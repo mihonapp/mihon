@@ -191,7 +191,6 @@
     <string name="delete_downloaded">លុបអ្វីដែលបានទាញហើយ</string>
     <string name="label_local">ក្នុងទូរស័ព្ទ</string>
     <string name="on">បើក</string>
-    <string name="action_sort_category">តម្រៀបតាមថ្នាក់ក្រម</string>
     <string name="action_update_category">ធ្វើបច្ចុប្បន្នភាពថ្នាក់ក្រម</string>
     <string name="action_menu_overflow_description">ជម្រើសបន្ថែមទៀត</string>
     <string name="off">បិទ</string>
@@ -202,7 +201,6 @@
     <string name="action_bar_up_description">រុករកទៅលើ</string>
     <string name="label_data_storage">ទិន្នន័យ និងអង្គផ្ទុក</string>
     <string name="action_remove_everything">ដកអ្វីៗទាំងអស់ចេញ</string>
-    <string name="sort_category_confirmation">តើអ្នកចង់តម្រៀប តាមអក្ខរក្រមទេ?</string>
     <string name="action_open_random_manga">បើកត្លុកដោយចៃដន្យ</string>
     <string name="label_started">បានចាប់ផ្តើមហើយ</string>
     <string name="action_sort_unread_count">ចំនួនមិនទាន់អាន</string>

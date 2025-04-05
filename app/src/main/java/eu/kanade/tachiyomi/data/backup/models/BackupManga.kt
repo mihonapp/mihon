@@ -38,8 +38,10 @@ data class BackupManga(
     @ProtoNumber(105) var updateStrategy: UpdateStrategy = UpdateStrategy.ALWAYS_UPDATE,
     @ProtoNumber(106) var lastModifiedAt: Long = 0,
     @ProtoNumber(107) var favoriteModifiedAt: Long? = null,
+    // Mihon values start here
     @ProtoNumber(108) var excludedScanlators: List<String> = emptyList(),
     @ProtoNumber(109) var version: Long = 0,
+    @ProtoNumber(110) var notes: String = "",
     // Numbers to keep compatibility with fork edited manga fields
     // https://github.com/jobobby04/TachiyomiSY/blob/7e151ddb83d5d7e0ea553eca686a8c4aa3a1fa8c/app/src/main/java/eu/kanade/tachiyomi/data/backup/models/BackupManga.kt#L49
     @ProtoNumber(800) var customTitle: String? = null,
@@ -70,6 +72,7 @@ data class BackupManga(
             customAuthor = this@BackupManga.customAuthor,
             customDescription = this@BackupManga.customDescription,
             version = this@BackupManga.version,
+            notes = this@BackupManga.notes,
         )
     }
 }

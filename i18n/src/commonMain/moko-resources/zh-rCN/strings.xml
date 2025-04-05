@@ -70,7 +70,7 @@
     <string name="pref_category_tracking">进度记录</string>
     <string name="pref_category_advanced">高级</string>
     <string name="pref_category_about">关于</string>
-    <string name="pref_library_columns">网格大小</string>
+    <string name="pref_library_columns">每行数目</string>
     <string name="portrait">竖屏</string>
     <string name="landscape">横屏</string>
     <string name="pref_library_update_interval">自动更新</string>
@@ -396,7 +396,7 @@
     <string name="updated_version">已更新至 v%1$s</string>
     <string name="whats_new">更新日志</string>
     <string name="download_insufficient_space">存储空间不足，无法下载章节</string>
-    <string name="action_global_search_query">全局搜索“%1$s”</string>
+    <string name="action_global_search_query">全局搜索 \"%1$s\"</string>
     <string name="pref_category_reading_mode">阅读模式</string>
     <string name="pref_category_theme">主题</string>
     <string name="action_sort_date_added">收藏日期</string>
@@ -571,7 +571,6 @@
     <string name="action_move_to_top_all_for_series">将作品移到顶部</string>
     <string name="disabled_nav">关闭</string>
     <string name="error_saving_picture">保存图片出错</string>
-    <string name="update_check_fdroid_migration_info">官方发布了新版本，点击了解如何从非官方的 F-Droid 版本迁移。</string>
     <string name="empty_backup_error">书架没有可备份的作品</string>
     <string name="update_check_open">打开 GitHub 页面</string>
     <string name="webview_data_deleted">已清除 WebView 数据</string>
@@ -604,7 +603,7 @@
     <string name="pref_app_language">应用语言</string>
     <string name="theme_lavender">薰衣草</string>
     <string name="description_placeholder">无简介</string>
-    <string name="delete_category_confirmation">确定要删除分类“%s”吗？</string>
+    <string name="delete_category_confirmation">确定要删除 \"%s\" 分类吗？</string>
     <string name="delete_category">删除分类</string>
     <string name="internal_error">InternalError: 内部错误，详情请见崩溃日志</string>
     <string name="pref_user_agent_string">默认 User Agent 字符串</string>
@@ -621,7 +620,7 @@
     <string name="are_you_sure">你确定吗？</string>
     <string name="multi_lang">多语言</string>
     <string name="updates_last_update_info">书架更新时间：%s</string>
-    <string name="remove_manga">即将从书架中删除“%s”</string>
+    <string name="remove_manga">即将从书架中删除 \"%s\"</string>
     <string name="popular">热门</string>
     <string name="missing_storage_permission">未授予存储权限</string>
     <string name="skipped_reason_not_always_update">已跳过，因为作品无需更新</string>
@@ -692,11 +691,9 @@
     <string name="pref_page_rotate">旋转横向图片</string>
     <string name="pref_page_rotate_invert">旋转横向图片时反转方向</string>
     <string name="pref_debug_info">调试信息</string>
-    <string name="pref_chapter_swipe">目录左右滑动</string>
     <string name="pref_chapter_swipe_end">向右滑动操作</string>
     <string name="pref_chapter_swipe_start">向左滑动操作</string>
     <string name="pref_double_tap_zoom">双击放大</string>
-    <string name="pref_library_columns_per_row">每行 %d 个</string>
     <string name="pref_update_only_in_release_period">预测下次更新时间</string>
     <string name="action_ok">确定</string>
     <string name="track_delete_title">要删除 %s 的记录吗？</string>
@@ -723,13 +720,11 @@
     <string name="source_settings">图源设置</string>
     <string name="app_settings">应用设置</string>
     <string name="unlock_app_title">解锁 %s</string>
-    <string name="action_sort_category">分类排序</string>
     <string name="action_move_to_bottom_all_for_series">将作品移到底部</string>
     <string name="notification_updating_progress">正在更新书架… (%s)</string>
-    <string name="sort_category_confirmation">要按字母顺序将分类重新排序吗？</string>
     <string name="file_null_uri_error">未选择文件</string>
     <string name="pref_relative_format">相对时间戳</string>
-    <string name="pref_relative_format_summary">显示“%1$s”而不是“%2$s”</string>
+    <string name="pref_relative_format_summary">显示 \"%1$s\" 而不是 \"%2$s\"</string>
     <string name="relative_time_span_never">尚未</string>
     <string name="pref_flash_page_summ">减轻墨水屏上的残影</string>
     <string name="last_auto_backup_info">上次自动备份时间：%s</string>
@@ -761,7 +756,7 @@
     <string name="ext_permission_install_apps_warning">需要安装插件的权限，点击此处授权。</string>
     <string name="action_add_repo">添加仓库</string>
     <string name="private_settings">包含敏感设置（例如进度记录平台的账号信息）</string>
-    <string name="delete_repo_confirmation">确定要删除仓库“%s”吗？</string>
+    <string name="delete_repo_confirmation">确定要删除仓库 \"%s\" 吗？</string>
     <string name="error_repo_exists">此仓库已存在！</string>
     <string name="action_delete_repo">删除仓库</string>
     <string name="invalid_repo_name">仓库网址无效</string>
@@ -778,7 +773,7 @@
     <string name="label_extension_repos">插件仓库</string>
     <string name="information_empty_repos">尚未设置仓库</string>
     <string name="label_add_repo_input">仓库网址</string>
-    <string name="action_add_repo_message">在 Mihon 中添加仓库，输入的网址结尾应为“index.min.json”。</string>
+    <string name="action_add_repo_message">在 Mihon 中添加仓库，输入的网址结尾应为 \"index.min.json\" 。</string>
     <string name="onboarding_storage_help_info">如果你是从旧版更新而来，可以查看存储指南了解详情。</string>
     <string name="onboarding_storage_help_action">存储指南</string>
     <string name="pref_storage_location">存储位置</string>
@@ -820,7 +815,7 @@
     <string name="invalid_backup_file_unknown">备份文件已损坏</string>
     <string name="action_copy_link">复制链接</string>
     <string name="extensionRepo_settings">插件仓库</string>
-    <string name="add_repo_confirmation">您想添加“%s”仓库吗？</string>
+    <string name="add_repo_confirmation">您想添加仓库 \"%s\" 吗？</string>
     <string name="pref_download_new_unread_chapters_only">跳过下载重复阅读的章节</string>
     <string name="confirm_tracker_update">将进度更新到第 %d 章？</string>
     <string name="onboarding_permission_crashlytics">发送崩溃日志</string>
@@ -840,4 +835,18 @@
     <string name="pref_hardware_bitmap_threshold_default">默认 (%d)</string>
     <string name="pref_hardware_bitmap_threshold_summary">如果阅读器加载空白图像，请逐步降低阈值。\n已选择： %s</string>
     <string name="pref_hardware_bitmap_threshold">自定义硬件位图阈值</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">会影响性能。仅当降低位图阈值无法解决空白图像问题时才启用</string>
+    <string name="pref_incognito_mode_extension_summary">暂停记录插件的阅读历史</string>
+    <string name="label_auto">自动</string>
+    <string name="theme_monochrome">单色</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">在长条阅读模式中使用旧版解码器</string>
+    <string name="pref_mark_duplicate_read_chapter_read">将重复的已读章节标记为已读</string>
+    <string name="author">作者</string>
+    <string name="action_toggle_private_off">公开记录</string>
+    <string name="artist">画师</string>
+    <string name="export">导出</string>
+    <string name="library_list">书架列表</string>
+    <string name="library_exported">已导出列表</string>
+    <string name="tracked_privately">私下记录</string>
+    <string name="action_toggle_private_on">私下记录</string>
 </resources>

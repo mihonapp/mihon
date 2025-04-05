@@ -12,16 +12,18 @@ import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import uy.kohesive.injekt.injectLazy
 import java.util.Collections
-import java.util.concurrent.atomic.AtomicReference
+import kotlin.concurrent.atomics.AtomicReference
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 /**
  * Base implementation class for extension installer. To be used inside a foreground [Service].
  */
+@OptIn(ExperimentalAtomicApi::class)
 abstract class Installer(private val service: Service) {
 
     private val extensionManager: ExtensionManager by injectLazy()
 
-    private var waitingInstall = AtomicReference<Entry>(null)
+    private var waitingInstall = AtomicReference<Entry?>(null)
     private val queue = Collections.synchronizedList(mutableListOf<Entry>())
 
     private val cancelReceiver = object : BroadcastReceiver() {
@@ -79,7 +81,7 @@ abstract class Installer(private val service: Service) {
      * @see waitingInstall
      */
     fun continueQueue(resultStep: InstallStep) {
-        val completedEntry = waitingInstall.getAndSet(null)
+        val completedEntry = waitingInstall.exchange(null)
         if (completedEntry != null) {
             extensionManager.updateInstallStep(completedEntry.downloadId, resultStep)
             checkQueue()
@@ -115,10 +117,10 @@ abstract class Installer(private val service: Service) {
         LocalBroadcastManager.getInstance(service).unregisterReceiver(cancelReceiver)
         queue.forEach { extensionManager.updateInstallStep(it.downloadId, InstallStep.Error) }
         queue.clear()
-        waitingInstall.set(null)
+        waitingInstall.store(null)
     }
 
-    protected fun getActiveEntry(): Entry? = waitingInstall.get()
+    protected fun getActiveEntry(): Entry? = waitingInstall.load()
 
     /**
      * Cancels queue for the provided download ID if exists.
@@ -126,13 +128,13 @@ abstract class Installer(private val service: Service) {
      * @param downloadId Download ID as known by [ExtensionManager]
      */
     private fun cancelQueue(downloadId: Long) {
-        val waitingInstall = this.waitingInstall.get()
+        val waitingInstall = this.waitingInstall.load()
         val toCancel = queue.find { it.downloadId == downloadId } ?: waitingInstall ?: return
         if (cancelEntry(toCancel)) {
             queue.remove(toCancel)
             if (waitingInstall == toCancel) {
                 // Currently processing removed entry, continue queue
-                this.waitingInstall.set(null)
+                this.waitingInstall.store(null)
                 checkQueue()
             }
             extensionManager.updateInstallStep(downloadId, InstallStep.Idle)

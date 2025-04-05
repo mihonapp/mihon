@@ -10,15 +10,18 @@ android {
 
     sourceSets {
         getByName("main") {
-            val dir = if (Config.includeAnalytics) "firebase" else "noop"
-            kotlin.srcDirs("src/$dir/kotlin")
-            manifest.srcFile("src/$dir/AndroidManifext.xml")
+            if (Config.includeTelemetry) {
+                kotlin.srcDirs("src/firebase/kotlin")
+            } else {
+                kotlin.srcDirs("src/noop/kotlin")
+                manifest.srcFile("src/noop/AndroidManifext.xml")
+            }
         }
     }
 }
 
 dependencies {
-    if (Config.includeAnalytics) {
+    if (Config.includeTelemetry) {
         implementation(platform(libs.firebase.bom))
         implementation(libs.firebase.analytics)
         implementation(libs.firebase.crashlytics)

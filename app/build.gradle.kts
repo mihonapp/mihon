@@ -11,7 +11,7 @@ plugins {
     alias(libs.plugins.aboutLibraries)
 }
 
-if (Config.includeAnalytics) {
+if (Config.includeTelemetry) {
     pluginManager.apply {
         apply(libs.plugins.google.services.get().pluginId)
         apply(libs.plugins.firebase.crashlytics.get().pluginId)
@@ -26,13 +26,13 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 10
-        versionName = "0.17.1"
+        versionCode = 11
+        versionName = "0.18.0"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
         buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
-        buildConfigField("String", "BUILD_TIME", "\"${getBuildTime()}\"")
-        buildConfigField("boolean", "ANALYTICS_INCLUDED", "${Config.includeAnalytics}")
+        buildConfigField("String", "BUILD_TIME", "\"${getBuildTime(useLastCommitTime = false)}\"")
+        buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
         buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -49,6 +49,8 @@ android {
             isShrinkResources = Config.enableCodeShrink
 
             proguardFiles("proguard-android-optimize.txt", "proguard-rules.pro")
+
+            buildConfigField("String", "BUILD_TIME", "\"${getBuildTime(useLastCommitTime = true)}\"")
         }
 
         val commonMatchingFallbacks = listOf(release.name)
@@ -69,6 +71,8 @@ android {
             signingConfig = debug.signingConfig
 
             matchingFallbacks.addAll(commonMatchingFallbacks)
+
+            buildConfigField("String", "BUILD_TIME", "\"${getBuildTime(useLastCommitTime = false)}\"")
         }
         create("benchmark") {
             initWith(release)
@@ -258,7 +262,7 @@ dependencies {
         exclude(group = "androidx.viewpager", module = "viewpager")
     }
     implementation(libs.insetter)
-    implementation(libs.bundles.richtext)
+    implementation(libs.richeditor.compose)
     implementation(libs.aboutLibraries.compose)
     implementation(libs.bundles.voyager)
     implementation(libs.compose.materialmotion)
@@ -266,6 +270,7 @@ dependencies {
     implementation(libs.compose.webview)
     implementation(libs.compose.grid)
     implementation(libs.reorderable)
+    implementation(libs.bundles.markdown)
 
     // Logging
     implementation(libs.logcat)
@@ -284,14 +289,6 @@ dependencies {
 }
 
 androidComponents {
-    beforeVariants { variantBuilder ->
-        // Disables standardBenchmark
-        if (variantBuilder.buildType == "benchmark") {
-            variantBuilder.enable = variantBuilder.productFlavors.containsAll(
-                listOf("default" to "dev"),
-            )
-        }
-    }
     onVariants(selector().withFlavor("default" to "standard")) {
         // Only excluding in standard flavor because this breaks
         // Layout Inspector's Compose tree

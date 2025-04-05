@@ -103,4 +103,5 @@ private fun Manga.toBackupManga() =
         customTitle = this.customTitle,
         customDescription = this.customDescription,
         version = this.version,
+        notes = this.notes,
     )

@@ -605,7 +605,6 @@
     <string name="skipped_reason_not_caught_up">Ohitettu, koska sarjassa on luettomia lukuja</string>
     <string name="skipped_reason_not_always_update">Ohitettu, koska sarja ei vaadi päivityksiä</string>
     <string name="remove_manga">Olet poistamassa \"%s\" kirjastostasi</string>
-    <string name="update_check_fdroid_migration_info">Uusi versio on saatavilla viralliselta alustalta. Napauta saadaksesi tietää, miten siirtyä pois epävirallisesta F-Droid versiosta.</string>
     <string name="pref_verbose_logging_summary">Kirjoittaa yksityiskohtaiset lokit järjestelmälokiin (heikentää sovelluksen suorituskykyä)</string>
     <string name="backup_info">Varmuuskopioita kannattaa säilyttää myös muissa paikoissa.</string>
     <string name="wish_list">Toivelista</string>
@@ -618,7 +617,6 @@
     <string name="action_sort_next_updated">Seuraava odotettu päivitys</string>
     <string name="action_sort_tracker_score">Seurannan pisteytys</string>
     <string name="action_update_category">Päivitä kategoria</string>
-    <string name="action_sort_category">Järjestä kategoriat</string>
     <string name="action_display_show_continue_reading_button">Jatka lukemista painike</string>
     <string name="action_apply">Käytä</string>
     <string name="action_ok">OK</string>
@@ -638,7 +636,6 @@
     <string name="label_local">Paikallinen</string>
     <string name="label_started">Aloitettu</string>
     <string name="action_open_random_manga">Avaa satunnainen merkintä</string>
-    <string name="sort_category_confirmation">Haluatko järjestää kategoriat aakkosjärjestykseen?</string>
     <string name="action_copy_to_clipboard">Kopioi leikepöydälle</string>
     <string name="action_move_to_bottom_all_for_series">Siirrä sarja pohjimmaiseksi</string>
     <string name="action_not_now">Ei nyt</string>
@@ -671,7 +668,6 @@
     <string name="pref_flash_page">Väläytä näyttöä sivunvaihdon yhteydessä</string>
     <string name="pref_storage_location_info">Käytetään automaattisille varmuuskopioille, lukujen latauksille ja paikallisille lähteille.</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Vältä keskeytyksiä pitkään jatkuvissa toimenpiteissä, kuten kirjaston päivitys, lataukset, ja varmuuskopion palautukset.</string>
-    <string name="pref_library_columns_per_row">%d per rivi</string>
     <string name="pref_appearance_summary">Teema, ajan ja päivämäärän formaatti</string>
     <string name="pref_downloads_summary">Automaattinen lataus, ennakkolataus</string>
     <string name="pref_tracking_summary">Yksisuuntainen synkronointi, paranneltu synkronointi</string>

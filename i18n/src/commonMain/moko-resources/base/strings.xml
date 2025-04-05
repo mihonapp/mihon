@@ -126,6 +126,7 @@
     <string name="action_display_list">List</string>
     <string name="action_display_cover_only_grid">Cover-only grid</string>
     <string name="action_display_download_badge">Downloaded chapters</string>
+    <string name="action_display_unread_badge">Unread chapters</string>
     <string name="action_display_local_badge">Local source</string>
     <string name="action_display_language_badge">Language</string>
     <string name="action_display_show_tabs">Show category tabs</string>
@@ -150,6 +151,8 @@
     <string name="action_move_to_top_all_for_series">Move series to top</string>
     <string name="action_move_to_bottom">Move to bottom</string>
     <string name="action_move_to_bottom_all_for_series">Move series to bottom</string>
+    <string name="action_notes">Notes</string>
+    <string name="action_edit_notes">Edit notes</string>
     <string name="action_install">Install</string>
     <string name="action_share">Share</string>
     <string name="action_save">Save</string>
@@ -168,7 +171,6 @@
     <string name="action_start_downloading_now">Start downloading now</string>
     <string name="action_not_now">Not now</string>
     <string name="action_add_anyway">Add anyway</string>
-    <string name="action_migrate_duplicate">Migrate existing entry</string>
 
     <!-- Operations -->
     <string name="loading">Loading…</string>
@@ -297,7 +299,6 @@
     <string name="pref_update_only_started">Skip unstarted entries</string>
     <string name="pref_update_only_in_release_period">Predict next release time</string>
     <string name="pref_library_update_show_tab_badge">Show unread count on Updates icon</string>
-    <string name="pref_mark_duplicate_read_chapter_read">Mark duplicate read chapters as read</string>
 
     <string name="pref_library_update_refresh_metadata">Automatically refresh metadata</string>
     <string name="pref_library_update_refresh_metadata_summary">Check for new cover and details when updating library</string>
@@ -311,11 +312,14 @@
     <string name="include">Include: %s</string>
     <string name="exclude">Exclude: %s</string>
 
-    <string name="pref_chapter_swipe">Chapter swipe</string>
+    <string name="pref_behavior">Behavior</string>
     <!-- This should be to the left for RTL locales -->
-    <string name="pref_chapter_swipe_end">Swipe to right action</string>
+    <string name="pref_chapter_swipe_end">Chapter on swipe to right</string>
     <!-- This should be to the right for RTL locales -->
-    <string name="pref_chapter_swipe_start">Swipe to left action</string>
+    <string name="pref_chapter_swipe_start">Chapter on swipe to left</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Mark duplicate read chapter as read</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">After reading a chapter</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">After fetching new chapter</string>
 
       <!-- Extension section -->
     <string name="multi_lang">Multi</string>
@@ -708,7 +712,8 @@
     <!-- missing confirm menu after Compose rewrite #7901 -->
     <string name="remove_from_library">Remove from library</string>
     <string name="unknown_title">Unknown title</string>
-    <string name="confirm_add_duplicate_manga">You have an entry in your library with the same name.\n\nDo you still wish to continue?</string>
+    <string name="possible_duplicates_title">Possible duplicates</string>
+    <string name="possible_duplicates_summary">You have entries in your library with a similar name.\n\nSelect an entry to migrate or add anyway.</string>
     <string name="manga_added_library">Added to library</string>
     <string name="manga_removed_library">Removed from library</string>
     <string name="manga_info_expand">More</string>
@@ -985,4 +990,7 @@
     <string name="exception_http">HTTP %d, check website in WebView</string>
     <string name="exception_offline">No Internet connection</string>
     <string name="exception_unknown_host">Couldn\'t reach %s</string>
+
+    <!-- Notes screen -->
+    <string name="notes_placeholder">Enjoyed the part where…</string>
 </resources>

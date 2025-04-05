@@ -58,6 +58,8 @@ class LibraryPreferences(
         false,
     )
 
+    fun markDuplicateReadChapterAsRead() = preferenceStore.getStringSet("mark_duplicate_read_chapter_read", emptySet())
+
     // region Filter
 
     fun filterDownloaded() = preferenceStore.getEnum(
@@ -97,6 +99,8 @@ class LibraryPreferences(
     // region Badges
 
     fun downloadBadge() = preferenceStore.getBoolean("display_download_badge", false)
+
+    fun unreadBadge() = preferenceStore.getBoolean("display_unread_badge", true)
 
     fun localBadge() = preferenceStore.getBoolean("display_local_badge", true)
 
@@ -203,6 +207,9 @@ class LibraryPreferences(
         const val MANGA_HAS_UNREAD = "manga_fully_read"
         const val MANGA_NON_READ = "manga_started"
         const val MANGA_OUTSIDE_RELEASE_PERIOD = "manga_outside_release_period"
+
+        const val MARK_DUPLICATE_CHAPTER_READ_NEW = "new"
+        const val MARK_DUPLICATE_CHAPTER_READ_EXISTING = "existing"
 
         const val DEFAULT_CATEGORY_PREF_KEY = "default_category"
         private const val LIBRARY_UPDATE_CATEGORIES_PREF_KEY = "library_update_categories"

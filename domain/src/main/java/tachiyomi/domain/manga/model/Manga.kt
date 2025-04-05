@@ -36,6 +36,7 @@ data class Manga(
     val customDescription: String?,
     val customTitle: String?,
     val version: Long,
+    val notes: String,
 ) : Serializable {
     val title: String
         get() = customTitle ?: ogTitle
@@ -145,6 +146,7 @@ data class Manga(
             lastModifiedAt = 0L,
             favoriteModifiedAt = null,
             version = 0L,
+            notes = "",
         )
     }
 }

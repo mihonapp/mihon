@@ -219,14 +219,11 @@ data class BrowseSourceScreen(
                 onMangaClick = { navigator.push((MangaScreen(it.id, true))) },
                 onMangaLongClick = { manga ->
                     scope.launchIO {
-                        val duplicateManga = screenModel.getDuplicateLibraryManga(manga)
+                        val duplicates = screenModel.getDuplicateLibraryManga(manga)
                         when {
                             manga.favorite -> screenModel.setDialog(BrowseSourceScreenModel.Dialog.RemoveManga(manga))
-                            duplicateManga != null -> screenModel.setDialog(
-                                BrowseSourceScreenModel.Dialog.AddDuplicateManga(
-                                    manga,
-                                    duplicateManga,
-                                ),
+                            duplicates.isNotEmpty() -> screenModel.setDialog(
+                                BrowseSourceScreenModel.Dialog.AddDuplicateManga(manga, duplicates),
                             )
                             else -> screenModel.addFavorite(manga)
                         }
@@ -249,12 +246,11 @@ data class BrowseSourceScreen(
             }
             is BrowseSourceScreenModel.Dialog.AddDuplicateManga -> {
                 DuplicateMangaDialog(
+                    duplicates = dialog.duplicates,
                     onDismissRequest = onDismissRequest,
                     onConfirm = { screenModel.addFavorite(dialog.manga) },
-                    onOpenManga = { navigator.push(MangaScreen(dialog.duplicate.id)) },
-                    onMigrate = {
-                        screenModel.setDialog(BrowseSourceScreenModel.Dialog.Migrate(dialog.manga, dialog.duplicate))
-                    },
+                    onOpenManga = { navigator.push(MangaScreen(it.id)) },
+                    onMigrate = { screenModel.setDialog(BrowseSourceScreenModel.Dialog.Migrate(dialog.manga, it)) },
                 )
             }
 

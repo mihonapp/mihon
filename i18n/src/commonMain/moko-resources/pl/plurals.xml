@@ -97,15 +97,21 @@
         <item quantity="other">%d dni</item>
     </plurals>
     <plurals name="num_repos">
-        <item quantity="one">repo</item>
-        <item quantity="few">repos</item>
-        <item quantity="many">repos</item>
-        <item quantity="other">repos</item>
+        <item quantity="one">%d repozytorium</item>
+        <item quantity="few">%d repozytoria</item>
+        <item quantity="many">%d repozytoriów</item>
+        <item quantity="other">%d repozytoriów</item>
     </plurals>
     <plurals name="upcoming_relative_time">
         <item quantity="one">Jutro</item>
         <item quantity="few">Za %1$d dni</item>
         <item quantity="many">Za %1$d dni</item>
         <item quantity="other">Za %1$d dni</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 strona</item>
+        <item quantity="few">%1$s strony</item>
+        <item quantity="many">%1$s stron</item>
+        <item quantity="other">%1$s stron</item>
     </plurals>
 </resources>

@@ -33,11 +33,11 @@ interface MangaRepository {
 
     suspend fun setMangaCategories(mangaId: Long, categoryIds: List<Long>)
 
-    suspend fun insert(manga: Manga): Long?
-
     suspend fun update(update: MangaUpdate): Boolean
 
     suspend fun updateAll(mangaUpdates: List<MangaUpdate>): Boolean
+
+    suspend fun insertNetworkManga(manga: List<Manga>): List<Manga>
 
     suspend fun updateEditedInfo(update: MangaUpdate): Boolean
 }

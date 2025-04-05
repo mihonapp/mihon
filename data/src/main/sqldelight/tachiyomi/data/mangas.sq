@@ -31,7 +31,8 @@ CREATE TABLE mangas(
     custom_description TEXT,
     custom_title TEXT,
     version INTEGER NOT NULL DEFAULT 0,
-    is_syncing INTEGER NOT NULL DEFAULT 0
+    is_syncing INTEGER NOT NULL DEFAULT 0,
+    notes TEXT NOT NULL DEFAULT ""
 );
 
 CREATE INDEX library_favorite_index ON mangas(favorite) WHERE favorite = 1;
@@ -122,7 +123,7 @@ getDuplicateLibraryManga:
 SELECT *
 FROM mangas
 WHERE favorite = 1
-AND LOWER(title) = :title
+AND lower(title) LIKE '%' || lower(:title) || '%'
 AND _id != :id;
 
 getUpcomingManga:
@@ -154,8 +155,8 @@ WHERE favorite = 0
 AND source IN :sourceIds;
 
 insert:
-INSERT INTO mangas(source, url, artist, author, description, genre, title, status, thumbnail_url, favorite, last_update, next_update, initialized, viewer, chapter_flags, cover_last_modified, date_added, update_strategy, calculate_interval, last_modified_at, version)
-VALUES (:source, :url, :artist, :author, :description, :genre, :title, :status, :thumbnailUrl, :favorite, :lastUpdate, :nextUpdate, :initialized, :viewerFlags, :chapterFlags, :coverLastModified, :dateAdded, :updateStrategy, :calculateInterval, 0, :version);
+INSERT INTO mangas(source, url, artist, author, description, genre, title, status, thumbnail_url, favorite, last_update, next_update, initialized, viewer, chapter_flags, cover_last_modified, date_added, update_strategy, calculate_interval, last_modified_at, version, notes)
+VALUES (:source, :url, :artist, :author, :description, :genre, :title, :status, :thumbnailUrl, :favorite, :lastUpdate, :nextUpdate, :initialized, :viewerFlags, :chapterFlags, :coverLastModified, :dateAdded, :updateStrategy, :calculateInterval, 0, :version, :notes);
 
 update:
 UPDATE mangas SET
@@ -179,11 +180,40 @@ UPDATE mangas SET
     update_strategy = coalesce(:updateStrategy, update_strategy),
     calculate_interval = coalesce(:calculateInterval, calculate_interval),
     version = coalesce(:version, version),
-    is_syncing = coalesce(:isSyncing, is_syncing)
+    is_syncing = coalesce(:isSyncing, is_syncing),
+    notes = coalesce(:notes, notes)
 WHERE _id = :mangaId;
 
 selectLastInsertedRowId:
 SELECT last_insert_rowid();
+
+insertNetworkManga {
+    -- Insert the manga if it doesn't exist already
+    INSERT INTO mangas(
+        source, url, artist, author, description, genre, title, status, thumbnail_url, favorite,
+        last_update, next_update, initialized, viewer, chapter_flags, cover_last_modified, date_added,
+        update_strategy, calculate_interval, last_modified_at, version
+    )
+    SELECT
+        :source, :url, :artist, :author, :description, :genre, :title, :status, :thumbnailUrl, :favorite,
+        :lastUpdate, :nextUpdate, :initialized, :viewerFlags, :chapterFlags, :coverLastModified, :dateAdded,
+        :updateStrategy, :calculateInterval, 0, :version
+    WHERE NOT EXISTS(SELECT 0 FROM mangas WHERE source = :source AND url = :url);
+
+    -- Update the title if it is not favorite
+    UPDATE mangas
+    SET title = :title
+    WHERE source = :source
+    AND url = :url
+    AND favorite = 0;
+
+    -- Finally return the manga
+    SELECT *
+    FROM mangas
+    WHERE source = :source
+    AND url = :url
+    LIMIT 1;
+}
 
 updateMangaEdit:
 UPDATE mangas SET
