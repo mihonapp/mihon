@@ -31,36 +31,36 @@ object CustomCoverExporter {
                 val mangas = Injekt.get<GetFavorites>().await()
                 val outputFile = UniFile.fromUri(context, uri)
 
-                if (outputFile != null) {
-                    ZipWriter(context, outputFile).use { zipWriter ->
-                        val mangaUrlMappings = mangas.mapNotNull { manga ->
-                            val expectedFileName = coverCache.getCustomCoverFilename(manga.id)
-                            val file = customCovers.find { it.name == expectedFileName }
+                if (outputFile == null) return@withContext
 
-                            if (file?.exists() == true) {
-                                BackupCover(manga.id.toString(), manga.url, manga.source)
-                            } else {
-                                null
-                            }
+                ZipWriter(context, outputFile).use { zipWriter ->
+                    val mangaUrlMappings = mangas.mapNotNull { manga ->
+                        val expectedFileName = coverCache.getCustomCoverFilename(manga.id)
+                        val file = customCovers.find { it.name == expectedFileName }
+
+                        if (file?.exists() == true) {
+                            BackupCover(manga.id.toString(), manga.url, manga.source)
+                        } else {
+                            null
                         }
+                    }
 
-                        val protoByteArray = ProtoBuf.encodeToByteArray(BackupCovers(mangaUrlMappings))
-                        val protoFile = File(context.cacheDir, "manga_urls.proto")
-                        protoFile.writeBytes(protoByteArray)
+                    val protoByteArray = ProtoBuf.encodeToByteArray(BackupCovers(mangaUrlMappings))
+                    val protoFile = File(context.cacheDir, "manga_urls.proto")
+                    protoFile.writeBytes(protoByteArray)
 
-                        val protoUniFile = UniFile.fromFile(protoFile)!!
-                        zipWriter.write(protoUniFile)
-                        protoFile.delete()
+                    val protoUniFile = UniFile.fromFile(protoFile)!!
+                    zipWriter.write(protoUniFile)
+                    protoFile.delete()
 
-                        mangas.forEach { manga ->
-                            val expectedFileName = coverCache.getCustomCoverFilename(manga.id)
-                            val file = customCovers.find { it.name == expectedFileName }
+                    mangas.forEach { manga ->
+                        val expectedFileName = coverCache.getCustomCoverFilename(manga.id)
+                        val file = customCovers.find { it.name == expectedFileName }
 
-                            if (file?.exists() == true) {
-                                val coverUniFile = UniFile.fromFile(file)!!
-                                coverUniFile.renameTo("${manga.id}.jpg")
-                                zipWriter.write(coverUniFile)
-                            }
+                        if (file?.exists() == true) {
+                            val coverUniFile = UniFile.fromFile(file)!!
+                            coverUniFile.renameTo("${manga.id}.jpg")
+                            zipWriter.write(coverUniFile)
                         }
                     }
                 }
