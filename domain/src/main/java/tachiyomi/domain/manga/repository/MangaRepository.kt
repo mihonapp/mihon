@@ -2,9 +2,9 @@ package tachiyomi.domain.manga.repository
 
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.domain.library.model.LibraryManga
-import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
+import tachiyomi.domain.manga.model.MangaWithChapterCount
 
 interface MangaRepository {
 
