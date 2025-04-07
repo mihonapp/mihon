@@ -40,17 +40,17 @@ object CustomCoverRestorer {
                         }
 
                         if (protoData != null) {
-                            val backupCoverMappings = ProtoBuf.decodeFromByteArray<BackupCovers>(protoData)
+                            val backupCovers = ProtoBuf.decodeFromByteArray<BackupCovers>(protoData)
                             val mangas = Injekt.get<GetFavorites>().await()
                             val coverCache = Injekt.get<CoverCache>()
 
-                            backupCoverMappings().forEach { mapping ->
+                            backupCovers().forEach { backupCover ->
                                 val matchingManga = mangas.find {
-                                    it.url == mapping.mangaUrl && it.source == mapping.sourceId
+                                    it.url == backupCover.mangaUrl && it.source == backupCover.sourceId
                                 }
 
                                 if (matchingManga != null) {
-                                    val imageName = "${mapping.filename}.jpg"
+                                    val imageName = "${backupCover.filename}.jpg"
                                     val coverData = imageMap[imageName]
 
                                     if (coverData != null) {
