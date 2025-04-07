@@ -26,14 +26,15 @@ object CustomCoverExporter {
     ) {
         withContext(Dispatchers.IO) {
             try {
-                val customCovers = Injekt.get<CoverCache>().getAllCustomCovers()
+                val coverCache = Injekt.get<CoverCache>()
+                val customCovers = coverCache.getAllCustomCovers()
                 val mangas = Injekt.get<GetFavorites>().await()
                 val outputFile = UniFile.fromUri(context, uri)
 
                 if (outputFile != null) {
                     ZipWriter(context, outputFile).use { zipWriter ->
                         val mangaUrlMappings = mangas.mapNotNull { manga ->
-                            val expectedFileName = DiskUtil.hashKeyForDisk(manga.id.toString())
+                            val expectedFileName = coverCache.getCustomCoverFilename(manga.id)
                             val file = customCovers.find { it.name == expectedFileName }
 
                             if (file?.exists() == true) {
@@ -52,7 +53,7 @@ object CustomCoverExporter {
                         protoFile.delete()
 
                         mangas.forEach { manga ->
-                            val expectedFileName = DiskUtil.hashKeyForDisk(manga.id.toString())
+                            val expectedFileName = coverCache.getCustomCoverFilename(manga.id)
                             val file = customCovers.find { it.name == expectedFileName }
 
                             if (file?.exists() == true) {

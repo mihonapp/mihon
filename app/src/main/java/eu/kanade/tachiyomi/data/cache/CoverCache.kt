@@ -52,7 +52,14 @@ class CoverCache(private val context: Context) {
         return File(customCoverCacheDir, DiskUtil.hashKeyForDisk(mangaId.toString()))
     }
 
-    fun getCoverFileName(mangaId: Long): String {
+    /**
+     * Returns the expected filename of a custom cover.
+     * Does not mean that the file actually exists.
+     *
+     * @param mangaId the manga id.
+     * @return cover filename.
+     */
+    fun getCustomCoverFilename(mangaId: Long): String {
         return DiskUtil.hashKeyForDisk(mangaId.toString())
     }
 
