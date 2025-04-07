@@ -196,7 +196,7 @@ insertNetworkManga {
         :updateStrategy, :calculateInterval, 0, :version
     WHERE NOT EXISTS(SELECT 0 FROM mangas WHERE source = :source AND url = :url);
 
-    -- Update the title if it is not favorite
+    -- Update the relevant details if applicable and not favorite
     UPDATE mangas
     SET
         title = CASE WHEN :updateTitle THEN :title ELSE title END,
@@ -207,7 +207,7 @@ insertNetworkManga {
         genre = CASE WHEN :updateDetails THEN :genre ELSE genre END,
         status = CASE WHEN :updateDetails THEN :status ELSE status END,
         update_strategy = CASE WHEN :updateDetails THEN :updateStrategy ELSE update_strategy END,
-        initialized = CASE WHEN :updateDetails THEN :initialized ELSE initialized END
+        initialized = :updateDetails
     WHERE source = :source
     AND url = :url
     AND favorite = 0;
