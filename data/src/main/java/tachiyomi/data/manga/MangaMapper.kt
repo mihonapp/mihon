@@ -2,7 +2,7 @@ package tachiyomi.data.manga
 
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
 import tachiyomi.domain.library.model.LibraryManga
-import tachiyomi.domain.manga.model.DuplicateManga
+import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.manga.model.Manga
 
 object MangaMapper {
@@ -130,7 +130,7 @@ object MangaMapper {
         lastRead = lastRead,
     )
 
-    fun mapDuplicateManga(
+    fun mapMangaWithChapterCount(
         id: Long,
         source: Long,
         url: String,
@@ -157,7 +157,7 @@ object MangaMapper {
         isSyncing: Long,
         notes: String,
         totalCount: Long,
-    ): DuplicateManga = DuplicateManga(
+    ): MangaWithChapterCount = MangaWithChapterCount(
         manga = mapManga(
             id,
             source,
@@ -185,6 +185,6 @@ object MangaMapper {
             isSyncing,
             notes,
         ),
-        totalChapters = totalCount,
+        chapterCount = totalCount,
     )
 }

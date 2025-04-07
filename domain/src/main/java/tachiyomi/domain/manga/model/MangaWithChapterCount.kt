@@ -1,6 +1,6 @@
 package tachiyomi.domain.manga.model
 
-data class DuplicateManga(
+data class MangaWithChapterCount(
     val manga: Manga,
-    val totalChapters: Long,
+    val chapterCount: Long,
 )

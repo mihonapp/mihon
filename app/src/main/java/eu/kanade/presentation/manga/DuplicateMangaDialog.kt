@@ -63,8 +63,8 @@ import eu.kanade.presentation.more.settings.LocalPreferenceMinHeight
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SManga
-import tachiyomi.domain.manga.model.DuplicateManga
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
@@ -79,7 +79,7 @@ import uy.kohesive.injekt.api.get
 
 @Composable
 fun DuplicateMangaDialog(
-    duplicates: List<DuplicateManga>,
+    duplicates: List<MangaWithChapterCount>,
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
     onOpenManga: (manga: Manga) -> Unit,
@@ -126,7 +126,7 @@ fun DuplicateMangaDialog(
                     key = { it.manga.id },
                 ) {
                     DuplicateMangaListItem(
-                        duplicateManga = it,
+                        duplicate = it,
                         getSource = { sourceManager.getOrStub(it.manga.source) },
                         onMigrate = { onMigrate(it.manga) },
                         onDismissRequest = onDismissRequest,
@@ -170,14 +170,14 @@ fun DuplicateMangaDialog(
 
 @Composable
 private fun DuplicateMangaListItem(
-    duplicateManga: DuplicateManga,
+    duplicate: MangaWithChapterCount,
     getSource: () -> Source,
     onDismissRequest: () -> Unit,
     onOpenManga: () -> Unit,
     onMigrate: () -> Unit,
 ) {
     val source = getSource()
-    val manga = duplicateManga.manga
+    val manga = duplicate.manga
     Column(
         modifier = Modifier
             .width(MangaCardWidth)
@@ -210,8 +210,8 @@ private fun DuplicateMangaListItem(
                     textColor = MaterialTheme.colorScheme.onSecondary,
                     text = pluralStringResource(
                         MR.plurals.manga_num_chapters,
-                        duplicateManga.totalChapters.toInt(),
-                        duplicateManga.totalChapters,
+                        duplicate.chapterCount.toInt(),
+                        duplicate.chapterCount,
                     ),
                 )
             }
@@ -315,7 +315,7 @@ private fun MangaDetailRow(
 }
 
 @Composable
-private fun getMaximumMangaCardHeight(duplicates: List<DuplicateManga>): Dp {
+private fun getMaximumMangaCardHeight(duplicates: List<MangaWithChapterCount>): Dp {
     val density = LocalDensity.current
     val typography = MaterialTheme.typography
     val textMeasurer = rememberTextMeasurer()
