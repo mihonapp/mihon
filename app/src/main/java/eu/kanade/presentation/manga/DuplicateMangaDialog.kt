@@ -3,6 +3,7 @@ package eu.kanade.presentation.manga
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -63,10 +64,14 @@ import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SManga
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.Badge
+import tachiyomi.presentation.core.components.BadgeGroup
 import tachiyomi.presentation.core.components.material.padding
+import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 import uy.kohesive.injekt.Injekt
@@ -74,7 +79,7 @@ import uy.kohesive.injekt.api.get
 
 @Composable
 fun DuplicateMangaDialog(
-    duplicates: List<Manga>,
+    duplicates: List<MangaWithChapterCount>,
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
     onOpenManga: (manga: Manga) -> Unit,
@@ -118,14 +123,14 @@ fun DuplicateMangaDialog(
             ) {
                 items(
                     items = duplicates,
-                    key = { it.id },
+                    key = { it.manga.id },
                 ) {
                     DuplicateMangaListItem(
-                        manga = it,
-                        getSource = { sourceManager.getOrStub(it.source) },
-                        onMigrate = { onMigrate(it) },
+                        duplicate = it,
+                        getSource = { sourceManager.getOrStub(it.manga.source) },
+                        onMigrate = { onMigrate(it.manga) },
                         onDismissRequest = onDismissRequest,
-                        onOpenManga = { onOpenManga(it) },
+                        onOpenManga = { onOpenManga(it.manga) },
                     )
                 }
             }
@@ -165,13 +170,14 @@ fun DuplicateMangaDialog(
 
 @Composable
 private fun DuplicateMangaListItem(
-    manga: Manga,
+    duplicate: MangaWithChapterCount,
     getSource: () -> Source,
     onDismissRequest: () -> Unit,
     onOpenManga: () -> Unit,
     onMigrate: () -> Unit,
 ) {
     val source = getSource()
+    val manga = duplicate.manga
     Column(
         modifier = Modifier
             .width(MangaCardWidth)
@@ -186,13 +192,30 @@ private fun DuplicateMangaListItem(
             )
             .padding(MaterialTheme.padding.small),
     ) {
-        MangaCover.Book(
-            data = ImageRequest.Builder(LocalContext.current)
-                .data(manga)
-                .crossfade(true)
-                .build(),
-            modifier = Modifier.fillMaxWidth(),
-        )
+        Box {
+            MangaCover.Book(
+                data = ImageRequest.Builder(LocalContext.current)
+                    .data(manga)
+                    .crossfade(true)
+                    .build(),
+                modifier = Modifier.fillMaxWidth(),
+            )
+            BadgeGroup(
+                modifier = Modifier
+                    .padding(4.dp)
+                    .align(Alignment.TopStart),
+            ) {
+                Badge(
+                    color = MaterialTheme.colorScheme.secondary,
+                    textColor = MaterialTheme.colorScheme.onSecondary,
+                    text = pluralStringResource(
+                        MR.plurals.manga_num_chapters,
+                        duplicate.chapterCount.toInt(),
+                        duplicate.chapterCount,
+                    ),
+                )
+            }
+        }
 
         Spacer(modifier = Modifier.height(MaterialTheme.padding.extraSmall))
 
@@ -292,7 +315,7 @@ private fun MangaDetailRow(
 }
 
 @Composable
-private fun getMaximumMangaCardHeight(duplicates: List<Manga>): Dp {
+private fun getMaximumMangaCardHeight(duplicates: List<MangaWithChapterCount>): Dp {
     val density = LocalDensity.current
     val typography = MaterialTheme.typography
     val textMeasurer = rememberTextMeasurer()
@@ -320,7 +343,7 @@ private fun getMaximumMangaCardHeight(duplicates: List<Manga>): Dp {
     ) {
         duplicates.fastMaxOfOrNull {
             calculateMangaCardHeight(
-                manga = it,
+                manga = it.manga,
                 density = density,
                 typography = typography,
                 textMeasurer = textMeasurer,

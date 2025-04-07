@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
+import tachiyomi.domain.manga.model.MangaWithChapterCount
 
 interface MangaRepository {
 
@@ -25,7 +26,7 @@ interface MangaRepository {
 
     fun getFavoritesBySourceId(sourceId: Long): Flow<List<Manga>>
 
-    suspend fun getDuplicateLibraryManga(id: Long, title: String): List<Manga>
+    suspend fun getDuplicateLibraryManga(id: Long, title: String): List<MangaWithChapterCount>
 
     suspend fun getUpcomingManga(statuses: Set<Long>): Flow<List<Manga>>
 
