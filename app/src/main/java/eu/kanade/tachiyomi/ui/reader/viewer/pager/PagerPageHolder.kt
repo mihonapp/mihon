@@ -291,8 +291,6 @@ class PagerPageHolder(
             }
         }
 
-        logcat(throwable = error) { "why" }
-
         errorLayout?.errorMessage?.text =
             with(context) { error?.formattedMessage } ?: MR.strings.decode_image_error.getString(context)
 
