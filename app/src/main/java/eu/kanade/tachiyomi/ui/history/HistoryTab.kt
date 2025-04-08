@@ -104,7 +104,7 @@ data object HistoryTab : Tab {
                         screenModel.addFavorite(dialog.manga)
                     },
                     onOpenManga = { navigator.push(MangaScreen(it.id)) },
-                    onMigrate = { },
+                    onMigrate = { screenModel.showMigrateDialog(dialog.manga, it) },
                 )
             }
             is HistoryScreenModel.Dialog.ChangeCategory -> {
@@ -124,7 +124,7 @@ data object HistoryTab : Tab {
                     screenModel = MigrateDialogScreenModel(),
                     onDismissRequest = onDismissRequest,
                     onClickTitle = { navigator.push(MangaScreen(dialog.oldManga.id)) },
-                    onPopScreen = { navigator.replace(MangaScreen(dialog.newManga.id)) },
+                    onPopScreen = onDismissRequest,
                 )
             }
             null -> {}
