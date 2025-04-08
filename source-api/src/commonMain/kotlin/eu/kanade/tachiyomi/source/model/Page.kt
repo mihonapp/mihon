@@ -32,8 +32,6 @@ open class Page(
     @Transient
     private val _errorFlow = MutableStateFlow<Throwable?>(null)
 
-    @Transient
-    val errorFlow = _errorFlow.asStateFlow()
     var error: Throwable?
         get() = _errorFlow.value
         set(value) {
