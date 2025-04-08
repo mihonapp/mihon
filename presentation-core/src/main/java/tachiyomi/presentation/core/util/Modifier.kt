@@ -29,7 +29,7 @@ fun Modifier.selectedBackground(isSelected: Boolean): Modifier {
     return if (isSelected) {
         val alpha = if (isSystemInDarkTheme()) 0.16f else 0.22f
         val color = MaterialTheme.colorScheme.secondary.copy(alpha = alpha)
-        this then Modifier.drawBehind { drawRect(color) }
+        this.drawBehind { drawRect(color) }
     } else {
         this
     }
@@ -79,7 +79,7 @@ fun Modifier.showSoftKeyboard(show: Boolean): Modifier {
                 openKeyboard = false
             }
         }
-        this then Modifier.focusRequester(focusRequester)
+        this.focusRequester(focusRequester)
     } else {
         this
     }
@@ -108,7 +108,7 @@ fun Modifier.clearFocusOnSoftKeyboardHide(
         }
     }
 
-    return this then Modifier.onFocusChanged {
+    return this.onFocusChanged {
         if (isFocused != it.isFocused) {
             if (isFocused) {
                 keyboardShowedSinceFocused = false

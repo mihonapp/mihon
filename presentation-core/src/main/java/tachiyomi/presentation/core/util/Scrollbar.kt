@@ -234,7 +234,7 @@ private fun Modifier.drawScrollbar(
     val thickness = remember { ViewConfiguration.get(context).scaledScrollBarSize.toFloat() }
     val color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.364f)
 
-    return this then Modifier
+    return this
         .nestedScroll(nestedScrollConnection)
         .drawWithContent {
             onDraw(reverseDirection, atEnd, thickness, color, alpha::value)
