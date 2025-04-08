@@ -172,6 +172,14 @@ DELETE FROM mangas
 WHERE favorite = 0
 AND source IN :sourceIds;
 
+deleteMangasNotInLibraryAndNotReadBySourceIds:
+DELETE FROM mangas
+WHERE favorite = 0
+AND source IN :sourceIds
+AND _id NOT IN (
+    SELECT manga_id FROM chapters WHERE read = 1 OR last_page_read != 0
+);
+
 insert:
 INSERT INTO mangas(source, url, artist, author, description, genre, title, status, thumbnail_url, favorite, last_update, next_update, initialized, viewer, chapter_flags, cover_last_modified, date_added, update_strategy, calculate_interval, last_modified_at, version, notes)
 VALUES (:source, :url, :artist, :author, :description, :genre, :title, :status, :thumbnailUrl, :favorite, :lastUpdate, :nextUpdate, :initialized, :viewerFlags, :chapterFlags, :coverLastModified, :dateAdded, :updateStrategy, :calculateInterval, 0, :version, :notes);

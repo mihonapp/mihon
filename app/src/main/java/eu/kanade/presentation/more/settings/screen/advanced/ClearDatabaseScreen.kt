@@ -18,7 +18,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -45,6 +48,7 @@ import tachiyomi.domain.source.interactor.GetSourcesWithNonLibraryManga
 import tachiyomi.domain.source.model.Source
 import tachiyomi.domain.source.model.SourceWithCount
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.LazyColumnWithAction
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
@@ -68,13 +72,14 @@ class ClearDatabaseScreen : Screen() {
             is ClearDatabaseScreenModel.State.Loading -> LoadingScreen()
             is ClearDatabaseScreenModel.State.Ready -> {
                 if (s.showConfirmation) {
+                    var keepReadManga by remember { mutableStateOf(true) }
                     AlertDialog(
                         onDismissRequest = model::hideConfirmation,
                         confirmButton = {
                             TextButton(
                                 onClick = {
                                     scope.launchUI {
-                                        model.removeMangaBySourceId()
+                                        model.removeMangaBySourceId(keepReadManga)
                                         model.clearSelection()
                                         model.hideConfirmation()
                                         context.toast(MR.strings.clear_database_completed)
@@ -90,7 +95,20 @@ class ClearDatabaseScreen : Screen() {
                             }
                         },
                         text = {
-                            Text(text = stringResource(MR.strings.clear_database_confirmation))
+                            Column {
+                                Text(
+                                    text = if (keepReadManga) {
+                                        stringResource(MR.strings.are_you_sure)
+                                    } else {
+                                        stringResource(MR.strings.clear_database_confirmation)
+                                    }
+                                )
+                                LabeledCheckbox(
+                                    label = stringResource(MR.strings.clear_db_exclude_read),
+                                    checked = keepReadManga,
+                                    onCheckedChange = { keepReadManga = it },
+                                )
+                            }
                         },
                     )
                 }
@@ -203,9 +221,13 @@ private class ClearDatabaseScreenModel : StateScreenModel<ClearDatabaseScreenMod
         }
     }
 
-    suspend fun removeMangaBySourceId() = withNonCancellableContext {
+    suspend fun removeMangaBySourceId(keepReadManga: Boolean) = withNonCancellableContext {
         val state = state.value as? State.Ready ?: return@withNonCancellableContext
-        database.mangasQueries.deleteMangasNotInLibraryBySourceIds(state.selection)
+        if (keepReadManga) {
+            database.mangasQueries.deleteMangasNotInLibraryAndNotReadBySourceIds(state.selection)
+        } else {
+            database.mangasQueries.deleteMangasNotInLibraryBySourceIds(state.selection)
+        }
         database.historyQueries.removeResettedHistory()
     }
 
