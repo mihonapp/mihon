@@ -101,7 +101,7 @@ class ClearDatabaseScreen : Screen() {
                                         stringResource(MR.strings.are_you_sure)
                                     } else {
                                         stringResource(MR.strings.clear_database_confirmation)
-                                    }
+                                    },
                                 )
                                 LabeledCheckbox(
                                     label = stringResource(MR.strings.clear_db_exclude_read),
