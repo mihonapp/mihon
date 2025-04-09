@@ -318,9 +318,10 @@ open class ReaderPageImageView @JvmOverloads constructor(
                             setImage(ImageSource.bitmap(image.bitmap))
                             isVisible = true
                         },
-                        onError = {
-                            // TODO: get actual error from result.throwable
-                            onImageLoadError(error = null)
+                    )
+                    .listener(
+                        onError = { _, result ->
+                            onImageLoadError(result.throwable)
                         },
                     )
                     .size(ViewSizeResolver(this@ReaderPageImageView))
@@ -396,9 +397,10 @@ open class ReaderPageImageView @JvmOverloads constructor(
                     isVisible = true
                     this@ReaderPageImageView.onImageLoaded()
                 },
-                onError = {
-                    // TODO: get actual error from result.throwable
-                    this@ReaderPageImageView.onImageLoadError(error = null)
+            )
+            .listener(
+                onError = { _, result ->
+                    onImageLoadError(result.throwable)
                 },
             )
             .crossfade(false)
