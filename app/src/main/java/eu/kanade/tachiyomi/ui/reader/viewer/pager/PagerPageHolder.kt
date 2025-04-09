@@ -21,6 +21,7 @@ import kotlinx.coroutines.supervisorScope
 import logcat.LogPriority
 import okio.Buffer
 import okio.BufferedSource
+import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.lang.withUIContext
@@ -291,8 +292,8 @@ class PagerPageHolder(
             }
         }
 
-        errorLayout?.errorMessage?.text =
-            with(context) { error?.formattedMessage } ?: MR.strings.decode_image_error.getString(context)
+        errorLayout?.errorMessage?.text = with(context) { error?.formattedMessage }
+            ?: context.stringResource(MR.strings.decode_image_error)
 
         errorLayout?.root?.isVisible = true
         return errorLayout!!

@@ -26,6 +26,7 @@ open class Page(
     var status: State
         get() = _statusFlow.value
         set(value) {
+            _error.value = null
             _statusFlow.value = value
         }
 

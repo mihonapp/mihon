@@ -89,7 +89,6 @@ internal class HttpPageLoader(
 
         // Automatically retry failed pages when subscribed to this page
         if (page.status == Page.State.ERROR) {
-            page.error = null
             page.status = Page.State.QUEUE
         }
 
@@ -115,7 +114,6 @@ internal class HttpPageLoader(
      */
     override fun retryPage(page: ReaderPage) {
         if (page.status == Page.State.ERROR) {
-            page.error = null
             page.status = Page.State.QUEUE
         }
         queue.offer(PriorityPage(page, 2))
@@ -187,10 +185,10 @@ internal class HttpPageLoader(
             page.status = Page.State.READY
         } catch (e: Throwable) {
             page.status = Page.State.ERROR
+            page.error = e
             if (e is CancellationException) {
                 throw e
             }
-            page.error = e
         }
     }
 }
