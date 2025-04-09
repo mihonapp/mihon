@@ -7,14 +7,11 @@ import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.data.backup.models.BackupCover
 import eu.kanade.tachiyomi.data.backup.models.BackupCovers
 import eu.kanade.tachiyomi.data.cache.CoverCache
-import eu.kanade.tachiyomi.util.storage.DiskUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import mihon.core.archive.ZipWriter
-import tachiyomi.core.common.storage.extension
-import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.domain.manga.interactor.GetFavorites
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
