@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.data.export
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.data.backup.models.BackupCover
 import eu.kanade.tachiyomi.data.backup.models.BackupCovers
@@ -39,7 +38,7 @@ object CustomCoverExporter {
                         val file = customCovers.find { it.name == expectedFileName }
 
                         if (file?.exists() == true) {
-                            BackupCover(manga.id.toString(), manga.url, manga.source)
+                            BackupCover(expectedFileName, manga.url, manga.source)
                         } else {
                             null
                         }
@@ -59,7 +58,6 @@ object CustomCoverExporter {
 
                         if (file?.exists() == true) {
                             val coverUniFile = UniFile.fromFile(file)!!
-                            coverUniFile.renameTo("${manga.id}.jpg")
                             zipWriter.write(coverUniFile)
                         }
                     }
