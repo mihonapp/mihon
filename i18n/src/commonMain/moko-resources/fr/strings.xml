@@ -461,6 +461,7 @@
     <string name="pref_show_navigation_mode">Afficher les zones tactiles (superposition)</string>
     <string name="exclude">Exclure : %s</string>
     <string name="include">Inclure : %s</string>
+    <string name="pref_behavior">Comportement</string>
     <string name="none">Aucun(e)</string>
     <string name="action_sort_chapter_fetch_date">Date de récupération du chapitre</string>
     <string name="pref_library_update_categories_details">Les entrées dans les catégories exclues ne seront pas mises à jour même si elles sont aussi dans les catégories inclues.</string>
@@ -836,4 +837,10 @@
     <string name="invalid_backup_file_unknown">Le fichier de sauvegarde est corrompu</string>
     <string name="remove_private_extension_message">Voulez-vous vraiment retirer l\'extension \"%s\" ?</string>
     <string name="pref_hardware_bitmap_threshold">Seuil de bitmap matériel personnalisé</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Marque le chapitre comme lu</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">Après voir lu le chapitre</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">Après avoir acquis le suivant</string>
+    <string name="export">Export</string>
+    <string name="library_list">Liste des librairies</string>
+    <string name="library_exported">Librairies exportées</string>
 </resources>
