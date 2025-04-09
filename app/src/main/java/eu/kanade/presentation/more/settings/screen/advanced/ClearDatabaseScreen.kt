@@ -53,6 +53,7 @@ import tachiyomi.domain.source.model.SourceWithCount
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LazyColumnWithAction
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
@@ -80,14 +81,19 @@ class ClearDatabaseScreen : Screen() {
                             Text(text = stringResource(MR.strings.are_you_sure))
                         },
                         text = {
-                            Column {
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+                            ) {
                                 Text(text = stringResource(MR.strings.clear_database_text))
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
-                                    Text(text = stringResource(MR.strings.clear_db_exclude_read))
+                                    Text(
+                                        text = stringResource(MR.strings.clear_db_exclude_read),
+                                        modifier = Modifier.weight(1f),
+                                    )
                                     Switch(
                                         checked = keepReadManga,
                                         onCheckedChange = { keepReadManga = it },
@@ -235,7 +241,7 @@ private class ClearDatabaseScreenModel : StateScreenModel<ClearDatabaseScreenMod
 
     suspend fun removeMangaBySourceId(keepReadManga: Boolean) = withNonCancellableContext {
         val state = state.value as? State.Ready ?: return@withNonCancellableContext
-        database.mangasQueries.deleteMangasNotInLibraryAndOptionallyNotReadBySourceIds(state.selection, keepReadManga)
+        database.mangasQueries.deleteMangasNotInLibraryBySourceIds(state.selection, keepReadManga)
         database.historyQueries.removeResettedHistory()
     }
 

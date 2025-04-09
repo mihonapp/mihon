@@ -167,7 +167,7 @@ FROM mangas
 WHERE favorite = 0
 GROUP BY source;
 
-deleteMangasNotInLibraryAndOptionallyNotReadBySourceIds:
+deleteMangasNotInLibraryBySourceIds:
 DELETE FROM mangas
 WHERE favorite = 0
 AND source IN :sourceIds
