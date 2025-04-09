@@ -2,15 +2,19 @@ package eu.kanade.tachiyomi.data.export
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.data.backup.models.BackupCover
 import eu.kanade.tachiyomi.data.backup.models.BackupCovers
 import eu.kanade.tachiyomi.data.cache.CoverCache
+import eu.kanade.tachiyomi.util.storage.DiskUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import mihon.core.archive.ZipWriter
+import tachiyomi.core.common.storage.extension
+import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.domain.manga.interactor.GetFavorites
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -34,7 +38,7 @@ object CustomCoverExporter {
 
                 ZipWriter(context, outputFile).use { zipWriter ->
                     val mangaUrlMappings = mangas.mapNotNull { manga ->
-                        val expectedFileName = coverCache.getCustomCoverFilename(manga.id)
+                        val expectedFileName = CoverCache.getCustomCoverFilename(manga.id)
                         val file = customCovers.find { it.name == expectedFileName }
 
                         if (file?.exists() == true) {
@@ -53,7 +57,7 @@ object CustomCoverExporter {
                     protoFile.delete()
 
                     mangas.forEach { manga ->
-                        val expectedFileName = coverCache.getCustomCoverFilename(manga.id)
+                        val expectedFileName = CoverCache.getCustomCoverFilename(manga.id)
                         val file = customCovers.find { it.name == expectedFileName }
 
                         if (file?.exists() == true) {

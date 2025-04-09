@@ -21,6 +21,17 @@ class CoverCache(private val context: Context) {
     companion object {
         private const val COVERS_DIR = "covers"
         private const val CUSTOM_COVERS_DIR = "covers/custom"
+
+        /**
+         * Returns the expected filename of a custom cover.
+         * Does not mean that the file actually exists.
+         *
+         * @param mangaId the manga id.
+         * @return cover filename.
+         */
+        fun getCustomCoverFilename(mangaId: Long): String {
+            return DiskUtil.hashKeyForDisk(mangaId.toString())
+        }
     }
 
     /**
@@ -50,17 +61,6 @@ class CoverCache(private val context: Context) {
      */
     fun getCustomCoverFile(mangaId: Long?): File {
         return File(customCoverCacheDir, DiskUtil.hashKeyForDisk(mangaId.toString()))
-    }
-
-    /**
-     * Returns the expected filename of a custom cover.
-     * Does not mean that the file actually exists.
-     *
-     * @param mangaId the manga id.
-     * @return cover filename.
-     */
-    fun getCustomCoverFilename(mangaId: Long): String {
-        return DiskUtil.hashKeyForDisk(mangaId.toString())
     }
 
     /**
