@@ -23,14 +23,10 @@ import coil3.asDrawable
 import coil3.dispose
 import coil3.imageLoader
 import coil3.request.CachePolicy
-import coil3.request.ErrorResult
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import coil3.request.transitionFactory
 import coil3.size.Precision
 import coil3.size.ViewSizeResolver
-import coil3.target.Target
-import coil3.transition.Transition
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.EASE_IN_OUT_QUAD
