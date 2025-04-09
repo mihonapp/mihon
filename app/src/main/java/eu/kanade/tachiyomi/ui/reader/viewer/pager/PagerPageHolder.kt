@@ -258,9 +258,9 @@ class PagerPageHolder(
     /**
      * Called when an image fails to decode.
      */
-    override fun onImageLoadError() {
-        super.onImageLoadError()
-        setError(null)
+    override fun onImageLoadError(error: Throwable?) {
+        super.onImageLoadError(error)
+        setError(error)
     }
 
     /**

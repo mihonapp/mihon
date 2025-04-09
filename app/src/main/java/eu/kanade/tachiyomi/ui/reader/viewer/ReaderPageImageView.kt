@@ -23,10 +23,14 @@ import coil3.asDrawable
 import coil3.dispose
 import coil3.imageLoader
 import coil3.request.CachePolicy
+import coil3.request.ErrorResult
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import coil3.request.transitionFactory
 import coil3.size.Precision
 import coil3.size.ViewSizeResolver
+import coil3.target.Target
+import coil3.transition.Transition
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.EASE_IN_OUT_QUAD
@@ -69,7 +73,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
     private var config: Config? = null
 
     var onImageLoaded: (() -> Unit)? = null
-    var onImageLoadError: (() -> Unit)? = null
+    var onImageLoadError: ((Throwable?) -> Unit)? = null
     var onScaleChanged: ((newScale: Float) -> Unit)? = null
     var onViewClicked: (() -> Unit)? = null
 
@@ -85,8 +89,8 @@ open class ReaderPageImageView @JvmOverloads constructor(
     }
 
     @CallSuper
-    open fun onImageLoadError() {
-        onImageLoadError?.invoke()
+    open fun onImageLoadError(error: Throwable?) {
+        onImageLoadError?.invoke(error)
     }
 
     @CallSuper
@@ -114,7 +118,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                         }
 
                         override fun onImageLoadError(e: Exception) {
-                            onImageLoadError()
+                            onImageLoadError(e)
                         }
                     },
                 )
@@ -290,7 +294,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 }
 
                 override fun onImageLoadError(e: Exception) {
-                    this@ReaderPageImageView.onImageLoadError()
+                    this@ReaderPageImageView.onImageLoadError(e)
                 }
             },
         )
@@ -319,7 +323,8 @@ open class ReaderPageImageView @JvmOverloads constructor(
                             isVisible = true
                         },
                         onError = {
-                            onImageLoadError()
+                            // TODO: get actual error from result.throwable
+                            onImageLoadError(error = null)
                         },
                     )
                     .size(ViewSizeResolver(this@ReaderPageImageView))
@@ -396,7 +401,8 @@ open class ReaderPageImageView @JvmOverloads constructor(
                     this@ReaderPageImageView.onImageLoaded()
                 },
                 onError = {
-                    this@ReaderPageImageView.onImageLoadError()
+                    // TODO: get actual error from result.throwable
+                    this@ReaderPageImageView.onImageLoadError(error = null)
                 },
             )
             .crossfade(false)
