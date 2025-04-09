@@ -167,17 +167,21 @@ FROM mangas
 WHERE favorite = 0
 GROUP BY source;
 
-deleteMangasNotInLibraryBySourceIds:
-DELETE FROM mangas
-WHERE favorite = 0
-AND source IN :sourceIds;
-
-deleteMangasNotInLibraryAndNotReadBySourceIds:
+deleteMangasNotInLibraryAndOptionallyNotReadBySourceIds:
 DELETE FROM mangas
 WHERE favorite = 0
 AND source IN :sourceIds
-AND _id NOT IN (
-    SELECT manga_id FROM chapters WHERE read = 1 OR last_page_read != 0
+AND (
+    CASE
+        WHEN :keepReadManga
+            THEN _id NOT IN (
+                SELECT DISTINCT manga_id
+                FROM chapters
+                WHERE read = 1
+                OR last_page_read != 0
+            )
+        ELSE 1 -- True
+    END
 );
 
 insert:
