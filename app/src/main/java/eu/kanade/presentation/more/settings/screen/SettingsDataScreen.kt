@@ -273,6 +273,10 @@ object SettingsDataScreen : SearchableSettings {
                     stringResource(MR.strings.backup_info) + "\n\n" +
                         stringResource(MR.strings.last_auto_backup_info, relativeTimeSpanString(lastAutoBackup)),
                 ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = backupPreferences.showRestoringProgressBanner(),
+                    title = stringResource(MR.strings.pref_show_restoring_progress_banner),
+                ),
             ),
         )
     }
