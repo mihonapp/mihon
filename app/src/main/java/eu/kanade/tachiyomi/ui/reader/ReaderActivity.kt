@@ -833,11 +833,11 @@ class ReaderActivity : BaseActivity() {
             readerPreferences.readerTheme().changes()
                 .onEach { theme ->
                     binding.readerContainer.setBackgroundColor(
-                        when (theme) {
-                            0 -> Color.WHITE
-                            2 -> grayBackgroundColor
-                            3 -> automaticBackgroundColor()
-                            else -> Color.BLACK
+                        when (Pair(theme, readerPreferences.readerThemeSwitch().get())) {
+                            Pair(0,false) -> Color.WHITE
+                            Pair(2,false) -> grayBackgroundColor
+                            Pair(1,false) -> Color.BLACK
+                            else -> automaticBackgroundColor()
                         },
                     )
                 }

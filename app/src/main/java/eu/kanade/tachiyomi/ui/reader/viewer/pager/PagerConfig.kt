@@ -53,8 +53,13 @@ class PagerConfig(
             .register(
                 {
                     theme = it
-                    automaticBackground = it == 3
                 },
+                { imagePropertyChangedListener?.invoke() },
+            )
+
+        readerPreferences.readerThemeSwitch()
+            .register(
+                { automaticBackground = it },
                 { imagePropertyChangedListener?.invoke() },
             )
 
