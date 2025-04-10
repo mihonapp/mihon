@@ -1,5 +1,5 @@
 [versions]
-compose-bom = "2025.03.01"
+compose-bom = "2025.04.00"
 
 [libraries]
 activity = "androidx.activity:activity-compose:1.10.1"
