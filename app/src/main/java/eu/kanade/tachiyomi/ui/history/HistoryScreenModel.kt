@@ -222,7 +222,7 @@ class HistoryScreenModel(
         }
     }
 
-    fun showChangeCategoryDialog(manga: Manga) {
+    private fun showChangeCategoryDialog(manga: Manga) {
         screenModelScope.launch {
             val categories = getCategories()
             val selection = getMangaCategoryIds(manga)
