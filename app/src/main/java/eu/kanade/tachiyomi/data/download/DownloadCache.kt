@@ -6,6 +6,7 @@ import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.util.storage.size
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -188,6 +189,21 @@ class DownloadCache(
             }
         }
         return 0
+    }
+
+    /**
+     * Returns the total size of downloaded chapters for a manga.
+     *
+     * @param manga the manga to check.
+     */
+    fun getDownloadSize(manga: Manga): Long {
+        renewCache()
+
+        return rootDownloadsDir.sourceDirs[manga.source]?.mangaDirs?.get(
+            provider.getMangaDirName(
+                manga.title,
+            ),
+        )?.dir?.size() ?: 0L
     }
 
     /**
