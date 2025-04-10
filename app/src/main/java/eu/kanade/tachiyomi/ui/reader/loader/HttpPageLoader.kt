@@ -50,7 +50,7 @@ internal class HttpPageLoader(
                     emit(runInterruptible { queue.take() }.page)
                 }
             }
-                .filter { it.status == Page.State.QUEUE }
+                .filter { it.status == Page.State.Queue }
                 .collect(::internalLoadPage)
         }
     }
@@ -83,17 +83,17 @@ internal class HttpPageLoader(
         val imageUrl = page.imageUrl
 
         // Check if the image has been deleted
-        if (page.status == Page.State.READY && imageUrl != null && !chapterCache.isImageInCache(imageUrl)) {
-            page.status = Page.State.QUEUE
+        if (page.status == Page.State.Ready && imageUrl != null && !chapterCache.isImageInCache(imageUrl)) {
+            page.status = Page.State.Queue
         }
 
         // Automatically retry failed pages when subscribed to this page
-        if (page.status == Page.State.ERROR) {
-            page.status = Page.State.QUEUE
+        if (page.status is Page.State.Error) {
+            page.status = Page.State.Queue
         }
 
         val queuedPages = mutableListOf<PriorityPage>()
-        if (page.status == Page.State.QUEUE) {
+        if (page.status == Page.State.Queue) {
             queuedPages += PriorityPage(page, 1).also { queue.offer(it) }
         }
         queuedPages += preloadNextPages(page, preloadSize)
@@ -101,7 +101,7 @@ internal class HttpPageLoader(
         suspendCancellableCoroutine<Nothing> { continuation ->
             continuation.invokeOnCancellation {
                 queuedPages.forEach {
-                    if (it.page.status == Page.State.QUEUE) {
+                    if (it.page.status == Page.State.Queue) {
                         queue.remove(it)
                     }
                 }
@@ -113,8 +113,8 @@ internal class HttpPageLoader(
      * Retries a page. This method is only called from user interaction on the viewer.
      */
     override fun retryPage(page: ReaderPage) {
-        if (page.status == Page.State.ERROR) {
-            page.status = Page.State.QUEUE
+        if (page.status is Page.State.Error) {
+            page.status = Page.State.Queue
         }
         queue.offer(PriorityPage(page, 2))
     }
@@ -153,7 +153,7 @@ internal class HttpPageLoader(
         return pages
             .subList(pageIndex + 1, min(pageIndex + 1 + amount, pages.size))
             .mapNotNull {
-                if (it.status == Page.State.QUEUE) {
+                if (it.status == Page.State.Queue) {
                     PriorityPage(it, 0).apply { queue.offer(this) }
                 } else {
                     null
@@ -170,21 +170,21 @@ internal class HttpPageLoader(
     private suspend fun internalLoadPage(page: ReaderPage) {
         try {
             if (page.imageUrl.isNullOrEmpty()) {
-                page.status = Page.State.LOAD_PAGE
+                page.status = Page.State.LoadPage
                 page.imageUrl = source.getImageUrl(page)
             }
             val imageUrl = page.imageUrl!!
 
             if (!chapterCache.isImageInCache(imageUrl)) {
-                page.status = Page.State.DOWNLOAD_IMAGE
+                page.status = Page.State.DownloadImage
                 val imageResponse = source.getImage(page)
                 chapterCache.putImageToCache(imageUrl, imageResponse)
             }
 
             page.stream = { chapterCache.getImageFile(imageUrl).inputStream() }
-            page.status = Page.State.READY
+            page.status = Page.State.Ready
         } catch (e: Throwable) {
-            page.status = Page.State.ERROR
+            page.status = Page.State.Error(e)
             if (e is CancellationException) {
                 throw e
             }

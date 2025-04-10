@@ -537,7 +537,7 @@ class ReaderViewModel @JvmOverloads constructor(
         readerChapter.requestedPage = pageIndex
         chapterPageIndex = pageIndex
 
-        if (!incognitoMode && page.status != Page.State.ERROR) {
+        if (!incognitoMode && page.status is Page.State.Error) {
             readerChapter.chapter.last_page_read = pageIndex
 
             if (readerChapter.pages?.lastIndex == pageIndex) {
@@ -799,7 +799,7 @@ class ReaderViewModel @JvmOverloads constructor(
      */
     fun saveImage() {
         val page = (state.value.dialog as? Dialog.PageActions)?.page
-        if (page?.status != Page.State.READY) return
+        if (page?.status != Page.State.Ready) return
         val manga = manga ?: return
 
         val context = Injekt.get<Application>()
@@ -847,7 +847,7 @@ class ReaderViewModel @JvmOverloads constructor(
      */
     fun shareImage(copyToClipboard: Boolean) {
         val page = (state.value.dialog as? Dialog.PageActions)?.page
-        if (page?.status != Page.State.READY) return
+        if (page?.status != Page.State.Ready) return
         val manga = manga ?: return
 
         val context = Injekt.get<Application>()
@@ -877,7 +877,7 @@ class ReaderViewModel @JvmOverloads constructor(
      */
     fun setAsCover() {
         val page = (state.value.dialog as? Dialog.PageActions)?.page
-        if (page?.status != Page.State.READY) return
+        if (page?.status != Page.State.Ready) return
         val manga = manga ?: return
         val stream = page.stream ?: return
 
