@@ -1,5 +1,6 @@
 package eu.kanade.presentation.duplicates.components
 
+import android.graphics.drawable.Icon
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -65,6 +66,11 @@ import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 
+data class ManageDuplicateAction (
+    val icon: ImageVector,
+    val onClick: () -> Unit,
+)
+
 @Composable
 fun DuplicateMangaListItem(
     duplicate: MangaWithChapterCount,
@@ -72,12 +78,10 @@ fun DuplicateMangaListItem(
     onDismissRequest: () -> Unit,
     onLongClick: () -> Unit,
     onClick: () -> Unit,
-    onToggleFavoriteClicked: () -> Unit,
-    onHideDuplicateClicked: () -> Unit,
+    actions: List<ManageDuplicateAction> = emptyList(),
 ) {
     val source = getSource()
     val manga = duplicate.manga
-    val defaultActionButtonColor = MaterialTheme.colorScheme.onSurface.copy(alpha = DISABLED_ALPHA)
 
     Column(
         modifier = Modifier
@@ -187,25 +191,17 @@ fun DuplicateMangaListItem(
         }
 
         Row {
-            IconButton(
-                onClick = onToggleFavoriteClicked,
-                modifier = Modifier.weight(1f),
-            ) {
-                Icon(
-                    imageVector = if (manga.favorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                    tint = if (manga.favorite) MaterialTheme.colorScheme.primary else defaultActionButtonColor,
-                    contentDescription = null,
-                )
-            }
-            IconButton(
-                onClick = onHideDuplicateClicked,
-                modifier = Modifier.weight(1f),
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.HideSource,
-                    tint = MaterialTheme.colorScheme.secondary,
-                    contentDescription = null,
-                )
+            actions.forEach {
+                IconButton(
+                    onClick = it.onClick,
+                    modifier = Modifier.weight(1f),
+                ) {
+                    Icon(
+                        imageVector = it.icon,
+                        tint = MaterialTheme.colorScheme.primary,
+                        contentDescription = null,
+                    )
+                }
             }
         }
     }
@@ -239,7 +235,7 @@ private fun MangaDetailRow(
 }
 
 @Composable
-fun getMaximumMangaCardHeight(duplicates: List<MangaWithChapterCount>): Dp {
+fun getMaximumMangaCardHeight(duplicates: List<MangaWithChapterCount>, actions: Boolean = false): Dp {
     val density = LocalDensity.current
     val typography = MaterialTheme.typography
     val textMeasurer = rememberTextMeasurer()
@@ -264,6 +260,7 @@ fun getMaximumMangaCardHeight(duplicates: List<MangaWithChapterCount>): Dp {
         coverHeight,
         constraints,
         detailsConstraints,
+        actions,
     ) {
         duplicates.fastMaxOfOrNull {
             calculateMangaCardHeight(
@@ -276,6 +273,7 @@ fun getMaximumMangaCardHeight(duplicates: List<MangaWithChapterCount>): Dp {
                 coverHeight = coverHeight,
                 constraints = constraints,
                 detailsConstraints = detailsConstraints,
+                actions = actions,
             )
         }
             ?: 0.dp
@@ -292,6 +290,7 @@ private fun calculateMangaCardHeight(
     coverHeight: Float,
     constraints: Constraints,
     detailsConstraints: Constraints,
+    actions: Boolean,
 ): Dp {
     val titleHeight = textMeasurer.measureHeight(manga.title, typography.titleSmall, 2, constraints)
     val authorHeight = if (!manga.author.isNullOrBlank()) {
@@ -306,11 +305,12 @@ private fun calculateMangaCardHeight(
     }
     val statusHeight = textMeasurer.measureHeight("", typography.bodySmall, 2, detailsConstraints)
     val sourceHeight = textMeasurer.measureHeight("", typography.labelSmall, 1, constraints)
-    val buttonsHeight =
-        with(density) { tachiyomi.presentation.core.components.material.IconButtonTokens.StateLayerSize.toPx() }
+    val buttonsHeight = when (actions) {
+        true -> with(density) { tachiyomi.presentation.core.components.material.IconButtonTokens.StateLayerSize.toPx() }
+        false -> 0f
+    }
 
-    val totalHeight =
-        coverHeight + titleHeight + authorHeight + artistHeight + statusHeight + sourceHeight + buttonsHeight
+    val totalHeight = coverHeight + titleHeight + authorHeight + artistHeight + statusHeight + sourceHeight + buttonsHeight
     return with(density) { ((3 * smallPadding) + totalHeight + (4 * extraSmallPadding)).toDp() }
 }
 

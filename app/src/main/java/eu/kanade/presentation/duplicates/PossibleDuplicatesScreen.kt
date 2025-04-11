@@ -11,8 +11,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.HideSource
+import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
@@ -21,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.TabbedDialogPaddings
 import eu.kanade.presentation.duplicates.components.DuplicateMangaListItem
+import eu.kanade.presentation.duplicates.components.ManageDuplicateAction
 import eu.kanade.presentation.duplicates.components.getMaximumMangaCardHeight
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
@@ -54,7 +60,7 @@ fun PossibleDuplicatesContent(
         items(
             items = duplicatesMap.toList(),
         ) { duplicatePair ->
-            val height = getMaximumMangaCardHeight(duplicatePair.second + duplicatePair.first)
+            val height = getMaximumMangaCardHeight(duplicatePair.second + duplicatePair.first, actions = true)
 
             Row (modifier = Modifier.height(height)) {
                 Column (
@@ -66,8 +72,16 @@ fun PossibleDuplicatesContent(
                         onClick = { onOpenManga(duplicatePair.first.manga) },
                         onDismissRequest = onDismissRequest,
                         onLongClick = { onOpenManga(duplicatePair.first.manga) },
-                        onToggleFavoriteClicked = { onToggleFavoriteClicked(duplicatePair.first) },
-                        onHideDuplicateClicked = { onHideGroupClicked(duplicatePair.first, duplicatePair.second) },
+                        actions = listOf(
+                            ManageDuplicateAction(
+                                icon = Icons.Filled.Favorite,
+                                onClick = { onToggleFavoriteClicked(duplicatePair.first) },
+                            ),
+                            ManageDuplicateAction(
+                                icon = Icons.Outlined.VisibilityOff,
+                                onClick = { onHideGroupClicked(duplicatePair.first, duplicatePair.second) },
+                            ),
+                        ),
                     )
                 }
                 VerticalDivider()
@@ -84,8 +98,16 @@ fun PossibleDuplicatesContent(
                             onClick = { onOpenManga(duplicate.manga) },
                             onDismissRequest = onDismissRequest,
                             onLongClick = { onOpenManga(duplicate.manga) },
-                            onToggleFavoriteClicked = { onToggleFavoriteClicked(duplicate) },
-                            onHideDuplicateClicked = { onHideSingleClicked(duplicatePair.first, duplicate) },
+                            actions = listOf(
+                                ManageDuplicateAction(
+                                    icon = Icons.Filled.Favorite,
+                                    onClick = { onToggleFavoriteClicked(duplicate) },
+                                ),
+                                ManageDuplicateAction(
+                                    icon = Icons.Outlined.VisibilityOff,
+                                    onClick = { onHideSingleClicked(duplicatePair.first, duplicate) },
+                                ),
+                            ),
                         )
                     }
                 }

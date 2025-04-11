@@ -12,10 +12,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.domain.manga.interactor.AddHiddenDuplicate
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetHiddenDuplicates
 import tachiyomi.domain.manga.interactor.GetLibraryManga
+import tachiyomi.domain.manga.interactor.RemoveHiddenDuplicates
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.source.service.SourceManager
@@ -23,6 +25,7 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class HiddenDuplicatesScreenModel(
+    private val removeHiddenDuplicate: RemoveHiddenDuplicates = Injekt.get(),
     private val getHiddenDuplicates: GetHiddenDuplicates = Injekt.get(),
     private val getLibraryManga: GetLibraryManga = Injekt.get(),
 ) : StateScreenModel<HiddenDuplicatesScreenModel.State>(State()) {
@@ -57,12 +60,32 @@ class HiddenDuplicatesScreenModel(
         updateHiddenDuplicatesMap(key, newList)
     }
 
-    fun unhideSingleDuplicate(keyManga: MangaWithChapterCount, duplicateManga: MangaWithChapterCount) {
+    private fun removeList(key: MangaWithChapterCount) {
+        updateHiddenDuplicatesMap(key, null)
+    }
 
+    fun unhideSingleDuplicate(keyManga: MangaWithChapterCount, duplicateManga: MangaWithChapterCount) {
+        screenModelScope.launch {
+            removeHiddenDuplicate(keyManga.manga.id, duplicateManga.manga.id)
+            withUIContext {
+                removeSingleMangaFromList(keyManga, duplicateManga.manga.id)
+                removeSingleMangaFromList(duplicateManga, keyManga.manga.id)
+            }
+        }
     }
 
     fun unhideGroupDuplicate(keyManga: MangaWithChapterCount, duplicateManga: List<MangaWithChapterCount>) {
-
+        screenModelScope.launch {
+            duplicateManga.forEach {
+                removeHiddenDuplicate(keyManga.manga.id, it.manga.id)
+            }
+            withUIContext {
+                removeList(keyManga)
+                duplicateManga.forEach {
+                    removeSingleMangaFromList(it, keyManga.manga.id)
+                }
+            }
+        }
     }
 
     fun setDialog(dialog: Dialog?) {
