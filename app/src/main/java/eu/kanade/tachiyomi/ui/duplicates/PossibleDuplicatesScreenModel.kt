@@ -38,8 +38,10 @@ class PossibleDuplicatesScreenModel(
     private val snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) : StateScreenModel<PossibleDuplicatesScreenModel.State>(State()) {
 
-    private var _duplicatesMapState: MutableStateFlow<Map<MangaWithChapterCount, List<MangaWithChapterCount>>> = MutableStateFlow(mapOf())
-    val duplicatesMapState: StateFlow<Map<MangaWithChapterCount, List<MangaWithChapterCount>>> = _duplicatesMapState.asStateFlow()
+    private var _duplicatesMapState: MutableStateFlow<Map<MangaWithChapterCount, List<MangaWithChapterCount>>> =
+        MutableStateFlow(mapOf())
+    val duplicatesMapState: StateFlow<Map<MangaWithChapterCount, List<MangaWithChapterCount>>> =
+        _duplicatesMapState.asStateFlow()
 
     init {
         screenModelScope.launch {
@@ -55,7 +57,7 @@ class PossibleDuplicatesScreenModel(
 
     private fun updateDuplicatesMap(key: MangaWithChapterCount, value: List<MangaWithChapterCount>?) {
         val updatedMap = duplicatesMapState.value.toMutableMap()
-        if (value.isNullOrEmpty()){
+        if (value.isNullOrEmpty()) {
             updatedMap.remove(key)
         } else {
             updatedMap[key] = value

@@ -1,26 +1,19 @@
 package eu.kanade.tachiyomi.ui.duplicates
 
-import android.content.Context
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import eu.kanade.domain.manga.interactor.UpdateManga
-import eu.kanade.tachiyomi.data.download.DownloadManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import tachiyomi.core.common.util.lang.withUIContext
-import tachiyomi.domain.manga.interactor.AddHiddenDuplicate
-import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetHiddenDuplicates
 import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.manga.interactor.RemoveHiddenDuplicates
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
-import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -30,8 +23,10 @@ class HiddenDuplicatesScreenModel(
     private val getLibraryManga: GetLibraryManga = Injekt.get(),
 ) : StateScreenModel<HiddenDuplicatesScreenModel.State>(State()) {
 
-    private var _hiddenDuplicatesMapState: MutableStateFlow<Map<MangaWithChapterCount, List<MangaWithChapterCount>>> = MutableStateFlow(mapOf())
-    val hiddenDuplicatesMapState: StateFlow<Map<MangaWithChapterCount, List<MangaWithChapterCount>>> = _hiddenDuplicatesMapState.asStateFlow()
+    private var _hiddenDuplicatesMapState: MutableStateFlow<Map<MangaWithChapterCount, List<MangaWithChapterCount>>> =
+        MutableStateFlow(mapOf())
+    val hiddenDuplicatesMapState: StateFlow<Map<MangaWithChapterCount, List<MangaWithChapterCount>>> =
+        _hiddenDuplicatesMapState.asStateFlow()
 
     init {
         screenModelScope.launch {
@@ -47,7 +42,7 @@ class HiddenDuplicatesScreenModel(
 
     private fun updateHiddenDuplicatesMap(key: MangaWithChapterCount, value: List<MangaWithChapterCount>?) {
         val updatedMap = hiddenDuplicatesMapState.value.toMutableMap()
-        if (value.isNullOrEmpty()){
+        if (value.isNullOrEmpty()) {
             updatedMap.remove(key)
         } else {
             updatedMap[key] = value
