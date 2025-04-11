@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Immutable
-import androidx.compose.ui.util.fastDistinctBy
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.domain.manga.interactor.UpdateManga
@@ -39,24 +38,44 @@ class ManageDuplicatesScreenModel(
     private val snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) : StateScreenModel<ManageDuplicatesScreenModel.State>(State()) {
 
-    private var _duplicatesListState: MutableStateFlow<List<List<MangaWithChapterCount>>> = MutableStateFlow(listOf())
-    val duplicatesListState: StateFlow<List<List<MangaWithChapterCount>>> = _duplicatesListState.asStateFlow()
+    private var _duplicatesMapState: MutableStateFlow<Map<MangaWithChapterCount, List<MangaWithChapterCount>>> = MutableStateFlow(mapOf())
+    val duplicatesMapState: StateFlow<Map<MangaWithChapterCount, List<MangaWithChapterCount>>> = _duplicatesMapState.asStateFlow()
 
     init {
         screenModelScope.launch {
             val allLibraryManga = getLibraryManga.await()
             allLibraryManga.forEach { libraryManga ->
+                val keyManga = MangaWithChapterCount(libraryManga.manga, libraryManga.totalChapters)
                 val duplicates = getDuplicateLibraryManga(libraryManga.manga)
-                if (duplicates.isNotEmpty()) {
-                    val duplicateList = (
-                        duplicates +
-                            MangaWithChapterCount(libraryManga.manga, libraryManga.totalChapters)
-                        ).sortedBy { it.manga.id }
-                    val updatedList = duplicatesListState.value.toMutableList() + listOf(duplicateList)
-                    _duplicatesListState.value = updatedList.fastDistinctBy { list -> list.map { it.manga.id } }
-                }
+                updateDuplicatesMap(keyManga, duplicates)
             }
             mutableState.update { it.copy(loading = false) }
+        }
+    }
+
+    private fun updateDuplicatesMap(key: MangaWithChapterCount, value: List<MangaWithChapterCount>?) {
+        val updatedMap = duplicatesMapState.value.toMutableMap()
+        if (value.isNullOrEmpty()){
+            updatedMap.remove(key)
+        } else {
+            updatedMap[key] = value
+        }
+        _duplicatesMapState.value = updatedMap
+    }
+
+    private fun removeSingleMangaFromList(key: MangaWithChapterCount, mangaId: Long) {
+        val newList = duplicatesMapState.value[key]?.mapNotNull { it.takeIf { it.manga.id != mangaId } }
+        updateDuplicatesMap(key, newList)
+    }
+
+    private fun removeList(key: MangaWithChapterCount) {
+        updateDuplicatesMap(key, null)
+    }
+
+    private fun removeMangaFromMap(manga: MangaWithChapterCount) {
+        removeList(manga)
+        duplicatesMapState.value.forEach { (key, _) ->
+            removeSingleMangaFromList(key, manga.manga.id)
         }
     }
 
@@ -64,7 +83,8 @@ class ManageDuplicatesScreenModel(
         mutableState.update { it.copy(dialog = dialog) }
     }
 
-    fun removeFavorite(manga: Manga) {
+    fun removeFavorite(mangaItem: MangaWithChapterCount) {
+        val manga = mangaItem.manga
         screenModelScope.launch {
             if (downloadManager.getDownloadCount(manga) == 0) return@launch
             val result = snackbarHostState.showSnackbar(
@@ -83,29 +103,31 @@ class ManageDuplicatesScreenModel(
                     updateManga.awaitUpdateCoverLastModified(manga.id)
                 }
                 withUIContext {
-                    val updatedList = duplicatesListState.value.mapNotNull { lists ->
-                        lists.mapNotNull { it.takeIf { it.manga.id != manga.id } }.takeIf { it.count() > 1 }
-                    }.fastDistinctBy { list -> list.map { it.manga.id } }
-                    _duplicatesListState.value = updatedList
+                    removeMangaFromMap(mangaItem)
                 }
             }
         }
     }
 
-    fun hideDuplicate(id: Long, othersIDs: List<Long>) {
-        screenModelScope.launchIO {
-            othersIDs.forEach { otherId ->
-                addHiddenDuplicate(id, otherId)
-                withUIContext {
-                    val updatedList = duplicatesListState.value.mapNotNull { list ->
-                        when (list.map { it.manga.id }.containsAll(othersIDs + id)) {
-                            true -> {
-                                list.mapNotNull { it.takeIf { it.manga.id != id } }.takeIf { it.count() > 1 }
-                            }
-                            false -> list
-                        }
-                    }
-                    _duplicatesListState.value = updatedList
+    fun hideSingleDuplicate(keyManga: MangaWithChapterCount, duplicateManga: MangaWithChapterCount) {
+        screenModelScope.launch {
+            addHiddenDuplicate(keyManga.manga.id, duplicateManga.manga.id)
+            withUIContext {
+                removeSingleMangaFromList(keyManga, duplicateManga.manga.id)
+                removeSingleMangaFromList(duplicateManga, keyManga.manga.id)
+            }
+        }
+    }
+
+    fun hideGroupDuplicate(keyManga: MangaWithChapterCount, duplicateManga: List<MangaWithChapterCount>) {
+        screenModelScope.launch {
+            duplicateManga.forEach {
+                addHiddenDuplicate(keyManga.manga.id, it.manga.id)
+            }
+            withUIContext {
+                removeList(keyManga)
+                duplicateManga.forEach {
+                    removeSingleMangaFromList(it, keyManga.manga.id)
                 }
             }
         }

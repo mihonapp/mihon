@@ -1,6 +1,7 @@
 package eu.kanade.presentation.duplicates
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -30,13 +32,14 @@ import uy.kohesive.injekt.api.get
 
 @Composable
 fun ManageDuplicatesContent(
-    duplicatesLists: List<List<MangaWithChapterCount>>,
+    duplicatesLists: Map<MangaWithChapterCount, List<MangaWithChapterCount>>,
     paddingValues: PaddingValues,
     lazyListState: LazyListState,
     onOpenManga: (manga: Manga) -> Unit,
     onDismissRequest: () -> Unit,
-    onToggleFavoriteClicked: (manga: Manga) -> Unit,
-    onHideDuplicateClicked: (Long, List<Long>) -> Unit,
+    onToggleFavoriteClicked: (manga: MangaWithChapterCount) -> Unit,
+    onHideSingleClicked: (MangaWithChapterCount, MangaWithChapterCount) -> Unit,
+    onHideGroupClicked: (MangaWithChapterCount, List<MangaWithChapterCount>) -> Unit,
     loading: Boolean,
 ) {
     val sourceManager = remember { Injekt.get<SourceManager>() }
@@ -49,34 +52,42 @@ fun ManageDuplicatesContent(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
     ) {
         items(
-            items = duplicatesLists,
-        ) { duplicateList ->
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
-                modifier = Modifier
-                    .height(getMaximumMangaCardHeight(duplicateList)),
-                contentPadding = horizontalPadding,
-            ) {
-                items(
-                    items = duplicateList,
-                ) { duplicate ->
+            items = duplicatesLists.toList(),
+        ) { duplicatePair ->
+            val height = getMaximumMangaCardHeight(duplicatePair.second + duplicatePair.first)
+
+            Row (modifier = Modifier.height(height)) {
+                Column (
+                    modifier = Modifier.padding(horizontal = MaterialTheme.padding.small)
+                ) {
                     DuplicateMangaListItem(
-                        duplicate = duplicate,
-                        getSource = { sourceManager.getOrStub(duplicate.manga.source) },
-                        onClick = { onOpenManga(duplicate.manga) },
+                        duplicate = duplicatePair.first,
+                        getSource = { sourceManager.getOrStub(duplicatePair.first.manga.source) },
+                        onClick = { onOpenManga(duplicatePair.first.manga) },
                         onDismissRequest = onDismissRequest,
-                        onLongClick = { onOpenManga(duplicate.manga) },
-                        onToggleFavoriteClicked = { onToggleFavoriteClicked(duplicate.manga) },
-                        onHideDuplicateClicked = {
-                            val otherIds = duplicateList.mapNotNull {
-                                it.manga.id.takeIf { id ->
-                                    id !=
-                                        duplicate.manga.id
-                                }
-                            }
-                            onHideDuplicateClicked(duplicate.manga.id, otherIds)
-                        },
+                        onLongClick = { onOpenManga(duplicatePair.first.manga) },
+                        onToggleFavoriteClicked = { onToggleFavoriteClicked(duplicatePair.first) },
+                        onHideDuplicateClicked = { onHideGroupClicked(duplicatePair.first, duplicatePair.second) },
                     )
+                }
+                VerticalDivider()
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+                    contentPadding = horizontalPadding,
+                ) {
+                    items(
+                        items = duplicatePair.second,
+                    ) { duplicate ->
+                        DuplicateMangaListItem(
+                            duplicate = duplicate,
+                            getSource = { sourceManager.getOrStub(duplicate.manga.source) },
+                            onClick = { onOpenManga(duplicate.manga) },
+                            onDismissRequest = onDismissRequest,
+                            onLongClick = { onOpenManga(duplicate.manga) },
+                            onToggleFavoriteClicked = { onToggleFavoriteClicked(duplicate) },
+                            onHideDuplicateClicked = { onHideSingleClicked(duplicatePair.first, duplicate) },
+                        )
+                    }
                 }
             }
             HorizontalDivider(

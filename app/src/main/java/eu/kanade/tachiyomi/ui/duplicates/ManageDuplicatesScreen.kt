@@ -1,12 +1,10 @@
 package eu.kanade.tachiyomi.ui.duplicates
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalHapticFeedback
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -29,8 +27,7 @@ class ManageDuplicatesScreen : Screen() {
         val onDismissRequest = { screenModel.setDialog(null) }
         val lazyListState = rememberLazyListState()
         val state by screenModel.state.collectAsState()
-        val haptic = LocalHapticFeedback.current
-        val duplicatesListState by screenModel.duplicatesListState.collectAsState()
+        val duplicatesMapState by screenModel.duplicatesMapState.collectAsState()
 
         Scaffold(
             topBar = { scrollBehavior ->
@@ -41,23 +38,22 @@ class ManageDuplicatesScreen : Screen() {
                 )
             },
         ) { paddingValues ->
-            if (!state.loading && duplicatesListState.isEmpty()) {
+            if (!state.loading && duplicatesMapState.isEmpty()) {
                 EmptyScreen(MR.strings.information_empty_manage_duplicates, happyFace = true)
                 return@Scaffold
             }
 
-            Column {
-                ManageDuplicatesContent(
-                    duplicatesLists = duplicatesListState,
-                    paddingValues = paddingValues,
-                    lazyListState = lazyListState,
-                    onOpenManga = { navigator.push(MangaScreen(it.id)) },
-                    onDismissRequest = onDismissRequest,
-                    onToggleFavoriteClicked = screenModel::removeFavorite,
-                    onHideDuplicateClicked = screenModel::hideDuplicate,
-                    loading = state.loading,
-                )
-            }
+            ManageDuplicatesContent(
+                duplicatesLists = duplicatesMapState,
+                paddingValues = paddingValues,
+                lazyListState = lazyListState,
+                onOpenManga = { navigator.push(MangaScreen(it.id)) },
+                onDismissRequest = onDismissRequest,
+                onToggleFavoriteClicked = screenModel::removeFavorite,
+                onHideSingleClicked = screenModel::hideSingleDuplicate,
+                onHideGroupClicked = screenModel::hideGroupDuplicate,
+                loading = state.loading,
+            )
         }
     }
 }
