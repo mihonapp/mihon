@@ -31,8 +31,8 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 @Composable
-fun ManageDuplicatesContent(
-    duplicatesLists: Map<MangaWithChapterCount, List<MangaWithChapterCount>>,
+fun PossibleDuplicatesContent(
+    duplicatesMap: Map<MangaWithChapterCount, List<MangaWithChapterCount>>,
     paddingValues: PaddingValues,
     lazyListState: LazyListState,
     onOpenManga: (manga: Manga) -> Unit,
@@ -52,7 +52,7 @@ fun ManageDuplicatesContent(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
     ) {
         items(
-            items = duplicatesLists.toList(),
+            items = duplicatesMap.toList(),
         ) { duplicatePair ->
             val height = getMaximumMangaCardHeight(duplicatePair.second + duplicatePair.first)
 

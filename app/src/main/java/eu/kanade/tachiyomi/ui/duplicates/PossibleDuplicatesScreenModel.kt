@@ -27,7 +27,7 @@ import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class ManageDuplicatesScreenModel(
+class PossibleDuplicatesScreenModel(
     private val context: Context,
     private val getDuplicateLibraryManga: GetDuplicateLibraryManga = Injekt.get(),
     private val addHiddenDuplicate: AddHiddenDuplicate = Injekt.get(),
@@ -36,7 +36,7 @@ class ManageDuplicatesScreenModel(
     private val updateManga: UpdateManga = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
     private val snackbarHostState: SnackbarHostState = SnackbarHostState(),
-) : StateScreenModel<ManageDuplicatesScreenModel.State>(State()) {
+) : StateScreenModel<PossibleDuplicatesScreenModel.State>(State()) {
 
     private var _duplicatesMapState: MutableStateFlow<Map<MangaWithChapterCount, List<MangaWithChapterCount>>> = MutableStateFlow(mapOf())
     val duplicatesMapState: StateFlow<Map<MangaWithChapterCount, List<MangaWithChapterCount>>> = _duplicatesMapState.asStateFlow()
