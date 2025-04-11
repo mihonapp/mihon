@@ -371,7 +371,7 @@
     <string name="backup_restore_missing_sources">Eksik kaynaklar:</string>
     <string name="invalid_backup_file_missing_manga">Yedek, bir kitaplık girdisi içermiyor.</string>
     <string name="invalid_backup_file">Geçersiz yedekleme dosyası:</string>
-    <string name="pref_library_update_refresh_metadata_summary">Kitaplığı güncellerken yeni kapağı ve ayrıntıları kontrol et</string>
+    <string name="pref_library_update_refresh_metadata_summary">Kitaplığı güncellerken yeni kapak ve ayrıntılar için kontrol et</string>
     <string name="pref_library_update_refresh_metadata">Üst veriyi otomatik yenile</string>
     <string name="action_migrate">Taşı</string>
     <string name="action_display_comfortable_grid">Rahat ızgara</string>
@@ -516,7 +516,7 @@
     <string name="pref_low">Düşük</string>
     <string name="pref_high">Yüksek</string>
     <string name="pref_highest">En yüksek</string>
-    <string name="pref_hide_threshold">Kaydırmada menüyü gizleme hassasiyeti</string>
+    <string name="pref_hide_threshold">Kaydırmada menüyü gizleme duyarlılığı</string>
     <string name="pref_inverted_colors">Ters Çevrilmiş</string>
     <string name="relative_time_today">Bugün</string>
     <string name="theme_tealturquoise">Ördekbaşı &amp; Turkuaz</string>
@@ -678,9 +678,6 @@
     <string name="copied_to_clipboard_plain">Panoya kopyalandı</string>
     <string name="enhanced_services_not_installed">Kullanılabilir ancak kaynak yüklü değil: %s</string>
     <string name="pref_skip_dupe_chapters">Yinelenen bölümleri atla</string>
-    <string name="confirm_add_duplicate_manga">Kitaplığınızda aynı ada sahip bir girdiniz var.
-\n
-\nYine de devam etmek istiyor musunuz?</string>
     <string name="track_error">%1$s hatası: %2$s</string>
     <string name="information_required_plain">*gerekli</string>
     <string name="pref_hide_in_library_items">Zaten kitaplıkta bulunan girdileri gizle</string>
@@ -805,7 +802,6 @@
     <string name="invalid_backup_file_unknown">Yedek dosyası bozuk</string>
     <string name="manga_interval_expected_update_null">Bu manga ya tamamlanmış ya da tahmin edilen yayımlanma tarihi yok.</string>
     <string name="action_add_anyway">Yine de ekle</string>
-    <string name="action_migrate_duplicate">Zaten olan girdiyi taşı</string>
     <string name="action_replace_repo">Değiştir</string>
     <string name="action_replace_repo_title">İmzalama Anahtarı Parmak İzi Zaten Var</string>
     <string name="extensionRepo_settings">Eklenti depoları</string>
@@ -821,7 +817,7 @@
     <string name="onboarding_permission_crashlytics">Çökme kayıtlarını gönder</string>
     <string name="pref_security">Güvenlik</string>
     <string name="onboarding_permission_crashlytics_description">Geliştiricilere anonimleştirilmiş çökme kayıtlarını gönder.</string>
-    <string name="firebase_summary">Çökme kayıtlarını ve kullanım istatistiklerini göndermek sorunları tanımlamamıza ve düzeltmemize imkan verir, performansı iyileştirmemizi sağlar ve gelecek güncellemeleri ihtiyaçlarınızla uyumlu yapmamıza olanak tanır</string>
+    <string name="firebase_summary">Çökme kayıtlarını ve kullanım istatistiklerini göndermek sorunları tanımlamamıza ve düzeltmemize imkân verir, performansı iyileştirmemizi sağlar ve gelecek güncellemeleri ihtiyaçlarınızla uyumlu yapmamıza olanak tanır</string>
     <string name="onboarding_permission_analytics">Kullanım istatistiklerine izin ver</string>
     <string name="onboarding_permission_analytics_description">Uygulama özelliklerini geliştirmek için anonimleştirilmiş kullanım verileri gönder.</string>
     <string name="pref_firebase">Kullanım İstatistikleri ve Çökme Kayıtları</string>
@@ -853,4 +849,9 @@
     <string name="pref_behavior">Davranış</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">Bölümü okuduktan sonra</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">Yeni bir bölüm geldiğinde</string>
+    <string name="action_edit_notes">Notları düzenle</string>
+    <string name="action_notes">Notlar</string>
+    <string name="notes_placeholder">…olduğu kısmı beğendim.</string>
+    <string name="possible_duplicates_title">Muhtemel yinelenenler</string>
+    <string name="possible_duplicates_summary">Kitaplığınızda benzer isimli girdiler var.\n\nTaşımak için bir girdi seçin veya yine de ekleyin.</string>
 </resources>

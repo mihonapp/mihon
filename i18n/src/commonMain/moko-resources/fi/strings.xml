@@ -624,9 +624,6 @@
     <string name="crash_screen_description">%s kohtasi odottamattoman virheen. Ehdotamme että jaat kaatumisen lokitiedot tukikanavallemme Discordissa.</string>
     <string name="delete_downloaded">Poista ladatut</string>
     <string name="create_backup_file_error">Varmuuskopiotiedoston luonti epäonnistui</string>
-    <string name="confirm_add_duplicate_manga">Kirjastossasi on jo samanniminen merkintä.
-\n
-\nHaluatko silti jatkaa?</string>
     <string name="crash_screen_title">Hupsista!</string>
     <string name="copied_to_clipboard_plain">Kopioitu leikepöydälle</string>
     <string name="crash_screen_restart_application">Uudelleenkäynnistä applikaatio</string>

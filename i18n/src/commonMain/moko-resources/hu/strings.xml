@@ -646,9 +646,6 @@
     <string name="action_copy_to_clipboard">Másolás a vágólapra</string>
     <string name="action_update_category">Kategória frissítése</string>
     <string name="copied_to_clipboard_plain">Vágólapra másolva</string>
-    <string name="confirm_add_duplicate_manga">Van már egy ilyen nevű elem a könyvtáradban.
-\n
-\nBiztos folytatni akarod?</string>
     <string name="track_remove_start_date_conf_text">Ez eltávolítja az eddig kiválasztott kezdeti dátumot a(z) %s szolgáltatásból</string>
     <string name="fdroid_warning">F-Droid csomagok nem hivatalosan támogatottak.
 \nKattincs további információért.</string>
@@ -791,7 +788,6 @@
     <string name="manga_interval_expected_update_soon">Hamarosan</string>
     <string name="manga_interval_custom_amount">Egyedi frissítési időköz:</string>
     <string name="action_add_anyway">Hozzáadás mindenképp</string>
-    <string name="action_migrate_duplicate">Meglévő elem áttelepítése</string>
     <string name="pref_display_profile">Egyedi megjelenítési profil</string>
     <string name="action_replace_repo">Lecserélés</string>
     <string name="action_replace_repo_title">Aláíró kulcs ujjlenyomat már létezik</string>

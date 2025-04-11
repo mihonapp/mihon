@@ -674,7 +674,6 @@
     <string name="copied_to_clipboard_plain">已複製到剪貼簿</string>
     <string name="pref_skip_dupe_chapters">略過重複的章節</string>
     <string name="enhanced_services_not_installed">可供使用但來源尚未安裝：%s</string>
-    <string name="confirm_add_duplicate_manga">書櫃中已有同名作品\n\n仍要新增嗎？</string>
     <string name="track_error">%1$s 發生錯誤：%2$s</string>
     <string name="information_required_plain">*必填</string>
     <string name="pref_hide_in_library_items">隱藏已在書櫃的作品</string>
@@ -685,9 +684,9 @@
     <string name="pref_page_rotate">旋轉寬頁以符合螢幕</string>
     <string name="pref_page_rotate_invert">調換旋轉寬頁方向</string>
     <string name="pref_debug_info">偵錯資訊</string>
-    <string name="pref_chapter_swipe_start">向左滑動</string>
+    <string name="pref_chapter_swipe_start">向左滑動章節</string>
     <string name="pref_double_tap_zoom">輕觸兩下以縮放</string>
-    <string name="pref_chapter_swipe_end">向右滑動</string>
+    <string name="pref_chapter_swipe_end">向右滑動章節</string>
     <string name="action_ok">確定</string>
     <string name="delete_downloaded">刪除舊有下載章節</string>
     <string name="track_delete_title">移除「%s」歷程平臺？</string>
@@ -782,7 +781,6 @@
     <string name="pref_webtoon_disable_zoom_out">停用縮小</string>
     <string name="pref_display_profile">自訂顯示設定檔</string>
     <string name="action_add_anyway">仍要新增</string>
-    <string name="action_migrate_duplicate">遷移現有作品</string>
     <string name="action_replace_repo">取代</string>
     <string name="action_replace_repo_title">已有相同的簽署金鑰指紋</string>
     <string name="action_replace_repo_message">「%1$s」儲存庫的簽署金鑰指紋與「%2$s」相同\n若此為預期現象，則「%2$s」將被取代，否則請聯絡該儲存庫的維護者</string>
@@ -838,4 +836,13 @@
     <string name="artist">畫家</string>
     <string name="pref_always_decode_long_strip_with_ssiv_2">對長條閱讀模式使用舊版解碼器</string>
     <string name="pref_mark_duplicate_read_chapter_read">將重複的已讀章節標記為已讀</string>
+    <string name="action_display_unread_badge">未讀章節</string>
+    <string name="pref_behavior">操作</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">閱讀完一章後</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">獲取新章節後</string>
+    <string name="action_notes">新增筆記</string>
+    <string name="action_edit_notes">編輯筆記</string>
+    <string name="notes_placeholder">我喜歡這段⋯</string>
+    <string name="possible_duplicates_summary">您的書櫃有相似名稱的條目\n\n請選擇一個條目進行遷移或仍然新增</string>
+    <string name="possible_duplicates_title">可能的重複條目</string>
 </resources>

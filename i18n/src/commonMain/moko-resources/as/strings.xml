@@ -11,7 +11,6 @@
     <string name="unlock_app_title">%s আনলক কৰক</string>
     <string name="action_webview_forward">সামনে</string>
     <string name="action_webview_refresh">পুনৰপ্ৰাপ্তি কৰক</string>
-    <string name="action_migrate_duplicate">বিদ্যমান প্ৰৱিষ্টি স্থানান্তৰ কৰক</string>
     <string name="onboarding_action_next">পৰৱৰ্তী</string>
     <string name="pref_category_general">সাধাৰণ</string>
     <string name="pref_category_appearance">দেখাত</string>
@@ -609,9 +608,6 @@
     <string name="remove_from_library">লাইব্ৰেৰী পৰা মচি দিয়ক</string>
     <string name="manga_removed_library">লাইব্ৰেৰী পৰা মচি দিয়া হৈছে</string>
     <string name="unknown_title">অজানা শিৰোনাম</string>
-    <string name="confirm_add_duplicate_manga">আপোনাৰ লাইব্ৰেৰীত এই নামৰ এটা প্ৰৱিষ্ট আছে।
-\n
-\nআপুনি এতিয়াও আগবঢ়াব খুজিছে নেকি?</string>
     <string name="manga_info_expand">অধিক</string>
     <string name="manga_info_collapse">সৰু</string>
     <string name="delete_downloads_for_manga">ডাউনলোড কৰা অধ্যায়সমূহ মচি দিব নেকি?</string>

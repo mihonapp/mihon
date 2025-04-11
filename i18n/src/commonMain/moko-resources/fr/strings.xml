@@ -677,9 +677,6 @@
     <string name="pref_library_update_show_tab_badge">Afficher le nombre de chapitres non lus sur l\'icône des mises à jour</string>
     <string name="copied_to_clipboard_plain">Copié dans le presse-papier</string>
     <string name="pref_skip_dupe_chapters">Ignorer les chapitres en double</string>
-    <string name="confirm_add_duplicate_manga">Un titre de votre bibliothèque porte le même nom.
-\n
-\nVoulez-vous vraiment continuer ?</string>
     <string name="track_error">%1$s erreur : %2$s</string>
     <string name="enhanced_services_not_installed">Disponible mais la source n\'est pas installée : %s</string>
     <string name="information_required_plain">*obligatoire</string>
@@ -790,7 +787,6 @@
     <string name="last_auto_backup_info">Dernière sauvegarde automatique : %s</string>
     <string name="source_settings">Paramètres sources</string>
     <string name="action_add_anyway">Ajouter tout de même</string>
-    <string name="action_migrate_duplicate">Migrer l’entrée existante</string>
     <string name="label_upcoming">À venir</string>
     <string name="action_replace_repo">Remplacer</string>
     <string name="pref_display_profile">Profil d\'affichage personnalisé</string>
@@ -832,8 +828,20 @@
     <string name="onboarding_permission_analytics_description">Envoyer des données d\'utilisation anonymes pour améliorer les fonctionnalités de l\'application.</string>
     <string name="trackers_updated_summary">Trackers mis à jour au chapitre %d</string>
     <string name="manga_interval_expected_update_null">Ce manga est soit terminé, soit il n\'y a pas de date de sortie prévue.</string>
-    <string name="file_picker_uri_permission_unsupported">Échec de l\'acquisition persistante de l\'accès au dossier. L\'application peut se comporter de manière inattendue.</string>
+    <string name="file_picker_uri_permission_unsupported">L\'application n\'a pas obtenu l\'accès au dossier. Il se peut qu\'elle ne fonctionne pas comme prévu.</string>
     <string name="invalid_backup_file_unknown">Le fichier de sauvegarde est corrompu</string>
     <string name="remove_private_extension_message">Voulez-vous vraiment retirer l\'extension \"%s\" ?</string>
     <string name="pref_hardware_bitmap_threshold">Seuil de bitmap matériel personnalisé</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">Après avoir lu un chapitre</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">Après avoir acquis le chapitre suivant</string>
+    <string name="library_exported">Librairie exportée</string>
+    <string name="artist">Artiste</string>
+    <string name="pref_behavior">Comportement</string>
+    <string name="export">Export</string>
+    <string name="library_list">Liste des librairies</string>
+    <string name="tracked_privately">Suivi privé</string>
+    <string name="author">Auteur</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Marquer un chapitre dupliqué comme lu</string>
+    <string name="possible_duplicates_summary">Vous aez une entrée similaire dans votre librairie.\n\nSélectionnez une entrée à migrer ou l\'ajouter quand même.</string>
+    <string name="action_display_unread_badge">Chapitres non lus</string>
 </resources>
