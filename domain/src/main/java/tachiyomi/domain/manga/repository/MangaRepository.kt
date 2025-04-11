@@ -42,4 +42,5 @@ interface MangaRepository {
 
     suspend fun insertNetworkManga(manga: List<Manga>): List<Manga>
     suspend fun getHiddenDuplicates(manga: Manga): List<MangaWithChapterCount>
+    suspend fun removeHiddenDuplicates(id1: Long, id2: Long)
 }
