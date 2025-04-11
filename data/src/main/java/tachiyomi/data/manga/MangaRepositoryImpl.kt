@@ -72,6 +72,10 @@ class MangaRepositoryImpl(
         }
     }
 
+    override suspend fun addHiddenDuplicate(id1: Long, id2: Long) {
+        handler.await(inTransaction = true) { hidden_duplicatesQueries.insert(id1, id2) }
+    }
+
     override suspend fun getUpcomingManga(statuses: Set<Long>): Flow<List<Manga>> {
         val epochMillis = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toEpochSecond() * 1000
         return handler.subscribeToList {
