@@ -21,13 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
-import eu.kanade.presentation.components.AppBarActions
-import eu.kanade.presentation.components.AppBarTitle
-import eu.kanade.presentation.components.SearchToolbar
-import eu.kanade.presentation.components.TabbedScreen
 import eu.kanade.presentation.util.Screen
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
@@ -44,7 +39,7 @@ class ManageDuplicatesScreen : Screen() {
 
         val tabs = persistentListOf(
             possibleDuplicatesTab(),
-            hiddenDuplicatesTab()
+            hiddenDuplicatesTab(),
         )
 
         val state = rememberPagerState { tabs.size }

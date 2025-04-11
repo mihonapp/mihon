@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Brush
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.outlined.AttachMoney
@@ -23,8 +22,6 @@ import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material.icons.outlined.DoneAll
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.HideSource
 import androidx.compose.material.icons.outlined.Pause
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Icon
@@ -60,13 +57,12 @@ import tachiyomi.domain.source.model.StubSource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.Badge
 import tachiyomi.presentation.core.components.BadgeGroup
-import tachiyomi.presentation.core.components.material.DISABLED_ALPHA
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 
-data class ManageDuplicateAction (
+data class ManageDuplicateAction(
     val icon: ImageVector,
     val onClick: () -> Unit,
 )
@@ -310,7 +306,8 @@ private fun calculateMangaCardHeight(
         false -> 0f
     }
 
-    val totalHeight = coverHeight + titleHeight + authorHeight + artistHeight + statusHeight + sourceHeight + buttonsHeight
+    val totalHeight =
+        coverHeight + titleHeight + authorHeight + artistHeight + statusHeight + sourceHeight + buttonsHeight
     return with(density) { ((3 * smallPadding) + totalHeight + (4 * extraSmallPadding)).toDp() }
 }
 
