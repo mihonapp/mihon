@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="lock_after_mins">
-        <item quantity="one">%1$s मिनट के बाद%1$s मिनटों के बाद</item>
-        <item quantity="other"></item>
+        <item quantity="one">%1$s मिनट के बाद</item>
+        <item quantity="other">%1$s मिनटों के बाद</item>
     </plurals>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d नया अध्याय</item>
@@ -13,8 +13,8 @@
         <item quantity="other">अध्याय %1$s और %2$d अधिक</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">%d आइटम के लिए</item>
-        <item quantity="other">%d आइटम के लिए</item>
+        <item quantity="one">%d प्रविष्टि के लिए</item>
+        <item quantity="other">%d प्रविष्टियों के लिए</item>
     </plurals>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">एक्सटेंशन अपडेट उपलब्ध</item>
@@ -25,15 +25,15 @@
         <item quantity="other">%1$s बचे हुए</item>
     </plurals>
     <plurals name="num_categories">
-        <item quantity="one">%d श्रेणी%d श्रेणियाँ</item>
-        <item quantity="other"></item>
+        <item quantity="one">%d श्रेणी</item>
+        <item quantity="other">%d श्रेणियाँ</item>
     </plurals>
     <plurals name="restore_completed_message">
         <item quantity="one">%1$s में %2$s त्रुटि के साथ किया गया</item>
         <item quantity="other">%1$s में %2$s त्रुटियों के साथ किया गया</item>
     </plurals>
     <plurals name="manga_num_chapters">
-        <item quantity="one">अध्याय %1$s</item>
+        <item quantity="one">%1$s अध्याय</item>
         <item quantity="other">%1$s अध्याय</item>
     </plurals>
     <plurals name="num_trackers">
@@ -45,8 +45,8 @@
         <item quantity="other">%d अध्यायों को छोड़ा जा रहा है, या तो स्रोत उन्हें याद कर रहा है या उन्हें फ़िल्टर कर दिया गया है</item>
     </plurals>
     <plurals name="relative_time">
-        <item quantity="one">कल%1$d दिन पहले</item>
-        <item quantity="other"></item>
+        <item quantity="one">कल</item>
+        <item quantity="other">%1$d दिन पहले</item>
     </plurals>
     <plurals name="next_unread_chapters">
         <item quantity="one">अगला अपठित अध्याय</item>
@@ -61,16 +61,16 @@
         <item quantity="other">अगले %d अध्याय</item>
     </plurals>
     <plurals name="num_repos">
-        <item quantity="one">%d भंडार</item>
-        <item quantity="other">%d भंडारों</item>
+        <item quantity="one">%d रेपो</item>
+        <item quantity="other">%d रेपोज़</item>
     </plurals>
     <plurals name="pref_pages">
         <item quantity="one">1 पृष्ठ</item>
         <item quantity="other">%1$s पृष्ठ</item>
     </plurals>
     <plurals name="upcoming_relative_time">
-        <item quantity="one">कल%1$d दिनों में</item>
-        <item quantity="other"></item>
+        <item quantity="one">कल</item>
+        <item quantity="other">%1$d दिनों में</item>
     </plurals>
     <plurals name="missing_chapters">
         <item quantity="one">%1$s अध्याय गायब है</item>

@@ -678,9 +678,6 @@
     <string name="copied_to_clipboard_plain">Скопировано в буфер обмена</string>
     <string name="enhanced_services_not_installed">Доступно, но источник не установлен: %s</string>
     <string name="pref_skip_dupe_chapters">Пропускать повторяющиеся главы</string>
-    <string name="confirm_add_duplicate_manga">В вашей библиотеке уже есть серия с таким именем.
-\n
-\nВы всё ещё хотите продолжить?</string>
     <string name="track_error">%1$s ошибка: %2$s</string>
     <string name="information_required_plain">*необходимо</string>
     <string name="pref_hide_in_library_items">Скрывать серии, уже находящиеся в библиотеке</string>
@@ -792,7 +789,6 @@
     <string name="pref_webtoon_disable_zoom_out">Отключить уменьшение масштаба</string>
     <string name="action_add_anyway">Добавить в любом случае</string>
     <string name="pref_display_profile">Пользовательский профиль отображения</string>
-    <string name="action_migrate_duplicate">Перенести существующую серию</string>
     <string name="action_replace_repo">Заменить</string>
     <string name="action_replace_repo_message">Репозиторий %1$s имеет тот же подписанный ключ отпечатка, что и %2$s.
 \nЕсли это так и задумано, %2$s будет заменён, в противном случае, свяжитесь с сопровождающим вашего репозитория.</string>
@@ -853,4 +849,9 @@
     <string name="pref_behavior">Поведение</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">После прочтения главы</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">После получения новой главы</string>
+    <string name="notes_placeholder">Понравилась часть, где…</string>
+    <string name="action_notes">Заметки</string>
+    <string name="action_edit_notes">Изменить заметки</string>
+    <string name="possible_duplicates_title">Возможные дупликаты</string>
+    <string name="possible_duplicates_summary">В вашей библиотеке есть серии с похожим названием.\n\nВыберите серию, чтобы её перенести, или же добавить как дупликат.</string>
 </resources>

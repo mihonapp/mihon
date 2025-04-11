@@ -676,9 +676,6 @@
     <string name="download_notifier_cache_renewal">Đang kiểm tra những truyện đã tải xuống</string>
     <string name="crash_screen_description">%s đã có lỗi. Bạn nên chia sẻ tệp báo lỗi tạm ở trong kênh hỗ trợ của chúng tôi trên Discord.</string>
     <string name="action_update_category">Cập nhật danh mục</string>
-    <string name="confirm_add_duplicate_manga">Truyện này đã có sẵn trong thư viện bạn.
-\n
-\nBạn có muốn thêm lại không?</string>
     <string name="copied_to_clipboard_plain">Đã sao chép vào bảng tạm</string>
     <string name="action_copy_to_clipboard">Sao chép vào bảng tạm</string>
     <string name="seconds_short">%d giây</string>
@@ -776,7 +773,6 @@
     <string name="theme_nord">Phương bắc</string>
     <string name="pref_library_update_smart_update">Cập nhật thông minh</string>
     <string name="label_upcoming">Sắp tới</string>
-    <string name="action_migrate_duplicate">Chuyển vào các mục hiện có</string>
     <string name="onboarding_storage_help_info">Cập nhật từ phiên bản cũ hơn và không biết nên chọn gì? Tham khảo hướng dẫn để biết thêm thông tin.</string>
     <string name="action_add_repo_message">Thêm nguồn bổ sung vào Mihon. Địa chỉ URL này cần phải kết thúc với \"index.min.json\".</string>
     <string name="action_replace_repo_message">Kho lưu trữ %1$s có Dấu vân tay Khóa ký giống hệt như %2$s.

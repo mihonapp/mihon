@@ -682,7 +682,4 @@
     <string name="enhanced_services_not_installed">Turima, bet šaltinis nėra įdiegtas: %s</string>
     <string name="pref_library_update_show_tab_badge">Rodyti neperskaitytų skaičių ant Naujienų piktogramos</string>
     <string name="pref_skip_dupe_chapters">Praleisti pasikartojančius skyrius</string>
-    <string name="confirm_add_duplicate_manga">Bibliotekoje jau turite įrašą tokiu pačiu pavadinimu.
-\n
-\nAr vis tiek norite tęsti?</string>
 </resources>

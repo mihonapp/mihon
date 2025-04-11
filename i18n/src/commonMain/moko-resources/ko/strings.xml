@@ -679,9 +679,6 @@
     <string name="enhanced_services_not_installed">사용 가능하지만 소스가 설치되지 않음: %s</string>
     <string name="pref_skip_dupe_chapters">중복 회차 건너뛰기</string>
     <string name="track_error">%1$s 오류: %2$s</string>
-    <string name="confirm_add_duplicate_manga">서재에 같은 이름의 항목이 있습니다.
-\n
-\n그래도 계속하시겠습니까?</string>
     <string name="information_required_plain">*필수</string>
     <string name="action_copy_to_clipboard">클립보드에 복사</string>
     <string name="pref_hide_in_library_items">이미 서재에 있는 항목 숨기기</string>

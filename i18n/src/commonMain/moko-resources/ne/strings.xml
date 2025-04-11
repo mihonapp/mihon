@@ -608,9 +608,6 @@
     <string name="ext_info_age_rating">उमेर मूल्याङ्कन</string>
     <string name="action_not_now">अहिले हैन</string>
     <string name="action_open_random_manga">जुनसुकै इन्ट्री खोल्नुहोस्</string>
-    <string name="confirm_add_duplicate_manga">तपाईको पुस्तकालयमा एउटै नामको इन्ट्री छ।
-\n
-\nके तपाईं अझै जारी राख्न चाहनुहुन्छ?</string>
     <string name="reading_list">पढिरहेको सूची</string>
     <string name="updates_last_update_info">पुस्तकालय पछिल्लो पटक अपडेट गरिएको: %s</string>
     <string name="crash_screen_description">%s एक अप्रत्याशित त्रुटिमा पर्यो। समर्थन को लागि हामी तपाईंलाई हाम्रो Discord को #support च्यानलमा crash logs शेगर गर्न सुझाव दिन्छौं।</string>
@@ -795,7 +792,6 @@
     <string name="private_settings">संवेदनशील सेटिंग्स समावेश गर्नुहोस् (जस्तै, ट्र्याकर लगइन टोकनहरू)</string>
     <string name="pref_webtoon_disable_zoom_out">जूम आउट असक्षम गर्नुहोस्</string>
     <string name="action_add_anyway">जे भए पनि थप्नुहोस्</string>
-    <string name="action_migrate_duplicate">अवस्थित इन्ट्री माइग्रेट गर्नुहोस्</string>
     <string name="pref_display_profile">कस्टम प्रदर्शन प्रोफाइल</string>
     <string name="action_replace_repo">रिप्लेस</string>
     <string name="action_replace_repo_title">साइन गर्ने की फिंगरप्रिन्ट पहिले नै अवस्थित छ</string>

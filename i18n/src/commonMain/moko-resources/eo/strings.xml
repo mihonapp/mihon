@@ -553,7 +553,6 @@
     <string name="onboarding_storage_help_info">Ĉu vi ĝisdatigas de pli malnova versio kaj ne scias kion elekti? Kontrolu la konservejan gvidilon por pliaj informoj.</string>
     <string name="onboarding_action_finish">Komencu</string>
     <string name="action_add_anyway">Aldoni ĉiuokaze</string>
-    <string name="action_migrate_duplicate">Migri ekzistantan elementon</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Malebligi interrompojn por longedaŭraj bibliotekaj ĝisdatigoj, elŝutoj kaj savkopiaj restaŭroj.</string>
     <string name="onboarding_permission_notifications">Sciiga permeso</string>
     <string name="pref_reader_summary">Legada reĝimo, montrado, navigado</string>

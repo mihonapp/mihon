@@ -676,9 +676,6 @@
     <string name="information_no_manga_category">Categorie goala</string>
     <string name="pref_skip_dupe_chapters">Treci peste capitolele duplicae</string>
     <string name="enhanced_services_not_installed">Disponibil, dar sursa nu este instalata: %s</string>
-    <string name="confirm_add_duplicate_manga">Ai deja o intrare in librarie cu acelasi nume.
-\n
-\nEsti sigur ca vrei sa continui?</string>
     <string name="track_error">%1$s eroare: %2$s</string>
     <string name="information_required_plain">*necesar</string>
     <string name="copied_to_clipboard_plain">Copiat in clipboard</string>
@@ -792,7 +789,6 @@
 \nÎn cazul în care asta este la ce vă așteptați, %2$s va fi înlocuit, altfel contatati întreținătorul repozitoriului.</string>
     <string name="pref_display_profile">Profil de afișare personalizat</string>
     <string name="action_add_anyway">Adăugați oricum</string>
-    <string name="action_migrate_duplicate">Migrați intrare existentă</string>
     <string name="action_replace_repo">Înlocuiți</string>
     <string name="action_replace_repo_title">Amprenta digitală a cheii de semnare există deja</string>
     <string name="pref_webtoon_disable_zoom_out">Dezactivați funcția de zoom-out</string>

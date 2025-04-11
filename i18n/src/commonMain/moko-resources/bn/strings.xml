@@ -641,7 +641,6 @@
     <string name="action_sort_random">এলোমেলো</string>
     <string name="onboarding_permission_notifications_description">লাইব্রেরি আপডেট এবং আরও অনেক কিছুর জন্য বিজ্ঞপ্তি পান।</string>
     <string name="action_add_anyway">যাই হোক যোগ করুন</string>
-    <string name="action_migrate_duplicate">বিদ্যমান এন্ট্রি স্থানান্তর করুন</string>
     <string name="onboarding_storage_help_action">স্টোরেজ গাইড</string>
     <string name="onboarding_storage_help_info">পুরোনো ভার্সন থেকে আপডেট করছেন এবং কী নির্বাচন করবেন তা নিশ্চিত নন? আরও তথ্যের জন্য স্টোরেজ গাইডটি দেখুন।</string>
     <string name="label_upcoming">আসন্ন</string>
