@@ -82,6 +82,7 @@ class ManageDuplicatesScreen : Screen() {
                     modifier = Modifier.fillMaxSize(),
                     state = state,
                     verticalAlignment = Alignment.Top,
+                    userScrollEnabled = false,
                 ) { page ->
                     tabs[page].content(
                         PaddingValues(bottom = contentPadding.calculateBottomPadding()),
