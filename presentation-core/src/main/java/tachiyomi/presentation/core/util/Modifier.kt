@@ -26,12 +26,10 @@ import tachiyomi.presentation.core.components.material.SECONDARY_ALPHA
 
 @Composable
 fun Modifier.selectedBackground(isSelected: Boolean): Modifier {
-    return if (isSelected) {
+    return if (!isSelected) this else {
         val alpha = if (isSystemInDarkTheme()) 0.16f else 0.22f
         val color = MaterialTheme.colorScheme.secondary.copy(alpha = alpha)
         this.drawBehind { drawRect(color) }
-    } else {
-        this
     }
 }
 
@@ -70,7 +68,7 @@ fun Modifier.runOnEnterKeyPressed(action: () -> Unit): Modifier = this.onPreview
  */
 @Composable
 fun Modifier.showSoftKeyboard(show: Boolean): Modifier {
-    return if (show) {
+    return if (!show) this else {
         val focusRequester = remember { FocusRequester() }
         var openKeyboard by rememberSaveable { mutableStateOf(show) }
         LaunchedEffect(focusRequester) {
@@ -80,8 +78,6 @@ fun Modifier.showSoftKeyboard(show: Boolean): Modifier {
             }
         }
         this.focusRequester(focusRequester)
-    } else {
-        this
     }
 }
 
