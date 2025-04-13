@@ -172,16 +172,13 @@ DELETE FROM mangas
 WHERE favorite = 0
 AND source IN :sourceIds
 AND (
-    CASE
-        WHEN :keepReadManga
-            THEN _id NOT IN (
-                SELECT DISTINCT manga_id
-                FROM chapters
-                WHERE read = 1
-                OR last_page_read != 0
-            )
-        ELSE 1 -- True
-    END
+    :keepReadManga = 0
+    OR _id NOT IN (
+        SELECT DISTINCT manga_id
+        FROM chapters
+        WHERE read = 1
+        OR last_page_read != 0
+    )
 );
 
 insert:
