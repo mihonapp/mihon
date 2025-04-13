@@ -167,10 +167,19 @@ FROM mangas
 WHERE favorite = 0
 GROUP BY source;
 
-deleteMangasNotInLibraryBySourceIds:
+deleteNonLibraryManga:
 DELETE FROM mangas
 WHERE favorite = 0
-AND source IN :sourceIds;
+AND source IN :sourceIds
+AND (
+    :keepReadManga = 0
+    OR _id NOT IN (
+        SELECT DISTINCT manga_id
+        FROM chapters
+        WHERE read = 1
+        OR last_page_read != 0
+    )
+);
 
 insert:
 INSERT INTO mangas(source, url, artist, author, description, genre, title, status, thumbnail_url, favorite, last_update, next_update, initialized, viewer, chapter_flags, cover_last_modified, date_added, update_strategy, calculate_interval, last_modified_at, version, notes)
