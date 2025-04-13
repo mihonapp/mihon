@@ -29,7 +29,7 @@ data class Download(
         get() = pages?.sumOf(Page::progress) ?: 0
 
     val downloadedImages: Int
-        get() = pages?.count { it.status == Page.State.READY } ?: 0
+        get() = pages?.count { it.status == Page.State.Ready } ?: 0
 
     @Transient
     private val _statusFlow = MutableStateFlow(State.NOT_DOWNLOADED)
