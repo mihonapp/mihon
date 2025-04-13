@@ -45,7 +45,9 @@ import eu.kanade.tachiyomi.util.system.getHtml
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
+import logcat.LogPriority
 import okhttp3.Request
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
@@ -145,16 +147,18 @@ fun WebViewScreenContent(
 
                     val contentType = response.body.contentType()?.let { "${it.type}/${it.subtype}" } ?: "text/html"
                     val contentEncoding = response.body.contentType()?.charset()?.name() ?: "utf-8"
+                    val message = response.message.ifBlank { WebViewUtil.getMessageFromHttpStatusCode(response.code) }
 
                     WebResourceResponse(
                         contentType,
                         contentEncoding,
                         response.code,
-                        response.message,
+                        message,
                         response.headers.associate { it.first to it.second },
                         response.body.byteStream(),
                     )
                 } catch (e: Throwable) {
+                    logcat(priority = LogPriority.ERROR, throwable = e)
                     super.shouldInterceptRequest(view, request)
                 }
             }

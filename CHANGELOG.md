@@ -16,12 +16,16 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add user manga notes ([@imkunet](https://github.com/imkunet), [@AntsyLich](https://github.com/AntsyLich)) ([#428](https://github.com/mihonapp/mihon/pull/428))
   - Fix user notes not restoring when manga doesn't exist in DB ([@AntsyLich](https://github.com/AntsyLich)) ([#1945](https://github.com/mihonapp/mihon/pull/1945))
 - Add markdown support for manga descriptions ([@Secozzi](https://github.com/Secozzi)) ([#1948](https://github.com/mihonapp/mihon/pull/1948))
+  - Use simpler markdown flavour ([@Secozzi](https://github.com/Secozzi)) ([#2000](https://github.com/mihonapp/mihon/pull/2000))
 - Add Nord Theme ([@Riztard](https://github.com/Riztard)) ([#1951](https://github.com/mihonapp/mihon/pull/1951))
+- Option to keep read manga when clearing database ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#1979](https://github.com/mihonapp/mihon/pull/1979))
 
 ### Improved
 - Significantly improve browsing speed (near instantaneous) ([@AntsyLich](https://github.com/AntsyLich)) ([#1946](https://github.com/mihonapp/mihon/pull/1946))
 - Deduplicate entries when browsing ([@AntsyLich](https://github.com/AntsyLich)) ([#1957](https://github.com/mihonapp/mihon/pull/1957))
 - Update non-library manga data when browsing ([@AntsyLich](https://github.com/AntsyLich)) ([#1967](https://github.com/mihonapp/mihon/pull/1967))
+- Surface image loading error in Reader ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#1981](https://github.com/mihonapp/mihon/pull/1981))
+- Include source headers when opening failed images from reader ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2004](https://github.com/mihonapp/mihon/pull/2004))
 
 ### Changed
 - Display all similarly named duplicates in duplicate manga dialogue ([@NarwhalHorns](https://github.com/NarwhalHorns), [@AntsyLich](https://github.com/AntsyLich)) ([#1861](https://github.com/mihonapp/mihon/pull/1861))
@@ -36,6 +40,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix app bar action tooltips blocking clicks ([@Bartuzen](https://github.com/Bartuzen)) ([#1928](https://github.com/mihonapp/mihon/pull/1928))
 - Fix unintended app permissions due to Firebase misconfiguration ([@AntsyLich](https://github.com/AntsyLich)) ([#1960](https://github.com/mihonapp/mihon/pull/1960))
 - Fix navigation issue after migrating a duplicated entry from History tab ([@cuong-tran](https://github.com/cuong-tran)) ([#1980](https://github.com/mihonapp/mihon/pull/1980))
+- Fix duplicate requests in WebView due to empty reasonPhrase ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2003](https://github.com/mihonapp/mihon/pull/2003))
 
 ## [v0.18.0] - 2025-03-20
 ### Added
