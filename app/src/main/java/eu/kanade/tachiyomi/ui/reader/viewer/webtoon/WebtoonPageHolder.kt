@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
@@ -25,11 +26,13 @@ import kotlinx.coroutines.supervisorScope
 import logcat.LogPriority
 import okio.Buffer
 import okio.BufferedSource
+import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.i18n.MR
 
 /**
  * Holder of the webtoon reader for a single page of a chapter.
@@ -81,7 +84,7 @@ class WebtoonPageHolder(
         refreshLayoutParams()
 
         frame.onImageLoaded = { onImageDecoded() }
-        frame.onImageLoadError = { setError() }
+        frame.onImageLoadError = { error -> setError(error) }
         frame.onScaleChanged = { viewer.activity.hideMenu() }
     }
 
@@ -145,7 +148,7 @@ class WebtoonPageHolder(
                         }
                     }
                     Page.State.Ready -> setImage()
-                    Page.State.Error -> setError()
+                    is Page.State.Error -> setError(state.error)
                 }
             }
         }
@@ -207,7 +210,7 @@ class WebtoonPageHolder(
         } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e)
             withUIContext {
-                setError()
+                setError(e)
             }
         }
     }
@@ -241,9 +244,9 @@ class WebtoonPageHolder(
     /**
      * Called when the page has an error.
      */
-    private fun setError() {
+    private fun setError(error: Throwable?) {
         progressContainer.isVisible = false
-        initErrorLayout()
+        initErrorLayout(error)
     }
 
     /**
@@ -273,7 +276,7 @@ class WebtoonPageHolder(
     /**
      * Initializes a button to retry pages.
      */
-    private fun initErrorLayout(): ReaderErrorBinding {
+    private fun initErrorLayout(error: Throwable?): ReaderErrorBinding {
         if (errorLayout == null) {
             errorLayout = ReaderErrorBinding.inflate(LayoutInflater.from(context), frame, true)
             errorLayout?.root?.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, (parentHeight * 0.8).toInt())
@@ -292,6 +295,9 @@ class WebtoonPageHolder(
                 }
             }
         }
+
+        errorLayout?.errorMessage?.text = with(context) { error?.formattedMessage }
+            ?: context.stringResource(MR.strings.decode_image_error)
 
         return errorLayout!!
     }
