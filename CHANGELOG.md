@@ -16,6 +16,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add user manga notes ([@imkunet](https://github.com/imkunet), [@AntsyLich](https://github.com/AntsyLich)) ([#428](https://github.com/mihonapp/mihon/pull/428))
   - Fix user notes not restoring when manga doesn't exist in DB ([@AntsyLich](https://github.com/AntsyLich)) ([#1945](https://github.com/mihonapp/mihon/pull/1945))
 - Add markdown support for manga descriptions ([@Secozzi](https://github.com/Secozzi)) ([#1948](https://github.com/mihonapp/mihon/pull/1948))
+  - Use simpler markdown flavour ([@Secozzi](https://github.com/Secozzi)) ([#2000](https://github.com/mihonapp/mihon/pull/2000))
 - Add Nord Theme ([@Riztard](https://github.com/Riztard)) ([#1951](https://github.com/mihonapp/mihon/pull/1951))
 
 ### Improved
@@ -36,7 +37,6 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix app bar action tooltips blocking clicks ([@Bartuzen](https://github.com/Bartuzen)) ([#1928](https://github.com/mihonapp/mihon/pull/1928))
 - Fix unintended app permissions due to Firebase misconfiguration ([@AntsyLich](https://github.com/AntsyLich)) ([#1960](https://github.com/mihonapp/mihon/pull/1960))
 - Fix navigation issue after migrating a duplicated entry from History tab ([@cuong-tran](https://github.com/cuong-tran)) ([#1980](https://github.com/mihonapp/mihon/pull/1980))
-- Fix undesirable parsing of markdown ([@Secozzi](https://github.com/Secozzi)) ([#2000](https://github.com/mihonapp/mihon/pull/2000))
 
 ## [v0.18.0] - 2025-03-20
 ### Added
