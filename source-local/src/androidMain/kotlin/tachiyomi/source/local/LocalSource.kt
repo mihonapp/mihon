@@ -1,59 +1,52 @@
 package tachiyomi.source.local
 
 import android.content.Context
-import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.UnmeteredSource
+import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
-import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromStream
+import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
-import mihon.core.archive.archiveReader
-import mihon.core.archive.epubReader
-import nl.adaptivity.xmlutil.core.AndroidXmlReader
-import nl.adaptivity.xmlutil.serialization.XML
+import mihon.domain.manga.local.interactor.GetLocalSourceMangaByUrl
 import tachiyomi.core.common.i18n.stringResource
-import tachiyomi.core.common.storage.extension
-import tachiyomi.core.common.storage.nameWithoutExtension
 import tachiyomi.core.common.util.lang.withIOContext
-import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
-import tachiyomi.core.metadata.comicinfo.COMIC_INFO_FILE
-import tachiyomi.core.metadata.comicinfo.ComicInfo
-import tachiyomi.core.metadata.comicinfo.copyFromComicInfo
-import tachiyomi.core.metadata.comicinfo.getComicInfo
-import tachiyomi.core.metadata.tachiyomi.MangaDetails
-import tachiyomi.domain.chapter.service.ChapterRecognition
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
+import tachiyomi.source.local.filter.ArtistFilter
+import tachiyomi.source.local.filter.ArtistGroup
+import tachiyomi.source.local.filter.ArtistTextSearch
+import tachiyomi.source.local.filter.AuthorFilter
+import tachiyomi.source.local.filter.AuthorGroup
+import tachiyomi.source.local.filter.AuthorTextSearch
+import tachiyomi.source.local.filter.GenreFilter
+import tachiyomi.source.local.filter.GenreGroup
+import tachiyomi.source.local.filter.GenreTextSearch
 import tachiyomi.source.local.filter.OrderBy
-import tachiyomi.source.local.image.LocalCoverManager
-import tachiyomi.source.local.io.Archive
+import tachiyomi.source.local.filter.Separator
+import tachiyomi.source.local.filter.StatusFilter
+import tachiyomi.source.local.filter.StatusGroup
+import tachiyomi.source.local.filter.TextSearchHeader
+import tachiyomi.source.local.filter.extractLocalFilter
 import tachiyomi.source.local.io.Format
 import tachiyomi.source.local.io.LocalSourceFileSystem
-import tachiyomi.source.local.metadata.fillMetadata
-import uy.kohesive.injekt.injectLazy
-import java.io.InputStream
-import java.nio.charset.StandardCharsets
-import kotlin.time.Duration.Companion.days
+import tachiyomi.source.local.io.LocalSourceIndexer
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import tachiyomi.domain.source.model.Source as DomainSource
 
 actual class LocalSource(
     private val context: Context,
     private val fileSystem: LocalSourceFileSystem,
-    private val coverManager: LocalCoverManager,
 ) : CatalogueSource, UnmeteredSource {
 
-    private val json: Json by injectLazy()
-    private val xml: XML by injectLazy()
+    private val localSourceIndexer: LocalSourceIndexer = Injekt.get()
+    private val getLocalSourceMangaByUrl: GetLocalSourceMangaByUrl = Injekt.get()
 
     @Suppress("PrivatePropertyName")
     private val PopularFilters = FilterList(OrderBy.Popular(context))
@@ -71,277 +64,213 @@ actual class LocalSource(
 
     override val supportsLatest: Boolean = true
 
+    private var mangaPages: List<List<SManga>>? = null
+
     // Browse related
     override suspend fun getPopularManga(page: Int) = getSearchManga(page, "", PopularFilters)
 
     override suspend fun getLatestUpdates(page: Int) = getSearchManga(page, "", LatestFilters)
 
-    override suspend fun getSearchManga(page: Int, query: String, filters: FilterList): MangasPage = withIOContext {
-        val lastModifiedLimit = if (filters === LatestFilters) {
-            System.currentTimeMillis() - LATEST_THRESHOLD
-        } else {
-            0L
+    override suspend fun getSearchManga(
+        page: Int,
+        query: String,
+        filters: FilterList,
+    ): MangasPage = withIOContext {
+        if (page == 1) {
+            val filter = filters.extractLocalFilter()
+            mangaPages = filter
+                .getMangaFunc()
+                .asSequence()
+                .filter { manga ->
+                    if (filter.includedAuthors.isEmpty()) {
+                        true
+                    } else {
+                        manga.author
+                            .takeUnless { it.isNullOrBlank() }
+                            ?.split(",")
+                            ?.map { it.trim().lowercase() }
+                            ?.any { filter.includedAuthors.contains(it) }
+                            ?: false
+                    }
+                }
+                .filterNot { manga ->
+                    if (filter.excludedAuthors.isEmpty()) {
+                        false
+                    } else {
+                        manga.author
+                            .takeUnless { it.isNullOrBlank() }
+                            ?.split(",")
+                            ?.map { it.trim().lowercase() }
+                            ?.any { filter.excludedAuthors.contains(it) }
+                            ?: false
+                    }
+                }
+                .filter { manga ->
+                    if (filter.includedArtists.isEmpty()) {
+                        true
+                    } else {
+                        manga.artist
+                            .takeUnless { it.isNullOrBlank() }
+                            ?.split(",")
+                            ?.map { it.trim().lowercase() }
+                            ?.any { filter.includedArtists.contains(it) }
+                            ?: false
+                    }
+                }
+                .filterNot { manga ->
+                    if (filter.excludedArtists.isEmpty()) {
+                        false
+                    } else {
+                        manga.artist
+                            .takeUnless { it.isNullOrBlank() }
+                            ?.split(",")
+                            ?.map { it.trim().lowercase() }
+                            ?.any { filter.excludedArtists.contains(it) }
+                            ?: false
+                    }
+                }
+                .filter { manga ->
+                    if (filter.includedGenres.isEmpty()) {
+                        true
+                    } else {
+                        manga.genre
+                            .takeUnless { it.isNullOrBlank() }
+                            ?.split(",")
+                            ?.map { it.trim().lowercase() }
+                            ?.any { filter.includedGenres.contains(it) }
+                            ?: false
+                    }
+                }
+                .filterNot { manga ->
+                    if (filter.excludedGenres.isEmpty()) {
+                        false
+                    } else {
+                        manga.genre
+                            .takeUnless { it.isNullOrBlank() }
+                            ?.split(",")
+                            ?.map { it.trim().lowercase() }
+                            ?.any { filter.excludedGenres.contains(it) }
+                            ?: false
+                    }
+                }
+                .filter { manga ->
+                    filter.includedStatuses
+                        .takeUnless { it.isEmpty() }
+                        ?.contains(manga.status)
+                        ?: true
+                }
+                .filterNot { manga ->
+                    filter.excludedStatuses
+                        .takeUnless { it.isEmpty() }
+                        ?.contains(manga.status)
+                        ?: false
+                }
+                .chunked(CHUNK_SIZE)
+                .toList()
         }
 
-        var mangaDirs = fileSystem.getFilesInBaseDirectory()
-            // Filter out files that are hidden and is not a folder
-            .filter { it.isDirectory && !it.name.orEmpty().startsWith('.') }
-            .distinctBy { it.name }
-            .filter {
-                if (lastModifiedLimit == 0L && query.isBlank()) {
-                    true
-                } else if (lastModifiedLimit == 0L) {
-                    it.name.orEmpty().contains(query, ignoreCase = true)
-                } else {
-                    it.lastModified() >= lastModifiedLimit
-                }
-            }
-
-        filters.forEach { filter ->
-            when (filter) {
-                is OrderBy.Popular -> {
-                    mangaDirs = if (filter.state!!.ascending) {
-                        mangaDirs.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name.orEmpty() })
-                    } else {
-                        mangaDirs.sortedWith(compareByDescending(String.CASE_INSENSITIVE_ORDER) { it.name.orEmpty() })
-                    }
-                }
-                is OrderBy.Latest -> {
-                    mangaDirs = if (filter.state!!.ascending) {
-                        mangaDirs.sortedBy(UniFile::lastModified)
-                    } else {
-                        mangaDirs.sortedByDescending(UniFile::lastModified)
-                    }
-                }
-                else -> {
-                    /* Do nothing */
-                }
-            }
+        if (mangaPages.isNullOrEmpty()) {
+            return@withIOContext MangasPage(
+                mangas = emptyList<SManga>(),
+                hasNextPage = false,
+            )
         }
 
-        val mangas = mangaDirs
-            .map { mangaDir ->
-                async {
-                    SManga.create().apply {
-                        title = mangaDir.name.orEmpty()
-                        url = mangaDir.name.orEmpty()
-
-                        // Try to find the cover
-                        coverManager.find(mangaDir.name.orEmpty())?.let {
-                            thumbnail_url = it.uri.toString()
-                        }
-                    }
-                }
-            }
-            .awaitAll()
-
-        MangasPage(mangas, false)
+        val hasNextPage = page != mangaPages?.count()
+        MangasPage(
+            mangas = mangaPages!![page - 1],
+            hasNextPage = hasNextPage,
+        )
     }
 
     // Manga details related
     override suspend fun getMangaDetails(manga: SManga): SManga = withIOContext {
-        coverManager.find(manga.url)?.let {
-            manga.thumbnail_url = it.uri.toString()
-        }
+        var dbManga = getLocalSourceMangaByUrl.await(manga.url)
+        val mangaDir = fileSystem.getMangaDirectory(manga.url)
 
-        // Augment manga details based on metadata files
-        try {
-            val mangaDir = fileSystem.getMangaDirectory(manga.url) ?: error("${manga.url} is not a valid directory")
-            val mangaDirFiles = mangaDir.listFiles().orEmpty()
-
-            val comicInfoFile = mangaDirFiles
-                .firstOrNull { it.name == COMIC_INFO_FILE }
-            val noXmlFile = mangaDirFiles
-                .firstOrNull { it.name == ".noxml" }
-            val legacyJsonDetailsFile = mangaDirFiles
-                .firstOrNull { it.extension == "json" }
-
-            when {
-                // Top level ComicInfo.xml
-                comicInfoFile != null -> {
-                    noXmlFile?.delete()
-                    setMangaDetailsFromComicInfoFile(comicInfoFile.openInputStream(), manga)
-                }
-
-                // Old custom JSON format
-                // TODO: remove support for this entirely after a while
-                legacyJsonDetailsFile != null -> {
-                    json.decodeFromStream<MangaDetails>(legacyJsonDetailsFile.openInputStream()).run {
-                        title?.let { manga.title = it }
-                        author?.let { manga.author = it }
-                        artist?.let { manga.artist = it }
-                        description?.let { manga.description = it }
-                        genre?.let { manga.genre = it.joinToString() }
-                        status?.let { manga.status = it }
-                    }
-                    // Replace with ComicInfo.xml file
-                    val comicInfo = manga.getComicInfo()
-                    mangaDir
-                        .createFile(COMIC_INFO_FILE)
-                        ?.openOutputStream()
-                        ?.use {
-                            val comicInfoString = xml.encodeToString(ComicInfo.serializer(), comicInfo)
-                            it.write(comicInfoString.toByteArray())
-                            legacyJsonDetailsFile.delete()
-                        }
-                }
-
-                // Copy ComicInfo.xml from chapter archive to top level if found
-                noXmlFile == null -> {
-                    val chapterArchives = mangaDirFiles.filter(Archive::isSupported)
-
-                    val copiedFile = copyComicInfoFileFromArchive(chapterArchives, mangaDir)
-                    if (copiedFile != null) {
-                        setMangaDetailsFromComicInfoFile(copiedFile.openInputStream(), manga)
-                    } else {
-                        // Avoid re-scanning
-                        mangaDir.createFile(".noxml")
-                    }
-                }
-            }
-        } catch (e: Throwable) {
-            logcat(LogPriority.ERROR, e) { "Error setting manga details from local metadata for ${manga.title}" }
-        }
-
-        return@withIOContext manga
-    }
-
-    private fun copyComicInfoFileFromArchive(chapterArchives: List<UniFile>, folder: UniFile): UniFile? {
-        for (chapter in chapterArchives) {
-            chapter.archiveReader(context).use { reader ->
-                reader.getInputStream(COMIC_INFO_FILE)?.use { stream ->
-                    return copyComicInfoFile(stream, folder)
-                }
+        mangaDir?.let { dir ->
+            if (dir.lastModified() != dbManga?.dir_last_modified) {
+                dbManga = localSourceIndexer.fileToSManga(dir)
+                dbManga?.let { localSourceIndexer.insertOrReplaceLocalSourceManga.await(it) }
             }
         }
-        return null
-    }
-
-    private fun copyComicInfoFile(comicInfoFileStream: InputStream, folder: UniFile): UniFile? {
-        return folder.createFile(COMIC_INFO_FILE)?.apply {
-            openOutputStream().use { outputStream ->
-                comicInfoFileStream.use { it.copyTo(outputStream) }
-            }
-        }
-    }
-
-    private fun setMangaDetailsFromComicInfoFile(stream: InputStream, manga: SManga) {
-        val comicInfo = AndroidXmlReader(stream, StandardCharsets.UTF_8.name()).use {
-            xml.decodeFromReader<ComicInfo>(it)
-        }
-
-        manga.copyFromComicInfo(comicInfo)
+        dbManga ?: manga
     }
 
     // Chapters
-    override suspend fun getChapterList(manga: SManga): List<SChapter> = withIOContext {
-        val chapters = fileSystem.getFilesInMangaDirectory(manga.url)
-            // Only keep supported formats
-            .filterNot { it.name.orEmpty().startsWith('.') }
-            .filter { it.isDirectory || Archive.isSupported(it) || it.extension.equals("epub", true) }
-            .map { chapterFile ->
-                SChapter.create().apply {
-                    url = "${manga.url}/${chapterFile.name}"
-                    name = if (chapterFile.isDirectory) {
-                        chapterFile.name
-                    } else {
-                        chapterFile.nameWithoutExtension
-                    }.orEmpty()
-                    date_upload = chapterFile.lastModified()
-                    chapter_number = ChapterRecognition
-                        .parseChapterNumber(manga.title, this.name, this.chapter_number.toDouble())
-                        .toFloat()
-
-                    val format = Format.valueOf(chapterFile)
-                    if (format is Format.Epub) {
-                        format.file.epubReader(context).use { epub ->
-                            epub.fillMetadata(manga, this)
-                        }
-                    }
-                }
-            }
-            .sortedWith { c1, c2 ->
-                val c = c2.chapter_number.compareTo(c1.chapter_number)
-                if (c == 0) c2.name.compareToCaseInsensitiveNaturalOrder(c1.name) else c
-            }
-
-        // Copy the cover from the first chapter found if not available
-        if (manga.thumbnail_url.isNullOrBlank()) {
-            chapters.lastOrNull()?.let { chapter ->
-                updateCover(chapter, manga)
-            }
-        }
-
-        chapters
-    }
+    override suspend fun getChapterList(manga: SManga): List<SChapter> = localSourceIndexer.getChapterList(manga)
 
     // Filters
-    override fun getFilterList() = FilterList(OrderBy.Popular(context))
+    override fun getFilterList(): FilterList {
+        val manga = runBlocking { localSourceIndexer.getAllLocalSourceManga.await() }
+
+        val genres = manga
+            .mapNotNull { it.genre?.split(",") }
+            .flatMap { it.map { genre -> genre.trim() } }
+            .toSet()
+
+        val authors = manga
+            .mapNotNull { it.author?.split(",") }
+            .flatMap { it.map { author -> author.trim() } }
+            .toSet()
+
+        val artists = manga
+            .mapNotNull { it.artist?.split(",") }
+            .flatMap { it.map { artist -> artist.trim() } }
+            .toSet()
+
+        val filters = try {
+            mutableListOf<Filter<*>>(
+                OrderBy.Popular(context),
+                Separator(),
+                GenreGroup(
+                    context = context,
+                    genres = genres.map { GenreFilter(it) },
+                ),
+                AuthorGroup(
+                    context = context,
+                    authors = authors.map { AuthorFilter(it) },
+                ),
+                ArtistGroup(
+                    context = context,
+                    artists = artists.map { ArtistFilter(it) },
+                ),
+                StatusGroup(
+                    context,
+                    listOf(
+                        context.getString(R.string.ongoing),
+                        context.getString(R.string.completed),
+                        context.getString(R.string.licensed),
+                        context.getString(R.string.publishing_finished),
+                        context.getString(R.string.cancelled),
+                        context.getString(R.string.on_hiatus),
+                        context.getString(R.string.unknown),
+                    ).map { StatusFilter(it) },
+                ),
+                Separator(),
+                TextSearchHeader(context),
+                GenreTextSearch(context),
+                AuthorTextSearch(context),
+                ArtistTextSearch(context),
+                Filter.Separator(),
+            )
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+            emptyList()
+        }
+        return FilterList(filters)
+    }
 
     // Unused stuff
     override suspend fun getPageList(chapter: SChapter): List<Page> = throw UnsupportedOperationException("Unused")
 
-    fun getFormat(chapter: SChapter): Format {
-        try {
-            val (mangaDirName, chapterName) = chapter.url.split('/', limit = 2)
-            return fileSystem.getBaseDirectory()
-                ?.findFile(mangaDirName)
-                ?.findFile(chapterName)
-                ?.let(Format.Companion::valueOf)
-                ?: throw Exception(context.stringResource(MR.strings.chapter_not_found))
-        } catch (e: Format.UnknownFormatException) {
-            throw Exception(context.stringResource(MR.strings.local_invalid_format))
-        } catch (e: Exception) {
-            throw e
-        }
-    }
-
-    private fun updateCover(chapter: SChapter, manga: SManga): UniFile? {
-        return try {
-            when (val format = getFormat(chapter)) {
-                is Format.Directory -> {
-                    val entry = format.file.listFiles()
-                        ?.sortedWith { f1, f2 ->
-                            f1.name.orEmpty().compareToCaseInsensitiveNaturalOrder(
-                                f2.name.orEmpty(),
-                            )
-                        }
-                        ?.find {
-                            !it.isDirectory && ImageUtil.isImage(it.name) { it.openInputStream() }
-                        }
-
-                    entry?.let { coverManager.update(manga, it.openInputStream()) }
-                }
-                is Format.Archive -> {
-                    format.file.archiveReader(context).use { reader ->
-                        val entry = reader.useEntries { entries ->
-                            entries
-                                .sortedWith { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) }
-                                .find { it.isFile && ImageUtil.isImage(it.name) { reader.getInputStream(it.name)!! } }
-                        }
-
-                        entry?.let { coverManager.update(manga, reader.getInputStream(it.name)!!) }
-                    }
-                }
-                is Format.Epub -> {
-                    format.file.epubReader(context).use { epub ->
-                        val entry = epub.getImagesFromPages().firstOrNull()
-
-                        entry?.let { coverManager.update(manga, epub.getInputStream(it)!!) }
-                    }
-                }
-            }
-        } catch (e: Throwable) {
-            logcat(LogPriority.ERROR, e) { "Error updating cover for ${manga.title}" }
-            null
-        }
-    }
+    fun getFormat(chapter: SChapter): Format = localSourceIndexer.getFormat(chapter)
 
     companion object {
         const val ID = 0L
         const val HELP_URL = "https://mihon.app/docs/guides/local-source/"
 
-        private val LATEST_THRESHOLD = 7.days.inWholeMilliseconds
+        private const val CHUNK_SIZE = 20
     }
 }
 

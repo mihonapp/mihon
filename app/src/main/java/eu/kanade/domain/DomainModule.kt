@@ -26,6 +26,7 @@ import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.interactor.SyncChapterProgressWithTrack
 import eu.kanade.domain.track.interactor.TrackChapter
 import mihon.data.repository.ExtensionRepoRepositoryImpl
+import mihon.data.repository.manga.local.LocalMangaRepositoryImpl
 import mihon.domain.chapter.interactor.FilterChaptersForDownload
 import mihon.domain.extensionrepo.interactor.CreateExtensionRepo
 import mihon.domain.extensionrepo.interactor.DeleteExtensionRepo
@@ -35,6 +36,16 @@ import mihon.domain.extensionrepo.interactor.ReplaceExtensionRepo
 import mihon.domain.extensionrepo.interactor.UpdateExtensionRepo
 import mihon.domain.extensionrepo.repository.ExtensionRepoRepository
 import mihon.domain.extensionrepo.service.ExtensionRepoService
+import mihon.domain.manga.local.interactor.DeleteLocalSourceManga
+import mihon.domain.manga.local.interactor.GetAllLocalSourceManga
+import mihon.domain.manga.local.interactor.GetAllLocalSourceMangaOrderedByDateAsc
+import mihon.domain.manga.local.interactor.GetAllLocalSourceMangaOrderedByDateDesc
+import mihon.domain.manga.local.interactor.GetAllLocalSourceMangaOrderedByTitleAsc
+import mihon.domain.manga.local.interactor.GetAllLocalSourceMangaOrderedByTitleDesc
+import mihon.domain.manga.local.interactor.GetLocalSourceMangaByUrl
+import mihon.domain.manga.local.interactor.InsertOrReplaceLocalSourceManga
+import mihon.domain.manga.local.interactor.UpdateThumbnailUrlLocalSource
+import mihon.domain.manga.local.repository.LocalMangaRepository
 import mihon.domain.upcoming.interactor.GetUpcomingManga
 import tachiyomi.data.category.CategoryRepositoryImpl
 import tachiyomi.data.chapter.ChapterRepositoryImpl
@@ -134,6 +145,17 @@ class DomainModule : InjektModule {
         addFactory { SetMangaCategories(get()) }
         addFactory { GetExcludedScanlators(get()) }
         addFactory { SetExcludedScanlators(get()) }
+
+        addSingletonFactory<LocalMangaRepository> { LocalMangaRepositoryImpl(get()) }
+        addFactory { GetAllLocalSourceManga(get()) }
+        addFactory { GetAllLocalSourceMangaOrderedByTitleAsc(get()) }
+        addFactory { GetAllLocalSourceMangaOrderedByTitleDesc(get()) }
+        addFactory { GetAllLocalSourceMangaOrderedByDateAsc(get()) }
+        addFactory { GetAllLocalSourceMangaOrderedByDateDesc(get()) }
+        addFactory { GetLocalSourceMangaByUrl(get()) }
+        addFactory { UpdateThumbnailUrlLocalSource(get()) }
+        addFactory { InsertOrReplaceLocalSourceManga(get()) }
+        addFactory { DeleteLocalSourceManga(get()) }
 
         addSingletonFactory<ReleaseService> { ReleaseServiceImpl(get(), get()) }
         addFactory { GetApplicationRelease(get(), get()) }
