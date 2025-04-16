@@ -37,6 +37,20 @@ class LocalMangaRepositoryImpl(
         return handler.awaitOneOrNull { local_mangaQueries.getMangaByUrl(url, LocalSMangaMapper::mapSManga) }
     }
 
+    override suspend fun getLocalSourceFilterValues(): Triple<List<String>, List<String>, List<String>> {
+        val authors = mutableListOf<String>()
+        val artists = mutableListOf<String>()
+        val genres = mutableListOf<String>()
+        handler.awaitList {
+            local_mangaQueries.getFilterValues()
+        }.forEach { result ->
+            result.author_item.takeUnless { it.isBlank() }?.let { authors.add(it) }
+            result.artist_item.takeUnless { it.isBlank() }?.let { artists.add(it) }
+            result.genre_item.takeUnless { it.isBlank() }?.let { genres.add(it) }
+        }
+        return Triple(authors, artists, genres)
+    }
+
     override suspend fun updateThumbnailUrl(url: String, thumbnailUrl: String?) {
         return handler.await(inTransaction = true) {
             local_mangaQueries.updateThumbnailUrl(

@@ -19,6 +19,8 @@ interface LocalMangaRepository {
 
     suspend fun getSMangaByUrl(url: String): SManga?
 
+    suspend fun getLocalSourceFilterValues(): Triple<List<String>, List<String>, List<String>>
+
     suspend fun updateThumbnailUrl(url: String, thumbnailUrl: String?)
 
     suspend fun insertOrReplaceSManga(manga: SManga)

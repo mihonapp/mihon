@@ -42,6 +42,7 @@ import mihon.domain.manga.local.interactor.GetAllLocalSourceMangaOrderedByDateAs
 import mihon.domain.manga.local.interactor.GetAllLocalSourceMangaOrderedByDateDesc
 import mihon.domain.manga.local.interactor.GetAllLocalSourceMangaOrderedByTitleAsc
 import mihon.domain.manga.local.interactor.GetAllLocalSourceMangaOrderedByTitleDesc
+import mihon.domain.manga.local.interactor.GetLocalSourceFilterValues
 import mihon.domain.manga.local.interactor.GetLocalSourceMangaByUrl
 import mihon.domain.manga.local.interactor.InsertOrReplaceLocalSourceManga
 import mihon.domain.manga.local.interactor.UpdateThumbnailUrlLocalSource
@@ -153,6 +154,7 @@ class DomainModule : InjektModule {
         addFactory { GetAllLocalSourceMangaOrderedByDateAsc(get()) }
         addFactory { GetAllLocalSourceMangaOrderedByDateDesc(get()) }
         addFactory { GetLocalSourceMangaByUrl(get()) }
+        addFactory { GetLocalSourceFilterValues(get()) }
         addFactory { UpdateThumbnailUrlLocalSource(get()) }
         addFactory { InsertOrReplaceLocalSourceManga(get()) }
         addFactory { DeleteLocalSourceManga(get()) }

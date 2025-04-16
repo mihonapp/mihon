@@ -46,6 +46,41 @@ SELECT *
 FROM local_manga
 ORDER BY dir_last_modified DESC;
 
+getFilterValues:
+WITH RECURSIVE author_artist_genre_split(item_author, rest_author, item_artist, rest_artist, item_genre, rest_genre) AS (
+  SELECT
+    '',
+    author || ',',
+    '',
+    artist || ',',
+    '',
+    genre || ','
+  FROM
+    local_manga
+  UNION ALL
+  SELECT
+    TRIM(substr(rest_author, 0, instr(rest_author, ','))),
+    substr(rest_author, instr(rest_author, ',') + 1),
+    TRIM(substr(rest_artist, 0, instr(rest_artist, ','))),
+    substr(rest_artist, instr(rest_artist, ',') + 1),
+    TRIM(substr(rest_genre, 0, instr(rest_genre, ','))),
+    substr(rest_genre, instr(rest_genre, ',') + 1)
+  FROM
+    author_artist_genre_split
+  WHERE
+    rest_author <> '' OR rest_artist <> '' OR rest_genre <> ''
+)
+SELECT DISTINCT
+  item_author AS author_item,
+  item_artist AS artist_item,
+  item_genre AS genre_item
+FROM
+  author_artist_genre_split
+WHERE
+  item_author <> '' OR item_artist <> '' OR item_genre <> ''
+ORDER BY
+  author_item, artist_item, genre_item;
+
 updateThumbnailUrl:
 UPDATE local_manga
 SET thumbnail_url = :thumbnailUrl

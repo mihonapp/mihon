@@ -12,6 +12,7 @@ import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
 import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
+import mihon.domain.manga.local.interactor.GetLocalSourceFilterValues
 import mihon.domain.manga.local.interactor.GetLocalSourceMangaByUrl
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.withIOContext
@@ -47,6 +48,7 @@ actual class LocalSource(
 
     private val localSourceIndexer: LocalSourceIndexer = Injekt.get()
     private val getLocalSourceMangaByUrl: GetLocalSourceMangaByUrl = Injekt.get()
+    private val getLocalSourceFilterValues: GetLocalSourceFilterValues = Injekt.get()
 
     @Suppress("PrivatePropertyName")
     private val PopularFilters = FilterList(OrderBy.Popular(context))
@@ -202,38 +204,23 @@ actual class LocalSource(
 
     // Filters
     override fun getFilterList(): FilterList {
-        val manga = runBlocking { localSourceIndexer.getAllLocalSourceManga.await() }
-
-        val genres = manga
-            .mapNotNull { it.genre?.split(",") }
-            .flatMap { it.map { genre -> genre.trim() } }
-            .toSet()
-
-        val authors = manga
-            .mapNotNull { it.author?.split(",") }
-            .flatMap { it.map { author -> author.trim() } }
-            .toSet()
-
-        val artists = manga
-            .mapNotNull { it.artist?.split(",") }
-            .flatMap { it.map { artist -> artist.trim() } }
-            .toSet()
+        val filterValues = runBlocking { getLocalSourceFilterValues.await() }
 
         val filters = try {
             mutableListOf<Filter<*>>(
                 OrderBy.Popular(context),
                 Separator(),
-                GenreGroup(
-                    context = context,
-                    genres = genres.map { GenreFilter(it) },
-                ),
                 AuthorGroup(
                     context = context,
-                    authors = authors.map { AuthorFilter(it) },
+                    authors = filterValues.first.map { AuthorFilter(it) },
                 ),
                 ArtistGroup(
                     context = context,
-                    artists = artists.map { ArtistFilter(it) },
+                    artists = filterValues.second.map { ArtistFilter(it) },
+                ),
+                GenreGroup(
+                    context = context,
+                    genres = filterValues.third.map { GenreFilter(it) },
                 ),
                 StatusGroup(
                     context,
@@ -249,9 +236,9 @@ actual class LocalSource(
                 ),
                 Separator(),
                 TextSearchHeader(context),
-                GenreTextSearch(context),
                 AuthorTextSearch(context),
                 ArtistTextSearch(context),
+                GenreTextSearch(context),
                 Filter.Separator(),
             )
         } catch (e: Exception) {
