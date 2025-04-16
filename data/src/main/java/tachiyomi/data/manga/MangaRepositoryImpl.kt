@@ -72,16 +72,8 @@ class MangaRepositoryImpl(
         }
     }
 
-    override suspend fun addHiddenDuplicate(id1: Long, id2: Long) {
-        handler.await(inTransaction = true) { hidden_duplicatesQueries.insert(id1, id2) }
-    }
-
     override suspend fun getHiddenDuplicates(manga: Manga): List<MangaWithChapterCount> {
         return handler.awaitList { mangasQueries.getHiddenDuplicates(manga.id, MangaMapper::mapMangaWithChapterCount) }
-    }
-
-    override suspend fun removeHiddenDuplicates(id1: Long, id2: Long) {
-        handler.await(inTransaction = true) { hidden_duplicatesQueries.remove(id1, id2) }
     }
 
     override suspend fun getUpcomingManga(statuses: Set<Long>): Flow<List<Manga>> {

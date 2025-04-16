@@ -12,6 +12,14 @@ class HiddenDuplicateRepositoryImpl(
         return handler.awaitList { hidden_duplicatesQueries.getAll(::mapHiddenDuplicate) }
     }
 
+    override suspend fun addHiddenDuplicate(id1: Long, id2: Long) {
+        handler.await(inTransaction = true) { hidden_duplicatesQueries.insert(id1, id2) }
+    }
+
+    override suspend fun removeHiddenDuplicates(id1: Long, id2: Long) {
+        handler.await(inTransaction = true) { hidden_duplicatesQueries.remove(id1, id2) }
+    }
+
     private fun mapHiddenDuplicate(
         id: Long,
         manga1Id: Long,
