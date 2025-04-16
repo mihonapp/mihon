@@ -38,12 +38,13 @@ import mihon.domain.extensionrepo.repository.ExtensionRepoRepository
 import mihon.domain.extensionrepo.service.ExtensionRepoService
 import mihon.domain.manga.local.interactor.DeleteLocalSourceManga
 import mihon.domain.manga.local.interactor.GetAllLocalSourceManga
-import mihon.domain.manga.local.interactor.GetAllLocalSourceMangaOrderedByDateAsc
-import mihon.domain.manga.local.interactor.GetAllLocalSourceMangaOrderedByDateDesc
-import mihon.domain.manga.local.interactor.GetAllLocalSourceMangaOrderedByTitleAsc
-import mihon.domain.manga.local.interactor.GetAllLocalSourceMangaOrderedByTitleDesc
+import mihon.domain.manga.local.interactor.GetFilteredLocalSourceUrls
 import mihon.domain.manga.local.interactor.GetLocalSourceFilterValues
 import mihon.domain.manga.local.interactor.GetLocalSourceMangaByUrl
+import mihon.domain.manga.local.interactor.GetLocalSourceMangaOrderedByDateAsc
+import mihon.domain.manga.local.interactor.GetLocalSourceMangaOrderedByDateDesc
+import mihon.domain.manga.local.interactor.GetLocalSourceMangaOrderedByTitleAsc
+import mihon.domain.manga.local.interactor.GetLocalSourceMangaOrderedByTitleDesc
 import mihon.domain.manga.local.interactor.InsertOrReplaceLocalSourceManga
 import mihon.domain.manga.local.interactor.UpdateThumbnailUrlLocalSource
 import mihon.domain.manga.local.repository.LocalMangaRepository
@@ -149,10 +150,11 @@ class DomainModule : InjektModule {
 
         addSingletonFactory<LocalMangaRepository> { LocalMangaRepositoryImpl(get()) }
         addFactory { GetAllLocalSourceManga(get()) }
-        addFactory { GetAllLocalSourceMangaOrderedByTitleAsc(get()) }
-        addFactory { GetAllLocalSourceMangaOrderedByTitleDesc(get()) }
-        addFactory { GetAllLocalSourceMangaOrderedByDateAsc(get()) }
-        addFactory { GetAllLocalSourceMangaOrderedByDateDesc(get()) }
+        addFactory { GetLocalSourceMangaOrderedByTitleAsc(get()) }
+        addFactory { GetLocalSourceMangaOrderedByTitleDesc(get()) }
+        addFactory { GetLocalSourceMangaOrderedByDateAsc(get()) }
+        addFactory { GetLocalSourceMangaOrderedByDateDesc(get()) }
+        addFactory { GetFilteredLocalSourceUrls(get()) }
         addFactory { GetLocalSourceMangaByUrl(get()) }
         addFactory { GetLocalSourceFilterValues(get()) }
         addFactory { UpdateThumbnailUrlLocalSource(get()) }

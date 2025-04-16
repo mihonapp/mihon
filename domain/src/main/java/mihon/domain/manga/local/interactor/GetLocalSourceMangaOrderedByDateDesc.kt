@@ -3,11 +3,11 @@ package mihon.domain.manga.local.interactor
 import eu.kanade.tachiyomi.source.model.SManga
 import mihon.domain.manga.local.repository.LocalMangaRepository
 
-class GetAllLocalSourceMangaOrderedByDateAsc(
+class GetLocalSourceMangaOrderedByDateDesc(
     private val localMangaRepository: LocalMangaRepository,
 ) {
 
-    suspend fun await(): List<SManga> {
-        return localMangaRepository.getAllSMangaOrderedByDateAsc()
+    suspend fun await(urls: List<String>): List<SManga> {
+        return localMangaRepository.getSMangaOrderedByDateDesc(urls)
     }
 }

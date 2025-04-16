@@ -13,20 +13,20 @@ class LocalMangaRepositoryImpl(
         return handler.awaitList { local_mangaQueries.getAllManga(LocalSMangaMapper::mapSManga) }
     }
 
-    override suspend fun getAllSMangaOrderedByTitleAsc(): List<SManga> {
-        return handler.awaitList { local_mangaQueries.getAllMangaOrderedByTitleAsc(LocalSMangaMapper::mapSManga) }
+    override suspend fun getSMangaOrderedByTitleAsc(urls: List<String>): List<SManga> {
+        return handler.awaitList { local_mangaQueries.getMangaOrderedByTitleAsc(urls, LocalSMangaMapper::mapSManga) }
     }
 
-    override suspend fun getAllSMangaOrderedByTitleDesc(): List<SManga> {
-        return handler.awaitList { local_mangaQueries.getAllMangaOrderedByTitleDesc(LocalSMangaMapper::mapSManga) }
+    override suspend fun getSMangaOrderedByTitleDesc(urls: List<String>): List<SManga> {
+        return handler.awaitList { local_mangaQueries.getMangaOrderedByTitleDesc(urls, LocalSMangaMapper::mapSManga) }
     }
 
-    override suspend fun getAllSMangaOrderedByDateAsc(): List<SManga> {
-        return handler.awaitList { local_mangaQueries.getAllMangaOrderedByDateAsc(LocalSMangaMapper::mapSManga) }
+    override suspend fun getSMangaOrderedByDateAsc(urls: List<String>): List<SManga> {
+        return handler.awaitList { local_mangaQueries.getMangaOrderedByDateAsc(urls, LocalSMangaMapper::mapSManga) }
     }
 
-    override suspend fun getAllSMangaOrderedByDateDesc(): List<SManga> {
-        return handler.awaitList { local_mangaQueries.getAllMangaOrderedByDateDesc(LocalSMangaMapper::mapSManga) }
+    override suspend fun getSMangaOrderedByDateDesc(urls: List<String>): List<SManga> {
+        return handler.awaitList { local_mangaQueries.getMangaOrderedByDateDesc(urls, LocalSMangaMapper::mapSManga) }
     }
 
     override fun getAllSMangaAsFlow(): Flow<List<SManga>> {
@@ -36,6 +36,35 @@ class LocalMangaRepositoryImpl(
     override suspend fun getSMangaByUrl(url: String): SManga? {
         return handler.awaitOneOrNull { local_mangaQueries.getMangaByUrl(url, LocalSMangaMapper::mapSManga) }
     }
+
+    override suspend fun getFilteredLocalSourceUrls(
+        excludedAuthors: Collection<String>,
+        excludedArtists: Collection<String>,
+        excludedGenres: Collection<String>,
+        excludedStatuses: Collection<Long>,
+        includedAuthors: Collection<String>,
+        includedArtists: Collection<String>,
+        includedGenres: Collection<String>,
+        includedStatuses: Collection<Long>,
+    ): List<String> {
+        return handler.awaitList(inTransaction = true) {
+            local_mangaQueries.getFilteredUrls(
+                excludedAuthors = excludedAuthors,
+                excludedArtists = excludedArtists,
+                excludedGenres = excludedGenres,
+                excludedStatuses = excludedStatuses,
+                includedAuthors = includedAuthors,
+                noFilterAuthor = includedAuthors.isEmpty(),
+                includedArtists = includedArtists,
+                noFilterArtist = includedArtists.isEmpty(),
+                includedGenres = includedGenres,
+                noFilterGenre = includedGenres.isEmpty(),
+                includedStatuses = includedStatuses,
+                noFilterStatus = includedStatuses.isEmpty(),
+            )
+        }
+    }
+
 
     override suspend fun getLocalSourceFilterValues(): Triple<List<String>, List<String>, List<String>> {
         val authors = mutableListOf<String>()

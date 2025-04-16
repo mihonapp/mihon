@@ -79,96 +79,22 @@ actual class LocalSource(
         filters: FilterList,
     ): MangasPage = withIOContext {
         if (page == 1) {
+            filters.extractLocalFilter().getFilteredManga()
             val filter = filters.extractLocalFilter()
-            mangaPages = filter
-                .getMangaFunc()
-                .asSequence()
-                .filter { manga ->
-                    if (filter.includedAuthors.isEmpty()) {
-                        true
-                    } else {
-                        manga.author
-                            .takeUnless { it.isNullOrBlank() }
-                            ?.split(",")
-                            ?.map { it.trim().lowercase() }
-                            ?.any { filter.includedAuthors.contains(it) }
-                            ?: false
-                    }
-                }
+            mangaPages = filter.getFilteredManga()
                 .filterNot { manga ->
-                    if (filter.excludedAuthors.isEmpty()) {
-                        false
-                    } else {
-                        manga.author
-                            .takeUnless { it.isNullOrBlank() }
-                            ?.split(",")
-                            ?.map { it.trim().lowercase() }
-                            ?.any { filter.excludedAuthors.contains(it) }
-                            ?: false
+                    filter.includedAuthors.any { author ->
+                        manga.author?.split(",")?.map { it.trim() }?.contains(author) == false
                     }
-                }
-                .filter { manga ->
-                    if (filter.includedArtists.isEmpty()) {
-                        true
-                    } else {
-                        manga.artist
-                            .takeUnless { it.isNullOrBlank() }
-                            ?.split(",")
-                            ?.map { it.trim().lowercase() }
-                            ?.any { filter.includedArtists.contains(it) }
-                            ?: false
+                }.filterNot { manga ->
+                    filter.includedArtists.any { artist ->
+                        manga.artist?.split(",")?.map { it.trim() }?.contains(artist) == false
                     }
+                }.filterNot { manga ->
+                filter.includedGenres.any { genre ->
+                    manga.genre?.split(",")?.map { it.trim() }?.contains(genre) == false
                 }
-                .filterNot { manga ->
-                    if (filter.excludedArtists.isEmpty()) {
-                        false
-                    } else {
-                        manga.artist
-                            .takeUnless { it.isNullOrBlank() }
-                            ?.split(",")
-                            ?.map { it.trim().lowercase() }
-                            ?.any { filter.excludedArtists.contains(it) }
-                            ?: false
-                    }
-                }
-                .filter { manga ->
-                    if (filter.includedGenres.isEmpty()) {
-                        true
-                    } else {
-                        manga.genre
-                            .takeUnless { it.isNullOrBlank() }
-                            ?.split(",")
-                            ?.map { it.trim().lowercase() }
-                            ?.any { filter.includedGenres.contains(it) }
-                            ?: false
-                    }
-                }
-                .filterNot { manga ->
-                    if (filter.excludedGenres.isEmpty()) {
-                        false
-                    } else {
-                        manga.genre
-                            .takeUnless { it.isNullOrBlank() }
-                            ?.split(",")
-                            ?.map { it.trim().lowercase() }
-                            ?.any { filter.excludedGenres.contains(it) }
-                            ?: false
-                    }
-                }
-                .filter { manga ->
-                    filter.includedStatuses
-                        .takeUnless { it.isEmpty() }
-                        ?.contains(manga.status)
-                        ?: true
-                }
-                .filterNot { manga ->
-                    filter.excludedStatuses
-                        .takeUnless { it.isEmpty() }
-                        ?.contains(manga.status)
-                        ?: false
-                }
-                .chunked(CHUNK_SIZE)
-                .toList()
+            }.chunked(CHUNK_SIZE)
         }
 
         if (mangaPages.isNullOrEmpty()) {

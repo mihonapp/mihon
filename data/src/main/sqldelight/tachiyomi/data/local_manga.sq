@@ -26,25 +26,120 @@ getAllManga:
 SELECT *
 FROM local_manga;
 
-getAllMangaOrderedByTitleAsc:
+getMangaOrderedByTitleAsc:
 SELECT *
 FROM local_manga
+WHERE url IN :urls
 ORDER BY title ASC;
 
-getAllMangaOrderedByTitleDesc:
+getMangaOrderedByTitleDesc:
 SELECT *
 FROM local_manga
+WHERE url IN :urls
 ORDER BY title DESC;
 
-getAllMangaOrderedByDateAsc:
+getMangaOrderedByDateAsc:
 SELECT *
 FROM local_manga
+WHERE url IN :urls
 ORDER BY dir_last_modified ASC;
 
-getAllMangaOrderedByDateDesc:
+getMangaOrderedByDateDesc:
 SELECT *
 FROM local_manga
+WHERE url IN :urls
 ORDER BY dir_last_modified DESC;
+
+getFilteredUrls:
+WITH FilteredUrls AS (
+  SELECT DISTINCT
+    result.url,
+    CASE
+      WHEN COALESCE(result.author_item, '') IN :excludedAuthors THEN result.url
+      WHEN COALESCE(result.artist_item, '') IN :excludedArtists THEN result.url
+      WHEN COALESCE(result.genre_item, '') IN :excludedGenres THEN result.url
+      WHEN COALESCE(result.status, -1) IN :excludedStatuses THEN result.url
+      ELSE ''
+    END AS excludedUrls,
+    CASE
+      WHEN (COALESCE(result.author_item, '') IN :includedAuthors OR :noFilterAuthor) THEN result.url
+      ELSE ''
+    END AS includedAuthorUrls,
+    CASE
+      WHEN (COALESCE(result.artist_item, '') IN :includedArtists OR :noFilterArtist) THEN result.url
+      ELSE ''
+    END AS includedArtisUrls,
+    CASE
+      WHEN (COALESCE(result.genre_item, '') IN :includedGenres OR :noFilterGenre) THEN result.url
+      ELSE ''
+    END AS includedGenreUrls,
+    CASE
+      WHEN (COALESCE(result.status, -1) IN :includedStatuses OR :noFilterStatus) THEN result.url
+      ELSE ''
+    END AS includedStatusUrls
+  FROM (
+    WITH RECURSIVE author_artist_genre_split(url, item_author, rest_author, item_artist, rest_artist, item_genre, rest_genre, status) AS (
+      SELECT
+        url,
+        '',
+        author || ',',
+        '',
+        artist || ',',
+        '',
+        genre || ',',
+        status
+      FROM
+        local_manga
+      UNION ALL
+      SELECT
+        url,
+        TRIM(substr(rest_author, 0, instr(rest_author, ','))),
+        substr(rest_author, instr(rest_author, ',') + 1),
+        TRIM(substr(rest_artist, 0, instr(rest_artist, ','))),
+        substr(rest_artist, instr(rest_artist, ',') + 1),
+        TRIM(substr(rest_genre, 0, instr(rest_genre, ','))),
+        substr(rest_genre, instr(rest_genre, ',') + 1),
+        status
+      FROM
+        author_artist_genre_split
+      WHERE
+        rest_author <> '' OR rest_artist <> '' OR rest_genre <> ''
+    )
+    SELECT
+      url,
+      item_author AS author_item,
+      item_artist AS artist_item,
+      item_genre AS genre_item,
+      status AS status
+    FROM
+      author_artist_genre_split
+    WHERE
+      item_author <> '' OR item_artist <> '' OR item_genre <> ''
+    ORDER BY
+      url, author_item, artist_item, genre_item
+  ) AS result
+),
+IntersectedUrls AS (
+  SELECT DISTINCT includedAuthorUrls AS url FROM FilteredUrls WHERE includedAuthorUrls <> ''
+  INTERSECT
+  SELECT DISTINCT includedArtisUrls AS url FROM FilteredUrls WHERE includedArtisUrls <> ''
+  INTERSECT
+  SELECT DISTINCT includedGenreUrls AS url FROM FilteredUrls WHERE includedGenreUrls <> ''
+  INTERSECT
+  SELECT DISTINCT includedStatusUrls AS url FROM FilteredUrls WHERE includedStatusUrls <> ''
+),
+FinalFilteredUrls AS (
+  SELECT url
+  FROM IntersectedUrls
+  WHERE url NOT IN (
+    SELECT DISTINCT excludedUrls
+    FROM FilteredUrls
+    WHERE excludedUrls <> ''
+  )
+)
+SELECT DISTINCT url
+FROM FinalFilteredUrls;
+
 
 getFilterValues:
 WITH RECURSIVE author_artist_genre_split(item_author, rest_author, item_artist, rest_artist, item_genre, rest_genre) AS (
