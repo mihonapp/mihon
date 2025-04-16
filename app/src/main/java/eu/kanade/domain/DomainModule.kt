@@ -39,6 +39,7 @@ import mihon.domain.migration.usecases.MigrateMangaUseCase
 import mihon.domain.upcoming.interactor.GetUpcomingManga
 import tachiyomi.data.category.CategoryRepositoryImpl
 import tachiyomi.data.chapter.ChapterRepositoryImpl
+import tachiyomi.data.hiddenDuplicates.HiddenDuplicateRepositoryImpl
 import tachiyomi.data.history.HistoryRepositoryImpl
 import tachiyomi.data.manga.MangaRepositoryImpl
 import tachiyomi.data.release.ReleaseServiceImpl
@@ -65,6 +66,7 @@ import tachiyomi.domain.chapter.interactor.SetMangaDefaultChapterFlags
 import tachiyomi.domain.chapter.interactor.ShouldUpdateDbChapter
 import tachiyomi.domain.chapter.interactor.UpdateChapter
 import tachiyomi.domain.chapter.repository.ChapterRepository
+import tachiyomi.domain.hiddenDuplicates.repository.HiddenDuplicateRepository
 import tachiyomi.domain.history.interactor.GetHistory
 import tachiyomi.domain.history.interactor.GetNextChapters
 import tachiyomi.domain.history.interactor.GetTotalReadDuration
@@ -122,7 +124,6 @@ class DomainModule : InjektModule {
         addSingletonFactory<MangaRepository> { MangaRepositoryImpl(get()) }
         addFactory { GetDuplicateLibraryManga(get()) }
         addFactory { AddHiddenDuplicate(get()) }
-        addFactory { GetHiddenDuplicates(get()) }
         addFactory { RemoveHiddenDuplicates(get()) }
         addFactory { GetFavorites(get()) }
         addFactory { GetLibraryManga(get()) }
@@ -147,6 +148,9 @@ class DomainModule : InjektModule {
                 get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(),
             )
         }
+
+        addSingletonFactory<HiddenDuplicateRepository> { HiddenDuplicateRepositoryImpl(get()) }
+        addFactory { GetHiddenDuplicates(get(), get()) }
 
         addSingletonFactory<ReleaseService> { ReleaseServiceImpl(get(), get()) }
         addFactory { GetApplicationRelease(get(), get()) }

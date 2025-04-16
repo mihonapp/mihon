@@ -15,6 +15,7 @@
     <string name="categories">Categories</string>
     <string name="manga">Library entries</string>
     <string name="chapters">Chapters</string>
+    <string name="hidden_duplicates">Hidden duplicates</string>
     <string name="track">Tracking</string>
     <string name="delete_downloaded">Delete downloaded</string>
     <string name="history">History</string>
