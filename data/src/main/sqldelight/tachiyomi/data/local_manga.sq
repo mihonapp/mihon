@@ -140,7 +140,6 @@ FinalFilteredUrls AS (
 SELECT DISTINCT url
 FROM FinalFilteredUrls;
 
-
 getFilterValues:
 WITH RECURSIVE author_artist_genre_split(item_author, rest_author, item_artist, rest_artist, item_genre, rest_genre) AS (
   SELECT

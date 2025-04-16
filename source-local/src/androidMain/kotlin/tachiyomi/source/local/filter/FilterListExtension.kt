@@ -10,7 +10,7 @@ fun FilterList.extractLocalFilter(): LocalSourceFilter {
 
         when (filter) {
             is OrderBy.Popular -> {
-              localSourceFilter.orderBy = filter
+                localSourceFilter.orderBy = filter
             }
 
             // included Filter
@@ -99,11 +99,15 @@ fun FilterList.extractLocalFilter(): LocalSourceFilter {
                 filter.state.forEach { status ->
                     when (status.state) {
                         Filter.TriState.STATE_INCLUDE -> {
-                            localSourceFilter.includedStatuses.add(ComicInfoPublishingStatus.toSMangaValue(status.name).toLong())
+                            localSourceFilter.includedStatuses.add(
+                                ComicInfoPublishingStatus.toSMangaValue(status.name).toLong(),
+                            )
                         }
 
                         Filter.TriState.STATE_EXCLUDE -> {
-                            localSourceFilter.excludedStatuses.add(ComicInfoPublishingStatus.toSMangaValue(status.name).toLong())
+                            localSourceFilter.excludedStatuses.add(
+                                ComicInfoPublishingStatus.toSMangaValue(status.name).toLong(),
+                            )
                         }
                     }
                 }

@@ -65,7 +65,6 @@ class LocalMangaRepositoryImpl(
         }
     }
 
-
     override suspend fun getLocalSourceFilterValues(): Triple<List<String>, List<String>, List<String>> {
         val authors = mutableListOf<String>()
         val artists = mutableListOf<String>()

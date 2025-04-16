@@ -91,10 +91,10 @@ actual class LocalSource(
                         manga.artist?.split(",")?.map { it.trim() }?.contains(artist) == false
                     }
                 }.filterNot { manga ->
-                filter.includedGenres.any { genre ->
-                    manga.genre?.split(",")?.map { it.trim() }?.contains(genre) == false
-                }
-            }.chunked(CHUNK_SIZE)
+                    filter.includedGenres.any { genre ->
+                        manga.genre?.split(",")?.map { it.trim() }?.contains(genre) == false
+                    }
+                }.chunked(CHUNK_SIZE)
         }
 
         if (mangaPages.isNullOrEmpty()) {
