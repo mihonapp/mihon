@@ -57,6 +57,6 @@ fun Pill(
         modifier = modifier,
         color = color,
         contentColor = contentColor,
-        style = MaterialTheme.typography.bodyMedium.copy(fontSize = fontSize),
+        style = style.copy(fontSize = fontSize),
     )
 }
