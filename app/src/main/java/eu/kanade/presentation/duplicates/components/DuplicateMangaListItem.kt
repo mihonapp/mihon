@@ -75,13 +75,14 @@ fun DuplicateMangaListItem(
     onLongClick: () -> Unit,
     onClick: () -> Unit,
     actions: List<ManageDuplicateAction> = emptyList(),
+    cardWidth: Dp,
 ) {
     val source = getSource()
     val manga = duplicate.manga
 
     Column(
         modifier = Modifier
-            .width(MangaCardWidth)
+            .width(cardWidth)
             .clip(MaterialTheme.shapes.medium)
             .background(MaterialTheme.colorScheme.surface)
             .combinedClickable(
@@ -231,7 +232,7 @@ private fun MangaDetailRow(
 }
 
 @Composable
-fun getMaximumMangaCardHeight(duplicates: List<MangaWithChapterCount>, actions: Boolean = false): Dp {
+fun getMaximumMangaCardHeight(duplicates: List<MangaWithChapterCount>, cardWidth: Dp, actions: Boolean = false): Dp {
     val density = LocalDensity.current
     val typography = MaterialTheme.typography
     val textMeasurer = rememberTextMeasurer()
@@ -239,7 +240,7 @@ fun getMaximumMangaCardHeight(duplicates: List<MangaWithChapterCount>, actions: 
     val smallPadding = with(density) { MaterialTheme.padding.small.roundToPx() }
     val extraSmallPadding = with(density) { MaterialTheme.padding.extraSmall.roundToPx() }
 
-    val width = with(density) { MangaCardWidth.roundToPx() - (2 * smallPadding) }
+    val width = with(density) { cardWidth.roundToPx() - (2 * smallPadding) }
     val iconWidth = with(density) { MangaDetailsIconWidth.roundToPx() }
 
     val coverHeight = width / MangaCover.Book.ratio
@@ -326,5 +327,4 @@ private fun TextMeasurer.measureHeight(
     .size
     .height
 
-private val MangaCardWidth = 150.dp
 private val MangaDetailsIconWidth = 16.dp
