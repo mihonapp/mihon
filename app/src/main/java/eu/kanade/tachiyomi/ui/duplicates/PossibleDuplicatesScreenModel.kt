@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.withUIContext
-import tachiyomi.domain.manga.interactor.AddHiddenDuplicate
+import tachiyomi.domain.hiddenDuplicates.interactor.AddHiddenDuplicate
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.manga.model.Manga

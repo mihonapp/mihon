@@ -2,18 +2,18 @@ package eu.kanade.tachiyomi.data.backup.restore.restorers
 
 import eu.kanade.tachiyomi.data.backup.models.BackupHiddenDuplicate
 import tachiyomi.data.DatabaseHandler
-import tachiyomi.domain.manga.interactor.GetHiddenDuplicates
+import tachiyomi.domain.hiddenDuplicates.interactor.GetAllHiddenDuplicates
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class HiddenDuplicatesRestorer(
     private val handler: DatabaseHandler = Injekt.get(),
-    private val getHiddenDuplicates: GetHiddenDuplicates = Injekt.get(),
+    private val getAllHiddenDuplicates: GetAllHiddenDuplicates = Injekt.get(),
 ) {
 
     suspend operator fun invoke(backupHiddenDuplicates: List<BackupHiddenDuplicate>) {
         if (backupHiddenDuplicates.isNotEmpty()) {
-            val dbHiddenDuplicates = getHiddenDuplicates.await()
+            val dbHiddenDuplicates = getAllHiddenDuplicates.await()
                 .map { BackupHiddenDuplicate(it.manga1Id, it.manga2Id) }
                 .toMutableList()
 

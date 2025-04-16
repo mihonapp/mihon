@@ -9,16 +9,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import tachiyomi.core.common.util.lang.withUIContext
+import tachiyomi.domain.hiddenDuplicates.interactor.RemoveHiddenDuplicate
 import tachiyomi.domain.manga.interactor.GetHiddenDuplicates
 import tachiyomi.domain.manga.interactor.GetLibraryManga
-import tachiyomi.domain.manga.interactor.RemoveHiddenDuplicates
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class HiddenDuplicatesScreenModel(
-    private val removeHiddenDuplicate: RemoveHiddenDuplicates = Injekt.get(),
+    private val removeHiddenDuplicate: RemoveHiddenDuplicate = Injekt.get(),
     private val getHiddenDuplicates: GetHiddenDuplicates = Injekt.get(),
     private val getLibraryManga: GetLibraryManga = Injekt.get(),
 ) : StateScreenModel<HiddenDuplicatesScreenModel.State>(State()) {

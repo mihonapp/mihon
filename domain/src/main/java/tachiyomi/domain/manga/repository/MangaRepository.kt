@@ -28,8 +28,6 @@ interface MangaRepository {
 
     suspend fun getDuplicateLibraryManga(id: Long, title: String): List<MangaWithChapterCount>
 
-    suspend fun addHiddenDuplicate(id1: Long, id2: Long)
-
     suspend fun getHiddenDuplicates(manga: Manga): List<MangaWithChapterCount>
 
     suspend fun getUpcomingManga(statuses: Set<Long>): Flow<List<Manga>>
@@ -43,6 +41,4 @@ interface MangaRepository {
     suspend fun updateAll(mangaUpdates: List<MangaUpdate>): Boolean
 
     suspend fun insertNetworkManga(manga: List<Manga>): List<Manga>
-
-    suspend fun removeHiddenDuplicates(id1: Long, id2: Long)
 }
