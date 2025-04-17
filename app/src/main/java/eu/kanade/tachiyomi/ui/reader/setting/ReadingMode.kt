@@ -60,7 +60,7 @@ enum class ReadingMode(
         0x00000006,
         Direction.Horizontal,
         ViewerType.Webtoon,
-    );
+    ),
     ;
 
     companion object {

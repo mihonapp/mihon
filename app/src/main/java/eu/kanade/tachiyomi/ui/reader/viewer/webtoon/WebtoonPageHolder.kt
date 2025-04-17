@@ -101,7 +101,7 @@ class WebtoonPageHolder(
     private fun refreshLayoutParams() {
         frame.layoutParams = FrameLayout.LayoutParams(
             if (viewer.isHorizontal) WRAP_CONTENT else MATCH_PARENT,
-            if (viewer.isHorizontal) MATCH_PARENT else WRAP_CONTENT
+            if (viewer.isHorizontal) MATCH_PARENT else WRAP_CONTENT,
         ).apply {
             if (!viewer.isContinuous) {
                 if (viewer.isHorizontal) {
@@ -210,10 +210,11 @@ class WebtoonPageHolder(
                     isAnimated,
                     ReaderPageImageView.Config(
                         zoomDuration = viewer.config.doubleTapAnimDuration,
-                        minimumScaleType = if (viewer.isHorizontal) 
+                        minimumScaleType = if (viewer.isHorizontal) {
                             SubsamplingScaleImageView.SCALE_TYPE_FIT_HEIGHT
-                        else 
-                            SubsamplingScaleImageView.SCALE_TYPE_FIT_WIDTH,
+                        } else {
+                            SubsamplingScaleImageView.SCALE_TYPE_FIT_WIDTH
+                        },
                         cropBorders = viewer.config.imageCropBorders,
                     ),
                 )

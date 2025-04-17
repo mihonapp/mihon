@@ -9,7 +9,6 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.WebtoonLayoutManager
 import eu.kanade.tachiyomi.data.download.DownloadManager
@@ -35,7 +34,7 @@ import kotlin.math.min
 class WebtoonViewer(
     val activity: ReaderActivity,
     val isContinuous: Boolean = true,
-    val isHorizontal: Boolean = false
+    val isHorizontal: Boolean = false,
 ) : Viewer {
 
     val downloadManager: DownloadManager by injectLazy()

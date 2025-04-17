@@ -303,8 +303,20 @@ class WebtoonRecyclerView @JvmOverloads constructor(
 
                     val x = (ev.getX(index) + 0.5f).toInt()
                     val y = (ev.getY(index) + 0.5f).toInt()
-                    var dx = if (orientation == RecyclerView.HORIZONTAL && (atFirstPosition || atLastPosition)) x - downX else 0
-                    var dy = if (orientation == RecyclerView.VERTICAL && (atFirstPosition || atLastPosition)) y - downY else 0
+                    var dx = if (orientation == RecyclerView.HORIZONTAL &&
+                        (atFirstPosition || atLastPosition)
+                    ) {
+                        x - downX
+                    } else {
+                        0
+                    }
+                    var dy = if (orientation == RecyclerView.VERTICAL &&
+                        (atFirstPosition || atLastPosition)
+                    ) {
+                        y - downY
+                    } else {
+                        0
+                    }
 
                     if (!isZoomDragging && currentScale > 1f) {
                         var startScroll = false
