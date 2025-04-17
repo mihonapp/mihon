@@ -119,7 +119,7 @@ fun MoreScreen(
             }
             item {
                 TextPreferenceWidget(
-                    title = stringResource(MR.strings.label_manage_duplicates),
+                    title = stringResource(MR.strings.label_duplicates),
                     icon = Icons.Outlined.BurstMode,
                     onPreferenceClick = onClickManageDuplicates,
                 )

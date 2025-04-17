@@ -59,6 +59,7 @@ object SettingsLibraryScreen : SearchableSettings {
         return listOf(
             getCategoriesGroup(LocalNavigator.currentOrThrow, allCategories, libraryPreferences),
             getGlobalUpdateGroup(allCategories, libraryPreferences),
+            getDuplicatesGroup(libraryPreferences),
             getBehaviorGroup(libraryPreferences),
         )
     }
@@ -208,6 +209,29 @@ object SettingsLibraryScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_library_update_show_tab_badge),
                 ),
             ),
+        )
+    }
+
+    @Composable
+    private fun getDuplicatesGroup(
+        libraryPreferences: LibraryPreferences,
+    ): Preference.PreferenceGroup {
+        return Preference.PreferenceGroup(
+            title = stringResource(MR.strings.label_duplicates),
+            preferenceItems = persistentListOf(
+                Preference.PreferenceItem.ListPreference(
+                    preference = libraryPreferences.duplicateMatchLevel(),
+                    entries = persistentMapOf(
+                        LibraryPreferences.DuplicateMatchLevel.ExactMatch to
+                            stringResource(MR.strings.pref_duplicate_automatic_match_exact),
+                        LibraryPreferences.DuplicateMatchLevel.FuzzyTitle  to
+                            stringResource(MR.strings.pref_duplicate_automatic_match_fuzzy_title),
+                        LibraryPreferences.DuplicateMatchLevel.TitleSubstring  to
+                            stringResource(MR.strings.pref_duplicate_automatic_match_title_substring),
+                    ),
+                    title = stringResource(MR.strings.pref_duplicate_automatic_match),
+                ),
+            )
         )
     }
 

@@ -66,9 +66,9 @@ class MangaRepositoryImpl(
         return handler.subscribeToList { mangasQueries.getFavoriteBySourceId(sourceId, MangaMapper::mapManga) }
     }
 
-    override suspend fun getDuplicateLibraryManga(id: Long, title: String): List<MangaWithChapterCount> {
+    override suspend fun getDuplicateLibraryManga(id: Long, searchString: String): List<MangaWithChapterCount> {
         return handler.awaitList {
-            mangasQueries.getDuplicateLibraryManga(id, title, MangaMapper::mapMangaWithChapterCount)
+            mangasQueries.getDuplicateLibraryManga(id, searchString, MangaMapper::mapMangaWithChapterCount)
         }
     }
 

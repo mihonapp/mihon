@@ -50,7 +50,7 @@ class ManageDuplicatesScreen : Screen() {
         Scaffold(
             topBar = { scrollBehavior ->
                 AppBar(
-                    title = stringResource(MR.strings.label_manage_duplicates),
+                    title = stringResource(MR.strings.action_manage_duplicates),
                     navigateUp = navigator::pop,
                     scrollBehavior = scrollBehavior,
                 )
