@@ -70,7 +70,7 @@
     <string name="pref_category_tracking">İzleme</string>
     <string name="pref_category_advanced">Gelişmiş</string>
     <string name="pref_category_about">Hakkında</string>
-    <string name="pref_library_columns">Izgara boyutu</string>
+    <string name="pref_library_columns">Bir satırdaki öge sayısı</string>
     <string name="portrait">Portre</string>
     <string name="landscape">Manzara</string>
     <string name="pref_library_update_interval">Otomatik güncellemeler</string>
@@ -100,7 +100,7 @@
     <string name="untrusted_extension_message">Kötü niyetli uzantılar, oturum açma bilgilerini okuyabilir veya güvenilmeyen kodlar çalıştırabilir.
 \n
 \nBu uzantıya güvenerek bu riskleri kabul etmiş olursunuz.</string>
-    <string name="pref_fullscreen">Tam Ekran</string>
+    <string name="pref_fullscreen">Tam ekran</string>
     <string name="pref_page_transitions">Sayfa geçişlerini animasyonla yap</string>
     <string name="pref_double_tap_anim_speed">Çift dokunma animasyon hızı</string>
     <string name="pref_show_page_number">Sayfa numarası göster</string>
@@ -139,10 +139,10 @@
     <string name="rotation_free">Serbest</string>
     <string name="rotation_force_portrait">Kilitli portre</string>
     <string name="rotation_force_landscape">Kilitli manzara</string>
-    <string name="color_filter_r_value">K</string>
-    <string name="color_filter_g_value">Y</string>
-    <string name="color_filter_b_value">M</string>
-    <string name="color_filter_a_value">A</string>
+    <string name="color_filter_r_value">Kırmızı</string>
+    <string name="color_filter_g_value">Yeşil</string>
+    <string name="color_filter_b_value">Mavi</string>
+    <string name="color_filter_a_value">Alfa</string>
     <string name="pref_remove_after_marked_as_read">Elle okundu olarak işaretlenince</string>
     <string name="pref_remove_after_read">Okuduktan sonra otomatik sil</string>
     <string name="disabled">Devre dışı</string>
@@ -331,7 +331,7 @@
     <string name="action_move_to_bottom">En alta taşı</string>
     <string name="channel_ext_updates">Uzantı güncellemeleri</string>
     <string name="updating_library">Kitaplık güncelleniyor</string>
-    <string name="pref_category_reading">Okunan</string>
+    <string name="pref_category_reading">Okuma</string>
     <string name="pref_skip_filtered_chapters">Filtrelenmiş bölümleri atla</string>
     <string name="label_sources">Kaynaklar</string>
     <string name="action_select_inverse">Tersini seç</string>
@@ -410,7 +410,7 @@
     <string name="pref_category_delete_chapters">Bölümleri sil</string>
     <string name="ext_nsfw_warning">Bu uzantıdaki kaynaklar yetişkin içerik (18+) içerebilir</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Bu, resmi olmayan veya yanlış işaretlenmiş uzantıların uygulama içinde yetişkin içeriği (18+) göstermesini engellemez.</string>
+    <string name="parental_controls_info">Bu, resmî olmayan veya yanlış işaretlenmiş uzantıların uygulama içinde yetişkin içeriği (18+) göstermesini engellemez.</string>
     <string name="no_chapters_error">Bölüm bulunamadı</string>
     <string name="chapter_settings_updated">Varsayılan bölüm ayarları güncellendi</string>
     <string name="set_chapter_settings_as_default">Varsayılan olarak ayarla</string>
@@ -494,7 +494,7 @@
     <string name="error_saving_cover">Kapak kaydedilemedi</string>
     <string name="cover_saved">Kapak kaydedildi</string>
     <string name="manga_cover">Kapak</string>
-    <string name="categorized_display_settings">Her kategori için sıralama ayarları</string>
+    <string name="categorized_display_settings">Her kategori için ayrı sıralama ayarları</string>
     <string name="tracking_guide">İzleyici kılavuzu</string>
     <string name="information_empty_category_dialog">Henüz bir kategoriniz yok.</string>
     <string name="action_start_downloading_now">Şimdi indirmeye başla</string>
@@ -570,7 +570,6 @@
     <string name="rotation_reverse_portrait">Ters portre</string>
     <string name="action_move_to_top_all_for_series">Seriyi en üste taşı</string>
     <string name="disabled_nav">Devre dışı</string>
-    <string name="update_check_fdroid_migration_info">Resmi yayınlardan yeni bir sürüm var. Resmi olmayan F-Droid sürümlerinden nasıl geçiş yapacağınızı öğrenmek için dokunun.</string>
     <string name="error_saving_picture">Görsel kaydedilirken hata oluştu</string>
     <string name="empty_backup_error">Yedeklenecek kitaplık girdisi yok</string>
     <string name="update_check_open">GitHub\'da aç</string>
@@ -678,7 +677,7 @@
     <string name="pref_library_update_show_tab_badge">Güncellemeler simgesinde okunmayan sayısını göster</string>
     <string name="copied_to_clipboard_plain">Panoya kopyalandı</string>
     <string name="enhanced_services_not_installed">Kullanılabilir ancak kaynak yüklü değil: %s</string>
-    <string name="pref_skip_dupe_chapters">Tekrarlanan bölümleri atla</string>
+    <string name="pref_skip_dupe_chapters">Yinelenen bölümleri atla</string>
     <string name="confirm_add_duplicate_manga">Kitaplığınızda aynı ada sahip bir girdiniz var.
 \n
 \nYine de devam etmek istiyor musunuz?</string>
@@ -688,15 +687,13 @@
     <string name="action_copy_to_clipboard">Panoya kopyala</string>
     <string name="action_update_category">Kategoriyi güncelle</string>
     <string name="split_tall_images">Uzun görselleri böl</string>
-    <string name="overlay_header">Kaplama</string>
+    <string name="overlay_header">Üstünde göster</string>
     <string name="pref_page_rotate">Geniş sayfaları sığdırmak için döndür</string>
     <string name="pref_page_rotate_invert">Döndürülen geniş sayfaların yönünü ters çevir</string>
     <string name="pref_debug_info">Hata ayıklama bilgisi</string>
-    <string name="pref_chapter_swipe">Kaydırma kontrolleri</string>
-    <string name="pref_chapter_swipe_end">Sağa kaydırma kontrolü</string>
-    <string name="pref_chapter_swipe_start">Sola kaydırma kontrolü</string>
+    <string name="pref_chapter_swipe_end">Bölümü sağa kaydırma</string>
+    <string name="pref_chapter_swipe_start">Bölümü sola kaydırma</string>
     <string name="pref_double_tap_zoom">Yakınlaştırmak için iki kez dokun</string>
-    <string name="pref_library_columns_per_row">Satır başına %d</string>
     <string name="action_set_interval">Sıklığı ayarla</string>
     <string name="action_filter_interval_custom">Özel güncelleme sıklığı</string>
     <string name="intervals_header">Zaman aralıkları</string>
@@ -722,9 +719,7 @@
     <string name="syncing_library">Kitaplık eşitleniyor</string>
     <string name="unlock_app_title">%s Kilidini Aç</string>
     <string name="action_move_to_bottom_all_for_series">Seriyi en alta taşı</string>
-    <string name="action_sort_category">Kategorileri sırala</string>
     <string name="notification_updating_progress">Kitaplık güncelleniyor… (%s)</string>
-    <string name="sort_category_confirmation">Kategorileri alfabetik olarak sıralamak ister misiniz?</string>
     <string name="file_null_uri_error">Dosya seçilmedi</string>
     <string name="source_settings">Kaynak ayarları</string>
     <string name="app_settings">Uygulama ayarları</string>
@@ -820,12 +815,12 @@
     <string name="upcoming_guide">Yakında Gelecek Rehberi</string>
     <string name="upcoming_calendar_next">Gelecek Ay</string>
     <string name="upcoming_calendar_prev">Önceki Ay</string>
-    <string name="pref_download_new_unread_chapters_only">Tekrarlanan okunmuş bölümlerin indirilmesini atla</string>
+    <string name="pref_download_new_unread_chapters_only">Yinelenen okunmuş bölümlerin indirilmesini atla</string>
     <string name="add_repo_confirmation">\"%s\" deposunu eklemek istiyor musunuz?</string>
     <string name="confirm_tracker_update">İzleyicileri %d. bölüme güncelle?</string>
     <string name="onboarding_permission_crashlytics">Çökme kayıtlarını gönder</string>
     <string name="pref_security">Güvenlik</string>
-    <string name="onboarding_permission_crashlytics_description">Geliştiricelere anonimleştirilmiş çökme kayıtlarını gönder.</string>
+    <string name="onboarding_permission_crashlytics_description">Geliştiricilere anonimleştirilmiş çökme kayıtlarını gönder.</string>
     <string name="firebase_summary">Çökme kayıtlarını ve kullanım istatistiklerini göndermek sorunları tanımlamamıza ve düzeltmemize imkan verir, performansı iyileştirmemizi sağlar ve gelecek güncellemeleri ihtiyaçlarınızla uyumlu yapmamıza olanak tanır</string>
     <string name="onboarding_permission_analytics">Kullanım istatistiklerine izin ver</string>
     <string name="onboarding_permission_analytics_description">Uygulama özelliklerini geliştirmek için anonimleştirilmiş kullanım verileri gönder.</string>
@@ -839,5 +834,23 @@
     <string name="trackers_updated_summary">İzleyiciler %d. bölüme güncellendi</string>
     <string name="pref_hardware_bitmap_threshold">Özel bitmap donanım sınırı</string>
     <string name="pref_hardware_bitmap_threshold_default">Varsayılan (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Eğer okuyucu boş bir resim yüklerse bu sınırı kademeli olarak azaltın.\nSeçili: %s</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Eğer okuyucu boş bir görsel yüklerse bu sınırı kademeli olarak azaltın.\nSeçili: %s</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Performansı etkiler. Yalnızca bitmap sınırını düşürmek boş görsel sorunlarını çözmediğinde kullanın</string>
+    <string name="pref_incognito_mode_extension_summary">Eklenti için okuma geçmişini duraklat</string>
+    <string name="label_auto">Otomatik</string>
+    <string name="theme_monochrome">Monokrom</string>
+    <string name="tracked_privately">Gizli olarak izlendi</string>
+    <string name="library_exported">Kitaplık Dışa Aktarıldı</string>
+    <string name="author">Yazar</string>
+    <string name="artist">Sanatçı</string>
+    <string name="action_toggle_private_on">Gizli olarak izle</string>
+    <string name="library_list">Kitaplık Listesi</string>
+    <string name="export">Dışa Aktar</string>
+    <string name="action_toggle_private_off">Herkese açık olarak izle</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">Uzun şerit okuyucusu için eski çözümleyiciyi kullan</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Yinelenen okunmuş bölümleri okundu olarak işaretle</string>
+    <string name="action_display_unread_badge">Okunmamış bölümler</string>
+    <string name="pref_behavior">Davranış</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">Bölümü okuduktan sonra</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">Yeni bir bölüm geldiğinde</string>
 </resources>

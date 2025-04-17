@@ -2,6 +2,7 @@ package eu.kanade.presentation.reader.settings
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -97,21 +98,21 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
     if (flashPageState) {
         SliderItem(
             value = flashMillis / ReaderPreferences.MILLI_CONVERSION,
+            valueRange = 1..15,
             label = stringResource(MR.strings.pref_flash_duration),
             valueText = stringResource(MR.strings.pref_flash_duration_summary, flashMillis),
             onChange = { flashMillisPref.set(it * ReaderPreferences.MILLI_CONVERSION) },
-            min = 1,
-            max = 15,
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         )
         SliderItem(
             value = flashInterval,
+            valueRange = 1..10,
             label = stringResource(MR.strings.pref_flash_page_interval),
             valueText = pluralStringResource(MR.plurals.pref_pages, flashInterval, flashInterval),
             onChange = {
                 flashIntervalPref.set(it)
             },
-            min = 1,
-            max = 10,
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         )
         SettingsChipRow(MR.strings.pref_flash_with) {
             flashColors.map { (labelRes, value) ->

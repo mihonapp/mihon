@@ -38,6 +38,7 @@
     <string name="label_help">Help</string>
     <string name="label_default">Default</string>
     <string name="label_warning">Warning</string>
+    <string name="label_auto">Auto</string>
 
     <!-- Shared labels -->
     <string name="label_started">Started</string>
@@ -96,8 +97,6 @@
     <string name="action_move_category">Set categories</string>
     <string name="delete_category_confirmation">Do you wish to delete the category \"%s\"?</string>
     <string name="delete_category">Delete category</string>
-    <string name="action_sort_category">Sort categories</string>
-    <string name="sort_category_confirmation">Would you like to sort the categories alphabetically?</string>
     <string name="action_edit_cover">Edit cover</string>
     <string name="action_view_chapters">View chapters</string>
     <string name="action_pause">Pause</string>
@@ -123,6 +122,7 @@
     <string name="action_display_list">List</string>
     <string name="action_display_cover_only_grid">Cover-only grid</string>
     <string name="action_display_download_badge">Downloaded chapters</string>
+    <string name="action_display_unread_badge">Unread chapters</string>
     <string name="action_display_local_badge">Local source</string>
     <string name="action_display_language_badge">Language</string>
     <string name="action_display_show_tabs">Show category tabs</string>
@@ -147,6 +147,8 @@
     <string name="action_move_to_top_all_for_series">Move series to top</string>
     <string name="action_move_to_bottom">Move to bottom</string>
     <string name="action_move_to_bottom_all_for_series">Move series to bottom</string>
+    <string name="action_notes">Notes</string>
+    <string name="action_edit_notes">Edit notes</string>
     <string name="action_install">Install</string>
     <string name="action_share">Share</string>
     <string name="action_save">Save</string>
@@ -230,6 +232,7 @@
     <string name="theme_greenapple">Green Apple</string>
     <string name="theme_lavender">Lavender</string>
     <string name="theme_midnightdusk">Midnight Dusk</string>
+    <string name="theme_monochrome">Monochrome</string>
     <string name="theme_nord">Nord</string>
     <string name="theme_strawberrydaiquiri">Strawberry Daiquiri</string>
     <string name="theme_tako">Tako</string>
@@ -267,8 +270,7 @@
 
       <!-- Library section -->
     <string name="pref_category_display">Display</string>
-    <string name="pref_library_columns">Grid size</string>
-    <string name="pref_library_columns_per_row">%d per row</string>
+    <string name="pref_library_columns">Items per row</string>
     <string name="portrait">Portrait</string>
     <string name="landscape">Landscape</string>
 
@@ -306,11 +308,14 @@
     <string name="include">Include: %s</string>
     <string name="exclude">Exclude: %s</string>
 
-    <string name="pref_chapter_swipe">Chapter swipe</string>
+    <string name="pref_behavior">Behavior</string>
     <!-- This should be to the left for RTL locales -->
-    <string name="pref_chapter_swipe_end">Swipe to right action</string>
+    <string name="pref_chapter_swipe_end">Chapter on swipe to right</string>
     <!-- This should be to the right for RTL locales -->
-    <string name="pref_chapter_swipe_start">Swipe to left action</string>
+    <string name="pref_chapter_swipe_start">Chapter on swipe to left</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Mark duplicate read chapter as read</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">After reading a chapter</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">After fetching new chapter</string>
 
       <!-- Extension section -->
     <string name="multi_lang">Multi</string>
@@ -394,7 +399,7 @@
     <string name="pref_hardware_bitmap_threshold">Custom hardware bitmap threshold</string>
     <string name="pref_hardware_bitmap_threshold_default">Default (%d)</string>
     <string name="pref_hardware_bitmap_threshold_summary">If reader loads a blank image incrementally reduce the threshold.\nSelected: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv">Always decode long strip images with SSIV</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">Use legacy decoder for long strip reader</string>
     <string name="pref_always_decode_long_strip_with_ssiv_summary">Affects performance. Only enable if reducing bitmap threshold doesn\'t fix blank image issues</string>
     <string name="pref_display_profile">Custom display profile</string>
     <string name="pref_crop_borders">Crop borders</string>
@@ -471,10 +476,10 @@
     <string name="rotation_landscape">Landscape</string>
     <string name="rotation_force_portrait">Locked portrait</string>
     <string name="rotation_force_landscape">Locked landscape</string>
-    <string name="color_filter_r_value">R</string>
-    <string name="color_filter_g_value">G</string>
-    <string name="color_filter_b_value">B</string>
-    <string name="color_filter_a_value">A</string>
+    <string name="color_filter_r_value">Red</string>
+    <string name="color_filter_g_value">Green</string>
+    <string name="color_filter_b_value">Blue</string>
+    <string name="color_filter_a_value">Alpha</string>
     <string name="pref_always_show_chapter_transition">Always show chapter transition</string>
     <string name="pref_category_reading_mode">Reading mode</string>
     <string name="pref_category_reading">Reading</string>
@@ -520,7 +525,6 @@
     <string name="enhanced_services">Enhanced trackers</string>
     <string name="enhanced_services_not_installed">Available but source not installed: %s</string>
     <string name="enhanced_tracking_info">Provides enhanced features for specific sources. Entries are automatically tracked when added to your library.</string>
-    <string name="action_track">Track</string>
     <string name="track_activity_name">Tracker login</string>
 
       <!-- Browse section -->
@@ -573,6 +577,9 @@
     <string name="cache_deleted">Cache cleared, %1$d files deleted</string>
     <string name="cache_delete_error">Error occurred while clearing</string>
     <string name="pref_auto_clear_chapter_cache">Clear chapter cache on app launch</string>
+    <string name="export">Export</string>
+    <string name="library_list">Library List</string>
+    <string name="library_exported">Library Exported</string>
 
     <!-- Sync section -->
     <string name="syncing_library">Syncing library</string>
@@ -594,7 +601,9 @@
     <string name="pref_clear_database">Clear database</string>
     <string name="pref_clear_database_summary">Delete history for entries that are not saved in your library</string>
     <string name="clear_database_source_item_count">%1$d non-library entries in database</string>
-    <string name="clear_database_confirmation">Are you sure? Read chapters and progress of non-library entries will be lost</string>
+    <string name="clear_database_text">You’re about to remove entries from the database</string>
+    <string name="clear_database_history_warning">Read chapters and progress of non-library entries will be lost</string>
+    <string name="clear_db_exclude_read">Keep entries with read chapters</string>
     <string name="clear_database_completed">Entries deleted</string>
     <string name="database_clean">Nothing to clear</string>
     <string name="pref_clear_webview_data">Clear WebView data</string>
@@ -688,6 +697,8 @@
     <string name="ongoing">Ongoing</string>
     <string name="unknown">Unknown</string>
     <string name="unknown_author">Unknown author</string>
+    <string name="author">Author</string>
+    <string name="artist">Artist</string>
     <!-- reserved for #6163 -->
     <string name="unknown_status">Unknown status</string>
     <string name="licensed">Licensed</string>
@@ -699,7 +710,8 @@
     <!-- missing confirm menu after Compose rewrite #7901 -->
     <string name="remove_from_library">Remove from library</string>
     <string name="unknown_title">Unknown title</string>
-    <string name="confirm_add_duplicate_manga">You have an entry in your library with the same name.\n\nDo you still wish to continue?</string>
+    <string name="possible_duplicates_title">Possible duplicates</string>
+    <string name="possible_duplicates_summary">You have entries in your library with a similar name.\n\nSelect an entry to migrate or add anyway.</string>
     <string name="manga_added_library">Added to library</string>
     <string name="manga_removed_library">Removed from library</string>
     <string name="manga_info_expand">More</string>
@@ -751,6 +763,7 @@
     <!-- Tracking Screen -->
     <string name="manga_tracking_tab">Tracking</string>
     <string name="add_tracking">Add tracking</string>
+    <string name="action_track">Track</string>
     <string name="unread">Unread</string>
     <string name="reading">Reading</string>
     <string name="completed">Completed</string>
@@ -770,6 +783,9 @@
     <string name="track_status">Status</string>
     <string name="track_started_reading_date">Start date</string>
     <string name="track_finished_reading_date">Finish date</string>
+    <string name="tracked_privately">Tracked privately</string>
+    <string name="action_toggle_private_on">Track privately</string>
+    <string name="action_toggle_private_off">Track publicly</string>
     <string name="track_type">Type</string>
     <string name="myanimelist_relogin">Please login to MAL again</string>
     <string name="source_unsupported">Source is not supported</string>
@@ -918,7 +934,6 @@
     <string name="update_check_notification_download_complete">Tap to install update</string>
     <string name="update_check_notification_download_error">Download error</string>
     <string name="update_check_notification_update_available">New version available!</string>
-    <string name="update_check_fdroid_migration_info">A new version is available from the official releases. Tap to learn how to migrate from unofficial F-Droid releases.</string>
 
     <!-- Information Text -->
     <string name="information_no_downloads">No downloads</string>
@@ -1003,4 +1018,7 @@
     <string name="block_rule_sort">Sort block rules</string>
     <string name="block_rule_confirm_sort_alphabetically">Would you like to sort the block rules alphabetically?</string>
     <string name="block_rule_empty_screen">You have no block rules. Tap the plus button to create one.</string>
+
+    <!-- Notes screen -->
+    <string name="notes_placeholder">Enjoyed the part where…</string>
 </resources>

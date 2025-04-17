@@ -12,16 +12,79 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ## [Unreleased]
 ### Added
-- Add option to always decode long strip images with SSIV
+- Add more Kaomoji for empty/error screens ([@ianfhunter](https://github.com/ianfhunter/)) ([#1909](https://github.com/mihonapp/mihon/pull/1909))
+- Add user manga notes ([@imkunet](https://github.com/imkunet), [@AntsyLich](https://github.com/AntsyLich)) ([#428](https://github.com/mihonapp/mihon/pull/428))
+  - Fix user notes not restoring when manga doesn't exist in DB ([@AntsyLich](https://github.com/AntsyLich)) ([#1945](https://github.com/mihonapp/mihon/pull/1945))
+- Add markdown support for manga descriptions ([@Secozzi](https://github.com/Secozzi)) ([#1948](https://github.com/mihonapp/mihon/pull/1948))
+  - Use simpler markdown flavour ([@Secozzi](https://github.com/Secozzi)) ([#2000](https://github.com/mihonapp/mihon/pull/2000))
+- Add Nord Theme ([@Riztard](https://github.com/Riztard)) ([#1951](https://github.com/mihonapp/mihon/pull/1951))
+- Option to keep read manga when clearing database ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#1979](https://github.com/mihonapp/mihon/pull/1979))
+
+### Improved
+- Significantly improve browsing speed (near instantaneous) ([@AntsyLich](https://github.com/AntsyLich)) ([#1946](https://github.com/mihonapp/mihon/pull/1946))
+- Deduplicate entries when browsing ([@AntsyLich](https://github.com/AntsyLich)) ([#1957](https://github.com/mihonapp/mihon/pull/1957))
+- Update non-library manga data when browsing ([@AntsyLich](https://github.com/AntsyLich)) ([#1967](https://github.com/mihonapp/mihon/pull/1967))
+- Surface image loading error in Reader ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#1981](https://github.com/mihonapp/mihon/pull/1981))
+- Include source headers when opening failed images from reader ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2004](https://github.com/mihonapp/mihon/pull/2004))
+
+### Changed
+- Display all similarly named duplicates in duplicate manga dialogue ([@NarwhalHorns](https://github.com/NarwhalHorns), [@AntsyLich](https://github.com/AntsyLich)) ([#1861](https://github.com/mihonapp/mihon/pull/1861))
+  - Display chapter count on items in duplicate manga dialogue ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#1963](https://github.com/mihonapp/mihon/pull/1963))
+- Update Facebook and Reddit icons ([@Joehuu](https://github.com/Joehuu)) ([#1994](https://github.com/mihonapp/mihon/pull/1994))
+
+### Fixes
+- Fix Bangumi search results including novels ([@MajorTanya](https://github.com/MajorTanya)) ([#1885](https://github.com/mihonapp/mihon/pull/1885))
+- Fix next chapter button occasionally jumping to the last page of the current chapter ([@perokhe](https://github.com/perokhe)) ([#1920](https://github.com/mihonapp/mihon/pull/1920))
+  - Fix page number not appearing when opening chapter ([@perokhe](https://github.com/perokhe)) ([#1936](https://github.com/mihonapp/mihon/pull/1936))
+- Fix backup sharing from notifications not working when app is in background ([@JaymanR](https://github.com/JaymanR))([#1929](https://github.com/mihonapp/mihon/pull/1929))
+- Fix mark existing duplicate read chapters as read option not working in some cases ([@AntsyLich](https://github.com/AntsyLich)) ([#1944](https://github.com/mihonapp/mihon/pull/1944))
+- Fix app bar action tooltips blocking clicks ([@Bartuzen](https://github.com/Bartuzen)) ([#1928](https://github.com/mihonapp/mihon/pull/1928))
+- Fix unintended app permissions due to Firebase misconfiguration ([@AntsyLich](https://github.com/AntsyLich)) ([#1960](https://github.com/mihonapp/mihon/pull/1960))
+- Fix navigation issue after migrating a duplicated entry from History tab ([@cuong-tran](https://github.com/cuong-tran)) ([#1980](https://github.com/mihonapp/mihon/pull/1980))
+- Fix duplicate requests in WebView due to empty reasonPhrase ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2003](https://github.com/mihonapp/mihon/pull/2003))
+
+## [v0.18.0] - 2025-03-20
+### Added
+- Add option to always decode long strip images with SSIV ([@AntsyLich](https://github.com/AntsyLich)) ([`c5655e8`](https://github.com/mihonapp/mihon/commit/c5655e8803bc32d0931657f0b7bc6afeab70feaf))
+  - Change option label ([@AntsyLich](https://github.com/AntsyLich)) ([#1835](https://github.com/mihonapp/mihon/pull/1835))
 - Added option to enable incognito per extension ([@sdaqo](https://github.com/sdaqo), [@AntsyLich](https://github.com/AntsyLich)) ([#157](https://github.com/mihonapp/mihon/pull/157))
+- Add button to favorite manga from history screen ([@Animeboynz](https://github.com/Animeboynz)) ([#1733](https://github.com/mihonapp/mihon/pull/1733))
+- Add Monochrome theme (made with e-ink displays in mind) ([@MajorTanya](https://github.com/MajorTanya)) ([#1752](https://github.com/mihonapp/mihon/pull/1752))
+- Support for private tracking with AniList and Bangumi ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#1736](https://github.com/mihonapp/mihon/pull/1736))
+  - Add private tracking support for Kitsu ([@MajorTanya](https://github.com/MajorTanya)) ([#1774](https://github.com/mihonapp/mihon/pull/1774))
+- Add option to export minimal library information to a CSV file ([@Animeboynz](https://github.com/Animeboynz), [@AntsyLich](https://github.com/AntsyLich)) ([#1161](https://github.com/mihonapp/mihon/pull/1161))
+- Add back support for drag-and-drop category reordering ([@cuong-tran](https://github.com/cuong-tran)) ([#1427](https://github.com/mihonapp/mihon/pull/1427))
+- Add option to mark duplicate read chapters as read after library update or while reading ([@AntsyLich](https://github.com/AntsyLich)) ([#1785](https://github.com/mihonapp/mihon/pull/1785), [#1791](https://github.com/mihonapp/mihon/pull/1791), [#1870](https://github.com/mihonapp/mihon/pull/1870))
+- Display staff information on Anilist tracker search results ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#1810](https://github.com/mihonapp/mihon/pull/1810))
+- Add `id:` prefix search to library to search by internal DB ID ([@MajorTanya](https://github.com/MajorTanya)) ([#1856](https://github.com/mihonapp/mihon/pull/1856))
+- Add back option to disable unread chapter badge in library ([@AntsyLich](https://github.com/AntsyLich)) ([#1871](https://github.com/mihonapp/mihon/pull/1871))
+
+### Changed
+- Sliders UI ([@AntsyLich](https://github.com/AntsyLich)) ([#1840](https://github.com/mihonapp/mihon/pull/1840))
+- Apply "Downloaded only" filter to all entries regardless of favourite status ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#1603](https://github.com/mihonapp/mihon/pull/1603))
+- Ignore hidden files/folders for Local Source chapter list ([@BrutuZ](https://github.com/BrutuZ)) ([#1763](https://github.com/mihonapp/mihon/pull/1763))
+- Migrate to newer Bangumi API ([@MajorTanya](https://github.com/MajorTanya)) ([#1748](https://github.com/mihonapp/mihon/pull/1748))
+  - Now showing manga starting dates in search
+  - Reduced request load by 2-4x in certain situations
+- Bump default user agent ([@AntsyLich](https://github.com/AntsyLich)) ([#1833](https://github.com/mihonapp/mihon/pull/1833))
+- Changed the label of chapter swipe settings and renamed the group to "Behavior" ([@AntsyLich](https://github.com/AntsyLich)) ([#1870](https://github.com/mihonapp/mihon/pull/1870))
 
 ### Fixed
 - Fix MAL `main_picture` nullability breaking search if a result doesn't have a cover set ([@MajorTanya](https://github.com/MajorTanya)) ([#1618](https://github.com/mihonapp/mihon/pull/1618))
 - Fix Bangumi and MAL tracking 401 errors due to Mihon sending expired credentials ([@MajorTanya](https://github.com/MajorTanya)) ([#1681](https://github.com/mihonapp/mihon/pull/1681), [#1682](https://github.com/mihonapp/mihon/pull/1682))
-- Fix certain Infinix devices being unable to use any "Open link in browser" actions, including tracker setup ([@MajorTanya](https://github.com/MajorTanya)) ([#1684](https://github.com/mihonapp/mihon/pull/1684))
+- Fix certain Infinix, Xiaomi devices being unable to use any "Open link in browser" actions, including tracker setup ([@MajorTanya](https://github.com/MajorTanya)) ([#1684](https://github.com/mihonapp/mihon/pull/1684)) ([#1776](https://github.com/mihonapp/mihon/pull/1776))
+- Fix App's preferences referencing deleted categories ([@cuong-tran](https://github.com/cuong-tran)) ([#1734](https://github.com/mihonapp/mihon/pull/1734))
+- Fix backup/restore of category related preferences ([@cuong-tran](https://github.com/cuong-tran)) ([#1726](https://github.com/mihonapp/mihon/pull/1726))
+- Fix WebView sending app's package name in `X-Requested-With` header, which led to sources blocking access ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#1812](https://github.com/mihonapp/mihon/pull/1812))
+- Fix an issue where tracker reading progress is changed to a lower value ([@Animeboynz](https://github.com/Animeboynz)) ([#1795](https://github.com/mihonapp/mihon/pull/1795))
+- Attempt to fix crash when migrating or removing entries from library ([@FlaminSarge](https://github.com/FlaminSarge)) ([#1828](https://github.com/mihonapp/mihon/pull/1828))
+
+### Removed
+- Remove alphabetical category sort option ([@AntsyLich](https://github.com/AntsyLich)) ([#1781](https://github.com/mihonapp/mihon/pull/1781))
 
 ### Other
 - Add zoned "Current time" to debug info and include year & timezone in logcat output ([@MajorTanya](https://github.com/MajorTanya)) ([#1672](https://github.com/mihonapp/mihon/pull/1672))
+- Add application package ID to debug info ([@MajorTanya](https://github.com/MajorTanya)) ([#1847](https://github.com/mihonapp/mihon/pull/1847))
 
 ## [v0.17.1] - 2024-12-06
 ### Changed
@@ -30,7 +93,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Improved
 - Bangumi search now shows the score and summary of a search result ([@MajorTanya](https://github.com/MajorTanya)) ([#1396](https://github.com/mihonapp/mihon/pull/1396))
 - Extension repo URLs are now auto-formatted ([@AntsyLich](https://github.com/AntsyLich), [@MajorTanya](https://github.com/MajorTanya)) ([`22d8aad`](https://github.com/mihonapp/mihon/commit/22d8aad598bea8f00f2831779e45a6645392ca0f))
- 
+
 ### Fixed
 - Fix "currentTab was used multiple times" ([@AntsyLich](https://github.com/AntsyLich)) ([`371c143`](https://github.com/mihonapp/mihon/commit/371c1432e218f6dcf129f05405dceb2cd351c647))
 - Fix a rare crash when invoking "Mark previous as read" action ([@AntsyLich](https://github.com/AntsyLich)) ([`f508d10`](https://github.com/mihonapp/mihon/commit/f508d10ad13560d7316df8642bc93fe66c05b9a8))
@@ -71,7 +134,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add option to opt out of Analytics and Crashlytics ([@Animeboynz](https://github.com/Animeboynz)) ([#1237](https://github.com/mihonapp/mihon/pull/1237))
   - Rework Firebase setup ([@AntsyLich](https://github.com/AntsyLich)) ([`15e3f28`](https://github.com/mihonapp/mihon/commit/15e3f28aa36bec3c31f212c572ab57ce960cc862))
 - Added random library sort ([@jackhamilton](https://github.com/jackhamilton)) ([#1317](https://github.com/mihonapp/mihon/pull/1317))
-  - Make sure random library sort is at the bottom ([@AntsyLich](https://github.com/AntsyLich)) ([`2e2c8d3`](https://github.com/mihonapp/mihon/commit/2e2c8d36c1e23bf274c7c19f1242e14b0c7afbc1)) 
+  - Make sure random library sort is at the bottom ([@AntsyLich](https://github.com/AntsyLich)) ([`2e2c8d3`](https://github.com/mihonapp/mihon/commit/2e2c8d36c1e23bf274c7c19f1242e14b0c7afbc1))
 - Confirmation dialog when removing privately installed extensions ([@Animeboynz](https://github.com/Animeboynz), [@AntsyLich](https://github.com/AntsyLich)) ([#1320](https://github.com/mihonapp/mihon/pull/1320))
 - Option to backup non-library read entries ([@Animeboynz](https://github.com/Animeboynz), [@jobobby04](https://github.com/jobobby04), [@AntsyLich](https://github.com/AntsyLich)) ([#1324](https://github.com/mihonapp/mihon/pull/1324))
 
@@ -89,7 +152,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
     - Fix crash with `TypeReference` issue when creating extension repo ([@AntsyLich](https://github.com/AntsyLich)) ([#574](https://github.com/mihonapp/mihon/pull/574), [`e020ae5`](https://github.com/mihonapp/mihon/commit/e020ae5ed558e80742ef0ad8bfa0f69af0959d5a))
       - Fix mishap in [`e020ae5`](https://github.com/mihonapp/mihon/commit/e020ae5ed558e80742ef0ad8bfa0f69af0959d5a) ([@AntsyLich](https://github.com/AntsyLich)) ([`6965e59`](https://github.com/mihonapp/mihon/commit/6965e59a643c67a2bf81b3c69ec70268e5da5797))
     - Backup and Restore ([@Animeboynz](https://github.com/Animeboynz)) ([#1057](https://github.com/mihonapp/mihon/pull/1057))
-  - Trust extension by repo ([@AntsyLich](https://github.com/AntsyLich)) ([#570](https://github.com/mihonapp/mihon/pull/570))- 
+  - Trust extension by repo ([@AntsyLich](https://github.com/AntsyLich)) ([#570](https://github.com/mihonapp/mihon/pull/570))
 - From M2 ripple to M3 ([@FooIbar](https://github.com/FooIbar)) ([#675](https://github.com/mihonapp/mihon/pull/675))
 - Increased continue reading button size ([@AntsyLich](https://github.com/AntsyLich), [@Animeboynz](https://github.com/Animeboynz)) ([`e17f70f`](https://github.com/mihonapp/mihon/commit/e17f70f7226ea031fc1f962c9dfea3e404ba53ad))
 - Global search "Has result" choice is now sticky ([@AntsyLich](https://github.com/AntsyLich)) ([`5a61ca5`](https://github.com/mihonapp/mihon/commit/5a61ca5535fe0d9e8e7bcb9e665ba2f9cb0cf649))
@@ -160,7 +223,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Other
 - Code cleanup
-  - Minor refactor of theming when expressions ([@MajorTanya](https://github.com/MajorTanya)) ([#396](https://github.com/mihonapp/mihon/pull/396)) 
+  - Minor refactor of theming when expressions ([@MajorTanya](https://github.com/MajorTanya)) ([#396](https://github.com/mihonapp/mihon/pull/396))
   - Inside `WorkerInfoScreen` ([@AntsyLich](https://github.com/AntsyLich)) ([`5aec8f8`](https://github.com/mihonapp/mihon/commit/5aec8f8018236a38106483da08f9cbc28261ac9b))
   - Inside `ChapterDownloadIndicator`, `MangaChapterListItem` ([@AntsyLich](https://github.com/AntsyLich)) ([`b7e091d`](https://github.com/mihonapp/mihon/commit/b7e091d5d039e00cababc7daf555280df6cf9c03))
   - MangaCoverFetcher ([@ivaniskandar](https://github.com/ivaniskandar)) ([`1365695`](https://github.com/mihonapp/mihon/commit/13656959ae0606736f6ca9eb62699dc23e467c2f))
@@ -189,7 +252,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
   - Move archive related code to :core:archive ([@AntsyLich](https://github.com/AntsyLich)) ([`bd7b354`](https://github.com/mihonapp/mihon/commit/bd7b35419861df6d426d6ec0a188391910d0f615))
 - Replace detekt with ktlint via spotless ([@AntsyLich](https://github.com/AntsyLich)) ([#1130](https://github.com/mihonapp/mihon/pull/1130), [#1136](https://github.com/mihonapp/mihon/pull/1136), [#1138](https://github.com/mihonapp/mihon/pull/1138))
   - Refrain from running spotless on weblate files ([@AntsyLich](https://github.com/AntsyLich)) ([`32d2c2a`](https://github.com/mihonapp/mihon/commit/32d2c2ac1bc224cbda2f09a4023d7d120ea0e954))
-- Use feature flags in compose compiler plugin ([@AntsyLich](https://github.com/AntsyLich)) ([`8f9a325`](https://github.com/mihonapp/mihon/commit/8f9a325895bb7b94c2ec92dd969094fc30b3b5e2))- PagerPageHolder: lazy init loading indicator ([@AntsyLich](https://github.com/AntsyLich), [@ivaniskandar](https://github.com/ivaniskandar)) ([`a45eb5e`](https://github.com/mihonapp/mihon/commit/a45eb5e5288159dbbbbb5f92140ce0dd32a8f3ab))
+- Use feature flags in compose compiler plugin ([@AntsyLich](https://github.com/AntsyLich)) ([`8f9a325`](https://github.com/mihonapp/mihon/commit/8f9a325895bb7b94c2ec92dd969094fc30b3b5e2))
+- PagerPageHolder: lazy init loading indicator ([@AntsyLich](https://github.com/AntsyLich), [@ivaniskandar](https://github.com/ivaniskandar)) ([`a45eb5e`](https://github.com/mihonapp/mihon/commit/a45eb5e5288159dbbbbb5f92140ce0dd32a8f3ab))
 - Collect MangaScreen state with lifecycle ([@AntsyLich](https://github.com/AntsyLich), [@ivaniskandar](https://github.com/ivaniskandar)) ([`03eb756`](https://github.com/mihonapp/mihon/commit/03eb756ecba0692d88d3a76254afc4c157fa225b))
 - Add stable marker to Manga data class ([@AntsyLich](https://github.com/AntsyLich), [@ivaniskandar](https://github.com/ivaniskandar)) ([`03eb756`](https://github.com/mihonapp/mihon/commit/03eb756ecba0692d88d3a76254afc4c157fa225b))
 - Use DTOs to parse tracking API responses ([@MajorTanya](https://github.com/MajorTanya)) ([#1103](https://github.com/mihonapp/mihon/pull/1103))
@@ -227,7 +291,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
   - Fix extra date header introduced by parent PR ([@sirlag](https://github.com/sirlag)) ([#415](https://github.com/mihonapp/mihon/pull/415))
   - Fix build time in about screen displayed in UTC ([@AntsyLich](https://github.com/AntsyLich)) ([`aed53d3`](https://github.com/mihonapp/mihon/commit/aed53d3bdc85ce0e899fbb90b9f9cad0f1b86480))
 - App infinitely retries tracker update instead of failing after 3 tries ([@MajorTanya](https://github.com/MajorTanya)) ([#411](https://github.com/mihonapp/mihon/pull/411))
-- Crash on Pixel devices (was introduced due to compose update) ([`ab06720`](https://github.com/mihonapp/mihon/commit/ab067209661eceefc04c65f6bdbfcaa8a1264651))
+- Crash on Pixel devices (was introduced due to compose update) ([@AntsyLich](https://github.com/AntsyLich)) ([`ab06720`](https://github.com/mihonapp/mihon/commit/ab067209661eceefc04c65f6bdbfcaa8a1264651))
 - Crash when opening some heif/heic images ([@az4521](https://github.com/az4521)) ([#466](https://github.com/mihonapp/mihon/pull/466))
 - Crash when putting app in background while track date selection dialog is open ([@ivaniskandar](https://github.com/ivaniskandar)) ([`c348fac`](https://github.com/mihonapp/mihon/commit/c348fac78fac479fb123bd617c01c78b9ca851d5))
 - Dates for saved images not following the specification (fixes date issue mainly on Samsung devices) ([@MajorTanya](https://github.com/MajorTanya)) ([#552](https://github.com/mihonapp/mihon/pull/552))
@@ -265,7 +329,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Fixed
 - "Flash screen on page change" making the screen full black ([@AntsyLich](https://github.com/AntsyLich)) ([`38d6ab8`](https://github.com/mihonapp/mihon/commit/38d6ab80ce868707829dbc81de4170afe3c2f2a5))
-- Faulty MangaUpdates score in database ([@AntsyLich](https://github.com/AntsyLich) ([`a024218`](https://github.com/mihonapp/mihon/commit/a024218410953a389b8af4880fa7ae6cc30124a2)
+- Faulty MangaUpdates score in database ([@AntsyLich](https://github.com/AntsyLich)) ([`a024218`](https://github.com/mihonapp/mihon/commit/a024218410953a389b8af4880fa7ae6cc30124a2))
 - Updating extension not reflecting correctly ([@AntsyLich](https://github.com/AntsyLich)) ([`cb06898`](https://github.com/mihonapp/mihon/commit/cb068984303f811692531bf6f14902ae118d8ac7))
 - Inconsistent button height in "Data and storage" for some languages ([@theolm](https://github.com/theolm)) ([#202](https://github.com/mihonapp/mihon/pull/202))
 - Chapter not being marked as read locally when refreshing Enhanced Trackers ([@Secozzi](https://github.com/Secozzi)) ([#219](https://github.com/mihonapp/mihon/pull/219))
@@ -290,7 +354,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Branding to Mihon ([@AntsyLich](https://github.com/AntsyLich))
 - Minimum supported Android version to 8 ([@AntsyLich](https://github.com/AntsyLich)) ([`dfb3091`](https://github.com/mihonapp/mihon/commit/dfb3091e380dda3e9bfb64bf5c9a685cf3a03d0e))
 
-[unreleased]: https://github.com/mihonapp/mihon/compare/v0.17.1...main
+[unreleased]: https://github.com/mihonapp/mihon/compare/v0.18.0...main
+[v0.18.0]: https://github.com/mihonapp/mihon/compare/v0.17.1...v0.18.0
 [v0.17.1]: https://github.com/mihonapp/mihon/compare/v0.17.0...v0.17.1
 [v0.17.0]: https://github.com/mihonapp/mihon/compare/v0.16.5...v0.17.0
 [v0.16.5]: https://github.com/mihonapp/mihon/compare/v0.16.4...v0.16.5

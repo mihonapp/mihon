@@ -1,12 +1,6 @@
 package eu.kanade.presentation.more
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.automirrored.outlined.Label
@@ -40,7 +34,6 @@ fun MoreScreen(
     onDownloadedOnlyChange: (Boolean) -> Unit,
     incognitoMode: Boolean,
     onIncognitoModeChange: (Boolean) -> Unit,
-    isFDroid: Boolean,
     onClickDownloadQueue: () -> Unit,
     onClickCategories: () -> Unit,
     onClickStats: () -> Unit,
@@ -50,19 +43,7 @@ fun MoreScreen(
 ) {
     val uriHandler = LocalUriHandler.current
 
-    Scaffold(
-        topBar = {
-            Column(
-                modifier = Modifier.windowInsetsPadding(
-                    WindowInsets.systemBars.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
-                ),
-            ) {
-                if (isFDroid) {
-                    // Don't really care about slow updaters now
-                }
-            }
-        },
-    ) { contentPadding ->
+    Scaffold { contentPadding ->
         ScrollbarLazyColumn(
             modifier = Modifier.padding(contentPadding),
         ) {

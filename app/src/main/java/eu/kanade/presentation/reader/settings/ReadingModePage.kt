@@ -2,6 +2,7 @@ package eu.kanade.presentation.reader.settings
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -152,14 +153,14 @@ private fun ColumnScope.WebtoonViewerSettings(screenModel: ReaderSettingsScreenM
 
     val webtoonSidePadding by screenModel.preferences.webtoonSidePadding().collectAsState()
     SliderItem(
-        label = stringResource(MR.strings.pref_webtoon_side_padding),
-        min = ReaderPreferences.WEBTOON_PADDING_MIN,
-        max = ReaderPreferences.WEBTOON_PADDING_MAX,
         value = webtoonSidePadding,
+        valueRange = ReaderPreferences.let { it.WEBTOON_PADDING_MIN..it.WEBTOON_PADDING_MAX },
+        label = stringResource(MR.strings.pref_webtoon_side_padding),
         valueText = numberFormat.format(webtoonSidePadding / 100f),
         onChange = {
             screenModel.preferences.webtoonSidePadding().set(it)
         },
+        pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
     )
 
     CheckboxItem(

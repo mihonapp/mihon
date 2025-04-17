@@ -9,6 +9,7 @@ import androidx.compose.material3.SliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import kotlin.math.roundToInt
 
 @Composable
 fun Slider(
@@ -16,8 +17,8 @@ fun Slider(
     onValueChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    valueRange: ClosedRange<Int> = 0..1,
-    @IntRange(from = 0) steps: Int = with(valueRange) { (endInclusive - start) - 1 },
+    valueRange: IntProgression = 0..1,
+    @IntRange(from = 0) steps: Int = with(valueRange) { (last - first) - 1 },
     onValueChangeFinished: (() -> Unit)? = null,
     colors: SliderColors = SliderDefaults.colors(),
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
@@ -34,10 +35,10 @@ fun Slider(
 ) {
     Slider(
         value = value.toFloat(),
-        onValueChange = { onValueChange(it.toInt()) },
+        onValueChange = { onValueChange(it.roundToInt()) },
         modifier = modifier,
         enabled = enabled,
-        valueRange = with(valueRange) { start.toFloat()..endInclusive.toFloat() },
+        valueRange = with(valueRange) { first.toFloat()..last.toFloat() },
         steps = steps,
         onValueChangeFinished = onValueChangeFinished,
         colors = colors,

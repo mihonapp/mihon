@@ -54,7 +54,7 @@ object SettingsBrowseScreen : SearchableSettings {
                 title = stringResource(MR.strings.label_sources),
                 preferenceItems = persistentListOf(
                     Preference.PreferenceItem.SwitchPreference(
-                        pref = sourcePreferences.hideInLibraryItems(),
+                        preference = sourcePreferences.hideInLibraryItems(),
                         title = stringResource(MR.strings.pref_hide_in_library_items),
                     ),
                     Preference.PreferenceItem.TextPreference(
@@ -103,7 +103,7 @@ object SettingsBrowseScreen : SearchableSettings {
                 title = stringResource(MR.strings.pref_category_nsfw_content),
                 preferenceItems = persistentListOf(
                     Preference.PreferenceItem.SwitchPreference(
-                        pref = sourcePreferences.showNsfwSource(),
+                        preference = sourcePreferences.showNsfwSource(),
                         title = stringResource(MR.strings.pref_show_nsfw_source),
                         subtitle = stringResource(MR.strings.requires_app_restart),
                         onValueChanged = {

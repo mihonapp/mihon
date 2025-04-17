@@ -96,4 +96,9 @@
         <item quantity="many">חסרים %1$s פרקים</item>
         <item quantity="other"/>
     </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">מחר</item>
+        <item quantity="two">מחרותיים</item>
+        <item quantity="other">בעוד %1$d ימים</item>
+    </plurals>
 </resources>

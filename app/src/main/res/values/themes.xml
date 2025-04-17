@@ -446,6 +446,45 @@
         <item name="colorSurfaceContainerLowest">@color/nord_surfaceContainerLowest</item>
     </style>
 
+    <!--== Monochrome Theme ==-->
+    <style name="Theme.Tachiyomi.Monochrome">
+        <!-- Theme Colors -->
+        <item name="colorPrimary">@color/monochrome_primary</item>
+        <item name="colorOnPrimary">@color/monochrome_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/monochrome_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/monochrome_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/monochrome_secondary</item>
+        <item name="colorOnSecondary">@color/monochrome_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/monochrome_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/monochrome_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/monochrome_tertiary</item>
+        <item name="colorOnTertiary">@color/monochrome_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/monochrome_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/monochrome_onTertiaryContainer</item>
+        <item name="colorError">@color/monochrome_error</item>
+        <item name="colorOnError">@color/monochrome_onError</item>
+        <item name="colorErrorContainer">@color/monochrome_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/monochrome_onErrorContainer</item>
+        <item name="android:colorBackground">@color/monochrome_background</item>
+        <item name="colorOnBackground">@color/monochrome_onBackground</item>
+        <item name="colorSurface">@color/monochrome_surface</item>
+        <item name="colorOnSurface">@color/monochrome_onSurface</item>
+        <item name="colorSurfaceVariant">@color/monochrome_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/monochrome_onSurfaceVariant</item>
+        <item name="colorOutline">@color/monochrome_outline</item>
+        <item name="colorOutlineVariant">@color/monochrome_outlineVariant</item>
+        <item name="colorSurfaceInverse">@color/monochrome_inverseSurface</item>
+        <item name="colorOnSurfaceInverse">@color/monochrome_inverseOnSurface</item>
+        <item name="colorPrimaryInverse">@color/monochrome_inversePrimary</item>
+        <item name="colorSurfaceDim">@color/monochrome_surfaceDim</item>
+        <item name="colorSurfaceBright">@color/monochrome_surfaceBright</item>
+        <item name="colorSurfaceContainerLowest">@color/monochrome_surfaceContainerLowest</item>
+        <item name="colorSurfaceContainerLow">@color/monochrome_surfaceContainerLow</item>
+        <item name="colorSurfaceContainer">@color/monochrome_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/monochrome_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/monochrome_surfaceContainerHighest</item>
+    </style>
+
     <!--== AMOLED Mode Overlay ==-->
     <style name="ThemeOverlay.Tachiyomi.Amoled" parent="" />
 

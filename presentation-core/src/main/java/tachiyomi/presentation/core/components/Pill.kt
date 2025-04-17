@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
@@ -19,7 +20,7 @@ fun Pill(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
-    fontSize: TextUnit = LocalTextStyle.current.fontSize,
+    style: TextStyle = LocalTextStyle.current,
 ) {
     Surface(
         modifier = modifier
@@ -35,9 +36,27 @@ fun Pill(
         ) {
             Text(
                 text = text,
-                fontSize = fontSize,
                 maxLines = 1,
+                style = style,
             )
         }
     }
+}
+
+@Composable
+fun Pill(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    fontSize: TextUnit = LocalTextStyle.current.fontSize,
+) {
+    val style = LocalTextStyle.current
+    Pill(
+        text = text,
+        modifier = modifier,
+        color = color,
+        contentColor = contentColor,
+        style = MaterialTheme.typography.bodyMedium.copy(fontSize = fontSize),
+    )
 }
