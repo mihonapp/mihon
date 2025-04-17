@@ -80,7 +80,7 @@ enum class ReadingMode(
                 VERTICAL -> VerticalPagerViewer(activity)
                 WEBTOON -> WebtoonViewer(activity)
                 CONTINUOUS_VERTICAL -> WebtoonViewer(activity, isContinuous = false)
-                CONTINUOUS_HORIZONTAL -> WebtoonViewer(activity, isContinuous = false)
+                CONTINUOUS_HORIZONTAL -> WebtoonViewer(activity, isContinuous = false, isHorizontal = true)
                 DEFAULT -> throw IllegalStateException("Preference value must be resolved: $preference")
             }
         }

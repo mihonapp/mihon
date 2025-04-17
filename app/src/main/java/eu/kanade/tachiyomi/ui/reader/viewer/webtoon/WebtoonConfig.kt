@@ -22,6 +22,7 @@ import uy.kohesive.injekt.api.get
 class WebtoonConfig(
     scope: CoroutineScope,
     readerPreferences: ReaderPreferences = Injekt.get(),
+    val isHorizontal: Boolean = false,
 ) : ViewerConfig(readerPreferences, scope) {
 
     var themeChangedListener: (() -> Unit)? = null
@@ -104,7 +105,7 @@ class WebtoonConfig(
         }
 
     override fun defaultNavigation(): ViewerNavigation {
-        return LNavigation()
+        return if (isHorizontal) RightAndLeftNavigation() else LNavigation()
     }
 
     override fun updateNavigation(navigationMode: Int) {
