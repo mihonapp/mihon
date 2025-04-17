@@ -13,7 +13,10 @@ fun FilterList.extractLocalFilter(): LocalSourceFilter {
                 localSourceFilter.orderBy = filter
             }
 
-            // included Filter
+            is OrderBy.Latest -> {
+                localSourceFilter.orderBy = filter
+            }
+
             is GenreGroup -> {
                 filter.state.forEach { genre ->
                     when (genre.state) {

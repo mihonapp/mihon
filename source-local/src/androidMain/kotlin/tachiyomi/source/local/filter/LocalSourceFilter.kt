@@ -16,7 +16,7 @@ private val getLocalSourceMangaOrderedByDateDesc: GetLocalSourceMangaOrderedByDa
 private val getFilteredLocalSourceUrls: GetFilteredLocalSourceUrls = Injekt.get()
 
 data class LocalSourceFilter(
-    var orderBy: OrderBy.Popular? = null,
+    var orderBy: OrderBy? = null,
     val includedAuthors: MutableList<String> = mutableListOf(),
     val excludedAuthors: MutableList<String> = mutableListOf(),
     val includedArtists: MutableList<String> = mutableListOf(),
