@@ -446,8 +446,9 @@
     <string name="left_to_right_viewer">Paged (left to right)</string>
     <string name="right_to_left_viewer">Paged (right to left)</string>
     <string name="vertical_viewer">Paged (vertical)</string>
-    <string name="webtoon_viewer">Long strip</string>
-    <string name="vertical_plus_viewer">Long strip with gaps</string>
+    <string name="webtoon_viewer">Strip (vertical)</string>
+    <string name="vertical_plus_viewer">Strip w/gaps (vertical)</string>
+    <string name="horizontal_plus_viewer">Strip w/gaps (horizontal)</string>
     <string name="pager_viewer">Paged</string>
     <string name="pref_viewer_nav">Tap zones</string>
     <string name="pref_image_scale_type">Scale type</string>

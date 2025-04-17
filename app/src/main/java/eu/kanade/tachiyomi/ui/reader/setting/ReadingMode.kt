@@ -54,6 +54,13 @@ enum class ReadingMode(
         Direction.Vertical,
         ViewerType.Webtoon,
     ),
+    CONTINUOUS_HORIZONTAL(
+        MR.strings.horizontal_plus_viewer,
+        R.drawable.ic_reader_continuous_horizontal_24dp,
+        0x00000006,
+        Direction.Horizontal,
+        ViewerType.Webtoon,
+    );
     ;
 
     companion object {
@@ -73,6 +80,7 @@ enum class ReadingMode(
                 VERTICAL -> VerticalPagerViewer(activity)
                 WEBTOON -> WebtoonViewer(activity)
                 CONTINUOUS_VERTICAL -> WebtoonViewer(activity, isContinuous = false)
+                CONTINUOUS_HORIZONTAL -> WebtoonViewer(activity, isContinuous = false)
                 DEFAULT -> throw IllegalStateException("Preference value must be resolved: $preference")
             }
         }
