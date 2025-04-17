@@ -48,7 +48,7 @@ class PossibleDuplicatesScreenModel(
             val allLibraryManga = getLibraryManga.await()
             allLibraryManga.forEach { libraryManga ->
                 val keyManga = MangaWithChapterCount(libraryManga.manga, libraryManga.totalChapters)
-                val duplicates = getDuplicateLibraryManga(libraryManga.manga)
+                val duplicates = getDuplicateLibraryManga(libraryManga.manga).sortedBy { it.manga.title }
                 updateDuplicatesMap(keyManga, duplicates)
             }
             mutableState.update { it.copy(loading = false) }
@@ -60,6 +60,7 @@ class PossibleDuplicatesScreenModel(
         if (value.isNullOrEmpty()) {
             updatedMap.remove(key)
         } else {
+            if (value.count() == 1 && value[0] in _duplicatesMapState.value) return
             updatedMap[key] = value
         }
         _duplicatesMapState.value = updatedMap
