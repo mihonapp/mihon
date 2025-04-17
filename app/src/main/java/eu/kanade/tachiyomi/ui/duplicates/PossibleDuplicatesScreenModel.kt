@@ -18,9 +18,9 @@ import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.domain.hiddenDuplicates.interactor.AddHiddenDuplicate
+import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetLibraryManga
-import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
@@ -36,7 +36,8 @@ class PossibleDuplicatesScreenModel(
     private val updateManga: UpdateManga = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
     private val snackbarHostState: SnackbarHostState = SnackbarHostState(),
-) : StateScreenModel<PossibleDuplicatesScreenModel.State>(State()) {
+    val libraryPreferences: LibraryPreferences = Injekt.get(),
+) : StateScreenModel<PossibleDuplicatesScreenModel.State>(State(libraryPreferences.duplicateMatchLevel().get())) {
 
     private var _duplicatesMapState: MutableStateFlow<Map<MangaWithChapterCount, List<MangaWithChapterCount>>> =
         MutableStateFlow(mapOf())
@@ -44,11 +45,19 @@ class PossibleDuplicatesScreenModel(
         _duplicatesMapState.asStateFlow()
 
     init {
+        refreshList()
+    }
+
+    private fun refreshList() {
+        _duplicatesMapState.value = mapOf()
         screenModelScope.launch {
+            mutableState.update { it.copy(loading = true) }
             val allLibraryManga = getLibraryManga.await()
             allLibraryManga.forEach { libraryManga ->
                 val keyManga = MangaWithChapterCount(libraryManga.manga, libraryManga.totalChapters)
-                val duplicates = getDuplicateLibraryManga(libraryManga.manga).sortedBy { it.manga.title }
+                val duplicates = getDuplicateLibraryManga(libraryManga.manga, state.value.matchLevel).sortedBy {
+                    it.manga.title
+                }
                 updateDuplicatesMap(keyManga, duplicates)
             }
             mutableState.update { it.copy(loading = false) }
@@ -80,10 +89,6 @@ class PossibleDuplicatesScreenModel(
         duplicatesMapState.value.forEach { (key, _) ->
             removeSingleMangaFromList(key, manga.manga.id)
         }
-    }
-
-    fun setDialog(dialog: Dialog?) {
-        mutableState.update { it.copy(dialog = dialog) }
     }
 
     fun removeFavorite(mangaItem: MangaWithChapterCount) {
@@ -136,12 +141,26 @@ class PossibleDuplicatesScreenModel(
         }
     }
 
+    fun setDialog(dialog: Dialog?) {
+        mutableState.update { it.copy(dialog = dialog) }
+    }
+
+    fun showFilterDialog() {
+        setDialog(Dialog.FilterSheet)
+    }
+
+    fun setMatchLevel(level: LibraryPreferences.DuplicateMatchLevel) {
+        mutableState.update { it.copy(matchLevel = level) }
+        refreshList()
+    }
+
     sealed interface Dialog {
-        data class Migrate(val newManga: Manga, val oldManga: Manga) : Dialog
+        data object FilterSheet : Dialog
     }
 
     @Immutable
     data class State(
+        val matchLevel: LibraryPreferences.DuplicateMatchLevel,
         val loading: Boolean = true,
         val dialog: Dialog? = null,
     )

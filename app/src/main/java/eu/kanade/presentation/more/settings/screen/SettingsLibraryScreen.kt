@@ -224,14 +224,14 @@ object SettingsLibraryScreen : SearchableSettings {
                     entries = persistentMapOf(
                         LibraryPreferences.DuplicateMatchLevel.ExactMatch to
                             stringResource(MR.strings.pref_duplicate_automatic_match_exact),
-                        LibraryPreferences.DuplicateMatchLevel.FuzzyTitle  to
+                        LibraryPreferences.DuplicateMatchLevel.FuzzyTitle to
                             stringResource(MR.strings.pref_duplicate_automatic_match_fuzzy_title),
-                        LibraryPreferences.DuplicateMatchLevel.TitleSubstring  to
+                        LibraryPreferences.DuplicateMatchLevel.TitleSubstring to
                             stringResource(MR.strings.pref_duplicate_automatic_match_title_substring),
                     ),
                     title = stringResource(MR.strings.pref_duplicate_automatic_match),
                 ),
-            )
+            ),
         )
     }
 

@@ -33,10 +33,11 @@
     <string name="label_backup">Backup and restore</string>
     <string name="label_data_storage">Data and storage</string>
     <string name="label_stats">Statistics</string>
+    <string name="label_migration">Migrate</string>
+    <string name="label_manage_duplicates">Manage duplicates</string>
     <string name="label_duplicates">Duplicates</string>
     <string name="label_possible_duplicates">Possible Duplicates</string>
     <string name="label_hidden_duplicates">Hidden Duplicates</string>
-    <string name="label_migration">Migrate</string>
     <string name="label_extensions">Extensions</string>
     <string name="label_extension_info">Extension info</string>
     <string name="label_help">Help</string>
@@ -100,7 +101,6 @@
     <string name="action_edit_categories">Edit categories</string>
     <string name="action_rename_category">Rename category</string>
     <string name="action_move_category">Set categories</string>
-    <string name="action_manage_duplicates">Manage duplicates</string>
     <string name="delete_category_confirmation">Do you wish to delete the category \"%s\"?</string>
     <string name="delete_category">Delete category</string>
     <string name="action_edit_cover">Edit cover</string>
@@ -736,8 +736,6 @@
     <!-- missing confirm menu after Compose rewrite #7901 -->
     <string name="remove_from_library">Remove from library</string>
     <string name="unknown_title">Unknown title</string>
-    <string name="possible_duplicates_title">Possible duplicates</string>
-    <string name="possible_duplicates_summary">You have entries in your library with a similar name.\n\nSelect an entry to migrate or add anyway.</string>
     <string name="manga_added_library">Added to library</string>
     <string name="manga_removed_library">Removed from library</string>
     <string name="manga_info_expand">More</string>
@@ -824,6 +822,13 @@
     <string name="track_delete_title">Remove %s tracking?</string>
     <string name="track_delete_text">This will remove the tracking locally.</string>
     <string name="track_delete_remote_text">Also remove from %s</string>
+
+    <!-- Duplicates Screen -->
+    <string name="duplicate_match_level_title">Duplicates matching level</string>
+
+    <!-- Duplicate Manga Dialog -->
+    <string name="possible_duplicates_title">Possible duplicates</string>
+    <string name="possible_duplicates_summary">You have entries in your library with a similar name.\n\nSelect an entry to migrate or add anyway.</string>
 
     <!-- Category activity -->
     <string name="error_category_exists">A category with this name already exists!</string>
