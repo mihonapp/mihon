@@ -99,14 +99,23 @@ class WebtoonPageHolder(
     }
 
     private fun refreshLayoutParams() {
-        frame.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
+        frame.layoutParams = FrameLayout.LayoutParams(
+            if (viewer.isHorizontal) WRAP_CONTENT else MATCH_PARENT,
+            if (viewer.isHorizontal) MATCH_PARENT else WRAP_CONTENT
+        ).apply {
             if (!viewer.isContinuous) {
-                bottomMargin = 15.dpToPx
+                if (viewer.isHorizontal) {
+                    marginEnd = 15.dpToPx
+                } else {
+                    bottomMargin = 15.dpToPx
+                }
             }
 
             val margin = Resources.getSystem().displayMetrics.widthPixels * (viewer.config.sidePadding / 100f)
-            marginEnd = margin.toInt()
-            marginStart = margin.toInt()
+            if (!viewer.isHorizontal) {
+                marginEnd = margin.toInt()
+                marginStart = margin.toInt()
+            }
         }
     }
 
@@ -201,7 +210,10 @@ class WebtoonPageHolder(
                     isAnimated,
                     ReaderPageImageView.Config(
                         zoomDuration = viewer.config.doubleTapAnimDuration,
-                        minimumScaleType = SubsamplingScaleImageView.SCALE_TYPE_FIT_WIDTH,
+                        minimumScaleType = if (viewer.isHorizontal) 
+                            SubsamplingScaleImageView.SCALE_TYPE_FIT_HEIGHT
+                        else 
+                            SubsamplingScaleImageView.SCALE_TYPE_FIT_WIDTH,
                         cropBorders = viewer.config.imageCropBorders,
                     ),
                 )

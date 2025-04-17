@@ -23,6 +23,8 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     defStyle: Int = 0,
 ) : RecyclerView(context, attrs, defStyle) {
 
+    var orientation = RecyclerView.VERTICAL
+
     private var isZooming = false
     private var atLastPosition = false
     private var atFirstPosition = false
@@ -30,7 +32,9 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     private var halfHeight = 0
     var originalHeight = 0
         private set
-    private var heightSet = false
+    var originalWidth = 0
+        private set
+    private var dimensionsSet = false
     private var firstVisibleItemPosition = 0
     private var lastVisibleItemPosition = 0
     private var currentScale = DEFAULT_RATE
@@ -55,9 +59,10 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
         halfWidth = MeasureSpec.getSize(widthSpec) / 2
         halfHeight = MeasureSpec.getSize(heightSpec) / 2
-        if (!heightSet) {
+        if (!dimensionsSet) {
             originalHeight = MeasureSpec.getSize(heightSpec)
-            heightSet = true
+            originalWidth = MeasureSpec.getSize(widthSpec)
+            dimensionsSet = true
         }
         super.onMeasure(widthSpec, heightSpec)
     }
@@ -182,12 +187,21 @@ class WebtoonRecyclerView @JvmOverloads constructor(
 
         setScaleRate(currentScale)
 
-        layoutParams.height = if (currentScale < 1) {
-            (originalHeight / currentScale).toInt()
+        if (orientation == RecyclerView.VERTICAL) {
+            layoutParams.height = if (currentScale < 1) {
+                (originalHeight / currentScale).toInt()
+            } else {
+                originalHeight
+            }
+            halfHeight = layoutParams.height / 2
         } else {
-            originalHeight
+            layoutParams.width = if (currentScale < DEFAULT_RATE) {
+                (originalWidth / currentScale).toInt()
+            } else {
+                originalWidth
+            }
+            halfWidth = layoutParams.width / 2
         }
-        halfHeight = layoutParams.height / 2
 
         if (currentScale != DEFAULT_RATE) {
             x = getPositionX(x)
@@ -228,8 +242,13 @@ class WebtoonRecyclerView @JvmOverloads constructor(
             if (!isZooming && doubleTapZoom) {
                 if (scaleX != DEFAULT_RATE) {
                     zoom(currentScale, DEFAULT_RATE, x, 0f, y, 0f)
-                    layoutParams.height = originalHeight
-                    halfHeight = layoutParams.height / 2
+                    if (orientation == RecyclerView.VERTICAL) {
+                        layoutParams.height = originalHeight
+                        halfHeight = layoutParams.height / 2
+                    } else {
+                        layoutParams.width = originalWidth
+                        halfWidth = layoutParams.width / 2
+                    }
                     requestLayout()
                 } else {
                     val toScale = 2f
@@ -284,8 +303,8 @@ class WebtoonRecyclerView @JvmOverloads constructor(
 
                     val x = (ev.getX(index) + 0.5f).toInt()
                     val y = (ev.getY(index) + 0.5f).toInt()
-                    var dx = x - downX
-                    var dy = if (atFirstPosition || atLastPosition) y - downY else 0
+                    var dx = if (orientation == RecyclerView.HORIZONTAL && (atFirstPosition || atLastPosition)) x - downX else 0
+                    var dy = if (orientation == RecyclerView.VERTICAL && (atFirstPosition || atLastPosition)) y - downY else 0
 
                     if (!isZoomDragging && currentScale > 1f) {
                         var startScroll = false

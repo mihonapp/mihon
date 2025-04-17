@@ -9,6 +9,7 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.WebtoonLayoutManager
 import eu.kanade.tachiyomi.data.download.DownloadManager
@@ -31,7 +32,11 @@ import kotlin.math.min
 /**
  * Implementation of a [Viewer] to display pages with a [RecyclerView].
  */
-class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = true) : Viewer {
+class WebtoonViewer(
+    val activity: ReaderActivity,
+    val isContinuous: Boolean = true,
+    val isHorizontal: Boolean = false
+) : Viewer {
 
     val downloadManager: DownloadManager by injectLazy()
 
@@ -50,17 +55,23 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
     /**
      * Distance to scroll when the user taps on one side of the recycler view.
      */
-    private val scrollDistance = activity.resources.displayMetrics.heightPixels * 3 / 4
+    private val scrollDistance = if (isHorizontal) {
+        activity.resources.displayMetrics.widthPixels * 3 / 4
+    } else {
+        activity.resources.displayMetrics.heightPixels * 3 / 4
+    }
 
     /**
      * Layout manager of the recycler view.
      */
-    private val layoutManager = WebtoonLayoutManager(activity, scrollDistance)
+    private val layoutManager = WebtoonLayoutManager(activity, scrollDistance).apply {
+        orientation = if (isHorizontal) RecyclerView.HORIZONTAL else RecyclerView.VERTICAL
+    }
 
     /**
      * Configuration used by this viewer, like allow taps, or crop image borders.
      */
-    val config = WebtoonConfig(scope)
+    val config = WebtoonConfig(scope, isHorizontal = isHorizontal)
 
     /**
      * Adapter of the recycler view.
@@ -84,6 +95,9 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         recycler.layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
         recycler.isFocusable = false
         recycler.itemAnimator = null
+
+        layoutManager.orientation = if (isHorizontal) RecyclerView.HORIZONTAL else RecyclerView.VERTICAL
+
         recycler.layoutManager = layoutManager
         recycler.adapter = adapter
         recycler.addOnScrollListener(
@@ -283,10 +297,18 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      * Scrolls up by [scrollDistance].
      */
     private fun scrollUp() {
-        if (config.usePageTransitions) {
-            recycler.smoothScrollBy(0, -scrollDistance)
+        if (isHorizontal) {
+            if (config.usePageTransitions) {
+                recycler.smoothScrollBy(-scrollDistance, 0)
+            } else {
+                recycler.scrollBy(-scrollDistance, 0)
+            }
         } else {
-            recycler.scrollBy(0, -scrollDistance)
+            if (config.usePageTransitions) {
+                recycler.smoothScrollBy(0, -scrollDistance)
+            } else {
+                recycler.scrollBy(0, -scrollDistance)
+            }
         }
     }
 
@@ -294,10 +316,18 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      * Scrolls down by [scrollDistance].
      */
     private fun scrollDown() {
-        if (config.usePageTransitions) {
-            recycler.smoothScrollBy(0, scrollDistance)
+        if (isHorizontal) {
+            if (config.usePageTransitions) {
+                recycler.smoothScrollBy(scrollDistance, 0)
+            } else {
+                recycler.scrollBy(scrollDistance, 0)
+            }
         } else {
-            recycler.scrollBy(0, scrollDistance)
+            if (config.usePageTransitions) {
+                recycler.smoothScrollBy(0, scrollDistance)
+            } else {
+                recycler.scrollBy(0, scrollDistance)
+            }
         }
     }
 
