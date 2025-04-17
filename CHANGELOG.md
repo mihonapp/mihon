@@ -19,6 +19,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
   - Use simpler markdown flavour ([@Secozzi](https://github.com/Secozzi)) ([#2000](https://github.com/mihonapp/mihon/pull/2000))
 - Add Nord Theme ([@Riztard](https://github.com/Riztard)) ([#1951](https://github.com/mihonapp/mihon/pull/1951))
 - Option to keep read manga when clearing database ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#1979](https://github.com/mihonapp/mihon/pull/1979))
+- Continuous horizontal reading mode ([@eliasbenb](https://github.com/eliasbenb)) ([#2010](https://github.com/mihonapp/mihon/pull/2010))
 
 ### Improved
 - Significantly improve browsing speed (near instantaneous) ([@AntsyLich](https://github.com/AntsyLich)) ([#1946](https://github.com/mihonapp/mihon/pull/1946))
