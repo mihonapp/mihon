@@ -324,7 +324,8 @@ data class BrowseSourceScreen(
                                 },
                             )
                             AssistChip(
-                                onClick = screenModel::openConfirmMangaList,
+//                                onClick = screenModel::openConfirmMangaList,
+                                onClick = screenModel::openChangeCategoryDialog,
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Outlined.Label,
@@ -374,15 +375,13 @@ data class BrowseSourceScreen(
                         scope.launchIO {
                             val duplicateManga = screenModel.getDuplicateLibraryManga(manga)
                             when {
-                                manga.favorite         -> screenModel.setDialog(BrowseSourceScreenModel.Dialog.RemoveManga(manga))
-                                duplicateManga != null -> screenModel.setDialog(
+                                manga.favorite -> screenModel.setDialog(BrowseSourceScreenModel.Dialog.RemoveManga(manga))
+                                else           -> screenModel.setDialog(
                                     BrowseSourceScreenModel.Dialog.AddDuplicateManga(
                                         manga,
                                         duplicateManga,
                                     ),
                                 )
-
-                                else                   -> screenModel.addFavorite(manga)
                             }
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         }
@@ -405,12 +404,11 @@ data class BrowseSourceScreen(
 
             is BrowseSourceScreenModel.Dialog.AddDuplicateManga       -> {
                 DuplicateMangaDialog(
+                    duplicates = dialog.duplicates,
                     onDismissRequest = onDismissRequest,
                     onConfirm = { screenModel.addFavorite(dialog.manga) },
-                    onOpenManga = { navigator.push(MangaScreen(dialog.duplicate.id)) },
-                    onMigrate = {
-                        screenModel.setDialog(BrowseSourceScreenModel.Dialog.Migrate(dialog.manga, dialog.duplicate))
-                    },
+                    onOpenManga = { navigator.push(MangaScreen(it.id)) },
+                    onMigrate = { screenModel.setDialog(BrowseSourceScreenModel.Dialog.Migrate(dialog.manga, it)) },
                 )
             }
 
@@ -483,8 +481,7 @@ data class BrowseSourceScreen(
                             tachiyomi.presentation.core.components.material.TextButton(
                                 onClick = {
                                     scope.launchIO {
-                                        val dup =
-                                            dialog.mangaList.fastFilter { screenModel.getDuplicateLibraryManga(it) != null }
+                                        val dup = dialog.mangaList.fastFilter { screenModel.getDuplicateLibraryManga(it).isNotEmpty() }
                                         screenModel.minusSelection(dup)
                                         screenModel.openChangeCategoryDialog()
                                         onDismissRequest()
@@ -507,7 +504,7 @@ data class BrowseSourceScreen(
                         Text(text = stringResource(MR.strings.are_you_sure))
                     },
                     text = {
-                        Text(text = stringResource(MR.strings.confirm_add_duplicate_manga))
+                        Text(text = "duplicate")
                     },
                 )
             }

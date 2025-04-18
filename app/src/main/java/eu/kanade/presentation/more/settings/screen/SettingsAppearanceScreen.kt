@@ -23,6 +23,7 @@ import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableMap
 import tachiyomi.i18n.MR
+import tachiyomi.i18n.MR.strings.title
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
@@ -164,8 +165,7 @@ object SettingsAppearanceScreen : SearchableSettings {
             preferenceItems = persistentListOf(
                 Preference.PreferenceItem.SliderPreference(
                     value = bookPadding,
-                    min = 0,
-                    max = 8,
+                    valueRange = 0..8,
                     title = "书间的边距",
 //                    subtitle = stringResource(MR.strings.pref_flash_duration_summary, flashMillis),
                     subtitle = "边距 $bookPadding.dp",
@@ -195,69 +195,30 @@ object SettingsAppearanceScreen : SearchableSettings {
         val shapeS by shapeSPref.collectAsState()
         val shapeES by shapeESPref.collectAsState()
 
+        fun tachiyomi.core.common.preference.Preference<Int>.shapePreference(
+            title: String,
+            value: Int,
+        ) =
+            Preference.PreferenceItem.SliderPreference(
+                value = value,
+                valueRange = 0..100,
+                title = title,
+                subtitle = "圆角 $value.dp",
+                onValueChanged = {
+                    this.set(it)
+                    true
+                },
+                enabled = true,
+            )
+
         return Preference.PreferenceGroup(
             title = "形状",//i18n
             preferenceItems = persistentListOf(
-                Preference.PreferenceItem.SliderPreference(
-                    value = shapeEL,
-                    min = 20,
-                    max = 40,
-                    title = "超大",
-                    subtitle = "圆角 $shapeEL.dp",
-                    onValueChanged = {
-                        shapeELPref.set(it)
-                        true
-                    },
-                    enabled = true,
-                ),
-                Preference.PreferenceItem.SliderPreference(
-                    value = shapeL,
-                    min = 0,
-                    max = 30,
-                    title = "大",
-                    subtitle = "圆角 $shapeL.dp",
-                    onValueChanged = {
-                        shapeLPref.set(it)
-                        true
-                    },
-                    enabled = true,
-                ),
-                Preference.PreferenceItem.SliderPreference(
-                    value = shapeM,
-                    min = 0,
-                    max = 30,
-                    title = "中",
-                    subtitle = "圆角 $shapeM.dp",
-                    onValueChanged = {
-                        shapeMPref.set(it)
-                        true
-                    },
-                    enabled = true,
-                ),
-                Preference.PreferenceItem.SliderPreference(
-                    value = shapeS,
-                    min = 0,
-                    max = 20,
-                    title = "小",
-                    subtitle = "圆角 $shapeS.dp",
-                    onValueChanged = {
-                        shapeSPref.set(it)
-                        true
-                    },
-                    enabled = true,
-                ),
-                Preference.PreferenceItem.SliderPreference(
-                    value = shapeES,
-                    min = 0,
-                    max = 10,
-                    title = "超小",
-                    subtitle = "圆角 $shapeES.dp",
-                    onValueChanged = {
-                        shapeESPref.set(it)
-                        true
-                    },
-                    enabled = true,
-                ),
+                shapeELPref.shapePreference("超大", shapeEL),
+                shapeLPref.shapePreference("大", shapeL),
+                shapeMPref.shapePreference("中", shapeM),
+                shapeSPref.shapePreference("小", shapeS),
+                shapeESPref.shapePreference("超小", shapeES),
             ),
         )
     }

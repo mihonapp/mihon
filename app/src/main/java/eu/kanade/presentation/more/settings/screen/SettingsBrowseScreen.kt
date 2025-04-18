@@ -75,8 +75,7 @@ object SettingsBrowseScreen : SearchableSettings {
                     ),
                     Preference.PreferenceItem.SliderPreference(
                         value = prefetchPages,
-                        min = 1,
-                        max = 10,
+                        valueRange = 1..10,
                         title = "预读取页",//i18n
                         subtitle = "页数 $prefetchPages",
                         onValueChanged = {
@@ -87,8 +86,7 @@ object SettingsBrowseScreen : SearchableSettings {
                     ),
                     Preference.PreferenceItem.SliderPreference(
                         value = pageItems,
-                        min = 1,
-                        max = 10,
+                        valueRange = 1..100,
                         title = "每页大小",//i18n
                         subtitle = "数量 $pageItems",
                         onValueChanged = {
