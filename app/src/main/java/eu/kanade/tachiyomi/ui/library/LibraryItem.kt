@@ -10,6 +10,7 @@ data class LibraryItem(
     val libraryManga: LibraryManga,
     val downloadCount: Long = -1,
     val unreadCount: Long = -1,
+    val authorName :String? = null,
     val isLocal: Boolean = false,
     val sourceLanguage: String = "",
     private val sourceManager: SourceManager = Injekt.get(),

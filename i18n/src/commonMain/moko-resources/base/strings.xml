@@ -1046,6 +1046,9 @@
 <!--    <string name="block_rule_confirm_sort_alphabetically">Would you like to sort the block rules alphabetically?</string>-->
 <!--    <string name="block_rule_empty_screen">You have no block rules. Tap the plus button to create one.</string>-->
 
+    <string name="author_name">作者名称</string>
+    <string name="author_work_num">作者作品数</string>
+
     <!-- Notes screen -->
     <string name="notes_placeholder">Enjoyed the part where…</string>
 </resources>

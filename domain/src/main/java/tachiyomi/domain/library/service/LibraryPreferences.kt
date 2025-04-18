@@ -58,6 +58,11 @@ class LibraryPreferences(
         false,
     )
 
+    fun showAuthorName()= preferenceStore.getBoolean(
+        "display_author_name",
+        false,
+    )
+
     fun markDuplicateReadChapterAsRead() = preferenceStore.getStringSet("mark_duplicate_read_chapter_read", emptySet())
 
     // region Filter

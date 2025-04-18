@@ -98,32 +98,25 @@ fun ChapterSettingsDialog(
                 .verticalScroll(rememberScrollState()),
         ) {
             when (page) {
-                0 -> {
-                    FilterPage(
-                        downloadFilter = manga?.downloadedFilter ?: TriState.DISABLED,
-                        onDownloadFilterChanged = onDownloadFilterChanged
-                            .takeUnless { downloadedOnly },
-                        unreadFilter = manga?.unreadFilter ?: TriState.DISABLED,
-                        onUnreadFilterChanged = onUnreadFilterChanged,
-                        bookmarkedFilter = manga?.bookmarkedFilter ?: TriState.DISABLED,
-                        onBookmarkedFilterChanged = onBookmarkedFilterChanged,
-                        scanlatorFilterActive = scanlatorFilterActive,
-                        onScanlatorFilterClicked = onScanlatorFilterClicked,
-                    )
-                }
-                1 -> {
-                    SortPage(
-                        sortingMode = manga?.sorting ?: 0,
-                        sortDescending = manga?.sortDescending() ?: false,
-                        onItemSelected = onSortModeChanged,
-                    )
-                }
-                2 -> {
-                    DisplayPage(
-                        displayMode = manga?.displayMode ?: 0,
-                        onItemSelected = onDisplayModeChanged,
-                    )
-                }
+                0 -> FilterPage(
+                    downloadFilter = manga?.downloadedFilter ?: TriState.DISABLED,
+                    onDownloadFilterChanged = onDownloadFilterChanged.takeUnless { downloadedOnly },
+                    unreadFilter = manga?.unreadFilter ?: TriState.DISABLED,
+                    onUnreadFilterChanged = onUnreadFilterChanged,
+                    bookmarkedFilter = manga?.bookmarkedFilter ?: TriState.DISABLED,
+                    onBookmarkedFilterChanged = onBookmarkedFilterChanged,
+                    scanlatorFilterActive = scanlatorFilterActive,
+                    onScanlatorFilterClicked = onScanlatorFilterClicked,
+                )
+                1 -> SortPage(
+                    sortingMode = manga?.sorting ?: 0,
+                    sortDescending = manga?.sortDescending() ?: false,
+                    onItemSelected = onSortModeChanged,
+                )
+                2 -> DisplayPage(
+                    displayMode = manga?.displayMode ?: 0,
+                    onItemSelected = onDisplayModeChanged,
+                )
             }
         }
     }
