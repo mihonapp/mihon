@@ -54,7 +54,6 @@ fun Screen.possibleDuplicatesTab(): TabContent {
             onToggleFavoriteClicked = screenModel::removeFavorite,
             onHideSingleClicked = screenModel::hideSingleDuplicate,
             onHideGroupClicked = screenModel::hideGroupDuplicate,
-            loading = state.loading,
         )
 
         when (state.dialog) {

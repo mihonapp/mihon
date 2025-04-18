@@ -116,6 +116,29 @@ FROM mangas
 WHERE favorite = 1
 AND source = :sourceId;
 
+getMangaWithChapterCount:
+WITH
+chapter_counts AS (
+    SELECT
+        M._id AS manga_id,
+        count(*) AS chapter_count
+    FROM mangas M
+    JOIN chapters C
+    ON M._id = C.manga_id
+    LEFT JOIN excluded_scanlators ES
+    ON C.manga_id = ES.manga_id
+    AND C.scanlator = ES.scanlator
+    WHERE ES.scanlator IS NULL
+    GROUP BY M._id
+)
+SELECT
+    M.*,
+    coalesce(CC.chapter_count, 0) AS chapter_count
+FROM mangas M
+LEFT JOIN chapter_counts CC
+ON M._id = CC.manga_id
+WHERE M._id = :id;
+
 getDuplicateLibraryManga:
 WITH
 hidden_dupes AS (
@@ -163,6 +186,46 @@ SELECT
 FROM duplicates M
 LEFT JOIN chapter_counts CC
 ON M._id = CC.manga_id;
+
+getAllDuplicateManga:
+WITH hidden_dupes AS (
+    SELECT DISTINCT *
+    FROM hidden_duplicates
+),
+duplicates AS (
+    SELECT
+        M1._id AS sourceId,
+        M2.*
+    FROM mangas M1
+    JOIN mangas M2
+    ON lower(M2.title) LIKE lower(:searchPrefix || M1.title || :searchAffix)
+    LEFT JOIN hidden_dupes
+    ON manga1_id = M1._id
+    AND manga2_id = M2._id
+    WHERE M1._id != M2._id
+    AND M1.favorite = 1
+    AND M2.favorite = 1
+    AND manga2_id IS NULL
+),
+chapter_counts AS (
+    SELECT
+        M._id AS manga_id,
+        count(*) AS chapter_count
+    FROM duplicates M
+    JOIN chapters C
+    ON M._id = C.manga_id
+    LEFT JOIN excluded_scanlators ES
+    ON C.manga_id = ES.manga_id
+    AND C.scanlator = ES.scanlator
+    WHERE ES.scanlator IS NULL
+    GROUP BY M._id
+)
+SELECT
+    D.*,
+    coalesce(CC.chapter_count, 0) AS chapter_count
+FROM duplicates D
+LEFT JOIN chapter_counts CC
+ON D._id = CC.manga_id;
 
 getHiddenDuplicates:
 WITH
