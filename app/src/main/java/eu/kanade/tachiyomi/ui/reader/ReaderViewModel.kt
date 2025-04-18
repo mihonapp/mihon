@@ -537,7 +537,7 @@ class ReaderViewModel @JvmOverloads constructor(
         readerChapter.requestedPage = pageIndex
         chapterPageIndex = pageIndex
 
-        if (!incognitoMode && page.status is Page.State.Error) {
+        if (!incognitoMode && page.status !is Page.State.Error) {
             readerChapter.chapter.last_page_read = pageIndex
 
             if (readerChapter.pages?.lastIndex == pageIndex) {
