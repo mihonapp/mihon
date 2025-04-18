@@ -124,7 +124,6 @@
     <string name="cookies_cleared">Бисквитки изчистени</string>
     <string name="pref_clear_database">Изчисти базата данни</string>
     <string name="pref_clear_database_summary">Изтрий историята на манги, които не са запазени в библиотеката</string>
-    <string name="clear_database_confirmation">Сигурни ли сте? Прочетените глави и напредъкът на манги, които не са в библиотеката Ви, ще бъдат изгубени</string>
     <string name="clear_database_completed">Базата данни изчистена</string>
     <string name="version">Версия</string>
     <string name="pref_enable_acra">Изпращай данни за сривове</string>

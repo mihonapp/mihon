@@ -124,7 +124,6 @@
     <string name="cookies_cleared">Thông tin lưu trữ đã được xóa</string>
     <string name="pref_clear_database">Dọn dẹp cơ sở dữ liệu</string>
     <string name="pref_clear_database_summary">Xóa lịch sử đọc truyện và các chương không nằm trong thư viện</string>
-    <string name="clear_database_confirmation">Bạn có chắc không? Các chương đã đọc và tiến độ đọc các truyện không nằm trong thư viện sẽ bị mất</string>
     <string name="clear_database_completed">Các mục đã bị xóa</string>
     <string name="version">Phiên bản</string>
     <string name="pref_enable_acra">Gửi báo cáo lỗi</string>
@@ -298,8 +297,8 @@
     <string name="filter_mode_screen">Màn hình</string>
     <string name="pref_cutout_short">Hiển thị nội dung ở phần rìa</string>
     <string name="obsolete_extension_message">Phần mở rộng này không khả dụng. Nó có thể không chạy và có thể gây ra lỗi với Mihon. Kiến nghị nên Gỡ cài đặt.</string>
-    <string name="ext_obsolete">Lỗi thời</string>
-    <string name="ext_updates_pending">Cập nhật đang chờ</string>
+    <string name="ext_obsolete">Nguồn truyện không còn được hỗ trợ</string>
+    <string name="ext_updates_pending">Tiện ích đang chờ cập nhật</string>
     <string name="pref_category_library_update">Cập nhật toàn bộ</string>
     <string name="pref_category_display">Hiển thị</string>
     <string name="hide_notification_content">Ẩn nội dung thông báo</string>
@@ -676,9 +675,6 @@
     <string name="download_notifier_cache_renewal">Đang kiểm tra những truyện đã tải xuống</string>
     <string name="crash_screen_description">%s đã có lỗi. Bạn nên chia sẻ tệp báo lỗi tạm ở trong kênh hỗ trợ của chúng tôi trên Discord.</string>
     <string name="action_update_category">Cập nhật danh mục</string>
-    <string name="confirm_add_duplicate_manga">Truyện này đã có sẵn trong thư viện bạn.
-\n
-\nBạn có muốn thêm lại không?</string>
     <string name="copied_to_clipboard_plain">Đã sao chép vào bảng tạm</string>
     <string name="action_copy_to_clipboard">Sao chép vào bảng tạm</string>
     <string name="seconds_short">%d giây</string>
@@ -776,7 +772,6 @@
     <string name="theme_nord">Phương bắc</string>
     <string name="pref_library_update_smart_update">Cập nhật thông minh</string>
     <string name="label_upcoming">Sắp tới</string>
-    <string name="action_migrate_duplicate">Chuyển vào các mục hiện có</string>
     <string name="onboarding_storage_help_info">Cập nhật từ phiên bản cũ hơn và không biết nên chọn gì? Tham khảo hướng dẫn để biết thêm thông tin.</string>
     <string name="action_add_repo_message">Thêm nguồn bổ sung vào Mihon. Địa chỉ URL này cần phải kết thúc với \"index.min.json\".</string>
     <string name="action_replace_repo_message">Kho lưu trữ %1$s có Dấu vân tay Khóa ký giống hệt như %2$s.
@@ -837,4 +832,14 @@
     <string name="pref_hardware_bitmap_threshold_summary">Nếu người đọc tải một hình ảnh trống thì hãy giảm dần ngưỡng\nĐã chọn: %s</string>
     <string name="pref_always_decode_long_strip_with_ssiv_summary">Ảnh hưởng đến hiệu suất. Chỉ bật nếu việc giảm ngưỡng bitmap không khắc phục được sự cố hình ảnh trống</string>
     <string name="pref_incognito_mode_extension_summary">Tạm dừng lịch sử đọc của phần mở rộng</string>
+    <string name="pref_behavior">Tùy chỉnh ưu tiên</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">Kết thúc chương</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">Khi có chương mới</string>
+    <string name="possible_duplicates_title">Tiêu đề các mục có thể trùng lặp</string>
+    <string name="label_auto">Tự động cập nhật</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Tự động đánh dấu chương trùng đã đọc</string>
+    <string name="action_edit_notes">Sửa</string>
+    <string name="theme_monochrome">Chủ đề Đơn sắc</string>
+    <string name="action_notes">Ghi chú</string>
+    <string name="action_display_unread_badge">Hiển thị biểu tượng \"chưa đọc\"</string>
 </resources>

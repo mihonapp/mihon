@@ -167,7 +167,6 @@
     <string name="cookies_cleared">Informasjonskapsler slettet</string>
     <string name="pref_clear_database">Tøm database</string>
     <string name="pref_clear_database_summary">Slett historikk for oppføringer som ikke er lagret i biblioteket ditt</string>
-    <string name="clear_database_confirmation">Er du sikker? Leste kapitler og framdrift for oppføringer som ikke er i biblioteket vil gå tapt</string>
     <string name="clear_database_completed">Oppføringer slettet</string>
     <string name="version">Versjon</string>
     <string name="pref_enable_acra">Send krasjrapporter</string>
@@ -677,9 +676,6 @@
     <string name="pref_library_update_show_tab_badge">Vis antall uleste på oppdateringsikonet</string>
     <string name="copied_to_clipboard_plain">Kopiert til utklippstavlen</string>
     <string name="enhanced_services_not_installed">Tilgjengelig, men kilden er ikke installert: %s</string>
-    <string name="confirm_add_duplicate_manga">Du har en oppføring i biblioteket med samme navn.
-\n
-\nØnsker du å fortsette likevel?</string>
     <string name="pref_skip_dupe_chapters">Hopp over dupliserte kapitler</string>
     <string name="track_error">%1$s feil: %2$s</string>
     <string name="information_required_plain">*påkrevd</string>
@@ -791,6 +787,5 @@
     <string name="action_open_repo">Åpne pakkebrønnen</string>
     <string name="label_upcoming">Kommende</string>
     <string name="action_add_anyway">Legg til likevel</string>
-    <string name="action_migrate_duplicate">Flytt eksisterende oppføring</string>
     <string name="action_replace_repo">Erstatt</string>
 </resources>
