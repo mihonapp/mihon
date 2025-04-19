@@ -53,6 +53,8 @@ class ReaderPreferences(
 
     fun readerTheme() = preferenceStore.getInt("pref_reader_theme_key", 1)
 
+    fun readerThemeSwitch() = preferenceStore.getBoolean("pref_reader_theme_key_switch", false)
+
     fun alwaysShowChapterTransition() = preferenceStore.getBoolean("always_show_chapter_transition", true)
 
     fun cropBorders() = preferenceStore.getBoolean("crop_borders", false)
