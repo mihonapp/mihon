@@ -337,24 +337,27 @@ class DownloadManager(
      */
     suspend fun renameChapter(source: Source, manga: Manga, oldChapter: Chapter, newChapter: Chapter) {
         val oldNames = provider.getValidChapterDirNames(oldChapter.name, oldChapter.scanlator)
-        val mangaDir = provider.getMangaDir(manga.title, source)
+        try {
+            val mangaDir = provider.getMangaDir(manga.title, source)
 
-        // Assume there's only 1 version of the chapter name formats present
-        val oldDownload = oldNames.asSequence()
-            .mapNotNull { mangaDir.findFile(it) }
-            .firstOrNull() ?: return
+            // Assume there's only 1 version of the chapter name formats present
+            val oldDownload = oldNames.asSequence()
+                .mapNotNull { mangaDir.findFile(it) }
+                .firstOrNull() ?: return
 
-        var newName = provider.getChapterDirName(newChapter.name, newChapter.scanlator)
-        if (oldDownload.isFile && oldDownload.extension == "cbz") {
-            newName += ".cbz"
-        }
+            var newName = provider.getChapterDirName(newChapter.name, newChapter.scanlator)
+            if (oldDownload.isFile && oldDownload.extension == "cbz") {
+                newName += ".cbz"
+            }
 
-        if (oldDownload.name == newName) return
+            if (oldDownload.name == newName) return
 
-        if (oldDownload.renameTo(newName)) {
-            cache.removeChapter(oldChapter, manga)
-            cache.addChapter(newName, mangaDir, manga)
-        } else {
+            if (oldDownload.renameTo(newName)) {
+                cache.removeChapter(oldChapter, manga)
+                cache.addChapter(newName, mangaDir, manga)
+            }
+        } catch (_: Exception) {
+        } finally {
             logcat(LogPriority.ERROR) { "Could not rename downloaded chapter: ${oldNames.joinToString()}" }
         }
     }
