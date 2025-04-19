@@ -7,6 +7,7 @@ import tachiyomi.data.DatabaseHandler
 import tachiyomi.data.StringListColumnAdapter
 import tachiyomi.data.UpdateStrategyColumnAdapter
 import tachiyomi.domain.library.model.LibraryManga
+import tachiyomi.domain.manga.model.DuplicateManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.model.MangaWithChapterCount
@@ -24,6 +25,10 @@ class MangaRepositoryImpl(
 
     override suspend fun getMangaByIdAsFlow(id: Long): Flow<Manga> {
         return handler.subscribeToOne { mangasQueries.getMangaById(id, MangaMapper::mapManga) }
+    }
+
+    override suspend fun getMangaByIdWithChapterCount(id: Long): MangaWithChapterCount {
+        return handler.awaitOne { mangasQueries.getMangaWithChapterCount(id, MangaMapper::mapMangaWithChapterCount) }
     }
 
     override suspend fun getMangaByUrlAndSourceId(url: String, sourceId: Long): Manga? {
@@ -66,10 +71,23 @@ class MangaRepositoryImpl(
         return handler.subscribeToList { mangasQueries.getFavoriteBySourceId(sourceId, MangaMapper::mapManga) }
     }
 
-    override suspend fun getDuplicateLibraryManga(id: Long, title: String): List<MangaWithChapterCount> {
+    override suspend fun getDuplicateLibraryManga(id: Long, searchString: String): List<MangaWithChapterCount> {
         return handler.awaitList {
-            mangasQueries.getDuplicateLibraryManga(id, title, MangaMapper::mapMangaWithChapterCount)
+            mangasQueries.getDuplicateLibraryManga(id, searchString, MangaMapper::mapMangaWithChapterCount)
         }
+    }
+
+    override suspend fun getAllDuplicateLibraryMangaAsFlow(fuzzy: Boolean): Flow<List<DuplicateManga>> {
+        return handler.subscribeToList {
+            when (fuzzy) {
+                true -> mangasQueries.getAllDuplicateManga("%", "%", MangaMapper::mapDuplicateManga)
+                false -> mangasQueries.getAllDuplicateManga("", "", MangaMapper::mapDuplicateManga)
+            }
+        }
+    }
+
+    override suspend fun getHiddenDuplicates(manga: Manga): List<MangaWithChapterCount> {
+        return handler.awaitList { mangasQueries.getHiddenDuplicates(manga.id, MangaMapper::mapMangaWithChapterCount) }
     }
 
     override suspend fun getUpcomingManga(statuses: Set<Long>): Flow<List<Manga>> {
