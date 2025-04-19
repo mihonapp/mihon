@@ -1,0 +1,3 @@
+-- Add notes column
+ALTER TABLE mangas
+ADD notes TEXT NOT NULL DEFAULT "";

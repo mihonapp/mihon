@@ -1,3 +1,5 @@
--- Add notes column
-ALTER TABLE mangas
-ADD notes TEXT NOT NULL DEFAULT "";
+import kotlin.Boolean;
+
+-- Add private field for tracking
+ALTER TABLE manga_sync
+ADD COLUMN private INTEGER AS Boolean DEFAULT 0 NOT NULL;

@@ -1,11 +1,14 @@
 package eu.kanade.tachiyomi.ui.browse.source.browse
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastAny
+import androidx.compose.ui.util.fastMap
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
@@ -24,6 +27,11 @@ import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.PersistentMap
+import kotlinx.collections.immutable.mutate
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -32,10 +40,12 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.mapAsCheckboxState
 import tachiyomi.core.common.util.lang.launchIO
+import tachiyomi.core.common.util.lang.launchNonCancellable
+import tachiyomi.domain.blockrule.interactor.GetBlockrules
+import tachiyomi.domain.blockrule.model.Blockrule
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.SetMangaCategories
 import tachiyomi.domain.category.model.Category
@@ -51,8 +61,10 @@ import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.Instant
+import java.util.regex.PatternSyntaxException
 import eu.kanade.tachiyomi.source.model.Filter as SourceModelFilter
 
+@Suppress("DuplicatedCode")
 class BrowseSourceScreenModel(
     private val sourceId: Long,
     listingQuery: String?,
@@ -68,10 +80,13 @@ class BrowseSourceScreenModel(
     private val getManga: GetManga = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
     private val addTracks: AddTracks = Injekt.get(),
-    private val getIncognitoState: GetIncognitoState = Injekt.get(),
+    getIncognitoState: GetIncognitoState = Injekt.get(),
+    getBlockrules: GetBlockrules = Injekt.get(),
 ) : StateScreenModel<BrowseSourceScreenModel.State>(State(Listing.valueOf(listingQuery))) {
 
     var displayMode by sourcePreferences.sourceDisplayMode().asState(screenModelScope)
+    private val prefetchPages = sourcePreferences.prefetchPages().get()
+    private val pageItems = sourcePreferences.pageItems().get()
 
     val source = sourceManager.getOrStub(sourceId)
 
@@ -103,10 +118,22 @@ class BrowseSourceScreenModel(
      * Flow of Pager flow tied to [State.listing]
      */
     private val hideInLibraryItems = sourcePreferences.hideInLibraryItems().get()
+    private val blockrulesFlow = getBlockrules.subscribeEnable(true)
+        .stateIn(
+            scope = ioCoroutineScope,
+            started = SharingStarted.Eagerly,
+            initialValue = emptyList(),
+        )
     val mangaPagerFlowFlow = state.map { it.listing }
         .distinctUntilChanged()
         .map { listing ->
-            Pager(PagingConfig(pageSize = 25)) {
+            Pager(
+                PagingConfig(
+                    pageSize = pageItems,
+                    prefetchDistance = pageItems * prefetchPages,
+                ),
+                initialKey = 1,
+            ) {
                 getRemoteManga(sourceId, listing.query ?: "", listing.filters)
             }.flow.map { pagingData ->
                 pagingData.map { manga ->
@@ -115,10 +142,41 @@ class BrowseSourceScreenModel(
                         .stateIn(ioCoroutineScope)
                 }
                     .filter { !hideInLibraryItems || !it.value.favorite }
-            }
-                .cachedIn(ioCoroutineScope)
+                    .filter { mangaState ->
+                        val listBlock = blockrulesFlow.value
+                        val m = mangaState.value
+                        !listBlock.fastAny { b ->
+                            when (b.type) {
+                                Blockrule.Type.AUTHOR_EQUALS        -> m.author == b.rule
+                                Blockrule.Type.AUTHOR_CONTAINS      -> m.author?.contains(b.rule)
+                                Blockrule.Type.TITLE_REGEX          -> b.rule.toRegexOrNull()?.matches(m.title)
+                                Blockrule.Type.TITLE_CONTAINS       -> m.title.contains(b.rule)
+                                Blockrule.Type.TITLE_STARTS_WITH    -> m.title.startsWith(b.rule)
+                                Blockrule.Type.TITLE_ENDS_WITH      -> m.title.endsWith(b.rule)
+                                Blockrule.Type.TITLE_EQUALS         -> m.title == b.rule
+                                Blockrule.Type.DESCRIPTION_REGEX    -> m.description?.let {
+                                    b.rule.toRegexOrNull()?.matches(it)
+                                }
+
+                                Blockrule.Type.DESCRIPTION_CONTAINS -> m.description?.contains(b.rule)
+                            }?.also { boolean ->
+                                if (boolean) {
+                                    val newMap =
+                                        state.value.blockList.mutate { it[m] = b }
+                                    mutableState.update { it.copy(blockList = newMap) }
+                                }
+                            } ?: false
+                        }
+                    }
+            }.cachedIn(ioCoroutineScope)
         }
         .stateIn(ioCoroutineScope, SharingStarted.Lazily, emptyFlow())
+
+    private fun String.toRegexOrNull() = try {
+        toRegex()
+    } catch (e: PatternSyntaxException) {
+        null
+    }
 
     fun getColumnsPreference(orientation: Int): GridCells {
         val isLandscape = orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -180,7 +238,7 @@ class BrowseSourceScreenModel(
                         when (filter) {
                             is SourceModelFilter.TriState -> filter.state = 1
                             is SourceModelFilter.CheckBox -> filter.state = true
-                            else -> {}
+                            else                          -> {}
                         }
                         genreExists = true
                         break@filter
@@ -217,12 +275,13 @@ class BrowseSourceScreenModel(
      *
      * @param manga the manga to update.
      */
+    @SuppressLint("NewApi")
     fun changeMangaFavorite(manga: Manga) {
-        screenModelScope.launch {
+        screenModelScope.launchIO {
             var new = manga.copy(
                 favorite = !manga.favorite,
                 dateAdded = when (manga.favorite) {
-                    true -> 0
+                    true  -> 0
                     false -> Instant.now().toEpochMilli()
                 },
             )
@@ -239,14 +298,14 @@ class BrowseSourceScreenModel(
     }
 
     fun addFavorite(manga: Manga) {
-        screenModelScope.launch {
+        screenModelScope.launchIO {
             val categories = getCategories()
             val defaultCategoryId = libraryPreferences.defaultCategory().get()
             val defaultCategory = categories.find { it.id == defaultCategoryId.toLong() }
 
             when {
                 // Default category set
-                defaultCategory != null -> {
+                defaultCategory != null                        -> {
                     moveMangaToCategories(manga, defaultCategory)
 
                     changeMangaFavorite(manga)
@@ -260,7 +319,7 @@ class BrowseSourceScreenModel(
                 }
 
                 // Choose a category
-                else -> {
+                else                                           -> {
                     val preselectedIds = getCategories.await(manga.id).map { it.id }
                     setDialog(
                         Dialog.ChangeMangaCategory(
@@ -326,8 +385,8 @@ class BrowseSourceScreenModel(
             fun valueOf(query: String?): Listing {
                 return when (query) {
                     GetRemoteManga.QUERY_POPULAR -> Popular
-                    GetRemoteManga.QUERY_LATEST -> Latest
-                    else -> Search(query = query, filters = FilterList()) // filters are filled in later
+                    GetRemoteManga.QUERY_LATEST  -> Latest
+                    else                         -> Search(query = query, filters = FilterList()) // filters are filled in later
                 }
             }
         }
@@ -341,7 +400,17 @@ class BrowseSourceScreenModel(
             val manga: Manga,
             val initialSelection: ImmutableList<CheckboxState.State<Category>>,
         ) : Dialog
+
         data class Migrate(val newManga: Manga, val oldManga: Manga) : Dialog
+
+        data class ChangeMangaListCategory(
+            val mangaList: List<Manga>,
+            val initialSelection: ImmutableList<CheckboxState<Category>>,
+        ) : Dialog
+
+        data class ConfirmMangaList(
+            val mangaList: List<Manga>,
+        ) : Dialog
     }
 
     @Immutable
@@ -350,7 +419,134 @@ class BrowseSourceScreenModel(
         val filters: FilterList = FilterList(),
         val toolbarQuery: String? = null,
         val dialog: Dialog? = null,
+        val selection: PersistentList<Manga> = persistentListOf(),
+        val selectionMode: Boolean = false,
+        val blockList: PersistentMap<Manga, Blockrule> = persistentMapOf(),
     ) {
         val isUserQuery get() = listing is Listing.Search && !listing.query.isNullOrEmpty()
     }
+
+    fun toggleSelectionMode() {
+        mutableState.update { it.copy(selectionMode = !it.selectionMode) }
+        if (!mutableState.value.selectionMode) {
+            clearSelection()
+        }
+    }
+
+    fun clearSelection() {
+        mutableState.update { it.copy(selection = persistentListOf()) }
+    }
+
+    fun minusSelection(mangaList: List<Manga>) {
+        mutableState.update { state ->
+            val newSelection = state.selection.mutate { list ->
+                list.removeAll(mangaList)
+            }
+            state.copy(selection = newSelection)
+        }
+    }
+
+    fun toggleSelection(manga: Manga) {
+        mutableState.update { state ->
+            val newSelection = state.selection.mutate { list ->
+                if (list.fastAny { it.id == manga.id }) {
+                    list.removeAll { it.id == manga.id }
+                } else {
+                    list.add(manga)
+                }
+            }
+            state.copy(selection = newSelection)
+        }
+    }
+
+    fun toggleRangeSelection(manga: Manga, items: List<Manga>) {
+        mutableState.update { state ->
+            val newSelection = state.selection.mutate { list ->
+                val lastSelected = list.lastOrNull()
+
+                val lastMangaIndex = items.indexOf(lastSelected)
+                val curMangaIndex = items.indexOf(manga)
+
+                if (lastMangaIndex == -1 || curMangaIndex == -1) {
+                    return@mutate
+                }
+
+                val selectedIds = list.fastMap { it.id }
+                val selectionRange = when {
+                    lastMangaIndex < curMangaIndex -> IntRange(lastMangaIndex, curMangaIndex)
+                    curMangaIndex < lastMangaIndex -> IntRange(curMangaIndex, lastMangaIndex)
+                    // We shouldn't reach this point
+                    else                           -> return@mutate
+                }
+
+                val newSelections = selectionRange.mapNotNull { index ->
+                    items[index].takeUnless { it.id in selectedIds }
+                }
+                list.addAll(newSelections)
+            }
+            state.copy(selection = newSelection)
+        }
+    }
+
+    fun openConfirmMangaList() {
+        screenModelScope.launchIO {
+            val mangaList = state.value.selection
+            if (mangaList.isNotEmpty()) {
+                if (mangaList.fastAny { getDuplicateLibraryManga(it).isNotEmpty() }) {
+                    setDialog(Dialog.ConfirmMangaList(mangaList))
+                } else {
+                    openChangeCategoryDialog()
+                }
+            }
+        }
+    }
+
+    fun openChangeCategoryDialog() {
+        screenModelScope.launchIO {
+            val mangaList = state.value.selection
+            val categories = getCategories()
+            val common = getCommonCategories(mangaList)
+            // Get indexes of the mix categories to preselect.
+            val mix = getMixCategories(mangaList)
+            val preselected = categories
+                .map {
+                    when (it) {
+                        in common -> CheckboxState.State.Checked(it)
+                        in mix    -> CheckboxState.TriState.Exclude(it)
+                        else      -> CheckboxState.State.None(it)
+                    }
+                }
+                .toImmutableList()
+            mutableState.update { it.copy(dialog = Dialog.ChangeMangaListCategory(mangaList, preselected)) }
+        }
+    }
+
+    private suspend fun getCommonCategories(mangas: List<Manga>): Collection<Category> {
+        if (mangas.isEmpty()) return emptyList()
+        return mangas
+            .map { getCategories.await(it.id).toSet() }
+            .reduce { set1, set2 -> set1.intersect(set2) }
+    }
+
+    private suspend fun getMixCategories(mangas: List<Manga>): Collection<Category> {
+        if (mangas.isEmpty()) return emptyList()
+        val mangaCategories = mangas.map { getCategories.await(it.id).toSet() }
+        val common = mangaCategories.reduce { set1, set2 -> set1.intersect(set2) }
+        return mangaCategories.flatten().distinct().subtract(common)
+    }
+
+    fun setMangaListCategories(mangaList: List<Manga>, addCategories: List<Long>, removeCategories: List<Long>) {
+        screenModelScope.launchNonCancellable {
+            mangaList.forEach { manga ->
+                val categoryIds = getCategories.await(manga.id)
+                    .map { it.id }
+                    .subtract(removeCategories.toSet())
+                    .plus(addCategories)
+                    .toList()
+
+                setMangaCategories.await(manga.id, categoryIds)
+            }
+        }
+    }
+
 }
