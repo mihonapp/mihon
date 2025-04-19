@@ -26,6 +26,7 @@ import com.mikepenz.markdown.m3.markdownTypography
 import com.mikepenz.markdown.model.MarkdownAnnotator
 import com.mikepenz.markdown.model.markdownAnnotator
 import com.mikepenz.markdown.model.markdownPadding
+import com.mikepenz.markdown.model.rememberMarkdownState
 import org.intellij.markdown.MarkdownTokenTypes.Companion.HTML_TAG
 import org.intellij.markdown.flavours.commonmark.CommonMarkFlavourDescriptor
 import org.intellij.markdown.flavours.commonmark.CommonMarkMarkerProcessor
@@ -51,10 +52,15 @@ fun MarkdownRender(
     modifier: Modifier = Modifier,
     annotator: MarkdownAnnotator = markdownAnnotator(),
 ) {
-    Markdown(
+    val markdownState = rememberMarkdownState(
         content = content,
-        annotator = annotator,
         flavour = SimpleMarkdownFlavourDescriptor,
+        immediate = true,
+    )
+
+    Markdown(
+        markdownState = markdownState,
+        annotator = annotator,
         typography = mihonMarkdownTypography(),
         padding = mihonMarkdownPadding(),
         components = mihonMarkdownComponents(),
@@ -114,7 +120,7 @@ private fun mihonMarkdownComponents() = markdownComponents(
         val markers = listOf("•", "◦", "▸", "▹")
 
         CompositionLocalProvider(
-            LocalBulletListHandler provides { _, _, _, _ -> "${markers[ul.listDepth % markers.size]} " },
+            LocalBulletListHandler provides { _, _, _, _, _ -> "${markers[ul.listDepth % markers.size]} " },
         ) {
             Column(modifier = Modifier.padding(start = MaterialTheme.padding.small)) {
                 MarkdownBulletList(ul.content, ul.node, style = ul.typography.bullet)
