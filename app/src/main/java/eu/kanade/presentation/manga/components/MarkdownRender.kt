@@ -28,6 +28,7 @@ import com.mikepenz.markdown.model.markdownAnnotator
 import com.mikepenz.markdown.model.markdownPadding
 import com.mikepenz.markdown.model.rememberMarkdownState
 import org.intellij.markdown.MarkdownTokenTypes.Companion.HTML_TAG
+import org.intellij.markdown.flavours.MarkdownFlavourDescriptor
 import org.intellij.markdown.flavours.commonmark.CommonMarkFlavourDescriptor
 import org.intellij.markdown.flavours.commonmark.CommonMarkMarkerProcessor
 import org.intellij.markdown.flavours.gfm.table.GitHubTableMarkerProvider
@@ -50,11 +51,12 @@ import tachiyomi.presentation.core.components.material.padding
 fun MarkdownRender(
     content: String,
     modifier: Modifier = Modifier,
+    flavour: MarkdownFlavourDescriptor = SimpleMarkdownFlavourDescriptor,
     annotator: MarkdownAnnotator = markdownAnnotator(),
 ) {
     val markdownState = rememberMarkdownState(
         content = content,
-        flavour = SimpleMarkdownFlavourDescriptor,
+        flavour = flavour,
         immediate = true,
     )
 
