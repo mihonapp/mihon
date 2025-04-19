@@ -125,7 +125,13 @@ private fun mihonMarkdownComponents() = markdownComponents(
             LocalBulletListHandler provides { _, _, _, _, _ -> "${markers[ul.listDepth % markers.size]} " },
         ) {
             Column(modifier = Modifier.padding(start = MaterialTheme.padding.small)) {
-                MarkdownBulletList(ul.content, ul.node, style = ul.typography.bullet)
+                MarkdownBulletList(
+                    content = ul.content,
+                    node = ul.node,
+                    style = ul.typography.bullet,
+                    markerModifier = { Modifier.alignBy(FirstBaseline) },
+                    listModifier = { Modifier.alignBy(FirstBaseline) },
+                )
             }
         }
     },
