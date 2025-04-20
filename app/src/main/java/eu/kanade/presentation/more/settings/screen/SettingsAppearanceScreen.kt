@@ -41,6 +41,8 @@ object SettingsAppearanceScreen : SearchableSettings {
         return listOf(
             getThemeGroup(uiPreferences = uiPreferences),
             getDisplayGroup(uiPreferences = uiPreferences),
+            getPaddingGroup(uiPreferences = uiPreferences),
+            getCornerGroup(uiPreferences = uiPreferences)
         )
     }
 
@@ -145,6 +147,76 @@ object SettingsAppearanceScreen : SearchableSettings {
                         formattedNow,
                     ),
                 ),
+            ),
+        )
+    }
+
+    @Composable
+    private fun getPaddingGroup(
+        uiPreferences: UiPreferences,
+    ): Preference.PreferenceGroup {
+        val bookPaddingPref = uiPreferences.bookPadding()
+        val bookPadding by bookPaddingPref.collectAsState()
+
+        return Preference.PreferenceGroup(
+            title = "边距",//i18n
+            preferenceItems = persistentListOf(
+                Preference.PreferenceItem.SliderPreference(
+                    value = bookPadding,
+                    valueRange = 0..8,
+                    title = "书间的边距",
+//                    subtitle = stringResource(MR.strings.pref_flash_duration_summary, flashMillis),
+                    subtitle = "边距 $bookPadding.dp",
+                    onValueChanged = {
+                        bookPaddingPref.set(it)
+                        true
+                    },
+                    enabled = true,
+                )
+            ),
+        )
+    }
+
+    @Composable
+    private fun getCornerGroup(
+        uiPreferences: UiPreferences,
+    ): Preference.PreferenceGroup {
+        val shapeELPref = uiPreferences.cornerEL()
+        val shapeLPref = uiPreferences.cornerL()
+        val shapeMPref = uiPreferences.cornerM()
+        val shapeSPref = uiPreferences.cornerS()
+        val shapeESPref = uiPreferences.cornerES()
+
+        val shapeEL by shapeELPref.collectAsState()
+        val shapeL by shapeLPref.collectAsState()
+        val shapeM by shapeMPref.collectAsState()
+        val shapeS by shapeSPref.collectAsState()
+        val shapeES by shapeESPref.collectAsState()
+
+        fun tachiyomi.core.common.preference.Preference<Int>.shapePreference(
+            title: String,
+            value: Int,
+        ) =
+            Preference.PreferenceItem.SliderPreference(
+                value = value,
+                valueRange = 0..100,
+                title = title,
+                subtitle = "圆角 $value.dp",
+                onValueChanged = {
+                    this.set(it)
+                    true
+                },
+                enabled = true,
+            )
+
+        return Preference.PreferenceGroup(
+            title = "形状",//i18n
+            preferenceItems = persistentListOf(
+                shapeELPref.shapePreference("超大", shapeEL),
+                shapeLPref.shapePreference("大", shapeL),
+                shapeMPref.shapePreference("中", shapeM),
+                shapeSPref.shapePreference("小", shapeS),
+                shapeESPref.shapePreference("超小", shapeES),
             ),
         )
     }

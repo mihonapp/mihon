@@ -62,10 +62,12 @@ fun LibrarySettingsDialog(
                 0 -> FilterPage(
                     screenModel = screenModel,
                 )
+
                 1 -> SortPage(
                     category = category,
                     screenModel = screenModel,
                 )
+
                 2 -> DisplayPage(
                     screenModel = screenModel,
                 )
@@ -128,10 +130,11 @@ private fun ColumnScope.FilterPage(
 
     val trackers by screenModel.trackersFlow.collectAsState()
     when (trackers.size) {
-        0 -> {
+        0    -> {
             // No trackers
         }
-        1 -> {
+
+        1    -> {
             val service = trackers[0]
             val filterTracker by screenModel.libraryPreferences.filterTracking(service.id.toInt()).collectAsState()
             TriStateItem(
@@ -140,6 +143,7 @@ private fun ColumnScope.FilterPage(
                 onClick = { screenModel.toggleTracker(service.id.toInt()) },
             )
         }
+
         else -> {
             HeadingItem(MR.strings.action_filter_tracked)
             trackers.map { service ->
@@ -164,11 +168,10 @@ private fun ColumnScope.SortPage(
     val sortDescending = !category.sort.isAscending
 
     val options = remember(trackers.isEmpty()) {
-        val trackerMeanPair = if (trackers.isNotEmpty()) {
-            MR.strings.action_sort_tracker_score to LibrarySort.Type.TrackerMean
-        } else {
-            null
-        }
+        val trackerMeanPair =
+            if (trackers.isNotEmpty()) MR.strings.action_sort_tracker_score to LibrarySort.Type.TrackerMean
+            else null
+
         listOfNotNull(
             MR.strings.action_sort_alpha to LibrarySort.Type.Alphabetical,
             MR.strings.action_sort_total to LibrarySort.Type.TotalChapters,
@@ -180,6 +183,8 @@ private fun ColumnScope.SortPage(
             MR.strings.action_sort_date_added to LibrarySort.Type.DateAdded,
             trackerMeanPair,
             MR.strings.action_sort_random to LibrarySort.Type.Random,
+            MR.strings.author_name to LibrarySort.Type.AuthorName,
+            MR.strings.author_work_num to LibrarySort.Type.AuthorWork,
         )
     }
 
@@ -187,8 +192,7 @@ private fun ColumnScope.SortPage(
         if (mode == LibrarySort.Type.Random) {
             BaseSortItem(
                 label = stringResource(titleRes),
-                icon = Icons.Default.Refresh
-                    .takeIf { sortingMode == LibrarySort.Type.Random },
+                icon = Icons.Default.Refresh.takeIf { sortingMode == LibrarySort.Type.Random },
                 onClick = {
                     screenModel.setSort(category, mode, LibrarySort.Direction.Ascending)
                 },
@@ -201,16 +205,8 @@ private fun ColumnScope.SortPage(
             onClick = {
                 val isTogglingDirection = sortingMode == mode
                 val direction = when {
-                    isTogglingDirection -> if (sortDescending) {
-                        LibrarySort.Direction.Ascending
-                    } else {
-                        LibrarySort.Direction.Descending
-                    }
-                    else -> if (sortDescending) {
-                        LibrarySort.Direction.Descending
-                    } else {
-                        LibrarySort.Direction.Ascending
-                    }
+                    isTogglingDirection -> if (sortDescending) LibrarySort.Direction.Ascending else LibrarySort.Direction.Descending
+                    else                -> if (sortDescending) LibrarySort.Direction.Descending else LibrarySort.Direction.Ascending
                 }
                 screenModel.setSort(category, mode, direction)
             },
@@ -285,6 +281,10 @@ private fun ColumnScope.DisplayPage(
     CheckboxItem(
         label = stringResource(MR.strings.action_display_show_continue_reading_button),
         pref = screenModel.libraryPreferences.showContinueReadingButton(),
+    )
+    CheckboxItem(
+        label = "显示作者名称",//i18n
+        pref = screenModel.libraryPreferences.showAuthorName()
     )
 
     HeadingItem(MR.strings.tabs_header)

@@ -9,6 +9,7 @@ import androidx.compose.ui.util.fastAny
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.model.MangaCover
+import tachiyomi.presentation.core.components.Badge
 
 @Composable
 internal fun LibraryCompactGrid(
@@ -54,6 +55,9 @@ internal fun LibraryCompactGrid(
                         isLocal = libraryItem.isLocal,
                         sourceLanguage = libraryItem.sourceLanguage,
                     )
+                    if (libraryItem.authorName != null) {
+                        Badge(text = libraryItem.authorName)
+                    }
                 },
                 onLongClick = { onLongClick(libraryItem.libraryManga) },
                 onClick = { onClick(libraryItem.libraryManga) },

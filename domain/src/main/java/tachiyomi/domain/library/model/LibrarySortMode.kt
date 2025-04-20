@@ -20,18 +20,20 @@ data class LibrarySort(
         override val flag: Long,
     ) : FlagWithMask {
 
-        override val mask: Long = 0b00111100L
+        override val mask: Long = 0b1100111100L
 
-        data object Alphabetical : Type(0b00000000)
-        data object LastRead : Type(0b00000100)
-        data object LastUpdate : Type(0b00001000)
-        data object UnreadCount : Type(0b00001100)
-        data object TotalChapters : Type(0b00010000)
-        data object LatestChapter : Type(0b00010100)
-        data object ChapterFetchDate : Type(0b00011000)
-        data object DateAdded : Type(0b00011100)
-        data object TrackerMean : Type(0b00100000)
-        data object Random : Type(0b00111100)
+        data object Alphabetical     : Type(0b0000000000)
+        data object LastRead         : Type(0b0000000100)
+        data object LastUpdate       : Type(0b0000001000)
+        data object UnreadCount      : Type(0b0000001100)
+        data object TotalChapters    : Type(0b0000010000)
+        data object LatestChapter    : Type(0b0000010100)
+        data object ChapterFetchDate : Type(0b0000011000)
+        data object DateAdded        : Type(0b0000011100)
+        data object TrackerMean      : Type(0b0000100000)
+        data object Random           : Type(0b0000111100)
+        data object AuthorName       : Type(0b0100000000)
+        data object AuthorWork       : Type(0b1000000000)
 
         companion object {
             fun valueOf(flag: Long): Type {
@@ -79,6 +81,8 @@ data class LibrarySort(
                 Type.DateAdded,
                 Type.TrackerMean,
                 Type.Random,
+                Type.AuthorName,
+                Type.AuthorWork,
             )
         }
         val directions by lazy { setOf(Direction.Ascending, Direction.Descending) }
@@ -97,17 +101,19 @@ data class LibrarySort(
             return try {
                 val values = serialized.split(",")
                 val type = when (values[0]) {
-                    "ALPHABETICAL" -> Type.Alphabetical
-                    "LAST_READ" -> Type.LastRead
-                    "LAST_MANGA_UPDATE" -> Type.LastUpdate
-                    "UNREAD_COUNT" -> Type.UnreadCount
-                    "TOTAL_CHAPTERS" -> Type.TotalChapters
-                    "LATEST_CHAPTER" -> Type.LatestChapter
+                    "ALPHABETICAL"       -> Type.Alphabetical
+                    "LAST_READ"          -> Type.LastRead
+                    "LAST_MANGA_UPDATE"  -> Type.LastUpdate
+                    "UNREAD_COUNT"       -> Type.UnreadCount
+                    "TOTAL_CHAPTERS"     -> Type.TotalChapters
+                    "LATEST_CHAPTER"     -> Type.LatestChapter
                     "CHAPTER_FETCH_DATE" -> Type.ChapterFetchDate
-                    "DATE_ADDED" -> Type.DateAdded
-                    "TRACKER_MEAN" -> Type.TrackerMean
-                    "RANDOM" -> Type.Random
-                    else -> Type.Alphabetical
+                    "DATE_ADDED"         -> Type.DateAdded
+                    "TRACKER_MEAN"       -> Type.TrackerMean
+                    "RANDOM"             -> Type.Random
+                    "AUTHOR_NAME"        -> Type.AuthorName
+                    "AUTHOR_WORK"        -> Type.AuthorWork
+                    else                 -> Type.Alphabetical
                 }
                 val ascending = if (values[1] == "ASCENDING") Direction.Ascending else Direction.Descending
                 LibrarySort(type, ascending)
@@ -119,16 +125,18 @@ data class LibrarySort(
 
     fun serialize(): String {
         val type = when (type) {
-            Type.Alphabetical -> "ALPHABETICAL"
-            Type.LastRead -> "LAST_READ"
-            Type.LastUpdate -> "LAST_MANGA_UPDATE"
-            Type.UnreadCount -> "UNREAD_COUNT"
-            Type.TotalChapters -> "TOTAL_CHAPTERS"
-            Type.LatestChapter -> "LATEST_CHAPTER"
+            Type.Alphabetical     -> "ALPHABETICAL"
+            Type.LastRead         -> "LAST_READ"
+            Type.LastUpdate       -> "LAST_MANGA_UPDATE"
+            Type.UnreadCount      -> "UNREAD_COUNT"
+            Type.TotalChapters    -> "TOTAL_CHAPTERS"
+            Type.LatestChapter    -> "LATEST_CHAPTER"
             Type.ChapterFetchDate -> "CHAPTER_FETCH_DATE"
-            Type.DateAdded -> "DATE_ADDED"
-            Type.TrackerMean -> "TRACKER_MEAN"
-            Type.Random -> "RANDOM"
+            Type.DateAdded        -> "DATE_ADDED"
+            Type.TrackerMean      -> "TRACKER_MEAN"
+            Type.Random           -> "RANDOM"
+            Type.AuthorName       -> "AUTHOR_NAME"
+            Type.AuthorWork       -> "AUTHOR_WORK"
         }
         val direction = if (direction == Direction.Ascending) "ASCENDING" else "DESCENDING"
         return "$type,$direction"

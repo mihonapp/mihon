@@ -46,6 +46,10 @@ class SourcePreferences(
 
     fun extensionUpdatesCount() = preferenceStore.getInt("ext_updates_count", 0)
 
+    fun prefetchPages() = preferenceStore.getInt("pref_prefetch_amount", 1)
+
+    fun pageItems() = preferenceStore.getInt("pref_page_item_amount", 25)
+
     fun trustedExtensions() = preferenceStore.getStringSet(
         Preference.appStateKey("trusted_extensions"),
         emptySet(),

@@ -1,17 +1,35 @@
 package eu.kanade.tachiyomi.ui.browse.source.browse
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Label
+import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.NewReleases
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -24,14 +42,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastFilter
+import androidx.compose.ui.util.fastMap
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -49,6 +73,8 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.extension.details.SourcePreferencesScreen
 import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateDialog
 import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateDialogScreenModel
+import eu.kanade.tachiyomi.ui.browse.source.blockrule.BlockruleScreen
+import eu.kanade.tachiyomi.ui.browse.source.blockrule.components.toShowName
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreenModel.Listing
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
@@ -59,6 +85,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import mihon.presentation.core.util.collectAsLazyPagingItems
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.util.lang.launchIO
+import tachiyomi.domain.manga.model.asMangaCover
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -90,8 +117,13 @@ data class BrowseSourceScreen(
         val navigateUp: () -> Unit = {
             when {
                 !state.isUserQuery && state.toolbarQuery != null -> screenModel.setToolbarQuery(null)
-                else -> navigator.pop()
+                state.selectionMode                              -> screenModel.toggleSelectionMode()
+                else                                             -> navigator.pop()
             }
+        }
+
+        BackHandler {
+            navigateUp()
         }
 
         if (screenModel.source is StubSource) {
@@ -141,79 +173,186 @@ data class BrowseSourceScreen(
                         onHelpClick = onHelpClick,
                         onSettingsClick = { navigator.push(SourcePreferencesScreen(sourceId)) },
                         onSearch = screenModel::search,
+                        onSelectClick = screenModel::toggleSelectionMode,
+                        inSelection = state.selectionMode,
+                        onBlockruleClick = { navigator.push(BlockruleScreen()) },
                     )
 
-                    Row(
-                        modifier = Modifier
-                            .horizontalScroll(rememberScrollState())
-                            .padding(horizontal = MaterialTheme.padding.small),
-                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+                    androidx.compose.animation.AnimatedVisibility(
+                        visible = !state.selectionMode,
+                        enter = fadeIn() + expandVertically(),
+                        exit = fadeOut() + shrinkVertically(),
                     ) {
-                        FilterChip(
-                            selected = state.listing == Listing.Popular,
-                            onClick = {
-                                screenModel.resetFilters()
-                                screenModel.setListing(Listing.Popular)
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Outlined.Favorite,
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(FilterChipDefaults.IconSize),
-                                )
-                            },
-                            label = {
-                                Text(text = stringResource(MR.strings.popular))
-                            },
-                        )
-                        if ((screenModel.source as CatalogueSource).supportsLatest) {
+                        Row(
+                            modifier = Modifier
+                                .horizontalScroll(rememberScrollState())
+                                .padding(horizontal = MaterialTheme.padding.small),
+                            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+                        ) {
                             FilterChip(
-                                selected = state.listing == Listing.Latest,
+                                selected = state.listing == Listing.Popular,
                                 onClick = {
                                     screenModel.resetFilters()
-                                    screenModel.setListing(Listing.Latest)
+                                    screenModel.setListing(Listing.Popular)
                                 },
                                 leadingIcon = {
                                     Icon(
-                                        imageVector = Icons.Outlined.NewReleases,
+                                        imageVector = Icons.Outlined.Favorite,
                                         contentDescription = null,
                                         modifier = Modifier
                                             .size(FilterChipDefaults.IconSize),
                                     )
                                 },
                                 label = {
-                                    Text(text = stringResource(MR.strings.latest))
+                                    Text(text = stringResource(MR.strings.popular))
                                 },
                             )
+                            if ((screenModel.source as CatalogueSource).supportsLatest) {
+                                FilterChip(
+                                    selected = state.listing == Listing.Latest,
+                                    onClick = {
+                                        screenModel.resetFilters()
+                                        screenModel.setListing(Listing.Latest)
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Outlined.NewReleases,
+                                            contentDescription = null,
+                                            modifier = Modifier
+                                                .size(FilterChipDefaults.IconSize),
+                                        )
+                                    },
+                                    label = {
+                                        Text(text = stringResource(MR.strings.latest))
+                                    },
+                                )
+                            }
+                            if (state.filters.isNotEmpty()) {
+                                FilterChip(
+                                    selected = state.listing is Listing.Search,
+                                    onClick = screenModel::openFilterSheet,
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Outlined.FilterList,
+                                            contentDescription = null,
+                                            modifier = Modifier
+                                                .size(FilterChipDefaults.IconSize),
+                                        )
+                                    },
+                                    label = {
+                                        Text(text = stringResource(MR.strings.action_filter))
+                                    },
+                                )
+                            }
+                            if (state.blockList.isNotEmpty()) {
+                                var expand by remember { mutableStateOf(false) }
+                                AssistChip(
+                                    onClick = { expand = !expand },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Block,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(FilterChipDefaults.IconSize),
+                                        )
+                                    },
+                                    label = {
+                                        Text(text = state.blockList.size.toString())
+                                    },
+                                )
+                                DropdownMenu(
+                                    expanded = expand,
+                                    onDismissRequest = { expand = false },
+                                    modifier = Modifier.padding(horizontal = MaterialTheme.padding.small),
+                                ) {
+                                    state.blockList.forEach { (manga, blockrule) ->
+                                        DropdownMenuItem(
+                                            text = {
+                                                Row(
+                                                    modifier = Modifier.height(IntrinsicSize.Min),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                ) {
+                                                    eu.kanade.presentation.manga.components.MangaCover.Book(
+                                                        modifier = Modifier
+                                                            .width(50.dp)
+                                                            .padding(end = MaterialTheme.padding.small),
+                                                        data = manga.asMangaCover(),
+                                                    )
+
+                                                    Column(
+                                                        modifier = Modifier
+                                                            .fillMaxHeight()
+                                                            .horizontalScroll(state = rememberScrollState()),
+                                                    ) {
+                                                        Text(text = manga.title + " : " + manga.author)
+                                                        Text(text = stringResource(MR.strings.block_rule_show) + " " + blockrule.name)
+                                                        Text(text = stringResource(MR.strings.block_rule_type) + ": " + blockrule.type.toShowName() + "   " + stringResource(MR.strings.block_rule_rule) + ": " + blockrule.rule)
+                                                        HorizontalDivider(
+                                                            modifier = Modifier
+                                                                .padding(vertical = MaterialTheme.padding.small)
+                                                                .widthIn(max = 300.dp),
+                                                        )
+                                                    }
+                                                }
+                                            },
+                                            onClick = {
+                                                expand = false
+                                                navigator.push((MangaScreen(manga.id, true)))
+                                            },
+                                        )
+                                    }
+                                }
+                            }
                         }
-                        if (state.filters.isNotEmpty()) {
-                            FilterChip(
-                                selected = state.listing is Listing.Search,
-                                onClick = screenModel::openFilterSheet,
+                    }
+
+                    androidx.compose.animation.AnimatedVisibility(
+                        visible = state.selectionMode,
+                        enter = fadeIn() + expandVertically(),
+                        exit = fadeOut() + shrinkVertically(),
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .horizontalScroll(rememberScrollState())
+                                .padding(horizontal = MaterialTheme.padding.small),
+                            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+                        ) {
+                            AssistChip(
+                                onClick = screenModel::clearSelection,
+                                label = {
+                                    Text(state.selection.size.toString())
+                                },
+                            )
+                            AssistChip(
+                                onClick = screenModel::toggleSelectionMode,
+                                label = {
+                                    Text(stringResource(MR.strings.exit_multiple_selection))
+                                },
+                            )
+                            AssistChip(
+//                                onClick = screenModel::openConfirmMangaList,
+                                onClick = screenModel::openChangeCategoryDialog,
                                 leadingIcon = {
                                     Icon(
-                                        imageVector = Icons.Outlined.FilterList,
+                                        imageVector = Icons.AutoMirrored.Outlined.Label,
                                         contentDescription = null,
-                                        modifier = Modifier
-                                            .size(FilterChipDefaults.IconSize),
+                                        modifier = Modifier.size(AssistChipDefaults.IconSize),
                                     )
                                 },
                                 label = {
-                                    Text(text = stringResource(MR.strings.action_filter))
+                                    Text(stringResource(MR.strings.action_move_category))
                                 },
                             )
                         }
                     }
-
                     HorizontalDivider()
                 }
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         ) { paddingValues ->
+            val itemList = screenModel.mangaPagerFlowFlow.collectAsLazyPagingItems()
             BrowseSourceContent(
                 source = screenModel.source,
-                mangaList = screenModel.mangaPagerFlowFlow.collectAsLazyPagingItems(),
+                mangaList = itemList,
                 columns = screenModel.getColumnsPreference(LocalConfiguration.current.orientation),
                 displayMode = screenModel.displayMode,
                 snackbarHostState = snackbarHostState,
@@ -221,18 +360,36 @@ data class BrowseSourceScreen(
                 onWebViewClick = onWebViewClick,
                 onHelpClick = { uriHandler.openUri(Constants.URL_HELP) },
                 onLocalSourceHelpClick = onHelpClick,
-                onMangaClick = { navigator.push((MangaScreen(it.id, true))) },
+                selection = state.selection,
+                onMangaClick = {
+                    if (state.selectionMode) {
+                        screenModel.toggleSelection(it)
+                    } else {
+                        navigator.push((MangaScreen(it.id, true)))
+                    }
+                },
                 onMangaLongClick = { manga ->
-                    scope.launchIO {
-                        val duplicates = screenModel.getDuplicateLibraryManga(manga)
-                        when {
-                            manga.favorite -> screenModel.setDialog(BrowseSourceScreenModel.Dialog.RemoveManga(manga))
-                            duplicates.isNotEmpty() -> screenModel.setDialog(
-                                BrowseSourceScreenModel.Dialog.AddDuplicateManga(manga, duplicates),
-                            )
-                            else -> screenModel.addFavorite(manga)
+                    if (state.selectionMode) {
+                        scope.launchIO {
+                            val list = itemList.itemSnapshotList.items.fastMap { it.value }
+                            state.selection.ifEmpty { screenModel.toggleSelection(manga) }
+                            screenModel.toggleRangeSelection(manga, list)
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         }
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    } else {
+                        scope.launchIO {
+                            val duplicateManga = screenModel.getDuplicateLibraryManga(manga)
+                            when {
+                                manga.favorite -> screenModel.setDialog(BrowseSourceScreenModel.Dialog.RemoveManga(manga))
+                                else           -> screenModel.setDialog(
+                                    BrowseSourceScreenModel.Dialog.AddDuplicateManga(
+                                        manga,
+                                        duplicateManga,
+                                    ),
+                                )
+                            }
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
                     }
                 },
             )
@@ -240,7 +397,7 @@ data class BrowseSourceScreen(
 
         val onDismissRequest = { screenModel.setDialog(null) }
         when (val dialog = state.dialog) {
-            is BrowseSourceScreenModel.Dialog.Filter -> {
+            is BrowseSourceScreenModel.Dialog.Filter                  -> {
                 SourceFilterDialog(
                     onDismissRequest = onDismissRequest,
                     filters = state.filters,
@@ -249,7 +406,8 @@ data class BrowseSourceScreen(
                     onUpdate = screenModel::setFilters,
                 )
             }
-            is BrowseSourceScreenModel.Dialog.AddDuplicateManga -> {
+
+            is BrowseSourceScreenModel.Dialog.AddDuplicateManga       -> {
                 DuplicateMangaDialog(
                     duplicates = dialog.duplicates,
                     onDismissRequest = onDismissRequest,
@@ -259,7 +417,7 @@ data class BrowseSourceScreen(
                 )
             }
 
-            is BrowseSourceScreenModel.Dialog.Migrate -> {
+            is BrowseSourceScreenModel.Dialog.Migrate                 -> {
                 MigrateDialog(
                     oldManga = dialog.oldManga,
                     newManga = dialog.newManga,
@@ -271,7 +429,8 @@ data class BrowseSourceScreen(
                     },
                 )
             }
-            is BrowseSourceScreenModel.Dialog.RemoveManga -> {
+
+            is BrowseSourceScreenModel.Dialog.RemoveManga             -> {
                 RemoveMangaDialog(
                     onDismissRequest = onDismissRequest,
                     onConfirm = {
@@ -280,7 +439,8 @@ data class BrowseSourceScreen(
                     mangaToRemove = dialog.manga,
                 )
             }
-            is BrowseSourceScreenModel.Dialog.ChangeMangaCategory -> {
+
+            is BrowseSourceScreenModel.Dialog.ChangeMangaCategory     -> {
                 ChangeCategoryDialog(
                     initialSelection = dialog.initialSelection,
                     onDismissRequest = onDismissRequest,
@@ -291,7 +451,70 @@ data class BrowseSourceScreen(
                     },
                 )
             }
-            else -> {}
+
+            is BrowseSourceScreenModel.Dialog.ChangeMangaListCategory -> {
+                ChangeCategoryDialog(
+                    initialSelection = dialog.initialSelection,
+                    onDismissRequest = onDismissRequest,
+                    onEditCategories = {
+                        screenModel.clearSelection()
+                        navigator.push(CategoryScreen())
+                    },
+                    onConfirm = { include, exclude ->
+                        scope.launchIO {
+                            screenModel.clearSelection()
+
+                            val unFavorites = dialog.mangaList.filter { !it.favorite }
+                            unFavorites.forEach(screenModel::changeMangaFavorite)
+                            screenModel.setMangaListCategories(dialog.mangaList, include, exclude)
+
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                    },
+                )
+            }
+
+            is BrowseSourceScreenModel.Dialog.ConfirmMangaList        -> {
+                AlertDialog(
+                    onDismissRequest = onDismissRequest,
+                    confirmButton = {
+                        Row {
+                            tachiyomi.presentation.core.components.material.TextButton(onClick = onDismissRequest) {
+                                Text(text = stringResource(MR.strings.action_cancel))
+                            }
+                            Spacer(modifier = Modifier.weight(1f))
+                            tachiyomi.presentation.core.components.material.TextButton(
+                                onClick = {
+                                    scope.launchIO {
+                                        val dup = dialog.mangaList.fastFilter { screenModel.getDuplicateLibraryManga(it).isNotEmpty() }
+                                        screenModel.minusSelection(dup)
+                                        screenModel.openChangeCategoryDialog()
+                                        onDismissRequest()
+                                    }
+                                },
+                            ) {
+                                Text(text = stringResource(MR.strings.exclude_duplicate_manga))
+                            }
+                            tachiyomi.presentation.core.components.material.TextButton(
+                                onClick = {
+                                    onDismissRequest()
+                                    screenModel.openChangeCategoryDialog()
+                                },
+                            ) {
+                                Text(text = stringResource(MR.strings.action_add_anyway))
+                            }
+                        }
+                    },
+                    title = {
+                        Text(text = stringResource(MR.strings.are_you_sure))
+                    },
+                    text = {
+                        Text(text = "duplicate")
+                    },
+                )
+            }
+
+            else                                                      -> {}
         }
 
         LaunchedEffect(Unit) {
@@ -299,7 +522,7 @@ data class BrowseSourceScreen(
                 .collectLatest {
                     when (it) {
                         is SearchType.Genre -> screenModel.searchGenre(it.txt)
-                        is SearchType.Text -> screenModel.search(it.txt)
+                        is SearchType.Text  -> screenModel.search(it.txt)
                     }
                 }
         }

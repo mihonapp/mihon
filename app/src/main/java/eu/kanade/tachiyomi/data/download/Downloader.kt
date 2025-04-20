@@ -265,7 +265,7 @@ class Downloader(
      *
      * @param manga the manga of the chapters to download.
      * @param chapters the list of chapters to download.
-     * @param autoStart whether to start the downloader after enqueing the chapters.
+     * @param autoStart whether to start the downloader after enqueuing the chapters.
      */
     fun queueChapters(manga: Manga, chapters: List<Chapter>, autoStart: Boolean) {
         if (chapters.isEmpty()) return
@@ -438,7 +438,7 @@ class Downloader(
         }
 
         try {
-            // If the image is already downloaded, do nothing. Otherwise download from network
+            // If the image is already downloaded, do nothing. Otherwise, download from network
             val file = when {
                 imageFile != null -> imageFile
                 chapterCache.isImageInCache(
@@ -667,7 +667,7 @@ class Downloader(
                     download.status = Download.State.NOT_DOWNLOADED
                 }
             }
-            queue - downloads
+            queue - downloads.toSet()
         }
     }
 

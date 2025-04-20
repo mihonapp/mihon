@@ -95,4 +95,10 @@
         <item quantity="one">%d repo</item>
         <item quantity="other">%d repos</item>
     </plurals>
+
+    <plurals name="num_blockrules">
+        <item quantity="one">%d block rule</item>
+        <item quantity="other">%d block rules</item>
+    </plurals>
+
 </resources>

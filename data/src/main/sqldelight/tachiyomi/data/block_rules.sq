@@ -1,0 +1,54 @@
+CREATE TABLE block_rules (
+    _id INTEGER NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    rule TEXT NOT NULL,
+    type TEXT NOT NULL,
+    sort INTEGER NOT NULL,
+    enable INTEGER NOT NULL
+);
+
+getBlockRule:
+SELECT *
+FROM block_rules
+WHERE _id = :id
+LIMIT 1;
+
+getBlockRules:
+SELECT
+_id AS id,
+name,
+rule,
+type,
+sort,
+enable
+FROM block_rules
+ORDER BY sort;
+
+getBlockRulesByEnable:
+SELECT
+_id AS id,
+name,
+rule,
+type,
+sort,
+enable
+FROM block_rules
+WHERE enable = :enable
+ORDER BY sort;
+
+insert:
+INSERT INTO block_rules(name, rule, type, sort, enable)
+VALUES (:name, :rule,:type,:sort ,:enable  );
+
+delete:
+DELETE FROM block_rules
+WHERE _id = :blockRuleId;
+
+update:
+UPDATE block_rules
+SET name = coalesce(:name, name),
+    rule = coalesce(:rule, rule),
+    type = coalesce(:type, type),
+    sort = coalesce(:sort, sort),
+    enable = coalesce(:enable, enable)
+WHERE _id = :blockRuleId;
