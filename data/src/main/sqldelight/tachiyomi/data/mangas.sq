@@ -123,11 +123,33 @@ WHERE favorite = 1
 AND source = :sourceId;
 
 getDuplicateLibraryManga:
-SELECT *
-FROM mangas
-WHERE favorite = 1
-AND lower(title) LIKE '%' || lower(:title) || '%'
-AND _id != :id;
+WITH
+duplicates AS (
+    SELECT *
+    FROM mangas
+    WHERE favorite = 1
+    AND _id != :id
+    AND lower(title) LIKE '%' || lower(:title) || '%'
+),
+chapter_counts AS (
+    SELECT
+        M._id AS manga_id,
+        count(*) AS chapter_count
+    FROM duplicates M
+    JOIN chapters C
+    ON M._id = C.manga_id
+    LEFT JOIN excluded_scanlators ES
+    ON C.manga_id = ES.manga_id
+    AND C.scanlator = ES.scanlator
+    WHERE ES.scanlator IS NULL
+    GROUP BY M._id
+)
+SELECT
+    M.*,
+    coalesce(CC.chapter_count, 0) AS chapter_count
+FROM duplicates M
+LEFT JOIN chapter_counts CC
+ON M._id = CC.manga_id;
 
 getUpcomingManga:
 SELECT *
@@ -152,10 +174,19 @@ FROM mangas
 WHERE favorite = 0
 GROUP BY source;
 
-deleteMangasNotInLibraryBySourceIds:
+deleteNonLibraryManga:
 DELETE FROM mangas
 WHERE favorite = 0
-AND source IN :sourceIds;
+AND source IN :sourceIds
+AND (
+    :keepReadManga = 0
+    OR _id NOT IN (
+        SELECT DISTINCT manga_id
+        FROM chapters
+        WHERE read = 1
+        OR last_page_read != 0
+    )
+);
 
 insert:
 INSERT INTO mangas(source, url, artist, author, description, genre, title, status, thumbnail_url, favorite, last_update, next_update, initialized, viewer, chapter_flags, cover_last_modified, date_added, update_strategy, calculate_interval, last_modified_at, version, notes)
@@ -203,9 +234,18 @@ insertNetworkManga {
         :updateStrategy, :calculateInterval, 0, :version
     WHERE NOT EXISTS(SELECT 0 FROM mangas WHERE source = :source AND url = :url);
 
-    -- Update the title if it is not favorite
+    -- Update the relevant details if applicable and not favorite
     UPDATE mangas
-    SET title = :title
+    SET
+        title = CASE WHEN :updateTitle THEN :title ELSE title END,
+        thumbnail_url = CASE WHEN :updateCover THEN :thumbnailUrl ELSE thumbnail_url END,
+        author = CASE WHEN :updateDetails THEN :author ELSE author END,
+        artist = CASE WHEN :updateDetails THEN :artist ELSE artist END,
+        description = CASE WHEN :updateDetails THEN :description ELSE description END,
+        genre = CASE WHEN :updateDetails THEN :genre ELSE genre END,
+        status = CASE WHEN :updateDetails THEN :status ELSE status END,
+        update_strategy = CASE WHEN :updateDetails THEN :updateStrategy ELSE update_strategy END,
+        initialized = :updateDetails
     WHERE source = :source
     AND url = :url
     AND favorite = 0;

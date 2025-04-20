@@ -1,8 +1,7 @@
 name: ⭐ Feature request
 description: Suggest a feature to improve Mihon
-labels: [Feature request]
+labels: [feature request]
 body:
-
   - type: textarea
     id: feature-description
     attributes:

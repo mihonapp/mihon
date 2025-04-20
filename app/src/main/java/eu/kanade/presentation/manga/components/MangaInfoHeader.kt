@@ -555,6 +555,14 @@ private fun ColumnScope.MangaContentInfo(
 }
 
 private val descriptionAnnotator = markdownAnnotator(
+    annotate = { content, child ->
+        if (child.type in DISALLOWED_MARKDOWN_TYPES) {
+            append(content.substring(child.startOffset, child.endOffset))
+            return@markdownAnnotator true
+        }
+
+        false
+    },
     config = markdownAnnotatorConfig(
         eolAsNewLine = true,
     ),
@@ -592,8 +600,8 @@ private fun MangaSummary(
                     )
                     MarkdownRender(
                         content = description,
-                        annotator = descriptionAnnotator,
                         modifier = Modifier.secondaryItemAlpha(),
+                        annotator = descriptionAnnotator,
                     )
                 }
             },
@@ -607,8 +615,8 @@ private fun MangaSummary(
                     SelectionContainer {
                         MarkdownRender(
                             content = description,
-                            annotator = descriptionAnnotator,
                             modifier = Modifier.secondaryItemAlpha(),
+                            annotator = descriptionAnnotator,
                         )
                     }
                 }

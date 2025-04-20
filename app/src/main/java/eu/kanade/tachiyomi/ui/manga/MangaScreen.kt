@@ -226,7 +226,7 @@ class MangaScreen(
                     screenModel = MigrateDialogScreenModel(),
                     onDismissRequest = onDismissRequest,
                     onClickTitle = { navigator.push(MangaScreen(dialog.oldManga.id)) },
-                    onPopScreen = { navigator.replace(MangaScreen(dialog.newManga.id)) },
+                    onPopScreen = onDismissRequest,
                 )
             }
             MangaScreenModel.Dialog.SettingsSheet -> ChapterSettingsDialog(

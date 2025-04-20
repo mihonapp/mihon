@@ -605,7 +605,9 @@
     <string name="pref_clear_database">Clear database</string>
     <string name="pref_clear_database_summary">Delete history for entries that are not saved in your library</string>
     <string name="clear_database_source_item_count">%1$d non-library entries in database</string>
-    <string name="clear_database_confirmation">Are you sure? Read chapters and progress of non-library entries will be lost</string>
+    <string name="clear_database_text">You’re about to remove entries from the database</string>
+    <string name="clear_database_history_warning">Read chapters and progress of non-library entries will be lost</string>
+    <string name="clear_db_exclude_read">Keep entries with read chapters</string>
     <string name="clear_database_completed">Entries deleted</string>
     <string name="database_clean">Nothing to clear</string>
     <string name="pref_clear_webview_data">Clear WebView data</string>

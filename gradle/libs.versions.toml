@@ -5,12 +5,12 @@ moko = "0.24.5"
 okhttp_version = "5.0.0-alpha.14"
 shizuku_version = "13.1.0"
 sqldelight = "2.0.2"
-sqlite = "2.4.0"
+sqlite = "2.5.0"
 voyager = "1.0.1"
-spotless = "7.0.2"
+spotless = "7.0.3"
 ktlint-core = "1.5.0"
 firebase-bom = "33.11.0"
-markdown = "0.33.0-b05"
+markdown = "0.33.0"
 
 [libraries]
 desugar = "com.android.tools:desugar_jdk_libs:2.1.5"
@@ -22,7 +22,7 @@ okhttp-core = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp_ve
 okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp_version" }
 okhttp-brotli = { module = "com.squareup.okhttp3:okhttp-brotli", version.ref = "okhttp_version" }
 okhttp-dnsoverhttps = { module = "com.squareup.okhttp3:okhttp-dnsoverhttps", version.ref = "okhttp_version" }
-okio = "com.squareup.okio:okio:3.10.2"
+okio = "com.squareup.okio:okio:3.11.0"
 
 conscrypt-android = "org.conscrypt:conscrypt-android:2.5.3"
 
@@ -91,7 +91,7 @@ sqldelight-dialects-sql = { module = "app.cash.sqldelight:sqlite-3-38-dialect", 
 
 junit = "org.junit.jupiter:junit-jupiter:5.11.4"
 kotest-assertions = "io.kotest:kotest-assertions-core:5.9.1"
-mockk = "io.mockk:mockk:1.13.17"
+mockk = "io.mockk:mockk:1.14.0"
 
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
