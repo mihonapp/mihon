@@ -90,6 +90,10 @@ class MangaRepositoryImpl(
         return handler.awaitList { mangasQueries.getHiddenDuplicates(manga.id, MangaMapper::mapMangaWithChapterCount) }
     }
 
+    override suspend fun getAllHiddenDuplicateManga(): Flow<List<DuplicateManga>> {
+        return handler.subscribeToList { mangasQueries.getAllHiddenDuplicateManga(MangaMapper::mapDuplicateManga) }
+    }
+
     override suspend fun getUpcomingManga(statuses: Set<Long>): Flow<List<Manga>> {
         val epochMillis = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toEpochSecond() * 1000
         return handler.subscribeToList {
