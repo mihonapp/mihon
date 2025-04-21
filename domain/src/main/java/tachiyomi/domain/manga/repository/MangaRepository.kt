@@ -35,6 +35,8 @@ interface MangaRepository {
 
     suspend fun getHiddenDuplicates(manga: Manga): List<MangaWithChapterCount>
 
+    suspend fun getAllHiddenDuplicateManga(): Flow<List<DuplicateManga>>
+
     suspend fun getUpcomingManga(statuses: Set<Long>): Flow<List<Manga>>
 
     suspend fun resetViewerFlags(): Boolean
