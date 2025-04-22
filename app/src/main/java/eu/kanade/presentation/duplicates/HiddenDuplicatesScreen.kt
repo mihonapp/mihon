@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
@@ -13,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Visibility
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.VerticalDivider
@@ -41,7 +39,6 @@ fun HiddenDuplicatesContent(
     onDismissRequest: () -> Unit,
     onUnhideSingleClicked: (MangaWithChapterCount, MangaWithChapterCount) -> Unit,
     onUnhideGroupClicked: (MangaWithChapterCount, List<MangaWithChapterCount>) -> Unit,
-    loading: Boolean,
 ) {
     val sourceManager = remember { Injekt.get<SourceManager>() }
 
@@ -111,18 +108,6 @@ fun HiddenDuplicatesContent(
             HorizontalDivider(
                 modifier = Modifier.padding(top = verticalListPadding),
             )
-        }
-        if (loading) {
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 100.dp),
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
         }
     }
 }
