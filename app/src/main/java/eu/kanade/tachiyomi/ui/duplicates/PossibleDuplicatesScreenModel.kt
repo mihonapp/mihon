@@ -1,13 +1,11 @@
 package eu.kanade.tachiyomi.ui.duplicates
 
-import android.content.Context
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,25 +14,22 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import tachiyomi.core.common.i18n.stringResource
-import tachiyomi.core.common.util.lang.launchIO
+import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.domain.hiddenDuplicates.interactor.AddHiddenDuplicate
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
+import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.source.service.SourceManager
-import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class PossibleDuplicatesScreenModel(
-    private val context: Context,
     private val getDuplicateLibraryManga: GetDuplicateLibraryManga = Injekt.get(),
     private val addHiddenDuplicate: AddHiddenDuplicate = Injekt.get(),
-    private val downloadManager: DownloadManager = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
-    private val snackbarHostState: SnackbarHostState = SnackbarHostState(),
+    private val downloadManager: DownloadManager = Injekt.get(),
     val libraryPreferences: LibraryPreferences = Injekt.get(),
 ) : StateScreenModel<PossibleDuplicatesScreenModel.State>(State(libraryPreferences.duplicateMatchLevel().get())) {
 
@@ -55,24 +50,17 @@ class PossibleDuplicatesScreenModel(
         }
     }
 
-    fun removeFavorite(mangaItem: MangaWithChapterCount) {
-        val manga = mangaItem.manga
-        screenModelScope.launch {
-            if (downloadManager.getDownloadCount(manga) == 0) return@launch
-            val result = snackbarHostState.showSnackbar(
-                message = context.stringResource(MR.strings.delete_downloads_for_manga),
-                actionLabel = context.stringResource(MR.strings.action_delete),
-                withDismissAction = true,
-            )
-            if (result == SnackbarResult.ActionPerformed) {
-                val source = sourceManager.getOrStub(manga.source)
-                downloadManager.deleteManga(manga, source)
-            }
-        }
-        screenModelScope.launchIO {
+    fun removeFavorite(manga: Manga, deleteDownloads: Boolean) {
+        screenModelScope.launchNonCancellable {
             if (updateManga.awaitUpdateFavorite(manga.id, false)) {
                 if (manga.removeCovers() != manga) {
                     updateManga.awaitUpdateCoverLastModified(manga.id)
+                }
+            }
+            if (deleteDownloads) {
+                val source = sourceManager.get(manga.source) as? HttpSource
+                if (source != null) {
+                    downloadManager.deleteManga(manga, source)
                 }
             }
         }
@@ -100,12 +88,17 @@ class PossibleDuplicatesScreenModel(
         setDialog(Dialog.FilterSheet)
     }
 
+    fun openDeleteMangaDialog(mangaItem: MangaWithChapterCount) {
+        mutableState.update { it.copy(dialog = Dialog.ConfirmRemove(mangaItem.manga)) }
+    }
+
     fun setMatchLevel(level: LibraryPreferences.DuplicateMatchLevel) {
         mutableState.update { it.copy(matchLevel = level) }
     }
 
     sealed interface Dialog {
         data object FilterSheet : Dialog
+        data class ConfirmRemove(val manga: Manga) : Dialog
     }
 
     @Immutable
