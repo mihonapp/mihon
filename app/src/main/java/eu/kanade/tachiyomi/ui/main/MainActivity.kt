@@ -144,7 +144,7 @@ class MainActivity : BaseActivity() {
 
             var incognito by remember { mutableStateOf(getIncognitoState.await(null)) }
             val downloadOnly by preferences.downloadedOnly().collectAsState()
-            val indexing by downloadCache.isInitializing.collectAsState()
+            val indexing by downloadCache.isIndexing.collectAsState()
 
             val isSystemInDarkTheme = isSystemInDarkTheme()
             val statusBarBackgroundColor = when {
