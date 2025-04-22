@@ -32,7 +32,12 @@ class GetDuplicateLibraryManga(
                     return@mapNotNull null
                 }
                 Pair(keyManga, MangaWithChapterCount(it.manga, it.chapterCount))
-            }.groupBy(keySelector = { it.first }, valueTransform = { it.second })
+            }.sortedBy { it.second.manga.title.lowercase() }
+                .groupBy(keySelector = { it.first }, valueTransform = { it.second })
+                .toList()
+                .sortedBy { it.first.manga.title.lowercase() }
+                .sortedByDescending { it.second.count() }
+                .toMap()
         }
     }
 

@@ -35,7 +35,7 @@ class HiddenDuplicatesScreenModel(
                         newMap[it.value[0]]?.count() == 1 &&
                         newMap[it.value[0]]?.get(0) == it.key &&
                         it.value[0].manga.id < it.key.manga.id
-                }
+                }.onEach { it.value.sortedBy { it.manga.title } }
             }
         }
         mutableState.update { it.copy(loading = false) }
