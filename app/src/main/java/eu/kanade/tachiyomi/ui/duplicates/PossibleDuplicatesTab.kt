@@ -1,12 +1,13 @@
 package eu.kanade.tachiyomi.ui.duplicates
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -19,12 +20,13 @@ import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
+import tachiyomi.presentation.core.screens.LoadingScreen
+import tachiyomi.source.local.isLocal
 
 @Composable
 fun Screen.possibleDuplicatesTab(): TabContent {
-    val context = LocalContext.current
     val navigator = LocalNavigator.currentOrThrow
-    val screenModel = rememberScreenModel { PossibleDuplicatesScreenModel(context) }
+    val screenModel = rememberScreenModel { PossibleDuplicatesScreenModel() }
     val onDismissRequest = { screenModel.setDialog(null) }
     val lazyListState = rememberLazyListState()
     val state by screenModel.state.collectAsState()
@@ -40,7 +42,12 @@ fun Screen.possibleDuplicatesTab(): TabContent {
             ),
         ),
     ) { contentPadding, _ ->
-        if (!state.loading && duplicatesMapState.isEmpty()) {
+        if (state.loading) {
+            LoadingScreen(Modifier.padding(contentPadding))
+            return@TabContent
+        }
+
+        if (duplicatesMapState.isEmpty()) {
             EmptyScreen(MR.strings.information_empty_possible_duplicates, happyFace = true)
             return@TabContent
         }
@@ -51,16 +58,25 @@ fun Screen.possibleDuplicatesTab(): TabContent {
             lazyListState = lazyListState,
             onOpenManga = { navigator.push(MangaScreen(it.id)) },
             onDismissRequest = onDismissRequest,
-            onToggleFavoriteClicked = screenModel::removeFavorite,
+            onToggleFavoriteClicked = screenModel::openDeleteMangaDialog,
             onHideSingleClicked = screenModel::hideSingleDuplicate,
             onHideGroupClicked = screenModel::hideGroupDuplicate,
         )
 
-        when (state.dialog) {
-            PossibleDuplicatesScreenModel.Dialog.FilterSheet -> run {
+        when (val dialog = state.dialog) {
+            is PossibleDuplicatesScreenModel.Dialog.FilterSheet -> run {
                 DuplicateFilterDialog(
                     onDismissRequest = onDismissRequest,
                     screenModel = screenModel,
+                )
+            }
+            is PossibleDuplicatesScreenModel.Dialog.ConfirmRemove -> {
+                ConfirmDeleteMangaDialog(
+                    isLocalManga = dialog.manga.isLocal(),
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = { deleteDownloads ->
+                        screenModel.removeFavorite(dialog.manga, deleteDownloads)
+                    },
                 )
             }
             null -> {}
