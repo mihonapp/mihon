@@ -385,10 +385,10 @@ fun TextItem(label: String, value: String, onChange: (String) -> Unit) {
 }
 
 @Composable
-fun SwitchItem(label: String, preference: Preference<Boolean>) {
+fun SwitchItem(label: StringResource, preference: Preference<Boolean>) {
     val checked by preference.collectAsState()
     BaseSettingsItem(
-        label = label,
+        label = stringResource(label),
         widget = {
             Switch(
                 checked = checked,
@@ -397,44 +397,6 @@ fun SwitchItem(label: String, preference: Preference<Boolean>) {
         },
         onClick = { preference.toggle() },
     )
-}
-
-@Composable
-fun SettingsChipRowSwitch(labelRes: StringResource, switchPref: Preference<Boolean>, content: @Composable FlowRowScope.() -> Unit) {
-    Column {
-        Row(
-            modifier = Modifier.padding(
-                start = SettingsItemsPaddings.Horizontal,
-                top = 0.dp,
-                end = SettingsItemsPaddings.Horizontal,
-                bottom = SettingsItemsPaddings.Vertical,
-            ),
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
-        ) {
-            Text(
-                text = stringResource(labelRes),
-                style = MaterialTheme.typography.header,
-                modifier = Modifier
-                    .padding(
-                        vertical = SettingsItemsPaddings.Vertical,
-                    ),
-            )
-            SwitchItem(
-                label = "",
-                pref = switchPref
-            )
-        }
-        FlowRow(
-            modifier = Modifier.padding(
-                start = SettingsItemsPaddings.Horizontal,
-                top = 0.dp,
-                end = SettingsItemsPaddings.Horizontal,
-                bottom = SettingsItemsPaddings.Vertical,
-            ),
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
-            content = content,
-        )
-    }
 }
 
 @Composable
