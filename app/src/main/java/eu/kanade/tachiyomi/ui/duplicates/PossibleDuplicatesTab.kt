@@ -42,6 +42,25 @@ fun Screen.possibleDuplicatesTab(): TabContent {
             ),
         ),
     ) { contentPadding, _ ->
+        when (val dialog = state.dialog) {
+            is PossibleDuplicatesScreenModel.Dialog.FilterSheet -> run {
+                DuplicateFilterDialog(
+                    onDismissRequest = onDismissRequest,
+                    screenModel = screenModel,
+                )
+            }
+            is PossibleDuplicatesScreenModel.Dialog.ConfirmRemove -> {
+                ConfirmDeleteMangaDialog(
+                    isLocalManga = dialog.manga.isLocal(),
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = { deleteDownloads ->
+                        screenModel.removeFavorite(dialog.manga, deleteDownloads)
+                    },
+                )
+            }
+            null -> {}
+        }
+
         if (state.loading) {
             LoadingScreen(Modifier.padding(contentPadding))
             return@TabContent
@@ -62,24 +81,5 @@ fun Screen.possibleDuplicatesTab(): TabContent {
             onHideSingleClicked = screenModel::hideSingleDuplicate,
             onHideGroupClicked = screenModel::hideGroupDuplicate,
         )
-
-        when (val dialog = state.dialog) {
-            is PossibleDuplicatesScreenModel.Dialog.FilterSheet -> run {
-                DuplicateFilterDialog(
-                    onDismissRequest = onDismissRequest,
-                    screenModel = screenModel,
-                )
-            }
-            is PossibleDuplicatesScreenModel.Dialog.ConfirmRemove -> {
-                ConfirmDeleteMangaDialog(
-                    isLocalManga = dialog.manga.isLocal(),
-                    onDismissRequest = onDismissRequest,
-                    onConfirm = { deleteDownloads ->
-                        screenModel.removeFavorite(dialog.manga, deleteDownloads)
-                    },
-                )
-            }
-            null -> {}
-        }
     }
 }
