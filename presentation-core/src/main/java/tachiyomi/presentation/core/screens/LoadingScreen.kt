@@ -20,14 +20,14 @@ fun LoadingScreen(modifier: Modifier = Modifier, text: StringResource? = null) {
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        Column (
-            horizontalAlignment = Alignment.CenterHorizontally
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             CircularProgressIndicator()
             if (text != null) {
                 Text(
                     text = stringResource(text),
-                    Modifier.padding(top = MaterialTheme.padding.small)
+                    Modifier.padding(top = MaterialTheme.padding.small),
                 )
             }
         }
