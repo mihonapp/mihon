@@ -51,7 +51,7 @@ class PagerConfig(
     init {
         readerPreferences.readerTheme()
             .register(
-                {
+                { theme = it },
                     theme = it
                 },
                 { imagePropertyChangedListener?.invoke() },

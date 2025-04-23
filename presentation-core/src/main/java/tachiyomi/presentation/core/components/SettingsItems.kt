@@ -385,29 +385,17 @@ fun TextItem(label: String, value: String, onChange: (String) -> Unit) {
 }
 
 @Composable
-fun SwitchItem(label: String, pref: Preference<Boolean>) {
-    val checked by pref.collectAsState()
-    SwitchItem(
-        label = label,
-        checked = checked,
-        onClick = { pref.toggle() },
-        switchSize = 15f,
-    )
-}
-
-@Composable
-fun SwitchItem(label: String, checked: Boolean, switchSize: Float, onClick: () -> Unit) {
-
+fun SwitchItem(label: String, preference: Preference<Boolean>) {
+    val checked by preference.collectAsState()
     BaseSettingsItem(
         label = label,
         widget = {
             Switch(
                 checked = checked,
                 onCheckedChange = null,
-                modifier = Modifier.size(switchSize.dp),
             )
         },
-        onClick = onClick,
+        onClick = { preference.toggle() },
     )
 }
 

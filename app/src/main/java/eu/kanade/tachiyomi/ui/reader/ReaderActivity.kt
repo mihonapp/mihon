@@ -833,11 +833,11 @@ class ReaderActivity : BaseActivity() {
             readerPreferences.readerTheme().changes()
                 .onEach { theme ->
                     binding.readerContainer.setBackgroundColor(
-                        when (Pair(theme, readerPreferences.readerThemeSwitch().get())) {
-                            Pair(0,false) -> Color.WHITE
-                            Pair(2,false) -> grayBackgroundColor
-                            Pair(1,false) -> Color.BLACK
-                            else -> automaticBackgroundColor()
+                        when (theme, readerPreferences.readerThemeSwitch().get()) {
+                            0 -> Color.WHITE
+                            1 -> Color.BLACK
+                            2 -> grayBackgroundColor
+                            else -> error("Unknown reader theme")
                         },
                     )
                 }

@@ -108,12 +108,8 @@ fun Context.createReaderThemeContext(): Context {
     val preferences = Injekt.get<UiPreferences>()
     val readerPreferences = Injekt.get<ReaderPreferences>()
     val themeMode = preferences.themeMode().get()
-    val isDarkBackground = when (Pair(readerPreferences.readerTheme().get(), readerPreferences.readerThemeSwitch().get())) {
-        Pair(1,false), Pair(2,false) -> true // Black, Gray
-        Pair(0,true),Pair(1,true),Pair(2,true) -> when (themeMode) { // Automatic bg uses activity background by default
-            ThemeMode.SYSTEM -> applicationContext.isNightMode()
-            else -> themeMode == ThemeMode.DARK
-        }
+    val isDarkBackground = when (readerPreferences.readerTheme().get()) {
+        1, 2 -> true // Black, Gray
         else -> false // White
     }
     val expected = if (isDarkBackground) Configuration.UI_MODE_NIGHT_YES else Configuration.UI_MODE_NIGHT_NO
