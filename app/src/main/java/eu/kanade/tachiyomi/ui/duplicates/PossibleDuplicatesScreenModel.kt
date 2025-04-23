@@ -40,9 +40,11 @@ class PossibleDuplicatesScreenModel(
 
     init {
         screenModelScope.launch {
+            mutableState.update { it.copy(loading = true) }
             state.distinctUntilChangedBy { it.matchLevel }.collectLatest { state ->
                 mutableState.update { it.copy(loading = true) }
                 getDuplicateLibraryManga.subscribe(state.matchLevel).collectLatest { duplicatesMap ->
+                    mutableState.update { it.copy(loading = true) }
                     _duplicatesMapState.value = duplicatesMap
                     mutableState.update { it.copy(loading = false) }
                 }

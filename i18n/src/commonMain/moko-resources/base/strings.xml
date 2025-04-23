@@ -980,6 +980,7 @@
     <string name="information_empty_category_dialog">You don\'t have any categories yet.</string>
     <string name="information_empty_possible_duplicates">No duplicates found.</string>
     <string name="information_empty_hidden_duplicates">You haven\'t hidden any duplicates yet.</string>
+    <string name="information_long_load">This may take a long time for large libraries.</string>
     <string name="information_cloudflare_bypass_failure">Failed to bypass Cloudflare</string>
     <string name="information_cloudflare_help">Tap here for help with Cloudflare</string>
     <string name="information_required_plain">*required</string>
