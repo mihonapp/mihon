@@ -12,10 +12,43 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ## [Unreleased]
 ### Added
+- Add more Kaomoji for empty/error screens ([@ianfhunter](https://github.com/ianfhunter/)) ([#1909](https://github.com/mihonapp/mihon/pull/1909))
+- Add user manga notes ([@imkunet](https://github.com/imkunet), [@AntsyLich](https://github.com/AntsyLich)) ([#428](https://github.com/mihonapp/mihon/pull/428))
+  - Fix user notes not restoring when manga doesn't exist in DB ([@AntsyLich](https://github.com/AntsyLich)) ([#1945](https://github.com/mihonapp/mihon/pull/1945))
+- Add markdown support for manga descriptions ([@Secozzi](https://github.com/Secozzi)) ([#1948](https://github.com/mihonapp/mihon/pull/1948))
+  - Use simpler markdown flavour ([@Secozzi](https://github.com/Secozzi)) ([#2000](https://github.com/mihonapp/mihon/pull/2000))
+  - Use Github markdown flavour for Github releases & fix bullet list alignment ([@Secozzi](https://github.com/Secozzi)) ([#2024](https://github.com/mihonapp/mihon/pull/2024))
+- Add Nord Theme ([@Riztard](https://github.com/Riztard)) ([#1951](https://github.com/mihonapp/mihon/pull/1951))
+- Option to keep read manga when clearing database ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#1979](https://github.com/mihonapp/mihon/pull/1979))
 - Showing in-app progress bar for backup restoring & library updating ([@cuong-tran](https://github.com/cuong-tran)) ([#1835](https://github.com/mihonapp/mihon/pull/1835))
+
+### Improved
+- Significantly improve browsing speed (near instantaneous) ([@AntsyLich](https://github.com/AntsyLich)) ([#1946](https://github.com/mihonapp/mihon/pull/1946))
+- Deduplicate entries when browsing ([@AntsyLich](https://github.com/AntsyLich)) ([#1957](https://github.com/mihonapp/mihon/pull/1957))
+- Update non-library manga data when browsing ([@AntsyLich](https://github.com/AntsyLich)) ([#1967](https://github.com/mihonapp/mihon/pull/1967))
+- Surface image loading error in Reader ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#1981](https://github.com/mihonapp/mihon/pull/1981))
+- Include source headers when opening failed images from reader ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2004](https://github.com/mihonapp/mihon/pull/2004))
+
+### Changed
+- Display all similarly named duplicates in duplicate manga dialogue ([@NarwhalHorns](https://github.com/NarwhalHorns), [@AntsyLich](https://github.com/AntsyLich)) ([#1861](https://github.com/mihonapp/mihon/pull/1861))
+  - Display chapter count on items in duplicate manga dialogue ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#1963](https://github.com/mihonapp/mihon/pull/1963))
+- Update Facebook and Reddit icons ([@Joehuu](https://github.com/Joehuu)) ([#1994](https://github.com/mihonapp/mihon/pull/1994))
 
 ### Fixes
 - Fix Bangumi search results including novels ([@MajorTanya](https://github.com/MajorTanya)) ([#1885](https://github.com/mihonapp/mihon/pull/1885))
+- Fix next chapter button occasionally jumping to the last page of the current chapter ([@perokhe](https://github.com/perokhe)) ([#1920](https://github.com/mihonapp/mihon/pull/1920))
+  - Fix page number not appearing when opening chapter ([@perokhe](https://github.com/perokhe)) ([#1936](https://github.com/mihonapp/mihon/pull/1936))
+- Fix backup sharing from notifications not working when app is in background ([@JaymanR](https://github.com/JaymanR))([#1929](https://github.com/mihonapp/mihon/pull/1929))
+- Fix mark existing duplicate read chapters as read option not working in some cases ([@AntsyLich](https://github.com/AntsyLich)) ([#1944](https://github.com/mihonapp/mihon/pull/1944))
+- Fix app bar action tooltips blocking clicks ([@Bartuzen](https://github.com/Bartuzen)) ([#1928](https://github.com/mihonapp/mihon/pull/1928))
+- Fix unintended app permissions due to Firebase misconfiguration ([@AntsyLich](https://github.com/AntsyLich)) ([#1960](https://github.com/mihonapp/mihon/pull/1960))
+- Fix navigation issue after migrating a duplicated entry from History tab ([@cuong-tran](https://github.com/cuong-tran)) ([#1980](https://github.com/mihonapp/mihon/pull/1980))
+- Fix duplicate requests in WebView due to empty reasonPhrase ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2003](https://github.com/mihonapp/mihon/pull/2003))
+- Fix content under source browse screen top appbar is interactable ([@AntsyLich](https://github.com/AntsyLich)) ([#2026](https://github.com/mihonapp/mihon/pull/2026))
+- Fix crash when trying use source sort filter without a pre-selection ([@AntsyLich](https://github.com/AntsyLich)) ([#2036](https://github.com/mihonapp/mihon/pull/2036))
+
+### Removed
+- Remove Okhttp networking from WebView Screen ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2020](https://github.com/mihonapp/mihon/pull/2020))
 
 ## [v0.18.0] - 2025-03-20
 ### Added

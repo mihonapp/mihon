@@ -147,6 +147,8 @@
     <string name="action_move_to_top_all_for_series">Move series to top</string>
     <string name="action_move_to_bottom">Move to bottom</string>
     <string name="action_move_to_bottom_all_for_series">Move series to bottom</string>
+    <string name="action_notes">Notes</string>
+    <string name="action_edit_notes">Edit notes</string>
     <string name="action_install">Install</string>
     <string name="action_share">Share</string>
     <string name="action_save">Save</string>
@@ -164,7 +166,6 @@
     <string name="action_start_downloading_now">Start downloading now</string>
     <string name="action_not_now">Not now</string>
     <string name="action_add_anyway">Add anyway</string>
-    <string name="action_migrate_duplicate">Migrate existing entry</string>
 
     <!-- Operations -->
     <string name="loading">Loading…</string>
@@ -602,7 +603,9 @@
     <string name="pref_clear_database">Clear database</string>
     <string name="pref_clear_database_summary">Delete history for entries that are not saved in your library</string>
     <string name="clear_database_source_item_count">%1$d non-library entries in database</string>
-    <string name="clear_database_confirmation">Are you sure? Read chapters and progress of non-library entries will be lost</string>
+    <string name="clear_database_text">You’re about to remove entries from the database</string>
+    <string name="clear_database_history_warning">Read chapters and progress of non-library entries will be lost</string>
+    <string name="clear_db_exclude_read">Keep entries with read chapters</string>
     <string name="clear_database_completed">Entries deleted</string>
     <string name="database_clean">Nothing to clear</string>
     <string name="pref_clear_webview_data">Clear WebView data</string>
@@ -709,7 +712,8 @@
     <!-- missing confirm menu after Compose rewrite #7901 -->
     <string name="remove_from_library">Remove from library</string>
     <string name="unknown_title">Unknown title</string>
-    <string name="confirm_add_duplicate_manga">You have an entry in your library with the same name.\n\nDo you still wish to continue?</string>
+    <string name="possible_duplicates_title">Possible duplicates</string>
+    <string name="possible_duplicates_summary">You have entries in your library with a similar name.\n\nSelect an entry to migrate or add anyway.</string>
     <string name="manga_added_library">Added to library</string>
     <string name="manga_removed_library">Removed from library</string>
     <string name="manga_info_expand">More</string>
@@ -986,4 +990,7 @@
     <string name="exception_http">HTTP %d, check website in WebView</string>
     <string name="exception_offline">No Internet connection</string>
     <string name="exception_unknown_host">Couldn\'t reach %s</string>
+
+    <!-- Notes screen -->
+    <string name="notes_placeholder">Enjoyed the part where…</string>
 </resources>

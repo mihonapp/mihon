@@ -1,8 +1,7 @@
 name: 🐞 Issue report
 description: Report an issue in Mihon
-labels: [Bug]
+labels: [bug]
 body:
-
   - type: textarea
     id: reproduce-steps
     attributes:

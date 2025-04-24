@@ -1,5 +1,6 @@
 package eu.kanade.presentation.more
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,13 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import com.halilibo.richtext.markdown.Markdown
-import com.halilibo.richtext.ui.RichTextStyle
-import com.halilibo.richtext.ui.material3.RichText
-import com.halilibo.richtext.ui.string.RichTextStringStyle
+import eu.kanade.presentation.manga.components.MarkdownRender
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
+import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
@@ -42,17 +40,15 @@ fun NewUpdateScreen(
         rejectText = stringResource(MR.strings.action_not_now),
         onRejectClick = onRejectUpdate,
     ) {
-        RichText(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = MaterialTheme.padding.large),
-            style = RichTextStyle(
-                stringStyle = RichTextStringStyle(
-                    linkStyle = SpanStyle(color = MaterialTheme.colorScheme.primary),
-                ),
-            ),
         ) {
-            Markdown(content = changelogInfo)
+            MarkdownRender(
+                content = changelogInfo,
+                flavour = GFMFlavourDescriptor(),
+            )
 
             TextButton(
                 onClick = onOpenInBrowser,
