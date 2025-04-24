@@ -63,7 +63,7 @@
     <string name="pref_category_tracking">Tracking</string>
     <string name="pref_category_advanced">Erweitert</string>
     <string name="pref_category_about">Über</string>
-    <string name="pref_library_columns">Kachelgröße</string>
+    <string name="pref_library_columns">Elemente pro Zeile</string>
     <string name="portrait">Hochformat</string>
     <string name="landscape">Querformat</string>
     <string name="pref_library_update_interval">Automatische Aktualisierungen</string>
@@ -114,10 +114,10 @@
     <string name="rotation_free">Frei</string>
     <string name="rotation_force_portrait">Hochformat erzwingen</string>
     <string name="rotation_force_landscape">Querformat erzwingen</string>
-    <string name="color_filter_r_value">R</string>
-    <string name="color_filter_g_value">G</string>
-    <string name="color_filter_b_value">B</string>
-    <string name="color_filter_a_value">A</string>
+    <string name="color_filter_r_value">Rot</string>
+    <string name="color_filter_g_value">Grün</string>
+    <string name="color_filter_b_value">Blau</string>
+    <string name="color_filter_a_value">Alpha</string>
     <string name="pref_remove_after_marked_as_read">Nachdem manuell als gelesen markiert</string>
     <string name="pref_remove_after_read">Automatisch nach dem Lesen löschen</string>
     <string name="disabled">Deaktiviert</string>
@@ -571,7 +571,6 @@
     <string name="action_move_to_top_all_for_series">Serie nach oben verschieben</string>
     <string name="disabled_nav">Deaktiviert</string>
     <string name="error_saving_picture">Fehler beim Speichern des Bildes</string>
-    <string name="update_check_fdroid_migration_info">Eine neue Version ist aus dem offiziellen Repository verfügbar. Tippe, um zu erfahren, wie man aus inoffiziellen F-Droid-Versionen migriert.</string>
     <string name="empty_backup_error">Keine zu sichernden Bibliothekseinträge verfügbar</string>
     <string name="update_check_open">Auf GitHub öffnen</string>
     <string name="pref_clear_webview_data">WebView-Daten löschen</string>
@@ -692,11 +691,9 @@
     <string name="pref_page_rotate">Breite Seiten drehen, damit sie passen</string>
     <string name="pref_page_rotate_invert">Ausrichtung gedrehter breiter Seiten spiegeln</string>
     <string name="pref_debug_info">Debug-Info</string>
-    <string name="pref_chapter_swipe">Kapitelaktionen</string>
-    <string name="pref_chapter_swipe_end">Aktion beim Streichen nach rechts</string>
-    <string name="pref_chapter_swipe_start">Aktion beim Streichen nach links</string>
+    <string name="pref_chapter_swipe_end">Kapitel beim Streichen nach rechts</string>
+    <string name="pref_chapter_swipe_start">Kapitel beim Streichen nach links</string>
     <string name="pref_double_tap_zoom">Zum Zoomen doppeltippen</string>
-    <string name="pref_library_columns_per_row">%d pro Zeile</string>
     <string name="intervals_header">Intervalle</string>
     <string name="action_filter_interval_custom">Benutzerdefiniertes Aktualisierungsintervall</string>
     <string name="action_set_interval">Intervall einstellen</string>
@@ -727,8 +724,6 @@
     <string name="app_settings">App-Einstellungen</string>
     <string name="source_settings">Quelleneinstellungen</string>
     <string name="notification_updating_progress">Bibliothek wird aktualisiert… (%s)</string>
-    <string name="action_sort_category">Kategorien sortieren</string>
-    <string name="sort_category_confirmation">Möchtest du die Kategorien alphabetisch sortieren?</string>
     <string name="file_null_uri_error">Keine Datei ausgewählt</string>
     <string name="relative_time_span_never">Nie</string>
     <string name="pref_flash_page_summ">Reduziert Ghosting auf E-Papier-Displays</string>
@@ -787,7 +782,7 @@
     <string name="onboarding_storage_help_action">Speicherleitfaden</string>
     <string name="pref_library_update_smart_update">Intelligentes Aktualisieren</string>
     <string name="label_add_repo_input">Repository-URL</string>
-    <string name="action_add_repo_message">Füge zusätzliche Repositorys zu Mihon hinzu. Deren URL sollte mit „index.min.json“ enden.</string>
+    <string name="action_add_repo_message">Füge zusätzliche Repositorys zu Mihon hinzu. Deren URLs sollten mit „index.min.json“ enden.</string>
     <string name="invalid_repo_name">Ungültige Repository-URL</string>
     <string name="manga_interval_expected_update">Ca. %1$s bis zur Veröffentlichung neuer Kapitel, wird ca. alle %2$s überprüft.</string>
     <string name="theme_nord">Nord</string>
@@ -840,4 +835,22 @@
     <string name="pref_hardware_bitmap_threshold_summary">Reduziert stufenweise den Grenzwert, wenn der Leser nur ein leeres Bild lädt.\nAusgewählt: %s</string>
     <string name="pref_hardware_bitmap_threshold">Benutzerdefinierter Hardware-Bitmap-Grenzwert</string>
     <string name="pref_hardware_bitmap_threshold_default">Standard (%d)</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Beeinflusst die Leistung. Nur aktivieren, wenn das Reduzieren des Bitmap-Grenzwerts das Problem von leeren Bildern nicht behebt</string>
+    <string name="pref_incognito_mode_extension_summary">Leseverlauf für eine Erweiterung pausieren</string>
+    <string name="label_auto">Automatisch</string>
+    <string name="theme_monochrome">Monochrom</string>
+    <string name="tracked_privately">Privat getrackt</string>
+    <string name="action_toggle_private_on">Privat tracken</string>
+    <string name="action_toggle_private_off">Öffentlich tracken</string>
+    <string name="library_list">Bibliotheksliste</string>
+    <string name="library_exported">Bibliothek exportiert</string>
+    <string name="author">Autor</string>
+    <string name="export">Exportieren</string>
+    <string name="artist">Illustrator</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">Legacy-Decoder für Langer-Streifen-Leser verwenden</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Doppeltes gelesenes Kapitel als gelesen markieren</string>
+    <string name="action_display_unread_badge">Ungelesene Kapitel</string>
+    <string name="pref_behavior">Verhalten</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">Nach dem Abrufen eines neuen Kapitels</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">Nach dem Lesen eines Kapitels</string>
 </resources>

@@ -506,7 +506,6 @@
     <string name="notification_first_add_to_library">Először adja az elemet a könyvtárhoz</string>
     <string name="skipped_reason_not_caught_up">Átugorva, mivel tartalmaz olvasatlan fejezeteket</string>
     <string name="skipped_reason_not_started">Átugorva, mivel nincs olvasott fejezet</string>
-    <string name="update_check_fdroid_migration_info">Új hivatalos verzió érhető el. Koppintson további információért, hogy hogyan importáljon nem hivatalos F-Droid verziókról.</string>
     <string name="update_check_confirm">Letöltés</string>
     <string name="update_check_open">Megnyitás GitHub-on</string>
     <string name="update_check_eol">Ez az Android verzió már nem támogatott</string>
@@ -675,7 +674,6 @@
     <string name="crash_screen_restart_application">Applikáció újrainditása</string>
     <string name="label_titles_in_global_update">Globális frissítésben</string>
     <string name="information_required_plain">*kötelező</string>
-    <string name="pref_chapter_swipe">Fejezet csúsztatás</string>
     <string name="pref_chapter_swipe_start">Balra csúsztatási cselekmény</string>
     <string name="pref_skip_dupe_chapters">Duplikált fejezetek átugrása</string>
     <string name="action_set_interval">Időköz állítása</string>
@@ -686,7 +684,6 @@
     <string name="track_activity_name">Bejelentkezés nyilvántartóhoz</string>
     <string name="delete_downloaded">Letöltött törlése</string>
     <string name="split_tall_images">Magas képek szétvágása</string>
-    <string name="pref_library_columns_per_row">%d elem soronként</string>
     <string name="pref_update_only_in_release_period">Következő kiadás idejének megjóslása</string>
     <string name="pref_page_rotate">Széles oldalak forgatása az illeszkedéshez</string>
     <string name="pref_chapter_swipe_end">Jobbra csúsztatási cselekmény</string>
@@ -705,7 +702,6 @@
     <string name="intervals_header">Intervallumok</string>
     <string name="action_revert_to_default">Visszaállítás alapértelmezettre</string>
     <string name="error_user_agent_string_blank">Felhasználói ágens (user agent) szöveg nem lehet üres</string>
-    <string name="action_sort_category">Kategória alapján</string>
     <string name="action_menu_overflow_description">További lehetőségek</string>
     <string name="library_sync_complete">Könyvtár szinkronizálása elkészült</string>
     <string name="last_auto_backup_info">Utolsó automatikus biztonsági mentés: %s</string>
@@ -721,7 +717,6 @@
     <string name="label_titles_section">Elemek</string>
     <string name="action_bar_up_description">Felnavigálás</string>
     <string name="label_data_storage">Adatok és tárolás</string>
-    <string name="sort_category_confirmation">Szeretnéd a kategóriákat betűrendbe rendezni?</string>
     <string name="skipped_reason_not_in_release_period">Átlépve, mert ma nem várható kiadás</string>
     <string name="file_null_uri_error">Nincs fájl kiválasztva</string>
     <string name="error_user_agent_string_invalid">Érvénytelen felhasználói ágens (user agent) szöveg</string>
@@ -807,4 +802,12 @@
     <string name="action_view_upcoming">Közelgő frissítések megtekintése</string>
     <string name="upcoming_guide">Közelgő útmutató</string>
     <string name="upcoming_calendar_prev">Előző hónap</string>
+    <string name="action_copy_link">Hivatkozás másolása</string>
+    <string name="onboarding_permission_crashlytics">Összeomlási jelentés küldése</string>
+    <string name="onboarding_permission_analytics">Analitika engedélyezése</string>
+    <string name="onboarding_permission_analytics_description">Anonimizált használati adatok küldése a funkciók fejlesztésének érdekében.</string>
+    <string name="action_sort_random">Véletlenszerű</string>
+    <string name="pref_security">Biztonság</string>
+    <string name="pref_firebase">Analitika és összeomlási jelentések</string>
+    <string name="onboarding_permission_crashlytics_description">Anonimizált összeomlási jelentés küldése a fejlesztőknek.</string>
 </resources>

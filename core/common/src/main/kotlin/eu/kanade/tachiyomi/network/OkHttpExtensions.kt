@@ -16,20 +16,23 @@ import rx.Observable
 import rx.Producer
 import rx.Subscription
 import java.io.IOException
-import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.concurrent.atomics.AtomicBoolean
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.coroutines.resumeWithException
 
 val jsonMime = "application/json; charset=utf-8".toMediaType()
 
+@OptIn(ExperimentalAtomicApi::class)
 fun Call.asObservable(): Observable<Response> {
     return Observable.unsafeCreate { subscriber ->
         // Since Call is a one-shot type, clone it for each new subscriber.
         val call = clone()
 
         // Wrap the call in a helper which handles both unsubscription and backpressure.
-        val requestArbiter = object : AtomicBoolean(), Producer, Subscription {
+        val requestArbiter = object : Producer, Subscription {
+            val boolean = AtomicBoolean(false)
             override fun request(n: Long) {
-                if (n == 0L || !compareAndSet(false, true)) return
+                if (n == 0L || !boolean.compareAndSet(expectedValue = false, newValue = true)) return
 
                 try {
                     val response = call.execute()

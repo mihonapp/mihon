@@ -13,7 +13,6 @@
     <string name="action_update_category">വിഭാഗം അപ്ഡേറ്റ് ചെയ്യുക</string>
     <string name="action_open_random_manga">ക്രമരഹിതമായ എൻട്രി തുറക്കുക</string>
     <string name="action_add_category">വിഭാഗം ചേർക്കുക</string>
-    <string name="sort_category_confirmation">വിഭാഗങ്ങൾ അക്ഷരമാലാക്രമത്തിൽ അടുക്കാൻ നിങ്ങൾ ആഗ്രഹിക്കുന്നുണ്ടോ?</string>
     <string name="action_edit_cover">കവർ എഡിറ്റ് ചെയ്യുക</string>
     <string name="action_view_chapters">അധ്യായങ്ങൾ കാണുക</string>
     <string name="action_pause">വിരാമം</string>
@@ -84,7 +83,6 @@
     <string name="action_move_category">വിഭാഗങ്ങൾ സജ്ജമാക്കുക</string>
     <string name="delete_category_confirmation">\"%s\" എന്ന വിഭാഗം ഇല്ലാതാക്കാൻ നിങ്ങൾ ആഗ്രഹിക്കുന്നുണ്ടോ?</string>
     <string name="delete_category">വിഭാഗം ഇല്ലാതാക്കുക</string>
-    <string name="action_sort_category">വിഭാഗങ്ങൾ അടുക്കുക</string>
     <string name="on">ഓൺ</string>
     <string name="action_menu_overflow_description">കൂടുതൽ ഓപ്ഷനുകൾ</string>
     <string name="not_selected">തിരഞ്ഞെടുത്തില്ല</string>
@@ -188,4 +186,13 @@
     <string name="nav_zone_left">ഇടത്</string>
     <string name="ext_info_age_rating">വയസ്സ് റേറ്റിംഗ്</string>
     <string name="ext_nsfw_short">18+</string>
+    <string name="pref_firebase">വിശകലനവും തകരാറ് ലോഗുകളും</string>
+    <string name="lock_with_biometrics">അൺലോക്ക് ആവശ്യമാണ്</string>
+    <string name="pref_date_format">തീയതി രൂപം</string>
+    <string name="pref_manage_notifications">അറിയിപ്പുകൾ കൈകാര്യം ചെയ്യുക</string>
+    <string name="pref_app_language">ആപ്പ് ഭാഷ</string>
+    <string name="pref_category_security">സുരക്ഷയും സ്വകാര്യതയും</string>
+    <string name="pref_show_nsfw_source">ഉറവിടങ്ങളിലും വിപുലീകരണ പട്ടികയിലും കാണിക്കുക</string>
+    <string name="parental_controls_info">ഇത് അനൗദ്യോഗികമായോ തെറ്റായി അടയാളപ്പെടുത്തിയോ ഉള്ള വിപുലീകരണങ്ങൾ ആപ്പിനുള്ളിൽ NSFW (18+) ഉള്ളടക്കം പ്രദർശിപ്പിക്കുന്നത് തടയില്ല.</string>
+    <string name="relative_time_today">ഇന്ന്</string>
 </resources>

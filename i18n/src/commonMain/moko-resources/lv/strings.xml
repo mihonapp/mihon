@@ -516,7 +516,6 @@
     <string name="file_select_backup">Atlasiet dublējuma failu</string>
     <string name="spen_previous_page">Iepriekšējā lapa</string>
     <string name="copy">Kopēt</string>
-    <string name="update_check_fdroid_migration_info">Jaunā versija ir pieejama no oficiālajām versijām. Pieskarieties, lai uzzinātu, kā migrēt no neoficiālajām F-Droid versijām.</string>
     <string name="score">Vērtējums</string>
     <string name="clear_history_completed">Vēsture izdzēsta</string>
     <string name="theme_lavender">Lavanda</string>
@@ -718,14 +717,11 @@
     <string name="action_ok">OK</string>
     <string name="pref_update_only_in_release_period">Ārpus paredzamā izlaišanas perioda</string>
     <string name="pref_double_tap_zoom">Dubult-pieskarieties, lai tuvinātu</string>
-    <string name="pref_library_columns_per_row">%d katrā rindā</string>
     <string name="unlock_app_title">Atbloķēt %s</string>
-    <string name="pref_chapter_swipe">Vilkt nodaļas</string>
     <string name="manga_display_modified_interval_title">Atjaunināt katru</string>
     <string name="exception_http">HTTP %d, pārbaudiet vietni iekš WebView</string>
     <string name="exception_offline">Nav interneta savienojuma</string>
     <string name="exception_unknown_host">Nevarēja sasniegt %s</string>
-    <string name="action_sort_category">Kārtot kategorijas</string>
     <string name="action_sort_tracker_score">Izsekošanas rezultāts</string>
     <string name="label_data_storage">Dati un uzglabāšana</string>
     <string name="pref_storage_location">Krātuves atrašanās vieta</string>
@@ -746,7 +742,6 @@
     <string name="pref_storage_usage">Krātuves izmantošana</string>
     <string name="notification_updating_progress">Bibliotēkas atjaunināšana... (%s)</string>
     <string name="action_bar_up_description">Virzīties uz augšu</string>
-    <string name="sort_category_confirmation">Vai vēlaties kategorijas sakārtot pēc alfabēta?</string>
     <string name="file_null_uri_error">Nav atlasīts neviens fails</string>
     <string name="source_settings">Avota iestatījumi</string>
     <string name="app_settings">Lietotnes iestatījumi</string>

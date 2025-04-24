@@ -356,7 +356,7 @@
     <string name="licenses">Licences à code source ouvert</string>
     <string name="last_used_source">Dernière utilisée</string>
     <string name="check_for_updates">Rechercher des mises à jour</string>
-    <string name="restore_duration">%02d min, %02d s</string>
+    <string name="restore_duration">%1$02d min, %2$02d s</string>
     <string name="information_webview_required">WebView est requis pour le fonctionnement l\'application</string>
     <string name="local_source_help_guide">Guide des sources locales</string>
     <string name="downloaded_only_summary">Filtrer toutes les entrées dans la bibliothèque</string>
@@ -571,7 +571,6 @@
     <string name="action_move_to_top_all_for_series">Déplacer la série vers le haut</string>
     <string name="disabled_nav">Désactivé</string>
     <string name="error_saving_picture">Erreur d\'enregistrement de l\'image</string>
-    <string name="update_check_fdroid_migration_info">Une nouvelle version est disponible à partir des versions officielles. Appuyez pour apprendre comment migrer depuis les versions non officielles de F-Droid.</string>
     <string name="empty_backup_error">Aucune entrée de bibliothèque à sauvegarder</string>
     <string name="update_check_open">Ouvrir sur GitHub</string>
     <string name="pref_clear_webview_data">Effacer les données WebView</string>
@@ -605,7 +604,7 @@
     <string name="description_placeholder">Aucune description</string>
     <string name="theme_lavender">Lavande</string>
     <string name="delete_category">Effacer catégorie</string>
-    <string name="delete_category_confirmation">Souhaitez-vous supprimer la catégorie « %s » ?</string>
+    <string name="delete_category_confirmation">Souhaitez-vous supprimer la catégorie « %s » ?</string>
     <string name="internal_error">ErreurInterne : Consultez vos rapports de plantage pour plus d\'informations</string>
     <string name="pref_reset_user_agent_string">Réinitialiser la liste d\'agents utilisateurs</string>
     <string name="pref_user_agent_string">Liste d\'agents utilisateurs par défaut</string>
@@ -622,7 +621,7 @@
     <string name="popular">Populaire</string>
     <string name="multi_lang">Multiple</string>
     <string name="updates_last_update_info">Dernière mise à jour de la bibliothèque le : %s</string>
-    <string name="remove_manga">Vous êtes sur le point de retirer « %s » de votre bibliothèque</string>
+    <string name="remove_manga">Vous êtes sur le point de retirer « %s » de votre bibliothèque</string>
     <string name="missing_storage_permission">Autorisations de stockage non accordées</string>
     <string name="action_search_hint">Recherche…</string>
     <string name="skipped_reason_not_always_update">Ignorée car la série ne nécessite pas de mises à jour</string>
@@ -651,7 +650,7 @@
     <string name="track_remove_start_date_conf_text">Ceci supprimera la date de début que vous avez précédemment sélectionnée dans la base de données de %s</string>
     <string name="track_remove_date_conf_title">Retirer la date ?</string>
     <string name="track_remove_finish_date_conf_text">Ceci supprimera la date de fin que vous aviez précédemment sélectionnée dans la base de données de %s</string>
-    <string name="pref_invalidate_download_cache">Invalider l\'index des téléchargements</string>
+    <string name="pref_invalidate_download_cache">Réindexe les téléchargements</string>
     <string name="pref_invalidate_download_cache_summary">Forcer l\'application à revérifier les chapitres téléchargés</string>
     <string name="label_stats">Statistiques</string>
     <string name="label_overview_section">Aperçu</string>
@@ -693,8 +692,6 @@
     <string name="pref_page_rotate">Tourner les pages larges pour qu\'elles rentrent</string>
     <string name="pref_debug_info">Informations de débogage</string>
     <string name="pref_chapter_swipe_start">Action de glisser à gauche</string>
-    <string name="pref_library_columns_per_row">%d par ligne</string>
-    <string name="pref_chapter_swipe">Glissement de chapitre</string>
     <string name="pref_chapter_swipe_end">Action de glisser à droite</string>
     <string name="pref_double_tap_zoom">Appuyez deux fois pour zoomer</string>
     <string name="action_sort_next_updated">Prochaine mise à jour prévue</string>
@@ -721,7 +718,6 @@
     <string name="delete_downloaded">Supprimer le(s) téléchargement(s)</string>
     <string name="action_apply">Appliquer</string>
     <string name="action_revert_to_default">Réintialiser les valeurs par défaut</string>
-    <string name="action_sort_category">Trier les catégories</string>
     <string name="action_menu_overflow_description">Plus d\'options</string>
     <string name="selected">Sélectionné</string>
     <string name="not_selected">Pas sélectionné(e)</string>
@@ -730,7 +726,6 @@
     <string name="action_bar_up_description">Naviguer vers le haut</string>
     <string name="action_sort_tracker_score">Score du service de suivi</string>
     <string name="label_data_storage">Données et stockage</string>
-    <string name="sort_category_confirmation">Voulez-vous trier les catégories par ordre alphabétique ?</string>
     <string name="track_activity_name">Se connecter au service de suivi</string>
     <string name="pref_relative_format_summary">« %1$s » au lieu de « %2$s »</string>
     <string name="pref_storage_location">Emplacement de stockage</string>
@@ -818,4 +813,27 @@
     <string name="pref_flash_style_white_black">Blanc et Noir</string>
     <string name="pref_download_new_unread_chapters_only">Ignorer le téléchargement des chapitres dupliqués et déjà lus</string>
     <string name="invalid_backup_file_json">Sauvegarde JSON non supportée</string>
+    <string name="action_sort_random">Aléatoire</string>
+    <string name="onboarding_permission_crashlytics">Envoyer les logs de crash</string>
+    <string name="onboarding_permission_crashlytics_description">Envoyer les logs de crash anonymes aux développeurs.</string>
+    <string name="onboarding_permission_analytics">Autoriser l\'analyse</string>
+    <string name="pref_auto_update_manga_on_mark_read">Mise à jour de la progression quand marqué comme lu</string>
+    <string name="pref_firebase">Analyses et logs de crash</string>
+    <string name="firebase_summary">L\'envoi de logs de crash et d\'analyses nous permettra d\'identifier et de corriger les problèmes, d\'améliorer les performances et de rendre les futures mises à jour plus adaptées à vos besoins</string>
+    <string name="pref_security">Sécurité</string>
+    <string name="extensionRepo_settings">Dépôts d\'extension</string>
+    <string name="pref_hardware_bitmap_threshold_default">Par défaut (%d)</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Affecte les performances. Ne l\'activer que si la réduction du seuil de bitmap ne résout pas les problèmes d\'images vierges</string>
+    <string name="non_library_settings">Toutes les entrées lues</string>
+    <string name="confirm_tracker_update">Mettre à jour les trackers au chapitre %d ?</string>
+    <string name="ext_remove">Retirer</string>
+    <string name="ext_confirm_remove">Retirer l\'Extension ?</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Si le lecteur charge une image vierge, réduire progressivement le seuil.\nSélectionné : %s</string>
+    <string name="onboarding_permission_analytics_description">Envoyer des données d\'utilisation anonymes pour améliorer les fonctionnalités de l\'application.</string>
+    <string name="trackers_updated_summary">Trackers mis à jour au chapitre %d</string>
+    <string name="manga_interval_expected_update_null">Ce manga est soit terminé, soit il n\'y a pas de date de sortie prévue.</string>
+    <string name="file_picker_uri_permission_unsupported">Échec de l\'acquisition persistante de l\'accès au dossier. L\'application peut se comporter de manière inattendue.</string>
+    <string name="invalid_backup_file_unknown">Le fichier de sauvegarde est corrompu</string>
+    <string name="remove_private_extension_message">Voulez-vous vraiment retirer l\'extension \"%s\" ?</string>
+    <string name="pref_hardware_bitmap_threshold">Seuil de bitmap matériel personnalisé</string>
 </resources>
