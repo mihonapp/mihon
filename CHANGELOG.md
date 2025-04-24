@@ -45,6 +45,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix duplicate requests in WebView due to empty reasonPhrase ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2003](https://github.com/mihonapp/mihon/pull/2003))
 - Fix content under source browse screen top appbar is interactable ([@AntsyLich](https://github.com/AntsyLich)) ([#2026](https://github.com/mihonapp/mihon/pull/2026))
 - Fix crash when trying use source sort filter without a pre-selection ([@AntsyLich](https://github.com/AntsyLich)) ([#2036](https://github.com/mihonapp/mihon/pull/2036))
+- Fix download job stops all together even if 1 entry is failed to create manga directory ([@cuong-tran](https://github.com/cuong-tran)) ([#1445](https://github.com/mihonapp/mihon/pull/1445))
 
 ### Removed
 - Remove Okhttp networking from WebView Screen ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2020](https://github.com/mihonapp/mihon/pull/2020))
@@ -84,7 +85,6 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix WebView sending app's package name in `X-Requested-With` header, which led to sources blocking access ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#1812](https://github.com/mihonapp/mihon/pull/1812))
 - Fix an issue where tracker reading progress is changed to a lower value ([@Animeboynz](https://github.com/Animeboynz)) ([#1795](https://github.com/mihonapp/mihon/pull/1795))
 - Attempt to fix crash when migrating or removing entries from library ([@FlaminSarge](https://github.com/FlaminSarge)) ([#1828](https://github.com/mihonapp/mihon/pull/1828))
-- Fix download job stops all together even if 1 entry is failed to create manga directory ([@cuong-tran](https://github.com/cuong-tran)) ([#1445](https://github.com/mihonapp/mihon/pull/1445))
 
 ### Removed
 - Remove alphabetical category sort option ([@AntsyLich](https://github.com/AntsyLich)) ([#1781](https://github.com/mihonapp/mihon/pull/1781))
