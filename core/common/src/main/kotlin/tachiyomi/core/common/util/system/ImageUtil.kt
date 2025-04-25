@@ -1,20 +1,15 @@
 package tachiyomi.core.common.util.system
 
-import android.content.Context
-import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.BitmapRegionDecoder
-import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import androidx.annotation.ColorInt
-import androidx.core.graphics.alpha
 import androidx.core.graphics.applyCanvas
 import androidx.core.graphics.blue
 import androidx.core.graphics.createBitmap
@@ -330,7 +325,7 @@ object ImageUtil {
     /**
      * Algorithm for determining what background to accompany a comic/manga page
      */
-    fun chooseBackground(context: Context, imageStream: InputStream): Drawable? {
+    fun chooseBackground(imageStream: InputStream): Drawable? {
         val decoder = ImageDecoder.newInstance(imageStream)
         val image = decoder?.decode()
         decoder?.recycle()
@@ -365,9 +360,6 @@ object ImageUtil {
             return null
         }
     }
-
-    private fun @receiver:ColorInt Int.isDark(): Boolean =
-        red < 40 && blue < 40 && green < 40 && alpha > 200
 
     private fun @receiver:ColorInt Int.isCloseTo(other: Int): Boolean =
         abs(red - other.red) < 30 && abs(green - other.green) < 30 && abs(blue - other.blue) < 30

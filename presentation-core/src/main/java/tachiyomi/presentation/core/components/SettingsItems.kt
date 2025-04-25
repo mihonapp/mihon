@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.rounded.CheckBox
 import androidx.compose.material.icons.rounded.CheckBoxOutlineBlank
 import androidx.compose.material.icons.rounded.DisabledByDefault
@@ -33,7 +32,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -84,21 +82,6 @@ fun HeadingItem(text: String) {
                 horizontal = SettingsItemsPaddings.Horizontal,
                 vertical = SettingsItemsPaddings.Vertical,
             ),
-    )
-}
-
-@Composable
-fun IconItem(label: String, icon: ImageVector, onClick: () -> Unit) {
-    BaseSettingsItem(
-        label = label,
-        widget = {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-            )
-        },
-        onClick = onClick,
     )
 }
 

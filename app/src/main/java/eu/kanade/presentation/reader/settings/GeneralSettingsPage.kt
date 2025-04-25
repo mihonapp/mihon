@@ -1,6 +1,5 @@
 package eu.kanade.presentation.reader.settings
 
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,6 +20,7 @@ private val themes = listOf(
     MR.strings.black_background to 1,
     MR.strings.gray_background to 2,
     MR.strings.white_background to 0,
+    MR.strings.automatic_background to 3,
 )
 
 private val flashColors = listOf(
@@ -30,7 +30,7 @@ private val flashColors = listOf(
 )
 
 @Composable
-internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
+internal fun GeneralPage(screenModel: ReaderSettingsScreenModel) {
     val readerTheme by screenModel.preferences.readerTheme().collectAsState()
 
     val flashPageState by screenModel.preferences.flashOnPageChange().collectAsState()
@@ -44,10 +44,10 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
     val flashColorPref = screenModel.preferences.flashColor()
     val flashColor by flashColorPref.collectAsState()
 
-    SwitchItem (MR.strings.auto_background, screenModel.preferences.readerAutomaticBackground())
+    SwitchItem(MR.strings.auto_background, screenModel.preferences.readerAutomaticBackground())
 
     SettingsChipRow(MR.strings.pref_reader_theme) {
-        themes.map { (labelRes, value) ->
+        themes.filter { it.second != 3 }.map { (labelRes, value) ->
             FilterChip(
                 selected = readerTheme == value,
                 onClick = { screenModel.preferences.readerTheme().set(value) },
