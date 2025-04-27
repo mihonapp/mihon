@@ -1,4 +1,4 @@
-<div align="center">
+²<div align="center">
 
 <a href="https://mihon.app">
     <img src="./.github/assets/logo.png" alt="Mihon logo" title="Mihon logo" width="80"/>
