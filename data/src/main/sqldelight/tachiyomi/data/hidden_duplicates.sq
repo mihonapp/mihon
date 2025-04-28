@@ -1,5 +1,4 @@
 CREATE TABLE hidden_duplicates(
-    id INTEGER PRIMARY KEY,
     manga1_id INTEGER NOT NULL,
     manga2_id INTEGER NOT NULL,
     FOREIGN KEY(manga1_id) REFERENCES mangas (_id) ON DELETE CASCADE,
