@@ -18,7 +18,7 @@ class PageData(
         val digitCount = splitData.size.toString().length.coerceAtLeast(3)
         val npd = ArrayList<PageData>()
         splitData.forEachIndexed { idx, dat ->
-            PageData(prefix, number, formatSubPageNumber(idx, digitCount), type, dat)
+            npd.add(PageData(prefix, number, formatSubPageNumber(idx, digitCount), type, dat))
         }
         return npd
     }
