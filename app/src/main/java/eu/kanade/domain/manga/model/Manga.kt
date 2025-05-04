@@ -48,22 +48,22 @@ fun Manga.toSManga(): SManga = SManga.create().also {
 }
 
 fun Manga.copyFrom(other: SManga): Manga {
-    val author = other.author ?: author
-    val artist = other.artist ?: artist
-    val description = other.description ?: description
+    val author = other.author ?: ogAuthor
+    val artist = other.artist ?: ogArtist
+    val description = other.description ?: ogDescription
     val genres = if (other.genre != null) {
         other.getGenres()
     } else {
         genre
     }
-    val thumbnailUrl = other.thumbnail_url ?: thumbnailUrl
+    val thumbnailUrl = other.thumbnail_url ?: ogThumbnailUrl
     return this.copy(
-        author = author,
-        artist = artist,
-        description = description,
-        genre = genres,
-        thumbnailUrl = thumbnailUrl,
-        status = other.status.toLong(),
+        ogAuthor = author,
+        ogArtist = artist,
+        ogDescription = description,
+        ogGenre = genres,
+        ogThumbnailUrl = thumbnailUrl,
+        ogStatus = other.status.toLong(),
         updateStrategy = other.update_strategy,
         initialized = other.initialized && initialized,
     )

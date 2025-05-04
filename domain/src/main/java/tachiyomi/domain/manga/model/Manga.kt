@@ -20,20 +20,47 @@ data class Manga(
     val chapterFlags: Long,
     val coverLastModified: Long,
     val url: String,
-    val title: String,
-    val artist: String?,
-    val author: String?,
-    val description: String?,
-    val genre: List<String>?,
-    val status: Long,
-    val thumbnailUrl: String?,
+    val ogTitle: String,
+    val ogArtist: String?,
+    val ogAuthor: String?,
+    val ogDescription: String?,
+    val ogGenre: List<String>?,
+    val ogStatus: Long,
+    val ogThumbnailUrl: String?,
     val updateStrategy: UpdateStrategy,
     val initialized: Boolean,
     val lastModifiedAt: Long,
     val favoriteModifiedAt: Long?,
+    val customArtist: String?,
+    val customAuthor: String?,
+    val customDescription: String?,
+    val customTitle: String?,
+    val customGenre: List<String>?,
+    val customStatus: Long?,
+    val customThumbnailUrl: String?,
     val version: Long,
     val notes: String,
 ) : Serializable {
+    val title: String
+        get() = customTitle ?: ogTitle
+
+    val author: String?
+        get() = customAuthor ?: ogAuthor
+
+    val artist: String?
+        get() = customArtist ?: ogArtist
+
+    val description: String?
+        get() = customDescription ?: ogDescription
+
+    val genre: List<String>?
+        get() = customGenre ?: ogGenre
+
+    val status: Long
+        get() = customStatus ?: ogStatus
+
+    val thumbnailUrl: String?
+        get() = customThumbnailUrl ?: ogThumbnailUrl
 
     val expectedNextUpdate: Instant?
         get() = nextUpdate
@@ -106,7 +133,8 @@ data class Manga(
         fun create() = Manga(
             id = -1L,
             url = "",
-            title = "",
+            ogTitle = "",
+            customTitle = null,
             source = -1L,
             favorite = false,
             lastUpdate = 0L,
@@ -116,12 +144,18 @@ data class Manga(
             viewerFlags = 0L,
             chapterFlags = 0L,
             coverLastModified = 0L,
-            artist = null,
-            author = null,
-            description = null,
-            genre = null,
-            status = 0L,
-            thumbnailUrl = null,
+            ogArtist = null,
+            customArtist = null,
+            ogAuthor = null,
+            customAuthor = null,
+            ogDescription = null,
+            customDescription = null,
+            ogGenre = null,
+            customGenre = null,
+            ogStatus = 0L,
+            customStatus = null,
+            ogThumbnailUrl = null,
+            customThumbnailUrl = null,
             updateStrategy = UpdateStrategy.ALWAYS_UPDATE,
             initialized = false,
             lastModifiedAt = 0L,

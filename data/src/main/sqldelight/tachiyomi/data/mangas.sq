@@ -26,6 +26,13 @@ CREATE TABLE mangas(
     calculate_interval INTEGER DEFAULT 0 NOT NULL,
     last_modified_at INTEGER NOT NULL DEFAULT 0,
     favorite_modified_at INTEGER,
+    custom_artist TEXT,
+    custom_author TEXT,
+    custom_description TEXT,
+    custom_title TEXT,
+    custom_genre TEXT AS List<String>,
+    custom_status INTEGER,
+    custom_thumbnail_url TEXT,
     version INTEGER NOT NULL DEFAULT 0,
     is_syncing INTEGER NOT NULL DEFAULT 0,
     notes TEXT NOT NULL DEFAULT ""
@@ -250,3 +257,14 @@ insertNetworkManga {
     AND url = :url
     LIMIT 1;
 }
+
+updateMangaEdit:
+UPDATE mangas SET
+    custom_artist = :artist,
+    custom_author = :author,
+    custom_description = :description,
+    custom_title = :title,
+    custom_genre = :genre,
+    custom_status = :status,
+    custom_thumbnail_url = :thumbnailUrl
+WHERE _id = :mangaId;

@@ -1,0 +1,9 @@
+-- Add the manga edited info --
+
+ALTER TABLE mangas ADD COLUMN custom_artist TEXT;
+ALTER TABLE mangas ADD COLUMN custom_author TEXT;
+ALTER TABLE mangas ADD COLUMN custom_description TEXT;
+ALTER TABLE mangas ADD COLUMN custom_title TEXT;
+ALTER TABLE mangas ADD COLUMN custom_genre TEXT;
+ALTER TABLE mangas ADD COLUMN custom_status INTEGER;
+ALTER TABLE mangas ADD COLUMN custom_thumbnail_url TEXT;

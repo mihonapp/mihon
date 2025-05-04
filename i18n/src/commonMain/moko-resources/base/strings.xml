@@ -19,6 +19,10 @@
     <string name="delete_downloaded">Delete downloaded</string>
     <string name="history">History</string>
     <string name="scanlator">Scanlator</string>
+    <string name="author">Author</string>
+    <string name="artist">Artist</string>
+    <string name="description">Description</string>
+
 
     <!-- Screen titles -->
     <string name="label_more">More</string>
@@ -154,6 +158,7 @@
     <string name="action_save">Save</string>
     <string name="action_reset">Reset</string>
     <string name="action_revert_to_default">Revert to default</string>
+    <string name="action_edit_info">Edit info</string>
     <!-- missing undo feature after Compose rewrite #7454 -->
     <string name="action_undo">Undo</string>
     <string name="action_close">Close</string>
@@ -990,4 +995,11 @@
 
     <!-- Notes screen -->
     <string name="notes_placeholder">Enjoyed the part where…</string>
+
+    <!-- Edit manga info -->
+    <string name="thumbnail_url">Thumbnail URL</string>
+    <string name="rename_genre">Rename genre</string>
+    <string name="delete_genre">Delete genre</string>
+    <string name="add_genre">New</string>
+    <string name="publishing_status">Publishing status</string>
 </resources>

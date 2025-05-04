@@ -183,4 +183,20 @@ class MangaRepositoryImpl(
             }
         }
     }
+
+    override suspend fun updateEditedInfo(update: MangaUpdate): Boolean {
+        handler.await {
+            mangasQueries.updateMangaEdit(
+                artist = update.artist,
+                author = update.author,
+                description = update.description,
+                title = update.title,
+                genre = update.genre,
+                status = update.status,
+                thumbnailUrl = update.thumbnailUrl,
+                mangaId = update.id,
+            )
+        }
+        return true
+    }
 }
