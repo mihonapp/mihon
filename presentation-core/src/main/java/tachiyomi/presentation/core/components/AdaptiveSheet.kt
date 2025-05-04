@@ -227,7 +227,7 @@ private fun <T> AnchoredDraggableState<T>.preUpPostDownNestedScrollConnection(
 
     override suspend fun onPreFling(available: Velocity): Velocity {
         val toFling = available.toFloat()
-        return if (toFling < 0 && offset > anchors.minAnchor()) {
+        return if (toFling < 0 && offset > anchors.minPosition()) {
             onFling(toFling)
             // since we go to the anchor with tween settling, consume all for the best UX
             available
