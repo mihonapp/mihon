@@ -3,7 +3,6 @@ package eu.kanade.domain.manga.interactor
 import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
-import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SManga
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.FetchInterval
@@ -30,7 +29,6 @@ class UpdateManga(
     }
 
     suspend fun awaitUpdateFromSource(
-        source: Source,
         localManga: Manga,
         remoteManga: SManga,
         manualFetch: Boolean,
@@ -88,7 +86,7 @@ class UpdateManga(
             ),
         )
         if (success && title != null) {
-            downloadManager.renameManga(source, localManga, localTitle, title)
+            downloadManager.renameManga(localManga, localTitle, title)
         }
         return success
     }
