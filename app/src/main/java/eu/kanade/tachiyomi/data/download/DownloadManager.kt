@@ -353,7 +353,7 @@ class DownloadManager(
         }
 
         if (oldFolder.renameTo(newName)) {
-            cache.renameManga(source.id, oldFolder, manga.title, newTitle)
+            cache.renameManga(manga, oldFolder, newTitle)
         } else {
             logcat(LogPriority.ERROR) { "Failed to rename manga download folder: ${oldFolder.name}" }
         }
