@@ -68,8 +68,6 @@ class UpdateManga(
 
         val thumbnailUrl = remoteManga.thumbnail_url?.takeIf { it.isNotEmpty() }
 
-        val localTitle = localManga.title
-
         val success = mangaRepository.update(
             MangaUpdate(
                 id = localManga.id,
@@ -86,7 +84,7 @@ class UpdateManga(
             ),
         )
         if (success && title != null) {
-            downloadManager.renameManga(localManga, localTitle, title)
+            downloadManager.renameManga(localManga, title)
         }
         return success
     }
