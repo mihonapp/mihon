@@ -58,9 +58,7 @@ fun Modifier.runOnEnterKeyPressed(action: () -> Unit): Modifier = this.onPreview
             // Physical keyboards generate two event types:
             // - KeyDown when the key is pressed
             // - KeyUp when the key is released
-            // To match the behavior of software keyboards (IME),
-            // trigger [action] only on the KeyUp event.
-            if (it.type == KeyEventType.KeyUp) {
+            if (it.type == KeyEventType.KeyDown) {
                 action()
                 true
             } else {
