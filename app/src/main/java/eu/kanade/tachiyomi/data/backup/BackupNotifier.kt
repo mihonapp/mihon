@@ -6,6 +6,7 @@ import androidx.core.app.NotificationCompat
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
+import eu.kanade.tachiyomi.data.BackupRestoreStatus
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.storage.getUriCompat
@@ -16,6 +17,8 @@ import tachiyomi.core.common.i18n.pluralStringResource
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.displayablePath
 import tachiyomi.i18n.MR
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -23,6 +26,7 @@ import java.util.concurrent.TimeUnit
 class BackupNotifier(private val context: Context) {
 
     private val preferences: SecurityPreferences by injectLazy()
+    private val backupRestoreStatus: BackupRestoreStatus = Injekt.get()
 
     private val progressNotificationBuilder = context.notificationBuilder(
         Notifications.CHANNEL_BACKUP_RESTORE_PROGRESS,
@@ -87,7 +91,7 @@ class BackupNotifier(private val context: Context) {
         }
     }
 
-    fun showRestoreProgress(
+    suspend fun showRestoreProgress(
         content: String = "",
         progress: Int = 0,
         maxAmount: Int = 100,
@@ -107,6 +111,7 @@ class BackupNotifier(private val context: Context) {
 
             setProgress(maxAmount, progress, false)
             setOnlyAlertOnce(true)
+            backupRestoreStatus.updateProgress(progress.toFloat() / maxAmount)
 
             clearActions()
             addAction(

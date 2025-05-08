@@ -21,6 +21,7 @@ import androidx.work.workDataOf
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.toSManga
+import eu.kanade.tachiyomi.data.LibraryUpdateStatus
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.notification.Notifications
@@ -90,6 +91,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get()
     private val fetchInterval: FetchInterval = Injekt.get()
     private val filterChaptersForDownload: FilterChaptersForDownload = Injekt.get()
+    private val libraryUpdateStatus: LibraryUpdateStatus = Injekt.get()
 
     private val notifier = LibraryUpdateNotifier(context)
 
@@ -110,6 +112,8 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                 return Result.retry()
             }
         }
+
+        libraryUpdateStatus.start()
 
         setForegroundSafely()
 
@@ -132,6 +136,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                 }
             } finally {
                 notifier.cancelProgressNotification()
+                libraryUpdateStatus.stop()
             }
         }
     }

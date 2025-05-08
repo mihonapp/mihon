@@ -275,6 +275,7 @@
 
     <string name="pref_category_library_update">Global update</string>
     <string name="pref_library_update_interval">Automatic updates</string>
+    <string name="pref_show_updating_progress_banner">Show updating progress banner</string>
     <string name="update_never">Off</string>
     <string name="update_6hour">Every 6 hours</string>
     <string name="update_12hour">Every 12 hours</string>
@@ -566,6 +567,7 @@
     <string name="restore_miui_warning">Backup/restore may not function properly if MIUI Optimization is disabled.</string>
     <string name="restore_in_progress">Restore is already in progress</string>
     <string name="restoring_backup">Restoring backup</string>
+    <string name="restoring_backup_progress">Restoring backup… (%s)</string>
     <string name="restoring_backup_error">Restoring backup failed</string>
     <string name="restoring_backup_canceled">Canceled restore</string>
     <string name="backup_info">You should keep copies of backups in other places as well. Backups may contain sensitive data including any stored passwords; be careful if sharing.</string>
@@ -585,6 +587,7 @@
     <!-- Sync section -->
     <string name="syncing_library">Syncing library</string>
     <string name="library_sync_complete">Library sync complete</string>
+    <string name="pref_show_restoring_progress_banner">Show restoring progress banner</string>
 
       <!-- Advanced section -->
     <string name="label_network">Networking</string>

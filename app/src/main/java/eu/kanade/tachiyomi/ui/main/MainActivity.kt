@@ -59,11 +59,15 @@ import eu.kanade.presentation.components.AppStateBanners
 import eu.kanade.presentation.components.DownloadedOnlyBannerBackgroundColor
 import eu.kanade.presentation.components.IncognitoModeBannerBackgroundColor
 import eu.kanade.presentation.components.IndexingBannerBackgroundColor
+import eu.kanade.presentation.components.RestoringBannerBackgroundColor
+import eu.kanade.presentation.components.UpdatingBannerBackgroundColor
 import eu.kanade.presentation.more.settings.screen.browse.ExtensionReposScreen
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
 import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.DefaultNavigatorScreenTransition
 import eu.kanade.tachiyomi.BuildConfig
+import eu.kanade.tachiyomi.data.BackupRestoreStatus
+import eu.kanade.tachiyomi.data.LibraryUpdateStatus
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
@@ -96,6 +100,7 @@ import mihon.core.migration.Migrator
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.release.interactor.GetApplicationRelease
 import tachiyomi.i18n.MR
@@ -108,6 +113,10 @@ class MainActivity : BaseActivity() {
 
     private val libraryPreferences: LibraryPreferences by injectLazy()
     private val preferences: BasePreferences by injectLazy()
+
+    private val backupPreferences: BackupPreferences by injectLazy()
+    private val backupRestoreStatus: BackupRestoreStatus by injectLazy()
+    private val libraryUpdateStatus: LibraryUpdateStatus by injectLazy()
 
     private val downloadCache: DownloadCache by injectLazy()
     private val chapterCache: ChapterCache by injectLazy()
@@ -146,8 +155,19 @@ class MainActivity : BaseActivity() {
             val downloadOnly by preferences.downloadedOnly().collectAsState()
             val indexing by downloadCache.isInitializing.collectAsState()
 
+            val restoringState by backupRestoreStatus.isRunning.collectAsState()
+            val updatingState by libraryUpdateStatus.isRunning.collectAsState()
+            val restoringProgressBanner by backupPreferences.showRestoringProgressBanner().collectAsState()
+            val updatingProgressBanner by libraryPreferences.showUpdatingProgressBanner().collectAsState()
+            val restoring = restoringState && restoringProgressBanner
+            val updating = updatingState && updatingProgressBanner
+            val restoringProgress by backupRestoreStatus.progress.collectAsState()
+            val updatingProgress by libraryUpdateStatus.progress.collectAsState()
+
             val isSystemInDarkTheme = isSystemInDarkTheme()
             val statusBarBackgroundColor = when {
+                updating -> UpdatingBannerBackgroundColor
+                restoring -> RestoringBannerBackgroundColor
                 indexing -> IndexingBannerBackgroundColor
                 downloadOnly -> DownloadedOnlyBannerBackgroundColor
                 incognito -> IncognitoModeBannerBackgroundColor
@@ -191,6 +211,10 @@ class MainActivity : BaseActivity() {
                             downloadedOnlyMode = downloadOnly,
                             incognitoMode = incognito,
                             indexing = indexing,
+                            restoring = restoring,
+                            updating = updating,
+                            progress = updatingProgress.takeIf { updating }
+                                ?: restoringProgress.takeIf { restoring },
                             modifier = Modifier.windowInsetsPadding(scaffoldInsets),
                         )
                     },
