@@ -158,7 +158,8 @@ class LibraryScreenModel(
                     prefs.filterCompleted,
                     prefs.filterIntervalCustom,
                 ) + trackFilter.values
-                ).any { it != TriState.DISABLED }
+                ).any { it != TriState.DISABLED } ||
+                prefs.filterCategories
         }
             .distinctUntilChanged()
             .onEach {
@@ -188,6 +189,13 @@ class LibraryScreenModel(
         val excludedTracks = trackingFilter.mapNotNull { if (it.value == TriState.ENABLED_NOT) it.key else null }
         val includedTracks = trackingFilter.mapNotNull { if (it.value == TriState.ENABLED_IS) it.key else null }
         val trackFiltersIsIgnored = includedTracks.isEmpty() && excludedTracks.isEmpty()
+
+        val filterCategories = prefs.filterCategories
+        val includedCategories = prefs.filterCategoriesInclude
+        val excludedCategories = prefs.filterCategoriesExclude
+        val categoriesMap = this
+            .flatMap { (category, items) -> items.map { item -> item.libraryManga.id to category } }
+            .groupBy({ it.first }, { it.second })
 
         val filterFnDownloaded: (LibraryItem) -> Boolean = {
             applyFilter(filterDownloaded) {
@@ -234,6 +242,17 @@ class LibraryScreenModel(
             !isExcluded && isIncluded
         }
 
+        val filterFnCategories: (LibraryItem) -> Boolean = categories@{ item ->
+            if (!filterCategories) return@categories true
+
+            val mangaCategories = categoriesMap[item.libraryManga.id].orEmpty().fastMap { it.id }
+
+            val isExcluded = excludedCategories.any { it in mangaCategories }
+            val isIncluded = includedCategories.isEmpty() || includedCategories.all { it in mangaCategories }
+
+            !isExcluded && isIncluded
+        }
+
         val filterFn: (LibraryItem) -> Boolean = {
             filterFnDownloaded(it) &&
                 filterFnUnread(it) &&
@@ -241,7 +260,8 @@ class LibraryScreenModel(
                 filterFnBookmarked(it) &&
                 filterFnCompleted(it) &&
                 filterFnIntervalCustom(it) &&
-                filterFnTracking(it)
+                filterFnTracking(it) &&
+                filterFnCategories(it)
         }
 
         return mapValues { (_, value) -> value.fastFilter(filterFn) }
@@ -335,6 +355,9 @@ class LibraryScreenModel(
             libraryPreferences.filterBookmarked().changes(),
             libraryPreferences.filterCompleted().changes(),
             libraryPreferences.filterIntervalCustom().changes(),
+            libraryPreferences.filterCategories().changes(),
+            libraryPreferences.filterCategoriesInclude().changes(),
+            libraryPreferences.filterCategoriesExclude().changes(),
         ) {
             ItemPreferences(
                 downloadBadge = it[0] as Boolean,
@@ -349,6 +372,11 @@ class LibraryScreenModel(
                 filterBookmarked = it[9] as TriState,
                 filterCompleted = it[10] as TriState,
                 filterIntervalCustom = it[11] as TriState,
+                filterCategories = it[12] as Boolean,
+                filterCategoriesInclude = (it[13] as? Set<*>)?.filterIsInstance<String>()?.map { it.toLong() }?.toSet()
+                    ?: emptySet(),
+                filterCategoriesExclude = (it[14] as? Set<*>)?.filterIsInstance<String>()?.map { it.toLong() }?.toSet()
+                    ?: emptySet(),
             )
         }
     }
@@ -718,6 +746,9 @@ class LibraryScreenModel(
         val filterBookmarked: TriState,
         val filterCompleted: TriState,
         val filterIntervalCustom: TriState,
+        val filterCategories: Boolean,
+        val filterCategoriesInclude: Set<Long>,
+        val filterCategoriesExclude: Set<Long>,
     )
 
     @Immutable
