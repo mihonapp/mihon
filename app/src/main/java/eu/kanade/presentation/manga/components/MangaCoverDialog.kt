@@ -2,6 +2,9 @@ package eu.kanade.presentation.manga.components
 
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import androidx.activity.compose.PredictiveBackHandler
+import androidx.compose.animation.core.animate
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -24,18 +27,22 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.lerp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.updatePadding
 import coil3.asDrawable
 import coil3.imageLoader
@@ -48,11 +55,14 @@ import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import kotlinx.collections.immutable.persistentListOf
+import soup.compose.material.motion.MotionConstants
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
+import tachiyomi.presentation.core.util.PredictiveBack
 import tachiyomi.presentation.core.util.clickableNoIndication
+import kotlin.coroutines.cancellation.CancellationException
 
 @Composable
 fun MangaCoverDialog(
@@ -151,10 +161,32 @@ fun MangaCoverDialog(
             val statusBarPaddingPx = with(LocalDensity.current) { contentPadding.calculateTopPadding().roundToPx() }
             val bottomPaddingPx = with(LocalDensity.current) { contentPadding.calculateBottomPadding().roundToPx() }
 
+            var scale by remember { mutableFloatStateOf(1f) }
+            PredictiveBackHandler { progress ->
+                try {
+                    progress.collect { backEvent ->
+                        scale = lerp(1f, 0.8f, PredictiveBack.transform(backEvent.progress))
+                    }
+                    onDismissRequest()
+                } catch (e: CancellationException) {
+                    animate(
+                        initialValue = scale,
+                        targetValue = 1f,
+                        animationSpec = tween(durationMillis = MotionConstants.DefaultMotionDuration),
+                    ) { value, _ ->
+                        scale = value
+                    }
+                }
+            }
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .clickableNoIndication(onClick = onDismissRequest),
+                    .clickableNoIndication(onClick = onDismissRequest)
+                    .graphicsLayer {
+                        scaleX = scale
+                        scaleY = scale
+                    },
             ) {
                 AndroidView(
                     factory = {
@@ -171,15 +203,13 @@ fun MangaCoverDialog(
                             .memoryCachePolicy(CachePolicy.DISABLED)
                             .target { image ->
                                 val drawable = image.asDrawable(view.context.resources)
-
                                 // Copy bitmap in case it came from memory cache
                                 // Because SSIV needs to thoroughly read the image
-                                val copy = (drawable as? BitmapDrawable)?.let {
-                                    BitmapDrawable(
-                                        view.context.resources,
-                                        it.bitmap.copy(Bitmap.Config.HARDWARE, false),
-                                    )
-                                } ?: drawable
+                                val copy = (drawable as? BitmapDrawable)
+                                    ?.bitmap
+                                    ?.copy(Bitmap.Config.HARDWARE, false)
+                                    ?.toDrawable(view.context.resources)
+                                    ?: drawable
                                 view.setImage(copy, ReaderPageImageView.Config(zoomDuration = 500))
                             }
                             .build()
