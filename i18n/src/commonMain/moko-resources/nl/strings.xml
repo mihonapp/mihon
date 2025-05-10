@@ -206,7 +206,6 @@
     <string name="pref_update_only_non_completed">Gelezen series</string>
     <string name="pref_auto_update_manga_sync">Voortgang bijwerken na lezen</string>
     <string name="pref_keep_screen_on">Scherm aanhouden</string>
-    <string name="clear_database_confirmation">Weet je het zeker? Gelezen hoofdstukken en voortgang voor items die niet in de bibliotheek zitten zullen verloren gaan</string>
     <string name="clear_database_completed">Database geleegd</string>
     <string name="ongoing">Lopend</string>
     <string name="delete_downloads_for_manga">Verwijder gedownloade hoofdstukken?</string>
@@ -618,9 +617,6 @@
 \nTik hier voor meer informatie.</string>
     <string name="pref_skip_dupe_chapters">Dubbele hoofdstukken overslaan</string>
     <string name="are_you_sure">Weet je het zeker?</string>
-    <string name="confirm_add_duplicate_manga">Je hebt momenteel een item in je bibliotheek met dezelfde naam.
-\n
-\nWil je alsnog verdergaan?</string>
     <string name="reading_list">Leeslijst</string>
     <string name="description_placeholder">Geen beschrijving</string>
     <string name="pref_reset_viewer_flags_summary">Zet de instellingen voor de leesmodus en het draaitype terug naar de standaardwaarden voor alle series</string>
@@ -780,7 +776,6 @@
     <string name="invalid_repo_name">Ongeldige repo URL</string>
     <string name="no_location_set">Geen opslaglocatie ingesteld</string>
     <string name="action_add_anyway">Toch toevoegen</string>
-    <string name="action_migrate_duplicate">Bestaand item migreren</string>
     <string name="action_replace_repo">Vervangen</string>
     <string name="add_repo_confirmation">Wens je de repo \"%s\" toe te voegen?</string>
     <string name="pref_flash_duration_summary">%1$s ms</string>

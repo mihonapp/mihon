@@ -431,7 +431,6 @@
     <string name="pref_create_backup_summ">Galima naudoti dabartinei bibliotekai atkurti</string>
     <string name="pref_webtoon_side_padding">Šoninis spaudinėjimas</string>
     <string name="empty_backup_error">Nėra bibliotekos įrašų, kurių atsargines kopijas būtų galima sukurti</string>
-    <string name="clear_database_confirmation">Ar tikrai? Perskaityti skyriai ir nebibliotekinių įrašų progresas bus prarastas</string>
     <string name="pref_dump_crash_logs_summary">Įrašyti strigčių žurnalus į failą, kad būtų galima juos bendrinti su kūrėjais</string>
     <string name="creating_backup">Atsarginės kopijos kūrimas</string>
     <string name="pref_dns_over_https">DNS per HTTPS (DoH)</string>
@@ -682,7 +681,4 @@
     <string name="enhanced_services_not_installed">Turima, bet šaltinis nėra įdiegtas: %s</string>
     <string name="pref_library_update_show_tab_badge">Rodyti neperskaitytų skaičių ant Naujienų piktogramos</string>
     <string name="pref_skip_dupe_chapters">Praleisti pasikartojančius skyrius</string>
-    <string name="confirm_add_duplicate_manga">Bibliotekoje jau turite įrašą tokiu pačiu pavadinimu.
-\n
-\nAr vis tiek norite tęsti?</string>
 </resources>

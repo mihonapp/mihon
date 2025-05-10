@@ -497,7 +497,6 @@
     <string name="pref_clear_chapter_cache">Borrar a caché dos capítulos</string>
     <string name="cache_deleted">Borrouse a caché. Elimináronse %1$d ficheiros</string>
     <string name="pref_invalidate_download_cache_summary">Forzar á aplicación a comprobar de novo os capítulos descargados</string>
-    <string name="clear_database_confirmation">Estás seguro? Perderanse os capítulos lidos e o progreso dos elementos que non estean na biblioteca</string>
     <string name="pref_reset_viewer_flags">Restablecer os axustes do lector en cada serie</string>
     <string name="pref_disable_battery_optimization">Desactivar a optimización de batería</string>
     <string name="battery_optimization_disabled">A optimización de batería xa está desactivada</string>
@@ -552,9 +551,6 @@
     <string name="sort_by_source">Por fonte</string>
     <string name="transition_current">Actual:</string>
     <string name="transition_next">Seguinte:</string>
-    <string name="confirm_add_duplicate_manga">Xa tes un elemento na túa biblioteca co mesmo nome.
-\n
-\nAínda queres continuar?</string>
     <string name="copied_to_clipboard">Copiado ao portapapeis:
 \n%1$s</string>
     <string name="clipboard_copy_error">Non se puido copiar ao portapapeis</string>
@@ -770,7 +766,6 @@
     <string name="download_cache_invalidated">Invalidouse o índice de descargas</string>
     <string name="has_results">Ten resultados</string>
     <string name="action_add_anyway">Engadir de todos modos</string>
-    <string name="action_migrate_duplicate">Migrar a entrada existente</string>
     <string name="available_disk_space_info">Dispoñible: %1$s / Total: %2$s</string>
     <string name="syncing_library">Sincronizando a biblioteca</string>
     <string name="relative_time_span_never">Nunca</string>
