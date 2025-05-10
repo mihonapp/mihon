@@ -1,10 +1,9 @@
 package eu.kanade.presentation.components
 
-import androidx.activity.compose.BackHandler
+import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
@@ -28,20 +27,14 @@ fun NavigatorAdaptiveSheet(
         screen = screen,
         content = { sheetNavigator ->
             AdaptiveSheet(
-                enableSwipeDismiss = enableSwipeDismiss(sheetNavigator),
                 onDismissRequest = onDismissRequest,
+                enableSwipeDismiss = enableSwipeDismiss(sheetNavigator),
             ) {
                 ScreenTransition(
                     navigator = sheetNavigator,
-                    transition = {
-                        fadeIn(animationSpec = tween(220, delayMillis = 90)) togetherWith
-                            fadeOut(animationSpec = tween(90))
-                    },
-                )
-
-                BackHandler(
-                    enabled = sheetNavigator.size > 1,
-                    onBack = sheetNavigator::pop,
+                    enterTransition = { fadeIn(animationSpec = tween(220, delayMillis = 90)) },
+                    exitTransition = { fadeOut(animationSpec = tween(90)) },
+                    sizeTransform = { SizeTransform() },
                 )
             }
 
@@ -79,10 +72,10 @@ fun AdaptiveSheet(
         properties = dialogProperties,
     ) {
         AdaptiveSheetImpl(
-            modifier = modifier,
             isTabletUi = isTabletUi,
             enableSwipeDismiss = enableSwipeDismiss,
             onDismissRequest = onDismissRequest,
+            modifier = modifier,
         ) {
             content()
         }

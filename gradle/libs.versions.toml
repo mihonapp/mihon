@@ -6,11 +6,11 @@ okhttp_version = "5.0.0-alpha.14"
 shizuku_version = "13.1.0"
 sqldelight = "2.0.2"
 sqlite = "2.5.1"
-voyager = "1.0.1"
+voyager = "1.1.0-beta03"
 spotless = "7.0.3"
 ktlint-core = "1.5.0"
 firebase-bom = "33.13.0"
-markdown = "0.33.0"
+markdown = "0.34.0"
 
 [libraries]
 desugar = "com.android.tools:desugar_jdk_libs:2.1.5"
