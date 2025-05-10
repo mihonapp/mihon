@@ -303,6 +303,8 @@
     <string name="default_category_summary">Always ask</string>
     <string name="categorized_display_settings">Per-category settings for sort</string>
     <string name="pref_library_update_categories_details">Entries in excluded categories will not be updated even if they are also in included categories.</string>
+    <string name="ungrouped">Ungrouped</string>
+
     <string name="all">All</string>
     <string name="none">None</string>
     <string name="include">Include: %s</string>
