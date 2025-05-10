@@ -1,0 +1,15 @@
+import kotlin.collections.List;
+import kotlin.String;
+
+-- Create local_manga table --
+CREATE TABLE local_manga (
+    url TEXT NOT NULL PRIMARY KEY,
+    artist TEXT,
+    author TEXT,
+    description TEXT,
+    genre TEXT AS List<String>,
+    title TEXT NOT NULL,
+    status INTEGER NOT NULL,
+    thumbnail_url TEXT,
+    dir_last_modified INTEGER NOT NULL DEFAULT 0
+);
