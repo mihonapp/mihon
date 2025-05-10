@@ -163,7 +163,6 @@
     <string name="action_start_downloading_now">ခုပဲ ဒေါင်းလုဒ်လုပ်မည်</string>
     <string name="action_not_now">ခုမဟုတ်ပါ</string>
     <string name="action_add_anyway">ဘာဖြစ်ဖြစ် ထည့်မည်</string>
-    <string name="action_migrate_duplicate">ထပ်မံပြောင်းရွှေ့ရန်</string>
     <string name="loading">ခဏစောင့်ပါ။ …</string>
     <string name="internal_error">InternalError: ပြဿနာဖြေရှင်းရန် အတွက် ခရပ်စ်လော့ဂ်များကို စစ်ဆေးပါ။</string>
     <string name="app_not_available">အက်ပလီကေးရှင်းရရှိနိုင်ခြင်းမရှိပါ</string>
