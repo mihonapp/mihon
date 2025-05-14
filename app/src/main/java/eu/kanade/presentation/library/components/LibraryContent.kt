@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -45,6 +47,8 @@ fun LibraryContent(
     getDisplayMode: (Int) -> PreferenceMutableState<LibraryDisplayMode>,
     getColumnsForOrientation: (Boolean) -> PreferenceMutableState<Int>,
     getLibraryForPage: (Int) -> List<LibraryItem>,
+    snackbarHostState: SnackbarHostState,
+    enablePullToRefresh: Boolean,
 ) {
     Column(
         modifier = Modifier.padding(
@@ -84,6 +88,18 @@ fun LibraryContent(
         PullRefresh(
             refreshing = isRefreshing,
             onRefresh = {
+                if (!enablePullToRefresh) {
+
+                    scope.launch {
+                        isRefreshing = true
+                        snackbarHostState.showSnackbar(
+                            message = "pull to update is disabled",
+                        )
+                        isRefreshing = false
+
+                    }
+                    return@PullRefresh
+                }
                 val started = onRefresh(categories[currentPage()])
                 if (!started) return@PullRefresh
                 scope.launch {
@@ -109,6 +125,7 @@ fun LibraryContent(
                 onLongClickManga = onToggleRangeSelection,
                 onClickContinueReading = onContinueReadingClicked,
             )
+            SnackbarHost(hostState = snackbarHostState)
         }
 
         LaunchedEffect(pagerState.currentPage) {
