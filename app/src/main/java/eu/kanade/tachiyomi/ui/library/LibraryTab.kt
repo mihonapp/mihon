@@ -52,6 +52,7 @@ import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryManga
+import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -60,6 +61,8 @@ import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.EmptyScreenAction
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.source.local.isLocal
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 data object LibraryTab : Tab {
 
@@ -85,7 +88,7 @@ data object LibraryTab : Tab {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
         val haptic = LocalHapticFeedback.current
-
+        val preferences = Injekt.get<LibraryPreferences>()
         val screenModel = rememberScreenModel { LibraryScreenModel() }
         val settingsScreenModel = rememberScreenModel { LibrarySettingsScreenModel() }
         val state by screenModel.state.collectAsState()
@@ -205,7 +208,10 @@ data object LibraryTab : Tab {
                         getNumberOfMangaForCategory = { state.getMangaCountForCategory(it) },
                         getDisplayMode = { screenModel.getDisplayMode() },
                         getColumnsForOrientation = { screenModel.getColumnsPreferenceForCurrentOrientation(it) },
-                    ) { state.getLibraryItemsByPage(it) }
+                        snackbarHostState = snackbarHostState,
+                        enablePullToRefresh = preferences.enablePullToRefresh().get(),
+                        getLibraryForPage = { state.getLibraryItemsByPage(it) },
+                    )
                 }
             }
         }
