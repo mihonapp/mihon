@@ -190,7 +190,6 @@
     <string name="pref_disable_battery_optimization_summary">עוזר בעדכוני ספריות רקע וגיבויים</string>
     <string name="pref_disable_battery_optimization">השבתת האופטימיזציה של הסוללה</string>
     <string name="clear_database_completed">הרשומות נמחקו</string>
-    <string name="clear_database_confirmation">האם אתה בטוח? פרקים שנקראו וההתקדמות של פריטים שאינם בספרייה יאבדו</string>
     <string name="pref_clear_database_summary">מחק את היסטוריית הפריטים שאינם שמורים בספריה שלך</string>
     <string name="pref_clear_database">נקה את מסד הנתונים</string>
     <string name="cookies_cleared">עוגיות נוקו</string>
@@ -597,9 +596,6 @@
     <string name="download_notifier_split_page_not_found">עמוד %d לא נמצא בעת פיצול</string>
     <string name="appwidget_updates_description">צפה בפריטי הספריה העדכניים ביותר</string>
     <string name="download_notifier_split_page_path_not_found">נכשל במציאת כתובת עמוד %d</string>
-    <string name="confirm_add_duplicate_manga">כבר קיים פריט בספריה בעל אותו שם.
-\n
-\nלהמשיך בכל זאת?</string>
     <string name="pref_downloads_summary">הורדה אוטומטית, הורד את הבאים</string>
     <string name="pref_appearance_summary">נושא, פורמט תאריך וזמן</string>
     <string name="pref_library_summary">קטגוריות, עדכון כללי, החלקת פרק</string>
