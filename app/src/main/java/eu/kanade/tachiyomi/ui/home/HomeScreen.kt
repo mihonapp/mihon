@@ -46,6 +46,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import eu.kanade.domain.source.service.SourcePreferences
+import eu.kanade.presentation.updates.failed.FailedUpdatesScreen
 import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.ui.browse.BrowseTab
@@ -237,7 +238,7 @@ object HomeScreen : Screen() {
                     openTabEvent.receiveAsFlow().collectLatest {
                         tabNavigator.current = when (it) {
                             is Tab.Library -> LibraryTab
-                            Tab.Updates -> UpdatesTab
+                            is Tab.Updates -> UpdatesTab
                             Tab.History -> HistoryTab
                             is Tab.Browse -> {
                                 if (it.toExtensions) {
@@ -253,6 +254,9 @@ object HomeScreen : Screen() {
                         }
                         if (it is Tab.More && it.toDownloads) {
                             navigator.push(DownloadQueueScreen)
+                        }
+                        if (it is Tab.Updates && it.toFailedUpdates) {
+                            navigator.push(FailedUpdatesScreen())
                         }
                     }
                 }
@@ -387,7 +391,7 @@ object HomeScreen : Screen() {
 
     sealed interface Tab {
         data class Library(val mangaIdToOpen: Long? = null) : Tab
-        data object Updates : Tab
+        data class Updates(val toFailedUpdates: Boolean) : Tab
         data object History : Tab
         data class Browse(val toExtensions: Boolean = false) : Tab
         data class More(val toDownloads: Boolean) : Tab
