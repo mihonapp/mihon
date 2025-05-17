@@ -32,6 +32,7 @@ import tachiyomi.data.Database
 import tachiyomi.data.DatabaseHandler
 import tachiyomi.data.DateColumnAdapter
 import tachiyomi.data.History
+import tachiyomi.data.Local_manga
 import tachiyomi.data.Mangas
 import tachiyomi.data.StringListColumnAdapter
 import tachiyomi.data.UpdateStrategyColumnAdapter
@@ -39,6 +40,7 @@ import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.storage.service.StorageManager
 import tachiyomi.source.local.image.LocalCoverManager
 import tachiyomi.source.local.io.LocalSourceFileSystem
+import tachiyomi.source.local.io.LocalSourceIndexer
 import uy.kohesive.injekt.api.InjektModule
 import uy.kohesive.injekt.api.InjektRegistrar
 import uy.kohesive.injekt.api.addSingleton
@@ -81,6 +83,9 @@ class AppModule(val app: Application) : InjektModule {
                 driver = get(),
                 historyAdapter = History.Adapter(
                     last_readAdapter = DateColumnAdapter,
+                ),
+                local_mangaAdapter = Local_manga.Adapter(
+                    genreAdapter = StringListColumnAdapter,
                 ),
                 mangasAdapter = Mangas.Adapter(
                     genreAdapter = StringListColumnAdapter,
@@ -133,6 +138,7 @@ class AppModule(val app: Application) : InjektModule {
         addSingletonFactory { LocalSourceFileSystem(get()) }
         addSingletonFactory { LocalCoverManager(app, get()) }
         addSingletonFactory { StorageManager(app, get()) }
+        addSingletonFactory { LocalSourceIndexer(app) }
 
         // Asynchronously init expensive components for a faster cold start
         ContextCompat.getMainExecutor(app).execute {
