@@ -1071,7 +1071,6 @@ class MangaScreenModel(
         ) : Dialog
         data class DeleteChapters(val chapters: List<Chapter>) : Dialog
         data class DuplicateManga(val manga: Manga, val duplicates: List<MangaWithChapterCount>) : Dialog
-        data class Migrate(val newManga: Manga, val oldManga: Manga) : Dialog
         data class SetFetchInterval(val manga: Manga) : Dialog
         data object SettingsSheet : Dialog
         data object TrackSheet : Dialog
@@ -1096,11 +1095,6 @@ class MangaScreenModel(
 
     fun showCoverDialog() {
         updateSuccessState { it.copy(dialog = Dialog.FullCover) }
-    }
-
-    fun showMigrateDialog(duplicate: Manga) {
-        val manga = successState?.manga ?: return
-        updateSuccessState { it.copy(dialog = Dialog.Migrate(newManga = manga, oldManga = duplicate)) }
     }
 
     fun setExcludedScanlators(excludedScanlators: Set<String>) {

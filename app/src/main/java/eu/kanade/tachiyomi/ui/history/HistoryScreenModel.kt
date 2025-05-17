@@ -216,12 +216,6 @@ class HistoryScreenModel(
         }
     }
 
-    fun showMigrateDialog(currentManga: Manga, duplicate: Manga) {
-        mutableState.update { currentState ->
-            currentState.copy(dialog = Dialog.Migrate(newManga = currentManga, oldManga = duplicate))
-        }
-    }
-
     fun showChangeCategoryDialog(manga: Manga) {
         screenModelScope.launch {
             val categories = getCategories()
@@ -252,7 +246,6 @@ class HistoryScreenModel(
             val manga: Manga,
             val initialSelection: ImmutableList<CheckboxState<Category>>,
         ) : Dialog
-        data class Migrate(val newManga: Manga, val oldManga: Manga) : Dialog
     }
 
     sealed interface Event {

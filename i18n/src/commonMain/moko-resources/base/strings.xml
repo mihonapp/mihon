@@ -166,6 +166,10 @@
     <string name="action_start_downloading_now">Start downloading now</string>
     <string name="action_not_now">Not now</string>
     <string name="action_add_anyway">Add anyway</string>
+    <string name="action_skip_entry">Don\'t migrate</string>
+    <string name="action_search_manually">Search manually</string>
+    <string name="action_migrate_now">Migrate now</string>
+    <string name="action_copy_now">Copy now</string>
 
     <!-- Operations -->
     <string name="loading">Loading…</string>
@@ -315,6 +319,8 @@
     <string name="pref_mark_duplicate_read_chapter_read">Mark duplicate read chapter as read</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">After reading a chapter</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">After fetching new chapter</string>
+
+    <string name="pref_skip_pre_migration_summary">Use last saved pre-migration preferences and sources to mass migrate</string>
 
       <!-- Extension section -->
     <string name="multi_lang">Multi</string>
@@ -872,6 +878,31 @@
     <string name="copy">Copy</string>
     <string name="empty_screen">Well, this is awkward</string>
     <string name="not_installed">Not installed</string>
+
+    <string name="select_sources">Select sources</string>
+    <string name="select_none">Select none</string>
+    <string name="migration">Migration</string>
+    <string name="skip_pre_migration">Skip pre-migration</string>
+    <string name="pre_migration_skip_toast">To show this screen again, go to Settings -> Library.</string>
+    <string name="use_intelligent_search">Search title + keywords of title</string>
+    <string name="data_to_include_in_migration">Data to include in migration</string>
+    <string name="include_extra_search_parameter">Include extra search parameter when searching</string>
+    <string name="use_most_chapters">Use source with the most chapters (slower)</string>
+    <string name="use_first_source">Use first source with alternative</string>
+    <string name="skip_this_step_next_time">Skip this step next time</string>
+    <string name="hide_not_found_entries">Hide not found entries</string>
+    <string name="only_show_updated_entries">Only show entries with new chapters</string>
+    <string name="search_parameter">Search parameter (e.g. language:english)</string>
+    <string name="latest_">Latest: %1$s</string>
+    <string name="migrating_to">migrating to</string>
+    <string name="match_pinned_sources">Match pinned sources</string>
+    <string name="match_enabled_sources">Match enabled sources</string>
+    <string name="no_chapters_found_for_migration">No chapters found, this entry cannot be used for migration</string>
+    <string name="no_alternatives_found">No Alternatives Found</string>
+    <string name="stop_migrating">Stop migrating?</string>
+    <string name="action_stop">Stop</string>
+    <string name="skipping_">(skipping %1$d)</string>
+    <string name="extra">Extra</string>
 
     <!-- Crash screen -->
     <string name="crash_screen_title">Whoops!</string>

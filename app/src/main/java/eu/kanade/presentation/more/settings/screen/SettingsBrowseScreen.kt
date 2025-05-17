@@ -19,6 +19,7 @@ import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
+import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -69,6 +70,24 @@ object SettingsBrowseScreen : SearchableSettings {
                         },
                     ),
                     Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.parental_controls_info)),
+                ),
+            ),
+            getMigrationCategory(sourcePreferences),
+        )
+    }
+
+    @Composable
+    fun getMigrationCategory(sourcePreferences: SourcePreferences): Preference.PreferenceGroup {
+        val skipPreMigration by sourcePreferences.skipPreMigration().collectAsState()
+        val migrationSources by sourcePreferences.migrationSources().collectAsState()
+        return Preference.PreferenceGroup(
+            stringResource(MR.strings.migration),
+            enabled = skipPreMigration || migrationSources.isNotEmpty(),
+            preferenceItems = persistentListOf(
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = sourcePreferences.skipPreMigration(),
+                    title = stringResource(MR.strings.skip_pre_migration),
+                    subtitle = stringResource(MR.strings.pref_skip_pre_migration_summary),
                 ),
             ),
         )

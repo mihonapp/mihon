@@ -14,8 +14,10 @@ import androidx.compose.material.icons.outlined.Numbers
 import androidx.compose.material.icons.outlined.SortByAlpha
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,6 +51,7 @@ fun MigrateSourceScreen(
     onClickItem: (Source) -> Unit,
     onToggleSortingDirection: () -> Unit,
     onToggleSortingMode: () -> Unit,
+    onClickAll: (Source) -> Unit,
 ) {
     val context = LocalContext.current
     when {
@@ -70,6 +73,7 @@ fun MigrateSourceScreen(
                 onToggleSortingMode = onToggleSortingMode,
                 sortingDirection = state.sortingDirection,
                 onToggleSortingDirection = onToggleSortingDirection,
+                onClickAll = onClickAll,
             )
     }
 }
@@ -84,6 +88,7 @@ private fun MigrateSourceList(
     onToggleSortingMode: () -> Unit,
     sortingDirection: SetMigrateSorting.Direction,
     onToggleSortingDirection: () -> Unit,
+    onClickAll: (Source) -> Unit,
 ) {
     ScrollbarLazyColumn(
         contentPadding = contentPadding + topSmallPaddingValues,
@@ -138,6 +143,7 @@ private fun MigrateSourceList(
                 count = count,
                 onClickItem = { onClickItem(source) },
                 onLongClickItem = { onLongClickItem(source) },
+                onClickAll = { onClickAll(source) },
             )
         }
     }
@@ -149,6 +155,7 @@ private fun MigrateSourceItem(
     count: Long,
     onClickItem: () -> Unit,
     onLongClickItem: () -> Unit,
+    onClickAll: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     BaseSourceItem(
@@ -161,6 +168,14 @@ private fun MigrateSourceItem(
         action = {
             BadgeGroup {
                 Badge(text = "$count")
+            }
+            TextButton(onClick = onClickAll) {
+                Text(
+                    text = stringResource(MR.strings.all),
+                    style = LocalTextStyle.current.copy(
+                        color = MaterialTheme.colorScheme.primary,
+                    ),
+                )
             }
         },
         content = { _, sourceLangString ->
