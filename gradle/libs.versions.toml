@@ -8,7 +8,7 @@ sqldelight = "2.0.2"
 sqlite = "2.5.1"
 voyager = "1.1.0-beta03"
 spotless = "7.0.3"
-ktlint-core = "1.5.0"
+ktlint-core = "1.6.0"
 firebase-bom = "33.13.0"
 markdown = "0.34.0"
 
