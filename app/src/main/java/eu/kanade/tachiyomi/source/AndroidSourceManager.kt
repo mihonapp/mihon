@@ -54,7 +54,6 @@ class AndroidSourceManager(
                             LocalSource.ID to LocalSource(
                                 context,
                                 Injekt.get(),
-                                Injekt.get(),
                             ),
                         ),
                     )
