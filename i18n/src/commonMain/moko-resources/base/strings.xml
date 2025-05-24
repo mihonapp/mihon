@@ -298,6 +298,9 @@
     <string name="pref_library_update_refresh_metadata">Automatically refresh metadata</string>
     <string name="pref_library_update_refresh_metadata_summary">Check for new cover and details when updating library</string>
 
+    <string name="pref_library_update_enable_pull_to_refresh">Pull to refresh category</string>
+    <string name="pref_library_update_enable_pull_to_refresh_summary">Manage pull to refresh for category</string>
+
     <string name="default_category">Default category</string>
     <string name="default_category_summary">Always ask</string>
     <string name="categorized_display_settings">Per-category settings for sort</string>
@@ -839,6 +842,7 @@
 
     <!-- Updates -->
     <string name="updating_library">Updating library</string>
+    <string name="pull_to_refresh_disabled">Pull to update is disabled</string>
     <string name="update_already_running">An update is already running</string>
     <string name="cant_open_last_read_chapter">Unable to open last read chapter</string>
     <string name="updates_last_update_info">Library last updated: %s</string>
