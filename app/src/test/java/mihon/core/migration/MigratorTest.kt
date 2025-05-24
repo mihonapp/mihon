@@ -1,9 +1,12 @@
+@file:Suppress("DeferredResultUnused")
+
 package mihon.core.migration
 
 import io.mockk.slot
 import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.newSingleThreadContext
@@ -20,10 +23,10 @@ import org.junit.jupiter.api.Test
 
 class MigratorTest {
 
-    lateinit var migrationCompletedListener: MigrationCompletedListener
-    lateinit var migrationContext: MigrationContext
-    lateinit var migrationJobFactory: MigrationJobFactory
-    lateinit var migrationStrategyFactory: MigrationStrategyFactory
+    private lateinit var migrationCompletedListener: MigrationCompletedListener
+    private lateinit var migrationContext: MigrationContext
+    private lateinit var migrationJobFactory: MigrationJobFactory
+    private lateinit var migrationStrategyFactory: MigrationStrategyFactory
 
     @BeforeEach
     fun initilize() {
@@ -140,7 +143,8 @@ class MigratorTest {
 
     companion object {
 
-        val mainThreadSurrogate = newSingleThreadContext("UI thread")
+        @OptIn(DelicateCoroutinesApi::class)
+        private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
         @BeforeAll
         @JvmStatic
