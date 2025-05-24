@@ -41,8 +41,8 @@
         <item quantity="other">%d izleyici</item>
     </plurals>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">%d bölüm atlanıyor, kaynak mevcut değil veya filtrelendi</item>
-        <item quantity="other">%d bölüm atlanıyor, kaynak mevcut değil veya filtrelendi</item>
+        <item quantity="one">%d bölüm atlandı, kaynak mevcut değil veya filtrelendi</item>
+        <item quantity="other">%d bölüm atlandı, kaynak mevcut değil veya filtrelendi</item>
     </plurals>
     <plurals name="relative_time">
         <item quantity="one">Dün</item>
