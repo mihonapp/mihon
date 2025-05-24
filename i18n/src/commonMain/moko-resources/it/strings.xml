@@ -120,7 +120,6 @@
     <string name="cookies_cleared">Cookie cancellati</string>
     <string name="pref_clear_database">Pulisci database</string>
     <string name="pref_clear_database_summary">Elimina la cronologia delle voci che non sono presenti nella libreria</string>
-    <string name="clear_database_confirmation">Sei sicuro? I capitoli letti e i progressi di lettura di voci fuori dalla libreria verranno persi</string>
     <string name="clear_database_completed">Elementi eliminati</string>
     <string name="version">Versione</string>
     <string name="pref_enable_acra">Invia segnalazioni crash</string>
@@ -678,9 +677,6 @@
     <string name="copied_to_clipboard_plain">Copiato negli appunti</string>
     <string name="enhanced_services_not_installed">Disponibile ma la fonte non è installata: %s</string>
     <string name="pref_skip_dupe_chapters">Salta i capitoli duplicati</string>
-    <string name="confirm_add_duplicate_manga">Hai già una voce in libreria con lo stesso nome.
-\n
-\nVuoi comunque continuare?</string>
     <string name="track_error">%1$s errore: %2$s</string>
     <string name="information_required_plain">*obbligatorio</string>
     <string name="pref_hide_in_library_items">Nascondi le voci già in libreria</string>
@@ -790,7 +786,6 @@
     <string name="invalid_backup_file_error">Errore completo:</string>
     <string name="manga_interval_expected_update">Si prevede che i nuovi capitoli saranno rilasciati tra circa %1$s, con controlli ogni %2$s.</string>
     <string name="action_add_anyway">Aggiungere comunque</string>
-    <string name="action_migrate_duplicate">Migrare la voce esistente</string>
     <string name="action_replace_repo_title">La Firma dell\'Impronta Digitale della Chiave Esiste Già</string>
     <string name="pref_display_profile">Profilo di visualizzazione personalizzato</string>
     <string name="action_replace_repo_message">La repository %1$s ha la stessa Firma d\'Impronta Digitale della Chiave %2$s.
@@ -840,4 +835,19 @@
     <string name="export">Esporta</string>
     <string name="author">Autore</string>
     <string name="artist">Artista</string>
+    <string name="action_notes">Note</string>
+    <string name="action_edit_notes">Modifica note</string>
+    <string name="action_display_unread_badge">Capitoli non letti</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">Usa decoder legacy per lettore di strisce lunghe</string>
+    <string name="action_toggle_private_off">Traccia pubblicamente</string>
+    <string name="action_toggle_private_on">Tracciato privatamente</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Segna capitoli duplicati come letti</string>
+    <string name="pref_behavior">Comportamento</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">Dopo aver letto in capitolo</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">Dopo aver cercato nuovi capitoli</string>
+    <string name="tracked_privately">Tracciato privatamente</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Influisce sulle prestazioni. Abilitare solo se riducendo la soglia bitmap non risolve i problemi di immagine vuota</string>
+    <string name="library_list">Lista libreria</string>
+    <string name="library_exported">Libreria esportata</string>
+    <string name="pref_incognito_mode_extension_summary">Metti in pausa la cronologia di lettura per l\'estensione</string>
 </resources>

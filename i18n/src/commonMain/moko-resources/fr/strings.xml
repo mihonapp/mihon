@@ -55,7 +55,7 @@
     <string name="pref_category_tracking">Suivi</string>
     <string name="pref_category_advanced">Avancé</string>
     <string name="pref_category_about">À propos</string>
-    <string name="pref_library_columns">Taille de grille</string>
+    <string name="pref_library_columns">Éléments par ligne</string>
     <string name="portrait">Portrait</string>
     <string name="landscape">Paysage</string>
     <string name="pref_library_update_interval">Mises à jour automatiques</string>
@@ -101,10 +101,10 @@
     <string name="rotation_free">Libre</string>
     <string name="rotation_force_portrait">Bloqué sur portrait</string>
     <string name="rotation_force_landscape">Bloqué sur paysage</string>
-    <string name="color_filter_r_value">R</string>
-    <string name="color_filter_g_value">V</string>
-    <string name="color_filter_b_value">B</string>
-    <string name="color_filter_a_value">O</string>
+    <string name="color_filter_r_value">Rouge</string>
+    <string name="color_filter_g_value">Vert</string>
+    <string name="color_filter_b_value">Bleu</string>
+    <string name="color_filter_a_value">Alpha</string>
     <string name="pref_remove_after_read">Suppression automatique après lecture</string>
     <string name="disabled">Désactivé</string>
     <string name="last_read_chapter">Dernier chapitre lu</string>
@@ -183,7 +183,6 @@
     <string name="download_notifier_title_error">Erreur</string>
     <string name="download_notifier_text_only_wifi">Aucune connexion disponible</string>
     <string name="download_notifier_no_network">Aucune connexion disponible</string>
-    <string name="clear_database_confirmation">Êtes-vous sûr(e) ? Les chapitres lus et la progression des entrées hors dans la bibliothèque seront perdues</string>
     <string name="confirm_delete_chapters">Supprimer les chapitres sélectionnés ?</string>
     <string name="download_notifier_unknown_error">Impossible de télécharger le chapitre en raison d\'une erreur inattendue</string>
     <string name="fifth_to_last">Cinquième chapitre avant le dernier lu</string>
@@ -677,9 +676,6 @@
     <string name="pref_library_update_show_tab_badge">Afficher le nombre de chapitres non lus sur l\'icône des mises à jour</string>
     <string name="copied_to_clipboard_plain">Copié dans le presse-papier</string>
     <string name="pref_skip_dupe_chapters">Ignorer les chapitres en double</string>
-    <string name="confirm_add_duplicate_manga">Un titre de votre bibliothèque porte le même nom.
-\n
-\nVoulez-vous vraiment continuer ?</string>
     <string name="track_error">%1$s erreur : %2$s</string>
     <string name="enhanced_services_not_installed">Disponible mais la source n\'est pas installée : %s</string>
     <string name="information_required_plain">*obligatoire</string>
@@ -790,7 +786,6 @@
     <string name="last_auto_backup_info">Dernière sauvegarde automatique : %s</string>
     <string name="source_settings">Paramètres sources</string>
     <string name="action_add_anyway">Ajouter tout de même</string>
-    <string name="action_migrate_duplicate">Migrer l’entrée existante</string>
     <string name="label_upcoming">À venir</string>
     <string name="action_replace_repo">Remplacer</string>
     <string name="pref_display_profile">Profil d\'affichage personnalisé</string>
@@ -832,8 +827,28 @@
     <string name="onboarding_permission_analytics_description">Envoyer des données d\'utilisation anonymes pour améliorer les fonctionnalités de l\'application.</string>
     <string name="trackers_updated_summary">Trackers mis à jour au chapitre %d</string>
     <string name="manga_interval_expected_update_null">Ce manga est soit terminé, soit il n\'y a pas de date de sortie prévue.</string>
-    <string name="file_picker_uri_permission_unsupported">Échec de l\'acquisition persistante de l\'accès au dossier. L\'application peut se comporter de manière inattendue.</string>
+    <string name="file_picker_uri_permission_unsupported">L\'application n\'a pas obtenu l\'accès au dossier. Il se peut qu\'elle ne fonctionne pas comme prévu.</string>
     <string name="invalid_backup_file_unknown">Le fichier de sauvegarde est corrompu</string>
     <string name="remove_private_extension_message">Voulez-vous vraiment retirer l\'extension \"%s\" ?</string>
     <string name="pref_hardware_bitmap_threshold">Seuil de bitmap matériel personnalisé</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">Après avoir lu un chapitre</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">Après avoir acquis le chapitre suivant</string>
+    <string name="library_exported">Librairie exportée</string>
+    <string name="artist">Artiste</string>
+    <string name="pref_behavior">Comportement</string>
+    <string name="export">Export</string>
+    <string name="library_list">Liste des librairies</string>
+    <string name="tracked_privately">Suivi privé</string>
+    <string name="author">Auteur</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Marquer un chapitre dupliqué comme lu</string>
+    <string name="possible_duplicates_summary">Vous aez une entrée similaire dans votre librairie.\n\nSélectionnez une entrée à migrer ou l\'ajouter quand même.</string>
+    <string name="action_display_unread_badge">Chapitres non lus</string>
+    <string name="label_auto">Auto</string>
+    <string name="action_notes">Notes</string>
+    <string name="action_edit_notes">Modifier les notes</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">Utiliser l\'ancien décodeur pour le lecteur de bandes longues</string>
+    <string name="clear_database_text">Vous êtes sur le point de supprimer des entrées de la base de données</string>
+    <string name="clear_database_history_warning">Les chapitres lus et la progression des entrées hors bibliothèque seront perdus</string>
+    <string name="theme_monochrome">Monochrome</string>
+    <string name="clear_db_exclude_read">Conserver les entrées avec les chapitres lus</string>
 </resources>
