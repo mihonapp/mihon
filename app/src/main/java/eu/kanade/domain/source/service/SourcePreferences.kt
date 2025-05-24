@@ -40,6 +40,20 @@ class SourcePreferences(
         SetMigrateSorting.Direction.ASCENDING,
     )
 
+    fun migrateFlags() = preferenceStore.getInt("migrate_flags", Int.MAX_VALUE)
+
+    fun migrationSources() = preferenceStore.getString("migrate_sources", "")
+
+    fun smartMigration() = preferenceStore.getBoolean("smart_migrate", false)
+
+    fun useSourceWithMost() = preferenceStore.getBoolean("use_source_with_most", false)
+
+    fun skipPreMigration() = preferenceStore.getBoolean(Preference.appStateKey("skip_pre_migration"), false)
+
+    fun hideNotFoundMigration() = preferenceStore.getBoolean("hide_not_found_migration", false)
+
+    fun showOnlyUpdatesMigration() = preferenceStore.getBoolean("show_only_updates_migration", false)
+
     fun hideInLibraryItems() = preferenceStore.getBoolean("browse_hide_in_library_items", false)
 
     fun extensionRepos() = preferenceStore.getStringSet("extension_repos", emptySet())

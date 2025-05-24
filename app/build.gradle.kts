@@ -8,6 +8,7 @@ plugins {
     id("mihon.android.application.compose")
     id("com.github.zellius.shortcut-helper")
     kotlin("plugin.serialization")
+    kotlin("plugin.parcelize")
     alias(libs.plugins.aboutLibraries)
 }
 
@@ -277,6 +278,9 @@ dependencies {
 
     // Shizuku
     implementation(libs.bundles.shizuku)
+
+    // String Simularity
+    implementation(libs.simularity)
 
     // Tests
     testImplementation(libs.bundles.test)

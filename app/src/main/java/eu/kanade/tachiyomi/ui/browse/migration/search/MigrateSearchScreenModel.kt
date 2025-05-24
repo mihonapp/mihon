@@ -7,12 +7,15 @@ import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SourceFilter
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import tachiyomi.domain.manga.interactor.GetManga
+import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class MigrateSearchScreenModel(
     val mangaId: Long,
+    val validSources: List<Long>,
     getManga: GetManga = Injekt.get(),
+    private val sourceManager: SourceManager = Injekt.get(),
 ) : SearchScreenModel() {
 
     init {
@@ -29,7 +32,8 @@ class MigrateSearchScreenModel(
     }
 
     override fun getEnabledSources(): List<CatalogueSource> {
-        return super.getEnabledSources()
+        return validSources.mapNotNull { sourceManager.get(it) }
+            .filterIsInstance<CatalogueSource>()
             .filter { state.value.sourceFilter != SourceFilter.PinnedOnly || "${it.id}" in pinnedSources }
             .sortedWith(
                 compareBy(

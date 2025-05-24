@@ -95,4 +95,18 @@
         <item quantity="one">%d repo</item>
         <item quantity="other">%d repos</item>
     </plurals>
+
+    <!--Migration-->
+    <plurals name="migrate_entry">
+        <item quantity="one">Migrate %1$d%2$s entry?</item>
+        <item quantity="other">Migrate %1$d%2$s entries?</item>
+    </plurals>
+    <plurals name="copy_entry">
+        <item quantity="one">Copy %1$d%2$s entry?</item>
+        <item quantity="other">Copy %1$d%2$s entries?</item>
+    </plurals>
+    <plurals name="entry_migrated">
+        <item quantity="one">%d entry migrated</item>
+        <item quantity="other">%d entries migrated</item>
+    </plurals>
 </resources>
