@@ -55,7 +55,7 @@ abstract class SearchScreenModel(
 
     protected var extensionFilter: String? = null
 
-    private val sortComparator = { map: Map<CatalogueSource, SearchItemResult> ->
+    open val sortComparator = { map: Map<CatalogueSource, SearchItemResult> ->
         compareBy<CatalogueSource>(
             { (map[it] as? SearchItemResult.Success)?.isEmpty ?: true },
             { "${it.id}" !in pinnedSources },
