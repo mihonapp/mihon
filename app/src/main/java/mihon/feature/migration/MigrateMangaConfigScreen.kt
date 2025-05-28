@@ -6,25 +6,33 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material.icons.outlined.Deselect
 import androidx.compose.material.icons.outlined.DragHandle
 import androidx.compose.material.icons.outlined.SelectAll
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEachIndexed
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
@@ -38,13 +46,16 @@ import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateSearchScreen
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.updateAndGet
+import sh.calvin.reorderable.ReorderableCollectionItemScope
 import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.ReorderableLazyListState
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.source.model.Source
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.material.DISABLED_ALPHA
 import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
@@ -60,16 +71,13 @@ class MigrateMangaConfigScreen(private val mangaId: Long) : Screen() {
         val navigator = LocalNavigator.currentOrThrow
         val screenModel = rememberScreenModel { ScreenModel() }
         val state by screenModel.state.collectAsState()
+        val (selectedSources, availableSources) = state.sources.partition { it.isSelected }
 
         val lazyListState = rememberLazyListState()
-        val reorderableState = rememberReorderableLazyListState(lazyListState) { from, to ->
-            // The list is preceded by an info header hence -1
-            screenModel.orderSource(from.index - 1, to.index - 1)
-        }
         Scaffold(
             topBar = {
                 AppBar(
-                    title = "",
+                    title = null,
                     navigateUp = navigator::pop,
                     scrollBehavior = it,
                     actions = {
@@ -78,20 +86,20 @@ class MigrateMangaConfigScreen(private val mangaId: Long) : Screen() {
                                 AppBar.Action(
                                     title = stringResource(MR.strings.migrationConfigScreen_selectAllLabel),
                                     icon = Icons.Outlined.SelectAll,
-                                    onClick = { screenModel.toggleSource(ScreenModel.EnableSourceConfig.All) },
+                                    onClick = { screenModel.toggleSelection(ScreenModel.SelectionConfig.All) },
                                 ),
                                 AppBar.Action(
                                     title = stringResource(MR.strings.migrationConfigScreen_selectNoneLabel),
                                     icon = Icons.Outlined.Deselect,
-                                    onClick = { screenModel.toggleSource(ScreenModel.EnableSourceConfig.None) },
+                                    onClick = { screenModel.toggleSelection(ScreenModel.SelectionConfig.None) },
                                 ),
                                 AppBar.OverflowAction(
                                     title = stringResource(MR.strings.migrationConfigScreen_selectEnabledLabel),
-                                    onClick = { screenModel.toggleSource(ScreenModel.EnableSourceConfig.Enabled) },
+                                    onClick = { screenModel.toggleSelection(ScreenModel.SelectionConfig.Enabled) },
                                 ),
                                 AppBar.OverflowAction(
                                     title = stringResource(MR.strings.migrationConfigScreen_selectPinnedLabel),
-                                    onClick = { screenModel.toggleSource(ScreenModel.EnableSourceConfig.Pinned) },
+                                    onClick = { screenModel.toggleSelection(ScreenModel.SelectionConfig.Pinned) },
                                 ),
                             ),
                         )
@@ -107,59 +115,144 @@ class MigrateMangaConfigScreen(private val mangaId: Long) : Screen() {
                 )
             },
         ) { contentPadding ->
+            val reorderableState = rememberReorderableLazyListState(lazyListState, contentPadding) { from, to ->
+                val fromIndex = selectedSources.indexOfFirst { it.id == from.key }
+                val toIndex = selectedSources.indexOfFirst { it.id == to.key }
+                if (fromIndex == -1 || toIndex == -1) return@rememberReorderableLazyListState
+                screenModel.orderSource(fromIndex, toIndex)
+            }
+
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 state = lazyListState,
                 contentPadding = contentPadding,
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
             ) {
-                item {
-                    Text(
-                        text = stringResource(MR.strings.migrationConfigScreen_infoHeader),
-                        fontStyle = FontStyle.Italic,
-                        modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
-                    )
-                }
-                items(
-                    items = state.sources,
-                    key = { it.id },
-                ) { source ->
-                    ReorderableItem(reorderableState, source.id) {
-                        ListItem(
-                            leadingContent = {
-                                Icon(
-                                    imageVector = Icons.Outlined.DragHandle,
-                                    contentDescription = null,
-                                    modifier = Modifier.draggableHandle(),
-                                )
-                            },
-                            headlineContent = {
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
-                                    SourceIcon(source = source.source)
-                                    Text(
-                                        text = source.visualName,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        modifier = Modifier.weight(1f),
-                                    )
-                                }
-                            },
-                            trailingContent = {
-                                Switch(
-                                    checked = source.isEnabled,
-                                    onCheckedChange = null,
-                                )
-                            },
-                            modifier = Modifier.clickable(onClick = { screenModel.toggleSource(source.id) }),
+                listOf(selectedSources, availableSources).fastForEachIndexed { listIndex, sources ->
+                    val selectedSourcesList = listIndex == 0
+                    if (sources.isNotEmpty()) {
+                        val headerPrefix = if (selectedSourcesList) "selected" else "available"
+                        item("$headerPrefix-header") {
+                            Text(
+                                text = stringResource(
+                                    resource = if (selectedSourcesList) {
+                                        MR.strings.migrationConfigScreen_selectedHeader
+                                    } else {
+                                        MR.strings.migrationConfigScreen_availableHeader
+                                    },
+                                ),
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier
+                                    .padding(MaterialTheme.padding.medium)
+                                    .animateItem(),
+                            )
+                        }
+                    }
+                    itemsIndexed(
+                        items = sources,
+                        key = { _, item -> item.id },
+                    ) { index, item ->
+                        SourceItemContainer(
+                            firstItem = index == 0,
+                            lastItem = index == (sources.size - 1),
+                            source = item.source,
+                            isSelected = item.isSelected,
+                            dragEnabled = selectedSourcesList && sources.size > 1,
+                            state = reorderableState,
+                            key = { if (selectedSourcesList) it.id else "available-${it.id}" },
+                            onClick = { screenModel.toggleSelection(item.id) },
                         )
                     }
                 }
             }
         }
+    }
+
+    @Composable
+    private fun LazyItemScope.SourceItemContainer(
+        firstItem: Boolean,
+        lastItem: Boolean,
+        source: Source,
+        isSelected: Boolean,
+        dragEnabled: Boolean,
+        state: ReorderableLazyListState,
+        key: (Source) -> Any,
+        onClick: () -> Unit,
+    ) {
+        val shape = remember(firstItem, lastItem) {
+            val top = if (firstItem) 12.dp else 0.dp
+            val bottom = if (lastItem) 12.dp else 0.dp
+            RoundedCornerShape(top, top, bottom, bottom)
+        }
+
+        ReorderableItem(
+            state = state,
+            key = key(source),
+            enabled = dragEnabled,
+        ) { _ ->
+            ElevatedCard(
+                shape = shape,
+                modifier = Modifier
+                    .padding(horizontal = MaterialTheme.padding.medium)
+                    .animateItem(),
+            ) {
+                SourceItem(
+                    source = source,
+                    isSelected = isSelected,
+                    dragEnabled = dragEnabled,
+                    scope = this@ReorderableItem,
+                    onClick = onClick,
+                )
+            }
+        }
+
+        if (!lastItem) {
+            HorizontalDivider(modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium))
+        }
+    }
+
+    @Composable
+    private fun SourceItem(
+        source: Source,
+        isSelected: Boolean,
+        dragEnabled: Boolean,
+        scope: ReorderableCollectionItemScope,
+        onClick: () -> Unit,
+    ) {
+        ListItem(
+            headlineContent = {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    SourceIcon(source = source)
+                    Text(
+                        text = source.visualName,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
+            },
+            trailingContent = if (dragEnabled) {
+                {
+                    Icon(
+                        imageVector = Icons.Outlined.DragHandle,
+                        contentDescription = null,
+                        modifier = with(scope) {
+                            Modifier.draggableHandle()
+                        },
+                    )
+                }
+            } else {
+                null
+            },
+            colors = ListItemDefaults.colors(
+                containerColor = Color.Transparent,
+            ),
+            modifier = Modifier
+                .clickable(onClick = onClick)
+                .alpha(if (isSelected) 1f else DISABLED_ALPHA),
+        )
     }
 
     private class ScreenModel(
@@ -169,12 +262,34 @@ class MigrateMangaConfigScreen(private val mangaId: Long) : Screen() {
 
         init {
             screenModelScope.launchIO {
-                updateSources()
+                initSources()
             }
         }
 
-        private fun updateSources() {
+        private val sourcesComparator = { includedSources: List<Long> ->
+            compareBy<MigrationSource>(
+                { !it.isSelected },
+                { includedSources.indexOf(it.source.id) },
+                { it.visualName },
+            )
+        }
+
+        private fun updateSources(save: Boolean = true, action: (List<MigrationSource>) -> List<MigrationSource>) {
+            val state = mutableState.updateAndGet { state ->
+                val updatedSources = action(state.sources)
+                val includedSources = updatedSources.mapNotNull { if (!it.isSelected) null else it.id }
+                state.copy(sources = updatedSources.sortedWith(sourcesComparator(includedSources)))
+            }
+            if (!save) return
+            state.sources
+                .filter { source -> source.isSelected }
+                .map { source -> source.source.id }
+                .let { sources -> sourcePreferences.migrationSources().set(sources) }
+        }
+
+        private fun initSources() {
             val languages = sourcePreferences.enabledLanguages().get()
+            val pinnedSources = sourcePreferences.pinnedSources().get().mapNotNull { it.toLongOrNull() }
             val includedSources = sourcePreferences.migrationSources().get()
             val disabledSources = sourcePreferences.disabledSources().get()
                 .mapNotNull { it.toLongOrNull() }
@@ -182,7 +297,6 @@ class MigrateMangaConfigScreen(private val mangaId: Long) : Screen() {
                 .asSequence()
                 .filterIsInstance<HttpSource>()
                 .filter { it.lang in languages }
-                .sortedBy { "(${it.lang}) ${it.name}" }
                 .map {
                     val source = Source(
                         id = it.id,
@@ -193,85 +307,51 @@ class MigrateMangaConfigScreen(private val mangaId: Long) : Screen() {
                     )
                     MigrationSource(
                         source = source,
-                        isEnabled = source.isEnabled(
-                            includedSources,
-                            disabledSources,
-                        ),
+                        isSelected = when {
+                            includedSources.isNotEmpty() -> source.id in includedSources
+                            pinnedSources.isNotEmpty() -> source.id in pinnedSources
+                            else -> source.id !in disabledSources
+                        },
                     )
                 }
                 .toList()
 
-            val sorted = sources
-                .filter { it.isEnabled }
-                .sortedBy { includedSources.indexOf(it.source.id) }
-                .plus(
-                    sources.filterNot { it.isEnabled },
-                )
-
-            mutableState.update { it.copy(sources = sorted) }
+            updateSources(save = false) { sources }
         }
 
-        fun toggleSource(id: Long) {
-            mutableState.update {
-                val updatedSources = it.sources.map { source ->
-                    source.copy(isEnabled = if (source.source.id == id) !source.isEnabled else source.isEnabled)
+        fun toggleSelection(id: Long) {
+            updateSources { sources ->
+                sources.map { source ->
+                    source.copy(isSelected = if (source.source.id == id) !source.isSelected else source.isSelected)
                 }
-
-                it.copy(sources = updatedSources)
             }
-
-            saveSourceSelection()
         }
 
-        fun toggleSource(config: EnableSourceConfig) {
+        fun toggleSelection(config: SelectionConfig) {
             val pinnedSources = sourcePreferences.pinnedSources().get().mapNotNull { it.toLongOrNull() }
             val disabledSources = sourcePreferences.disabledSources().get().mapNotNull { it.toLongOrNull() }
-            val isEnabled: (Long) -> Boolean = {
+            val isSelected: (Long) -> Boolean = {
                 when (config) {
-                    EnableSourceConfig.All -> true
-                    EnableSourceConfig.None -> false
-                    EnableSourceConfig.Pinned -> it in pinnedSources
-                    EnableSourceConfig.Enabled -> it !in disabledSources
+                    SelectionConfig.All -> true
+                    SelectionConfig.None -> false
+                    SelectionConfig.Pinned -> it in pinnedSources
+                    SelectionConfig.Enabled -> it !in disabledSources
                 }
             }
-            mutableState.update {
-                val updatedSources = it.sources.map { source ->
-                    source.copy(isEnabled = isEnabled(source.source.id))
+            updateSources { sources ->
+                sources.map { source ->
+                    source.copy(isSelected = isSelected(source.source.id))
                 }
-
-                it.copy(sources = updatedSources)
             }
-
-            saveSourceSelection()
         }
 
         fun orderSource(from: Int, to: Int) {
-            mutableState.update {
-                val reorderedSources = it.sources
-                    .toMutableList()
+            updateSources {
+                it.toMutableList()
                     .apply {
                         add(to, removeAt(from))
                     }
                     .toList()
-
-                it.copy(sources = reorderedSources)
-            }
-
-            saveSourceSelection()
-        }
-
-        private fun saveSourceSelection() {
-            state.value.sources
-                .filter { source -> source.isEnabled }
-                .map { source -> source.source.id }
-                .let { sources -> sourcePreferences.migrationSources().set(sources) }
-        }
-
-        private fun Source.isEnabled(included: List<Long>, disabled: List<Long>): Boolean {
-            return if (included.isEmpty()) {
-                id !in disabled
-            } else {
-                id in included
             }
         }
 
@@ -279,7 +359,7 @@ class MigrateMangaConfigScreen(private val mangaId: Long) : Screen() {
             val sources: List<MigrationSource> = emptyList(),
         )
 
-        enum class EnableSourceConfig {
+        enum class SelectionConfig {
             All,
             None,
             Pinned,
@@ -289,7 +369,7 @@ class MigrateMangaConfigScreen(private val mangaId: Long) : Screen() {
 
     data class MigrationSource(
         val source: Source,
-        val isEnabled: Boolean,
+        val isSelected: Boolean,
     ) {
         val id = source.id
         val visualName = source.visualName
