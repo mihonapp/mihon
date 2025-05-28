@@ -228,6 +228,7 @@
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
     <string name="theme_monet">Dynamic</string>
+    <string name="theme_catppuccin">Catppuccin</string>
     <string name="theme_greenapple">Green Apple</string>
     <string name="theme_lavender">Lavender</string>
     <string name="theme_midnightdusk">Midnight Dusk</string>
