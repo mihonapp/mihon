@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -55,6 +54,7 @@ import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.source.model.Source
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.material.DISABLED_ALPHA
 import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -122,7 +122,7 @@ class MigrateMangaConfigScreen(private val mangaId: Long) : Screen() {
                 screenModel.orderSource(fromIndex, toIndex)
             }
 
-            LazyColumn(
+            FastScrollLazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 state = lazyListState,
                 contentPadding = contentPadding,
