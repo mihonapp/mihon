@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -44,6 +45,7 @@ import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateSearchScreen
+import eu.kanade.tachiyomi.util.system.LocaleHelper
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.updateAndGet
 import sh.calvin.reorderable.ReorderableCollectionItemScope
@@ -55,6 +57,7 @@ import tachiyomi.domain.source.model.Source
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
+import tachiyomi.presentation.core.components.Pill
 import tachiyomi.presentation.core.components.material.DISABLED_ALPHA
 import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -72,6 +75,11 @@ class MigrateMangaConfigScreen(private val mangaId: Long) : Screen() {
         val screenModel = rememberScreenModel { ScreenModel() }
         val state by screenModel.state.collectAsState()
         val (selectedSources, availableSources) = state.sources.partition { it.isSelected }
+        val showLanguage by remember(state) {
+            derivedStateOf {
+                state.sources.distinctBy { it.source.lang }.size > 1
+            }
+        }
 
         val lazyListState = rememberLazyListState()
         Scaffold(
@@ -155,6 +163,7 @@ class MigrateMangaConfigScreen(private val mangaId: Long) : Screen() {
                             firstItem = index == 0,
                             lastItem = index == (sources.size - 1),
                             source = item.source,
+                            showLanguage = showLanguage,
                             isSelected = item.isSelected,
                             dragEnabled = selectedSourcesList && sources.size > 1,
                             state = reorderableState,
@@ -172,6 +181,7 @@ class MigrateMangaConfigScreen(private val mangaId: Long) : Screen() {
         firstItem: Boolean,
         lastItem: Boolean,
         source: Source,
+        showLanguage: Boolean,
         isSelected: Boolean,
         dragEnabled: Boolean,
         state: ReorderableLazyListState,
@@ -197,6 +207,7 @@ class MigrateMangaConfigScreen(private val mangaId: Long) : Screen() {
             ) {
                 SourceItem(
                     source = source,
+                    showLanguage = showLanguage,
                     isSelected = isSelected,
                     dragEnabled = dragEnabled,
                     scope = this@ReorderableItem,
@@ -213,6 +224,7 @@ class MigrateMangaConfigScreen(private val mangaId: Long) : Screen() {
     @Composable
     private fun SourceItem(
         source: Source,
+        showLanguage: Boolean,
         isSelected: Boolean,
         dragEnabled: Boolean,
         scope: ReorderableCollectionItemScope,
@@ -226,11 +238,18 @@ class MigrateMangaConfigScreen(private val mangaId: Long) : Screen() {
                 ) {
                     SourceIcon(source = source)
                     Text(
-                        text = source.visualName,
+                        text = source.name,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.weight(1f)
                     )
+                    if (showLanguage) {
+                        Pill(
+                            text = LocaleHelper.getLocalizedDisplayName(source.lang),
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
                 }
             },
             trailingContent = if (dragEnabled) {
@@ -270,7 +289,7 @@ class MigrateMangaConfigScreen(private val mangaId: Long) : Screen() {
             compareBy<MigrationSource>(
                 { !it.isSelected },
                 { includedSources.indexOf(it.source.id) },
-                { it.visualName },
+                { with(it.source) { "$name (${LocaleHelper.getLocalizedDisplayName(lang)})" }  },
             )
         }
 
