@@ -242,7 +242,7 @@ class MigrateMangaConfigScreen(private val mangaId: Long) : Screen() {
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
                     if (showLanguage) {
                         Pill(
@@ -289,7 +289,7 @@ class MigrateMangaConfigScreen(private val mangaId: Long) : Screen() {
             compareBy<MigrationSource>(
                 { !it.isSelected },
                 { includedSources.indexOf(it.source.id) },
-                { with(it.source) { "$name (${LocaleHelper.getLocalizedDisplayName(lang)})" }  },
+                { with(it.source) { "$name (${LocaleHelper.getLocalizedDisplayName(lang)})" } },
             )
         }
 
