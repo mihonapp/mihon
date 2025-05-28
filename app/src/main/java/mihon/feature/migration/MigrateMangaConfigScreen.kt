@@ -136,13 +136,13 @@ class MigrateMangaConfigScreen(private val mangaId: Long) : Screen() {
                 contentPadding = contentPadding,
             ) {
                 listOf(selectedSources, availableSources).fastForEachIndexed { listIndex, sources ->
-                    val selectedSourcesList = listIndex == 0
+                    val selectedSourceList = listIndex == 0
                     if (sources.isNotEmpty()) {
-                        val headerPrefix = if (selectedSourcesList) "selected" else "available"
+                        val headerPrefix = if (selectedSourceList) "selected" else "available"
                         item("$headerPrefix-header") {
                             Text(
                                 text = stringResource(
-                                    resource = if (selectedSourcesList) {
+                                    resource = if (selectedSourceList) {
                                         MR.strings.migrationConfigScreen_selectedHeader
                                     } else {
                                         MR.strings.migrationConfigScreen_availableHeader
@@ -165,9 +165,9 @@ class MigrateMangaConfigScreen(private val mangaId: Long) : Screen() {
                             source = item.source,
                             showLanguage = showLanguage,
                             isSelected = item.isSelected,
-                            dragEnabled = selectedSourcesList && sources.size > 1,
+                            dragEnabled = selectedSourceList && sources.size > 1,
                             state = reorderableState,
-                            key = { if (selectedSourcesList) it.id else "available-${it.id}" },
+                            key = { if (selectedSourceList) it.id else "available-${it.id}" },
                             onClick = { screenModel.toggleSelection(item.id) },
                         )
                     }
