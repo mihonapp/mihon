@@ -36,7 +36,7 @@ libarchive = "me.zhanghai.android.libarchive:library:1.1.5"
 
 sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = "sqlite" }
 sqlite-ktx = { module = "androidx.sqlite:sqlite-ktx", version.ref = "sqlite" }
-sqlite-android = "com.github.requery:sqlite-android:3.45.0"
+sqlite-android = "com.github.requery:sqlite-android:3.49.0"
 
 preferencektx = "androidx.preference:preference-ktx:1.2.1"
 
