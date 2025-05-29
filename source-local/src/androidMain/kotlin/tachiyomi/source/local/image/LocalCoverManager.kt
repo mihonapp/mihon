@@ -4,9 +4,15 @@ import android.content.Context
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.util.storage.DiskUtil
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import mihon.domain.manga.local.interactor.UpdateThumbnailUrlLocalSource
 import tachiyomi.core.common.storage.nameWithoutExtension
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.source.local.io.LocalSourceFileSystem
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import java.io.InputStream
 
 private const val DEFAULT_COVER_NAME = "cover.jpg"
@@ -15,6 +21,8 @@ actual class LocalCoverManager(
     private val context: Context,
     private val fileSystem: LocalSourceFileSystem,
 ) {
+
+    private val updateThumbnailUrlLocalSource: UpdateThumbnailUrlLocalSource = Injekt.get()
 
     actual fun find(mangaUrl: String): UniFile? {
         return fileSystem.getFilesInMangaDirectory(mangaUrl)
@@ -45,6 +53,9 @@ actual class LocalCoverManager(
         DiskUtil.createNoMediaFile(directory, context)
 
         manga.thumbnail_url = targetFile.uri.toString()
+        CoroutineScope(Dispatchers.IO).launch {
+            updateThumbnailUrlLocalSource.await(manga.url, manga.thumbnail_url)
+        }
         return targetFile
     }
 }
