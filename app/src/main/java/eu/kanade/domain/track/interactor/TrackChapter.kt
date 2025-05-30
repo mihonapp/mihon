@@ -1,11 +1,15 @@
 package eu.kanade.domain.track.interactor
 
 import android.content.Context
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ProcessLifecycleOwner
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.domain.track.model.toDomainTrack
 import eu.kanade.domain.track.service.DelayedTrackingUpdateJob
 import eu.kanade.domain.track.store.DelayedTrackingStore
+import eu.kanade.domain.ui.TrackChapterUiEventBus
 import eu.kanade.tachiyomi.data.track.TrackerManager
+import eu.kanade.tachiyomi.data.track.TrackerOAuthRefreshNotPossibleException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import logcat.LogPriority
@@ -42,6 +46,14 @@ class TrackChapter(
                             insertTrack.await(updatedTrack)
                             delayedTrackingStore.remove(track.id)
                         } catch (e: Exception) {
+                            if (e is TrackerOAuthRefreshNotPossibleException) {
+                                if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(
+                                        Lifecycle.State.STARTED,
+                                    )
+                                ) {
+                                    TrackChapterUiEventBus.notifyShowAuthDialog(e.tracker.id)
+                                }
+                            }
                             delayedTrackingStore.add(track.id, chapterNumber)
                             if (setupJobOnFailure) {
                                 DelayedTrackingUpdateJob.setupTask(context)

@@ -28,6 +28,7 @@ import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.interactor.TrackChapter
 import eu.kanade.domain.track.model.AutoTrackState
 import eu.kanade.domain.track.service.TrackPreferences
+import eu.kanade.domain.ui.TrackChapterUiEventBus
 import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.presentation.manga.components.ChapterDownloadAction
 import eu.kanade.presentation.util.formattedMessage
@@ -46,6 +47,9 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -153,6 +157,9 @@ class MangaScreenModel(
     private val selectedPositions: Array<Int> = arrayOf(-1, -1) // first and last selected index in list
     private val selectedChapterIds: HashSet<Long> = HashSet()
 
+    private val _authFailedTrackerId = MutableStateFlow<Long?>(null)
+    val authFailedTrackerId: StateFlow<Long?> = _authFailedTrackerId.asStateFlow()
+
     /**
      * Helper function to update the UI state only if it's currently in success state
      */
@@ -247,6 +254,12 @@ class MangaScreenModel(
 
             // Initial loading finished
             updateSuccessState { it.copy(isRefreshingData = false) }
+        }
+
+        screenModelScope.launch {
+            TrackChapterUiEventBus.showAuthDialog.collect { trackerId ->
+                _authFailedTrackerId.value = trackerId
+            }
         }
     }
 
@@ -1076,6 +1089,7 @@ class MangaScreenModel(
         data object SettingsSheet : Dialog
         data object TrackSheet : Dialog
         data object FullCover : Dialog
+        data class TrackerOAuthExpiredDialog(val trackerID: Long) : Dialog
     }
 
     fun dismissDialog() {
@@ -1101,6 +1115,10 @@ class MangaScreenModel(
     fun showMigrateDialog(duplicate: Manga) {
         val manga = successState?.manga ?: return
         updateSuccessState { it.copy(dialog = Dialog.Migrate(newManga = manga, oldManga = duplicate)) }
+    }
+
+    fun showTrackerOAuthExpiredDialog(trackerID: Long) {
+        updateSuccessState { it.copy(dialog = Dialog.TrackerOAuthExpiredDialog(trackerID)) }
     }
 
     fun setExcludedScanlators(excludedScanlators: Set<String>) {
