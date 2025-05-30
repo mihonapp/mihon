@@ -326,7 +326,6 @@
     <string name="pref_disable_battery_optimization">غیر فعال کردن بهینه سازی باتری</string>
     <string name="pref_refresh_library_covers">تازه کردن عکس روی جلد مانگاها</string>
     <string name="clear_database_completed">اطلاعات حذف شدند</string>
-    <string name="clear_database_confirmation">آیا مطمئن هستید؟ اطلاعات قسمت های خوانده شده برای مانگاهایی که در کتابخانه اضافه نشده از دست خواهد رفت</string>
     <string name="pref_clear_database_summary">حذف سابقه برای مانگاهایی که در کتابخانه ذخیره نشده اند</string>
     <string name="pref_clear_database">پاک کردن پایگاه داده</string>
     <string name="cookies_cleared">کوکی ها پاک شدند</string>

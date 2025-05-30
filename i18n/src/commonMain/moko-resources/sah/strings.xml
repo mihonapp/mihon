@@ -256,7 +256,6 @@
     <string name="pref_clear_chapter_cache">Түһүмэх кээһин ыраастааһын</string>
     <string name="label_data">Билим</string>
     <string name="cookies_cleared">Куки ыраастанна</string>
-    <string name="clear_database_confirmation">Эрэллэххин дуо? Ааҕыллыбыт түһүмэхтэр уонна бэбэлэтиэкэҕэ суох маанга туруга сүтүө</string>
     <string name="pref_clear_database_summary">Эн бэбэлэтиэкэҕэр суох маанга остуоруйатын сотторуу</string>
     <string name="pref_clear_database">Билим олоҕо ыраастааһына</string>
     <string name="pref_disable_battery_optimization">Батарея тупсарыытын араарыы</string>
