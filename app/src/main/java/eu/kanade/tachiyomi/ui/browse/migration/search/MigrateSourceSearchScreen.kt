@@ -39,8 +39,8 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.source.local.LocalSource
 
-data class SourceSearchScreen(
-    private val oldManga: Manga,
+data class MigrateSourceSearchScreen(
+    private val currentManga: Manga,
     private val sourceId: Long,
     private val query: String?,
 ) : Screen() {
@@ -83,7 +83,7 @@ data class SourceSearchScreen(
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         ) { paddingValues ->
             val openMigrateDialog: (Manga) -> Unit = {
-                screenModel.setDialog(BrowseSourceScreenModel.Dialog.Migrate(newManga = it, oldManga = oldManga))
+                screenModel.setDialog(BrowseSourceScreenModel.Dialog.Migrate(target = it, current = currentManga))
             }
             BrowseSourceContent(
                 source = screenModel.source,
@@ -122,15 +122,16 @@ data class SourceSearchScreen(
             }
             is BrowseSourceScreenModel.Dialog.Migrate -> {
                 MigrateMangaDialog(
-                    current = oldManga,
-                    target = dialog.newManga,
-                    onClickTitle = { navigator.push(MangaScreen(dialog.newManga.id)) },
+                    current = currentManga,
+                    target = dialog.target,
+                    // Initiated from the context of [currentManga] so we show [dialog.target].
+                    onClickTitle = { navigator.push(MangaScreen(dialog.target.id)) },
                     onDismissRequest = onDismissRequest,
                     onComplete = {
                         scope.launch {
                             navigator.popUntilRoot()
                             HomeScreen.openTab(HomeScreen.Tab.Browse())
-                            navigator.push(MangaScreen(dialog.newManga.id))
+                            navigator.push(MangaScreen(dialog.target.id))
                         }
                     },
                 )

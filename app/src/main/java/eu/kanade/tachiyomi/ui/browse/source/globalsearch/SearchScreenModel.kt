@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mihon.domain.manga.model.toDomainManga
 import tachiyomi.core.common.preference.toggle
+import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.manga.model.Manga
@@ -201,17 +202,33 @@ abstract class SearchScreenModel(
         updateItems(newItems)
     }
 
+    fun setMigrateDialog(currentId: Long, target: Manga) {
+        screenModelScope.launchIO {
+            val current = getManga.await(currentId) ?: return@launchIO
+            mutableState.update { it.copy(dialog = Dialog.Migrate(target, current)) }
+        }
+    }
+
+    fun clearDialog() {
+        mutableState.update { it.copy(dialog = null) }
+    }
+
     @Immutable
     data class State(
-        val fromSourceId: Long? = null,
+        val from: Manga? = null,
         val searchQuery: String? = null,
         val sourceFilter: SourceFilter = SourceFilter.PinnedOnly,
         val onlyShowHasResults: Boolean = false,
         val items: PersistentMap<CatalogueSource, SearchItemResult> = persistentMapOf(),
+        val dialog: Dialog? = null,
     ) {
         val progress: Int = items.count { it.value !is SearchItemResult.Loading }
         val total: Int = items.size
         val filteredItems = items.filter { (_, result) -> result.isVisible(onlyShowHasResults) }
+    }
+
+    sealed interface Dialog {
+        data class Migrate(val target: Manga, val current: Manga) : Dialog
     }
 }
 

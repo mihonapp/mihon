@@ -212,9 +212,10 @@ class MangaScreen(
 
             is MangaScreenModel.Dialog.Migrate -> {
                 MigrateMangaDialog(
-                    current = dialog.oldManga,
-                    target = dialog.newManga,
-                    onClickTitle = { navigator.push(MangaScreen(dialog.oldManga.id)) },
+                    current = dialog.current,
+                    target = dialog.target,
+                    // Initiated from the context of [dialog.target] so we show [dialog.current].
+                    onClickTitle = { navigator.push(MangaScreen(dialog.current.id)) },
                     onDismissRequest = onDismissRequest,
                 )
             }
