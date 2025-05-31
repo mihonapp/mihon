@@ -37,9 +37,12 @@ import eu.kanade.presentation.manga.components.DeleteChaptersDialog
 import eu.kanade.presentation.manga.components.MangaCoverDialog
 import eu.kanade.presentation.manga.components.ScanlatorFilterDialog
 import eu.kanade.presentation.manga.components.SetIntervalDialog
+import eu.kanade.presentation.track.components.TrackerOAuthExpiredDialog
 import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.util.isTabletUi
+import eu.kanade.tachiyomi.data.track.Tracker
+import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.isLocalOrStub
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -66,6 +69,8 @@ import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.LoadingScreen
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 class MangaScreen(
     private val mangaId: Long,
@@ -111,6 +116,13 @@ class MangaScreen(
                 } catch (e: Exception) {
                     logcat(LogPriority.ERROR, e) { "Failed to get manga URL" }
                 }
+            }
+        }
+
+        val authFailedTrackerId by screenModel.authFailedTrackerId.collectAsState()
+        LaunchedEffect(authFailedTrackerId) {
+            if (authFailedTrackerId != null) {
+                screenModel.showTrackerOAuthExpiredDialog(authFailedTrackerId!!)
             }
         }
 
@@ -276,6 +288,15 @@ class MangaScreen(
                     onDismissRequest = onDismissRequest,
                     onValueChanged = { interval: Int -> screenModel.setFetchInterval(dialog.manga, interval) }
                         .takeIf { screenModel.isUpdateIntervalEnabled },
+                )
+            }
+            is MangaScreenModel.Dialog.TrackerOAuthExpiredDialog -> {
+                val tracker = Injekt.get<TrackerManager>().get(
+                    (successState.dialog as MangaScreenModel.Dialog.TrackerOAuthExpiredDialog).trackerID,
+                )
+                TrackerOAuthExpiredDialog(
+                    tracker as Tracker,
+                    onDismissRequest = onDismissRequest,
                 )
             }
         }

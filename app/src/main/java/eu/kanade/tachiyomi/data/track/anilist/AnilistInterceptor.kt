@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.track.anilist
 
 import eu.kanade.tachiyomi.BuildConfig
+import eu.kanade.tachiyomi.data.track.TrackerOAuthRefreshNotPossibleException
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALOAuth
 import eu.kanade.tachiyomi.data.track.anilist.dto.isExpired
 import okhttp3.Interceptor
@@ -32,7 +33,7 @@ class AnilistInterceptor(val anilist: Anilist, private var token: String?) : Int
         // Refresh access token if null or expired.
         if (oauth!!.isExpired()) {
             anilist.logout()
-            throw IOException("Token expired")
+            throw TrackerOAuthRefreshNotPossibleException(anilist)
         }
 
         // Throw on null auth.

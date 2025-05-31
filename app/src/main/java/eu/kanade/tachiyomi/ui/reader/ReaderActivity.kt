@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -53,10 +54,13 @@ import eu.kanade.presentation.reader.ReaderPageActionsDialog
 import eu.kanade.presentation.reader.ReadingModeSelectDialog
 import eu.kanade.presentation.reader.appbars.ReaderAppBars
 import eu.kanade.presentation.reader.settings.ReaderSettingsDialog
+import eu.kanade.presentation.track.components.TrackerOAuthExpiredDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.coil.TachiyomiImageDecoder
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.data.track.Tracker
+import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.databinding.ReaderActivityBinding
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
@@ -374,6 +378,13 @@ class ReaderActivity : BaseActivity() {
             val isPagerType = ReadingMode.isPagerType(viewModel.getMangaReadingMode())
             val cropEnabled = if (isPagerType) cropBorderPaged else cropBorderWebtoon
 
+            val authFailedTrackerId by viewModel.authFailedTrackerId.collectAsState()
+            LaunchedEffect(authFailedTrackerId) {
+                if (authFailedTrackerId != null) {
+                    viewModel.showTrackerOAuthExpiredDialog(authFailedTrackerId!!)
+                }
+            }
+
             ReaderContentOverlay(
                 brightness = state.brightnessOverlayValue,
                 color = colorOverlay.takeIf { colorOverlayEnabled },
@@ -485,6 +496,15 @@ class ReaderActivity : BaseActivity() {
                     )
                 }
                 null -> {}
+                is ReaderViewModel.Dialog.TrackerOAuthExpiredDialog -> {
+                    val tracker = Injekt.get<TrackerManager>().get(
+                        (state.dialog as ReaderViewModel.Dialog.TrackerOAuthExpiredDialog).trackerId,
+                    )
+                    TrackerOAuthExpiredDialog(
+                        tracker as Tracker,
+                        onDismissRequest = onDismissRequest,
+                    )
+                }
             }
         }
 

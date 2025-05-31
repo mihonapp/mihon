@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.track.bangumi
 
 import eu.kanade.tachiyomi.BuildConfig
+import eu.kanade.tachiyomi.data.track.TrackerOAuthRefreshNotPossibleException
 import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMOAuth
 import eu.kanade.tachiyomi.data.track.bangumi.dto.isExpired
 import kotlinx.serialization.json.Json
@@ -29,6 +30,7 @@ class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
                 newAuth(currAuth)
             } else {
                 response.close()
+                throw TrackerOAuthRefreshNotPossibleException(bangumi)
             }
         }
 

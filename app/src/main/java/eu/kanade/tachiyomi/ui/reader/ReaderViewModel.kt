@@ -15,6 +15,7 @@ import eu.kanade.domain.manga.model.readingMode
 import eu.kanade.domain.source.interactor.GetIncognitoState
 import eu.kanade.domain.track.interactor.TrackChapter
 import eu.kanade.domain.track.service.TrackPreferences
+import eu.kanade.domain.ui.TrackChapterUiEventBus
 import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
@@ -45,6 +46,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
@@ -54,6 +56,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import tachiyomi.core.common.preference.toggle
@@ -109,6 +112,9 @@ class ReaderViewModel @JvmOverloads constructor(
 
     private val eventChannel = Channel<Event>()
     val eventFlow = eventChannel.receiveAsFlow()
+
+    private val _authFailedTrackerId = MutableStateFlow<Long?>(null)
+    val authFailedTrackerId: StateFlow<Long?> = _authFailedTrackerId.asStateFlow()
 
     /**
      * The manga loaded in the reader. It can be null when instantiated for a short time.
@@ -242,6 +248,12 @@ class ReaderViewModel @JvmOverloads constructor(
                 chapterId = currentChapter.chapter.id!!
             }
             .launchIn(viewModelScope)
+
+        viewModelScope.launch {
+            TrackChapterUiEventBus.showAuthDialog.collect { trackerId ->
+                _authFailedTrackerId.value = trackerId
+            }
+        }
     }
 
     override fun onCleared() {
@@ -785,6 +797,10 @@ class ReaderViewModel @JvmOverloads constructor(
         mutableState.update { it.copy(dialog = Dialog.Settings) }
     }
 
+    fun showTrackerOAuthExpiredDialog(trackerId: Long) {
+        mutableState.update { it.copy(dialog = Dialog.TrackerOAuthExpiredDialog(trackerId)) }
+    }
+
     fun closeDialog() {
         mutableState.update { it.copy(dialog = null) }
     }
@@ -975,6 +991,7 @@ class ReaderViewModel @JvmOverloads constructor(
         data object ReadingModeSelect : Dialog
         data object OrientationModeSelect : Dialog
         data class PageActions(val page: ReaderPage) : Dialog
+        data class TrackerOAuthExpiredDialog(val trackerId: Long) : Dialog
     }
 
     sealed interface Event {

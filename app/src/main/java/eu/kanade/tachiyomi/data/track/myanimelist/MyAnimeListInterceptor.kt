@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.data.track.myanimelist
 
+import eu.kanade.tachiyomi.data.track.TrackerOAuthRefreshNotPossibleException
 import eu.kanade.tachiyomi.data.track.myanimelist.dto.MALOAuth
 import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.json.Json
@@ -17,7 +18,7 @@ class MyAnimeListInterceptor(private val myanimelist: MyAnimeList) : Interceptor
 
     override fun intercept(chain: Interceptor.Chain): Response {
         if (tokenExpired) {
-            throw MALTokenExpired()
+            throw TrackerOAuthRefreshNotPossibleException(myanimelist)
         }
         val originalRequest = chain.request()
 
@@ -49,7 +50,6 @@ class MyAnimeListInterceptor(private val myanimelist: MyAnimeList) : Interceptor
     }
 
     private fun refreshToken(chain: Interceptor.Chain): MALOAuth = synchronized(this) {
-        if (tokenExpired) throw MALTokenExpired()
         oauth?.takeUnless { it.isExpired() }?.let { return@synchronized it }
 
         val response = try {
@@ -60,7 +60,7 @@ class MyAnimeListInterceptor(private val myanimelist: MyAnimeList) : Interceptor
 
         if (response.code == 401) {
             myanimelist.setAuthExpired()
-            throw MALTokenExpired()
+            throw TrackerOAuthRefreshNotPossibleException(myanimelist)
         }
 
         return runCatching {
@@ -81,4 +81,3 @@ class MyAnimeListInterceptor(private val myanimelist: MyAnimeList) : Interceptor
 }
 
 class MALTokenRefreshFailed : IOException("MAL: Failed to refresh account token")
-class MALTokenExpired : IOException("MAL: Login has expired")

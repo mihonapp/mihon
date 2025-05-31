@@ -1004,4 +1004,8 @@
     <string name="migrationConfigScreen.selectEnabledLabel">Select enabled sources</string>
     <string name="migrationConfigScreen.selectPinnedLabel">Select pinned sources</string>
     <string name="migrationConfigScreen.continueButtonText">Continue</string>
+
+    <!--  Tracker OAuth failed dialog  -->
+    <string name="tracker_oauth_dialog_title">Log in to continue using %s tracker.</string>
+    <string name="tracker_oauth_dialog_description">Your login to %s has expired and cannot be renewed. Please log in again to continue using it.</string>
 </resources>
