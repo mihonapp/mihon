@@ -1,28 +1,42 @@
 package eu.kanade.presentation.library
 
 import android.content.res.Configuration
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.dp
+import eu.kanade.presentation.category.visualName
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
+import eu.kanade.presentation.more.settings.widget.TriStateListDialog
 import eu.kanade.tachiyomi.ui.library.LibrarySettingsScreenModel
 import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.core.common.preference.TriState
+import tachiyomi.core.common.preference.toggle
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibrarySort
@@ -33,9 +47,11 @@ import tachiyomi.presentation.core.components.BaseSortItem
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
 import tachiyomi.presentation.core.components.SettingsChipRow
+import tachiyomi.presentation.core.components.SettingsItemsPaddings
 import tachiyomi.presentation.core.components.SliderItem
 import tachiyomi.presentation.core.components.SortItem
 import tachiyomi.presentation.core.components.TriStateItem
+import tachiyomi.presentation.core.components.material.TextButton
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 
@@ -44,6 +60,7 @@ fun LibrarySettingsDialog(
     onDismissRequest: () -> Unit,
     screenModel: LibrarySettingsScreenModel,
     category: Category?,
+    categories: List<Category>,
 ) {
     TabbedDialog(
         onDismissRequest = onDismissRequest,
@@ -61,6 +78,7 @@ fun LibrarySettingsDialog(
             when (page) {
                 0 -> FilterPage(
                     screenModel = screenModel,
+                    categories = categories,
                 )
                 1 -> SortPage(
                     category = category,
@@ -77,6 +95,7 @@ fun LibrarySettingsDialog(
 @Composable
 private fun ColumnScope.FilterPage(
     screenModel: LibrarySettingsScreenModel,
+    categories: List<Category>,
 ) {
     val filterDownloaded by screenModel.libraryPreferences.filterDownloaded().collectAsState()
     val downloadedOnly by screenModel.preferences.downloadedOnly().collectAsState()
@@ -152,6 +171,11 @@ private fun ColumnScope.FilterPage(
             }
         }
     }
+
+    CategoriesFilter(
+        libraryPreferences = screenModel.libraryPreferences,
+        categories = categories,
+    )
 }
 
 @Composable
@@ -296,4 +320,57 @@ private fun ColumnScope.DisplayPage(
         label = stringResource(MR.strings.action_display_show_number_of_items),
         pref = screenModel.libraryPreferences.categoryNumberOfItems(),
     )
+}
+
+@Composable
+private fun CategoriesFilter(
+    libraryPreferences: LibraryPreferences,
+    categories: List<Category>,
+) {
+    val filterCategories by libraryPreferences.filterCategories().collectAsState()
+
+    val filterCategoriesInclude = libraryPreferences.filterCategoriesInclude()
+    val filterCategoriesExclude = libraryPreferences.filterCategoriesExclude()
+    val included by filterCategoriesInclude.collectAsState()
+    val excluded by filterCategoriesExclude.collectAsState()
+
+    var showCategoriesDialog by rememberSaveable { mutableStateOf(false) }
+    if (showCategoriesDialog) {
+        TriStateListDialog(
+            title = stringResource(MR.strings.categories),
+            message = stringResource(MR.strings.pref_library_filter_categories_details),
+            items = categories,
+            initialChecked = included.mapNotNull { id -> categories.find { it.id.toString() == id } },
+            initialInversed = excluded.mapNotNull { id -> categories.find { it.id.toString() == id } },
+            itemLabel = { it.visualName },
+            onDismissRequest = { showCategoriesDialog = false },
+            onValueChanged = { newIncluded, newExcluded ->
+                filterCategoriesInclude.set(newIncluded.map { it.id.toString() }.toSet())
+                filterCategoriesExclude.set(newExcluded.map { it.id.toString() }.toSet())
+                showCategoriesDialog = false
+            },
+        )
+    }
+
+    Row(
+        modifier = Modifier
+            .clickable(onClick = { libraryPreferences.filterCategories().toggle() })
+            .fillMaxWidth()
+            .padding(horizontal = SettingsItemsPaddings.Horizontal),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(24.dp),
+    ) {
+        Checkbox(
+            checked = filterCategories,
+            onCheckedChange = null,
+        )
+        Text(
+            text = stringResource(MR.strings.categories),
+            style = MaterialTheme.typography.bodyMedium,
+        )
+        Spacer(Modifier.weight(1f))
+        TextButton(onClick = { showCategoriesDialog = true }) {
+            Text(stringResource(MR.strings.action_edit))
+        }
+    }
 }
