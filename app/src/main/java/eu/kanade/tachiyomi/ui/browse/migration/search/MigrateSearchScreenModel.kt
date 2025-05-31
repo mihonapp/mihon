@@ -33,7 +33,7 @@ class MigrateSearchScreenModel(
             val manga = getManga.await(mangaId)!!
             mutableState.update {
                 it.copy(
-                    fromSourceId = manga.source,
+                    from = manga,
                     searchQuery = manga.title,
                 )
             }
