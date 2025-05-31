@@ -28,6 +28,7 @@ import eu.kanade.tachiyomi.ui.home.HomeScreen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewScreen
 import kotlinx.coroutines.launch
+import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.presentation.core.util.collectAsLazyPagingItems
 import tachiyomi.core.common.Constants
 import tachiyomi.domain.manga.model.Manga
@@ -120,13 +121,12 @@ data class SourceSearchScreen(
                 )
             }
             is BrowseSourceScreenModel.Dialog.Migrate -> {
-                MigrateDialog(
-                    oldManga = oldManga,
-                    newManga = dialog.newManga,
-                    screenModel = rememberScreenModel { MigrateDialogScreenModel() },
-                    onDismissRequest = onDismissRequest,
+                MigrateMangaDialog(
+                    current = oldManga,
+                    target = dialog.newManga,
                     onClickTitle = { navigator.push(MangaScreen(dialog.newManga.id)) },
-                    onPopScreen = {
+                    onDismissRequest = onDismissRequest,
+                    onComplete = {
                         scope.launch {
                             navigator.popUntilRoot()
                             HomeScreen.openTab(HomeScreen.Tab.Browse())

@@ -12,14 +12,14 @@ class LibraryPreferences(
     private val preferenceStore: PreferenceStore,
 ) {
 
-    fun displayMode() = preferenceStore.getObject(
+    fun displayMode() = preferenceStore.getObjectFromString(
         "pref_display_mode_library",
         LibraryDisplayMode.default,
         LibraryDisplayMode.Serializer::serialize,
         LibraryDisplayMode.Serializer::deserialize,
     )
 
-    fun sortingMode() = preferenceStore.getObject(
+    fun sortingMode() = preferenceStore.getObjectFromString(
         "library_sorting_mode",
         LibrarySort.default,
         LibrarySort.Serializer::serialize,

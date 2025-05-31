@@ -9,6 +9,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.browse.MigrateSearchScreen
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
+import mihon.feature.migration.dialog.MigrateMangaDialog
 
 class MigrateSearchScreen(private val mangaId: Long) : Screen() {
 
@@ -40,15 +41,14 @@ class MigrateSearchScreen(private val mangaId: Long) : Screen() {
 
         when (val dialog = dialogState.dialog) {
             is MigrateSearchScreenDialogScreenModel.Dialog.Migrate -> {
-                MigrateDialog(
-                    oldManga = dialogState.manga!!,
-                    newManga = dialog.manga,
-                    screenModel = rememberScreenModel { MigrateDialogScreenModel() },
-                    onDismissRequest = { dialogScreenModel.setDialog(null) },
+                MigrateMangaDialog(
+                    current = dialogState.manga!!,
+                    target = dialog.manga,
                     onClickTitle = {
                         navigator.push(MangaScreen(dialog.manga.id, true))
                     },
-                    onPopScreen = {
+                    onDismissRequest = { dialogScreenModel.setDialog(null) },
+                    onComplete = {
                         if (navigator.lastItem is MangaScreen) {
                             val lastItem = navigator.lastItem
                             navigator.popUntil { navigator.items.contains(lastItem) }
