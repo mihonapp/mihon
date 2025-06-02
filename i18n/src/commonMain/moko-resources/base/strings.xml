@@ -1004,4 +1004,10 @@
     <string name="migrationConfigScreen.selectEnabledLabel">Select enabled sources</string>
     <string name="migrationConfigScreen.selectPinnedLabel">Select pinned sources</string>
     <string name="migrationConfigScreen.continueButtonText">Continue</string>
+    <string name="migrationConfigScreen.skipMigrationConfigTitle">Skip migration config</string>
+    <string name="migrationConfigScreen.skipMigrationConfigSubtitle">To show this screen again in the future, disable skipping in Settings → Browse</string>
+
+    <string name="browseSettingsScreen.migrationCategoryHeader">Migration</string>
+    <string name="browseSettingsScreen.skipMigrationConfigTitle">Skip migration config</string>
+    <string name="browseSettingsScreen.skipMigrationConfigSubtitle">Use last used sources and preferences for migration</string>
 </resources>

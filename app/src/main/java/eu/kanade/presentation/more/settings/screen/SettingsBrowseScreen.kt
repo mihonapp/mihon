@@ -71,6 +71,22 @@ object SettingsBrowseScreen : SearchableSettings {
                     Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.parental_controls_info)),
                 ),
             ),
+            getMigrationCategory(sourcePreferences),
+        )
+    }
+
+    @Composable
+    fun getMigrationCategory(sourcePreferences: SourcePreferences): Preference.PreferenceGroup {
+        return Preference.PreferenceGroup(
+            stringResource(MR.strings.browseSettingsScreen_migrationCategoryHeader),
+            enabled = sourcePreferences.skipMigrationConfig().isSet(),
+            preferenceItems = persistentListOf(
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = sourcePreferences.skipMigrationConfig(),
+                    title = stringResource(MR.strings.browseSettingsScreen_skipMigrationConfigTitle),
+                    subtitle = stringResource(MR.strings.browseSettingsScreen_skipMigrationConfigSubtitle),
+                ),
+            ),
         )
     }
 }

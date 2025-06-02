@@ -22,10 +22,14 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -61,6 +65,7 @@ import tachiyomi.presentation.core.components.material.ExtendedFloatingActionBut
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
+import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.util.shouldExpandFAB
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -70,8 +75,28 @@ class MigrationConfigScreen(private val mangaId: Long) : Screen() {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+
         val screenModel = rememberScreenModel { ScreenModel() }
         val state by screenModel.state.collectAsState()
+
+        var migrationSheetOpen by rememberSaveable { mutableStateOf(false) }
+
+        fun continueMigration(openSheet: Boolean) {
+            if (openSheet) {
+                migrationSheetOpen = true
+                return
+            }
+            navigator.replace(MigrateSearchScreen(mangaId))
+        }
+
+        if (state.isLoading) {
+            LaunchedEffect(state.skipMigrationConfig) {
+                if (state.skipMigrationConfig) continueMigration(openSheet = false)
+            }
+            LoadingScreen()
+            return
+        }
+
         val (selectedSources, availableSources) = state.sources.partition { it.isSelected }
         val showLanguage by remember(state) {
             derivedStateOf {
@@ -118,7 +143,7 @@ class MigrationConfigScreen(private val mangaId: Long) : Screen() {
                     icon = { Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowForward, contentDescription = null) },
                     onClick = {
                         screenModel.saveSources()
-                        navigator.replace(MigrateSearchScreen(mangaId))
+                        continueMigration(openSheet = true)
                     },
                     expanded = lazyListState.shouldExpandFAB(),
                 )
@@ -173,6 +198,17 @@ class MigrationConfigScreen(private val mangaId: Long) : Screen() {
                     }
                 }
             }
+        }
+
+        if (migrationSheetOpen) {
+            MigrationConfigScreenSheet(
+                preferences = screenModel.sourcePreferences,
+                onDismissRequest = { migrationSheetOpen = false },
+                onStartMigration = {
+                    migrationSheetOpen = false
+                    continueMigration(openSheet = false)
+                },
+            )
         }
     }
 
@@ -270,13 +306,17 @@ class MigrationConfigScreen(private val mangaId: Long) : Screen() {
     }
 
     private class ScreenModel(
+        val sourcePreferences: SourcePreferences = Injekt.get(),
         private val sourceManager: SourceManager = Injekt.get(),
-        private val sourcePreferences: SourcePreferences = Injekt.get(),
     ) : StateScreenModel<ScreenModel.State>(State()) {
 
         init {
             screenModelScope.launchIO {
+                val skipMigrationConfig = sourcePreferences.skipMigrationConfig().get()
+                mutableState.update { it.copy(skipMigrationConfig = skipMigrationConfig) }
+                if (skipMigrationConfig) return@launchIO
                 initSources()
+                mutableState.update { it.copy(isLoading = false) }
             }
         }
 
@@ -373,6 +413,8 @@ class MigrationConfigScreen(private val mangaId: Long) : Screen() {
         }
 
         data class State(
+            val isLoading: Boolean = true,
+            val skipMigrationConfig: Boolean = false,
             val sources: List<MigrationSource> = emptyList(),
         )
 

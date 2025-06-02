@@ -66,4 +66,6 @@ class SourcePreferences(
         serializer = { MigrationFlag.toBit(it) },
         deserializer = { value: Int -> MigrationFlag.fromBit(value) },
     )
+
+    fun skipMigrationConfig() = preferenceStore.getBoolean(Preference.appStateKey("skip_migration_config"), false)
 }
