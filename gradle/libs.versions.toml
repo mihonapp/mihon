@@ -4,7 +4,7 @@ leakcanary = "2.14"
 moko = "0.24.5"
 okhttp_version = "5.0.0-alpha.14"
 shizuku_version = "13.1.0"
-sqldelight = "2.0.2"
+sqldelight = "2.1.0"
 sqlite = "2.5.1"
 voyager = "1.1.0-beta03"
 spotless = "7.0.4"
@@ -88,7 +88,7 @@ leakcanary-plumber = { module = "com.squareup.leakcanary:plumber-android", versi
 sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
 sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions-jvm", version.ref = "sqldelight" }
 sqldelight-android-paging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqldelight" }
-sqldelight-dialects-sql = { module = "app.cash.sqldelight:sqlite-3-38-dialect", version.ref = "sqldelight" }
+sqldelight-dialects-sql = { module = "app.cash.sqldelight:sqlite-3-38-dialect", version = "2.0.2" }
 
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
