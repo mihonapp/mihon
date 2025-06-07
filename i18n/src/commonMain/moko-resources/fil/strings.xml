@@ -30,7 +30,7 @@
     <string name="action_migrate">Ilipat</string>
     <string name="action_open_in_web_view">Buksan sa WebView</string>
     <string name="action_open_in_browser">Buksan sa browser</string>
-    <string name="action_resume">Magpatuloy</string>
+    <string name="action_resume">Ipagpatuloy</string>
     <string name="action_start">Simulan</string>
     <string name="action_remove">Tanggalin</string>
     <string name="action_retry">Subukan muli</string>
@@ -218,7 +218,7 @@
     <string name="pref_read_with_tapping_inverted">Baligtarin ang mga tap zone</string>
     <string name="backup_restore_missing_sources">Nawawalang mga source:</string>
     <string name="invalid_backup_file_missing_manga">Hindi naglalaman ang backup ng kahit anong mga entry sa aklatan.</string>
-    <string name="invalid_backup_file">Imbalidong backup file:</string>
+    <string name="invalid_backup_file">Di-wastong backup file:</string>
     <string name="backup_created">Nai-backup na</string>
     <string name="pref_backup_interval">Awtomatikong dalas ng pag-backup</string>
     <string name="pref_restore_backup_summ">I-restore ang aklatan mula sa backup file</string>
@@ -379,7 +379,6 @@
     <string name="pref_disable_battery_optimization_summary">Nakatutulong sa pag-update ng aklatan sa background at pag-backup</string>
     <string name="pref_refresh_library_covers">I-refresh ang mga pabalat ng aklatan</string>
     <string name="clear_database_completed">Binura na</string>
-    <string name="clear_database_confirmation">Sigurado ka ba? Ang mga nabasang kabanata at progress ng mga wala sa aklatan ay mawawala</string>
     <string name="pref_clear_database_summary">Burahin ang kasaysasan sa mga entry na hindi naka-save sa iyong aklatan</string>
     <string name="pref_clear_database">Linisin ang database</string>
     <string name="cache_delete_error">Nagka-error habang nililinis</string>
@@ -422,7 +421,7 @@
     <string name="manga_from_library">Mula sa Aklatan</string>
     <string name="action_search_settings">Maghanap ng setting</string>
     <string name="pref_incognito_mode_summary">Pinahihinto ang kasaysayan ng pagbabasa</string>
-    <string name="pref_incognito_mode">Patagong mode</string>
+    <string name="pref_incognito_mode">Incognito na mode</string>
     <string name="pref_clear_history">Linisin ang kasaysayan</string>
     <string name="clear_history_completed">Nabura ang kasaysayan</string>
     <string name="clear_history_confirmation">Sigurado ka ba talaga? Mawawala ang buong kasaysayan.</string>
@@ -476,14 +475,14 @@
     <string name="pref_reader_actions">Gawain</string>
     <string name="rotation_type">Pag-ikot</string>
     <string name="pref_grayscale">Maabo</string>
-    <string name="notification_incognito_text">Isara ang patagong mode</string>
+    <string name="notification_incognito_text">Di-paganahin ang Incognito na mode</string>
     <string name="automatic_background">Awto</string>
     <string name="cancel_all_for_series">Kanselahin lahat para sa seryeng ito</string>
     <string name="local_filter_order_by">Ayusin ayon sa</string>
     <string name="restrictions">Mga Restriksyon: %s</string>
-    <string name="error_no_match">Walang nahanap na kapares</string>
+    <string name="error_no_match">Walang natagpuang katugma</string>
     <string name="date">Petsa</string>
-    <string name="local_invalid_format">Imbalidong format ng kabanata</string>
+    <string name="local_invalid_format">Di-wastong format ng kabanata</string>
     <string name="chapter_not_found">Hindi makita ang kabanata</string>
     <string name="source_unsupported">Di suportado ang source</string>
     <string name="unread">Di nabasa</string>
@@ -637,7 +636,7 @@
     <string name="crash_screen_description">Nagkaroon ng hindi inaasahang error ang %s. Iminumungkahi naming ibahagi mo ang mga crash log sa aming support channel sa Discord.</string>
     <string name="crash_screen_title">Ay Naku!</string>
     <string name="crash_screen_restart_application">Buksan muli ang app</string>
-    <string name="invalid_location">Imbalidong lokasyon: %s</string>
+    <string name="invalid_location">Di-wastong lokasyon: %s</string>
     <string name="unknown_title">Di alam na pamagat</string>
     <string name="error_user_agent_string_invalid">Di-wastong string ng user agent</string>
     <string name="updates_last_update_info_just_now">Ngayon lang</string>
@@ -671,13 +670,10 @@
     <string name="action_not_now">Hindi muna ngayon</string>
     <string name="not_applicable">N/A</string>
     <string name="label_stats">Istatistika</string>
-    <string name="pref_skip_dupe_chapters">Laktawan ang mga magkaparehong kabanata</string>
+    <string name="pref_skip_dupe_chapters">Laktawan ang mga duplikadong kabanata</string>
     <string name="copied_to_clipboard_plain">Kinopya sa clipboard</string>
     <string name="information_required_plain">*kinakailangan</string>
     <string name="enhanced_services_not_installed">Mayroon ngunit hindi naka-install ang source: %s</string>
-    <string name="confirm_add_duplicate_manga">Mayroon kang entry sa iyong aklatan na magkapareho ng pangalan.
-\n
-\nGusto mo pa bang magpatuloy?</string>
     <string name="track_error">%1$s Kamalian: %2$s</string>
     <string name="day_short">%da</string>
     <string name="hour_short">%do</string>
@@ -691,9 +687,9 @@
     <string name="overlay_header">Nakapatong (Overlay)</string>
     <string name="split_tall_images">Hatiin ang mga matataas na larawan</string>
     <string name="pref_debug_info">Impormasyon sa pag-debug</string>
-    <string name="pref_chapter_swipe_start">Mag-swipe ng pakaliwang pagkilos</string>
+    <string name="pref_chapter_swipe_start">Kabanata sa pag-swipe pakaliwa</string>
     <string name="pref_double_tap_zoom">I-double tap para mag-zoom</string>
-    <string name="pref_chapter_swipe_end">Mag-swipe ng pakanang pagkilos</string>
+    <string name="pref_chapter_swipe_end">Kabanata sa pag-swipe pakanan</string>
     <string name="action_set_interval">Itakda ang pagitan</string>
     <string name="action_filter_interval_custom">Ma-customize na dalas ng pag-update</string>
     <string name="action_sort_next_updated">Susunod na inaasahang update</string>
@@ -792,7 +788,6 @@
     <string name="pref_webtoon_disable_zoom_out">Patayin ang pag-zoom out</string>
     <string name="action_replace_repo">Palitan</string>
     <string name="action_add_anyway">Idagdag pa rin</string>
-    <string name="action_migrate_duplicate">Ilipat ang kasalukuyang entry</string>
     <string name="action_replace_repo_title">Umiiral na ang Signing Key Fingerprint</string>
     <string name="action_replace_repo_message">Ang repository na %1$s ay may magkaparehong Signing Key Fingerprint sa %2$s.
 \nKung ito ay inaasahan, %2$s ang papalitan, kung hindi naman ay makipag-ugnayan sa tagapamahala ng iyong repo.</string>
@@ -812,10 +807,10 @@
     <string name="pref_flash_style_white">Puti</string>
     <string name="manga_interval_expected_update_null">Ang manga na ito ay nakumpleto na, o walang nahulaang petsa ng paglabas.</string>
     <string name="invalid_backup_file_json">Hindi suportado ang JSON backup</string>
-    <string name="invalid_backup_file_unknown">Nasira ang backup file</string>
+    <string name="invalid_backup_file_unknown">Na-corrupt ang backup file</string>
     <string name="extensionRepo_settings">Mga repo ng extension</string>
     <string name="action_copy_link">Kopyahin ang link</string>
-    <string name="pref_download_new_unread_chapters_only">Laktawan ang pag-download ng mga kopya ng mga nabasang kabanata</string>
+    <string name="pref_download_new_unread_chapters_only">Laktawan ang pag-download ng mga duplikadong mga nabasang kabanata</string>
     <string name="add_repo_confirmation">Gusto mo bang idagdag ang repo na \"%s\"?</string>
     <string name="confirm_tracker_update">I-update ang mga tracker hanggang kabanata %d?</string>
     <string name="onboarding_permission_crashlytics">Magpadala ang mga crash log</string>
@@ -848,5 +843,33 @@
     <string name="library_list">Listahan ng Aklatan</string>
     <string name="theme_monochrome">Monokromatiko</string>
     <string name="pref_always_decode_long_strip_with_ssiv_2">Gamitin ang legacy decoder para sa long strip reader</string>
-    <string name="pref_mark_duplicate_read_chapter_read">Markahan ang mga nadobleng nabasa na kabanata bilang nabasa na</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Markahan ang duplikadong nabasa na kabanata bilang nabasa na</string>
+    <string name="action_display_unread_badge">Di nabasang kabanata</string>
+    <string name="pref_behavior">Pagkilos</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">Matapos basahin ang kabanata</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">Pagkatapos kumuha ng bagong kabanata</string>
+    <string name="notes_placeholder">Masaya ang bahagi kung saan…</string>
+    <string name="action_notes">Mga note</string>
+    <string name="action_edit_notes">I-edit ang mga note</string>
+    <string name="possible_duplicates_title">Mga posibleng duplikado</string>
+    <string name="possible_duplicates_summary">Mayroon kang mga entry sa iyong aklatan na may katulad na pangalan.\n\nPumili ng entry na ililipat o idaragdag pa rin.</string>
+    <string name="clear_database_text">Aalisin mo na ang mga entry mula sa database</string>
+    <string name="clear_db_exclude_read">Panatilihin ang mga entry na may mga nabasang kabanata</string>
+    <string name="clear_database_history_warning">Mga nabasang kabanata at ang progress ng mga entry na wala sa aklatan ay mawawala</string>
+    <string name="logging_in">Nagla-log in…</string>
+    <string name="storage_failed_to_create_download_directory">Nabigong lumikha ng direktory para sa pag-download</string>
+    <string name="storage_failed_to_create_directory">Nabigong lumikha ng direktory: %s</string>
+    <string name="pref_update_library_manga_titles">I-update ang mga title ng manga ng aklatan upang tumugma sa source</string>
+    <string name="pref_update_library_manga_titles_summary">Babala: kung ang isang manga ay pinalitan ng pangalan, ito ay aalisin sa pila ng mga download (kung mayroon).</string>
+    <string name="migrationConfigScreen.selectedHeader">Napili</string>
+    <string name="migrationConfigScreen.selectAllLabel">Piliin lahat</string>
+    <string name="migrationConfigScreen.selectNoneLabel">Pumili ng wala</string>
+    <string name="migrationConfigScreen.selectEnabledLabel">Pumili sa mga pinaganang source</string>
+    <string name="migrationConfigScreen.continueButtonText">Magpatuloy</string>
+    <string name="migrationConfigScreen.selectPinnedLabel">Pumili mula sa naka-pin na mga source</string>
+    <string name="migrationConfigScreen.skipMigrationConfigTitle">Laktawan ang config ng paglilipat</string>
+    <string name="migrationConfigScreen.skipMigrationConfigSubtitle">Upang ipakita muli ang screen na ito sa hinaharap, huwag paganahin ang paglaktaw sa Mga Setting → Maghanap</string>
+    <string name="browseSettingsScreen.skipMigrationConfigTitle">Laktawan ang config ng paglipat</string>
+    <string name="browseSettingsScreen.skipMigrationConfigSubtitle">Gamitin ang huling ginamit na mga source at mga kagustuhan para sa paglilipat</string>
+    <string name="browseSettingsScreen.migrationCategoryHeader">Lumipat</string>
 </resources>

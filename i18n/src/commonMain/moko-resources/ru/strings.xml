@@ -51,7 +51,6 @@
     <string name="chapters">Главы</string>
     <string name="charging">Когда заряжается</string>
     <string name="clear_database_completed">Серии удалены</string>
-    <string name="clear_database_confirmation">Вы уверены? Прочитанные главы и прогресс не библиотечных серий будет потерян</string>
     <string name="color_filter_a_value">Альфа</string>
     <string name="color_filter_r_value">Красный</string>
     <string name="color_filter_g_value">Зелёный</string>
@@ -109,7 +108,7 @@
     <string name="ongoing">Выпускается</string>
     <string name="password">Пароль</string>
     <string name="picture_saved">Картинка сохранена</string>
-    <string name="plan_to_read">Запланировано</string>
+    <string name="plan_to_read">Планирую прочесть</string>
     <string name="portrait">Портретная</string>
     <string name="pref_acra_summary">Помогает исправлять все возможные ошибки. Данные пользователя не передаются</string>
     <string name="pref_auto_update_manga_sync">Обновлять прогресс после прочтения</string>
@@ -594,7 +593,7 @@
     <string name="complete_list">Прочитано</string>
     <string name="on_hold_list">Отложено</string>
     <string name="reading_list">Читаю</string>
-    <string name="wish_list">Запланировано</string>
+    <string name="wish_list">Хочу прочесть</string>
     <string name="unfinished_list">Не закончено</string>
     <string name="network_not_metered">Только в безлимитной сети</string>
     <string name="cant_open_last_read_chapter">Не удаётся открыть последнюю прочитанную главу</string>
@@ -678,9 +677,6 @@
     <string name="copied_to_clipboard_plain">Скопировано в буфер обмена</string>
     <string name="enhanced_services_not_installed">Доступно, но источник не установлен: %s</string>
     <string name="pref_skip_dupe_chapters">Пропускать повторяющиеся главы</string>
-    <string name="confirm_add_duplicate_manga">В вашей библиотеке уже есть серия с таким именем.
-\n
-\nВы всё ещё хотите продолжить?</string>
     <string name="track_error">%1$s ошибка: %2$s</string>
     <string name="information_required_plain">*необходимо</string>
     <string name="pref_hide_in_library_items">Скрывать серии, уже находящиеся в библиотеке</string>
@@ -792,7 +788,6 @@
     <string name="pref_webtoon_disable_zoom_out">Отключить уменьшение масштаба</string>
     <string name="action_add_anyway">Добавить в любом случае</string>
     <string name="pref_display_profile">Пользовательский профиль отображения</string>
-    <string name="action_migrate_duplicate">Перенести существующую серию</string>
     <string name="action_replace_repo">Заменить</string>
     <string name="action_replace_repo_message">Репозиторий %1$s имеет тот же подписанный ключ отпечатка, что и %2$s.
 \nЕсли это так и задумано, %2$s будет заменён, в противном случае, свяжитесь с сопровождающим вашего репозитория.</string>
@@ -853,4 +848,30 @@
     <string name="pref_behavior">Поведение</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">После прочтения главы</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">После получения новой главы</string>
+    <string name="notes_placeholder">Понравилась часть, где…</string>
+    <string name="action_notes">Заметки</string>
+    <string name="action_edit_notes">Изменить заметки</string>
+    <string name="possible_duplicates_title">Возможные дупликаты</string>
+    <string name="possible_duplicates_summary">В вашей библиотеке есть серии с похожим названием.\n\nВыберите серию, чтобы её перенести, или же добавить как дупликат.</string>
+    <string name="clear_db_exclude_read">Оставлять серии с прочитанными главами</string>
+    <string name="clear_database_history_warning">Прочитанные главы и прогресс не библиотечных серий будет потерян</string>
+    <string name="clear_database_text">Вы собираетесь удалить записи из базы данных</string>
+    <string name="storage_failed_to_create_directory">Ошибка при создании папки: %s</string>
+    <string name="storage_failed_to_create_download_directory">Ошибка при создании папки для загрузок</string>
+    <string name="logging_in">Вход…</string>
+    <string name="pref_update_library_manga_titles">Обновлять названия серий в библиотеке для соответствия в источнике</string>
+    <string name="pref_update_library_manga_titles_summary">Внимание: Если серия была переименована, она будет удалена из очереди загрузок (если присутствует).</string>
+    <string name="migrationConfigScreen.selectedHeader">Выбрано</string>
+    <string name="migrationConfigScreen.availableHeader">Доступно</string>
+    <string name="migrationConfigScreen.selectAllLabel">Выбрать всё</string>
+    <string name="migrationConfigScreen.selectEnabledLabel">Выбрать включенные источники</string>
+    <string name="migrationConfigScreen.selectPinnedLabel">Выбрать закреплённые источники</string>
+    <string name="migrationConfigScreen.continueButtonText">Продолжить</string>
+    <string name="migrationConfigScreen.selectNoneLabel">Ничего не выбирать</string>
+    <string name="theme_catppuccin">Котопуссин</string>
+    <string name="migrationConfigScreen.skipMigrationConfigSubtitle">Чтобы снова увидеть этот экран, выключите пропуск настроек в «Настойки → Поисковик»</string>
+    <string name="browseSettingsScreen.skipMigrationConfigTitle">Пропустить настройки переноса</string>
+    <string name="browseSettingsScreen.migrationCategoryHeader">Перенос</string>
+    <string name="browseSettingsScreen.skipMigrationConfigSubtitle">Использовать прошлые настройки и источники для переноса</string>
+    <string name="migrationConfigScreen.skipMigrationConfigTitle">Пропустить настройки переноса</string>
 </resources>

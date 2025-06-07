@@ -171,7 +171,6 @@
     <string name="cookies_cleared">Çerezler temizlendi</string>
     <string name="pref_clear_database">Veritabanını temizle</string>
     <string name="pref_clear_database_summary">Kitaplığa kaydedilmeyen girdilerin geçmiş bilgisini sil</string>
-    <string name="clear_database_confirmation">Emin misiniz? Kitaplıkta olmayan girdilerin okunan bölümleri ve ilerlemesi kaybolacak</string>
     <string name="clear_database_completed">Girdiler silindi</string>
     <string name="version">Sürüm</string>
     <string name="pref_enable_acra">Çökme günlüklerini gönder</string>
@@ -371,7 +370,7 @@
     <string name="backup_restore_missing_sources">Eksik kaynaklar:</string>
     <string name="invalid_backup_file_missing_manga">Yedek, bir kitaplık girdisi içermiyor.</string>
     <string name="invalid_backup_file">Geçersiz yedekleme dosyası:</string>
-    <string name="pref_library_update_refresh_metadata_summary">Kitaplığı güncellerken yeni kapağı ve ayrıntıları kontrol et</string>
+    <string name="pref_library_update_refresh_metadata_summary">Kitaplığı güncellerken yeni kapak ve ayrıntılar için kontrol et</string>
     <string name="pref_library_update_refresh_metadata">Üst veriyi otomatik yenile</string>
     <string name="action_migrate">Taşı</string>
     <string name="action_display_comfortable_grid">Rahat ızgara</string>
@@ -516,7 +515,7 @@
     <string name="pref_low">Düşük</string>
     <string name="pref_high">Yüksek</string>
     <string name="pref_highest">En yüksek</string>
-    <string name="pref_hide_threshold">Kaydırmada menüyü gizleme hassasiyeti</string>
+    <string name="pref_hide_threshold">Kaydırmada menüyü gizleme duyarlılığı</string>
     <string name="pref_inverted_colors">Ters Çevrilmiş</string>
     <string name="relative_time_today">Bugün</string>
     <string name="theme_tealturquoise">Ördekbaşı &amp; Turkuaz</string>
@@ -678,9 +677,6 @@
     <string name="copied_to_clipboard_plain">Panoya kopyalandı</string>
     <string name="enhanced_services_not_installed">Kullanılabilir ancak kaynak yüklü değil: %s</string>
     <string name="pref_skip_dupe_chapters">Yinelenen bölümleri atla</string>
-    <string name="confirm_add_duplicate_manga">Kitaplığınızda aynı ada sahip bir girdiniz var.
-\n
-\nYine de devam etmek istiyor musunuz?</string>
     <string name="track_error">%1$s hatası: %2$s</string>
     <string name="information_required_plain">*gerekli</string>
     <string name="pref_hide_in_library_items">Zaten kitaplıkta bulunan girdileri gizle</string>
@@ -805,7 +801,6 @@
     <string name="invalid_backup_file_unknown">Yedek dosyası bozuk</string>
     <string name="manga_interval_expected_update_null">Bu manga ya tamamlanmış ya da tahmin edilen yayımlanma tarihi yok.</string>
     <string name="action_add_anyway">Yine de ekle</string>
-    <string name="action_migrate_duplicate">Zaten olan girdiyi taşı</string>
     <string name="action_replace_repo">Değiştir</string>
     <string name="action_replace_repo_title">İmzalama Anahtarı Parmak İzi Zaten Var</string>
     <string name="extensionRepo_settings">Eklenti depoları</string>
@@ -821,7 +816,7 @@
     <string name="onboarding_permission_crashlytics">Çökme kayıtlarını gönder</string>
     <string name="pref_security">Güvenlik</string>
     <string name="onboarding_permission_crashlytics_description">Geliştiricilere anonimleştirilmiş çökme kayıtlarını gönder.</string>
-    <string name="firebase_summary">Çökme kayıtlarını ve kullanım istatistiklerini göndermek sorunları tanımlamamıza ve düzeltmemize imkan verir, performansı iyileştirmemizi sağlar ve gelecek güncellemeleri ihtiyaçlarınızla uyumlu yapmamıza olanak tanır</string>
+    <string name="firebase_summary">Çökme kayıtlarını ve kullanım istatistiklerini göndermek sorunları tanımlamamıza ve düzeltmemize imkân verir, performansı iyileştirmemizi sağlar ve gelecek güncellemeleri ihtiyaçlarınızla uyumlu yapmamıza olanak tanır</string>
     <string name="onboarding_permission_analytics">Kullanım istatistiklerine izin ver</string>
     <string name="onboarding_permission_analytics_description">Uygulama özelliklerini geliştirmek için anonimleştirilmiş kullanım verileri gönder.</string>
     <string name="pref_firebase">Kullanım İstatistikleri ve Çökme Kayıtları</string>
@@ -853,4 +848,30 @@
     <string name="pref_behavior">Davranış</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">Bölümü okuduktan sonra</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">Yeni bir bölüm geldiğinde</string>
+    <string name="action_edit_notes">Notları düzenle</string>
+    <string name="action_notes">Notlar</string>
+    <string name="notes_placeholder">…olduğu kısmı beğendim.</string>
+    <string name="possible_duplicates_title">Muhtemel yinelenenler</string>
+    <string name="possible_duplicates_summary">Kitaplığınızda benzer isimli girdiler var.\n\nTaşımak için bir girdi seçin veya yine de ekleyin.</string>
+    <string name="clear_database_history_warning">Kitaplıkta olmayan girdilerin okunmuş bölümleri ve ilerlemeleri kaybolacaktır</string>
+    <string name="clear_database_text">Girdileri veri tabanından kaldırmak üzeresiniz</string>
+    <string name="clear_db_exclude_read">Okunmuş bölümleri olan girdileri koru</string>
+    <string name="storage_failed_to_create_download_directory">İndirme dosya konumu oluşturulamadı</string>
+    <string name="storage_failed_to_create_directory">Dosya konumu oluşturulamadı: %s</string>
+    <string name="logging_in">Giriş yapılıyor…</string>
+    <string name="pref_update_library_manga_titles">Kitaplıktaki mangaların başlıklarını kaynakla eşleşecek şekilde güncelle</string>
+    <string name="pref_update_library_manga_titles_summary">Uyarı: Eğer bir manga yeniden adlandırılırsa (eğer mevcutsa) indirme sırasından kaldırılacaktır.</string>
+    <string name="theme_catppuccin">Catppuccin</string>
+    <string name="migrationConfigScreen.availableHeader">Mevcut</string>
+    <string name="migrationConfigScreen.selectEnabledLabel">Etkin kaynakları seç</string>
+    <string name="migrationConfigScreen.selectPinnedLabel">Sabitlenmiş kaynakları seç</string>
+    <string name="migrationConfigScreen.continueButtonText">Devam Et</string>
+    <string name="migrationConfigScreen.selectAllLabel">Tümünü seç</string>
+    <string name="migrationConfigScreen.selectNoneLabel">Seçimleri kaldır</string>
+    <string name="migrationConfigScreen.selectedHeader">Seçilen</string>
+    <string name="migrationConfigScreen.skipMigrationConfigTitle">Taşıma özelleştirmeyi atla</string>
+    <string name="migrationConfigScreen.skipMigrationConfigSubtitle">Bu ekranı gelecekte tekrar göstermek için Ayarlar → Göz At bölümünde atlamayı kapatın</string>
+    <string name="browseSettingsScreen.skipMigrationConfigSubtitle">Taşıma için son kullanılan kaynakları ve tercihleri kullan</string>
+    <string name="browseSettingsScreen.migrationCategoryHeader">Taşıma</string>
+    <string name="browseSettingsScreen.skipMigrationConfigTitle">Taşıma özelleştirmeyi atla</string>
 </resources>

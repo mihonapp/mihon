@@ -215,7 +215,6 @@
     <string name="cookies_cleared">Keksit tyhjennetty</string>
     <string name="pref_clear_database">Tyhjennä tietokanta</string>
     <string name="pref_clear_database_summary">Poista mangan historia, jota ei ole tallennettu kirjastoosi</string>
-    <string name="clear_database_confirmation">Oletko varma? Luetut luvut ja eteneminen poistetaan muista kun kirjastossa olevista sarjoista</string>
     <string name="clear_database_completed">Tiedot poistettu</string>
     <string name="version">Versio</string>
     <string name="pref_enable_acra">Lähetä kaatumisilmoituksia</string>
@@ -624,9 +623,6 @@
     <string name="crash_screen_description">%s kohtasi odottamattoman virheen. Ehdotamme että jaat kaatumisen lokitiedot tukikanavallemme Discordissa.</string>
     <string name="delete_downloaded">Poista ladatut</string>
     <string name="create_backup_file_error">Varmuuskopiotiedoston luonti epäonnistui</string>
-    <string name="confirm_add_duplicate_manga">Kirjastossasi on jo samanniminen merkintä.
-\n
-\nHaluatko silti jatkaa?</string>
     <string name="crash_screen_title">Hupsista!</string>
     <string name="copied_to_clipboard_plain">Kopioitu leikepöydälle</string>
     <string name="crash_screen_restart_application">Uudelleenkäynnistä applikaatio</string>
