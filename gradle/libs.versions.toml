@@ -9,7 +9,7 @@ sqlite = "2.5.1"
 voyager = "1.1.0-beta03"
 spotless = "7.0.4"
 ktlint-core = "1.6.0"
-firebase-bom = "33.13.0"
+firebase-bom = "33.15.0"
 markdown = "0.35.0"
 junit = "5.13.1"
 
