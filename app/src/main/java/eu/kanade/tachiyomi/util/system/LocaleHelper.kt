@@ -48,6 +48,17 @@ object LocaleHelper {
         return Locale.forLanguageTag(normalizedLang).displayName
     }
 
+    fun getShortDisplayName(lang: String?, uppercase: Boolean = false): String {
+        return when (lang) {
+            null -> ""
+            "es-419" -> "es-la"
+            "zh-CN" -> "zh-hans"
+            "zh-TW" -> "zh-hant"
+            else -> lang
+        }
+            .let { if (uppercase) it.uppercase(Locale.ENGLISH) else it }
+    }
+
     /**
      * Returns display name of a string language code.
      *

@@ -28,6 +28,7 @@ import eu.kanade.tachiyomi.ui.home.HomeScreen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewScreen
 import kotlinx.coroutines.launch
+import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.presentation.core.util.collectAsLazyPagingItems
 import tachiyomi.core.common.Constants
 import tachiyomi.domain.manga.model.Manga
@@ -38,8 +39,8 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.source.local.LocalSource
 
-data class SourceSearchScreen(
-    private val oldManga: Manga,
+data class MigrateSourceSearchScreen(
+    private val currentManga: Manga,
     private val sourceId: Long,
     private val query: String?,
 ) : Screen() {
@@ -82,7 +83,7 @@ data class SourceSearchScreen(
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         ) { paddingValues ->
             val openMigrateDialog: (Manga) -> Unit = {
-                screenModel.setDialog(BrowseSourceScreenModel.Dialog.Migrate(newManga = it, oldManga = oldManga))
+                screenModel.setDialog(BrowseSourceScreenModel.Dialog.Migrate(target = it, current = currentManga))
             }
             BrowseSourceContent(
                 source = screenModel.source,
@@ -120,17 +121,17 @@ data class SourceSearchScreen(
                 )
             }
             is BrowseSourceScreenModel.Dialog.Migrate -> {
-                MigrateDialog(
-                    oldManga = oldManga,
-                    newManga = dialog.newManga,
-                    screenModel = rememberScreenModel { MigrateDialogScreenModel() },
+                MigrateMangaDialog(
+                    current = currentManga,
+                    target = dialog.target,
+                    // Initiated from the context of [currentManga] so we show [dialog.target].
+                    onClickTitle = { navigator.push(MangaScreen(dialog.target.id)) },
                     onDismissRequest = onDismissRequest,
-                    onClickTitle = { navigator.push(MangaScreen(dialog.newManga.id)) },
-                    onPopScreen = {
+                    onComplete = {
                         scope.launch {
                             navigator.popUntilRoot()
                             HomeScreen.openTab(HomeScreen.Tab.Browse())
-                            navigator.push(MangaScreen(dialog.newManga.id))
+                            navigator.push(MangaScreen(dialog.target.id))
                         }
                     },
                 )

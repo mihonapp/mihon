@@ -2,16 +2,18 @@ package eu.kanade.domain.source.service
 
 import eu.kanade.domain.source.interactor.SetMigrateSorting
 import eu.kanade.tachiyomi.util.system.LocaleHelper
+import mihon.domain.migration.models.MigrationFlag
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.preference.getEnum
+import tachiyomi.core.common.preference.getLongArray
 import tachiyomi.domain.library.model.LibraryDisplayMode
 
 class SourcePreferences(
     private val preferenceStore: PreferenceStore,
 ) {
 
-    fun sourceDisplayMode() = preferenceStore.getObject(
+    fun sourceDisplayMode() = preferenceStore.getObjectFromString(
         "pref_display_mode_catalogue",
         LibraryDisplayMode.default,
         LibraryDisplayMode.Serializer::serialize,
@@ -19,6 +21,8 @@ class SourcePreferences(
     )
 
     fun enabledLanguages() = preferenceStore.getStringSet("source_languages", LocaleHelper.getDefaultEnabledLanguages())
+
+    fun migrationSources() = preferenceStore.getLongArray("migration_sources", emptyList())
 
     fun disabledSources() = preferenceStore.getStringSet("hidden_catalogues", emptySet())
 
@@ -55,4 +59,13 @@ class SourcePreferences(
         Preference.appStateKey("has_filters_toggle_state"),
         false,
     )
+
+    fun migrationFlags() = preferenceStore.getObjectFromInt(
+        key = "migrate_flags",
+        defaultValue = MigrationFlag.entries.toSet(),
+        serializer = { MigrationFlag.toBit(it) },
+        deserializer = { value: Int -> MigrationFlag.fromBit(value) },
+    )
+
+    fun skipMigrationConfig() = preferenceStore.getBoolean(Preference.appStateKey("skip_migration_config"), false)
 }

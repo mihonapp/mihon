@@ -23,8 +23,6 @@ import eu.kanade.presentation.history.components.HistoryDeleteDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.util.Tab
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateDialog
-import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateDialogScreenModel
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
@@ -32,6 +30,7 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
+import mihon.feature.migration.dialog.MigrateMangaDialog
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.i18n.MR
@@ -100,9 +99,7 @@ data object HistoryTab : Tab {
                 DuplicateMangaDialog(
                     duplicates = dialog.duplicates,
                     onDismissRequest = onDismissRequest,
-                    onConfirm = {
-                        screenModel.addFavorite(dialog.manga)
-                    },
+                    onConfirm = { screenModel.addFavorite(dialog.manga) },
                     onOpenManga = { navigator.push(MangaScreen(it.id)) },
                     onMigrate = { screenModel.showMigrateDialog(dialog.manga, it) },
                 )
@@ -118,13 +115,12 @@ data object HistoryTab : Tab {
                 )
             }
             is HistoryScreenModel.Dialog.Migrate -> {
-                MigrateDialog(
-                    oldManga = dialog.oldManga,
-                    newManga = dialog.newManga,
-                    screenModel = MigrateDialogScreenModel(),
+                MigrateMangaDialog(
+                    current = dialog.current,
+                    target = dialog.target,
+                    // Initiated from the context of [dialog.target] so we show [dialog.current].
+                    onClickTitle = { navigator.push(MangaScreen(dialog.current.id)) },
                     onDismissRequest = onDismissRequest,
-                    onClickTitle = { navigator.push(MangaScreen(dialog.oldManga.id)) },
-                    onPopScreen = onDismissRequest,
                 )
             }
             null -> {}

@@ -91,6 +91,45 @@
     <!-- Monet theme only support S+ -->
     <style name="Theme.Tachiyomi.Monet" />
 
+    <!--== Catppuccin Theme ==-->
+    <style name="Theme.Tachiyomi.Catppuccin">
+        <!-- Theme Colors -->
+        <item name="colorPrimary">@color/catppuccin_primary</item>
+        <item name="colorOnPrimary">@color/catppuccin_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/catppuccin_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/catppuccin_onPrimaryContainer</item>
+        <item name="colorPrimaryInverse">@color/catppuccin_inversePrimary</item>
+        <item name="colorSecondary">@color/catppuccin_secondary</item>
+        <item name="colorOnSecondary">@color/catppuccin_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/catppuccin_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/catppuccin_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/catppuccin_tertiary</item>
+        <item name="colorOnTertiary">@color/catppuccin_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/catppuccin_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/catppuccin_onTertiaryContainer</item>
+        <item name="android:colorBackground">@color/catppuccin_background</item>
+        <item name="colorOnBackground">@color/catppuccin_onBackground</item>
+        <item name="colorSurface">@color/catppuccin_surface</item>
+        <item name="colorOnSurface">@color/catppuccin_onSurface</item>
+        <item name="colorSurfaceVariant">@color/catppuccin_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/catppuccin_onSurfaceVariant</item>
+        <item name="colorSurfaceInverse">@color/catppuccin_inverseSurface</item>
+        <item name="colorOnSurfaceInverse">@color/catppuccin_inverseOnSurface</item>
+        <item name="colorError">@color/catppuccin_error</item>
+        <item name="colorOnError">@color/catppuccin_onError</item>
+        <item name="colorErrorContainer">@color/catppuccin_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/catppuccin_onErrorContainer</item>
+        <item name="colorOutline">@color/catppuccin_outline</item>
+        <item name="colorOutlineVariant">@color/catppuccin_outlineVariant</item>
+        <item name="scrimBackground">@color/catppuccin_scrim</item>
+        <item name="colorSurfaceBright">@color/catppuccin_surfaceBright</item>
+        <item name="colorSurfaceDim">@color/catppuccin_surfaceDim</item>
+        <item name="colorSurfaceContainer">@color/catppuccin_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/catppuccin_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/catppuccin_surfaceContainerHighest</item>
+        <item name="colorSurfaceContainerLow">@color/catppuccin_surfaceContainerLow</item>
+        <item name="colorSurfaceContainerLowest">@color/catppuccin_surfaceContainerLowest</item>
+    </style>
     <!--== Green Apple Theme ==-->
     <style name="Theme.Tachiyomi.GreenApple">
         <!-- Theme Colors -->

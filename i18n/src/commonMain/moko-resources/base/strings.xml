@@ -228,6 +228,7 @@
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
     <string name="theme_monet">Dynamic</string>
+    <string name="theme_catppuccin">Catppuccin</string>
     <string name="theme_greenapple">Green Apple</string>
     <string name="theme_lavender">Lavender</string>
     <string name="theme_midnightdusk">Midnight Dusk</string>
@@ -995,4 +996,18 @@
 
     <!-- Notes screen -->
     <string name="notes_placeholder">Enjoyed the part where…</string>
+
+    <string name="migrationConfigScreen.selectedHeader">Selected</string>
+    <string name="migrationConfigScreen.availableHeader">Available</string>
+    <string name="migrationConfigScreen.selectAllLabel">Select all</string>
+    <string name="migrationConfigScreen.selectNoneLabel">Select none</string>
+    <string name="migrationConfigScreen.selectEnabledLabel">Select enabled sources</string>
+    <string name="migrationConfigScreen.selectPinnedLabel">Select pinned sources</string>
+    <string name="migrationConfigScreen.continueButtonText">Continue</string>
+    <string name="migrationConfigScreen.skipMigrationConfigTitle">Skip migration config</string>
+    <string name="migrationConfigScreen.skipMigrationConfigSubtitle">To show this screen again in the future, disable skipping in Settings → Browse</string>
+
+    <string name="browseSettingsScreen.migrationCategoryHeader">Migration</string>
+    <string name="browseSettingsScreen.skipMigrationConfigTitle">Skip migration config</string>
+    <string name="browseSettingsScreen.skipMigrationConfigSubtitle">Use last used sources and preferences for migration</string>
 </resources>
