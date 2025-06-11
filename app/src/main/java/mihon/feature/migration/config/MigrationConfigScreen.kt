@@ -22,7 +22,6 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -81,18 +80,11 @@ class MigrationConfigScreen(private val mangaId: Long) : Screen() {
 
         var migrationSheetOpen by rememberSaveable { mutableStateOf(false) }
 
-        fun continueMigration(openSheet: Boolean) {
-            if (openSheet) {
-                migrationSheetOpen = true
-                return
-            }
+        fun continueMigration(openSheet: Boolean, extraSearchQuery: String?) {
             navigator.replace(MigrateSearchScreen(mangaId))
         }
 
         if (state.isLoading) {
-            LaunchedEffect(state.skipMigrationConfig) {
-                if (state.skipMigrationConfig) continueMigration(openSheet = false)
-            }
             LoadingScreen()
             return
         }
@@ -143,7 +135,7 @@ class MigrationConfigScreen(private val mangaId: Long) : Screen() {
                     icon = { Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowForward, contentDescription = null) },
                     onClick = {
                         screenModel.saveSources()
-                        continueMigration(openSheet = true)
+                        continueMigration(openSheet = true, extraSearchQuery = null)
                     },
                     expanded = lazyListState.shouldExpandFAB(),
                 )
@@ -204,9 +196,9 @@ class MigrationConfigScreen(private val mangaId: Long) : Screen() {
             MigrationConfigScreenSheet(
                 preferences = screenModel.sourcePreferences,
                 onDismissRequest = { migrationSheetOpen = false },
-                onStartMigration = {
+                onStartMigration = { extraSearchQuery ->
                     migrationSheetOpen = false
-                    continueMigration(openSheet = false)
+                    continueMigration(openSheet = false, extraSearchQuery = extraSearchQuery)
                 },
             )
         }
@@ -312,9 +304,6 @@ class MigrationConfigScreen(private val mangaId: Long) : Screen() {
 
         init {
             screenModelScope.launchIO {
-                val skipMigrationConfig = sourcePreferences.skipMigrationConfig().get()
-                mutableState.update { it.copy(skipMigrationConfig = skipMigrationConfig) }
-                if (skipMigrationConfig) return@launchIO
                 initSources()
                 mutableState.update { it.copy(isLoading = false) }
             }
@@ -414,7 +403,6 @@ class MigrationConfigScreen(private val mangaId: Long) : Screen() {
 
         data class State(
             val isLoading: Boolean = true,
-            val skipMigrationConfig: Boolean = false,
             val sources: List<MigrationSource> = emptyList(),
         )
 

@@ -1004,10 +1004,16 @@
     <string name="migrationConfigScreen.selectEnabledLabel">Select enabled sources</string>
     <string name="migrationConfigScreen.selectPinnedLabel">Select pinned sources</string>
     <string name="migrationConfigScreen.continueButtonText">Continue</string>
-    <string name="migrationConfigScreen.skipMigrationConfigTitle">Skip migration config</string>
-    <string name="migrationConfigScreen.skipMigrationConfigSubtitle">To show this screen again in the future, disable skipping in Settings → Browse</string>
-
-    <string name="browseSettingsScreen.migrationCategoryHeader">Migration</string>
-    <string name="browseSettingsScreen.skipMigrationConfigTitle">Skip migration config</string>
-    <string name="browseSettingsScreen.skipMigrationConfigSubtitle">Use last used sources and preferences for migration</string>
+    <string name="migrationConfigScreen.dataToMigrateHeader">Data to migrate</string>
+    <string name="migrationConfigScreen.removeDownloadsTitle">Delete downloads after migration</string>
+    <string name="migrationConfigScreen.additionalSearchQueryLabel">Additional search keywords</string>
+    <string name="migrationConfigScreen.additionalSearchQueryPlaceholder">e.g. language:english</string>
+    <string name="migrationConfigScreen.additionalSearchQuerySupportingText">Appends keywords to the search query</string>
+    <string name="migrationConfigScreen.hideUnmatchedTitle">Hide unmatched manga</string>
+    <string name="migrationConfigScreen.enhancedOptionsWarning">Settings below can be slower and may lead to temporary source restrictions</string>
+    <string name="migrationConfigScreen.hideWithoutUpdatesTitle">Hide if no new chapters</string>
+    <string name="migrationConfigScreen.hideWithoutUpdatesSubtitle">Show only if the match offers newer chapters</string>
+    <string name="migrationConfigScreen.deepSearchModeTitle">Deep search mode</string>
+    <string name="migrationConfigScreen.deepSearchModeSubtitle">More detailed keyword search</string>
+    <string name="migrationConfigScreen.prioritizeByChaptersTitle">Prioritize by newer chapters</string>
 </resources>
