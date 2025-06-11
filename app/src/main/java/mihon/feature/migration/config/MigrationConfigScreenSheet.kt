@@ -99,7 +99,7 @@ fun MigrationConfigScreenSheet(
                                         contentDescription = null,
                                     )
                                 }
-                            }
+                            },
                         )
                     }
                 }
