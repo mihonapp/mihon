@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
@@ -91,6 +92,14 @@ fun MigrationConfigScreenSheet(
                                 }
                             },
                             label = { Text(stringResource(flag.getLabel())) },
+                            leadingIcon = {
+                                if (selected) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Check,
+                                        contentDescription = null,
+                                    )
+                                }
+                            }
                         )
                     }
                 }
