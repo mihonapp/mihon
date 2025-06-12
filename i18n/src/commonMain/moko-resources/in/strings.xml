@@ -65,7 +65,7 @@
     <string name="pref_category_tracking">Sinkronisasi</string>
     <string name="pref_category_advanced">Lanjutan</string>
     <string name="pref_category_about">Tentang</string>
-    <string name="pref_library_columns">Ukuran kisi</string>
+    <string name="pref_library_columns">Item per baris</string>
     <string name="portrait">Layar tegak</string>
     <string name="landscape">Layar mendatar</string>
     <string name="pref_library_update_interval">Pembaruan otomatis</string>
@@ -114,10 +114,10 @@
     <string name="rotation_free">Bebas</string>
     <string name="rotation_force_portrait">Terkunci tegak</string>
     <string name="rotation_force_landscape">Terkunci mendatar</string>
-    <string name="color_filter_r_value">R</string>
-    <string name="color_filter_g_value">G</string>
-    <string name="color_filter_b_value">B</string>
-    <string name="color_filter_a_value">A</string>
+    <string name="color_filter_r_value">Merah</string>
+    <string name="color_filter_g_value">Hijau</string>
+    <string name="color_filter_b_value">Biru</string>
+    <string name="color_filter_a_value">Alfa</string>
     <string name="pref_remove_after_marked_as_read">Setelah secara manual ditandai telah dibaca</string>
     <string name="pref_remove_after_read">Otomatis hapus setelah dibaca</string>
     <string name="disabled">Tidak Aktif</string>
@@ -569,7 +569,6 @@
     <string name="rotation_reverse_portrait">Layar tegak terbalik</string>
     <string name="notification_update_error">%1$d pembaruan gagal</string>
     <string name="action_move_to_top_all_for_series">Pindahkan seri ke atas</string>
-    <string name="update_check_fdroid_migration_info">Versi baru tersedia dari perilisan resmi. Ketuk untuk mempelajari migrasi dari perilisan non-resmi dari F-Droid.</string>
     <string name="disabled_nav">Dinonaktifkan</string>
     <string name="error_saving_picture">Gagal menyimpan gambar</string>
     <string name="empty_backup_error">Tidak ada entri perpustakaan untuk dicadangkan</string>
@@ -692,11 +691,9 @@
     <string name="pref_page_rotate">Memutar halaman lebar agar pas</string>
     <string name="pref_page_rotate_invert">Orientasi balik halaman lebar yang diputar</string>
     <string name="pref_debug_info">Info debug</string>
-    <string name="pref_chapter_swipe">Geser chapter</string>
     <string name="pref_chapter_swipe_end">Geser kekanan</string>
     <string name="pref_chapter_swipe_start">Geser kekiri</string>
     <string name="pref_double_tap_zoom">Ketuk dua kali untuk memperbesar</string>
-    <string name="pref_library_columns_per_row">%d per baris</string>
     <string name="action_set_interval">Terapkan jeda waktu</string>
     <string name="action_filter_interval_custom">Frekuensi pembaruan yang disesuaikan</string>
     <string name="skipped_reason_not_in_release_period">Dilewati karena tidak ada rilis yang diharapkan hari ini</string>
@@ -724,9 +721,7 @@
     <string name="action_move_to_bottom_all_for_series">Pindahkan seri ke bawah</string>
     <string name="pref_relative_format">Penanda waktu</string>
     <string name="pref_relative_format_summary">\"%1$s\" seharusnya \"%2$s\"</string>
-    <string name="action_sort_category">Urutkan kategori</string>
     <string name="notification_updating_progress">Memperbarui pustaka... (%s)</string>
-    <string name="sort_category_confirmation">Apakah Anda ingin mengurutkan kategori menurut abjad?</string>
     <string name="file_null_uri_error">Tidak ada file yang dipilih</string>
     <string name="source_settings">Pengaturan sumber</string>
     <string name="app_settings">Pengaturan aplikasi</string>
@@ -837,4 +832,21 @@
     <string name="ext_confirm_remove">Hapus Ekstensi?</string>
     <string name="pref_auto_update_manga_on_mark_read">Kemajuan pembaruan saat ditandai sebagai telah dibaca</string>
     <string name="trackers_updated_summary">Pelacak diperbarui ke bab %d</string>
+    <string name="pref_hardware_bitmap_threshold">Batas bitmap perangkat keras kustom</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Jika pembaca memuat gambar kosong, kurangi threshold secara bertahap.\nPilih: %s</string>
+    <string name="pref_hardware_bitmap_threshold_default">Bawaan (%d)</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Mempengaruhi performa. Aktifkan hanya jika menurunkan batas bitmap tidak memperbaiki gambar kosong</string>
+    <string name="pref_incognito_mode_extension_summary">Jeda riwayat pembacaan untuk ekstensi</string>
+    <string name="label_auto">Otomatis</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">Gunakan dekoder lama untuk bacaan strip panjang</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Tandai bab duplikat sebagai sudah dibaca</string>
+    <string name="theme_monochrome">Monokrom</string>
+    <string name="export">Ekspor</string>
+    <string name="library_list">Daftar pustaka</string>
+    <string name="library_exported">Pustaka diekspor</string>
+    <string name="author">Penulis</string>
+    <string name="artist">Seniman</string>
+    <string name="tracked_privately">Dilacak secara pribady</string>
+    <string name="action_toggle_private_on">Lacak secara pribadi</string>
+    <string name="action_toggle_private_off">Lacak secara publik</string>
 </resources>

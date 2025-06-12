@@ -575,7 +575,6 @@
     <string name="skipped_reason_completed">Прескочено јер је наслов завршен</string>
     <string name="skipped_reason_not_caught_up">Прескочено јер има непрочитаних поглавља</string>
     <string name="disabled_nav">Onesposobljen</string>
-    <string name="update_check_fdroid_migration_info">Нова верзија је доступна у званичним издањима. Додирните да научите како да пређете са незваничних издања F-Droid-а.</string>
     <string name="empty_backup_error">Нема уноса у колекцији за прављење резервних копија</string>
     <string name="update_check_open">Отвори на GitHub-у</string>
     <string name="error_saving_picture">Грешка при чувању слике</string>
@@ -693,10 +692,8 @@
     <string name="pref_hide_in_library_items">Сакри уносе који се већ налазе у колекцији</string>
     <string name="overlay_header">Прекривање</string>
     <string name="split_tall_images">Растави високе слике</string>
-    <string name="pref_library_columns_per_row">%d по реду</string>
     <string name="pref_chapter_swipe_end">Превуци удесно</string>
     <string name="pref_chapter_swipe_start">Превуци улево</string>
-    <string name="pref_chapter_swipe">Прелистај поглавље</string>
     <string name="pref_double_tap_zoom">Додирни двапут за зумирање</string>
     <string name="action_copy_to_clipboard">Копирај</string>
     <string name="pref_page_rotate_invert">Окрени положај широких страница</string>
@@ -785,8 +782,6 @@
     <string name="selected">Одабрано</string>
     <string name="action_menu_overflow_description">Више опција</string>
     <string name="action_bar_up_description">Навигација према горе</string>
-    <string name="action_sort_category">Сортирање категорија</string>
-    <string name="sort_category_confirmation">Да ли желиш да сортираш категорије по абецеди?</string>
     <string name="action_move_to_bottom_all_for_series">Премести серију на крај</string>
     <string name="app_settings">Подешавања апликације</string>
     <string name="source_settings">Подешавања извора</string>

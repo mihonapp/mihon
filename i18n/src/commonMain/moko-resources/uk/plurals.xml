@@ -25,9 +25,10 @@
         <item quantity="other">Для %d записів</item>
     </plurals>
     <plurals name="update_check_notification_ext_updates">
-        <item quantity="one">Наявне оновлення для розширення</item>
-        <item quantity="few">%d наявних оновлень розширень</item>
-        <item quantity="many">%d наявних оновлень розширень</item>
+        <item quantity="one">%d розширення має оновлення</item>
+        <item quantity="few">%d розширення мають оновлення</item>
+        <item quantity="many">%d розширень мають оновлення</item>
+        <item quantity="other">%d розширень мають оновлення</item>
     </plurals>
     <plurals name="num_categories">
         <item quantity="one">%d категорія</item>
@@ -62,8 +63,8 @@
     <plurals name="missing_chapters_warning">
         <item quantity="one">Пропускається %d розділ, тому що джерело не має його, або він був відфільтрований</item>
         <item quantity="few">Пропускаються %d розділи, тому що джерело не має їх, або вони були відфільтровані</item>
-        <item quantity="many">Пропускання %d розділів, тому що джерело не має їх, або вони були відфільтровані</item>
-        <item quantity="other">Пропускання %d розділів, тому що джерело не має їх, або вони були відфільтровані</item>
+        <item quantity="many">Пропускаються %d розділів, тому що джерело не має їх, або вони були відфільтровані</item>
+        <item quantity="other">Пропускаються %d розділів, тому що джерело не має їх, або вони були відфільтровані</item>
     </plurals>
     <plurals name="relative_time">
         <item quantity="one">Учора</item>
@@ -90,7 +91,7 @@
         <item quantity="other">Відсутні %1$s розділів</item>
     </plurals>
     <plurals name="day">
-        <item quantity="one">1 день</item>
+        <item quantity="one">%d день</item>
         <item quantity="few">%d дні</item>
         <item quantity="many">%d днів</item>
         <item quantity="other">%d днів</item>
@@ -106,5 +107,11 @@
         <item quantity="few">%1$s сторінки</item>
         <item quantity="many">%1$s сторінок</item>
         <item quantity="other">%1$s сторінок</item>
+    </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Завтра</item>
+        <item quantity="few">Через %1$d дні</item>
+        <item quantity="many">Через %1$d днів</item>
+        <item quantity="other">Через %1$d днів</item>
     </plurals>
 </resources>

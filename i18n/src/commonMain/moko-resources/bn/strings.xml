@@ -624,7 +624,6 @@
     <string name="onboarding_permission_notifications">নোটিফিকেশনের পারমিশন</string>
     <string name="action_revert_to_default">সকল সেটিং ডিফল্ট করুন</string>
     <string name="onboarding_permission_install_apps">অ্যাপের ইন্সটল করার পারমিশন</string>
-    <string name="action_sort_category">ক্যাটাগরি ফিল্টার করুন</string>
     <string name="onboarding_heading">স্বাগতম</string>
     <string name="action_move_to_bottom_all_for_series">নিচের দিকে সরান</string>
     <string name="onboarding_action_skip">বাদ দিন</string>
@@ -634,7 +633,16 @@
     <string name="internal_error">ইন্টারনাল ইরর: বাকি ইনফরমেশন পেতে ক্যাশ লগ দেখুন</string>
     <string name="skipped_reason_not_started">স্কিপ করা হয়েছে কারণ আগে কোন চ্যাপ্টার পড়া হয়নি</string>
     <string name="action_sort_tracker_score">ট্রেকার স্কোর</string>
-    <string name="sort_category_confirmation">আপনি কি বর্ণানুক্রমিকভাবে ফিল্টার করতে চান</string>
     <string name="action_ok">ঠিক আছে</string>
     <string name="action_sort_next_updated">পরবর্তী আপডেটের সম্ভাব্য সময়</string>
+    <string name="action_copy_link">লিংক কপি করুন</string>
+    <string name="label_auto">স্বয়ংক্রিয়</string>
+    <string name="onboarding_permission_ignore_battery_opts">অবজ্ঞাত অবস্থায় ব্যাটারি ব্যবহার</string>
+    <string name="action_sort_random">এলোমেলো</string>
+    <string name="onboarding_permission_notifications_description">লাইব্রেরি আপডেট এবং আরও অনেক কিছুর জন্য বিজ্ঞপ্তি পান।</string>
+    <string name="action_add_anyway">যাই হোক যোগ করুন</string>
+    <string name="action_migrate_duplicate">বিদ্যমান এন্ট্রি স্থানান্তর করুন</string>
+    <string name="onboarding_storage_help_action">স্টোরেজ গাইড</string>
+    <string name="onboarding_storage_help_info">পুরোনো ভার্সন থেকে আপডেট করছেন এবং কী নির্বাচন করবেন তা নিশ্চিত নন? আরও তথ্যের জন্য স্টোরেজ গাইডটি দেখুন।</string>
+    <string name="label_upcoming">আসন্ন</string>
 </resources>

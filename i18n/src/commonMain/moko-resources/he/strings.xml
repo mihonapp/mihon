@@ -513,7 +513,6 @@
     <string name="channel_app_updates">עדכוני אפליקציה</string>
     <string name="source_filter_empty_screen">לא נמצאו מקורות מותקנים</string>
     <string name="notification_size_warning">הורדות גדולות פוגעות במקורות ויכולות לגרום לעדכונים איטיים יותר וגם לשימוש מוגבר בסוללה. לחץ כדי ללמוד עוד.</string>
-    <string name="update_check_fdroid_migration_info">גרסה חדשה זמינה מההוצאה הרשמית. לחץ כדי ללמוד איך להעביר מהוצאות לא רשמיות של F-Droid.</string>
     <string name="information_empty_category_dialog">עדיין אין קטגוריות.</string>
     <string name="learn_more">לחץ כדי ללמוד עוד</string>
     <string name="pref_clear_history">נקה היסטוריה</string>
@@ -594,7 +593,6 @@
     <string name="action_sort_next_updated">העדכון הצפוי הבא</string>
     <string name="pref_advanced_summary">הורד קבצי קריסה, אופטימיזציה לסוללה</string>
     <string name="theme_lavender">לבנדר</string>
-    <string name="pref_library_columns_per_row">%d בכל שורה</string>
     <string name="information_cloudflare_help">לחץ כאן לעזרה עם Cloudflare</string>
     <string name="download_notifier_split_page_not_found">עמוד %d לא נמצא בעת פיצול</string>
     <string name="appwidget_updates_description">צפה בפריטי הספריה העדכניים ביותר</string>
@@ -636,7 +634,6 @@
     <string name="label_background_activity">פעילות רקע</string>
     <string name="label_tracked_titles">פריטים במעקב</string>
     <string name="pref_user_agent_string">מחרוזת משתמש דיפולטית</string>
-    <string name="pref_chapter_swipe">מעבר פרק</string>
     <string name="copied_to_clipboard_plain">הועתק ללוח כתיבה</string>
     <string name="are_you_sure">האם אתה בטוח?</string>
     <string name="source_unsupported">המקור לא נתמך</string>

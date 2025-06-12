@@ -571,7 +571,6 @@
     <string name="notification_chapters_multiple">%1$s화</string>
     <string name="file_picker_error">파일 선택 어플리케이션이 없습니다</string>
     <string name="empty_backup_error">백업할 서재 항목이 없습니다</string>
-    <string name="update_check_fdroid_migration_info">새로운 공식 업데이트가 있습니다. F-Droid의 비공식 버전에서 이전을 원하시면 터치해서 방법을 확인하세요.</string>
     <string name="update_check_open">GitHub에서 열기</string>
     <string name="error_saving_picture">이미지 저장 오류</string>
     <string name="source_empty_screen">출처를 찾을 수 없습니다</string>
@@ -692,10 +691,8 @@
     <string name="pref_page_rotate">화면에 맞게 넓은 페이지 회전</string>
     <string name="pref_page_rotate_invert">회전된 넓은 페이지의 회전 방향</string>
     <string name="pref_debug_info">디버그 정보</string>
-    <string name="pref_library_columns_per_row">행당 %d개</string>
     <string name="pref_chapter_swipe_start">왼쪽으로 스와이프 액션</string>
     <string name="pref_chapter_swipe_end">오른쪽으로 스와이프 액션</string>
-    <string name="pref_chapter_swipe">회차 스와이프</string>
     <string name="pref_double_tap_zoom">두 번 탭하여 줌</string>
     <string name="action_set_interval">간격 설정</string>
     <string name="action_filter_interval_custom">사용자 설정 업데이트 빈도</string>
@@ -722,9 +719,7 @@
     <string name="track_activity_name">트래킹 서비스 로그인</string>
     <string name="exception_http">HTTP %d, WebView의 웹 사이트를 확인해 주세요</string>
     <string name="exception_unknown_host">%s에 연결할 수 없습니다</string>
-    <string name="action_sort_category">카테고리 정렬</string>
     <string name="notification_updating_progress">서재 업데이트 중...(%s)</string>
-    <string name="sort_category_confirmation">카테고리를 알파벳 순으로 정렬하시겠습니까?</string>
     <string name="source_settings">소스 설정</string>
     <string name="app_settings">앱 설정</string>
     <string name="onboarding_permission_install_apps_description">확장 앱 설치를 위해 필요합니다.</string>

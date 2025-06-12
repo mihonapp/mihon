@@ -14,6 +14,7 @@ import tachiyomi.domain.storage.service.StorageManager
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.io.IOException
 
 /**
  * This class is used to provide the directories where the downloads should be saved.
@@ -35,20 +36,36 @@ class DownloadProvider(
      * @param mangaTitle the title of the manga to query.
      * @param source the source of the manga.
      */
-    internal fun getMangaDir(mangaTitle: String, source: Source): UniFile {
-        try {
-            return downloadsDir!!
-                .createDirectory(getSourceDirName(source))!!
-                .createDirectory(getMangaDirName(mangaTitle))!!
-        } catch (e: Throwable) {
-            logcat(LogPriority.ERROR, e) { "Invalid download directory" }
-            throw Exception(
-                context.stringResource(
-                    MR.strings.invalid_location,
-                    downloadsDir?.displayablePath ?: "",
-                ),
+    internal fun getMangaDir(mangaTitle: String, source: Source): Result<UniFile> {
+        val downloadsDir = downloadsDir
+        if (downloadsDir == null) {
+            logcat(LogPriority.ERROR) { "Failed to create download directory" }
+            return Result.failure(
+                IOException(context.stringResource(MR.strings.storage_failed_to_create_download_directory)),
             )
         }
+
+        val sourceDirName = getSourceDirName(source)
+        val sourceDir = downloadsDir.createDirectory(sourceDirName)
+        if (sourceDir == null) {
+            val displayablePath = downloadsDir.displayablePath + "/$sourceDirName"
+            logcat(LogPriority.ERROR) { "Failed to create source download directory: $displayablePath" }
+            return Result.failure(
+                IOException(context.stringResource(MR.strings.storage_failed_to_create_directory, displayablePath)),
+            )
+        }
+
+        val mangaDirName = getMangaDirName(mangaTitle)
+        val mangaDir = sourceDir.createDirectory(mangaDirName)
+        if (mangaDir == null) {
+            val displayablePath = sourceDir.displayablePath + "/$mangaDirName"
+            logcat(LogPriority.ERROR) { "Failed to create manga download directory: $displayablePath" }
+            return Result.failure(
+                IOException(context.stringResource(MR.strings.storage_failed_to_create_directory, displayablePath)),
+            )
+        }
+
+        return Result.success(mangaDir)
     }
 
     /**

@@ -64,4 +64,16 @@
         <item quantity="one">%d দিন</item>
         <item quantity="other">%d দিন</item>
     </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d রিপো</item>
+        <item quantity="other">%d রিপো</item>
+    </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">আগামীকাল</item>
+        <item quantity="other">%1$d দিনে</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">১ পেজ</item>
+        <item quantity="other">%1$s পেজ</item>
+    </plurals>
 </resources>

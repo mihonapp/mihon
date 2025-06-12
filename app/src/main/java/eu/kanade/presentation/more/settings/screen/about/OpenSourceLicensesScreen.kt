@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
-import com.mikepenz.aboutlibraries.ui.compose.m3.util.htmlReadyLicenseContent
+import com.mikepenz.aboutlibraries.ui.compose.util.htmlReadyLicenseContent
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.util.Screen
 import tachiyomi.i18n.MR

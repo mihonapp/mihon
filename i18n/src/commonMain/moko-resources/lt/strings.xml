@@ -479,7 +479,6 @@
     <string name="channel_progress">Progresas</string>
     <string name="backup_in_progress">Atsarginė kopija jau kuriama</string>
     <string name="download_queue_size_warning">Įspėjimas: dėl didelių masinių atsisiuntimų šaltiniai gali tapti lėtesni ir (arba) jie blokuoti \"Mihon\". Bakstelėkite , jei norite sužinoti daugiau.</string>
-    <string name="update_check_fdroid_migration_info">Nauja versija pasiekiama oficialiuose leidiniuose. Bakstelėkite , kad sužinotumėte, kaip pereiti iš neoficialių \"F-Droid\" leidinių.</string>
     <string name="pref_disable_battery_optimization">Išjungti akumuliatoriaus optimizavimą</string>
     <string name="restore_completed">Atkūrimas baigtas</string>
     <string name="restore_duration">%02d min, %02d sek</string>

@@ -458,7 +458,6 @@
     <string name="channel_app_updates">بروزرسانی برنامه</string>
     <string name="pref_navigate_pan">هنگام ضربه زدن تصاویر را عریض کنید</string>
     <string name="pref_landscape_zoom">بزرگنمایی تصویر چشم انداز</string>
-    <string name="update_check_fdroid_migration_info">نسخه جدیدی از نسخه‌های رسمی موجود است. برای یادگیری نحوه انتقال از نسخه‌های غیررسمی اف دروید، ضربه بزنید.</string>
     <string name="action_sort_last_manga_update">بررسی آخرین به روزرسانی</string>
     <string name="action_sort_unread_count">تعداد نخوانده‌ها</string>
     <string name="skipped_reason_completed">به دلیل کامل‌بودن سری، رد شد</string>
@@ -591,7 +590,6 @@
     <string name="delete_downloaded">پاک کردن قسمت های دانلود شده</string>
     <string name="action_apply">ذخیره</string>
     <string name="action_revert_to_default">باز نشانی به حالت اولیه</string>
-    <string name="action_sort_category">منظم کردن دسته بندی ها</string>
     <string name="action_menu_overflow_description">گزینه های بیشتر</string>
     <string name="selected">انتخاب شده</string>
     <string name="not_selected">انتخاب نشده</string>
@@ -599,7 +597,6 @@
     <string name="action_bar_up_description">برو به بالا</string>
     <string name="action_sort_tracker_score">امتیاز رهگیز</string>
     <string name="label_data_storage">داده های و ذخیره سازی</string>
-    <string name="sort_category_confirmation">آیا مایلید که دسته بندی ها را به ترتیب الفبا منظم کنید؟</string>
     <string name="action_ok">باشه</string>
     <string name="action_sort_next_updated">به روز رسانی مورد انتظار بعدی</string>
     <string name="download_queue_size_warning">هشدار: حجم زیاد بارگیری ممکن است باعث اهسته تر شدن سرعت ویا مسدود کردن Mihon از منبع شود. برای اطلاعات بیشتر لمس کنید.</string>
@@ -608,7 +605,6 @@
     <string name="skipped_reason_not_started">به دلیل این که هیچ چپتری خوانده نشده بود رد شد</string>
     <string name="notification_update_error">%1$d بروز رسانی ناموفق</string>
     <string name="pref_relative_format_summary">\"%1$s\" به جای \"%2$s\"</string>
-    <string name="pref_library_columns_per_row">%d در هر ردیف</string>
     <string name="pref_page_rotate">صفحات عریض را بچرخان تا جا شوند</string>
     <string name="popular">محبوب</string>
     <string name="pref_chapter_swipe_end">حرکت کشیدن به راست</string>
@@ -631,7 +627,6 @@
     <string name="onboarding_guides_returning_user">نصب مجدد %s؟</string>
     <string name="pref_relative_format">زمان بندی های نسبی</string>
     <string name="pref_library_update_smart_update">به روز رسانی هوشمند</string>
-    <string name="pref_chapter_swipe">کشیدن قسمت</string>
     <string name="ext_revoke_trust">لغو اعتماد افزونه های ناشناخته</string>
     <string name="label_extension_repos">مخازن افزونه ها</string>
     <string name="action_add_repo">اضافه کردن مخزن</string>

@@ -197,10 +197,6 @@ object SettingsReaderScreen : SearchableSettings {
                     preference = readerPreferences.alwaysShowChapterTransition(),
                     title = stringResource(MR.strings.pref_always_show_chapter_transition),
                 ),
-                Preference.PreferenceItem.SwitchPreference(
-                    preference = readerPreferences.markDuplicateReadChapterAsRead(),
-                    title = stringResource(MR.strings.pref_mark_duplicate_read_chapter_read),
-                ),
             ),
         )
     }
