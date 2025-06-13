@@ -259,7 +259,6 @@ object SettingsLibraryScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = libraryPreferences.hideMissingChapters(),
                     title = stringResource(MR.strings.pref_hide_missing_chapter_indicators),
-                    subtitle = stringResource(MR.strings.pref_hide_missing_chapter_indicators_summary)
                 ),
             ),
         )
