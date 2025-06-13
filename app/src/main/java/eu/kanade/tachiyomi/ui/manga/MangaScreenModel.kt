@@ -1139,9 +1139,10 @@ class MangaScreenModel(
 
             val chapterListItems by lazy {
                 if (hideMissingChapters) {
-                    processedChapters
-                } else {
-                    processedChapters.insertSeparators { before, after ->
+                    return@lazy processedChapters
+                }
+                
+                processedChapters.insertSeparators { before, after ->
                         val (lowerChapter, higherChapter) = if (manga.sortDescending()) {
                             after to before
                         } else {
