@@ -1138,29 +1138,33 @@ class MangaScreenModel(
             }
 
             val chapterListItems by lazy {
-                processedChapters.insertSeparators { before, after ->
-                    val (lowerChapter, higherChapter) = if (manga.sortDescending()) {
-                        after to before
-                    } else {
-                        before to after
-                    }
-                    if (higherChapter == null) return@insertSeparators null
-
-                    if (lowerChapter == null) {
-                        floor(higherChapter.chapter.chapterNumber)
-                            .toInt()
-                            .minus(1)
-                            .coerceAtLeast(0)
-                    } else {
-                        calculateChapterGap(higherChapter.chapter, lowerChapter.chapter)
-                    }
-                        .takeIf { it > 0 }
-                        ?.let { missingCount ->
-                            ChapterList.MissingCount(
-                                id = "${lowerChapter?.id}-${higherChapter.id}",
-                                count = missingCount,
-                            )
+                if (hideMissingChapters) {
+                    processedChapters
+                } else {
+                    processedChapters.insertSeparators { before, after ->
+                        val (lowerChapter, higherChapter) = if (manga.sortDescending()) {
+                            after to before
+                        } else {
+                            before to after
                         }
+                        if (higherChapter == null) return@insertSeparators null
+
+                        if (lowerChapter == null) {
+                            floor(higherChapter.chapter.chapterNumber)
+                                .toInt()
+                                .minus(1)
+                                .coerceAtLeast(0)
+                        } else {
+                            calculateChapterGap(higherChapter.chapter, lowerChapter.chapter)
+                        }
+                            .takeIf { it > 0 }
+                            ?.let { missingCount ->
+                                ChapterList.MissingCount(
+                                    id = "${lowerChapter?.id}-${higherChapter.id}",
+                                    count = missingCount,
+                                )
+                            }
+                    }
                 }
             }
 

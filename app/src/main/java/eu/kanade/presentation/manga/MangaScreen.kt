@@ -447,7 +447,6 @@ private fun MangaScreenSmallImpl(
                         onDownloadChapter = onDownloadChapter,
                         onChapterSelected = onChapterSelected,
                         onChapterSwipe = onChapterSwipe,
-                        hideMissingChapters = state.hideMissingChapters,
                     )
                 }
             }
@@ -687,7 +686,6 @@ fun MangaScreenLargeImpl(
                                 onDownloadChapter = onDownloadChapter,
                                 onChapterSelected = onChapterSelected,
                                 onChapterSwipe = onChapterSwipe,
-                                hideMissingChapters = state.hideMissingChapters,
                             )
                         }
                     }
@@ -749,7 +747,6 @@ private fun LazyListScope.sharedChapterItems(
     onDownloadChapter: ((List<ChapterList.Item>, ChapterDownloadAction) -> Unit)?,
     onChapterSelected: (ChapterList.Item, Boolean, Boolean, Boolean) -> Unit,
     onChapterSwipe: (ChapterList.Item, LibraryPreferences.ChapterSwipeAction) -> Unit,
-    hideMissingChapters: Boolean,
 ) {
     items(
         items = chapters,
@@ -765,9 +762,7 @@ private fun LazyListScope.sharedChapterItems(
 
         when (item) {
             is ChapterList.MissingCount -> {
-                if (!hideMissingChapters) {
                     MissingChapterCountListItem(count = item.count)
-                }
             }
             is ChapterList.Item -> {
                 MangaChapterListItem(
