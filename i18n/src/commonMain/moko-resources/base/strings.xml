@@ -1016,4 +1016,24 @@
     <string name="migrationConfigScreen.deepSearchModeSubtitle">Breaks down the title into keywords for a wider search</string>
     <string name="migrationConfigScreen.prioritizeByChaptersTitle">Match based on chapter number</string>
     <string name="migrationConfigScreen.prioritizeByChaptersSubtitle">If enabled, chooses the match furthest ahead. Otherwise, picks the first match by source priority.</string>
+    <string name="migrationListScreenTitle">Migration</string>
+    <string name="migrationListScreenTitleWithProgress">Migration (%1$d/%2$d)</string>
+    <string name="migrationListScreen.copyActionLabel">Copy</string>
+    <string name="migrationListScreen.migrateActionLabel">Migrate</string>
+    <string name="migrationListScreen.noMatchFoundText">No alternatives found</string>
+    <string name="migrationListScreen.latestChapterLabel">Latest: %1$s</string>
+    <string name="migrationListScreen.unknownLatestChapter">Unknown</string>
+    <string name="migrationListScreen.searchManuallyActionLabel">Search manually</string>
+    <string name="migrationListScreen.skipActionLabel">Don\'t migrate</string>
+    <string name="migrationListScreen.migrateNowActionLabel">Migrate now</string>
+    <string name="migrationListScreen.copyNowActionLabel">Copy now</string>
+    <string name="migrationListScreen.copyNowActionLabel">Copy now</string>
+    <string name="migrationListScreen.exitDialogTitle">Stop migrating?</string>
+    <string name="migrationListScreen.exitDialog.stopLabel">Stop</string>
+    <string name="migrationListScreen.exitDialog.cancelLabel">Cancel</string>
+    <string name="migrationListScreen.migrateDialog.copyLabel">Copy</string>
+    <string name="migrationListScreen.migrateDialog.migrateLabel">Migrate</string>
+    <string name="migrationListScreen.migrateDialog.cancelLabel">Cancel</string>
+    <string name="migrationListScreen.progressDialog.cancelLabel">Cancel</string>
+    <string name="migrationListScreen.matchWithoutChapterToast">No chapters found, this entry cannot be used for migration</string>
 </resources>

@@ -50,6 +50,7 @@ import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateSearchScreen
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.update
+import mihon.feature.migration.list.MigrationListScreen
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.ReorderableLazyListState
@@ -69,7 +70,9 @@ import tachiyomi.presentation.core.util.shouldExpandFAB
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class MigrationConfigScreen(private val mangaId: Long) : Screen() {
+class MigrationConfigScreen(private val mangaIds: List<Long>) : Screen() {
+
+    constructor(mangaId: Long) : this(listOf(mangaId))
 
     @Composable
     override fun Content() {
@@ -81,7 +84,17 @@ class MigrationConfigScreen(private val mangaId: Long) : Screen() {
         var migrationSheetOpen by rememberSaveable { mutableStateOf(false) }
 
         fun continueMigration(openSheet: Boolean, extraSearchQuery: String?) {
-            navigator.replace(MigrateSearchScreen(mangaId))
+            val mangaId = mangaIds.singleOrNull()
+            if (mangaId == null && openSheet) {
+                migrationSheetOpen = true
+                return
+            }
+            val screen = if (mangaId == null) {
+                MigrationListScreen(mangaIds, extraSearchQuery)
+            } else {
+                MigrateSearchScreen(mangaId)
+            }
+            navigator.replace(screen)
         }
 
         if (state.isLoading) {

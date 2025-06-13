@@ -29,6 +29,7 @@ import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewScreen
 import kotlinx.coroutines.launch
 import mihon.feature.migration.dialog.MigrateMangaDialog
+import mihon.feature.migration.list.MigrationListScreen
 import mihon.presentation.core.util.collectAsLazyPagingItems
 import tachiyomi.core.common.Constants
 import tachiyomi.domain.manga.model.Manga
@@ -83,7 +84,16 @@ data class MigrateSourceSearchScreen(
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         ) { paddingValues ->
             val openMigrateDialog: (Manga) -> Unit = {
-                screenModel.setDialog(BrowseSourceScreenModel.Dialog.Migrate(target = it, current = currentManga))
+                val migrateListScreen = navigator.items
+                    .filterIsInstance<MigrationListScreen>()
+                    .lastOrNull()
+
+                if (migrateListScreen == null) {
+                    screenModel.setDialog(BrowseSourceScreenModel.Dialog.Migrate(target = it, current = currentManga))
+                } else {
+                    migrateListScreen.addMatchOverride(current = currentManga.id, target = it.id)
+                    navigator.popUntil { screen -> screen is MigrationListScreen }
+                }
             }
             BrowseSourceContent(
                 source = screenModel.source,
