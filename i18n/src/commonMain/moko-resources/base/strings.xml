@@ -1005,15 +1005,15 @@
     <string name="migrationConfigScreen.selectPinnedLabel">Select pinned sources</string>
     <string name="migrationConfigScreen.continueButtonText">Continue</string>
     <string name="migrationConfigScreen.dataToMigrateHeader">Data to migrate</string>
-    <string name="migrationConfigScreen.removeDownloadsTitle">Delete downloads after migration</string>
-    <string name="migrationConfigScreen.additionalSearchQueryLabel">Additional search keywords</string>
-    <string name="migrationConfigScreen.additionalSearchQueryPlaceholder">e.g. language:english</string>
-    <string name="migrationConfigScreen.additionalSearchQuerySupportingText">Appends keywords to the search query</string>
-    <string name="migrationConfigScreen.hideUnmatchedTitle">Hide unmatched manga</string>
-    <string name="migrationConfigScreen.enhancedOptionsWarning">Settings below can be slower and may lead to temporary source restrictions</string>
-    <string name="migrationConfigScreen.hideWithoutUpdatesTitle">Hide if no new chapters</string>
-    <string name="migrationConfigScreen.hideWithoutUpdatesSubtitle">Show only if the match offers newer chapters</string>
-    <string name="migrationConfigScreen.deepSearchModeTitle">Deep search mode</string>
-    <string name="migrationConfigScreen.deepSearchModeSubtitle">More detailed keyword search</string>
-    <string name="migrationConfigScreen.prioritizeByChaptersTitle">Prioritize by newer chapters</string>
+    <string name="migrationConfigScreen.removeDownloadsTitle">Delete downloads of current entry after migration</string>
+    <string name="migrationConfigScreen.additionalSearchQueryLabel">Additional keywords (optional)</string>
+    <string name="migrationConfigScreen.additionalSearchQuerySupportingText">Helps narrow down search results by adding additional keywords</string>
+    <string name="migrationConfigScreen.hideUnmatchedTitle">Hide entries without a match</string>
+    <string name="migrationConfigScreen.hideWithoutUpdatesTitle">Hide entries without newer chapters</string>
+    <string name="migrationConfigScreen.hideWithoutUpdatesSubtitle">Only show entry if the match has additional chapters</string>
+    <string name="migrationConfigScreen.enhancedOptionsWarning">These options are slow and dangerous and may lead to restrictions from sources</string>
+    <string name="migrationConfigScreen.deepSearchModeTitle">Advanced search mode</string>
+    <string name="migrationConfigScreen.deepSearchModeSubtitle">Breaks down the title into keywords for a wider search</string>
+    <string name="migrationConfigScreen.prioritizeByChaptersTitle">Match based on chapter number</string>
+    <string name="migrationConfigScreen.prioritizeByChaptersSubtitle">If enabled, chooses the match furthest ahead. Otherwise, picks the first match by source priority.</string>
 </resources>

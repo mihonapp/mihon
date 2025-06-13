@@ -29,6 +29,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.util.fastForEach
+import eu.kanade.core.util.fastFilterNot
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.presentation.components.AdaptiveSheet
 import mihon.domain.migration.models.MigrationFlag
@@ -77,31 +79,32 @@ fun MigrationConfigScreenSheet(
                         .padding(bottom = MaterialTheme.padding.extraSmall),
                     horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
                 ) {
-                    MigrationFlag.entries.forEach { flag ->
-                        if (flag == MigrationFlag.REMOVE_DOWNLOAD) return@forEach
-                        val selected = flag in migrationFlags
-                        FilterChip(
-                            selected = selected,
-                            onClick = {
-                                preferences.migrationFlags().getAndSet {
-                                    if (selected) {
-                                        it - flag
-                                    } else {
-                                        it + flag
+                    MigrationFlag.entries
+                        .fastFilterNot { it == MigrationFlag.REMOVE_DOWNLOAD }
+                        .fastForEach { flag ->
+                            val selected = flag in migrationFlags
+                            FilterChip(
+                                selected = selected,
+                                onClick = {
+                                    preferences.migrationFlags().getAndSet { currentFlags ->
+                                        if (flag in currentFlags) {
+                                            currentFlags - flag
+                                        } else {
+                                            currentFlags + flag
+                                        }
                                     }
-                                }
-                            },
-                            label = { Text(stringResource(flag.getLabel())) },
-                            leadingIcon = {
-                                if (selected) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.Check,
-                                        contentDescription = null,
-                                    )
-                                }
-                            },
-                        )
-                    }
+                                },
+                                label = { Text(stringResource(flag.getLabel())) },
+                                leadingIcon = {
+                                    if (selected) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Check,
+                                            contentDescription = null,
+                                        )
+                                    }
+                                },
+                            )
+                        }
                 }
                 val removeDownloads = MigrationFlag.REMOVE_DOWNLOAD in migrationFlags
                 MigrationSheetSwitchItem(
@@ -123,9 +126,6 @@ fun MigrationConfigScreenSheet(
                     value = extraSearchQuery,
                     onValueChange = { extraSearchQuery = it },
                     label = { Text(stringResource(MR.strings.migrationConfigScreen_additionalSearchQueryLabel)) },
-                    placeholder = {
-                        Text(stringResource(MR.strings.migrationConfigScreen_additionalSearchQueryPlaceholder))
-                    },
                     supportingText = {
                         Text(stringResource(MR.strings.migrationConfigScreen_additionalSearchQuerySupportingText))
                     },
@@ -142,13 +142,13 @@ fun MigrationConfigScreenSheet(
                     subtitle = null,
                     preference = preferences.migrationHideUnmatched(),
                 )
-                MigrationSheetDividerItem()
-                MigrationSheetWarningItem(stringResource(MR.strings.migrationConfigScreen_enhancedOptionsWarning))
                 MigrationSheetSwitchItem(
                     title = stringResource(MR.strings.migrationConfigScreen_hideWithoutUpdatesTitle),
                     subtitle = stringResource(MR.strings.migrationConfigScreen_hideWithoutUpdatesSubtitle),
                     preference = preferences.migrationHideWithoutUpdates(),
                 )
+                MigrationSheetDividerItem()
+                MigrationSheetWarningItem(stringResource(MR.strings.migrationConfigScreen_enhancedOptionsWarning))
                 MigrationSheetSwitchItem(
                     title = stringResource(MR.strings.migrationConfigScreen_deepSearchModeTitle),
                     subtitle = stringResource(MR.strings.migrationConfigScreen_deepSearchModeSubtitle),
@@ -156,13 +156,16 @@ fun MigrationConfigScreenSheet(
                 )
                 MigrationSheetSwitchItem(
                     title = stringResource(MR.strings.migrationConfigScreen_prioritizeByChaptersTitle),
-                    subtitle = null,
+                    subtitle = stringResource(MR.strings.migrationConfigScreen_prioritizeByChaptersSubtitle),
                     preference = preferences.migrationPrioritizeByChapters(),
                 )
             }
             HorizontalDivider()
             Button(
-                onClick = { onStartMigration(extraSearchQuery) },
+                onClick = {
+                    val cleanedExtraSearchQuery = extraSearchQuery.trim().ifBlank { null }
+                    onStartMigration(cleanedExtraSearchQuery)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
@@ -182,11 +185,10 @@ private fun MigrationSheetSwitchItem(
     subtitle: String?,
     preference: Preference<Boolean>,
 ) {
-    val checked by preference.collectAsState()
     MigrationSheetSwitchItem(
         title = title,
         subtitle = subtitle,
-        checked = checked,
+        checked = preference.collectAsState().value,
         onClick = { preference.toggle() },
     )
 }
