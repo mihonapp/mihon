@@ -317,7 +317,6 @@
     <string name="pref_mark_duplicate_read_chapter_read_new">After fetching new chapter</string>
 
     <string name="pref_hide_missing_chapter_indicators">Hide missing chapter indicators</string>
-    <string name="pref_hide_missing_chapter_indicators_summary">Prevent showing messages like 'Missing 3 chapters'</string>
 
       <!-- Extension section -->
     <string name="multi_lang">Multi</string>
