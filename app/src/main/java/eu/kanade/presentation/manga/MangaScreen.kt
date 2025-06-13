@@ -762,7 +762,7 @@ private fun LazyListScope.sharedChapterItems(
 
         when (item) {
             is ChapterList.MissingCount -> {
-                    MissingChapterCountListItem(count = item.count)
+                MissingChapterCountListItem(count = item.count)
             }
             is ChapterList.Item -> {
                 MangaChapterListItem(
