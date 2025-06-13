@@ -56,6 +56,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix Pill not following the local text style ([@AntsyLich](https://github.com/AntsyLich)) ([`f8cb506`](https://github.com/mihonapp/mihon/commit/f8cb506))
 - Fix downloader stopping after failing to create download directory of a manga ([@AntsyLich](https://github.com/AntsyLich)) ([#2068](https://github.com/mihonapp/mihon/pull/2068))
 - Fix pressing `Enter` while searching also triggering navigation back on physical keyboards ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2077](https://github.com/mihonapp/mihon/pull/2077))
+- Ensure app waits for Cloudflare challenge to complete before continuing ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2200](https://github.com/mihonapp/mihon/pull/2200))
 
 ### Removed
 - Remove Okhttp networking from WebView Screen ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2020](https://github.com/mihonapp/mihon/pull/2020))
