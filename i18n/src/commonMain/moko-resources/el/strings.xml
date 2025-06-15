@@ -171,7 +171,6 @@
     <string name="cookies_cleared">Τα cookies διαγράφηκαν</string>
     <string name="pref_clear_database">Καθαρισμός βάσης δεδομένων</string>
     <string name="pref_clear_database_summary">Διαγραφή ιστορικού για καταχωρήσεις που δεν έχουν αποθηκευτεί στη βιβλιοθήκη σας</string>
-    <string name="clear_database_confirmation">Είστε σίγουροι; Τα διαβασμένα κεφάλαια και η πρόοδος των καταχωρήσεων εκτός βιβλιοθήκης θα χαθούν</string>
     <string name="clear_database_completed">Οι καταχωρίσεις διαγράφηκαν</string>
     <string name="version">Έκδοση</string>
     <string name="pref_enable_acra">Αποστολή αναφορών σφαλμάτων</string>
@@ -676,9 +675,6 @@
     <string name="information_no_manga_category">Η κατηγορία είναι άδεια</string>
     <string name="pref_library_update_show_tab_badge">Εμφάνιση του αριθμού των μη αναγνωσμένων στο εικονίδιο Ενημερώσεις</string>
     <string name="copied_to_clipboard_plain">Αντιγράφηκε στο πρόχειρο</string>
-    <string name="confirm_add_duplicate_manga">Έχετε μια καταχώρηση στη βιβλιοθήκη σας με το ίδιο όνομα.
-\n
-\nΘέλετε να συνεχίσετε;</string>
     <string name="pref_skip_dupe_chapters">Παράλειψη διπλότυπων κεφαλαίων</string>
     <string name="enhanced_services_not_installed">Διαθέσιμο αλλά η πηγή δεν έχει εγκατασταθεί: %s</string>
     <string name="track_error">%1$s σφάλμα: %2$s</string>
@@ -794,7 +790,6 @@
     <string name="action_replace_repo_message">Το αποθετήριο %1$s έχει το ίδιο δακτυλικό αποτύπωμα κλειδιού υπογραφής με το %2$s.
 \nΕάν αυτό είναι αναμενόμενο, το %2$s θα αντικατασταθεί, διαφορετικά επικοινωνήστε με τον συντηρητή του αποθετηρίου σας.</string>
     <string name="label_upcoming">Ανερχόμενο</string>
-    <string name="action_migrate_duplicate">Μεταφορά υπάρχουσας καταχώρησης</string>
     <string name="pref_display_profile">Προσαρμοσμένο προφίλ εμφάνισης</string>
     <string name="action_view_upcoming">Δείτε τις επερχόμενες ενημερώσεις</string>
     <string name="action_replace_repo">Αντικατάσταση</string>

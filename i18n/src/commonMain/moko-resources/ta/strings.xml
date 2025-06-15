@@ -195,7 +195,6 @@
     <string name="action_start_downloading_now">இப்போது பதிவிறக்கத் தொடங்குங்கள்</string>
     <string name="action_not_now">இப்போது இல்லை</string>
     <string name="action_add_anyway">எப்படியும் சேர்க்கவும்</string>
-    <string name="action_migrate_duplicate">இருக்கும் நுழைவு இடம்பெயரவும்</string>
     <string name="loading">ஏற்றுகிறது…</string>
     <string name="internal_error">இன்டர்னெர்ர்: மேலும் தகவலுக்கு செயலிழப்பு பதிவுகளை சரிபார்க்கவும்</string>
     <string name="app_not_available">பயன்பாடு கிடைக்கவில்லை</string>
@@ -554,7 +553,6 @@
     <string name="pref_clear_database">தரவுத்தளத்தை அழிக்கவும்</string>
     <string name="pref_clear_database_summary">உங்கள் நூலகத்தில் சேமிக்கப்படாத உள்ளீடுகளுக்கான வரலாற்றை நீக்கவும்</string>
     <string name="clear_database_source_item_count">தரவுத்தளத்தில் %1$d நூலகமற்ற உள்ளீடுகள்</string>
-    <string name="clear_database_confirmation">நீங்கள் உறுதியாக இருக்கிறீர்களா? அத்தியாயங்கள் மற்றும் நூலகமற்ற உள்ளீடுகளின் முன்னேற்றம் இழக்கப்படும்</string>
     <string name="clear_database_completed">உள்ளீடுகள் நீக்கப்பட்டன</string>
     <string name="database_clean">அழிக்க எதுவும் இல்லை</string>
     <string name="pref_clear_webview_data">வெப்வியூ தரவை அழிக்கவும்</string>
@@ -623,7 +621,6 @@
     <string name="licensed">உரிமம்</string>
     <string name="publishing_finished">வெளியீடு முடிந்தது</string>
     <string name="unknown_title">தெரியாத தலைப்பு</string>
-    <string name="confirm_add_duplicate_manga">அதே பெயருடன் உங்கள் நூலகத்தில் ஒரு நுழைவு உள்ளது.\n\n நீங்கள் இன்னும் தொடர விரும்புகிறீர்களா?</string>
     <string name="manga_added_library">நூலகத்தில் சேர்க்கப்பட்டது</string>
     <string name="cancelled">ரத்து செய்யப்பட்டது</string>
     <string name="on_hiatus">இடைவெளியில்</string>

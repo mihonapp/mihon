@@ -65,7 +65,7 @@
     <string name="pref_category_tracking">التتبع</string>
     <string name="pref_category_advanced">اﻹعدادات المتقدمة</string>
     <string name="pref_category_about">حول التطبيق</string>
-    <string name="pref_library_columns">حجم الشبكة</string>
+    <string name="pref_library_columns">العناصر لكل صف</string>
     <string name="portrait">طوليٌّ</string>
     <string name="landscape">عرضيٌّ</string>
     <string name="pref_library_update_interval">التحديثات التلقائية</string>
@@ -137,10 +137,10 @@
     <string name="restoring_backup">تُستعاد النسخة الاحتياطية</string>
     <string name="creating_backup">تُنشأ النسخة الاحتياطية</string>
     <string name="action_global_search">بحث شامل</string>
-    <string name="color_filter_r_value">R</string>
-    <string name="color_filter_g_value">G</string>
-    <string name="color_filter_b_value">B</string>
-    <string name="color_filter_a_value">A</string>
+    <string name="color_filter_r_value">احمر</string>
+    <string name="color_filter_g_value">اخضر</string>
+    <string name="color_filter_b_value">أزرق</string>
+    <string name="color_filter_a_value">ألفا</string>
     <string name="pref_clear_chapter_cache">مسح الذاكرة المؤقتة للفصول</string>
     <string name="used_cache">المستخدمة: %1$s</string>
     <string name="cache_deleted">تم محو الذاكرة المؤقتة. %1$d ملف تم محوه</string>
@@ -149,7 +149,6 @@
     <string name="cookies_cleared">تم محو ملفات تعريف الارتباط</string>
     <string name="pref_clear_database">محو قاعدة البيانات</string>
     <string name="pref_clear_database_summary">مسح سجلّ الإدخالات التي ليست محفوظة في مكتبتك</string>
-    <string name="clear_database_confirmation">أمتأكِّد؟ إن فعلتَ سوف تخسر الفصول المقروءة و التقدم فى المدخلات الغير محفوظة فى المكتبة</string>
     <string name="clear_database_completed">تم حذف المدخلات</string>
     <string name="version">اﻹصدار</string>
     <string name="pref_enable_acra">إرسال تقارير الأعطال</string>
@@ -330,7 +329,7 @@
     <string name="restore_in_progress">الاستعادة قيد التقدم بالفعل</string>
     <string name="creating_backup_error">فشل النسخ الاحتياطي</string>
     <string name="backup_in_progress">يُنسخ احتياطيًّا بالفعل</string>
-    <string name="restore_duration">%02d دقيقة و %02d ثانية</string>
+    <string name="restore_duration">%1$02dدقيقة،%2$02dثانية</string>
     <string name="action_unpin">إلغاء التثبيت</string>
     <string name="action_pin">تثبيت</string>
     <string name="action_select_inverse">عكس التحديد</string>
@@ -677,9 +676,6 @@
     <string name="pref_library_update_show_tab_badge">إظهار عدد الادخالات غير المقروءة في ايقونة التحديثات</string>
     <string name="pref_skip_dupe_chapters">تجاوز الفصول المكررة</string>
     <string name="enhanced_services_not_installed">متوفر ولكن المصدر غير مثبت: %s</string>
-    <string name="confirm_add_duplicate_manga">لديك إدخال في مكتبتك بنفس الاسم.
-\n
-\nهل مازلت ترغب في الاستمرار؟</string>
     <string name="copied_to_clipboard_plain">نسخ الى الحافظة</string>
     <string name="track_error">%1$s خطأ: %2$s</string>
     <string name="information_required_plain">*مطلوب</string>
@@ -692,8 +688,8 @@
     <string name="pref_page_rotate_invert">اعكس اتِّجاه الصفحات العريضة المدوَّرة</string>
     <string name="pref_debug_info">معلومات التنقيح</string>
     <string name="pref_double_tap_zoom">انقر مرتين لتكبِّر</string>
-    <string name="pref_chapter_swipe_end">إجراء التمرير الأيسر</string>
-    <string name="pref_chapter_swipe_start">إجراء التمرير الأيمن</string>
+    <string name="pref_chapter_swipe_end">إجراء التمرير الى اليمين</string>
+    <string name="pref_chapter_swipe_start">إجراء التمرير الى اليسار</string>
     <string name="action_set_interval">عيِّد المدة</string>
     <string name="action_filter_interval_custom">مدة جلب مخصَّصة</string>
     <string name="manga_display_interval_title">قدِّر كلَّ</string>
@@ -809,10 +805,51 @@
     <string name="pref_flash_with">يومض مع</string>
     <string name="action_replace_repo_message">يحتوي المستودع %1$s على نفس بصمة مفتاح التوقيع الموجودة في %2$s.
 \nإذا كان هذا متوقعًا، فسيتم استبدال %2$s، وإلا فاتصل بمشرف الرابطالخاص بك.</string>
-    <string name="action_migrate_duplicate">نقل مَدْخَل موجود</string>
     <string name="pref_display_profile">ملف تعريف عرض خاص</string>
     <string name="action_copy_link">نسخ الرابط</string>
     <string name="extensionRepo_settings">مستودع الإضافات</string>
     <string name="invalid_backup_file_unknown">ملف النسخة الإحتياطية معطل أو لا يعمل</string>
     <string name="invalid_backup_file_json">لا يتم دعم النسخ الاحتياطي لـ JSON</string>
+    <string name="artist">فنان</string>
+    <string name="author">الكاتب</string>
+    <string name="label_auto">تلقائي</string>
+    <string name="onboarding_permission_analytics_description">أرسل بيانات بشكل مخفي للمساهمة في تطوير البرنامج.</string>
+    <string name="pref_security">الأمن</string>
+    <string name="pref_firebase">سجلات التحليلات و الأخطاء</string>
+    <string name="action_sort_random">عشوائي</string>
+    <string name="onboarding_permission_crashlytics">أرسل سجلات الخطأ</string>
+    <string name="onboarding_permission_crashlytics_description">أرسل سجلات الخطأ للمطورين بشكل خفي.</string>
+    <string name="onboarding_permission_analytics">السماح للتحليلات</string>
+    <string name="action_notes">ملاحظات</string>
+    <string name="action_edit_notes">تعديل الملاحظات</string>
+    <string name="action_display_unread_badge">فصول غير مقروءة</string>
+    <string name="theme_monochrome">أحادي اللون</string>
+    <string name="firebase_summary">سيسمح لنا إرسال سجلات الأعطال والتحليلات بتحديد المشكلات وإصلاحها وتحسين الأداء وجعل التحديثات المستقبلية أكثر ملاءمة لاحتياجاتك</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">بعد قرائة الفصل</string>
+    <string name="storage_failed_to_create_directory">فشل في انشاء المكتبة:%s</string>
+    <string name="storage_failed_to_create_download_directory">فشل في تحميل المكتبة</string>
+    <string name="action_toggle_private_off">التتبع العلني</string>
+    <string name="pref_behavior">تصرف</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">بعد نقل الفصل الجديد</string>
+    <string name="ext_remove">احدف</string>
+    <string name="ext_confirm_remove">حدف الإمتداد؟</string>
+    <string name="add_repo_confirmation">هل تريد اضافة الفهرس \"%s\"؟</string>
+    <string name="pref_update_library_manga_titles">تحديث عنوان المانغا لتطابق المصدر</string>
+    <string name="logging_in">جاري الدخول…</string>
+    <string name="pref_update_library_manga_titles_summary">تحذير: إذا تمت إعادة تسمية المانجا، فسيتم إزالتها من قائمة التنزيل (إن وجدت)</string>
+    <string name="action_toggle_private_on">التتبع الخاص</string>
+    <string name="notes_placeholder">استمتعت بالجزء حين …</string>
+    <string name="trackers_updated_summary">تحديث المتابعات إلى الفصل %d</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">استخدم فك التشفير القديم لقارئ الشرائط الطويلة</string>
+    <string name="pref_mark_duplicate_read_chapter_read">اعتبر الفصول المقروئة مرتين مقروئة</string>
+    <string name="remove_private_extension_message">هل تريد فعلا حدف الامتداد \"%s\"؟</string>
+    <string name="pref_hardware_bitmap_threshold_summary">ادا تم تحميل صورة فارغة قلل الحد تدريجيا لحل المشكلة.\nتم تحديد:%s</string>
+    <string name="library_list">قائمة المكتبات</string>
+    <string name="non_library_settings">جميع الإدخالات المقروئة</string>
+    <string name="pref_hardware_bitmap_threshold">عتبة خريطة الصورة النقطية للأجهزة المخصصة</string>
+    <string name="pref_hardware_bitmap_threshold_default">اساس(%d)</string>
+    <string name="possible_duplicates_summary">لديك مداخلات متشابهة في مكتبك بنفس الاسم.\nحدد واحدة للنقل أو الإضافة على أي حال</string>
+    <string name="possible_duplicates_title">التكرارات المحتملة</string>
+    <string name="confirm_tracker_update">تحديث المتابعات إلى الفصل %d؟</string>
+    <string name="pref_incognito_mode_extension_summary">إيقاف قراءة التاريخ مؤقتًا للتمديد</string>
 </resources>
