@@ -159,7 +159,7 @@ class DownloadManager(
      * @return the list of pages from the chapter.
      */
     fun buildPageList(source: Source, manga: Manga, chapter: Chapter): List<Page> {
-        val chapterDir = provider.findChapterDir(chapter.name, chapter.scanlator, manga.title, source)
+        val chapterDir = provider.findChapterDir(chapter, manga, source)
         val files = chapterDir?.listFiles().orEmpty()
             .filter { it.isFile && ImageUtil.isImage(it.name) { it.openInputStream() } }
 
@@ -176,20 +176,17 @@ class DownloadManager(
     /**
      * Returns true if the chapter is downloaded.
      *
-     * @param chapterName the name of the chapter to query.
-     * @param chapterScanlator scanlator of the chapter to query
-     * @param mangaTitle the title of the manga to query.
-     * @param sourceId the id of the source of the chapter.
+     * @param chapter the domain chapter object.
+     * @param manga the domain manga object.
      * @param skipCache whether to skip the directory cache and check in the filesystem.
      */
     fun isChapterDownloaded(
-        chapterName: String,
-        chapterScanlator: String?,
-        mangaTitle: String,
-        sourceId: Long,
+        chapter: Chapter?,
+        manga: Manga?,
         skipCache: Boolean = false,
     ): Boolean {
-        return cache.isChapterDownloaded(chapterName, chapterScanlator, mangaTitle, sourceId, skipCache)
+        if ((manga == null) || (chapter == null)) return false;
+        return cache.isChapterDownloaded(chapter, manga, skipCache)
     }
 
     /**
@@ -251,7 +248,7 @@ class DownloadManager(
             if (removeQueued) {
                 downloader.removeFromQueue(manga)
             }
-            provider.findMangaDir(manga.title, source)?.delete()
+            provider.findMangaDir(manga, source)?.delete()
             cache.removeManga(manga)
 
             // Delete source directory if empty
@@ -331,12 +328,12 @@ class DownloadManager(
      * Renames manga download folder
      *
      * @param manga the manga
-     * @param newTitle the new manga title.
+     * @param newManga the domain manga object representing the target state.
      */
-    suspend fun renameManga(manga: Manga, newTitle: String) {
+    suspend fun renameManga(manga: Manga, newManga: Manga) {
         val source = sourceManager.getOrStub(manga.source)
-        val oldFolder = provider.findMangaDir(manga.title, source) ?: return
-        val newName = provider.getMangaDirName(newTitle)
+        val oldFolder = provider.findMangaDir(manga, source) ?: return
+        val newName = provider.getMangaDirName(newManga)
 
         if (oldFolder.name == newName) return
 
@@ -353,7 +350,7 @@ class DownloadManager(
         }
 
         if (oldFolder.renameTo(newName)) {
-            cache.renameManga(manga, oldFolder, newTitle)
+            cache.renameManga(manga, oldFolder, newManga)
         } else {
             logcat(LogPriority.ERROR) { "Failed to rename manga download folder: ${oldFolder.name}" }
         }
@@ -368,8 +365,8 @@ class DownloadManager(
      * @param newChapter the target chapter with the new name.
      */
     suspend fun renameChapter(source: Source, manga: Manga, oldChapter: Chapter, newChapter: Chapter) {
-        val oldNames = provider.getValidChapterDirNames(oldChapter.name, oldChapter.scanlator)
-        val mangaDir = provider.getMangaDir(manga.title, source).getOrElse { e ->
+        val oldNames = provider.getValidChapterDirNames(oldChapter)
+        val mangaDir = provider.getMangaDir(manga, source).getOrElse { e ->
             logcat(LogPriority.ERROR, e) { "Manga download folder doesn't exist. Skipping renaming after source sync" }
             return
         }
@@ -379,7 +376,7 @@ class DownloadManager(
             .mapNotNull { mangaDir.findFile(it) }
             .firstOrNull() ?: return
 
-        var newName = provider.getChapterDirName(newChapter.name, newChapter.scanlator)
+        var newName = provider.getChapterDirName(newChapter)
         if (oldDownload.isFile && oldDownload.extension == "cbz") {
             newName += ".cbz"
         }

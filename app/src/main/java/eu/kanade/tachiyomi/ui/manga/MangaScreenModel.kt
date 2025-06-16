@@ -526,7 +526,7 @@ class MangaScreenModel(
             val downloaded = if (isLocal) {
                 true
             } else {
-                downloadManager.isChapterDownloaded(chapter.name, chapter.scanlator, manga.title, manga.source)
+                downloadManager.isChapterDownloaded(chapter, manga)
             }
             val downloadState = when {
                 activeDownload != null -> activeDownload.status

@@ -469,10 +469,8 @@ class LibraryScreenModel(
                     .fastFilterNot { chapter ->
                         downloadManager.getQueuedDownloadOrNull(chapter.id) != null ||
                             downloadManager.isChapterDownloaded(
-                                chapter.name,
-                                chapter.scanlator,
-                                manga.title,
-                                manga.source,
+                                chapter,
+                                manga,
                             )
                     }
                     .let { if (amount != null) it.take(amount) else it }
