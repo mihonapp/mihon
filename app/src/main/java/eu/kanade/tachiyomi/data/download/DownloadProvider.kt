@@ -144,11 +144,11 @@ class DownloadProvider(
      */
     fun getChapterDirName(chapter: Chapter): String {
         val newChapterName = sanitizeChapterName(chapter.name)
-        val hash = md5(chapter.url).takeLast(6)
+//        val hash = md5(chapter.url).takeLast(6)
         return DiskUtil.buildValidFilename(
             when {
-                !chapter.scanlator.isNullOrBlank() -> "${newChapterName}_${chapter.scanlator}_${hash}"
-                else -> "${newChapterName}_${hash}"
+                !chapter.scanlator.isNullOrBlank() -> "${newChapterName}_${chapter.scanlator}_${chapter.id}"
+                else -> "${newChapterName}_${chapter.id}"
             },
         )
     }
