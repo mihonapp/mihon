@@ -147,8 +147,10 @@ class DownloadProvider(
 //        val hash = md5(chapter.url).takeLast(6)
         return DiskUtil.buildValidFilename(
             when {
-                !chapter.scanlator.isNullOrBlank() -> "${newChapterName}_${chapter.scanlator}_${chapter.id}"
-                else -> "${newChapterName}_${chapter.id}"
+//                !chapter.scanlator.isNullOrBlank() -> "${newChapterName}_${chapter.scanlator}_${chapter.id}"
+//                else -> "${newChapterName}_${chapter.id}"
+                !chapter.scanlator.isNullOrBlank() -> "${chapter.scanlator}_$newChapterName"
+                else -> newChapterName
             },
         )
     }
@@ -160,16 +162,17 @@ class DownloadProvider(
      * @param chapter the chapter
      */
     private fun getLegacyChapterDirNames(chapter: Chapter): List<String> {
-        val sanitizedChapterName = sanitizeChapterName(chapter.name)
-        val chapterNameV1 = DiskUtil.buildValidFilename(
-            when {
-                !chapter.scanlator.isNullOrBlank() -> "${chapter.scanlator}_$sanitizedChapterName"
-                else -> sanitizedChapterName
-            })
+//        val sanitizedChapterName = sanitizeChapterName(chapter.name)
+//        val chapterNameV1 = DiskUtil.buildValidFilename(
+//            when {
+//                !chapter.scanlator.isNullOrBlank() -> "${chapter.scanlator}_$sanitizedChapterName"
+//                else -> sanitizedChapterName
+//            })
 
-        return buildList(1) {
+        return buildList(0) {
+//        return buildList(1) {
             // Folder of images
-            add(chapterNameV1)
+//            add(chapterNameV1)
         }
     }
 
