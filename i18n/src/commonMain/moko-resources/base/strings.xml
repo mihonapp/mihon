@@ -317,6 +317,8 @@
     <string name="pref_mark_duplicate_read_chapter_read_existing">After reading a chapter</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">After fetching new chapter</string>
 
+    <string name="pref_hide_missing_chapter_indicators">Hide missing chapter indicators</string>
+
       <!-- Extension section -->
     <string name="multi_lang">Multi</string>
     <string name="ext_updates_pending">Updates pending</string>
