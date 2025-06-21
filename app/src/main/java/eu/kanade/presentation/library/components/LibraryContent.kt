@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,6 +25,8 @@ import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.presentation.core.components.material.PullRefresh
+import tachiyomi.presentation.core.i18n.stringResource
+import tachiyomi.i18n.MR
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
@@ -45,6 +49,8 @@ fun LibraryContent(
     getDisplayMode: (Int) -> PreferenceMutableState<LibraryDisplayMode>,
     getColumnsForOrientation: (Boolean) -> PreferenceMutableState<Int>,
     getLibraryForPage: (Int) -> List<LibraryItem>,
+    snackbarHostState: SnackbarHostState,
+    enablePullToRefresh: Boolean,
 ) {
     Column(
         modifier = Modifier.padding(
@@ -55,6 +61,7 @@ fun LibraryContent(
     ) {
         val coercedCurrentPage = remember { currentPage().coerceAtMost(categories.lastIndex) }
         val pagerState = rememberPagerState(coercedCurrentPage) { categories.size }
+        val pullToRefreshDisabledMessage = stringResource(MR.strings.pull_to_refresh_disabled)
 
         val scope = rememberCoroutineScope()
         var isRefreshing by remember(pagerState.currentPage) { mutableStateOf(false) }
@@ -84,6 +91,18 @@ fun LibraryContent(
         PullRefresh(
             refreshing = isRefreshing,
             onRefresh = {
+                if (!enablePullToRefresh) {
+
+                    scope.launch {
+                        isRefreshing = true
+                        snackbarHostState.showSnackbar(
+                            message = pullToRefreshDisabledMessage,
+                        )
+                        isRefreshing = false
+
+                    }
+                    return@PullRefresh
+                }
                 val started = onRefresh(categories[currentPage()])
                 if (!started) return@PullRefresh
                 scope.launch {
@@ -109,6 +128,7 @@ fun LibraryContent(
                 onLongClickManga = onToggleRangeSelection,
                 onClickContinueReading = onContinueReadingClicked,
             )
+            SnackbarHost(hostState = snackbarHostState)
         }
 
         LaunchedEffect(pagerState.currentPage) {
