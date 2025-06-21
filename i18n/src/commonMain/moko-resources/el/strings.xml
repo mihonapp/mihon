@@ -171,7 +171,6 @@
     <string name="cookies_cleared">Τα cookies διαγράφηκαν</string>
     <string name="pref_clear_database">Καθαρισμός βάσης δεδομένων</string>
     <string name="pref_clear_database_summary">Διαγραφή ιστορικού για καταχωρήσεις που δεν έχουν αποθηκευτεί στη βιβλιοθήκη σας</string>
-    <string name="clear_database_confirmation">Είστε σίγουροι; Τα διαβασμένα κεφάλαια και η πρόοδος των καταχωρήσεων εκτός βιβλιοθήκης θα χαθούν</string>
     <string name="clear_database_completed">Οι καταχωρίσεις διαγράφηκαν</string>
     <string name="version">Έκδοση</string>
     <string name="pref_enable_acra">Αποστολή αναφορών σφαλμάτων</string>
@@ -428,7 +427,7 @@
     <string name="clear_history_completed">Το ιστορικό διαγράφηκε</string>
     <string name="spen_next_page">Επόμενη σελίδα</string>
     <string name="spen_previous_page">Προηγούμενη σελίδα</string>
-    <string name="migration_help_guide">Οδηγός μετανάστευσης πηγής</string>
+    <string name="migration_help_guide">Οδηγός μεταφοράς πηγής</string>
     <string name="pref_category_nsfw_content">Πηγές NSFW (18+)</string>
     <string name="pref_show_nsfw_source">Εμφάνιση στις λίστες πηγών και επεκτάσεων</string>
     <string name="file_picker_error">Δεν βρέθηκε εφαρμογή επιλογής αρχείων</string>
@@ -676,9 +675,6 @@
     <string name="information_no_manga_category">Η κατηγορία είναι άδεια</string>
     <string name="pref_library_update_show_tab_badge">Εμφάνιση του αριθμού των μη αναγνωσμένων στο εικονίδιο Ενημερώσεις</string>
     <string name="copied_to_clipboard_plain">Αντιγράφηκε στο πρόχειρο</string>
-    <string name="confirm_add_duplicate_manga">Έχετε μια καταχώρηση στη βιβλιοθήκη σας με το ίδιο όνομα.
-\n
-\nΘέλετε να συνεχίσετε;</string>
     <string name="pref_skip_dupe_chapters">Παράλειψη διπλότυπων κεφαλαίων</string>
     <string name="enhanced_services_not_installed">Διαθέσιμο αλλά η πηγή δεν έχει εγκατασταθεί: %s</string>
     <string name="track_error">%1$s σφάλμα: %2$s</string>
@@ -794,7 +790,6 @@
     <string name="action_replace_repo_message">Το αποθετήριο %1$s έχει το ίδιο δακτυλικό αποτύπωμα κλειδιού υπογραφής με το %2$s.
 \nΕάν αυτό είναι αναμενόμενο, το %2$s θα αντικατασταθεί, διαφορετικά επικοινωνήστε με τον συντηρητή του αποθετηρίου σας.</string>
     <string name="label_upcoming">Ανερχόμενο</string>
-    <string name="action_migrate_duplicate">Μεταφορά υπάρχουσας καταχώρησης</string>
     <string name="pref_display_profile">Προσαρμοσμένο προφίλ εμφάνισης</string>
     <string name="action_view_upcoming">Δείτε τις επερχόμενες ενημερώσεις</string>
     <string name="action_replace_repo">Αντικατάσταση</string>
@@ -853,4 +848,57 @@
     <string name="tracked_privately">Παρακολουθείται ιδιωτικά</string>
     <string name="action_toggle_private_off">Παρακολούθηση δημόσια</string>
     <string name="action_toggle_private_on">Παρακολούθηση ιδιωτικά</string>
+    <string name="migrationConfigScreen.removeDownloadsTitle">Διαγραφή λήψεων της τρέχουσας καταχώρησης μετά τη μεταφορά</string>
+    <string name="migrationConfigScreen.additionalSearchQueryLabel">Πρόσθετες λέξεις-κλειδιά (προαιρετικά)</string>
+    <string name="migrationConfigScreen.additionalSearchQuerySupportingText">Βοηθά στον περιορισμό των αποτελεσμάτων αναζήτησης με την προσθήκη πρόσθετων λέξεων-κλειδιών</string>
+    <string name="migrationConfigScreen.hideWithoutUpdatesSubtitle">Εμφάνιση καταχώρησης μόνο αν ο συσχετισμός έχει πρόσθετα κεφάλαια</string>
+    <string name="migrationConfigScreen.enhancedOptionsWarning">Οι επιλογές αυτές είναι αργές και επικίνδυνες και μπορεί να οδηγήσουν σε περιορισμούς από τις πηγές</string>
+    <string name="migrationConfigScreen.deepSearchModeTitle">Προηγμένη λειτουργία αναζήτησης</string>
+    <string name="migrationConfigScreen.prioritizeByChaptersSubtitle">Εάν είναι ενεργοποιημένη, επιλέγει την πιο μακρινή αντιστοιχία. Διαφορετικά, επιλέγει την πρώτη αντιστοιχία με βάση την προτεραιότητα πηγής.</string>
+    <string name="migrationListScreen.unknownLatestChapter">Άγνωστο</string>
+    <string name="migrationListScreen.searchManuallyActionLabel">Αναζήτηση χειροκίνητα</string>
+    <string name="migrationListScreen.skipActionLabel">Να μη γίνει μεταφορά</string>
+    <string name="migrationListScreen.migrateNowActionLabel">Μεταφορά τώρα</string>
+    <string name="migrationListScreen.copyNowActionLabel">Αντιγραφή τώρα</string>
+    <string name="migrationListScreen.exitDialogTitle">Να σταματήσετε η μεταφορά;</string>
+    <string name="migrationListScreen.exitDialog.stopLabel">Σταμάτημα</string>
+    <string name="possible_duplicates_summary">Έχετε καταχωρήσεις στη βιβλιοθήκη σας με παρόμοιο όνομα.\n\nΕπιλέξτε μια καταχώρηση για να τη μεταφέρετε ή να την προσθέσετε ούτως ή άλλως.</string>
+    <string name="possible_duplicates_title">Πιθανά διπλότυπα</string>
+    <string name="theme_catppuccin">Catppuccin</string>
+    <string name="pref_update_library_manga_titles">Ενημέρωση τίτλων manga της βιβλιοθήκης για να ταιριάζουν με την πηγή</string>
+    <string name="pref_update_library_manga_titles_summary">Προειδοποίηση: αν ένα manga μετονομαστεί, θα αφαιρεθεί από την ουρά λήψης (αν υπάρχει).</string>
+    <string name="migrationConfigScreen.selectEnabledLabel">Επιλογή ενεργοποιημένων πηγών</string>
+    <string name="migrationConfigScreen.selectPinnedLabel">Επιλογή καρφιτσωμένων πηγών</string>
+    <string name="migrationConfigScreen.continueButtonText">Συνέχειά</string>
+    <string name="migrationConfigScreen.selectedHeader">Επιλεγμένο</string>
+    <string name="migrationConfigScreen.availableHeader">Διαθέσιμο</string>
+    <string name="migrationConfigScreen.selectAllLabel">Επιλογή όλων</string>
+    <string name="migrationConfigScreen.selectNoneLabel">Επιλογή κανενός</string>
+    <string name="action_notes">Σημειώσεις</string>
+    <string name="action_edit_notes">Επεξεργασία σημείων</string>
+    <string name="notes_placeholder">Μου άρεσε το σημείο όπου…</string>
+    <string name="pref_hide_missing_chapter_indicators">Απόκρυψη δεικτών ελλείποντος κεφαλαίου</string>
+    <string name="migrationListScreen.migrateActionLabel">Μεταφορά</string>
+    <string name="migrationListScreen.noMatchFoundText">Δε βρέθηκαν εναλλακτικές</string>
+    <string name="migrationListScreen.migrateDialog.cancelLabel">Ακύρωση</string>
+    <string name="migrationConfigScreen.deepSearchModeSubtitle">Αναλύει τον τίτλο σε λέξεις-κλειδιά για ευρύτερη αναζήτηση</string>
+    <string name="migrationListScreen.exitDialog.cancelLabel">Ακύρωση</string>
+    <string name="migrationConfigScreen.prioritizeByChaptersTitle">Αντιστοίχιση με βάση τον αριθμό κεφαλαίου</string>
+    <string name="migrationListScreen.copyActionLabel">Αντιγραφή</string>
+    <string name="migrationListScreen.migrateDialog.migrateLabel">Μεταφορά</string>
+    <string name="migrationListScreen.matchWithoutChapterToast">Δε βρέθηκαν κεφάλαια, αυτή η καταχώρηση δεν μπορεί να χρησιμοποιηθεί για μεταφορά</string>
+    <string name="migrationListScreenTitleWithProgress">Μεταφορά (%1$d/%2$d)</string>
+    <string name="migrationListScreen.latestChapterLabel">Τελευταία: %1$s</string>
+    <string name="migrationListScreen.progressDialog.cancelLabel">Ακύρωση</string>
+    <string name="migrationConfigScreen.hideUnmatchedTitle">Απόκρυψη καταχωρήσεων χωρίς αντιστοιχία</string>
+    <string name="migrationConfigScreen.hideWithoutUpdatesTitle">Απόκρυψη καταχωρήσεων χωρίς νεότερα κεφάλαια</string>
+    <string name="migrationListScreen.migrateDialog.copyLabel">Αντιγραφή</string>
+    <string name="migrationListScreenTitle">Μεταφορά</string>
+    <string name="migrationConfigScreen.dataToMigrateHeader">Δεδομένα προς μεταφορά</string>
+    <string name="logging_in">Σύνδεση…</string>
+    <string name="clear_database_text">Πρόκειται να αφαιρέσετε καταχωρήσεις από τη βάση δεδομένων</string>
+    <string name="clear_database_history_warning">Τα αναγνωσμένα κεφάλαια και η πρόοδος των καταχωρήσεων που δεν είναι στη βιβλιοθήκη θα χαθούν</string>
+    <string name="clear_db_exclude_read">Κρατήστε καταχωρήσεις με αναγνωσμένα κεφάλαια</string>
+    <string name="storage_failed_to_create_download_directory">Αποτυχία δημιουργίας καταλόγου λήψης</string>
+    <string name="storage_failed_to_create_directory">Αποτυχία δημιουργίας καταλόγου: %s</string>
 </resources>
