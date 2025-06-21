@@ -27,7 +27,7 @@
     <string name="pref_category_tracking">Nyilvántartás</string>
     <string name="pref_category_advanced">Speciális</string>
     <string name="pref_category_about">Névjegy</string>
-    <string name="pref_library_columns">Rács mérete</string>
+    <string name="pref_library_columns">Elemek soronként</string>
     <string name="portrait">Álló</string>
     <string name="landscape">Fekvő</string>
     <string name="pref_library_update_interval">Frissítések gyakorisága</string>
@@ -446,13 +446,12 @@
     <string name="pref_clear_cookies">Sütik törlése</string>
     <string name="cache_deleted">Gyorsítótár törölve: %1$d fájl lett törölve</string>
     <string name="cache_delete_error">Hiba történt törlés közben</string>
-    <string name="clear_database_confirmation">Biztos benne? Nem könyvtári elemek olvasott fejezetei elvesznek</string>
     <string name="file_picker_error">Nem található fájl választó alkalmazás</string>
     <string name="information_empty_category_dialog">Nincsenek még kategóriáid.</string>
     <string name="information_cloudflare_bypass_failure">Nem sikerült megkerülni a Cloudflare-t</string>
     <string name="pref_landscape_zoom">Automatikusan nagyítsa a széles képeket</string>
     <string name="restore_completed">Helyreállítás befejeződött</string>
-    <string name="restore_duration">%02d perc, %02d másodperc</string>
+    <string name="restore_duration">%1$02d perc, %2$02d mp.</string>
     <string name="backup_restore_content_full">Előfordulhat, hogy telepítenie kell a hiányzó bővítményeket, majd később be kell jelentkeznie a nyilvántartási szolgáltatásokba a használatukhoz.</string>
     <string name="pref_refresh_library_covers">Könyvtár fedők frissítése</string>
     <string name="pref_dump_crash_logs">Hibaüzenetetek törlése</string>
@@ -646,9 +645,6 @@
     <string name="action_copy_to_clipboard">Másolás a vágólapra</string>
     <string name="action_update_category">Kategória frissítése</string>
     <string name="copied_to_clipboard_plain">Vágólapra másolva</string>
-    <string name="confirm_add_duplicate_manga">Van már egy ilyen nevű elem a könyvtáradban.
-\n
-\nBiztos folytatni akarod?</string>
     <string name="track_remove_start_date_conf_text">Ez eltávolítja az eddig kiválasztott kezdeti dátumot a(z) %s szolgáltatásból</string>
     <string name="fdroid_warning">F-Droid csomagok nem hivatalosan támogatottak.
 \nKattincs további információért.</string>
@@ -674,7 +670,7 @@
     <string name="crash_screen_restart_application">Applikáció újrainditása</string>
     <string name="label_titles_in_global_update">Globális frissítésben</string>
     <string name="information_required_plain">*kötelező</string>
-    <string name="pref_chapter_swipe_start">Balra csúsztatási cselekmény</string>
+    <string name="pref_chapter_swipe_start">Fejezet balra húzásakor</string>
     <string name="pref_skip_dupe_chapters">Duplikált fejezetek átugrása</string>
     <string name="action_set_interval">Időköz állítása</string>
     <string name="action_filter_interval_custom">Egyedi frissítési időköz</string>
@@ -686,7 +682,7 @@
     <string name="split_tall_images">Magas képek szétvágása</string>
     <string name="pref_update_only_in_release_period">Következő kiadás idejének megjóslása</string>
     <string name="pref_page_rotate">Széles oldalak forgatása az illeszkedéshez</string>
-    <string name="pref_chapter_swipe_end">Jobbra csúsztatási cselekmény</string>
+    <string name="pref_chapter_swipe_end">Fejezet jobbra húzásakor</string>
     <string name="pref_page_rotate_invert">Forgatott széles oldalak megfordítása</string>
     <string name="action_ok">Ok</string>
     <string name="pref_storage_location">Tárolási hely</string>
@@ -713,7 +709,7 @@
     <string name="pref_flash_page">Villantson fehéren lap változtatáskor</string>
     <string name="exception_offline">Nincs internet kapcsolat</string>
     <string name="pref_storage_usage">Tárolóhely felhasználás</string>
-    <string name="notification_updating_progress">Könyvtár frissítése ... (%s)</string>
+    <string name="notification_updating_progress">Könyvtár frissítése... (%s)</string>
     <string name="label_titles_section">Elemek</string>
     <string name="action_bar_up_description">Felnavigálás</string>
     <string name="label_data_storage">Adatok és tárolás</string>
@@ -780,7 +776,7 @@
     <string name="action_sort_tracker_score">Nyilvántartási pont</string>
     <string name="theme_nord">Nord</string>
     <string name="private_settings">Érzékeny beállítások megadása (Pl. szolgáltatások bejelentkezési tokenei)</string>
-    <string name="pref_invalidate_download_cache">Letöltési index érvénytelenítése</string>
+    <string name="pref_invalidate_download_cache">Letöltések újraindexelése</string>
     <string name="manga_interval_expected_update">Új fejezetek megjelenése %1$s múlva várható, frissítési időköz: %2$s.</string>
     <string name="track_delete_title">Leállítja a(z) %s nyilvántartását?</string>
     <string name="label_tracked_titles">Nyilvántartott elemek</string>
@@ -791,7 +787,6 @@
     <string name="manga_interval_expected_update_soon">Hamarosan</string>
     <string name="manga_interval_custom_amount">Egyedi frissítési időköz:</string>
     <string name="action_add_anyway">Hozzáadás mindenképp</string>
-    <string name="action_migrate_duplicate">Meglévő elem áttelepítése</string>
     <string name="pref_display_profile">Egyedi megjelenítési profil</string>
     <string name="action_replace_repo">Lecserélés</string>
     <string name="action_replace_repo_title">Aláíró kulcs ujjlenyomat már létezik</string>
@@ -810,4 +805,51 @@
     <string name="pref_security">Biztonság</string>
     <string name="pref_firebase">Analitika és összeomlási jelentések</string>
     <string name="onboarding_permission_crashlytics_description">Anonimizált összeomlási jelentés küldése a fejlesztőknek.</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Ha az olvasó üres képet tölt be, fokozatosan csökkentse a küszöbértéket.\nKijelölt: %s</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">Hosszú szalagolvasóhoz régi dekóder használata</string>
+    <string name="invalid_backup_file_json">JSON biztonsági mentés nem támogatott</string>
+    <string name="extensionRepo_settings">Bővítmény repók</string>
+    <string name="non_library_settings">Minden olvasott elem</string>
+    <string name="library_exported">Könyvtár exportálva</string>
+    <string name="pref_incognito_mode_extension_summary">Olvasási előzmények szüneteltetése ehhez bővítményhez</string>
+    <string name="possible_duplicates_summary">Vannak hasonló nevű elemek a könyvtárában.\n\nVálasszon ki egy elemet az áttelepítéshez vagy a hozzáadáshoz.</string>
+    <string name="possible_duplicates_title">Lehetséges duplikációk</string>
+    <string name="pref_flash_style_white_black">Fehér és fekete</string>
+    <string name="firebase_summary">Az összeomlási naplók és elemzések elküldése lehetővé teszi számunkra, hogy azonosítsuk és javítsuk a problémákat, javítsuk a teljesítményt, és a jövőbeli frissítéseket még inkább az Ön igényeihez igazítsuk</string>
+    <string name="invalid_backup_file_unknown">A biztonsági másolat fájl sérült</string>
+    <string name="pref_flash_duration_summary">%1$s ms</string>
+    <string name="label_auto">Automatikus</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">Új fejezet lekérése után</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Befolyásolja a teljesítményt. Csak akkor engedélyezze, ha a bitkép küszöbértékének csökkentése nem oldja meg az üres kép problémákat</string>
+    <string name="pref_flash_style_white">Fehér</string>
+    <string name="library_list">Könyvtár lista</string>
+    <string name="trackers_updated_summary">Nyilvántartók frissítve a(z) %d. fejezetre</string>
+    <string name="add_repo_confirmation">Szeretné hozzáadni a \"%s\" repót?</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Jelölje meg a duplikált olvasott fejezetet olvasottként</string>
+    <string name="action_edit_notes">Jegyzetek szerkesztése</string>
+    <string name="action_notes">Jegyzetek</string>
+    <string name="pref_behavior">Viselkedés</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">Fejezet olvasása után</string>
+    <string name="pref_flash_style_black">Fekete</string>
+    <string name="export">Exportálás</string>
+    <string name="manga_interval_expected_update_null">Ez a manga vagy befejeződött, vagy nincs megjósolt megjelenési dátum.</string>
+    <string name="ext_remove">Eltávolítás</string>
+    <string name="ext_confirm_remove">Bővítmény eltávolítása?</string>
+    <string name="pref_download_new_unread_chapters_only">Duplikált fejezetek letöltésének kihagyása</string>
+    <string name="file_picker_uri_permission_unsupported">Nem sikerült megszerezni a mappához való állandó hozzáférést. Az alkalmazás váratlanul viselkedhet.</string>
+    <string name="theme_monochrome">Monokróm</string>
+    <string name="confirm_tracker_update">Nyilvántartók frissítése a(z) %d. fejezetre?</string>
+    <string name="tracked_privately">Privátan nyilvántartva</string>
+    <string name="remove_private_extension_message">Tényleg el akarja távolítani a(z) \"%s\" bővítményt?</string>
+    <string name="pref_hardware_bitmap_threshold_default">Alapértelmezett (%d)</string>
+    <string name="pref_hardware_bitmap_threshold">Egyedi hardveres bitmap küszöbérték</string>
+    <string name="action_display_unread_badge">Olvasatlan fejezetek</string>
+    <string name="clear_database_text">Elemeket készül eltávolítani az adatbázisból</string>
+    <string name="clear_database_history_warning">Az elolvasott fejezetek és a nem könyvtári bejegyzések előrehaladása elveszik</string>
+    <string name="clear_db_exclude_read">Tartsa meg az elolvasott fejezetekkel rendelkező elemeket</string>
+    <string name="artist">Művész</string>
+    <string name="author">Szerző</string>
+    <string name="action_toggle_private_on">Privát nyilvántartás</string>
+    <string name="action_toggle_private_off">Nyilvános nyilvántartás</string>
+    <string name="notes_placeholder">Élveztem azt a részt, ahol…</string>
 </resources>

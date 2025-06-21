@@ -190,7 +190,6 @@
     <string name="pref_disable_battery_optimization_summary">עוזר בעדכוני ספריות רקע וגיבויים</string>
     <string name="pref_disable_battery_optimization">השבתת האופטימיזציה של הסוללה</string>
     <string name="clear_database_completed">הרשומות נמחקו</string>
-    <string name="clear_database_confirmation">האם אתה בטוח? פרקים שנקראו וההתקדמות של פריטים שאינם בספרייה יאבדו</string>
     <string name="pref_clear_database_summary">מחק את היסטוריית הפריטים שאינם שמורים בספריה שלך</string>
     <string name="pref_clear_database">נקה את מסד הנתונים</string>
     <string name="cookies_cleared">עוגיות נוקו</string>
@@ -311,11 +310,11 @@
     <string name="information_no_recent">אין עידכונים אחרונים</string>
     <string name="action_filter_bookmarked">סומן</string>
     <string name="label_default">ברירת המחדל</string>
-    <string name="pref_app_theme">ערכת הנושא של האפליקציה</string>
+    <string name="pref_app_theme">ערכת נושא של האפליקציה</string>
     <string name="action_start_downloading_now">התחל להוריד עכשיו</string>
     <string name="action_pin">נעץ</string>
     <string name="secure_screen">מסך מאובטח</string>
-    <string name="pref_library_columns">גודל רשת</string>
+    <string name="pref_library_columns">פריטים בכל שורה</string>
     <string name="theme_system">עקוב אחר המערכת</string>
     <string name="pref_library_update_refresh_metadata_summary">בדוק אם יש כריכה ופרטים חדשים בעת עדכון הספרייה</string>
     <string name="action_sort_count">סה\"כ פריטים</string>
@@ -335,7 +334,7 @@
     <string name="confirm_lock_change">אימות לאישור השינוי</string>
     <string name="pref_category_reader">מצב קריאה</string>
     <string name="pref_category_tracking">מעקב</string>
-    <string name="pref_category_theme">נושא</string>
+    <string name="pref_category_theme">ערכת נושא</string>
     <string name="pref_category_nsfw_content">מקורות NSFW (18+)</string>
     <string name="pref_show_nsfw_source">הצג ברשימות מקורות ותוספים</string>
     <string name="parental_controls_info">זה לא מונע תוספים לא רשמיים או תוספים שעלולים לסמן באופן שגוי מלהציג תוכן NSFW (18+) בתוך האפליקציה.</string>
@@ -427,7 +426,7 @@
     <string name="pref_create_folder_per_manga_summary">צור תיקיות בהתאם לכותרת הפריטים</string>
     <string name="enhanced_tracking_info">שירותים המספקים שירותים משופרים למקורות ספציפיים. פריטים יהיו במעקב אוטומטי אחרי הוספה לספרייה שלך.</string>
     <string name="backup_restore_missing_sources">מקורות חסרים:</string>
-    <string name="invalid_backup_file">קובץ גיבוי לא תקין</string>
+    <string name="invalid_backup_file">קובץ גיבוי לא תקין:</string>
     <string name="invalid_backup_file_missing_manga">הגיבוי לא מכיל שום פריטים.</string>
     <string name="action_track">מעקב</string>
     <string name="pref_auto_clear_chapter_cache">נקה את זיכרון המטמון של הפרקים כשהאפליקציה עולה</string>
@@ -597,11 +596,8 @@
     <string name="download_notifier_split_page_not_found">עמוד %d לא נמצא בעת פיצול</string>
     <string name="appwidget_updates_description">צפה בפריטי הספריה העדכניים ביותר</string>
     <string name="download_notifier_split_page_path_not_found">נכשל במציאת כתובת עמוד %d</string>
-    <string name="confirm_add_duplicate_manga">כבר קיים פריט בספריה בעל אותו שם.
-\n
-\nלהמשיך בכל זאת?</string>
     <string name="pref_downloads_summary">הורדה אוטומטית, הורד את הבאים</string>
-    <string name="pref_appearance_summary">נושא, פורמט תאריך וזמן</string>
+    <string name="pref_appearance_summary">ערכת נושא, תצורת תאריך ושעה</string>
     <string name="pref_library_summary">קטגוריות, עדכון כללי, החלקת פרק</string>
     <string name="pref_tracking_summary">סנכרון חד צדדי, סנכרון משופר</string>
     <string name="pref_backup_summary">מדריך וגיבויים אוטומטיים</string>
@@ -621,7 +617,7 @@
     <string name="overlay_header">שכבת על</string>
     <string name="day_short">%d ימים</string>
     <string name="update_check_open">פתח ב-GitHub</string>
-    <string name="pref_chapter_swipe_end">פעולה בהחלקה ימינה</string>
+    <string name="pref_chapter_swipe_end">פרק בהחלקה ימינה</string>
     <string name="pref_invalidate_download_cache">בטל תוקף של אינדקס ההורדות</string>
     <string name="enhanced_services_not_installed">זמין אבל המקור לא מותקן: %s</string>
     <string name="tracking_info">סנכרון חד צדדי לעדכון ההתקדמות בפרקים בשיקות המעקב. קבע מעקב עבור פריטים ספציפיים מכפתור המעקב שלהם.</string>
@@ -684,7 +680,7 @@
     <string name="library_sync_complete">סנכרון ספריה הושלם</string>
     <string name="intervals_header">מרווחי זמן</string>
     <string name="cant_open_last_read_chapter">לא מסוגל לפתוח את הפרק שנקרא לאחרונה</string>
-    <string name="pref_chapter_swipe_start">פעולה בהחלקה שמאלה</string>
+    <string name="pref_chapter_swipe_start">פרק בהחלקה שמאלה</string>
     <string name="pref_double_tap_zoom">לחיצה כפולה לקירוב (זום)</string>
     <string name="updated_version">עודכן לגרסה %1$s</string>
     <string name="label_total_chapters">בסך הכל</string>
@@ -721,4 +717,44 @@
     <string name="label_mean_score">ציון ממוצע</string>
     <string name="label_used">בשימוש</string>
     <string name="minute_short">%d דקות</string>
+    <string name="action_copy_link">העתק קישור</string>
+    <string name="action_revert_to_default">אפס לברירת מחדל</string>
+    <string name="action_move_to_bottom_all_for_series">העבר סדרה לתחתית</string>
+    <string name="label_auto">אוטומטי</string>
+    <string name="action_sort_tracker_score">ציון במעקב</string>
+    <string name="action_add_anyway">הוסף בכל זאת</string>
+    <string name="onboarding_description">נגדיר כמה דברים תחילה. ניתן לשנות אותם בכל עת בהגדרות מאוחר יותר.</string>
+    <string name="onboarding_storage_help_action">מדריך אחסון</string>
+    <string name="onboarding_permission_install_apps">הרשאה להתקנת אפליקציות</string>
+    <string name="theme_monochrome">מונוכרום</string>
+    <string name="pref_security">אבטחה</string>
+    <string name="pref_firebase">ניתוח נתונים ודוחות קריסה</string>
+    <string name="pref_behavior">התנהגות</string>
+    <string name="action_sort_random">אקראי</string>
+    <string name="onboarding_heading">ברוכים הבאים!</string>
+    <string name="action_bar_up_description">נווט למעלה</string>
+    <string name="pref_onboarding_guide">מדריך התחלה</string>
+    <string name="action_edit_notes">ערוך הערות</string>
+    <string name="action_notes">הערות</string>
+    <string name="theme_nord">נורד</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">לאחר קריאת פרק</string>
+    <string name="ext_remove">הסר</string>
+    <string name="selected">נבחר</string>
+    <string name="not_selected">לא נבחר</string>
+    <string name="action_menu_overflow_description">אפשרויות נוספות</string>
+    <string name="label_data_storage">נתונים ואחסון</string>
+    <string name="onboarding_permission_notifications">הרשאת התראות</string>
+    <string name="onboarding_permission_ignore_battery_opts">שימוש בסוללה ברקע</string>
+    <string name="onboarding_permission_action_grant">הענק</string>
+    <string name="pref_library_update_smart_update">עדכון חכם</string>
+    <string name="action_display_unread_badge">פרקים שלא נקראו</string>
+    <string name="action_apply">החל</string>
+    <string name="onboarding_permission_crashlytics_description">שלח דוחות קריסה אנונימיים למפתחים.</string>
+    <string name="onboarding_permission_analytics_description">שלח נתוני שימוש אנונימיים לשיפור תכונות האפליקציה.</string>
+    <string name="onboarding_storage_action_select">בחר תיקייה</string>
+    <string name="onboarding_permission_analytics">אפשר ניתוח נתונים</string>
+    <string name="onboarding_action_skip">דלג</string>
+    <string name="onboarding_action_next">הבא</string>
+    <string name="onboarding_permission_crashlytics">שלח דוחות קריסה</string>
+    <string name="scanlator">קבוצת תרגום</string>
 </resources>
