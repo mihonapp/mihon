@@ -11,7 +11,7 @@ spotless = "7.0.4"
 ktlint-core = "1.6.0"
 firebase-bom = "33.15.0"
 markdown = "0.35.0"
-junit = "5.13.1"
+junit = "5.13.2"
 
 [libraries]
 desugar = "com.android.tools:desugar_jdk_libs:2.1.5"
