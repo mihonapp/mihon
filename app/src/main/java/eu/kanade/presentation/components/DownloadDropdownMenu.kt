@@ -23,6 +23,7 @@ fun DownloadDropdownMenu(
         DownloadAction.NEXT_10_CHAPTERS to pluralStringResource(MR.plurals.download_amount, 10, 10),
         DownloadAction.NEXT_25_CHAPTERS to pluralStringResource(MR.plurals.download_amount, 25, 25),
         DownloadAction.UNREAD_CHAPTERS to stringResource(MR.strings.download_unread),
+        DownloadAction.NOT_DOWNLOADED to stringResource(MR.strings.download_not_downloaded)
     )
 
     DropdownMenu(
