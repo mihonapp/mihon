@@ -452,6 +452,7 @@ class LibraryScreenModel(
             DownloadAction.NEXT_10_CHAPTERS -> downloadUnreadChapters(mangas, 10)
             DownloadAction.NEXT_25_CHAPTERS -> downloadUnreadChapters(mangas, 25)
             DownloadAction.UNREAD_CHAPTERS -> downloadUnreadChapters(mangas, null)
+            DownloadAction.NOT_DOWNLOADED -> downloadNotDownloadedChapters(mangas)
         }
         clearSelection()
     }
@@ -481,6 +482,33 @@ class LibraryScreenModel(
             }
         }
     }
+
+    /**
+     * Queues all not-downloaded chapters (regardless of read status) for the given list of manga.
+     *
+     * This skips chapters that are already downloaded or queued, and downloads the rest.
+     *
+     * @param mangas the list of manga.
+     */
+    private fun downloadNotDownloadedChapters(mangas: List<Manga>) {
+        screenModelScope.launchNonCancellable {
+            mangas.forEach { manga ->
+                val chapters = getNextChapters.await(manga.id, onlyUnread = false)
+                    .fastFilterNot { chapter ->
+                        downloadManager.getQueuedDownloadOrNull(chapter.id) != null ||
+                                downloadManager.isChapterDownloaded(
+                                    chapter.name,
+                                    chapter.scanlator,
+                                    manga.title,
+                                    manga.source,
+                                )
+                    }
+
+                downloadManager.downloadChapters(manga, chapters)
+            }
+        }
+    }
+
 
     /**
      * Marks mangas' chapters read status.
