@@ -94,6 +94,15 @@ class LibraryPreferences(
         TriState.DISABLED,
     )
 
+    fun filterCategories() = preferenceStore.getBoolean(
+        "pref_filter_library_categories",
+        false,
+    )
+
+    fun filterCategoriesInclude() = preferenceStore.getStringSet("pref_filter_library_categories_include", emptySet())
+
+    fun filterCategoriesExclude() = preferenceStore.getStringSet("pref_filter_library_categories_exclude", emptySet())
+
     // endregion
 
     // region Badges
