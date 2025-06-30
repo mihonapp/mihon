@@ -335,7 +335,6 @@
     <string name="pref_disable_battery_optimization_summary">Pomaže pri aktualiziranju biblioteke i spremanju sigurnosnih kopija u pozadini</string>
     <string name="pref_disable_battery_optimization">Deaktiviraj optimiranje baterije</string>
     <string name="clear_database_completed">Unosi su izbrisani</string>
-    <string name="clear_database_confirmation">Sigurno? Pročitana poglavlja i tijek unosa koji nisu u biblioteci će se izgubiti</string>
     <string name="pref_clear_database_summary">Izbriši povijest za unose koji nisu spremljeni u biblioteci</string>
     <string name="pref_clear_database">Isprazni bazu podataka</string>
     <string name="cookies_cleared">Kolačići su izbrisani</string>
@@ -677,9 +676,6 @@
     <string name="information_no_manga_category">Kategorija je prazna</string>
     <string name="copied_to_clipboard_plain">Kopirano u međuspremnik</string>
     <string name="enhanced_services_not_installed">Dostupne, ali izvor nije instaliran: %s</string>
-    <string name="confirm_add_duplicate_manga">U tvojoj biblioteci imaš unos s istim imenom.
-\n
-\nŽeliš li svejedno nastaviti?</string>
     <string name="pref_skip_dupe_chapters">Preskoči dupla poglavlja</string>
     <string name="track_error">%1$s greška: %2$s</string>
     <string name="information_required_plain">*obavezno</string>
@@ -792,7 +788,6 @@
     <string name="pref_webtoon_disable_zoom_out">Deaktiviraj smanjivanje zumiranja</string>
     <string name="pref_display_profile">Prilagođeni profil prikaza</string>
     <string name="label_upcoming">Predstojeći</string>
-    <string name="action_migrate_duplicate">Migriraj postojeći unos</string>
     <string name="action_add_anyway">Svejedno dodaj</string>
     <string name="upcoming_calendar_prev">Prethodni mjesec</string>
     <string name="action_replace_repo">Zamijeni</string>

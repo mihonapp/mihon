@@ -149,7 +149,6 @@
     <string name="cookies_cleared">Cookies dihapuskan</string>
     <string name="pref_clear_database">Hapus pangkalan data</string>
     <string name="pref_clear_database_summary">Hapus sejarah entri yang tidak disimpan di dalam pustaka</string>
-    <string name="clear_database_confirmation">Adakah anda pasti? Bab dibaca dan kemajuan entri bukan-pustaka akan hilang</string>
     <string name="clear_database_completed">Entri dihapuskan</string>
     <string name="version">Versi</string>
     <string name="pref_enable_acra">Hantar laporan ranap</string>
@@ -679,9 +678,6 @@
     <string name="enhanced_services_not_installed">Tersedia tetapi sumber tidak dipasang: %s</string>
     <string name="copied_to_clipboard_plain">Disalin ke papan keratan</string>
     <string name="track_error">%1$s ralat: %2$s</string>
-    <string name="confirm_add_duplicate_manga">Entri di dalam pustaka anda mempunyai nama yang sama.
-\n
-\nAdakah anda ingin meneruskan?</string>
     <string name="information_required_plain">*diperlukan</string>
     <string name="pref_hide_in_library_items">Sembunyikan entri yang sudah ada di dalam pustaka</string>
     <string name="action_copy_to_clipboard">Salin ke papan keratan</string>

@@ -373,7 +373,6 @@
     <string name="pref_backup_interval">Янтӑвлани тӑтӑшлӑхӗ</string>
     <string name="pref_refresh_library_covers">Вулавӑшри манкӑсен хуплашкисене ҫӗнет</string>
     <string name="clear_database_completed">Ҫыравсене катертнӗ</string>
-    <string name="clear_database_confirmation">Чӑнах катертесшӗн-и? Вулавӑшри мар манкӑн вуланӑ сыпӑкӗсем тата вулав ӳсӗмӗ ҫухалӗ</string>
     <string name="pref_clear_database_summary">Санӑн вулавӑшра упранман манкӑн вуланӑ кун-ҫулне катерт</string>
     <string name="pref_clear_database">Пӗлӗмсен кӗлете тасат</string>
     <string name="cache_delete_error">Кеше тасатнӑ чух йӑнӑш тухрӗ</string>
@@ -601,7 +600,6 @@
     <string name="action_sort_random">Ӑнсӑрт</string>
     <string name="onboarding_permission_crashlytics">Йӑнӑшсен кӗнекине йар</string>
     <string name="onboarding_permission_crashlytics_description">Вӑрттӑнлатнӑ йӑнӑшсен кӗнекине хатӗрлевҫӗсене йарса парӗ.</string>
-    <string name="action_migrate_duplicate">Хальхи хайлава куҫар</string>
     <string name="onboarding_permission_analytics_description">Апӑн ӗҫ-тивӗҫсене лайӑхлатма вӑрттӑнлатнӑ усӑ курав пӗлӗмӗсене йарса парӗ.</string>
     <string name="onboarding_storage_info">%1$s тийенӗ сыпӑксене, йантӑлав ӑтӑвӗсене тата ыттине упрамалли папкӑ суйла.\n\nУйтӑм папкӑ усӑ курма сӗнетпӗр.\n\nСуйланӑ папкӑ: %2$s</string>
     <string name="onboarding_permission_analytics">Тӗпчевлеме ирӗк</string>
