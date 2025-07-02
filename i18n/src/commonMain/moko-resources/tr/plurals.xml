@@ -41,8 +41,8 @@
         <item quantity="other">%d izleyici</item>
     </plurals>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">%d bölüm atlanıyor, kaynak mevcut değil veya filtrelendi</item>
-        <item quantity="other">%d bölüm atlanıyor, kaynak mevcut değil veya filtrelendi</item>
+        <item quantity="one">%d bölüm atlandı, kaynak mevcut değil veya filtrelendi</item>
+        <item quantity="other">%d bölüm atlandı, kaynak mevcut değil veya filtrelendi</item>
     </plurals>
     <plurals name="relative_time">
         <item quantity="one">Dün</item>
@@ -75,5 +75,17 @@
     <plurals name="pref_pages">
         <item quantity="one">1 sayfa</item>
         <item quantity="other">%1$s sayfa</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">%1$d girdiyi taşı?</item>
+        <item quantity="other">%1$d girdiyi taşı?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">%1$d girdiyi kopyala?</item>
+        <item quantity="other">%1$d girdiyi kopyala?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">Bir girdi atlandı</item>
+        <item quantity="other">%1$d girdi atlandı</item>
     </plurals>
 </resources>
