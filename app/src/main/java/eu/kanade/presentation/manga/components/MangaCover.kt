@@ -31,8 +31,8 @@ enum class MangaCover(val ratio: Float) {
         AsyncImage(
             model = coil3.request.ImageRequest.Builder(androidx.compose.ui.platform.LocalContext.current)
                 .data(data)
-                .memoryCachePolicy(coil3.request.CachePolicy.ENABLED)
-                .diskCachePolicy(coil3.request.CachePolicy.ENABLED)
+                .memoryCachePolicy(coil3.request.CachePolicy.DISABLED)
+                .diskCachePolicy(coil3.request.CachePolicy.DISABLED)
                 .build(),
             placeholder = ColorPainter(CoverPlaceholderColor),
             error = rememberResourceBitmapPainter(id = R.drawable.cover_error),
