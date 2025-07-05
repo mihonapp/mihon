@@ -15,7 +15,7 @@ internal class DirectoryPageLoader(val file: UniFile) : PageLoader() {
 
     override suspend fun getPages(): List<ReaderPage> {
         return file.listFiles()
-            ?.filter { !it.isDirectory && isImageFile(it) }
+            ?.filter { !it.isDirectory && ImageUtil.isImage(it.name) { it.openInputStream() } }
             ?.sortedWith { f1, f2 -> f1.name.orEmpty().compareToCaseInsensitiveNaturalOrder(f2.name.orEmpty()) }
             ?.mapIndexed { i, file ->
                 val streamFn = { file.openInputStream() }
@@ -25,15 +25,5 @@ internal class DirectoryPageLoader(val file: UniFile) : PageLoader() {
                 }
             }
             .orEmpty()
-    }
-
-    private fun isImageFile(file: UniFile): Boolean {
-        return try {
-            file.openInputStream().use { stream ->
-                ImageUtil.isImage(file.name) { stream }
-            }
-        } catch (e: Exception) {
-            false
-        }
     }
 }
