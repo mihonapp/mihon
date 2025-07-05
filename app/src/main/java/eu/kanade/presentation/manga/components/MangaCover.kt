@@ -29,11 +29,7 @@ enum class MangaCover(val ratio: Float) {
         onClick: (() -> Unit)? = null,
     ) {
         AsyncImage(
-            model = coil3.request.ImageRequest.Builder(androidx.compose.ui.platform.LocalContext.current)
-                .data(data)
-                .memoryCachePolicy(coil3.request.CachePolicy.DISABLED)
-                .diskCachePolicy(coil3.request.CachePolicy.DISABLED)
-                .build(),
+            model = data,
             placeholder = ColorPainter(CoverPlaceholderColor),
             error = rememberResourceBitmapPainter(id = R.drawable.cover_error),
             contentDescription = contentDescription,
