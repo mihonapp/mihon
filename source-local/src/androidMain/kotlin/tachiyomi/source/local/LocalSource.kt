@@ -330,28 +330,54 @@ actual class LocalSource(
                                 f2.name.orEmpty(),
                             )
                         }
-                        ?.find {
-                            !it.isDirectory && ImageUtil.isImage(it.name) { it.openInputStream() }
+                        ?.find { file ->
+                            !file.isDirectory && try {
+                                file.openInputStream().use { stream ->
+                                    ImageUtil.isImage(file.name) { stream }
+                                }
+                            } catch (e: Exception) {
+                                false
+                            }
                         }
 
-                    entry?.let { coverManager.update(manga, it.openInputStream()) }
+                    entry?.let {
+                        it.openInputStream().use { inputStream ->
+                            coverManager.update(manga, inputStream)
+                        }
+                    }
                 }
                 is Format.Archive -> {
                     format.file.archiveReader(context).use { reader ->
                         val entry = reader.useEntries { entries ->
                             entries
                                 .sortedWith { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) }
-                                .find { it.isFile && ImageUtil.isImage(it.name) { reader.getInputStream(it.name)!! } }
+                                .find { it.isFile &&
+                                    try {
+                                        reader.getInputStream(it.name)?.use { stream ->
+                                            ImageUtil.isImage(it.name) { stream }
+                                        } ?: false
+                                    } catch (e: Exception) {
+                                        false
+                                    }
+                                }
                         }
 
-                        entry?.let { coverManager.update(manga, reader.getInputStream(it.name)!!) }
+                        entry?.let {
+                            reader.getInputStream(it.name)?.use { inputStream ->
+                                coverManager.update(manga, inputStream)
+                            }
+                        }
                     }
                 }
                 is Format.Epub -> {
                     format.file.epubReader(context).use { epub ->
                         val entry = epub.getImagesFromPages().firstOrNull()
 
-                        entry?.let { coverManager.update(manga, epub.getInputStream(it)!!) }
+                        entry?.let {
+                            epub.getInputStream(it)?.use { inputStream ->
+                                coverManager.update(manga, inputStream)
+                            }
+                        }
                     }
                 }
             }

@@ -21,7 +21,15 @@ actual class LocalCoverManager(
             // Get all file whose names start with "cover"
             .filter { it.isFile && it.nameWithoutExtension.equals("cover", ignoreCase = true) }
             // Get the first actual image
-            .firstOrNull { ImageUtil.isImage(it.name) { it.openInputStream() } }
+            .firstOrNull { file ->
+                try {
+                    file.openInputStream().use { stream ->
+                        ImageUtil.isImage(file.name) { stream }
+                    }
+                } catch (e: Exception) {
+                    false
+                }
+            }
     }
 
     actual fun update(
