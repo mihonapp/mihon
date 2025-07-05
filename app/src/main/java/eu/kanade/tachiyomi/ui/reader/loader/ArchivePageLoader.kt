@@ -14,7 +14,7 @@ internal class ArchivePageLoader(private val reader: ArchiveReader) : PageLoader
 
     override suspend fun getPages(): List<ReaderPage> = reader.useEntries { entries ->
         entries
-            .filter { it.isFile && isImageEntry(it) }
+            .filter { it.isFile && ImageUtil.isImage(it.name) { reader.getInputStream(it.name)!! } }
             .sortedWith { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) }
             .mapIndexed { i, entry ->
                 ReaderPage(i).apply {
@@ -23,20 +23,6 @@ internal class ArchivePageLoader(private val reader: ArchiveReader) : PageLoader
                 }
             }
             .toList()
-    }
-
-    private fun isImageEntry(entry: Any): Boolean {
-        return try {
-            val entryName = when (entry) {
-                is mihon.core.archive.ArchiveEntry -> entry.name
-                else -> entry.toString()
-            }
-            reader.getInputStream(entryName)?.use { stream ->
-                ImageUtil.isImage(entryName) { stream }
-            } ?: false
-        } catch (e: Exception) {
-            false
-        }
     }
 
     override suspend fun loadPage(page: ReaderPage) {

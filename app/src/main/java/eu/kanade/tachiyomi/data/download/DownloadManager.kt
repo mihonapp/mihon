@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.data.download
 
 import android.content.Context
-import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.Page
@@ -162,7 +161,7 @@ class DownloadManager(
     fun buildPageList(source: Source, manga: Manga, chapter: Chapter): List<Page> {
         val chapterDir = provider.findChapterDir(chapter.name, chapter.scanlator, chapter.url, manga.title, source)
         val files = chapterDir?.listFiles().orEmpty()
-            .filter { it.isFile && isImageFile(it) }
+            .filter { it.isFile && ImageUtil.isImage(it.name) { it.openInputStream() } }
 
         if (files.isEmpty()) {
             throw Exception(context.stringResource(MR.strings.page_list_empty_error))
@@ -172,16 +171,6 @@ class DownloadManager(
             .mapIndexed { i, file ->
                 Page(i, uri = file.uri).apply { status = Page.State.Ready }
             }
-    }
-
-    private fun isImageFile(file: UniFile): Boolean {
-        return try {
-            file.openInputStream().use { stream ->
-                ImageUtil.isImage(file.name) { stream }
-            }
-        } catch (e: Exception) {
-            false
-        }
     }
 
     /**
