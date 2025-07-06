@@ -115,15 +115,15 @@ fun MangaCoverDialog(
                                 ),
                             ),
                         )
-                        if (onEditClick != null && manga.favorite) {
+                        if (onEditClick != null) {
                             Box {
                                 var expanded by remember { mutableStateOf(false) }
                                 IconButton(
                                     onClick = {
-                                        if (isCustomCover) {
-                                            expanded = true
-                                        } else {
-                                            onEditClick(EditCoverAction.EDIT)
+                                        when {
+                                            !manga.favorite -> onEditClick(EditCoverAction.ADD_TO_LIBRARY)
+                                            isCustomCover -> expanded = true
+                                            else -> onEditClick(EditCoverAction.EDIT)
                                         }
                                     },
                                 ) {

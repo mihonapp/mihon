@@ -162,4 +162,13 @@ class MangaCoverScreenModel(
             logcat(LogPriority.ERROR, e)
         }
     }
+
+    fun addToLibraryWarning(context: Context) {
+        screenModelScope.launch {
+            snackbarHostState.showSnackbar(
+                context.stringResource(MR.strings.add_to_library_hint),
+                withDismissAction = true,
+            )
+        }
+    }
 }
