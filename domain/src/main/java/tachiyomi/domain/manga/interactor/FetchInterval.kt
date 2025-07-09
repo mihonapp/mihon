@@ -70,14 +70,12 @@ class FetchInterval(
             // Enough upload date from source
             uploadDates.size >= 3 -> {
                 val ranges = uploadDates.windowed(2).map { x -> x[1].until(x[0], ChronoUnit.DAYS) }.sorted()
-                val median = ranges[(ranges.size - 1) / 2]
-                median.toInt()
+                ranges[(ranges.size - 1) / 2].toInt()
             }
             // Enough fetch date from client
             fetchDates.size >= 3 -> {
                 val ranges = fetchDates.windowed(2).map { x -> x[1].until(x[0], ChronoUnit.DAYS) }.sorted()
-                val median = ranges[(ranges.size - 1) / 2]
-                median.toInt()
+                ranges[(ranges.size - 1) / 2].toInt()
             }
             // Default to 7 days
             else -> 7
