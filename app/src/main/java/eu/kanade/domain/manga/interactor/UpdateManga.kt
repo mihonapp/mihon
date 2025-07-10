@@ -4,6 +4,7 @@ import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.model.SManga
+import mihon.domain.manga.model.toDomainManga
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.FetchInterval
 import tachiyomi.domain.manga.model.Manga
@@ -84,7 +85,7 @@ class UpdateManga(
             ),
         )
         if (success && title != null) {
-            downloadManager.renameManga(localManga, title)
+            downloadManager.renameManga(localManga, remoteManga.toDomainManga(localManga.source))
         }
         return success
     }

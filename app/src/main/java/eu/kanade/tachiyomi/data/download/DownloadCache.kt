@@ -126,36 +126,33 @@ class DownloadCache(
     /**
      * Returns true if the chapter is downloaded.
      *
-     * @param chapterName the name of the chapter to query.
-     * @param chapterScanlator scanlator of the chapter to query
-     * @param mangaTitle the title of the manga to query.
-     * @param sourceId the id of the source of the chapter.
+     * @param chapter the domain chapter object.
+     * @param manga the domain manga object.
      * @param skipCache whether to skip the directory cache and check in the filesystem.
      */
     fun isChapterDownloaded(
-        chapterName: String,
-        chapterScanlator: String?,
-        mangaTitle: String,
-        sourceId: Long,
+        chapter: Chapter,
+        manga: Manga,
         skipCache: Boolean,
     ): Boolean {
         if (skipCache) {
-            val source = sourceManager.getOrStub(sourceId)
-            return provider.findChapterDir(chapterName, chapterScanlator, mangaTitle, source) != null
+            val source = sourceManager.getOrStub(manga.source)
+            return provider.findChapterDir(chapter, manga, source) != null
         }
 
         renewCache()
 
-        val sourceDir = rootDownloadsDir.sourceDirs[sourceId]
+        val sourceDir = rootDownloadsDir.sourceDirs[manga.source]
         if (sourceDir != null) {
-            val mangaDir = sourceDir.mangaDirs[provider.getMangaDirName(mangaTitle)]
+            val mangaDir = sourceDir.mangaDirs[provider.getMangaDirName(manga)]
             if (mangaDir != null) {
-                return provider.getValidChapterDirNames(
-                    chapterName,
-                    chapterScanlator,
-                ).any { it in mangaDir.chapterDirs }
+                return provider.getValidChapterDirNames(chapter).any { it in mangaDir.chapterDirs }
+                // TODO: perhaps this is where chapter migration should go?
+                // instead of returning immediately, check if the found dir is equal to
+                // provider.getChapterDirName() and change the dir name here?
             }
         }
+
         return false
     }
 
@@ -182,7 +179,7 @@ class DownloadCache(
 
         val sourceDir = rootDownloadsDir.sourceDirs[manga.source]
         if (sourceDir != null) {
-            val mangaDir = sourceDir.mangaDirs[provider.getMangaDirName(manga.title)]
+            val mangaDir = sourceDir.mangaDirs[provider.getMangaDirName(manga)]
             if (mangaDir != null) {
                 return mangaDir.chapterDirs.size
             }
@@ -209,7 +206,7 @@ class DownloadCache(
             }
 
             // Retrieve the cached manga directory or cache a new one
-            val mangaDirName = provider.getMangaDirName(manga.title)
+            val mangaDirName = provider.getMangaDirName(manga)
             var mangaDir = sourceDir.mangaDirs[mangaDirName]
             if (mangaDir == null) {
                 mangaDir = MangaDirectory(mangaUniFile)
@@ -232,8 +229,8 @@ class DownloadCache(
     suspend fun removeChapter(chapter: Chapter, manga: Manga) {
         rootDownloadsDirMutex.withLock {
             val sourceDir = rootDownloadsDir.sourceDirs[manga.source] ?: return
-            val mangaDir = sourceDir.mangaDirs[provider.getMangaDirName(manga.title)] ?: return
-            provider.getValidChapterDirNames(chapter.name, chapter.scanlator).forEach {
+            val mangaDir = sourceDir.mangaDirs[provider.getMangaDirName(manga)] ?: return
+            provider.getValidChapterDirNames(chapter).forEach {
                 if (it in mangaDir.chapterDirs) {
                     mangaDir.chapterDirs -= it
                 }
@@ -252,9 +249,9 @@ class DownloadCache(
     suspend fun removeChapters(chapters: List<Chapter>, manga: Manga) {
         rootDownloadsDirMutex.withLock {
             val sourceDir = rootDownloadsDir.sourceDirs[manga.source] ?: return
-            val mangaDir = sourceDir.mangaDirs[provider.getMangaDirName(manga.title)] ?: return
+            val mangaDir = sourceDir.mangaDirs[provider.getMangaDirName(manga)] ?: return
             chapters.forEach { chapter ->
-                provider.getValidChapterDirNames(chapter.name, chapter.scanlator).forEach {
+                provider.getValidChapterDirNames(chapter).forEach {
                     if (it in mangaDir.chapterDirs) {
                         mangaDir.chapterDirs -= it
                     }
@@ -273,7 +270,7 @@ class DownloadCache(
     suspend fun removeManga(manga: Manga) {
         rootDownloadsDirMutex.withLock {
             val sourceDir = rootDownloadsDir.sourceDirs[manga.source] ?: return
-            val mangaDirName = provider.getMangaDirName(manga.title)
+            val mangaDirName = provider.getMangaDirName(manga)
             if (sourceDir.mangaDirs.containsKey(mangaDirName)) {
                 sourceDir.mangaDirs -= mangaDirName
             }
@@ -287,12 +284,12 @@ class DownloadCache(
      *
      * @param manga the manga being renamed.
      * @param mangaUniFile the manga's new directory.
-     * @param newTitle the manga's new title.
+     * @param newManga the domain manga object containing the target state.
      */
-    suspend fun renameManga(manga: Manga, mangaUniFile: UniFile, newTitle: String) {
+    suspend fun renameManga(manga: Manga, mangaUniFile: UniFile, newManga: Manga) {
         rootDownloadsDirMutex.withLock {
             val sourceDir = rootDownloadsDir.sourceDirs[manga.source] ?: return
-            val oldMangaDirName = provider.getMangaDirName(manga.title)
+            val oldMangaDirName = provider.getMangaDirName(manga)
             var oldChapterDirs: MutableSet<String>? = null
             // Save the old name's cached chapter dirs
             if (sourceDir.mangaDirs.containsKey(oldMangaDirName)) {
@@ -301,7 +298,7 @@ class DownloadCache(
             }
 
             // Retrieve/create the cached manga directory for new name
-            val newMangaDirName = provider.getMangaDirName(newTitle)
+            val newMangaDirName = provider.getMangaDirName(newManga)
             var mangaDir = sourceDir.mangaDirs[newMangaDirName]
             if (mangaDir == null) {
                 mangaDir = MangaDirectory(mangaUniFile)
