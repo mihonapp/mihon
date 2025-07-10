@@ -69,15 +69,13 @@ class FetchInterval(
         val interval = when {
             // Enough upload date from source
             uploadDates.size >= 3 -> {
-                val uploadDelta = uploadDates.last().until(uploadDates.first(), ChronoUnit.DAYS)
-                val uploadPeriod = uploadDates.indexOf(uploadDates.last())
-                uploadDelta.floorDiv(uploadPeriod).toInt()
+                val ranges = uploadDates.windowed(2).map { x -> x[1].until(x[0], ChronoUnit.DAYS) }.sorted()
+                ranges[(ranges.size - 1) / 2].toInt()
             }
             // Enough fetch date from client
             fetchDates.size >= 3 -> {
-                val fetchDelta = fetchDates.last().until(fetchDates.first(), ChronoUnit.DAYS)
-                val uploadPeriod = fetchDates.indexOf(fetchDates.last())
-                fetchDelta.floorDiv(uploadPeriod).toInt()
+                val ranges = fetchDates.windowed(2).map { x -> x[1].until(x[0], ChronoUnit.DAYS) }.sorted()
+                ranges[(ranges.size - 1) / 2].toInt()
             }
             // Default to 7 days
             else -> 7

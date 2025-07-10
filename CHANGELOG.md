@@ -32,6 +32,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Include source headers when opening failed images from reader ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2004](https://github.com/mihonapp/mihon/pull/2004))
 - Added autofill support to tracker login dialog ([@AntsyLich](https://github.com/AntsyLich)) ([#2069](https://github.com/mihonapp/mihon/pull/2069))
 - Added option to hide missing chapter count ([@User826](https://github.com/User826), [@AntsyLich](https://github.com/AntsyLich)) ([#2108](https://github.com/mihonapp/mihon/pull/2108))
+- Use median to determine smart update interval, making it more resilient to long hiatuses ([@Kladki](https://github.com/Kladki)) ([#2251](https://github.com/mihonapp/mihon/pull/2251))
 
 ### Changed
 - Display all similarly named duplicates in duplicate manga dialogue ([@NarwhalHorns](https://github.com/NarwhalHorns), [@AntsyLich](https://github.com/AntsyLich)) ([#1861](https://github.com/mihonapp/mihon/pull/1861))
