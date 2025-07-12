@@ -195,4 +195,16 @@
     <string name="pref_show_nsfw_source">ഉറവിടങ്ങളിലും വിപുലീകരണ പട്ടികയിലും കാണിക്കുക</string>
     <string name="parental_controls_info">ഇത് അനൗദ്യോഗികമായോ തെറ്റായി അടയാളപ്പെടുത്തിയോ ഉള്ള വിപുലീകരണങ്ങൾ ആപ്പിനുള്ളിൽ NSFW (18+) ഉള്ളടക്കം പ്രദർശിപ്പിക്കുന്നത് തടയില്ല.</string>
     <string name="relative_time_today">ഇന്ന്</string>
+    <string name="onboarding_description">ആദ്യമായി ചില ക്രമീകരണങ്ങൾ സജ്ജമാക്കാം. പിന്നീട് ഇവയെല്ലാം സെറ്റിംഗ്സിൽ നിന്ന് എപ്പോൾ വേണമെങ്കിലും മാറ്റാനാകും.</string>
+    <string name="lock_always">എപ്പോഴും</string>
+    <string name="pref_category_about">കുറിച്ച്</string>
+    <string name="onboarding_action_next">അടുത്തത്</string>
+    <string name="onboarding_action_finish">ആരംഭിക്കുക</string>
+    <string name="onboarding_action_skip">ഒഴിവാക്കുക</string>
+    <string name="onboarding_storage_info">%1$s ചാപ്റ്റർ ഡൗൺലോഡുകൾ, ബാക്കപ്പുകൾ എന്നിവയും മറ്റും സംഭരിക്കുന്ന ഒരു ഫോൾഡർ തിരഞ്ഞെടുക്കുക.\n\nഒരു പ്രത്യേക ഫോൾഡർ ശുപാർശ ചെയ്യുന്നു.\n\nതിരഞ്ഞെടുത്ത ഫോൾഡർ: %2$s</string>
+    <string name="onboarding_storage_help_info">പഴയ പതിപ്പിൽ നിന്ന് അപ്ഡേറ്റ് ചെയ്യുകയാണ്, എന്ത് തിരഞ്ഞെടുക്കണമെന്ന് ഉറപ്പില്ലേ? കൂടുതൽ വിവരങ്ങൾക്ക് സ്റ്റോറേജ് ഗൈഡ് കാണുക.</string>
+    <string name="onboarding_permission_install_apps_description">To install source extensions.</string>
+    <string name="onboarding_permission_notifications_description">ലൈബ്രറി അപ്‌ഡേറ്റുകൾക്കും മറ്റും അറിയിപ്പ് നേടുക.</string>
+    <string name="onboarding_permission_ignore_battery_opts">പശ്ചാത്തല ബാറ്ററി ഉപയോഗം</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">ദീർഘകാല ലൈബ്രറി അപ്‌ഡേറ്റുകൾ, ഡൗൺലോഡ്, ബാക്കപ്പ് പുനഃസ്ഥാപിക്കൽ എന്നിവയ്ക്കുള്ള തടസ്സങ്ങൾ ഒഴിവാക്കുക.</string>
 </resources>
