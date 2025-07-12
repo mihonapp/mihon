@@ -393,7 +393,6 @@
     <string name="publishing_finished">Басылымы яқталды</string>
     <string name="add_to_library">Кітапханаға қосу</string>
     <string name="pref_dump_crash_logs">Қателер тіркеулерімен бөлісу</string>
-    <string name="clear_database_confirmation">Сенімдісіз бе? Кітапханадағы емес жазбалардың оқылған тараулары мен прогрессі жоғалады</string>
     <string name="clear_database_completed">Жазбалар жойылды</string>
     <string name="database_clean">Тазалайтын түк жоқ</string>
     <string name="pref_refresh_library_covers">Туындылар мұқабасын жаңарту</string>
@@ -682,9 +681,6 @@
     <string name="enhanced_services_not_installed">Қолжетімді, бірақ дереккөзі орнатылған жоқ: %s</string>
     <string name="copied_to_clipboard_plain">Аралық сақтағышқа көшірілді</string>
     <string name="pref_skip_dupe_chapters">Қайталанған бөлімдерді өткізіп жіберу</string>
-    <string name="confirm_add_duplicate_manga">Сіздің кітапханаңызда осымен атауы бірдей жазба бар
-\n
-\nБәрібір жалғастыра бересіз бе?</string>
     <string name="track_error">%1$s қателік: %2$s</string>
     <string name="information_required_plain">*қажетті</string>
     <string name="action_update_category">Санатты жаңарту</string>

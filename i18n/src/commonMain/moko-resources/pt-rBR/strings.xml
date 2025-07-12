@@ -148,7 +148,6 @@
     <string name="cookies_cleared">Cookies limpos</string>
     <string name="pref_clear_database">Limpar o banco de dados</string>
     <string name="pref_clear_database_summary">Exclui o histórico de itens que não estão salvos em sua biblioteca</string>
-    <string name="clear_database_confirmation">Tem certeza? Os capítulos lidos e o progresso em itens que não estão na sua biblioteca serão perdidos</string>
     <string name="clear_database_completed">Entradas excluídas</string>
     <string name="version">Versão</string>
     <string name="pref_enable_acra">Enviar relatórios de erro</string>
@@ -678,9 +677,6 @@
     <string name="copied_to_clipboard_plain">Copiado para a área de transferência</string>
     <string name="enhanced_services_not_installed">Disponíveis, mas a fonte não está instalada: %s</string>
     <string name="pref_skip_dupe_chapters">Pular capítulos duplicados</string>
-    <string name="confirm_add_duplicate_manga">Você possui um item na sua biblioteca com o mesmo nome.
-\n
-\nVocê ainda deseja continuar?</string>
     <string name="track_error">Erro em %1$s: %2$s</string>
     <string name="information_required_plain">*obrigatório</string>
     <string name="pref_hide_in_library_items">Ocultar títulos que já estão na biblioteca</string>
@@ -793,7 +789,6 @@
     <string name="action_add_anyway">Adicionar de qualquer maneira</string>
     <string name="action_replace_repo">Substituir</string>
     <string name="label_upcoming">Próximo</string>
-    <string name="action_migrate_duplicate">Migrar entrada existente</string>
     <string name="action_replace_repo_title">A impressão digital da chave de assinatura já existe</string>
     <string name="action_replace_repo_message">O repositório %1$s tem a mesma impressão digital da chave de assinatura que %2$s.
 \nSe isso for esperado, %2$s será substituído, caso contrário, entre em contato com o mantenedor do repositório.</string>
@@ -826,4 +821,31 @@
     <string name="onboarding_permission_crashlytics">Enviar logs de falhas</string>
     <string name="pref_security">Segurança</string>
     <string name="onboarding_permission_analytics">Permitir análise</string>
+    <string name="pref_hardware_bitmap_threshold_default">Padrão (%d)</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Afeta o desempenho. Habilite somente se a redução do limite de bitmap não corrigir problemas de imagem em branco</string>
+    <string name="ext_remove">Remover</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">Depois de ler um capítulo</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">Use o decodificador legado para leitor de tira longa</string>
+    <string name="ext_confirm_remove">Remover extensão?</string>
+    <string name="firebase_summary">O envio de logs de falhas e análises nos permitirá identificar e corrigir problemas, melhorar o desempenho e tornar as atualizações futuras mais relevantes para suas necessidades</string>
+    <string name="pref_behavior">Comportamento</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Marcar capítulo lido duplicado como lido</string>
+    <string name="pref_auto_update_manga_on_mark_read">Atualizar progresso quando marcado como lido</string>
+    <string name="remove_private_extension_message">Você realmente deseja remover a extensão \"%s\"?</string>
+    <string name="export">Exportar</string>
+    <string name="pref_hardware_bitmap_threshold">Limite de bitmap de hardware personalizado</string>
+    <string name="pref_incognito_mode_extension_summary">Pausar histórico de leitura para extensão</string>
+    <string name="trackers_updated_summary">Rastreadores atualizados para o capítulo %d</string>
+    <string name="tracked_privately">Rastreado de forma privada</string>
+    <string name="action_toggle_private_on">Rastrear privadamente</string>
+    <string name="action_toggle_private_off">Rastrear publicamente</string>
+    <string name="action_display_unread_badge">Capítulos não lidos</string>
+    <string name="theme_monochrome">Monocromático</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">Depois de buscar um novo capítulo</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Se o leitor carregar uma imagem em branco, reduza o limite incrementalmente.\nSelecionado: %s</string>
+    <string name="non_library_settings">Todas as entradas lidas</string>
+    <string name="library_list">Lista da biblioteca</string>
+    <string name="library_exported">Biblioteca Exportada</string>
+    <string name="author">Autor</string>
+    <string name="artist">Artista</string>
 </resources>
