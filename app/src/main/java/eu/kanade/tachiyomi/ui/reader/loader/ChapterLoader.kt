@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.loader
 
 import android.content.Context
-import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.source.Source
@@ -77,13 +76,15 @@ class ChapterLoader(
      * Returns the page loader to use for this [chapter].
      */
     private fun getPageLoader(chapter: ReaderChapter): PageLoader {
-        val domainChapter = chapter.chapter.toDomainChapter()
+        val dbChapter = chapter.chapter
         val isDownloaded = downloadManager.isChapterDownloaded(
-            domainChapter,
-            manga,
+            dbChapter.name,
+            dbChapter.scanlator,
+            dbChapter.url,
+            manga.title,
+            manga.source,
             skipCache = true,
-            )
-
+        )
         return when {
             isDownloaded -> DownloadPageLoader(
                 chapter,
