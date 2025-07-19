@@ -110,7 +110,6 @@ fun Automation(
 
             FilledIconButton(
                 onClick = {
-                    android.util.Log.d("Automation","Decrement automation")
                     if (isPagerViewer) {
                         val newAutoFlipInterval = (readerPreferences.autoFlipInterval().get() - 1).coerceIn(1, 60)
                         readerPreferences.autoFlipInterval().set(newAutoFlipInterval)

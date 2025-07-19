@@ -449,7 +449,7 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SliderPreference(
                     value = autoScrollSpeed,
                     valueRange = 5..30,
-                    steps = 5,
+                    steps = 4,
                     title = stringResource(MR.strings.pref_auto_scroll_speed),
                     subtitle = stringResource(MR.strings.pref_auto_scroll_speed_summary, autoScrollSpeed),
                     enabled = autoScrollState,
