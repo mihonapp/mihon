@@ -69,6 +69,7 @@ object SettingsReaderScreen : SearchableSettings {
             getWebtoonGroup(readerPreferences = readerPref),
             getNavigationGroup(readerPreferences = readerPref),
             getActionsGroup(readerPreferences = readerPref),
+            getAutomationGroup(readerPreferences = readerPref),
         )
     }
 
@@ -423,6 +424,54 @@ object SettingsReaderScreen : SearchableSettings {
                     preference = readerPreferences.folderPerManga(),
                     title = stringResource(MR.strings.pref_create_folder_per_manga),
                     subtitle = stringResource(MR.strings.pref_create_folder_per_manga_summary),
+                ),
+            ),
+        )
+    }
+
+    @Composable
+    private fun getAutomationGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup {
+        val autoScrollState by readerPreferences.autoScroll().collectAsState()
+        val autoFlipState by readerPreferences.autoFlip().collectAsState()
+
+        val autoScrollSpeedPref = readerPreferences.autoScrollSpeed()
+        val autoScrollSpeed by autoScrollSpeedPref.collectAsState()
+        val autoFlipIntervalPref = readerPreferences.autoFlipInterval()
+        val autoFlipInterval by autoFlipIntervalPref.collectAsState()
+
+        return Preference.PreferenceGroup(
+            title = stringResource(MR.strings.pref_reader_automation),
+            preferenceItems = persistentListOf(
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.autoScroll(),
+                    title = stringResource(MR.strings.pref_auto_scroll),
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = autoScrollSpeed,
+                    valueRange = 5..30,
+                    steps = 5,
+                    title = stringResource(MR.strings.pref_auto_scroll_speed),
+                    subtitle = stringResource(MR.strings.pref_auto_scroll_speed_summary, autoScrollSpeed),
+                    enabled = autoScrollState,
+                    onValueChanged = {
+                        autoScrollSpeedPref.set(it)
+                        true
+                    },
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.autoFlip(),
+                    title = stringResource(MR.strings.pref_auto_flip),
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = autoFlipInterval,
+                    valueRange = 1..30,
+                    title = stringResource(MR.strings.pref_auto_flip_interval),
+                    subtitle = stringResource(MR.strings.pref_auto_flip_interval_summary, autoFlipInterval),
+                    enabled = autoFlipState,
+                    onValueChanged = {
+                        autoFlipIntervalPref.set(it)
+                        true
+                    },
                 ),
             ),
         )

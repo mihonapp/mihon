@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
 import android.graphics.PointF
+import android.view.Choreographer
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
@@ -21,10 +22,14 @@ import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
+import kotlin.coroutines.resume
 import kotlin.math.max
 import kotlin.math.min
 
@@ -78,6 +83,8 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
             .get()
             .threshold
 
+    override val automationInProgress = MutableStateFlow(false)
+
     init {
         recycler.setItemViewCacheSize(RECYCLER_VIEW_CACHE_SIZE)
         recycler.isVisible = false // Don't let the recycler layout yet
@@ -112,6 +119,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
             },
         )
         recycler.tapListener = { event ->
+            automationInProgress.value = false
             val viewPosition = IntArray(2)
             recycler.getLocationOnScreen(viewPosition)
             val viewPositionRelativeToWindow = IntArray(2)
@@ -164,6 +172,32 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
 
         frame.layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
         frame.addView(recycler)
+
+        scope.launch {
+            automationInProgress.collect { isAutomating ->
+                if (isAutomating) {
+                    android.util.Log.d("Automation","started")
+                    activity.hideMenu()
+                    while (automationInProgress.value) {
+                        suspendCancellableCoroutine { continuation ->
+                            val frameCallback = Choreographer.FrameCallback {
+                                if (continuation.isActive) {
+                                    continuation.resume(Unit)
+                                }
+                            }
+                            Choreographer.getInstance().postFrameCallback(frameCallback)
+                            continuation.invokeOnCancellation {
+                                Choreographer.getInstance().removeFrameCallback(frameCallback)
+                                android.util.Log.d("Automation", "Choreographer callback cancelled", it)
+                            }
+                        }
+                        recycler.scrollBy(0, config.autoScrollSpeed)
+                    }
+                } else {
+                    android.util.Log.d("Automation","stopped")
+                }
+            }
+        }
     }
 
     private fun checkAllowPreload(page: ReaderPage?): Boolean {

@@ -168,6 +168,9 @@
     <string name="action_start_downloading_now">Start downloading now</string>
     <string name="action_not_now">Not now</string>
     <string name="action_add_anyway">Add anyway</string>
+    <string name="action_automation_increase_speed">Faster</string>
+    <string name="action_automation_decrease_speed">Slower</string>
+    <string name="action_automation_start">Start</string>
 
     <!-- Operations -->
     <string name="loading">Loading…</string>
@@ -497,8 +500,16 @@
     <string name="pref_low">Low</string>
     <string name="pref_lowest">Lowest</string>
     <string name="pref_webtoon_disable_zoom_out">Disable zoom out</string>
+    <string name="pref_reader_automation">Automation</string>
+    <string name="pref_auto_scroll">Scroll</string>
+    <string name="pref_auto_scroll_speed">Scroll speed</string>
+    <string name="pref_auto_scroll_speed_summary">Scrolls %1$dpx every screen refresh</string>
+    <string name="pref_auto_flip">Flip</string>
+    <string name="pref_auto_flip_interval">Flip interval</string>
+    <string name="pref_auto_flip_interval_summary">Flips a page every %1$d seconds</string>
 
-      <!-- Downloads section -->
+
+    <!-- Downloads section -->
     <string name="pref_category_delete_chapters">Delete chapters</string>
     <string name="pref_remove_after_marked_as_read">After manually marked as read</string>
     <string name="pref_remove_after_read">After reading automatically delete</string>
