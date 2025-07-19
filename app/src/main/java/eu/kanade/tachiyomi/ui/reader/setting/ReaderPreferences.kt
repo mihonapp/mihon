@@ -137,6 +137,14 @@ class ReaderPreferences(
 
     fun showNavigationOverlayOnStart() = preferenceStore.getBoolean("reader_navigation_overlay_on_start", false)
 
+    fun autoScroll() = preferenceStore.getBoolean("pref_auto_scroll", false)
+
+    fun autoScrollSpeed() = preferenceStore.getInt("pref_auto_scroll_speed", 10)
+
+    fun autoFlip() = preferenceStore.getBoolean("pref_auto_flip", false)
+
+    fun autoFlipInterval() = preferenceStore.getInt("pref_auto_flip_interval", 5)
+
     // endregion
 
     enum class FlashColor {
