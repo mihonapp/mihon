@@ -6,6 +6,7 @@ import tachiyomi.domain.manga.model.Manga
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
+import kotlin.toString
 
 /**
  * Class used to create cover cache.
@@ -20,6 +21,17 @@ class CoverCache(private val context: Context) {
     companion object {
         private const val COVERS_DIR = "covers"
         private const val CUSTOM_COVERS_DIR = "covers/custom"
+
+        /**
+         * Returns the expected filename of a custom cover.
+         * Does not mean that the file actually exists.
+         *
+         * @param mangaId the manga id.
+         * @return cover filename.
+         */
+        fun getCustomCoverFilename(mangaId: Long): String {
+            return DiskUtil.hashKeyForDisk(mangaId.toString())
+        }
     }
 
     /**
@@ -101,5 +113,14 @@ class CoverCache(private val context: Context) {
     private fun getCacheDir(dir: String): File {
         return context.getExternalFilesDir(dir)
             ?: File(context.filesDir, dir).also { it.mkdirs() }
+    }
+
+    /**
+     * Get all custom cover files.
+     *
+     * @return list of custom cover image files.
+     */
+    fun getAllCustomCovers(): List<File> {
+        return customCoverCacheDir.listFiles()?.toList() ?: emptyList()
     }
 }
