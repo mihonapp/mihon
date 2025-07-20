@@ -149,16 +149,17 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             val showOnStart = config.navigationOverlayOnStart || config.forceNavigationOverlay
             activity.binding.navigationOverlay.setNavigation(config.navigator, showOnStart)
         }
-
-        scope.launch {
-            automationInProgress.collect { isAutomating ->
-                if (isAutomating) {
-                    activity.hideMenu()
-                    while (automationInProgress.value) {
-                        android.util.Log.d("Automation", "waiting for ${config.autoFlipInterval}s to flip")
-                        delay(config.autoFlipInterval * 1000L)
-                        android.util.Log.d("Automation", "flip")
-                        moveToNext()
+        if (config.autoFlipEnabled) {
+            scope.launch {
+                automationInProgress.collect { isAutomating ->
+                    if (isAutomating) {
+                        activity.hideMenu()
+                        while (automationInProgress.value) {
+                            android.util.Log.d("Automation", "waiting for ${config.autoFlipInterval}s to flip")
+                            delay(config.autoFlipInterval * 1000L)
+                            android.util.Log.d("Automation", "flip")
+                            moveToNext()
+                        }
                     }
                 }
             }

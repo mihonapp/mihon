@@ -173,38 +173,40 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         frame.layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
         frame.addView(recycler)
 
-        scope.launch {
-            automationInProgress.collect { isAutomating ->
-                if (isAutomating) {
-                    activity.hideMenu()
-                    var lastRefreshRate = getRefreshRate()
-                    var scrollDistancePerFrame = getScrollDistancePerFrame(lastRefreshRate)
-                    android.util.Log.d("Automation", "Detected refresh rate: ${lastRefreshRate}Hz")
-                    android.util.Log.d("Automation", "Started @ $scrollDistancePerFrame px/frame")
-                    while (automationInProgress.value) {
-                        suspendCancellableCoroutine { continuation ->
-                            val frameCallback = Choreographer.FrameCallback {
-                                if (continuation.isActive) {
-                                    continuation.resume(Unit)
+        if (config.autoScrollEnabled) {
+            scope.launch {
+                automationInProgress.collect { isAutomating ->
+                    if (isAutomating) {
+                        activity.hideMenu()
+                        var lastRefreshRate = getRefreshRate()
+                        var scrollDistancePerFrame = getScrollDistancePerFrame(lastRefreshRate)
+                        android.util.Log.d("Automation", "Detected refresh rate: ${lastRefreshRate}Hz")
+                        android.util.Log.d("Automation", "Started @ $scrollDistancePerFrame px/frame")
+                        while (automationInProgress.value) {
+                            suspendCancellableCoroutine { continuation ->
+                                val frameCallback = Choreographer.FrameCallback {
+                                    if (continuation.isActive) {
+                                        continuation.resume(Unit)
+                                    }
+                                }
+                                Choreographer.getInstance().postFrameCallback(frameCallback)
+                                continuation.invokeOnCancellation {
+                                    Choreographer.getInstance().removeFrameCallback(frameCallback)
+                                    android.util.Log.d("Automation", "Choreographer callback cancelled", it)
                                 }
                             }
-                            Choreographer.getInstance().postFrameCallback(frameCallback)
-                            continuation.invokeOnCancellation {
-                                Choreographer.getInstance().removeFrameCallback(frameCallback)
-                                android.util.Log.d("Automation", "Choreographer callback cancelled", it)
+                            val newRefreshRate = getRefreshRate()
+                            if (newRefreshRate != lastRefreshRate) {
+                                lastRefreshRate = newRefreshRate
+                                scrollDistancePerFrame = getScrollDistancePerFrame(lastRefreshRate)
+                                android.util.Log.d("Automation", "Refresh rate changed to ${lastRefreshRate}Hz")
+                                android.util.Log.d("Automation", "Updated @ $scrollDistancePerFrame px/frame")
                             }
+                            recycler.scrollBy(0, scrollDistancePerFrame)
                         }
-                        val newRefreshRate = getRefreshRate()
-                        if (newRefreshRate != lastRefreshRate) {
-                            lastRefreshRate = newRefreshRate
-                            scrollDistancePerFrame = getScrollDistancePerFrame(lastRefreshRate)
-                            android.util.Log.d("Automation", "Refresh rate changed to ${lastRefreshRate}Hz")
-                            android.util.Log.d("Automation", "Updated @ $scrollDistancePerFrame px/frame")
-                        }
-                        recycler.scrollBy(0, scrollDistancePerFrame)
+                    } else {
+                        android.util.Log.d("Automation", "stopped")
                     }
-                } else {
-                    android.util.Log.d("Automation", "stopped")
                 }
             }
         }
