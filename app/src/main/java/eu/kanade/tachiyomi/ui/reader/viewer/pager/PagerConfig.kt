@@ -48,8 +48,8 @@ class PagerConfig(
     var landscapeZoom = false
         private set
 
-    var autoFlipEnabled = false
-    var autoFlipInterval = 5
+    var autoFlipEnabled = readerPreferences.autoFlip().get()
+    var autoFlipInterval = readerPreferences.autoFlipInterval().get()
 
     init {
         readerPreferences.readerTheme()
