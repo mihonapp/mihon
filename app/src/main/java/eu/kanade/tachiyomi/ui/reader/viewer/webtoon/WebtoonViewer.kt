@@ -176,19 +176,11 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         scope.launch {
             automationInProgress.collect { isAutomating ->
                 if (isAutomating) {
-
                     activity.hideMenu()
-
-                    val screenHeight = activity.resources.displayMetrics.heightPixels
-                    val refreshRate = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-                        activity.display?.refreshRate ?: 60f
-                    } else {
-                        @Suppress("DEPRECATION")
-                        activity.windowManager.defaultDisplay.refreshRate
-                    }
-                    val scrollDistancePerFrame = screenHeight / (config.autoScrollSpeed * refreshRate)
-                    val scrollDistancePerFrameInt = scrollDistancePerFrame.toInt()
-                    android.util.Log.d("Automation", "started @ $scrollDistancePerFrameInt px/frame")
+                    var lastRefreshRate = getRefreshRate()
+                    var scrollDistancePerFrame = getScrollDistancePerFrame(lastRefreshRate)
+                    android.util.Log.d("Automation", "Detected refresh rate: ${lastRefreshRate}Hz")
+                    android.util.Log.d("Automation", "Started @ $scrollDistancePerFrame px/frame")
                     while (automationInProgress.value) {
                         suspendCancellableCoroutine { continuation ->
                             val frameCallback = Choreographer.FrameCallback {
@@ -202,13 +194,35 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
                                 android.util.Log.d("Automation", "Choreographer callback cancelled", it)
                             }
                         }
-                        recycler.scrollBy(0, scrollDistancePerFrameInt)
+                        val newRefreshRate = getRefreshRate()
+                        if (newRefreshRate != lastRefreshRate) {
+                            lastRefreshRate = newRefreshRate
+                            scrollDistancePerFrame = getScrollDistancePerFrame(lastRefreshRate)
+                            android.util.Log.d("Automation", "Refresh rate changed to ${lastRefreshRate}Hz")
+                            android.util.Log.d("Automation", "Updated @ $scrollDistancePerFrame px/frame")
+                        }
+                        recycler.scrollBy(0, scrollDistancePerFrame)
                     }
                 } else {
                     android.util.Log.d("Automation", "stopped")
                 }
             }
         }
+    }
+
+    private fun getRefreshRate(): Float {
+        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            activity.display?.refreshRate ?: 60f
+        } else {
+            @Suppress("DEPRECATION")
+            activity.windowManager.defaultDisplay.refreshRate
+        }
+    }
+
+    private fun getScrollDistancePerFrame(refreshRate: Float): Int {
+        val screenHeight = activity.resources.displayMetrics.heightPixels
+        val scrollDistancePerFrame = screenHeight / (config.autoScrollSpeed * refreshRate)
+        return scrollDistancePerFrame.toInt()
     }
 
     private fun checkAllowPreload(page: ReaderPage?): Boolean {
