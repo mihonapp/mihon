@@ -155,9 +155,9 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
                 if (isAutomating) {
                     activity.hideMenu()
                     while (automationInProgress.value) {
-                        android.util.Log.d("Automation","waiting for ${config.autoFlipInterval}s to flip")
+                        android.util.Log.d("Automation", "waiting for ${config.autoFlipInterval}s to flip")
                         delay(config.autoFlipInterval * 1000L)
-                        android.util.Log.d("Automation","flip")
+                        android.util.Log.d("Automation", "flip")
                         moveToNext()
                     }
                 }
@@ -472,6 +472,4 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     private fun cleanupPageSplit() {
         adapter.cleanupPageSplit()
     }
-
-
 }

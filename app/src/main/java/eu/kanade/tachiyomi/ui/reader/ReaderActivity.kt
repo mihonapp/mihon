@@ -489,8 +489,6 @@ class ReaderActivity : BaseActivity() {
             }
         }
 
-
-
         val toolbarColor = ColorUtils.setAlphaComponent(
             SurfaceColors.SURFACE_2.getColor(this),
             if (isNightMode()) 230 else 242, // 90% dark 95% light

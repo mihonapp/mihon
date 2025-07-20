@@ -17,8 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -37,15 +37,17 @@ import tachiyomi.presentation.core.i18n.stringResource
 @Composable
 fun Automation(
     readerPreferences: ReaderPreferences,
-    viewer: Viewer?
+    viewer: Viewer?,
 ) {
     val isPagerViewer = viewer is PagerViewer
     val isWebtoonViewer = viewer is WebtoonViewer
+    val isPagerFlipAvailableAndEnabled = isPagerViewer && readerPreferences.autoFlip().get()
+    val isWebtoonScrollAvailableAndEnabled = isWebtoonViewer && readerPreferences.autoScroll().get()
+    if (!isPagerFlipAvailableAndEnabled && !isWebtoonScrollAvailableAndEnabled) {
+        return
+    }
 
-    if (!((isPagerViewer && readerPreferences.autoFlip().get()) ||
-          (isWebtoonViewer && readerPreferences.autoScroll().get()))) return
-
-    android.util.Log.d("Automation","Init automation $isPagerViewer $isWebtoonViewer")
+    android.util.Log.d("Automation", "Init automation $isPagerViewer $isWebtoonViewer")
     val isTabletUi = isTabletUi()
     val horizontalPadding = if (isTabletUi) 24.dp else 8.dp
 
@@ -58,8 +60,6 @@ fun Automation(
         containerColor = backgroundColor,
         disabledContainerColor = backgroundColor,
     )
-
-
 
     // We explicitly handle direction based on the reader viewer rather than the system direction
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
@@ -74,14 +74,18 @@ fun Automation(
                     if (isPagerViewer) {
                         val newAutoFlipInterval = (readerPreferences.autoFlipInterval().get() + 1).coerceIn(1, 60)
                         readerPreferences.autoFlipInterval().set(newAutoFlipInterval)
-                        context.toast(MR.strings.pref_auto_flip_interval_summary
-                            .format(newAutoFlipInterval).toString(context))
+                        context.toast(
+                            MR.strings.pref_auto_flip_interval_summary
+                                .format(newAutoFlipInterval).toString(context),
+                        )
                     }
                     if (isWebtoonViewer) {
                         val newAutoScrollSpeed = (readerPreferences.autoScrollSpeed().get() - 1).coerceIn(1, 10)
                         readerPreferences.autoScrollSpeed().set(newAutoScrollSpeed)
-                        context.toast(MR.strings.pref_auto_scroll_speed_summary
-                            .format(newAutoScrollSpeed).toString(context))
+                        context.toast(
+                            MR.strings.pref_auto_scroll_speed_summary
+                                .format(newAutoScrollSpeed).toString(context),
+                        )
                     }
                 },
                 colors = buttonColor,
@@ -95,7 +99,7 @@ fun Automation(
             }
             FilledIconButton(
                 onClick = {
-                    android.util.Log.d("Automation","Clicked start automation")
+                    android.util.Log.d("Automation", "Clicked start automation")
                     viewer?.automationInProgress?.value = true
                 },
                 colors = buttonColor,
@@ -113,14 +117,18 @@ fun Automation(
                     if (isPagerViewer) {
                         val newAutoFlipInterval = (readerPreferences.autoFlipInterval().get() - 1).coerceIn(1, 60)
                         readerPreferences.autoFlipInterval().set(newAutoFlipInterval)
-                        context.toast(MR.strings.pref_auto_flip_interval_summary
-                            .format(newAutoFlipInterval).toString(context))
+                        context.toast(
+                            MR.strings.pref_auto_flip_interval_summary
+                                .format(newAutoFlipInterval).toString(context),
+                        )
                     }
                     if (isWebtoonViewer) {
                         val newAutoScrollSpeed = (readerPreferences.autoScrollSpeed().get() + 1).coerceIn(1, 10)
                         readerPreferences.autoScrollSpeed().set(newAutoScrollSpeed)
-                        context.toast(MR.strings.pref_auto_scroll_speed_summary
-                            .format(newAutoScrollSpeed).toString(context))
+                        context.toast(
+                            MR.strings.pref_auto_scroll_speed_summary
+                                .format(newAutoScrollSpeed).toString(context),
+                        )
                     }
                 },
                 colors = buttonColor,
