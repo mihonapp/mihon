@@ -78,7 +78,7 @@ fun Automation(
                             .format(newAutoFlipInterval).toString(context))
                     }
                     if (isWebtoonViewer) {
-                        val newAutoScrollSpeed = (readerPreferences.autoScrollSpeed().get() + 5).coerceIn(5, 30)
+                        val newAutoScrollSpeed = (readerPreferences.autoScrollSpeed().get() - 1).coerceIn(1, 10)
                         readerPreferences.autoScrollSpeed().set(newAutoScrollSpeed)
                         context.toast(MR.strings.pref_auto_scroll_speed_summary
                             .format(newAutoScrollSpeed).toString(context))
@@ -117,7 +117,7 @@ fun Automation(
                             .format(newAutoFlipInterval).toString(context))
                     }
                     if (isWebtoonViewer) {
-                        val newAutoScrollSpeed = (readerPreferences.autoScrollSpeed().get() - 5).coerceIn(5, 30)
+                        val newAutoScrollSpeed = (readerPreferences.autoScrollSpeed().get() + 1).coerceIn(1, 10)
                         readerPreferences.autoScrollSpeed().set(newAutoScrollSpeed)
                         context.toast(MR.strings.pref_auto_scroll_speed_summary
                             .format(newAutoScrollSpeed).toString(context))

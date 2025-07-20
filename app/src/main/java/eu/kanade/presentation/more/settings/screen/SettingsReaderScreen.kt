@@ -447,14 +447,13 @@ object SettingsReaderScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_auto_scroll),
                 ),
                 Preference.PreferenceItem.SliderPreference(
-                    value = autoScrollSpeed,
-                    valueRange = 5..30,
-                    steps = 4,
+                    value = 11 - autoScrollSpeed,
+                    valueRange = 1..10,
                     title = stringResource(MR.strings.pref_auto_scroll_speed),
                     subtitle = stringResource(MR.strings.pref_auto_scroll_speed_summary, autoScrollSpeed),
                     enabled = autoScrollState,
                     onValueChanged = {
-                        autoScrollSpeedPref.set(it)
+                        autoScrollSpeedPref.set(11 - it)
                         true
                     },
                 ),

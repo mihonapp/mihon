@@ -503,7 +503,7 @@
     <string name="pref_reader_automation">Automation</string>
     <string name="pref_auto_scroll">Scroll</string>
     <string name="pref_auto_scroll_speed">Scroll speed</string>
-    <string name="pref_auto_scroll_speed_summary">Scrolls %1$dpx every screen refresh</string>
+    <string name="pref_auto_scroll_speed_summary">Scrolls 1 screen (height) every %1$d seconds</string>
     <string name="pref_auto_flip">Flip</string>
     <string name="pref_auto_flip_interval">Flip interval</string>
     <string name="pref_auto_flip_interval_summary">Flips a page every %1$d seconds</string>
