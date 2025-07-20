@@ -48,6 +48,9 @@ class PagerConfig(
     var landscapeZoom = false
         private set
 
+    var autoFlipEnabled = false
+    var autoFlipInterval = 5
+
     init {
         readerPreferences.readerTheme()
             .register(
@@ -106,6 +109,12 @@ class PagerConfig(
                 { dualPageRotateToFitInvert = it },
                 { imagePropertyChangedListener?.invoke() },
             )
+
+        readerPreferences.autoFlip()
+            .register({ autoFlipEnabled = it })
+
+        readerPreferences.autoFlipInterval()
+            .register({ autoFlipInterval = it })
     }
 
     private fun zoomTypeFromPreference(value: Int) {
