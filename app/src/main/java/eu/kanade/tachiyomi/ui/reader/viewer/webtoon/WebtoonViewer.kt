@@ -180,7 +180,12 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
                     activity.hideMenu()
 
                     val screenHeight = activity.resources.displayMetrics.heightPixels
-                    val refreshRate = activity.windowManager.defaultDisplay.refreshRate
+                    val refreshRate = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                        activity.display?.refreshRate ?: 60f
+                    } else {
+                        @Suppress("DEPRECATION")
+                        activity.windowManager.defaultDisplay.refreshRate
+                    }
                     val scrollDistancePerFrame = screenHeight / (config.autoScrollSpeed * refreshRate)
                     val scrollDistancePerFrameInt = scrollDistancePerFrame.toInt()
                     android.util.Log.d("Automation","started @ $scrollDistancePerFrameInt px/frame")
