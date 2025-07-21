@@ -21,9 +21,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.injectLazy
 import kotlin.math.min
@@ -150,19 +148,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             activity.binding.navigationOverlay.setNavigation(config.navigator, showOnStart)
         }
         if (config.autoFlipEnabled) {
-            scope.launch {
-                automationInProgress.collect { isAutomating ->
-                    if (isAutomating) {
-                        activity.hideMenu()
-                        while (automationInProgress.value) {
-                            android.util.Log.d("Automation", "waiting for ${config.autoFlipInterval}s to flip")
-                            delay(config.autoFlipInterval * 1000L)
-                            android.util.Log.d("Automation", "flip")
-                            moveToNext()
-                        }
-                    }
-                }
-            }
+            automatePager(activity, adapter, automationInProgress, config, scope) { moveToNext() }
         }
     }
 
@@ -277,6 +263,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
         } else if (transition is ChapterTransition.Next) {
             // No more chapters, show menu because the user is probably going to close the reader
             activity.showMenu()
+            automationInProgress.value = false
         }
     }
 

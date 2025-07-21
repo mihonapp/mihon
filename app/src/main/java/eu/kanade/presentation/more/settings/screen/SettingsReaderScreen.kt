@@ -438,7 +438,10 @@ object SettingsReaderScreen : SearchableSettings {
         val autoScrollSpeed by autoScrollSpeedPref.collectAsState()
         val autoFlipIntervalPref = readerPreferences.autoFlipInterval()
         val autoFlipInterval by autoFlipIntervalPref.collectAsState()
-
+        val automationMaxMinutesPref = readerPreferences.automationMaxMinutes()
+        val automationMaxMinutes by automationMaxMinutesPref.collectAsState()
+        val automationMaxChaptersPref = readerPreferences.automationMaxChapters()
+        val automationMaxChapters by automationMaxChaptersPref.collectAsState()
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_reader_automation),
             preferenceItems = persistentListOf(
@@ -469,6 +472,36 @@ object SettingsReaderScreen : SearchableSettings {
                     enabled = autoFlipState,
                     onValueChanged = {
                         autoFlipIntervalPref.set(it)
+                        true
+                    },
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = readerPreferences.automationMaxMinutes().get(),
+                    valueRange = 0..60,
+                    title = stringResource(MR.strings.pref_reader_automation_max_minutes),
+                    subtitle = if (automationMaxMinutes == 0) {
+                        stringResource(MR.strings.disabled)
+                    } else {
+                        stringResource(MR.strings.pref_reader_automation_max_minutes_summary, automationMaxMinutes)
+                    },
+                    enabled = autoScrollState || autoFlipState,
+                    onValueChanged = {
+                        automationMaxMinutesPref.set(it)
+                        true
+                    },
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = readerPreferences.automationMaxChapters().get(),
+                    valueRange = 0..10,
+                    title = stringResource(MR.strings.pref_reader_automation_max_chapters),
+                    subtitle = if (automationMaxChapters == 0) {
+                        stringResource(MR.strings.disabled)
+                    } else {
+                        stringResource(MR.strings.pref_reader_automation_max_chapters_summary, automationMaxChapters)
+                    },
+                    enabled = autoScrollState || autoFlipState,
+                    onValueChanged = {
+                        automationMaxChaptersPref.set(it)
                         true
                     },
                 ),
