@@ -173,15 +173,21 @@ class ReaderViewModel @JvmOverloads constructor(
                                 (
                                     manga.downloadedFilterRaw == Manga.CHAPTER_SHOW_DOWNLOADED &&
                                         !downloadManager.isChapterDownloaded(
-                                            it,
-                                            manga,
+                                            it.name,
+                                            it.scanlator,
+                                            it.url,
+                                            manga.title,
+                                            manga.source,
                                         )
                                     ) ||
                                 (
                                     manga.downloadedFilterRaw == Manga.CHAPTER_SHOW_NOT_DOWNLOADED &&
                                         downloadManager.isChapterDownloaded(
-                                            it,
-                                            manga,
+                                            it.name,
+                                            it.scanlator,
+                                            it.url,
+                                            manga.title,
+                                            manga.source,
                                         )
                                     ) ||
                                 (manga.bookmarkedFilterRaw == Manga.CHAPTER_SHOW_BOOKMARKED && !it.bookmark) ||
@@ -389,12 +395,15 @@ class ReaderViewModel @JvmOverloads constructor(
 
         if (chapter.pageLoader?.isLocal == false) {
             val manga = manga ?: return
-            val isDownloaded =  downloadManager.isChapterDownloaded(
-                chapter.chapter.toDomainChapter(),
-                manga,
+            val dbChapter = chapter.chapter
+            val isDownloaded = downloadManager.isChapterDownloaded(
+                dbChapter.name,
+                dbChapter.scanlator,
+                dbChapter.url,
+                manga.title,
+                manga.source,
                 skipCache = true,
-                )
-
+            )
             if (isDownloaded) {
                 chapter.state = ReaderChapter.State.Wait
             }
@@ -461,18 +470,21 @@ class ReaderViewModel @JvmOverloads constructor(
 
         // Only download ahead if current + next chapter is already downloaded too to avoid jank
         if (getCurrentChapter()?.pageLoader !is DownloadPageLoader) return
-        val nextChapter = state.value.viewerChapters?.nextChapter?.chapter?.toDomainChapter() ?: return
+        val nextChapter = state.value.viewerChapters?.nextChapter?.chapter ?: return
 
         viewModelScope.launchIO {
             val isNextChapterDownloaded = downloadManager.isChapterDownloaded(
-                nextChapter,
-                manga,
+                nextChapter.name,
+                nextChapter.scanlator,
+                nextChapter.url,
+                manga.title,
+                manga.source,
             )
             if (!isNextChapterDownloaded) return@launchIO
 
-            val chaptersToDownload = getNextChapters.await(manga.id, nextChapter.id).run {
+            val chaptersToDownload = getNextChapters.await(manga.id, nextChapter.id!!).run {
                 if (readerPreferences.skipDupe().get()) {
-                    removeDuplicates(nextChapter)
+                    removeDuplicates(nextChapter.toDomainChapter()!!)
                 } else {
                     this
                 }

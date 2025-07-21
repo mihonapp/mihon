@@ -34,10 +34,10 @@ class DownloadProvider(
     /**
      * Returns the download directory for a manga. For internal use only.
      *
-     * @param manga the domain manga object.
+     * @param mangaTitle the title of the manga to query.
      * @param source the source of the manga.
      */
-    internal fun getMangaDir(manga: Manga, source: Source): Result<UniFile> {
+    internal fun getMangaDir(mangaTitle: String, source: Source): Result<UniFile> {
         val downloadsDir = downloadsDir
         if (downloadsDir == null) {
             logcat(LogPriority.ERROR) { "Failed to create download directory" }
@@ -56,7 +56,7 @@ class DownloadProvider(
             )
         }
 
-        val mangaDirName = getMangaDirName(manga)
+        val mangaDirName = getMangaDirName(mangaTitle)
         val mangaDir = sourceDir.createDirectory(mangaDirName)
         if (mangaDir == null) {
             val displayablePath = sourceDir.displayablePath + "/$mangaDirName"
@@ -81,24 +81,25 @@ class DownloadProvider(
     /**
      * Returns the download directory for a manga if it exists.
      *
-     * @param manga the domain manga object.
+     * @param mangaTitle the title of the manga to query.
      * @param source the source of the manga.
      */
-    fun findMangaDir(manga: Manga, source: Source): UniFile? {
+    fun findMangaDir(mangaTitle: String, source: Source): UniFile? {
         val sourceDir = findSourceDir(source)
-        return sourceDir?.findFile(getMangaDirName(manga))
+        return sourceDir?.findFile(getMangaDirName(mangaTitle))
     }
 
     /**
      * Returns the download directory for a chapter if it exists.
      *
-     * @param chapter the domain chapter object.
-     * @param manga the domain manga object.
+     * @param chapterName the name of the chapter to query.
+     * @param chapterScanlator scanlator of the chapter to query
+     * @param mangaTitle the title of the manga to query.
      * @param source the source of the chapter.
      */
-    fun findChapterDir(chapter: Chapter, manga: Manga, source: Source): UniFile? {
-        val mangaDir = findMangaDir(manga, source)
-        return getValidChapterDirNames(chapter).asSequence()
+    fun findChapterDir(chapterName: String, chapterScanlator: String?, chapterUrl: String, mangaTitle: String, source: Source): UniFile? {
+        val mangaDir = findMangaDir(mangaTitle, source)
+        return getValidChapterDirNames(chapterName, chapterScanlator, chapterUrl).asSequence()
             .mapNotNull { mangaDir?.findFile(it) }
             .firstOrNull()
     }
@@ -111,9 +112,9 @@ class DownloadProvider(
      * @param source the source of the chapter.
      */
     fun findChapterDirs(chapters: List<Chapter>, manga: Manga, source: Source): Pair<UniFile?, List<UniFile>> {
-        val mangaDir = findMangaDir(manga, source) ?: return null to emptyList()
+        val mangaDir = findMangaDir(manga.title, source) ?: return null to emptyList()
         return mangaDir to chapters.mapNotNull { chapter ->
-            getValidChapterDirNames(chapter).asSequence()
+            getValidChapterDirNames(chapter.name, chapter.scanlator, chapter.url).asSequence()
                 .mapNotNull { mangaDir.findFile(it) }
                 .firstOrNull()
         }
@@ -131,10 +132,10 @@ class DownloadProvider(
     /**
      * Returns the download directory name for a manga.
      *
-     * @param manga the title of the manga to query.
+     * @param mangaTitle the title of the manga to query.
      */
-    fun getMangaDirName(manga: Manga): String {
-        return DiskUtil.buildValidFilename(manga.title)
+    fun getMangaDirName(mangaTitle: String): String {
+        return DiskUtil.buildValidFilename(mangaTitle)
     }
 
     /**
@@ -142,15 +143,12 @@ class DownloadProvider(
      *
      * @param chapter the chapter
      */
-    fun getChapterDirName(chapter: Chapter): String {
-        val newChapterName = sanitizeChapterName(chapter.name)
-//        val hash = md5(chapter.url).takeLast(6)
+    fun getChapterDirName(chapterName: String, chapterScanlator: String?, chapterUrl: String): String {
+        val newChapterName = sanitizeChapterName(chapterName) + "_" + md5(chapterUrl).takeLast(6)
         return DiskUtil.buildValidFilename(
             when {
-//                !chapter.scanlator.isNullOrBlank() -> "${newChapterName}_${chapter.scanlator}_${chapter.id}"
-//                else -> "${newChapterName}_${chapter.id}"
-                !chapter.scanlator.isNullOrBlank() -> "${chapter.scanlator}_$newChapterName"
-                else -> newChapterName
+                !chapterScanlator.isNullOrBlank() -> "${chapterScanlator}_${newChapterName}"
+                else -> "${newChapterName}"
             },
         )
     }
@@ -161,19 +159,19 @@ class DownloadProvider(
      *
      * @param chapter the chapter
      */
-    private fun getLegacyChapterDirNames(chapter: Chapter): List<String> {
-//        val sanitizedChapterName = sanitizeChapterName(chapter.name)
-//        val chapterNameV1 = DiskUtil.buildValidFilename(
-//            when {
-//                !chapter.scanlator.isNullOrBlank() -> "${chapter.scanlator}_$sanitizedChapterName"
-//                else -> sanitizedChapterName
-//            })
+    private fun getLegacyChapterDirNames(chapterName: String, chapterScanlator: String?): List<String> {
+       val sanitizedChapterName = sanitizeChapterName(chapterName)
+       val chapterNameV1 = DiskUtil.buildValidFilename(
+           when {
+               !chapterScanlator.isNullOrBlank() -> "${chapterScanlator}_$sanitizedChapterName"
+               else -> sanitizedChapterName
+           })
 
-        return buildList(0) {
-//        return buildList(1) {
-            // Folder of images
-//            add(chapterNameV1)
-        }
+       return buildList(1) {
+           // Chapter name without hash (unable to handle duplicate
+           // chapter names)
+           add(chapterNameV1)
+       }
     }
 
     /**
@@ -188,7 +186,7 @@ class DownloadProvider(
     }
 
     fun isChapterDirNameChanged(oldChapter: Chapter, newChapter: Chapter): Boolean {
-        return getChapterDirName(oldChapter) != getChapterDirName(newChapter)
+        return getChapterDirName(oldChapter.name, oldChapter.scanlator, oldChapter.url) != getChapterDirName(newChapter.name, newChapter.scanlator, newChapter.url)
     }
 
     /**
@@ -196,9 +194,9 @@ class DownloadProvider(
      *
      * @param chapter the domain chapter object.
      */
-    fun getValidChapterDirNames(chapter: Chapter): List<String> {
-        val chapterDirName = getChapterDirName(chapter)
-        val legacyChapterDirNames = getLegacyChapterDirNames(chapter)
+    fun getValidChapterDirNames(chapterName: String, chapterScanlator: String?, chapterUrl: String): List<String> {
+        val chapterDirName = getChapterDirName(chapterName, chapterScanlator, chapterUrl)
+        val legacyChapterDirNames = getLegacyChapterDirNames(chapterName, chapterScanlator)
 
         return buildList {
             // Folder of images

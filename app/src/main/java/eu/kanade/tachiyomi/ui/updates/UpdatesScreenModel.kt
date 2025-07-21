@@ -100,18 +100,16 @@ class UpdatesScreenModel(
         }
     }
 
-    // since this is only called in launch.IO coroutine, it should be fine to change it to suspend function.
-    private suspend fun List<UpdatesWithRelations>.toUpdateItems(): PersistentList<UpdatesItem> {
+    private fun List<UpdatesWithRelations>.toUpdateItems(): PersistentList<UpdatesItem> {
         return this
             .map { update ->
                 val activeDownload = downloadManager.getQueuedDownloadOrNull(update.chapterId)
-
-                val chapter = getChapter.await(update.chapterId)
-                val manga = getManga.await(update.mangaId)
-
                 val downloaded = downloadManager.isChapterDownloaded(
-                    chapter,
-                    manga,
+                    update.chapterName,
+                    update.scanlator,
+                    update.chapterUrl,
+                    update.mangaTitle,
+                    update.sourceId,
                 )
                 val downloadState = when {
                     activeDownload != null -> activeDownload.status
