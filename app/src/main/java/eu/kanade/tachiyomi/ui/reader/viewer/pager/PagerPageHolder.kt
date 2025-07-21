@@ -16,6 +16,7 @@ import eu.kanade.tachiyomi.widget.ViewPagerAdapter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import logcat.LogPriority
@@ -151,7 +152,11 @@ class PagerPageHolder(
 
         try {
             val (source, isAnimated, background) = withIOContext {
-                val source = streamFn().use { process(item, Buffer().readFrom(it)) }
+                val source = if (viewer.config.dualPageCombine && canCombineWithNext()) {
+                    createCombinedPageSource()
+                } else {
+                    streamFn().use { process(item, Buffer().readFrom(it)) }
+                }
                 val isAnimated = ImageUtil.isAnimatedAndSupported(source)
                 val background = if (!isAnimated && viewer.config.automaticBackground) {
                     ImageUtil.chooseBackground(context, source.peek().inputStream())
@@ -240,6 +245,86 @@ class PagerPageHolder(
     private fun onPageSplit(page: ReaderPage) {
         val newPage = InsertPage(page)
         viewer.onPageSplit(page, newPage)
+    }
+
+    /**
+     * Check if current page can be combined with the next page for dual-page display.
+     * Returns true if both pages are narrow (not wide) and next page exists.
+     */
+    private suspend fun canCombineWithNext(): Boolean {
+        val currentPageIndex = viewer.adapter.items.indexOf(page)
+        
+        val nextPageIndex = if (viewer is R2LPagerViewer) {
+            currentPageIndex - 1  // In R2L, the "next" page in reading order is at index - 1
+        } else {
+            currentPageIndex + 1  // In L2R, the "next" page in reading order is at index + 1
+        }
+        
+        if (currentPageIndex == -1 || nextPageIndex < 0 || nextPageIndex >= viewer.adapter.items.size) {
+            return false
+        }
+
+        val nextPage = viewer.adapter.items[nextPageIndex]
+        if (nextPage !is ReaderPage || nextPage is InsertPage) {
+            return false
+        }
+
+        if (viewer.config.dualPageCombineShowCover && page.index == 0) {
+            return false
+        }
+
+        if (page.status != Page.State.Ready) {
+            return false
+        }
+        
+        // Wait for next page to be ready
+        if (nextPage.status != Page.State.Ready) {
+            try {
+                nextPage.statusFlow.first { it == Page.State.Ready || it is Page.State.Error }
+                if (nextPage.status is Page.State.Error) {
+                    return false
+                }
+            } catch (e: Exception) {
+                return false
+            }
+        }
+
+        // Check if both pages are narrow (not wide)
+        val currentStreamFn = page.stream ?: return false
+        val nextStreamFn = nextPage.stream ?: return false
+
+        val currentIsWide = currentStreamFn().use { ImageUtil.isWideImage(Buffer().readFrom(it)) }
+        val nextIsWide = nextStreamFn().use { ImageUtil.isWideImage(Buffer().readFrom(it)) }
+        
+        return !currentIsWide && !nextIsWide
+    }
+
+    /**
+     * Creates a combined image source from current page and next page.
+     */
+    private suspend fun createCombinedPageSource(): BufferedSource {
+        val currentPageIndex = viewer.adapter.items.indexOf(page)
+        val nextPageIndex = if (viewer is R2LPagerViewer) {
+            currentPageIndex - 1  // In R2L, the "next" page in reading order is at index - 1
+        } else {
+            currentPageIndex + 1  // In L2R, the "next" page in reading order is at index + 1
+        }
+        val nextPage = viewer.adapter.items[nextPageIndex] as ReaderPage
+
+        val currentStreamFn = page.stream!!
+        val nextStreamFn = nextPage.stream!!
+
+        val currentBuffer = currentStreamFn().use { 
+            process(page, Buffer().readFrom(it))
+        }
+        val nextBuffer = nextStreamFn().use { 
+            process(nextPage, Buffer().readFrom(it))
+        }
+
+        return when (viewer) {
+            is L2RPagerViewer -> ImageUtil.combinePagesForDualPage(currentBuffer, nextBuffer)
+            else -> ImageUtil.combinePagesForDualPage(nextBuffer, currentBuffer)
+        }
     }
 
     /**

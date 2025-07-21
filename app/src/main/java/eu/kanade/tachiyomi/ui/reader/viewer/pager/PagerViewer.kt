@@ -49,7 +49,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     /**
      * Adapter of the pager.
      */
-    private val adapter = PagerViewerAdapter(this)
+    val adapter = PagerViewerAdapter(this)
 
     /**
      * Currently active item. It can be a chapter page or a chapter transition.
@@ -132,6 +132,19 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
         config.dualPageSplitChangedListener = { enabled ->
             if (!enabled) {
                 cleanupPageSplit()
+            }
+        }
+
+        config.dualPageCombineChangedListener = { enabled ->
+            // Reload chapters to apply/remove dual-page combination
+            val chapters = adapter.currentChapter
+            if (chapters != null) {
+                val viewerChapters = ViewerChapters(
+                    currChapter = chapters,
+                    prevChapter = adapter.prevTransition?.from,
+                    nextChapter = adapter.nextTransition?.to
+                )
+                adapter.setChapters(viewerChapters, forceTransition = false)
             }
         }
 
