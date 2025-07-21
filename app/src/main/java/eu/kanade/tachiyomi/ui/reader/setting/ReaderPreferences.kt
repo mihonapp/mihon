@@ -145,6 +145,10 @@ class ReaderPreferences(
 
     fun autoFlipInterval() = preferenceStore.getInt("pref_auto_flip_interval", 5)
 
+    fun automationMaxChapters() = preferenceStore.getInt("pref_automation_max_chapters", 5)
+
+    fun automationMaxMinutes() = preferenceStore.getInt("pref_automation_max_minutes", 15)
+
     // endregion
 
     enum class FlashColor {

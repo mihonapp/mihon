@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
 import android.graphics.PointF
-import android.view.Choreographer
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
@@ -23,13 +22,10 @@ import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
 import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
-import kotlin.coroutines.resume
 import kotlin.math.max
 import kotlin.math.min
 
@@ -114,6 +110,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
                     val lastItem = adapter.items.getOrNull(lastIndex)
                     if (lastItem is ChapterTransition.Next && lastItem.to == null) {
                         activity.showMenu()
+                        automationInProgress.value = false
                     }
                 }
             },
@@ -174,57 +171,8 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         frame.addView(recycler)
 
         if (config.autoScrollEnabled) {
-            scope.launch {
-                automationInProgress.collect { isAutomating ->
-                    if (isAutomating) {
-                        activity.hideMenu()
-                        var lastRefreshRate = getRefreshRate()
-                        var scrollDistancePerFrame = getScrollDistancePerFrame(lastRefreshRate)
-                        android.util.Log.d("Automation", "Detected refresh rate: ${lastRefreshRate}Hz")
-                        android.util.Log.d("Automation", "Started @ $scrollDistancePerFrame px/frame")
-                        while (automationInProgress.value) {
-                            suspendCancellableCoroutine { continuation ->
-                                val frameCallback = Choreographer.FrameCallback {
-                                    if (continuation.isActive) {
-                                        continuation.resume(Unit)
-                                    }
-                                }
-                                Choreographer.getInstance().postFrameCallback(frameCallback)
-                                continuation.invokeOnCancellation {
-                                    Choreographer.getInstance().removeFrameCallback(frameCallback)
-                                    android.util.Log.d("Automation", "Choreographer callback cancelled", it)
-                                }
-                            }
-                            val newRefreshRate = getRefreshRate()
-                            if (newRefreshRate != lastRefreshRate) {
-                                lastRefreshRate = newRefreshRate
-                                scrollDistancePerFrame = getScrollDistancePerFrame(lastRefreshRate)
-                                android.util.Log.d("Automation", "Refresh rate changed to ${lastRefreshRate}Hz")
-                                android.util.Log.d("Automation", "Updated @ $scrollDistancePerFrame px/frame")
-                            }
-                            recycler.scrollBy(0, scrollDistancePerFrame)
-                        }
-                    } else {
-                        android.util.Log.d("Automation", "stopped")
-                    }
-                }
-            }
+            automateWebtoon(activity, recycler, adapter, automationInProgress, config, scope)
         }
-    }
-
-    private fun getRefreshRate(): Float {
-        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-            activity.display?.refreshRate ?: 60f
-        } else {
-            @Suppress("DEPRECATION")
-            activity.windowManager.defaultDisplay.refreshRate
-        }
-    }
-
-    private fun getScrollDistancePerFrame(refreshRate: Float): Int {
-        val screenHeight = activity.resources.displayMetrics.heightPixels
-        val scrollDistancePerFrame = screenHeight / (config.autoScrollSpeed * refreshRate)
-        return scrollDistancePerFrame.toInt()
     }
 
     private fun checkAllowPreload(page: ReaderPage?): Boolean {
