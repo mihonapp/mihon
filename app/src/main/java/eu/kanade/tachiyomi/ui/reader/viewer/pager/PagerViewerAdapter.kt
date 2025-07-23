@@ -28,6 +28,11 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
      */
     private var preprocessed: MutableMap<Int, InsertPage> = mutableMapOf()
 
+    /**
+     * Set of pages that have been consumed in dual-page combinations.
+     */
+    private val consumedPages = mutableSetOf<ReaderPage>()
+
     var nextTransition: ChapterTransition.Next? = null
         private set
 
@@ -122,6 +127,12 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         }
 
         preprocessed = mutableMapOf()
+        
+        val isChapterChange = currentChapter?.chapter?.id != chapters.currChapter.chapter.id
+        if (isChapterChange) {
+            consumedPages.clear()
+        }
+        
         items = newItems
         notifyDataSetChanged()
 
@@ -132,17 +143,18 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     }
 
     /**
-     * Returns the amount of items of the adapter.
+     * Returns the amount of items of the adapter, excluding consumed pages.
      */
     override fun getCount(): Int {
-        return items.size
+        return getFilteredItems().size
     }
 
     /**
      * Creates a new view for the item at the given [position].
      */
     override fun createView(container: ViewGroup, position: Int): View {
-        return when (val item = items[position]) {
+        val filteredItems = getFilteredItems()
+        return when (val item = filteredItems[position]) {
             is ReaderPage -> PagerPageHolder(readerThemedContext, viewer, item)
             is ChapterTransition -> PagerTransitionHolder(readerThemedContext, viewer, item)
             else -> throw NotImplementedError("Holder for ${item.javaClass} not implemented")
@@ -154,11 +166,10 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
      */
     override fun getItemPosition(view: Any): Int {
         if (view is PositionableView) {
-            val position = items.indexOf(view.item)
+            val filteredItems = getFilteredItems()
+            val position = filteredItems.indexOf(view.item)
             if (position != -1) {
                 return position
-            } else {
-                logcat { "Position for ${view.item} not found" }
             }
         }
         return POSITION_NONE
@@ -201,6 +212,29 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         val insertPages = items.filterIsInstance(InsertPage::class.java)
         items.removeAll(insertPages)
         notifyDataSetChanged()
+    }
+
+    /**
+     * Returns a filtered list of items, excluding consumed pages.
+     */
+    private fun getFilteredItems(): List<Any> {
+        return items.filterNot { it is ReaderPage && isPageConsumed(it) }
+    }
+
+    /**
+     * Marks a page as consumed in dual-page combination.
+     * The page will be filtered out from display but kept in the items list.
+     */
+    fun markPageAsConsumed(consumedPage: ReaderPage) {
+        consumedPages.add(consumedPage)
+        notifyDataSetChanged()
+    }
+
+    /**
+     * Checks if a page has been consumed in dual-page combination.
+     */
+    fun isPageConsumed(page: ReaderPage): Boolean {
+        return consumedPages.contains(page)
     }
 
     fun refresh() {

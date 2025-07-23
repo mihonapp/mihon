@@ -305,20 +305,21 @@ class PagerPageHolder(
     private suspend fun createCombinedPageSource(): BufferedSource {
         val currentPageIndex = viewer.adapter.items.indexOf(page)
         val nextPageIndex = if (viewer is R2LPagerViewer) {
-            currentPageIndex - 1  // In R2L, the "next" page in reading order is at index - 1
+            currentPageIndex - 1
         } else {
-            currentPageIndex + 1  // In L2R, the "next" page in reading order is at index + 1
+            currentPageIndex + 1
         }
         val nextPage = viewer.adapter.items[nextPageIndex] as ReaderPage
 
-        val currentStreamFn = page.stream!!
-        val nextStreamFn = nextPage.stream!!
-
-        val currentBuffer = currentStreamFn().use { 
+        val currentBuffer = page.stream!!().use { 
             process(page, Buffer().readFrom(it))
         }
-        val nextBuffer = nextStreamFn().use { 
+        val nextBuffer = nextPage.stream!!().use { 
             process(nextPage, Buffer().readFrom(it))
+        }
+
+        withUIContext {
+            viewer.adapter.markPageAsConsumed(nextPage)
         }
 
         return when (viewer) {
