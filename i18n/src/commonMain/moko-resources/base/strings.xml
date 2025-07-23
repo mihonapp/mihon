@@ -503,16 +503,10 @@
     <string name="pref_reader_automation">Automation</string>
     <string name="pref_auto_scroll">Scroll</string>
     <string name="pref_auto_scroll_speed">Scroll speed</string>
-    <string name="pref_auto_scroll_speed_summary">%1$d seconds/screen</string>
     <string name="pref_auto_flip">Flip</string>
     <string name="pref_auto_flip_interval">Flip interval</string>
-    <string name="pref_auto_flip_interval_summary">%1$d seconds</string>
     <string name="pref_reader_automation_max_minutes">Maximum duration</string>
-    <string name="pref_reader_automation_max_minutes_summary">%1$d minutes</string>
-    <string name="reader_automation_max_minutes_reached">Stopped after %1$d minutes</string>
     <string name="pref_reader_automation_max_chapters">Maximum chapters</string>
-    <string name="pref_reader_automation_max_chapters_summary">%1$d chapters</string>
-    <string name="reader_automation_max_chapters_reached">Stopped after %1$d chapters</string>
 
     <!-- Downloads section -->
     <string name="pref_category_delete_chapters">Delete chapters</string>
