@@ -530,9 +530,10 @@ class ReaderViewModel @JvmOverloads constructor(
      */
     private suspend fun updateChapterProgress(readerChapter: ReaderChapter, page: Page) {
         val pageIndex = page.index
+        val combinedPageNumber = getCombinedPageNumber(page as ReaderPage)
 
         mutableState.update {
-            it.copy(currentPage = pageIndex + 1)
+            it.copy(currentPage = pageIndex + 1, combinedPageNumber = combinedPageNumber)
         }
         readerChapter.requestedPage = pageIndex
         chapterPageIndex = pageIndex
@@ -552,6 +553,30 @@ class ReaderViewModel @JvmOverloads constructor(
                 ),
             )
         }
+    }
+
+    /**
+     * Gets the ending page number when pages are combined (e.g., 3 for pages 2-3).
+     */
+    private fun getCombinedPageNumber(page: ReaderPage): Int? {
+        val viewer = state.value.viewer ?: return null
+        val adapter = when (viewer) {
+            is eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer -> viewer.adapter
+            else -> return null
+        }
+        
+        val pages = page.chapter.pages ?: return null
+        val nextPageIndex = page.index + 1
+        if (nextPageIndex >= pages.size) {
+            return null
+        }
+        
+        val nextPage = pages[nextPageIndex]
+        if (adapter.isPageConsumed(nextPage)) {
+            return nextPage.index + 1
+        }
+        
+        return null
     }
 
     private suspend fun updateChapterProgressOnComplete(readerChapter: ReaderChapter) {
@@ -953,6 +978,7 @@ class ReaderViewModel @JvmOverloads constructor(
         val bookmarked: Boolean = false,
         val isLoadingAdjacentChapter: Boolean = false,
         val currentPage: Int = -1,
+        val combinedPageNumber: Int? = null,
 
         /**
          * Viewer used to display the pages (pager, webtoon, ...).

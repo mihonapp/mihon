@@ -217,8 +217,15 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     /**
      * Returns a filtered list of items, excluding consumed pages.
      */
-    private fun getFilteredItems(): List<Any> {
+    fun getFilteredItems(): List<Any> {
         return items.filterNot { it is ReaderPage && isPageConsumed(it) }
+    }
+
+    /**
+     * Returns the position of the given item in the filtered list.
+     */
+    fun getFilteredPosition(item: Any): Int {
+        return getFilteredItems().indexOf(item)
     }
 
     /**
@@ -226,8 +233,8 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
      * The page will be filtered out from display but kept in the items list.
      */
     fun markPageAsConsumed(consumedPage: ReaderPage) {
-        consumedPages.add(consumedPage)
-        notifyDataSetChanged()
+       consumedPages.add(consumedPage)
+       notifyDataSetChanged()
     }
 
     /**

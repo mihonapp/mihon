@@ -339,6 +339,7 @@ class ReaderActivity : BaseActivity() {
                 PageIndicatorText(
                     currentPage = state.currentPage,
                     totalPages = state.totalPages,
+                    combinedPageNumber = state.combinedPageNumber,
                 )
             }
         }
