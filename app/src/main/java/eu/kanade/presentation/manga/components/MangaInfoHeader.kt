@@ -7,11 +7,9 @@ import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -66,7 +64,6 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
@@ -412,7 +409,7 @@ private fun MangaAndSourceTitlesSmall(
 }
 
 @Composable
-private fun ColumnScope.MangaContentInfo(
+private fun MangaContentInfo(
     title: String,
     author: String?,
     artist: String?,
@@ -422,12 +419,24 @@ private fun ColumnScope.MangaContentInfo(
     doSearch: (query: String, global: Boolean) -> Unit,
     textAlign: TextAlign? = LocalTextStyle.current.textAlign,
 ) {
-    ClickableText(
-        text = title.ifBlank { stringResource(MR.strings.unknown_title) },
-        style = MaterialTheme.typography.titleLarge,
-        maxLines = 3,
-        textAlign = textAlign,
-        doSearch = doSearch
+    var titleExpanded by rememberSaveable { mutableStateOf(false) }
+    var titleMenuVisible by remember { mutableStateOf(false) }
+    var authorExpanded by rememberSaveable { mutableStateOf(false) }
+    var authorMenuVisible by remember { mutableStateOf(false) }
+    var artistExpanded by rememberSaveable { mutableStateOf(false) }
+    var artistMenuVisible by remember { mutableStateOf(false) }
+
+    ExpandableClickableText(
+        content = title.ifBlank { stringResource(MR.strings.unknown_title) },
+        textStyle = MaterialTheme.typography.titleLarge,
+        collapsedMaxLines = 3,
+        alignment = textAlign,
+        onSearchRequested = doSearch,
+        isExpanded = titleExpanded,
+        isMenuOpen = titleMenuVisible,
+        onToggleExpanded = { titleExpanded = !titleExpanded },
+        onMenuVisibilityChange = { titleMenuVisible = it },
+        isContextMenuEnabled = title.isNotBlank()
     )
 
     Spacer(modifier = Modifier.height(2.dp))
@@ -442,11 +451,16 @@ private fun ColumnScope.MangaContentInfo(
             contentDescription = null,
             modifier = Modifier.size(16.dp),
         )
-        ClickableText(
-            text = author?.takeIf { it.isNotBlank() } ?: stringResource(MR.strings.unknown_author),
-            style = MaterialTheme.typography.titleSmall,
-            textAlign = textAlign,
-            doSearch = doSearch
+        ExpandableClickableText(
+            content = author?.takeIf { it.isNotBlank() } ?: stringResource(MR.strings.unknown_author),
+            textStyle = MaterialTheme.typography.titleSmall,
+            alignment = textAlign,
+            onSearchRequested = doSearch,
+            isExpanded = authorExpanded,
+            isMenuOpen = authorMenuVisible,
+            onToggleExpanded = { authorExpanded = !authorExpanded },
+            onMenuVisibilityChange = { authorMenuVisible = it },
+            isContextMenuEnabled = !author.isNullOrBlank()
         )
     }
 
@@ -461,15 +475,18 @@ private fun ColumnScope.MangaContentInfo(
                 contentDescription = null,
                 modifier = Modifier.size(16.dp),
             )
-            ClickableText(
-                text = artist,
-                style = MaterialTheme.typography.titleSmall,
-                textAlign = textAlign,
-                doSearch = doSearch
+            ExpandableClickableText(
+                content = artist,
+                textStyle = MaterialTheme.typography.titleSmall,
+                alignment = textAlign,
+                onSearchRequested = doSearch,
+                isExpanded = artistExpanded,
+                isMenuOpen = artistMenuVisible,
+                onToggleExpanded = { artistExpanded = !artistExpanded},
+                onMenuVisibilityChange = { artistMenuVisible = it },
             )
         }
     }
-
     Spacer(modifier = Modifier.height(2.dp))
 
     Row(
@@ -690,55 +707,59 @@ private fun RowScope.MangaActionButton(
 }
 
 @Composable
-fun ClickableText(
-    text: String,
-    style: TextStyle,
-    maxLines: Int = 1,
-    textAlign: TextAlign?,
-    doSearch: (query: String, global: Boolean) -> Unit
+fun ExpandableClickableText(
+    content: String,
+    textStyle: TextStyle,
+    collapsedMaxLines: Int = 1,
+    alignment: TextAlign?,
+    onSearchRequested: (query: String, global: Boolean) -> Unit,
+    isExpanded: Boolean,
+    isMenuOpen: Boolean,
+    onToggleExpanded: () -> Unit,
+    onMenuVisibilityChange: (Boolean) -> Unit,
+    isContextMenuEnabled: Boolean = true,
 ) {
     val context = LocalContext.current
-    var expanded by remember { mutableStateOf(false) }
-    var menuVisible by remember { mutableStateOf(false) }
-    val displayLines = if (expanded) Int.MAX_VALUE else maxLines
+    val maxLinesToShow = if (isExpanded) Int.MAX_VALUE else collapsedMaxLines
     Box(
-        modifier = Modifier
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = { expanded = !expanded },
-                    onLongPress = {
-                        menuVisible = true
+        modifier = Modifier.clickableNoIndication(
+            onClick = onToggleExpanded,
+            onLongClick = {
+                if (isContextMenuEnabled) onMenuVisibilityChange(true)
+            }
+        )
+    ) {
+        Text(
+            text = content,
+            style = textStyle,
+            maxLines = maxLinesToShow,
+            overflow = TextOverflow.Ellipsis,
+            textAlign = alignment,
+        )
+
+        if (isContextMenuEnabled) {
+            DropdownMenu(
+                expanded = isMenuOpen,
+                onDismissRequest = { onMenuVisibilityChange(false) },
+            ) {
+                val menuTextStyle = MaterialTheme.typography.bodyMedium
+
+                DropdownMenuItem(
+                    text = { Text(stringResource(MR.strings.action_search), style = menuTextStyle) },
+                    onClick = {
+                        onSearchRequested(content, true)
+                        onMenuVisibilityChange(false)
+                    }
+                )
+
+                DropdownMenuItem(
+                    text = { Text(stringResource(MR.strings.copy), style = menuTextStyle) },
+                    onClick = {
+                        context.copyToClipboard(content, content)
+                        onMenuVisibilityChange(false)
                     }
                 )
             }
-    ) {
-        Text(
-            text = text,
-            style = style,
-            maxLines = displayLines,
-            overflow = TextOverflow.Ellipsis,
-            textAlign = textAlign,
-        )
-
-        DropdownMenu(
-            expanded = menuVisible,
-            onDismissRequest = { menuVisible = false },
-        ) {
-            DropdownMenuItem(
-                text = { Text(text= stringResource(MR.strings.action_search), style = MaterialTheme.typography.bodyMedium) },
-                onClick = {
-                    doSearch(text, true)
-                    menuVisible = false
-                }
-            )
-
-            DropdownMenuItem(
-                text = { Text(stringResource(MR.strings.copy), style = MaterialTheme.typography.bodyMedium) },
-                onClick = {
-                    context.copyToClipboard(text, text)
-                    menuVisible = false
-                }
-            )
         }
     }
 }
