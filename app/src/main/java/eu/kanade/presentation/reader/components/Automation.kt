@@ -22,7 +22,6 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.format
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
@@ -30,6 +29,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import eu.kanade.tachiyomi.util.system.toast
+import tachiyomi.core.common.i18n.pluralStringResource
 import tachiyomi.core.common.preference.InMemoryPreferenceStore
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
@@ -75,16 +75,22 @@ fun Automation(
                         val newAutoFlipInterval = (readerPreferences.autoFlipInterval().get() + 1).coerceIn(1, 60)
                         readerPreferences.autoFlipInterval().set(newAutoFlipInterval)
                         context.toast(
-                            MR.strings.pref_auto_flip_interval_summary
-                                .format(newAutoFlipInterval).toString(context),
+                            context.pluralStringResource(
+                                MR.plurals.pref_auto_flip_interval_summary,
+                                newAutoFlipInterval,
+                                newAutoFlipInterval,
+                            ),
                         )
                     }
                     if (isWebtoonViewer) {
                         val newAutoScrollSpeed = (readerPreferences.autoScrollSpeed().get() - 1).coerceIn(1, 10)
                         readerPreferences.autoScrollSpeed().set(newAutoScrollSpeed)
                         context.toast(
-                            MR.strings.pref_auto_scroll_speed_summary
-                                .format(newAutoScrollSpeed).toString(context),
+                            context.pluralStringResource(
+                                MR.plurals.pref_auto_scroll_speed_summary,
+                                newAutoScrollSpeed,
+                                newAutoScrollSpeed,
+                            ),
                         )
                     }
                 },
@@ -118,16 +124,22 @@ fun Automation(
                         val newAutoFlipInterval = (readerPreferences.autoFlipInterval().get() - 1).coerceIn(1, 60)
                         readerPreferences.autoFlipInterval().set(newAutoFlipInterval)
                         context.toast(
-                            MR.strings.pref_auto_flip_interval_summary
-                                .format(newAutoFlipInterval).toString(context),
+                            context.pluralStringResource(
+                                MR.plurals.pref_auto_flip_interval_summary,
+                                newAutoFlipInterval,
+                                newAutoFlipInterval,
+                            ),
                         )
                     }
                     if (isWebtoonViewer) {
                         val newAutoScrollSpeed = (readerPreferences.autoScrollSpeed().get() + 1).coerceIn(1, 10)
                         readerPreferences.autoScrollSpeed().set(newAutoScrollSpeed)
                         context.toast(
-                            MR.strings.pref_auto_scroll_speed_summary
-                                .format(newAutoScrollSpeed).toString(context),
+                            context.pluralStringResource(
+                                MR.plurals.pref_auto_scroll_speed_summary,
+                                newAutoScrollSpeed,
+                                newAutoScrollSpeed,
+                            ),
                         )
                     }
                 },
