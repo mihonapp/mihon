@@ -453,7 +453,11 @@ object SettingsReaderScreen : SearchableSettings {
                     value = 11 - autoScrollSpeed,
                     valueRange = 1..10,
                     title = stringResource(MR.strings.pref_auto_scroll_speed),
-                    subtitle = stringResource(MR.strings.pref_auto_scroll_speed_summary, autoScrollSpeed),
+                    subtitle = pluralStringResource(
+                        MR.plurals.pref_auto_scroll_speed_summary,
+                        autoScrollSpeed,
+                        autoScrollSpeed,
+                    ),
                     enabled = autoScrollState,
                     onValueChanged = {
                         autoScrollSpeedPref.set(11 - it)
@@ -468,7 +472,11 @@ object SettingsReaderScreen : SearchableSettings {
                     value = autoFlipInterval,
                     valueRange = 1..30,
                     title = stringResource(MR.strings.pref_auto_flip_interval),
-                    subtitle = stringResource(MR.strings.pref_auto_flip_interval_summary, autoFlipInterval),
+                    subtitle = pluralStringResource(
+                        MR.plurals.pref_auto_flip_interval_summary,
+                        autoFlipInterval,
+                        autoFlipInterval,
+                    ),
                     enabled = autoFlipState,
                     onValueChanged = {
                         autoFlipIntervalPref.set(it)
@@ -482,7 +490,11 @@ object SettingsReaderScreen : SearchableSettings {
                     subtitle = if (automationMaxMinutes == 0) {
                         stringResource(MR.strings.disabled)
                     } else {
-                        stringResource(MR.strings.pref_reader_automation_max_minutes_summary, automationMaxMinutes)
+                        pluralStringResource(
+                            MR.plurals.pref_reader_automation_max_minutes_summary,
+                            automationMaxMinutes,
+                            automationMaxMinutes,
+                        )
                     },
                     enabled = autoScrollState || autoFlipState,
                     onValueChanged = {
@@ -497,7 +509,11 @@ object SettingsReaderScreen : SearchableSettings {
                     subtitle = if (automationMaxChapters == 0) {
                         stringResource(MR.strings.disabled)
                     } else {
-                        stringResource(MR.strings.pref_reader_automation_max_chapters_summary, automationMaxChapters)
+                        pluralStringResource(
+                            MR.plurals.pref_reader_automation_max_chapters_summary,
+                            automationMaxChapters,
+                            automationMaxChapters,
+                        )
                     },
                     enabled = autoScrollState || autoFlipState,
                     onValueChanged = {

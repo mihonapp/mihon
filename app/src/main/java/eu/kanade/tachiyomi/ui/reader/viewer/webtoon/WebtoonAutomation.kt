@@ -12,7 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.core.common.i18n.pluralStringResource
 import tachiyomi.i18n.MR
 import kotlin.coroutines.resume
 
@@ -48,8 +48,9 @@ fun automateWebtoon(
                         val currentTime = System.currentTimeMillis()
                         if (currentTime - startTime > maxMilliseconds) {
                             activity.toast(
-                                activity.stringResource(
-                                    MR.strings.reader_automation_max_minutes_reached,
+                                activity.pluralStringResource(
+                                    MR.plurals.reader_automation_max_minutes_reached,
+                                    config.automationMaxMinutes,
                                     config.automationMaxMinutes,
                                 ),
                             )
@@ -64,8 +65,9 @@ fun automateWebtoon(
                             chaptersAutomated++
                             if (chaptersAutomated >= config.automationMaxChapters) {
                                 activity.toast(
-                                    activity.stringResource(
-                                        MR.strings.reader_automation_max_chapters_reached,
+                                    activity.pluralStringResource(
+                                        MR.plurals.reader_automation_max_chapters_reached,
+                                        config.automationMaxChapters,
                                         config.automationMaxChapters,
                                     ),
                                 )

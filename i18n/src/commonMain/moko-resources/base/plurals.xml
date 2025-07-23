@@ -85,16 +85,11 @@
         <item quantity="other">Chapters %1$s and %2$d more</item>
     </plurals>
 
-    <plurals name="pref_auto_flip_interval_summary">
-        <item quantity="one">After %1$s minute</item>
-        <item quantity="other">After %1$s minutes</item>
+    <plurals name="pref_auto_scroll_speed_summary">
+        <item quantity="one">%1$d second/screen</item>
+        <item quantity="other">%1$d seconds/screen</item>
     </plurals>
 
-    <plurals name="pref_auto_flip_interval_summary">
-        <item quantity="one">After %1$s minute</item>
-        <item quantity="other">After %1$s minutes</item>
-    </plurals>
-    
     <plurals name="pref_auto_flip_interval_summary">
         <item quantity="one">%1$d second</item>
         <item quantity="other">%1$d seconds</item>
