@@ -7,6 +7,7 @@ import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -65,9 +66,11 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
@@ -419,22 +422,12 @@ private fun ColumnScope.MangaContentInfo(
     doSearch: (query: String, global: Boolean) -> Unit,
     textAlign: TextAlign? = LocalTextStyle.current.textAlign,
 ) {
-    val context = LocalContext.current
-    Text(
+    ClickableText(
         text = title.ifBlank { stringResource(MR.strings.unknown_title) },
         style = MaterialTheme.typography.titleLarge,
-        modifier = Modifier.clickableNoIndication(
-            onLongClick = {
-                if (title.isNotBlank()) {
-                    context.copyToClipboard(
-                        title,
-                        title,
-                    )
-                }
-            },
-            onClick = { if (title.isNotBlank()) doSearch(title, true) },
-        ),
+        maxLines = 3,
         textAlign = textAlign,
+        doSearch = doSearch
     )
 
     Spacer(modifier = Modifier.height(2.dp))
@@ -449,25 +442,11 @@ private fun ColumnScope.MangaContentInfo(
             contentDescription = null,
             modifier = Modifier.size(16.dp),
         )
-        Text(
-            text = author?.takeIf { it.isNotBlank() }
-                ?: stringResource(MR.strings.unknown_author),
+        ClickableText(
+            text = author?.takeIf { it.isNotBlank() } ?: stringResource(MR.strings.unknown_author),
             style = MaterialTheme.typography.titleSmall,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier
-                .clickableNoIndication(
-                    onLongClick = {
-                        if (!author.isNullOrBlank()) {
-                            context.copyToClipboard(
-                                author,
-                                author,
-                            )
-                        }
-                    },
-                    onClick = { if (!author.isNullOrBlank()) doSearch(author, true) },
-                ),
             textAlign = textAlign,
+            doSearch = doSearch
         )
     }
 
@@ -482,17 +461,11 @@ private fun ColumnScope.MangaContentInfo(
                 contentDescription = null,
                 modifier = Modifier.size(16.dp),
             )
-            Text(
+            ClickableText(
                 text = artist,
                 style = MaterialTheme.typography.titleSmall,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier
-                    .clickableNoIndication(
-                        onLongClick = { context.copyToClipboard(artist, artist) },
-                        onClick = { doSearch(artist, true) },
-                    ),
                 textAlign = textAlign,
+                doSearch = doSearch
             )
         }
     }
@@ -711,6 +684,60 @@ private fun RowScope.MangaActionButton(
                 color = color,
                 fontSize = 12.sp,
                 textAlign = TextAlign.Center,
+            )
+        }
+    }
+}
+
+@Composable
+fun ClickableText(
+    text: String,
+    style: TextStyle,
+    maxLines: Int = 1,
+    textAlign: TextAlign?,
+    doSearch: (query: String, global: Boolean) -> Unit
+) {
+    val context = LocalContext.current
+    var expanded by remember { mutableStateOf(false) }
+    var menuVisible by remember { mutableStateOf(false) }
+    val displayLines = if (expanded) Int.MAX_VALUE else maxLines
+    Box(
+        modifier = Modifier
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onTap = { expanded = !expanded },
+                    onLongPress = {
+                        menuVisible = true
+                    }
+                )
+            }
+    ) {
+        Text(
+            text = text,
+            style = style,
+            maxLines = displayLines,
+            overflow = TextOverflow.Ellipsis,
+            textAlign = textAlign,
+        )
+
+        DropdownMenu(
+            expanded = menuVisible,
+            onDismissRequest = { menuVisible = false },
+        ) {
+            DropdownMenuItem(
+                text = { Text(text= stringResource(MR.strings.action_search), style = MaterialTheme.typography.bodyMedium) },
+                onClick = {
+                    doSearch(text, true)
+                    menuVisible = false
+                }
+            )
+
+            DropdownMenuItem(
+                text = { Text(stringResource(MR.strings.copy), style = MaterialTheme.typography.bodyMedium) },
+                onClick = {
+                    context.copyToClipboard(text, text)
+                    menuVisible = false
+                }
             )
         }
     }
