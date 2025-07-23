@@ -248,7 +248,7 @@ fun VerticalGridFastScroller(
         val scrollerConstraints = constraints.copy(minWidth = 0, minHeight = 0)
         val scrollerPlaceable = subcompose("scroller") {
             val layoutInfo = state.layoutInfo
-            val showScroller = layoutInfo.visibleItemsInfo.size < layoutInfo.totalItemsCount
+            val showScroller = remember(columns){ layoutInfo.visibleItemsInfo.size < layoutInfo.totalItemsCount }
             if (!showScroller) return@subcompose
             val thumbTopPadding = with(LocalDensity.current) { topContentPadding.toPx() }
             var thumbOffsetY by remember(thumbTopPadding) { mutableFloatStateOf(thumbTopPadding) }
