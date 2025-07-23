@@ -141,14 +141,16 @@ class DownloadProvider(
     /**
      * Returns the chapter directory name for a chapter.
      *
-     * @param chapter the chapter
+     * @param chapterName the name of the chapter to query.
+     * @param chapterScanlator scanlator of the chapter to query.
+     * @param chapterUrl url of the chapter to query.
      */
     fun getChapterDirName(chapterName: String, chapterScanlator: String?, chapterUrl: String): String {
         val newChapterName = sanitizeChapterName(chapterName) + "_" + md5(chapterUrl).takeLast(6)
         return DiskUtil.buildValidFilename(
             when {
-                !chapterScanlator.isNullOrBlank() -> "${chapterScanlator}_${newChapterName}"
-                else -> "${newChapterName}"
+                !chapterScanlator.isNullOrBlank() -> "${chapterScanlator}_$newChapterName"
+                else -> newChapterName
             },
         )
     }
