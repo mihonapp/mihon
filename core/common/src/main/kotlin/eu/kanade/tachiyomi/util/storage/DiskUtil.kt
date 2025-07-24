@@ -12,7 +12,6 @@ import java.io.File
 import java.nio.ByteBuffer
 import java.nio.CharBuffer
 import java.nio.charset.CodingErrorAction
-import java.nio.charset.StandardCharsets
 
 object DiskUtil {
 
@@ -146,19 +145,19 @@ object DiskUtil {
      */
     fun truncateToLength(s: String, maxBytes: Int): String {
         val charset = Charsets.UTF_8
-        val decoder = charset.newDecoder();
-        val sba = s.toByteArray(charset);
+        val decoder = charset.newDecoder()
+        val sba = s.toByteArray(charset)
         if (sba.size <= maxBytes) {
-            return s;
+            return s
         }
         // Ensure truncation by having byte buffer = maxBytes
-        val bb = ByteBuffer.wrap(sba, 0, maxBytes);
-        val cb = CharBuffer.allocate(maxBytes);
+        val bb = ByteBuffer.wrap(sba, 0, maxBytes)
+        val cb = CharBuffer.allocate(maxBytes)
         // Ignore an incomplete character
         decoder.onMalformedInput(CodingErrorAction.IGNORE)
-        decoder.decode(bb, cb, true);
-        decoder.flush(cb);
-        return String(cb.array(), 0, cb.position());
+        decoder.decode(bb, cb, true)
+        decoder.flush(cb)
+        return String(cb.array(), 0, cb.position())
     }
 
     /**

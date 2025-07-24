@@ -97,7 +97,13 @@ class DownloadProvider(
      * @param mangaTitle the title of the manga to query.
      * @param source the source of the chapter.
      */
-    fun findChapterDir(chapterName: String, chapterScanlator: String?, chapterUrl: String, mangaTitle: String, source: Source): UniFile? {
+    fun findChapterDir(
+        chapterName: String,
+        chapterScanlator: String?,
+        chapterUrl: String,
+        mangaTitle: String,
+        source: Source,
+    ): UniFile? {
         val mangaDir = findMangaDir(mangaTitle, source)
         return getValidChapterDirNames(chapterName, chapterScanlator, chapterUrl).asSequence()
             .mapNotNull { mangaDir?.findFile(it) }
@@ -163,18 +169,19 @@ class DownloadProvider(
      * @param chapter the chapter
      */
     private fun getLegacyChapterDirNames(chapterName: String, chapterScanlator: String?): List<String> {
-       val sanitizedChapterName = sanitizeChapterName(chapterName)
-       val chapterNameV1 = DiskUtil.buildValidFilename(
-           when {
-               !chapterScanlator.isNullOrBlank() -> "${chapterScanlator}_$sanitizedChapterName"
-               else -> sanitizedChapterName
-           })
+        val sanitizedChapterName = sanitizeChapterName(chapterName)
+        val chapterNameV1 = DiskUtil.buildValidFilename(
+            when {
+                !chapterScanlator.isNullOrBlank() -> "${chapterScanlator}_$sanitizedChapterName"
+                else -> sanitizedChapterName
+            },
+        )
 
-       return buildList(1) {
-           // Chapter name without hash (unable to handle duplicate
-           // chapter names)
-           add(chapterNameV1)
-       }
+        return buildList(1) {
+            // Chapter name without hash (unable to handle duplicate
+            // chapter names)
+            add(chapterNameV1)
+        }
     }
 
     /**
@@ -189,7 +196,8 @@ class DownloadProvider(
     }
 
     fun isChapterDirNameChanged(oldChapter: Chapter, newChapter: Chapter): Boolean {
-        return getChapterDirName(oldChapter.name, oldChapter.scanlator, oldChapter.url) != getChapterDirName(newChapter.name, newChapter.scanlator, newChapter.url)
+        return getChapterDirName(oldChapter.name, oldChapter.scanlator, oldChapter.url) !=
+            getChapterDirName(newChapter.name, newChapter.scanlator, newChapter.url)
     }
 
     /**
@@ -210,7 +218,7 @@ class DownloadProvider(
             // any legacy names
             legacyChapterDirNames.forEach {
                 add(it)
-                add("${it}.cbz")
+                add("$it.cbz")
             }
         }
     }
