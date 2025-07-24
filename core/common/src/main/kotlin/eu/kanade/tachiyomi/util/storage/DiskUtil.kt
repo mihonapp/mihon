@@ -9,7 +9,10 @@ import androidx.core.content.ContextCompat
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.util.lang.Hash
 import java.io.File
-import java.nio.charset.Charset
+import java.nio.ByteBuffer
+import java.nio.CharBuffer
+import java.nio.charset.CodingErrorAction
+import java.nio.charset.StandardCharsets
 
 object DiskUtil {
 
@@ -128,19 +131,34 @@ object DiskUtil {
             return "(invalid)"
         }
         val sb = StringBuilder(name.length)
-        var byteLength = 0
         for (char in name) {
             var safeChar = char
             if (!isValidFatFilenameChar(char)) {
                 safeChar = '_'
             }
-            byteLength += safeChar.toString().toByteArray(Charset.forName("UTF-8")).size
-            if (byteLength > maxBytes) {
-                break
-            }
             sb.append(safeChar)
         }
-        return sb.toString()
+        return truncateToLength(sb.toString(), maxBytes)
+    }
+
+    /**
+     * Truncate a string to a maximum length, while maintaining valid Unicode encoding.
+     */
+    fun truncateToLength(s: String, maxBytes: Int): String {
+        val charset = Charsets.UTF_8
+        val decoder = charset.newDecoder();
+        val sba = s.toByteArray(charset);
+        if (sba.size <= maxBytes) {
+            return s;
+        }
+        // Ensure truncation by having byte buffer = maxBytes
+        val bb = ByteBuffer.wrap(sba, 0, maxBytes);
+        val cb = CharBuffer.allocate(maxBytes);
+        // Ignore an incomplete character
+        decoder.onMalformedInput(CodingErrorAction.IGNORE)
+        decoder.decode(bb, cb, true);
+        decoder.flush(cb);
+        return String(cb.array(), 0, cb.position());
     }
 
     /**
