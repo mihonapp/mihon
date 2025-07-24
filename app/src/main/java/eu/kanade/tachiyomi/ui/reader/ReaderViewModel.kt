@@ -760,8 +760,8 @@ class ReaderViewModel @JvmOverloads constructor(
     ): String {
         val chapter = page.chapter.chapter
         val filenameSuffix = " - ${page.number}"
-        return DiskUtil.buildValidFilename(
-            "${manga.title} - ${chapter.name}".takeBytes(DiskUtil.MAX_FILE_NAME_BYTES - filenameSuffix.byteSize()),
+        return DiskUtil.sanitizeFilename(
+            "${manga.title} - ${chapter.name}", DiskUtil.MAX_FILE_NAME_BYTES - filenameSuffix.byteSize(),
         ) + filenameSuffix
     }
 
@@ -814,7 +814,7 @@ class ReaderViewModel @JvmOverloads constructor(
 
         // Pictures directory.
         val relativePath = if (readerPreferences.folderPerManga().get()) {
-            DiskUtil.buildValidFilename(
+            DiskUtil.sanitizeFilename(
                 manga.title,
             )
         } else {

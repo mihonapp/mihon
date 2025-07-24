@@ -126,7 +126,7 @@ class DownloadProvider(
      * @param source the source to query.
      */
     fun getSourceDirName(source: Source): String {
-        return DiskUtil.buildValidFilename(source.toString())
+        return DiskUtil.sanitizeFilename(source.toString())
     }
 
     /**
@@ -135,7 +135,7 @@ class DownloadProvider(
      * @param mangaTitle the title of the manga to query.
      */
     fun getMangaDirName(mangaTitle: String): String {
-        return DiskUtil.buildValidFilename(mangaTitle)
+        return DiskUtil.sanitizeFilename(mangaTitle)
     }
 
     /**
@@ -146,13 +146,14 @@ class DownloadProvider(
      * @param chapterUrl url of the chapter to query.
      */
     fun getChapterDirName(chapterName: String, chapterScanlator: String?, chapterUrl: String): String {
-        val newChapterName = sanitizeChapterName(chapterName) + "_" + md5(chapterUrl).takeLast(6)
-        return DiskUtil.buildValidFilename(
-            when {
-                !chapterScanlator.isNullOrBlank() -> "${chapterScanlator}_$newChapterName"
-                else -> newChapterName
-            },
-        )
+        var dirName = sanitizeChapterName(chapterName)
+        if (!chapterScanlator.isNullOrBlank()) {
+            dirName = chapterScanlator + "_" + dirName
+        }
+        // Subtract 7 bytes for hash and underscore, 4 bytes for .cbz
+        dirName = DiskUtil.sanitizeFilename(dirName, DiskUtil.MAX_FILE_NAME_BYTES - 11)
+        dirName += "_" + md5(chapterUrl).takeLast(6)
+        return dirName
     }
 
     /**
@@ -163,7 +164,7 @@ class DownloadProvider(
      */
     private fun getLegacyChapterDirNames(chapterName: String, chapterScanlator: String?): List<String> {
        val sanitizedChapterName = sanitizeChapterName(chapterName)
-       val chapterNameV1 = DiskUtil.buildValidFilename(
+       val chapterNameV1 = DiskUtil.buildValidFilenameLegacy(
            when {
                !chapterScanlator.isNullOrBlank() -> "${chapterScanlator}_$sanitizedChapterName"
                else -> sanitizedChapterName
