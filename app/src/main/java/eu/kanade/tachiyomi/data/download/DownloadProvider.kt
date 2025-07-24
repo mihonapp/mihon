@@ -126,7 +126,7 @@ class DownloadProvider(
      * @param source the source to query.
      */
     fun getSourceDirName(source: Source): String {
-        return DiskUtil.sanitizeFilename(source.toString())
+        return DiskUtil.buildValidFilename(source.toString())
     }
 
     /**
@@ -135,7 +135,7 @@ class DownloadProvider(
      * @param mangaTitle the title of the manga to query.
      */
     fun getMangaDirName(mangaTitle: String): String {
-        return DiskUtil.sanitizeFilename(mangaTitle)
+        return DiskUtil.buildValidFilename(mangaTitle)
     }
 
     /**
@@ -151,7 +151,7 @@ class DownloadProvider(
             dirName = chapterScanlator + "_" + dirName
         }
         // Subtract 7 bytes for hash and underscore, 4 bytes for .cbz
-        dirName = DiskUtil.sanitizeFilename(dirName, DiskUtil.MAX_FILE_NAME_BYTES - 11)
+        dirName = DiskUtil.buildValidFilename(dirName, DiskUtil.MAX_FILE_NAME_BYTES - 11)
         dirName += "_" + md5(chapterUrl).takeLast(6)
         return dirName
     }
@@ -164,7 +164,7 @@ class DownloadProvider(
      */
     private fun getLegacyChapterDirNames(chapterName: String, chapterScanlator: String?): List<String> {
        val sanitizedChapterName = sanitizeChapterName(chapterName)
-       val chapterNameV1 = DiskUtil.buildValidFilenameLegacy(
+       val chapterNameV1 = DiskUtil.buildValidFilename(
            when {
                !chapterScanlator.isNullOrBlank() -> "${chapterScanlator}_$sanitizedChapterName"
                else -> sanitizedChapterName

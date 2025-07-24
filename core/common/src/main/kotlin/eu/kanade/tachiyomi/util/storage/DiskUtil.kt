@@ -125,18 +125,18 @@ object DiskUtil {
      * files by default. If a hidden file is desired, a period can be
      * prepended to the return value from this function.
      */
-    fun sanitizeFilename(origName: String, maxBytes: Int = MAX_FILE_NAME_BYTES): String {
+    fun buildValidFilename(origName: String, maxBytes: Int = MAX_FILE_NAME_BYTES): String {
         val name = origName.trim('.', ' ')
         if (name.isEmpty()) {
             return "(invalid)"
         }
         val sb = StringBuilder(name.length)
-        for (char in name) {
-            var safeChar = char
-            if (!isValidFatFilenameChar(char)) {
-                safeChar = '_'
+        name.forEach { c ->
+            if (isValidFatFilenameChar(c)) {
+                sb.append(c)
+            } else {
+                sb.append('_')
             }
-            sb.append(safeChar)
         }
         return truncateToLength(sb.toString(), maxBytes)
     }
@@ -159,32 +159,6 @@ object DiskUtil {
         decoder.decode(bb, cb, true);
         decoder.flush(cb);
         return String(cb.array(), 0, cb.position());
-    }
-
-    /**
-     * Mutate the given filename to make it valid for a FAT filesystem,
-     * replacing any invalid characters with "_". This method doesn't allow hidden files (starting
-     * with a dot), but you can manually add it later.
-     *
-     * Prefer using sanitizeFilename instead. This method is retained for backwards
-     * compatibility to find files that were written by previous versions of Mihon.
-     */
-    fun buildValidFilenameLegacy(origName: String): String {
-        val name = origName.trim('.', ' ')
-        if (name.isEmpty()) {
-            return "(invalid)"
-        }
-        val sb = StringBuilder(name.length)
-        name.forEach { c ->
-            if (isValidFatFilenameChar(c)) {
-                sb.append(c)
-            } else {
-                sb.append('_')
-            }
-        }
-        // Even though vfat allows 255 UCS-2 chars, we might eventually write to
-        // ext4 through a FUSE layer, so use that limit minus 15 reserved characters.
-        return sb.toString().take(240)
     }
 
     /**

@@ -34,7 +34,7 @@ class ImageSaver(
         val data = image.data
 
         val type = ImageUtil.findImageType(data) ?: throw IllegalArgumentException("Not an image")
-        val filename = DiskUtil.sanitizeFilename("${image.name}.${type.extension}")
+        val filename = DiskUtil.buildValidFilename("${image.name}.${type.extension}")
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || image.location !is Location.Pictures) {
             return save(data(), image.location.directory(context), filename)
