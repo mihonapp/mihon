@@ -110,11 +110,11 @@ fun VerticalFastScroller(
             val visibleItems = layoutInfo.visibleItemsInfo
             val topItem = visibleItems.fastFirstOrNull {
                 it.bottom >= 0 &&
-               (it.key as? String)?.startsWith(STICKY_HEADER_KEY_PREFIX)?.not() ?: true
+                    (it.key as? String)?.startsWith(STICKY_HEADER_KEY_PREFIX)?.not() ?: true
             } ?: visibleItems.first()
             val bottomItem = visibleItems.fastLastOrNull {
                 it.top <= scrollHeightPx &&
-               (it.key as? String)?.startsWith(STICKY_HEADER_KEY_PREFIX)?.not() ?: true
+                    (it.key as? String)?.startsWith(STICKY_HEADER_KEY_PREFIX)?.not() ?: true
             } ?: visibleItems.last()
 
             val topHiddenProportion = -1f * topItem.top / topItem.size.coerceAtLeast(1)
@@ -276,7 +276,7 @@ fun VerticalGridFastScroller(
         val scrollerConstraints = constraints.copy(minWidth = 0, minHeight = 0)
         val scrollerPlaceable = subcompose("scroller") {
             val layoutInfo = state.layoutInfo
-            val showScroller = remember(columns){ layoutInfo.visibleItemsInfo.size < layoutInfo.totalItemsCount }
+            val showScroller = remember(columns) { layoutInfo.visibleItemsInfo.size < layoutInfo.totalItemsCount }
             if (!showScroller) return@subcompose
             val thumbTopPadding = with(LocalDensity.current) { topContentPadding.toPx() }
             var thumbOffsetY by remember(thumbTopPadding) { mutableFloatStateOf(thumbTopPadding) }
@@ -298,8 +298,8 @@ fun VerticalGridFastScroller(
             val thumbHeightPx = with(LocalDensity.current) { ThumbLength.toPx() }
             val trackHeightPx = heightPx - thumbHeightPx
 
-            val columnCount = remember(columns){ slotSizesSums(constraints).size }
-            val scrollRange = remember(columns){ computeGridScrollRange(state = state, columnCount = columnCount) }
+            val columnCount = remember(columns) { slotSizesSums(constraints).size }
+            val scrollRange = remember(columns) { computeGridScrollRange(state = state, columnCount = columnCount) }
 
             // When thumb dragged
             LaunchedEffect(thumbOffsetY) {
@@ -316,7 +316,7 @@ fun VerticalGridFastScroller(
                 val rowNumber = (scrollAmt / avgSizePerRow).toInt()
                 val rowOffset = scrollAmt - rowNumber * avgSizePerRow
 
-                state.scrollToItem(index = columnCount*rowNumber, scrollOffset = rowOffset.roundToInt())
+                state.scrollToItem(index = columnCount * rowNumber, scrollOffset = rowOffset.roundToInt())
                 scrolled.tryEmit(Unit)
             }
 
@@ -327,7 +327,7 @@ fun VerticalGridFastScroller(
                 /*
                     LazyGridItemInfo doesn't always give the accurate height of the object, so we clamp the proportion
                     at 1 to ensure that there are no issues due to this -- ideally we would correctly compute the value
-                */
+                 */
                 val extraScrollRange = (scrollRange.toFloat() - heightPx).coerceAtLeast(1f)
                 val proportion = (scrollOffset.toFloat() / extraScrollRange).coerceAtMost(1f)
                 thumbOffsetY = trackHeightPx * proportion + thumbTopPadding
@@ -399,8 +399,7 @@ fun VerticalGridFastScroller(
     }
 }
 
-
-//TODO: not sure why abs corrections are in the following functions; these can probably be removed
+// TODO: not sure why abs corrections are in the following functions; these can probably be removed
 
 private fun computeGridScrollOffset(state: LazyGridState, columnCount: Int): Int {
     if (state.layoutInfo.totalItemsCount == 0) return 0
