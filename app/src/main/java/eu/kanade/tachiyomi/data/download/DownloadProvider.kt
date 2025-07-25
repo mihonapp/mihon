@@ -158,7 +158,7 @@ class DownloadProvider(
         }
         // Subtract 7 bytes for hash and underscore, 4 bytes for .cbz
         dirName = DiskUtil.buildValidFilename(dirName, DiskUtil.MAX_FILE_NAME_BYTES - 11)
-        dirName += "_" + md5(chapterUrl).takeLast(6)
+        dirName += "_" + md5(chapterUrl).take(6)
         return dirName
     }
 
