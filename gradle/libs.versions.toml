@@ -71,7 +71,7 @@ swipe = "me.saket.swipe:swipe:1.3.0"
 
 moko-core = { module = "dev.icerock.moko:resources", version.ref = "moko" }
 
-logcat = "com.squareup.logcat:logcat:0.2.3"
+logcat = "com.squareup.logcat:logcat:0.3"
 
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
