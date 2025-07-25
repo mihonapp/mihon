@@ -89,7 +89,7 @@
     <string name="app_not_available">แอพไม่พร้อมใช้งาน</string>
     <string name="pref_category_downloads">การดาวน์โหลด</string>
     <string name="pref_category_tracking">การติดตาม</string>
-    <string name="pref_library_columns">ขนาดตาราง</string>
+    <string name="pref_library_columns">รายการต่อแถว</string>
     <string name="portrait">แนวตั้ง</string>
     <string name="landscape">แนวนอน</string>
     <string name="pref_library_update_interval">การอัปเดตอัตโนมัติ</string>
@@ -172,7 +172,6 @@
     <string name="cookies_cleared">ล้างคุกกี้แล้ว</string>
     <string name="pref_clear_database">ล้างฐานข้อมูล</string>
     <string name="pref_clear_database_summary">ลบประวัติรายการที่ไม่ได้บันทึกไว้ในคลัง</string>
-    <string name="clear_database_confirmation">แน่ใจไหม? ข้อมูลการอ่านของรายการที่ไม่ได้อยู่ในคลังจะหายไป</string>
     <string name="clear_database_completed">ลบรายการแล้ว</string>
     <string name="version">เวอร์ชัน</string>
     <string name="pref_enable_acra">ส่งรายงานความผิดพลาด</string>
@@ -453,7 +452,7 @@
     <string name="restore_in_progress">การคืนค่ากําลังดําเนินการอยู่แล้ว</string>
     <string name="creating_backup_error">การสำรองข้อมูลล้มเหลว</string>
     <string name="backup_in_progress">การสำรองข้อมูลกําลังดําเนินการอยู่แล้ว</string>
-    <string name="restore_duration">%02d นาที %02d วินาที</string>
+    <string name="restore_duration">%1$02d นาที %2$02d วินาที</string>
     <string name="backup_restore_content_full">คุณจะต้องติดตั้งส่วนขยายที่ขาดหายไปและลงชื่อเข้าใช้บริการติดตามจึงจะสามารถใช้งานได้</string>
     <string name="backup_restore_missing_trackers">ตัวติดตามไม่ได้เข้าสู่ระบบ:</string>
     <string name="backup_restore_missing_sources">แหล่งที่มาที่หายไป:</string>
@@ -678,9 +677,6 @@
     <string name="copied_to_clipboard_plain">คัดลอกไปยังคลิปบอร์ดแล้ว</string>
     <string name="pref_skip_dupe_chapters">ข้ามตอนที่ซ้ำกัน</string>
     <string name="enhanced_services_not_installed">พร้อมใช้งานแต่ไม่ได้ติดตั้งแหล่งที่มา: %s</string>
-    <string name="confirm_add_duplicate_manga">มีรายการชื่อเดียวกันอยู่ในคลัง
-\n
-\nต้องการดำเนินการต่อหรือไม่?</string>
     <string name="track_error">%1$s ข้อผิดพลาด: %2$s</string>
     <string name="information_required_plain">*จำเป็น</string>
     <string name="pref_hide_in_library_items">ซ่อนรายการที่มีอยู่ในคลังอยู่แล้ว</string>
@@ -691,8 +687,8 @@
     <string name="pref_page_rotate">หมุนหน้ากว้างให้พอดี</string>
     <string name="pref_page_rotate_invert">พลิกการวางแนวของหน้ากว้างที่หมุน</string>
     <string name="pref_debug_info">ข้อมูลดีบัก</string>
-    <string name="pref_chapter_swipe_end">การกระทำเมื่อปัดไปทางขวา</string>
-    <string name="pref_chapter_swipe_start">การกระทำเมื่อปัดไปทางซ้าย</string>
+    <string name="pref_chapter_swipe_end">เปิดตอนเมื่อปัดไปทางขวา</string>
+    <string name="pref_chapter_swipe_start">เปิดตอนเมื่อปัดไปทางซ้าย</string>
     <string name="pref_double_tap_zoom">แตะสองครั้งเพื่อซูม</string>
     <string name="action_set_interval">กำหนดช่วงเวลา</string>
     <string name="action_filter_interval_custom">กำหนดความถี่ในการอัปเดต</string>
@@ -803,7 +799,6 @@
     <string name="remove_private_extension_message">ต้องการนำส่วนขยาย \"%s\" ออกหรือไม่?</string>
     <string name="label_upcoming">ที่กำลังจะมีขึ้น</string>
     <string name="action_add_anyway">เพิ่มอยู่ดี</string>
-    <string name="action_migrate_duplicate">โยกย้ายรายการที่มีอยู่</string>
     <string name="pref_auto_update_manga_on_mark_read">อัปเดตความคืบหน้าเมื่อทำเครื่องหมายว่าอ่านแล้ว</string>
     <string name="invalid_backup_file_unknown">ไฟล์สำรองข้อมูลเสียหาย</string>
     <string name="non_library_settings">รายการที่อ่านทั้งหมด</string>
@@ -832,4 +827,25 @@
     <string name="add_repo_confirmation">คุณต้องการเพิ่มรีโพ \"%s\" หรือไม่?</string>
     <string name="confirm_tracker_update">อัปเดตตัวติดตามของบท %d หรือไม่?</string>
     <string name="label_auto">อัตโนมัติ</string>
+    <string name="action_display_unread_badge">ตอนที่ยังไม่ได้อ่าน</string>
+    <string name="action_notes">โน้ต</string>
+    <string name="action_edit_notes">แก้ไขโน้ต</string>
+    <string name="theme_catppuccin">แคทปุชชิน</string>
+    <string name="theme_monochrome">โมโนโครม</string>
+    <string name="pref_behavior">พฤติกรรม</string>
+    <string name="pref_mark_duplicate_read_chapter_read">ทำเครื่องหมายตอนซ้ำที่อ่านแล้วว่าอ่านแล้ว</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">หลังจากอ่านตอน</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">หลังจากเรียกข้อมูลตอนใหม่</string>
+    <string name="pref_hide_missing_chapter_indicators">ซ่อนตัวแสดงตอนที่หายไป</string>
+    <string name="pref_hardware_bitmap_threshold">เกณฑ์บิตแมปฮาร์ดแวร์กำหนดเอง</string>
+    <string name="pref_hardware_bitmap_threshold_default">ค่าเริ่มต้น (%d)</string>
+    <string name="pref_hardware_bitmap_threshold_summary">หากตัวอ่านโหลดภาพเปล่า ให้ลดเกณฑ์ลงทีละน้อย\nเลือกแล้ว: %s</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">ใช้ตัวถอดรหัสแบบเก่าสำหรับตัวอ่านภาพยาว</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">มีผลต่อประสิทธิภาพ เปิดใช้งานเฉพาะเมื่อการลดเกณฑ์บิตแมปไม่สามารถแก้ไขปัญหาภาพเปล่าได้</string>
+    <string name="storage_failed_to_create_download_directory">เกิดข้อผิดพลาดในการสร้างไดเรกเทอรี่ดาวน์โหลด</string>
+    <string name="storage_failed_to_create_directory">เกิดข้อผิดพลาดในการสร้างไดเรกเทอรี่: %s</string>
+    <string name="export">ส่งออก</string>
+    <string name="library_list">รายการคลัง</string>
+    <string name="library_exported">ส่งออกคลังแล้ว</string>
+    <string name="clear_database_text">คุณกำลังจะลบรายการออกจากฐานข้อมูล</string>
 </resources>
