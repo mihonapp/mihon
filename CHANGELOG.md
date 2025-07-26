@@ -23,6 +23,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add advanced option to always update manga title from source ([@FlaminSarge](https://github.com/FlaminSarge)) ([#1182](https://github.com/mihonapp/mihon/pull/1182))
 - Full predictive back support ([@AntsyLich](https://github.com/AntsyLich)) ([#2085](https://github.com/mihonapp/mihon/pull/2085))
 - Add Catppuccin theme (mocha for dark and latte for light, mauve accent) ([@claymorwan](https://github.com/claymorwan/)) ([#2117](https://github.com/mihonapp/mihon/pull/2117))
+- Added option to automate scrolling and flipping of pages in reader ([@Guzmazow](https://github.com/guzmazow/)) ([#2291](https://github.com/mihonapp/mihon/pull/2291))
 
 ### Improved
 - Significantly improve browsing speed (near instantaneous) ([@AntsyLich](https://github.com/AntsyLich)) ([#1946](https://github.com/mihonapp/mihon/pull/1946))

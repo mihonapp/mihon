@@ -421,6 +421,7 @@ class ReaderActivity : BaseActivity() {
                     menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
                 },
                 onClickSettings = viewModel::openSettingsDialog,
+                readerPreferences = readerPreferences,
             )
 
             if (flashOnPageChange) {

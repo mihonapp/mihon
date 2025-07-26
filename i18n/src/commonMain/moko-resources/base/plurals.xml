@@ -85,6 +85,36 @@
         <item quantity="other">Chapters %1$s and %2$d more</item>
     </plurals>
 
+    <plurals name="pref_auto_scroll_speed_summary">
+        <item quantity="one">%1$d second/screen</item>
+        <item quantity="other">%1$d seconds/screen</item>
+    </plurals>
+
+    <plurals name="pref_auto_flip_interval_summary">
+        <item quantity="one">%1$d second</item>
+        <item quantity="other">%1$d seconds</item>
+    </plurals>
+
+    <plurals name="pref_reader_automation_max_minutes_summary">
+        <item quantity="one">%1$d minute</item>
+        <item quantity="other">%1$d minutes</item>
+    </plurals>
+
+    <plurals name="reader_automation_max_minutes_reached">
+        <item quantity="one">Stopped after %1$d minute</item>
+        <item quantity="other">Stopped after %1$d minutes</item>
+    </plurals>
+
+    <plurals name="pref_reader_automation_max_chapters_summary">
+        <item quantity="one">%1$d chapter</item>
+        <item quantity="other">%1$d chapters</item>
+    </plurals>
+
+    <plurals name="reader_automation_max_chapters_reached">
+        <item quantity="one">Stopped after %1$d chapter</item>
+        <item quantity="other">Stopped after %1$d chapters</item>
+    </plurals>
+
     <!--Extension Updates Notifications-->
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Extension update available</item>
