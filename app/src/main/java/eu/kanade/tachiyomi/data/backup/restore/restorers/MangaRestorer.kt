@@ -138,10 +138,11 @@ class MangaRestorer(
     private suspend fun restoreNewManga(
         manga: Manga,
     ): Manga {
-        return manga.copy(
+        val newManga = manga.copy(
             initialized = manga.description != null,
-            id = insertManga(manga),
-            version = manga.version,
+        )
+        return newManga.copy(
+            id = insertManga(newManga),
         )
     }
 
