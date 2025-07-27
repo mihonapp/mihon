@@ -261,8 +261,7 @@ actual class LocalSource(
                 }
             }
             .sortedWith { c1, c2 ->
-                val c = c2.chapter_number.compareTo(c1.chapter_number)
-                if (c == 0) c2.name.compareToCaseInsensitiveNaturalOrder(c1.name) else c
+                c2.name.compareToCaseInsensitiveNaturalOrder(c1.name)
             }
 
         // Copy the cover from the first chapter found if not available
