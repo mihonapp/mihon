@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.reader.viewer.pager
 import android.content.Context
 import android.os.PowerManager
 import android.util.Log
+import android.view.WindowManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -26,6 +27,7 @@ fun automatePager(
         automationInProgress.collect { isAutomating ->
             if (isAutomating) {
                 activity.hideMenu()
+                activity.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                 val powerManager = activity.getSystemService(Context.POWER_SERVICE) as PowerManager
                 val lifeCycle = ProcessLifecycleOwner.get().lifecycle
                 val startTime = System.currentTimeMillis()
@@ -75,6 +77,8 @@ fun automatePager(
                     android.util.Log.d("Automation", "flip")
                     moveToNext()
                 }
+            } else {
+                activity.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             }
         }
     }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.PowerManager
 import android.util.Log
 import android.view.Choreographer
+import android.view.WindowManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -28,6 +29,7 @@ fun automateWebtoon(
         automationInProgress.collect { isAutomating ->
             if (isAutomating) {
                 activity.hideMenu()
+                activity.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                 var lastRefreshRate = getRefreshRate(activity)
                 var scrollDistancePerFrame = getScrollDistancePerFrame(activity, config, lastRefreshRate)
                 val powerManager = activity.getSystemService(Context.POWER_SERVICE) as PowerManager
@@ -99,6 +101,7 @@ fun automateWebtoon(
                 }
             } else {
                 Log.d("Automation", "Stopped")
+                activity.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             }
         }
     }
