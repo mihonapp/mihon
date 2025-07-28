@@ -33,6 +33,8 @@ class PagerConfig(
 
     var dualPageSplitChangedListener: ((Boolean) -> Unit)? = null
 
+    var combinedPagesChangedListener: ((Boolean) -> Unit)? = null
+
     var imageScaleType = 1
         private set
 
@@ -105,6 +107,24 @@ class PagerConfig(
             .register(
                 { dualPageRotateToFitInvert = it },
                 { imagePropertyChangedListener?.invoke() },
+            )
+
+        readerPreferences.combinedPagesPaged()
+            .register(
+                { combinedPages = it },
+                {
+                    imagePropertyChangedListener?.invoke()
+                    combinedPagesChangedListener?.invoke(it)
+                },
+            )
+
+        readerPreferences.combinedPagesShowCoverPage()
+            .register(
+                { combinedPagesShowCover = it },
+                {
+                    imagePropertyChangedListener?.invoke()
+                    combinedPagesChangedListener?.invoke(combinedPages)
+                },
             )
     }
 
