@@ -10,6 +10,7 @@ import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.displayablePath
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.storage.service.StorageManager
 import tachiyomi.i18n.MR
@@ -26,6 +27,7 @@ import java.io.IOException
 class DownloadProvider(
     private val context: Context,
     private val storageManager: StorageManager = Injekt.get(),
+    private val libraryPreferences: LibraryPreferences = Injekt.get(),
 ) {
 
     private val downloadsDir: UniFile?
@@ -132,7 +134,10 @@ class DownloadProvider(
      * @param source the source to query.
      */
     fun getSourceDirName(source: Source): String {
-        return DiskUtil.buildValidFilename(source.toString())
+        return DiskUtil.buildValidFilename(
+            source.toString(),
+            disallowNonEnglish = libraryPreferences.disallowNonEnglishFilenames().get(),
+        )
     }
 
     /**
@@ -141,7 +146,10 @@ class DownloadProvider(
      * @param mangaTitle the title of the manga to query.
      */
     fun getMangaDirName(mangaTitle: String): String {
-        return DiskUtil.buildValidFilename(mangaTitle)
+        return DiskUtil.buildValidFilename(
+            mangaTitle,
+            disallowNonEnglish = libraryPreferences.disallowNonEnglishFilenames().get(),
+        )
     }
 
     /**
@@ -151,13 +159,18 @@ class DownloadProvider(
      * @param chapterScanlator scanlator of the chapter to query.
      * @param chapterUrl url of the chapter to query.
      */
-    fun getChapterDirName(chapterName: String, chapterScanlator: String?, chapterUrl: String): String {
+    fun getChapterDirName(
+        chapterName: String,
+        chapterScanlator: String?,
+        chapterUrl: String,
+        disallowNonEnglishFilenames: Boolean = libraryPreferences.disallowNonEnglishFilenames().get(),
+    ): String {
         var dirName = sanitizeChapterName(chapterName)
         if (!chapterScanlator.isNullOrBlank()) {
             dirName = chapterScanlator + "_" + dirName
         }
         // Subtract 7 bytes for hash and underscore, 4 bytes for .cbz
-        dirName = DiskUtil.buildValidFilename(dirName, DiskUtil.MAX_FILE_NAME_BYTES - 11)
+        dirName = DiskUtil.buildValidFilename(dirName, DiskUtil.MAX_FILE_NAME_BYTES - 11, disallowNonEnglishFilenames)
         dirName += "_" + md5(chapterUrl).take(6)
         return dirName
     }
@@ -168,7 +181,11 @@ class DownloadProvider(
      *
      * @param chapter the chapter
      */
-    private fun getLegacyChapterDirNames(chapterName: String, chapterScanlator: String?): List<String> {
+    private fun getLegacyChapterDirNames(
+        chapterName: String,
+        chapterScanlator: String?,
+        chapterUrl: String,
+    ): List<String> {
         val sanitizedChapterName = sanitizeChapterName(chapterName)
         val chapterNameV1 = DiskUtil.buildValidFilename(
             when {
@@ -177,10 +194,23 @@ class DownloadProvider(
             },
         )
 
+        // Get the filename that would be generated if the user were
+        // using the other value for the disallow non-English
+        // filenames setting. This ensures that chapters downloaded
+        // before the user changed the setting can still be found.
+        val otherChapterDirName =
+            getChapterDirName(
+                chapterName,
+                chapterScanlator,
+                chapterUrl,
+                !libraryPreferences.disallowNonEnglishFilenames().get(),
+            )
+
         return buildList(1) {
             // Chapter name without hash (unable to handle duplicate
             // chapter names)
             add(chapterNameV1)
+            add(otherChapterDirName)
         }
     }
 
@@ -207,7 +237,7 @@ class DownloadProvider(
      */
     fun getValidChapterDirNames(chapterName: String, chapterScanlator: String?, chapterUrl: String): List<String> {
         val chapterDirName = getChapterDirName(chapterName, chapterScanlator, chapterUrl)
-        val legacyChapterDirNames = getLegacyChapterDirNames(chapterName, chapterScanlator)
+        val legacyChapterDirNames = getLegacyChapterDirNames(chapterName, chapterScanlator, chapterUrl)
 
         return buildList {
             // Folder of images

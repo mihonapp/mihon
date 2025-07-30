@@ -319,6 +319,8 @@
     <string name="pref_mark_duplicate_read_chapter_read_new">After fetching new chapter</string>
 
     <string name="pref_hide_missing_chapter_indicators">Hide missing chapter indicators</string>
+    <string name="pref_disallow_non_english_filenames">Disallow non-English filenames</string>
+    <string name="pref_disallow_non_english_filenames_details">Compatibility with defective storage media which do not support Unicode. When enabling, you'll need to manually rename folders to replace non-ASCII characters with their lowercase UTF-8 hexadecimal representations. Chapter files do not need to be manually renamed.</string>
 
       <!-- Extension section -->
     <string name="multi_lang">Multi</string>

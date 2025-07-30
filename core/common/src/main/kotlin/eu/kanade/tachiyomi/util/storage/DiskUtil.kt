@@ -123,15 +123,41 @@ object DiskUtil {
      * Leading periods are stripped, to avoid the creation of hidden
      * files by default. If a hidden file is desired, a period can be
      * prepended to the return value from this function.
+     *
+     * If the optional argument disallowNonEnglish is set to true,
+     * then ALL non-English characters and ANYTHING outside the ASCII
+     * range are replaced not with underscores, but with their
+     * hexadecimal encoding. This is to make it so that distinct
+     * non-English titles of things remain distinct, since not all
+     * places where this function is used also take care of
+     * disambiguation.
+     *
+     * We could instead replace only non-English characters known to
+     * be problematic, but so far nobody with a non-Unicode-compliant
+     * device has been able to provide either directions to reproduce
+     * their issue nor any documentation or tests that would allow us
+     * to determine which characters are problems and which are not.
      */
-    fun buildValidFilename(origName: String, maxBytes: Int = MAX_FILE_NAME_BYTES): String {
+    fun buildValidFilename(
+        origName: String,
+        maxBytes: Int = MAX_FILE_NAME_BYTES,
+        disallowNonEnglish: Boolean = false,
+    ): String {
         val name = origName.trim('.', ' ')
         if (name.isEmpty()) {
             return "(invalid)"
         }
         val sb = StringBuilder(name.length)
         name.forEach { c ->
-            if (isValidFatFilenameChar(c)) {
+            if (disallowNonEnglish && c >= 0x80.toChar()) {
+                sb.append(
+                    c.toString().toByteArray(Charsets.UTF_8).toHexString(
+                        HexFormat {
+                            upperCase = false
+                        },
+                    ),
+                )
+            } else if (isValidFatFilenameChar(c)) {
                 sb.append(c)
             } else {
                 sb.append('_')
