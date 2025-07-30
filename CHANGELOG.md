@@ -44,6 +44,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Disable reader's 'Keep screen on' setting by default ([@AntsyLich](https://github.com/AntsyLich)) ([#2095](https://github.com/mihonapp/mihon/pull/2095))
 - Update manga without chapters even if restricted by source ([@AntsyLich](https://github.com/AntsyLich)) ([#2224](https://github.com/mihonapp/mihon/pull/224))
 - Make local source default chapter sorting match file explorer behavior ([@AntsyLich](https://github.com/AntsyLich)) ([#2224](https://github.com/mihonapp/mihon/pull/224))
+- Include Manga `initialized` status in backup ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2285](https://github.com/mihonapp/mihon/pull/2285))
 
 ### Fixes
 - Fix Bangumi search results including novels ([@MajorTanya](https://github.com/MajorTanya)) ([#1885](https://github.com/mihonapp/mihon/pull/1885))
