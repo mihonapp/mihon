@@ -1,5 +1,4 @@
 -- Add chapter urls to updates view
--- Can't update views, have to drop and re-create
 DROP VIEW IF EXISTS updatesView;
 CREATE VIEW updatesView AS
 SELECT
