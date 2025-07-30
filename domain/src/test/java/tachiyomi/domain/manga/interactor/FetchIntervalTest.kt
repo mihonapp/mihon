@@ -125,11 +125,11 @@ class FetchIntervalTest {
     }
 
     @Test
-    fun `returns interval of 1 day when chapters are released just below every 2 days`() {
+    fun `returns interval of 2 days when chapters are released just below every 2 days`() {
         val chapters = (1..20).map {
             chapterWithTime(chapter, (43 * it).hours)
         }
-        fetchInterval.calculateInterval(chapters, testZoneId) shouldBe 1
+        fetchInterval.calculateInterval(chapters, testZoneId) shouldBe 2
     }
 
     private fun chapterWithTime(chapter: Chapter, duration: Duration): Chapter {

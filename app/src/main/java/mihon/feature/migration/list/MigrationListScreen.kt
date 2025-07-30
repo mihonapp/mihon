@@ -6,8 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -23,7 +21,7 @@ import tachiyomi.i18n.MR
 
 class MigrationListScreen(private val mangaIds: List<Long>, private val extraSearchQuery: String?) : Screen() {
 
-    private var matchOverride: Pair<Long, Long>? by mutableStateOf(null)
+    private var matchOverride: Pair<Long, Long>? = null
 
     fun addMatchOverride(current: Long, target: Long) {
         matchOverride = current to target

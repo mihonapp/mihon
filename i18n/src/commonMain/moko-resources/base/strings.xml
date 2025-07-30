@@ -245,6 +245,7 @@
     <!-- "Today" instead of "2023-12-31" -->
     <string name="pref_relative_format_summary">\"%1$s\" instead of \"%2$s\"</string>
     <string name="pref_date_format">Date format</string>
+    <string name="pref_display_images_description">Render images in manga descriptions</string>
 
     <string name="pref_manage_notifications">Manage notifications</string>
     <string name="pref_app_language">App language</string>
@@ -316,6 +317,8 @@
     <string name="pref_mark_duplicate_read_chapter_read">Mark duplicate read chapter as read</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">After reading a chapter</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">After fetching new chapter</string>
+
+    <string name="pref_hide_missing_chapter_indicators">Hide missing chapter indicators</string>
 
       <!-- Extension section -->
     <string name="multi_lang">Multi</string>
