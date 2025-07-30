@@ -4,6 +4,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Image
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -12,6 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.FirstBaseline
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.font.FontFamily
@@ -32,11 +38,13 @@ import com.mikepenz.markdown.compose.elements.MarkdownTableRow
 import com.mikepenz.markdown.compose.elements.MarkdownText
 import com.mikepenz.markdown.compose.elements.listDepth
 import com.mikepenz.markdown.model.DefaultMarkdownColors
+import com.mikepenz.markdown.model.DefaultMarkdownInlineContent
 import com.mikepenz.markdown.model.DefaultMarkdownTypography
 import com.mikepenz.markdown.model.MarkdownAnnotator
 import com.mikepenz.markdown.model.MarkdownColors
 import com.mikepenz.markdown.model.MarkdownPadding
 import com.mikepenz.markdown.model.MarkdownTypography
+import com.mikepenz.markdown.model.NoOpImageTransformerImpl
 import com.mikepenz.markdown.model.markdownAnnotator
 import com.mikepenz.markdown.model.rememberMarkdownState
 import org.intellij.markdown.MarkdownTokenTypes.Companion.HTML_TAG
@@ -59,12 +67,15 @@ import org.intellij.markdown.parser.markerblocks.providers.ListMarkerProvider
 import org.intellij.markdown.parser.markerblocks.providers.SetextHeaderProvider
 import tachiyomi.presentation.core.components.material.padding
 
+const val MARKDOWN_INLINE_IMAGE_TAG = "MARKDOWN_INLINE_IMAGE"
+
 @Composable
 fun MarkdownRender(
     content: String,
     modifier: Modifier = Modifier,
     flavour: MarkdownFlavourDescriptor = SimpleMarkdownFlavourDescriptor,
     annotator: MarkdownAnnotator = remember { markdownAnnotator() },
+    loadImages: Boolean = true,
 ) {
     Markdown(
         markdownState = rememberMarkdownState(
@@ -77,7 +88,10 @@ fun MarkdownRender(
         typography = getMarkdownTypography(),
         padding = markdownPadding,
         components = markdownComponents,
-        imageTransformer = Coil3ImageTransformerImpl,
+        imageTransformer = remember(loadImages) {
+            if (loadImages) Coil3ImageTransformerImpl else NoOpImageTransformerImpl()
+        },
+        inlineContent = getMarkdownInlineContent(),
         modifier = modifier,
     )
 }
@@ -101,11 +115,15 @@ private fun getMarkdownColors(): MarkdownColors {
 
 @Composable
 @ReadOnlyComposable
+fun getMarkdownLinkStyle() = MaterialTheme.typography.bodyMedium.copy(
+    color = MaterialTheme.colorScheme.primary,
+    fontWeight = FontWeight.Bold,
+)
+
+@Composable
+@ReadOnlyComposable
 private fun getMarkdownTypography(): MarkdownTypography {
-    val link = MaterialTheme.typography.bodyMedium.copy(
-        color = MaterialTheme.colorScheme.primary,
-        fontWeight = FontWeight.Bold,
-    )
+    val link = getMarkdownLinkStyle()
     return DefaultMarkdownTypography(
         h1 = MaterialTheme.typography.headlineMedium,
         h2 = MaterialTheme.typography.headlineSmall,
@@ -214,6 +232,27 @@ private val markdownComponents = markdownComponents(
             )
         }
     },
+)
+
+@Composable
+@ReadOnlyComposable
+private fun getMarkdownInlineContent() = DefaultMarkdownInlineContent(
+    inlineContent = mapOf(
+        MARKDOWN_INLINE_IMAGE_TAG to InlineTextContent(
+            placeholder = Placeholder(
+                width = MaterialTheme.typography.bodyMedium.fontSize * 1.25,
+                height = MaterialTheme.typography.bodyMedium.fontSize * 1.25,
+                placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
+            ),
+            children = {
+                Icon(
+                    imageVector = Icons.Outlined.Image,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+            },
+        ),
+    ),
 )
 
 private object SimpleMarkdownFlavourDescriptor : CommonMarkFlavourDescriptor() {
