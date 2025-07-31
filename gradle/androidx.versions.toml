@@ -30,7 +30,7 @@ interpolator = { group = "androidx.interpolator", name = "interpolator", version
 
 benchmark-macro = "androidx.benchmark:benchmark-macro-junit4:1.4.0"
 test-ext = "androidx.test.ext:junit-ktx:1.2.1"
-test-espresso-core = "androidx.test.espresso:espresso-core:3.6.1"
+test-espresso-core = "androidx.test.espresso:espresso-core:3.7.0"
 test-uiautomator = "androidx.test.uiautomator:uiautomator:2.3.0"
 
 [bundles]
