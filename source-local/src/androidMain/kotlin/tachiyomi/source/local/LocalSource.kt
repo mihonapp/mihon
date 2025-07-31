@@ -206,12 +206,20 @@ actual class LocalSource(
         return@withIOContext manga
     }
 
+    private fun <R> getComicInfoFileFromArchive(chapterArchive: UniFile, block: (InputStream) -> R): R? {
+        return chapterArchive.archiveReader(context).use { reader ->
+            reader.getInputStream(COMIC_INFO_FILE)?.use(block)
+        }
+    }
+
     private fun copyComicInfoFileFromArchive(chapterArchives: List<UniFile>, folder: UniFile): UniFile? {
         for (chapter in chapterArchives) {
-            chapter.archiveReader(context).use { reader ->
-                reader.getInputStream(COMIC_INFO_FILE)?.use { stream ->
-                    return copyComicInfoFile(stream, folder)
-                }
+            var rv: UniFile? = null
+            getComicInfoFileFromArchive(chapter) { stream ->
+                rv = copyComicInfoFile(stream, folder)
+            }
+            if (rv != null) {
+                return rv
             }
         }
         return null
@@ -225,16 +233,32 @@ actual class LocalSource(
         }
     }
 
-    private fun setMangaDetailsFromComicInfoFile(stream: InputStream, manga: SManga) {
-        val comicInfo = AndroidXmlReader(stream, StandardCharsets.UTF_8.name()).use {
+    private fun parseComicInfoFile(stream: InputStream): ComicInfo {
+        return AndroidXmlReader(stream, StandardCharsets.UTF_8.name()).use {
             xml.decodeFromReader<ComicInfo>(it)
         }
+    }
 
+    private fun setMangaDetailsFromComicInfoFile(stream: InputStream, manga: SManga) {
+        val comicInfo = parseComicInfoFile(stream)
         manga.copyFromComicInfo(comicInfo)
+    }
+
+    private fun setChapterDetailsFromComicInfoFile(stream: InputStream, chapter: SChapter) {
+        val comicInfo = parseComicInfoFile(stream)
+
+        comicInfo.title?.let { chapter.name = it.value }
+        comicInfo.number?.value?.toFloatOrNull()?.let { chapter.chapter_number = it }
+        comicInfo.web?.let { chapter.url = it.value }
     }
 
     // Chapters
     override suspend fun getChapterList(manga: SManga): List<SChapter> = withIOContext {
+        val mangaDir = fileSystem.getMangaDirectory(manga.url) ?: error("${manga.url} is not a valid directory")
+        val mangaDirFiles = mangaDir.listFiles().orEmpty()
+        val noXmlFile = mangaDirFiles
+            .firstOrNull { it.name == ".noxml" }
+
         val chapters = fileSystem.getFilesInMangaDirectory(manga.url)
             // Only keep supported formats
             .filterNot { it.name.orEmpty().startsWith('.') }
@@ -256,6 +280,10 @@ actual class LocalSource(
                     if (format is Format.Epub) {
                         format.file.epubReader(context).use { epub ->
                             epub.fillMetadata(manga, this)
+                        }
+                    } else if (noXmlFile == null) {
+                        getComicInfoFileFromArchive(chapterFile) { stream ->
+                            setChapterDetailsFromComicInfoFile(stream, this)
                         }
                     }
                 }
