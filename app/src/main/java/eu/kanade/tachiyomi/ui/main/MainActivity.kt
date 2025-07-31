@@ -404,7 +404,11 @@ class MainActivity : BaseActivity() {
                 navigator.popUntilRoot()
                 HomeScreen.Tab.Library(idToOpen)
             }
-            Constants.SHORTCUT_UPDATES -> HomeScreen.Tab.Updates
+            Constants.SHORTCUT_UPDATES -> HomeScreen.Tab.Updates(false)
+            Constants.SHORTCUT_FAILED -> {
+                navigator.popUntilRoot()
+                HomeScreen.Tab.Updates(true)
+            }
             Constants.SHORTCUT_HISTORY -> HomeScreen.Tab.History
             Constants.SHORTCUT_SOURCES -> HomeScreen.Tab.Browse(false)
             Constants.SHORTCUT_EXTENSIONS -> HomeScreen.Tab.Browse(true)

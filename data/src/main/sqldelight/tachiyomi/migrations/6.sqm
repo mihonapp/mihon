@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS failed_updates (
+    manga_id INTEGER NOT NULL,
+    error_message TEXT NOT NULL,
+    is_online INTEGER NOT NULL CHECK(is_online IN (0, 1)),
+    UNIQUE (manga_id) ON CONFLICT REPLACE,
+    FOREIGN KEY(manga_id) REFERENCES mangas (_id)
+    ON DELETE CASCADE
+);
