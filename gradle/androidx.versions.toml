@@ -29,7 +29,7 @@ paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pag
 interpolator = { group = "androidx.interpolator", name = "interpolator", version.ref = "interpolator_version" }
 
 benchmark-macro = "androidx.benchmark:benchmark-macro-junit4:1.4.0"
-test-ext = "androidx.test.ext:junit-ktx:1.2.1"
+test-ext = "androidx.test.ext:junit-ktx:1.3.0"
 test-espresso-core = "androidx.test.espresso:espresso-core:3.7.0"
 test-uiautomator = "androidx.test.uiautomator:uiautomator:2.3.0"
 
