@@ -147,7 +147,7 @@ data object LibraryTab : Tab {
                     onMarkAsReadClicked = { screenModel.markReadSelection(true) },
                     onMarkAsUnreadClicked = { screenModel.markReadSelection(false) },
                     onDownloadClicked = screenModel::runDownloadActionSelection
-                        .takeIf { state.selection.fastAll { !it.manga.isLocal() } },
+                        .takeIf { state.selectedManga.fastAll { !it.isLocal() } },
                     onDeleteClicked = screenModel::openDeleteMangaDialog,
                 )
             },

@@ -29,7 +29,7 @@ import kotlin.time.Duration.Companion.seconds
 fun LibraryContent(
     categories: List<Category>,
     searchQuery: String?,
-    selection: List<LibraryManga>,
+    selection: Set<Long>,
     contentPadding: PaddingValues,
     currentPage: () -> Int,
     hasActiveFilters: Boolean,
@@ -95,7 +95,7 @@ fun LibraryContent(
                 state = pagerState,
                 contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding()),
                 hasActiveFilters = hasActiveFilters,
-                selectedManga = selection,
+                selection = selection,
                 searchQuery = searchQuery,
                 onGlobalSearchClicked = onGlobalSearchClicked,
                 getCategoryForPage = { page -> categories[page] },
