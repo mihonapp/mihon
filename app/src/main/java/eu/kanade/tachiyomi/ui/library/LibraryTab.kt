@@ -222,6 +222,7 @@ data object LibraryTab : Tab {
                     onDismissRequest = onDismissRequest,
                     screenModel = settingsScreenModel,
                     category = category,
+                    categories = state.userCategories,
                 )
             }
             is LibraryScreenModel.Dialog.ChangeCategory -> {
