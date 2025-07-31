@@ -35,16 +35,16 @@ fun LibraryContent(
     hasActiveFilters: Boolean,
     showPageTabs: Boolean,
     onChangeCurrentPage: (Int) -> Unit,
-    onMangaClicked: (Long) -> Unit,
+    onClickManga: (Long) -> Unit,
     onContinueReadingClicked: ((LibraryManga) -> Unit)?,
-    onToggleSelection: (LibraryManga) -> Unit,
-    onToggleRangeSelection: (LibraryManga) -> Unit,
+    onToggleSelection: (Category, LibraryManga) -> Unit,
+    onToggleRangeSelection: (Category, LibraryManga) -> Unit,
     onRefresh: (Category?) -> Boolean,
     onGlobalSearchClicked: () -> Unit,
     getNumberOfMangaForCategory: (Category) -> Int?,
     getDisplayMode: (Int) -> PreferenceMutableState<LibraryDisplayMode>,
     getColumnsForOrientation: (Boolean) -> PreferenceMutableState<Int>,
-    getLibraryForPage: (Int) -> List<LibraryItem>,
+    getItemsForCategory: (Category) -> List<LibraryItem>,
 ) {
     Column(
         modifier = Modifier.padding(
@@ -59,7 +59,7 @@ fun LibraryContent(
         val scope = rememberCoroutineScope()
         var isRefreshing by remember(pagerState.currentPage) { mutableStateOf(false) }
 
-        if (showPageTabs && categories.size > 1) {
+        if (showPageTabs && categories.isNotEmpty()) {
             LaunchedEffect(categories) {
                 if (categories.size <= pagerState.currentPage) {
                     pagerState.scrollToPage(categories.size - 1)
@@ -68,23 +68,20 @@ fun LibraryContent(
             LibraryTabs(
                 categories = categories,
                 pagerState = pagerState,
-                getNumberOfMangaForCategory = getNumberOfMangaForCategory,
-            ) { scope.launch { pagerState.animateScrollToPage(it) } }
-        }
-
-        val notSelectionMode = selection.isEmpty()
-        val onClickManga = { manga: LibraryManga ->
-            if (notSelectionMode) {
-                onMangaClicked(manga.manga.id)
-            } else {
-                onToggleSelection(manga)
-            }
+                getItemCountForCategory = getNumberOfMangaForCategory,
+                onTabItemClick = {
+                    scope.launch {
+                        pagerState.animateScrollToPage(it)
+                    }
+                },
+            )
         }
 
         PullRefresh(
             refreshing = isRefreshing,
+            enabled = selection.isEmpty(),
             onRefresh = {
-                val started = onRefresh(categories[currentPage()])
+                val started = categories.getOrNull(currentPage())?.let(onRefresh) ?: return@PullRefresh
                 if (!started) return@PullRefresh
                 scope.launch {
                     // Fake refresh status but hide it after a second as it's a long running task
@@ -93,7 +90,6 @@ fun LibraryContent(
                     isRefreshing = false
                 }
             },
-            enabled = notSelectionMode,
         ) {
             LibraryPager(
                 state = pagerState,
@@ -102,10 +98,17 @@ fun LibraryContent(
                 selectedManga = selection,
                 searchQuery = searchQuery,
                 onGlobalSearchClicked = onGlobalSearchClicked,
+                getCategoryForPage = { page -> categories[page] },
                 getDisplayMode = getDisplayMode,
                 getColumnsForOrientation = getColumnsForOrientation,
-                getLibraryForPage = getLibraryForPage,
-                onClickManga = onClickManga,
+                getItemsForCategory = getItemsForCategory,
+                onClickManga = { category, manga ->
+                    if (selection.isNotEmpty()) {
+                        onToggleSelection(category, manga)
+                    } else {
+                        onClickManga(manga.manga.id)
+                    }
+                },
                 onLongClickManga = onToggleRangeSelection,
                 onClickContinueReading = onContinueReadingClicked,
             )

@@ -110,18 +110,18 @@ data object LibraryTab : Tab {
                 val title = state.getToolbarTitle(
                     defaultTitle = stringResource(MR.strings.label_library),
                     defaultCategoryTitle = stringResource(MR.strings.label_default),
-                    page = screenModel.activeCategoryIndex,
+                    page = screenModel.activeGroupIndex,
                 )
-                val tabVisible = state.showCategoryTabs && state.categories.size > 1
+                val tabVisible = state.showCategoryTabs && state.getGroups().size > 1
                 LibraryToolbar(
                     hasActiveFilters = state.hasActiveFilters,
                     selectedCount = state.selection.size,
                     title = title,
                     onClickUnselectAll = screenModel::clearSelection,
-                    onClickSelectAll = { screenModel.selectAll(screenModel.activeCategoryIndex) },
-                    onClickInvertSelection = { screenModel.invertSelection(screenModel.activeCategoryIndex) },
+                    onClickSelectAll = { screenModel.selectAll(screenModel.activeGroupIndex) },
+                    onClickInvertSelection = { screenModel.invertSelection(screenModel.activeGroupIndex) },
                     onClickFilter = screenModel::showSettingsDialog,
-                    onClickRefresh = { onClickRefresh(state.categories[screenModel.activeCategoryIndex]) },
+                    onClickRefresh = { onClickRefresh(state.getGroups()[screenModel.activeGroupIndex]) },
                     onClickGlobalUpdate = { onClickRefresh(null) },
                     onClickOpenRandomManga = {
                         scope.launch {
@@ -154,7 +154,9 @@ data object LibraryTab : Tab {
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         ) { contentPadding ->
             when {
-                state.isLoading -> LoadingScreen(Modifier.padding(contentPadding))
+                state.isLoading -> {
+                    LoadingScreen(Modifier.padding(contentPadding))
+                }
                 state.searchQuery.isNullOrEmpty() && !state.hasActiveFilters && state.isLibraryEmpty -> {
                     val handler = LocalUriHandler.current
                     EmptyScreen(
@@ -171,15 +173,15 @@ data object LibraryTab : Tab {
                 }
                 else -> {
                     LibraryContent(
-                        categories = state.categories,
+                        categories = state.getGroups(),
                         searchQuery = state.searchQuery,
                         selection = state.selection,
                         contentPadding = contentPadding,
-                        currentPage = { screenModel.activeCategoryIndex },
+                        currentPage = { screenModel.activeGroupIndex },
                         hasActiveFilters = state.hasActiveFilters,
                         showPageTabs = state.showCategoryTabs || !state.searchQuery.isNullOrEmpty(),
-                        onChangeCurrentPage = { screenModel.activeCategoryIndex = it },
-                        onMangaClicked = { navigator.push(MangaScreen(it)) },
+                        onChangeCurrentPage = { screenModel.activeGroupIndex = it },
+                        onClickManga = { navigator.push(MangaScreen(it)) },
                         onContinueReadingClicked = { it: LibraryManga ->
                             scope.launchIO {
                                 val chapter = screenModel.getNextUnreadChapter(it.manga)
@@ -194,18 +196,19 @@ data object LibraryTab : Tab {
                             Unit
                         }.takeIf { state.showMangaContinueButton },
                         onToggleSelection = screenModel::toggleSelection,
-                        onToggleRangeSelection = {
-                            screenModel.toggleRangeSelection(it)
+                        onToggleRangeSelection = { category, manga ->
+                            screenModel.toggleRangeSelection(category, manga)
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         },
                         onRefresh = onClickRefresh,
                         onGlobalSearchClicked = {
                             navigator.push(GlobalSearchScreen(screenModel.state.value.searchQuery ?: ""))
                         },
-                        getNumberOfMangaForCategory = { state.getMangaCountForCategory(it) },
+                        getNumberOfMangaForCategory = { state.getItemCountForCategory(it) },
                         getDisplayMode = { screenModel.getDisplayMode() },
                         getColumnsForOrientation = { screenModel.getColumnsPreferenceForCurrentOrientation(it) },
-                    ) { state.getLibraryItemsByPage(it) }
+                        getItemsForCategory = { state.getItemsForCategory(it) },
+                    )
                 }
             }
         }
@@ -213,7 +216,7 @@ data object LibraryTab : Tab {
         val onDismissRequest = screenModel::closeDialog
         when (val dialog = state.dialog) {
             is LibraryScreenModel.Dialog.SettingsSheet -> run {
-                val category = state.categories.getOrNull(screenModel.activeCategoryIndex)
+                val category = state.getGroups().getOrNull(screenModel.activeGroupIndex)
                 if (category == null) {
                     onDismissRequest()
                     return@run
