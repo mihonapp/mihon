@@ -39,9 +39,9 @@ fun LibraryContent(
     onContinueReadingClicked: ((LibraryManga) -> Unit)?,
     onToggleSelection: (Category, LibraryManga) -> Unit,
     onToggleRangeSelection: (Category, LibraryManga) -> Unit,
-    onRefresh: (Category?) -> Boolean,
+    onRefresh: () -> Boolean,
     onGlobalSearchClicked: () -> Unit,
-    getNumberOfMangaForCategory: (Category) -> Int?,
+    getItemCountForCategory: (Category) -> Int?,
     getDisplayMode: (Int) -> PreferenceMutableState<LibraryDisplayMode>,
     getColumnsForOrientation: (Boolean) -> PreferenceMutableState<Int>,
     getItemsForCategory: (Category) -> List<LibraryItem>,
@@ -68,7 +68,7 @@ fun LibraryContent(
             LibraryTabs(
                 categories = categories,
                 pagerState = pagerState,
-                getItemCountForCategory = getNumberOfMangaForCategory,
+                getItemCountForCategory = getItemCountForCategory,
                 onTabItemClick = {
                     scope.launch {
                         pagerState.animateScrollToPage(it)
@@ -81,7 +81,7 @@ fun LibraryContent(
             refreshing = isRefreshing,
             enabled = selection.isEmpty(),
             onRefresh = {
-                val started = categories.getOrNull(currentPage())?.let(onRefresh) ?: return@PullRefresh
+                val started = onRefresh()
                 if (!started) return@PullRefresh
                 scope.launch {
                     // Fake refresh status but hide it after a second as it's a long running task
