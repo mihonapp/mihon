@@ -68,9 +68,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withLink
@@ -447,7 +447,7 @@ private fun MangaContentInfo(
         isMenuOpen = titleMenuVisible,
         onToggleExpanded = { titleExpanded = !titleExpanded },
         onMenuVisibilityChange = { titleMenuVisible = it },
-        isContextMenuEnabled = title.isNotBlank()
+        isContextMenuEnabled = title.isNotBlank(),
     )
 
     Spacer(modifier = Modifier.height(2.dp))
@@ -471,7 +471,7 @@ private fun MangaContentInfo(
             isMenuOpen = authorMenuVisible,
             onToggleExpanded = { authorExpanded = !authorExpanded },
             onMenuVisibilityChange = { authorMenuVisible = it },
-            isContextMenuEnabled = !author.isNullOrBlank()
+            isContextMenuEnabled = !author.isNullOrBlank(),
         )
     }
 
@@ -493,7 +493,7 @@ private fun MangaContentInfo(
                 onSearchRequested = doSearch,
                 isExpanded = artistExpanded,
                 isMenuOpen = artistMenuVisible,
-                onToggleExpanded = { artistExpanded = !artistExpanded},
+                onToggleExpanded = { artistExpanded = !artistExpanded },
                 onMenuVisibilityChange = { artistMenuVisible = it },
             )
         }
@@ -772,8 +772,8 @@ fun ExpandableClickableText(
             onClick = onToggleExpanded,
             onLongClick = {
                 if (isContextMenuEnabled) onMenuVisibilityChange(true)
-            }
-        )
+            },
+        ),
     ) {
         Text(
             text = content,
@@ -795,7 +795,7 @@ fun ExpandableClickableText(
                     onClick = {
                         onSearchRequested(content, true)
                         onMenuVisibilityChange(false)
-                    }
+                    },
                 )
 
                 DropdownMenuItem(
@@ -803,7 +803,7 @@ fun ExpandableClickableText(
                     onClick = {
                         context.copyToClipboard(content, content)
                         onMenuVisibilityChange(false)
-                    }
+                    },
                 )
             }
         }
