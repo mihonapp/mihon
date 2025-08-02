@@ -76,4 +76,16 @@
         <item quantity="one">1 pahina</item>
         <item quantity="other">%1$s na mga pahina</item>
     </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">Iilipat ang %1$d na entry?</item>
+        <item quantity="other">Ilipat ang %1$d na mga entry?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">Kopyahin ang %1$d na entry?</item>
+        <item quantity="other">Kopyahin ang %1$d na mga entry?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">Mayroong entry ay nalaktawan</item>
+        <item quantity="other">%1$d na mga entry ay nalaktawan</item>
+    </plurals>
 </resources>
