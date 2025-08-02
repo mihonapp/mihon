@@ -48,6 +48,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import mihon.feature.migration.config.MigrationConfigScreen
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.category.model.Category
@@ -149,6 +150,11 @@ data object LibraryTab : Tab {
                     onDownloadClicked = screenModel::performDownloadAction
                         .takeIf { state.selectedManga.fastAll { !it.isLocal() } },
                     onDeleteClicked = screenModel::openDeleteMangaDialog,
+                    onMigrateClicked = {
+                        val selection = state.selection
+                        screenModel.clearSelection()
+                        navigator.push(MigrationConfigScreen(selection))
+                    },
                 )
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },

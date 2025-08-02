@@ -43,7 +43,7 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class MigrationListScreenModel(
-    mangaIds: List<Long>,
+    mangaIds: Collection<Long>,
     extraSearchQuery: String?,
     private val preferences: SourcePreferences = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
