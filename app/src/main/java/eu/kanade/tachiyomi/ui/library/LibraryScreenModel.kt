@@ -102,31 +102,31 @@ class LibraryScreenModel(
                     .applyFilters(tracksMap, trackingFilters, itemPreferences)
                     .let { if (searchQuery == null) it else it.filter { m -> m.matches(searchQuery) } }
 
-                Quadruple(categories, filteredFavorites, tracksMap, trackingFilters.keys)
+                LibraryData(
+                    isInitialized = true,
+                    categories = categories,
+                    favorites = filteredFavorites,
+                    tracksMap = tracksMap,
+                    loggedInTrackerIds = trackingFilters.keys,
+                )
             }
                 .distinctUntilChanged()
-                .collectLatest { (categories, favorites, tracksMap, loggedInTrackerIds) ->
+                .collectLatest { libraryData ->
                     mutableState.update { state ->
-                        state.copy(
-                            isInitialized = true,
-                            categories = categories,
-                            favorites = favorites,
-                            tracksMap = tracksMap,
-                            loggedInTrackerIds = loggedInTrackerIds,
-                        )
+                        state.copy(libraryData = libraryData)
                     }
                 }
         }
 
         screenModelScope.launchIO {
             state
-                .dropWhile { !it.isInitialized }
-                .map { Quadruple(it.categories, it.favoritesById, it.tracksMap, it.loggedInTrackerIds) }
+                .dropWhile { !it.libraryData.isInitialized }
+                .map { it.libraryData }
                 .distinctUntilChanged()
-                .map { (categories, favoritesById, tracksMap, loggedInTrackerIds) ->
-                    favoritesById.values.toList()
-                        .applyGrouping(categories)
-                        .applySort(favoritesById, tracksMap, loggedInTrackerIds)
+                .map { data ->
+                    data.favorites
+                        .applyGrouping(data.categories)
+                        .applySort(data.favoritesById, data.tracksMap, data.loggedInTrackerIds)
                 }
                 .collectLatest {
                     mutableState.update { state ->
@@ -712,6 +712,17 @@ class LibraryScreenModel(
     )
 
     @Immutable
+    data class LibraryData(
+        val isInitialized: Boolean = false,
+        val categories: List<Category> = emptyList(),
+        val favorites: List<LibraryItem> = emptyList(),
+        val tracksMap: Map</* Manga */ Long, List<Track>> = emptyMap(),
+        val loggedInTrackerIds: Set<Long> = emptySet(),
+    ) {
+        val favoritesById by lazy { favorites.associateBy { it.id } }
+    }
+
+    @Immutable
     data class State(
         val isInitialized: Boolean = false,
         val isLoading: Boolean = true,
@@ -722,18 +733,14 @@ class LibraryScreenModel(
         val showMangaCount: Boolean = false,
         val showMangaContinueButton: Boolean = false,
         val dialog: Dialog? = null,
-        val categories: List<Category> = emptyList(),
-        val favorites: List<LibraryItem> = emptyList(),
-        val tracksMap: Map</* Manga */ Long, List<Track>> = emptyMap(),
-        val loggedInTrackerIds: Set<Long> = emptySet(),
+        val libraryData: LibraryData = LibraryData(),
         private val groupedFavorites: Map<Category, List</* LibraryItem */ Long>> = emptyMap(),
     ) {
-        val favoritesById by lazy { favorites.associateBy { it.id } }
-        val isLibraryEmpty = favorites.isEmpty()
+        val isLibraryEmpty = libraryData.favorites.isEmpty()
 
         val selectionMode = selection.isNotEmpty()
 
-        val selectedManga by lazy { selection.mapNotNull { favoritesById[it]?.libraryManga?.manga } }
+        val selectedManga by lazy { selection.mapNotNull { libraryData.favoritesById[it]?.libraryManga?.manga } }
 
         val displayedCategories = groupedFavorites.keys.toList()
 
@@ -743,7 +750,7 @@ class LibraryScreenModel(
         }
 
         fun getItemsForCategory(category: Category): List<LibraryItem> {
-            return groupedFavorites[category].orEmpty().mapNotNull { favoritesById[it] }
+            return groupedFavorites[category].orEmpty().mapNotNull { libraryData.favoritesById[it] }
         }
 
         fun getItemCountForCategory(category: Category): Int? {
@@ -764,18 +771,9 @@ class LibraryScreenModel(
                 !showMangaCount -> null
                 !showCategoryTabs -> getItemCountForCategory(category)
                 // Whole library count
-                else -> favorites.size
+                else -> libraryData.favorites.size
             }
             return LibraryToolbarTitle(title, count)
         }
-    }
-
-    private data class Quadruple<out A, out B, out C, out D>(
-        val first: A,
-        val second: B,
-        val third: C,
-        val fourth: D,
-    ) {
-        override fun toString(): String = "($first, $second, $third, $fourth)"
     }
 }
