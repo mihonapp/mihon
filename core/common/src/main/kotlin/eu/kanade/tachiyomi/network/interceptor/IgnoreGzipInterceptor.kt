@@ -23,6 +23,7 @@ class IgnoreGzipInterceptor : Interceptor {
                 .removeHeader("Accept-Encoding")
                 .build(),
         )
+        // Restore the request header before passing it back to CacheInterceptor.
         return response.newBuilder().request(
             response.request.newBuilder()
                 .header("Accept-Encoding", "gzip")
