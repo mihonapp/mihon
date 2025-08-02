@@ -237,8 +237,7 @@ actual class LocalSource(
     }
 
     private fun setMangaDetailsFromComicInfoFile(stream: InputStream, manga: SManga) {
-        val comicInfo = parseComicInfoFile(stream)
-        manga.copyFromComicInfo(comicInfo)
+        manga.copyFromComicInfo(parseComicInfoFile(stream))
     }
 
     private fun setChapterDetailsFromComicInfoFile(stream: InputStream, chapter: SChapter) {
