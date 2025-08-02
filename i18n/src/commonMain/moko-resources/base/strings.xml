@@ -36,6 +36,7 @@
     <string name="label_extensions">Extensions</string>
     <string name="label_extension_info">Extension info</string>
     <string name="label_help">Help</string>
+    <string name="label_donate">Donate</string>
     <string name="label_default">Default</string>
     <string name="label_warning">Warning</string>
     <string name="label_auto">Auto</string>
