@@ -214,13 +214,10 @@ actual class LocalSource(
 
     private fun copyComicInfoFileFromArchive(chapterArchives: List<UniFile>, folder: UniFile): UniFile? {
         for (chapter in chapterArchives) {
-            var rv: UniFile? = null
-            getComicInfoFileFromArchive(chapter) { stream ->
-                rv = copyComicInfoFile(stream, folder)
+            val file = getComicInfoFileFromArchive(chapter) f@{ stream ->
+                return@f copyComicInfoFile(stream, folder)
             }
-            if (rv != null) {
-                return rv
-            }
+            if (file != null) return file
         }
         return null
     }
