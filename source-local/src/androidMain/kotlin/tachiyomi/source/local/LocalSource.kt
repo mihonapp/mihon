@@ -251,9 +251,7 @@ actual class LocalSource(
     // Chapters
     override suspend fun getChapterList(manga: SManga): List<SChapter> = withIOContext {
         val mangaDir = fileSystem.getMangaDirectory(manga.url) ?: error("${manga.url} is not a valid directory")
-        val mangaDirFiles = mangaDir.listFiles().orEmpty()
-        val noXmlFile = mangaDirFiles
-            .firstOrNull { it.name == ".noxml" }
+        val noXmlExists = mangaDir.listFiles()?.any { it.name == ".noxml" } ?: false
 
         val chapters = fileSystem.getFilesInMangaDirectory(manga.url)
             // Only keep supported formats
@@ -277,7 +275,7 @@ actual class LocalSource(
                         format.file.epubReader(context).use { epub ->
                             epub.fillMetadata(manga, this)
                         }
-                    } else if (noXmlFile == null) {
+                    } else if (!noXmlExists) {
                         getComicInfoFileFromArchive(chapterFile) { stream ->
                             setChapterDetailsFromComicInfoFile(stream, this)
                         }
