@@ -207,8 +207,14 @@ actual class LocalSource(
     }
 
     private fun <R> getComicInfoFileFromArchive(chapterArchive: UniFile, block: (InputStream) -> R): R? {
-        return chapterArchive.archiveReader(context).use { reader ->
-            reader.getInputStream(COMIC_INFO_FILE)?.use(block)
+        if (chapterArchive.isDirectory) {
+            return chapterArchive.findFile(COMIC_INFO_FILE)?.let { file ->
+                file.openInputStream().use(block)
+            }
+        } else {
+            return chapterArchive.archiveReader(context).use { reader ->
+                reader.getInputStream(COMIC_INFO_FILE)?.use(block)
+            }
         }
     }
 
