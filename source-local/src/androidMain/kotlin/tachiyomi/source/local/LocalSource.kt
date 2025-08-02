@@ -245,7 +245,7 @@ actual class LocalSource(
 
         comicInfo.title?.let { chapter.name = it.value }
         comicInfo.number?.value?.toFloatOrNull()?.let { chapter.chapter_number = it }
-        comicInfo.web?.let { chapter.url = it.value }
+        comicInfo.translator?.let { chapter.scanlator = it.value }
     }
 
     // Chapters
