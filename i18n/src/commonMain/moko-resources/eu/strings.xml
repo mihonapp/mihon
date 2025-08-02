@@ -126,7 +126,6 @@
     <string name="label_data">Datuak</string>
     <string name="pref_clear_chapter_cache">Garbitu kapituluen cachea</string>
     <string name="pref_auto_clear_chapter_cache">Garbitu kapituluen cachea aplikazioa ixtean</string>
-    <string name="clear_database_confirmation">Ziur zaude? Kapitulu iraurriak eta liburutegikoak ez diren manga-en aurrerapenak galduko dira</string>
     <string name="database_clean">Datu-basea garbi</string>
     <string name="pref_disable_battery_optimization">Desgaitu bateriaren optimizazioa</string>
     <string name="version">Bertsioa</string>

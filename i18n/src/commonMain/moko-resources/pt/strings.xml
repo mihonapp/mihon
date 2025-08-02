@@ -104,7 +104,6 @@
     <string name="cookies_cleared">Cookies limpos</string>
     <string name="pref_clear_database">Limpar base de dados</string>
     <string name="pref_clear_database_summary">Exclui o histórico de itens que não estão salvos nasua biblioteca</string>
-    <string name="clear_database_confirmation">Tem certeza? Os capítulos lidos e o progresso em itens que não estão na sua biblioteca serão perdidos</string>
     <string name="clear_database_completed">Eliminar entradas</string>
     <string name="version">Versão</string>
     <string name="pref_enable_acra">Enviar relatórios de erro</string>
@@ -640,9 +639,6 @@
     <string name="label_downloaded">Baixado</string>
     <string name="unknown_title">Título desconhecido</string>
     <string name="copied_to_clipboard_plain">Copiado para a área de transferência</string>
-    <string name="confirm_add_duplicate_manga">Você tem uma entrada em sua biblioteca com o mesmo nome.
-\n
-\nAinda deseja continuar?</string>
     <string name="day_short">%dd</string>
     <string name="updates_last_update_info_just_now">Agora mesmo</string>
     <string name="crash_screen_restart_application">Reinicie o aplicativo</string>
@@ -723,7 +719,6 @@
     <string name="information_cloudflare_help">Toque aqui para obter ajuda com o Cloudflare</string>
     <string name="action_delete_repo">Deletar repositório</string>
     <string name="action_add_anyway">Adicionar de qualquer maneira</string>
-    <string name="action_migrate_duplicate">Migrar entrada existente</string>
     <string name="onboarding_permission_notifications_description">Seja notificado para atualizações da biblioteca e mais.</string>
     <string name="onboarding_guides_returning_user">A reinstalar o %s?</string>
     <string name="pref_relative_format">Datas relativas</string>
@@ -832,4 +827,8 @@
     <string name="pref_download_new_unread_chapters_only">Ignorar dar download a capítulos já lidos duplicados</string>
     <string name="confirm_tracker_update">"Atualizar  os tracker para o capítulo  %d?"</string>
     <string name="add_repo_confirmation">Desejas adicionar o seguinte repositório: \"%s\"?</string>
+    <string name="label_auto">Automático</string>
+    <string name="clear_db_exclude_read">Manter entradas com capítulos lidos</string>
+    <string name="action_notes">Notas</string>
+    <string name="action_edit_notes">Editar notas</string>
 </resources>
