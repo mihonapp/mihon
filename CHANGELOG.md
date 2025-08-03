@@ -24,7 +24,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add advanced option to always update manga title from source ([@FlaminSarge](https://github.com/FlaminSarge)) ([#1182](https://github.com/mihonapp/mihon/pull/1182))
 - Full predictive back support ([@AntsyLich](https://github.com/AntsyLich)) ([#2085](https://github.com/mihonapp/mihon/pull/2085))
 - Add Catppuccin theme (mocha for dark and latte for light, mauve accent) ([@claymorwan](https://github.com/claymorwan/)) ([#2117](https://github.com/mihonapp/mihon/pull/2117))
-- Manga mass migration ([@AntsyLich](https://github.com/AntsyLich), [@jobobby04](https://github.com/jobobby04)) ([#2110](https://github.com/mihonapp/mihon/pull/2110), [#2336](https://github.com/mihonapp/mihon/pull/2336))
+- Manga mass migration ([@AntsyLich](https://github.com/AntsyLich), [@jobobby04](https://github.com/jobobby04)) ([#2110](https://github.com/mihonapp/mihon/pull/2110), [#2336](https://github.com/mihonapp/mihon/pull/2336), [#2338](https://github.com/mihonapp/mihon/pull/2338))
 
 ### Improved
 - Significantly improve browsing speed (near instantaneous) ([@AntsyLich](https://github.com/AntsyLich)) ([#1946](https://github.com/mihonapp/mihon/pull/1946))
@@ -35,7 +35,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Added autofill support to tracker login dialog ([@AntsyLich](https://github.com/AntsyLich)) ([#2069](https://github.com/mihonapp/mihon/pull/2069))
 - Added option to hide missing chapter count ([@User826](https://github.com/User826), [@AntsyLich](https://github.com/AntsyLich)) ([#2108](https://github.com/mihonapp/mihon/pull/2108))
 - Use median to determine smart update interval, making it more resilient to long hiatuses ([@Kladki](https://github.com/Kladki)) ([#2251](https://github.com/mihonapp/mihon/pull/2251))
-- Optimize library code to potentially better handle big user libraries ([@AntsyLich](https://github.com/AntsyLich)) ([#2329](https://github.com/mihonapp/mihon/pull/2329))
+- Optimize library code to potentially better handle big user libraries ([@AntsyLich](https://github.com/AntsyLich)) ([#2329](https://github.com/mihonapp/mihon/pull/2329), [#2341](https://github.com/mihonapp/mihon/pull/2341))
 
 ### Changed
 - Display all similarly named duplicates in duplicate manga dialogue ([@NarwhalHorns](https://github.com/NarwhalHorns), [@AntsyLich](https://github.com/AntsyLich)) ([#1861](https://github.com/mihonapp/mihon/pull/1861))
