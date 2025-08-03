@@ -43,7 +43,7 @@ import tachiyomi.i18n.MR
  */
 class WebtoonPageHolder(
     private val frame: ReaderPageImageView,
-    viewer: WebtoonViewer,
+    override val viewer: WebtoonViewer,
 ) : WebtoonBaseHolder(frame, viewer) {
 
     /**

@@ -329,7 +329,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     /**
      * Moves to the page at the right.
      */
-    protected open fun moveRight() {
+    internal open fun moveRight() {
         if (pager.currentItem != adapter.count - 1) {
             val holder = (currentPage as? ReaderPage)?.let(::getPageHolder)
             if (holder != null && config.navigateToPan && holder.canPanRight()) {
@@ -343,7 +343,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     /**
      * Moves to the page at the left.
      */
-    protected open fun moveLeft() {
+    internal open fun moveLeft() {
         if (pager.currentItem != 0) {
             val holder = (currentPage as? ReaderPage)?.let(::getPageHolder)
             if (holder != null && config.navigateToPan && holder.canPanLeft()) {
