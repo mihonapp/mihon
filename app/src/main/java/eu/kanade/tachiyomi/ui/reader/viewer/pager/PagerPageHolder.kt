@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import androidx.core.view.isVisible
 import eu.kanade.presentation.util.formattedMessage
@@ -9,6 +10,7 @@ import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
+import eu.kanade.tachiyomi.ui.reader.translator.Translator
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
@@ -61,6 +63,8 @@ class PagerPageHolder(
      * Job for loading the page and processing changes to the page's status.
      */
     private var loadJob: Job? = null
+
+    private val translator by lazy { (viewer.activity as ReaderActivity).translator }
 
     init {
         loadJob = scope.launch { loadPageAndProcessStatus() }
@@ -150,32 +154,46 @@ class PagerPageHolder(
         val streamFn = page.stream ?: return
 
         try {
-            val (source, isAnimated, background) = withIOContext {
-                val source = streamFn().use { process(item, Buffer().readFrom(it)) }
-                val isAnimated = ImageUtil.isAnimatedAndSupported(source)
-                val background = if (!isAnimated && viewer.config.automaticBackground) {
-                    ImageUtil.chooseBackground(context, source.peek().inputStream())
-                } else {
-                    null
+            val readerPreferences = viewer.activity.viewModel.readerPreferences
+            if (readerPreferences.translateManga().get()) {
+                val bitmap = withIOContext {
+                    BitmapFactory.decodeStream(streamFn())
                 }
-                Triple(source, isAnimated, background)
-            }
-            withUIContext {
-                setImage(
-                    source,
-                    isAnimated,
-                    Config(
-                        zoomDuration = viewer.config.doubleTapAnimDuration,
-                        minimumScaleType = viewer.config.imageScaleType,
-                        cropBorders = viewer.config.imageCropBorders,
-                        zoomStartPosition = viewer.config.imageZoomType,
-                        landscapeZoom = viewer.config.landscapeZoom,
-                    ),
-                )
-                if (!isAnimated) {
-                    pageBackground = background
+                val sourceLanguage = readerPreferences.sourceLanguage().get()
+                val targetLanguage = readerPreferences.targetLanguage().get()
+                val translations = translator.detectAndTranslate(bitmap, sourceLanguage, targetLanguage)
+                withUIContext {
+                    setImage(bitmap, translations)
+                    removeErrorLayout()
                 }
-                removeErrorLayout()
+            } else {
+                val (source, isAnimated, background) = withIOContext {
+                    val source = streamFn().use { process(item, Buffer().readFrom(it)) }
+                    val isAnimated = ImageUtil.isAnimatedAndSupported(source)
+                    val background = if (!isAnimated && viewer.config.automaticBackground) {
+                        ImageUtil.chooseBackground(context, source.peek().inputStream())
+                    } else {
+                        null
+                    }
+                    Triple(source, isAnimated, background)
+                }
+                withUIContext {
+                    setImage(
+                        source,
+                        isAnimated,
+                        Config(
+                            zoomDuration = viewer.config.doubleTapAnimDuration,
+                            minimumScaleType = viewer.config.imageScaleType,
+                            cropBorders = viewer.config.imageCropBorders,
+                            zoomStartPosition = viewer.config.imageZoomType,
+                            landscapeZoom = viewer.config.landscapeZoom,
+                        ),
+                    )
+                    if (!isAnimated) {
+                        pageBackground = background
+                    }
+                    removeErrorLayout()
+                }
             }
         } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e)

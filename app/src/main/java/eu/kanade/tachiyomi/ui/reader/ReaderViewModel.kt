@@ -987,4 +987,18 @@ class ReaderViewModel @JvmOverloads constructor(
         data class ShareImage(val uri: Uri, val page: ReaderPage) : Event
         data class CopyImage(val uri: Uri) : Event
     }
+
+    fun reloadChapter() {
+        viewModelScope.launchIO {
+            val loader = loader ?: return@launchIO
+            val currentChapter = state.value.viewerChapters?.currChapter ?: return@launchIO
+            if (currentChapter.pageLoader is DownloadPageLoader) {
+                (currentChapter.pageLoader as? DownloadPageLoader)?.rebuild()
+            }
+            loader.loadChapter(currentChapter)
+            withUIContext {
+                eventChannel.trySend(Event.ReloadViewerChapters)
+            }
+        }
+    }
 }

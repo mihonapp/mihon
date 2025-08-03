@@ -12,6 +12,7 @@ ktlint-core = "1.7.1"
 firebase-bom = "34.0.0"
 markdown = "0.35.0"
 junit = "5.13.4"
+mlkit-text-recognition = "18.0.2"
 
 [libraries]
 desugar = "com.android.tools:desugar_jdk_libs:2.1.5"
@@ -107,6 +108,7 @@ markdown-core = { module = "com.mikepenz:multiplatform-markdown-renderer", versi
 markdown-coil = { module = "com.mikepenz:multiplatform-markdown-renderer-coil3", version.ref = "markdown" }
 
 stringSimilarity = { module = "com.aallam.similarity:string-similarity-kotlin", version = "0.1.0" }
+mlkit-text-recognition = { group = "com.google.android.gms", name = "play-services-mlkit-text-recognition", version.ref = "mlkit-text-recognition" }
 
 [plugins]
 google-services = { id = "com.google.gms.google-services", version = "4.4.3" }

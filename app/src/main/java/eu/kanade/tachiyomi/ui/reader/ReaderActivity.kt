@@ -71,6 +71,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import eu.kanade.tachiyomi.ui.reader.translator.Translator
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.hasDisplayCutout
@@ -119,6 +120,7 @@ class ReaderActivity : BaseActivity() {
     lateinit var binding: ReaderActivityBinding
 
     val viewModel by viewModels<ReaderViewModel>()
+    lateinit var translator: Translator
     private var assistUrl: String? = null
 
     private val hasCutout by lazy { hasDisplayCutout() }
@@ -181,6 +183,7 @@ class ReaderActivity : BaseActivity() {
         }
 
         config = ReaderConfig()
+        translator = Translator(this)
         initializeMenu()
 
         // Finish when incognito mode is disabled
@@ -244,6 +247,7 @@ class ReaderActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         viewModel.state.value.viewer?.destroy()
+        translator.destroy()
         config = null
         menuToggleToast?.cancel()
         readingModeToast?.cancel()
@@ -421,6 +425,14 @@ class ReaderActivity : BaseActivity() {
                     menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
                 },
                 onClickSettings = viewModel::openSettingsDialog,
+                readerPreferences = readerPreferences,
+                onClickTranslate = {
+                    readerPreferences.translateManga().toggle()
+                    val enabled = readerPreferences.translateManga().get()
+                    menuToggleToast?.cancel()
+                    menuToggleToast = toast(if (enabled) "Translator On" else "Translator Off")
+                    viewModel.reloadChapter()
+                },
             )
 
             if (flashOnPageChange) {

@@ -69,6 +69,7 @@ object SettingsReaderScreen : SearchableSettings {
             getWebtoonGroup(readerPreferences = readerPref),
             getNavigationGroup(readerPreferences = readerPref),
             getActionsGroup(readerPreferences = readerPref),
+            getTranslationGroup(readerPreferences = readerPref),
         )
     }
 
@@ -434,6 +435,50 @@ object SettingsReaderScreen : SearchableSettings {
                     preference = readerPreferences.folderPerManga(),
                     title = stringResource(MR.strings.pref_create_folder_per_manga),
                     subtitle = stringResource(MR.strings.pref_create_folder_per_manga_summary),
+                ),
+            ),
+        )
+    }
+
+    @Composable
+    private fun getTranslationGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup {
+        val translatorEnabled by readerPreferences.translateManga().collectAsState()
+
+        // TODO: Get a real list of languages from Google Translate
+        val sourceLanguages = persistentMapOf(
+            "auto" to "Auto Detect",
+            "en" to "English",
+            "ja" to "Japanese",
+            "ko" to "Korean",
+            "zh" to "Chinese",
+        )
+        val targetLanguages = persistentMapOf(
+            "en" to "English",
+            "es" to "Spanish",
+            "fr" to "French",
+            "de" to "German",
+            "pt" to "Portuguese",
+            "id" to "Indonesian",
+        )
+
+        return Preference.PreferenceGroup(
+            title = stringResource(MR.strings.pref_category_translation),
+            preferenceItems = persistentListOf(
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.translateManga(),
+                    title = stringResource(MR.strings.pref_translate_manga),
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    preference = readerPreferences.sourceLanguage(),
+                    title = stringResource(MR.strings.pref_source_language),
+                    entries = sourceLanguages,
+                    enabled = translatorEnabled,
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    preference = readerPreferences.targetLanguage(),
+                    title = stringResource(MR.strings.pref_target_language),
+                    entries = targetLanguages,
+                    enabled = translatorEnabled,
                 ),
             ),
         )

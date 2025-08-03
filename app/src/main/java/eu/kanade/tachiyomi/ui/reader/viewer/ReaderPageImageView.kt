@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader.viewer
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.PointF
 import android.graphics.RectF
 import android.graphics.drawable.Animatable
@@ -36,6 +37,7 @@ import com.github.chrisbanes.photoview.PhotoView
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.data.coil.cropBorders
 import eu.kanade.tachiyomi.data.coil.customDecoder
+import eu.kanade.tachiyomi.ui.reader.translator.Translator
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonSubsamplingImageView
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
@@ -65,6 +67,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
     }
 
     private var pageView: View? = null
+    private var overlayView: TranslationOverlayView? = null
 
     private var config: Config? = null
 
@@ -122,6 +125,13 @@ open class ReaderPageImageView @JvmOverloads constructor(
         }
     }
 
+    private fun prepareTranslationOverlayView() {
+        if (overlayView == null) {
+            overlayView = TranslationOverlayView(context)
+            addView(overlayView, MATCH_PARENT, MATCH_PARENT)
+        }
+    }
+
     private fun SubsamplingScaleImageView.landscapeZoom(forward: Boolean) {
         if (
             config != null &&
@@ -145,6 +155,14 @@ open class ReaderPageImageView @JvmOverloads constructor(
                     .start()
             }
         }
+    }
+
+    fun setImage(bitmap: Bitmap, translations: List<Translator.TranslationResult>) {
+        this.config = config
+        prepareNonAnimatedImageView()
+        (pageView as? SubsamplingScaleImageView)?.setImage(ImageSource.bitmap(bitmap))
+        prepareTranslationOverlayView()
+        overlayView?.setTranslations(translations)
     }
 
     fun setImage(drawable: Drawable, config: Config) {
@@ -248,16 +266,19 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 object : SubsamplingScaleImageView.OnStateChangedListener {
                     override fun onScaleChanged(newScale: Float, origin: Int) {
                         this@ReaderPageImageView.onScaleChanged(newScale)
+                        overlayView?.updateTransform(newScale, center?.x ?: 0f, center?.y ?: 0f)
                     }
 
                     override fun onCenterChanged(newCenter: PointF?, origin: Int) {
-                        // Not used
+                        if (newCenter != null) {
+                            overlayView?.updateTransform(scale, newCenter.x, newCenter.y)
+                        }
                     }
                 },
             )
             setOnClickListener { this@ReaderPageImageView.onViewClicked() }
         }
-        addView(pageView, MATCH_PARENT, MATCH_PARENT)
+        addView(pageView, 0, LayoutParams(MATCH_PARENT, MATCH_PARENT))
     }
 
     private fun SubsamplingScaleImageView.setupZoom(config: Config?) {

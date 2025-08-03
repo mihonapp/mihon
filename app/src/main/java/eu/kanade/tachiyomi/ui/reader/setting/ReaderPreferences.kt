@@ -79,6 +79,14 @@ class ReaderPreferences(
 
     // endregion
 
+    // region Translation
+    fun translateManga() = preferenceStore.getBoolean("translator_enabled", false)
+
+    fun targetLanguage() = preferenceStore.getString("translator_target_language", "en")
+
+    fun sourceLanguage() = preferenceStore.getString("translator_source_language", "auto")
+    // endregion
+
     // region Split two page spread
 
     fun dualPageSplitPaged() = preferenceStore.getBoolean("pref_dual_page_split", false)
