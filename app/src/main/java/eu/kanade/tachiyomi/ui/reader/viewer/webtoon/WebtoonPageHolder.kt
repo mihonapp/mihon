@@ -42,13 +42,11 @@ import tachiyomi.i18n.MR
  * @constructor creates a new webtoon holder.
  */
 class WebtoonPageHolder(
-    private val frame: ReaderPageImageView,
+    val pageView: ReaderPageImageView,
     override val viewer: WebtoonViewer,
-) : WebtoonBaseHolder(frame, viewer) {
+) : WebtoonBaseHolder(pageView, viewer) {
 
-    /**
-     * Loading progress bar to indicate the current progress.
-     */
+    private val frame = pageView
     private val progressIndicator = createProgressIndicator()
 
     /**

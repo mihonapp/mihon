@@ -403,13 +403,17 @@ class ReaderActivity : BaseActivity() {
                 enabledNext = state.viewerChapters?.nextChapter != null,
                 onPreviousChapter = ::loadPreviousChapter,
                 enabledPrevious = state.viewerChapters?.prevChapter != null,
-                currentPage = state.currentPage,
                 totalPages = state.totalPages,
                 onPageIndexChange = {
                     isScrollingThroughPages = true
-                    moveToPageIndex(it)
+                    if (state.viewer?.canPanRight() == true && it > state.currentPage?.index ?: 0) {
+                        state.viewer?.panRight()
+                    } else if (state.viewer?.canPanLeft() == true && it < state.currentPage?.index ?: 0) {
+                        state.viewer?.panLeft()
+                    } else {
+                        moveToPageIndex(it)
+                    }
                 },
-
                 readingMode = ReadingMode.fromPreference(
                     viewModel.getMangaReadingMode(resolveDefault = false),
                 ),
