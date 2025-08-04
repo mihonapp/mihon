@@ -109,10 +109,18 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
         pref = screenModel.preferences.navigateToPan(),
     )
 
-    val dualPageSplitPaged by screenModel.preferences.dualPageSplitPaged().collectAsState()
+    val dualPageSplitPagedPref = screenModel.preferences.dualPageSplitPaged()
+    val dualPageSplitPaged by dualPageSplitPagedPref.collectAsState()
+
+    val dualPageRotateToFitPref = screenModel.preferences.dualPageRotateToFit()
+    val dualPageRotateToFit by dualPageRotateToFitPref.collectAsState()
+
     CheckboxItem(
         label = stringResource(MR.strings.pref_dual_page_split),
-        pref = screenModel.preferences.dualPageSplitPaged(),
+        pref = dualPageSplitPagedPref,
+        onClick = {
+            dualPageRotateToFitPref.set(false)
+        }
     )
 
     if (dualPageSplitPaged) {
@@ -122,10 +130,12 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
         )
     }
 
-    val dualPageRotateToFit by screenModel.preferences.dualPageRotateToFit().collectAsState()
     CheckboxItem(
         label = stringResource(MR.strings.pref_page_rotate),
-        pref = screenModel.preferences.dualPageRotateToFit(),
+        pref = dualPageRotateToFitPref,
+        onClick = {
+            dualPageSplitPagedPref.set(false)
+        }
     )
 
     if (dualPageRotateToFit) {
@@ -168,10 +178,18 @@ private fun ColumnScope.WebtoonViewerSettings(screenModel: ReaderSettingsScreenM
         pref = screenModel.preferences.cropBordersWebtoon(),
     )
 
-    val dualPageSplitWebtoon by screenModel.preferences.dualPageSplitWebtoon().collectAsState()
+    val dualPageSplitWebtoonPref = screenModel.preferences.dualPageSplitWebtoon()
+    val dualPageSplitWebtoon by dualPageSplitWebtoonPref.collectAsState()
+
+    val dualPageRotateToFitWebtoonPref = screenModel.preferences.dualPageRotateToFitWebtoon()
+    val dualPageRotateToFitWebtoon by dualPageRotateToFitWebtoonPref.collectAsState()
+
     CheckboxItem(
         label = stringResource(MR.strings.pref_dual_page_split),
-        pref = screenModel.preferences.dualPageSplitWebtoon(),
+        pref = dualPageSplitWebtoonPref,
+        onClick = {
+            dualPageRotateToFitWebtoonPref.set(false)
+        }
     )
 
     if (dualPageSplitWebtoon) {
@@ -181,10 +199,12 @@ private fun ColumnScope.WebtoonViewerSettings(screenModel: ReaderSettingsScreenM
         )
     }
 
-    val dualPageRotateToFitWebtoon by screenModel.preferences.dualPageRotateToFitWebtoon().collectAsState()
     CheckboxItem(
         label = stringResource(MR.strings.pref_page_rotate),
-        pref = screenModel.preferences.dualPageRotateToFitWebtoon(),
+        pref = dualPageRotateToFitWebtoonPref,
+        onClick = {
+            dualPageSplitWebtoonPref.set(false)
+        }
     )
 
     if (dualPageRotateToFitWebtoon) {
