@@ -379,6 +379,11 @@ private fun ExtensionItemContent(
                         overflow = TextOverflow.Ellipsis,
                     )
                 }
+                if (extension is Extension.Installed && !extension.isShared) {
+                    Text(
+                        text = stringResource(MR.strings.ext_installer_private),
+                    )
+                }
 
                 if (!installStep.isCompleted()) {
                     DotSeparatorNoSpaceText()
