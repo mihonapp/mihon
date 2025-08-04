@@ -19,8 +19,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import logcat.LogPriority
-import okio.Buffer
-import okio.BufferedSource
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.withIOContext
@@ -147,31 +145,29 @@ class PagerPageHolder(
     private suspend fun setImage() {
         progressIndicator?.setProgress(0)
 
-        val streamFn = page.stream ?: return
-
         try {
             val (source, isAnimated, background) = withIOContext {
-                val source = streamFn().use { process(item, Buffer().readFrom(it)) }
+                val source = process(page, page.getImageSource() ?: return@withIOContext null)
                 val isAnimated = ImageUtil.isAnimatedAndSupported(source)
                 val background = if (!isAnimated && viewer.config.automaticBackground) {
-                    ImageUtil.chooseBackground(context, source.peek().inputStream())
+                    ImageUtil.chooseBackground(context, source)
                 } else {
                     null
                 }
                 Triple(source, isAnimated, background)
-            }
+            } ?: return
             withUIContext {
-                setImage(
-                    source,
-                    isAnimated,
-                    Config(
-                        zoomDuration = viewer.config.doubleTapAnimDuration,
-                        minimumScaleType = viewer.config.imageScaleType,
-                        cropBorders = viewer.config.imageCropBorders,
-                        zoomStartPosition = viewer.config.imageZoomType,
-                        landscapeZoom = viewer.config.landscapeZoom,
-                    ),
+                val config = Config(
+                    zoomDuration = viewer.config.doubleTapAnimDuration,
+                    minimumScaleType = viewer.config.imageScaleType,
+                    cropBorders = viewer.config.imageCropBorders,
+                    zoomStartPosition = viewer.config.imageZoomType,
+                    landscapeZoom = viewer.config.landscapeZoom,
                 )
+                when (source) {
+                    is ImageUtil.ImageSource.FromBitmap -> setImage(source.bitmap, config)
+                    is ImageUtil.ImageSource.FromBuffer -> setImage(source.buffer, isAnimated, config)
+                }
                 if (!isAnimated) {
                     pageBackground = background
                 }
@@ -185,7 +181,7 @@ class PagerPageHolder(
         }
     }
 
-    private fun process(page: ReaderPage, imageSource: BufferedSource): BufferedSource {
+    private fun process(page: ReaderPage, imageSource: ImageUtil.ImageSource): ImageUtil.ImageSource {
         if (viewer.config.dualPageRotateToFit) {
             return rotateDualPage(imageSource)
         }
@@ -208,7 +204,7 @@ class PagerPageHolder(
         return splitInHalf(imageSource)
     }
 
-    private fun rotateDualPage(imageSource: BufferedSource): BufferedSource {
+    private fun rotateDualPage(imageSource: ImageUtil.ImageSource): ImageUtil.ImageSource {
         val isDoublePage = ImageUtil.isWideImage(imageSource)
         return if (isDoublePage) {
             val rotation = if (viewer.config.dualPageRotateToFitInvert) -90f else 90f
@@ -218,7 +214,7 @@ class PagerPageHolder(
         }
     }
 
-    private fun splitInHalf(imageSource: BufferedSource): BufferedSource {
+    private fun splitInHalf(imageSource: ImageUtil.ImageSource): ImageUtil.ImageSource {
         var side = when {
             viewer is L2RPagerViewer && page is InsertPage -> ImageUtil.Side.RIGHT
             viewer !is L2RPagerViewer && page is InsertPage -> ImageUtil.Side.LEFT
