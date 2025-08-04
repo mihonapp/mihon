@@ -34,14 +34,15 @@ import tachiyomi.i18n.MR
 class PagerPageHolder(
     readerThemedContext: Context,
     val viewer: PagerViewer,
-    val page: ReaderPage,
+    page: ReaderPage,
 ) : ReaderPageImageView(readerThemedContext), ViewPagerAdapter.PositionableView {
 
     /**
      * Item that identifies this view. Needed by the adapter to not recreate views.
      */
-    override val item
-        get() = page
+    override val item = page
+
+    private val page = viewer.getInterceptedPage(page)
 
     /**
      * Loading progress bar to indicate the current progress.
@@ -93,7 +94,7 @@ class PagerPageHolder(
 
         supervisorScope {
             launchIO {
-                loader.loadPage(page)
+                viewer.loadPage(page)
             }
             page.statusFlow.collectLatest { state ->
                 when (state) {
@@ -272,7 +273,7 @@ class PagerPageHolder(
             errorLayout = ReaderErrorBinding.inflate(LayoutInflater.from(context), this, true)
             errorLayout?.actionRetry?.viewer = viewer
             errorLayout?.actionRetry?.setOnClickListener {
-                page.chapter.pageLoader?.retryPage(page)
+                viewer.retryPage(page)
             }
         }
 
