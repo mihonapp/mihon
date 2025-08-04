@@ -31,6 +31,7 @@ dependencies {
     api(libs.okio)
 
     implementation(libs.image.decoder)
+    implementation(libs.opencv)
 
     implementation(libs.unifile)
     implementation(libs.libarchive)

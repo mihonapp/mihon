@@ -202,6 +202,13 @@ object ImageUtil {
         LEFT,
     }
 
+    fun mergeHorizontal(bitmap1: Bitmap, bitmap2: Bitmap): Bitmap {
+        return createBitmap(bitmap1.width + bitmap2.width, bitmap1.height).applyCanvas {
+            drawBitmap(bitmap1, 0f, 0f, null)
+            drawBitmap(bitmap2, bitmap1.width.toFloat(), 0f, null)
+        }
+    }
+
     /**
      * Check whether the image is considered a tall image.
      *

@@ -14,6 +14,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.loader.inteceptor.PageLoaderInterceptorManager
+import eu.kanade.tachiyomi.ui.reader.loader.inteceptor.SpreadFusionInterceptor
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
@@ -233,6 +234,9 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
 
     private fun createInterceptionManager(): PageLoaderInterceptorManager {
         return PageLoaderInterceptorManager(buildList {
+            if (config.dualPageFusion && !config.dualPageSplit) {
+                add { SpreadFusionInterceptor(it, areWidePagesLTR) }
+            }
         })
     }
 

@@ -383,6 +383,8 @@
     <string name="pref_show_navigation_mode">Show tap zones overlay</string>
     <string name="pref_show_navigation_mode_summary">Briefly show when reader is opened</string>
     <string name="pref_dual_page_split">Split wide pages</string>
+    <string name="pref_dual_page_fusion">Merge two-page spreads</string>
+    <string name="pref_dual_page_fusion_summary">Uses an experimental algorithm to detect two-page spreads and merge them into a single wide page</string>
     <string name="pref_dual_page_invert">Invert split page placement</string>
     <string name="pref_dual_page_invert_summary">If the placement of the split wide pages don\'t match reading direction</string>
     <string name="pref_page_rotate">Rotate wide pages to fit</string>
