@@ -206,7 +206,7 @@ class DownloadProvider(
                 !libraryPreferences.disallowNonEnglishFilenames().get(),
             )
 
-        return buildList(1) {
+        return buildList(2) {
             // Chapter name without hash (unable to handle duplicate
             // chapter names)
             add(chapterNameV1)
