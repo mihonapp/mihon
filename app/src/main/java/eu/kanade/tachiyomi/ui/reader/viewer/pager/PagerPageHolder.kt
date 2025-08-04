@@ -107,6 +107,7 @@ class PagerPageHolder(
                         }
                     }
                     Page.State.Ready -> setImage()
+                    Page.State.Skip -> setSkip()
                     is Page.State.Error -> setError(state.error)
                 }
             }
@@ -180,6 +181,12 @@ class PagerPageHolder(
                 setError(e)
             }
         }
+    }
+
+    private fun setSkip() {
+        progressIndicator?.setProgress(0)
+        removeErrorLayout()
+        viewer.onPageSkip(page)
     }
 
     private fun process(page: ReaderPage, imageSource: ImageUtil.ImageSource): ImageUtil.ImageSource {

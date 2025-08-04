@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.view.ViewGroup.MarginLayoutParams
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
+import androidx.core.view.setMargins
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
@@ -97,6 +99,16 @@ class WebtoonPageHolder(
     }
 
     private fun refreshLayoutParams() {
+        if (page?.status == Page.State.Skip) {
+            frame.isVisible = false
+            frame.layoutParams = (frame.layoutParams as MarginLayoutParams).apply {
+                width = 0
+                height = 0
+                setMargins(0)
+            }
+            return
+        }
+        frame.isVisible = true
         frame.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
             if (!viewer.isContinuous) {
                 bottomMargin = 15.dpToPx
@@ -146,6 +158,7 @@ class WebtoonPageHolder(
                         }
                     }
                     Page.State.Ready -> setImage()
+                    Page.State.Skip -> setSkip()
                     is Page.State.Error -> setError(state.error)
                 }
             }
@@ -210,6 +223,12 @@ class WebtoonPageHolder(
                 setError(e)
             }
         }
+    }
+
+    private fun setSkip() {
+        progressContainer.isVisible = false
+        removeErrorLayout()
+        refreshLayoutParams()
     }
 
     private fun process(imageSource: ImageUtil.ImageSource): ImageUtil.ImageSource {
