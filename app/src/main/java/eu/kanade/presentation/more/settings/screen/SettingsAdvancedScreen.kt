@@ -324,9 +324,9 @@ object SettingsAdvancedScreen : SearchableSettings {
                     subtitle = stringResource(MR.strings.pref_update_library_manga_titles_summary),
                 ),
                 Preference.PreferenceItem.SwitchPreference(
-                    preference = libraryPreferences.disallowNonEnglishFilenames(),
-                    title = stringResource(MR.strings.pref_disallow_non_english_filenames),
-                    subtitle = stringResource(MR.strings.pref_disallow_non_english_filenames_details),
+                    preference = libraryPreferences.disallowNonAsciiFilenames(),
+                    title = stringResource(MR.strings.pref_disallow_non_ascii_filenames),
+                    subtitle = stringResource(MR.strings.pref_disallow_non_ascii_filenames_details),
                 ),
             ),
         )

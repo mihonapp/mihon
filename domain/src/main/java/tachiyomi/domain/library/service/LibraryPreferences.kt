@@ -192,7 +192,7 @@ class LibraryPreferences(
 
     fun updateMangaTitles() = preferenceStore.getBoolean("pref_update_library_manga_titles", false)
 
-    fun disallowNonEnglishFilenames() = preferenceStore.getBoolean("disallow_non_english_filenames", false)
+    fun disallowNonAsciiFilenames() = preferenceStore.getBoolean("disallow_non_ascii_filenames", false)
 
     // endregion
 

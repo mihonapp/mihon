@@ -124,15 +124,14 @@ object DiskUtil {
      * files by default. If a hidden file is desired, a period can be
      * prepended to the return value from this function.
      *
-     * If the optional argument disallowNonEnglish is set to true,
-     * then ALL non-English characters and ANYTHING outside the ASCII
-     * range are replaced not with underscores, but with their
-     * hexadecimal encoding. This is to make it so that distinct
+     * If the optional argument disallowNonAscii is set to true,
+     * then ANYTHING outside the ASCII range is replaced not with underscores,
+     * but with its hexadecimal encoding. This is to make it so that distinct
      * non-English titles of things remain distinct, since not all
      * places where this function is used also take care of
      * disambiguation.
      *
-     * We could instead replace only non-English characters known to
+     * We could instead replace only non-ASCII characters known to
      * be problematic, but so far nobody with a non-Unicode-compliant
      * device has been able to provide either directions to reproduce
      * their issue nor any documentation or tests that would allow us
@@ -141,7 +140,7 @@ object DiskUtil {
     fun buildValidFilename(
         origName: String,
         maxBytes: Int = MAX_FILE_NAME_BYTES,
-        disallowNonEnglish: Boolean = false,
+        disallowNonAscii: Boolean = false,
     ): String {
         val name = origName.trim('.', ' ')
         if (name.isEmpty()) {
@@ -149,7 +148,7 @@ object DiskUtil {
         }
         val sb = StringBuilder(name.length)
         name.forEach { c ->
-            if (disallowNonEnglish && c >= 0x80.toChar()) {
+            if (disallowNonAscii && c >= 0x80.toChar()) {
                 sb.append(
                     c.toString().toByteArray(Charsets.UTF_8).toHexString(
                         HexFormat {
