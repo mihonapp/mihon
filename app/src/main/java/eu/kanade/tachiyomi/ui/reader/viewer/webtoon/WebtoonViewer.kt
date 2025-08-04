@@ -167,7 +167,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         config.navigationModeChangedListener = {
             val showOnStart = config.navigationOverlayOnStart || config.forceNavigationOverlay
             activity.binding.navigationOverlay.setNavigation(config.navigator, showOnStart)
-        }
+        }.also { it() } // set navigation mode before any changes occur
 
         frame.layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
         frame.addView(recycler)

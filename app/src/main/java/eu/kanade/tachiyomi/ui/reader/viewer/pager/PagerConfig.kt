@@ -48,6 +48,11 @@ class PagerConfig(
     var landscapeZoom = false
         private set
 
+    override var navigator: ViewerNavigation = defaultNavigation()
+        set(value) {
+            field = value.also { it.invertMode = this.tappingInverted }
+        }
+
     init {
         readerPreferences.readerTheme()
             .register(
@@ -73,15 +78,18 @@ class PagerConfig(
         readerPreferences.landscapeZoom()
             .register({ landscapeZoom = it }, { imagePropertyChangedListener?.invoke() })
 
+        readerPreferences.pagerNavInverted()
+            .register(
+                { tappingInverted = it },
+                {
+                    navigator.invertMode = it
+                    navigationModeChangedListener?.invoke()
+                },
+            )
+
         readerPreferences.navigationModePager()
             .register({ navigationMode = it }, { updateNavigation(navigationMode) })
-
-        readerPreferences.pagerNavInverted()
-            .register({ tappingInverted = it }, { navigator.invertMode = it })
-        readerPreferences.pagerNavInverted().changes()
-            .drop(1)
-            .onEach { navigationModeChangedListener?.invoke() }
-            .launchIn(scope)
+        updateNavigation(navigationMode)
 
         readerPreferences.dualPageSplitPaged()
             .register(
@@ -124,11 +132,6 @@ class PagerConfig(
             else -> ReaderPageImageView.ZoomStartPosition.CENTER
         }
     }
-
-    override var navigator: ViewerNavigation = defaultNavigation()
-        set(value) {
-            field = value.also { it.invertMode = this.tappingInverted }
-        }
 
     override fun defaultNavigation(): ViewerNavigation {
         return when (viewer) {
