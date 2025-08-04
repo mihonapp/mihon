@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.WebtoonLayoutManager
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
+import eu.kanade.tachiyomi.ui.reader.loader.inteceptor.PageLoaderInterceptorManager
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
@@ -71,6 +72,11 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      * Currently active item. It can be a chapter page or a chapter transition.
      */
     private var currentPage: Any? = null
+
+    /**
+     * Manager to process page loader interceptors.
+     */
+    private var interceptionManager = createInterceptionManager()
 
     private val threshold: Int =
         Injekt.get<ReaderPreferences>()
@@ -142,6 +148,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         }
 
         config.imagePropertyChangedListener = {
+            interceptionManager = createInterceptionManager()
             refreshAdapter()
         }
 
@@ -184,6 +191,27 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
             nextChapter -> true
             else -> false
         }
+    }
+
+    private fun createInterceptionManager(): PageLoaderInterceptorManager {
+        return PageLoaderInterceptorManager(buildList {
+        })
+    }
+
+    /**
+     * Get a version of [page] which has interceptors applied.
+     * The result should be used for listening to data flows, but it may not be referentially stable.
+     */
+    fun getInterceptedPage(page: ReaderPage): ReaderPage {
+        return interceptionManager.getInterceptedPage(page)
+    }
+
+    suspend fun loadPage(page: ReaderPage) {
+        interceptionManager.loadPage(page)
+    }
+
+    fun retryPage(page: ReaderPage) {
+        interceptionManager.retryPage(page)
     }
 
     /**

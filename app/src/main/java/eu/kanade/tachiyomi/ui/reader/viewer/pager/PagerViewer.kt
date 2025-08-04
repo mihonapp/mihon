@@ -13,6 +13,7 @@ import androidx.viewpager.widget.ViewPager
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
+import eu.kanade.tachiyomi.ui.reader.loader.inteceptor.PageLoaderInterceptorManager
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
@@ -55,6 +56,11 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
      * Currently active item. It can be a chapter page or a chapter transition.
      */
     private var currentPage: Any? = null
+
+    /**
+     * Manager to process page loader interceptors.
+     */
+    private var interceptionManager = createInterceptionManager()
 
     /**
      * Viewer chapters to set when the pager enters idle mode. Otherwise, if the view was settling
@@ -136,6 +142,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
         }
 
         config.imagePropertyChangedListener = {
+            interceptionManager = createInterceptionManager()
             refreshAdapter()
         }
 
@@ -216,6 +223,23 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             adapter.nextTransition?.to -> true
             else -> false
         }
+    }
+
+    private fun createInterceptionManager(): PageLoaderInterceptorManager {
+        return PageLoaderInterceptorManager(buildList {
+        })
+    }
+
+    fun getInterceptedPage(page: ReaderPage): ReaderPage {
+        return interceptionManager.getInterceptedPage(page)
+    }
+
+    suspend fun loadPage(page: ReaderPage) {
+        interceptionManager.loadPage(page)
+    }
+
+    fun retryPage(page: ReaderPage) {
+        interceptionManager.retryPage(page)
     }
 
     /**
@@ -443,9 +467,10 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     }
 
     fun onPageSplit(currentPage: ReaderPage, newPage: InsertPage) {
+        val originalCurrentPage = interceptionManager.getOriginalPage(currentPage)
         activity.runOnUiThread {
             // Need to insert on UI thread else images will go blank
-            adapter.onPageSplit(currentPage, newPage)
+            adapter.onPageSplit(originalCurrentPage, newPage)
         }
     }
 

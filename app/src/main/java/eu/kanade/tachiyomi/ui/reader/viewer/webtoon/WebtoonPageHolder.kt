@@ -130,10 +130,10 @@ class WebtoonPageHolder(
      */
     private suspend fun loadPageAndProcessStatus() {
         val page = page ?: return
-        val loader = page.chapter.pageLoader ?: return
+        page.chapter.pageLoader ?: return
         supervisorScope {
             launchIO {
-                loader.loadPage(page)
+                viewer.loadPage(page)
             }
             page.statusFlow.collectLatest { state ->
                 when (state) {
@@ -278,7 +278,7 @@ class WebtoonPageHolder(
             errorLayout = ReaderErrorBinding.inflate(LayoutInflater.from(context), frame, true)
             errorLayout?.root?.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, (parentHeight * 0.8).toInt())
             errorLayout?.actionRetry?.setOnClickListener {
-                page?.let { it.chapter.pageLoader?.retryPage(it) }
+                page?.let { viewer.retryPage(it) }
             }
         }
 
