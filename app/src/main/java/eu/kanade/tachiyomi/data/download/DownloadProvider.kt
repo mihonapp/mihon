@@ -176,10 +176,13 @@ class DownloadProvider(
     }
 
     /**
-     * Returns the chapter directory name for a chapter.
+     * Returns list of names that might have been previously used as
+     * the directory name for a chapter.
      * Add to this list if naming pattern ever changes.
      *
-     * @param chapter the chapter
+     * @param chapterName the name of the chapter to query.
+     * @param chapterScanlator scanlator of the chapter to query.
+     * @param chapterUrl url of the chapter to query.
      */
     private fun getLegacyChapterDirNames(
         chapterName: String,
