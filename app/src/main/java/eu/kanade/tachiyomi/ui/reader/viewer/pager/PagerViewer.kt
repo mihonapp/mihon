@@ -58,6 +58,11 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     private var currentPage: Any? = null
 
     /**
+     * Whether spreads are read in the left-to-right or right-to-left order.
+     */
+    abstract val areWidePagesLTR: Boolean
+
+    /**
      * Manager to process page loader interceptors.
      */
     private var interceptionManager = createInterceptionManager()
@@ -143,6 +148,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
 
         config.imagePropertyChangedListener = {
             interceptionManager = createInterceptionManager()
+            restoreSkippedPages()
             refreshAdapter()
         }
 
@@ -474,7 +480,18 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
         }
     }
 
+    fun onPageSkip(page: ReaderPage) {
+        val originalPage = interceptionManager.getOriginalPage(page)
+        activity.runOnUiThread {
+            adapter.onPageSkip(originalPage)
+        }
+    }
+
     private fun cleanupPageSplit() {
         adapter.cleanupPageSplit()
+    }
+
+    private fun restoreSkippedPages() {
+        adapter.restoreSkippedPages()
     }
 }

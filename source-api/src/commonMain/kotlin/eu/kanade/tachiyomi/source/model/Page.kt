@@ -53,6 +53,7 @@ open class Page(
         data object LoadPage : State
         data object DownloadImage : State
         data object Ready : State
+        data object Skip : State
         data class Error(val error: Throwable) : State
     }
 }
