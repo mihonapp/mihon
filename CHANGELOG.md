@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+
+## [v0.19.0] - 2025-08-04
 ### Added
 - Add more Kaomoji for empty/error screens ([@ianfhunter](https://github.com/ianfhunter/)) ([#1909](https://github.com/mihonapp/mihon/pull/1909))
 - Add user manga notes ([@imkunet](https://github.com/imkunet), [@AntsyLich](https://github.com/AntsyLich)) ([#428](https://github.com/mihonapp/mihon/pull/428))
@@ -24,7 +26,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add advanced option to always update manga title from source ([@FlaminSarge](https://github.com/FlaminSarge)) ([#1182](https://github.com/mihonapp/mihon/pull/1182))
 - Full predictive back support ([@AntsyLich](https://github.com/AntsyLich)) ([#2085](https://github.com/mihonapp/mihon/pull/2085))
 - Add Catppuccin theme (mocha for dark and latte for light, mauve accent) ([@claymorwan](https://github.com/claymorwan/)) ([#2117](https://github.com/mihonapp/mihon/pull/2117))
-- Manga mass migration ([@AntsyLich](https://github.com/AntsyLich), [@jobobby04](https://github.com/jobobby04)) ([#2110](https://github.com/mihonapp/mihon/pull/2110), [#2336](https://github.com/mihonapp/mihon/pull/2336), [#2338](https://github.com/mihonapp/mihon/pull/2338))
+- Manga mass migration ([@AntsyLich](https://github.com/AntsyLich), [@jobobby04](https://github.com/jobobby04)) ([#2110](https://github.com/mihonapp/mihon/pull/2110), [#2336](https://github.com/mihonapp/mihon/pull/2336), [#2338](https://github.com/mihonapp/mihon/pull/2338), [`f119386`](https://github.com/mihonapp/mihon/commit/f119386))
 
 ### Improved
 - Significantly improve browsing speed (near instantaneous) ([@AntsyLich](https://github.com/AntsyLich)) ([#1946](https://github.com/mihonapp/mihon/pull/1946))
@@ -380,7 +382,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Branding to Mihon ([@AntsyLich](https://github.com/AntsyLich))
 - Minimum supported Android version to 8 ([@AntsyLich](https://github.com/AntsyLich)) ([`dfb3091`](https://github.com/mihonapp/mihon/commit/dfb3091e380dda3e9bfb64bf5c9a685cf3a03d0e))
 
-[unreleased]: https://github.com/mihonapp/mihon/compare/v0.18.0...main
+[unreleased]: https://github.com/mihonapp/mihon/compare/v0.19.0...main
+[v0.18.0]: https://github.com/mihonapp/mihon/compare/v0.18.0...v0.19.0
 [v0.18.0]: https://github.com/mihonapp/mihon/compare/v0.17.1...v0.18.0
 [v0.17.1]: https://github.com/mihonapp/mihon/compare/v0.17.0...v0.17.1
 [v0.17.0]: https://github.com/mihonapp/mihon/compare/v0.16.5...v0.17.0
