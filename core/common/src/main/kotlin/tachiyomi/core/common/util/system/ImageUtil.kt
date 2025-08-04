@@ -18,6 +18,7 @@ import androidx.core.graphics.alpha
 import androidx.core.graphics.applyCanvas
 import androidx.core.graphics.blue
 import androidx.core.graphics.createBitmap
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.get
 import androidx.core.graphics.green
 import androidx.core.graphics.red
@@ -69,6 +70,13 @@ object ImageUtil {
         return type?.extension ?: "jpg"
     }
 
+    fun isAnimatedAndSupported(source: ImageSource): Boolean {
+        return when (source) {
+            is ImageSource.FromBitmap -> false
+            is ImageSource.FromBuffer -> isAnimatedAndSupported(source.buffer)
+        }
+    }
+
     fun isAnimatedAndSupported(source: BufferedSource): Boolean {
         return try {
             val type = getImageType(source.peek().inputStream()) ?: return false
@@ -118,16 +126,21 @@ object ImageUtil {
      *
      * @return true if the width is greater than the height
      */
-    fun isWideImage(imageSource: BufferedSource): Boolean {
-        val options = extractImageOptions(imageSource)
-        return options.outWidth > options.outHeight
+    fun isWideImage(imageSource: ImageSource): Boolean {
+        return when (imageSource) {
+            is ImageSource.FromBitmap -> with(imageSource.bitmap) { width > height }
+            is ImageSource.FromBuffer -> {
+                val options = extractImageOptions(imageSource.buffer)
+                options.outWidth > options.outHeight
+            }
+        }
     }
 
     /**
-     * Extract the 'side' part from [BufferedSource] and return it as [BufferedSource].
+     * Extract the [side] part from [imageSource].
      */
-    fun splitInHalf(imageSource: BufferedSource, side: Side): BufferedSource {
-        val imageBitmap = BitmapFactory.decodeStream(imageSource.inputStream())
+    fun splitInHalf(imageSource: ImageSource, side: Side): ImageSource {
+        val imageBitmap = imageSource.toBitmap()
         val height = imageBitmap.height
         val width = imageBitmap.width
 
@@ -141,20 +154,13 @@ object ImageUtil {
         half.applyCanvas {
             drawBitmap(imageBitmap, part, singlePage, null)
         }
-        val output = Buffer()
-        half.compress(Bitmap.CompressFormat.JPEG, 100, output.outputStream())
-
-        return output
+        return ImageSource.FromBitmap(half)
     }
 
-    fun rotateImage(imageSource: BufferedSource, degrees: Float): BufferedSource {
-        val imageBitmap = BitmapFactory.decodeStream(imageSource.inputStream())
+    fun rotateImage(imageSource: ImageSource, degrees: Float): ImageSource {
+        val imageBitmap = imageSource.toBitmap()
         val rotated = rotateBitMap(imageBitmap, degrees)
-
-        val output = Buffer()
-        rotated.compress(Bitmap.CompressFormat.JPEG, 100, output.outputStream())
-
-        return output
+        return ImageSource.FromBitmap(rotated)
     }
 
     private fun rotateBitMap(bitmap: Bitmap, degrees: Float): Bitmap {
@@ -165,8 +171,8 @@ object ImageUtil {
     /**
      * Split the image into left and right parts, then merge them into a new image.
      */
-    fun splitAndMerge(imageSource: BufferedSource, upperSide: Side): BufferedSource {
-        val imageBitmap = BitmapFactory.decodeStream(imageSource.inputStream())
+    fun splitAndMerge(imageSource: ImageSource, upperSide: Side): ImageSource {
+        val imageBitmap = imageSource.toBitmap()
         val height = imageBitmap.height
         val width = imageBitmap.width
 
@@ -188,9 +194,7 @@ object ImageUtil {
             drawBitmap(imageBitmap, leftPart, bottomPart, null)
         }
 
-        val output = Buffer()
-        result.compress(Bitmap.CompressFormat.JPEG, 100, output.outputStream())
-        return output
+        return ImageSource.FromBitmap(result)
     }
 
     enum class Side {
@@ -330,15 +334,18 @@ object ImageUtil {
     /**
      * Algorithm for determining what background to accompany a comic/manga page
      */
-    fun chooseBackground(context: Context, imageStream: InputStream): Drawable {
-        val decoder = ImageDecoder.newInstance(imageStream)
-        val image = decoder?.decode()
-        decoder?.recycle()
-
+    fun chooseBackground(context: Context, imageSource: ImageSource): Drawable {
         val whiteColor = Color.WHITE
-        if (image == null) return ColorDrawable(whiteColor)
+        val image =
+            try {
+                imageSource.toBitmap()
+            }
+            catch (e: Throwable) {
+                return whiteColor.toDrawable()
+            }
+
         if (image.width < 50 || image.height < 50) {
-            return ColorDrawable(whiteColor)
+            return whiteColor.toDrawable()
         }
 
         val top = 5
@@ -379,7 +386,7 @@ object ImageUtil {
             !color.isWhite() && color.isCloseTo(other)
         }
         if (isNotWhiteAndCloseTo.all { it }) {
-            return ColorDrawable(topLeftPixel)
+            return topLeftPixel.toDrawable()
         }
 
         val cornerPixels = listOf(topLeftPixel, topRightPixel, botLeftPixel, botRightPixel)
@@ -494,8 +501,8 @@ object ImageUtil {
         val isLandscape = context.resources.configuration?.orientation == Configuration.ORIENTATION_LANDSCAPE
         if (isLandscape) {
             return when {
-                darkBG -> ColorDrawable(blackColor)
-                else -> ColorDrawable(whiteColor)
+                darkBG -> blackColor.toDrawable()
+                else -> whiteColor.toDrawable()
             }
         }
 
@@ -516,7 +523,7 @@ object ImageUtil {
                 intArrayOf(whiteColor, whiteColor, blackColor, blackColor)
             }
             darkBG -> {
-                return ColorDrawable(blackColor)
+                return blackColor.toDrawable()
             }
             topIsBlackStreak ||
                 (
@@ -535,7 +542,7 @@ object ImageUtil {
                 intArrayOf(whiteColor, whiteColor, blackColor, blackColor)
             }
             else -> {
-                return ColorDrawable(whiteColor)
+                return whiteColor.toDrawable()
             }
         }
 
@@ -553,6 +560,31 @@ object ImageUtil {
 
     private fun @receiver:ColorInt Int.isWhite(): Boolean =
         red + blue + green > 740
+
+    sealed interface ImageSource {
+        fun toBitmap(): Bitmap
+
+        /**
+         * A non-animated [Bitmap]-backed [ImageSource].
+         */
+        data class FromBitmap(val bitmap: Bitmap) : ImageSource {
+            override fun toBitmap(): Bitmap = bitmap
+        }
+
+        /**
+         * A [BufferedSource]-backed [ImageSource]. Depending on its contents, it may be animated.
+         */
+        data class FromBuffer(val buffer: BufferedSource) : ImageSource {
+            override fun toBitmap(): Bitmap = ImageDecoder.newInstance(buffer.peek().inputStream())!!.run {
+                try {
+                    decode()!!
+                }
+                finally {
+                    recycle()
+                }
+            }
+        }
+    }
 
     /**
      * Used to check an image's dimensions without loading it in the memory.
