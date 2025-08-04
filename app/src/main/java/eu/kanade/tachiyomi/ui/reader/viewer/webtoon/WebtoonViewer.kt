@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
+import android.annotation.SuppressLint
 import android.graphics.PointF
 import android.view.KeyEvent
 import android.view.MotionEvent
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.WebtoonLayoutManager
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.loader.inteceptor.PageLoaderInterceptorManager
+import eu.kanade.tachiyomi.ui.reader.loader.inteceptor.SpreadFusionInterceptor
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
@@ -72,6 +74,12 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      * Currently active item. It can be a chapter page or a chapter transition.
      */
     private var currentPage: Any? = null
+
+    /**
+     * Whether spreads are read in the left-to-right or right-to-left order.
+     */
+    val areWidePagesLTR
+        get() = config.dualPageInvert
 
     /**
      * Manager to process page loader interceptors.
@@ -195,6 +203,9 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
 
     private fun createInterceptionManager(): PageLoaderInterceptorManager {
         return PageLoaderInterceptorManager(buildList {
+            if (config.dualPageFusion && !config.dualPageSplit) {
+                add { SpreadFusionInterceptor(it, areWidePagesLTR) }
+            }
         })
     }
 
@@ -379,13 +390,19 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      * Notifies adapter of changes around the current page to trigger a relayout in the recycler.
      * Used when an image configuration is changed.
      */
+    @SuppressLint("NotifyDataSetChanged")
     private fun refreshAdapter() {
-        val position = layoutManager.findLastEndVisibleItemPosition()
         adapter.refresh()
-        adapter.notifyItemRangeChanged(
-            max(0, position - 3),
-            min(position + 3, adapter.itemCount - 1),
-        )
+        val position = layoutManager.findLastEndVisibleItemPosition()
+        if (position == RecyclerView.NO_POSITION) {
+            adapter.notifyDataSetChanged()
+        }
+        else {
+            adapter.notifyItemRangeChanged(
+                max(0, position - 3),
+                min(position + 3, adapter.itemCount - 1),
+            )
+        }
     }
 }
 

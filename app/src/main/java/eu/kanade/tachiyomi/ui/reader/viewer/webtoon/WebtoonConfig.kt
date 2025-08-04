@@ -73,6 +73,9 @@ class WebtoonConfig(
         readerPreferences.dualPageSplitWebtoon()
             .register({ dualPageSplit = it }, { imagePropertyChangedListener?.invoke() })
 
+        readerPreferences.dualPageFusionWebtoon()
+            .register({ dualPageFusion = it }, { imagePropertyChangedListener?.invoke() })
+
         readerPreferences.dualPageInvertWebtoon()
             .register({ dualPageInvert = it }, { imagePropertyChangedListener?.invoke() })
 
