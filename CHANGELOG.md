@@ -36,7 +36,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Added option to hide missing chapter count ([@User826](https://github.com/User826), [@AntsyLich](https://github.com/AntsyLich)) ([#2108](https://github.com/mihonapp/mihon/pull/2108))
 - Use median to determine smart update interval, making it more resilient to long hiatuses ([@Kladki](https://github.com/Kladki)) ([#2251](https://github.com/mihonapp/mihon/pull/2251))
 - Optimize library code to potentially better handle big user libraries ([@AntsyLich](https://github.com/AntsyLich)) ([#2329](https://github.com/mihonapp/mihon/pull/2329))
-- LocalSource reads `ComicInfo.xml` files for each chapter, if present, to display more accurate chapter titles and ordering. Disable by creating a `.noxml` file if undesired ([@raxod502](https://github.com/radian-software)) ([#2332](https://github.com/mihonapp/mihon/pull/2332))
+- LocalSource reads `ComicInfo.xml` files for each chapter, if present, to display more accurate chapter titles and ordering. Updating a LocalSource manga may take longer ([@raxod502](https://github.com/radian-software)) ([#2332](https://github.com/mihonapp/mihon/pull/2332))
 
 ### Changed
 - Display all similarly named duplicates in duplicate manga dialogue ([@NarwhalHorns](https://github.com/NarwhalHorns), [@AntsyLich](https://github.com/AntsyLich)) ([#1861](https://github.com/mihonapp/mihon/pull/1861))
