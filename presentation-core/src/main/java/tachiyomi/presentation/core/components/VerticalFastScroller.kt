@@ -80,7 +80,7 @@ fun VerticalFastScroller(
         val scrollerConstraints = constraints.copy(minWidth = 0, minHeight = 0)
         val scrollerPlaceable = subcompose("scroller") {
             val layoutInfo = listState.layoutInfo
-            if (layoutInfo.totalItemsCount == 0) return@subcompose
+            if (layoutInfo.visibleItemsInfo.isEmpty() || layoutInfo.totalItemsCount == 0) return@subcompose
 
             val thumbTopPadding = with(LocalDensity.current) { topContentPadding.toPx() }
             var thumbOffsetY by remember(thumbTopPadding) { mutableFloatStateOf(thumbTopPadding) }
@@ -155,7 +155,7 @@ fun VerticalFastScroller(
                 val expectedScrollItem = visibleItems.find { it.index == scrollSectionIndex } ?: visibleItems.first()
                 val scrollRelativeOffset = expectedScrollItem.size * (currentSection - scrollSectionIndex)
                 val scrollSectionOffset = (scrollRelativeOffset - scrollHeightPx).roundToInt()
-                val scrollItemIndex = scrollSectionIndex.coerceAtMost(layoutInfo.totalItemsCount - 1)
+                val scrollItemIndex = scrollSectionIndex.coerceIn(0, layoutInfo.totalItemsCount - 1)
                 val scrollItemOffset = scrollSectionOffset + (scrollSectionIndex - scrollItemIndex) * bottomItem.size
                 listState.scrollToItem(index = scrollItemIndex, scrollOffset = scrollItemOffset)
                 scrolled.tryEmit(Unit)
