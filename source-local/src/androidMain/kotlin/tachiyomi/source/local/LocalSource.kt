@@ -190,7 +190,7 @@ actual class LocalSource(
                 noXmlFile == null -> {
                     val chapterArchives = mangaDirFiles.filter(Archive::isSupported)
 
-                    val copiedFile = copyComicInfoFileFromArchive(chapterArchives, mangaDir)
+                    val copiedFile = copyComicInfoFileFromChapter(chapterArchives, mangaDir)
                     if (copiedFile != null) {
                         setMangaDetailsFromComicInfoFile(copiedFile.openInputStream(), manga)
                     } else {
@@ -206,7 +206,7 @@ actual class LocalSource(
         return@withIOContext manga
     }
 
-    private fun <R> getComicInfoFileFromArchive(chapterArchive: UniFile, block: (InputStream) -> R): R? {
+    private fun <R> getComicInfoFileFromChapter(chapterArchive: UniFile, block: (InputStream) -> R): R? {
         if (chapterArchive.isDirectory) {
             return chapterArchive.findFile(COMIC_INFO_FILE)?.let { file ->
                 file.openInputStream().use(block)
@@ -218,9 +218,9 @@ actual class LocalSource(
         }
     }
 
-    private fun copyComicInfoFileFromArchive(chapterArchives: List<UniFile>, folder: UniFile): UniFile? {
+    private fun copyComicInfoFileFromChapter(chapterArchives: List<UniFile>, folder: UniFile): UniFile? {
         for (chapter in chapterArchives) {
-            val file = getComicInfoFileFromArchive(chapter) f@{ stream ->
+            val file = getComicInfoFileFromChapter(chapter) f@{ stream ->
                 return@f copyComicInfoFile(stream, folder)
             }
             if (file != null) return file
@@ -256,9 +256,6 @@ actual class LocalSource(
 
     // Chapters
     override suspend fun getChapterList(manga: SManga): List<SChapter> = withIOContext {
-        val mangaDir = fileSystem.getMangaDirectory(manga.url) ?: error("${manga.url} is not a valid directory")
-        val noXmlExists = mangaDir.listFiles()?.any { it.name == ".noxml" } ?: false
-
         val chapters = fileSystem.getFilesInMangaDirectory(manga.url)
             // Only keep supported formats
             .filterNot { it.name.orEmpty().startsWith('.') }
@@ -281,8 +278,8 @@ actual class LocalSource(
                         format.file.epubReader(context).use { epub ->
                             epub.fillMetadata(manga, this)
                         }
-                    } else if (!noXmlExists) {
-                        getComicInfoFileFromArchive(chapterFile) { stream ->
+                    } else {
+                        getComicInfoFileFromChapter(chapterFile) { stream ->
                             setChapterDetailsFromComicInfoFile(stream, this)
                         }
                     }
