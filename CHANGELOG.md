@@ -11,8 +11,6 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
-### Added
-- Add "Private" label to extensions installed with the Private installer ([@MajorTanya](https://github.com/MajorTanya)) ([#2349](https://github.com/mihonapp/mihon/pull/2349))
 
 ## [v0.19.0] - 2025-08-04
 ### Added
