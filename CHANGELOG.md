@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Fixes
+- Fix scrollbar sometimes not displaying while scrolling and not reaching bottom with few items ([@anirudhsnayak](https://github.com/anirudhsnayak)) ([#2304](https://github.com/mihonapp/mihon/pull/2304))
 
 ## [v0.19.0] - 2025-08-04
 ### Added
@@ -67,7 +69,6 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix downloader stopping after failing to create download directory of a manga ([@AntsyLich](https://github.com/AntsyLich)) ([#2068](https://github.com/mihonapp/mihon/pull/2068))
 - Fix pressing `Enter` while searching also triggering navigation back on physical keyboards ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2077](https://github.com/mihonapp/mihon/pull/2077))
 - Ensure app waits for Cloudflare challenge to complete before continuing ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2200](https://github.com/mihonapp/mihon/pull/2200))
-- Fix scrollbar sometimes not displaying while scrolling and not reaching bottom with few items ([@anirudhsnayak](https://github.com/anirudhsnayak)) ([#2304](https://github.com/mihonapp/mihon/pull/2304))
 
 ### Removed
 - Remove Okhttp networking from WebView Screen ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2020](https://github.com/mihonapp/mihon/pull/2020))
