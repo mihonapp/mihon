@@ -206,7 +206,7 @@ actual class LocalSource(
         return@withIOContext manga
     }
 
-    private fun <R> getComicInfoFileFromChapter(chapterArchive: UniFile, block: (InputStream) -> R): R? {
+    private fun <T> getComicInfoForChapter(chapter: UniFile, block: (InputStream) -> T): T? {
         if (chapterArchive.isDirectory) {
             return chapterArchive.findFile(COMIC_INFO_FILE)?.let { file ->
                 file.openInputStream().use(block)
