@@ -1,5 +1,6 @@
 package eu.kanade.presentation.util
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ContentTransform
@@ -89,4 +90,6 @@ fun ScreenTransition(
             content(screen)
         }
     }
+
+    BackHandler(enabled = navigator.canPop, onBack = navigator::pop)
 }
