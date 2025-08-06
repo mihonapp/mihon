@@ -190,7 +190,7 @@ actual class LocalSource(
                 noXmlFile == null -> {
                     val chapterArchives = mangaDirFiles.filter(Archive::isSupported)
 
-                    val copiedFile = copyComicInfoFileFromChapter(chapterArchives, mangaDir)
+                    val copiedFile = copyComicInfoFileFromChapters(chapterArchives, mangaDir)
                     if (copiedFile != null) {
                         setMangaDetailsFromComicInfoFile(copiedFile.openInputStream(), manga)
                     } else {
@@ -218,7 +218,7 @@ actual class LocalSource(
         }
     }
 
-    private fun copyComicInfoFileFromChapter(chapterArchives: List<UniFile>, folder: UniFile): UniFile? {
+    private fun copyComicInfoFileFromChapters(chapterArchives: List<UniFile>, folder: UniFile): UniFile? {
         for (chapter in chapterArchives) {
             val file = getComicInfoForChapter(chapter) f@{ stream ->
                 return@f copyComicInfoFile(stream, folder)
