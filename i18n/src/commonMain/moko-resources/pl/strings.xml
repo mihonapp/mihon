@@ -192,7 +192,6 @@
     <string name="pref_acra_summary">Pomaga naprawiać błędy. Żadne wrażliwe dane nie będą wysyłane</string>
     <string name="backup_created">Utworzono kopię zapasową</string>
     <string name="restore_completed">Przywracanie ukończone</string>
-    <string name="clear_database_confirmation">Na pewno? Przeczytane rozdziały i postęp w wpisach spoza biblioteki zostaną utracone</string>
     <string name="clear_database_completed">Pozycje usunięte</string>
     <string name="login_success">Zalogowano</string>
     <string name="local_source">Źródło lokalne</string>
@@ -680,9 +679,6 @@
     <string name="download_notifier_cache_renewal">Sprawdzanie pobranych plików</string>
     <string name="information_no_manga_category">Kategoria jest pusta</string>
     <string name="copied_to_clipboard_plain">Skopiowano do schowka</string>
-    <string name="confirm_add_duplicate_manga">Masz w swojej bibliotece pozycję o tej samej nazwie.
-\n
-\nCzy nadal chcesz kontynuować?</string>
     <string name="pref_skip_dupe_chapters">Pomiń zduplikowane rozdziały</string>
     <string name="enhanced_services_not_installed">Dostępne, ale źródło nie jest zainstalowane: %s</string>
     <string name="track_error">Błąd %1$s: %2$s</string>
@@ -795,7 +791,6 @@
     <string name="exclude_scanlators">Wyklucz skanlatorów</string>
     <string name="pref_webtoon_disable_zoom_out">Wyłącz oddalenie</string>
     <string name="action_add_anyway">Dodaj mimo to</string>
-    <string name="action_migrate_duplicate">Zmigruj istniejący wpis</string>
     <string name="action_replace_repo">Zamień</string>
     <string name="action_view_upcoming">Pokaż nadchodzące aktualizacje</string>
     <string name="upcoming_calendar_next">Następny miesiąc</string>

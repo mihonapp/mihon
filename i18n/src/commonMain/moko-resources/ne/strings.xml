@@ -443,7 +443,6 @@
     <string name="licensed">लाइसेन्स प्राप्त</string>
     <string name="password">पासवर्ड</string>
     <string name="pref_clear_database_summary">पुस्तकालयमा नभएका इन्ट्रीको इतिहास हटाउनुहोस्</string>
-    <string name="clear_database_confirmation">के तपाईँ निश्चित हुनुहुन्छ? तपाईंले पढ्नुभएको अध्यायहरू र गैर-पुस्तकालय इन्ट्रीहरूको प्रगति हराउनेछ</string>
     <string name="database_clean">सफा गर्न केही छैन</string>
     <string name="version">संस्करण</string>
     <string name="website">वेबसाइट</string>
@@ -608,9 +607,6 @@
     <string name="ext_info_age_rating">उमेर मूल्याङ्कन</string>
     <string name="action_not_now">अहिले हैन</string>
     <string name="action_open_random_manga">जुनसुकै इन्ट्री खोल्नुहोस्</string>
-    <string name="confirm_add_duplicate_manga">तपाईको पुस्तकालयमा एउटै नामको इन्ट्री छ।
-\n
-\nके तपाईं अझै जारी राख्न चाहनुहुन्छ?</string>
     <string name="reading_list">पढिरहेको सूची</string>
     <string name="updates_last_update_info">पुस्तकालय पछिल्लो पटक अपडेट गरिएको: %s</string>
     <string name="crash_screen_description">%s एक अप्रत्याशित त्रुटिमा पर्यो। समर्थन को लागि हामी तपाईंलाई हाम्रो Discord को #support च्यानलमा crash logs शेगर गर्न सुझाव दिन्छौं।</string>
@@ -695,8 +691,8 @@
     <string name="pref_page_rotate">फिट गर्न चौडा पृष्ठहरू घुमाउनुहोस्</string>
     <string name="pref_page_rotate_invert">घुमाइएका चौडा पृष्ठहरूको अभिमुखीकरण फ्लिप गर्नुहोस्</string>
     <string name="pref_debug_info">Debug जानकारी</string>
-    <string name="pref_chapter_swipe_end">दायाँ स्वाइप</string>
-    <string name="pref_chapter_swipe_start">बायाँ स्वाइप</string>
+    <string name="pref_chapter_swipe_end">दायाँतिर स्वाइप गर्ने अध्याय</string>
+    <string name="pref_chapter_swipe_start">बायाँतिर स्वाइप गर्ने अध्याय</string>
     <string name="pref_double_tap_zoom">जूम गर्न डबल ट्याप गर्नुहोस्</string>
     <string name="action_set_interval">अन्तराल सेट गर्नुहोस्</string>
     <string name="action_filter_interval_custom">कस्टम गरिएको अपडेट फ्रिक्वेन्सी</string>
@@ -795,7 +791,6 @@
     <string name="private_settings">संवेदनशील सेटिंग्स समावेश गर्नुहोस् (जस्तै, ट्र्याकर लगइन टोकनहरू)</string>
     <string name="pref_webtoon_disable_zoom_out">जूम आउट असक्षम गर्नुहोस्</string>
     <string name="action_add_anyway">जे भए पनि थप्नुहोस्</string>
-    <string name="action_migrate_duplicate">अवस्थित इन्ट्री माइग्रेट गर्नुहोस्</string>
     <string name="pref_display_profile">कस्टम प्रदर्शन प्रोफाइल</string>
     <string name="action_replace_repo">रिप्लेस</string>
     <string name="action_replace_repo_title">साइन गर्ने की फिंगरप्रिन्ट पहिले नै अवस्थित छ</string>
@@ -843,7 +838,7 @@
     <string name="pref_incognito_mode_extension_summary">एक्सटेन्शनमा पढिएको इतिहास रोक्नुहोस्</string>
     <string name="label_auto">अटो</string>
     <string name="pref_always_decode_long_strip_with_ssiv_2">लामो स्ट्रिप रिडरको लागि लिगेसी डिकोडर प्रयोग गर्नुहोस्</string>
-    <string name="pref_mark_duplicate_read_chapter_read">पढिएका अध्यायहरूको डुप्लिकेटलाई पढिएको रूपमा चिन्ह लगाउनुहोस्</string>
+    <string name="pref_mark_duplicate_read_chapter_read">पढिएको अध्यायको डुप्लिकेटलाई पढिएको रूपमा चिन्ह लगाउनुहोस्</string>
     <string name="theme_monochrome">मोनोक्रोम</string>
     <string name="action_toggle_private_on">निजी रूपमा ट्र्याक गर्नुहोस्</string>
     <string name="action_toggle_private_off">सार्वजनिक रूपमा ट्र्याक गरिएको</string>
@@ -853,4 +848,21 @@
     <string name="author">लेखक</string>
     <string name="artist">कलाकार</string>
     <string name="tracked_privately">निजी रूपमा ट्र्याक गरियो</string>
+    <string name="pref_behavior">आचरण</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">अध्याय पढे पछि</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">नयाँ अध्याय ल्याएपछि</string>
+    <string name="pref_update_library_manga_titles">स्रोतसँग मिल्ने गरी पुस्तकालयका माङ्गा शीर्षकहरू अपडेट गर्नुहोस्</string>
+    <string name="pref_update_library_manga_titles_summary">चेतावनी: यदि माङ्गाको नाम परिवर्तन गरियो भने, यसलाई डाउनलोड सूचीबाट हटाइनेछ (यदि अवस्थित छ भने)।</string>
+    <string name="logging_in">लग इन गर्दै…</string>
+    <string name="action_notes">नोट</string>
+    <string name="action_edit_notes">नोट सम्पादन गर्नुहोस्</string>
+    <string name="action_display_unread_badge">नपढिएका अध्यायहरू</string>
+    <string name="clear_database_history_warning">पुस्तकालयमा नभएका इन्ट्रीहरूको \"तपाईंले पढ्नुभएको अध्यायहरू र प्रगति\" हराउनेछ</string>
+    <string name="clear_db_exclude_read">अध्याय पढिएका इन्ट्रीहरू राख्नुहोस्</string>
+    <string name="possible_duplicates_title">सम्भावित डुप्लिकेटहरू</string>
+    <string name="notes_placeholder">त्यो भाग मन पर्यो जहाँ…</string>
+    <string name="storage_failed_to_create_directory">Directory सिर्जना गर्न असफल भयो: %s</string>
+    <string name="possible_duplicates_summary">तपाईंको पुस्तकालयमा उस्तै नामका इन्ट्रीहरू छन्।\n\nस्थानान्तरण गर्न वा जे भए पनि थप्नको लागि इन्ट्री चयन गर्नुहोस्।</string>
+    <string name="clear_database_text">तपाईं डाटाबेसबाट इन्ट्रीहरू हटाउन लाग्दै हुनुहुन्छ</string>
+    <string name="storage_failed_to_create_download_directory">डाउनलोड directory सिर्जना गर्न असफल भयो</string>
 </resources>

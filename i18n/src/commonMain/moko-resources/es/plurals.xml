@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="lock_after_mins">
-        <item quantity="one">Después de %1$s minuto</item>
-        <item quantity="many">Después de %1$s minutos</item>
-        <item quantity="other">Después de %1$s minutos</item>
+        <item quantity="one">Tras %1$s minuto</item>
+        <item quantity="many">Tras %1$s minutos</item>
+        <item quantity="other">Tras %1$s minutos</item>
     </plurals>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d nuevo capítulo</item>
@@ -16,9 +16,9 @@
         <item quantity="other">Capítulos %1$s y %2$d más</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Para %d entrada</item>
-        <item quantity="many">Para %d entradas</item>
-        <item quantity="other">Para %d entradas</item>
+        <item quantity="one">Para %d título</item>
+        <item quantity="many">Para %d títulos</item>
+        <item quantity="other">Para %d títulos</item>
     </plurals>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Actualización de extensión disponible</item>
@@ -46,9 +46,9 @@
         <item quantity="other">%1$s capítulos</item>
     </plurals>
     <plurals name="num_trackers">
-        <item quantity="one">%d rastreador</item>
-        <item quantity="many">%d rastreadores</item>
-        <item quantity="other">%d rastreadores</item>
+        <item quantity="one">%d servicio de seguimiento</item>
+        <item quantity="many">%d de servicios de seguimiento</item>
+        <item quantity="other">%d servicios de seguimiento</item>
     </plurals>
     <plurals name="missing_chapters_warning">
         <item quantity="one">Se omite %d capítulo, o bien falta en la fuente o ha sido filtrado</item>
@@ -76,7 +76,7 @@
         <item quantity="other">Faltan %1$s capítulos</item>
     </plurals>
     <plurals name="day">
-        <item quantity="one">Un día</item>
+        <item quantity="one">1 día</item>
         <item quantity="many">%d días</item>
         <item quantity="other">%d días</item>
     </plurals>
@@ -94,5 +94,20 @@
         <item quantity="one">1 página</item>
         <item quantity="many">%1$s páginas</item>
         <item quantity="other">%1$s páginas</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">Se ha saltado un elemento</item>
+        <item quantity="many">Se han saltado %1$d elementos</item>
+        <item quantity="other">Se han saltado %1$d elementos</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">¿Copiar este elemento?</item>
+        <item quantity="many">¿Copiar estos %1$d elementos?</item>
+        <item quantity="other">¿Copiar estos %1$d elementos?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">¿Migrar este elemento?</item>
+        <item quantity="many">¿Migrar estos %1$d elementos?</item>
+        <item quantity="other">¿Migrar estos %1$d elementos?</item>
     </plurals>
 </resources>

@@ -57,4 +57,13 @@
     <plurals name="pref_pages">
         <item quantity="other">第 %1$s 页</item>
     </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="other">迁移 %1$d 个作品？</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="other">复制 %1$d 作品？</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="other">%1$d 个作品已跳过</item>
+    </plurals>
 </resources>

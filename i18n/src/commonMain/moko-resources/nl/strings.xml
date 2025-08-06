@@ -206,7 +206,6 @@
     <string name="pref_update_only_non_completed">Gelezen series</string>
     <string name="pref_auto_update_manga_sync">Voortgang bijwerken na lezen</string>
     <string name="pref_keep_screen_on">Scherm aanhouden</string>
-    <string name="clear_database_confirmation">Weet je het zeker? Gelezen hoofdstukken en voortgang voor items die niet in de bibliotheek zitten zullen verloren gaan</string>
     <string name="clear_database_completed">Database geleegd</string>
     <string name="ongoing">Lopend</string>
     <string name="delete_downloads_for_manga">Verwijder gedownloade hoofdstukken?</string>
@@ -618,9 +617,6 @@
 \nTik hier voor meer informatie.</string>
     <string name="pref_skip_dupe_chapters">Dubbele hoofdstukken overslaan</string>
     <string name="are_you_sure">Weet je het zeker?</string>
-    <string name="confirm_add_duplicate_manga">Je hebt momenteel een item in je bibliotheek met dezelfde naam.
-\n
-\nWil je alsnog verdergaan?</string>
     <string name="reading_list">Leeslijst</string>
     <string name="description_placeholder">Geen beschrijving</string>
     <string name="pref_reset_viewer_flags_summary">Zet de instellingen voor de leesmodus en het draaitype terug naar de standaardwaarden voor alle series</string>
@@ -683,11 +679,11 @@
     <string name="download_cache_invalidated">Download Index geïnvalideerd</string>
     <string name="pref_invalidate_download_cache">Herindexeer downloads</string>
     <string name="action_ok">OK</string>
-    <string name="pref_chapter_swipe_start">Swipe naar de linker actie</string>
+    <string name="pref_chapter_swipe_start">Hoofdstuk bij links vegen</string>
     <string name="intervals_header">Intervallen</string>
     <string name="track_delete_title">Haal %s tracking weg?</string>
     <string name="unlock_app_title">Ontgrendel %s</string>
-    <string name="pref_chapter_swipe_end">Swipe naar de juiste actie</string>
+    <string name="pref_chapter_swipe_end">Hoofdstuk bij rechts vegen</string>
     <string name="pref_page_rotate">Roteer brede pagina\'s zodat ze passen</string>
     <string name="create_backup_file_error">Kon een backup-bestand niet creëren</string>
     <string name="library_sync_complete">Bibliotheeksynchronisatie beëindigd</string>
@@ -780,7 +776,6 @@
     <string name="invalid_repo_name">Ongeldige repo URL</string>
     <string name="no_location_set">Geen opslaglocatie ingesteld</string>
     <string name="action_add_anyway">Toch toevoegen</string>
-    <string name="action_migrate_duplicate">Bestaand item migreren</string>
     <string name="action_replace_repo">Vervangen</string>
     <string name="add_repo_confirmation">Wens je de repo \"%s\" toe te voegen?</string>
     <string name="pref_flash_duration_summary">%1$s ms</string>
@@ -815,4 +810,13 @@
     <string name="invalid_backup_file_unknown">Back-up bestand is corrupt</string>
     <string name="manga_interval_expected_update">Nieuwe hoofdstukken zijn geschat om uit te komen in ongeveer %1$s. Word ongeveer elke %2$s gecontroleerd.</string>
     <string name="pref_incognito_mode_extension_summary">Pauseer leesgeschiedenis voor extensie</string>
+    <string name="label_auto">Automatisch</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">Na het lezen van een hoofdstuk</string>
+    <string name="pref_behavior">Gedrag</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">Na het ophalen van een nieuw hoofdstuk</string>
+    <string name="action_notes">Notities</string>
+    <string name="action_edit_notes">Notities bewerken</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Duplicaat gelezen hoofdstuk als gelezen markeren</string>
+    <string name="action_display_unread_badge">Ongelezen hoofdstukken</string>
+    <string name="theme_monochrome">Monochroom</string>
 </resources>

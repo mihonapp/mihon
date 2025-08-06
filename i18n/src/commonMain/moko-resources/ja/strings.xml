@@ -179,7 +179,6 @@
     <string name="cache_deleted">キャッシュがクリアされ、%1$d 個のファイルが削除されました</string>
     <string name="pref_clear_cookies">Cookiesを削除</string>
     <string name="cookies_cleared">Cookiesを削除しました</string>
-    <string name="clear_database_confirmation">データベースをクリアしてもよろしいですか？ライブラリにない項目の読んだ章と読書進捗はすべて失われます</string>
     <string name="clear_database_completed">エントリーを削除しました</string>
     <string name="pref_acra_summary">バグの修正などに役立ちます。個人情報を送信しません</string>
     <string name="unknown_error">不明なエラー</string>
@@ -678,9 +677,6 @@
     <string name="copied_to_clipboard_plain">クリップボードにコピーしました</string>
     <string name="enhanced_services_not_installed">利用可能ですが未インストールのソース: %s</string>
     <string name="pref_skip_dupe_chapters">重複の章をスキップ</string>
-    <string name="confirm_add_duplicate_manga">ライブラリには既に同名の項目が存在しています。
-\n
-\nそれでも続行しますか？</string>
     <string name="track_error">%1$s エラー: %2$s</string>
     <string name="information_required_plain">*必須</string>
     <string name="action_copy_to_clipboard">クリップボードにコピー</string>
@@ -791,7 +787,6 @@
     <string name="pref_library_update_smart_update">スマート・アップデート</string>
     <string name="pref_webtoon_disable_zoom_out">ズームアウトを無効にする</string>
     <string name="action_add_anyway">追加</string>
-    <string name="action_migrate_duplicate">移行</string>
     <string name="action_replace_repo">交換</string>
     <string name="pref_display_profile">カスタムディスプレイプロファイル</string>
     <string name="upcoming_calendar_prev">前月</string>
@@ -836,4 +831,25 @@
     <string name="pref_hardware_bitmap_threshold_default">デフォルト (%d)</string>
     <string name="pref_hardware_bitmap_threshold">カスタム・ハードウェア・ビットマップ閾値</string>
     <string name="pref_hardware_bitmap_threshold_summary">リーダが空の画像を読み込んだ場合は、しきい値を徐々に下げてください。\n選択されました: %s</string>
+    <string name="library_exported">ライブラリをエクスポートしました</string>
+    <string name="action_notes">ノート</string>
+    <string name="action_edit_notes">ノートを編集</string>
+    <string name="export">バックアップ</string>
+    <string name="pref_behavior">動作設定</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">章の読了後</string>
+    <string name="pref_update_library_manga_titles">ライブラリーのマンガのタイトルをソースに合わせて更新</string>
+    <string name="pref_incognito_mode_extension_summary">拡張機能の既読章履歴を一時停止</string>
+    <string name="logging_in">ログイン中…</string>
+    <string name="pref_mark_duplicate_read_chapter_read">重複した既読済みの章を既読扱い</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">新章取得後</string>
+    <string name="possible_duplicates_summary">ライブラリに名前が似ている作品があります。\n\n移行作品の選択、またはそのまま追加。</string>
+    <string name="author">著者</string>
+    <string name="artist">アーティスト</string>
+    <string name="action_display_unread_badge">未読の章</string>
+    <string name="storage_failed_to_create_download_directory">ダウンロードディレクトリの作成に失敗しました</string>
+    <string name="storage_failed_to_create_directory">ディレクトリの作成に失敗しました: %s</string>
+    <string name="clear_database_text">データベースから作品が削除されます</string>
+    <string name="clear_database_history_warning">ライブラリ外作品の既読の章と進捗は失われます</string>
+    <string name="clear_db_exclude_read">既読の章がある作品は保持</string>
+    <string name="possible_duplicates_title">重複の可能性あり</string>
 </resources>

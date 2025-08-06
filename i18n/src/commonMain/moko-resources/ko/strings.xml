@@ -148,7 +148,6 @@
     <string name="cookies_cleared">쿠키 삭제됨</string>
     <string name="pref_clear_database">데이터베이스 삭제</string>
     <string name="pref_clear_database_summary">서재에 추가되지 않은 항목의 기록을 삭제합니다</string>
-    <string name="clear_database_confirmation">확실합니까? 서재에 없는 항목의 읽기 기록이 삭제됩니다</string>
     <string name="version">버전</string>
     <string name="pref_enable_acra">오류 보고서 전송</string>
     <string name="pref_acra_summary">버그를 수정하는데 도움이 됩니다. 개인 정보는 전송되지 않습니다</string>
@@ -679,9 +678,6 @@
     <string name="enhanced_services_not_installed">사용 가능하지만 소스가 설치되지 않음: %s</string>
     <string name="pref_skip_dupe_chapters">중복 회차 건너뛰기</string>
     <string name="track_error">%1$s 오류: %2$s</string>
-    <string name="confirm_add_duplicate_manga">서재에 같은 이름의 항목이 있습니다.
-\n
-\n그래도 계속하시겠습니까?</string>
     <string name="information_required_plain">*필수</string>
     <string name="action_copy_to_clipboard">클립보드에 복사</string>
     <string name="pref_hide_in_library_items">이미 서재에 있는 항목 숨기기</string>

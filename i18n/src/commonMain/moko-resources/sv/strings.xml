@@ -171,7 +171,6 @@
     <string name="cookies_cleared">Cookies rensade</string>
     <string name="pref_clear_database">Rensa databas</string>
     <string name="pref_clear_database_summary">Ta bort historik för inlägg som inte finns i ditt bibliotek</string>
-    <string name="clear_database_confirmation">Är du säker på det? Lästa kapitel och framsteg för poster som inte finns i biblioteket kommer att gå förlorade</string>
     <string name="clear_database_completed">Inlägg raderade</string>
     <string name="version">Version</string>
     <string name="pref_enable_acra">Skicka kraschrapporter</string>
@@ -670,9 +669,6 @@
     <string name="seconds_short">%ds</string>
     <string name="label_used">Använd</string>
     <string name="not_applicable">N/A</string>
-    <string name="confirm_add_duplicate_manga">Du har en post i ditt bibliotek med samma namn.
-\n
-\nVill du fortfarande fortsätta?</string>
     <string name="track_remove_date_conf_title">Ta bort datum?</string>
     <string name="label_titles_section">Inlägg</string>
     <string name="label_titles_in_global_update">I global uppdatering</string>
@@ -796,7 +792,6 @@
     <string name="label_upcoming">Kommande</string>
     <string name="upcoming_calendar_prev">Föregående månad</string>
     <string name="upcoming_calendar_next">Nästa månad</string>
-    <string name="action_migrate_duplicate">Migrera existerande post</string>
     <string name="action_replace_repo_title">Signeringsnyckel-fingeravtryck finns redan</string>
     <string name="action_replace_repo_message">Förrådet %1$s har samma Signering av nyckelfingeravtryck som %2$s.
 \nOm detta förväntas kommer %2$s att ersättas, annars kontakta den förråds-ansvarige.</string>
