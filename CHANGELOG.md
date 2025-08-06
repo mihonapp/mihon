@@ -11,7 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
-- LocalSource reads `ComicInfo.xml` files for each chapter, if present, to display more accurate chapter titles and ordering. Updating a LocalSource manga may take longer ([@raxod502](https://github.com/radian-software)) ([#2332](https://github.com/mihonapp/mihon/pull/2332))
+### Changed
+- LocalSource now reads ComicInfo.xml file for chapter (if available) to display chapter title, number and scanlator ([@raxod502](https://github.com/radian-software)) ([#2332](https://github.com/mihonapp/mihon/pull/2332))
 
 ## [v0.19.0] - 2025-08-04
 ### Added
