@@ -216,6 +216,7 @@ fun MigrationListItem(
                 maxLines = 2,
                 style = MaterialTheme.typography.labelMedium
                     .merge(shadow = Shadow(color = Color.Black, blurRadius = 4f)),
+                color = Color.White,
             )
             BadgeGroup(modifier = Modifier.padding(4.dp)) {
                 Badge(text = "$chapterCount")
