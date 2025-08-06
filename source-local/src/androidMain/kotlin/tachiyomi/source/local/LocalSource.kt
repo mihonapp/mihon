@@ -220,7 +220,7 @@ actual class LocalSource(
 
     private fun copyComicInfoFileFromChapter(chapterArchives: List<UniFile>, folder: UniFile): UniFile? {
         for (chapter in chapterArchives) {
-            val file = getComicInfoFileFromChapter(chapter) f@{ stream ->
+            val file = getComicInfoForChapter(chapter) f@{ stream ->
                 return@f copyComicInfoFile(stream, folder)
             }
             if (file != null) return file
@@ -279,7 +279,7 @@ actual class LocalSource(
                             epub.fillMetadata(manga, this)
                         }
                     } else {
-                        getComicInfoFileFromChapter(chapterFile) { stream ->
+                        getComicInfoForChapter(chapterFile) { stream ->
                             setChapterDetailsFromComicInfoFile(stream, this)
                         }
                     }
