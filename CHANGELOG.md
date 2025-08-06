@@ -11,11 +11,18 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Added
+- New advanced setting to limit filenames to ASCII in case your storage medium or operating system does not support non-ASCII characters. This setting is not recommended as all devices and operating systems should support Unicode filenames, and is provided as a temporary workaround until those devices are fixed ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
+
+### Improved
+- If you download two chapters of the same manga which have the same chapter name, one of them would previously overwrite the other because they would both use the same filename. Now, a unique disambiguator based on the URL of the chapter is automatically included in the filename. Existing downloaded chapters without that disambiguator are still processed my Mihon in the same way as before ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
+
 ### Changed
 - LocalSource now reads ComicInfo.xml file for chapter (if available) to display chapter title, number and scanlator ([@raxod502](https://github.com/radian-software)) ([#2332](https://github.com/mihonapp/mihon/pull/2332))
 
 ### Fixes
 - Fixed scrollbar sometimes not showing during scroll or not reaching the bottom with few items ([@anirudhsnayak](https://github.com/anirudhsnayak)) ([#2304](https://github.com/mihonapp/mihon/pull/2304))
+- Very long chapter names are correctly truncated to fit filename limitations, avoiding failed downloads of chapters with long names ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
 
 ## [v0.19.0] - 2025-08-04
 ### Added
