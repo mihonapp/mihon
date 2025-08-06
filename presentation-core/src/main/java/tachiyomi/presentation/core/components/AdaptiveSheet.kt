@@ -1,13 +1,10 @@
 package tachiyomi.presentation.core.components
 
-import androidx.activity.compose.PredictiveBackHandler
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animate
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.AnchoredDraggableDefaults
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
@@ -26,21 +23,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -49,14 +41,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.lerp
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
-import tachiyomi.presentation.core.util.PredictiveBack
-import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.roundToInt
+
+private val sheetAnimationSpec = tween<Float>(durationMillis = 350)
 
 @Composable
 fun AdaptiveSheet(
@@ -84,7 +75,6 @@ fun AdaptiveSheet(
         Box(
             modifier = Modifier
                 .clickable(
-                    enabled = true,
                     interactionSource = null,
                     indication = null,
                     onClick = internalOnDismissRequest,
@@ -95,11 +85,6 @@ fun AdaptiveSheet(
         ) {
             Surface(
                 modifier = Modifier
-                    .predictiveBackAnimation(
-                        enabled = remember { derivedStateOf { alpha > 0f } }.value,
-                        transformOrigin = TransformOrigin.Center,
-                        onBack = internalOnDismissRequest,
-                    )
                     .requiredWidthIn(max = 460.dp)
                     .clickable(
                         interactionSource = null,
@@ -112,6 +97,7 @@ fun AdaptiveSheet(
                 shape = MaterialTheme.shapes.extraLarge,
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 content = {
+                    BackHandler(enabled = alpha > 0f, onBack = internalOnDismissRequest)
                     content()
                 },
             )
@@ -121,14 +107,16 @@ fun AdaptiveSheet(
             }
         }
     } else {
-        val anchoredDraggableState = rememberSaveable(saver = AnchoredDraggableState.Saver()) {
-            AnchoredDraggableState(initialValue = 1)
+        val decayAnimationSpec = rememberSplineBasedDecay<Float>()
+        val anchoredDraggableState = remember {
+            AnchoredDraggableState(
+                initialValue = 1,
+                positionalThreshold = { with(density) { 56.dp.toPx() } },
+                velocityThreshold = { with(density) { 125.dp.toPx() } },
+                snapAnimationSpec = sheetAnimationSpec,
+                decayAnimationSpec = decayAnimationSpec,
+            )
         }
-        val flingBehavior = AnchoredDraggableDefaults.flingBehavior(
-            state = anchoredDraggableState,
-            positionalThreshold = { _: Float -> with(density) { 56.dp.toPx() } },
-            animationSpec = sheetAnimationSpec,
-        )
         val internalOnDismissRequest = {
             if (anchoredDraggableState.settledValue == 0) {
                 scope.launch { anchoredDraggableState.animateTo(1) }
@@ -153,11 +141,6 @@ fun AdaptiveSheet(
         ) {
             Surface(
                 modifier = Modifier
-                    .predictiveBackAnimation(
-                        enabled = anchoredDraggableState.targetValue == 0,
-                        transformOrigin = TransformOrigin(0.5f, 1f),
-                        onBack = internalOnDismissRequest,
-                    )
                     .widthIn(max = 460.dp)
                     .clickable(
                         interactionSource = null,
@@ -168,9 +151,9 @@ fun AdaptiveSheet(
                         if (enableSwipeDismiss) {
                             Modifier.nestedScroll(
                                 remember(anchoredDraggableState) {
-                                    anchoredDraggableState.preUpPostDownNestedScrollConnection {
-                                        scope.launch { anchoredDraggableState.settle(sheetAnimationSpec) }
-                                    }
+                                    anchoredDraggableState.preUpPostDownNestedScrollConnection(
+                                        onFling = { scope.launch { anchoredDraggableState.settle(it) } },
+                                    )
                                 },
                             )
                         } else {
@@ -191,13 +174,16 @@ fun AdaptiveSheet(
                         state = anchoredDraggableState,
                         orientation = Orientation.Vertical,
                         enabled = enableSwipeDismiss,
-                        flingBehavior = flingBehavior,
                     )
                     .navigationBarsPadding()
                     .statusBarsPadding(),
                 shape = MaterialTheme.shapes.extraLarge,
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 content = {
+                    BackHandler(
+                        enabled = anchoredDraggableState.targetValue == 0,
+                        onBack = internalOnDismissRequest,
+                    )
                     content()
                 },
             )
@@ -252,11 +238,7 @@ private fun <T> AnchoredDraggableState<T>.preUpPostDownNestedScrollConnection(
 
     override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
         onFling(available.toFloat())
-        return if (targetValue != settledValue) {
-            available
-        } else {
-            Velocity.Zero
-        }
+        return available
     }
 
     private fun Float.toOffset(): Offset = Offset(0f, this)
@@ -267,37 +249,3 @@ private fun <T> AnchoredDraggableState<T>.preUpPostDownNestedScrollConnection(
     @JvmName("offsetToFloat")
     private fun Offset.toFloat(): Float = this.y
 }
-
-private fun Modifier.predictiveBackAnimation(
-    enabled: Boolean,
-    transformOrigin: TransformOrigin,
-    onBack: () -> Unit,
-) = composed {
-    var scale by remember { mutableFloatStateOf(1f) }
-    PredictiveBackHandler(enabled = enabled) { progress ->
-        try {
-            progress.collect { backEvent ->
-                scale = lerp(1f, 0.85f, PredictiveBack.transform(backEvent.progress))
-            }
-            // Completion
-            onBack()
-        } catch (e: CancellationException) {
-            // Cancellation
-        } finally {
-            animate(
-                initialValue = scale,
-                targetValue = 1f,
-                animationSpec = spring(stiffness = Spring.StiffnessLow),
-            ) { value, _ ->
-                scale = value
-            }
-        }
-    }
-    Modifier.graphicsLayer {
-        this.scaleX = scale
-        this.scaleY = scale
-        this.transformOrigin = transformOrigin
-    }
-}
-
-private val sheetAnimationSpec = tween<Float>(durationMillis = 350)

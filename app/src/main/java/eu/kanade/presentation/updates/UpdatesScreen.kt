@@ -57,9 +57,7 @@ fun UpdateScreen(
     onUpdateSelected: (UpdatesItem, Boolean, Boolean, Boolean) -> Unit,
     onOpenChapter: (UpdatesItem) -> Unit,
 ) {
-    BackHandler(enabled = state.selectionMode) {
-        onSelectAll(false)
-    }
+    BackHandler(enabled = state.selectionMode, onBack = { onSelectAll(false) })
 
     Scaffold(
         topBar = { scrollBehavior ->

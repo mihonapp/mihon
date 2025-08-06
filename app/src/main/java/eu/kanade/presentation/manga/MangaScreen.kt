@@ -269,9 +269,13 @@ private fun MangaScreenSmallImpl(
         )
     }
 
-    BackHandler(enabled = isAnySelected) {
-        onAllChapterSelected(false)
-    }
+    BackHandler(onBack = {
+        if (isAnySelected) {
+            onAllChapterSelected(false)
+        } else {
+            navigateUp()
+        }
+    })
 
     Scaffold(
         topBar = {
@@ -519,9 +523,13 @@ fun MangaScreenLargeImpl(
 
     val chapterListState = rememberLazyListState()
 
-    BackHandler(enabled = isAnySelected) {
-        onAllChapterSelected(false)
-    }
+    BackHandler(onBack = {
+        if (isAnySelected) {
+            onAllChapterSelected(false)
+        } else {
+            navigateUp()
+        }
+    })
 
     Scaffold(
         topBar = {
