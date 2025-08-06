@@ -26,7 +26,7 @@ jobs:
           distribution: temurin
 
       - name: Set up gradle
-        uses: gradle/actions/setup-gradle@ac638b010cf58a27ee6c972d7336334ccaf61c96 # v4.4.1
+        uses: gradle/actions/setup-gradle@017a9effdb900e5b5b2fddfb590a105619dca3c3 # v4.4.2
 
       - name: Check code format
         run: ./gradlew spotlessCheck
@@ -87,7 +87,14 @@ jobs:
           tag_name: ${{ env.VERSION_TAG }}
           name: Mihon ${{ env.VERSION_TAG }}
           body: |
+            Check out the [past release notes](https://github.com/mihonapp/mihon/releases) if you’re upgrading from an earlier version. Consider [donating via Open Collective](https://opencollective.com/mihon/contribute) to help keep Mihon improving!
+
+            ---
+
+
+
             <!-->
+
             > [!TIP]
             >
             > ### If you are unsure which version to download then go with `mihon-${{ env.VERSION_TAG }}.apk`
