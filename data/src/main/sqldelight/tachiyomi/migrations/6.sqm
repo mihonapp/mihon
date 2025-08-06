@@ -1,3 +1,5 @@
+DROP VIEW IF EXISTS libraryView;
+
 CREATE VIEW libraryView AS
 SELECT
     M.*,
@@ -35,7 +37,3 @@ LEFT JOIN (
 ) AS MC
 ON MC.manga_id = M._id
 WHERE M.favorite = 1;
-
-library:
-SELECT *
-FROM libraryView;

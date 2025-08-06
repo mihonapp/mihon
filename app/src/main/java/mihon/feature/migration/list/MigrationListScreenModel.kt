@@ -43,7 +43,7 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class MigrationListScreenModel(
-    mangaIds: List<Long>,
+    mangaIds: Collection<Long>,
     extraSearchQuery: String?,
     private val preferences: SourcePreferences = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
@@ -146,7 +146,7 @@ class MigrationListScreenModel(
                     }
                 }
                     .await()
-            } catch (e: CancellationException) {
+            } catch (_: CancellationException) {
                 continue
             }
 
@@ -188,7 +188,7 @@ class MigrationListScreenModel(
                 smartSearchEngine.regularSearch(source, manga.title)
             }
 
-            if (searchResult == null || !(searchResult.url == manga.url && source.id == manga.source)) return null
+            if (searchResult == null || (searchResult.url == manga.url && source.id == manga.source)) return null
 
             val localManga = networkToLocalManga(searchResult)
             try {

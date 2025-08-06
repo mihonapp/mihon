@@ -158,25 +158,16 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         val libraryManga = getLibraryManga.await()
 
         val listToUpdate = if (categoryId != -1L) {
-            libraryManga.filter { it.category == categoryId }
+            libraryManga.filter { categoryId in it.categories }
         } else {
-            val categoriesToUpdate = libraryPreferences.updateCategories().get().map { it.toLong() }
-            val includedManga = if (categoriesToUpdate.isNotEmpty()) {
-                libraryManga.filter { it.category in categoriesToUpdate }
-            } else {
-                libraryManga
-            }
+            val includedCategories = libraryPreferences.updateCategories().get().map { it.toLong() }
+            val excludedCategories = libraryPreferences.updateCategoriesExclude().get().map { it.toLong() }
 
-            val categoriesToExclude = libraryPreferences.updateCategoriesExclude().get().map { it.toLong() }
-            val excludedMangaIds = if (categoriesToExclude.isNotEmpty()) {
-                libraryManga.filter { it.category in categoriesToExclude }.map { it.manga.id }
-            } else {
-                emptyList()
+            libraryManga.filter {
+                val included = includedCategories.isEmpty() || it.categories.intersect(includedCategories).isNotEmpty()
+                val excluded = it.categories.intersect(excludedCategories).isNotEmpty()
+                included && !excluded
             }
-
-            includedManga
-                .filterNot { it.manga.id in excludedMangaIds }
-                .distinctBy { it.manga.id }
         }
 
         val restrictions = libraryPreferences.autoUpdateMangaRestrictions().get()
