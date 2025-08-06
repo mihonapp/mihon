@@ -236,18 +236,18 @@ actual class LocalSource(
         }
     }
 
-    private fun parseComicInfoFile(stream: InputStream): ComicInfo {
+    private fun parseComicInfo(stream: InputStream): ComicInfo {
         return AndroidXmlReader(stream, StandardCharsets.UTF_8.name()).use {
             xml.decodeFromReader<ComicInfo>(it)
         }
     }
 
     private fun setMangaDetailsFromComicInfoFile(stream: InputStream, manga: SManga) {
-        manga.copyFromComicInfo(parseComicInfoFile(stream))
+        manga.copyFromComicInfo(parseComicInfo(stream))
     }
 
     private fun setChapterDetailsFromComicInfoFile(stream: InputStream, chapter: SChapter) {
-        val comicInfo = parseComicInfoFile(stream)
+        val comicInfo = parseComicInfo(stream)
 
         comicInfo.title?.let { chapter.name = it.value }
         comicInfo.number?.value?.toFloatOrNull()?.let { chapter.chapter_number = it }
