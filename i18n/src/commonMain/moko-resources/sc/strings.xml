@@ -170,7 +170,6 @@
     <string name="cookies_cleared">Cookies iscantzellados</string>
     <string name="pref_clear_database">Isbòida sa base de datos</string>
     <string name="pref_clear_database_summary">Iscantzella sa cronologia pro sos elementos chi non sunt sarvados in sa biblioteca tua</string>
-    <string name="clear_database_confirmation">Seguru ses? Sos capìtulos lèghidos e su progressu de sos elementos chi non sunt in sa biblioteca s\'ant a pèrdere</string>
     <string name="clear_database_completed">Boghes iscantzelladas</string>
     <string name="version">Versione</string>
     <string name="pref_enable_acra">Imbia raportos a pitzu de sos arrestos anòmalos</string>
@@ -674,9 +673,6 @@
     <string name="information_no_manga_category">Sa categoria est bòida</string>
     <string name="pref_library_update_show_tab_badge">Ammustra su nùmeru de non lèghidos in s\'icona de agiornamentu</string>
     <string name="copied_to_clipboard_plain">Copiadu in punta de billete</string>
-    <string name="confirm_add_duplicate_manga">Tenes giai un\'elementu in sa biblioteca tua cun su matessi nùmene.
-\n
-\nBoles sighire su matessi?</string>
     <string name="pref_skip_dupe_chapters">Brinca sos capìtulos duplicados</string>
     <string name="enhanced_services_not_installed">A disponimentu ma sa fonte no est installada: %s</string>
     <string name="track_error">Errore %1$s: %2$s</string>
@@ -689,8 +685,8 @@
     <string name="pref_page_rotate">Gira sas pàginas largas pro las adatare</string>
     <string name="pref_page_rotate_invert">Fùrria s\'orientamentu de sas pàginas largas giradas</string>
     <string name="pref_double_tap_zoom">Tocu dòpiu pro ismanniare</string>
-    <string name="pref_chapter_swipe_end">Atzione de iscurrimentu a destra</string>
-    <string name="pref_chapter_swipe_start">Atzione de iscurrimentu a manca</string>
+    <string name="pref_chapter_swipe_end">Capìtulu iscurrende a destra</string>
+    <string name="pref_chapter_swipe_start">Capìtulu iscurrende a manca</string>
     <string name="pref_debug_info">Informatziones de depuratzione de còdighe</string>
     <string name="manga_display_interval_title">Càrcula cada</string>
     <string name="action_filter_interval_custom">Intervallu de recùperu personalizadu</string>
@@ -783,7 +779,6 @@
     <string name="private_settings">Include impostatziones sensìbiles ( a es. getones de intrada a sos arrastadores)</string>
     <string name="manga_interval_expected_update_soon">Luego</string>
     <string name="action_add_anyway">Annanghe su matessi</string>
-    <string name="action_migrate_duplicate">Tràmuda s\'elementu esistente</string>
     <string name="pref_webtoon_disable_zoom_out">Istuda sa ridutzione de ismanniada</string>
     <string name="onboarding_description">In antis de totus tocat a cunfigurare una paja de cosas. L\'as a pòdere semper modificare a pustis dae sas impostatziones.</string>
     <string name="onboarding_storage_action_select">Seletziona una cartella</string>
@@ -840,4 +835,36 @@
     <string name="pref_always_decode_long_strip_with_ssiv_2">Imprea su codificadore betzu pro su leghidore de immàgines longas</string>
     <string name="export">Esporta</string>
     <string name="theme_monochrome">Monocromo</string>
+    <string name="action_display_unread_badge">Capìtulos non lèghidos</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">A pustis de àere lèghidu unu capìtulu</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Marca sos capìtulos lèghidos duplicados comente lèghidos</string>
+    <string name="tracked_privately">Arrastadu in manera privada</string>
+    <string name="action_toggle_private_on">Arrasta in manera privada</string>
+    <string name="author">Autore</string>
+    <string name="artist">Artista</string>
+    <string name="library_exported">Biblioteca esportada</string>
+    <string name="action_toggle_private_off">Arrasta in manera pùblica</string>
+    <string name="pref_behavior">Cumportamentu</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">A pustis de su recùperu de unu capìtulu</string>
+    <string name="action_edit_notes">Modìfica notas</string>
+    <string name="action_notes">Notas</string>
+    <string name="notes_placeholder">M\'est agradadu cando…</string>
+    <string name="pref_update_library_manga_titles">Annoa sos tìtulos de sos manga in sa biblioteca pro chi currispondant cun sa fonte</string>
+    <string name="pref_update_library_manga_titles_summary">Dae cara: si unu manga mudat de nùmene, s\'at a bogare dae sa lista de iscarrigamentu (si b\'est).</string>
+    <string name="logging_in">Intrende…</string>
+    <string name="possible_duplicates_title">Duplicados possìbiles</string>
+    <string name="possible_duplicates_summary">Tenes elementos in s biblioteca tua cun nùmenes chi s\'assimìgiant.\n\nSeletziona un\'elementu pro lu tramudare o annànghere su matessi.</string>
+    <string name="storage_failed_to_create_download_directory">Creatzione de sa cartella de iscarrigamentu fallida</string>
+    <string name="storage_failed_to_create_directory">Non faghet a creare sa cartella: %s</string>
+    <string name="clear_database_text">Ses pro bogare elementos dae sa base de datos</string>
+    <string name="clear_db_exclude_read">Mantene sos elementos cun capìtulos lèghidos</string>
+    <string name="clear_database_history_warning">Sos capìtulos lèghidos e su progressu de sos elementos chi non sunt in sa biblioteca s\'ant a pèrdere</string>
+    <string name="migrationConfigScreen.selectNoneLabel">Non seletziones nudda</string>
+    <string name="migrationConfigScreen.selectPinnedLabel">Seletziona fontes apicadas</string>
+    <string name="theme_catppuccin">Gatuputzinu</string>
+    <string name="migrationConfigScreen.selectedHeader">Seletzionadu</string>
+    <string name="migrationConfigScreen.availableHeader">A disponimentu</string>
+    <string name="migrationConfigScreen.selectAllLabel">Seletziona totu</string>
+    <string name="migrationConfigScreen.selectEnabledLabel">Seletziona fontes abilitadas</string>
+    <string name="migrationConfigScreen.continueButtonText">Sighi</string>
 </resources>

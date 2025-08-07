@@ -174,7 +174,6 @@
     <string name="cookies_cleared">Колачићи су избрисани</string>
     <string name="pref_clear_database">Избриши базу података</string>
     <string name="pref_clear_database_summary">Обриши историју за наслове који нису сачувани у твојој колекцији</string>
-    <string name="clear_database_confirmation">Да ли сте сигурни? Изгубићете прочитана поглавља и статус наслова који нису у колекцији</string>
     <string name="clear_database_completed">Уноси избрисани</string>
     <string name="version">Верзија</string>
     <string name="pref_enable_acra">Пошаљи извештаје грешака</string>
@@ -605,9 +604,6 @@
     <string name="updates_last_update_info">Последње ажурирање колекције било је: %s</string>
     <string name="updates_last_update_info_just_now">Управо сада</string>
     <string name="update_already_running">Ажурирање је већ у току</string>
-    <string name="confirm_add_duplicate_manga">Имате унос у колекцији са истим именом.
-\n
-\nДа ли још увек желите да наставите?</string>
     <string name="complete_list">Завршена листа</string>
     <string name="on_hold_list">Наслови на чекању</string>
     <string name="unfinished_list">Незавршени наслови</string>
@@ -796,7 +792,6 @@
     <string name="action_revert_to_default">Врати на подразумевано</string>
     <string name="action_add_anyway">Dodati svejedno</string>
     <string name="label_upcoming">Predstojeći</string>
-    <string name="action_migrate_duplicate">Migrirajte postojeći unos</string>
     <string name="action_replace_repo">Zameniti</string>
     <string name="action_replace_repo_title">Otisak prsta za otključavanje već postoji</string>
 </resources>

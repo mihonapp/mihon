@@ -13,10 +13,10 @@
         <item quantity="other">%1$d нових розділів</item>
     </plurals>
     <plurals name="notification_chapters_multiple_and_more">
-        <item quantity="one">Розділ %1$s та 1 більше</item>
-        <item quantity="few">Розділи %1$s та %2$d більше</item>
-        <item quantity="many">Розділи %1$s та %2$d більше</item>
-        <item quantity="other">Розділи %1$s та %2$d більше</item>
+        <item quantity="one">Розділи %1$s та ще 1 розділ</item>
+        <item quantity="few">Розділи %1$s та ще %2$d розділи</item>
+        <item quantity="many">Розділи %1$s та ще %2$d розділів</item>
+        <item quantity="other">Розділи %1$s та ще %2$d розділів</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
         <item quantity="one">Для %d запису</item>

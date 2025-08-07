@@ -95,4 +95,19 @@
         <item quantity="few">%1$s pagini</item>
         <item quantity="other">%1$s de pagini</item>
     </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">Migrați %1$d intrare?</item>
+        <item quantity="few">Migrați %1$d intrări?</item>
+        <item quantity="other">Migrați %1$d de intrări?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">Copiați %1$d intrare?</item>
+        <item quantity="few">Copiați %1$d intrări?</item>
+        <item quantity="other">Copiați %1$d de intrări?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">O intrare a fost omisă</item>
+        <item quantity="few">%1$d intrări au fost omise</item>
+        <item quantity="other">%1$d de intrări au fost omise</item>
+    </plurals>
 </resources>
