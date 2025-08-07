@@ -2,7 +2,7 @@
 <resources>
     <string name="on">ဖွင့်သည်။</string>
     <string name="off">ပိတ်သည်။</string>
-    <string name="selected">ရွေးချယ်ထားသည်။</string>
+    <string name="selected">ရွေးချယ်ထားပြီး</string>
     <string name="not_selected">မရွေးချယ်ထားပါ။</string>
     <string name="action_menu_overflow_description">ရွေးချယ်စရာများ</string>
     <string name="action_bar_up_description">အပေါ်သို့</string>
@@ -34,7 +34,7 @@
     <string name="label_upcoming">နောက်ဆက်တွဲ</string>
     <string name="label_extensions">ချိတ်ဆက်မှုများ</string>
     <string name="label_backup">အရံသိမ်းဆည်းခြင်းနှင့် ပြန်လည်ရယူခြင်း</string>
-    <string name="unlock_app_title">အက်ပ်ကို ဖွင့်ရန်</string>
+    <string name="unlock_app_title">%s ကို လော့ခ်ဖွင့်ပါ။</string>
     <string name="confirm_lock_change">ဖြည့်ထားသည်ကို အတည်ပြုပါ</string>
     <string name="action_settings">ဆက်တင်များ</string>
     <string name="action_menu">မီနူး</string>
@@ -71,10 +71,10 @@
     <string name="action_filter_unread">မဖတ်ရသေးသော စစ်ထုတ်မှု</string>
     <string name="action_filter_interval_custom">စိတ်ကြိုက် အချိန်ကြား စစ်ထုတ်မှု</string>
     <string name="action_sort_alpha">အက္ခရာစဉ်အားဖြင့် စီပါ</string>
-    <string name="action_sort_count">ရေတွက်မှုအားဖြင့် စီပါ</string>
+    <string name="action_sort_count">စာအုပ်စင်တွင်ရှိသော အရေအတွက်စုစုပေါင်း</string>
     <string name="action_sort_next_updated">နောက်တစ်ခု အပ်ဒိတ်မည်အားဖြင့် စီပါ</string>
     <string name="action_sort_latest_chapter">နောက်ဆုံး အပိုင်းအားဖြင့် စီပါ</string>
-    <string name="action_sort_total">စုစုပေါင်းအားဖြင့် စီပါ</string>
+    <string name="action_sort_total">အပိုင်းစုစုပေါင်း</string>
     <string name="action_sort_unread_count">မဖတ်ရသေးသော အရေအတွက်အားဖြင့် စီပါ</string>
     <string name="action_sort_chapter_fetch_date">အပိုင်းရရှိသည့် ရက်စွဲအားဖြင့် စီပါ</string>
     <string name="action_sort_date_added">ထည့်သွင်းသည့် ရက်စွဲအားဖြင့် စီပါ</string>
@@ -85,11 +85,11 @@
     <string name="action_search_settings">ရှာဖွေမှု ဆက်တင်များ</string>
     <string name="action_select_all">အားလုံးကို ရွေးချယ်ပါ</string>
     <string name="action_select_inverse">ရွေးချယ်မှု ပြောင်းပြန်ပါ</string>
-    <string name="action_mark_as_read">ဖတ်ပြီးဟု မှတ်သားပါ</string>
+    <string name="action_mark_as_read">ဖတ်ပြီးပြီး</string>
     <string name="action_global_search">ကမ္ဘာလုံးဆိုင်ရာ ရှာဖွေမှု</string>
-    <string name="action_mark_as_unread">မဖတ်ရသေးဟု မှတ်သားပါ</string>
-    <string name="action_mark_previous_as_read">ယခင် အပိုင်းများကို ဖတ်ပြီးဟု မှတ်သားပါ</string>
-    <string name="action_download">ဒေါင်းလုဒ်လုပ်ပါ</string>
+    <string name="action_mark_as_unread">မဖတ်ရသေးဘူး</string>
+    <string name="action_mark_previous_as_read">ယခင် အပိုင်းများကို ဖတ်ပြီးပြီး</string>
+    <string name="action_download">သိမ်းယူထားမယ်</string>
     <string name="action_update_library">စာအုပ်စင် အပ်ဒိတ်လုပ်ပါ</string>
     <string name="action_enable_all">အားလုံးကို ဖွင့်ပါ</string>
     <string name="action_disable_all">အားလုံးကို ပိတ်ပါ</string>
@@ -163,7 +163,6 @@
     <string name="action_start_downloading_now">ခုပဲ ဒေါင်းလုဒ်လုပ်မည်</string>
     <string name="action_not_now">ခုမဟုတ်ပါ</string>
     <string name="action_add_anyway">ဘာဖြစ်ဖြစ် ထည့်မည်</string>
-    <string name="action_migrate_duplicate">ထပ်မံပြောင်းရွှေ့ရန်</string>
     <string name="loading">ခဏစောင့်ပါ။ …</string>
     <string name="internal_error">InternalError: ပြဿနာဖြေရှင်းရန် အတွက် ခရပ်စ်လော့ဂ်များကို စစ်ဆေးပါ။</string>
     <string name="app_not_available">အက်ပလီကေးရှင်းရရှိနိုင်ခြင်းမရှိပါ</string>
@@ -207,7 +206,7 @@
     <string name="parental_controls_info">ဒါက တရားမဝင်တဲ့ ဒါမှမဟုတ် မှားယွင်းစွာ သတ်မှတ်ထားတဲ့ တိုးချဲ့ပလပ်အင်တွေက အက်ပ်ထဲမှာ လိင်ပိုင်းဆိုင်ရာ အကြောင်းအရာတွေ ပေါ်လာတာကို တားမရနိုင်ပါဘူး။</string>
     <string name="firebase_summary">ခရပ်စ်လော့ဂ်များနှင့် ခွဲခြမ်းစိတ်ဖြာမှုဒေတာများကို ပေးပို့ခြင်းဖြင့် ပြဿနာများကို ဖော်ထုတ်ပြီး ပြင်ဆင်နိုင်မည်ဖြစ်ပြီး စွမ်းဆောင်ရည်ကို တိုးတက်စေကာ သုံးစွဲသူများ၏ လိုအပ်ချက်များနှင့် ပိုမိုသက်ဆိုင်သော အနာဂတ် အပ်ဒိတ်များကို ပြုလုပ်နိုင်မည်ဖြစ်သည်။\"</string>
     <string name="ext_confirm_remove">ဖယ်ရှားမည်လား</string>
-    <string name="pref_chapter_swipe_start">ဘယ်ဘက်သို့ ပွတ်ဆွဲ</string>
+    <string name="pref_chapter_swipe_start">ဘယ်ဘက်သို့ ပွတ်ဆွဲရန်</string>
     <string name="ext_update_all">အကုန် အပ်ဒိတ်လုပ်မည်။</string>
     <string name="ext_pending">စောင့်ဆိုင်းဆဲ</string>
     <string name="ext_installed">ထည့်သွင်းပြီး</string>
@@ -269,4 +268,28 @@
     <string name="pref_show_page_number">စာမျက်နှာနံပါတ် ပြပါ။</string>
     <string name="delete_repo_confirmation">\"%s\"ကို ဖျက်လိုပါသလား?</string>
     <string name="add_repo_confirmation">\"%s\" ထည့်သွင်းလိုပါသလား?</string>
+    <string name="pref_library_update_interval">အလိုအလျောက် အပ်ဒိတ်များ</string>
+    <string name="landscape">ရှုခင်း</string>
+    <string name="portrait">ပုံတူ</string>
+    <string name="pref_library_columns">အတန်းအလိုက် ပစ္စည်းများ</string>
+    <string name="pref_category_display">ဖုန်းမျက်နှာပြင်</string>
+    <string name="pref_category_library_update">ကမ္ဘာလုံးဆိုင်ရာ အပ်ဒိတ်</string>
+    <string name="theme_greenapple">နီစိမ်းရောင်</string>
+    <string name="theme_lavender">ခရမ်းနုရောင်</string>
+    <string name="pref_relative_format">အနီးစပ်ဆုံး အချိန်အမှတ်အသား</string>
+    <string name="pref_relative_format_summary">\"%2$s\" မဟုတ်ဘဲ \"%1$s\" ဟုပြရန်</string>
+    <string name="pref_library_update_refresh_metadata">metadataကို အလိုလျောက် ပြန်လည်ဆန်းသစ်ပေးပါ။</string>
+    <string name="pref_library_update_refresh_metadata_summary">စာအုပ်စင်ကို အပ်ဒိတ်လုပ်လျှင် ကာဗာနှင့် အချက်အလက်သစ်များ ရယူရန်။</string>
+    <string name="default_category">မူရင်းကဏ္ဍ</string>
+    <string name="ext_obsolete">အသုံးပြု၍မရ</string>
+    <string name="ext_trust">ယုံကြည်ရန်</string>
+    <string name="untrusted_extension">မယုံကြည်ရသေးသော အစိတ်အပိုင်းများ</string>
+    <string name="label_add_repo_input">စုစည်းမှုများ၏ URL</string>
+    <string name="label_extension_repos">Extension စုစည်းရာ</string>
+    <string name="information_empty_repos">သင့်မှာ extension ထည့်ရန် စုစည်းမှုများ မထည့်ရသေးပါ။</string>
+    <string name="invalid_repo_name">အသုံးပြုမရသော စုစည်းမှုများ၏ URL</string>
+    <string name="restrictions">ကန့်သက်ထားခြင်း %s</string>
+    <string name="network_not_metered">ကန့်သက်မထားသော ကွန်ရက်ပေါ်တွင်သာ</string>
+    <string name="ext_uninstall">သင့်ဖုန်းမှ ဖယ်ရှားရန်</string>
+    <string name="theme_monet">Dynamic</string>
 </resources>

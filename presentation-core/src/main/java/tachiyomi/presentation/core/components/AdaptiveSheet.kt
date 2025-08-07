@@ -1,10 +1,7 @@
 package tachiyomi.presentation.core.components
 
-import androidx.activity.compose.PredictiveBackHandler
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animate
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.AnchoredDraggableDefaults
@@ -36,11 +33,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -49,13 +43,10 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.lerp
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
-import tachiyomi.presentation.core.util.PredictiveBack
-import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.roundToInt
 
 @Composable
@@ -84,7 +75,6 @@ fun AdaptiveSheet(
         Box(
             modifier = Modifier
                 .clickable(
-                    enabled = true,
                     interactionSource = null,
                     indication = null,
                     onClick = internalOnDismissRequest,
@@ -95,11 +85,6 @@ fun AdaptiveSheet(
         ) {
             Surface(
                 modifier = Modifier
-                    .predictiveBackAnimation(
-                        enabled = remember { derivedStateOf { alpha > 0f } }.value,
-                        transformOrigin = TransformOrigin.Center,
-                        onBack = internalOnDismissRequest,
-                    )
                     .requiredWidthIn(max = 460.dp)
                     .clickable(
                         interactionSource = null,
@@ -112,6 +97,10 @@ fun AdaptiveSheet(
                 shape = MaterialTheme.shapes.extraLarge,
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 content = {
+                    BackHandler(
+                        enabled = remember { derivedStateOf { alpha > 0f } }.value,
+                        onBack = internalOnDismissRequest,
+                    )
                     content()
                 },
             )
@@ -153,11 +142,6 @@ fun AdaptiveSheet(
         ) {
             Surface(
                 modifier = Modifier
-                    .predictiveBackAnimation(
-                        enabled = anchoredDraggableState.targetValue == 0,
-                        transformOrigin = TransformOrigin(0.5f, 1f),
-                        onBack = internalOnDismissRequest,
-                    )
                     .widthIn(max = 460.dp)
                     .clickable(
                         interactionSource = null,
@@ -198,6 +182,10 @@ fun AdaptiveSheet(
                 shape = MaterialTheme.shapes.extraLarge,
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 content = {
+                    BackHandler(
+                        enabled = anchoredDraggableState.targetValue == 0,
+                        onBack = internalOnDismissRequest,
+                    )
                     content()
                 },
             )
@@ -266,38 +254,6 @@ private fun <T> AnchoredDraggableState<T>.preUpPostDownNestedScrollConnection(
 
     @JvmName("offsetToFloat")
     private fun Offset.toFloat(): Float = this.y
-}
-
-private fun Modifier.predictiveBackAnimation(
-    enabled: Boolean,
-    transformOrigin: TransformOrigin,
-    onBack: () -> Unit,
-) = composed {
-    var scale by remember { mutableFloatStateOf(1f) }
-    PredictiveBackHandler(enabled = enabled) { progress ->
-        try {
-            progress.collect { backEvent ->
-                scale = lerp(1f, 0.85f, PredictiveBack.transform(backEvent.progress))
-            }
-            // Completion
-            onBack()
-        } catch (e: CancellationException) {
-            // Cancellation
-        } finally {
-            animate(
-                initialValue = scale,
-                targetValue = 1f,
-                animationSpec = spring(stiffness = Spring.StiffnessLow),
-            ) { value, _ ->
-                scale = value
-            }
-        }
-    }
-    Modifier.graphicsLayer {
-        this.scaleX = scale
-        this.scaleY = scale
-        this.transformOrigin = transformOrigin
-    }
 }
 
 private val sheetAnimationSpec = tween<Float>(durationMillis = 350)

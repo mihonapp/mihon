@@ -44,7 +44,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
@@ -200,10 +199,10 @@ fun MigrationListItem(
                     .background(
                         Brush.verticalGradient(
                             0f to Color.Transparent,
-                            1f to Color(0xAA000000),
+                            1f to MaterialTheme.colorScheme.background,
                         ),
                     )
-                    .fillMaxHeight(0.33f)
+                    .fillMaxHeight(0.4f)
                     .fillMaxWidth()
                     .align(Alignment.BottomCenter),
             )
@@ -214,8 +213,7 @@ fun MigrationListItem(
                 text = manga.title,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2,
-                style = MaterialTheme.typography.labelMedium
-                    .merge(shadow = Shadow(color = Color.Black, blurRadius = 4f)),
+                style = MaterialTheme.typography.labelMedium,
             )
             BadgeGroup(modifier = Modifier.padding(4.dp)) {
                 Badge(text = "$chapterCount")

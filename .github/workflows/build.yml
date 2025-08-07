@@ -1,4 +1,4 @@
-name: PR build check
+name: Build & Test
 on:
   pull_request:
     paths:
@@ -8,9 +8,12 @@ on:
       - '!i18n/src/commonMain/moko-resources/**/plurals.xml'
       - 'i18n/src/commonMain/moko-resources/base/strings.xml'
       - 'i18n/src/commonMain/moko-resources/base/plurals.xml'
+  push:
+    branches:
+      - main
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -18,14 +21,15 @@ permissions:
 
 jobs:
   build:
-    name: Build app
+    name: Build & Test App
     runs-on: 'ubuntu-24.04'
 
     steps:
-      - name: Clone repo
+      - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Dependency Review
+        if: github.event_name == 'pull_request'
         uses: actions/dependency-review-action@da24556b548a50705dd671f47852072ea4c105d9 # v4.7.1
 
       - name: Set up JDK
@@ -34,14 +38,14 @@ jobs:
           java-version: 17
           distribution: temurin
 
-      - name: Set up gradle
+      - name: Set up Gradle
         uses: gradle/actions/setup-gradle@017a9effdb900e5b5b2fddfb590a105619dca3c3 # v4.4.2
 
       - name: Check code format
         run: ./gradlew spotlessCheck
 
       - name: Build app
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleRelease -Pinclude-telemetry -Penable-updater
 
       - name: Run unit tests
         run: ./gradlew testReleaseUnitTest

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="lock_after_mins">
-        <item quantity="one">Por %1$s minuto</item>
-        <item quantity="many">Por %1$s minutos</item>
-        <item quantity="other">Por %1$s minutos</item>
+        <item quantity="one">Após %1$s minuto</item>
+        <item quantity="many">Após %1$s minutos</item>
+        <item quantity="other">Após %1$s minuto</item>
     </plurals>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d capítulo novo</item>
@@ -89,5 +89,20 @@
         <item quantity="one">Amanhã</item>
         <item quantity="many">Em %1$d dias</item>
         <item quantity="other">Em breve</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">Migrar %1$d entrada?</item>
+        <item quantity="many">Migrar %1$d entradas?</item>
+        <item quantity="other"></item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">Copiar %1$d entrada?</item>
+        <item quantity="many">Copiar %1$d entradas?</item>
+        <item quantity="other"></item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">Uma entrada foi ignorada</item>
+        <item quantity="many">%1$d entradas foram ignoradas</item>
+        <item quantity="other"></item>
     </plurals>
 </resources>
