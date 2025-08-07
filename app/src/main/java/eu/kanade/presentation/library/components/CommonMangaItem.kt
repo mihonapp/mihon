@@ -131,10 +131,10 @@ private fun BoxScope.CoverTextOverlay(
             .background(
                 Brush.verticalGradient(
                     0f to Color.Transparent,
-                    1f to Color(0xAA000000),
+                    1f to MaterialTheme.colorScheme.background,
                 ),
             )
-            .fillMaxHeight(0.33f)
+            .fillMaxHeight(0.4f)
             .fillMaxWidth()
             .align(Alignment.BottomCenter),
     )
@@ -147,12 +147,7 @@ private fun BoxScope.CoverTextOverlay(
                 .weight(1f)
                 .padding(8.dp),
             title = title,
-            style = MaterialTheme.typography.titleSmall.copy(
-                color = Color.White,
-                shadow = Shadow(
-                    color = Color.Black,
-                    blurRadius = 4f,
-                ),
+            style = MaterialTheme.typography.labelMedium,
             ),
             minLines = 1,
         )
