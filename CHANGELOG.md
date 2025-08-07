@@ -22,6 +22,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix local source EPUB files not loading ([@AntsyLich](https://github.com/AntsyLich)) ([#2369](https://github.com/mihonapp/mihon/pull/2369))
 - Fix title text color in light mode on mass migration list ([@AntsyLich](https://github.com/AntsyLich)) ([#2370](https://github.com/mihonapp/mihon/pull/2370))
 - Fix 'Default' category showing in library with no user-added categories ([@AntsyLich](https://github.com/AntsyLich)) ([#2371](https://github.com/mihonapp/mihon/pull/2371))
+- Fix crash when opening filter sheet with an empty library ([@krysanify](https://github.com/krysanify/)) ([#2355](https://github.com/mihonapp/mihon/pull/2355))
+- Fix mark as read/unread not working for selected library items ([@krysanify](https://github.com/krysanify/)) ([#2355](https://github.com/mihonapp/mihon/pull/2355))
 
 ## [v0.19.0] - 2025-08-04
 ### Added
