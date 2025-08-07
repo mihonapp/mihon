@@ -2,6 +2,7 @@ package mihon.core.archive
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.jsoup.parser.Parser
 import java.io.Closeable
 import java.io.File
 import java.io.InputStream
@@ -39,7 +40,7 @@ class EpubReader(private val reader: ArchiveReader) : Closeable by reader {
     fun getPackageHref(): String {
         val meta = getInputStream(resolveZipPath("META-INF", "container.xml"))
         if (meta != null) {
-            val metaDoc = meta.use { Jsoup.parse(it, null, "") }
+            val metaDoc = meta.use { Jsoup.parse(it, null, "", Parser.xmlParser()) }
             val path = metaDoc.getElementsByTag("rootfile").first()?.attr("full-path")
             if (path != null) {
                 return path
@@ -52,7 +53,7 @@ class EpubReader(private val reader: ArchiveReader) : Closeable by reader {
      * Returns the package document where all the files are listed.
      */
     fun getPackageDocument(ref: String): Document {
-        return getInputStream(ref)!!.use { Jsoup.parse(it, null, "") }
+        return getInputStream(ref)!!.use { Jsoup.parse(it, null, "", Parser.xmlParser()) }
     }
 
     /**
