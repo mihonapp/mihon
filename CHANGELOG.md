@@ -20,6 +20,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Fixes
 - Fix scrollbar sometimes not showing during scroll or not reaching the bottom with few items ([@anirudhsnayak](https://github.com/anirudhsnayak)) ([#2304](https://github.com/mihonapp/mihon/pull/2304))
 - Fix local source EPUB files not loading ([@AntsyLich](https://github.com/AntsyLich)) ([#2369](https://github.com/mihonapp/mihon/pull/2369))
+- Fix title text color in light mode on mass migration list ([@AntsyLich](https://github.com/AntsyLich)) ([#2370](https://github.com/mihonapp/mihon/pull/2370))
 
 ## [v0.19.0] - 2025-08-04
 ### Added
