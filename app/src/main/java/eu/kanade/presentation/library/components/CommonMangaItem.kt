@@ -148,7 +148,6 @@ private fun BoxScope.CoverTextOverlay(
                 .padding(8.dp),
             title = title,
             style = MaterialTheme.typography.labelMedium,
-            ),
             minLines = 1,
         )
         if (onClickContinueReading != null) {
