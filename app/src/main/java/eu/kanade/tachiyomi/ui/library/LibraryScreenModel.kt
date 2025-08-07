@@ -484,6 +484,7 @@ class LibraryScreenModel(
                             downloadManager.isChapterDownloaded(
                                 chapter.name,
                                 chapter.scanlator,
+                                chapter.url,
                                 manga.title,
                                 manga.source,
                             )

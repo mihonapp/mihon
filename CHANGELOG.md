@@ -11,6 +11,11 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Added
+- New advanced setting to limit filenames to ASCII in case your storage medium or operating system does not support non-ASCII characters. This setting is not recommended as all devices and operating systems should support Unicode filenames, and is provided as a temporary workaround until those devices are fixed ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
+
+### Improved
+- If you download two chapters of the same manga which have the same chapter name, one of them would previously overwrite the other because they would both use the same filename. Now, a unique disambiguator based on the URL of the chapter is automatically included in the filename. Existing downloaded chapters without that disambiguator are still processed my Mihon in the same way as before ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
 
 ## [v0.19.1] - 2025-08-07
 ### Changed
@@ -19,7 +24,6 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Removed
 - Predictive back support ([@AntsyLich](https://github.com/AntsyLich)) ([#2362](https://github.com/mihonapp/mihon/pull/2362))
 
-### Fixes
 - Fix scrollbar sometimes not showing during scroll or not reaching the bottom with few items ([@anirudhsnayak](https://github.com/anirudhsnayak)) ([#2304](https://github.com/mihonapp/mihon/pull/2304))
 - Fix local source EPUB files not loading ([@AntsyLich](https://github.com/AntsyLich)) ([#2369](https://github.com/mihonapp/mihon/pull/2369))
 - Fix title text color in light mode on mass migration list ([@AntsyLich](https://github.com/AntsyLich)) ([#2370](https://github.com/mihonapp/mihon/pull/2370))
