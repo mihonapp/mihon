@@ -57,4 +57,13 @@
     <plurals name="pref_pages">
         <item quantity="other">%1$s trang</item>
     </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="other">Di chuyển %1$d mục?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="other">Sao chép %1$d mục?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="other">%1$d mục được bỏ qua</item>
+    </plurals>
 </resources>

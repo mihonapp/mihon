@@ -538,7 +538,6 @@
     <string name="downloaded_only_summary">तव ग्रन्थालये सर्वाः माङ्गाः शोधनीकरोति</string>
     <string name="pref_clear_database_summary">तव ग्रन्थालये न रक्षितानां माङ्गानां चरित्रं नाशय</string>
     <string name="confirm_delete_chapters">त्वं निश्चितरूपेण सङ्गृहीतान् अध्यायान् नाशयितुम् इच्छसि किम् ?</string>
-    <string name="clear_database_confirmation">त्वं निश्चितं किम्। पर-ग्रन्थालय-माङ्गानाम् अपिठाध्यायाः नष्टाः भविष्यन्ते</string>
     <string name="download_queue_size_warning">पूर्वसूचना -- महद्भाराणि अवारोपणानि कुर्यात् मूलानि मन्दानि। अपि च टाचीयोमिं निवारयेत्॥</string>
     <string name="pref_dump_crash_logs_summary">व्युत्पादकेभ्यः प्रसारयितुं दोषदत्तम् एकस्यां सञ्चिकायां रक्षति</string>
     <string name="confirm_set_chapter_settings">इमानि समायोजनानि प्राथमिकानि इव रक्षितुं त्वं निश्चितं किम्</string>

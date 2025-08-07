@@ -16,9 +16,9 @@
         <item quantity="other">Chapitres %1$s et %2$d autres</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Pour %d titre</item>
-        <item quantity="many">Pour %d titres</item>
-        <item quantity="other">Pour %d titres</item>
+        <item quantity="one">Pour %d série</item>
+        <item quantity="many">Pour %d séries</item>
+        <item quantity="other">Pour %d séries</item>
     </plurals>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Mise à jour d\'extension disponible</item>
@@ -94,5 +94,20 @@
         <item quantity="one">1 page</item>
         <item quantity="many">%1$s pages</item>
         <item quantity="other">%1$s pages</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">Migrer %1$d série ?</item>
+        <item quantity="many">Migrer %1$d séries ?</item>
+        <item quantity="other">Migrer %1$d séries ?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">Copier %1$d série ?</item>
+        <item quantity="many">Copier %1$d séries ?</item>
+        <item quantity="other">Copier %1$d séries ?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">Une série a été ignorée</item>
+        <item quantity="many">%1$d séries ont été ignorées</item>
+        <item quantity="other">%1$d séries ont été ignorées</item>
     </plurals>
 </resources>

@@ -150,7 +150,6 @@
     <string name="cookies_cleared">कुकीज़ को साफ़ किया हुआ</string>
     <string name="pref_clear_database">डेटाबेस साफ़ करें</string>
     <string name="pref_clear_database_summary">उन आइटम का इतिहास हटाएं जो आपकी पुस्तकालय में सहेजी नहीं गई हैं</string>
-    <string name="clear_database_confirmation">क्या आपको यकीन है? आपके द्वारा पढ़े गए अध्याय और गैर-पुस्तकालय आइटम की प्रगति खो जाएगी</string>
     <string name="clear_database_completed">प्रविष्टियां हटाई गईं</string>
     <string name="version">संस्करण</string>
     <string name="pref_enable_acra">क्रैश रिपोर्ट भेजें</string>
@@ -196,7 +195,7 @@
     <string name="error_category_exists">इस नाम के साथ एक श्रेणी पहले से मौजूद है!</string>
     <string name="snack_categories_deleted">श्रेणियाँ हटाई गयी</string>
     <string name="dialog_with_checkbox_remove_description">यह इस अध्याय की पठन तिथि को निकाल देगा क्या आप निश्चित है?</string>
-    <string name="dialog_with_checkbox_reset">इस आइटम के लिए सभी अध्यायों को रीसेट करें</string>
+    <string name="dialog_with_checkbox_reset">इस प्रविष्टि के लिए सभी अध्यायों को रीसेट करें</string>
     <string name="snack_add_to_library">पुस्तकालय में जोड़ें?</string>
     <string name="picture_saved">चित्र सहेजा गया</string>
     <string name="custom_filter">इच्छा अनुसार फिल्टर</string>
@@ -209,7 +208,7 @@
     <string name="download_queue_error">अध्याय डाउनलोड नहीं कर सका। आप डाउनलोड अनुभाग में फिर से कोशिश कर सकते हैं</string>
     <string name="notification_new_chapters">नए अध्याय पाए गए</string>
     <string name="notification_cover_update_failed">कवर को अपडेट करने में विफल</string>
-    <string name="notification_first_add_to_library">ऐसा करने से पहले कृपया अपनी पुस्तकालय में आइटम जोड़ें</string>
+    <string name="notification_first_add_to_library">कृपया यह करने से पहले प्रविष्टि को पुस्तकालय में जोड़ें</string>
     <string name="file_select_cover">कवर छवि का चयन करें</string>
     <string name="file_select_backup">बैकअप फ़ाइल का चयन करें</string>
     <string name="update_check_confirm">डाउनलोड</string>
@@ -360,7 +359,7 @@
     <string name="last_used_source">आखरी इस्त्तमाल किया गया</string>
     <string name="check_for_updates">अद्यतन के लिए जाँच</string>
     <string name="local_source_help_guide">स्थानीय स्रोत गाइड</string>
-    <string name="restore_duration">%02d मिनट,%02d सेकंड</string>
+    <string name="restore_duration">%1$02d मिनट, %2$02d सेकंड</string>
     <string name="downloaded_only_summary">आपकी पुस्तकालय में सभी आइटम को फ़िल्टर करता है</string>
     <string name="viewer">पढ़न मोड</string>
     <string name="pref_category_for_this_series">इस श्रृंखला के लिए</string>
@@ -372,7 +371,7 @@
     <string name="label_data">डेटा</string>
     <string name="backup_restore_missing_sources">अनुपलब्ध स्रोत:</string>
     <string name="invalid_backup_file_missing_manga">बैकअप में कोई पुस्तकालय आइटम नहीं हैं।</string>
-    <string name="invalid_backup_file">अमान्य बैकअप फ़ाइल</string>
+    <string name="invalid_backup_file">अमान्य बैकअप फ़ाइल:</string>
     <string name="pref_library_update_refresh_metadata_summary">लाइब्रेरी को अपडेट करते समय नए कवर और विवरण की जांच करें</string>
     <string name="pref_library_update_refresh_metadata">मेटाडेटा को स्वचालित रूप से ताज़ा करें</string>
     <string name="action_migrate">प्रवास</string>
@@ -450,9 +449,7 @@
     <string name="action_order_by_upload_date">अपलोड तिथि से</string>
     <string name="action_display_show_number_of_items">वस्तुओं की संख्या दिखाएं</string>
     <string name="action_filter_tracked">ट्रैक किए गए</string>
-    <string name="backup_restore_content_full">बैकअप फ़ाइल से डेटा बहाल किया जाएगा।
-\n
-\nआपको किसी भी लापता एक्सटेंशन को इंस्टॉल करना होगा और बाद में सेवाओं को ट्रैक करने के लिए लॉग इन करना होगा ताकि उनका उपयोग किया जा सके।</string>
+    <string name="backup_restore_content_full">आपको किसी भी गायब एक्सटेंशनों को स्थापित करने की आवश्यकता हो सकती है और उन्हें उपयोग करने के लिए बाद में ट्रैकिंग सेवाओं में लॉग इन करना पड़ सकता है।</string>
     <string name="pref_dual_page_invert_summary">यदि स्प्लिट वाइड पेजों का प्लेसमेंट पढ़ने की दिशा से मेल नहीं खाता है</string>
     <string name="pref_dual_page_invert">स्प्लिट पेज प्लेसमेंट को उल्टा करें</string>
     <string name="pref_dual_page_split">चौड़े पृष्ठ को दो भागों में बांट दे</string>
@@ -566,7 +563,7 @@
     <string name="skipped_reason_not_caught_up">छोड़ दिया गया क्योंकि वहाँ अपठित अध्याय हैं</string>
     <string name="skipped_reason_not_started">छोड़ दिया गया क्योंकि कोई अध्याय पढ़ा नहीं गया</string>
     <string name="pref_update_only_started">जो शुरू नहीं हुए हैं</string>
-    <string name="action_show_manga">आइटम दिखाएँ</string>
+    <string name="action_show_manga">प्रविष्टि दिखाएँ</string>
     <string name="action_display_cover_only_grid">केवल कवर ग्रिड</string>
     <string name="disabled_nav">अक्षम</string>
     <string name="rotation_reverse_portrait">रिवर्स पोर्ट्रेट</string>
@@ -633,7 +630,7 @@
     <string name="action_search_hint">खोजें…</string>
     <string name="action_display_show_continue_reading_button">पढ़ना जारी रखने वाला बटन</string>
     <string name="label_local">स्थानीय</string>
-    <string name="action_open_random_manga">कोई भी आइटम खोल दे</string>
+    <string name="action_open_random_manga">कोई भी प्रविष्टि खोलें</string>
     <string name="pref_skip_dupe_chapters">डुप्लिकेट अध्याय छोड़ें</string>
     <string name="action_not_now">अभी नहीं</string>
     <string name="pref_browse_summary">स्रोत, विस्तार, वैश्विक खोज</string>
@@ -664,7 +661,6 @@
     <string name="copied_to_clipboard_plain">क्लिपबोर्ड पर कॉपी हो गया है</string>
     <string name="track_delete_remote_text">%s से भी हटा दें</string>
     <string name="label_auto">स्वत:</string>
-    <string name="action_migrate_duplicate">मौजूदा एंट्री को बसाएं</string>
     <string name="action_sort_random">अनियमित</string>
     <string name="action_sort_tracker_score">ट्रैकर के स्कोर</string>
     <string name="selected">चयनित</string>
@@ -683,4 +679,25 @@
     <string name="onboarding_heading">नमस्ते!आपका स्वागत है!</string>
     <string name="label_upcoming">आगामी</string>
     <string name="action_revert_to_default">डिफ़ॉल्ट पर वापस लौटें</string>
+    <string name="onboarding_description">पहले कुछ चीजें सेट करते हैं। आप इन्हें बाद में सेटिंग्स में बदल भी सकते हैं।</string>
+    <string name="onboarding_storage_selection_required">एक फ़ोल्डर चुनना अनिवार्य है</string>
+    <string name="onboarding_storage_help_info">पुराने संस्करण से अपडेट कर रहे हैं और नहीं समझ पा रहे कि क्या चुनें? अधिक जानकारी के लिए स्टोरेज गाइड देखें।</string>
+    <string name="onboarding_storage_help_action">संग्रहण मार्गदर्शिका</string>
+    <string name="pref_behavior">व्यवहार</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">एक अध्याय पढ़ने के बाद</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">नया अध्याय प्राप्त करने के बाद</string>
+    <string name="pref_mark_duplicate_read_chapter_read">डुप्लिकेट पढ़े गए अध्याय को पढ़ा हुआ मार्क करें</string>
+    <string name="action_notes">टिप्पणियाँ</string>
+    <string name="action_edit_notes">टिप्पणियाँ संपादित करें</string>
+    <string name="ext_remove">हटाएँ</string>
+    <string name="remove_private_extension_message">क्या आप वाकई \"%s\" एक्सटेंशन को हटाना चाहते हैं?</string>
+    <string name="ext_confirm_remove">एक्सटेंशन हटाएँ?</string>
+    <string name="action_display_unread_badge">अवांचित अध्याय</string>
+    <string name="onboarding_action_next">अगला</string>
+    <string name="onboarding_action_finish">शुरू करें</string>
+    <string name="onboarding_action_skip">छोड़ें</string>
+    <string name="onboarding_storage_action_select">एक फ़ोल्डर चुनें</string>
+    <string name="possible_duplicates_summary">आपकी पुस्तकालय में एक समान नाम वाली प्रविष्टियाँ हैं।\n\nस्थानांतरित करने के लिए एक प्रविष्टि चुनें या फिर भी जोड़ें।</string>
+    <string name="onboarding_storage_info">%1$s अध्याय डाउनलोड, बैकअप और अन्य चीज़ों को संग्रहित करने के लिए एक फ़ोल्डर चुनें।\n\nएक समर्पित फ़ोल्डर उपयुक्त रहेगा।\n\nचयनित फ़ोल्डर: %2$s</string>
+    <string name="ext_permission_install_apps_warning">एक्सटेंशन स्थापित करने के लिए अनुमतियाँ आवश्यक हैं। अनुमति देने के लिए यहाँ टैप करें।</string>
 </resources>

@@ -34,7 +34,7 @@
     <string name="action_add_category">Tambah kategori</string>
     <string name="action_edit_categories">Ubah kategori</string>
     <string name="action_rename_category">Ubah nama kategori</string>
-    <string name="action_move_category">Masukkan ke kategori</string>
+    <string name="action_move_category">"Tentukan  kategori"</string>
     <string name="action_edit_cover">Ubah gambar sampul</string>
     <string name="action_pause">Hentikan sementara</string>
     <string name="action_previous_chapter">Bab sebelumnya</string>
@@ -146,7 +146,6 @@
     <string name="cookies_cleared">Cookies dihapus</string>
     <string name="pref_clear_database">Hapus database</string>
     <string name="pref_clear_database_summary">Hapus riwayat untuk entri yang tidak disimpan di perpustakaan Anda</string>
-    <string name="clear_database_confirmation">Apakah Anda yakin? Bab yang sudah dibaca dan kemajuan entri non-perpustakaan akan hilang</string>
     <string name="clear_database_completed">Entri dihapus</string>
     <string name="version">Versi</string>
     <string name="pref_enable_acra">Kirim laporan kerusakan</string>
@@ -384,7 +383,7 @@
     <string name="loader_not_implemented_error">Sumber tidak ditemukan</string>
     <string name="requires_app_restart">Mulai ulang aplikasi untuk menerapkan pengaturan</string>
     <string name="label_network">Jaringan</string>
-    <string name="action_disable">Matikan</string>
+    <string name="action_disable">Nonaktif</string>
     <string name="tapping_inverted_both">Keduanya</string>
     <string name="tapping_inverted_vertical">Tegak</string>
     <string name="tapping_inverted_horizontal">Mendatar</string>
@@ -608,7 +607,7 @@
     <string name="delete_category">Hapus kategori</string>
     <string name="pref_user_agent_string">String agen pengguna default</string>
     <string name="pref_reset_user_agent_string">Setel ulang string agen pengguna default</string>
-    <string name="action_remove_everything">Hapus semuanya</string>
+    <string name="action_remove_everything">Hapus semua</string>
     <string name="appwidget_updates_description">Lihat entri pustaka Anda yang baru saja diperbarui</string>
     <string name="appwidget_unavailable_locked">Widget tidak tersedia saat kunci aplikasi diaktifkan</string>
     <string name="update_already_running">Pembaruan sudah berjalan</string>
@@ -672,15 +671,12 @@
     <string name="label_completed_titles">Entri selesai</string>
     <string name="not_applicable">Tidak tersedia</string>
     <string name="day_short">%dhari</string>
-    <string name="action_not_now">Tidak sekarang</string>
+    <string name="action_not_now">Nanti</string>
     <string name="pref_library_update_show_tab_badge">Tampilkan jumlah yang belum dibaca pada ikon Pembaruan</string>
     <string name="information_no_manga_category">Kategori ini kosong</string>
     <string name="copied_to_clipboard_plain">Tersalin di papan klip</string>
     <string name="enhanced_services_not_installed">Tersedia tetapi sumber tidak terpasang: %s</string>
     <string name="pref_skip_dupe_chapters">Melewati bab terduplikasi</string>
-    <string name="confirm_add_duplicate_manga">Kamu memiliki entri di pustaka dengan nama yang sama.
-\n
-\nApakah kamu ingin melanjutkan?</string>
     <string name="track_error">%1$s eror: %2$s</string>
     <string name="information_required_plain">*dibutuhkan</string>
     <string name="pref_hide_in_library_items">Semua catatan tersembunyi sudah ada di perpustakaan</string>
@@ -691,11 +687,11 @@
     <string name="pref_page_rotate">Memutar halaman lebar agar pas</string>
     <string name="pref_page_rotate_invert">Orientasi balik halaman lebar yang diputar</string>
     <string name="pref_debug_info">Info debug</string>
-    <string name="pref_chapter_swipe_end">Geser kekanan</string>
-    <string name="pref_chapter_swipe_start">Geser kekiri</string>
+    <string name="pref_chapter_swipe_end">Bab tentang geser ke kanan</string>
+    <string name="pref_chapter_swipe_start">Bab tentang geser ke kiri</string>
     <string name="pref_double_tap_zoom">Ketuk dua kali untuk memperbesar</string>
     <string name="action_set_interval">Terapkan jeda waktu</string>
-    <string name="action_filter_interval_custom">Frekuensi pembaruan yang disesuaikan</string>
+    <string name="action_filter_interval_custom">Penyesuaian frekuensi update</string>
     <string name="skipped_reason_not_in_release_period">Dilewati karena tidak ada rilis yang diharapkan hari ini</string>
     <string name="action_sort_next_updated">Pembaruan yang diharapkan berikutnya</string>
     <string name="intervals_header">Interval</string>
@@ -738,7 +734,7 @@
     <string name="action_sort_tracker_score">Skor pelacak</string>
     <string name="label_data_storage">Data dan penyimpanan</string>
     <string name="exclude_scanlators">Kecualikan pemindai</string>
-    <string name="action_menu_overflow_description">Opsi lebih lanjut</string>
+    <string name="action_menu_overflow_description">Opsi lainnya</string>
     <string name="selected">Dipilih</string>
     <string name="not_selected">Tidak dipilih</string>
     <string name="action_bar_up_description">Navigasi ke atas</string>
@@ -791,7 +787,6 @@
     <string name="action_open_repo">Repo sumber terbuka</string>
     <string name="pref_webtoon_disable_zoom_out">Menonaktifkan zoom out</string>
     <string name="label_upcoming">Yang akan datang</string>
-    <string name="action_migrate_duplicate">Migrasikan entri yang ada</string>
     <string name="action_replace_repo_message">Repositori %1$s memiliki Signing Key Fingerprint yang sama dengan %2$s.
 \nJika hal ini diharapkan, %2$s akan diganti, jika tidak, hubungi pengelola repo Anda.</string>
     <string name="action_add_anyway">Tambahkan saja</string>
@@ -849,4 +844,13 @@
     <string name="tracked_privately">Dilacak secara pribady</string>
     <string name="action_toggle_private_on">Lacak secara pribadi</string>
     <string name="action_toggle_private_off">Lacak secara publik</string>
+    <string name="action_edit_notes">Ubah catatan</string>
+    <string name="action_notes">Catatan</string>
+    <string name="action_display_unread_badge">Chapter belum dibaca</string>
+    <string name="theme_catppuccin">Catppuccin</string>
+    <string name="pref_behavior">Perilaku</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">Setelah membaca satu bab</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">Setelah mengambil bab baru</string>
+    <string name="pref_hide_missing_chapter_indicators">Sembunyikan indikator bab yang hilang</string>
+    <string name="storage_failed_to_create_download_directory">Gagal membuat direktori unduhan</string>
 </resources>

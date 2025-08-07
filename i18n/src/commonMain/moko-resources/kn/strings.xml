@@ -351,7 +351,6 @@
     <string name="pref_disable_battery_optimization">ಬ್ಯಾಟರಿ ಆಪ್ಟಿಮೈಸೇಶನ್ ಅನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಿ</string>
     <string name="pref_refresh_library_covers">ಗ್ರಂಥಾಲಯದ ಮಾಂಗಾ ಕವರ್‌ಗಳನ್ನು ರಿಫ್ರೆಶ್ ಮಾಡಿ</string>
     <string name="clear_database_completed">ನಮೂದುಗಳನ್ನು ಅಳಿಸಲಾಗಿದೆ</string>
-    <string name="clear_database_confirmation">ನೀವು ಖಚಿತವಾಗಿರುವಿರಾ? ಅಧ್ಯಾಯಗಳು ಗ್ರಂಥಾಲಯೇತರ ಮಾಂಗಾದ ಓದು ಮತ್ತು ಪ್ರಗತಿ ಕಳೆದುಹೋಗುತ್ತದೆ</string>
     <string name="pref_clear_database_summary">ನಿಮ್ಮ ಗ್ರಂಥಾಲಯದಲ್ಲಿ ಇಲ್ಲದ ಮಾಂಗಾದ ಇತಿಹಾಸವನ್ನು ಅಳಿಸಿ</string>
     <string name="pref_clear_database">ಡೇಟಾಬೇಸ್ ತೆರವುಗೊಳಿಸಿ</string>
     <string name="cookies_cleared">ಕುಕೀಗಳನ್ನು ತೆರವುಗೊಳಿಸಲಾಗಿದೆ</string>

@@ -57,4 +57,13 @@
     <plurals name="pref_pages">
         <item quantity="other">%1$s halaman</item>
     </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="other">Migrasikan %1$d entri?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="other">Salin %1$d entri?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="other">%1$d entri dilewati</item>
+    </plurals>
 </resources>

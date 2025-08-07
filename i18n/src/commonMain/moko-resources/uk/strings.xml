@@ -70,7 +70,7 @@
     <string name="pref_category_tracking">Відстеження</string>
     <string name="pref_category_advanced">Додатково</string>
     <string name="pref_category_about">Інформація</string>
-    <string name="pref_library_columns">Розмір сітки</string>
+    <string name="pref_library_columns">Елементів у рядку</string>
     <string name="portrait">Портретна</string>
     <string name="landscape">Альбомна</string>
     <string name="pref_library_update_interval">Автоматичне оновлення</string>
@@ -139,10 +139,10 @@
     <string name="rotation_free">Вільна</string>
     <string name="rotation_force_portrait">Заблокована портретна</string>
     <string name="rotation_force_landscape">Заблокована альбомна</string>
-    <string name="color_filter_r_value">R</string>
-    <string name="color_filter_g_value">G</string>
-    <string name="color_filter_b_value">B</string>
-    <string name="color_filter_a_value">A</string>
+    <string name="color_filter_r_value">Червоний</string>
+    <string name="color_filter_g_value">Зелений</string>
+    <string name="color_filter_b_value">Синій</string>
+    <string name="color_filter_a_value">Прозорість</string>
     <string name="pref_remove_after_marked_as_read">Після того, як було відмічено прочитаним вручну</string>
     <string name="pref_remove_after_read">Автоматично видаляти після прочитання</string>
     <string name="disabled">Вимкнено</string>
@@ -171,7 +171,6 @@
     <string name="cookies_cleared">Куки очищено</string>
     <string name="pref_clear_database">Очистити базу даних</string>
     <string name="pref_clear_database_summary">Видалити історію для записів, котрі не знаходяться в вашій бібліотеці</string>
-    <string name="clear_database_confirmation">Ви впевнені? Прочитані розділи та прогрес не бібліотечних записів будуть втрачені</string>
     <string name="clear_database_completed">Дані видалено</string>
     <string name="version">Версія</string>
     <string name="pref_enable_acra">Надсилати звіти про падіння</string>
@@ -651,7 +650,7 @@
     <string name="track_remove_date_conf_title">Видалити дату?</string>
     <string name="track_remove_start_date_conf_text">Це призведе до видалення вибраної раніше дати початку з %s</string>
     <string name="track_remove_finish_date_conf_text">Це призведе до видалення раніше вибраної дати завершення з %s</string>
-    <string name="pref_invalidate_download_cache">Недійсний індекс завантажень</string>
+    <string name="pref_invalidate_download_cache">Переіндексація завантажень</string>
     <string name="label_read_duration">Тривалість читання</string>
     <string name="label_titles_section">Записи</string>
     <string name="label_total_chapters">Всього</string>
@@ -678,9 +677,6 @@
     <string name="copied_to_clipboard_plain">Скопійовано в буфер обміну</string>
     <string name="enhanced_services_not_installed">Доступно, але джерело не встановлене: %s</string>
     <string name="pref_skip_dupe_chapters">Пропуск повторюваних розділів</string>
-    <string name="confirm_add_duplicate_manga">У бібліотеці є запис з такою ж назвою.
-\n
-\nВи все ще хочете продовжити?</string>
     <string name="track_error">%1$s помилка: %2$s</string>
     <string name="information_required_plain">*необхідно</string>
     <string name="pref_hide_in_library_items">Приховати записи, які вже є в бібліотеці</string>
@@ -691,8 +687,8 @@
     <string name="pref_page_rotate">Повернути широкі сторінки за розміром</string>
     <string name="pref_page_rotate_invert">Перевернути орієнтацію обернутих широких сторінок</string>
     <string name="pref_debug_info">Інформація для відлагодження</string>
-    <string name="pref_chapter_swipe_end">Проведіть пальцем праворуч</string>
-    <string name="pref_chapter_swipe_start">Проведіть пальцем ліворуч</string>
+    <string name="pref_chapter_swipe_end">Розділ при проведені пальцем вправоруч</string>
+    <string name="pref_chapter_swipe_start">Розділ при проведені пальцем ліворуч</string>
     <string name="pref_double_tap_zoom">Двічі торкніться, щоб збільшити</string>
     <string name="action_set_interval">Встановити інтервал</string>
     <string name="manga_display_interval_title">Оцініть кожну</string>
@@ -756,7 +752,7 @@
     <string name="error_repo_exists">Цей репозиторій вже існує!</string>
     <string name="label_add_repo_input">Посилання на репозиторій</string>
     <string name="action_add_repo_message">Додати додаткові репозиторії до Mihon. Це повинні бути посилання які закінчуються на \"index.min.json\".</string>
-    <string name="manga_interval_expected_update">Нові глави передбачено будуть випущені приблизно в %1$s, перевіряючи кожні %2$s.</string>
+    <string name="manga_interval_expected_update">Нові розділи передбачено будуть випущені приблизно в %1$s, перевіряючи кожні %2$s.</string>
     <string name="onboarding_storage_help_info">Оновлюєтесь з попередньої версії і не впевнені яку обрати? Перегляньте гайд по сховищу для додаткової інформації.</string>
     <string name="onboarding_storage_help_action">Гайд по сховищу</string>
     <string name="manga_interval_custom_amount">Своя частота оновлення:</string>
@@ -766,7 +762,7 @@
     <string name="no_location_set">Не встановлено місце сховища</string>
     <string name="pref_storage_location">Місце сховища</string>
     <string name="onboarding_permission_action_grant">Отримати</string>
-    <string name="pref_storage_location_info">Використовується для автоматичних бекапів, завантажень глав, та локальних джерел.</string>
+    <string name="pref_storage_location_info">Використовується для автоматичних бекапів, завантажень розділів, та локальних джерел.</string>
     <string name="manga_interval_expected_update_soon">Незабаром</string>
     <string name="ext_revoke_trust">Скинути довірені невідомі розширення</string>
     <string name="action_delete_repo">Видалити репозиторій</string>
@@ -781,11 +777,7 @@
     <string name="onboarding_heading">Вітаємо!</string>
     <string name="onboarding_action_next">Далі</string>
     <string name="onboarding_action_skip">Пропустити</string>
-    <string name="onboarding_storage_info">Оберіть папку де %1$s буде зберігати збережені глави, бекапи, та інше.
-\n
-\nРекомендуємо обрати окрему папку.
-\n
-\nОбрана папка: %2$s</string>
+    <string name="onboarding_storage_info">Оберіть папку де %1$s буде зберігати збережені розділи, бекапи, та інше. \n \nРекомендуємо обрати окрему папку. \n \nОбрана папка: %2$s</string>
     <string name="onboarding_action_finish">Почнемо</string>
     <string name="onboarding_description">Давайте для початку налаштуємо дещо. Ви завжди зможете змінити ці налаштування потім.</string>
     <string name="pref_onboarding_guide">Гайд новачка</string>
@@ -795,16 +787,15 @@
 \nЯкщо це очікувано, %2$s буде замінено, в іншому випадку зверніться до вашого обслуговуючого репозиторію.</string>
     <string name="action_view_upcoming">Переглянути майбутні оновлення</string>
     <string name="upcoming_calendar_prev">Попередній місяць</string>
-    <string name="action_migrate_duplicate">Перенести існуючий запис</string>
     <string name="action_replace_repo">Замінити</string>
     <string name="pref_display_profile">Власний профіль відображення</string>
     <string name="pref_webtoon_disable_zoom_out">Вимкнути зменшення масштабу</string>
     <string name="label_upcoming">Незабаром</string>
     <string name="upcoming_calendar_next">Наступний місяць</string>
     <string name="pref_auto_update_manga_on_mark_read">Оновити прогрес коли главу помічено прочитаною</string>
-    <string name="manga_interval_expected_update_null">Ця манга завершена, або не має приблизної дати релізу.</string>
+    <string name="manga_interval_expected_update_null">Ця манґа завершена, або не має приблизної дати релізу.</string>
     <string name="action_sort_random">Випадково</string>
-    <string name="onboarding_permission_crashlytics_description">Надіслати анонімний звіт про помилку</string>
+    <string name="onboarding_permission_crashlytics_description">Надіслати анонімний звіт про помилку.</string>
     <string name="onboarding_permission_crashlytics">Надіслати звіт про помилку</string>
     <string name="onboarding_permission_analytics">Дозволити аналітику</string>
     <string name="pref_flash_duration_summary">%1$s мс</string>
@@ -816,6 +807,47 @@
     <string name="ext_confirm_remove">Видалити Розширення?</string>
     <string name="ext_remove">Видалити</string>
     <string name="remove_private_extension_message">Дійсно видалити \"%s\"?</string>
-    <string name="pref_download_new_unread_chapters_only">Пропускати завантаження копій прочитаних глав</string>
+    <string name="pref_download_new_unread_chapters_only">Пропустити завантаження копій прочитаних розділів</string>
     <string name="add_repo_confirmation">Дійсно додати репозиторій \"%s\"?</string>
+    <string name="label_auto">Автоматичний</string>
+    <string name="theme_monochrome">Монохромний режим</string>
+    <string name="pref_behavior">Поведінка</string>
+    <string name="action_notes">Примітки</string>
+    <string name="action_edit_notes">Редагувати примітки</string>
+    <string name="action_display_unread_badge">Непрочитані розділи</string>
+    <string name="pref_flash_style_white">Білий</string>
+    <string name="pref_flash_style_white_black">Білий і чорний</string>
+    <string name="pref_flash_duration">Тривалість спалаху</string>
+    <string name="pref_flash_page_interval">Блимайти кожну</string>
+    <string name="pref_flash_with">Блимайти з</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Позначати дублікат прочитаного розділу теж як прочитаний</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">Після прочитання розділу</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">Після отримання нового розділу</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">Використовуйте застарілий декодер для читалки довгих сторінок</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Впливає на продуктивність. Увімкніть, якщо зменшення порогу растрового зображення не розв\'язує проблему з порожніми зображеннями</string>
+    <string name="pref_hardware_bitmap_threshold">Користувацький поріг апаратного растра</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Якщо читалка завантажує порожнє зображення, поступово зменшувати поріг.\nВибрано: %s</string>
+    <string name="pref_flash_style_black">Чорний</string>
+    <string name="pref_hardware_bitmap_threshold_default">За замовчуванням (%d)</string>
+    <string name="invalid_backup_file_json">Резервне копіювання JSON не підтримується</string>
+    <string name="invalid_backup_file_unknown">Файл резервної копії пошкоджено</string>
+    <string name="trackers_updated_summary">Трекери оновлено до розділу %d</string>
+    <string name="confirm_tracker_update">Оновити трекери до розділу %d?</string>
+    <string name="library_exported">Бібліотеку експортовано</string>
+    <string name="possible_duplicates_title">Можливі копії</string>
+    <string name="pref_incognito_mode_extension_summary">Призупинити історію читання для розширення</string>
+    <string name="action_toggle_private_on">Відстежувати приватно</string>
+    <string name="file_picker_uri_permission_unsupported">Не вдалося отримати постійний доступ до теки. Програма може поводитися непередбачувано.</string>
+    <string name="notes_placeholder">Сподобалась частина, де…</string>
+    <string name="extensionRepo_settings">Репозиторії розширень</string>
+    <string name="upcoming_guide">Інструкції до наступних розділів</string>
+    <string name="non_library_settings">Всі прочитані записи</string>
+    <string name="tracked_privately">Відстежується приватно</string>
+    <string name="action_toggle_private_off">Відстежувати публічно</string>
+    <string name="export">Експортувати</string>
+    <string name="artist">Художник</string>
+    <string name="author">Автор</string>
+    <string name="library_list">Список бібліотеки</string>
+    <string name="possible_duplicates_summary">У вашій бібліотеці є записи зі схожою назвою.\n\nВиберіть запис для перенесення або просто додайте.</string>
+    <string name="clear_db_exclude_read">Зберегти записи з прочитаними розділами</string>
 </resources>

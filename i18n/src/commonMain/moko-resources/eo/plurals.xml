@@ -21,20 +21,20 @@
         <item quantity="other">%1$d novaj ĉapitroj</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Por 1 titolo</item>
-        <item quantity="other">Por %d titoloj</item>
+        <item quantity="one">Por 1 elemento</item>
+        <item quantity="other">Por %d elementoj</item>
     </plurals>
     <plurals name="missing_chapters_warning">
         <item quantity="one">Preterpasas %d ĉapitron, aŭ ĝi mankas ĉe la fonto aŭ ĝi estis elfiltrita</item>
         <item quantity="other">Preterpasas %d ĉapitrojn, aŭ ili mankas ĉe la fonto aŭ ili estis elfiltritaj</item>
     </plurals>
     <plurals name="num_trackers">
-        <item quantity="one">1 ŝanĝspurilo</item>
-        <item quantity="other">%d ŝanĝspuriloj</item>
+        <item quantity="one">1 sekvilo</item>
+        <item quantity="other">%d sekviloj</item>
     </plurals>
     <plurals name="download_queue_summary">
-        <item quantity="one">%1$s restas</item>
-        <item quantity="other">%1$s restas</item>
+        <item quantity="one">%1$s restanta</item>
+        <item quantity="other">%1$s restantaj</item>
     </plurals>
     <plurals name="restore_completed_message">
         <item quantity="one">Farita en %1$s kun %2$s eraro</item>
@@ -66,7 +66,7 @@
     </plurals>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Disponebla ĝisdatigo de etendaĵo</item>
-        <item quantity="other">Disponeblaj ĝisdatigoj de %d etendaĵoj</item>
+        <item quantity="other">Disponeblaj %d ĝisdatigoj de etendaĵoj</item>
     </plurals>
     <plurals name="upcoming_relative_time">
         <item quantity="one">Morgaŭ</item>
@@ -75,5 +75,17 @@
     <plurals name="pref_pages">
         <item quantity="one">1 paĝo</item>
         <item quantity="other">%1$s paĝoj</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">Ĉu migri %1$d elementon?</item>
+        <item quantity="other">Ĉu mirgi %1$d elementojn?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">Ĉu kopii %1$d elementon?</item>
+        <item quantity="other">Ĉu kopii %1$d elementojn?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">Elemento estis preterlasita</item>
+        <item quantity="other">%1$d elementoj estis preterlasitaj</item>
     </plurals>
 </resources>
