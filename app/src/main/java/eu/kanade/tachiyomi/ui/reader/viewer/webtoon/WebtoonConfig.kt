@@ -44,6 +44,9 @@ class WebtoonConfig(
 
     val theme = readerPreferences.readerTheme().get()
 
+    var autoScrollEnabled = readerPreferences.autoScroll().get()
+    var autoScrollSpeed = readerPreferences.autoScrollSpeed().get()
+
     init {
         readerPreferences.cropBordersWebtoon()
             .register({ imageCropBorders = it }, { imagePropertyChangedListener?.invoke() })
@@ -96,6 +99,12 @@ class WebtoonConfig(
             .distinctUntilChanged()
             .onEach { themeChangedListener?.invoke() }
             .launchIn(scope)
+
+        readerPreferences.autoScroll()
+            .register({ autoScrollEnabled = it })
+
+        readerPreferences.autoScrollSpeed()
+            .register({ autoScrollSpeed = it })
     }
 
     override var navigator: ViewerNavigation = defaultNavigation()

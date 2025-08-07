@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Added
+- Added option to automate scrolling and flipping of pages in reader ([@Guzmazow](https://github.com/guzmazow/)) ([#2291](https://github.com/mihonapp/mihon/pull/2291))
 
 ## [v0.19.1] - 2025-08-07
 ### Changed
