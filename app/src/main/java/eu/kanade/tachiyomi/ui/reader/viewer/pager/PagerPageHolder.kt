@@ -16,6 +16,7 @@ import eu.kanade.tachiyomi.widget.ViewPagerAdapter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import logcat.LogPriority
@@ -151,7 +152,12 @@ class PagerPageHolder(
 
         try {
             val (source, isAnimated, background) = withIOContext {
-                val source = streamFn().use { process(item, Buffer().readFrom(it)) }
+                val source = if (viewer.config.combinedPages && canCombineWithNext()) {
+                    viewer.markPageAsCombined(page)
+                    createCombinedPageSource()
+                } else {
+                    streamFn().use { process(item, Buffer().readFrom(it)) }
+                }
                 val isAnimated = ImageUtil.isAnimatedAndSupported(source)
                 val background = if (!isAnimated && viewer.config.automaticBackground) {
                     ImageUtil.chooseBackground(context, source.peek().inputStream())
@@ -240,6 +246,77 @@ class PagerPageHolder(
     private fun onPageSplit(page: ReaderPage) {
         val newPage = InsertPage(page)
         viewer.onPageSplit(page, newPage)
+    }
+
+    /**
+     * Check if current page can be combined with the next page for dual-page display.
+     */
+    private suspend fun canCombineWithNext(): Boolean {
+        if (viewer.config.combinedPagesShowCover && page.index == 0) return false
+        if (page.status != Page.State.Ready) return false
+
+        val currentPageIndex = viewer.getItemIndex(page)
+        val nextPageIndex = if (viewer is R2LPagerViewer) {
+            currentPageIndex - 1
+        } else {
+            currentPageIndex + 1
+        }
+
+        if (currentPageIndex == -1 || nextPageIndex < 0 || nextPageIndex >= viewer.getItemCount()) {
+            return false
+        }
+
+        val nextPage = viewer.getItemAt(nextPageIndex)
+        if (nextPage !is ReaderPage || nextPage is InsertPage) return false
+        if (viewer.isPageCombined(nextPage)) return false
+        if (page.chapter.chapter.id != nextPage.chapter.chapter.id) return false
+        if (nextPage.status != Page.State.Ready) {
+            try {
+                nextPage.statusFlow.first { it == Page.State.Ready || it is Page.State.Error }
+                if (nextPage.status is Page.State.Error) {
+                    return false
+                }
+            } catch (e: Exception) {
+                return false
+            }
+        }
+
+        val currentStreamFn = page.stream ?: return false
+        val nextStreamFn = nextPage.stream ?: return false
+
+        val currentIsWide = currentStreamFn().use { ImageUtil.isWideImage(Buffer().readFrom(it)) }
+        val nextIsWide = nextStreamFn().use { ImageUtil.isWideImage(Buffer().readFrom(it)) }
+
+        return !currentIsWide && !nextIsWide
+    }
+
+    /**
+     * Creates a combined image source from current page and next page.
+     */
+    private suspend fun createCombinedPageSource(): BufferedSource {
+        val currentPageIndex = viewer.getItemIndex(page)
+        val nextPageIndex = if (viewer is R2LPagerViewer) {
+            currentPageIndex - 1
+        } else {
+            currentPageIndex + 1
+        }
+        val nextPage = viewer.getItemAt(nextPageIndex) as ReaderPage
+
+        val currentBuffer = page.stream!!().use {
+            process(page, Buffer().readFrom(it))
+        }
+        val nextBuffer = nextPage.stream!!().use {
+            process(nextPage, Buffer().readFrom(it))
+        }
+
+        withUIContext {
+            viewer.markPageAsHidden(nextPage)
+        }
+
+        return when (viewer) {
+            is L2RPagerViewer -> ImageUtil.combinePages(currentBuffer, nextBuffer)
+            else -> ImageUtil.combinePages(nextBuffer, currentBuffer)
+        }
     }
 
     /**
