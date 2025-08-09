@@ -636,7 +636,7 @@ private fun MangaSummary(
                 Column(
                     modifier = Modifier.onSizeChanged { size ->
                         infoHeight = size.height
-                    }
+                    },
                 ) {
                     MangaNotesSection(
                         content = notes,
