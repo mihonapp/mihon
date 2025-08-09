@@ -848,9 +848,9 @@
     <string name="pref_behavior">操作</string>
     <string name="action_display_unread_badge">未读章节</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">读完一个章节后</string>
-    <string name="action_notes">笔记</string>
-    <string name="action_edit_notes">编辑笔记</string>
-    <string name="notes_placeholder">我喜欢这段…</string>
+    <string name="action_notes">添加注释</string>
+    <string name="action_edit_notes">编辑注释</string>
+    <string name="notes_placeholder">我喜欢这个部分…</string>
     <string name="possible_duplicates_summary">在你的书架中有一些名称相似的作品。\n\n请选择其中一个作品进行迁移或仍然新增。</string>
     <string name="possible_duplicates_title">可能重复的作品</string>
     <string name="clear_database_text">你即将从数据库中删除这些作品</string>
@@ -901,6 +901,6 @@
     <string name="migrationListScreen.unknownLatestChapter">未知</string>
     <string name="migrationListScreenTitle">迁移</string>
     <string name="pref_hide_missing_chapter_indicators">隐藏缺失章节提示符</string>
-    <string name="pref_display_images_description">在漫画简介中显示图片</string>
+    <string name="pref_display_images_description">在漫画注释中显示图片</string>
     <string name="label_donate">捐赠</string>
 </resources>

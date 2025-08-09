@@ -831,4 +831,6 @@
     <string name="clear_db_exclude_read">Manter entradas com capítulos lidos</string>
     <string name="action_notes">Notas</string>
     <string name="action_edit_notes">Editar notas</string>
+    <string name="artist">Artista</string>
+    <string name="author">Autor</string>
 </resources>
