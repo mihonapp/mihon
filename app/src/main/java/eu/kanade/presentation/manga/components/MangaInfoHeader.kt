@@ -53,6 +53,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -68,6 +69,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -618,6 +620,7 @@ private fun MangaSummary(
         targetValue = if (expanded) 1f else 0f,
         label = "summary",
     )
+    var infoHeight by remember { mutableIntStateOf(0) }
     Layout(
         modifier = modifier.clipToBounds(),
         contents = listOf(
@@ -630,25 +633,11 @@ private fun MangaSummary(
                 )
             },
             {
-                Column {
-                    MangaNotesSection(
-                        content = notes,
-                        expanded = true,
-                        onEditNotes = onEditNotesClicked,
-                    )
-                    MarkdownRender(
-                        content = description,
-                        modifier = Modifier.secondaryItemAlpha(),
-                        annotator = descriptionAnnotator(
-                            loadImages = loadImages,
-                            linkStyle = getMarkdownLinkStyle().toSpanStyle(),
-                        ),
-                        loadImages = loadImages,
-                    )
-                }
-            },
-            {
-                Column {
+                Column(
+                    modifier = Modifier.onSizeChanged { size ->
+                        infoHeight = size.height
+                    },
+                ) {
                     MangaNotesSection(
                         content = notes,
                         expanded = expanded,
@@ -685,14 +674,11 @@ private fun MangaSummary(
                 }
             },
         ),
-    ) { (shrunk, expanded, actual, scrim), constraints ->
+    ) { (shrunk, actual, scrim), constraints ->
         val shrunkHeight = shrunk.single()
             .measure(constraints)
             .height
-        val expandedHeight = expanded.single()
-            .measure(constraints)
-            .height
-        val heightDelta = expandedHeight - shrunkHeight
+        val heightDelta = infoHeight - shrunkHeight
         val scrimHeight = 24.dp.roundToPx()
 
         val actualPlaceable = actual.single()

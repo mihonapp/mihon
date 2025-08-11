@@ -299,7 +299,10 @@ class Downloader(
                     maxDownloadsFromSource > CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD
                 ) {
                     notifier.onWarning(
-                        context.stringResource(MR.strings.download_queue_size_warning),
+                        context.stringResource(
+                            MR.strings.download_queue_size_warning,
+                            context.stringResource(MR.strings.app_name),
+                        ),
                         WARNING_NOTIF_TIMEOUT_MS,
                         NotificationHandler.openUrl(context, LibraryUpdateNotifier.HELP_WARNING_URL),
                     )

@@ -14,6 +14,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Added
 - Added option to automate scrolling and flipping of pages in reader ([@Guzmazow](https://github.com/guzmazow/)) ([#2291](https://github.com/mihonapp/mihon/pull/2291))
 
+### Fixes
+- Fix height of description not being calculated correctly if images are present ([@Secozzi](https://github.com/Secozzi)) ([#2382](https://github.com/mihonapp/mihon/pull/2382))
+
 ## [v0.19.1] - 2025-08-07
 ### Changed
 - LocalSource now reads ComicInfo.xml file for chapter (if available) to display chapter title, number and scanlator ([@raxod502](https://github.com/radian-software)) ([#2332](https://github.com/mihonapp/mihon/pull/2332))
