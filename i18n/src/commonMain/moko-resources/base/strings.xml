@@ -364,7 +364,7 @@
     <string name="information_empty_repos">You have no repos set.</string>
     <string name="action_add_repo">Add repo</string>
     <string name="label_add_repo_input">Repo URL</string>
-    <string name="action_add_repo_message">Add additional repos to Mihon. This should be a URL that ends with \"index.min.json\".</string>
+    <string name="action_add_repo_message">Add additional repos to %s. This should be a URL that ends with \"index.min.json\".</string>
     <string name="error_repo_exists">This repo already exists!</string>
     <string name="action_delete_repo">Delete repo</string>
     <string name="invalid_repo_name">Invalid repo URL</string>
@@ -904,7 +904,7 @@
     <!-- Downloads activity and service -->
     <string name="download_queue_error">Couldn\'t download chapters. You can try again in the downloads section</string>
     <string name="download_insufficient_space">Couldn\'t download chapters due to low storage space</string>
-    <string name="download_queue_size_warning">Warning: large bulk downloads may lead to sources becoming slower and/or blocking Mihon. Tap to learn more.</string>
+    <string name="download_queue_size_warning">Warning: large bulk downloads may lead to sources becoming slower and/or blocking %s. Tap to learn more.</string>
 
     <!-- Library update service notifications -->
     <string name="notification_updating_progress">Updating library… (%s)</string>
