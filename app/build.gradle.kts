@@ -255,6 +255,9 @@ dependencies {
     }
     implementation(libs.image.decoder)
 
+    // Image processing
+    implementation(libs.manga.vision)
+
     // UI libraries
     implementation(libs.material)
     implementation(libs.flexible.adapter.core)

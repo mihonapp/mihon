@@ -2,9 +2,9 @@ package eu.kanade.tachiyomi.ui.reader.loader.inteceptor
 
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
+import io.github.theunlocked.mangavision.SpreadDetector
 import kotlinx.coroutines.sync.Mutex
 import tachiyomi.core.common.util.system.ImageUtil
-import tachiyomi.core.common.util.system.VisionUtil
 import tachiyomi.core.common.util.system.logcat
 
 class SpreadFusionInterceptor(pages: List<ReaderPage>, private val isLTR: Boolean) : PageLoaderInterceptor(pages) {
@@ -96,7 +96,7 @@ class SpreadFusionInterceptor(pages: List<ReaderPage>, private val isLTR: Boolea
             bitmap2 = tmp
         }
 
-        if (!VisionUtil.detectSpread(bitmap1, bitmap2)) {
+        if (!SpreadDetector.isSpread(bitmap1, bitmap2)) {
             return false
         }
 
