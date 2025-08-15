@@ -5,6 +5,7 @@ import android.view.MotionEvent
 import android.view.View
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
+import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
  * Interface for implementing a viewer.
@@ -42,4 +43,9 @@ interface Viewer {
      * return true if the event was handled, false otherwise.
      */
     fun handleGenericMotionEvent(event: MotionEvent): Boolean
+
+    /**
+     * This is used to start/stop auto-scrolling or auto-flipping
+     */
+    val automationInProgress: MutableStateFlow<Boolean>
 }
