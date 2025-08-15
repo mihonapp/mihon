@@ -68,7 +68,7 @@ class ExtensionDetailsScreenModel(
                         .map {
                             it.sortedWith(
                                 compareBy(
-                                    { !it.enabled },
+                                    { item -> !item.enabled },
                                     { item ->
                                         item.source.name.takeIf { item.labelAsName }
                                             ?: LocaleHelper.getSourceDisplayName(item.source.lang, context).lowercase()
