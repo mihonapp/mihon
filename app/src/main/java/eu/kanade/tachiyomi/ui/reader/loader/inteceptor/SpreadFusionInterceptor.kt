@@ -87,21 +87,34 @@ class SpreadFusionInterceptor(pages: List<ReaderPage>, private val isLTR: Boolea
     private fun trySpread(page1: ReaderPage, page2: ReaderPage): Boolean {
         checked.add(page1)
 
-        var bitmap1 = page1.bitmap ?: return false
-        var bitmap2 = page2.bitmap ?: return false
+        var bitmapFn1 = page1.bitmap ?: return false
+        var bitmapFn2 = page2.bitmap ?: return false
 
         if (!isLTR) {
-            val tmp = bitmap1
-            bitmap1 = bitmap2
-            bitmap2 = tmp
+            val tmp = bitmapFn1
+            bitmapFn1 = bitmapFn2
+            bitmapFn2 = tmp
         }
 
-        if (!SpreadDetector.isSpread(bitmap1, bitmap2)) {
-            return false
+        val bitmap1 = bitmapFn1()
+        val bitmap2 = bitmapFn2()
+
+        try {
+            if (!SpreadDetector.isSpread(bitmap1, bitmap2)) {
+                return false
+            }
+        }
+        finally {
+            // We don't want to hold these in memory. When it comes time to render the page, the bitmaps can be
+            // re-obtained for merging. In theory we could hold onto these for just the first time it loads since the
+            // image will generally be fetched immediately after the state changes to ready, but that adds a lot of
+            // complexity and it's probably not that big of a deal.
+            bitmap1.recycle()
+            bitmap2.recycle()
         }
 
         page1.output.apply {
-            bitmap = ImageUtil.mergeHorizontal(bitmap1, bitmap2)
+            bitmap = { ImageUtil.mergeHorizontal(bitmapFn1(), bitmapFn2()) }
             status = Page.State.Ready
         }
         page2.output.apply {

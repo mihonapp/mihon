@@ -16,7 +16,12 @@ open class ReaderPage(
     open lateinit var chapter: ReaderChapter
 
     private var _backingStream = stream
-    private var _backingBitmap: Bitmap? = null
+
+    /**
+     * We don't want to need to hold the bitmap in memory for the entire lifetime of the page,
+     * so wrapping it in a thunk allows the bitmap to be generated on the fly when requested.
+     */
+    private var _backingBitmap: (() -> Bitmap)? = null
 
     /**
      * A view of this page's image data represented as an [InputStream] thunk.
@@ -25,7 +30,7 @@ open class ReaderPage(
     var stream: (() -> InputStream)?
         get() = _backingStream ?: _backingBitmap?.let { {
             Buffer().apply {
-                it.compress(Bitmap.CompressFormat.PNG, 100, outputStream())
+                it().compress(Bitmap.CompressFormat.PNG, 100, outputStream())
             }.inputStream()
         } }
         set(value) {
@@ -34,31 +39,34 @@ open class ReaderPage(
         }
 
     /**
-     * A view of this page's image data represented as a [Bitmap].
+     * A view of this page's image data represented as a [Bitmap] thunk.
+     * The returned bitmap is owned by the caller. This means the same
+     * bitmap should _not_ be shared between calls to the same function.
      *
      * This will not include any animation data that may be present in [stream], and setting
      * this property will cause any existing animation data to be lost.
      *
      * @see [stream]
      */
-    var bitmap: Bitmap?
-        get() = _backingBitmap ?: stream?.invoke()?.use {
-            ImageDecoder.newInstance(Buffer().readFrom(it).inputStream())?.run {
-                try {
-                    decode()
-                }
-                finally {
-                    recycle()
+    var bitmap: (() -> Bitmap)?
+        get() = _backingBitmap ?: stream?.let { {
+            it().use {
+                ImageDecoder.newInstance(Buffer().readFrom(it).inputStream())!!.run {
+                    try {
+                        decode()!!
+                    }
+                    finally {
+                        recycle()
+                    }
                 }
             }
-        }
+        } }
         set(value) {
             _backingStream = null
             _backingBitmap = value
         }
 
     fun getImageSource(): ImageUtil.ImageSource? =
-        // Even if the backing data is already a bitmap, we need to clone it so _backingBitmap isn't consumed.
-        _backingBitmap?.let { ImageUtil.ImageSource.FromBitmap(Bitmap.createBitmap(it)) }
+        _backingBitmap?.let { ImageUtil.ImageSource.FromBitmap(it()) }
             ?: _backingStream?.let { ImageUtil.ImageSource.FromBuffer(Buffer().readFrom(it())) }
 }
