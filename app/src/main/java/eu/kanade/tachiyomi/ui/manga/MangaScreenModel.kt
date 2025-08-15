@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.manga
 
 import android.content.Context
+import androidx.annotation.FloatRange
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -29,6 +30,7 @@ import eu.kanade.domain.track.interactor.TrackChapter
 import eu.kanade.domain.track.model.AutoTrackState
 import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.presentation.manga.DownloadAction
+import eu.kanade.presentation.manga.ExportToLocalReason
 import eu.kanade.presentation.manga.components.ChapterDownloadAction
 import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.data.download.DownloadCache
@@ -56,6 +58,12 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import mihon.domain.chapter.interactor.FilterChaptersForDownload
+import tachiyomi.domain.export.interactor.ExportMangaToLocal
+import tachiyomi.domain.export.interactor.GetExportDestination
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.TriState
@@ -120,6 +128,8 @@ class MangaScreenModel(
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
     private val mangaRepository: MangaRepository = Injekt.get(),
     private val filterChaptersForDownload: FilterChaptersForDownload = Injekt.get(),
+    private val exportMangaToLocal: ExportMangaToLocal = Injekt.get(),
+    private val getExportDestination: GetExportDestination = Injekt.get(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) : StateScreenModel<MangaScreenModel.State>(State.Loading) {
 
@@ -152,6 +162,11 @@ class MangaScreenModel(
 
     private val selectedPositions: Array<Int> = arrayOf(-1, -1) // first and last selected index in list
     private val selectedChapterIds: HashSet<Long> = HashSet()
+
+    private val navigateBackChannel = Channel<Unit>()
+    val navigateBackEvent = navigateBackChannel.receiveAsFlow()
+
+    private var exportJob: Job? = null
 
     /**
      * Helper function to update the UI state only if it's currently in success state
@@ -818,6 +833,72 @@ class MangaScreenModel(
     }
 
     /**
+     * Verifies if manga to export to local has downloaded chapters or is already exported.
+     */
+    fun verifyExportToLocal() {
+        val manga = successState?.manga ?: return
+
+        val hasDownloads = downloadManager.getDownloadCount(manga) > 0
+
+        screenModelScope.launchIO {
+            val alreadyExported = getExportDestination.await(manga)?.let { destination ->
+                destination.listFiles()?.isNotEmpty() == true
+            } ?: false
+
+            when {
+                !hasDownloads -> showExportToLocalDialog(ExportToLocalReason.NO_DOWNLOADS)
+                alreadyExported -> showExportToLocalDialog(ExportToLocalReason.ALREADY_EXISTS)
+                else -> exportToLocal()
+            }
+        }
+    }
+
+    /**
+     * Exports the current manga to local source.
+     */
+    fun exportToLocal() {
+        val manga = successState?.manga ?: return
+
+        exportJob = screenModelScope.launchIO {
+            updateSuccessState { it.copy(dialog = Dialog.Progress(0f)) }
+
+            try {
+                val result = exportMangaToLocal.await(manga) { progress ->
+                    updateSuccessState {
+                        it.copy(dialog = Dialog.Progress(progress))
+                    }
+                }
+
+                when (result) {
+                    is ExportMangaToLocal.Result.Success -> {
+                        withUIContext {
+                            context.toast(context.stringResource(MR.strings.export_to_local_success))
+                        }
+                        navigateBack()
+                    }
+                    is ExportMangaToLocal.Result.Error -> {
+                        withUIContext {
+                            context.toast(result.error.message)
+                        }
+                    }
+                }
+            } finally {
+                updateSuccessState { it.copy(dialog = null) }
+                exportJob = null
+            }
+        }
+    }
+
+    fun cancelExport() {
+        exportJob?.cancel()
+        exportJob = null
+    }
+
+    private suspend fun navigateBack() {
+        navigateBackChannel.send(Unit)
+    }
+
+    /**
      * Deletes the given list of chapter.
      *
      * @param chapters the list of chapters to delete.
@@ -1077,6 +1158,8 @@ class MangaScreenModel(
         data object SettingsSheet : Dialog
         data object TrackSheet : Dialog
         data object FullCover : Dialog
+        data class ExportToLocal(val reason: ExportToLocalReason) : Dialog
+        data class Progress(@FloatRange(0.0, 1.0) val progress: Float) : Dialog
     }
 
     fun dismissDialog() {
@@ -1102,6 +1185,10 @@ class MangaScreenModel(
     fun showMigrateDialog(duplicate: Manga) {
         val manga = successState?.manga ?: return
         updateSuccessState { it.copy(dialog = Dialog.Migrate(target = manga, current = duplicate)) }
+    }
+
+    fun showExportToLocalDialog(reason: ExportToLocalReason) {
+        updateSuccessState { it.copy(dialog = Dialog.ExportToLocal(reason = reason)) }
     }
 
     fun setExcludedScanlators(excludedScanlators: Set<String>) {
