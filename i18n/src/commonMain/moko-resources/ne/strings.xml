@@ -865,4 +865,16 @@
     <string name="possible_duplicates_summary">तपाईंको पुस्तकालयमा उस्तै नामका इन्ट्रीहरू छन्।\n\nस्थानान्तरण गर्न वा जे भए पनि थप्नको लागि इन्ट्री चयन गर्नुहोस्।</string>
     <string name="clear_database_text">तपाईं डाटाबेसबाट इन्ट्रीहरू हटाउन लाग्दै हुनुहुन्छ</string>
     <string name="storage_failed_to_create_download_directory">डाउनलोड directory सिर्जना गर्न असफल भयो</string>
+    <string name="label_donate">दान</string>
+    <string name="theme_catppuccin">कात्पुचिन</string>
+    <string name="pref_display_images_description">mangaको विवरणहरूमा तस्वीर देखाउनुहोस</string>
+    <string name="pref_hide_missing_chapter_indicators">नभएको अध्यायहरु लुकौनुहोस</string>
+    <string name="migrationConfigScreen.selectedHeader">टिपेको</string>
+    <string name="migrationConfigScreen.availableHeader">उपलब्ध</string>
+    <string name="migrationConfigScreen.selectAllLabel">सबै तिप्नुहोस</string>
+    <string name="migrationConfigScreen.selectNoneLabel">कुनै पनि नतिप्नुहोस</string>
+    <string name="migrationConfigScreen.selectEnabledLabel">सक्षम स्रोतहरू तिप्नुहोस</string>
+    <string name="migrationConfigScreen.selectPinnedLabel">पिन गरिएको स्रोतहरू तिप्नुहोस</string>
+    <string name="migrationConfigScreen.continueButtonText">जारी</string>
+    <string name="migrationConfigScreen.dataToMigrateHeader">माइग्रेट गर्नुपर्ने डाटा</string>
 </resources>

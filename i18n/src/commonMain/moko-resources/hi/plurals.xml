@@ -76,4 +76,16 @@
         <item quantity="one">%1$s अध्याय गायब है</item>
         <item quantity="other">%1$s अध्याय गायब हैं</item>
     </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">%1$d एंट्री ट्रांसफ़र करें?</item>
+        <item quantity="other">%1$d एंट्रियाँ ट्रांसफ़र करें?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">%1$d एंट्री कॉपी करें?</item>
+        <item quantity="other">%1$d एंट्रियाँ कॉपी करें?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">एक प्रविष्टि त्यागी गई</item>
+        <item quantity="other">%1$d प्रविष्टियाँ त्यागी गईं</item>
+    </plurals>
 </resources>
