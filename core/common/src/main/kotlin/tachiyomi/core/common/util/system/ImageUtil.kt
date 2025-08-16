@@ -582,13 +582,23 @@ object ImageUtil {
          * A [BufferedSource]-backed [ImageSource]. Depending on its contents, it may be animated.
          */
         data class FromBuffer(val buffer: BufferedSource) : ImageSource {
-            override fun toBitmap(): Bitmap = ImageDecoder.newInstance(buffer.peek().inputStream())!!.run {
-                try {
-                    decode()!!
-                }
-                finally {
-                    recycle()
-                }
+            override fun toBitmap(): Bitmap = decodeBitmapFromInputStreamFn { buffer.peek().inputStream() }!!
+        }
+    }
+
+    fun decodeBitmapFromInputStreamFn(streamFn: () -> InputStream): Bitmap? {
+        // BitmapFactory.decodeStream is significantly faster than ImageDecoder, but does not support certain
+        // niche image formats. This hybrid approach optimizes for speed in the typical case while still
+        // allowing the niche formats to be processed, albeit with a very small amount of overhead.
+        BitmapFactory.decodeStream(Buffer().readFrom(streamFn()).inputStream())?.let {
+            return it
+        }
+        return ImageDecoder.newInstance(Buffer().readFrom(streamFn()).inputStream())?.run {
+            try {
+                decode()
+            }
+            finally {
+                recycle()
             }
         }
     }

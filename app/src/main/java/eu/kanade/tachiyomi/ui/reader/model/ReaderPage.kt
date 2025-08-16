@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import eu.kanade.tachiyomi.source.model.Page
 import okio.Buffer
 import tachiyomi.core.common.util.system.ImageUtil
-import tachiyomi.decoder.ImageDecoder
 import java.io.InputStream
 
 open class ReaderPage(
@@ -49,17 +48,8 @@ open class ReaderPage(
      * @see [stream]
      */
     var bitmap: (() -> Bitmap)?
-        get() = _backingBitmap ?: stream?.let { {
-            it().use {
-                ImageDecoder.newInstance(Buffer().readFrom(it).inputStream())!!.run {
-                    try {
-                        decode()!!
-                    }
-                    finally {
-                        recycle()
-                    }
-                }
-            }
+        get() = _backingBitmap ?: _backingStream?.let { {
+            ImageUtil.decodeBitmapFromInputStreamFn(it)!!
         } }
         set(value) {
             _backingStream = null
