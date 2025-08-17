@@ -25,11 +25,32 @@ data class Download(
 ) {
     var pages: List<Page>? = null
 
+    /**
+     * Progress for full chapter downloads (0-100).
+     * This is used when downloading complete chapter archives instead of individual pages.
+     */
+    @Transient
+    private val _fullChapterProgressFlow = MutableStateFlow(0)
+
+    /**
+     * Indicates if this download is using full chapter download mode.
+     */
+    @Transient
+    var isFullChapterDownload: Boolean = false
+
     val totalProgress: Int
-        get() = pages?.sumOf(Page::progress) ?: 0
+        get() = if (isFullChapterDownload) {
+            _fullChapterProgressFlow.value
+        } else {
+            pages?.sumOf(Page::progress) ?: 0
+        }
 
     val downloadedImages: Int
-        get() = pages?.count { it.status == Page.State.Ready } ?: 0
+        get() = if (isFullChapterDownload) {
+            if (_fullChapterProgressFlow.value >= 100) 1 else 0
+        } else {
+            pages?.count { it.status == Page.State.Ready } ?: 0
+        }
 
     @Transient
     private val _statusFlow = MutableStateFlow(State.NOT_DOWNLOADED)
@@ -42,26 +63,43 @@ data class Download(
             _statusFlow.value = status
         }
 
-    @Transient
     val progressFlow = flow {
-        if (pages == null) {
-            emit(0)
-            while (pages == null) {
-                delay(50)
+        if (isFullChapterDownload) {
+            emitAll(_fullChapterProgressFlow)
+        } else {
+            if (pages == null) {
+                emit(0)
+                while (pages == null) {
+                    delay(50)
+                }
             }
-        }
 
-        val progressFlows = pages!!.map(Page::progressFlow)
-        emitAll(combine(progressFlows) { it.average().toInt() })
+            val progressFlows = pages!!.map(Page::progressFlow)
+            emitAll(combine(progressFlows) { it.average().toInt() })
+        }
     }
         .distinctUntilChanged()
         .debounce(50)
 
     val progress: Int
-        get() {
+        get() = if (isFullChapterDownload) {
+            _fullChapterProgressFlow.value
+        } else {
             val pages = pages ?: return 0
-            return pages.map(Page::progress).average().toInt()
+            pages.map(Page::progress).average().toInt()
         }
+
+    /**
+     * Updates the progress for full chapter downloads.
+     * This should only be called when isFullChapterDownload is true.
+     *
+     * @param progress the progress value (0-100)
+     */
+    fun updateFullChapterProgress(progress: Int) {
+        if (isFullChapterDownload) {
+            _fullChapterProgressFlow.value = progress.coerceIn(0, 100)
+        }
+    }
 
     enum class State(val value: Int) {
         NOT_DOWNLOADED(0),
