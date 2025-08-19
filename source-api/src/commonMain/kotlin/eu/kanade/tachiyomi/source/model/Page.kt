@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.source.model
 
 import android.net.Uri
 import eu.kanade.tachiyomi.network.ProgressListener
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.Serializable
@@ -22,7 +23,7 @@ open class Page(
     private val _statusFlow = MutableStateFlow<State>(State.Queue)
 
     @Transient
-    val statusFlow = _statusFlow.asStateFlow()
+    open val statusFlow: Flow<State> = _statusFlow.asStateFlow()
     var status: State
         get() = _statusFlow.value
         set(value) {
@@ -33,7 +34,7 @@ open class Page(
     private val _progressFlow = MutableStateFlow(0)
 
     @Transient
-    val progressFlow = _progressFlow.asStateFlow()
+    val progressFlow: Flow<Int> = _progressFlow.asStateFlow()
     var progress: Int
         get() = _progressFlow.value
         set(value) {
