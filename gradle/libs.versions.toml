@@ -27,7 +27,7 @@ okio = "com.squareup.okio:okio:3.16.0"
 
 conscrypt-android = "org.conscrypt:conscrypt-android:2.5.3"
 
-quickjs-android = "app.cash.quickjs:quickjs-android:0.9.2"
+quickjs-android = { group = "com.github.zhanghai.quickjs-java", name = "quickjs-android", version = "547f5b1597" }
 
 jsoup = "org.jsoup:jsoup:1.21.1"
 
