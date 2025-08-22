@@ -805,12 +805,12 @@ class Downloader(
         if (contentLength > 0) {
             if (contentLength > MAX_CHAPTER_FILE_SIZE) {
                 throw IOException(
-                    "Chapter file too large: ${contentLength / (1024 * 1024)} MB (max: ${MAX_CHAPTER_FILE_SIZE / (1024 * 1024)} MB)"
+                    "Chapter file too large: ${contentLength / (1024 * 1024)} MB (max: ${MAX_CHAPTER_FILE_SIZE / (1024 * 1024)} MB)",
                 )
             }
             if (contentLength < MIN_CHAPTER_FILE_SIZE) {
                 throw IOException(
-                    "Chapter file too small: $contentLength bytes (min: $MIN_CHAPTER_FILE_SIZE bytes)"
+                    "Chapter file too small: $contentLength bytes (min: $MIN_CHAPTER_FILE_SIZE bytes)",
                 )
             }
         }
@@ -834,13 +834,13 @@ class Downloader(
 
         if (fileSize > MAX_CHAPTER_FILE_SIZE) {
             throw IOException(
-                "Downloaded file too large: ${fileSize / (1024 * 1024)} MB (max: ${MAX_CHAPTER_FILE_SIZE / (1024 * 1024)} MB)"
+                "Downloaded file too large: ${fileSize / (1024 * 1024)} MB (max: ${MAX_CHAPTER_FILE_SIZE / (1024 * 1024)} MB)",
             )
         }
 
         if (fileSize < MIN_CHAPTER_FILE_SIZE) {
             throw IOException(
-                "Downloaded file too small: $fileSize bytes (min: $MIN_CHAPTER_FILE_SIZE bytes)"
+                "Downloaded file too small: $fileSize bytes (min: $MIN_CHAPTER_FILE_SIZE bytes)",
             )
         }
 
@@ -877,7 +877,8 @@ class Downloader(
             // Network-related exceptions that can be retried
             is SocketTimeoutException,
             is UnknownHostException,
-            is SSLException -> true
+            is SSLException,
+            -> true
 
             // HTTP exceptions - check status code
             is HttpException -> {
@@ -921,8 +922,6 @@ class Downloader(
         download.status = Download.State.ERROR
         notifier.onError(error.message, download.chapter.name, download.manga.title, download.manga.id)
     }
-
-
 
     /**
      * Gets the image from the filesystem if it exists or downloads it otherwise.

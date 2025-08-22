@@ -32,6 +32,9 @@ data class Download(
     @Transient
     private val _fullChapterProgressFlow = MutableStateFlow(0)
 
+    @Transient
+    val fullChapterProgressFlow = _fullChapterProgressFlow.asStateFlow()
+
     /**
      * Indicates if this download is using full chapter download mode.
      */
