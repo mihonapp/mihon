@@ -64,16 +64,22 @@ data class Download(
         }
 
     val progressFlow = flow {
-        if (isFullChapterDownload) {
-            emitAll(_fullChapterProgressFlow)
-        } else {
+        // If we're not in full-chapter mode yet, wait for either pages to be available
+        // (page-by-page mode) or for full-chapter mode to be enabled by the downloader.
+        if (!isFullChapterDownload) {
             if (pages == null) {
                 emit(0)
-                while (pages == null) {
+                while (pages == null && !isFullChapterDownload) {
                     delay(50)
                 }
             }
+        }
 
+        if (isFullChapterDownload) {
+            // In full-chapter mode, emit progress directly from the dedicated flow
+            emitAll(_fullChapterProgressFlow)
+        } else {
+            // In page-by-page mode, combine per-page progress
             val progressFlows = pages!!.map(Page::progressFlow)
             emitAll(combine(progressFlows) { it.average().toInt() })
         }

@@ -478,9 +478,8 @@ class Downloader(
         download.updateFullChapterProgress(PROGRESS_START)
         download.status = Download.State.DOWNLOADING
         notifier.onProgressChange(download)
-
-        download.updateFullChapterProgress(PROGRESS_DOWNLOAD_START)
-        notifier.onProgressChange(download)
+        // Note: we only jump to PROGRESS_DOWNLOAD_START once we know content length.
+        // See streamResponseToFile() after response validation.
     }
 
     /**
@@ -588,6 +587,12 @@ class Downloader(
         val contentLength = response.body.contentLength()
         val source = response.body.source()
 
+        // If we have a known content length, nudge progress into the streaming window early
+        if (contentLength > 0) {
+            download.updateFullChapterProgress(PROGRESS_DOWNLOAD_START)
+            notifier.onProgressChange(download)
+        }
+
         chapterFile.openOutputStream().use { outputStream ->
             val sink = outputStream.sink().buffer()
             val buffer = okio.Buffer()
@@ -597,7 +602,7 @@ class Downloader(
 
             try {
                 while (true) {
-                    val bytesRead = handleStreamRead(source, buffer, totalBytesRead)
+                    val bytesRead = handleStreamRead(source, buffer, totalBytesRead, contentLength)
 
                     if (bytesRead == -1L) break
 
@@ -644,17 +649,23 @@ class Downloader(
      * @param totalBytesRead total bytes read so far
      * @return number of bytes read, or -1 for end of stream
      */
-    private suspend fun handleStreamRead(source: BufferedSource, buffer: okio.Buffer, totalBytesRead: Long): Long {
+    private suspend fun handleStreamRead(
+        source: BufferedSource,
+        buffer: okio.Buffer,
+        totalBytesRead: Long,
+        contentLength: Long,
+    ): Long {
         return try {
             source.read(buffer, DOWNLOAD_BUFFER_SIZE)
         } catch (e: IOException) {
-            // Handle network-related IO exceptions gracefully if we've read some data
-            if (totalBytesRead > 0) {
-                logcat(LogPriority.WARN) {
-                    "Stream reset after reading $totalBytesRead bytes, treating as partial success: ${e.message}"
-                }
-                -1L // Treat as end of stream
+            // If we know the content length and we've already read >= content length, treat as EOF.
+            // Otherwise, rethrow to trigger retry logic because the stream ended prematurely.
+            if (contentLength > 0 && totalBytesRead >= contentLength) {
+                -1L
             } else {
+                logcat(LogPriority.WARN) {
+                    "Stream reset after reading $totalBytesRead bytes (length=$contentLength), will retry: ${e.message}"
+                }
                 throw e
             }
         } catch (e: Exception) {
@@ -1219,10 +1230,10 @@ class Downloader(
 
         // Full chapter download progress constants
         private const val PROGRESS_START = 0
-        private const val PROGRESS_DOWNLOAD_START = 25
-        private const val PROGRESS_DOWNLOAD_END = 75
-        private const val PROGRESS_PROCESSING_START = 75
-        private const val PROGRESS_CLEANUP_START = 90
+        private const val PROGRESS_DOWNLOAD_START = 5
+        private const val PROGRESS_DOWNLOAD_END = 95
+        private const val PROGRESS_PROCESSING_START = 95
+        private const val PROGRESS_CLEANUP_START = 98
         private const val PROGRESS_COMPLETE = 100
 
         // Download configuration constants
@@ -1232,7 +1243,7 @@ class Downloader(
         private const val MAX_EMPTY_READS = 10
         private const val EMPTY_READ_DELAY_MS = 100L
         private const val PROGRESS_UPDATE_INTERVAL_MS = 1000L
-        private const val PROGRESS_DOWNLOAD_RANGE = 25
+        private const val PROGRESS_DOWNLOAD_RANGE = PROGRESS_DOWNLOAD_END - PROGRESS_DOWNLOAD_START
 
         // File validation constants
         private const val MAX_CHAPTER_FILE_SIZE = 500L * 1024 * 1024 // 500 MB
@@ -1241,6 +1252,7 @@ class Downloader(
             "application/zip",
             "application/x-zip-compressed",
             "application/octet-stream", // Some servers use this for CBZ files
+            "application/vnd.comicbook+zip", // Vendor CBZ MIME
         )
     }
 }
