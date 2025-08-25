@@ -346,7 +346,6 @@ class ReaderViewModel @JvmOverloads constructor(
             logcat { "Loading ${chapter.chapter.url}" }
 
             flushReadTimer()
-            restartReadTimer()
 
             try {
                 loadChapter(loader, chapter)
@@ -599,9 +598,8 @@ class ReaderViewModel @JvmOverloads constructor(
         val chapterId = readerChapter.chapter.id!!
         val endTime = Date()
         val sessionReadDuration = chapterReadStartTime?.let { endTime.time - it } ?: 0
-
+        restartReadTimer()
         upsertHistory.await(HistoryUpdate(chapterId, endTime, sessionReadDuration))
-        chapterReadStartTime = null
     }
 
     /**
