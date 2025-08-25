@@ -13,6 +13,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ## [Unreleased]
 ### Fixes
 - Fix height of description not being calculated correctly if images are present ([@Secozzi](https://github.com/Secozzi)) ([#2382](https://github.com/mihonapp/mihon/pull/2382))
+- Fix read Duration Not Match ([@KotlinHero](https://github.com/KotlinHero) ([#2411](https://github.com/mihonapp/mihon/issues/2411))
 
 ## [v0.19.1] - 2025-08-07
 ### Changed
