@@ -15,6 +15,7 @@ import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notify
+import tachiyomi.core.common.i18n.pluralStringResource
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.displayablePath
 import tachiyomi.i18n.MR
@@ -60,6 +61,7 @@ class BackupNotifier(private val context: Context) {
             .setProgress(0, 0, true)
 
         builder.show(Notifications.ID_BACKUP_PROGRESS)
+
         return builder
     }
 
@@ -68,7 +70,8 @@ class BackupNotifier(private val context: Context) {
 
         with(completeNotificationBuilder) {
             setContentTitle(context.stringResource(MR.strings.creating_backup_error))
-            setStyle(NotificationCompat.BigTextStyle().bigText(error))
+            setContentText(error)
+
             show(Notifications.ID_BACKUP_COMPLETE)
         }
     }
@@ -159,37 +162,27 @@ class BackupNotifier(private val context: Context) {
         with(completeNotificationBuilder) {
             setContentTitle(contentTitle)
             setContentText(
-                context.resources.getQuantityString(
-                    R.plurals.restore_completed_message,
+                context.pluralStringResource(
+                    MR.plurals.restore_completed_message,
                     errorCount,
                     timeString,
                     errorCount,
                 ),
             )
 
-            if (errorCount > 0 && path != null && file != null) {
-                val logFile = File(path, file)
-                val uri = logFile.getUriCompat(context)
+            clearActions()
+            if (errorCount > 0 && !path.isNullOrEmpty() && !file.isNullOrEmpty()) {
+                val destFile = File(path, file)
+                val uri = destFile.getUriCompat(context)
 
-                val intent = Intent(Intent.ACTION_VIEW, uri).apply {
-                    setDataAndType(uri, "text/plain")
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
-                }
-                val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-                setContentIntent(pendingIntent)
-            } else {
-                val intent = Intent(context, MainActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                }
-                val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-                setContentIntent(pendingIntent)
+                val errorLogIntent = NotificationReceiver.openErrorLogPendingActivity(context, uri)
+                setContentIntent(errorLogIntent)
+                addAction(
+                    R.drawable.ic_folder_24dp,
+                    context.stringResource(MR.strings.action_show_errors),
+                    errorLogIntent,
+                )
             }
-
-            val onCompleteIntent = NotificationReceiver.dismissNotificationPendingBroadcast(
-                context,
-                Notifications.ID_RESTORE_COMPLETE,
-            )
-            setDeleteIntent(onCompleteIntent)
 
             show(Notifications.ID_RESTORE_COMPLETE)
         }
