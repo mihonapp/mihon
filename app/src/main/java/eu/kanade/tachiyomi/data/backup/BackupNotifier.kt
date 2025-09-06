@@ -110,11 +110,12 @@ class BackupNotifier(private val context: Context) {
                 .setContentText(content)
                 .setProgress(maxAmount, progress, false)
                 .setOnlyAlertOnce(true)
-
-            if (!isSync) {
-                val intent = NotificationReceiver.cancelRestorePendingBroadcast(context, Notifications.ID_RESTORE_PROGRESS)
-                builder.addAction(R.drawable.ic_close_24dp, context.stringResource(MR.strings.action_cancel), intent)
-            }
+                .clearActions()
+                .addAction(
+                    R.drawable.ic_close_24dp,
+                    context.stringResource(MR.strings.action_cancel),
+                    NotificationReceiver.cancelRestorePendingBroadcast(context, Notifications.ID_RESTORE_PROGRESS),
+                )
 
             builder.show(Notifications.ID_RESTORE_PROGRESS)
         }
@@ -126,7 +127,8 @@ class BackupNotifier(private val context: Context) {
 
         with(completeNotificationBuilder) {
             setContentTitle(context.stringResource(MR.strings.restoring_backup_error))
-            setStyle(NotificationCompat.BigTextStyle().bigText(error))
+            setContentText(error)
+
             show(Notifications.ID_RESTORE_COMPLETE)
         }
     }
