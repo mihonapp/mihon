@@ -45,7 +45,7 @@ class BackupRestorer(
     private var restoreAmount = 0
     private var restoreProgress = AtomicInteger()
     private val errors = Collections.synchronizedList(mutableListOf<Pair<Date, String>>())
-    private val dispatcher = Executors.newFixedThreadPool(5).asCoroutineDispatcher()
+    private val dispatcher = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()).asCoroutineDispatcher()
 
     /**
      * Mapping of source ID to source name from backup data
@@ -214,7 +214,7 @@ class BackupRestorer(
                 }
                 return file
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             // Empty
         }
         return File("")
