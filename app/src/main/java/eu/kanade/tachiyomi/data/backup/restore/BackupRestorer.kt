@@ -109,6 +109,8 @@ class BackupRestorer(
             if (options.extensionRepoSettings) {
                 restoreExtensionRepos(backup.backupExtensionRepo)
             }
+
+            // TODO: optionally trigger online library + tracker update
         }
     }
 
