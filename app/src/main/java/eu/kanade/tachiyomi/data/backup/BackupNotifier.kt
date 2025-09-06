@@ -8,6 +8,7 @@ import android.net.Uri
 import androidx.core.app.NotificationCompat
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.ui.main.MainActivity
@@ -19,14 +20,19 @@ import tachiyomi.core.common.i18n.pluralStringResource
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.displayablePath
 import tachiyomi.i18n.MR
+import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
+import kotlin.getValue
 
 class BackupNotifier(private val context: Context) {
 
     private val lock = ReentrantLock()
+
+    private val preferences: SecurityPreferences by injectLazy()
+
 
     private val largeIcon by lazy {
         BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher)
@@ -110,7 +116,6 @@ class BackupNotifier(private val context: Context) {
                         context.stringResource(MR.strings.restoring_backup)
                     },
                 )
-                .setContentText(content)
                 .setProgress(maxAmount, progress, false)
                 .setOnlyAlertOnce(true)
                 .clearActions()
@@ -119,6 +124,9 @@ class BackupNotifier(private val context: Context) {
                     context.stringResource(MR.strings.action_cancel),
                     NotificationReceiver.cancelRestorePendingBroadcast(context, Notifications.ID_RESTORE_PROGRESS),
                 )
+            if (!preferences.hideNotificationContent().get()) {
+                builder.setContentText(content)
+            }
 
             builder.show(Notifications.ID_RESTORE_PROGRESS)
         }
