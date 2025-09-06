@@ -107,7 +107,7 @@ class BackupNotifier(private val context: Context) {
                         context.stringResource(MR.strings.restoring_backup)
                     },
                 )
-                .setSubText(content)
+                .setContentText(content)
                 .setProgress(maxAmount, progress, false)
 
             if (!isSync) {
