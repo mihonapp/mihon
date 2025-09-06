@@ -1,17 +1,13 @@
 package eu.kanade.tachiyomi.data.backup
 
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.graphics.BitmapFactory
-import android.net.Uri
 import androidx.core.app.NotificationCompat
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
-import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.notificationBuilder
@@ -25,14 +21,12 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
-import kotlin.getValue
 
 class BackupNotifier(private val context: Context) {
 
     private val lock = ReentrantLock()
 
     private val preferences: SecurityPreferences by injectLazy()
-
 
     private val largeIcon by lazy {
         BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher)
@@ -63,7 +57,6 @@ class BackupNotifier(private val context: Context) {
     fun showBackupProgress(): NotificationCompat.Builder {
         val builder = newProgressBuilder()
             .setContentTitle(context.stringResource(MR.strings.creating_backup))
-            .setSubText(context.stringResource(MR.strings.creating_backup))
             .setProgress(0, 0, true)
 
         builder.show(Notifications.ID_BACKUP_PROGRESS)
