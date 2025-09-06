@@ -16,6 +16,7 @@ import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notify
 import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.core.common.storage.displayablePath
 import tachiyomi.i18n.MR
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -77,15 +78,14 @@ class BackupNotifier(private val context: Context) {
 
         with(completeNotificationBuilder) {
             setContentTitle(context.stringResource(MR.strings.backup_created))
+            setContentText(file.displayablePath)
 
-            // Create share intent
-            val intent = Intent(Intent.ACTION_SEND).apply {
-                putExtra(Intent.EXTRA_STREAM, file.uri)
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
-                type = "application/octet-stream"
-            }
-            val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-            addAction(R.drawable.ic_share_24dp, context.stringResource(MR.strings.action_share), pendingIntent)
+            clearActions()
+            addAction(
+                R.drawable.ic_share_24dp,
+                context.stringResource(MR.strings.action_share),
+                NotificationReceiver.shareBackupPendingActivity(context, file.uri),
+            )
 
             show(Notifications.ID_BACKUP_COMPLETE)
         }
@@ -109,6 +109,7 @@ class BackupNotifier(private val context: Context) {
                 )
                 .setContentText(content)
                 .setProgress(maxAmount, progress, false)
+                .setOnlyAlertOnce(true)
 
             if (!isSync) {
                 val intent = NotificationReceiver.cancelRestorePendingBroadcast(context, Notifications.ID_RESTORE_PROGRESS)
