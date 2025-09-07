@@ -47,6 +47,8 @@ class BackupRestorer(
     private val errors = Collections.synchronizedList(mutableListOf<Pair<Date, String>>())
     private val dispatcher = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()).asCoroutineDispatcher()
 
+    private val MANGA_PROGRESS_BATCH = Runtime.getRuntime().availableProcessors() * 8
+
     /**
      * Mapping of source ID to source name from backup data
      */
@@ -142,10 +144,17 @@ class BackupRestorer(
                     errors.add(Date() to "${it.title} [$sourceName]: ${e.message}")
                 } finally {
                     val currentProgress = restoreProgress.incrementAndGet()
-                    notifier.showRestoreProgress(it.title, currentProgress, restoreAmount, isSync)
+                    if (currentProgress == restoreAmount || currentProgress % MANGA_PROGRESS_BATCH == 0) {
+                        notifier.showRestoreProgress(it.title, currentProgress, restoreAmount, isSync)
+                    }
                 }
             }
         }.awaitAll()
+
+        val finalProgress = restoreProgress.get()
+        if (finalProgress < restoreAmount) {
+            notifier.showRestoreProgress(context.stringResource(MR.strings.restoring_backup), finalProgress, restoreAmount, isSync)
+        }
     }
 
     private fun CoroutineScope.restoreAppPreferences(
