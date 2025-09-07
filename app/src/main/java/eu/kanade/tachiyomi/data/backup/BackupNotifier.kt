@@ -50,6 +50,8 @@ class BackupNotifier(private val context: Context) {
         }
     }
 
+    private var progressNotificationBuilder: NotificationCompat.Builder? = null
+
     private fun NotificationCompat.Builder.show(id: Int) {
         context.notify(id, build())
     }
@@ -99,31 +101,33 @@ class BackupNotifier(private val context: Context) {
         maxAmount: Int = 100,
         isSync: Boolean = false,
     ): NotificationCompat.Builder {
-        val builder = newProgressBuilder()
         lock.withLock {
-            builder
-                .setContentTitle(
+            val builder = (progressNotificationBuilder ?: newProgressBuilder().also { progressNotificationBuilder = it })
+            with(builder) {
+                setContentTitle(
                     if (isSync) {
                         context.stringResource(MR.strings.syncing_library)
                     } else {
                         context.stringResource(MR.strings.restoring_backup)
                     },
                 )
-                .setProgress(maxAmount, progress, false)
-                .setOnlyAlertOnce(true)
-                .clearActions()
-                .addAction(
+                setProgress(maxAmount, progress, false)
+                setOnlyAlertOnce(true)
+                clearActions()
+                addAction(
                     R.drawable.ic_close_24dp,
                     context.stringResource(MR.strings.action_cancel),
                     NotificationReceiver.cancelRestorePendingBroadcast(context, Notifications.ID_RESTORE_PROGRESS),
                 )
-            if (!preferences.hideNotificationContent().get()) {
-                builder.setContentText(content)
+                if (!preferences.hideNotificationContent().get() && content.isNotEmpty()) {
+                    setContentText(content)
+                } else if (preferences.hideNotificationContent().get()) {
+                    setContentText(null)
+                }
+                show(Notifications.ID_RESTORE_PROGRESS)
             }
-
-            builder.show(Notifications.ID_RESTORE_PROGRESS)
+            return builder
         }
-        return builder
     }
 
     fun showRestoreError(error: String?) {
