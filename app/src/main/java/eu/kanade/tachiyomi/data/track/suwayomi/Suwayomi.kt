@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.data.track.suwayomi
 
+import android.util.Log
 import android.graphics.Color
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.R
@@ -90,6 +91,7 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
         try {
             api.getTrackSearch(manga.url)
         } catch (e: Exception) {
+            Log.w(TAG, "Tracking failed", e)
             null
         }
 
@@ -104,3 +106,5 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
             null
         }
 }
+
+private const val TAG = "Suwayomi"
