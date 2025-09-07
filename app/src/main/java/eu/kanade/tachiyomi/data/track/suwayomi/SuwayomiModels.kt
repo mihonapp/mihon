@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.track.suwayomi
 
 import kotlinx.serialization.Serializable
+import kotlin.collections.List
 
 @Serializable
 data class SourceDataClass(
@@ -97,4 +98,37 @@ data class ChapterDataClass(
 
     /** used to store client specific values */
     val meta: Map<String, String>,
+)
+
+@Serializable
+data class GraphQlError(
+    val message: String,
+    // TODO: locations, path?
+)
+
+@Serializable
+data class GraphQlResult<T>(
+    val data: T?,
+    val errors: List<GraphQlError>?,
+)
+
+@Serializable
+data class LoginPayload(
+    val accessToken: String,
+    val refreshToken: String,
+)
+
+@Serializable
+data class LoginPayload1(
+    val login: LoginPayload,
+)
+
+@Serializable
+data class RefreshTokenPayload(
+    val accessToken: String,
+)
+
+@Serializable
+data class RefreshTokenPayload1(
+    val refreshToken: RefreshTokenPayload,
 )
