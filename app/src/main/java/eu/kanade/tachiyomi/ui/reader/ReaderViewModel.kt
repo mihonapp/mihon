@@ -540,7 +540,16 @@ class ReaderViewModel @JvmOverloads constructor(
         if (!incognitoMode && page.status !is Page.State.Error) {
             readerChapter.chapter.last_page_read = pageIndex
 
-            if (readerChapter.pages?.lastIndex == pageIndex) {
+            val totalPages = readerChapter.pages?.size ?: 0
+            val readPercentage = if (totalPages > 0) {
+                ((pageIndex + 1).toFloat() / totalPages * 100).toInt()
+            } else {
+                0
+            }
+            
+            val requiredPercentage = trackPreferences.readCompletionPercentage().get()
+            
+            if (readPercentage >= requiredPercentage && !readerChapter.chapter.read) {
                 updateChapterProgressOnComplete(readerChapter)
             }
 

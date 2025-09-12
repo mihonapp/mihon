@@ -44,4 +44,6 @@ class TrackPreferences(
     )
 
     fun autoBindEnhancedTrackers() = preferenceStore.getBoolean("pref_auto_bind_enhanced_trackers", true)
+    
+    fun readCompletionPercentage() = preferenceStore.getInt("pref_read_completion_percentage", 100)
 }

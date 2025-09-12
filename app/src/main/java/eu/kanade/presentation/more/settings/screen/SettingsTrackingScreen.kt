@@ -64,6 +64,7 @@ import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
+import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -91,6 +92,9 @@ object SettingsTrackingScreen : SearchableSettings {
         val trackerManager = remember { Injekt.get<TrackerManager>() }
         val sourceManager = remember { Injekt.get<SourceManager>() }
         val autoTrackStatePref = trackPreferences.autoUpdateTrackOnMarkRead()
+
+        val readCompletionPercentagePref = trackPreferences.readCompletionPercentage()
+        val readCompletionPercentage by readCompletionPercentagePref.collectAsState()
 
         var dialog by remember { mutableStateOf<Any?>(null) }
         dialog?.run {
@@ -142,6 +146,16 @@ object SettingsTrackingScreen : SearchableSettings {
                 preference = trackPreferences.autoBindEnhancedTrackers(),
                 title = stringResource(MR.strings.pref_auto_bind_enhanced_trackers),
                 subtitle = stringResource(MR.strings.pref_auto_bind_enhanced_trackers_summary),
+            ),
+            Preference.PreferenceItem.SliderPreference(
+                value = readCompletionPercentage,
+                valueRange = 50..100 step 5,
+                title = "阅读完成百分比",
+                subtitle = "阅读满 ${readCompletionPercentage}%时自动标记完成",
+                onValueChanged = {
+                    readCompletionPercentagePref.set(it)
+                    true
+                },
             ),
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.services),
