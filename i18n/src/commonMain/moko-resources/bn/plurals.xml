@@ -9,7 +9,7 @@
         <item quantity="other">%1$s সময়ে %2$sটি ত্রুটি সম্পন্ন</item>
     </plurals>
     <plurals name="num_categories">
-        <item quantity="one">%dটি বিভাগ</item>
+        <item quantity="one">১টি বিভাগ</item>
         <item quantity="other">%dটি বিভাগসমূহ</item>
     </plurals>
     <plurals name="lock_after_mins">
@@ -53,19 +53,19 @@
         <item quantity="other">পরবর্তী %d টি অপঠিত অধ্যায়</item>
     </plurals>
     <plurals name="download_amount">
-        <item quantity="one">পরের %d চ্যাপ্টার</item>
-        <item quantity="other">পরের %d চ্যাপ্টার</item>
+        <item quantity="one">পরবর্তী অধ্যায়</item>
+        <item quantity="other">পরবর্তী %d অধ্যায়</item>
     </plurals>
     <plurals name="missing_chapters">
-        <item quantity="one">%1$s টি চ্যাপ্টার নেই</item>
-        <item quantity="other">%1$s টি চ্যাপ্টার নেই</item>
+        <item quantity="one">১টি অধ্যায় নেই</item>
+        <item quantity="other">%1$s টি অধ্যায় নেই</item>
     </plurals>
     <plurals name="day">
-        <item quantity="one">%d দিন</item>
+        <item quantity="one">১ দিন</item>
         <item quantity="other">%d দিন</item>
     </plurals>
     <plurals name="num_repos">
-        <item quantity="one">%d রিপো</item>
+        <item quantity="one">১ রিপো</item>
         <item quantity="other">%d রিপো</item>
     </plurals>
     <plurals name="upcoming_relative_time">
@@ -73,7 +73,11 @@
         <item quantity="other">%1$d দিনে</item>
     </plurals>
     <plurals name="pref_pages">
-        <item quantity="one">১ পেজ</item>
-        <item quantity="other">%1$s পেজ</item>
+        <item quantity="one">১ পৃষ্ঠা</item>
+        <item quantity="other">%1$s পৃষ্ঠা</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">১টি এন্ট্রি স্থানান্তর?</item>
+        <item quantity="other">%1$dটি এন্ট্রি স্থানান্তর?</item>
     </plurals>
 </resources>

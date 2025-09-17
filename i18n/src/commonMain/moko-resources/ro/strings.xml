@@ -171,7 +171,6 @@
     <string name="cookies_cleared">Cookies curățate</string>
     <string name="pref_clear_database">Curățați baza de date</string>
     <string name="pref_clear_database_summary">Ștergeți istoricul pentru intrările care nu sunt salvate în bibliotecă</string>
-    <string name="clear_database_confirmation">Ești sigur? Capitolele citite și progresul înregistrărilor din afara bibliotecii vor fi pierdute</string>
     <string name="clear_database_completed">Înregistrări șterse</string>
     <string name="version">Versiune</string>
     <string name="pref_enable_acra">Trimite rapoarte pt. eșuări</string>
@@ -676,9 +675,6 @@
     <string name="information_no_manga_category">Categorie goala</string>
     <string name="pref_skip_dupe_chapters">Treci peste capitolele duplicae</string>
     <string name="enhanced_services_not_installed">Disponibil, dar sursa nu este instalata: %s</string>
-    <string name="confirm_add_duplicate_manga">Ai deja o intrare in librarie cu acelasi nume.
-\n
-\nEsti sigur ca vrei sa continui?</string>
     <string name="track_error">%1$s eroare: %2$s</string>
     <string name="information_required_plain">*necesar</string>
     <string name="copied_to_clipboard_plain">Copiat in clipboard</string>
@@ -712,7 +708,7 @@
     <string name="no_scanlators_found">Nici un scanlator nu a fost găsit</string>
     <string name="not_selected">Nu a fost selectat</string>
     <string name="action_move_to_bottom_all_for_series">Mutați seria pe ultima poziție</string>
-    <string name="pref_chapter_swipe_end">Acțiune glisare către dreapta</string>
+    <string name="pref_chapter_swipe_end">Glisare către dreapta a unui capitol</string>
     <string name="exception_offline">Fără conexiune la internet</string>
     <string name="pref_storage_usage">Utilizarea spațiului de stocare</string>
     <string name="notification_updating_progress">Actualizare bibliotecă… (%s)</string>
@@ -724,7 +720,7 @@
     <string name="track_delete_title">Eliminați monitorizarea %s?</string>
     <string name="source_settings">Setări surse</string>
     <string name="app_settings">Setări aplicație</string>
-    <string name="pref_chapter_swipe_start">Acțiune glisare către stânga</string>
+    <string name="pref_chapter_swipe_start">Glisare către stânga a unui capitol</string>
     <string name="track_delete_remote_text">De asemenea elimină din %s</string>
     <string name="split_tall_images">Împărțiți imaginile înalte</string>
     <string name="has_results">Au fost găsite rezultate</string>
@@ -792,7 +788,6 @@
 \nÎn cazul în care asta este la ce vă așteptați, %2$s va fi înlocuit, altfel contatati întreținătorul repozitoriului.</string>
     <string name="pref_display_profile">Profil de afișare personalizat</string>
     <string name="action_add_anyway">Adăugați oricum</string>
-    <string name="action_migrate_duplicate">Migrați intrare existentă</string>
     <string name="action_replace_repo">Înlocuiți</string>
     <string name="action_replace_repo_title">Amprenta digitală a cheii de semnare există deja</string>
     <string name="pref_webtoon_disable_zoom_out">Dezactivați funcția de zoom-out</string>

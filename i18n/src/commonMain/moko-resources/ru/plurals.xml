@@ -55,10 +55,10 @@
         <item quantity="other">%1$s глав</item>
     </plurals>
     <plurals name="num_trackers">
-        <item quantity="one">%d отслеживание</item>
-        <item quantity="few">%d отслеживания</item>
-        <item quantity="many">%d отслеживаний</item>
-        <item quantity="other">%d отслеживаний</item>
+        <item quantity="one">%d сервис отслеживания</item>
+        <item quantity="few">%d сервиса отслеживания</item>
+        <item quantity="many">%d сервисов отслеживания</item>
+        <item quantity="other">%d сервисов отслеживания</item>
     </plurals>
     <plurals name="missing_chapters_warning">
         <item quantity="one">Отсутствует %d глава</item>
@@ -113,5 +113,23 @@
         <item quantity="few">%1$s страницы</item>
         <item quantity="many">%1$s страниц</item>
         <item quantity="other">%1$s страниц</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">Перенести %1$d серию?</item>
+        <item quantity="few">Перенести %1$d серии?</item>
+        <item quantity="many">Перенести %1$d серий?</item>
+        <item quantity="other">Перенести %1$d серий?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">Серия была пропущена</item>
+        <item quantity="few">%1$d серии было прощено</item>
+        <item quantity="many">%1$d серий было прощено</item>
+        <item quantity="other">%1$d серий было прощено</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">Копировать %1$d серию?</item>
+        <item quantity="few">Копировать %1$d серии?</item>
+        <item quantity="many">Копировать %1$d серий?</item>
+        <item quantity="other">Копировать %1$d серий?</item>
     </plurals>
 </resources>

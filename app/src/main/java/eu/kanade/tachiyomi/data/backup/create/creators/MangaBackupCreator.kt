@@ -100,4 +100,5 @@ private fun Manga.toBackupManga() =
         favoriteModifiedAt = this.favoriteModifiedAt,
         version = this.version,
         notes = this.notes,
+        initialized = this.initialized,
     )

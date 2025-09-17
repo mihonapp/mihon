@@ -169,7 +169,6 @@
     <string name="cookies_cleared">S’han esborrat les galetes</string>
     <string name="pref_clear_database">Buida la base de dades</string>
     <string name="pref_clear_database_summary">Suprimeix l’historial dels elements que no siguin a la biblioteca</string>
-    <string name="clear_database_confirmation">N’esteu segur? Es perdrà el progrés i els capítols llegits dels elements que no siguin a la biblioteca</string>
     <string name="clear_database_completed">S’han suprimit les entrades</string>
     <string name="version">Versió</string>
     <string name="pref_enable_acra">Envia informes d’errors</string>
@@ -658,7 +657,6 @@
     <string name="pref_library_update_show_tab_badge">Mostra el recompte de no llegits a la icona d’Actualitzacions</string>
     <string name="pref_skip_dupe_chapters">Omet els capítols duplicats</string>
     <string name="enhanced_services_not_installed">Disponible però la font no està instal·lada: %s</string>
-    <string name="confirm_add_duplicate_manga">Ja teniu un element a la biblioteca amb el mateix nom.\n\nVoleu continuar igualment?</string>
     <string name="label_read_duration">Temps de lectura</string>
     <string name="label_titles_section">Elements</string>
     <string name="label_completed_titles">Elements completats</string>
@@ -784,7 +782,6 @@
     <string name="upcoming_guide">Guia de pròximes actualitzacions</string>
     <string name="upcoming_calendar_next">Mes següent</string>
     <string name="action_add_anyway">Afegeix igualment</string>
-    <string name="action_migrate_duplicate">Migra l’element existent</string>
     <string name="pref_webtoon_disable_zoom_out">Desactiva l’allunyament</string>
     <string name="action_replace_repo">Substitueix</string>
     <string name="action_replace_repo_title">L’empremta digital de la clau de xifratge ja existeix</string>

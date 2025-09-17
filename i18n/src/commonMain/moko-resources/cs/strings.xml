@@ -217,7 +217,6 @@
     <string name="cookies_cleared">Cookies vymazány</string>
     <string name="pref_clear_database">Vyčistit databázi</string>
     <string name="pref_clear_database_summary">Smazat historii položek, které nejsou uloženy ve vaší knihovně</string>
-    <string name="clear_database_confirmation">Jste si jistí? Přečtené kapitoly a postup v položkách mimo knihovnu bude ztracen</string>
     <string name="clear_database_completed">Položky byly smazány</string>
     <string name="version">Verze</string>
     <string name="pref_enable_acra">Odesílat hlášení o pádu</string>
@@ -678,9 +677,6 @@
     <string name="copied_to_clipboard_plain">Zkopírováno do schránky</string>
     <string name="enhanced_services_not_installed">K dispozici, ale zdroj není nainstalován: %s</string>
     <string name="pref_skip_dupe_chapters">Přeskakovat duplicitní kapitoly</string>
-    <string name="confirm_add_duplicate_manga">Ve své knihovně máte položku se stejným názvem.
-\n
-\nStále si přejete pokračovat?</string>
     <string name="track_error">%1$s chyba: %2$s</string>
     <string name="information_required_plain">*vyžadováno</string>
     <string name="pref_hide_in_library_items">Skrýt položky, které jsou již v knihovně</string>
@@ -790,7 +786,6 @@
     <string name="manga_interval_expected_update_soon">Brzy</string>
     <string name="onboarding_storage_help_info">Aktualizujete ze starší verze a nevíte, co vybrat? Další informace naleznete v průvodci úložištěm.</string>
     <string name="action_add_anyway">Přesto přidat</string>
-    <string name="action_migrate_duplicate">Přesunout existující záznam</string>
     <string name="pref_webtoon_disable_zoom_out">Zakázat oddálení</string>
     <string name="action_replace_repo">Nahradit</string>
     <string name="action_replace_repo_title">Otisk podepisovacího klíče již existuje</string>
@@ -848,4 +843,21 @@
     <string name="library_exported">Knihovna byla exportována</string>
     <string name="action_toggle_private_on">Sledovat soukromě</string>
     <string name="action_toggle_private_off">Sledovat veřejně</string>
+    <string name="pref_behavior">Chování</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">Po přečtení kapitoly</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">Po získání nové kapitoly</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">Použít zastaralý dekodér pro dlouhý pruh</string>
+    <string name="pref_update_library_manga_titles">Aktualizovat názvy mangy z knihovny, aby odpovídaly zdroji</string>
+    <string name="logging_in">Přihlašování…</string>
+    <string name="notes_placeholder">Užil jsem si tu část kde…</string>
+    <string name="action_notes">Poznámky</string>
+    <string name="action_edit_notes">Upravit poznámky</string>
+    <string name="pref_update_library_manga_titles_summary">Varování: pokud se manga přejmenuje, vymaže se z fronty stahování (pokud existuje).</string>
+    <string name="action_display_unread_badge">Nepřečtené kapitoly</string>
+    <string name="possible_duplicates_title">Možné duplikáty</string>
+    <string name="possible_duplicates_summary">Existují položky ve knihovně s podobným jménem.\n\nVyber položku pro migraci nebo přesto přidat.</string>
+    <string name="storage_failed_to_create_download_directory">Nepodařilo se vytvořit adresář pro stahování</string>
+    <string name="storage_failed_to_create_directory">Nepodařilo se vytvořit adresář: %s</string>
+    <string name="clear_database_text">Chystáte se odstranit položky z databáze</string>
+    <string name="clear_db_exclude_read">Ponechat položky s přečtenými kapitolami</string>
 </resources>

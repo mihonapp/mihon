@@ -42,8 +42,8 @@
     <string name="scale_type_fit_screen">Axustar á pantalla</string>
     <string name="pref_image_scale_type">Tipo de escala</string>
     <string name="pager_viewer">Paxinado</string>
-    <string name="vertical_plus_viewer">Tira longa con espacios</string>
-    <string name="webtoon_viewer">Tira longa</string>
+    <string name="vertical_plus_viewer">Tira vertical con espacios</string>
+    <string name="webtoon_viewer">Tira vertical</string>
     <string name="vertical_viewer">Por páxinas (vertical)</string>
     <string name="right_to_left_viewer">Páxinas (De dereita a esquerda)</string>
     <string name="left_to_right_viewer">Por páxinas (de esquerda a dereita)</string>
@@ -255,8 +255,8 @@
     <string name="pref_inverted_colors">Invertido</string>
     <string name="tapping_inverted_vertical">Vertical</string>
     <string name="tapping_inverted_both">Ambos</string>
-    <string name="pref_create_folder_per_manga">Gardar as páxinas en carpetas separadas</string>
-    <string name="pref_create_folder_per_manga_summary">Crea carpetas segundo o título dos elementos</string>
+    <string name="pref_create_folder_per_manga">Gardar as páxinas en cartafoles separados</string>
+    <string name="pref_create_folder_per_manga_summary">Crea cartafoles segundo o título dos elementos</string>
     <string name="rotation_portrait">Vertical</string>
     <string name="rotation_landscape">Horizontal</string>
     <string name="split_tall_images_summary">Mellora o rendemento do lector</string>
@@ -497,7 +497,6 @@
     <string name="pref_clear_chapter_cache">Borrar a caché dos capítulos</string>
     <string name="cache_deleted">Borrouse a caché. Elimináronse %1$d ficheiros</string>
     <string name="pref_invalidate_download_cache_summary">Forzar á aplicación a comprobar de novo os capítulos descargados</string>
-    <string name="clear_database_confirmation">Estás seguro? Perderanse os capítulos lidos e o progreso dos elementos que non estean na biblioteca</string>
     <string name="pref_reset_viewer_flags">Restablecer os axustes do lector en cada serie</string>
     <string name="pref_disable_battery_optimization">Desactivar a optimización de batería</string>
     <string name="battery_optimization_disabled">A optimización de batería xa está desactivada</string>
@@ -552,9 +551,6 @@
     <string name="sort_by_source">Por fonte</string>
     <string name="transition_current">Actual:</string>
     <string name="transition_next">Seguinte:</string>
-    <string name="confirm_add_duplicate_manga">Xa tes un elemento na túa biblioteca co mesmo nome.
-\n
-\nAínda queres continuar?</string>
     <string name="copied_to_clipboard">Copiado ao portapapeis:
 \n%1$s</string>
     <string name="clipboard_copy_error">Non se puido copiar ao portapapeis</string>
@@ -770,7 +766,6 @@
     <string name="download_cache_invalidated">Invalidouse o índice de descargas</string>
     <string name="has_results">Ten resultados</string>
     <string name="action_add_anyway">Engadir de todos modos</string>
-    <string name="action_migrate_duplicate">Migrar a entrada existente</string>
     <string name="available_disk_space_info">Dispoñible: %1$s / Total: %2$s</string>
     <string name="syncing_library">Sincronizando a biblioteca</string>
     <string name="relative_time_span_never">Nunca</string>
@@ -837,4 +832,33 @@
     <string name="file_picker_uri_permission_unsupported">Non se puido obter un acceso continuo ao cartafol. É posible que a aplicación se comporte de xeito imprevisto.</string>
     <string name="ext_remove">Eliminar</string>
     <string name="pref_flash_duration">Duración do flash</string>
+    <string name="label_auto">Automático</string>
+    <string name="theme_monochrome">Monocromo</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">Ao rematar de ler un capítulo</string>
+    <string name="possible_duplicates_title">Posibles duplicados</string>
+    <string name="pref_update_library_manga_titles">Actualizar os títulos para que coincidan cos da fonte</string>
+    <string name="pref_update_library_manga_titles_summary">Aviso: se unha obra cambia de nome, borrarase da cola de descargas (se está aí).</string>
+    <string name="author">Autor</string>
+    <string name="possible_duplicates_summary">Xa tes obras na túa biblioteca cun nome similar.\n\nElixe unha delas para comezar a migración ou engádea sen máis.</string>
+    <string name="tracked_privately">Seguindo de maneira privada</string>
+    <string name="notes_placeholder">Gustoume a parte na que…</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Marcar os capítulos duplicados como xa lidos</string>
+    <string name="action_notes">Notas</string>
+    <string name="action_edit_notes">Editar notas</string>
+    <string name="pref_behavior">Comportamento</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">Ao obter capítulos novos</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">Cargar imaxes de tira vertical co decodificador antigo</string>
+    <string name="logging_in">Iniciando sesión…</string>
+    <string name="export">Exportar</string>
+    <string name="library_list">Lista da biblioteca</string>
+    <string name="library_exported">Exportouse a biblioteca</string>
+    <string name="artist">Artista</string>
+    <string name="action_toggle_private_off">Seguir de maneira pública</string>
+    <string name="action_toggle_private_on">Seguir de maneira privada</string>
+    <string name="action_display_unread_badge">Capítulos sen ler</string>
+    <string name="storage_failed_to_create_download_directory">Non se puido crear o cartafol de descarga</string>
+    <string name="storage_failed_to_create_directory">Non se puido crear o cartafol:%s</string>
+    <string name="clear_database_text">Estás a piques de borrar elementos da túa base de datos</string>
+    <string name="clear_database_history_warning">Perderás os capítulos lidos e o progreso de lectura das obras que non estén na biblioteca</string>
+    <string name="clear_db_exclude_read">Conservar as obras con capítulos lidos</string>
 </resources>
