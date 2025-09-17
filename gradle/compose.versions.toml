@@ -8,6 +8,7 @@ foundation = { module = "androidx.compose.foundation:foundation" }
 animation = { module = "androidx.compose.animation:animation" }
 animation-graphics = { module = "androidx.compose.animation:animation-graphics" }
 runtime = { module = "androidx.compose.runtime:runtime" }
+runtime-annotation = { module = "androidx.compose.runtime:runtime-annotation" }
 ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 ui-util = { module = "androidx.compose.ui:ui-util" }
