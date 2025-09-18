@@ -24,18 +24,10 @@ class SuwayomiApi(private val trackId: Long) {
     private val json: Json by injectLazy()
 
     private val sourceManager: SourceManager by injectLazy()
-    private val source: HttpSource by lazy {
-        (sourceManager.get(sourceId) as HttpSource)
-    }
-    private val client: OkHttpClient by lazy {
-        source.client
-    }
-    private val headers: Headers by lazy {
-        source.headers
-    }
-    private val baseUrl: String by lazy {
-        source.baseUrl.trimEnd('/')
-    }
+    private val source: HttpSource by lazy { (sourceManager.get(sourceId) as HttpSource) }
+    private val client: OkHttpClient by lazy { source.client }
+    private val headers: Headers by lazy { source.headers }
+    private val baseUrl: String by lazy { source.baseUrl.trimEnd('/') }
 
     suspend fun getTrackSearch(trackUrl: String): TrackSearch = withIOContext {
         val url = try {
