@@ -21,6 +21,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
 import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -78,6 +79,8 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
             .get()
             .threshold
 
+    override val automationInProgress = MutableStateFlow(false)
+
     init {
         recycler.setItemViewCacheSize(RECYCLER_VIEW_CACHE_SIZE)
         recycler.isVisible = false // Don't let the recycler layout yet
@@ -107,11 +110,13 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
                     val lastItem = adapter.items.getOrNull(lastIndex)
                     if (lastItem is ChapterTransition.Next && lastItem.to == null) {
                         activity.showMenu()
+                        automationInProgress.value = false
                     }
                 }
             },
         )
         recycler.tapListener = { event ->
+            automationInProgress.value = false
             val viewPosition = IntArray(2)
             recycler.getLocationOnScreen(viewPosition)
             val viewPositionRelativeToWindow = IntArray(2)
@@ -164,6 +169,10 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
 
         frame.layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
         frame.addView(recycler)
+
+        if (config.autoScrollEnabled) {
+            automateWebtoon(activity, recycler, adapter, automationInProgress, config, scope)
+        }
     }
 
     private fun checkAllowPreload(page: ReaderPage?): Boolean {
