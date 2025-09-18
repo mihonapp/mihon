@@ -91,7 +91,6 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
         try {
             api.getTrackSearch(manga.url)
         } catch (e: Exception) {
-            Log.w(TAG, "Tracking failed", e)
             null
         }
 
@@ -106,5 +105,3 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
             null
         }
 }
-
-private const val TAG = "Suwayomi"
