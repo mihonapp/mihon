@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.data.track.suwayomi
 
 import kotlinx.serialization.Serializable
-import kotlin.collections.List
 
 @Serializable
 data class SourceDataClass(
