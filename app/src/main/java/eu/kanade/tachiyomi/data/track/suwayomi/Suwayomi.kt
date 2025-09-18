@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.data.track.suwayomi
 
 import android.graphics.Color
-import android.util.Log
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
