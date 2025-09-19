@@ -209,6 +209,35 @@ object ImageUtil {
     }
 
     /**
+     * Combines two pages for side-by-side view.
+     */
+    fun combinePages(leftPageSource: BufferedSource, rightPageSource: BufferedSource): BufferedSource {
+        val leftBitmap = BitmapFactory.decodeStream(leftPageSource.inputStream())
+        val rightBitmap = BitmapFactory.decodeStream(rightPageSource.inputStream())
+
+        val maxHeight = max(leftBitmap.height, rightBitmap.height)
+        val combinedWidth = leftBitmap.width + rightBitmap.width
+
+        val combinedBitmap = createBitmap(combinedWidth, maxHeight, Bitmap.Config.RGB_565)
+
+        combinedBitmap.applyCanvas {
+            drawBitmap(leftBitmap, 0f, (maxHeight - leftBitmap.height) / 2f, null)
+            drawBitmap(rightBitmap, leftBitmap.width.toFloat(), (maxHeight - rightBitmap.height) / 2f, null)
+        }
+
+        leftBitmap.recycle()
+        rightBitmap.recycle()
+
+        val buffer = Buffer()
+        buffer.outputStream().use { outputStream ->
+            combinedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
+        }
+        combinedBitmap.recycle()
+
+        return buffer
+    }
+
+    /**
      * Splits tall images to improve performance of reader
      */
     fun splitTallImage(tmpDir: UniFile, imageFile: UniFile, filenamePrefix: String): Boolean {

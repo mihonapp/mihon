@@ -109,6 +109,19 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
         pref = screenModel.preferences.navigateToPan(),
     )
 
+    val combinedPagesPaged by screenModel.preferences.combinedPagesPaged().collectAsState()
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_combined_pages),
+        pref = screenModel.preferences.combinedPagesPaged(),
+    )
+
+    if (combinedPagesPaged) {
+        CheckboxItem(
+            label = stringResource(MR.strings.pref_combined_pages_show_cover),
+            pref = screenModel.preferences.combinedPagesShowCoverPage(),
+        )
+    }
+
     val dualPageSplitPaged by screenModel.preferences.dualPageSplitPaged().collectAsState()
     CheckboxItem(
         label = stringResource(MR.strings.pref_dual_page_split),
