@@ -64,7 +64,7 @@ data class BackupManga(
             favoriteModifiedAt = this@BackupManga.favoriteModifiedAt,
             version = this@BackupManga.version,
             notes = this@BackupManga.notes,
-            initialized = this@BackupManga.initialized,
+            initialized = this@BackupManga.initialized || this@BackupManga.description != null,
         )
     }
 }
