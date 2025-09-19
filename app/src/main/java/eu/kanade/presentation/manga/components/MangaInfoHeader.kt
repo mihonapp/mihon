@@ -567,44 +567,47 @@ private fun ColumnScope.MangaContentInfo(
     }
 }
 
-private fun descriptionAnnotator(loadImages: Boolean, linkStyle: SpanStyle) = markdownAnnotator(
-    annotate = { content, child ->
-        if (!loadImages && child.type == MarkdownElementTypes.IMAGE) {
-            val inlineLink = child.findChildOfType(MarkdownElementTypes.INLINE_LINK)
+@Composable
+private fun descriptionAnnotator(loadImages: Boolean, linkStyle: SpanStyle) = remember(loadImages, linkStyle) {
+    markdownAnnotator(
+        annotate = { content, child ->
+            if (!loadImages && child.type == MarkdownElementTypes.IMAGE) {
+                val inlineLink = child.findChildOfType(MarkdownElementTypes.INLINE_LINK)
 
-            val url = inlineLink?.findChildOfType(MarkdownElementTypes.LINK_DESTINATION)
-                ?.getUnescapedTextInNode(content)
-                ?: inlineLink?.findChildOfType(MarkdownElementTypes.AUTOLINK)
-                    ?.findChildOfType(MarkdownTokenTypes.AUTOLINK)
+                val url = inlineLink?.findChildOfType(MarkdownElementTypes.LINK_DESTINATION)
                     ?.getUnescapedTextInNode(content)
-                ?: return@markdownAnnotator false
+                    ?: inlineLink?.findChildOfType(MarkdownElementTypes.AUTOLINK)
+                        ?.findChildOfType(MarkdownTokenTypes.AUTOLINK)
+                        ?.getUnescapedTextInNode(content)
+                    ?: return@markdownAnnotator false
 
-            val textNode = inlineLink?.findChildOfType(MarkdownElementTypes.LINK_TITLE)
-                ?: inlineLink?.findChildOfType(MarkdownElementTypes.LINK_TEXT)
-            val altText = textNode?.findChildOfType(MarkdownTokenTypes.TEXT)
-                ?.getUnescapedTextInNode(content).orEmpty()
+                val textNode = inlineLink?.findChildOfType(MarkdownElementTypes.LINK_TITLE)
+                    ?: inlineLink?.findChildOfType(MarkdownElementTypes.LINK_TEXT)
+                val altText = textNode?.findChildOfType(MarkdownTokenTypes.TEXT)
+                    ?.getUnescapedTextInNode(content).orEmpty()
 
-            withLink(LinkAnnotation.Url(url = url)) {
-                pushStyle(linkStyle)
-                appendInlineContent(MARKDOWN_INLINE_IMAGE_TAG)
-                append(altText)
-                pop()
+                withLink(LinkAnnotation.Url(url = url)) {
+                    pushStyle(linkStyle)
+                    appendInlineContent(MARKDOWN_INLINE_IMAGE_TAG)
+                    append(altText)
+                    pop()
+                }
+
+                return@markdownAnnotator true
             }
 
-            return@markdownAnnotator true
-        }
+            if (child.type in DISALLOWED_MARKDOWN_TYPES) {
+                append(content.substring(child.startOffset, child.endOffset))
+                return@markdownAnnotator true
+            }
 
-        if (child.type in DISALLOWED_MARKDOWN_TYPES) {
-            append(content.substring(child.startOffset, child.endOffset))
-            return@markdownAnnotator true
-        }
-
-        false
-    },
-    config = markdownAnnotatorConfig(
-        eolAsNewLine = true,
-    ),
-)
+            false
+        },
+        config = markdownAnnotatorConfig(
+            eolAsNewLine = true,
+        ),
+    )
+}
 
 @Composable
 private fun MangaSummary(
