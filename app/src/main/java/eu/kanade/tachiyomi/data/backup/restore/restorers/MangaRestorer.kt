@@ -139,6 +139,7 @@ class MangaRestorer(
         manga: Manga,
     ): Manga {
         return manga.copy(
+            initialized = manga.initialized || manga.description != null,
             id = insertManga(manga),
         )
     }
