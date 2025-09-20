@@ -13,10 +13,10 @@
     <string name="version">Versi</string>
     <string name="pref_dns_over_https">DNS liwat HTTPS</string>
     <string name="disabled">Dipateni</string>
-    <string name="color_filter_a_value">T</string>
-    <string name="color_filter_b_value">B</string>
-    <string name="color_filter_g_value">I</string>
-    <string name="color_filter_r_value">A</string>
+    <string name="color_filter_a_value">Alfa</string>
+    <string name="color_filter_b_value">Biru</string>
+    <string name="color_filter_g_value">Ijo</string>
+    <string name="color_filter_r_value">Abang</string>
     <string name="double_tap_anim_speed_fast">Cepet</string>
     <string name="zoom_start_right">Nengen</string>
     <string name="zoom_start_left">Ngiwa</string>
