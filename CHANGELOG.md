@@ -21,7 +21,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix height of description not being calculated correctly if images are present ([@Secozzi](https://github.com/Secozzi)) ([#2382](https://github.com/mihonapp/mihon/pull/2382))
 - Fix migration progress not updating after manual search ([@Secozzi](https://github.com/Secozzi)) ([#2484](https://github.com/mihonapp/mihon/pull/2484))
 - Fix category migration flag being ignored due to incorrect check against chapter flag ([@Secozzi](https://github.com/Secozzi)) ([#2484](https://github.com/mihonapp/mihon/pull/2484))
-- Fix search URL for Kitsu tracker ([@cpiber](https://github.com/cpiber)) ([#2517](https://github.com/mihonapp/mihon/pull/2517))
+- Use new search URL for Kitsu tracker ([@cpiber](https://github.com/cpiber)) ([#2517](https://github.com/mihonapp/mihon/pull/2517))
 
 ## [v0.19.1] - 2025-08-07
 ### Changed
