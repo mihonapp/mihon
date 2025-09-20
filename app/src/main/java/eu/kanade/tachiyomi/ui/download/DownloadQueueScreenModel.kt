@@ -211,12 +211,9 @@ class DownloadQueueScreenModel(
      */
     private fun launchProgressJob(download: Download) {
         val job = screenModelScope.launch {
-            while (download.pages == null) {
-                delay(50)
-            }
-
-            val progressFlows = download.pages!!.map(Page::progressFlow)
-            combine(progressFlows, Array<Int>::sum)
+            // Collect progress from the unified Download.progressFlow which supports
+            // both page-by-page and full-chapter downloads.
+            download.progressFlow
                 .distinctUntilChanged()
                 .debounce(50)
                 .collectLatest {
