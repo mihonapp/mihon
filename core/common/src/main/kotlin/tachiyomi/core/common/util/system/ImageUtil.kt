@@ -28,6 +28,8 @@ import okio.Buffer
 import okio.BufferedSource
 import tachiyomi.decoder.Format
 import tachiyomi.decoder.ImageDecoder
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.util.Locale
 import kotlin.math.abs
@@ -213,14 +215,48 @@ object ImageUtil {
      */
     fun splitTallImage(tmpDir: UniFile, imageFile: UniFile, filenamePrefix: String): Boolean {
         val imageSource = imageFile.openInputStream().use { Buffer().readFrom(it) }
+        val splitImages = splitTallImage(imageSource.readByteArray())
+        val splitImageNames = ArrayList<String>()
+
+        return try {
+            splitImages.forEachIndexed { idx, splitData ->
+                val splitImageName = splitImageName(filenamePrefix, idx)
+                // Remove pre-existing split if exists (this split shouldn't exist under normal circumstances)
+                tmpDir.findFile(splitImageName)?.delete()
+
+                splitImageNames.add(splitImageName)
+                val splitFile = tmpDir.createFile(splitImageName)!!
+                splitFile.openOutputStream().use { outputStream ->
+                    outputStream.write(splitData)
+                }
+            }
+            imageFile.delete()
+            true
+        } catch (e: Exception) {
+            // Image splits were not successfully saved so delete them and keep the original image
+            for (splitImageName in splitImageNames) {
+                tmpDir.findFile(splitImageName)?.delete()
+            }
+            logcat(LogPriority.ERROR, e)
+            false
+        }
+    }
+
+    /**
+     * Splits tall images to improve performance of reader
+     *
+     * @return a list of split image data, or null if this processing failed.
+     */
+    fun splitTallImage(imgData: ByteArray): Array<ByteArray> {
+        val imageSource = ByteArrayInputStream(imgData).use { Buffer().readFrom(it) }
         if (isAnimatedAndSupported(imageSource) || !isTallImage(imageSource)) {
-            return true
+            return arrayOf(imgData)
         }
 
         val bitmapRegionDecoder = getBitmapRegionDecoder(imageSource.peek().inputStream())
         if (bitmapRegionDecoder == null) {
             logcat { "Failed to create new instance of BitmapRegionDecoder" }
-            return false
+            return arrayOf(imgData)
         }
 
         val options = extractImageOptions(imageSource).apply {
@@ -230,34 +266,26 @@ object ImageUtil {
         val splitDataList = options.splitData
 
         return try {
+            val lst = Array(splitDataList.size) { byteArrayOf() }
             splitDataList.forEach { splitData ->
-                val splitImageName = splitImageName(filenamePrefix, splitData.index)
-                // Remove pre-existing split if exists (this split shouldn't exist under normal circumstances)
-                tmpDir.findFile(splitImageName)?.delete()
-
-                val splitFile = tmpDir.createFile(splitImageName)!!
-
                 val region = Rect(0, splitData.topOffset, splitData.splitWidth, splitData.bottomOffset)
 
-                splitFile.openOutputStream().use { outputStream ->
+                ByteArrayOutputStream().use { os ->
                     val splitBitmap = bitmapRegionDecoder.decodeRegion(region, options)
-                    splitBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                    splitBitmap.compress(Bitmap.CompressFormat.JPEG, 100, os)
                     splitBitmap.recycle()
+                    lst[splitData.index] = os.toByteArray()
                 }
                 logcat {
                     "Success: Split #${splitData.index + 1} with topOffset=${splitData.topOffset} " +
                         "height=${splitData.splitHeight} bottomOffset=${splitData.bottomOffset}"
                 }
             }
-            imageFile.delete()
-            true
+            lst
         } catch (e: Exception) {
-            // Image splits were not successfully saved so delete them and keep the original image
-            splitDataList
-                .map { splitImageName(filenamePrefix, it.index) }
-                .forEach { tmpDir.findFile(it)?.delete() }
+            // Image splits were not successfully saved so return original image
             logcat(LogPriority.ERROR, e)
-            false
+            arrayOf(imgData)
         } finally {
             bitmapRegionDecoder.recycle()
         }
