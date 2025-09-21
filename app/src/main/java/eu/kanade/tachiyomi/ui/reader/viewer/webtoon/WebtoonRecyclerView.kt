@@ -34,6 +34,10 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     private var firstVisibleItemPosition = 0
     private var lastVisibleItemPosition = 0
     private var currentScale = DEFAULT_RATE
+
+    private var isScrolling = false
+    private var lastTapStoppedScroll = false
+
     var zoomOutDisabled = false
         set(value) {
             field = value
@@ -62,7 +66,17 @@ class WebtoonRecyclerView @JvmOverloads constructor(
         super.onMeasure(widthSpec, heightSpec)
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
     override fun onTouchEvent(e: MotionEvent): Boolean {
+        if (e.actionMasked == MotionEvent.ACTION_DOWN) {
+            lastTapStoppedScroll = isScrolling
+        } else if (e.actionMasked == MotionEvent.ACTION_UP) {
+            performClick()
+        }
         detector.onTouchEvent(e)
         return super.onTouchEvent(e)
     }
@@ -82,6 +96,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
         val totalItemCount = layoutManager?.itemCount ?: 0
         atLastPosition = visibleItemCount > 0 && lastVisibleItemPosition == totalItemCount - 1
         atFirstPosition = firstVisibleItemPosition == 0
+        isScrolling = state != SCROLL_STATE_IDLE
     }
 
     private fun getPositionX(positionX: Float): Float {
@@ -215,7 +230,9 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     inner class GestureListener : GestureDetectorWithLongTap.Listener() {
 
         override fun onSingleTapConfirmed(ev: MotionEvent): Boolean {
-            tapListener?.invoke(ev)
+            if (!lastTapStoppedScroll) {
+                tapListener?.invoke(ev)
+            }
             return false
         }
 
