@@ -15,19 +15,19 @@ import eu.kanade.tachiyomi.data.backup.restore.restorers.MangaRestorer
 import eu.kanade.tachiyomi.data.backup.restore.restorers.PreferenceRestorer
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.asCoroutineDispatcher
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import java.io.File
 import java.text.SimpleDateFormat
+import java.util.Collections
 import java.util.Date
 import java.util.Locale
-import java.util.Collections
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -45,9 +45,11 @@ class BackupRestorer(
     private var restoreAmount = 0
     private var restoreProgress = AtomicInteger()
     private val errors = Collections.synchronizedList(mutableListOf<Pair<Date, String>>())
-    private val dispatcher = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()).asCoroutineDispatcher()
+    private val dispatcher = Executors.newFixedThreadPool(
+        Runtime.getRuntime().availableProcessors(),
+    ).asCoroutineDispatcher()
 
-    private val MANGA_PROGRESS_BATCH = Runtime.getRuntime().availableProcessors() * 8
+    private val mangaProgressBatch = Runtime.getRuntime().availableProcessors() * 8
 
     /**
      * Mapping of source ID to source name from backup data
@@ -152,7 +154,7 @@ class BackupRestorer(
                     errors.add(Date() to "${it.title} [$sourceName]: ${e.message}")
                 } finally {
                     val currentProgress = restoreProgress.incrementAndGet()
-                    if (currentProgress == restoreAmount || currentProgress % MANGA_PROGRESS_BATCH == 0) {
+                    if (currentProgress == restoreAmount || currentProgress % mangaProgressBatch == 0) {
                         notifier.showRestoreProgress(it.title, currentProgress, restoreAmount, isSync)
                     }
                 }
@@ -161,7 +163,12 @@ class BackupRestorer(
 
         val finalProgress = restoreProgress.get()
         if (finalProgress < restoreAmount) {
-            notifier.showRestoreProgress(context.stringResource(MR.strings.restoring_backup), finalProgress, restoreAmount, isSync)
+            notifier.showRestoreProgress(
+                context.stringResource(MR.strings.restoring_backup),
+                finalProgress,
+                restoreAmount,
+                isSync,
+            )
         }
     }
 
@@ -184,7 +191,9 @@ class BackupRestorer(
         )
     }
 
-    private fun CoroutineScope.restoreSourcePreferences(preferences: List<BackupSourcePreferences>) = launch(dispatcher) {
+    private fun CoroutineScope.restoreSourcePreferences(preferences: List<BackupSourcePreferences>) = launch(
+        dispatcher,
+    ) {
         ensureActive()
         preferenceRestorer.restoreSource(preferences)
 

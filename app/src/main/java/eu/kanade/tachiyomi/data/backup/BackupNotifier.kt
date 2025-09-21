@@ -102,7 +102,11 @@ class BackupNotifier(private val context: Context) {
         isSync: Boolean = false,
     ): NotificationCompat.Builder {
         lock.withLock {
-            val builder = (progressNotificationBuilder ?: newProgressBuilder().also { progressNotificationBuilder = it })
+            val builder = (
+                progressNotificationBuilder ?: newProgressBuilder().also {
+                    progressNotificationBuilder = it
+                }
+                )
             with(builder) {
                 setContentTitle(
                     if (isSync) {
