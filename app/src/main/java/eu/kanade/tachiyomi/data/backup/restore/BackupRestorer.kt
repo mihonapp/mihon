@@ -57,19 +57,27 @@ class BackupRestorer(
     suspend fun restore(uri: Uri, options: RestoreOptions) {
         val startTime = System.currentTimeMillis()
 
-        restoreFromFile(uri, options)
+        try {
+            restoreFromFile(uri, options)
 
-        val time = System.currentTimeMillis() - startTime
+            val time = System.currentTimeMillis() - startTime
 
-        val logFile = writeErrorLog()
+            val logFile = writeErrorLog()
 
-        notifier.showRestoreComplete(
-            time,
-            errors.size,
-            logFile.parent,
-            logFile.name,
-            isSync,
-        )
+            notifier.showRestoreComplete(
+                time,
+                errors.size,
+                logFile.parent,
+                logFile.name,
+                isSync,
+            )
+        } finally {
+            try {
+                dispatcher.close()
+            } catch (_: Exception) {
+                // ignore
+            }
+        }
     }
 
     private suspend fun restoreFromFile(uri: Uri, options: RestoreOptions) {
