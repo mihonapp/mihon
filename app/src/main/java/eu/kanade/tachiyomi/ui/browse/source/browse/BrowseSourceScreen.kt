@@ -12,8 +12,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.NewReleases
+import androidx.compose.material.icons.outlined.ContentPaste
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -65,6 +67,10 @@ import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.source.local.LocalSource
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import androidx.compose.ui.platform.LocalContext
 
 data class BrowseSourceScreen(
     val sourceId: Long,
@@ -74,6 +80,17 @@ data class BrowseSourceScreen(
     private var assistUrl: String? = null
 
     override fun onProvideAssistUrl() = assistUrl
+    fun getClipboardText(context: Context): String? {
+        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData: ClipData? = clipboard.primaryClip
+
+        if (clipData != null && clipData.itemCount > 0) {
+            val rawText = clipData.getItemAt(0).text?.toString()
+            val regex = Regex("[\\[\\]\\-/\\#]")
+            return rawText?.replace(regex, "")
+        }
+        return null
+    }
 
     @Composable
     override fun Content() {
@@ -104,6 +121,7 @@ data class BrowseSourceScreen(
         val scope = rememberCoroutineScope()
         val haptic = LocalHapticFeedback.current
         val uriHandler = LocalUriHandler.current
+        val context = LocalContext.current
         val snackbarHostState = remember { SnackbarHostState() }
 
         val onHelpClick = { uriHandler.openUri(LocalSource.HELP_URL) }
@@ -209,6 +227,16 @@ data class BrowseSourceScreen(
                 }
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = {
+                        val clipboardText = getClipboardText(context)
+                        screenModel.search(clipboardText)
+                    },
+                ) {
+                    Icon(Icons.Outlined.ContentPaste, contentDescription = "Search from clipboard")
+                }
+            }
         ) { paddingValues ->
             BrowseSourceContent(
                 source = screenModel.source,
