@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.filter
 import androidx.paging.map
@@ -25,7 +26,9 @@ import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.firstOrNull
@@ -103,21 +106,30 @@ class BrowseSourceScreenModel(
      * Flow of Pager flow tied to [State.listing]
      */
     private val hideInLibraryItems = sourcePreferences.hideInLibraryItems().get()
-    val mangaPagerFlowFlow = state.map { it.listing }
-        .distinctUntilChanged()
-        .map { listing ->
+
+    private val pagerCache = mutableMapOf<String, Flow<PagingData<StateFlow<Manga>>>>()
+
+    private fun getMangaPager(listing: Listing): Flow<PagingData<StateFlow<Manga>>> {
+        val key = "${listing.query}:${listing.filters.hashCode()}"
+        return pagerCache.getOrPut(key) {
             Pager(PagingConfig(pageSize = 25)) {
                 getRemoteManga(sourceId, listing.query ?: "", listing.filters)
-            }.flow.map { pagingData ->
-                pagingData.map { manga ->
-                    getManga.subscribe(manga.url, manga.source)
-                        .map { it ?: manga }
-                        .stateIn(ioCoroutineScope)
+            }.flow
+                .map { pagingData ->
+                    pagingData.map { manga ->
+                        getManga.subscribe(manga.url, manga.source)
+                            .map { it ?: manga }
+                            .stateIn(ioCoroutineScope)
+                    }
+                        .filter { !hideInLibraryItems || !it.value.favorite }
                 }
-                    .filter { !hideInLibraryItems || !it.value.favorite }
-            }
                 .cachedIn(ioCoroutineScope)
         }
+    }
+
+    val mangaPagerFlowFlow = state.map { it.listing }
+        .distinctUntilChanged()
+        .map(this::getMangaPager)
         .stateIn(ioCoroutineScope, SharingStarted.Lazily, emptyFlow())
 
     fun getColumnsPreference(orientation: Int): GridCells {
