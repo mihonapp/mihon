@@ -37,7 +37,6 @@ private val animationSpec = tween<IntOffset>(200)
 @Composable
 fun ReaderAppBars(
     visible: Boolean,
-    fullscreen: Boolean,
 
     mangaTitle: String?,
     chapterTitle: String?,
@@ -71,14 +70,10 @@ fun ReaderAppBars(
         .surfaceColorAtElevation(3.dp)
         .copy(alpha = if (isSystemInDarkTheme()) 0.9f else 0.95f)
 
-    val modifierWithInsetsPadding = if (fullscreen) {
-        Modifier.systemBarsPadding()
-    } else {
-        Modifier
-    }
-
     Column(
-        modifier = Modifier.fillMaxHeight(),
+        modifier = Modifier
+            .systemBarsPadding()
+            .fillMaxHeight(),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         AnimatedVisibility(
@@ -93,7 +88,7 @@ fun ReaderAppBars(
             ),
         ) {
             AppBar(
-                modifier = modifierWithInsetsPadding
+                modifier = Modifier
                     .clickable(onClick = onClickTopAppBar),
                 backgroundColor = backgroundColor,
                 title = mangaTitle,
@@ -165,7 +160,6 @@ fun ReaderAppBars(
             ),
         ) {
             Column(
-                modifier = modifierWithInsetsPadding,
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
             ) {
                 ChapterNavigator(

@@ -6,6 +6,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.TextStyle
@@ -18,6 +19,7 @@ import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 fun PageIndicatorText(
     currentPage: Int,
     totalPages: Int,
+    modifier: Modifier = Modifier,
 ) {
     if (currentPage <= 0 || totalPages <= 0) return
 
@@ -35,6 +37,7 @@ fun PageIndicatorText(
     )
 
     Box(
+        modifier = modifier,
         contentAlignment = Alignment.Center,
     ) {
         Text(

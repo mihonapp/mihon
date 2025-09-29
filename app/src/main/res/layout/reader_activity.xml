@@ -1,6 +1,8 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.view.insets.ProtectionLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/reader_protection"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <FrameLayout
         android:id="@+id/reader_container"
@@ -34,4 +36,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</FrameLayout>
+</androidx.core.view.insets.ProtectionLayout>

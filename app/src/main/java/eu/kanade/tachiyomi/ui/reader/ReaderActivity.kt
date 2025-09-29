@@ -19,9 +19,12 @@ import android.view.MotionEvent
 import android.view.View.LAYER_TYPE_HARDWARE
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -29,6 +32,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
 import androidx.core.graphics.ColorUtils
@@ -37,6 +41,7 @@ import androidx.core.transition.doOnEnd
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.insets.ColorProtection
 import androidx.lifecycle.lifecycleScope
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.google.android.material.elevation.SurfaceColors
@@ -339,6 +344,7 @@ class ReaderActivity : BaseActivity() {
                 PageIndicatorText(
                     currentPage = state.currentPage,
                     totalPages = state.totalPages,
+                    modifier = Modifier.systemBarsPadding(),
                 )
             }
         }
@@ -359,7 +365,6 @@ class ReaderActivity : BaseActivity() {
             }
 
             val isHttpSource = viewModel.getSource() is HttpSource
-            val isFullscreen by readerPreferences.fullscreen().collectAsState()
             val flashOnPageChange by readerPreferences.flashOnPageChange().collectAsState()
 
             val colorOverlayEnabled by readerPreferences.colorFilter().collectAsState()
@@ -382,7 +387,6 @@ class ReaderActivity : BaseActivity() {
 
             ReaderAppBars(
                 visible = state.menuVisible,
-                fullscreen = isFullscreen,
 
                 mangaTitle = state.manga?.title,
                 chapterTitle = state.currentChapter?.chapter?.name,
@@ -492,12 +496,17 @@ class ReaderActivity : BaseActivity() {
             SurfaceColors.SURFACE_2.getColor(this),
             if (isNightMode()) 230 else 242, // 90% dark 95% light
         )
-        @Suppress("DEPRECATION")
-        window.statusBarColor = toolbarColor
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            @Suppress("DEPRECATION")
-            window.navigationBarColor = toolbarColor
-        }
+
+        enableEdgeToEdge(
+            SystemBarStyle.auto(toolbarColor, toolbarColor),
+            SystemBarStyle.auto(toolbarColor, toolbarColor),
+        )
+        binding.readerProtection.setProtections(
+            listOf(
+                ColorProtection(WindowInsetsCompat.Side.TOP, toolbarColor),
+                ColorProtection(WindowInsetsCompat.Side.BOTTOM, toolbarColor),
+            ),
+        )
 
         // Set initial visibility
         setMenuVisibility(viewModel.state.value.menuVisible)
@@ -510,7 +519,8 @@ class ReaderActivity : BaseActivity() {
         viewModel.showMenus(visible)
         if (visible) {
             windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            windowInsetsController.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         } else {
             if (readerPreferences.fullscreen().get()) {
                 windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
