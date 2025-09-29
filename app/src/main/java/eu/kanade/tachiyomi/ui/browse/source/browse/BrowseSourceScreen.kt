@@ -53,6 +53,7 @@ import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreenModel.Listi
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewScreen
+import eu.kanade.domain.source.service.SourcePreferences
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -71,10 +72,13 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import androidx.compose.ui.platform.LocalContext
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 data class BrowseSourceScreen(
     val sourceId: Long,
     private val listingQuery: String?,
+    private val sourcePreferences: SourcePreferences = Injekt.get(),
 ) : Screen(), AssistContentScreen {
 
     private var assistUrl: String? = null
@@ -118,6 +122,7 @@ data class BrowseSourceScreen(
             return
         }
 
+        val showClipboardSearch = sourcePreferences.showClipboardSearch().get()
         val scope = rememberCoroutineScope()
         val haptic = LocalHapticFeedback.current
         val uriHandler = LocalUriHandler.current
@@ -228,13 +233,15 @@ data class BrowseSourceScreen(
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             floatingActionButton = {
-                FloatingActionButton(
-                    onClick = {
-                        val clipboardText = getClipboardText(context)
-                        screenModel.search(clipboardText)
-                    },
-                ) {
-                    Icon(Icons.Outlined.ContentPaste, contentDescription = "Search from clipboard")
+                if (showClipboardSearch) {
+                    FloatingActionButton(
+                        onClick = {
+                            val clipboardText = getClipboardText(context)
+                            screenModel.search(clipboardText)
+                        },
+                    ) {
+                        Icon(Icons.Outlined.ContentPaste, contentDescription = "Search from clipboard")
+                    }
                 }
             }
         ) { paddingValues ->
