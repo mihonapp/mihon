@@ -78,7 +78,6 @@ import uy.kohesive.injekt.api.get
 data class BrowseSourceScreen(
     val sourceId: Long,
     private val listingQuery: String?,
-    private val sourcePreferences: SourcePreferences = Injekt.get(),
 ) : Screen(), AssistContentScreen {
 
     private var assistUrl: String? = null
@@ -121,7 +120,7 @@ data class BrowseSourceScreen(
             )
             return
         }
-
+        val sourcePreferences = remember { Injekt.get<SourcePreferences>() }
         val showClipboardSearch = sourcePreferences.showClipboardSearch().get()
         val scope = rememberCoroutineScope()
         val haptic = LocalHapticFeedback.current
