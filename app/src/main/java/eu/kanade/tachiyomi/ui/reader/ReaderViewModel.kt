@@ -16,6 +16,7 @@ import eu.kanade.domain.source.interactor.GetIncognitoState
 import eu.kanade.domain.track.interactor.TrackChapter
 import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.tachiyomi.data.database.models.toDomainChapter
+import eu.kanade.tachiyomi.data.gorse.GorseService
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -102,6 +103,7 @@ class ReaderViewModel @JvmOverloads constructor(
     private val setMangaViewerFlags: SetMangaViewerFlags = Injekt.get(),
     private val getIncognitoState: GetIncognitoState = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
+    private val gorseService: GorseService = Injekt.get(),
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(State())
@@ -568,6 +570,13 @@ class ReaderViewModel @JvmOverloads constructor(
         updateTrackChapterRead(readerChapter)
         deleteChapterIfNeeded(readerChapter)
 
+        // Sync with Gorse when chapter is completed
+        manga?.let { manga ->
+            viewModelScope.launchNonCancellable {
+                gorseService.markMangaRead(manga)
+            }
+        }
+
         val markDuplicateAsRead = libraryPreferences.markDuplicateReadChapterAsRead().get()
             .contains(LibraryPreferences.MARK_DUPLICATE_CHAPTER_READ_EXISTING)
         if (!markDuplicateAsRead) return
@@ -672,6 +681,52 @@ class ReaderViewModel @JvmOverloads constructor(
                 bookmarked = bookmarked,
             )
         }
+    }
+
+    /**
+     * Mark current manga as liked in Gorse
+     */
+    suspend fun markMangaLikedByGorse(): Result<Unit> {
+        return manga?.let { manga ->
+            val result = gorseService.markMangaLiked(manga)
+            if (result.isSuccess) {
+                mutableState.update { it.copy(isLiked = true) }
+            }
+            result
+        } ?: Result.failure(Exception("No manga available"))
+    }
+
+    /**
+     * Remove like from current manga in Gorse
+     */
+    suspend fun removeMangaLikeByGorse(): Result<Unit> {
+        return manga?.let { manga ->
+            val result = gorseService.removeMangaLike(manga)
+            if (result.isSuccess) {
+                mutableState.update { it.copy(isLiked = false) }
+            }
+            result
+        } ?: Result.failure(Exception("No manga available"))
+    }
+
+    /**
+     * Toggle like status for current manga in Gorse
+     */
+    suspend fun toggleMangaLikeByGorse(): Result<Unit> {
+        return if (state.value.isLiked) {
+            removeMangaLikeByGorse()
+        } else {
+            markMangaLikedByGorse()
+        }
+    }
+
+    /**
+     * Get similar manga recommendations from Gorse (基于当前漫画的相似推荐)
+     */
+    suspend fun getSimilarMangaFromGorse(): List<String> {
+        return manga?.let { manga ->
+            gorseService.getSimilarManga(manga, 3)
+        } ?: emptyList()
     }
 
     /**
@@ -962,6 +1017,7 @@ class ReaderViewModel @JvmOverloads constructor(
         val bookmarked: Boolean = false,
         val isLoadingAdjacentChapter: Boolean = false,
         val currentPage: Int = -1,
+        val isLiked: Boolean = false,
 
         /**
          * Viewer used to display the pages (pager, webtoon, ...).

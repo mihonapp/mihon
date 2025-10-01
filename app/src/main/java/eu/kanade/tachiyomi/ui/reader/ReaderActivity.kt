@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.lifecycle.lifecycleScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
@@ -421,6 +422,26 @@ class ReaderActivity : BaseActivity() {
                     menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
                 },
                 onClickSettings = viewModel::openSettingsDialog,
+                isLiked = state.isLiked,
+                onClickGorseLike = {
+                    lifecycleScope.launch {
+                        try {
+                            val result = viewModel.toggleMangaLikeByGorse()
+                            menuToggleToast?.cancel()
+                            if (result.isSuccess) {
+                                val message = if (state.isLiked) "已取消喜欢" else "已标记为喜欢"
+                                menuToggleToast = toast(message)
+                            } else {
+                                val error = result.exceptionOrNull()?.message ?: "未知错误"
+                                menuToggleToast = toast("操作失败: $error")
+                            }
+                        } catch (e: Exception) {
+                            menuToggleToast?.cancel()
+                            menuToggleToast = toast("操作异常: ${e.message}")
+                        }
+                    }
+                },
+                onClickGorseRecommend = ::showGorseRecommendations,
             )
 
             if (flashOnPageChange) {
@@ -586,6 +607,35 @@ class ReaderActivity : BaseActivity() {
         assistUrl?.let {
             val intent = it.toUri().toShareIntent(this, type = "text/plain")
             startActivity(Intent.createChooser(intent, stringResource(MR.strings.action_share)))
+        }
+    }
+
+    private fun showGorseRecommendations() {
+        lifecycleScope.launch {
+            try {
+                logcat(LogPriority.DEBUG) { "Starting Gorse similar manga recommendations fetch..." }
+                
+                // 只获取基于当前漫画的相似推荐
+                val similarRecommendations = viewModel.getSimilarMangaFromGorse()
+                logcat(LogPriority.INFO) { "Similar manga recommendations from Gorse: $similarRecommendations (count: ${similarRecommendations.size})" }
+                
+                if (similarRecommendations.isNotEmpty()) {
+                    val message = "相似漫画推荐:\n" + 
+                        similarRecommendations.take(3).joinToString("\n") { "• $it" }
+                    
+                    android.app.AlertDialog.Builder(this@ReaderActivity)
+                        .setTitle("相似漫画")
+                        .setMessage(message)
+                        .setPositiveButton("确定", null)
+                        .show()
+                } else {
+                    logcat(LogPriority.WARN) { "No similar manga recommendations available" }
+                    toast("暂无相似漫画推荐")
+                }
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e) { "Error getting similar manga recommendations" }
+                toast("获取相似推荐失败: ${e.message}")
+            }
         }
     }
 

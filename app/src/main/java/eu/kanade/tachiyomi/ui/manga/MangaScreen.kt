@@ -155,6 +155,20 @@ class MangaScreen(
             onContinueReading = { continueReading(context, screenModel.getNextUnreadChapter()) },
             onSearch = { query, global -> scope.launch { performSearch(navigator, query, global) } },
             onCoverClicked = screenModel::showCoverDialog,
+            onGorseRecommendationClicked = { recommendation ->
+                // Navigate to the recommended manga based on itemId
+                scope.launch {
+                    try {
+                        // Try to parse the itemId as a manga ID and navigate to it
+                        val mangaId = recommendation.itemId.toLongOrNull()
+                        if (mangaId != null) {
+                            navigator.push(MangaScreen(mangaId))
+                        }
+                    } catch (e: Exception) {
+                        logcat(LogPriority.ERROR, e) { "Failed to navigate to Gorse recommendation: ${recommendation.itemId}" }
+                    }
+                }
+            },
             onShareClicked = { shareManga(context, screenModel.manga, screenModel.source) }.takeIf { isHttpSource },
             onDownloadActionClicked = screenModel::runDownloadAction.takeIf { !successState.source.isLocalOrStub() },
             onEditCategoryClicked = screenModel::showChangeCategoryDialog.takeIf { successState.manga.favorite },

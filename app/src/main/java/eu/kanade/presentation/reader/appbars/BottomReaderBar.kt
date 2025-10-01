@@ -6,9 +6,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Recommend
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +36,9 @@ fun BottomReaderBar(
     cropEnabled: Boolean,
     onClickCropBorder: () -> Unit,
     onClickSettings: () -> Unit,
+    isLiked: Boolean,
+    onClickGorseLike: () -> Unit,
+    onClickGorseRecommend: () -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -58,6 +66,21 @@ fun BottomReaderBar(
             Icon(
                 painter = painterResource(if (cropEnabled) R.drawable.ic_crop_24dp else R.drawable.ic_crop_off_24dp),
                 contentDescription = stringResource(MR.strings.pref_crop_borders),
+            )
+        }
+
+        IconButton(onClick = onClickGorseLike) {
+            Icon(
+                imageVector = if (isLiked) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                contentDescription = if (isLiked) "取消喜欢ByGorse" else "喜欢ByGorse",
+                tint = if (isLiked) Color.Red else LocalContentColor.current
+            )
+        }
+
+        IconButton(onClick = onClickGorseRecommend) {
+            Icon(
+                imageVector = Icons.Outlined.Recommend,
+                contentDescription = "相近推荐",
             )
         }
 

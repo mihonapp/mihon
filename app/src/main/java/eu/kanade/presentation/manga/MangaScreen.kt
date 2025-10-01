@@ -44,6 +44,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastAll
 import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastMap
@@ -51,6 +52,7 @@ import eu.kanade.presentation.components.relativeDateText
 import eu.kanade.presentation.manga.components.ChapterDownloadAction
 import eu.kanade.presentation.manga.components.ChapterHeader
 import eu.kanade.presentation.manga.components.ExpandableMangaDescription
+import eu.kanade.presentation.manga.components.GorseRecommendationsCard
 import eu.kanade.presentation.manga.components.MangaActionRow
 import eu.kanade.presentation.manga.components.MangaBottomActionMenu
 import eu.kanade.presentation.manga.components.MangaChapterListItem
@@ -106,6 +108,9 @@ fun MangaScreen(
     // For cover dialog
     onCoverClicked: () -> Unit,
 
+    // For Gorse recommendations
+    onGorseRecommendationClicked: (eu.kanade.tachiyomi.data.gorse.GorseRecommendationItem) -> Unit,
+
     // For top action menu
     onShareClicked: (() -> Unit)?,
     onDownloadActionClicked: ((DownloadAction) -> Unit)?,
@@ -156,6 +161,7 @@ fun MangaScreen(
             onContinueReading = onContinueReading,
             onSearch = onSearch,
             onCoverClicked = onCoverClicked,
+            onGorseRecommendationClicked = onGorseRecommendationClicked,
             onShareClicked = onShareClicked,
             onDownloadActionClicked = onDownloadActionClicked,
             onEditCategoryClicked = onEditCategoryClicked,
@@ -192,6 +198,7 @@ fun MangaScreen(
             onContinueReading = onContinueReading,
             onSearch = onSearch,
             onCoverClicked = onCoverClicked,
+            onGorseRecommendationClicked = onGorseRecommendationClicked,
             onShareClicked = onShareClicked,
             onDownloadActionClicked = onDownloadActionClicked,
             onEditCategoryClicked = onEditCategoryClicked,
@@ -236,6 +243,9 @@ private fun MangaScreenSmallImpl(
 
     // For cover dialog
     onCoverClicked: () -> Unit,
+
+    // For Gorse recommendations
+    onGorseRecommendationClicked: (eu.kanade.tachiyomi.data.gorse.GorseRecommendationItem) -> Unit,
 
     // For top action menu
     onShareClicked: (() -> Unit)?,
@@ -423,6 +433,18 @@ private fun MangaScreenSmallImpl(
                     }
 
                     item(
+                        key = MangaScreenItem.GORSE_RECOMMENDATIONS,
+                        contentType = MangaScreenItem.GORSE_RECOMMENDATIONS,
+                    ) {
+                        GorseRecommendationsCard(
+                            recommendations = state.gorseRecommendations,
+                            isLoading = state.isLoadingGorseRecommendations,
+                            onRecommendationClick = onGorseRecommendationClicked,
+                            modifier = Modifier.padding(vertical = 8.dp),
+                        )
+                    }
+
+                    item(
                         key = MangaScreenItem.CHAPTER_HEADER,
                         contentType = MangaScreenItem.CHAPTER_HEADER,
                     ) {
@@ -480,6 +502,9 @@ fun MangaScreenLargeImpl(
 
     // For cover dialog
     onCoverClicked: () -> Unit,
+
+    // For Gorse recommendations
+    onGorseRecommendationClicked: (eu.kanade.tachiyomi.data.gorse.GorseRecommendationItem) -> Unit,
 
     // For top action menu
     onShareClicked: (() -> Unit)?,
@@ -645,6 +670,12 @@ fun MangaScreenLargeImpl(
                             onTagSearch = onTagSearch,
                             onCopyTagToClipboard = onCopyTagToClipboard,
                             onEditNotes = onEditNotesClicked,
+                        )
+                        GorseRecommendationsCard(
+                            recommendations = state.gorseRecommendations,
+                            isLoading = state.isLoadingGorseRecommendations,
+                            onRecommendationClick = onGorseRecommendationClicked,
+                            modifier = Modifier.padding(vertical = 8.dp),
                         )
                     }
                 },

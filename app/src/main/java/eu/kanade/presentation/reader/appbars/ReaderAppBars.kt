@@ -65,6 +65,9 @@ fun ReaderAppBars(
     cropEnabled: Boolean,
     onClickCropBorder: () -> Unit,
     onClickSettings: () -> Unit,
+    isLiked: Boolean,
+    onClickGorseLike: () -> Unit,
+    onClickGorseRecommend: () -> Unit,
 ) {
     val isRtl = viewer is R2LPagerViewer
     val backgroundColor = MaterialTheme.colorScheme
@@ -187,6 +190,9 @@ fun ReaderAppBars(
                     cropEnabled = cropEnabled,
                     onClickCropBorder = onClickCropBorder,
                     onClickSettings = onClickSettings,
+                    isLiked = isLiked,
+                    onClickGorseLike = onClickGorseLike,
+                    onClickGorseRecommend = onClickGorseRecommend,
                 )
             }
         }

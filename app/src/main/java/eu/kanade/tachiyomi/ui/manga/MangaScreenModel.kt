@@ -34,6 +34,8 @@ import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
+import eu.kanade.tachiyomi.data.gorse.GorseRecommendationItem
+import eu.kanade.tachiyomi.data.gorse.GorseService
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.network.HttpException
@@ -120,6 +122,7 @@ class MangaScreenModel(
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
     private val mangaRepository: MangaRepository = Injekt.get(),
     private val filterChaptersForDownload: FilterChaptersForDownload = Injekt.get(),
+    private val gorseService: GorseService = Injekt.get(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) : StateScreenModel<MangaScreenModel.State>(State.Loading) {
 
@@ -247,6 +250,30 @@ class MangaScreenModel(
 
             // Initial loading finished
             updateSuccessState { it.copy(isRefreshingData = false) }
+            
+            // Load Gorse recommendations
+            loadGorseRecommendations()
+        }
+    }
+
+    /**
+     * Load personalized recommendations from Gorse
+     */
+    fun loadGorseRecommendations() {
+        screenModelScope.launchIO {
+            try {
+                updateSuccessState { it.copy(isLoadingGorseRecommendations = true) }
+                val recommendations = gorseService.getRecommendations(20)
+                updateSuccessState { 
+                    it.copy(
+                        gorseRecommendations = recommendations,
+                        isLoadingGorseRecommendations = false
+                    )
+                }
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e) { "Failed to load Gorse recommendations" }
+                updateSuccessState { it.copy(isLoadingGorseRecommendations = false) }
+            }
         }
     }
 
@@ -1126,6 +1153,8 @@ class MangaScreenModel(
             val isRefreshingData: Boolean = false,
             val dialog: Dialog? = null,
             val hasPromptedToAddBefore: Boolean = false,
+            val gorseRecommendations: List<GorseRecommendationItem> = emptyList(),
+            val isLoadingGorseRecommendations: Boolean = false,
         ) : State {
             val processedChapters by lazy {
                 chapters.applyFilters(manga).toList()

@@ -25,6 +25,8 @@ import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.interactor.SyncChapterProgressWithTrack
 import eu.kanade.domain.track.interactor.TrackChapter
+import eu.kanade.tachiyomi.data.gorse.GorsePreferences
+import eu.kanade.tachiyomi.data.gorse.GorseService
 import mihon.data.repository.ExtensionRepoRepositoryImpl
 import mihon.domain.chapter.interactor.FilterChaptersForDownload
 import mihon.domain.extensionrepo.interactor.CreateExtensionRepo
@@ -203,5 +205,9 @@ class DomainModule : InjektModule {
         addFactory { UpdateExtensionRepo(get(), get()) }
         addFactory { ToggleIncognito(get()) }
         addFactory { GetIncognitoState(get(), get(), get()) }
+        
+        // Gorse integration
+        addSingletonFactory<GorsePreferences> { GorsePreferences(get()) }
+        addSingletonFactory<GorseService> { GorseService(get(), get()) }
     }
 }
