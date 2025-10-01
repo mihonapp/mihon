@@ -198,6 +198,20 @@ private fun ColumnScope.WebtoonViewerSettings(screenModel: ReaderSettingsScreenM
         label = stringResource(MR.strings.pref_double_tap_zoom),
         pref = screenModel.preferences.webtoonDoubleTapZoomEnabled(),
     )
+
+    val holdScrollSpeed by screenModel.preferences.webtoonHoldScrollSpeed().collectAsState()
+    SliderItem(
+        value = holdScrollSpeed,
+        valueRange = ReaderPreferences.WEBTOON_HOLD_SCROLL_SPEED_MIN..ReaderPreferences.WEBTOON_HOLD_SCROLL_SPEED_MAX,
+        label = stringResource(MR.strings.pref_webtoon_hold_scroll_speed),
+        valueText = stringResource(
+            MR.strings.pref_webtoon_hold_scroll_speed_value,
+            holdScrollSpeed.toDouble() / ReaderPreferences.WEBTOON_HOLD_SCROLL_SPEED_DEFAULT,
+        ),
+        onChange = { screenModel.preferences.webtoonHoldScrollSpeed().set(it) },
+        pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+    )
+
     CheckboxItem(
         label = stringResource(MR.strings.pref_webtoon_disable_zoom_out),
         pref = screenModel.preferences.webtoonDisableZoomOut(),

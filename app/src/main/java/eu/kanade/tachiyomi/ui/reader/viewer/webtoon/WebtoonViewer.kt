@@ -6,6 +6,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewConfiguration
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -19,14 +20,19 @@ import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 /**
  * Implementation of a [Viewer] to display pages with a [RecyclerView].
@@ -72,6 +78,15 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      */
     private var currentPage: Any? = null
 
+    private val viewLocationOnScreen = IntArray(2)
+    private val viewLocationInWindow = IntArray(2)
+    private val navigationTouchPoint = PointF()
+
+    private var holdScrollPointerId: Int? = null
+    private var holdScrollJob: Job? = null
+    private var holdScrollDirection: HoldScrollDirection? = null
+    private var isHoldScrollEngaged: Boolean = false
+
     private val threshold: Int =
         Injekt.get<ReaderPreferences>()
             .readerHideThreshold()
@@ -112,21 +127,22 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
             },
         )
         recycler.tapListener = { event ->
-            val viewPosition = IntArray(2)
-            recycler.getLocationOnScreen(viewPosition)
-            val viewPositionRelativeToWindow = IntArray(2)
-            recycler.getLocationInWindow(viewPositionRelativeToWindow)
-            val pos = PointF(
-                (event.rawX - viewPosition[0] + viewPositionRelativeToWindow[0]) / recycler.width,
-                (event.rawY - viewPosition[1] + viewPositionRelativeToWindow[1]) / recycler.originalHeight,
-            )
-            when (config.navigator.getAction(pos)) {
+            when (resolveNavigationRegion(event, event.actionIndex)) {
                 NavigationRegion.MENU -> activity.toggleMenu()
                 NavigationRegion.NEXT, NavigationRegion.RIGHT -> scrollDown()
                 NavigationRegion.PREV, NavigationRegion.LEFT -> scrollUp()
+                else -> Unit
             }
         }
+        recycler.setOnTouchListener { _, event ->
+            handleHoldScroll(event)
+            false
+        }
         recycler.longTapListener = f@{ event ->
+            if (isHoldScrollEngaged) {
+                return@f false
+            }
+
             if (activity.viewModel.state.value.menuVisible || config.longTapEnabled) {
                 val child = recycler.findChildViewUnder(event.x, event.y)
                 if (child != null) {
@@ -198,6 +214,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      */
     override fun destroy() {
         super.destroy()
+        stopHoldScroll()
         scope.cancel()
     }
 
@@ -347,6 +364,133 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         return false
     }
 
+    private fun handleHoldScroll(event: MotionEvent) {
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                if (activity.viewModel.state.value.menuVisible || event.pointerCount > 1) {
+                    stopHoldScroll()
+                    holdScrollPointerId = null
+                    return
+                }
+
+                val direction = holdScrollDirectionForIndex(event, event.actionIndex)
+                if (direction != null) {
+                    holdScrollPointerId = event.getPointerId(event.actionIndex)
+                    startHoldScroll(direction)
+                    isHoldScrollEngaged = true
+                } else {
+                    stopHoldScroll()
+                    holdScrollPointerId = null
+                    isHoldScrollEngaged = false
+                }
+            }
+            MotionEvent.ACTION_POINTER_DOWN -> {
+                stopHoldScroll()
+                holdScrollPointerId = null
+                isHoldScrollEngaged = false
+            }
+            MotionEvent.ACTION_MOVE -> {
+                if (activity.viewModel.state.value.menuVisible) {
+                    stopHoldScroll()
+                    holdScrollPointerId = null
+                    isHoldScrollEngaged = false
+                    return
+                }
+
+                val pointerId = holdScrollPointerId ?: return
+                val pointerIndex = event.findPointerIndex(pointerId)
+                if (pointerIndex < 0) {
+                    stopHoldScroll()
+                    holdScrollPointerId = null
+                    isHoldScrollEngaged = false
+                    return
+                }
+
+                val expectedDirection = holdScrollDirection
+                val currentDirection = holdScrollDirectionForIndex(event, pointerIndex)
+                if (expectedDirection == null || currentDirection != expectedDirection) {
+                    stopHoldScroll()
+                    holdScrollPointerId = null
+                    isHoldScrollEngaged = false
+                }
+            }
+            MotionEvent.ACTION_POINTER_UP -> {
+                val pointerId = holdScrollPointerId ?: return
+                val actionPointerId = event.getPointerId(event.actionIndex)
+                if (pointerId == actionPointerId) {
+                    stopHoldScroll()
+                    holdScrollPointerId = null
+                    isHoldScrollEngaged = false
+                }
+            }
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                stopHoldScroll()
+                holdScrollPointerId = null
+                isHoldScrollEngaged = false
+            }
+        }
+    }
+
+    private fun startHoldScroll(direction: HoldScrollDirection) {
+        if (holdScrollDirection == direction && holdScrollJob?.isActive == true) return
+
+        holdScrollJob?.cancel()
+        holdScrollDirection = direction
+        holdScrollJob = scope.launch {
+            delay(ViewConfiguration.getTapTimeout().toLong())
+            val multiplier = config.holdScrollSpeedMultiplier.coerceIn(
+                ReaderPreferences.WEBTOON_HOLD_SCROLL_SPEED_MIN,
+                ReaderPreferences.WEBTOON_HOLD_SCROLL_SPEED_MAX,
+            )
+            val density = activity.resources.displayMetrics.density
+            val pixelsPerSecond = HOLD_SCROLL_BASE_SPEED_DP_PER_SEC * density * multiplier
+            val step = (pixelsPerSecond * HOLD_SCROLL_FRAME_DELAY_MS / 1000f)
+                .coerceAtLeast(1f)
+                .roundToInt()
+            val signedStep = if (direction == HoldScrollDirection.DOWN) step else -step
+
+            while (isActive) {
+                recycler.scrollBy(0, signedStep)
+                delay(HOLD_SCROLL_FRAME_DELAY_MS)
+            }
+        }
+    }
+
+    private fun stopHoldScroll() {
+        holdScrollJob?.cancel()
+        holdScrollJob = null
+        holdScrollDirection = null
+        isHoldScrollEngaged = false
+    }
+
+    private fun resolveNavigationRegion(event: MotionEvent, pointerIndex: Int = 0): NavigationRegion? {
+        if (pointerIndex < 0 || pointerIndex >= event.pointerCount) return null
+        if (recycler.width == 0 || recycler.originalHeight == 0) return null
+
+        recycler.getLocationOnScreen(viewLocationOnScreen)
+        recycler.getLocationInWindow(viewLocationInWindow)
+
+        val rawX = viewLocationOnScreen[0] + event.getX(pointerIndex)
+        val rawY = viewLocationOnScreen[1] + event.getY(pointerIndex)
+
+        val normalizedX = ((rawX - viewLocationOnScreen[0]) + viewLocationInWindow[0]) / recycler.width.toFloat()
+        val normalizedY = ((rawY - viewLocationOnScreen[1]) + viewLocationInWindow[1]) / recycler.originalHeight.toFloat()
+
+        navigationTouchPoint.set(normalizedX, normalizedY)
+        return config.navigator.getAction(navigationTouchPoint)
+    }
+
+    private fun holdScrollDirectionForIndex(
+        event: MotionEvent,
+        pointerIndex: Int,
+    ): HoldScrollDirection? {
+        return when (resolveNavigationRegion(event, pointerIndex)) {
+            NavigationRegion.NEXT, NavigationRegion.RIGHT -> HoldScrollDirection.DOWN
+            NavigationRegion.PREV, NavigationRegion.LEFT -> HoldScrollDirection.UP
+            else -> null
+        }
+    }
+
     /**
      * Notifies adapter of changes around the current page to trigger a relayout in the recycler.
      * Used when an image configuration is changed.
@@ -361,5 +505,12 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
     }
 }
 
+private enum class HoldScrollDirection {
+    UP,
+    DOWN,
+}
+
 // Double the cache size to reduce rebinds/recycles incurred by the extra layout space on scroll direction changes
 private const val RECYCLER_VIEW_CACHE_SIZE = 4
+private const val HOLD_SCROLL_FRAME_DELAY_MS = 16L
+private const val HOLD_SCROLL_BASE_SPEED_DP_PER_SEC = 80f
