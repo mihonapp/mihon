@@ -122,7 +122,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
                         val pendingIntent = PendingIntent.getBroadcast(
                             this@App,
                             0,
-                            Intent(ACTION_DISABLE_INCOGNITO_MODE),
+                            Intent(ACTION_DISABLE_INCOGNITO_MODE).setPackage(BuildConfig.APPLICATION_ID),
                             PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE,
                         )
                         setContentIntent(pendingIntent)
