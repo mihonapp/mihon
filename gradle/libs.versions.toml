@@ -10,7 +10,7 @@ voyager = "1.1.0-beta03"
 spotless = "8.0.0"
 ktlint-core = "1.7.1"
 firebase-bom = "34.2.0"
-markdown = "0.35.0"
+markdown = "0.37.0"
 junit = "5.13.4"
 
 [libraries]
