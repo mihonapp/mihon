@@ -14,8 +14,18 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Added
 - New advanced setting to limit filenames to ASCII in case your storage medium or operating system does not support non-ASCII characters. This setting is not recommended as all devices and operating systems should support Unicode filenames, and is provided as a temporary workaround until those devices are fixed ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
 
+### Changed
+- Delegate Suwayomi tracker authentication to extension ([@cpiber](https://github.com/cpiber)) ([#2476](https://github.com/mihonapp/mihon/pull/2476))
+
 ### Improved
+- Spoofing of `X-Requested-With` header to support newer WebView versions ([@Guzmazow](https://github.com/Guzmazow)) ([#2491](https://github.com/mihonapp/mihon/pull/2491))
 - If you download two chapters of the same manga which have the same chapter name, one of them would previously overwrite the other because they would both use the same filename. Now, a unique disambiguator based on the URL of the chapter is automatically included in the filename. Existing downloaded chapters without that disambiguator are still processed my Mihon in the same way as before ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
+
+### Fixes
+- Fix height of description not being calculated correctly if images are present ([@Secozzi](https://github.com/Secozzi)) ([#2382](https://github.com/mihonapp/mihon/pull/2382))
+- Fix migration progress not updating after manual search ([@Secozzi](https://github.com/Secozzi)) ([#2484](https://github.com/mihonapp/mihon/pull/2484))
+- Fix category migration flag being ignored due to incorrect check against chapter flag ([@Secozzi](https://github.com/Secozzi)) ([#2484](https://github.com/mihonapp/mihon/pull/2484))
+- Fix disabling incognito mode from notification ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2512](https://github.com/mihonapp/mihon/pull/2512))
 
 ## [v0.19.1] - 2025-08-07
 ### Changed
