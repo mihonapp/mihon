@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import dev.icerock.moko.resources.StringResource
+import eu.kanade.tachiyomi.extension.ExtensionManager
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.channels.Channel
@@ -27,6 +28,7 @@ class ExtensionReposScreenModel(
     private val deleteExtensionRepo: DeleteExtensionRepo = Injekt.get(),
     private val replaceExtensionRepo: ReplaceExtensionRepo = Injekt.get(),
     private val updateExtensionRepo: UpdateExtensionRepo = Injekt.get(),
+    private val extensionManager: ExtensionManager = Injekt.get(),
 ) : StateScreenModel<RepoScreenState>(RepoScreenState.Loading) {
 
     private val _events: Channel<RepoEvent> = Channel(Int.MAX_VALUE)
@@ -53,6 +55,7 @@ class ExtensionReposScreenModel(
     fun createRepo(baseUrl: String) {
         screenModelScope.launchIO {
             when (val result = createExtensionRepo.await(baseUrl)) {
+                CreateExtensionRepo.Result.Success -> extensionManager.findAvailableExtensions()
                 CreateExtensionRepo.Result.InvalidUrl -> _events.send(RepoEvent.InvalidUrl)
                 CreateExtensionRepo.Result.RepoAlreadyExists -> _events.send(RepoEvent.RepoAlreadyExists)
                 is CreateExtensionRepo.Result.DuplicateFingerprint -> {
@@ -93,6 +96,7 @@ class ExtensionReposScreenModel(
     fun deleteRepo(baseUrl: String) {
         screenModelScope.launchIO {
             deleteExtensionRepo.await(baseUrl)
+            extensionManager.findAvailableExtensions()
         }
     }
 
