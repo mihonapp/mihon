@@ -573,7 +573,17 @@ class ReaderViewModel @JvmOverloads constructor(
         // Sync with Gorse when chapter is completed
         manga?.let { manga ->
             viewModelScope.launchNonCancellable {
-                gorseService.markMangaRead(manga)
+                val result = gorseService.markMangaRead(manga)
+                
+                // 发送同步结果事件
+                withUIContext {
+                    if (result.isSuccess) {
+                        eventChannel.send(Event.GorseSyncResult(true, "已同步阅读记录到推荐系统"))
+                    } else {
+                        val errorMsg = result.exceptionOrNull()?.message ?: "未知错误"
+                        eventChannel.send(Event.GorseSyncResult(false, "同步推荐系统失败: $errorMsg"))
+                    }
+                }
             }
         }
 
@@ -1051,5 +1061,8 @@ class ReaderViewModel @JvmOverloads constructor(
         data class SavedImage(val result: SaveImageResult) : Event
         data class ShareImage(val uri: Uri, val page: ReaderPage) : Event
         data class CopyImage(val uri: Uri) : Event
+        
+        // Gorse sync events
+        data class GorseSyncResult(val success: Boolean, val message: String) : Event
     }
 }

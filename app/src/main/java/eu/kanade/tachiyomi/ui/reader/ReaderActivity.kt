@@ -234,6 +234,14 @@ class ReaderActivity : BaseActivity() {
                     is ReaderViewModel.Event.SetCoverResult -> {
                         onSetAsCoverResult(event.result)
                     }
+                    is ReaderViewModel.Event.GorseSyncResult -> {
+                        // 显示Gorse同步结果的轻量级Toast提示
+                        menuToggleToast?.cancel()
+                        menuToggleToast = toast(
+                            event.message,
+                            if (event.success) Toast.LENGTH_SHORT else Toast.LENGTH_LONG
+                        )
+                    }
                 }
             }
             .launchIn(lifecycleScope)
