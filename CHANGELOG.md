@@ -12,14 +12,14 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ## [Unreleased]
 ### Added
-- New advanced setting to limit filenames to ASCII in case your storage medium or operating system does not support non-ASCII characters. This setting is not recommended as all devices and operating systems should support Unicode filenames, and is provided as a temporary workaround until those devices are fixed ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
+- Advanced setting to limit download filenames to ASCII characters. This is provided only as a workaround for OSes that do not properly handle standard Unicode filenames. This setting is generally not recommended and should only be used as a last resort ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
 
 ### Changed
 - Delegate Suwayomi tracker authentication to extension ([@cpiber](https://github.com/cpiber)) ([#2476](https://github.com/mihonapp/mihon/pull/2476))
 
 ### Improved
 - Spoofing of `X-Requested-With` header to support newer WebView versions ([@Guzmazow](https://github.com/Guzmazow)) ([#2491](https://github.com/mihonapp/mihon/pull/2491))
-- If you download two chapters of the same manga which have the same chapter name, one of them would previously overwrite the other because they would both use the same filename. Now, a unique disambiguator based on the URL of the chapter is automatically included in the filename. Existing downloaded chapters without that disambiguator are still processed my Mihon in the same way as before ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
+- Download support for chapters with the same metadata. Now a hash based on chapter's url is appended to download filename to tell them apart, letting you download both. Existing downloaded chapters will continue to work normally ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
 
 ### Fixes
 - Fix height of description not being calculated correctly if images are present ([@Secozzi](https://github.com/Secozzi)) ([#2382](https://github.com/mihonapp/mihon/pull/2382))
