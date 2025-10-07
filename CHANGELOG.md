@@ -80,7 +80,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Make local source default chapter sorting match file explorer behavior ([@AntsyLich](https://github.com/AntsyLich)) ([#2224](https://github.com/mihonapp/mihon/pull/224))
 - Include Manga `initialized` status in backup ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2285](https://github.com/mihonapp/mihon/pull/2285))
 
-### Fixes
+### Fixed
 - Fix Bangumi search results including novels ([@MajorTanya](https://github.com/MajorTanya)) ([#1885](https://github.com/mihonapp/mihon/pull/1885))
 - Fix next chapter button occasionally jumping to the last page of the current chapter ([@perokhe](https://github.com/perokhe)) ([#1920](https://github.com/mihonapp/mihon/pull/1920))
   - Fix page number not appearing when opening chapter ([@perokhe](https://github.com/perokhe)) ([#1936](https://github.com/mihonapp/mihon/pull/1936))
