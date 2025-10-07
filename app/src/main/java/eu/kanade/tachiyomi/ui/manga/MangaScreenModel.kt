@@ -277,6 +277,20 @@ class MangaScreenModel(
         }
     }
 
+    /**
+     * Get manga title for search from Gorse recommendation itemId
+     * Used for source-specific search to avoid multi-source interference
+     */
+    suspend fun getMangaTitleForSearch(itemId: String): String? {
+        return try {
+            val mangaId = itemId.toLongOrNull() ?: return null
+            getMangaAndChapters.awaitManga(mangaId)?.title
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Failed to get manga title for itemId: $itemId" }
+            null
+        }
+    }
+
     fun fetchAllFromSource(manualFetch: Boolean = true) {
         screenModelScope.launch {
             updateSuccessState { it.copy(isRefreshingData = true) }

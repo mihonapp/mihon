@@ -296,6 +296,42 @@ class GorseApi(
             Result.failure(e)
         }
     }
+
+    /**
+     * Mark an item as hidden in Gorse (PATCH method)
+     * This will hide the item from recommendations
+     */
+    suspend fun markItemAsHidden(itemId: String): Result<Unit> = withIOContext {
+        try {
+            // 构建 PATCH 请求体，只更新 IsHidden 字段
+            val patchData = mapOf("IsHidden" to true)
+            val requestBody = json.encodeToString(patchData)
+                .toRequestBody("application/json".toMediaType())
+
+            logcat(LogPriority.DEBUG) { "Gorse markItemAsHidden request: ${json.encodeToString(patchData)}" }
+            logcat(LogPriority.DEBUG) { "Gorse markItemAsHidden URL: $baseUrl/api/item/$itemId" }
+
+            val request = Request.Builder()
+                .url("$baseUrl/api/item/$itemId")
+                .patch(requestBody)
+                .build()
+
+            val response = client.newCall(request).execute()
+            val responseBody = response.body?.string()
+
+            logcat(LogPriority.DEBUG) { "Gorse markItemAsHidden response code: ${response.code}" }
+            logcat(LogPriority.DEBUG) { "Gorse markItemAsHidden response body: $responseBody" }
+
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception("Failed to mark item as hidden: ${response.code}, body: $responseBody"))
+            }
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Exception in markItemAsHidden" }
+            Result.failure(e)
+        }
+    }
 }
 
 @Serializable

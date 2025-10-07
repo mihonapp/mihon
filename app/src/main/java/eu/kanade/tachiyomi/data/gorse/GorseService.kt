@@ -111,6 +111,26 @@ class GorseService(
     }
 
     /**
+     * Mark a recommendation item as hidden (not interested)
+     */
+    suspend fun markItemAsHidden(itemId: String): Result<Unit> {
+        return try {
+            logcat(LogPriority.DEBUG) { "Marking item '$itemId' as hidden in Gorse" }
+            val result = api.markItemAsHidden(itemId)
+            result.onSuccess {
+                logcat(LogPriority.INFO) { "Successfully marked item '$itemId' as hidden in Gorse" }
+                _events.emit(GorseEvent.ItemHidden(itemId))
+            }.onFailure { e ->
+                logcat(LogPriority.ERROR, e) { "Failed to mark item '$itemId' as hidden in Gorse" }
+            }
+            result
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Exception in markItemAsHidden for item '$itemId'" }
+            Result.failure(e)
+        }
+    }
+
+    /**
      * Ensure user exists in Gorse
      */
     private suspend fun ensureUserExists(): Result<Unit> {
@@ -193,5 +213,6 @@ sealed class GorseEvent {
     data class ItemMarkedRead(val title: String) : GorseEvent()
     data class ItemLiked(val title: String) : GorseEvent()
     data class ItemUnliked(val title: String) : GorseEvent()
+    data class ItemHidden(val itemId: String) : GorseEvent()
     data class Error(val message: String) : GorseEvent()
 }

@@ -110,6 +110,7 @@ fun MangaScreen(
 
     // For Gorse recommendations
     onGorseRecommendationClicked: (eu.kanade.tachiyomi.data.gorse.GorseRecommendationItem) -> Unit,
+    onGorseRecommendationHide: (eu.kanade.tachiyomi.data.gorse.GorseRecommendationItem) -> Unit,
 
     // For top action menu
     onShareClicked: (() -> Unit)?,
@@ -162,6 +163,7 @@ fun MangaScreen(
             onSearch = onSearch,
             onCoverClicked = onCoverClicked,
             onGorseRecommendationClicked = onGorseRecommendationClicked,
+            onGorseRecommendationHide = onGorseRecommendationHide,
             onShareClicked = onShareClicked,
             onDownloadActionClicked = onDownloadActionClicked,
             onEditCategoryClicked = onEditCategoryClicked,
@@ -199,6 +201,7 @@ fun MangaScreen(
             onSearch = onSearch,
             onCoverClicked = onCoverClicked,
             onGorseRecommendationClicked = onGorseRecommendationClicked,
+            onGorseRecommendationHide = onGorseRecommendationHide,
             onShareClicked = onShareClicked,
             onDownloadActionClicked = onDownloadActionClicked,
             onEditCategoryClicked = onEditCategoryClicked,
@@ -246,6 +249,7 @@ private fun MangaScreenSmallImpl(
 
     // For Gorse recommendations
     onGorseRecommendationClicked: (eu.kanade.tachiyomi.data.gorse.GorseRecommendationItem) -> Unit,
+    onGorseRecommendationHide: (eu.kanade.tachiyomi.data.gorse.GorseRecommendationItem) -> Unit,
 
     // For top action menu
     onShareClicked: (() -> Unit)?,
@@ -440,6 +444,7 @@ private fun MangaScreenSmallImpl(
                             recommendations = state.gorseRecommendations,
                             isLoading = state.isLoadingGorseRecommendations,
                             onRecommendationClick = onGorseRecommendationClicked,
+                            onRecommendationHide = onGorseRecommendationHide,
                             modifier = Modifier.padding(vertical = 8.dp),
                         )
                     }
@@ -505,6 +510,7 @@ fun MangaScreenLargeImpl(
 
     // For Gorse recommendations
     onGorseRecommendationClicked: (eu.kanade.tachiyomi.data.gorse.GorseRecommendationItem) -> Unit,
+    onGorseRecommendationHide: (eu.kanade.tachiyomi.data.gorse.GorseRecommendationItem) -> Unit,
 
     // For top action menu
     onShareClicked: (() -> Unit)?,
@@ -675,6 +681,7 @@ fun MangaScreenLargeImpl(
                             recommendations = state.gorseRecommendations,
                             isLoading = state.isLoadingGorseRecommendations,
                             onRecommendationClick = onGorseRecommendationClicked,
+                            onRecommendationHide = onGorseRecommendationHide,
                             modifier = Modifier.padding(vertical = 8.dp),
                         )
                     }

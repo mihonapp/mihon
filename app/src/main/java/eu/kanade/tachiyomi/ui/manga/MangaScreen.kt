@@ -66,6 +66,8 @@ import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.LoadingScreen
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 class MangaScreen(
     private val mangaId: Long,
@@ -156,16 +158,79 @@ class MangaScreen(
             onSearch = { query, global -> scope.launch { performSearch(navigator, query, global) } },
             onCoverClicked = screenModel::showCoverDialog,
             onGorseRecommendationClicked = { recommendation ->
-                // Navigate to the recommended manga based on itemId
+                // Perform source-specific search to avoid multi-source interference
                 scope.launch {
                     try {
-                        // Try to parse the itemId as a manga ID and navigate to it
-                        val mangaId = recommendation.itemId.toLongOrNull()
-                        if (mangaId != null) {
-                            navigator.push(MangaScreen(mangaId))
+                        logcat(LogPriority.DEBUG) { 
+                            "Gorse recommendation clicked: itemId=${recommendation.itemId}" 
+                        }
+                        
+                        // Strategy 1: Try to get title from local database
+                        var searchQuery = screenModel.getMangaTitleForSearch(recommendation.itemId)
+                        
+                        if (searchQuery.isNullOrBlank()) {
+                            // Strategy 2: Use itemId directly as search keyword
+                            // First clean itemId (same as UI card does for copy)
+                            searchQuery = sanitizeItemIdForSearch(recommendation.itemId)
+                            logcat(LogPriority.INFO) { 
+                                "Using cleaned itemId as search query: original=${recommendation.itemId}, cleaned=$searchQuery" 
+                            }
+                        } else {
+                            logcat(LogPriority.INFO) { 
+                                "Found title from database: $searchQuery" 
+                            }
+                        }
+                        
+                        // Further clean up search query (remove brackets, normalize spaces)
+                        val finalQuery = sanitizeForSearch(searchQuery)
+                        
+                        if (finalQuery.isBlank()) {
+                            context.toast("推荐内容为空，无法搜索")
+                            logcat(LogPriority.WARN) { "Final search query is blank after sanitization" }
+                            return@launch
+                        }
+                        
+                        // Perform source-specific search (returns to previous screen and searches)
+                        performSearch(navigator, finalQuery, global = false)
+                        
+                        logcat(LogPriority.INFO) { 
+                            "Searching Gorse recommendation: original=${recommendation.itemId}, final=$finalQuery" 
                         }
                     } catch (e: Exception) {
-                        logcat(LogPriority.ERROR, e) { "Failed to navigate to Gorse recommendation: ${recommendation.itemId}" }
+                        context.toast("搜索推荐失败: ${e.message}")
+                        logcat(LogPriority.ERROR, e) { 
+                            "Error searching Gorse recommendation: ${recommendation.itemId}" 
+                        }
+                    }
+                }
+            },
+            onGorseRecommendationHide = { recommendation ->
+                // Mark item as hidden in Gorse
+                scope.launch {
+                    try {
+                        logcat(LogPriority.DEBUG) { 
+                            "Marking Gorse recommendation as hidden: itemId=${recommendation.itemId}" 
+                        }
+                        
+                        val gorseService: eu.kanade.tachiyomi.data.gorse.GorseService = Injekt.get()
+                        val result = gorseService.markItemAsHidden(recommendation.itemId)
+                        
+                        result.onSuccess {
+                            context.toast("已标记为不感兴趣")
+                            logcat(LogPriority.INFO) { 
+                                "Successfully marked item as hidden: ${recommendation.itemId}" 
+                            }
+                        }.onFailure { e ->
+                            context.toast("操作失败: ${e.message}")
+                            logcat(LogPriority.ERROR, e) { 
+                                "Failed to mark item as hidden: ${recommendation.itemId}" 
+                            }
+                        }
+                    } catch (e: Exception) {
+                        context.toast("操作失败: ${e.message}")
+                        logcat(LogPriority.ERROR, e) { 
+                            "Exception marking item as hidden: ${recommendation.itemId}" 
+                        }
                     }
                 }
             },
@@ -405,5 +470,32 @@ class MangaScreen(
         val source = source_ as? HttpSource ?: return
         val url = source.getMangaUrl(manga.toSManga())
         context.copyToClipboard(url, url)
+    }
+
+    /**
+     * Clean up manga title for search query
+     * Removes special brackets and normalizes whitespace
+     */
+    private fun sanitizeForSearch(title: String): String {
+        return title
+            .trim()
+            .replace(Regex("[【\\[].+?[】\\]]"), "") // Remove content in brackets
+            .replace(Regex("\\s+"), " ") // Normalize whitespace
+            .trim()
+    }
+
+    /**
+     * Clean itemId for search (same as GorseRecommendationsCard)
+     * Only keep Chinese, English characters and spaces
+     */
+    private fun sanitizeItemIdForSearch(raw: String): String {
+        if (raw.isEmpty()) return raw
+        val sb = StringBuilder(raw.length)
+        for (c in raw) {
+            if (c == ' ' || c in 'a'..'z' || c in 'A'..'Z' || c in '\u4e00'..'\u9fff') {
+                sb.append(c)
+            }
+        }
+        return sb.toString().trim()
     }
 }
