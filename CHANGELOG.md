@@ -21,7 +21,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Spoofing of `X-Requested-With` header to support newer WebView versions ([@Guzmazow](https://github.com/Guzmazow)) ([#2491](https://github.com/mihonapp/mihon/pull/2491))
 - Download support for chapters with the same metadata. Now a hash based on chapter's url is appended to download filename to tell them apart, letting you download both. Existing downloaded chapters will continue to work normally ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
 
-### Fixes
+### Fixed
 - Fix height of description not being calculated correctly if images are present ([@Secozzi](https://github.com/Secozzi)) ([#2382](https://github.com/mihonapp/mihon/pull/2382))
 - Fix migration progress not updating after manual search ([@Secozzi](https://github.com/Secozzi)) ([#2484](https://github.com/mihonapp/mihon/pull/2484))
 - Fix category migration flag being ignored due to incorrect check against chapter flag ([@Secozzi](https://github.com/Secozzi)) ([#2484](https://github.com/mihonapp/mihon/pull/2484))
