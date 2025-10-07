@@ -90,11 +90,21 @@ internal class DownloadNotifier(private val context: Context) {
                 )
             }
 
-            val downloadingProgressText = context.stringResource(
-                MR.strings.chapter_downloading_progress,
-                download.downloadedImages,
-                download.pages!!.size,
-            )
+            val downloadingProgressText = if (download.isFullChapterDownload) {
+                // For full chapter downloads, show percentage progress
+                context.stringResource(
+                    MR.strings.chapter_downloading_progress,
+                    download.totalProgress,
+                    100,
+                )
+            } else {
+                // For page-by-page downloads, show downloaded pages
+                context.stringResource(
+                    MR.strings.chapter_downloading_progress,
+                    download.downloadedImages,
+                    download.pages?.size ?: 0,
+                )
+            }
 
             if (preferences.hideNotificationContent().get()) {
                 setContentTitle(downloadingProgressText)
@@ -110,7 +120,13 @@ internal class DownloadNotifier(private val context: Context) {
                 setContentText(downloadingProgressText)
             }
 
-            setProgress(download.pages!!.size, download.downloadedImages, false)
+            if (download.isFullChapterDownload) {
+                // For full chapter downloads, use percentage progress
+                setProgress(100, download.totalProgress, false)
+            } else {
+                // For page-by-page downloads, use page count
+                setProgress(download.pages?.size ?: 0, download.downloadedImages, false)
+            }
             setOngoing(true)
 
             show(Notifications.ID_DOWNLOAD_CHAPTER_PROGRESS)

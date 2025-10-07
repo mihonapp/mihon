@@ -8,7 +8,11 @@ import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateNotifier
 import eu.kanade.tachiyomi.data.notification.NotificationHandler
+import eu.kanade.tachiyomi.network.HttpException
+import eu.kanade.tachiyomi.source.FullChapterCapability
 import eu.kanade.tachiyomi.source.UnmeteredSource
+import eu.kanade.tachiyomi.source.getFullChapterCapability
+import eu.kanade.tachiyomi.source.getFullChapterResponse
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.storage.DiskUtil
@@ -37,12 +41,18 @@ import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.yield
 import logcat.LogPriority
 import mihon.core.archive.ZipWriter
+import mihon.core.archive.archiveReader
 import nl.adaptivity.xmlutil.serialization.XML
 import okhttp3.Response
+import okio.BufferedSource
+import okio.buffer
+import okio.sink
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.extension
+import tachiyomi.core.common.storage.nameWithoutExtension
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.launchNow
 import tachiyomi.core.common.util.lang.withIOContext
@@ -60,7 +70,11 @@ import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
+import java.io.IOException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import java.util.Locale
+import javax.net.ssl.SSLException
 
 /**
  * This class is the one in charge of downloading chapters.
@@ -336,6 +350,22 @@ class Downloader(
             return
         }
 
+        // Check if source supports full chapter downloads and it's enabled
+        val fullChapterCapability = getFullChapterCapability(download.source)
+        if (fullChapterCapability == FullChapterCapability.ENABLED) {
+            downloadFullChapter(download, mangaDir)
+        } else {
+            downloadChapterPages(download, mangaDir)
+        }
+    }
+
+    /**
+     * Downloads a chapter as individual pages (traditional method).
+     *
+     * @param download the chapter to be downloaded.
+     * @param mangaDir the manga directory where the chapter will be saved.
+     */
+    private suspend fun downloadChapterPages(download: Download, mangaDir: UniFile) {
         val chapterDirname = provider.getChapterDirName(download.chapter.name, download.chapter.scanlator)
         val tmpDir = mangaDir.createDirectory(chapterDirname + TMP_DIR_SUFFIX)!!
 
@@ -417,6 +447,480 @@ class Downloader(
             download.status = Download.State.ERROR
             notifier.onError(error.message, download.chapter.name, download.manga.title, download.manga.id)
         }
+    }
+
+    /**
+     * Downloads a complete chapter as an archive file.
+     *
+     * @param download the chapter to be downloaded.
+     * @param mangaDir the manga directory where the chapter will be saved.
+     */
+    private suspend fun downloadFullChapter(download: Download, mangaDir: UniFile) {
+        val chapterDirname = provider.getChapterDirName(download.chapter.name, download.chapter.scanlator)
+
+        try {
+            initializeFullChapterDownload(download)
+            val chapterFile = downloadChapterArchiveWithRetry(download, mangaDir, chapterDirname)
+            processComicInfoMetadata(download, mangaDir, chapterDirname, chapterFile)
+            finalizeFullChapterDownload(download, mangaDir, chapterDirname)
+        } catch (error: Throwable) {
+            handleDownloadError(error, download)
+        }
+    }
+
+    /**
+     * Initializes the download state for full chapter download.
+     *
+     * @param download the download to initialize
+     */
+    private fun initializeFullChapterDownload(download: Download) {
+        download.isFullChapterDownload = true
+        download.updateFullChapterProgress(PROGRESS_START)
+        download.status = Download.State.DOWNLOADING
+        notifier.onProgressChange(download)
+        // Note: we only jump to PROGRESS_DOWNLOAD_START once we know content length.
+        // See streamResponseToFile() after response validation.
+    }
+
+    /**
+     * Downloads the chapter archive with retry logic.
+     *
+     * @param download the chapter download
+     * @param mangaDir the manga directory
+     * @param chapterDirname the chapter directory name
+     * @return the downloaded chapter file
+     */
+    private suspend fun downloadChapterArchiveWithRetry(
+        download: Download,
+        mangaDir: UniFile,
+        chapterDirname: String,
+    ): UniFile {
+        var retryCount = 0
+        var lastException: Exception? = null
+
+        while (retryCount <= MAX_DOWNLOAD_RETRIES) {
+            try {
+                return executeChapterDownload(download, mangaDir, chapterDirname)
+            } catch (e: Exception) {
+                lastException = e
+
+                // Check if this exception should be retried
+                if (!shouldRetryException(e)) {
+                    logcat(LogPriority.ERROR) {
+                        "Full chapter download failed with non-retryable error: ${e.message}"
+                    }
+                    throw e
+                }
+
+                retryCount++
+
+                if (retryCount <= MAX_DOWNLOAD_RETRIES) {
+                    logcat(LogPriority.WARN) {
+                        "Full chapter download failed (attempt $retryCount/$MAX_DOWNLOAD_RETRIES): ${e.message}"
+                    }
+                    delay(RETRY_DELAY_MS * retryCount)
+                }
+            }
+        }
+
+        throw lastException ?: IOException("Download failed after $MAX_DOWNLOAD_RETRIES retries")
+    }
+
+    /**
+     * Executes a single chapter download attempt.
+     *
+     * @param download the chapter download
+     * @param mangaDir the manga directory
+     * @param chapterDirname the chapter directory name
+     * @return the downloaded chapter file
+     */
+    private suspend fun executeChapterDownload(
+        download: Download,
+        mangaDir: UniFile,
+        chapterDirname: String,
+    ): UniFile {
+        val chapterFile = createChapterFile(mangaDir, chapterDirname)
+
+        return download.source.getFullChapterResponse(download.chapter.toSChapter()).use { response ->
+            streamResponseToFile(response, chapterFile, download)
+
+            // Validate the downloaded file
+            validateDownloadedFile(chapterFile)
+
+            chapterFile
+        }
+    }
+
+    /**
+     * Creates and validates the chapter file.
+     *
+     * @param mangaDir the manga directory
+     * @param chapterDirname the chapter directory name
+     * @return the created chapter file
+     */
+    private fun createChapterFile(mangaDir: UniFile, chapterDirname: String): UniFile {
+        if (!mangaDir.exists()) {
+            throw IOException("Manga directory does not exist: ${mangaDir.uri}")
+        }
+
+        val chapterFile = mangaDir.createFile("$chapterDirname.cbz")
+            ?: throw IOException("Failed to create chapter file: $chapterDirname.cbz in directory: ${mangaDir.uri}")
+
+        if (!chapterFile.exists()) {
+            throw IOException("Chapter file was not created successfully: ${chapterFile.uri}")
+        }
+
+        return chapterFile
+    }
+
+    /**
+     * Streams the response content to the chapter file with progress tracking.
+     *
+     * @param response the HTTP response
+     * @param chapterFile the target file
+     * @param download the download for progress tracking
+     */
+    private suspend fun streamResponseToFile(response: Response, chapterFile: UniFile, download: Download) {
+        // Validate the response before starting download
+        validateResponse(response)
+
+        val contentLength = response.body.contentLength()
+        val source = response.body.source()
+
+        // If we have a known content length, nudge progress into the streaming window early
+        if (contentLength > 0) {
+            download.updateFullChapterProgress(PROGRESS_DOWNLOAD_START)
+            notifier.onProgressChange(download)
+        }
+
+        chapterFile.openOutputStream().use { outputStream ->
+            val sink = outputStream.sink().buffer()
+            val buffer = okio.Buffer()
+            var totalBytesRead = 0L
+            var lastProgressUpdate = System.currentTimeMillis()
+            var consecutiveEmptyReads = 0
+
+            try {
+                while (true) {
+                    val bytesRead = handleStreamRead(source, buffer, totalBytesRead, contentLength)
+
+                    if (bytesRead == -1L) break
+
+                    if (bytesRead == 0L) {
+                        consecutiveEmptyReads++
+                        if (consecutiveEmptyReads >= MAX_EMPTY_READS) {
+                            logcat(LogPriority.WARN) { "Too many consecutive empty reads, assuming stream exhausted" }
+                            break
+                        }
+                        delay(EMPTY_READ_DELAY_MS)
+                        continue
+                    } else {
+                        consecutiveEmptyReads = 0
+                    }
+
+                    sink.write(buffer, bytesRead)
+                    totalBytesRead += bytesRead
+
+                    lastProgressUpdate = updateStreamingProgress(
+                        download,
+                        contentLength,
+                        totalBytesRead,
+                        lastProgressUpdate,
+                    ) ?: lastProgressUpdate
+
+                    if (totalBytesRead % (DOWNLOAD_BUFFER_SIZE * 4) == 0L) {
+                        yield()
+                    }
+                }
+
+                sink.flush()
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR) { "Error during streaming download at $totalBytesRead bytes: ${e.message}" }
+                throw e
+            }
+        }
+    }
+
+    /**
+     * Handles a single stream read operation with error recovery.
+     *
+     * @param source the source to read from
+     * @param buffer the buffer to read into
+     * @param totalBytesRead total bytes read so far
+     * @return number of bytes read, or -1 for end of stream
+     */
+    private suspend fun handleStreamRead(
+        source: BufferedSource,
+        buffer: okio.Buffer,
+        totalBytesRead: Long,
+        contentLength: Long,
+    ): Long {
+        return try {
+            source.read(buffer, DOWNLOAD_BUFFER_SIZE)
+        } catch (e: IOException) {
+            // If we know the content length and we've already read >= content length, treat as EOF.
+            // Otherwise, rethrow to trigger retry logic because the stream ended prematurely.
+            if (contentLength > 0 && totalBytesRead >= contentLength) {
+                -1L
+            } else {
+                logcat(LogPriority.WARN) {
+                    "Stream reset after reading $totalBytesRead bytes (length=$contentLength), will retry: ${e.message}"
+                }
+                throw e
+            }
+        } catch (e: Exception) {
+            // For non-IO exceptions, always re-throw
+            logcat(LogPriority.ERROR) {
+                "Unexpected exception during stream read: ${e.message}"
+            }
+            throw e
+        }
+    }
+
+    /**
+     * Updates download progress during streaming.
+     *
+     * @param download the download to update
+     * @param contentLength total content length
+     * @param totalBytesRead bytes read so far
+     * @param lastProgressUpdate last update timestamp
+     * @return new timestamp if updated, null otherwise
+     */
+    private fun updateStreamingProgress(
+        download: Download,
+        contentLength: Long,
+        totalBytesRead: Long,
+        lastProgressUpdate: Long,
+    ): Long? {
+        val currentTime = System.currentTimeMillis()
+        if (contentLength > 0 && currentTime - lastProgressUpdate > PROGRESS_UPDATE_INTERVAL_MS) {
+            val progressPercent = (
+                (totalBytesRead.toDouble() / contentLength) * PROGRESS_DOWNLOAD_RANGE + PROGRESS_DOWNLOAD_START
+                ).toInt()
+            download.updateFullChapterProgress(
+                progressPercent.coerceIn(PROGRESS_DOWNLOAD_START, PROGRESS_DOWNLOAD_END),
+            )
+            notifier.onProgressChange(download)
+            return currentTime
+        }
+        return null
+    }
+
+    /**
+     * Processes ComicInfo metadata for the downloaded chapter.
+     * For full chapter downloads, we skip adding ComicInfo.xml to avoid the complex
+     * and risky re-compression process. The CBZ file from the source is used as-is.
+     *
+     * @param download the chapter download
+     * @param mangaDir the manga directory
+     * @param chapterDirname the chapter directory name
+     * @param chapterFile the downloaded chapter file
+     */
+    private suspend fun processComicInfoMetadata(
+        download: Download,
+        mangaDir: UniFile,
+        chapterDirname: String,
+        chapterFile: UniFile,
+    ) {
+        download.updateFullChapterProgress(PROGRESS_PROCESSING_START)
+        notifier.onProgressChange(download)
+
+        // For full chapter downloads, we skip ComicInfo.xml addition to avoid
+        // the complex and potentially risky re-compression process.
+        // The original CBZ file from the source is preserved as-is.
+        logcat(LogPriority.DEBUG) {
+            "Skipping ComicInfo.xml addition for full chapter download to preserve original CBZ integrity"
+        }
+    }
+
+    /**
+     * Finalizes the full chapter download.
+     *
+     * @param download the chapter download
+     * @param mangaDir the manga directory
+     * @param chapterDirname the chapter directory name
+     */
+    private suspend fun finalizeFullChapterDownload(
+        download: Download,
+        mangaDir: UniFile,
+        chapterDirname: String,
+    ) {
+        download.updateFullChapterProgress(PROGRESS_CLEANUP_START)
+        notifier.onProgressChange(download)
+
+        cleanupTemporaryFiles(mangaDir)
+        cache.addChapter(chapterDirname, mangaDir, download.manga)
+        DiskUtil.createNoMediaFile(mangaDir, context)
+
+        download.updateFullChapterProgress(PROGRESS_COMPLETE)
+        download.status = Download.State.DOWNLOADED
+        notifier.onProgressChange(download)
+    }
+
+    /**
+     * Cleans up temporary files from the manga directory.
+     *
+     * @param mangaDir the manga directory to clean
+     */
+    private fun cleanupTemporaryFiles(mangaDir: UniFile) {
+        try {
+            val tempFiles = mangaDir.listFiles()?.filter { file ->
+                val name = file.name
+                name?.startsWith("temp_") == true && (
+                    name.endsWith(".webp") || name.endsWith(".jpg") ||
+                        name.endsWith(".jpeg") || name.endsWith(".png")
+                    )
+            }
+            tempFiles?.forEach { tempFile ->
+                try {
+                    tempFile.delete()
+                } catch (e: Exception) {
+                    logcat(LogPriority.DEBUG) { "Failed to delete temp file ${tempFile.name}: ${e.message}" }
+                }
+            }
+        } catch (e: Exception) {
+            logcat(LogPriority.DEBUG) { "Error during cleanup: ${e.message}" }
+        }
+    }
+
+    /**
+     * Validates the HTTP response before starting the download.
+     *
+     * @param response the HTTP response to validate
+     * @throws IOException if the response is invalid
+     */
+    private fun validateResponse(response: Response) {
+        val contentType = response.header("Content-Type")
+        val contentLength = response.body.contentLength()
+
+        // Validate content type
+        if (contentType != null && !VALID_ARCHIVE_CONTENT_TYPES.any { contentType.contains(it, ignoreCase = true) }) {
+            logcat(LogPriority.WARN) {
+                "Unexpected content type for chapter download: $contentType"
+            }
+            // Don't fail for content type - some servers don't set it correctly
+        }
+
+        // Validate content length
+        if (contentLength > 0) {
+            if (contentLength > MAX_CHAPTER_FILE_SIZE) {
+                throw IOException(
+                    "Chapter file too large: ${contentLength / (1024 * 1024)} MB (max: ${MAX_CHAPTER_FILE_SIZE / (1024 * 1024)} MB)",
+                )
+            }
+            if (contentLength < MIN_CHAPTER_FILE_SIZE) {
+                throw IOException(
+                    "Chapter file too small: $contentLength bytes (min: $MIN_CHAPTER_FILE_SIZE bytes)",
+                )
+            }
+        }
+    }
+
+    /**
+     * Validates the downloaded file to ensure it's a valid archive.
+     *
+     * @param file the downloaded file to validate
+     * @throws IOException if the file is invalid
+     */
+    private suspend fun validateDownloadedFile(file: UniFile) {
+        if (!file.exists()) {
+            throw IOException("Downloaded file does not exist")
+        }
+
+        val fileSize = file.length()
+        if (fileSize == 0L) {
+            throw IOException("Downloaded file is empty")
+        }
+
+        if (fileSize > MAX_CHAPTER_FILE_SIZE) {
+            throw IOException(
+                "Downloaded file too large: ${fileSize / (1024 * 1024)} MB (max: ${MAX_CHAPTER_FILE_SIZE / (1024 * 1024)} MB)",
+            )
+        }
+
+        if (fileSize < MIN_CHAPTER_FILE_SIZE) {
+            throw IOException(
+                "Downloaded file too small: $fileSize bytes (min: $MIN_CHAPTER_FILE_SIZE bytes)",
+            )
+        }
+
+        // Validate that the file is a valid ZIP/CBZ archive
+        try {
+            file.archiveReader(context).use { reader ->
+                reader.useEntries { entries ->
+                    val entryCount = entries.count()
+                    if (entryCount == 0) {
+                        throw IOException("Archive is empty (no entries found)")
+                    }
+                    logcat(LogPriority.DEBUG) {
+                        "Validated archive with $entryCount entries"
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            if (e is IOException && e.message?.contains("Archive is empty") == true) {
+                throw e
+            }
+            throw IOException("Downloaded file is not a valid archive: ${e.message}", e)
+        }
+    }
+
+    /**
+     * Determines if an exception should be retried based on its type.
+     * Non-retryable errors include HTTP client errors (4xx), authentication issues, etc.
+     *
+     * @param exception the exception to check
+     * @return true if the exception should be retried, false otherwise
+     */
+    private fun shouldRetryException(exception: Throwable): Boolean {
+        return when (exception) {
+            // Network-related exceptions that can be retried
+            is SocketTimeoutException,
+            is UnknownHostException,
+            is SSLException,
+            -> true
+
+            // HTTP exceptions - check status code
+            is HttpException -> {
+                val code = exception.code
+                // Retry server errors (5xx) and some client errors, but not 4xx client errors
+                when (code) {
+                    in 500..599 -> true // Server errors - retry
+                    408, 429 -> true // Request timeout, too many requests - retry
+                    in 400..499 -> false // Client errors (404, 401, 403, etc.) - don't retry
+                    else -> true // Other codes - retry
+                }
+            }
+
+            // IO exceptions that might be temporary
+            is IOException -> {
+                val message = exception.message?.lowercase()
+                when {
+                    message?.contains("connection reset") == true -> true
+                    message?.contains("connection refused") == true -> true
+                    message?.contains("timeout") == true -> true
+                    message?.contains("network is unreachable") == true -> true
+                    else -> true // Default to retry for other IO exceptions
+                }
+            }
+
+            // Don't retry cancellation or other exceptions
+            is CancellationException -> false
+            else -> false // Conservative approach - don't retry unknown exceptions
+        }
+    }
+
+    /**
+     * Handles download errors.
+     *
+     * @param error the error that occurred
+     * @param download the download that failed
+     */
+    private fun handleDownloadError(error: Throwable, download: Download) {
+        if (error is CancellationException) throw error
+        logcat(LogPriority.ERROR, error)
+        download.status = Download.State.ERROR
+        notifier.onError(error.message, download.chapter.name, download.manga.title, download.manga.id)
     }
 
     /**
@@ -722,6 +1226,33 @@ class Downloader(
         const val WARNING_NOTIF_TIMEOUT_MS = 30_000L
         const val CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD = 15
         private const val DOWNLOADS_QUEUED_WARNING_THRESHOLD = 30
+
+        // Full chapter download progress constants
+        private const val PROGRESS_START = 0
+        private const val PROGRESS_DOWNLOAD_START = 5
+        private const val PROGRESS_DOWNLOAD_END = 95
+        private const val PROGRESS_PROCESSING_START = 95
+        private const val PROGRESS_CLEANUP_START = 98
+        private const val PROGRESS_COMPLETE = 100
+
+        // Download configuration constants
+        private const val MAX_DOWNLOAD_RETRIES = 3
+        private const val RETRY_DELAY_MS = 2000L
+        private const val DOWNLOAD_BUFFER_SIZE = 8192L
+        private const val MAX_EMPTY_READS = 10
+        private const val EMPTY_READ_DELAY_MS = 100L
+        private const val PROGRESS_UPDATE_INTERVAL_MS = 1000L
+        private const val PROGRESS_DOWNLOAD_RANGE = PROGRESS_DOWNLOAD_END - PROGRESS_DOWNLOAD_START
+
+        // File validation constants
+        private const val MAX_CHAPTER_FILE_SIZE = 500L * 1024 * 1024 // 500 MB
+        private const val MIN_CHAPTER_FILE_SIZE = 1024L // 1 KB
+        private val VALID_ARCHIVE_CONTENT_TYPES = setOf(
+            "application/zip",
+            "application/x-zip-compressed",
+            "application/octet-stream", // Some servers use this for CBZ files
+            "application/vnd.comicbook+zip", // Vendor CBZ MIME
+        )
     }
 }
 

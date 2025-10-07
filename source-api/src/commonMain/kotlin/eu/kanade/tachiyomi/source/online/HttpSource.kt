@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.newCachelessCallWithProgress
 import eu.kanade.tachiyomi.source.CatalogueSource
+import eu.kanade.tachiyomi.source.FullChapterSource
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.model.Page
@@ -462,4 +463,41 @@ abstract class HttpSource : CatalogueSource {
      * Returns the list of filters for the source.
      */
     override fun getFilterList() = FilterList()
+
+    // ===== Full Chapter Download Support =====
+
+    /**
+     * Indicates whether this source supports downloading complete chapters as archive files.
+     * Override this method to return true if your source can provide complete chapter files.
+     *
+     * @since extensions-lib 1.6
+     * @return true if the source supports full chapter downloads, false otherwise
+     */
+    open fun supportsFullChapterDownload(): Boolean = false
+
+    /**
+     * Returns the request for downloading a complete chapter as an archive file.
+     * Override this method if you need to customize the request (e.g., different headers, POST method).
+     * This method is only called if [supportsFullChapterDownload] returns true.
+     *
+     * @since extensions-lib 1.6
+     * @param chapter the chapter to download as a complete archive
+     * @return Request for downloading the complete chapter archive
+     */
+    protected open fun fullChapterRequest(chapter: SChapter): Request {
+        return GET(baseUrl + chapter.url, headers)
+    }
+
+    /**
+     * Downloads a complete chapter as an archive file.
+     * This default implementation uses [fullChapterRequest] to create the request.
+     * Override this method if you need custom download logic.
+     *
+     * @since extensions-lib 1.6
+     * @param chapter the chapter to download as a complete archive
+     * @return Response containing the complete chapter archive file
+     */
+    open suspend fun getFullChapter(chapter: SChapter): Response {
+        return client.newCall(fullChapterRequest(chapter)).awaitSuccess()
+    }
 }
