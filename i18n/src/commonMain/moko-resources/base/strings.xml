@@ -439,6 +439,7 @@
     <string name="white_background">White</string>
     <string name="gray_background">Gray</string>
     <string name="black_background">Black</string>
+    <string name="auto_background">Automatic background</string>
     <string name="automatic_background">Auto</string>
     <string name="pref_viewer_type">Default reading mode</string>
     <string name="l_nav">L shaped</string>
