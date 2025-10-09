@@ -434,6 +434,11 @@ object SettingsDataScreen : SearchableSettings {
                                 context.toast(MR.strings.covers_imported)
                             }
                         },
+                        onRestoreFailure = {
+                            scope.launch(Dispatchers.Main) {
+                                context.toast(MR.strings.covers_import_error)
+                            }
+                        },
                     )
                 }
             }

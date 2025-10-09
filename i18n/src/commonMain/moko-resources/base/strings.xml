@@ -760,6 +760,7 @@
     <string name="cover_saved">Cover saved</string>
     <string name="covers_exported">Covers exported</string>
     <string name="covers_imported">Covers imported</string>
+    <string name="covers_import_error">Error Importing Covers</string>
     <string name="error_saving_cover">Error saving cover</string>
     <string name="error_sharing_cover">Error sharing cover</string>
     <string name="confirm_delete_chapters">Are you sure you want to delete the selected chapters?</string>
