@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.data.export
 
 import android.content.Context
 import android.net.Uri
-import android.os.ParcelFileDescriptor
 import android.util.Log
 import eu.kanade.tachiyomi.data.backup.models.BackupCovers
 import eu.kanade.tachiyomi.data.cache.CoverCache
@@ -24,55 +23,53 @@ object CustomCoverRestorer {
         onRestoreFailure: () -> Unit,
     ) {
         withContext(Dispatchers.IO) {
+            val contentResolver = context.contentResolver
+            val getFavorites = Injekt.get<GetFavorites>()
+            val coverCache = Injekt.get<CoverCache>()
+
             try {
-                val pfd = context.contentResolver.openFileDescriptor(uri, "r") ?: return@withContext
+                val pfd = contentResolver.openFileDescriptor(uri, "r") ?: return@withContext onRestoreFailure()
                 ArchiveReader(pfd).use { archiveReader ->
                     var protoData: ByteArray? = null
-                    val imageMap = mutableMapOf<String, ByteArray>()
 
                     archiveReader.useEntries { entries ->
                         entries.forEach { entry ->
-                            val entryName = entry.name
-                            val entryStream = archiveReader.getInputStream(entryName) ?: return@forEach
-                            val data = entryStream.readBytes()
-
-                            if (entryName == "manga_urls.proto") {
-                                protoData = data
-                                Log.d("CustomCoverRestorer", "Proto found")
-                            } else {
-                                imageMap[entryName] = data
-                                Log.d("CustomCoverRestorer", "Image found: $entryName")
-                            }
-                        }
-                    }
-
-                    if (protoData != null) {
-                        val backupCovers = ProtoBuf.decodeFromByteArray<BackupCovers>(protoData)
-                        val mangas = Injekt.get<GetFavorites>().await()
-                        val coverCache = Injekt.get<CoverCache>()
-
-                        backupCovers().forEach { backupCover ->
-                            val matchingManga = mangas.find {
-                                it.url == backupCover.mangaUrl && it.source == backupCover.sourceId
-                            }
-
-                            if (matchingManga != null) {
-                                val imageName = backupCover.filename
-                                val coverData = imageMap[imageName]
-                                Log.d("CustomCoverRestorer", "Restoring image: ${backupCover.filename}")
-
-                                if (coverData != null) {
-                                    val coverInputStream = coverData.inputStream()
-                                    coverCache.setCustomCoverToCache(matchingManga, coverInputStream)
+                            if (entry.name == "manga_urls.proto") {
+                                archiveReader.getInputStream(entry.name)?.use { stream ->
+                                    protoData = stream.readBytes()
                                 }
                             }
                         }
-                        onRestoreComplete()
-                    } else {
-                        onRestoreFailure()
                     }
+
+                    if (protoData == null) {
+                        onRestoreFailure()
+                        return@withContext
+                    }
+
+                    val backupCovers = ProtoBuf.decodeFromByteArray<BackupCovers>(protoData)
+                    val mangas = getFavorites.await()
+                    val expectedFiles = backupCovers.covers.associateBy { it.filename }
+
+                    ArchiveReader(contentResolver.openFileDescriptor(uri, "r")!!).use { imageReader ->
+                        imageReader.useEntries { entries ->
+                            entries.forEach { entry ->
+                                val backupCover = expectedFiles[entry.name] ?: return@forEach
+                                val matchingManga = mangas.find {
+                                    it.url == backupCover.mangaUrl && it.source == backupCover.sourceId
+                                } ?: return@forEach
+
+                                imageReader.getInputStream(entry.name)?.use { imageStream ->
+                                    coverCache.setCustomCoverToCache(matchingManga, imageStream)
+                                }
+                            }
+                        }
+                    }
+
+                    onRestoreComplete()
                 }
             } catch (e: Exception) {
+                Log.e("CustomCoverRestorer", "Restore failed", e)
                 onRestoreFailure()
             }
         }
