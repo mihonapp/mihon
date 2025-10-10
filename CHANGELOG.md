@@ -13,6 +13,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ## [Unreleased]
 ### Added
 - Advanced setting to limit download filenames to ASCII characters. This is provided only as a workaround for OSes that do not properly handle standard Unicode filenames. This setting is generally not recommended and should only be used as a last resort ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
+- Allow for Export and Import of Custom Covers ([@Animeboynz](https://github.com/Animeboynz)) ([#1797](https://github.com/mihonapp/mihon/pull/1797))
 
 ### Changed
 - Delegate Suwayomi tracker authentication to extension ([@cpiber](https://github.com/cpiber)) ([#2476](https://github.com/mihonapp/mihon/pull/2476))

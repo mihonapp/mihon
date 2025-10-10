@@ -586,6 +586,7 @@
     <string name="cache_delete_error">Error occurred while clearing</string>
     <string name="pref_auto_clear_chapter_cache">Clear chapter cache on app launch</string>
     <string name="export">Export</string>
+    <string name="import_title">Import</string>
     <string name="library_list">Library List</string>
     <string name="library_exported">Library Exported</string>
 
@@ -757,6 +758,9 @@
     <string name="custom_cover">Custom cover</string>
     <string name="manga_cover">Cover</string>
     <string name="cover_saved">Cover saved</string>
+    <string name="covers_exported">Covers exported</string>
+    <string name="covers_imported">Covers imported</string>
+    <string name="covers_import_error">Error Importing Covers</string>
     <string name="error_saving_cover">Error saving cover</string>
     <string name="error_sharing_cover">Error sharing cover</string>
     <string name="confirm_delete_chapters">Are you sure you want to delete the selected chapters?</string>
