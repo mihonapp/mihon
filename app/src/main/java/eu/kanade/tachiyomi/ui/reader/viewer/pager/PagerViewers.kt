@@ -6,6 +6,9 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
  * Implementation of a left to right PagerViewer.
  */
 class L2RPagerViewer(activity: ReaderActivity) : PagerViewer(activity) {
+    override val areWidePagesLTR
+        get() = !config.dualPageInvert
+
     /**
      * Creates a new left to right pager.
      */
@@ -18,6 +21,9 @@ class L2RPagerViewer(activity: ReaderActivity) : PagerViewer(activity) {
  * Implementation of a right to left PagerViewer.
  */
 class R2LPagerViewer(activity: ReaderActivity) : PagerViewer(activity) {
+    override val areWidePagesLTR
+        get() = config.dualPageInvert
+
     /**
      * Creates a new right to left pager.
      */
@@ -44,6 +50,9 @@ class R2LPagerViewer(activity: ReaderActivity) : PagerViewer(activity) {
  * Implementation of a vertical (top to bottom) PagerViewer.
  */
 class VerticalPagerViewer(activity: ReaderActivity) : PagerViewer(activity) {
+    override val areWidePagesLTR
+        get() = config.dualPageInvert
+
     /**
      * Creates a new vertical pager.
      */
