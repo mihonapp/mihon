@@ -13,10 +13,10 @@
     <string name="version">Versi</string>
     <string name="pref_dns_over_https">DNS liwat HTTPS</string>
     <string name="disabled">Dipateni</string>
-    <string name="color_filter_a_value">T</string>
-    <string name="color_filter_b_value">B</string>
-    <string name="color_filter_g_value">I</string>
-    <string name="color_filter_r_value">A</string>
+    <string name="color_filter_a_value">Alfa</string>
+    <string name="color_filter_b_value">Biru</string>
+    <string name="color_filter_g_value">Ijo</string>
+    <string name="color_filter_r_value">Abang</string>
     <string name="double_tap_anim_speed_fast">Cepet</string>
     <string name="zoom_start_right">Nengen</string>
     <string name="zoom_start_left">Ngiwa</string>
@@ -244,11 +244,7 @@
     <string name="pref_library_update_refresh_metadata">Nganyari metadata otomatis</string>
     <string name="network_not_metered">Jaringan gak kebates tok</string>
     <string name="pref_app_language">Bohoso aplikasi</string>
-    <string name="untrusted_extension_message">Ekstensi iki ditandatangani nganggo sertifikat sing ora dipercaya lan ora diaktifake.
-\n
-\n Ekstensi angkoro bisa maca kredensial login sing disimpen ing Mihon utawa nglakokake kode sewenang-wenang.
-\n
-\n Kanthi percaya karo sertifikat iki, sampeyan nampa risiko kasebut.</string>
+    <string name="untrusted_extension_message">Ekstensi iki ditandatangani nganggo sertifikat sing ora dipercaya lan ora diaktifake.\n\nEkstensi angkoro bisa maca kredensial login sing disimpen ing Mihon utawa nglakokake kode sewenang-wenang. Kanthi percaya karo sertifikat iki, sampeyan nampa risiko kasebut.</string>
     <string name="ext_downloading">Ndownload</string>
     <string name="pref_show_navigation_mode">Tampilake overlay zona tutul</string>
     <string name="pref_library_update_categories_details">Manga ing kategori sing ora kalebu ora bakal dianyari sanajan uga ana ing kategori sing kalebu.</string>
@@ -310,4 +306,5 @@
     <string name="action_menu_overflow_description">Pilihan liane</string>
     <string name="label_data_storage">Data lan penyimpanan</string>
     <string name="label_upcoming">Bakal muncul</string>
+    <string name="action_bar_up_description">navigasi mendhuwur</string>
 </resources>

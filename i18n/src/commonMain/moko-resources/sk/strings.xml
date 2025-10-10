@@ -662,4 +662,5 @@
     <string name="onboarding_heading">Vitajte!</string>
     <string name="label_upcoming">Nadchádzajúce</string>
     <string name="action_replace_repo">Nahradiť</string>
+    <string name="action_bar_up_description">Navigovať hore</string>
 </resources>

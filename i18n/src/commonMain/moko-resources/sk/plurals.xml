@@ -65,4 +65,22 @@
         <item quantity="few">%d kategórie</item>
         <item quantity="other">%d kegórií</item>
     </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Zajtra</item>
+        <item quantity="few">O %1$d dni</item>
+        <item quantity="many">O %1$d dní</item>
+        <item quantity="other">O %1$d dní</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">1 deň</item>
+        <item quantity="few">%d dni</item>
+        <item quantity="many">%d dní</item>
+        <item quantity="other">%d dní</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 strana</item>
+        <item quantity="few">%1$s strany</item>
+        <item quantity="many">%1$s strán</item>
+        <item quantity="other">%1$s strán</item>
+    </plurals>
 </resources>
