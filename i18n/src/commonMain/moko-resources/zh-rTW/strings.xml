@@ -226,7 +226,7 @@
     <string name="notification_first_add_to_library">請先將作品收藏至書櫃</string>
     <string name="file_select_backup">選擇備份檔</string>
     <string name="information_empty_category">尚無任何類別，輕觸新增按鈕即可建立類別以組織你的書櫃</string>
-    <string name="download_notifier_downloader_title">下載管理員</string>
+    <string name="download_notifier_downloader_title">下載管理</string>
     <string name="download_unread">未讀</string>
     <string name="confirm_set_image_as_cover">要將該圖片設為封面嗎？</string>
     <string name="transition_pages_loading">正在載入頁面…</string>
@@ -539,7 +539,7 @@
     <string name="pref_verbose_logging_summary">傾印詳細記錄至系統日誌 (將降低應用程式效能)</string>
     <string name="connected_to_wifi">僅透過 Wi-Fi</string>
     <string name="update_72hour">每 3 天</string>
-    <string name="download_queue_size_warning">警告：大量批次下載可能壅塞來源，甚至使其封鎖 Mihon，輕觸以瞭解詳情</string>
+    <string name="download_queue_size_warning">警告：大量批次下載可能壅塞來源，甚至使其封鎖 %s，輕觸以瞭解詳情</string>
     <string name="ext_update_all">全部更新</string>
     <string name="channel_app_updates">應用程式更新</string>
     <string name="pref_auto_clear_chapter_cache">啟動應用程式時清除章節快取</string>
@@ -765,7 +765,7 @@
     <string name="error_repo_exists">已有該儲存庫！</string>
     <string name="pref_library_update_smart_update">智慧更新</string>
     <string name="invalid_repo_name">無效的儲存庫網址</string>
-    <string name="action_add_repo_message">將額外的擴充套件儲存庫新增至 Mihon，此處應填入一個結尾為「index.min.json」的網址</string>
+    <string name="action_add_repo_message">將額外的擴充套件儲存庫新增至 %s，此處應填入一個結尾為「index.min.json」的網址</string>
     <string name="delete_repo_confirmation">確定要刪除「%s」儲存庫嗎？</string>
     <string name="action_delete_repo">刪除儲存庫</string>
     <string name="action_add_repo">新增儲存庫</string>
