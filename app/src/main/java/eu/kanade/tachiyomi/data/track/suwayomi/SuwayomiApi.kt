@@ -8,6 +8,9 @@ import eu.kanade.tachiyomi.network.PUT
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.source.online.HttpSource
+import kotlin.reflect.KParameter
+import kotlin.reflect.full.createType
+import kotlin.reflect.full.isSubtypeOf
 import kotlinx.serialization.json.Json
 import okhttp3.FormBody
 import okhttp3.Headers
@@ -26,7 +29,13 @@ class SuwayomiApi(private val trackId: Long) {
     private val sourceManager: SourceManager by injectLazy()
     private val source: HttpSource by lazy { (sourceManager.get(sourceId) as HttpSource) }
     private val suwayomiExt: SuwayomiExtensionInterface by lazy {
-        (sourceManager.get(sourceId) as? SuwayomiExtensionInterface)?.let { return@lazy it }
+        source::class.members.firstOrNull {
+            it.parameters.size == 1 &&
+                it.parameters[0].kind == KParameter.Kind.INSTANCE &&
+                it.returnType.isSubtypeOf(SuwayomiExtensionInterface::class.createType())
+        }?.let {
+            return@lazy it.call(source) as SuwayomiExtensionInterface
+        }
         val context = Injekt.get<Application>()
         throw NullPointerException(MR.strings.error_extension_mismatch.getString(context))
     }
