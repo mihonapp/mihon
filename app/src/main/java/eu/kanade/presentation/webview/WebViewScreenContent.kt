@@ -2,6 +2,7 @@ package eu.kanade.presentation.webview
 
 import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap
+import android.os.Message
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import androidx.compose.foundation.clickable
@@ -28,11 +29,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.stack.mutableStateStackOf
+import com.kevinnzou.web.AccompanistWebChromeClient
 import com.kevinnzou.web.AccompanistWebViewClient
 import com.kevinnzou.web.LoadingState
+import com.kevinnzou.web.WebContent
 import com.kevinnzou.web.WebView
+import com.kevinnzou.web.WebViewState
 import com.kevinnzou.web.rememberWebViewNavigator
-import com.kevinnzou.web.rememberWebViewState
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.WarningBanner
@@ -44,6 +48,23 @@ import kotlinx.coroutines.launch
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
+
+class WebViewWindow {
+    val state: WebViewState
+    val popupMessage: Message?
+    var webView: WebView? = null
+
+    constructor(webContent: WebContent) {
+        state = WebViewState(webContent)
+        popupMessage = null
+    }
+
+    constructor(popupMessage: Message) {
+        state = WebViewState(WebContent.NavigatorOnly)
+        this.popupMessage = popupMessage
+    }
+}
+
 @Composable
 fun WebViewScreenContent(
     onNavigateUp: () -> Unit,
@@ -55,7 +76,25 @@ fun WebViewScreenContent(
     headers: Map<String, String> = emptyMap(),
     onUrlChange: (String) -> Unit = {},
 ) {
-    val state = rememberWebViewState(url = url, additionalHttpHeaders = headers)
+    val windowStack = remember {
+        mutableStateStackOf(
+            WebViewWindow(
+                WebContent.Url(url = url, additionalHttpHeaders = headers)
+            )
+        )
+    }
+
+    val currentWindow = windowStack.lastItemOrNull!!
+
+    val popState: (() -> Unit) = remember {{
+        if (windowStack.size == 1) {
+            onNavigateUp()
+        }
+        else {
+            windowStack.pop()
+        }
+    }}
+
     val navigator = rememberWebViewNavigator()
     val uriHandler = LocalUriHandler.current
     val scope = rememberCoroutineScope()
@@ -116,14 +155,39 @@ fun WebViewScreenContent(
         }
     }
 
+    val webChromeClient = remember {
+        object : AccompanistWebChromeClient() {
+            override fun onCreateWindow(
+                view: WebView,
+                isDialog: Boolean,
+                isUserGesture: Boolean,
+                resultMsg: Message
+            ): Boolean {
+                // if it wasn't initiated by a user gesture, we should ignore it like a normal browser would
+                if (isUserGesture) {
+                    windowStack.push(WebViewWindow(resultMsg))
+                    return true
+                }
+                return false
+            }
+        }
+    }
+
+    fun initializePopup(webView: WebView, message: Message): WebView {
+        val transport = message.obj as WebView.WebViewTransport
+        transport.webView = webView
+        message.sendToTarget()
+        return webView
+    }
+
     Scaffold(
         topBar = {
             Box {
                 Column {
                     AppBar(
-                        title = state.pageTitle ?: initialTitle,
+                        title = currentWindow.state.pageTitle ?: initialTitle,
                         subtitle = currentUrl,
-                        navigateUp = onNavigateUp,
+                        navigateUp = popState,
                         navigationIcon = Icons.Outlined.Close,
                         actions = {
                             AppBarActions(
@@ -186,7 +250,7 @@ fun WebViewScreenContent(
                         }
                     }
                 }
-                when (val loadingState = state.loadingState) {
+                when (val loadingState = currentWindow.state.loadingState) {
                     is LoadingState.Initializing -> LinearProgressIndicator(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -203,27 +267,44 @@ fun WebViewScreenContent(
             }
         },
     ) { contentPadding ->
-        WebView(
-            state = state,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(contentPadding),
-            navigator = navigator,
-            onCreated = { webView ->
-                webView.setDefaultSettings()
+        windowStack.items.map { window ->
+            WebView(
+                state = window.state,
+                // We want all of the WebViews in the stack to be loaded at full size, but only the top one to show.
+                // Due to the order that the WebViews are rendered, it turns out that we don't need any special
+                // modifier logic for that.
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(contentPadding),
+                navigator = navigator,
+                onCreated = { webView ->
+                    webView.setDefaultSettings()
 
-                // Debug mode (chrome://inspect/#devices)
-                if (BuildConfig.DEBUG &&
-                    0 != webView.context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE
-                ) {
-                    WebView.setWebContentsDebuggingEnabled(true)
-                }
+                    // Debug mode (chrome://inspect/#devices)
+                    if (BuildConfig.DEBUG &&
+                        0 != webView.context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE
+                    ) {
+                        WebView.setWebContentsDebuggingEnabled(true)
+                    }
 
-                headers["user-agent"]?.let {
-                    webView.settings.userAgentString = it
+                    headers["user-agent"]?.let {
+                        webView.settings.userAgentString = it
+                    }
+                },
+                onDispose = {
+                    it.destroy()
+                },
+                client = webClient,
+                chromeClient = webChromeClient,
+                factory = { context ->
+                    WebView(context).also { webView ->
+                        currentWindow.popupMessage?.let {
+                            initializePopup(webView, it)
+                            currentWindow.webView = webView
+                        }
+                    }
                 }
-            },
-            client = webClient,
-        )
+            )
+        }
     }
 }
