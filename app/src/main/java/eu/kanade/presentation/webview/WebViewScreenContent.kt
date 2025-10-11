@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -49,18 +50,13 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 
-class WebViewWindow {
-    val state: WebViewState
-    val popupMessage: Message?
+class WebViewWindow(webContent: WebContent) {
+    var state by mutableStateOf(WebViewState(webContent))
+    var popupMessage: Message? = null
+        private set
     var webView: WebView? = null
 
-    constructor(webContent: WebContent) {
-        state = WebViewState(webContent)
-        popupMessage = null
-    }
-
-    constructor(popupMessage: Message) {
-        state = WebViewState(WebContent.NavigatorOnly)
+    constructor(popupMessage: Message) : this(WebContent.NavigatorOnly) {
         this.popupMessage = popupMessage
     }
 }
@@ -267,9 +263,12 @@ fun WebViewScreenContent(
             }
         },
     ) { contentPadding ->
-        windowStack.items.map { window ->
+        // We need to key the WebView composable to the window object since simply updating the WebView composable will
+        // not cause it to re-invoke the WebView factory and render the new current window's WebView. This lets us
+        // completely reset the WebView composable when the current window switches.
+        key(currentWindow) {
             WebView(
-                state = window.state,
+                state = currentWindow.state,
                 // We want all of the WebViews in the stack to be loaded at full size, but only the top one to show.
                 // Due to the order that the WebViews are rendered, it turns out that we don't need any special
                 // modifier logic for that.
@@ -291,18 +290,30 @@ fun WebViewScreenContent(
                         webView.settings.userAgentString = it
                     }
                 },
-                onDispose = {
-                    it.destroy()
+                onDispose = { webView ->
+                    val window = windowStack.items.find { it.webView == webView }
+                    if (window == null) {
+                        // If we couldn't find any window on the stack that owns this WebView, it means that we can
+                        // safely dispose of it because the window containing it has been closed.
+                        webView.destroy()
+                    }
+                    else {
+                        // The composable is being disposed but the WebView object is not.
+                        // When the WebView element is recomposed, we will want the WebView to resume from its state
+                        // before it was unmounted, we won't want it to reset back to its original target.
+                        window.state = WebViewState(WebContent.NavigatorOnly)
+                    }
                 },
                 client = webClient,
                 chromeClient = webChromeClient,
                 factory = { context ->
-                    WebView(context).also { webView ->
-                        currentWindow.popupMessage?.let {
-                            initializePopup(webView, it)
+                    currentWindow.webView ?:
+                        WebView(context).also { webView ->
                             currentWindow.webView = webView
+                            currentWindow.popupMessage?.let {
+                                initializePopup(webView, it)
+                            }
                         }
-                    }
                 }
             )
         }
