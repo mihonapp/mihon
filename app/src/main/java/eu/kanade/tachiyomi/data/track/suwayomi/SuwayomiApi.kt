@@ -8,9 +8,6 @@ import eu.kanade.tachiyomi.network.PUT
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.source.online.HttpSource
-import kotlin.reflect.KParameter
-import kotlin.reflect.full.createType
-import kotlin.reflect.full.isSubtypeOf
 import kotlinx.serialization.json.Json
 import okhttp3.FormBody
 import okhttp3.Headers
@@ -23,6 +20,9 @@ import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.nio.charset.Charset
 import java.security.MessageDigest
+import kotlin.reflect.KParameter
+import kotlin.reflect.full.createType
+import kotlin.reflect.full.isSubtypeOf
 
 class SuwayomiApi(private val trackId: Long) {
 
