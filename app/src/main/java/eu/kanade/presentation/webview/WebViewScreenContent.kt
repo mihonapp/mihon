@@ -269,9 +269,6 @@ fun WebViewScreenContent(
         key(currentWindow) {
             WebView(
                 state = currentWindow.state,
-                // We want all of the WebViews in the stack to be loaded at full size, but only the top one to show.
-                // Due to the order that the WebViews are rendered, it turns out that we don't need any special
-                // modifier logic for that.
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(contentPadding),
