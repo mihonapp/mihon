@@ -75,21 +75,22 @@ fun WebViewScreenContent(
     val windowStack = remember {
         mutableStateStackOf(
             WebViewWindow(
-                WebContent.Url(url = url, additionalHttpHeaders = headers)
-            )
+                WebContent.Url(url = url, additionalHttpHeaders = headers),
+            ),
         )
     }
 
     val currentWindow = windowStack.lastItemOrNull!!
 
-    val popState: (() -> Unit) = remember {{
-        if (windowStack.size == 1) {
-            onNavigateUp()
+    val popState: (() -> Unit) = remember {
+        {
+            if (windowStack.size == 1) {
+                onNavigateUp()
+            } else {
+                windowStack.pop()
+            }
         }
-        else {
-            windowStack.pop()
-        }
-    }}
+    }
 
     val navigator = rememberWebViewNavigator()
     val uriHandler = LocalUriHandler.current
@@ -157,7 +158,7 @@ fun WebViewScreenContent(
                 view: WebView,
                 isDialog: Boolean,
                 isUserGesture: Boolean,
-                resultMsg: Message
+                resultMsg: Message,
             ): Boolean {
                 // if it wasn't initiated by a user gesture, we should ignore it like a normal browser would
                 if (isUserGesture) {
@@ -293,8 +294,7 @@ fun WebViewScreenContent(
                         // If we couldn't find any window on the stack that owns this WebView, it means that we can
                         // safely dispose of it because the window containing it has been closed.
                         webView.destroy()
-                    }
-                    else {
+                    } else {
                         // The composable is being disposed but the WebView object is not.
                         // When the WebView element is recomposed, we will want the WebView to resume from its state
                         // before it was unmounted, we won't want it to reset back to its original target.
@@ -304,14 +304,14 @@ fun WebViewScreenContent(
                 client = webClient,
                 chromeClient = webChromeClient,
                 factory = { context ->
-                    currentWindow.webView ?:
-                        WebView(context).also { webView ->
+                    currentWindow.webView
+                        ?: WebView(context).also { webView ->
                             currentWindow.webView = webView
                             currentWindow.popupMessage?.let {
                                 initializePopup(webView, it)
                             }
                         }
-                }
+                },
             )
         }
     }
