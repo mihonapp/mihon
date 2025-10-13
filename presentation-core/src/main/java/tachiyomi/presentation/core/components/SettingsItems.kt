@@ -31,6 +31,7 @@ import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -81,21 +82,6 @@ fun HeadingItem(text: String) {
                 horizontal = SettingsItemsPaddings.Horizontal,
                 vertical = SettingsItemsPaddings.Vertical,
             ),
-    )
-}
-
-@Composable
-fun IconItem(label: String, icon: ImageVector, onClick: () -> Unit) {
-    BaseSettingsItem(
-        label = label,
-        widget = {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-            )
-        },
-        onClick = onClick,
     )
 }
 
@@ -378,6 +364,21 @@ fun TextItem(label: String, value: String, onChange: (String) -> Unit) {
         value = value,
         onValueChange = onChange,
         singleLine = true,
+    )
+}
+
+@Composable
+fun SwitchItem(label: StringResource, preference: Preference<Boolean>) {
+    val checked by preference.collectAsState()
+    BaseSettingsItem(
+        label = stringResource(label),
+        widget = {
+            Switch(
+                checked = checked,
+                onCheckedChange = null,
+            )
+        },
+        onClick = { preference.toggle() },
     )
 }
 

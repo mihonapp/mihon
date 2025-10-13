@@ -15,7 +15,6 @@ import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
 import eu.kanade.domain.ui.UiPreferences
-import eu.kanade.domain.ui.model.ThemeMode
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
@@ -107,13 +106,8 @@ fun Context.createFileInCacheDir(name: String): File {
 fun Context.createReaderThemeContext(): Context {
     val preferences = Injekt.get<UiPreferences>()
     val readerPreferences = Injekt.get<ReaderPreferences>()
-    val themeMode = preferences.themeMode().get()
     val isDarkBackground = when (readerPreferences.readerTheme().get()) {
         1, 2 -> true // Black, Gray
-        3 -> when (themeMode) { // Automatic bg uses activity background by default
-            ThemeMode.SYSTEM -> applicationContext.isNightMode()
-            else -> themeMode == ThemeMode.DARK
-        }
         else -> false // White
     }
     val expected = if (isDarkBackground) Configuration.UI_MODE_NIGHT_YES else Configuration.UI_MODE_NIGHT_NO

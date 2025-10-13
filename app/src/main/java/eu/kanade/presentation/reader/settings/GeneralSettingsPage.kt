@@ -1,6 +1,5 @@
 package eu.kanade.presentation.reader.settings
 
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -12,6 +11,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.SettingsChipRow
 import tachiyomi.presentation.core.components.SliderItem
+import tachiyomi.presentation.core.components.SwitchItem
 import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
@@ -30,7 +30,7 @@ private val flashColors = listOf(
 )
 
 @Composable
-internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
+internal fun GeneralPage(screenModel: ReaderSettingsScreenModel) {
     val readerTheme by screenModel.preferences.readerTheme().collectAsState()
 
     val flashPageState by screenModel.preferences.flashOnPageChange().collectAsState()
@@ -44,8 +44,10 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
     val flashColorPref = screenModel.preferences.flashColor()
     val flashColor by flashColorPref.collectAsState()
 
+    SwitchItem(MR.strings.auto_background, screenModel.preferences.readerAutomaticBackground())
+
     SettingsChipRow(MR.strings.pref_reader_theme) {
-        themes.map { (labelRes, value) ->
+        themes.filter { it.second != 3 }.map { (labelRes, value) ->
             FilterChip(
                 selected = readerTheme == value,
                 onClick = { screenModel.preferences.readerTheme().set(value) },
