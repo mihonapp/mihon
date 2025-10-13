@@ -8,12 +8,10 @@ import android.os.Build
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
-import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.ForegroundInfo
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkQuery
 import androidx.work.WorkerParameters
@@ -68,7 +66,11 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.atomics.AtomicBoolean
@@ -118,7 +120,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         val categoryId = inputData.getLong(KEY_CATEGORY, -1L)
         addMangaToQueue(categoryId)
 
-        return withIOContext {
+        val result = withIOContext {
             try {
                 updateChapterList()
                 Result.success()
@@ -134,6 +136,8 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                 notifier.cancelProgressNotification()
             }
         }
+        queueWorkRequestAtTime(context)
+        return result
     }
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
@@ -425,47 +429,12 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         fun setupTask(
             context: Context,
             prefInterval: Int? = null,
+            prefTime: String? = null
         ) {
             val preferences = Injekt.get<LibraryPreferences>()
             val interval = prefInterval ?: preferences.autoUpdateInterval().get()
             if (interval > 0) {
-                val restrictions = preferences.autoUpdateDeviceRestrictions().get()
-                val networkType = if (DEVICE_NETWORK_NOT_METERED in restrictions) {
-                    NetworkType.UNMETERED
-                } else {
-                    NetworkType.CONNECTED
-                }
-                val networkRequestBuilder = NetworkRequest.Builder()
-                if (DEVICE_ONLY_ON_WIFI in restrictions) {
-                    networkRequestBuilder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                }
-                if (DEVICE_NETWORK_NOT_METERED in restrictions) {
-                    networkRequestBuilder.addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
-                }
-                val constraints = Constraints.Builder()
-                    // 'networkRequest' only applies to Android 9+, otherwise 'networkType' is used
-                    .setRequiredNetworkRequest(networkRequestBuilder.build(), networkType)
-                    .setRequiresCharging(DEVICE_CHARGING in restrictions)
-                    .setRequiresBatteryNotLow(true)
-                    .build()
-
-                val request = PeriodicWorkRequestBuilder<LibraryUpdateJob>(
-                    interval.toLong(),
-                    TimeUnit.HOURS,
-                    10,
-                    TimeUnit.MINUTES,
-                )
-                    .addTag(TAG)
-                    .addTag(WORK_NAME_AUTO)
-                    .setConstraints(constraints)
-                    .setBackoffCriteria(BackoffPolicy.LINEAR, 10, TimeUnit.MINUTES)
-                    .build()
-
-                context.workManager.enqueueUniquePeriodicWork(
-                    WORK_NAME_AUTO,
-                    ExistingPeriodicWorkPolicy.UPDATE,
-                    request,
-                )
+                queueWorkRequestAtTime(context, prefTime, interval)
             } else {
                 context.workManager.cancelUniqueWork(WORK_NAME_AUTO)
             }
@@ -509,6 +478,74 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                         setupTask(context)
                     }
                 }
+        }
+        private fun buildConstraints(preferences : LibraryPreferences) : Constraints
+        {
+            val restrictions = preferences.autoUpdateDeviceRestrictions().get()
+            val networkType = if (DEVICE_NETWORK_NOT_METERED in restrictions) {
+                NetworkType.UNMETERED
+            } else {
+                NetworkType.CONNECTED
+            }
+            val networkRequestBuilder = NetworkRequest.Builder()
+            if (DEVICE_ONLY_ON_WIFI in restrictions) {
+                networkRequestBuilder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            }
+            if (DEVICE_NETWORK_NOT_METERED in restrictions) {
+                networkRequestBuilder.addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
+            }
+            return Constraints.Builder()
+            // 'networkRequest' only applies to Android 9+, otherwise 'networkType' is used
+            .setRequiredNetworkRequest(networkRequestBuilder.build(), networkType)
+            .setRequiresCharging(DEVICE_CHARGING in restrictions)
+            .setRequiresBatteryNotLow(true)
+            .build()
+        }
+
+        private fun queueWorkRequestAtTime(
+            context : Context,
+            timePref : String? = null,
+            intervalPref : Int? = null)
+        {
+            val preferences = Injekt.get<LibraryPreferences>()
+
+            val time = timePref ?: preferences.autoUpdateTime().get()
+            val interval = intervalPref ?: preferences.autoUpdateInterval().get()
+
+            val constraints = buildConstraints(preferences)
+
+            // Convert time string into LocalTime obj
+            val format = DateTimeFormatter.ofPattern("h:mm a")
+            val updateTime = LocalTime.parse(time, format)
+
+            // Create LocalDateTime obj with today's date and the time set to the update time
+            var updateCal = LocalDateTime.now()
+            updateCal = updateCal.withHour(updateTime.hour).withMinute(updateTime.minute)
+
+            // Check if update time has already passed, if so: schedule for tomorrow
+            val now = LocalDateTime.now()
+            if (ChronoUnit.MINUTES.between(now,updateCal) <= 0)
+                updateCal = updateCal.plusHours(interval.toLong())
+
+            // Get number of minutes until update
+            val delay = ChronoUnit.MINUTES.between(now,updateCal) + 1
+
+
+            // Create one time request
+            val request = OneTimeWorkRequestBuilder<LibraryUpdateJob>()
+                .setInitialDelay(delay, TimeUnit.MINUTES)
+                .addTag(TAG)
+                .addTag(WORK_NAME_AUTO)
+                .setConstraints(constraints)
+                .setBackoffCriteria(BackoffPolicy.LINEAR, 10, TimeUnit.MINUTES)
+                .build()
+
+            // Enqueue request
+            context.workManager.enqueueUniqueWork(
+                WORK_NAME_AUTO,
+                ExistingWorkPolicy.REPLACE,
+                request,
+            )
         }
     }
 }

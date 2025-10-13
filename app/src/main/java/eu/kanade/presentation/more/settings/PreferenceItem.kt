@@ -24,11 +24,14 @@ import eu.kanade.presentation.more.settings.widget.PrefsHorizontalPadding
 import eu.kanade.presentation.more.settings.widget.PrefsVerticalPadding
 import eu.kanade.presentation.more.settings.widget.SwitchPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
+import eu.kanade.presentation.more.settings.widget.TimePreferenceWidget
 import eu.kanade.presentation.more.settings.widget.TitleFontSize
 import eu.kanade.presentation.more.settings.widget.TrackingPreferenceWidget
 import kotlinx.coroutines.launch
 import tachiyomi.presentation.core.components.BaseSliderItem
 import tachiyomi.presentation.core.util.collectAsState
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 val LocalPreferenceHighlighted = compositionLocalOf(structuralEqualityPolicy()) { false }
 val LocalPreferenceMinHeight = compositionLocalOf(structuralEqualityPolicy()) { 56.dp }
@@ -176,6 +179,20 @@ internal fun PreferenceItem(
             is Preference.PreferenceItem.InfoPreference -> {
                 InfoWidget(text = item.title)
             }
+            is Preference.PreferenceItem.TimePreference -> {
+                val format = DateTimeFormatter.ofPattern("h:m a")
+                val values by item.preference.collectAsState()
+                TimePreferenceWidget(
+                    title = item.title, subtitle = item.subtitle,
+                    value = LocalTime.parse(values, format),
+                    onConfirm = {
+                        val accepted = item.onValueChanged(it)
+                        if (accepted) item.preference.set(it)
+                        accepted
+                    },
+                )
+            }
+
             is Preference.PreferenceItem.CustomPreference -> {
                 item.content()
             }

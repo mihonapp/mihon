@@ -124,6 +124,13 @@ object SettingsLibraryScreen : SearchableSettings {
 
         val autoUpdateInterval by autoUpdateIntervalPref.collectAsState()
 
+        val autoUpdateTimePref = libraryPreferences.autoUpdateTime()
+        val autoUpdateTime by autoUpdateTimePref.collectAsState()
+        var displayTime = autoUpdateTime
+        if (autoUpdateInterval == 12){
+            displayTime = autoUpdateTime.split(" ")[0] + " am/pm"
+        }
+
         val included by autoUpdateCategoriesPref.collectAsState()
         val excluded by autoUpdateCategoriesExcludePref.collectAsState()
         var showCategoriesDialog by rememberSaveable { mutableStateOf(false) }
@@ -160,6 +167,16 @@ object SettingsLibraryScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_library_update_interval),
                     onValueChanged = {
                         LibraryUpdateJob.setupTask(context, it)
+                        true
+                    },
+                ),
+                Preference.PreferenceItem.TimePreference(
+                    preference = autoUpdateTimePref,
+                    title = stringResource(MR.strings.update_set_time),
+                    subtitle = displayTime,
+                    enabled = autoUpdateInterval > 0,
+                    onValueChanged = {
+                        LibraryUpdateJob.setupTask(context, autoUpdateInterval, it)
                         true
                     },
                 ),
