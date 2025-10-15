@@ -16,6 +16,8 @@ import androidx.compose.ui.window.DialogProperties
 import kotlinx.coroutines.launch
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
+import android.text.format.DateFormat
+import androidx.compose.ui.platform.LocalContext
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -24,7 +26,7 @@ fun TimePreferenceWidget(
     title: String,
     subtitle: String?,
     value: LocalTime,
-    onConfirm: suspend (String) -> Boolean,
+    onConfirm: suspend (String) -> Boolean
 ) {
     var isDialogShown by remember { mutableStateOf(false) }
 
@@ -38,10 +40,11 @@ fun TimePreferenceWidget(
         val scope = rememberCoroutineScope()
         val onDismissRequest = { isDialogShown = false }
 
+        val context = LocalContext.current
         val timePickerState = rememberTimePickerState(
             initialHour = value.hour,
             initialMinute = value.minute,
-            is24Hour = false,
+            is24Hour = DateFormat.is24HourFormat(context),
         )
         AlertDialog(
             onDismissRequest = onDismissRequest,
