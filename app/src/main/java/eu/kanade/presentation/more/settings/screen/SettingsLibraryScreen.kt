@@ -43,6 +43,9 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import android.text.format.DateFormat
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 object SettingsLibraryScreen : SearchableSettings {
 
@@ -123,12 +126,22 @@ object SettingsLibraryScreen : SearchableSettings {
         val autoUpdateCategoriesExcludePref = libraryPreferences.updateCategoriesExclude()
 
         val autoUpdateInterval by autoUpdateIntervalPref.collectAsState()
-
         val autoUpdateTimePref = libraryPreferences.autoUpdateTime()
         val autoUpdateTime by autoUpdateTimePref.collectAsState()
         var displayTime = autoUpdateTime
         if (autoUpdateInterval == 12){
             displayTime = autoUpdateTime.split(" ")[0] + " am/pm"
+        }
+        // Convert time to 24/12hr format based on system settings
+        else if (DateFormat.is24HourFormat(context))
+        {
+            // Convert from string to LocalTime
+            val format12 = DateTimeFormatter.ofPattern("h:m a")
+            val time = LocalTime.parse(displayTime, format12)
+
+            //Convert to 24hr format
+            val format24 = DateTimeFormatter.ofPattern("k:mm")
+            displayTime = format24.format(time)
         }
 
         val included by autoUpdateCategoriesPref.collectAsState()
