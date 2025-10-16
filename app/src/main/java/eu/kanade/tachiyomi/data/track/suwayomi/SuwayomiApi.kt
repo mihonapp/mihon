@@ -42,26 +42,26 @@ query GetManga(${'$'}mangaId: Int!) {
     }
 }
 
-${MangaFragment}
+$MangaFragment
         """.trimMargin()
-            val payload = buildJsonObject {
-                put("query", query)
-                putJsonObject("variables") {
-                    put("mangaId", mangaId)
-                }
+        val payload = buildJsonObject {
+            put("query", query)
+            putJsonObject("variables") {
+                put("mangaId", mangaId)
             }
-            val manga = with(json) {
-                client.newCall(
-                    POST(
-                        apiUrl,
-                        body = payload.toString().toRequestBody(jsonMime),
-                    ),
-                )
-                    .awaitSuccess()
-                    .parseAs<GetMangaResult>()
-                    .data
-                    .entry
-            }
+        }
+        val manga = with(json) {
+            client.newCall(
+                POST(
+                    apiUrl,
+                    body = payload.toString().toRequestBody(jsonMime),
+                ),
+            )
+                .awaitSuccess()
+                .parseAs<GetMangaResult>()
+                .data
+                .entry
+        }
 
         TrackSearch.create(trackId).apply {
             title = manga.title
