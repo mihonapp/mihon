@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -67,83 +70,117 @@ fun ChapterNavigator(
         disabledContainerColor = backgroundColor,
     )
 
-    // We explicitly handle direction based on the reader viewer rather than the system direction
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = horizontalPadding),
-            verticalAlignment = Alignment.CenterVertically,
+        Column (
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            FilledIconButton(
-                enabled = if (isRtl) enabledNext else enabledPrevious,
-                onClick = if (isRtl) onNextChapter else onPreviousChapter,
-                colors = buttonColor,
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.SkipPrevious,
-                    contentDescription = stringResource(
-                        if (isRtl) MR.strings.action_next_chapter else MR.strings.action_previous_chapter,
-                    ),
-                )
-            }
-
-            if (totalPages > 1) {
-                CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
-                    Row(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(24.dp))
-                            .background(backgroundColor)
-                            .padding(horizontal = 16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+            // We explicitly handle direction based on the reader viewer rather than the system direction
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = horizontalPadding),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    FilledIconButton(
+                        enabled = if (isRtl) enabledNext else enabledPrevious,
+                        onClick = if (isRtl) onNextChapter else onPreviousChapter,
+                        colors = buttonColor,
                     ) {
-                        Box(contentAlignment = Alignment.CenterEnd) {
-                            Text(text = currentPage.toString())
-                            // Taking up full length so the slider doesn't shift when 'currentPage' length changes
-                            Text(text = totalPages.toString(), color = Color.Transparent)
-                        }
+                        Icon(
+                            imageVector = Icons.Outlined.SkipPrevious,
+                            contentDescription = stringResource(
+                                if (isRtl) MR.strings.action_next_chapter else MR.strings.action_previous_chapter,
+                            ),
+                        )
+                    }
 
-                        val interactionSource = remember { MutableInteractionSource() }
-                        val sliderDragged by interactionSource.collectIsDraggedAsState()
-                        LaunchedEffect(currentPage) {
-                            if (sliderDragged) {
-                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    if (totalPages > 1) {
+                        CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
+                            Row(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(24.dp))
+                                    .background(backgroundColor)
+                                    .padding(horizontal = 16.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Box(contentAlignment = Alignment.CenterEnd) {
+                                    Text(text = currentPage.toString())
+                                    // Taking up full length so the slider doesn't shift when 'currentPage' length changes
+                                    Text(text = totalPages.toString(), color = Color.Transparent)
+                                }
+
+                                val interactionSource = remember { MutableInteractionSource() }
+                                val sliderDragged by interactionSource.collectIsDraggedAsState()
+                                LaunchedEffect(currentPage) {
+                                    if (sliderDragged) {
+                                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                    }
+                                }
+                                Slider(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(horizontal = 8.dp),
+                                    value = currentPage,
+                                    valueRange = 1..totalPages,
+                                    onValueChange = f@{
+                                        if (it == currentPage) return@f
+                                        onPageIndexChange(it - 1)
+                                    },
+                                    interactionSource = interactionSource,
+                                )
+
+                                Text(text = totalPages.toString())
                             }
                         }
-                        Slider(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(horizontal = 8.dp),
-                            value = currentPage,
-                            valueRange = 1..totalPages,
-                            onValueChange = f@{
-                                if (it == currentPage) return@f
-                                onPageIndexChange(it - 1)
-                            },
-                            interactionSource = interactionSource,
-                        )
+                    } else {
+                        Spacer(Modifier.weight(1f))
+                    }
 
-                        Text(text = totalPages.toString())
+                    FilledIconButton(
+                        enabled = if (isRtl) enabledPrevious else enabledNext,
+                        onClick = if (isRtl) onPreviousChapter else onNextChapter,
+                        colors = buttonColor,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.SkipNext,
+                            contentDescription = stringResource(
+                                if (isRtl) MR.strings.action_previous_chapter else MR.strings.action_next_chapter,
+                            ),
+                        )
                     }
                 }
-            } else {
-                Spacer(Modifier.weight(1f))
             }
 
-            FilledIconButton(
-                enabled = if (isRtl) enabledPrevious else enabledNext,
-                onClick = if (isRtl) onPreviousChapter else onNextChapter,
-                colors = buttonColor,
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.SkipNext,
-                    contentDescription = stringResource(
-                        if (isRtl) MR.strings.action_previous_chapter else MR.strings.action_next_chapter,
-                    ),
-                )
+            CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
+                Row(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(backgroundColor),
+                    verticalAlignment = Alignment.Bottom,
+                    ) {
+
+                    // Non plural text if 1 chapter remaining
+                    val chapterVsChapters: String =
+                        if ((totalPages - currentPage) == 1) {
+                            "Chapter"
+                        } else {
+                            "Chapters"
+                        }
+
+                    Text(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(horizontal = 8.dp),
+                        text = (totalPages - currentPage).toString() + " " + chapterVsChapters + " Remaining",
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         }
+
+
     }
 }
 
