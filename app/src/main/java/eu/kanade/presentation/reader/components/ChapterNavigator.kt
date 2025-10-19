@@ -153,34 +153,29 @@ fun ChapterNavigator(
                 }
             }
 
-            CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
-                Row(
+            Row(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(24.dp))
+                    .background(backgroundColor),
+                verticalAlignment = Alignment.Bottom,
+            ) {
+                // Non plural text if 1 chapter remaining
+                val chapterVsChapters: String =
+                    if ((totalPages - currentPage) == 1) {
+                        "Chapter"
+                    } else {
+                        "Chapters"
+                    }
+
+                Text(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(24.dp))
-                        .background(backgroundColor),
-                    verticalAlignment = Alignment.Bottom,
-                    ) {
-
-                    // Non plural text if 1 chapter remaining
-                    val chapterVsChapters: String =
-                        if ((totalPages - currentPage) == 1) {
-                            "Chapter"
-                        } else {
-                            "Chapters"
-                        }
-
-                    Text(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 8.dp),
-                        text = (totalPages - currentPage).toString() + " " + chapterVsChapters + " Remaining",
-                        textAlign = TextAlign.Center
-                    )
-                }
+                        .weight(1f)
+                        .padding(horizontal = 8.dp),
+                    text = (totalPages - currentPage).toString() + " " + chapterVsChapters + " Remaining",
+                    textAlign = TextAlign.Center
+                )
             }
         }
-
-
     }
 }
 
