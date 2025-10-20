@@ -67,7 +67,7 @@ $MangaFragment
             title = manga.title
             cover_url = "$baseUrl/${manga.thumbnailUrl}"
             summary = manga.description.orEmpty()
-            tracking_url = mangaId.toString()
+            tracking_url = "$baseUrl/manga/$mangaId"
             total_chapters = manga.chapters.totalCount.toLong()
             publishing_status = manga.status.name
             last_chapter_read = manga.latestReadChapter?.chapterNumber ?: 0.0
@@ -177,7 +177,7 @@ mutation TrackManga(${'$'}mangaId: Int!) {
 
     private fun String.getMangaId(): Int =
         // NOTE: Originally tracks were stored as API-v1 URLs of the form http://<base>/api/v1/manga/<mangaId>
-        //       Now, we store the ID directly, but for backwards compatibility support parsing the old format
+        //       Now, we http://<base>/manga/<mangaId>. In either case, the last path segment contains the ID
         this.substringAfterLast('/').toInt()
 
     companion object {
