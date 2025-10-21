@@ -15,10 +15,12 @@ class GetDuplicateLibraryManga(
     private val mangaRepository: MangaRepository,
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
 ) {
-    private fun titleFuzzyRegex(manga: Manga): Regex {
-        return Regex("""\b${manga.title}\b""", option = RegexOption.IGNORE_CASE)
+    private fun fuzzyTitleRegex(manga: Manga): Regex {
+        val sanitisedTitle = manga.title.replace(Regex("""[#-.]|[\[-^]|[?|{}]"""), """\\$0""")
+        return Regex("""\b$sanitisedTitle(\b|$)""", option = RegexOption.IGNORE_CASE)
     }
 
+    // this gets all duplicates for the entire library in a flow but is extremely slow for sizable libraries, but hesitant to delete entirely.
     suspend fun subscribe(
         searchLevel: LibraryPreferences.DuplicateMatchLevel = libraryPreferences.duplicateMatchLevel().get(),
     ): Flow<Map<MangaWithChapterCount, List<MangaWithChapterCount>>> {
@@ -27,7 +29,7 @@ class GetDuplicateLibraryManga(
             allDuplicatesList.mapNotNull {
                 val keyManga = mangaRepository.getMangaByIdWithChapterCount(it.sourceMangaId)
                 if (searchLevel == FuzzyTitle &&
-                    !titleFuzzyRegex(keyManga.manga).containsMatchIn(it.manga.title)
+                    !fuzzyTitleRegex(keyManga.manga).containsMatchIn(it.manga.title)
                 ) {
                     return@mapNotNull null
                 }
@@ -47,7 +49,7 @@ class GetDuplicateLibraryManga(
     ): List<MangaWithChapterCount> {
         return when (searchLevel) {
             ExactMatch -> exactTitleMatch(manga)
-            LibraryPreferences.DuplicateMatchLevel.FuzzyTitle -> fuzzyTitleSearch(manga)
+            FuzzyTitle -> fuzzyTitleSearch(manga)
             LibraryPreferences.DuplicateMatchLevel.TitleSubstring -> fuzzySubstringSearch(manga)
         }
     }
@@ -57,7 +59,7 @@ class GetDuplicateLibraryManga(
     }
 
     private suspend fun fuzzyTitleSearch(manga: Manga): List<MangaWithChapterCount> {
-        val regex = titleFuzzyRegex(manga)
+        val regex = fuzzyTitleRegex(manga)
         return mangaRepository.getDuplicateLibraryManga(manga.id, "%${manga.title}%")
             .filter { regex.containsMatchIn(it.manga.title) }
     }
