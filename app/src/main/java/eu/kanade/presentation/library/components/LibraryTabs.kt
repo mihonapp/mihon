@@ -18,13 +18,11 @@ import tachiyomi.presentation.core.components.material.TabText
 internal fun LibraryTabs(
     categories: List<Category>,
     pagerState: PagerState,
-    getNumberOfMangaForCategory: (Category) -> Int?,
+    getItemCountForCategory: (Category) -> Int?,
     onTabItemClick: (Int) -> Unit,
 ) {
     val currentPageIndex = pagerState.currentPage.coerceAtMost(categories.lastIndex)
-    Column(
-        modifier = Modifier.zIndex(1f),
-    ) {
+    Column(modifier = Modifier.zIndex(2f)) {
         PrimaryScrollableTabRow(
             selectedTabIndex = currentPageIndex,
             edgePadding = 0.dp,
@@ -39,7 +37,7 @@ internal fun LibraryTabs(
                     text = {
                         TabText(
                             text = category.visualName,
-                            badgeCount = getNumberOfMangaForCategory(category),
+                            badgeCount = getItemCountForCategory(category),
                         )
                     },
                     unselectedContentColor = MaterialTheme.colorScheme.onSurface,

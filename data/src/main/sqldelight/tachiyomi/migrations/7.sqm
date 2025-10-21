@@ -1,0 +1,21 @@
+CREATE TABLE hidden_duplicates(
+    manga1_id INTEGER NOT NULL,
+    manga2_id INTEGER NOT NULL,
+    FOREIGN KEY(manga1_id) REFERENCES mangas (_id) ON DELETE CASCADE,
+    FOREIGN KEY(manga2_id) REFERENCES mangas (_id) ON DELETE CASCADE
+);
+
+CREATE TRIGGER reflect_relationship
+AFTER INSERT ON hidden_duplicates
+BEGIN
+    INSERT INTO hidden_duplicates(manga1_id, manga2_id)
+    VALUES (new.manga2_id, new.manga1_id);
+END;
+
+CREATE TRIGGER delete_reflection
+AFTER DELETE ON hidden_duplicates
+BEGIN
+    DELETE FROM hidden_duplicates
+    WHERE manga1_id = old.manga2_id
+    AND manga2_id = old.manga1_id;
+END;

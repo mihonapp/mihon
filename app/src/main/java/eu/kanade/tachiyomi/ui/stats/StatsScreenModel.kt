@@ -2,11 +2,9 @@ package eu.kanade.tachiyomi.ui.stats
 
 import androidx.compose.ui.util.fastDistinctBy
 import androidx.compose.ui.util.fastFilter
-import androidx.compose.ui.util.fastMapNotNull
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.core.util.fastCountNot
-import eu.kanade.core.util.fastFilterNot
 import eu.kanade.presentation.more.stats.StatsScreenState
 import eu.kanade.presentation.more.stats.data.StatsData
 import eu.kanade.tachiyomi.data.download.DownloadManager
@@ -88,25 +86,14 @@ class StatsScreenModel(
 
     private fun getGlobalUpdateItemCount(libraryManga: List<LibraryManga>): Int {
         val includedCategories = preferences.updateCategories().get().map { it.toLong() }
-        val includedManga = if (includedCategories.isNotEmpty()) {
-            libraryManga.filter { it.category in includedCategories }
-        } else {
-            libraryManga
-        }
-
         val excludedCategories = preferences.updateCategoriesExclude().get().map { it.toLong() }
-        val excludedMangaIds = if (excludedCategories.isNotEmpty()) {
-            libraryManga.fastMapNotNull { manga ->
-                manga.id.takeIf { manga.category in excludedCategories }
-            }
-        } else {
-            emptyList()
-        }
-
         val updateRestrictions = preferences.autoUpdateMangaRestrictions().get()
-        return includedManga
-            .fastFilterNot { it.manga.id in excludedMangaIds }
-            .fastDistinctBy { it.manga.id }
+
+        return libraryManga.filter {
+            val included = includedCategories.isEmpty() || it.categories.intersect(includedCategories).isNotEmpty()
+            val excluded = it.categories.intersect(excludedCategories).isNotEmpty()
+            included && !excluded
+        }
             .fastCountNot {
                 (MANGA_NON_COMPLETED in updateRestrictions && it.manga.status.toInt() == SManga.COMPLETED) ||
                     (MANGA_HAS_UNREAD in updateRestrictions && it.unreadCount != 0L) ||

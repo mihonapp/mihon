@@ -76,4 +76,16 @@
         <item quantity="one">1 Seite</item>
         <item quantity="other">%1$s Seiten</item>
     </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">%1$d Eintrag migrieren?</item>
+        <item quantity="other">%1$d Einträge migrieren?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">%1$d Eintrag kopieren?</item>
+        <item quantity="other">%1$d Einträge kopieren?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">Ein Eintrag wurde übersprungen</item>
+        <item quantity="other">%1$d Einträge wurden übersprungen</item>
+    </plurals>
 </resources>

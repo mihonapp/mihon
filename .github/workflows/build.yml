@@ -1,4 +1,4 @@
-name: PR build check
+name: Build & Test
 on:
   pull_request:
     paths:
@@ -8,9 +8,12 @@ on:
       - '!i18n/src/commonMain/moko-resources/**/plurals.xml'
       - 'i18n/src/commonMain/moko-resources/base/strings.xml'
       - 'i18n/src/commonMain/moko-resources/base/plurals.xml'
+  push:
+    branches:
+      - main
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -18,30 +21,31 @@ permissions:
 
 jobs:
   build:
-    name: Build app
+    name: Build & Test App
     runs-on: 'ubuntu-24.04'
 
     steps:
-      - name: Clone repo
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Dependency Review
-        uses: actions/dependency-review-action@ce3cf9537a52e8119d91fd484ab5b8a807627bf8 # v4.6.0
+        if: github.event_name == 'pull_request'
+        uses: actions/dependency-review-action@56339e523c0409420f6c2c9a2f4292bbb3c07dd3 # v4.8.0
 
       - name: Set up JDK
-        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
         with:
           java-version: 17
           distribution: temurin
 
-      - name: Set up gradle
-        uses: gradle/actions/setup-gradle@06832c7b30a0129d7fb559bcc6e43d26f6374244 # v4.3.1
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
 
       - name: Check code format
         run: ./gradlew spotlessCheck
 
       - name: Build app
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleRelease -Pinclude-telemetry -Penable-updater
 
       - name: Run unit tests
         run: ./gradlew testReleaseUnitTest

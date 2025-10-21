@@ -51,7 +51,6 @@
     <string name="chapters">Главы</string>
     <string name="charging">Когда заряжается</string>
     <string name="clear_database_completed">Серии удалены</string>
-    <string name="clear_database_confirmation">Вы уверены? Прочитанные главы и прогресс не библиотечных серий будет потерян</string>
     <string name="color_filter_a_value">Альфа</string>
     <string name="color_filter_r_value">Красный</string>
     <string name="color_filter_g_value">Зелёный</string>
@@ -109,7 +108,7 @@
     <string name="ongoing">Выпускается</string>
     <string name="password">Пароль</string>
     <string name="picture_saved">Картинка сохранена</string>
-    <string name="plan_to_read">Запланировано</string>
+    <string name="plan_to_read">Планирую прочесть</string>
     <string name="portrait">Портретная</string>
     <string name="pref_acra_summary">Помогает исправлять все возможные ошибки. Данные пользователя не передаются</string>
     <string name="pref_auto_update_manga_sync">Обновлять прогресс после прочтения</string>
@@ -137,7 +136,7 @@
     <string name="pref_read_with_volume_keys">Клавиши громкости</string>
     <string name="pref_reader_navigation">Навигация</string>
     <string name="pref_reader_theme">Цвет фона</string>
-    <string name="pref_remove_after_marked_as_read">Удалять помеченое как «Прочитано»</string>
+    <string name="pref_remove_after_marked_as_read">Удалять помеченое вручную как «Прочитано»</string>
     <string name="pref_remove_after_read">Удалять после прочтения</string>
     <string name="pref_rotation_type">Ориентация по умолчанию</string>
     <string name="pref_show_page_number">Номер страницы</string>
@@ -345,7 +344,7 @@
     <string name="information_webview_required">Для работы приложения необходимо WebView</string>
     <string name="manga_info_collapse">Меньше</string>
     <string name="manga_info_expand">Больше</string>
-    <string name="in_library">В библиотеке</string>
+    <string name="in_library">Добавлено</string>
     <string name="add_to_library">Добавить</string>
     <string name="licenses">Лицензии open-source</string>
     <string name="website">Сайт</string>
@@ -475,7 +474,7 @@
     <string name="pref_create_folder_per_manga">Сохранять страницы в отдельные папки</string>
     <string name="pref_reader_actions">Действия</string>
     <string name="rotation_type">Ориентация</string>
-    <string name="pref_grayscale">Оттенки серого</string>
+    <string name="pref_grayscale">Чёрно-белый фильтр</string>
     <string name="notification_incognito_text">Выключить режим инкогнито</string>
     <string name="automatic_background">Автоматически</string>
     <string name="cancel_all_for_series">Отменить всё для этой серии</string>
@@ -594,7 +593,7 @@
     <string name="complete_list">Прочитано</string>
     <string name="on_hold_list">Отложено</string>
     <string name="reading_list">Читаю</string>
-    <string name="wish_list">Запланировано</string>
+    <string name="wish_list">Хочу прочесть</string>
     <string name="unfinished_list">Не закончено</string>
     <string name="network_not_metered">Только в безлимитной сети</string>
     <string name="cant_open_last_read_chapter">Не удаётся открыть последнюю прочитанную главу</string>
@@ -678,9 +677,6 @@
     <string name="copied_to_clipboard_plain">Скопировано в буфер обмена</string>
     <string name="enhanced_services_not_installed">Доступно, но источник не установлен: %s</string>
     <string name="pref_skip_dupe_chapters">Пропускать повторяющиеся главы</string>
-    <string name="confirm_add_duplicate_manga">В вашей библиотеке уже есть серия с таким именем.
-\n
-\nВы всё ещё хотите продолжить?</string>
     <string name="track_error">%1$s ошибка: %2$s</string>
     <string name="information_required_plain">*необходимо</string>
     <string name="pref_hide_in_library_items">Скрывать серии, уже находящиеся в библиотеке</string>
@@ -792,7 +788,6 @@
     <string name="pref_webtoon_disable_zoom_out">Отключить уменьшение масштаба</string>
     <string name="action_add_anyway">Добавить в любом случае</string>
     <string name="pref_display_profile">Пользовательский профиль отображения</string>
-    <string name="action_migrate_duplicate">Перенести существующую серию</string>
     <string name="action_replace_repo">Заменить</string>
     <string name="action_replace_repo_message">Репозиторий %1$s имеет тот же подписанный ключ отпечатка, что и %2$s.
 \nЕсли это так и задумано, %2$s будет заменён, в противном случае, свяжитесь с сопровождающим вашего репозитория.</string>
@@ -853,4 +848,59 @@
     <string name="pref_behavior">Поведение</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">После прочтения главы</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">После получения новой главы</string>
+    <string name="notes_placeholder">Понравилась часть, где…</string>
+    <string name="action_notes">Заметки</string>
+    <string name="action_edit_notes">Изменить заметки</string>
+    <string name="possible_duplicates_title">Возможные дупликаты</string>
+    <string name="possible_duplicates_summary">В вашей библиотеке есть серии с похожим названием.\n\nВыберите серию, чтобы её перенести, или же добавить как дупликат.</string>
+    <string name="clear_db_exclude_read">Оставлять серии с прочитанными главами</string>
+    <string name="clear_database_history_warning">Прочитанные главы и прогресс не библиотечных серий будет потерян</string>
+    <string name="clear_database_text">Вы собираетесь удалить записи из базы данных</string>
+    <string name="storage_failed_to_create_directory">Ошибка при создании папки: %s</string>
+    <string name="storage_failed_to_create_download_directory">Ошибка при создании папки для загрузок</string>
+    <string name="logging_in">Вход…</string>
+    <string name="pref_update_library_manga_titles">Обновлять названия серий в библиотеке для соответствия в источнике</string>
+    <string name="pref_update_library_manga_titles_summary">Внимание: Если серия была переименована, она будет удалена из очереди загрузок (если присутствует).</string>
+    <string name="migrationConfigScreen.selectedHeader">Выбрано</string>
+    <string name="migrationConfigScreen.availableHeader">Доступно</string>
+    <string name="migrationConfigScreen.selectAllLabel">Выбрать всё</string>
+    <string name="migrationConfigScreen.selectEnabledLabel">Выбрать включенные источники</string>
+    <string name="migrationConfigScreen.selectPinnedLabel">Выбрать закреплённые источники</string>
+    <string name="migrationConfigScreen.continueButtonText">Продолжить</string>
+    <string name="migrationConfigScreen.selectNoneLabel">Ничего не выбирать</string>
+    <string name="theme_catppuccin">Котопуссин</string>
+    <string name="migrationConfigScreen.enhancedOptionsWarning">Эти настройки медленные и опасные а также могут привести к ограничениям источников</string>
+    <string name="migrationConfigScreen.dataToMigrateHeader">Какие данные перенести</string>
+    <string name="migrationConfigScreen.removeDownloadsTitle">Удалить загрузки текущей серии после переноса</string>
+    <string name="migrationConfigScreen.additionalSearchQuerySupportingText">Помогает сузить результаты поиска добавляя ключевые слова</string>
+    <string name="migrationConfigScreen.hideWithoutUpdatesSubtitle">Показывать серии только, если соответствие имеет дополнительные главы</string>
+    <string name="migrationConfigScreen.additionalSearchQueryLabel">Дополнительные ключевые слова (опционально)</string>
+    <string name="migrationConfigScreen.hideUnmatchedTitle">Скрывать серии без совпадений</string>
+    <string name="migrationConfigScreen.hideWithoutUpdatesTitle">Скрывать серии без новых глав</string>
+    <string name="migrationConfigScreen.deepSearchModeTitle">Расширенный глубокий поиск</string>
+    <string name="migrationConfigScreen.deepSearchModeSubtitle">Разделяет название на ключевые слова для более обширного поиска</string>
+    <string name="migrationConfigScreen.prioritizeByChaptersTitle">Соответствие основанное на количестве глав</string>
+    <string name="migrationConfigScreen.prioritizeByChaptersSubtitle">Если включено, выбирает соответствие находящиеся дальше всех. В противном случает, выбирает первое соответствие по приоритету источника.</string>
+    <string name="migrationListScreenTitle">Перенос</string>
+    <string name="migrationListScreenTitleWithProgress">Перенос (%1$d/%2$d)</string>
+    <string name="migrationListScreen.copyActionLabel">Копировать</string>
+    <string name="migrationListScreen.migrateActionLabel">Перенести</string>
+    <string name="migrationListScreen.noMatchFoundText">Не найдено других вариантов</string>
+    <string name="migrationListScreen.latestChapterLabel">Последняя: %1$s</string>
+    <string name="migrationListScreen.unknownLatestChapter">Неизвестно</string>
+    <string name="migrationListScreen.skipActionLabel">Не переносить</string>
+    <string name="migrationListScreen.exitDialogTitle">Остановить перенос?</string>
+    <string name="migrationListScreen.exitDialog.stopLabel">Остановить</string>
+    <string name="migrationListScreen.exitDialog.cancelLabel">Отменить</string>
+    <string name="migrationListScreen.migrateDialog.copyLabel">Копировать</string>
+    <string name="migrationListScreen.migrateDialog.migrateLabel">Перенести</string>
+    <string name="migrationListScreen.progressDialog.cancelLabel">Отменить</string>
+    <string name="migrationListScreen.matchWithoutChapterToast">Не найдено глав, эта серия не может быть использована для переноса</string>
+    <string name="migrationListScreen.copyNowActionLabel">Копировать сейчас</string>
+    <string name="migrationListScreen.searchManuallyActionLabel">Искать вручную</string>
+    <string name="migrationListScreen.migrateNowActionLabel">Перенести сейчас</string>
+    <string name="migrationListScreen.migrateDialog.cancelLabel">Отменить</string>
+    <string name="pref_hide_missing_chapter_indicators">Скрывать индикаторы отсутствующих глав</string>
+    <string name="pref_display_images_description">Отрисововать изображения в описаниях серий</string>
+    <string name="label_donate">Спонсорство</string>
 </resources>

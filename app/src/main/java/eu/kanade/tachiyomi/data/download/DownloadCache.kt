@@ -128,6 +128,7 @@ class DownloadCache(
      *
      * @param chapterName the name of the chapter to query.
      * @param chapterScanlator scanlator of the chapter to query
+     * @param chapterUrl the url of the chapter to query
      * @param mangaTitle the title of the manga to query.
      * @param sourceId the id of the source of the chapter.
      * @param skipCache whether to skip the directory cache and check in the filesystem.
@@ -135,13 +136,14 @@ class DownloadCache(
     fun isChapterDownloaded(
         chapterName: String,
         chapterScanlator: String?,
+        chapterUrl: String,
         mangaTitle: String,
         sourceId: Long,
         skipCache: Boolean,
     ): Boolean {
         if (skipCache) {
             val source = sourceManager.getOrStub(sourceId)
-            return provider.findChapterDir(chapterName, chapterScanlator, mangaTitle, source) != null
+            return provider.findChapterDir(chapterName, chapterScanlator, chapterUrl, mangaTitle, source) != null
         }
 
         renewCache()
@@ -153,6 +155,7 @@ class DownloadCache(
                 return provider.getValidChapterDirNames(
                     chapterName,
                     chapterScanlator,
+                    chapterUrl,
                 ).any { it in mangaDir.chapterDirs }
             }
         }
@@ -233,7 +236,7 @@ class DownloadCache(
         rootDownloadsDirMutex.withLock {
             val sourceDir = rootDownloadsDir.sourceDirs[manga.source] ?: return
             val mangaDir = sourceDir.mangaDirs[provider.getMangaDirName(manga.title)] ?: return
-            provider.getValidChapterDirNames(chapter.name, chapter.scanlator).forEach {
+            provider.getValidChapterDirNames(chapter.name, chapter.scanlator, chapter.url).forEach {
                 if (it in mangaDir.chapterDirs) {
                     mangaDir.chapterDirs -= it
                 }
@@ -254,7 +257,7 @@ class DownloadCache(
             val sourceDir = rootDownloadsDir.sourceDirs[manga.source] ?: return
             val mangaDir = sourceDir.mangaDirs[provider.getMangaDirName(manga.title)] ?: return
             chapters.forEach { chapter ->
-                provider.getValidChapterDirNames(chapter.name, chapter.scanlator).forEach {
+                provider.getValidChapterDirNames(chapter.name, chapter.scanlator, chapter.url).forEach {
                     if (it in mangaDir.chapterDirs) {
                         mangaDir.chapterDirs -= it
                     }
@@ -276,6 +279,41 @@ class DownloadCache(
             val mangaDirName = provider.getMangaDirName(manga.title)
             if (sourceDir.mangaDirs.containsKey(mangaDirName)) {
                 sourceDir.mangaDirs -= mangaDirName
+            }
+        }
+
+        notifyChanges()
+    }
+
+    /**
+     * Renames a manga in this cache.
+     *
+     * @param manga the manga being renamed.
+     * @param mangaUniFile the manga's new directory.
+     * @param newTitle the manga's new title.
+     */
+    suspend fun renameManga(manga: Manga, mangaUniFile: UniFile, newTitle: String) {
+        rootDownloadsDirMutex.withLock {
+            val sourceDir = rootDownloadsDir.sourceDirs[manga.source] ?: return
+            val oldMangaDirName = provider.getMangaDirName(manga.title)
+            var oldChapterDirs: MutableSet<String>? = null
+            // Save the old name's cached chapter dirs
+            if (sourceDir.mangaDirs.containsKey(oldMangaDirName)) {
+                oldChapterDirs = sourceDir.mangaDirs[oldMangaDirName]?.chapterDirs
+                sourceDir.mangaDirs -= oldMangaDirName
+            }
+
+            // Retrieve/create the cached manga directory for new name
+            val newMangaDirName = provider.getMangaDirName(newTitle)
+            var mangaDir = sourceDir.mangaDirs[newMangaDirName]
+            if (mangaDir == null) {
+                mangaDir = MangaDirectory(mangaUniFile)
+                sourceDir.mangaDirs += newMangaDirName to mangaDir
+            }
+
+            // Add the old chapters to new name's cache
+            if (!oldChapterDirs.isNullOrEmpty()) {
+                mangaDir.chapterDirs += oldChapterDirs
             }
         }
 

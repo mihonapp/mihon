@@ -42,7 +42,9 @@ fun OnboardingScreen(
     }
     val isLastStep = currentStep == steps.lastIndex
 
-    BackHandler(enabled = currentStep != 0, onBack = { currentStep-- })
+    BackHandler(enabled = currentStep != 0) {
+        currentStep--
+    }
 
     InfoScreen(
         icon = Icons.Outlined.RocketLaunch,

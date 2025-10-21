@@ -33,12 +33,9 @@ class OnboardingScreen : Screen() {
 
         val restoreSettingKey = stringResource(SettingsDataScreen.restorePreferenceKeyString)
 
-        BackHandler(
-            enabled = !shownOnboardingFlow,
-            onBack = {
-                // Prevent exiting if onboarding hasn't been completed
-            },
-        )
+        BackHandler(enabled = !shownOnboardingFlow) {
+            // Prevent exiting if onboarding hasn't been completed
+        }
 
         OnboardingScreen(
             onComplete = finishOnboarding,

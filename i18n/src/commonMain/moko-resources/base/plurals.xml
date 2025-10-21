@@ -95,4 +95,18 @@
         <item quantity="one">%d repo</item>
         <item quantity="other">%d repos</item>
     </plurals>
+
+    <!--Migration-->
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">Migrate %1$d entry?</item>
+        <item quantity="other">Migrate %1$d entries?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">Copy %1$d entry?</item>
+        <item quantity="other">Copy %1$d entries?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">An entry was skipped</item>
+        <item quantity="other">%1$d entries were skipped</item>
+    </plurals>
 </resources>

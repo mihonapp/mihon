@@ -12,15 +12,52 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ## [Unreleased]
 ### Added
+- Advanced setting to limit download filenames to ASCII characters. This is provided only as a workaround for OSes that do not properly handle standard Unicode filenames. This setting is generally not recommended and should only be used as a last resort ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
+- Duplicates Management ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#1997](https://github.com/mihonapp/mihon/pull/1997))
+
+### Changed
+- Delegate Suwayomi tracker authentication to extension ([@cpiber](https://github.com/cpiber)) ([#2476](https://github.com/mihonapp/mihon/pull/2476))
+
+### Improved
+- Spoofing of `X-Requested-With` header to support newer WebView versions ([@Guzmazow](https://github.com/Guzmazow)) ([#2491](https://github.com/mihonapp/mihon/pull/2491))
+- Download support for chapters with the same metadata. Now a hash based on chapter's url is appended to download filename to tell them apart, letting you download both. Existing downloaded chapters will continue to work normally ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
+
+### Fixed
+- Fix height of description not being calculated correctly if images are present ([@Secozzi](https://github.com/Secozzi)) ([#2382](https://github.com/mihonapp/mihon/pull/2382))
+- Fix migration progress not updating after manual search ([@Secozzi](https://github.com/Secozzi)) ([#2484](https://github.com/mihonapp/mihon/pull/2484))
+- Fix category migration flag being ignored due to incorrect check against chapter flag ([@Secozzi](https://github.com/Secozzi)) ([#2484](https://github.com/mihonapp/mihon/pull/2484))
+- Fix disabling incognito mode from notification ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2512](https://github.com/mihonapp/mihon/pull/2512))
+
+## [v0.19.1] - 2025-08-07
+### Changed
+- LocalSource now reads ComicInfo.xml file for chapter (if available) to display chapter title, number and scanlator ([@raxod502](https://github.com/radian-software)) ([#2332](https://github.com/mihonapp/mihon/pull/2332))
+
+### Removed
+- Predictive back support ([@AntsyLich](https://github.com/AntsyLich)) ([#2362](https://github.com/mihonapp/mihon/pull/2362))
+
+### Fixed
+- Fix scrollbar sometimes not showing during scroll or not reaching the bottom with few items ([@anirudhsnayak](https://github.com/anirudhsnayak)) ([#2304](https://github.com/mihonapp/mihon/pull/2304))
+- Fix local source EPUB files not loading ([@AntsyLich](https://github.com/AntsyLich)) ([#2369](https://github.com/mihonapp/mihon/pull/2369))
+- Fix title text color in light mode on mass migration list ([@AntsyLich](https://github.com/AntsyLich)) ([#2370](https://github.com/mihonapp/mihon/pull/2370))
+- Fix 'Default' category showing in library with no user-added categories ([@AntsyLich](https://github.com/AntsyLich)) ([#2371](https://github.com/mihonapp/mihon/pull/2371))
+- Fix crash when opening filter sheet with an empty library ([@krysanify](https://github.com/krysanify/)) ([#2355](https://github.com/mihonapp/mihon/pull/2355))
+- Fix mark as read/unread not working for selected library items ([@krysanify](https://github.com/krysanify/)) ([#2355](https://github.com/mihonapp/mihon/pull/2355))
+
+## [v0.19.0] - 2025-08-04
+### Added
 - Add more Kaomoji for empty/error screens ([@ianfhunter](https://github.com/ianfhunter/)) ([#1909](https://github.com/mihonapp/mihon/pull/1909))
 - Add user manga notes ([@imkunet](https://github.com/imkunet), [@AntsyLich](https://github.com/AntsyLich)) ([#428](https://github.com/mihonapp/mihon/pull/428))
   - Fix user notes not restoring when manga doesn't exist in DB ([@AntsyLich](https://github.com/AntsyLich)) ([#1945](https://github.com/mihonapp/mihon/pull/1945))
 - Add markdown support for manga descriptions ([@Secozzi](https://github.com/Secozzi)) ([#1948](https://github.com/mihonapp/mihon/pull/1948))
   - Use simpler markdown flavour ([@Secozzi](https://github.com/Secozzi)) ([#2000](https://github.com/mihonapp/mihon/pull/2000))
   - Use Github markdown flavour for Github releases & fix bullet list alignment ([@Secozzi](https://github.com/Secozzi)) ([#2024](https://github.com/mihonapp/mihon/pull/2024))
+  - Add option to toggle image loading ([@Secozzi](https://github.com/Secozzi)) ([#2076](https://github.com/mihonapp/mihon/pull/2076))
 - Add Nord Theme ([@Riztard](https://github.com/Riztard)) ([#1951](https://github.com/mihonapp/mihon/pull/1951))
 - Option to keep read manga when clearing database ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#1979](https://github.com/mihonapp/mihon/pull/1979))
-- Duplicates Management ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#1997](https://github.com/mihonapp/mihon/pull/1997))
+- Add advanced option to always update manga title from source ([@FlaminSarge](https://github.com/FlaminSarge)) ([#1182](https://github.com/mihonapp/mihon/pull/1182))
+- Full predictive back support ([@AntsyLich](https://github.com/AntsyLich)) ([#2085](https://github.com/mihonapp/mihon/pull/2085))
+- Add Catppuccin theme (mocha for dark and latte for light, mauve accent) ([@claymorwan](https://github.com/claymorwan/)) ([#2117](https://github.com/mihonapp/mihon/pull/2117))
+- Manga mass migration ([@AntsyLich](https://github.com/AntsyLich), [@jobobby04](https://github.com/jobobby04)) ([#2110](https://github.com/mihonapp/mihon/pull/2110), [#2336](https://github.com/mihonapp/mihon/pull/2336), [#2338](https://github.com/mihonapp/mihon/pull/2338), [`f119386`](https://github.com/mihonapp/mihon/commit/f119386))
 
 ### Improved
 - Significantly improve browsing speed (near instantaneous) ([@AntsyLich](https://github.com/AntsyLich)) ([#1946](https://github.com/mihonapp/mihon/pull/1946))
@@ -28,13 +65,23 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Update non-library manga data when browsing ([@AntsyLich](https://github.com/AntsyLich)) ([#1967](https://github.com/mihonapp/mihon/pull/1967))
 - Surface image loading error in Reader ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#1981](https://github.com/mihonapp/mihon/pull/1981))
 - Include source headers when opening failed images from reader ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2004](https://github.com/mihonapp/mihon/pull/2004))
+- Added autofill support to tracker login dialog ([@AntsyLich](https://github.com/AntsyLich)) ([#2069](https://github.com/mihonapp/mihon/pull/2069))
+- Added option to hide missing chapter count ([@User826](https://github.com/User826), [@AntsyLich](https://github.com/AntsyLich)) ([#2108](https://github.com/mihonapp/mihon/pull/2108))
+- Use median to determine smart update interval, making it more resilient to long hiatuses ([@Kladki](https://github.com/Kladki)) ([#2251](https://github.com/mihonapp/mihon/pull/2251))
+- Optimize library code to potentially better handle big user libraries ([@AntsyLich](https://github.com/AntsyLich)) ([#2329](https://github.com/mihonapp/mihon/pull/2329), [#2341](https://github.com/mihonapp/mihon/pull/2341))
 
 ### Changed
 - Display all similarly named duplicates in duplicate manga dialogue ([@NarwhalHorns](https://github.com/NarwhalHorns), [@AntsyLich](https://github.com/AntsyLich)) ([#1861](https://github.com/mihonapp/mihon/pull/1861))
   - Display chapter count on items in duplicate manga dialogue ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#1963](https://github.com/mihonapp/mihon/pull/1963))
 - Update Facebook and Reddit icons ([@Joehuu](https://github.com/Joehuu)) ([#1994](https://github.com/mihonapp/mihon/pull/1994))
+- Switch default user agent to Android Chrome ([@AntsyLich](https://github.com/AntsyLich)) ([#2048](https://github.com/mihonapp/mihon/pull/2048))
+- Changed log in button text when processing tracker login ([@AntsyLich](https://github.com/AntsyLich)) ([#2069](https://github.com/mihonapp/mihon/pull/2069))
+- Disable reader's 'Keep screen on' setting by default ([@AntsyLich](https://github.com/AntsyLich)) ([#2095](https://github.com/mihonapp/mihon/pull/2095))
+- Update manga without chapters even if restricted by source ([@AntsyLich](https://github.com/AntsyLich)) ([#2224](https://github.com/mihonapp/mihon/pull/224))
+- Make local source default chapter sorting match file explorer behavior ([@AntsyLich](https://github.com/AntsyLich)) ([#2224](https://github.com/mihonapp/mihon/pull/224))
+- Include Manga `initialized` status in backup ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2285](https://github.com/mihonapp/mihon/pull/2285))
 
-### Fixes
+### Fixed
 - Fix Bangumi search results including novels ([@MajorTanya](https://github.com/MajorTanya)) ([#1885](https://github.com/mihonapp/mihon/pull/1885))
 - Fix next chapter button occasionally jumping to the last page of the current chapter ([@perokhe](https://github.com/perokhe)) ([#1920](https://github.com/mihonapp/mihon/pull/1920))
   - Fix page number not appearing when opening chapter ([@perokhe](https://github.com/perokhe)) ([#1936](https://github.com/mihonapp/mihon/pull/1936))
@@ -45,6 +92,12 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix navigation issue after migrating a duplicated entry from History tab ([@cuong-tran](https://github.com/cuong-tran)) ([#1980](https://github.com/mihonapp/mihon/pull/1980))
 - Fix duplicate requests in WebView due to empty reasonPhrase ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2003](https://github.com/mihonapp/mihon/pull/2003))
 - Fix content under source browse screen top appbar is interactable ([@AntsyLich](https://github.com/AntsyLich)) ([#2026](https://github.com/mihonapp/mihon/pull/2026))
+- Fix crash when trying use source sort filter without a pre-selection ([@AntsyLich](https://github.com/AntsyLich)) ([#2036](https://github.com/mihonapp/mihon/pull/2036))
+- Fix empty layout not appearing in browse source screen in some cases ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#2043](https://github.com/mihonapp/mihon/pull/2043))
+- Fix Pill not following the local text style ([@AntsyLich](https://github.com/AntsyLich)) ([`f8cb506`](https://github.com/mihonapp/mihon/commit/f8cb506))
+- Fix downloader stopping after failing to create download directory of a manga ([@AntsyLich](https://github.com/AntsyLich)) ([#2068](https://github.com/mihonapp/mihon/pull/2068))
+- Fix pressing `Enter` while searching also triggering navigation back on physical keyboards ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2077](https://github.com/mihonapp/mihon/pull/2077))
+- Ensure app waits for Cloudflare challenge to complete before continuing ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2200](https://github.com/mihonapp/mihon/pull/2200))
 
 ### Removed
 - Remove Okhttp networking from WebView Screen ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2020](https://github.com/mihonapp/mihon/pull/2020))
@@ -360,7 +413,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Branding to Mihon ([@AntsyLich](https://github.com/AntsyLich))
 - Minimum supported Android version to 8 ([@AntsyLich](https://github.com/AntsyLich)) ([`dfb3091`](https://github.com/mihonapp/mihon/commit/dfb3091e380dda3e9bfb64bf5c9a685cf3a03d0e))
 
-[unreleased]: https://github.com/mihonapp/mihon/compare/v0.18.0...main
+[unreleased]: https://github.com/mihonapp/mihon/compare/v0.19.1...main
+[v0.19.1]: https://github.com/mihonapp/mihon/compare/v0.19.0...v0.19.1
+[v0.19.0]: https://github.com/mihonapp/mihon/compare/v0.18.0...v0.19.0
 [v0.18.0]: https://github.com/mihonapp/mihon/compare/v0.17.1...v0.18.0
 [v0.17.1]: https://github.com/mihonapp/mihon/compare/v0.17.0...v0.17.1
 [v0.17.0]: https://github.com/mihonapp/mihon/compare/v0.16.5...v0.17.0

@@ -19,8 +19,10 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalFocusManager
 import tachiyomi.presentation.core.components.material.SECONDARY_ALPHA
 
@@ -53,8 +55,15 @@ fun Modifier.clickableNoIndication(
 fun Modifier.runOnEnterKeyPressed(action: () -> Unit): Modifier = this.onPreviewKeyEvent {
     when (it.key) {
         Key.Enter, Key.NumPadEnter -> {
-            action()
-            true
+            // Physical keyboards generate two event types:
+            // - KeyDown when the key is pressed
+            // - KeyUp when the key is released
+            if (it.type == KeyEventType.KeyDown) {
+                action()
+                true
+            } else {
+                false
+            }
         }
 
         else -> false

@@ -26,8 +26,8 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 11
-        versionName = "0.18.0"
+        versionCode = 13
+        versionName = "0.19.1"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
         buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
@@ -278,8 +278,12 @@ dependencies {
     // Shizuku
     implementation(libs.bundles.shizuku)
 
+    // String similarity
+    implementation(libs.stringSimilarity)
+
     // Tests
     testImplementation(libs.bundles.test)
+    testRuntimeOnly(libs.junit.platform.launcher)
 
     // For detecting memory leaks; see https://square.github.io/leakcanary/
     // debugImplementation(libs.leakcanary.android)

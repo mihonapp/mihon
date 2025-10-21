@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.updatePadding
 import coil3.asDrawable
 import coil3.imageLoader
@@ -171,15 +172,13 @@ fun MangaCoverDialog(
                             .memoryCachePolicy(CachePolicy.DISABLED)
                             .target { image ->
                                 val drawable = image.asDrawable(view.context.resources)
-
                                 // Copy bitmap in case it came from memory cache
                                 // Because SSIV needs to thoroughly read the image
-                                val copy = (drawable as? BitmapDrawable)?.let {
-                                    BitmapDrawable(
-                                        view.context.resources,
-                                        it.bitmap.copy(Bitmap.Config.HARDWARE, false),
-                                    )
-                                } ?: drawable
+                                val copy = (drawable as? BitmapDrawable)
+                                    ?.bitmap
+                                    ?.copy(Bitmap.Config.HARDWARE, false)
+                                    ?.toDrawable(view.context.resources)
+                                    ?: drawable
                                 view.setImage(copy, ReaderPageImageView.Config(zoomDuration = 500))
                             }
                             .build()
