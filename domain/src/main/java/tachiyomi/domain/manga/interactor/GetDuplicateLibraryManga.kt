@@ -17,7 +17,7 @@ class GetDuplicateLibraryManga(
 ) {
     private fun fuzzyTitleRegex(manga: Manga): Regex {
         val sanitisedTitle = manga.title.replace(Regex("""[#-.]|[\[-^]|[?|{}]"""), """\\$0""")
-        return Regex("""\b$sanitisedTitle(\b|$)""", option = RegexOption.IGNORE_CASE)
+        return Regex("""(^|\b)$sanitisedTitle(\b|$)""", option = RegexOption.IGNORE_CASE)
     }
 
     // this gets all duplicates for the entire library in a flow but is extremely slow for sizable libraries, but hesitant to delete entirely.
