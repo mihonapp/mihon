@@ -2,8 +2,10 @@ package tachiyomi.domain.manga.interactor
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.manga.repository.MangaRepository
+import kotlin.collections.sortedBy
 
 class GetHiddenDuplicateManga(
     private val mangaRepository: MangaRepository,
@@ -21,5 +23,13 @@ class GetHiddenDuplicateManga(
                 .sortedByDescending { it.second.count() }
                 .toMap()
         }
+    }
+
+    suspend fun invoke(manga: Manga): List<MangaWithChapterCount> {
+        return mangaRepository.getHiddenDuplicates(manga)
+    }
+
+    suspend fun subscribe(manga: Manga): Flow<List<MangaWithChapterCount>> {
+        return mangaRepository.getHiddenDuplicatesAsFlow(manga)
     }
 }

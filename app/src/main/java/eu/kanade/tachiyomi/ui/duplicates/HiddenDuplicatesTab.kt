@@ -1,11 +1,9 @@
 package eu.kanade.tachiyomi.ui.duplicates
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -15,7 +13,6 @@ import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.EmptyScreen
-import tachiyomi.presentation.core.screens.LoadingScreen
 
 @Composable
 fun Screen.hiddenDuplicatesTab(): TabContent {
@@ -29,12 +26,7 @@ fun Screen.hiddenDuplicatesTab(): TabContent {
     return TabContent(
         titleRes = MR.strings.label_hidden_duplicates,
     ) { contentPadding, _ ->
-        if (state.loading) {
-            LoadingScreen(Modifier.padding(contentPadding))
-            return@TabContent
-        }
-
-        if (hiddenDuplicatesMapState.isEmpty()) {
+        if (!state.loading and hiddenDuplicatesMapState.isEmpty()) {
             EmptyScreen(MR.strings.information_empty_hidden_duplicates, happyFace = true)
             return@TabContent
         }
@@ -47,6 +39,7 @@ fun Screen.hiddenDuplicatesTab(): TabContent {
             onDismissRequest = onDismissRequest,
             onUnhideSingleClicked = screenModel::unhideSingleDuplicate,
             onUnhideGroupClicked = screenModel::unhideGroupDuplicate,
+            loading = state.loading,
         )
     }
 }

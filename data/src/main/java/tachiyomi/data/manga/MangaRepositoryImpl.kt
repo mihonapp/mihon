@@ -90,6 +90,12 @@ class MangaRepositoryImpl(
         return handler.awaitList { mangasQueries.getHiddenDuplicates(manga.id, MangaMapper::mapMangaWithChapterCount) }
     }
 
+    override suspend fun getHiddenDuplicatesAsFlow(manga: Manga): Flow<List<MangaWithChapterCount>> {
+        return handler.subscribeToList {
+            mangasQueries.getHiddenDuplicates(manga.id, MangaMapper::mapMangaWithChapterCount)
+        }
+    }
+
     override suspend fun getAllHiddenDuplicateManga(): Flow<List<DuplicateManga>> {
         return handler.subscribeToList { mangasQueries.getAllHiddenDuplicateManga(MangaMapper::mapDuplicateManga) }
     }

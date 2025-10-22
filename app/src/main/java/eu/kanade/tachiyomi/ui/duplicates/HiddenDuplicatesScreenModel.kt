@@ -27,7 +27,6 @@ class HiddenDuplicatesScreenModel(
         _hiddenDuplicatesMapState.asStateFlow()
 
     init {
-        mutableState.update { it.copy(loading = true) }
         screenModelScope.launch {
             getHiddenDuplicateManga.subscribe().collectLatest { newMap ->
                 _hiddenDuplicatesMapState.value = newMap.filterNot {
