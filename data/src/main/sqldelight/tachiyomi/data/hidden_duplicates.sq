@@ -5,6 +5,9 @@ CREATE TABLE hidden_duplicates(
     FOREIGN KEY(manga2_id) REFERENCES mangas (_id) ON DELETE CASCADE
 );
 
+CREATE INDEX IF NOT EXISTS index_manga1_id ON hidden_duplicates(manga1_id);
+CREATE INDEX IF NOT EXISTS index_manga2_id ON hidden_duplicates(manga2_id);
+
 CREATE TRIGGER reflect_relationship
 AFTER INSERT ON hidden_duplicates
 BEGIN
