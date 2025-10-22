@@ -46,6 +46,7 @@ class PossibleDuplicatesScreenModel(
             val allLibraryManga = getLibraryManga.await().sortedBy { it.manga.title }
             state.distinctUntilChangedBy { it.matchLevel }.collectLatest { state ->
                 mutableState.update { it.copy(loading = true) }
+                _duplicatesMapState.value = mapOf<MangaWithChapterCount, List<MangaWithChapterCount>>()
                 allLibraryManga.forEach { libraryManga ->
                     val keyManga = MangaWithChapterCount(libraryManga.manga, libraryManga.totalChapters)
                     val duplicates = getDuplicateLibraryManga.invoke(
