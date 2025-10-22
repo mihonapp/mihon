@@ -42,6 +42,7 @@ class PossibleDuplicatesScreenModel(
 
     init {
         screenModelScope.launch {
+            mutableState.update { it.copy(loading = true) }
             val allLibraryManga = getLibraryManga.await()
             state.distinctUntilChangedBy { it.matchLevel }.collectLatest { state ->
                 mutableState.update { it.copy(loading = true) }
