@@ -20,7 +20,6 @@ class GetDuplicateLibraryManga(
         return Regex("""(^|\b)$sanitisedTitle(\b|$)""", option = RegexOption.IGNORE_CASE)
     }
 
-    // this gets all duplicates for the entire library in a flow but is extremely slow for sizable libraries, but hesitant to delete entirely.
     suspend fun subscribe(
         searchLevel: LibraryPreferences.DuplicateMatchLevel = libraryPreferences.duplicateMatchLevel().get(),
     ): Flow<Map<MangaWithChapterCount, List<MangaWithChapterCount>>> {
@@ -47,6 +46,7 @@ class GetDuplicateLibraryManga(
         manga: Manga,
         searchLevel: LibraryPreferences.DuplicateMatchLevel = libraryPreferences.duplicateMatchLevel().get(),
     ): List<MangaWithChapterCount> {
+        if (manga.title.isBlank()) return listOf()
         return when (searchLevel) {
             ExactMatch -> exactTitleMatch(manga)
             FuzzyTitle -> fuzzyTitleSearch(manga)
