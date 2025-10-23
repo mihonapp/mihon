@@ -33,8 +33,7 @@ class SuwayomiApi(private val trackId: Long) {
     private val baseUrl: String by lazy { source.baseUrl.trimEnd('/') }
     private val apiUrl: String by lazy { "$baseUrl/api/graphql" }
 
-    suspend fun getTrackSearch(trackUrl: String): TrackSearch = withIOContext {
-        val mangaId = trackUrl.getMangaId()
+    suspend fun getTrackSearch(mangaId: Long): TrackSearch = withIOContext {
         val query = """
 query GetManga(${'$'}mangaId: Int!) {
     manga(id: ${'$'}mangaId) {
@@ -64,6 +63,7 @@ $MangaFragment
         }
 
         TrackSearch.create(trackId).apply {
+            remote_id = mangaId
             title = manga.title
             cover_url = "$baseUrl/${manga.thumbnailUrl}"
             summary = manga.description.orEmpty()
@@ -80,8 +80,7 @@ $MangaFragment
     }
 
     suspend fun updateProgress(track: Track): Track {
-        val url = track.tracking_url
-        val mangaId = url.getMangaId()
+        val mangaId = track.remote_id
 
         val chaptersQuery = """
 query GetMangaUnreadChapters(${'$'}mangaId: Int!) {
@@ -166,7 +165,7 @@ mutation TrackManga(${'$'}mangaId: Int!) {
                 .awaitSuccess()
         }
 
-        return getTrackSearch(track.tracking_url)
+        return getTrackSearch(track.remote_id)
     }
 
     private val sourceId by lazy {
@@ -174,11 +173,6 @@ mutation TrackManga(${'$'}mangaId: Int!) {
         val bytes = MessageDigest.getInstance("MD5").digest(key.toByteArray())
         (0..7).map { bytes[it].toLong() and 0xff shl 8 * (7 - it) }.reduce(Long::or) and Long.MAX_VALUE
     }
-
-    private fun String.getMangaId(): Int =
-        // NOTE: Originally tracks were stored as API-v1 URLs of the form http://<base>/api/v1/manga/<mangaId>
-        //       Now, we http://<base>/manga/<mangaId>. In either case, the last path segment contains the ID
-        this.substringAfterLast('/').toInt()
 
     companion object {
         private val MangaFragment = """

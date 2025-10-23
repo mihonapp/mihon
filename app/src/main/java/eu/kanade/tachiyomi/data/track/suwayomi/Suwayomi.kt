@@ -70,7 +70,7 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
     }
 
     override suspend fun refresh(track: Track): Track {
-        val remoteTrack = api.getTrackSearch(track.tracking_url)
+        val remoteTrack = api.getTrackSearch(track.remote_id)
         track.copyPersonalFrom(remoteTrack)
         track.total_chapters = remoteTrack.total_chapters
         return track
@@ -88,14 +88,13 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
 
     override suspend fun match(manga: DomainManga): TrackSearch? =
         try {
-            api.getTrackSearch(manga.url)
+            api.getTrackSearch(manga.url.getMangaId())
         } catch (e: Exception) {
             null
         }
 
-    override fun isTrackFrom(track: DomainTrack, manga: DomainManga, source: Source?): Boolean = source?.let {
-        accept(it)
-    } == true
+    override fun isTrackFrom(track: DomainTrack, manga: DomainManga, source: Source?): Boolean =
+        track.remoteUrl == manga.url && source?.let { accept(it) } == true
 
     override fun migrateTrack(track: DomainTrack, manga: DomainManga, newSource: Source): DomainTrack? =
         if (accept(newSource)) {
@@ -103,4 +102,7 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
         } else {
             null
         }
+
+    private fun String.getMangaId(): Long =
+        this.substringAfterLast('/').toLong()
 }
