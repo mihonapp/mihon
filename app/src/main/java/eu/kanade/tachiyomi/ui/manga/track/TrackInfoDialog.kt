@@ -446,11 +446,16 @@ private data class TrackDateSelectorScreen(
     @Transient
     private val selectableDates = object : SelectableDates {
         override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+            // The picker passes times in UTC. Convert to a LocalDate in UTC to avoid
+            // shifting the day when interpreting the instant in the system timezone.
             val dateToCheck = Instant.ofEpochMilli(utcTimeMillis)
-                .atZone(ZoneOffset.systemDefault())
+                .atZone(ZoneOffset.UTC)
                 .toLocalDate()
 
-            if (dateToCheck > LocalDate.now()) {
+            // Compare against today in UTC so comparisons are performed on the same
+            // date basis and don't shift across timezones (which causes equality to fail
+            // in negative offsets).
+            if (dateToCheck > LocalDate.now(ZoneOffset.UTC)) {
                 // Disallow future dates
                 return false
             }
@@ -458,13 +463,13 @@ private data class TrackDateSelectorScreen(
             return if (start && track.finishDate > 0) {
                 // Disallow start date to be set later than finish date
                 val dateFinished = Instant.ofEpochMilli(track.finishDate)
-                    .atZone(ZoneId.systemDefault())
+                    .atZone(ZoneOffset.UTC)
                     .toLocalDate()
                 dateToCheck <= dateFinished
             } else if (!start && track.startDate > 0) {
                 // Disallow end date to be set earlier than start date
                 val dateStarted = Instant.ofEpochMilli(track.startDate)
-                    .atZone(ZoneId.systemDefault())
+                    .atZone(ZoneOffset.UTC)
                     .toLocalDate()
                 dateToCheck >= dateStarted
             } else {
@@ -474,7 +479,7 @@ private data class TrackDateSelectorScreen(
         }
 
         override fun isSelectableYear(year: Int): Boolean {
-            if (year > LocalDate.now().year) {
+            if (year > LocalDate.now(ZoneOffset.UTC).year) {
                 // Disallow future dates
                 return false
             }
@@ -482,14 +487,14 @@ private data class TrackDateSelectorScreen(
             return if (start && track.finishDate > 0) {
                 // Disallow start date to be set later than finish date
                 val dateFinished = Instant.ofEpochMilli(track.finishDate)
-                    .atZone(ZoneId.systemDefault())
+                    .atZone(ZoneOffset.UTC)
                     .toLocalDate()
                     .year
                 year <= dateFinished
             } else if (!start && track.startDate > 0) {
                 // Disallow end date to be set earlier than start date
                 val dateStarted = Instant.ofEpochMilli(track.startDate)
-                    .atZone(ZoneId.systemDefault())
+                    .atZone(ZoneOffset.UTC)
                     .toLocalDate()
                     .year
                 year >= dateStarted
