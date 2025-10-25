@@ -52,6 +52,7 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.Instant
 import eu.kanade.tachiyomi.source.model.Filter as SourceModelFilter
+
 import androidx.paging.PagingData
 import androidx.paging.filter
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -79,7 +80,8 @@ class BrowseSourceScreenModel(
     var displayMode by sourcePreferences.sourceDisplayMode().asState(screenModelScope)
 
     val source = sourceManager.getOrStub(sourceId)
-
+    private val showOnlyInLibrary = MutableStateFlow(false)
+    val showOnlyInLibraryFlow: StateFlow<Boolean> = showOnlyInLibrary
     init {
         if (source is CatalogueSource) {
             mutableState.update {
@@ -108,22 +110,43 @@ class BrowseSourceScreenModel(
      * Flow of Pager flow tied to [State.listing]
      */
     private val hideInLibraryItems = sourcePreferences.hideInLibraryItems().get()
-    val mangaPagerFlowFlow = state.map { it.listing }
-        .distinctUntilChanged()
-        .map { listing ->
+    val mangaPagerFlowFlow =
+        combine(
+            state.map { it.listing }.distinctUntilChanged(),
+            showOnlyInLibrary,
+        ) { listing, inLibOnly ->
             Pager(PagingConfig(pageSize = 25)) {
                 getRemoteManga(sourceId, listing.query ?: "", listing.filters)
-            }.flow.map { pagingData ->
-                pagingData.map { manga ->
-                    getManga.subscribe(manga.url, manga.source)
-                        .map { it ?: manga }
-                        .stateIn(ioCoroutineScope)
+            }.flow
+                .map { pagingData ->
+                    pagingData
+                        .map { manga ->
+                            getManga.subscribe(manga.url, manga.source)
+                                .map { it ?: manga }
+                                .stateIn(ioCoroutineScope)
+                        }
+                        // Apply filters in the right order:
+                        // - If inLibOnly is ON, only keep favorites
+                        // - Else, honor the global "hide in library" pref
+                        .let { data ->
+                            when {
+                                inLibOnly -> data.filter { it.value.favorite }
+                                hideInLibraryItems -> data.filter { !it.value.favorite }
+                                else -> data
+                            }
+                        }
                 }
-                    .filter { !hideInLibraryItems || !it.value.favorite }
-            }
                 .cachedIn(ioCoroutineScope)
         }
-        .stateIn(ioCoroutineScope, SharingStarted.Lazily, emptyFlow())
+            .stateIn(ioCoroutineScope, SharingStarted.Lazily, emptyFlow())
+
+    fun toggleShowOnlyInLibrary() {
+        showOnlyInLibrary.value = !showOnlyInLibrary.value
+    }
+
+    fun setShowOnlyInLibrary(enabled: Boolean) {
+        showOnlyInLibrary.value = enabled
+    }
 
     fun getColumnsPreference(orientation: Int): GridCells {
         val isLandscape = orientation == Configuration.ORIENTATION_LANDSCAPE

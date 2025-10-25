@@ -15,10 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.LibraryBooks
 import androidx.compose.material.icons.automirrored.outlined.Launch
-import androidx.compose.material.icons.automirrored.outlined.LibraryBooks
-import androidx.compose.material.icons.automirrored.outlined.MenuBook
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -68,7 +65,6 @@ import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 
-
 @Composable
 fun ExtensionDetailsScreen(
     navigateUp: () -> Unit,
@@ -80,8 +76,6 @@ fun ExtensionDetailsScreen(
     onClickUninstall: () -> Unit,
     onClickSource: (sourceId: Long) -> Unit,
     onClickIncognito: (Boolean) -> Unit,
-    showOnlyInLibrary: Boolean = false,
-    onToggleShowOnlyInLibrary: () -> Unit = {}
 ) {
     val uriHandler = LocalUriHandler.current
     val url = remember(state.extension) {
@@ -103,24 +97,14 @@ fun ExtensionDetailsScreen(
                     AppBarActions(
                         actions = persistentListOf<AppBar.AppBarAction>().builder()
                             .apply {
-                                add(
-                                    AppBar.Action(
-                                        title = "In library", // TODO: Localise
-                                        icon = if (showOnlyInLibrary) {
-                                            Icons.AutoMirrored.Filled.LibraryBooks
-                                        } else {
-                                            Icons.AutoMirrored.Outlined.LibraryBooks
-                                        },
-                                        onClick = onToggleShowOnlyInLibrary,
-                                    ),
-                                )
-
                                 if (url != null) {
                                     add(
                                         AppBar.Action(
                                             title = stringResource(MR.strings.action_open_repo),
                                             icon = Icons.AutoMirrored.Outlined.Launch,
-                                            onClick = { uriHandler.openUri(url) },
+                                            onClick = {
+                                                uriHandler.openUri(url)
+                                            },
                                         ),
                                     )
                                 }

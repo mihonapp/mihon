@@ -112,6 +112,7 @@ android {
                 "libquickjs",
                 "libsqlite3x",
             )
+                //noinspection WrongGradleMethod
                 .map { "**/$it.so" }
         }
         resources {
@@ -296,7 +297,10 @@ androidComponents {
     onVariants(selector().withFlavor("default" to "standard")) {
         // Only excluding in standard flavor because this breaks
         // Layout Inspector's Compose tree
-        it.packaging.resources.excludes.add("META-INF/*.version")
+        if (!it.debuggable) {
+            it.packaging.resources.excludes.add("META-INF/*.version")
+        }
+        //it.packaging.resources.excludes.add("META-INF/*.version")
     }
 }
 
