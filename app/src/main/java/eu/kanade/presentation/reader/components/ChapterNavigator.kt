@@ -77,81 +77,80 @@ fun ChapterNavigator(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             // We explicitly handle direction based on the reader viewer rather than the system direction
-            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = horizontalPadding),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    FilledIconButton(
-                        enabled = if (isRtl) enabledNext else enabledPrevious,
-                        onClick = if (isRtl) onNextChapter else onPreviousChapter,
-                        colors = buttonColor,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.SkipPrevious,
-                            contentDescription = stringResource(
-                                if (isRtl) MR.strings.action_next_chapter else MR.strings.action_previous_chapter,
-                            ),
-                        )
-                    }
 
-                    if (totalPages > 1) {
-                        CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
-                            Row(
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = horizontalPadding),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                FilledIconButton(
+                    enabled = if (isRtl) enabledNext else enabledPrevious,
+                    onClick = if (isRtl) onNextChapter else onPreviousChapter,
+                    colors = buttonColor,
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.SkipPrevious,
+                        contentDescription = stringResource(
+                            if (isRtl) MR.strings.action_next_chapter else MR.strings.action_previous_chapter,
+                        ),
+                    )
+                }
+
+                if (totalPages > 1) {
+                    CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
+                        Row(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clip(RoundedCornerShape(24.dp))
+                                .background(backgroundColor)
+                                .padding(horizontal = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Box(contentAlignment = Alignment.CenterEnd) {
+                                Text(text = currentPage.toString())
+                                // Taking up full length so the slider doesn't shift when 'currentPage' length changes
+                                Text(text = totalPages.toString(), color = Color.Transparent)
+                            }
+
+                            val interactionSource = remember { MutableInteractionSource() }
+                            val sliderDragged by interactionSource.collectIsDraggedAsState()
+                            LaunchedEffect(currentPage) {
+                                if (sliderDragged) {
+                                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                }
+                            }
+                            Slider(
                                 modifier = Modifier
                                     .weight(1f)
-                                    .clip(RoundedCornerShape(24.dp))
-                                    .background(backgroundColor)
-                                    .padding(horizontal = 16.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Box(contentAlignment = Alignment.CenterEnd) {
-                                    Text(text = currentPage.toString())
-                                    // Taking up full length so the slider doesn't shift when 'currentPage' length changes
-                                    Text(text = totalPages.toString(), color = Color.Transparent)
-                                }
+                                    .padding(horizontal = 8.dp),
+                                value = currentPage,
+                                valueRange = 1..totalPages,
+                                onValueChange = f@{
+                                    if (it == currentPage) return@f
+                                    onPageIndexChange(it - 1)
+                                },
+                                interactionSource = interactionSource,
+                            )
 
-                                val interactionSource = remember { MutableInteractionSource() }
-                                val sliderDragged by interactionSource.collectIsDraggedAsState()
-                                LaunchedEffect(currentPage) {
-                                    if (sliderDragged) {
-                                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                                    }
-                                }
-                                Slider(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .padding(horizontal = 8.dp),
-                                    value = currentPage,
-                                    valueRange = 1..totalPages,
-                                    onValueChange = f@{
-                                        if (it == currentPage) return@f
-                                        onPageIndexChange(it - 1)
-                                    },
-                                    interactionSource = interactionSource,
-                                )
-
-                                Text(text = totalPages.toString())
-                            }
+                            Text(text = totalPages.toString())
                         }
-                    } else {
-                        Spacer(Modifier.weight(1f))
                     }
+                } else {
+                    Spacer(Modifier.weight(1f))
+                }
 
-                    FilledIconButton(
-                        enabled = if (isRtl) enabledPrevious else enabledNext,
-                        onClick = if (isRtl) onPreviousChapter else onNextChapter,
-                        colors = buttonColor,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.SkipNext,
-                            contentDescription = stringResource(
-                                if (isRtl) MR.strings.action_previous_chapter else MR.strings.action_next_chapter,
-                            ),
-                        )
-                    }
+                FilledIconButton(
+                    enabled = if (isRtl) enabledPrevious else enabledNext,
+                    onClick = if (isRtl) onPreviousChapter else onNextChapter,
+                    colors = buttonColor,
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.SkipNext,
+                        contentDescription = stringResource(
+                            if (isRtl) MR.strings.action_previous_chapter else MR.strings.action_next_chapter,
+                        ),
+                    )
                 }
             }
 
