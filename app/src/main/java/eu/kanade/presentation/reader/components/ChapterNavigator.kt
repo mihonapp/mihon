@@ -43,6 +43,7 @@ import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import eu.kanade.presentation.util.isTabletUi
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Slider
+import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
@@ -160,19 +161,16 @@ fun ChapterNavigator(
                     .background(backgroundColor),
                 verticalAlignment = Alignment.Bottom,
             ) {
-                // Non plural text if 1 chapter remaining
-                val chapterVsChapters: String =
-                    if (remainingChapters == 1) {
-                        "Chapter"
-                    } else {
-                        "Chapters"
-                    }
 
                 Text(
                     modifier = Modifier
                         .weight(1f)
                         .padding(horizontal = 8.dp),
-                    text = "$remainingChapters $chapterVsChapters Remaining",
+                    text = pluralStringResource(
+                        MR.plurals.remaining_chapters,
+                        count = remainingChapters,
+                        remainingChapters,
+                        ),
                     textAlign = TextAlign.Center
                 )
             }

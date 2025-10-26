@@ -40,6 +40,11 @@
         <item quantity="other">%d days</item>
     </plurals>
 
+    <plurals name="remaining_chapters">
+        <item quantity="one">%1$s Chapter Remaining</item>
+        <item quantity="other">%1$s Chapters Remaining</item>
+    </plurals>
+
     <plurals name="pref_pages">
         <item quantity="one">1 page</item>
         <item quantity="other">%1$s pages</item>
