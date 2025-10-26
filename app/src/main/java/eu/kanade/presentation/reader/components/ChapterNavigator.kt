@@ -55,6 +55,7 @@ fun ChapterNavigator(
     currentPage: Int,
     totalPages: Int,
     onPageIndexChange: (Int) -> Unit,
+    remainingChapters: Int,
 ) {
     val isTabletUi = isTabletUi()
     val horizontalPadding = if (isTabletUi) 24.dp else 8.dp
@@ -161,7 +162,7 @@ fun ChapterNavigator(
             ) {
                 // Non plural text if 1 chapter remaining
                 val chapterVsChapters: String =
-                    if ((totalPages - currentPage) == 1) {
+                    if (remainingChapters == 1) {
                         "Chapter"
                     } else {
                         "Chapters"
@@ -171,7 +172,7 @@ fun ChapterNavigator(
                     modifier = Modifier
                         .weight(1f)
                         .padding(horizontal = 8.dp),
-                    text = (totalPages - currentPage).toString() + " " + chapterVsChapters + " Remaining",
+                    text = "$remainingChapters $chapterVsChapters Remaining",
                     textAlign = TextAlign.Center
                 )
             }
@@ -193,6 +194,7 @@ private fun ChapterNavigatorPreview() {
             currentPage = currentPage,
             totalPages = 10,
             onPageIndexChange = { currentPage = (it + 1) },
+            remainingChapters = 6
         )
     }
 }
