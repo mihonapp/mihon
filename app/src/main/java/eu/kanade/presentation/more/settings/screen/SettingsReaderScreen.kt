@@ -203,13 +203,17 @@ object SettingsReaderScreen : SearchableSettings {
 
     @Composable
     private fun getPagedGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup {
+        val numberFormat = remember { NumberFormat.getPercentInstance() }
+
         val navModePref = readerPreferences.navigationModePager()
         val imageScaleTypePref = readerPreferences.imageScaleType()
+        val imageVerticalPaddingPref = readerPreferences.imageVerticalPadding()
         val dualPageSplitPref = readerPreferences.dualPageSplitPaged()
         val rotateToFitPref = readerPreferences.dualPageRotateToFit()
 
         val navMode by navModePref.collectAsState()
         val imageScaleType by imageScaleTypePref.collectAsState()
+        val imageVerticalPadding by imageVerticalPaddingPref.collectAsState()
         val dualPageSplit by dualPageSplitPref.collectAsState()
         val rotateToFit by rotateToFitPref.collectAsState()
 
@@ -244,6 +248,19 @@ object SettingsReaderScreen : SearchableSettings {
                         .toMap()
                         .toImmutableMap(),
                     title = stringResource(MR.strings.pref_image_scale_type),
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = imageVerticalPadding,
+                    valueRange = ReaderPreferences.let {
+                        it.WEBTOON_PADDING_MIN..it.WEBTOON_PADDING_MAX
+                    },
+                    title = stringResource(MR.strings.pref_webtoon_side_padding),
+                    subtitle = numberFormat.format(imageVerticalPadding / 100f),
+                    onValueChanged = {
+                        imageVerticalPaddingPref.set(it)
+                        true
+                    },
+                    enabled = imageScaleType == 4
                 ),
                 Preference.PreferenceItem.ListPreference(
                     preference = readerPreferences.zoomStart(),

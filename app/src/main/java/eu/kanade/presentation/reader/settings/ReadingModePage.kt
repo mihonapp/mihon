@@ -83,6 +83,22 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
         }
     }
 
+    val numberFormat = remember { NumberFormat.getPercentInstance() }
+
+    if (imageScaleType == ReaderPreferences.ImageScaleType.indexOf(MR.strings.scale_type_fit_height) + 1) {
+        val imagePadding by screenModel.preferences.imageVerticalPadding().collectAsState()
+        SliderItem(
+            value = imagePadding,
+            valueRange = ReaderPreferences.let { it.WEBTOON_PADDING_MIN..it.WEBTOON_PADDING_MAX },
+            label = stringResource(MR.strings.pref_webtoon_side_padding),
+            valueText = numberFormat.format(imagePadding / 100f),
+            onChange = {
+                screenModel.preferences.imageVerticalPadding().set(it)
+            },
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+        )
+    }
+
     val zoomStart by screenModel.preferences.zoomStart().collectAsState()
     SettingsChipRow(MR.strings.pref_zoom_start) {
         ReaderPreferences.ZoomStart.mapIndexed { index, it ->
