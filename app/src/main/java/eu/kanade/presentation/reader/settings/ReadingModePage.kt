@@ -86,14 +86,14 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
     val numberFormat = remember { NumberFormat.getPercentInstance() }
 
     if (imageScaleType == ReaderPreferences.ImageScaleType.indexOf(MR.strings.scale_type_fit_height) + 1) {
-        val imagePadding by screenModel.preferences.imageVerticalPadding().collectAsState()
+        val imagePadding by screenModel.preferences.pagedVerticalPadding().collectAsState()
         SliderItem(
             value = imagePadding,
             valueRange = ReaderPreferences.let { it.PADDING_MIN..it.PADDING_MAX },
             label = stringResource(MR.strings.pref_vertical_padding),
             valueText = numberFormat.format(imagePadding / 100f),
             onChange = {
-                screenModel.preferences.imageVerticalPadding().set(it)
+                screenModel.preferences.pagedVerticalPadding().set(it)
             },
             pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         )
