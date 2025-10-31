@@ -52,6 +52,8 @@ import eu.kanade.presentation.util.relativeTimeSpanString
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
 import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
 import eu.kanade.tachiyomi.data.cache.ChapterCache
+import eu.kanade.tachiyomi.data.export.CustomCoverExporter
+import eu.kanade.tachiyomi.data.export.CustomCoverRestorer
 import eu.kanade.tachiyomi.data.export.LibraryExporter
 import eu.kanade.tachiyomi.data.export.LibraryExporter.ExportOptions
 import eu.kanade.tachiyomi.util.system.DeviceUtil
@@ -110,6 +112,7 @@ object SettingsDataScreen : SearchableSettings {
             getBackupAndRestoreGroup(backupPreferences = backupPreferences),
             getDataGroup(),
             getExportGroup(),
+            getImportGroup(),
         )
     }
 
@@ -349,7 +352,7 @@ object SettingsDataScreen : SearchableSettings {
             favorites = getFavorites.await()
         }
 
-        val saveFileLauncher = rememberLauncherForActivityResult(
+        val saveLibraryExportLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.CreateDocument("text/csv"),
         ) { uri ->
             uri?.let {
@@ -369,12 +372,30 @@ object SettingsDataScreen : SearchableSettings {
             }
         }
 
+        val saveCoverExportLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.CreateDocument("application/gzip"),
+        ) { uri ->
+            uri?.let {
+                scope.launch {
+                    CustomCoverExporter.exportToZip(
+                        context = context,
+                        uri = it,
+                        onExportComplete = {
+                            scope.launch(Dispatchers.Main) {
+                                context.toast(MR.strings.covers_exported)
+                            }
+                        },
+                    )
+                }
+            }
+        }
+
         if (showDialog) {
             ColumnSelectionDialog(
                 options = exportOptions,
                 onConfirm = { options ->
                     exportOptions = options
-                    saveFileLauncher.launch("mihon_library.csv")
+                    saveLibraryExportLauncher.launch("mihon_library.csv")
                 },
                 onDismissRequest = { showDialog = false },
             )
@@ -386,6 +407,49 @@ object SettingsDataScreen : SearchableSettings {
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.library_list),
                     onClick = { showDialog = true },
+                ),
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.custom_cover),
+                    onClick = { saveCoverExportLauncher.launch("mihon_custom_covers.gz") },
+                ),
+            ),
+        )
+    }
+
+    @Composable
+    private fun getImportGroup(): Preference.PreferenceGroup {
+        val context = LocalContext.current
+        val scope = rememberCoroutineScope()
+
+        val importCoverFileLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetContent(),
+        ) { uri ->
+            uri?.let {
+                scope.launch {
+                    CustomCoverRestorer.restoreFromZip(
+                        context = context,
+                        uri = it,
+                        onRestoreComplete = {
+                            scope.launch(Dispatchers.Main) {
+                                context.toast(MR.strings.covers_imported)
+                            }
+                        },
+                        onRestoreFailure = {
+                            scope.launch(Dispatchers.Main) {
+                                context.toast(MR.strings.covers_import_error)
+                            }
+                        },
+                    )
+                }
+            }
+        }
+
+        return Preference.PreferenceGroup(
+            title = stringResource(MR.strings.import_title),
+            preferenceItems = persistentListOf(
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.custom_cover),
+                    onClick = { importCoverFileLauncher.launch("application/gzip") },
                 ),
             ),
         )
