@@ -27,6 +27,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix category migration flag being ignored due to incorrect check against chapter flag ([@Secozzi](https://github.com/Secozzi)) ([#2484](https://github.com/mihonapp/mihon/pull/2484))
 - Fix disabling incognito mode from notification ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2512](https://github.com/mihonapp/mihon/pull/2512))
 
+### Other
+- Fix Kitsu tracker to conform to tracker data structure properly ([@cpiber](https://github.com/cpiber)) ([#2609](https://github.com/mihonapp/mihon/pull/2609))
+
 ## [v0.19.1] - 2025-08-07
 ### Changed
 - LocalSource now reads ComicInfo.xml file for chapter (if available) to display chapter title, number and scanlator ([@raxod502](https://github.com/radian-software)) ([#2332](https://github.com/mihonapp/mihon/pull/2332))
