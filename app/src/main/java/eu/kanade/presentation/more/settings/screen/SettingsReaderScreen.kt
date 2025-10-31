@@ -254,7 +254,7 @@ object SettingsReaderScreen : SearchableSettings {
                     valueRange = ReaderPreferences.let {
                         it.PADDING_MIN..it.PADDING_MAX
                     },
-                    title = stringResource(MR.strings.pref_webtoon_side_padding),
+                    title = stringResource(MR.strings.pref_vertical_padding),
                     subtitle = numberFormat.format(imageVerticalPadding / 100f),
                     onValueChanged = {
                         imageVerticalPaddingPref.set(it)

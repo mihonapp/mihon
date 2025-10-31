@@ -90,7 +90,7 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
         SliderItem(
             value = imagePadding,
             valueRange = ReaderPreferences.let { it.PADDING_MIN..it.PADDING_MAX },
-            label = stringResource(MR.strings.pref_webtoon_side_padding),
+            label = stringResource(MR.strings.pref_vertical_padding),
             valueText = numberFormat.format(imagePadding / 100f),
             onChange = {
                 screenModel.preferences.imageVerticalPadding().set(it)
