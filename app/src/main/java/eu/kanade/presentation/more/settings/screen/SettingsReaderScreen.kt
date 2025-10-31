@@ -252,7 +252,7 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SliderPreference(
                     value = imageVerticalPadding,
                     valueRange = ReaderPreferences.let {
-                        it.WEBTOON_PADDING_MIN..it.WEBTOON_PADDING_MAX
+                        it.PADDING_MIN..it.PADDING_MAX
                     },
                     title = stringResource(MR.strings.pref_webtoon_side_padding),
                     subtitle = numberFormat.format(imageVerticalPadding / 100f),
@@ -356,7 +356,7 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SliderPreference(
                     value = webtoonSidePadding,
                     valueRange = ReaderPreferences.let {
-                        it.WEBTOON_PADDING_MIN..it.WEBTOON_PADDING_MAX
+                        it.PADDING_MIN..it.PADDING_MAX
                     },
                     title = stringResource(MR.strings.pref_webtoon_side_padding),
                     subtitle = numberFormat.format(webtoonSidePadding / 100f),

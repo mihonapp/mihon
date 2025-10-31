@@ -89,7 +89,7 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
         val imagePadding by screenModel.preferences.imageVerticalPadding().collectAsState()
         SliderItem(
             value = imagePadding,
-            valueRange = ReaderPreferences.let { it.WEBTOON_PADDING_MIN..it.WEBTOON_PADDING_MAX },
+            valueRange = ReaderPreferences.let { it.PADDING_MIN..it.PADDING_MAX },
             label = stringResource(MR.strings.pref_webtoon_side_padding),
             valueText = numberFormat.format(imagePadding / 100f),
             onChange = {
@@ -170,7 +170,7 @@ private fun ColumnScope.WebtoonViewerSettings(screenModel: ReaderSettingsScreenM
     val webtoonSidePadding by screenModel.preferences.webtoonSidePadding().collectAsState()
     SliderItem(
         value = webtoonSidePadding,
-        valueRange = ReaderPreferences.let { it.WEBTOON_PADDING_MIN..it.WEBTOON_PADDING_MAX },
+        valueRange = ReaderPreferences.let { it.PADDING_MIN..it.PADDING_MAX },
         label = stringResource(MR.strings.pref_webtoon_side_padding),
         valueText = numberFormat.format(webtoonSidePadding / 100f),
         onChange = {
