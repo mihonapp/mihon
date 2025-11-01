@@ -523,6 +523,9 @@
     <string name="save_chapter_as_cbz">Save as CBZ archive</string>
     <string name="split_tall_images">Split tall images</string>
     <string name="split_tall_images_summary">Improves reader performance</string>
+    <string name="pref_download_concurrent_sources">Concurrent source downloads</string>
+    <string name="pref_download_concurrent_pages">Concurrent page downloads</string>
+    <string name="pref_download_concurrent_pages_summary">Pages downloaded simultaneously per source</string>
 
     <!-- Tracking section -->
     <string name="tracking_guide">Tracking guide</string>
