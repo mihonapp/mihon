@@ -542,7 +542,7 @@
     <string name="notification_size_warning">大量更新会损害图源，并可能导致更新变慢、耗电增加。点击了解详情。</string>
     <string name="connected_to_wifi">仅连接 Wi-Fi 时</string>
     <string name="update_72hour">每 3 天</string>
-    <string name="download_queue_size_warning">警告：批量下载可能导致图源变慢，甚至会使得它们屏蔽 Mihon。点击了解详情。</string>
+    <string name="download_queue_size_warning">警告：批量下载可能导致图源变慢，甚至会使得它们屏蔽 %s 。点击了解详情。</string>
     <string name="ext_update_all">全部更新</string>
     <string name="channel_app_updates">应用更新</string>
     <string name="pref_auto_clear_chapter_cache">启动时清除章节缓存</string>
@@ -769,7 +769,7 @@
     <string name="label_extension_repos">插件仓库</string>
     <string name="information_empty_repos">尚未设置仓库</string>
     <string name="label_add_repo_input">仓库网址</string>
-    <string name="action_add_repo_message">在 Mihon 中添加仓库，输入的网址结尾应为 \"index.min.json\" 。</string>
+    <string name="action_add_repo_message">在 %s 中添加仓库，输入的网址结尾应为 \"index.min.json\" 。</string>
     <string name="onboarding_storage_help_info">如果你是从旧版更新而来，可以查看存储指南了解详情。</string>
     <string name="onboarding_storage_help_action">存储指南</string>
     <string name="pref_storage_location">存储位置</string>
@@ -848,9 +848,9 @@
     <string name="pref_behavior">操作</string>
     <string name="action_display_unread_badge">未读章节</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">读完一个章节后</string>
-    <string name="action_notes">笔记</string>
-    <string name="action_edit_notes">编辑笔记</string>
-    <string name="notes_placeholder">我喜欢这段…</string>
+    <string name="action_notes">添加注释</string>
+    <string name="action_edit_notes">编辑注释</string>
+    <string name="notes_placeholder">标注你喜欢的部分…</string>
     <string name="possible_duplicates_summary">在你的书架中有一些名称相似的作品。\n\n请选择其中一个作品进行迁移或仍然新增。</string>
     <string name="possible_duplicates_title">可能重复的作品</string>
     <string name="clear_database_text">你即将从数据库中删除这些作品</string>
@@ -901,6 +901,6 @@
     <string name="migrationListScreen.unknownLatestChapter">未知</string>
     <string name="migrationListScreenTitle">迁移</string>
     <string name="pref_hide_missing_chapter_indicators">隐藏缺失章节提示符</string>
-    <string name="pref_display_images_description">在漫画简介中显示图片</string>
+    <string name="pref_display_images_description">在漫画注释中显示图片</string>
     <string name="label_donate">捐赠</string>
 </resources>

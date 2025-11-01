@@ -540,7 +540,7 @@
     <string name="backup_info">Es una buena idea tener copias de respaldo fuera de tu dispositivo. Ten en cuenta que incluyen contraseñas y otros datos privados que seguramente no quieras compartir.</string>
     <string name="connected_to_wifi">Solo con Wi-Fi</string>
     <string name="update_72hour">Cada 3 días</string>
-    <string name="download_queue_size_warning">Advertencia: Las descargas grandes pueden llevar a que las fuentes se vuelvan cada vez más lentas y en casos extremos que los servidores limiten o impidan el acceso a Mihon. Toca aquí para más información.</string>
+    <string name="download_queue_size_warning">Advertencia: Las descargas grandes pueden llevar a que las fuentes se vuelvan cada vez más lentas y en casos extremos que los servidores limiten o impidan el acceso a %s. Toca aquí para más información.</string>
     <string name="ext_update_all">Actualizar todas</string>
     <string name="channel_app_updates">Actualizaciones de la aplicación</string>
     <string name="pref_auto_clear_chapter_cache">Limpiar la caché de capítulos al abrir la aplicación</string>
@@ -766,7 +766,7 @@
     <string name="error_repo_exists">¡Este repositorio ya existe!</string>
     <string name="pref_library_update_smart_update">Actualizaciones inteligentes</string>
     <string name="invalid_repo_name">La dirección URL del repositorio no parece ser correcta</string>
-    <string name="action_add_repo_message">Añade más repositorios a Mihon; la dirección URL tiene que terminar en «index.min.json».</string>
+    <string name="action_add_repo_message">Añade más repositorios a %s; la dirección URL tiene que terminar en «index.min.json».</string>
     <string name="delete_repo_confirmation">¿Seguro que quieres borrar el repositorio «%s»?</string>
     <string name="action_delete_repo">Borrar repositorio</string>
     <string name="action_add_repo">Añadir un repositorio</string>
@@ -896,4 +896,6 @@
     <string name="pref_hide_missing_chapter_indicators">Ocultar los indicadores de capítulos que falten</string>
     <string name="label_donate">Donar</string>
     <string name="pref_display_images_description">Ver imágenes en las descripciones de manga</string>
+    <string name="pref_disallow_non_ascii_filenames">Prohibir los nombres de archivo que no sean ASCII</string>
+    <string name="pref_disallow_non_ascii_filenames_details">Permite guardar tus datos en ciertos tipos de almacenamiento que no admitan Unicode. Al activarlo tendrás que renombrar las carpetas de tus fuentes y manga, pasándolas a representaciones UTF-8 en hexadecimal en minúscula. No tienes que hacer lo mismo con las carpetas de capítulos.</string>
 </resources>

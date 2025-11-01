@@ -339,7 +339,7 @@
     <string name="pinned_sources">Sabitlenmiş</string>
     <string name="action_unpin">Sabitlemeyi kaldır</string>
     <string name="action_pin">Sabitle</string>
-    <string name="add_tracking">İzleme ekle</string>
+    <string name="add_tracking">İzleyici ekle</string>
     <string name="in_library">Kitaplıkta</string>
     <string name="add_to_library">Kitaplığa ekle</string>
     <string name="manga_info_collapse">Daha az</string>
@@ -363,7 +363,7 @@
     <string name="viewer">Okuma modu</string>
     <string name="pref_category_for_this_series">Bu seri için</string>
     <string name="battery_optimization_setting_activity_not_found">Cihaz ayarları açılamadı</string>
-    <string name="tracking_info">Bölüm ilerlemesin harici izleyici hizmetlerine güncellemek için tek yönlü eşitleme. Her girdinin izleme düğmesinden izlemeyi ayarlayın.</string>
+    <string name="tracking_info">Bölüm ilerlemesini harici izleyici hizmetlerine güncellemek için tek yönlü eşitleme. Her girdinin izleme düğmesinden izlemeyi ayarlayın.</string>
     <string name="pref_refresh_library_covers">Kitaplıktakilerin kapaklarını yenile</string>
     <string name="sort_by_upload_date">Yükleme tarihine göre</string>
     <string name="label_data">Veri</string>
@@ -381,7 +381,7 @@
     <string name="action_enable_all">Tümünü etkinleştir</string>
     <string name="pref_show_reading_mode_summary">Okuyucu açılınca kısaca okuma modunu göster</string>
     <string name="pref_show_reading_mode">Okuma modunu göster</string>
-    <string name="action_start">Başlat</string>
+    <string name="action_start">Başla</string>
     <string name="loader_not_implemented_error">Kaynak bulunamadı</string>
     <string name="action_disable">Devre dışı bırak</string>
     <string name="requires_app_restart">Etkili olması için uygulamanın yeniden başlatılmasını gerektirir</string>
@@ -541,7 +541,7 @@
     <string name="pref_verbose_logging">Ayrıntılı günlük kaydı</string>
     <string name="pref_verbose_logging_summary">Ayrıntılı günlükleri sistem günlüğüne yaz (uygulama performansını düşürür)</string>
     <string name="connected_to_wifi">Yalnızca kablosuz ağda</string>
-    <string name="download_queue_size_warning">Uyarı: Büyük toplu indirmeler kaynakların yavaşlamasına ve/veya Mihon\'u engellemesine neden olabilir. Daha fazla bilgi için dokunun.</string>
+    <string name="download_queue_size_warning">Uyarı: Büyük toplu indirmeler kaynakların yavaşlamasına ve/veya %s\'u engellemesine neden olabilir. Daha fazla bilgi için dokunun.</string>
     <string name="update_72hour">3 günde bir</string>
     <string name="ext_update_all">Tümünü güncelle</string>
     <string name="channel_app_updates">Uygulama güncellemeleri</string>
@@ -772,7 +772,7 @@
     <string name="onboarding_storage_help_action">Depolama kılavuzu</string>
     <string name="action_add_repo">Depo ekle</string>
     <string name="label_add_repo_input">Depo bağlantısı</string>
-    <string name="action_add_repo_message">Mihon\'a ek depolar ekleyin. Bu, \"index.min.json\" ile biten bir bağlantı olmalıdır.</string>
+    <string name="action_add_repo_message">%s\'a ek depolar ekleyin. Bu, \"index.min.json\" ile biten bir bağlantı olmalıdır.</string>
     <string name="error_repo_exists">Bu depo zaten var!</string>
     <string name="action_delete_repo">Depoyu sil</string>
     <string name="invalid_repo_name">Geçersiz depo bağlantısı</string>
@@ -796,7 +796,7 @@
     <string name="pref_display_profile">Özel görünüm profili</string>
     <string name="action_replace_repo_message">%1$s deposunun İmzalama Anahtarı Parmak İzi %2$s deposuyla aynı.
 \nEğer böyle olması gerekiyorsa %2$s ile değiştirilecek. Aksi takdirde depo yöneticinize ulaşın.</string>
-    <string name="pref_webtoon_disable_zoom_out">Dışa yakınlaştırmayı devre dışı bırak</string>
+    <string name="pref_webtoon_disable_zoom_out">Uzaklaştırmayı devre dışı bırak</string>
     <string name="invalid_backup_file_json">JSON yedekleri desteklenmiyor</string>
     <string name="invalid_backup_file_unknown">Yedek dosyası bozuk</string>
     <string name="manga_interval_expected_update_null">Bu manga ya tamamlanmış ya da tahmin edilen yayımlanma tarihi yok.</string>
@@ -903,4 +903,6 @@
     <string name="pref_hide_missing_chapter_indicators">Eksik bölüm göstergelerini gizle</string>
     <string name="pref_display_images_description">Manga açıklamalarında bulunan görselleri göster</string>
     <string name="label_donate">Bağış</string>
+    <string name="pref_disallow_non_ascii_filenames">ASCII olmayan dosya isimlerine izin verme</string>
+    <string name="pref_disallow_non_ascii_filenames_details">Unicode desteklemeyen bazı depolama sistemleri için uyumluluk sağlar. Etkinleştirildiğinde kaynak ve manga klasörlerini manuel olarak yeniden adlandırıp ASCII olmayan karakterleri küçük UTF-8 heksadesimal karşılıklarıyla değiştirmeniz gerekir. Bölüm dosyalarının yeniden adlandırılması gerekli değildir.</string>
 </resources>

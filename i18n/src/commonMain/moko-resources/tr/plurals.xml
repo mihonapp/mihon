@@ -25,8 +25,8 @@
         <item quantity="other">%1$s kaldı</item>
     </plurals>
     <plurals name="num_categories">
-        <item quantity="one">%d kategori</item>
-        <item quantity="other">%d kategori</item>
+        <item quantity="one">%d Kategori</item>
+        <item quantity="other">%d Kategoriler</item>
     </plurals>
     <plurals name="restore_completed_message">
         <item quantity="one">%1$s içinde %2$s hatayla tamamlandı</item>
