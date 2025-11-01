@@ -32,6 +32,10 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix migration dialog migrating to wrong entry ([@AntsyLich](https://github.com/AntsyLich)) ([#2631](https://github.com/mihonapp/mihon/pull/2631))
 - Fix migration "Attempt to invoke virtual method" crash ([@AntsyLich](https://github.com/AntsyLich)) ([#2632](https://github.com/mihonapp/mihon/pull/2632))
 - Fix reader "Unable to edit key" error ([@AntsyLich](https://github.com/AntsyLich)) ([#2634](https://github.com/mihonapp/mihon/pull/2634))
+- Fix extension download stuck in pending state in some cases ([@c2y5](https://github.com/c2y5)) ([#2483](https://github.com/mihonapp/mihon/pull/2483))
+
+### Improved
+- Auto refresh extension list whenever a repository is added or removed ([@c2y5](https://github.com/c2y5)) ([#2483](https://github.com/mihonapp/mihon/pull/2483))
 
 ### Other
 - Fix Kitsu tracker to conform to tracker data structure properly ([@cpiber](https://github.com/cpiber)) ([#2609](https://github.com/mihonapp/mihon/pull/2609))
