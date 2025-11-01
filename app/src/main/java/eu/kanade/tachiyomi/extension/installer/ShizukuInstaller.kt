@@ -12,15 +12,15 @@ import android.content.pm.PackageManager
 import android.os.IBinder
 import androidx.core.content.ContextCompat
 import eu.kanade.tachiyomi.BuildConfig
-import eu.kanade.tachiyomi.IShellInterface
 import eu.kanade.tachiyomi.extension.model.InstallStep
-import eu.kanade.tachiyomi.extension.util.ShellInterface
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import logcat.LogPriority
+import mihon.app.shizuku.IShellInterface
+import mihon.app.shizuku.ShellInterface
 import rikka.shizuku.Shizuku
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
