@@ -542,7 +542,7 @@
     <string name="ext_install_service_notif">Đang cài đặt tiện ích mở rộng…</string>
     <string name="update_72hour">3 ngày một lần</string>
     <string name="connected_to_wifi">Chỉ qua Wi-Fi</string>
-    <string name="download_queue_size_warning">Cảnh báo: các tải xuống hàng loạt lớn có thể dẫn đến các nguồn trở nên chậm hơn và / hoặc chặn Mihon. Nhấn vào để tìm hiểu thêm.</string>
+    <string name="download_queue_size_warning">Cảnh báo: các tải xuống hàng loạt lớn có thể dẫn đến các nguồn trở nên chậm hơn và / hoặc chặn %s. Nhấn vào để tìm hiểu thêm.</string>
     <string name="channel_app_updates">Cập nhật ứng dụng</string>
     <string name="ext_update_all">Cập nhật tất cả</string>
     <string name="pref_auto_clear_chapter_cache">Xóa bộ nhớ đệm các chương khi tắt ứng dụng</string>
@@ -773,7 +773,7 @@
     <string name="pref_library_update_smart_update">Cập nhật thông minh</string>
     <string name="label_upcoming">Sắp tới</string>
     <string name="onboarding_storage_help_info">Cập nhật từ phiên bản cũ hơn và không biết nên chọn gì? Tham khảo hướng dẫn để biết thêm thông tin.</string>
-    <string name="action_add_repo_message">Thêm nguồn bổ sung vào Mihon. Địa chỉ URL này cần phải kết thúc với \"index.min.json\".</string>
+    <string name="action_add_repo_message">Thêm nguồn bổ sung vào %s. Địa chỉ URL này cần phải kết thúc với \"index.min.json\".</string>
     <string name="action_replace_repo_message">Kho lưu trữ %1$s có Dấu vân tay Khóa ký giống hệt như %2$s.
 \nNếu điều này là dự kiến, %2$s sẽ bị thay thế. Nếu không, vui lòng liên hệ với người quản lý kho lưu trữ của bạn.</string>
     <string name="information_empty_repos">Bạn chưa có nguồn nào.</string>

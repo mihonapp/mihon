@@ -628,7 +628,7 @@
     <string name="pref_library_summary">หมวดหมู่, การอัปเดตคลัง, การปัดรายการตอน</string>
     <string name="pref_reader_summary">โหมดการอ่าน, การแสดงผล, การนำทาง</string>
     <string name="pref_downloads_summary">การดาวน์โหลดอัตโนมัติ, การดาวน์โหลดล่วงหน้า</string>
-    <string name="pref_tracking_summary">การประมวลผลซิงก์ทางเดียง, เสริมการวิงก์</string>
+    <string name="pref_tracking_summary">การอัพเดทความคืบหน้าหลังอ่าน, การซิงค์กับแหล่งที่มาภายนอก</string>
     <string name="pref_browse_summary">แหล่งที่มา, ส่วนขยาย, การค้นหาทั้งหมด</string>
     <string name="pref_backup_summary">การสำรองข้อมูลและพื้นที่เก็บข้อมูลด้วยตนเองและอัตโนมัติ</string>
     <string name="pref_security_summary">การล็อกแอป, หน้าจอความปลอดภัย</string>
@@ -848,4 +848,7 @@
     <string name="library_list">รายการคลัง</string>
     <string name="library_exported">ส่งออกคลังแล้ว</string>
     <string name="clear_database_text">คุณกำลังจะลบรายการออกจากฐานข้อมูล</string>
+    <string name="label_donate">บริจาค</string>
+    <string name="pref_display_images_description">เรนเดอร์รูปภาพในคำอธิบายเรื่อง</string>
+    <string name="pref_disallow_non_ascii_filenames">ไม่อนุญาตชื่อไฟล์ที่ไม่ใช่ ASCII</string>
 </resources>

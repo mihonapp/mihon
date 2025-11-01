@@ -121,10 +121,10 @@
     <string name="pref_rotation_type">既定の画面向き</string>
     <string name="rotation_free">自動回転</string>
     <string name="rotation_force_portrait">縦向き画面を強制</string>
-    <string name="color_filter_r_value">R</string>
-    <string name="color_filter_g_value">G</string>
-    <string name="color_filter_b_value">B</string>
-    <string name="color_filter_a_value">A</string>
+    <string name="color_filter_r_value">赤</string>
+    <string name="color_filter_g_value">緑</string>
+    <string name="color_filter_b_value">青</string>
+    <string name="color_filter_a_value">アルファ</string>
     <string name="pref_remove_after_marked_as_read">手動で既読にした後</string>
     <string name="pref_remove_after_read">読んだ後自動で削除</string>
     <string name="disabled">無効</string>
@@ -342,7 +342,7 @@
     <string name="ext_updates_pending">更新あり</string>
     <string name="pref_library_update_refresh_metadata_summary">ライブラリを更新時、新しい表紙と情報を確認します</string>
     <string name="pref_library_update_refresh_metadata">メタデータを自動で更新</string>
-    <string name="pref_library_columns">グリッドの項目数</string>
+    <string name="pref_library_columns">行あたりのアイテム数</string>
     <string name="pref_category_display">画面</string>
     <string name="hide_notification_content">通知内容を非表示</string>
     <string name="secure_screen_summary">セキュア画面はアプリを切り替える時アプリの内容を非表示し、画面キャプチャを無効化します</string>
@@ -687,8 +687,8 @@
     <string name="pref_page_rotate">画面に合わせるように幅広いページを回転</string>
     <string name="pref_page_rotate_invert">回転した幅広いページの向きを反転</string>
     <string name="pref_debug_info">デバッグ情報</string>
-    <string name="pref_chapter_swipe_start">左へスワイプ時の操作</string>
-    <string name="pref_chapter_swipe_end">右へスワイプ時の操作</string>
+    <string name="pref_chapter_swipe_start">左にスワイプする章</string>
+    <string name="pref_chapter_swipe_end">右にスワイプする章</string>
     <string name="pref_double_tap_zoom">ダブルタップでズーム</string>
     <string name="action_set_interval">間隔を設定</string>
     <string name="action_filter_interval_custom">カスタマイズした更新頻度</string>
@@ -777,7 +777,7 @@
     <string name="ext_revoke_trust">不明な拡張機能の信頼を取り消す</string>
     <string name="label_extension_repos">拡張機能リポジトリ</string>
     <string name="invalid_repo_name">リポジトリURLが無効です</string>
-    <string name="action_add_repo_message">Mihonにリポジトリを追加します。「index.min.json」で終わるURLを入力してください。</string>
+    <string name="action_add_repo_message">%sにリポジトリを追加します。「index.min.json」で終わるURLを入力してください。</string>
     <string name="action_add_repo">リポジトリを追加</string>
     <string name="action_open_repo">ソース リポジトリを開く</string>
     <string name="onboarding_storage_help_info">古いバージョンからバージョンアップしたばかりで、選択に悩んでいますか？ストレージ ガイドにご参照ください。</string>
@@ -835,12 +835,12 @@
     <string name="action_notes">ノート</string>
     <string name="action_edit_notes">ノートを編集</string>
     <string name="export">バックアップ</string>
-    <string name="pref_behavior">動作設定</string>
+    <string name="pref_behavior">行動</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">章の読了後</string>
     <string name="pref_update_library_manga_titles">ライブラリーのマンガのタイトルをソースに合わせて更新</string>
     <string name="pref_incognito_mode_extension_summary">拡張機能の既読章履歴を一時停止</string>
     <string name="logging_in">ログイン中…</string>
-    <string name="pref_mark_duplicate_read_chapter_read">重複した既読済みの章を既読扱い</string>
+    <string name="pref_mark_duplicate_read_chapter_read">重複する既読章を既読としてマークする</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">新章取得後</string>
     <string name="possible_duplicates_summary">ライブラリに名前が似ている作品があります。\n\n移行作品の選択、またはそのまま追加。</string>
     <string name="author">著者</string>
@@ -850,6 +850,14 @@
     <string name="storage_failed_to_create_directory">ディレクトリの作成に失敗しました: %s</string>
     <string name="clear_database_text">データベースから作品が削除されます</string>
     <string name="clear_database_history_warning">ライブラリ外作品の既読の章と進捗は失われます</string>
-    <string name="clear_db_exclude_read">既読の章がある作品は保持</string>
+    <string name="clear_db_exclude_read">読み終えた章を含むエントリーを保持する</string>
     <string name="possible_duplicates_title">重複の可能性あり</string>
+    <string name="label_donate">寄付する</string>
+    <string name="label_auto">自動車</string>
+    <string name="theme_catppuccin">キャットプッチン</string>
+    <string name="theme_monochrome">モノクロ</string>
+    <string name="pref_display_images_description">マンガの描写で画像をレンダリングする</string>
+    <string name="pref_hide_missing_chapter_indicators">欠落している章のインジケーターを非表示にする</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">レガシーデコーダーを長尺ストリップリーダーに使用する</string>
+    <string name="library_list">ライブラリーリスト</string>
 </resources>

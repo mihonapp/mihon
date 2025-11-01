@@ -542,7 +542,7 @@
     <string name="backup_info">Настоятельно рекомендуется хранить резервные копии в других местах или сервисах. Резервные копии могут содержать конфиденциальную информацию, как, например, пароли. Будьте осторожны при их отправке.</string>
     <string name="connected_to_wifi">Только по Wi-Fi</string>
     <string name="update_72hour">Каждые 3 дня</string>
-    <string name="download_queue_size_warning">Предупреждение: Большое количество загрузок может привести к замедлению работы источников и/или блокировке Mihon. Нажмите для подробностей.</string>
+    <string name="download_queue_size_warning">Предупреждение: Большое количество загрузок может привести к замедлению работы источников и/или блокировке %s. Нажмите для подробностей.</string>
     <string name="ext_update_all">Обновить все</string>
     <string name="channel_app_updates">Обновления приложения</string>
     <string name="pref_auto_clear_chapter_cache">Очищать кэш глав при запуске приложения</string>
@@ -772,7 +772,7 @@
     <string name="error_repo_exists">Этот репозиторий уже существует!</string>
     <string name="pref_library_update_smart_update">Умное обновление</string>
     <string name="invalid_repo_name">Недопустимый URL-адрес репозитория</string>
-    <string name="action_add_repo_message">Добавить дополнительные репозиторий в Mihon. Это должны быть URL-адреса которые заканчиваться на \"index.min.json\".</string>
+    <string name="action_add_repo_message">Добавить дополнительные репозиторий в %s. Это должны быть URL-адреса которые заканчиваться на \"index.min.json\".</string>
     <string name="delete_repo_confirmation">Хотите ли вы удалить репозиторий \"%s\"?</string>
     <string name="action_delete_repo">Удалить репозиторий</string>
     <string name="action_add_repo">Добавить репозиторий</string>
@@ -903,4 +903,6 @@
     <string name="pref_hide_missing_chapter_indicators">Скрывать индикаторы отсутствующих глав</string>
     <string name="pref_display_images_description">Отрисововать изображения в описаниях серий</string>
     <string name="label_donate">Спонсорство</string>
+    <string name="pref_disallow_non_ascii_filenames">Не позволять наименования файлов в виде non-ASCII</string>
+    <string name="pref_disallow_non_ascii_filenames_details">Обеспечивает совместимость с некоторыми носителями информации, которые не поддерживают Unicode. Когда этот функция включена, вам нужно будет вручную переименовать папки серий и источников, заменив non-ASCII символы на шестнадцатеричные UTF-8 в нижнем регистре. Файлы глав можно не переименовать.</string>
 </resources>

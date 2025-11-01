@@ -33,8 +33,8 @@
     <string name="update_never">Isključeno</string>
     <string name="pref_library_update_interval">Automatska aktualiziranja</string>
     <string name="pref_category_library_update">Globalno aktualiziranje</string>
-    <string name="landscape">Polegnuto</string>
-    <string name="portrait">Uspravno</string>
+    <string name="landscape">Polegnuti format</string>
+    <string name="portrait">Uspravni format</string>
     <string name="pref_library_columns">Broj stavki po retku</string>
     <string name="pref_category_display">Prikaz</string>
     <string name="hide_notification_content">Sakrij sadržaj obavijesti</string>
@@ -168,8 +168,8 @@
     <string name="color_filter_b_value">Plava</string>
     <string name="color_filter_g_value">Zelena</string>
     <string name="color_filter_r_value">Crvena</string>
-    <string name="rotation_force_landscape">Prisili polegnuto</string>
-    <string name="rotation_force_portrait">Prisili uspravno</string>
+    <string name="rotation_force_landscape">Zaključan polegnuti format</string>
+    <string name="rotation_force_portrait">Zaključan uspravni format</string>
     <string name="rotation_free">Slobodno</string>
     <string name="pref_rotation_type">Standardno okretanje</string>
     <string name="double_tap_anim_speed_fast">Brzo</string>
@@ -188,8 +188,8 @@
     <string name="scale_type_fit_screen">Prilagodi ekranu</string>
     <string name="pref_image_scale_type">Vrsta skaliranja</string>
     <string name="pager_viewer">Stranice</string>
-    <string name="vertical_plus_viewer">Duga traka s razmacima</string>
-    <string name="webtoon_viewer">Duga traka</string>
+    <string name="vertical_plus_viewer">Kontinuirano listanje s razmacima</string>
+    <string name="webtoon_viewer">Kontinuirano listanje</string>
     <string name="vertical_viewer">Stranica (okomito)</string>
     <string name="right_to_left_viewer">Stranica (s desna na lijevo)</string>
     <string name="left_to_right_viewer">Stranica (s lijeva na desno)</string>
@@ -302,7 +302,7 @@
     <string name="unknown">Nepoznato</string>
     <string name="ongoing">Nastavljajući</string>
     <string name="local_source_help_guide">Vodič za lokalni izvor</string>
-    <string name="browse">Pretraži</string>
+    <string name="browse">Pregledaj</string>
     <string name="latest">Najnoviji</string>
     <string name="action_global_search_hint">Globalna pretraga …</string>
     <string name="pinned_sources">Označeni</string>
@@ -468,8 +468,8 @@
     <string name="action_show_errors">Dodirni za prikaz detalja</string>
     <string name="update_check_eol">Ove se Android verzija više ne podržava</string>
     <string name="clipboard_copy_error">Kopiranje nije uspješno</string>
-    <string name="rotation_landscape">Polegnuto</string>
-    <string name="rotation_portrait">Uspravno</string>
+    <string name="rotation_landscape">Polegnuti format</string>
+    <string name="rotation_portrait">Uspravni format</string>
     <string name="pref_grayscale">Sive nijanse</string>
     <string name="notification_incognito_text">Deaktiviraj anonimni modus</string>
     <string name="rotation_type">Okretanje</string>
@@ -512,7 +512,7 @@
     <string name="pref_category_appearance">Izgled</string>
     <string name="getting_started_guide">Vodič za pokretanje</string>
     <string name="confirm_lock_change">Ovjeri za potvrditi promjenu</string>
-    <string name="label_default">Zadano</string>
+    <string name="label_default">Standardno</string>
     <string name="restore_miui_warning">Spremanje sigurnosne kopije i obnavljanje možda neće ispravno raditi, ako MIUI optimizacija nije aktivirana.</string>
     <string name="help_translate">Pomogni prevoditi</string>
     <string name="action_sort_count">Ukupan broj unosa</string>
@@ -525,7 +525,7 @@
     <string name="ext_install_service_notif">Instaliranje proširenja …</string>
     <string name="ext_app_info">Podaci aplikacije</string>
     <string name="connected_to_wifi">Samo putem Wi-Fi veze</string>
-    <string name="download_queue_size_warning">Upozorenje: velika skupna preuzimanja mogu dovesti do usporavanja izvora i/ili blokiranja Mihonja. Za daljnje informacije dodirni.</string>
+    <string name="download_queue_size_warning">Upozorenje: velika skupna preuzimanja mogu dovesti do usporavanja izvora i/ili blokiranja %s. Za daljnje informacije dodirni.</string>
     <string name="theme_tealturquoise">Plavozelena i tirkiz</string>
     <string name="clear_database_source_item_count">Broj unosa u bazi odataka koje nisu u zbirci: %1$d</string>
     <string name="pref_verbose_logging">Opširno zapisivanje</string>
@@ -535,7 +535,7 @@
     <string name="notification_size_warning">Velika aktualiziranja štete izvorima i mogu usporiti aktualiziranja i povećati potrošnju baterije. Dodirni i saznaj više.</string>
     <string name="pref_low">Niska</string>
     <string name="label_background_activity">Aktivnost u pozadini</string>
-    <string name="pref_hide_threshold">Osjetljivost za skrivanje izbornika pri pomicanju</string>
+    <string name="pref_hide_threshold">Osjetljivost za skrivanje izbornika pri listanju</string>
     <string name="pref_auto_clear_chapter_cache">Izbriši predmemoriju poglavlja tijekom pokretanja aplikacije</string>
     <string name="channel_app_updates">Aktualiziranja aplikacije</string>
     <string name="database_clean">Nema se što raščistiti</string>
@@ -566,7 +566,7 @@
     <string name="skipped_reason_not_caught_up">Preskočeno, jer postoje nepročitana poglavlja</string>
     <string name="notification_update_error">Nauspjela aktualiziranja: %1$d</string>
     <string name="learn_more">Dodirni za daljnje informacije</string>
-    <string name="rotation_reverse_portrait">Preokrenuto uspravno</string>
+    <string name="rotation_reverse_portrait">Preokreni uspravni format</string>
     <string name="action_move_to_top_all_for_series">Premjesti seriju na vrh</string>
     <string name="disabled_nav">Deaktivirano</string>
     <string name="empty_backup_error">Nema unosa u biblioteci za spremanje u sigurnosnu kopiju</string>
@@ -619,7 +619,7 @@
     <string name="pref_reset_user_agent_string">Obnovi standardni izraz korisničkog agenta</string>
     <string name="error_user_agent_string_invalid">Nevažeći niz korisničkog agenta</string>
     <string name="pref_invalidate_download_cache_summary">Prisili aplikaciju da ponovno provjeri preuzeta poglavlja</string>
-    <string name="pref_user_agent_string">Zadani niz korisničkog agenta</string>
+    <string name="pref_user_agent_string">Standardni niz korisničkog agenta</string>
     <string name="error_user_agent_string_blank">Niz korisničkog agenta ne može biti prazan</string>
     <string name="pref_invalidate_download_cache">Ponovo indeksiraj preuzimanja</string>
     <string name="pref_reset_viewer_flags">Obnovi postavke čitača serija</string>
@@ -776,12 +776,12 @@
     <string name="action_add_repo">Dodaj repozitorij</string>
     <string name="action_delete_repo">Izbriši repozitorij</string>
     <string name="label_add_repo_input">URL repozitorija</string>
-    <string name="action_add_repo_message">Dodaj dodatne repozitorije u Mihon. To bi trebao biti URL koji završava s „index.min.json”.</string>
+    <string name="action_add_repo_message">Dodaj dodatne repozitorije u %s. To bi trebao biti URL koji završava s „index.min.json”.</string>
     <string name="invalid_repo_name">Neispravan URL repozitorija</string>
     <string name="ext_revoke_trust">Opozovi pouzdana nepoznata proširenja</string>
     <string name="delete_repo_confirmation">Želiš li izbrisati repozitorij „%s”?</string>
     <string name="action_open_repo">Otvori repozitorij izvora</string>
-    <string name="private_settings">Omogući osjetljive postavke (kao što su tokeni za prijavu za usluge praćenja)</string>
+    <string name="private_settings">Uključi osjetljive postavke (kao što su tokeni za prijavu za usluge praćenja)</string>
     <string name="manga_interval_expected_update">Predviđa se da će nova poglavlja biti izdana za oko %1$s, provjera se svakih %2$s.</string>
     <string name="manga_interval_expected_update_soon">Uskoro</string>
     <string name="available_disk_space_info">Dostupno: %1$s / Ukupno: %2$s</string>
@@ -847,7 +847,7 @@
     <string name="pref_mark_duplicate_read_chapter_read_existing">Nakon čitanja poglavlja</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">Nakon dohvaćanja novog poglavlja</string>
     <string name="pref_hide_missing_chapter_indicators">Sakrij indikatore nedostajućih poglavlja</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Koristi zastarjeli dekoder za čitač bezprekidnog prikaza mange</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">Koristi zastarjeli dekoder za čitač kontinuiranog listanja</string>
     <string name="clear_database_text">Uklonit ćeš unose iz baze podataka</string>
     <string name="clear_database_history_warning">Izgubit će se pročitana poglavlja i napredak unosa koji se ne nalaze u biblioteci</string>
     <string name="clear_db_exclude_read">Zadrži unose s pročitanim poglavljima</string>
@@ -901,4 +901,8 @@
     <string name="migrationListScreen.latestChapterLabel">Najnovije: %1$s</string>
     <string name="migrationListScreen.unknownLatestChapter">Nepoznato</string>
     <string name="migrationListScreen.matchWithoutChapterToast">Nije pronađeno nijedno poglavlje. Ovaj se unos ne može koristiti za premještanje</string>
+    <string name="label_donate">Doniraj</string>
+    <string name="pref_display_images_description">Iscrtaj slike u opisima manga</string>
+    <string name="pref_disallow_non_ascii_filenames">Zabrani imena datoteka koji nisu u ASCII formatu</string>
+    <string name="pref_disallow_non_ascii_filenames_details">Osigurava kompatibilnost s određenim medijima za spremanje podataka koji ne podržavaju Unicode. Kada je ova opcija aktivirana, morat ćeš ručno preimenovati izvor i mape s mangama zamjenjivanjem znakova koji nisu ASCII s njihovim UTF-8 heksadecimalnim vrijednostima (u malim slovima). Datoteke poglavlja se ne moraju preimenovati.</string>
 </resources>
