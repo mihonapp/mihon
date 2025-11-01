@@ -25,15 +25,15 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix height of description not being calculated correctly if images are present ([@Secozzi](https://github.com/Secozzi)) ([#2382](https://github.com/mihonapp/mihon/pull/2382))
 - Fix migration progress not updating after manual search ([@Secozzi](https://github.com/Secozzi)) ([#2484](https://github.com/mihonapp/mihon/pull/2484))
 - Fix category migration flag being ignored due to incorrect check against chapter flag ([@Secozzi](https://github.com/Secozzi)) ([#2484](https://github.com/mihonapp/mihon/pull/2484))
-- Fixed an issue where cancelling an extension download too quickly could cause it to remain stuck in a pending state until the app was restarted ([@c2y5](https://github.com/c2y5)) ([#2483](https://github.com/mihonapp/mihon/pull/2483))
-
-### Improved
 - Fix disabling incognito mode from notification ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2512](https://github.com/mihonapp/mihon/pull/2512))
 - Fix mass migration advanced search query building ([@AntsyLich](https://github.com/AntsyLich)) ([#2629](https://github.com/mihonapp/mihon/pull/2629))
 - Fix migration dialog migrating to wrong entry ([@AntsyLich](https://github.com/AntsyLich)) ([#2631](https://github.com/mihonapp/mihon/pull/2631))
 - Fix migration "Attempt to invoke virtual method" crash ([@AntsyLich](https://github.com/AntsyLich)) ([#2632](https://github.com/mihonapp/mihon/pull/2632))
 - Fix reader "Unable to edit key" error ([@AntsyLich](https://github.com/AntsyLich)) ([#2634](https://github.com/mihonapp/mihon/pull/2634))
-- Improved extension listing by making it auto-refresh whenever a new repository is added or deleted ([@c2y5](https://github.com/c2y5)) ([#2483](https://github.com/mihonapp/mihon/pull/2483))
+- Fix extension download stuck in pending state in some cases ([@c2y5](https://github.com/c2y5)) ([#2483](https://github.com/mihonapp/mihon/pull/2483))
+
+### Improved
+- Auto refresh extension list whenever a repository is added or removed ([@c2y5](https://github.com/c2y5)) ([#2483](https://github.com/mihonapp/mihon/pull/2483))
 
 ### Other
 - Fix Kitsu tracker to conform to tracker data structure properly ([@cpiber](https://github.com/cpiber)) ([#2609](https://github.com/mihonapp/mihon/pull/2609))
