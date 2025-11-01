@@ -1,0 +1,7 @@
+-- Save the current remote_id as library_id, since old Kitsu tracker did not use this correctly
+UPDATE manga_sync SET library_id = remote_id WHERE sync_id = 3;
+
+-- Kitsu and Suwayomi aren't using the remote_id field properly, but for both the ID is present in the URL
+-- This parses a url and gets the ID from the trailing path part, e.g. https://kitsu.app/manga/<id>
+-- Based on https://stackoverflow.com/a/38330814
+UPDATE manga_sync SET remote_id = replace(remote_url, rtrim(remote_url, replace(remote_url, '/', '')), '') WHERE sync_id IN (3, 9);
