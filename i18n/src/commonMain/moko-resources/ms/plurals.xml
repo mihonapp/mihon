@@ -51,4 +51,19 @@
     <plurals name="num_repos">
         <item quantity="other">%d repositori</item>
     </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="other">Dalam %1$d hari</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="other">%1$s halaman</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="other">Berhijrah %1$d Kemasukan?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="other">Salin %1$d penyertaan?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="other">%1$d Penyertaan telah dilangkau</item>
+    </plurals>
 </resources>
