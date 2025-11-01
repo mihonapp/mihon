@@ -1,13 +1,14 @@
 [versions]
-compose-bom = "2025.07.00"
+compose-bom = "2025.09.00"
 
 [libraries]
-activity = "androidx.activity:activity-compose:1.10.1"
+activity = "androidx.activity:activity-compose:1.11.0"
 bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 foundation = { module = "androidx.compose.foundation:foundation" }
 animation = { module = "androidx.compose.animation:animation" }
 animation-graphics = { module = "androidx.compose.animation:animation-graphics" }
 runtime = { module = "androidx.compose.runtime:runtime" }
+runtime-annotation = { module = "androidx.compose.runtime:runtime-annotation" }
 ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 ui-util = { module = "androidx.compose.ui:ui-util" }
