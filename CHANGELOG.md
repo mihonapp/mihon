@@ -33,6 +33,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix migration "Attempt to invoke virtual method" crash ([@AntsyLich](https://github.com/AntsyLich)) ([#2632](https://github.com/mihonapp/mihon/pull/2632))
 - Fix reader "Unable to edit key" error ([@AntsyLich](https://github.com/AntsyLich)) ([#2634](https://github.com/mihonapp/mihon/pull/2634))
 - Fix extension download stuck in pending state in some cases ([@c2y5](https://github.com/c2y5)) ([#2483](https://github.com/mihonapp/mihon/pull/2483))
+- Fix scrollbar not showing when animator duration scale animation is turned off ([@anirudhsnayak](https://github.com/anirudhsnayak)) ([#2398](https://github.com/mihonapp/mihon/pull/2398))
 
 ### Improved
 - Auto refresh extension list whenever a repository is added or removed ([@c2y5](https://github.com/c2y5)) ([#2483](https://github.com/mihonapp/mihon/pull/2483))
