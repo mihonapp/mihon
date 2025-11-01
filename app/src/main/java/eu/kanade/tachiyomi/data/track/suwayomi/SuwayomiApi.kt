@@ -35,13 +35,13 @@ class SuwayomiApi(private val trackId: Long) {
 
     suspend fun getTrackSearch(mangaId: Long): TrackSearch = withIOContext {
         val query = """
-query GetManga(${'$'}mangaId: Int!) {
-    manga(id: ${'$'}mangaId) {
-        ...MangaFragment
-    }
-}
-
-$MangaFragment
+        |query GetManga(${'$'}mangaId: Int!) {
+        |    manga(id: ${'$'}mangaId) {
+        |        ...MangaFragment
+        |    }
+        |}
+        |
+        |$MangaFragment
         """.trimMargin()
         val payload = buildJsonObject {
             put("query", query)
@@ -83,14 +83,14 @@ $MangaFragment
         val mangaId = track.remote_id
 
         val chaptersQuery = """
-query GetMangaUnreadChapters(${'$'}mangaId: Int!) {
-  chapters(condition: {mangaId: ${'$'}mangaId, isRead: false}) {
-    nodes {
-      id
-      chapterNumber
-    }
-  }
-}
+        |query GetMangaUnreadChapters(${'$'}mangaId: Int!) {
+        |  chapters(condition: {mangaId: ${'$'}mangaId, isRead: false}) {
+        |    nodes {
+        |      id
+        |      chapterNumber
+        |    }
+        |  }
+        |}
         """.trimMargin()
         val chaptersPayload = buildJsonObject {
             put("query", chaptersQuery)
@@ -114,13 +114,13 @@ query GetMangaUnreadChapters(${'$'}mangaId: Int!) {
         }
 
         val markQuery = """
-mutation MarkChaptersRead(${'$'}chapters: [Int!]!) {
-  updateChapters(input: {ids: ${'$'}chapters, patch: {isRead: true}}) {
-    chapters {
-      id
-    }
-  }
-}
+        |mutation MarkChaptersRead(${'$'}chapters: [Int!]!) {
+        |  updateChapters(input: {ids: ${'$'}chapters, patch: {isRead: true}}) {
+        |    chapters {
+        |      id
+        |    }
+        |  }
+        |}
         """.trimMargin()
         val markPayload = buildJsonObject {
             put("query", markQuery)
@@ -141,13 +141,13 @@ mutation MarkChaptersRead(${'$'}chapters: [Int!]!) {
         }
 
         val trackQuery = """
-mutation TrackManga(${'$'}mangaId: Int!) {
-  trackProgress(input: {mangaId: ${'$'}mangaId}) {
-    trackRecords {
-      lastChapterRead
-    }
-  }
-}
+        |mutation TrackManga(${'$'}mangaId: Int!) {
+        |  trackProgress(input: {mangaId: ${'$'}mangaId}) {
+        |    trackRecords {
+        |      lastChapterRead
+        |    }
+        |  }
+        |}
         """.trimMargin()
         val trackPayload = buildJsonObject {
             put("query", trackQuery)
@@ -176,33 +176,33 @@ mutation TrackManga(${'$'}mangaId: Int!) {
 
     companion object {
         private val MangaFragment = """
-fragment MangaFragment on MangaType {
-    artist
-    author
-    description
-    id
-    status
-    thumbnailUrl
-    title
-    url
-    genre
-    inLibraryAt
-    chapters {
-        totalCount
-    }
-    latestUploadedChapter {
-        uploadDate
-    }
-    latestFetchedChapter {
-        fetchedAt
-    }
-    latestReadChapter {
-        lastReadAt
-        chapterNumber
-    }
-    unreadCount
-    downloadCount
-}
-        """
+        |fragment MangaFragment on MangaType {
+        |    artist
+        |    author
+        |    description
+        |    id
+        |    status
+        |    thumbnailUrl
+        |    title
+        |    url
+        |    genre
+        |    inLibraryAt
+        |    chapters {
+        |        totalCount
+        |    }
+        |    latestUploadedChapter {
+        |        uploadDate
+        |    }
+        |    latestFetchedChapter {
+        |        fetchedAt
+        |    }
+        |    latestReadChapter {
+        |        lastReadAt
+        |        chapterNumber
+        |    }
+        |    unreadCount
+        |    downloadCount
+        |}
+        """.trimMargin()
     }
 }
