@@ -181,56 +181,50 @@ class MangaRestorer(
             }
             .partition { it.id > 0 }
 
-        insertNewChapters(newChapters)
-        updateExistingChapters(existingChapters)
+        handler.await(inTransaction = true) {
+            if (newChapters.isNotEmpty()) {
+                newChapters.forEach { chapter ->
+                    chaptersQueries.insert(
+                        chapter.mangaId,
+                        chapter.url,
+                        chapter.name,
+                        chapter.scanlator,
+                        chapter.read,
+                        chapter.bookmark,
+                        chapter.lastPageRead,
+                        chapter.chapterNumber,
+                        chapter.sourceOrder,
+                        chapter.dateFetch,
+                        chapter.dateUpload,
+                        chapter.version,
+                    )
+                }
+            }
+            if (existingChapters.isNotEmpty()) {
+                existingChapters.forEach { chapter ->
+                    chaptersQueries.update(
+                        mangaId = null,
+                        url = null,
+                        name = null,
+                        scanlator = null,
+                        read = chapter.read,
+                        bookmark = chapter.bookmark,
+                        lastPageRead = chapter.lastPageRead,
+                        chapterNumber = null,
+                        sourceOrder = null,
+                        dateFetch = null,
+                        dateUpload = null,
+                        chapterId = chapter.id,
+                        version = chapter.version,
+                        isSyncing = 0,
+                    )
+                }
+            }
+        }
     }
 
     private fun Chapter.forComparison() =
         this.copy(id = 0L, mangaId = 0L, dateFetch = 0L, dateUpload = 0L, lastModifiedAt = 0L, version = 0L)
-
-    private suspend fun insertNewChapters(chapters: List<Chapter>) {
-        handler.await(true) {
-            chapters.forEach { chapter ->
-                chaptersQueries.insert(
-                    chapter.mangaId,
-                    chapter.url,
-                    chapter.name,
-                    chapter.scanlator,
-                    chapter.read,
-                    chapter.bookmark,
-                    chapter.lastPageRead,
-                    chapter.chapterNumber,
-                    chapter.sourceOrder,
-                    chapter.dateFetch,
-                    chapter.dateUpload,
-                    chapter.version,
-                )
-            }
-        }
-    }
-
-    private suspend fun updateExistingChapters(chapters: List<Chapter>) {
-        handler.await(true) {
-            chapters.forEach { chapter ->
-                chaptersQueries.update(
-                    mangaId = null,
-                    url = null,
-                    name = null,
-                    scanlator = null,
-                    read = chapter.read,
-                    bookmark = chapter.bookmark,
-                    lastPageRead = chapter.lastPageRead,
-                    chapterNumber = null,
-                    sourceOrder = null,
-                    dateFetch = null,
-                    dateUpload = null,
-                    chapterId = chapter.id,
-                    version = chapter.version,
-                    isSyncing = 0,
-                )
-            }
-        }
-    }
 
     /**
      * Inserts manga and returns id
