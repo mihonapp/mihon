@@ -22,6 +22,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Improved
 - Spoofing of `X-Requested-With` header to support newer WebView versions ([@Guzmazow](https://github.com/Guzmazow)) ([#2491](https://github.com/mihonapp/mihon/pull/2491))
 - Download support for chapters with the same metadata. Now a hash based on chapter's url is appended to download filename to tell them apart, letting you download both. Existing downloaded chapters will continue to work normally ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
+- Auto refresh extension list whenever a repository is added or removed ([@c2y5](https://github.com/c2y5)) ([#2483](https://github.com/mihonapp/mihon/pull/2483))
 
 ### Fixed
 - Fix height of description not being calculated correctly if images are present ([@Secozzi](https://github.com/Secozzi)) ([#2382](https://github.com/mihonapp/mihon/pull/2382))
@@ -34,9 +35,6 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix reader "Unable to edit key" error ([@AntsyLich](https://github.com/AntsyLich)) ([#2634](https://github.com/mihonapp/mihon/pull/2634))
 - Fix extension download stuck in pending state in some cases ([@c2y5](https://github.com/c2y5)) ([#2483](https://github.com/mihonapp/mihon/pull/2483))
 - Fix scrollbar not showing when animator duration scale animation is turned off ([@anirudhsnayak](https://github.com/anirudhsnayak)) ([#2398](https://github.com/mihonapp/mihon/pull/2398))
-
-### Improved
-- Auto refresh extension list whenever a repository is added or removed ([@c2y5](https://github.com/c2y5)) ([#2483](https://github.com/mihonapp/mihon/pull/2483))
 
 ### Other
 - Fix Kitsu tracker to conform to tracker data structure properly ([@cpiber](https://github.com/cpiber)) ([#2609](https://github.com/mihonapp/mihon/pull/2609))
