@@ -374,6 +374,10 @@ class ReaderActivity : BaseActivity() {
             val isPagerType = ReadingMode.isPagerType(viewModel.getMangaReadingMode())
             val cropEnabled = if (isPagerType) cropBorderPaged else cropBorderWebtoon
 
+            val totalChapters = viewModel.chapterCount()
+            val currentChapter = viewModel.currentChapter(state.currentChapter) + 1
+            val remainingChapters = totalChapters - currentChapter
+
             ReaderContentOverlay(
                 brightness = state.brightnessOverlayValue,
                 color = colorOverlay.takeIf { colorOverlayEnabled },
@@ -386,6 +390,7 @@ class ReaderActivity : BaseActivity() {
 
                 mangaTitle = state.manga?.title,
                 chapterTitle = state.currentChapter?.chapter?.name,
+                remainingChapters = remainingChapters,
                 navigateUp = onBackPressedDispatcher::onBackPressed,
                 onClickTopAppBar = ::openMangaScreen,
                 bookmarked = state.bookmarked,

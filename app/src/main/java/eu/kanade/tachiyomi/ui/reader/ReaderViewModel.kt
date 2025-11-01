@@ -337,6 +337,21 @@ class ReaderViewModel @JvmOverloads constructor(
     }
 
     /**
+     * Returns the total number of chapters for the current manga
+     */
+    fun chapterCount(): Int {
+        return chapterList.size
+    }
+
+    /**
+     * Returns the index of the current chapter from the ChapterList
+     * Effectively returns the number of the current chapter
+     */
+    fun currentChapter(chapter: ReaderChapter?): Int {
+        return chapterList.indexOf(chapter)
+    }
+
+    /**
      * Called when the user changed to the given [chapter] when changing pages from the viewer.
      * It's used only to set this chapter as active.
      */

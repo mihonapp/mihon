@@ -57,6 +57,7 @@ fun ReaderAppBars(
     currentPage: Int,
     totalPages: Int,
     onPageIndexChange: (Int) -> Unit,
+    remainingChapters: Int,
 
     readingMode: ReadingMode,
     onClickReadingMode: () -> Unit,
@@ -177,6 +178,7 @@ fun ReaderAppBars(
                     currentPage = currentPage,
                     totalPages = totalPages,
                     onPageIndexChange = onPageIndexChange,
+                    remainingChapters = remainingChapters,
                 )
                 BottomReaderBar(
                     backgroundColor = backgroundColor,
