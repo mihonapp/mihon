@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.view.ViewGroup.MarginLayoutParams
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
+import androidx.core.view.setMargins
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
@@ -24,8 +26,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import logcat.LogPriority
-import okio.Buffer
-import okio.BufferedSource
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.withIOContext
@@ -99,6 +99,16 @@ class WebtoonPageHolder(
     }
 
     private fun refreshLayoutParams() {
+        if (page?.status == Page.State.Skip) {
+            frame.isVisible = false
+            frame.layoutParams = (frame.layoutParams as MarginLayoutParams).apply {
+                width = 0
+                height = 0
+                setMargins(0)
+            }
+            return
+        }
+        frame.isVisible = true
         frame.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
             if (!viewer.isContinuous) {
                 bottomMargin = 15.dpToPx
@@ -132,10 +142,10 @@ class WebtoonPageHolder(
      */
     private suspend fun loadPageAndProcessStatus() {
         val page = page ?: return
-        val loader = page.chapter.pageLoader ?: return
+        page.chapter.pageLoader ?: return
         supervisorScope {
             launchIO {
-                loader.loadPage(page)
+                viewer.loadPage(page)
             }
             page.statusFlow.collectLatest { state ->
                 when (state) {
@@ -148,6 +158,7 @@ class WebtoonPageHolder(
                         }
                     }
                     Page.State.Ready -> setImage()
+                    Page.State.Skip -> setSkip()
                     is Page.State.Error -> setError(state.error)
                 }
             }
@@ -187,24 +198,23 @@ class WebtoonPageHolder(
     private suspend fun setImage() {
         progressIndicator.setProgress(0)
 
-        val streamFn = page?.stream ?: return
-
         try {
             val (source, isAnimated) = withIOContext {
-                val source = streamFn().use { process(Buffer().readFrom(it)) }
+                val source = process(page?.getImageSource() ?: return@withIOContext null)
                 val isAnimated = ImageUtil.isAnimatedAndSupported(source)
                 Pair(source, isAnimated)
-            }
+            } ?: return
             withUIContext {
-                frame.setImage(
-                    source,
-                    isAnimated,
-                    ReaderPageImageView.Config(
-                        zoomDuration = viewer.config.doubleTapAnimDuration,
-                        minimumScaleType = SubsamplingScaleImageView.SCALE_TYPE_FIT_WIDTH,
-                        cropBorders = viewer.config.imageCropBorders,
-                    ),
+                val config = ReaderPageImageView.Config(
+                    zoomDuration = viewer.config.doubleTapAnimDuration,
+                    minimumScaleType = SubsamplingScaleImageView.SCALE_TYPE_FIT_WIDTH,
+                    cropBorders = viewer.config.imageCropBorders,
                 )
+                when (source) {
+                    is ImageUtil.ImageSource.FromBuffer -> frame.setImage(source.buffer, isAnimated, config)
+                    is ImageUtil.ImageSource.FromBitmap -> frame.setImage(source.bitmap, config)
+                }
+
                 removeErrorLayout()
             }
         } catch (e: Throwable) {
@@ -215,7 +225,13 @@ class WebtoonPageHolder(
         }
     }
 
-    private fun process(imageSource: BufferedSource): BufferedSource {
+    private fun setSkip() {
+        progressContainer.isVisible = false
+        removeErrorLayout()
+        refreshLayoutParams()
+    }
+
+    private fun process(imageSource: ImageUtil.ImageSource): ImageUtil.ImageSource {
         if (viewer.config.dualPageRotateToFit) {
             return rotateDualPage(imageSource)
         }
@@ -223,7 +239,7 @@ class WebtoonPageHolder(
         if (viewer.config.dualPageSplit) {
             val isDoublePage = ImageUtil.isWideImage(imageSource)
             if (isDoublePage) {
-                val upperSide = if (viewer.config.dualPageInvert) ImageUtil.Side.LEFT else ImageUtil.Side.RIGHT
+                val upperSide = if (viewer.areWidePagesLTR) ImageUtil.Side.LEFT else ImageUtil.Side.RIGHT
                 return ImageUtil.splitAndMerge(imageSource, upperSide)
             }
         }
@@ -231,7 +247,7 @@ class WebtoonPageHolder(
         return imageSource
     }
 
-    private fun rotateDualPage(imageSource: BufferedSource): BufferedSource {
+    private fun rotateDualPage(imageSource: ImageUtil.ImageSource): ImageUtil.ImageSource {
         val isDoublePage = ImageUtil.isWideImage(imageSource)
         return if (isDoublePage) {
             val rotation = if (viewer.config.dualPageRotateToFitInvert) -90f else 90f
@@ -281,7 +297,7 @@ class WebtoonPageHolder(
             errorLayout = ReaderErrorBinding.inflate(LayoutInflater.from(context), frame, true)
             errorLayout?.root?.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, (parentHeight * 0.8).toInt())
             errorLayout?.actionRetry?.setOnClickListener {
-                page?.let { it.chapter.pageLoader?.retryPage(it) }
+                page?.let { viewer.retryPage(it) }
             }
         }
 

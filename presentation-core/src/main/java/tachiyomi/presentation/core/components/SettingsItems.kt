@@ -135,12 +135,17 @@ fun BaseSortItem(label: String, icon: ImageVector?, onClick: () -> Unit) {
 }
 
 @Composable
-fun CheckboxItem(label: String, pref: Preference<Boolean>) {
+fun CheckboxItem(label: String, pref: Preference<Boolean>, onClick: (() -> Unit)? = null) {
     val checked by pref.collectAsState()
     CheckboxItem(
         label = label,
         checked = checked,
-        onClick = { pref.toggle() },
+        onClick = {
+            pref.toggle()
+            if (onClick != null) {
+                onClick()
+            }
+        },
     )
 }
 

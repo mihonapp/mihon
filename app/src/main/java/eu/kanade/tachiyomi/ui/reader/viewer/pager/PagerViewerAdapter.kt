@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
 import android.view.View
 import android.view.ViewGroup
+import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
@@ -26,7 +27,12 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     /**
      * Holds preprocessed items so they don't get removed when changing chapter
      */
-    private var preprocessed: MutableMap<Int, InsertPage> = mutableMapOf()
+    private var preprocessed: MutableMap<ReaderPage, PreprocessedPageInfo> = mutableMapOf()
+
+    /**
+     * The set of pages which have been removed from the item list due to having status [Page.State.Skip]
+     */
+    private var skippedPages = mutableSetOf<ReaderPage>()
 
     var nextTransition: ChapterTransition.Next? = null
         private set
@@ -66,6 +72,8 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
             newItems.add(ChapterTransition.Prev(chapters.currChapter, chapters.prevChapter))
         }
 
+        skippedPages.clear()
+
         var insertPageLastPage: InsertPage? = null
 
         // Add current chapter.
@@ -75,13 +83,23 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
 
             val lastPage = pages.last()
 
-            // Insert preprocessed pages into current page list
-            preprocessed.keys.sortedDescending()
-                .forEach { key ->
-                    if (lastPage.index == key) {
-                        insertPageLastPage = preprocessed[key]
+            // Apply preprocessed pages to the incoming page list
+            preprocessed.entries.sortedByDescending { it.key.index }
+                .forEach { (page, info) ->
+                    if (chapters.currChapter.chapter.id == page.chapter.chapter.id) {
+                        when (info) {
+                            is PreprocessedPageInfo.Skip -> {
+                                pages.removeAt(page.index)
+                                skippedPages.add(page)
+                            }
+                            is PreprocessedPageInfo.Split -> {
+                                if (lastPage.index == page.index) {
+                                    insertPageLastPage = info.insertAfter
+                                }
+                                pages.add(page.index + 1, info.insertAfter)
+                            }
+                        }
                     }
-                    preprocessed[key]?.let { pages.add(key + 1, it) }
                 }
 
             newItems.addAll(pages)
@@ -167,7 +185,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
 
         // Put aside preprocessed pages for next chapter so they don't get removed when changing chapter
         if (currentPage.chapter.chapter.id != currentChapter?.chapter?.id) {
-            preprocessed[newPage.index] = newPage
+            preprocessed[newPage] = PreprocessedPageInfo.Split(newPage)
             return
         }
 
@@ -193,13 +211,88 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         notifyDataSetChanged()
     }
 
+    fun onPageSkip(page: ReaderPage) {
+        if (page.chapter.chapter.id != currentChapter?.chapter?.id) {
+            preprocessed[page] = PreprocessedPageInfo.Skip
+            return
+        }
+
+        val index = items.indexOf(page)
+        if (index != -1) {
+            val currentIndex = viewer.pager.currentItem
+            items.removeAt(index)
+            skippedPages.add(page)
+            notifyDataSetChanged()
+
+            // If the current page is skipped, we'll go to the previous page.
+            if (index == currentIndex) {
+                if (viewer is R2LPagerViewer) {
+                    viewer.pager.setCurrentItem(index)
+                }
+                else {
+                    viewer.pager.setCurrentItem(index - 1)
+                }
+            }
+        }
+    }
+
     fun cleanupPageSplit() {
-        val insertPages = items.filterIsInstance(InsertPage::class.java)
-        items.removeAll(insertPages)
+        preprocessed = mutableMapOf()
+        items.removeAll { it is InsertPage }
+        notifyDataSetChanged()
+    }
+
+    fun restoreSkippedPages() {
+        items = items.toMutableList().withOrder(viewer is R2LPagerViewer) { items ->
+            skippedPages.sortedBy { it.index }.forEach { page ->
+                if (page.index == 0) {
+                    val previousIndex = items.indexOfFirst {
+                        it is ChapterTransition && it.to?.chapter?.id == page.chapter.chapter.id
+                    }
+                    if (previousIndex != -1) {
+                        items.add(previousIndex + 1, page)
+                    }
+                    else {
+                        items.add(0, page)
+                    }
+                }
+                else {
+                    val previousIndex = items.indexOfFirst {
+                        it is ReaderPage
+                            && it.chapter.chapter.id == page.chapter.chapter.id
+                            && it.index == page.index - 1
+                    }
+                    if (previousIndex != -1) {
+                        items.add(previousIndex + 1, page)
+                    }
+                }
+            }
+            items
+        }
+        skippedPages.clear()
         notifyDataSetChanged()
     }
 
     fun refresh() {
         readerThemedContext = viewer.activity.createReaderThemeContext()
+    }
+
+    private sealed interface PreprocessedPageInfo {
+        data class Split(val insertAfter: InsertPage) : PreprocessedPageInfo
+        data object Skip : PreprocessedPageInfo
+    }
+
+    private fun<T : MutableList<Any>, R> T.withOrder(reversed: Boolean, block: (T) -> R): R {
+        return if (!reversed) {
+            block(this)
+        }
+        else {
+            reverse()
+            try {
+                block(this)
+            } finally {
+                reverse()
+            }
+        }
     }
 }
