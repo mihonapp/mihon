@@ -203,13 +203,17 @@ object SettingsReaderScreen : SearchableSettings {
 
     @Composable
     private fun getPagedGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup {
+        val numberFormat = remember { NumberFormat.getPercentInstance() }
+
         val navModePref = readerPreferences.navigationModePager()
         val imageScaleTypePref = readerPreferences.imageScaleType()
+        val pagedVerticalPaddingPref = readerPreferences.pagedVerticalPadding()
         val dualPageSplitPref = readerPreferences.dualPageSplitPaged()
         val rotateToFitPref = readerPreferences.dualPageRotateToFit()
 
         val navMode by navModePref.collectAsState()
         val imageScaleType by imageScaleTypePref.collectAsState()
+        val pagedVerticalPadding by pagedVerticalPaddingPref.collectAsState()
         val dualPageSplit by dualPageSplitPref.collectAsState()
         val rotateToFit by rotateToFitPref.collectAsState()
 
@@ -244,6 +248,19 @@ object SettingsReaderScreen : SearchableSettings {
                         .toMap()
                         .toImmutableMap(),
                     title = stringResource(MR.strings.pref_image_scale_type),
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = pagedVerticalPadding,
+                    valueRange = ReaderPreferences.let {
+                        it.PADDING_MIN..it.PADDING_MAX
+                    },
+                    title = stringResource(MR.strings.pref_vertical_padding),
+                    subtitle = numberFormat.format(pagedVerticalPadding / 100f),
+                    onValueChanged = {
+                        pagedVerticalPaddingPref.set(it)
+                        true
+                    },
+                    enabled = imageScaleType == 4
                 ),
                 Preference.PreferenceItem.ListPreference(
                     preference = readerPreferences.zoomStart(),
@@ -339,7 +356,7 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SliderPreference(
                     value = webtoonSidePadding,
                     valueRange = ReaderPreferences.let {
-                        it.WEBTOON_PADDING_MIN..it.WEBTOON_PADDING_MAX
+                        it.PADDING_MIN..it.PADDING_MAX
                     },
                     title = stringResource(MR.strings.pref_webtoon_side_padding),
                     subtitle = numberFormat.format(webtoonSidePadding / 100f),
