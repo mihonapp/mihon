@@ -191,7 +191,10 @@ class Downloader(
         if (isRunning) return
 
         downloaderJob = scope.launch {
-            val activeDownloadsFlow = combine(queueState, downloadPreferences.parallelSourceLimit().changes()) { a, b -> a to b }.transformLatest { (queue, parallelCount) ->
+            val activeDownloadsFlow = combine(
+                queueState,
+                downloadPreferences.parallelSourceLimit().changes(),
+            ) { a, b -> a to b }.transformLatest { (queue, parallelCount) ->
                 while (true) {
                     val activeDownloads = queue.asSequence()
                         // Ignore completed downloads, leave them in the queue
@@ -383,10 +386,10 @@ class Downloader(
                 }
                     .flowOn(Dispatchers.IO)
             }
-            .collect {
-                // Do when page is downloaded.
-                notifier.onProgressChange(download)
-            }
+                .collect {
+                    // Do when page is downloaded.
+                    notifier.onProgressChange(download)
+                }
 
             // Do after download completes
 
