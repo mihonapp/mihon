@@ -1,100 +1,90 @@
 package eu.kanade.tachiyomi.data.track.suwayomi
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+public enum class MangaStatus(
+    public val rawValue: String,
+) {
+    UNKNOWN("UNKNOWN"),
+    ONGOING("ONGOING"),
+    COMPLETED("COMPLETED"),
+    LICENSED("LICENSED"),
+    PUBLISHING_FINISHED("PUBLISHING_FINISHED"),
+    CANCELLED("CANCELLED"),
+    ON_HIATUS("ON_HIATUS"),
+}
+
 @Serializable
-data class SourceDataClass(
-    val id: String,
-    val name: String,
-    val lang: String,
-    val iconUrl: String,
+public data class MangaFragment(
+    public val artist: String?,
+    public val author: String?,
+    public val description: String?,
+    public val id: Int,
+    public val status: MangaStatus,
+    public val thumbnailUrl: String?,
+    public val title: String,
+    public val url: String,
+    public val genre: List<String>,
+    public val inLibraryAt: Long,
+    public val chapters: Chapters,
+    public val latestUploadedChapter: LatestUploadedChapter?,
+    public val latestFetchedChapter: LatestFetchedChapter?,
+    public val latestReadChapter: LatestReadChapter?,
+    public val unreadCount: Int,
+    public val downloadCount: Int,
+) {
+    @Serializable
+    public data class Chapters(
+        public val totalCount: Int,
+    )
 
-    /** The Source provides a latest listing */
-    val supportsLatest: Boolean,
+    @Serializable
+    public data class LatestUploadedChapter(
+        public val uploadDate: Long,
+    )
 
-    /** The Source implements [ConfigurableSource] */
-    val isConfigurable: Boolean,
+    @Serializable
+    public data class LatestFetchedChapter(
+        public val fetchedAt: Long,
+    )
 
-    /** The Source class has a @Nsfw annotation */
-    val isNsfw: Boolean,
+    @Serializable
+    public data class LatestReadChapter(
+        public val lastReadAt: Long,
+        public val chapterNumber: Double,
+    )
+}
 
-    /** A nicer version of [name] */
-    val displayName: String,
+@Serializable
+public data class GetMangaResult(
+    public val data: GetMangaData,
 )
 
 @Serializable
-data class MangaDataClass(
-    val id: Int,
-    val sourceId: String,
-
-    val url: String,
-    val title: String,
-    val thumbnailUrl: String?,
-
-    val initialized: Boolean,
-
-    val artist: String?,
-    val author: String?,
-    val description: String?,
-    val genre: List<String>,
-    val status: String,
-    val inLibrary: Boolean,
-    val inLibraryAt: Long,
-    val source: SourceDataClass?,
-
-    val meta: Map<String, String>,
-
-    val realUrl: String?,
-    val lastFetchedAt: Long?,
-    val chaptersLastFetchedAt: Long?,
-
-    val freshData: Boolean,
-    val unreadCount: Long?,
-    val downloadCount: Long?,
-    val chapterCount: Long, // actually is nullable server side, but should be set at this time
-    val lastChapterRead: ChapterDataClass?,
-
-    val age: Long?,
-    val chaptersAge: Long?,
+public data class GetMangaData(
+    @SerialName("manga")
+    public val entry: MangaFragment,
 )
 
 @Serializable
-data class ChapterDataClass(
-    val id: Int,
-    val url: String,
-    val name: String,
-    val uploadDate: Long,
-    val chapterNumber: Double,
-    val scanlator: String?,
-    val mangaId: Int,
+public data class GetMangaUnreadChaptersEntry(
+    public val nodes: List<GetMangaUnreadChaptersNode>,
+)
 
-    /** chapter is read */
-    val read: Boolean,
+@Serializable
+public data class GetMangaUnreadChaptersNode(
+    public val id: Int,
+    public val chapterNumber: Double,
+)
 
-    /** chapter is bookmarked */
-    val bookmarked: Boolean,
+@Serializable
+public data class GetMangaUnreadChaptersResult(
+    public val data: GetMangaUnreadChaptersData,
+)
 
-    /** last read page, zero means not read/no data */
-    val lastPageRead: Int,
-
-    /** last read page, zero means not read/no data */
-    val lastReadAt: Long,
-
-    /** this chapter's index, starts with 1 */
-    val index: Int,
-
-    /** the date we fist saw this chapter*/
-    val fetchedAt: Long,
-
-    /** is chapter downloaded */
-    val downloaded: Boolean,
-
-    /** used to construct pages in the front-end */
-    val pageCount: Int,
-
-    /** total chapter count, used to calculate if there's a next and prev chapter */
-    val chapterCount: Int?,
-
-    /** used to store client specific values */
-    val meta: Map<String, String>,
+@Serializable
+public data class GetMangaUnreadChaptersData(
+    @SerialName("chapters")
+    public val entry: GetMangaUnreadChaptersEntry,
 )
