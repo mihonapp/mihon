@@ -35,6 +35,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix reader "Unable to edit key" error ([@AntsyLich](https://github.com/AntsyLich)) ([#2634](https://github.com/mihonapp/mihon/pull/2634))
 - Fix extension download stuck in pending state in some cases ([@c2y5](https://github.com/c2y5)) ([#2483](https://github.com/mihonapp/mihon/pull/2483))
 - Fix scrollbar not showing when animator duration scale animation is turned off ([@anirudhsnayak](https://github.com/anirudhsnayak)) ([#2398](https://github.com/mihonapp/mihon/pull/2398))
+- Fix date picker not allowing the same start and finish date in negative time zones ([@AntsyLich](https://github.com/AntsyLich), [@kashish-aggarwal21](https://github.com/kashish-aggarwal21)) ([#2617](https://github.com/mihonapp/mihon/pull/2617))
 
 ### Other
 - Fix Kitsu tracker to conform to tracker data structure properly ([@cpiber](https://github.com/cpiber)) ([#2609](https://github.com/mihonapp/mihon/pull/2609))
