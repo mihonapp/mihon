@@ -32,7 +32,7 @@ object LibraryExporter {
 
     private val escapeRequired = listOf("\r", "\n", "\"", ",")
 
-    private fun generateCsvData(favorites: List<Manga>, options: ExportOptions): String {
+    fun generateCsvData(favorites: List<Manga>, options: ExportOptions): String {
         val columnSize = listOf(
             options.includeTitle,
             options.includeAuthor,

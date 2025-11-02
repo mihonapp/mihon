@@ -24,7 +24,7 @@ android {
     namespace = "eu.kanade.tachiyomi"
 
     defaultConfig {
-        applicationId = "app.mihon"
+        applicationId = "app.mihonai"
 
         versionCode = 14
         versionName = "0.19.1"
@@ -284,6 +284,9 @@ dependencies {
     // Tests
     testImplementation(libs.bundles.test)
     testRuntimeOnly(libs.junit.platform.launcher)
+
+    // AI
+    implementation(libs.google.ai.sdk)
 
     // For detecting memory leaks; see https://square.github.io/leakcanary/
     // debugImplementation(libs.leakcanary.android)
