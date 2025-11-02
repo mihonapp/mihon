@@ -47,6 +47,7 @@ import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastLastOrNull
 import androidx.compose.ui.util.fastMaxBy
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.sample
@@ -177,7 +178,8 @@ fun VerticalFastScroller(
                     .collectLatest {
                         if (thumbAllowed()) {
                             alpha.snapTo(1f)
-                            alpha.animateTo(0f, animationSpec = FadeOutAnimationSpec)
+                            delay(ScrollBarVisibilityDurationMillis)
+                            alpha.animateTo(0f, animationSpec = ImmediateFadeOutAnimationSpec)
                         } else {
                             alpha.animateTo(0f, animationSpec = ImmediateFadeOutAnimationSpec)
                         }
@@ -366,7 +368,8 @@ fun VerticalGridFastScroller(
                     .collectLatest {
                         if (thumbAllowed()) {
                             alpha.snapTo(1f)
-                            alpha.animateTo(0f, animationSpec = FadeOutAnimationSpec)
+                            delay(ScrollBarVisibilityDurationMillis)
+                            alpha.animateTo(0f, animationSpec = ImmediateFadeOutAnimationSpec)
                         } else {
                             alpha.animateTo(0f, animationSpec = ImmediateFadeOutAnimationSpec)
                         }
@@ -460,10 +463,7 @@ object Scroller {
 private val ThumbLength = 48.dp
 private val ThumbThickness = 12.dp
 private val ThumbShape = RoundedCornerShape(ThumbThickness / 2)
-private val FadeOutAnimationSpec = tween<Float>(
-    durationMillis = ViewConfiguration.getScrollBarFadeDuration(),
-    delayMillis = 2000,
-)
+private val ScrollBarVisibilityDurationMillis = 2000L
 private val ImmediateFadeOutAnimationSpec = tween<Float>(
     durationMillis = ViewConfiguration.getScrollBarFadeDuration(),
 )
