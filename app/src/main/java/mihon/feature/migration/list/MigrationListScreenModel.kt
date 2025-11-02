@@ -251,6 +251,7 @@ class MigrationListScreenModel(
             } catch (_: Exception) {
             }
             migratingManga.searchResult.value = result.toSuccessSearchResult()
+            updateMigrationProgress()
         }
     }
 
