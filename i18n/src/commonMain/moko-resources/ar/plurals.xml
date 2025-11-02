@@ -105,7 +105,7 @@
         <item quantity="other">%d فصل تالٍ لم يُقرؤوا</item>
     </plurals>
     <plurals name="download_amount">
-        <item quantity="zero">الفصل التالي</item>
+        <item quantity="zero">لا فصل تالي</item>
         <item quantity="one">الفصل التالي</item>
         <item quantity="two">%d فصول تالية</item>
         <item quantity="few">%d فصول تالية</item>
@@ -151,5 +151,29 @@
         <item quantity="few">بعد %1$d أيام</item>
         <item quantity="many">بعد %1$d أيام</item>
         <item quantity="other">بعد %1$d أيام</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="zero">نقل %1$d مدخل</item>
+        <item quantity="one">نقل %1$d مدخل</item>
+        <item quantity="two">نقل %1$d مدخل</item>
+        <item quantity="few">نقل %1$d مدخل</item>
+        <item quantity="many">نقل %1$d مدخل</item>
+        <item quantity="other">نقل %1$d مدخل</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="zero">نسخ %1$d مدخل؟</item>
+        <item quantity="one">نسخ %1$d مدخل؟</item>
+        <item quantity="two">نسخ %1$d مدخل؟</item>
+        <item quantity="few">نسخ %1$d مدخل؟</item>
+        <item quantity="many">نسخ %1$d مدخل؟</item>
+        <item quantity="other">نسخ %1$d مدخل؟</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="zero">لا مدخل ثم تجاوزه</item>
+        <item quantity="one">مدخل ثم تجاوزه</item>
+        <item quantity="two">مدخلان ثم تجاوزه</item>
+        <item quantity="few">%1$d مدخل ثم تجاوزه</item>
+        <item quantity="many">%1$d مدخل ثم تجاوزه</item>
+        <item quantity="other">%1$d مدخل ثم تجاوزه</item>
     </plurals>
 </resources>

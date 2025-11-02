@@ -426,7 +426,7 @@
     <string name="clear_history_completed">Nabura ang kasaysayan</string>
     <string name="clear_history_confirmation">Sigurado ka ba talaga? Mawawala ang buong kasaysayan.</string>
     <string name="migration_help_guide">Gabay sa Paglipat ng source</string>
-    <string name="spen_next_page">Abante</string>
+    <string name="spen_next_page">Susunod na pahina</string>
     <string name="spen_previous_page">Balik</string>
     <string name="file_picker_error">Walang nakitang file picker app</string>
     <string name="pref_show_nsfw_source">Ipakita sa mga listahan ng source at extension</string>
@@ -542,7 +542,7 @@
     <string name="backup_info">Dapat nagtatabi rin kayo ng mga kopya ng backup sa ibang mga lugar. Ang mga backup ay naglalaman ng sensitibong data tulad ng nakaimbak na password; mag-ingat kung ibahagi ito.</string>
     <string name="connected_to_wifi">Sa Wi-Fi lang</string>
     <string name="update_72hour">Kada 3 araw</string>
-    <string name="download_queue_size_warning">Babala: maaaring humantong sa pagbagal at/o pagharang ng mga source sa Mihon ang maramihang pag-download. I-tap para matuto pa.</string>
+    <string name="download_queue_size_warning">Babala: maaaring humantong sa pagbagal at/o pagharang ng mga source sa %s ang maramihang pag-download. I-tap para matuto pa.</string>
     <string name="channel_app_updates">Mga update sa app</string>
     <string name="ext_update_all">I-update lahat</string>
     <string name="clear_database_source_item_count">%1$d na entry sa database na wala sa aklatan</string>
@@ -777,7 +777,7 @@
     <string name="error_repo_exists">Umiiral na ang repo na ito!</string>
     <string name="action_delete_repo">Tanggalin ang repo</string>
     <string name="label_add_repo_input">URL ng repo</string>
-    <string name="action_add_repo_message">Magdagdag ng mga karagdagang repo sa Mihon. Dapat ito ay isang URL na nagtatapos sa \"index.min.json\".</string>
+    <string name="action_add_repo_message">Magdagdag ng mga karagdagang repo sa %s. Dapat ito ay isang URL na nagtatapos sa \"index.min.json\".</string>
     <string name="invalid_repo_name">Di-wastong URL ng repo</string>
     <string name="delete_repo_confirmation">Gusto mo bang tanggalin ang repo na \"%s\"?</string>
     <string name="manga_interval_custom_amount">Custom na frequency sa pag-update:</string>
@@ -901,4 +901,6 @@
     <string name="pref_hide_missing_chapter_indicators">Itago ang mga indikasyon ng nawawalang kabanata</string>
     <string name="pref_display_images_description">I-render ang mga imahe sa mga paglalarawan ng manga</string>
     <string name="label_donate">Mag-donate</string>
+    <string name="pref_disallow_non_ascii_filenames">Di-payagan ang mga non-ASCII na filename</string>
+    <string name="pref_disallow_non_ascii_filenames_details">Tinitiyak ang pagiging tugma sa ilang partikular na storage media na hindi sumusuporta sa Unicode. Kapag napagana ito, kakailanganin mong manu-manong palitan ang pangalan ng source at manga folder sa pamamagitan ng pagpapalit ng mga hindi ASCII na character ng kanilang lowercase na UTF-8 hexadecimal na representasyon. Hindi kailangang palitan ng pangalan ang mga file ng kabanata.</string>
 </resources>

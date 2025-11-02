@@ -452,7 +452,7 @@
     <string name="pref_dual_page_invert">Inverser le placement des pages divisées</string>
     <string name="backup_restore_content_full">Vous devrez installer les extensions manquantes et vous connecter ensuite aux services de suivi pour les utiliser.</string>
     <string name="nav_zone_prev">Précédent</string>
-    <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
+    <string name="pref_dns_over_https">DNS sur HTTPS (DoH)</string>
     <string name="nav_zone_right">Droite</string>
     <string name="nav_zone_left">Gauche</string>
     <string name="nav_zone_next">Suivant</string>
@@ -542,7 +542,7 @@
     <string name="backup_info">Vous devez également conserver des copies des sauvegardes à d\'autres endroits.</string>
     <string name="connected_to_wifi">Uniquement en Wi-Fi</string>
     <string name="update_72hour">Tous les 3 jours</string>
-    <string name="download_queue_size_warning">Attention : les téléchargements massifs peuvent entraîner un ralentissement des sources ou le blocage de Mihon. Appuyez pour en savoir plus.</string>
+    <string name="download_queue_size_warning">Attention : les téléchargements massifs peuvent entraîner un ralentissement des sources ou le blocage de %s. Appuyez pour en savoir plus.</string>
     <string name="ext_update_all">Tout mettre à jour</string>
     <string name="channel_app_updates">Mises à jour de l\'application</string>
     <string name="pref_auto_clear_chapter_cache">Vider le cache de chapitre au lancement de l\'application</string>
@@ -717,7 +717,7 @@
     <string name="action_menu_overflow_description">Plus d\'options</string>
     <string name="selected">Sélectionné</string>
     <string name="not_selected">Pas sélectionné(e)</string>
-    <string name="scanlator">Scanlator</string>
+    <string name="scanlator">Scanlateur</string>
     <string name="pref_flash_page">Flash lors du changement de page</string>
     <string name="action_bar_up_description">Naviguer vers le haut</string>
     <string name="action_sort_tracker_score">Score du service de suivi</string>
@@ -769,7 +769,7 @@
     <string name="label_extension_repos">Répertoire d\'extension</string>
     <string name="ext_revoke_trust">Révoquer les extensions provenant d\'un répertoire additionnel</string>
     <string name="label_add_repo_input">URL du répertoire</string>
-    <string name="action_add_repo_message">Ajouter un répertoire additionnel à Mihon. L\'URL devrait se terminer par « index.min.json ».</string>
+    <string name="action_add_repo_message">Ajouter un répertoire additionnel à %s. L\'URL devrait se terminer par « index.min.json ».</string>
     <string name="error_repo_exists">Ce répertoire existe déjà !</string>
     <string name="invalid_repo_name">L\'URL du répertoire est invalide</string>
     <string name="manga_interval_expected_update_soon">Bientôt</string>
@@ -796,7 +796,7 @@
     <string name="upcoming_calendar_prev">Le mois précédent</string>
     <string name="action_copy_link">Copier le lien</string>
     <string name="action_replace_repo_title">L\'empreinte digitale de la clé de signature existe déjà</string>
-    <string name="add_repo_confirmation">Souhaitez-vous ajouter le répertoire \"%s\"?</string>
+    <string name="add_repo_confirmation">Souhaitez-vous ajouter le répertoire \"%s\" ?</string>
     <string name="pref_flash_with">Flash avec</string>
     <string name="action_replace_repo_message">Le répertoire %1$s a la même empreinte digitale de la clé de signature que %2$s.
 \nSi cela est attendu, %2$s sera remplacé, sinon contactez votre mainteneur du répertoire.</string>
@@ -902,4 +902,5 @@
     <string name="migrationListScreen.migrateDialog.cancelLabel">Annuler</string>
     <string name="migrationListScreen.progressDialog.cancelLabel">Annuler</string>
     <string name="label_donate">Donation</string>
+    <string name="pref_display_images_description">Rendre les images dans les descriptions de mangas</string>
 </resources>

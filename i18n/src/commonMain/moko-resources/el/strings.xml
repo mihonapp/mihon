@@ -542,7 +542,7 @@
     <string name="notification_size_warning">Οι μεγάλες ενημερώσεις βλάπτουν τις πηγές και μπορεί να οδηγήσουν σε πιο αργές ενημερώσεις και σε αυξημένη χρήση της μπαταρίας. Πατήστε για να μάθετε περισσότερα.</string>
     <string name="connected_to_wifi">Μόνο σε Wi-Fi</string>
     <string name="update_72hour">Κάθε 3 ημέρες</string>
-    <string name="download_queue_size_warning">Προειδοποίηση: οι μαζικές λήψεις ενδέχεται να οδηγήσουν σε επιβράδυνση των πηγών ή/και αποκλεισμό του Mihon. Πατήστε για να μάθετε περισσότερα.</string>
+    <string name="download_queue_size_warning">Προειδοποίηση: οι μαζικές λήψεις ενδέχεται να οδηγήσουν σε επιβράδυνση των πηγών ή/και αποκλεισμό του %s. Πατήστε για να μάθετε περισσότερα.</string>
     <string name="ext_update_all">Ενημέρωση όλων</string>
     <string name="channel_app_updates">Ενημερώσεις εφαρμογής</string>
     <string name="pref_auto_clear_chapter_cache">Εκκαθάριση της προσωρινής μνήμης κεφαλαίων κατά την εκκίνηση της εφαρμογής</string>
@@ -779,7 +779,7 @@
     <string name="theme_nord">Nord</string>
     <string name="pref_library_update_smart_update">Έξυπνη ενημέρωση</string>
     <string name="label_add_repo_input">URL αποθετηρίου</string>
-    <string name="action_add_repo_message">Προσθέστε επιπλέον αποθετήρια στο Mihon. Αυτό θα πρέπει να είναι ένα URL που τελειώνει με \"index.min.json\".</string>
+    <string name="action_add_repo_message">Προσθέστε επιπλέον αποθετήρια στο %s. Αυτό θα πρέπει να είναι ένα URL που τελειώνει με \"index.min.json\".</string>
     <string name="delete_repo_confirmation">Θέλετε να διαγράψετε το αποθετήριο \"%s\";</string>
     <string name="error_repo_exists">Αυτό το αποθετήριο υπάρχει ήδη!</string>
     <string name="manga_interval_expected_update_soon">Σύντομα</string>
@@ -901,4 +901,8 @@
     <string name="clear_db_exclude_read">Κρατήστε καταχωρήσεις με αναγνωσμένα κεφάλαια</string>
     <string name="storage_failed_to_create_download_directory">Αποτυχία δημιουργίας καταλόγου λήψης</string>
     <string name="storage_failed_to_create_directory">Αποτυχία δημιουργίας καταλόγου: %s</string>
+    <string name="label_donate">Δωρεά</string>
+    <string name="pref_display_images_description">Αναπαράσταση εικόνων σε περιγραφές manga</string>
+    <string name="pref_disallow_non_ascii_filenames">Απαγόρευση μη ASCII ονομάτων αρχείων</string>
+    <string name="pref_disallow_non_ascii_filenames_details">Εξασφαλίζει συμβατότητα με ορισμένα μέσα αποθήκευσης που δεν υποστηρίζουν Unicode. Όταν αυτή η επιλογή είναι ενεργοποιημένη, θα πρέπει να μετονομάσετε χειροκίνητα τους φακέλους πηγής και manga, αντικαθιστώντας τους χαρακτήρες που δεν είναι ASCII με τις μικρές κεφαλαίες δεκαεξαδικές αναπαραστάσεις UTF-8. Τα αρχεία κεφαλαίων δε χρειάζεται να μετονομάζονται.</string>
 </resources>

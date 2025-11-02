@@ -105,4 +105,9 @@
         <item quantity="many">Foram saltadas %1$d entradas</item>
         <item quantity="other">Foram saltadas %1$d entradas</item>
     </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">%1$s página</item>
+        <item quantity="many">%1$s páginas</item>
+        <item quantity="other">%1$s páginas</item>
+    </plurals>
 </resources>
