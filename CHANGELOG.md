@@ -16,7 +16,6 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Option to customize the number of concurrent source and page downloads ([@AntsyLich](https://github.com/AntsyLich)) ([#2637](https://github.com/mihonapp/mihon/pull/2637))
 
 ### Changed
-- Delegate Suwayomi tracker authentication to extension ([@cpiber](https://github.com/cpiber)) ([#2476](https://github.com/mihonapp/mihon/pull/2476))
 - Increased default concurrent page downloads to 5 ([@AntsyLich](https://github.com/AntsyLich)) ([#2637](https://github.com/mihonapp/mihon/pull/2637))
 
 ### Improved
@@ -39,7 +38,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix date picker not allowing the same start and finish date in negative time zones ([@AntsyLich](https://github.com/AntsyLich), [@kashish-aggarwal21](https://github.com/kashish-aggarwal21)) ([#2617](https://github.com/mihonapp/mihon/pull/2617))
 
 ### Other
+- Delegate Suwayomi tracker authentication to extension ([@cpiber](https://github.com/cpiber)) ([#2476](https://github.com/mihonapp/mihon/pull/2476))
 - Fix Kitsu tracker to conform to tracker data structure properly ([@cpiber](https://github.com/cpiber)) ([#2609](https://github.com/mihonapp/mihon/pull/2609))
+- Update Suwayomi tracker to use GraphQL API instead of REST API ([@cpiber](https://github.com/cpiber)) ([#2585](https://github.com/mihonapp/mihon/pull/2585))
 
 ## [v0.19.1] - 2025-08-07
 ### Changed
