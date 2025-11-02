@@ -13,6 +13,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ## [Unreleased]
 ### Added
 - Automatically remove downloads on Suwayomi after reading, configurable via extension settings ([@cpiber](https://github.com/cpiber)) ([#2673](https://github.com/mihonapp/mihon/pull/2673))
+- Reader setting to automatically merge two-page spreads into a single image based on image analysis heuristics. ([@TheUnlocked](https://github.com/TheUnlocked)) ([#2527](https://github.com/mihonapp/mihon/pull/2527))
 
 ### Improved
 - Minimize memory usage by reducing in-memory cover cache size ([@Lolle2000la](https://github.com/Lolle2000la)) ([#2266](https://github.com/mihonapp/mihon/pull/2266))
@@ -26,6 +27,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix mass migration not using the same search queries as individual migration ([@AntsyLich](https://github.com/AntsyLich)) ([#2736](https://github.com/mihonapp/mihon/pull/2736))
 - Fix reader not saving read duration when changing chapter ([@AntsyLich](https://github.com/AntsyLich), [@KotlinHero](https://github.com/KotlinHero)) ([#2784](https://github.com/mihonapp/mihon/pull/2784))
 - Fix pre-1970 upload date display in chapter list ([@MajorTanya](https://github.com/MajorTanya)) ([#2779](https://github.com/mihonapp/mihon/pull/2779))
+- Fix inconsistency between how the "rotate wide pages" and "split wide pages" settings interact in the in-reader settings sheet versus the main settings page. ([@TheUnlocked](https://github.com/TheUnlocked)) ([#2527](https://github.com/mihonapp/mihon/pull/2527))
 
 ## [v0.19.3] - 2025-11-07
 ### Improved
