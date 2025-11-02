@@ -26,7 +26,7 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 13
+        versionCode = 14
         versionName = "0.19.1"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
@@ -138,9 +138,9 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        aidl = true
 
         // Disable some unused things
-        aidl = false
         renderScript = false
         shaders = false
     }

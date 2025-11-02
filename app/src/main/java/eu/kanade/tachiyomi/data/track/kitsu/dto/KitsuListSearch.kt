@@ -21,7 +21,8 @@ data class KitsuListSearchResult(
         val manga = included[0].attributes
 
         return TrackSearch.create(TrackerManager.KITSU).apply {
-            remote_id = userData.id
+            remote_id = included[0].id
+            library_id = userData.id
             title = manga.canonicalTitle
             total_chapters = manga.chapterCount ?: 0
             cover_url = manga.posterImage?.original ?: ""

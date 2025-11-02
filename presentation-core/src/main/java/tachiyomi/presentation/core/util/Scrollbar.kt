@@ -64,6 +64,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastFirstOrNull
 import androidx.compose.ui.util.fastSumBy
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.sample
@@ -218,7 +219,8 @@ private fun Modifier.drawScrollbar(
             .sample(100)
             .collectLatest {
                 alpha.snapTo(1f)
-                alpha.animateTo(0f, animationSpec = FadeOutAnimationSpec)
+                delay(ScrollBarVisibilityDurationMillis)
+                alpha.animateTo(0f, animationSpec = ImmediateFadeOutAnimationSpec)
             }
     }
 
@@ -241,9 +243,9 @@ private fun Modifier.drawScrollbar(
         }
 }
 
-private val FadeOutAnimationSpec = tween<Float>(
+private val ScrollBarVisibilityDurationMillis = ViewConfiguration.getScrollDefaultDelay().toLong()
+private val ImmediateFadeOutAnimationSpec = tween<Float>(
     durationMillis = ViewConfiguration.getScrollBarFadeDuration(),
-    delayMillis = ViewConfiguration.getScrollDefaultDelay(),
 )
 
 @Preview(widthDp = 400, heightDp = 400, showBackground = true)

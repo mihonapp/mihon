@@ -76,7 +76,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
                     .awaitSuccess()
                     .parseAs<KitsuAddMangaResult>()
                     .let {
-                        track.remote_id = it.data.id
+                        track.library_id = it.data.id
                         track
                     }
             }
@@ -88,7 +88,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
             val data = buildJsonObject {
                 putJsonObject("data") {
                     put("type", "libraryEntries")
-                    put("id", track.remote_id)
+                    put("id", track.library_id)
                     putJsonObject("attributes") {
                         put("status", track.toApiStatus())
                         put("progress", track.last_chapter_read.toInt())
@@ -102,7 +102,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
 
             authClient.newCall(
                 Request.Builder()
-                    .url("${BASE_URL}library-entries/${track.remote_id}")
+                    .url("${BASE_URL}library-entries/${track.library_id}")
                     .headers(
                         headersOf("Content-Type", VND_API_JSON),
                     )
@@ -119,7 +119,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
         withIOContext {
             authClient.newCall(
                 DELETE(
-                    "${BASE_URL}library-entries/${track.remoteId}",
+                    "${BASE_URL}library-entries/${track.libraryId}",
                     headers = headersOf("Content-Type", VND_API_JSON),
                 ),
             )
@@ -192,7 +192,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
     suspend fun getLibManga(track: Track): Track {
         return withIOContext {
             val url = "${BASE_URL}library-entries".toUri().buildUpon()
-                .encodedQuery("filter[id]=${track.remote_id}")
+                .encodedQuery("filter[id]=${track.library_id}")
                 .appendQueryParameter("include", "manga")
                 .build()
             with(json) {

@@ -99,7 +99,7 @@ class DebugInfoScreen : Screen() {
     }
 
     private fun getDeviceInfoGroup(): Preference.PreferenceGroup {
-        val items = persistentListOf<Preference.PreferenceItem<out Any>>().mutate {
+        val items = persistentListOf<Preference.PreferenceItem<out Any, out Any>>().mutate {
             it.add(
                 Preference.PreferenceItem.TextPreference(
                     title = "Model",

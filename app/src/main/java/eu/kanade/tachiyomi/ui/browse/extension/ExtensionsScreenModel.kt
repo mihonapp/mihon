@@ -169,6 +169,7 @@ class ExtensionsScreenModel(
 
     fun cancelInstallUpdateExtension(extension: Extension) {
         extensionManager.cancelInstallUpdateExtension(extension)
+        removeDownloadState(extension)
     }
 
     private fun addDownloadState(extension: Extension, installStep: InstallStep) {

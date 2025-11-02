@@ -1,26 +1,72 @@
 package eu.kanade.tachiyomi.extension.installer
 
 import android.app.Service
+import android.content.BroadcastReceiver
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.content.ServiceConnection
+import android.content.pm.PackageInstaller
 import android.content.pm.PackageManager
-import android.os.Process
+import android.os.IBinder
+import androidx.core.content.ContextCompat
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.extension.model.InstallStep
-import eu.kanade.tachiyomi.util.system.getUriSize
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 import logcat.LogPriority
+import mihon.app.shizuku.IShellInterface
+import mihon.app.shizuku.ShellInterface
 import rikka.shizuku.Shizuku
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
-import java.io.BufferedReader
-import java.io.InputStream
 
 class ShizukuInstaller(private val service: Service) : Installer(service) {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    private var shellInterface: IShellInterface? = null
+
+    private val shizukuArgs by lazy {
+        Shizuku.UserServiceArgs(
+            ComponentName(service, ShellInterface::class.java),
+        )
+            .tag("shizuku_service")
+            .processNameSuffix("shizuku_service")
+            .debuggable(BuildConfig.DEBUG)
+            .daemon(false)
+    }
+
+    private val connection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            shellInterface = IShellInterface.Stub.asInterface(service)
+            ready = true
+            checkQueue()
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            shellInterface = null
+        }
+    }
+
+    private val receiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, Int.MIN_VALUE)
+            val message = intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE)
+            val packageName = intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME)
+
+            if (status == PackageInstaller.STATUS_SUCCESS) {
+                continueQueue(InstallStep.Installed)
+            } else {
+                logcat(LogPriority.ERROR) { "Failed to install extension $packageName: $message" }
+                continueQueue(InstallStep.Error)
+            }
+        }
+    }
 
     private val shizukuDeadListener = Shizuku.OnBinderDeadListener {
         logcat { "Shizuku was killed prematurely" }
@@ -31,8 +77,8 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
         override fun onRequestPermissionResult(requestCode: Int, grantResult: Int) {
             if (requestCode == SHIZUKU_PERMISSION_REQUEST_CODE) {
                 if (grantResult == PackageManager.PERMISSION_GRANTED) {
-                    ready = true
                     checkQueue()
+                    Shizuku.bindUserService(shizukuArgs, connection)
                 } else {
                     service.stopSelf()
                 }
@@ -41,40 +87,34 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
         }
     }
 
+    fun initShizuku() {
+        if (ready) return
+        if (!Shizuku.pingBinder()) {
+            logcat(LogPriority.ERROR) { "Shizuku is not ready to use" }
+            service.toast(MR.strings.ext_installer_shizuku_stopped)
+            service.stopSelf()
+            return
+        }
+
+        if (Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) {
+            Shizuku.bindUserService(shizukuArgs, connection)
+        } else {
+            Shizuku.addRequestPermissionResultListener(shizukuPermissionListener)
+            Shizuku.requestPermission(SHIZUKU_PERMISSION_REQUEST_CODE)
+        }
+    }
+
     override var ready = false
 
     override fun processEntry(entry: Entry) {
         super.processEntry(entry)
-        scope.launch {
-            var sessionId: String? = null
-            try {
-                val size = service.getUriSize(entry.uri) ?: throw IllegalStateException()
-                service.contentResolver.openInputStream(entry.uri)!!.use {
-                    val userId = Process.myUserHandle().hashCode()
-                    val createCommand = "pm install-create --user $userId -r -i ${service.packageName} -S $size"
-                    val createResult = exec(createCommand)
-                    sessionId = SESSION_ID_REGEX.find(createResult.out)?.value
-                        ?: throw RuntimeException("Failed to create install session")
-
-                    val writeResult = exec("pm install-write -S $size $sessionId base -", it)
-                    if (writeResult.resultCode != 0) {
-                        throw RuntimeException("Failed to write APK to session $sessionId")
-                    }
-
-                    val commitResult = exec("pm install-commit $sessionId")
-                    if (commitResult.resultCode != 0) {
-                        throw RuntimeException("Failed to commit install session $sessionId")
-                    }
-
-                    continueQueue(InstallStep.Installed)
-                }
-            } catch (e: Exception) {
-                logcat(LogPriority.ERROR, e) { "Failed to install extension ${entry.downloadId} ${entry.uri}" }
-                if (sessionId != null) {
-                    exec("pm install-abandon $sessionId")
-                }
-                continueQueue(InstallStep.Error)
-            }
+        try {
+            shellInterface?.install(
+                service.contentResolver.openAssetFileDescriptor(entry.uri, "r"),
+            )
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Failed to install extension ${entry.downloadId} ${entry.uri}" }
+            continueQueue(InstallStep.Error)
         }
     }
 
@@ -84,41 +124,26 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
     override fun onDestroy() {
         Shizuku.removeBinderDeadListener(shizukuDeadListener)
         Shizuku.removeRequestPermissionResultListener(shizukuPermissionListener)
+        Shizuku.unbindUserService(shizukuArgs, connection, true)
+        service.unregisterReceiver(receiver)
+        logcat { "ShizukuInstaller destroy" }
         scope.cancel()
         super.onDestroy()
     }
 
-    private fun exec(command: String, stdin: InputStream? = null): ShellResult {
-        @Suppress("DEPRECATION")
-        val process = Shizuku.newProcess(arrayOf("sh", "-c", command), null, null)
-        if (stdin != null) {
-            process.outputStream.use { stdin.copyTo(it) }
-        }
-        val output = process.inputStream.bufferedReader().use(BufferedReader::readText)
-        val resultCode = process.waitFor()
-        return ShellResult(resultCode, output)
-    }
-
-    private data class ShellResult(val resultCode: Int, val out: String)
-
     init {
         Shizuku.addBinderDeadListener(shizukuDeadListener)
-        ready = if (Shizuku.pingBinder()) {
-            if (Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) {
-                true
-            } else {
-                Shizuku.addRequestPermissionResultListener(shizukuPermissionListener)
-                Shizuku.requestPermission(SHIZUKU_PERMISSION_REQUEST_CODE)
-                false
-            }
-        } else {
-            logcat(LogPriority.ERROR) { "Shizuku is not ready to use" }
-            service.toast(MR.strings.ext_installer_shizuku_stopped)
-            service.stopSelf()
-            false
-        }
+
+        ContextCompat.registerReceiver(
+            service,
+            receiver,
+            IntentFilter(ACTION_INSTALL_RESULT),
+            ContextCompat.RECEIVER_EXPORTED,
+        )
+
+        initShizuku()
     }
 }
 
 private const val SHIZUKU_PERMISSION_REQUEST_CODE = 14045
-private val SESSION_ID_REGEX = Regex("(?<=\\[).+?(?=])")
+const val ACTION_INSTALL_RESULT = "${BuildConfig.APPLICATION_ID}.ACTION_INSTALL_RESULT"

@@ -104,6 +104,7 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
         return if (remoteTrack != null) {
             track.copyPersonalFrom(remoteTrack, copyRemotePrivate = false)
             track.remote_id = remoteTrack.remote_id
+            track.library_id = remoteTrack.library_id
 
             if (track.status != COMPLETED) {
                 track.status = if (hasReadChapters) READING else track.status

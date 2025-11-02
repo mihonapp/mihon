@@ -15,10 +15,10 @@ sealed class Preference {
     abstract val title: String
     abstract val enabled: Boolean
 
-    sealed class PreferenceItem<T> : Preference() {
+    sealed class PreferenceItem<T, R> : Preference() {
         abstract val subtitle: String?
         abstract val icon: ImageVector?
-        abstract val onValueChanged: suspend (value: T) -> Boolean
+        abstract val onValueChanged: suspend (value: T) -> R
 
         /**
          * A basic [PreferenceItem] that only displays texts.
@@ -28,9 +28,9 @@ sealed class Preference {
             override val subtitle: String? = null,
             override val enabled: Boolean = true,
             val onClick: (() -> Unit)? = null,
-        ) : PreferenceItem<String>() {
+        ) : PreferenceItem<String, Unit>() {
             override val icon: ImageVector? = null
-            override val onValueChanged: suspend (value: String) -> Boolean = { true }
+            override val onValueChanged: suspend (value: String) -> Unit = {}
         }
 
         /**
@@ -42,7 +42,7 @@ sealed class Preference {
             override val subtitle: String? = null,
             override val enabled: Boolean = true,
             override val onValueChanged: suspend (value: Boolean) -> Boolean = { true },
-        ) : PreferenceItem<Boolean>() {
+        ) : PreferenceItem<Boolean, Boolean>() {
             override val icon: ImageVector? = null
         }
 
@@ -52,12 +52,13 @@ sealed class Preference {
         data class SliderPreference(
             val value: Int,
             override val title: String,
+            override val subtitle: String? = null,
+            val valueString: String? = null,
             val valueRange: IntProgression = 0..1,
             @IntRange(from = 0) val steps: Int = with(valueRange) { (last - first) - 1 },
-            override val subtitle: String? = null,
             override val enabled: Boolean = true,
-            override val onValueChanged: suspend (value: Int) -> Boolean = { true },
-        ) : PreferenceItem<Int>() {
+            override val onValueChanged: suspend (value: Int) -> Unit = {},
+        ) : PreferenceItem<Int, Unit>() {
             override val icon: ImageVector? = null
         }
 
@@ -75,7 +76,7 @@ sealed class Preference {
             override val icon: ImageVector? = null,
             override val enabled: Boolean = true,
             override val onValueChanged: suspend (value: T) -> Boolean = { true },
-        ) : PreferenceItem<T>() {
+        ) : PreferenceItem<T, Boolean>() {
             internal fun internalSet(value: Any) = preference.set(value as T)
             internal suspend fun internalOnValueChanged(value: Any) = onValueChanged(value as T)
 
@@ -96,8 +97,8 @@ sealed class Preference {
                 { v, e -> subtitle?.format(e[v]) },
             override val icon: ImageVector? = null,
             override val enabled: Boolean = true,
-            override val onValueChanged: suspend (value: String) -> Boolean = { true },
-        ) : PreferenceItem<String>()
+            override val onValueChanged: suspend (value: String) -> Unit = {},
+        ) : PreferenceItem<String, Unit>()
 
         /**
          * A [PreferenceItem] that displays a list of entries as a dialog.
@@ -121,7 +122,7 @@ sealed class Preference {
             override val icon: ImageVector? = null,
             override val enabled: Boolean = true,
             override val onValueChanged: suspend (value: Set<String>) -> Boolean = { true },
-        ) : PreferenceItem<Set<String>>()
+        ) : PreferenceItem<Set<String>, Boolean>()
 
         /**
          * A [PreferenceItem] that shows a EditText in the dialog.
@@ -132,7 +133,7 @@ sealed class Preference {
             override val subtitle: String? = "%s",
             override val enabled: Boolean = true,
             override val onValueChanged: suspend (value: String) -> Boolean = { true },
-        ) : PreferenceItem<String>() {
+        ) : PreferenceItem<String, Boolean>() {
             override val icon: ImageVector? = null
         }
 
@@ -143,31 +144,31 @@ sealed class Preference {
             val tracker: Tracker,
             val login: () -> Unit,
             val logout: () -> Unit,
-        ) : PreferenceItem<String>() {
+        ) : PreferenceItem<String, Unit>() {
             override val title: String = ""
             override val enabled: Boolean = true
             override val subtitle: String? = null
             override val icon: ImageVector? = null
-            override val onValueChanged: suspend (value: String) -> Boolean = { true }
+            override val onValueChanged: suspend (value: String) -> Unit = {}
         }
 
         data class InfoPreference(
             override val title: String,
-        ) : PreferenceItem<String>() {
+        ) : PreferenceItem<String, Unit>() {
             override val enabled: Boolean = true
             override val subtitle: String? = null
             override val icon: ImageVector? = null
-            override val onValueChanged: suspend (value: String) -> Boolean = { true }
+            override val onValueChanged: suspend (value: String) -> Unit = {}
         }
 
         data class CustomPreference(
             override val title: String,
             val content: @Composable () -> Unit,
-        ) : PreferenceItem<Unit>() {
+        ) : PreferenceItem<Unit, Unit>() {
             override val enabled: Boolean = true
             override val subtitle: String? = null
             override val icon: ImageVector? = null
-            override val onValueChanged: suspend (value: Unit) -> Boolean = { true }
+            override val onValueChanged: suspend (value: Unit) -> Unit = {}
         }
     }
 
@@ -175,6 +176,6 @@ sealed class Preference {
         override val title: String,
         override val enabled: Boolean = true,
 
-        val preferenceItems: ImmutableList<PreferenceItem<out Any>>,
+        val preferenceItems: ImmutableList<PreferenceItem<out Any, out Any>>,
     ) : Preference()
 }

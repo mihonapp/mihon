@@ -54,6 +54,7 @@ import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.util.lang.convertEpochMillisZone
+import eu.kanade.tachiyomi.util.lang.toLocalDate
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
@@ -84,7 +85,6 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
 import java.time.ZoneOffset
 
 data class TrackInfoDialogHomeScreen(
@@ -220,7 +220,7 @@ data class TrackInfoDialogHomeScreen(
                 try {
                     val matchResult = item.tracker.match(manga) ?: throw Exception()
                     item.tracker.register(matchResult, mangaId)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     withUIContext { Injekt.get<Application>().toast(MR.strings.error_no_match) }
                 }
             }
@@ -446,56 +446,46 @@ private data class TrackDateSelectorScreen(
     @Transient
     private val selectableDates = object : SelectableDates {
         override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-            val dateToCheck = Instant.ofEpochMilli(utcTimeMillis)
-                .atZone(ZoneOffset.systemDefault())
-                .toLocalDate()
+            val targetDate = Instant.ofEpochMilli(utcTimeMillis).toLocalDate(ZoneOffset.UTC)
 
-            if (dateToCheck > LocalDate.now()) {
-                // Disallow future dates
-                return false
-            }
+            // Disallow future dates
+            if (targetDate > LocalDate.now(ZoneOffset.UTC)) return false
 
-            return if (start && track.finishDate > 0) {
-                // Disallow start date to be set later than finish date
-                val dateFinished = Instant.ofEpochMilli(track.finishDate)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate()
-                dateToCheck <= dateFinished
-            } else if (!start && track.startDate > 0) {
-                // Disallow end date to be set earlier than start date
-                val dateStarted = Instant.ofEpochMilli(track.startDate)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate()
-                dateToCheck >= dateStarted
-            } else {
-                // Nothing set before
-                true
+            return when {
+                // Disallow setting start date after finish date
+                start && track.finishDate > 0 -> {
+                    val finishDate = Instant.ofEpochMilli(track.finishDate).toLocalDate(ZoneOffset.UTC)
+                    targetDate <= finishDate
+                }
+                // Disallow setting finish date before start date
+                !start && track.startDate > 0 -> {
+                    val startDate = Instant.ofEpochMilli(track.startDate).toLocalDate(ZoneOffset.UTC)
+                    startDate <= targetDate
+                }
+                else -> {
+                    true
+                }
             }
         }
 
         override fun isSelectableYear(year: Int): Boolean {
-            if (year > LocalDate.now().year) {
-                // Disallow future dates
-                return false
-            }
+            // Disallow future years
+            if (year > LocalDate.now(ZoneOffset.UTC).year) return false
 
-            return if (start && track.finishDate > 0) {
-                // Disallow start date to be set later than finish date
-                val dateFinished = Instant.ofEpochMilli(track.finishDate)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate()
-                    .year
-                year <= dateFinished
-            } else if (!start && track.startDate > 0) {
-                // Disallow end date to be set earlier than start date
-                val dateStarted = Instant.ofEpochMilli(track.startDate)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate()
-                    .year
-                year >= dateStarted
-            } else {
-                // Nothing set before
-                true
+            return when {
+                // Disallow setting start year after finish year
+                start && track.finishDate > 0 -> {
+                    val finishDate = Instant.ofEpochMilli(track.finishDate).toLocalDate(ZoneOffset.UTC)
+                    year <= finishDate.year
+                }
+                // Disallow setting finish year before start year
+                !start && track.startDate > 0 -> {
+                    val startDate = Instant.ofEpochMilli(track.startDate).toLocalDate(ZoneOffset.UTC)
+                    startDate.year <= year
+                }
+                else -> {
+                    true
+                }
             }
         }
     }

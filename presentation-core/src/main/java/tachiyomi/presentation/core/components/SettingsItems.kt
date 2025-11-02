@@ -59,6 +59,7 @@ import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.theme.header
 import tachiyomi.presentation.core.util.collectAsState
+import tachiyomi.presentation.core.util.secondaryItemAlpha
 
 object SettingsItemsPaddings {
     val Horizontal = 24.dp
@@ -183,7 +184,7 @@ fun SliderItem(
     label: String,
     onChange: (Int) -> Unit,
     steps: Int = with(valueRange) { (last - first) - 1 },
-    valueText: String = value.toString(),
+    valueString: String = value.toString(),
     labelStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     pillColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
 ) {
@@ -191,10 +192,10 @@ fun SliderItem(
         value = value,
         valueRange = valueRange,
         steps = steps,
-        label = label,
-        valueText = valueText,
+        title = label,
+        valueString = valueString,
         onChange = onChange,
-        labelStyle = labelStyle,
+        titleStyle = labelStyle,
         pillColor = pillColor,
         modifier = Modifier.padding(
             horizontal = SettingsItemsPaddings.Horizontal,
@@ -207,12 +208,14 @@ fun SliderItem(
 fun BaseSliderItem(
     value: Int,
     valueRange: IntProgression,
-    label: String,
+    title: String,
     onChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
+    subtitle: String? = null,
     steps: Int = with(valueRange) { (last - first) - 1 },
-    valueText: String = value.toString(),
-    labelStyle: TextStyle = MaterialTheme.typography.bodyMedium,
+    valueString: String = value.toString(),
+    titleStyle: TextStyle = MaterialTheme.typography.titleLarge,
+    subtitleStyle: TextStyle = MaterialTheme.typography.bodySmall,
     pillColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
 ) {
     val haptic = LocalHapticFeedback.current
@@ -226,13 +229,21 @@ fun BaseSliderItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
         ) {
-            Text(
-                text = label,
-                style = labelStyle,
-                modifier = Modifier.weight(1f),
-            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    style = titleStyle,
+                )
+                if (subtitle != null) {
+                    Text(
+                        text = subtitle,
+                        style = subtitleStyle,
+                        modifier = Modifier.secondaryItemAlpha(),
+                    )
+                }
+            }
             Pill(
-                text = valueText,
+                text = valueString,
                 style = MaterialTheme.typography.bodyMedium,
                 color = pillColor,
             )
@@ -256,12 +267,16 @@ fun SliderItemPreview() {
     MaterialTheme(if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()) {
         var value by remember { mutableIntStateOf(0) }
         Surface {
-            SliderItem(
+            BaseSliderItem(
                 value = value,
                 valueRange = 0..10,
-                label = "Item per row",
-                valueText = if (value == 0) "Auto" else value.toString(),
+                title = "Item per row",
+                valueString = if (value == 0) "Auto" else value.toString(),
                 onChange = { value = it },
+                modifier = Modifier.padding(
+                    horizontal = SettingsItemsPaddings.Horizontal,
+                    vertical = SettingsItemsPaddings.Vertical,
+                ),
             )
         }
     }

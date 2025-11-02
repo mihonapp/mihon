@@ -315,19 +315,19 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
         private val sourceManager: SourceManager = Injekt.get(),
     ) : StateScreenModel<ScreenModel.State>(State()) {
 
-        init {
-            screenModelScope.launchIO {
-                initSources()
-                mutableState.update { it.copy(isLoading = false) }
-            }
-        }
-
         private val sourcesComparator = { includedSources: List<Long> ->
             compareBy<MigrationSource>(
                 { !it.isSelected },
                 { includedSources.indexOf(it.id) },
                 { with(it) { "$name ($shortLanguage)" } },
             )
+        }
+
+        init {
+            screenModelScope.launchIO {
+                initSources()
+                mutableState.update { it.copy(isLoading = false) }
+            }
         }
 
         private fun updateSources(save: Boolean = true, action: (List<MigrationSource>) -> List<MigrationSource>) {
