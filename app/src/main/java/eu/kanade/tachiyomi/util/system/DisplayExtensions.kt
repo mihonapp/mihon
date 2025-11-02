@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.util.system
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
@@ -57,11 +58,19 @@ fun Context.isNightMode(): Boolean {
 /**
  * Checks whether if the device has a display cutout (i.e. notch, camera cutout, etc.).
  *
- * Only relevant from Android 9 to Android 14.
+ * Only works on Android 9+.
+ */
+fun Activity.hasDisplayCutout(): Boolean {
+    return window.decorView.hasDisplayCutout()
+}
+
+/**
+ * Checks whether if the device has a display cutout (i.e. notch, camera cutout, etc.).
+ *
+ * Only works on Android 9+.
  */
 fun View.hasDisplayCutout(): Boolean {
-    return Build.VERSION.SDK_INT in Build.VERSION_CODES.P..Build.VERSION_CODES.UPSIDE_DOWN_CAKE &&
-        rootWindowInsets?.displayCutout != null
+    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && rootWindowInsets?.displayCutout != null
 }
 
 /**

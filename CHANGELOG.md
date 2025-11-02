@@ -19,7 +19,6 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Changed
 - Increased default concurrent page downloads to 5 ([@AntsyLich](https://github.com/AntsyLich)) ([#2637](https://github.com/mihonapp/mihon/pull/2637))
-- Hide "Show content in cutout area" reader setting on Android 15+ as it's not supported ([@AntsyLich](https://github.com/AntsyLich)) ([#1908](https://github.com/mihonapp/mihon/pull/1908))
 
 ### Improved
 - Spoofing of `X-Requested-With` header to support newer WebView versions ([@Guzmazow](https://github.com/Guzmazow)) ([#2491](https://github.com/mihonapp/mihon/pull/2491))
