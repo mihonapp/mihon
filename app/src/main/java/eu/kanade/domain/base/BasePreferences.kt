@@ -35,4 +35,10 @@ class BasePreferences(
     fun hardwareBitmapThreshold() = preferenceStore.getInt("pref_hardware_bitmap_threshold", GLUtil.SAFE_TEXTURE_LIMIT)
 
     fun alwaysDecodeLongStripWithSSIV() = preferenceStore.getBoolean("pref_always_decode_long_strip_with_ssiv", false)
+
+    //region Gemini AI
+    fun geminiAiModel() = preferenceStore.getString("pref_gemini_ai_model", "gemini-flash-latest")
+    fun geminiAiApiKey() = preferenceStore.getString("pref_gemini_ai_api_key", "")
+    fun aiRecommendations() = preferenceStore.getString("pref_ai_recommendations", "")
+    //endregion
 }

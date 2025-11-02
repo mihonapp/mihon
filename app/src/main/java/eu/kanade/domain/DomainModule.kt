@@ -1,5 +1,6 @@
 package eu.kanade.domain
 
+import eu.kanade.domain.ai.GeminiService
 import eu.kanade.domain.chapter.interactor.GetAvailableScanlators
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
@@ -203,5 +204,7 @@ class DomainModule : InjektModule {
         addFactory { UpdateExtensionRepo(get(), get()) }
         addFactory { ToggleIncognito(get()) }
         addFactory { GetIncognitoState(get(), get(), get()) }
+
+        addSingletonFactory<GeminiService> { GeminiService(get()) }
     }
 }

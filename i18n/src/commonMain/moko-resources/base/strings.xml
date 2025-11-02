@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Mihon</string>
+    <string name="app_name" translatable="false">MihonAI</string>
 
     <!-- Generic strings -->
     <string name="on">On</string>
@@ -29,6 +29,7 @@
     <string name="label_upcoming">Upcoming</string>
     <string name="label_recent_manga">History</string>
     <string name="label_sources">Sources</string>
+    <string name="label_recommendations">Recommendations</string>
     <string name="label_backup">Backup and restore</string>
     <string name="label_data_storage">Data and storage</string>
     <string name="label_stats">Statistics</string>
@@ -210,6 +211,12 @@
     <string name="pref_category_downloads">Downloads</string>
     <string name="pref_category_tracking">Tracking</string>
     <string name="pref_category_advanced">Advanced</string>
+    <string name="pref_category_ai">AI</string>
+    <string name="pref_ai_summary">AI model and API configuration</string>
+    <string name="pref_gemini_api_key">Gemini API Key</string>
+    <string name="pref_gemini_api_key_summary">Enter your Gemini API key for AI features</string>
+    <string name="pref_gemini_model">Model</string>
+    <string name="pref_gemini_model_summary">gemini-flash-latest</string>
     <string name="pref_category_about">About</string>
 
     <string name="pref_appearance_summary">Theme, date &amp; time format</string>
@@ -866,6 +873,7 @@
 
     <!-- Source Screen -->
     <string name="source_empty_screen">No source found</string>
+    <string name="recommendation_empty_screen">No recommendations found</string>
 
     <!-- Source Filter Screen -->
     <string name="source_filter_empty_screen">No installed source found</string>

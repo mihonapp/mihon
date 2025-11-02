@@ -17,6 +17,7 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Security
+import androidx.compose.material.icons.outlined.SmartToy
 import androidx.compose.material.icons.outlined.Storage
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.LocalContentColor
@@ -172,6 +173,12 @@ object SettingsMainScreen : Screen() {
     )
 
     private val items = listOf(
+        Item(
+            titleRes = MR.strings.pref_category_ai,
+            subtitleRes = MR.strings.pref_ai_summary,
+            icon = Icons.Outlined.SmartToy,
+            screen = SettingsAIScreen,
+        ),
         Item(
             titleRes = MR.strings.pref_category_appearance,
             subtitleRes = MR.strings.pref_appearance_summary,
