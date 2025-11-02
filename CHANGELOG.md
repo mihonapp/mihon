@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+
+## [v0.19.2] - 2025-11-02
 ### Added
 - Advanced setting to limit download filenames to ASCII characters. This is provided only as a workaround for OSes that do not properly handle standard Unicode filenames. This setting is generally not recommended and should only be used as a last resort ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
 - Option to customize the number of concurrent source and page downloads ([@AntsyLich](https://github.com/AntsyLich)) ([#2637](https://github.com/mihonapp/mihon/pull/2637))
@@ -432,7 +434,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Branding to Mihon ([@AntsyLich](https://github.com/AntsyLich))
 - Minimum supported Android version to 8 ([@AntsyLich](https://github.com/AntsyLich)) ([`dfb3091`](https://github.com/mihonapp/mihon/commit/dfb3091e380dda3e9bfb64bf5c9a685cf3a03d0e))
 
-[unreleased]: https://github.com/mihonapp/mihon/compare/v0.19.1...main
+[unreleased]: https://github.com/mihonapp/mihon/compare/v0.19.2...main
+[v0.19.2]: https://github.com/mihonapp/mihon/compare/v0.19.1...v0.19.2
 [v0.19.1]: https://github.com/mihonapp/mihon/compare/v0.19.0...v0.19.1
 [v0.19.0]: https://github.com/mihonapp/mihon/compare/v0.18.0...v0.19.0
 [v0.18.0]: https://github.com/mihonapp/mihon/compare/v0.17.1...v0.18.0
