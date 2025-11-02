@@ -13,12 +13,6 @@
             android:layout_height="match_parent"
             android:descendantFocusability="blocksDescendants" />
 
-        <androidx.compose.ui.platform.ComposeView
-            android:id="@+id/page_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal" />
-
     </FrameLayout>
 
     <eu.kanade.tachiyomi.ui.reader.ReaderNavigationOverlayView
@@ -30,7 +24,7 @@
         android:visibility="gone" />
 
     <androidx.compose.ui.platform.ComposeView
-        android:id="@+id/dialog_root"
+        android:id="@+id/compose_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

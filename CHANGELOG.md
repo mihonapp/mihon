@@ -17,6 +17,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Changed
 - Increased default concurrent page downloads to 5 ([@AntsyLich](https://github.com/AntsyLich)) ([#2637](https://github.com/mihonapp/mihon/pull/2637))
+- Hide "Show content in cutout area" reader setting on Android 15+ as it's not supported ([@AntsyLich](https://github.com/AntsyLich)) ([#1908](https://github.com/mihonapp/mihon/pull/1908))
 
 ### Improved
 - Spoofing of `X-Requested-With` header to support newer WebView versions ([@Guzmazow](https://github.com/Guzmazow)) ([#2491](https://github.com/mihonapp/mihon/pull/2491))
@@ -37,6 +38,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix scrollbar not showing when animator duration scale animation is turned off ([@anirudhsnayak](https://github.com/anirudhsnayak)) ([#2398](https://github.com/mihonapp/mihon/pull/2398))
 - Fix date picker not allowing the same start and finish date in negative time zones ([@AntsyLich](https://github.com/AntsyLich), [@kashish-aggarwal21](https://github.com/kashish-aggarwal21)) ([#2617](https://github.com/mihonapp/mihon/pull/2617))
 - Fix reader tap zones triggering after scrolling was stopped by the user ([@Naputt1](https://github.com/Naputt1), [@AntsyLich](https://github.com/AntsyLich)) ([#2518](https://github.com/mihonapp/mihon/pull/2518))
+- Fix reader page indicator being partially visible on some devices ([@AntsyLich](https://github.com/AntsyLich)) ([#1908](https://github.com/mihonapp/mihon/pull/1908))
+- Fix inconsistent system bar and reader app bar background ([@AntsyLich](https://github.com/AntsyLich)) ([#1908](https://github.com/mihonapp/mihon/pull/1908))
+- Fix transparent system bar background in reader on Android 15+ ([@AntsyLich](https://github.com/AntsyLich)) ([#1908](https://github.com/mihonapp/mihon/pull/1908))
 
 ### Other
 - Delegate Suwayomi tracker authentication to extension ([@cpiber](https://github.com/cpiber)) ([#2476](https://github.com/mihonapp/mihon/pull/2476))

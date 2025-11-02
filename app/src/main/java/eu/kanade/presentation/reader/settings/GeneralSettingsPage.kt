@@ -6,8 +6,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalView
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
+import eu.kanade.tachiyomi.util.system.hasDisplayCutout
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.SettingsChipRow
@@ -64,7 +66,8 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
         pref = screenModel.preferences.fullscreen(),
     )
 
-    if (screenModel.hasDisplayCutout && screenModel.preferences.fullscreen().get()) {
+    val isFullscreen by screenModel.preferences.fullscreen().collectAsState()
+    if (LocalView.current.hasDisplayCutout() && isFullscreen) {
         CheckboxItem(
             label = stringResource(MR.strings.pref_cutout_short),
             pref = screenModel.preferences.cutoutShort(),
