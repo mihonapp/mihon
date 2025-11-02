@@ -1,6 +1,5 @@
 package eu.kanade.presentation.more.settings.screen
 
-import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
@@ -10,6 +9,7 @@ import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import eu.kanade.tachiyomi.util.system.hasDisplayCutout
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableMap
@@ -103,9 +103,7 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.cutoutShort(),
                     title = stringResource(MR.strings.pref_cutout_short),
-                    enabled = fullscreen &&
-                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.P &&
-                        LocalView.current.rootWindowInsets?.displayCutout != null, // has cutout
+                    enabled = LocalView.current.hasDisplayCutout() && fullscreen,
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.keepScreenOn(),
