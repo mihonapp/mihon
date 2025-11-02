@@ -71,7 +71,7 @@ fun PreferenceScreen(
                 }
 
                 // Create Preference Item
-                is Preference.PreferenceItem<*> -> item {
+                is Preference.PreferenceItem<*, *> -> item {
                     PreferenceItem(
                         item = preference,
                         highlightKey = highlightKey,
