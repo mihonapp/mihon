@@ -14,6 +14,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Added
 - Advanced setting to limit download filenames to ASCII characters. This is provided only as a workaround for OSes that do not properly handle standard Unicode filenames. This setting is generally not recommended and should only be used as a last resort ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
 - Option to customize the number of concurrent source and page downloads ([@AntsyLich](https://github.com/AntsyLich)) ([#2637](https://github.com/mihonapp/mihon/pull/2637))
+- Reader setting to automatically merge two-page spreads into a single image based on image analysis heuristics. ([@TheUnlocked](https://github.com/TheUnlocked)) ([#2527](https://github.com/mihonapp/mihon/pull/2527))
 
 ### Changed
 - Increased default concurrent page downloads to 5 ([@AntsyLich](https://github.com/AntsyLich)) ([#2637](https://github.com/mihonapp/mihon/pull/2637))
@@ -36,6 +37,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix extension download stuck in pending state in some cases ([@c2y5](https://github.com/c2y5)) ([#2483](https://github.com/mihonapp/mihon/pull/2483))
 - Fix scrollbar not showing when animator duration scale animation is turned off ([@anirudhsnayak](https://github.com/anirudhsnayak)) ([#2398](https://github.com/mihonapp/mihon/pull/2398))
 - Fix date picker not allowing the same start and finish date in negative time zones ([@AntsyLich](https://github.com/AntsyLich), [@kashish-aggarwal21](https://github.com/kashish-aggarwal21)) ([#2617](https://github.com/mihonapp/mihon/pull/2617))
+- Fix inconsistency between how the "rotate wide pages" and "split wide pages" settings interact in the in-reader settings sheet versus the main settings page. ([@TheUnlocked](https://github.com/TheUnlocked)) ([#2527](https://github.com/mihonapp/mihon/pull/2527))
 
 ### Other
 - Delegate Suwayomi tracker authentication to extension ([@cpiber](https://github.com/cpiber)) ([#2476](https://github.com/mihonapp/mihon/pull/2476))
