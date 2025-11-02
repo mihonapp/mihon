@@ -13,6 +13,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ## [Unreleased]
 ### Added
 - Advanced setting to limit download filenames to ASCII characters. This is provided only as a workaround for OSes that do not properly handle standard Unicode filenames. This setting is generally not recommended and should only be used as a last resort ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
+- Reader setting to automatically merge two-page spreads into a single image based on image analysis heuristics. ([@TheUnlocked](https://github.com/TheUnlocked)) ([#2527](https://github.com/mihonapp/mihon/pull/2527))
 
 ### Changed
 - Delegate Suwayomi tracker authentication to extension ([@cpiber](https://github.com/cpiber)) ([#2476](https://github.com/mihonapp/mihon/pull/2476))
@@ -26,6 +27,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix migration progress not updating after manual search ([@Secozzi](https://github.com/Secozzi)) ([#2484](https://github.com/mihonapp/mihon/pull/2484))
 - Fix category migration flag being ignored due to incorrect check against chapter flag ([@Secozzi](https://github.com/Secozzi)) ([#2484](https://github.com/mihonapp/mihon/pull/2484))
 - Fix disabling incognito mode from notification ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2512](https://github.com/mihonapp/mihon/pull/2512))
+- Fix inconsistency between how the "rotate wide pages" and "split wide pages" settings interact in the in-reader settings sheet versus the main settings page. ([@TheUnlocked](https://github.com/TheUnlocked)) ([#2527](https://github.com/mihonapp/mihon/pull/2527))
 
 ## [v0.19.1] - 2025-08-07
 ### Changed
