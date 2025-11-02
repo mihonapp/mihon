@@ -51,7 +51,8 @@ class WebtoonRecyclerView @JvmOverloads constructor(
 
     var tapListener: ((MotionEvent) -> Unit)? = null
     var longTapListener: ((MotionEvent) -> Boolean)? = null
-
+    private var zoomFlingAnimatorSet: AnimatorSet? = null
+    
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
         halfWidth = MeasureSpec.getSize(widthSpec) / 2
         halfHeight = MeasureSpec.getSize(heightSpec) / 2
@@ -155,6 +156,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
         animatorSet.duration = 400
         animatorSet.interpolator = DecelerateInterpolator()
         animatorSet.start()
+        zoomFlingAnimatorSet = animatorSet
 
         return true
     }
@@ -266,6 +268,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
                     scrollPointerId = ev.getPointerId(0)
                     downX = (ev.x + 0.5f).toInt()
                     downY = (ev.y + 0.5f).toInt()
+                    zoomFlingAnimatorSet?.cancel()
                 }
                 MotionEvent.ACTION_POINTER_DOWN -> {
                     scrollPointerId = ev.getPointerId(actionIndex)
