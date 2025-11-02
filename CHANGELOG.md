@@ -23,7 +23,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Spoofing of `X-Requested-With` header to support newer WebView versions ([@Guzmazow](https://github.com/Guzmazow)) ([#2491](https://github.com/mihonapp/mihon/pull/2491))
 - Download support for chapters with the same metadata. Now a hash based on chapter's url is appended to download filename to tell them apart, letting you download both. Existing downloaded chapters will continue to work normally ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
 - Auto refresh extension list whenever a repository is added or removed ([@c2y5](https://github.com/c2y5)) ([#2483](https://github.com/mihonapp/mihon/pull/2483))
-- The WebView activity now launches new WebViews for popups instead of treating them as redirects. The X button will close the most recent WebView in the stack. ([@TheUnlocked](https://github.com/TheUnlocked)) ([#2584](https://github.com/mihonapp/mihon/pull/2584))
+- Added proper multi window support in WebView instead of treating everything as a redirect ([@TheUnlocked](https://github.com/TheUnlocked)) ([#2584](https://github.com/mihonapp/mihon/pull/2584))
 
 ### Fixed
 - Fix height of description not being calculated correctly if images are present ([@Secozzi](https://github.com/Secozzi)) ([#2382](https://github.com/mihonapp/mihon/pull/2382))
