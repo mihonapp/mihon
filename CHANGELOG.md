@@ -36,6 +36,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix extension download stuck in pending state in some cases ([@c2y5](https://github.com/c2y5)) ([#2483](https://github.com/mihonapp/mihon/pull/2483))
 - Fix scrollbar not showing when animator duration scale animation is turned off ([@anirudhsnayak](https://github.com/anirudhsnayak)) ([#2398](https://github.com/mihonapp/mihon/pull/2398))
 - Fix date picker not allowing the same start and finish date in negative time zones ([@AntsyLich](https://github.com/AntsyLich), [@kashish-aggarwal21](https://github.com/kashish-aggarwal21)) ([#2617](https://github.com/mihonapp/mihon/pull/2617))
+- Fix reader tap zones triggering after scrolling was stopped by the user ([@Naputt1](https://github.com/Naputt1), [@AntsyLich](https://github.com/AntsyLich)) ([#2518](https://github.com/mihonapp/mihon/pull/2518))
 
 ### Other
 - Delegate Suwayomi tracker authentication to extension ([@cpiber](https://github.com/cpiber)) ([#2476](https://github.com/mihonapp/mihon/pull/2476))

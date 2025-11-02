@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.HapticFeedbackConstants
@@ -36,7 +37,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     private var currentScale = DEFAULT_RATE
 
     private var isScrolling = false
-    private var lastTapStoppedScroll = false
+    private var hasTappedWhileScrolling = false
 
     var zoomOutDisabled = false
         set(value) {
@@ -66,16 +67,10 @@ class WebtoonRecyclerView @JvmOverloads constructor(
         super.onMeasure(widthSpec, heightSpec)
     }
 
-    override fun performClick(): Boolean {
-        super.performClick()
-        return true
-    }
-
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(e: MotionEvent): Boolean {
         if (e.actionMasked == MotionEvent.ACTION_DOWN) {
-            lastTapStoppedScroll = isScrolling
-        } else if (e.actionMasked == MotionEvent.ACTION_UP) {
-            performClick()
+            hasTappedWhileScrolling = isScrolling
         }
         detector.onTouchEvent(e)
         return super.onTouchEvent(e)
@@ -230,7 +225,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     inner class GestureListener : GestureDetectorWithLongTap.Listener() {
 
         override fun onSingleTapConfirmed(ev: MotionEvent): Boolean {
-            if (!lastTapStoppedScroll) {
+            if (!hasTappedWhileScrolling) {
                 tapListener?.invoke(ev)
             }
             return false
