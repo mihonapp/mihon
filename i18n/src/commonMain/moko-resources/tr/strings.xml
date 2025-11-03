@@ -905,4 +905,7 @@
     <string name="label_donate">Bağış</string>
     <string name="pref_disallow_non_ascii_filenames">ASCII olmayan dosya isimlerine izin verme</string>
     <string name="pref_disallow_non_ascii_filenames_details">Unicode desteklemeyen bazı depolama sistemleri için uyumluluk sağlar. Etkinleştirildiğinde kaynak ve manga klasörlerini manuel olarak yeniden adlandırıp ASCII olmayan karakterleri küçük UTF-8 heksadesimal karşılıklarıyla değiştirmeniz gerekir. Bölüm dosyalarının yeniden adlandırılması gerekli değildir.</string>
+    <string name="pref_download_concurrent_pages">Tek seferde indirilen sayfalar</string>
+    <string name="pref_download_concurrent_pages_summary">Her kaynak için aynı anda indirilen sayfalar</string>
+    <string name="pref_download_concurrent_sources">Tek seferde indirilen kaynaklar</string>
 </resources>
