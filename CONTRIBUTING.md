@@ -26,11 +26,11 @@ Before you start, please note that the ability to use following technologies is 
 
 ## Local Development
 
-To test your changes, you can simply click **Run 'app'** or **Debug 'app'** at the top of Android Studio to build and run the app. No other configurations are needed.
+To test your changes, simply click **Run 'app'** or **Debug 'app'** at the top of Android Studio to build and run the app. No other configurations are needed.
 
 ## Building and Installing the Debug App
 
-If you do not have either a **rooted device** or an **emulator without Google Play**, you must use the **Debug build of Mihon**.
+If you do not have either a **rooted device** or an **emulator without Google Play**, you must use the **Debug build of Mihon** for debugging.
 
 To test your changes, you can build and install a debug version of the app. This version will be installed separately from the release version and will have a ".dev" suffix in its name.
 
