@@ -24,20 +24,25 @@ Before you start, please note that the ability to use following technologies is 
 - [Android Studio](https://developer.android.com/studio)
 - Emulator or phone with developer options enabled to test changes.
 
+## Local Development
+
+To test your changes, you can simply click **Run 'app'** or **Debug 'app'** at the top of Android Studio to build and run the app. No other configurations are needed.
+
 ## Building and Installing the Debug App
+
+If you do not have either a **rooted device** or an **emulator without Google Play**, you must use the **Debug build of Mihon**.
 
 To test your changes, you can build and install a debug version of the app. This version will be installed separately from the release version and will have a ".dev" suffix in its name.
 
 1.  **Build the debug APK:**
     Open a terminal in the project root and run the following command:
-    ```bash
+    ```
     ./gradlew assembleDebug
     ```
-    This will create an APK file in `app/build/outputs/apk/debug/`.
 
 2.  **Install the debug app:**
     To install the app on a connected device or emulator, run:
-    ```bash
+    ```
     ./gradlew installDebug
     ```
 
