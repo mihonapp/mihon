@@ -903,4 +903,7 @@
     <string name="label_donate">Mag-donate</string>
     <string name="pref_disallow_non_ascii_filenames">Di-payagan ang mga non-ASCII na filename</string>
     <string name="pref_disallow_non_ascii_filenames_details">Tinitiyak ang pagiging tugma sa ilang partikular na storage media na hindi sumusuporta sa Unicode. Kapag napagana ito, kakailanganin mong manu-manong palitan ang pangalan ng source at manga folder sa pamamagitan ng pagpapalit ng mga hindi ASCII na character ng kanilang lowercase na UTF-8 hexadecimal na representasyon. Hindi kailangang palitan ng pangalan ang mga file ng kabanata.</string>
+    <string name="pref_download_concurrent_sources">Kasabay na pag-download ng source</string>
+    <string name="pref_download_concurrent_pages">Kasabay na pag-download ng pahina</string>
+    <string name="pref_download_concurrent_pages_summary">Mga pahina na nai-download nang sabay-sabay kada source</string>
 </resources>

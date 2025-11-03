@@ -903,4 +903,9 @@
     <string name="migrationListScreen.matchWithoutChapterToast">Không tìm thấy chương nào, mục này không thể được sử dụng để di chuyển</string>
     <string name="label_donate">Quyên góp</string>
     <string name="pref_display_images_description">Hiển thị hình ảnh trong mô tả manga</string>
+    <string name="pref_disallow_non_ascii_filenames">Không cho phép tên tệp không phải định dạng ASCII</string>
+    <string name="pref_disallow_non_ascii_filenames_details">Đảm bảo khả năng tương thích với một số phương tiện lưu trữ nhất định không hỗ trợ Unicode. Khi tính năng này được bật, bạn sẽ cần đổi tên thủ công các thư mục nguồn và manga bằng cách thay thế các ký tự không phải ASCII bằng cách biểu diễn thập lục phân UTF-8 chữ thường của chúng. Các tập tin chương không cần phải đổi tên.</string>
+    <string name="pref_download_concurrent_sources">Tải xuống nguồn đồng thời</string>
+    <string name="pref_download_concurrent_pages">Tải xuống trang đồng thời</string>
+    <string name="pref_download_concurrent_pages_summary">Các trang được tải xuống đồng thời theo từng nguồn</string>
 </resources>
