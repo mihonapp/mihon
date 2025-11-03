@@ -17,6 +17,7 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import org.jsoup.Jsoup
+import kotlinx.coroutines.flow.MutableSharedFlow
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import java.io.IOException
@@ -29,6 +30,15 @@ class CloudflareInterceptor(
 ) : WebViewInterceptor(context, defaultUserAgentProvider) {
 
     private val executor = ContextCompat.getMainExecutor(context)
+
+    companion object {
+        // Emitted when Cloudflare bypass fails so UI can show a help banner.
+        // Use a Long payload (timestamp) to differentiate events and allow filtering by time.
+        // replay=1 ensures late subscribers get the last event, but UI should filter by timestamp.
+        val bypassFailedEvents: MutableSharedFlow<Long> = MutableSharedFlow(
+            replay = 1
+        )
+    }
 
     override fun shouldIntercept(response: Response): Boolean {
         // Check if Cloudflare anti-bot is on
@@ -63,6 +73,8 @@ class CloudflareInterceptor(
         // Because OkHttp's enqueue only handles IOExceptions, wrap the exception so that
         // we don't crash the entire app
         catch (e: CloudflareBypassException) {
+            // Emit banner event whenever the Cloudflare bypass failure message is surfaced
+            bypassFailedEvents.tryEmit(System.nanoTime())
             throw IOException(context.stringResource(MR.strings.information_cloudflare_bypass_failure), e)
         } catch (e: Exception) {
             throw IOException(e)

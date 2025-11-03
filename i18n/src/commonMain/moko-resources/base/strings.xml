@@ -959,7 +959,7 @@
     <string name="getting_started_guide">Getting started guide</string>
     <string name="information_empty_category">You have no categories. Tap the plus button to create one for organizing your library.</string>
     <string name="information_empty_category_dialog">You don\'t have any categories yet.</string>
-    <string name="information_cloudflare_bypass_failure">Failed to bypass Cloudflare</string>
+    <string name="information_cloudflare_bypass_failure">Failed to bypass Cloudflare. Try accessing WebView, changing your user agent, or changing the extension's mirror URL. Look up the troubleshooting guide for more details.</string>
     <string name="information_cloudflare_help">Tap here for help with Cloudflare</string>
     <string name="information_required_plain">*required</string>
     <!-- Do not translate "WebView" -->

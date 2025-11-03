@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,22 +29,28 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastAll
 import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastMap
@@ -58,7 +65,10 @@ import eu.kanade.presentation.manga.components.MangaInfoBox
 import eu.kanade.presentation.manga.components.MangaToolbar
 import eu.kanade.presentation.manga.components.MissingChapterCountListItem
 import eu.kanade.presentation.util.formatChapterNumber
+import eu.kanade.presentation.components.WarningBanner
+import eu.kanade.tachiyomi.network.interceptor.CloudflareInterceptor
 import eu.kanade.tachiyomi.data.download.model.Download
+import kotlinx.coroutines.flow.collectLatest
 import eu.kanade.tachiyomi.source.getNameForMangaInfo
 import eu.kanade.tachiyomi.ui.manga.ChapterList
 import eu.kanade.tachiyomi.ui.manga.MangaScreenModel
@@ -292,24 +302,52 @@ private fun MangaScreenSmallImpl(
                 if (!isFirstItemVisible || isFirstItemScrolled) 1f else 0f,
                 label = "Top Bar Background",
             )
-            MangaToolbar(
-                title = state.manga.title,
-                hasFilters = state.filterActive,
-                navigateUp = navigateUp,
-                onClickFilter = onFilterClicked,
-                onClickShare = onShareClicked,
-                onClickDownload = onDownloadActionClicked,
-                onClickEditCategory = onEditCategoryClicked,
-                onClickRefresh = onRefresh,
-                onClickMigrate = onMigrateClicked,
-                onClickEditNotes = onEditNotesClicked,
-                actionModeCounter = selectedChapterCount,
-                onCancelActionMode = { onAllChapterSelected(false) },
-                onSelectAll = { onAllChapterSelected(true) },
-                onInvertSelection = { onInvertSelection() },
-                titleAlphaProvider = { titleAlpha },
-                backgroundAlphaProvider = { backgroundAlpha },
-            )
+            val uriHandler = LocalUriHandler.current
+            var showCloudflareHelp by remember(state.manga.id) { mutableStateOf(false) }
+            val screenStartTime = remember(state.manga.id) { System.nanoTime() }
+            LaunchedEffect(state.manga.id) {
+                // Each manga screen has its own banner state (reset via remember key)
+                // Only show banner for failures that occur after this screen was composed
+                CloudflareInterceptor.bypassFailedEvents.collectLatest { failureTime ->
+                    if (failureTime >= screenStartTime) {
+                        showCloudflareHelp = true
+                    }
+                }
+            }
+            Column {
+                MangaToolbar(
+                    title = state.manga.title,
+                    hasFilters = state.filterActive,
+                    navigateUp = navigateUp,
+                    onClickFilter = onFilterClicked,
+                    onClickShare = onShareClicked,
+                    onClickDownload = onDownloadActionClicked,
+                    onClickEditCategory = onEditCategoryClicked,
+                    onClickRefresh = onRefresh,
+                    onClickMigrate = onMigrateClicked,
+                    onClickEditNotes = onEditNotesClicked,
+                    actionModeCounter = selectedChapterCount,
+                    onCancelActionMode = { onAllChapterSelected(false) },
+                    onSelectAll = { onAllChapterSelected(true) },
+                    onInvertSelection = { onInvertSelection() },
+                    titleAlphaProvider = { titleAlpha },
+                    backgroundAlphaProvider = { backgroundAlpha },
+                )
+                AnimatedVisibility(visible = showCloudflareHelp) {
+                    WarningBanner(
+                        textRes = MR.strings.information_cloudflare_help,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                            .clip(MaterialTheme.shapes.small)
+                            .clickable {
+                                uriHandler.openUri(
+                                    "https://mihon.app/docs/guides/troubleshooting/#cloudflare",
+                                )
+                            },
+                    )
+                }
+            }
         },
         bottomBar = {
             val selectedChapters = remember(chapters) {
@@ -528,25 +566,53 @@ fun MangaScreenLargeImpl(
             val selectedChapterCount = remember(chapters) {
                 chapters.count { it.selected }
             }
-            MangaToolbar(
-                modifier = Modifier.onSizeChanged { topBarHeight = it.height },
-                title = state.manga.title,
-                hasFilters = state.filterActive,
-                navigateUp = navigateUp,
-                onClickFilter = onFilterButtonClicked,
-                onClickShare = onShareClicked,
-                onClickDownload = onDownloadActionClicked,
-                onClickEditCategory = onEditCategoryClicked,
-                onClickRefresh = onRefresh,
-                onClickMigrate = onMigrateClicked,
-                onClickEditNotes = onEditNotesClicked,
-                onCancelActionMode = { onAllChapterSelected(false) },
-                actionModeCounter = selectedChapterCount,
-                onSelectAll = { onAllChapterSelected(true) },
-                onInvertSelection = { onInvertSelection() },
-                titleAlphaProvider = { 1f },
-                backgroundAlphaProvider = { 1f },
-            )
+            val uriHandler = LocalUriHandler.current
+            var showCloudflareHelp by remember(state.manga.id) { mutableStateOf(false) }
+            val screenStartTime = remember(state.manga.id) { System.nanoTime() }
+            LaunchedEffect(state.manga.id) {
+                // Each manga screen has its own banner state (reset via remember key)
+                // Only show banner for failures that occur after this screen was composed
+                CloudflareInterceptor.bypassFailedEvents.collectLatest { failureTime ->
+                    if (failureTime >= screenStartTime) {
+                        showCloudflareHelp = true
+                    }
+                }
+            }
+            Column {
+                MangaToolbar(
+                    modifier = Modifier.onSizeChanged { topBarHeight = it.height },
+                    title = state.manga.title,
+                    hasFilters = state.filterActive,
+                    navigateUp = navigateUp,
+                    onClickFilter = onFilterButtonClicked,
+                    onClickShare = onShareClicked,
+                    onClickDownload = onDownloadActionClicked,
+                    onClickEditCategory = onEditCategoryClicked,
+                    onClickRefresh = onRefresh,
+                    onClickMigrate = onMigrateClicked,
+                    onClickEditNotes = onEditNotesClicked,
+                    onCancelActionMode = { onAllChapterSelected(false) },
+                    actionModeCounter = selectedChapterCount,
+                    onSelectAll = { onAllChapterSelected(true) },
+                    onInvertSelection = { onInvertSelection() },
+                    titleAlphaProvider = { 1f },
+                    backgroundAlphaProvider = { 1f },
+                )
+                AnimatedVisibility(visible = showCloudflareHelp) {
+                    WarningBanner(
+                        textRes = MR.strings.information_cloudflare_help,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                            .clip(MaterialTheme.shapes.small)
+                            .clickable {
+                                uriHandler.openUri(
+                                    "https://mihon.app/docs/guides/troubleshooting/#cloudflare",
+                                )
+                            },
+                    )
+                }
+            }
         },
         bottomBar = {
             Box(
