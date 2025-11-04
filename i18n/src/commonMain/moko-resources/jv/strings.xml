@@ -313,4 +313,7 @@
     <string name="unlock_app_title">Bikak kunci %s</string>
     <string name="action_set_interval">Trapake jeda wayah</string>
     <string name="action_filter_interval_custom">Nganyari panyaris frekuensi</string>
+    <string name="action_sort_next_updated">nganyari kang diarep-arep sabanjure</string>
+    <string name="action_sort_tracker_score">Skor pelacak</string>
+    <string name="action_sort_random">mawut</string>
 </resources>
