@@ -133,21 +133,20 @@ fun WebViewScreenContent(
                 view: WebView?,
                 request: WebResourceRequest?,
             ): Boolean {
-                request?.let {
-                    // Don't attempt to open blobs as webpages
-                    if (it.url.toString().startsWith("blob:http")) {
-                        return false
-                    }
+                val url = request?.url?.toString() ?: return false
 
-                    // Ignore intents urls
-                    if (it.url.toString().startsWith("intent://")) {
+                // Ignore intents urls
+                if (url.startsWith("intent://")) return true
+
+                // Only open valid web urls
+                if (url.startsWith("http") || url.startsWith("https")) {
+                    if (url != view?.url) {
+                        view?.loadUrl(url, headers)
                         return true
                     }
-
-                    // Continue with request, but with custom headers
-                    view?.loadUrl(it.url.toString(), headers)
                 }
-                return super.shouldOverrideUrlLoading(view, request)
+
+                return false
             }
         }
     }
