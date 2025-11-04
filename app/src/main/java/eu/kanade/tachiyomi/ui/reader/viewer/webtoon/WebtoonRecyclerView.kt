@@ -36,7 +36,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     private var lastVisibleItemPosition = 0
     private var currentScale = DEFAULT_RATE
 
-    private var isScrolling = false
+    private var isManuallyScrolling = false
     private var hasTappedWhileScrolling = false
 
     var zoomOutDisabled = false
@@ -70,7 +70,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(e: MotionEvent): Boolean {
         if (e.actionMasked == MotionEvent.ACTION_DOWN) {
-            hasTappedWhileScrolling = isScrolling
+            hasTappedWhileScrolling = isManuallyScrolling
         }
         detector.onTouchEvent(e)
         return super.onTouchEvent(e)
@@ -91,7 +91,9 @@ class WebtoonRecyclerView @JvmOverloads constructor(
         val totalItemCount = layoutManager?.itemCount ?: 0
         atLastPosition = visibleItemCount > 0 && lastVisibleItemPosition == totalItemCount - 1
         atFirstPosition = firstVisibleItemPosition == 0
-        isScrolling = state != SCROLL_STATE_IDLE
+        if (state == SCROLL_STATE_IDLE) {
+            isManuallyScrolling = false
+        }
     }
 
     private fun getPositionX(positionX: Float): Float {
@@ -321,6 +323,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
 
                         if (startScroll) {
                             isZoomDragging = true
+                            isManuallyScrolling = true
                         }
                     }
 
