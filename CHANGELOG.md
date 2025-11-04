@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+
+## [v0.19.3] - 2025-11-04
 ### Fixed
 - Fix WebView crash introduced in 0.19.2 ([@bapeey](https://github.com/bapeey)) ([#2649](https://github.com/mihonapp/mihon/pull/2649))
 - Fix long strip reader not scrolling on consecutive taps ([@AntsyLich](https://github.com/AntsyLich)) ([#2650](https://github.com/mihonapp/mihon/pull/2650))
@@ -436,7 +438,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Branding to Mihon ([@AntsyLich](https://github.com/AntsyLich))
 - Minimum supported Android version to 8 ([@AntsyLich](https://github.com/AntsyLich)) ([`dfb3091`](https://github.com/mihonapp/mihon/commit/dfb3091e380dda3e9bfb64bf5c9a685cf3a03d0e))
 
-[unreleased]: https://github.com/mihonapp/mihon/compare/v0.19.2...main
+[unreleased]: https://github.com/mihonapp/mihon/compare/v0.19.3...main
+[v0.19.3]: https://github.com/mihonapp/mihon/compare/v0.19.2...v0.19.3
 [v0.19.2]: https://github.com/mihonapp/mihon/compare/v0.19.1...v0.19.2
 [v0.19.1]: https://github.com/mihonapp/mihon/compare/v0.19.0...v0.19.1
 [v0.19.0]: https://github.com/mihonapp/mihon/compare/v0.18.0...v0.19.0
