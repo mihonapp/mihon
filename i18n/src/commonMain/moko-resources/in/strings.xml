@@ -905,4 +905,7 @@
     <string name="migrationListScreen.matchWithoutChapterToast">Tidak ditemukan bab, entri ini tidak dapat digunakan untuk migrasi</string>
     <string name="pref_disallow_non_ascii_filenames">Jangan izinkan nama file non-ASCII</string>
     <string name="pref_disallow_non_ascii_filenames_details">Memastikan kompatibilitas dengan beberapa media penyimpanan yang tidak mendukung Unicode. Jika opsi ini diaktifkan, Anda harus mengganti nama folder sumber dan manga secara manual dengan mengganti karakter non-ASCII menjadi representasi heksadesimal UTF-8 huruf kecil. File chapter tidak perlu diganti namanya.</string>
+    <string name="pref_download_concurrent_sources">Ambil berkas sumber secara bersamaan</string>
+    <string name="pref_download_concurrent_pages">Ambil berkas halaman secara bersamaan</string>
+    <string name="pref_download_concurrent_pages_summary">Halaman yang diunduh secara bersamaan per sumber</string>
 </resources>

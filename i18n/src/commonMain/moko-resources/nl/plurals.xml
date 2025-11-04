@@ -76,4 +76,16 @@
         <item quantity="one">%d repo</item>
         <item quantity="other">%d repo\'s</item>
     </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">%1$d item migreren?</item>
+        <item quantity="other">%1$d items migreren?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">%1$d item kopiëren?</item>
+        <item quantity="other">%1$d items kopiëren?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">Een item werd overgeslagen</item>
+        <item quantity="other">%1$d items werden overgeslagen</item>
+    </plurals>
 </resources>

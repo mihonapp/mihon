@@ -904,4 +904,7 @@
     <string name="migrationListScreen.matchWithoutChapterToast">Tidak ada bab yang dijumpai, entri ini tidak dapat digunakan untuk penghijrahan</string>
     <string name="pref_disallow_non_ascii_filenames">Tidak benarkan nama fail bukan ASCII</string>
     <string name="pref_disallow_non_ascii_filenames_details">Memastikan keserasian dengan media penyimpanan tertentu yang tidak menyokong Unicode. Apabila ini diaktifkan, anda perlu menamakan semula folder sumber dan manga secara manual dengan menggantikan aksara bukan-ASCII dengan representasi heksadesimal UTF-8 huruf kecil mereka. Fail bab tidak perlu dinamakan semula.</string>
+    <string name="pref_download_concurrent_sources">Muat turun sumber serentak</string>
+    <string name="pref_download_concurrent_pages">Muat turun halaman serentak</string>
+    <string name="pref_download_concurrent_pages_summary">Halaman yang dimuat turun secara serentak setiap sumber</string>
 </resources>

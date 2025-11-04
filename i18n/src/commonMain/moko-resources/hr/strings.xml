@@ -905,4 +905,7 @@
     <string name="pref_display_images_description">Iscrtaj slike u opisima manga</string>
     <string name="pref_disallow_non_ascii_filenames">Zabrani imena datoteka koji nisu u ASCII formatu</string>
     <string name="pref_disallow_non_ascii_filenames_details">Osigurava kompatibilnost s određenim medijima za spremanje podataka koji ne podržavaju Unicode. Kada je ova opcija aktivirana, morat ćeš ručno preimenovati izvor i mape s mangama zamjenjivanjem znakova koji nisu ASCII s njihovim UTF-8 heksadecimalnim vrijednostima (u malim slovima). Datoteke poglavlja se ne moraju preimenovati.</string>
+    <string name="pref_download_concurrent_sources">Istovremena preuzimanja izvora</string>
+    <string name="pref_download_concurrent_pages">Istovremena preuzimanja stranica</string>
+    <string name="pref_download_concurrent_pages_summary">Istovremeno preuzete stranice po izvoru</string>
 </resources>
