@@ -5,6 +5,7 @@ import io.mockk.slot
 import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.newSingleThreadContext
@@ -28,7 +29,7 @@ class MigratorTest {
     lateinit var migrationStrategyFactory: MigrationStrategyFactory
 
     @BeforeEach
-    fun initilize() {
+    fun initialize() {
         migrationContext = MigrationContext(false)
         migrationJobFactory = spyk(MigrationJobFactory(migrationContext, CoroutineScope(Dispatchers.Main + Job())))
         migrationCompletedListener = spyk<MigrationCompletedListener>(block = {})
@@ -142,6 +143,7 @@ class MigratorTest {
 
     companion object {
 
+        @OptIn(DelicateCoroutinesApi::class)
         val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
         @BeforeAll
