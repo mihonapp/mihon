@@ -540,7 +540,7 @@
     <string name="action_display_language_badge">言語</string>
     <string name="label_warning">警告</string>
     <string name="pref_verbose_logging">Verboseログ出力</string>
-    <string name="download_queue_size_warning">警告: 大量の一括ダウンロードにより、ソースは遅くなったり、Mihonを接続禁止したりする恐れがあります。詳しくはタップでご覧ください。</string>
+    <string name="download_queue_size_warning">警告：大量のダウンロードは、ソースの速度低下や %s のブロックにつながる可能性があります。詳細を確認するにはタップしてください。</string>
     <string name="update_72hour">3日ごと</string>
     <string name="connected_to_wifi">Wi-Fi接続時のみ</string>
     <string name="ext_update_all">全て更新</string>
@@ -838,20 +838,20 @@
     <string name="pref_behavior">行動</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">章の読了後</string>
     <string name="pref_update_library_manga_titles">ライブラリーのマンガのタイトルをソースに合わせて更新</string>
-    <string name="pref_incognito_mode_extension_summary">拡張機能の既読章履歴を一時停止</string>
+    <string name="pref_incognito_mode_extension_summary">拡張機能の閲覧履歴を一時停止</string>
     <string name="logging_in">ログイン中…</string>
     <string name="pref_mark_duplicate_read_chapter_read">重複する既読章を既読としてマークする</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">新章取得後</string>
-    <string name="possible_duplicates_summary">ライブラリに名前が似ている作品があります。\n\n移行作品の選択、またはそのまま追加。</string>
+    <string name="possible_duplicates_summary">ライブラリに類似した名前のエントリが存在します。\n\n移行するエントリを選択するか、そのまま追加してください。</string>
     <string name="author">著者</string>
     <string name="artist">アーティスト</string>
     <string name="action_display_unread_badge">未読の章</string>
     <string name="storage_failed_to_create_download_directory">ダウンロードディレクトリの作成に失敗しました</string>
     <string name="storage_failed_to_create_directory">ディレクトリの作成に失敗しました: %s</string>
     <string name="clear_database_text">データベースから作品が削除されます</string>
-    <string name="clear_database_history_warning">ライブラリ外作品の既読の章と進捗は失われます</string>
+    <string name="clear_database_history_warning">非図書館エントリの章の読み取りと進捗は失われます</string>
     <string name="clear_db_exclude_read">読み終えた章を含むエントリーを保持する</string>
-    <string name="possible_duplicates_title">重複の可能性あり</string>
+    <string name="possible_duplicates_title">重複の可能性</string>
     <string name="label_donate">寄付する</string>
     <string name="label_auto">自動車</string>
     <string name="theme_catppuccin">キャットプッチン</string>
@@ -860,4 +860,13 @@
     <string name="pref_hide_missing_chapter_indicators">欠落している章のインジケーターを非表示にする</string>
     <string name="pref_always_decode_long_strip_with_ssiv_2">レガシーデコーダーを長尺ストリップリーダーに使用する</string>
     <string name="library_list">ライブラリーリスト</string>
+    <string name="pref_disallow_non_ascii_filenames">非ASCIIファイル名を許可しない</string>
+    <string name="pref_disallow_non_ascii_filenames_details">特定のUnicode非対応ストレージメディアとの互換性を確保します。有効にした場合、ソースフォルダとマンガフォルダは手動で名前を変更する必要があります。非ASCII文字を小文字のUTF-8 16進数表記に置き換えてください。チャプターファイルの名前変更は不要です。</string>
+    <string name="pref_download_concurrent_sources">同時ソースダウンロード</string>
+    <string name="pref_download_concurrent_pages">同時ページダウンロード</string>
+    <string name="pref_download_concurrent_pages_summary">ソースごとの同時ダウンロードページ数</string>
+    <string name="pref_update_library_manga_titles_summary">警告：マンガのタイトルが変更された場合、ダウンロードキューから削除されます（存在する場合）。</string>
+    <string name="tracked_privately">非公開で追跡</string>
+    <string name="action_toggle_private_on">非公開で追跡する</string>
+    <string name="action_toggle_private_off">公開で追跡する</string>
 </resources>
