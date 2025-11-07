@@ -905,4 +905,5 @@
     <string name="label_donate">Спонсорство</string>
     <string name="pref_disallow_non_ascii_filenames">Не позволять наименования файлов в виде non-ASCII</string>
     <string name="pref_disallow_non_ascii_filenames_details">Обеспечивает совместимость с некоторыми носителями информации, которые не поддерживают Unicode. Когда этот функция включена, вам нужно будет вручную переименовать папки серий и источников, заменив non-ASCII символы на шестнадцатеричные UTF-8 в нижнем регистре. Файлы глав можно не переименовать.</string>
+    <string name="pref_download_concurrent_sources">Параллельные загрузки с источников</string>
 </resources>

@@ -859,7 +859,7 @@
     <string name="storage_failed_to_create_download_directory">创建下载目录失败</string>
     <string name="storage_failed_to_create_directory">创建目录失败： %s</string>
     <string name="logging_in">正在登录…</string>
-    <string name="pref_update_library_manga_titles">更新书架中的漫画标题以匹配来源</string>
+    <string name="pref_update_library_manga_titles">更新书架中的漫画标题以匹配图源</string>
     <string name="pref_update_library_manga_titles_summary">警告：如果漫画被重命名，将会从下载队列中移除（如果存在）。</string>
     <string name="migrationConfigScreen.selectedHeader">选中</string>
     <string name="migrationConfigScreen.selectNoneLabel">全不选</string>
@@ -903,4 +903,9 @@
     <string name="pref_hide_missing_chapter_indicators">隐藏缺失章节提示符</string>
     <string name="pref_display_images_description">在漫画注释中显示图片</string>
     <string name="label_donate">捐赠</string>
+    <string name="pref_disallow_non_ascii_filenames">禁用非ASCII文件名</string>
+    <string name="pref_disallow_non_ascii_filenames_details">确保与某些不支持 Unicode 的存储介质相兼容。启用此功能后，你需要手动重命名图源和漫画文件夹，将非 ASCII 字符改为对应的 UTF-8 小写十六进制表示形式。章节文件无需重命名。</string>
+    <string name="pref_download_concurrent_sources">同时下载的图源数量</string>
+    <string name="pref_download_concurrent_pages">同时下载的页数</string>
+    <string name="pref_download_concurrent_pages_summary">每个图源同时下载的页数</string>
 </resources>

@@ -905,4 +905,7 @@
     <string name="pref_display_images_description">Bilder in Mangabeschreibungen anzeigen</string>
     <string name="pref_disallow_non_ascii_filenames">Nicht-ASCII-Dateinamen nicht zulassen</string>
     <string name="pref_disallow_non_ascii_filenames_details">Versichert Kompatibilität mit bestimmten Speichermedien, die Unicode nicht unterstützen. Ist diese Option aktiviert, müssen Quellen- und Manga-Ordner manuell umbenannt werden, indem Nicht-ASCII-Zeichen durch ihre UTF-8-Hexadezimaldarstellungen in Kleinbuchstaben ersetzt werden. Kapiteldateien müssen nicht umbenannt werden.</string>
+    <string name="pref_download_concurrent_sources">Gleichzeitige Quellendownloads</string>
+    <string name="pref_download_concurrent_pages">Gleichzeitige Seitendownloads</string>
+    <string name="pref_download_concurrent_pages_summary">Pro Quelle gleichzeitig heruntergeladene Seiten</string>
 </resources>

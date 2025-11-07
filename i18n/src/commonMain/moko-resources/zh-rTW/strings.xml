@@ -896,4 +896,7 @@
     <string name="label_donate">捐贈</string>
     <string name="pref_disallow_non_ascii_filenames">禁止使用非 ASCII 檔名</string>
     <string name="pref_disallow_non_ascii_filenames_details">確保與不支援 Unicode 的某些儲存媒體相容，啟用此選項後，你需要手動將來源與漫畫資料夾中的非 ASCII 字元改成對應的小寫 UTF-8 十六進位表示方式，章節檔案則不需要重新命名。</string>
+    <string name="pref_download_concurrent_sources">同時下載的來源數目</string>
+    <string name="pref_download_concurrent_pages">同時下載的頁數</string>
+    <string name="pref_download_concurrent_pages_summary">每個來源同時下載的頁數</string>
 </resources>
