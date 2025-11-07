@@ -316,4 +316,26 @@
     <string name="action_sort_next_updated">nganyari kang diarep-arep sabanjure</string>
     <string name="action_sort_tracker_score">Skor pelacak</string>
     <string name="action_sort_random">mawut</string>
+    <string name="action_update_category">Mbaharui kategori</string>
+    <string name="action_open_random_manga">Bikak entri acak</string>
+    <string name="action_remove_everything">Busek sedaya</string>
+    <string name="action_copy_to_clipboard">Santun dhateng blabak klip</string>
+    <string name="action_copy_link">Santun link</string>
+    <string name="action_display_unread_badge">Bab durung diwaca</string>
+    <string name="action_display_show_continue_reading_button">Tombol lajengaken maos</string>
+    <string name="action_apply">Terapaken</string>
+    <string name="action_ok">OK</string>
+    <string name="action_move_to_bottom_all_for_series">Pindhah seri ka ngisor</string>
+    <string name="action_notes">Cathetan</string>
+    <string name="action_edit_notes">Ganti cathetan</string>
+    <string name="action_revert_to_default">Mbalikake marang default</string>
+    <string name="action_not_now">Ora saiki</string>
+    <string name="action_add_anyway">Tambahaken mawon</string>
+    <string name="pref_onboarding_guide">Panuntun wiwitan</string>
+    <string name="onboarding_heading">Sugeng rawuh!</string>
+    <string name="onboarding_description">Ayo awakdewe atur sawetara perkara ndhisik. Sampeyan uga mesthi isa ngowahi ing menu setelan mengko.</string>
+    <string name="onboarding_action_next">Terusane</string>
+    <string name="onboarding_action_finish">Rampung</string>
+    <string name="onboarding_action_skip">Nglangkungi</string>
+    <string name="onboarding_storage_info">Milih direktori kanggo nyimpen isi saka %1$s, kalebu unduhan bab, data backup, lan liya-liyane. \n \nApike kudu nganggo direktori kapisah. \n \ndirektori ingkang dipunpilih: %2$s</string>
 </resources>

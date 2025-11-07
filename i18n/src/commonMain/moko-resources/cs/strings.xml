@@ -540,7 +540,7 @@
     <string name="update_72hour">Každé 3 dny</string>
     <string name="connected_to_wifi">Jen na Wi-Fi</string>
     <string name="pref_verbose_logging">Podrobné protokolování</string>
-    <string name="download_queue_size_warning">Varování: hromadné stahování může vést k tomu, že zdroje zpomalí a/nebo zablokují Mihon. Klepnutím se dozvíte více.</string>
+    <string name="download_queue_size_warning">Varování: hromadné stahování může vést k tomu, že zdroje zpomalí a/nebo zablokují %s. Klepnutím se dozvíte více.</string>
     <string name="ext_update_all">Aktualizovat vše</string>
     <string name="pref_verbose_logging_summary">Vypisovat podrobné informace do systémového protokolu (sníží výkon aplikace)</string>
     <string name="channel_app_updates">Aktualizace aplikace</string>
@@ -687,8 +687,8 @@
     <string name="pref_page_rotate_invert">Překlopení orientace otočených širokých stránek</string>
     <string name="pref_page_rotate">Otočení širokých stránek tak, aby se vešly</string>
     <string name="pref_debug_info">Ladící informace</string>
-    <string name="pref_chapter_swipe_end">Přejetí prstem doprava</string>
-    <string name="pref_chapter_swipe_start">Přejetí prstem doleva</string>
+    <string name="pref_chapter_swipe_end">Kapitola po přejetí doprava</string>
+    <string name="pref_chapter_swipe_start">Kapitola po přejetí doleva</string>
     <string name="pref_double_tap_zoom">Přiblížení dvojitým klepnutím</string>
     <string name="action_filter_interval_custom">Přizpůsobený interval aktualizace</string>
     <string name="action_sort_next_updated">Další očekávaná aktualizace</string>
@@ -768,7 +768,7 @@
 \nVybraná složka: %2$s</string>
     <string name="invalid_backup_file_error">Úplná chyba:</string>
     <string name="pref_library_update_smart_update">Chytrá aktualizace</string>
-    <string name="action_add_repo_message">Přidat další repozitáře do Mihon. Měli by to být URL končící \"index.min.json\".</string>
+    <string name="action_add_repo_message">Přidat další repozitáře do %s. Měli by to být URL končící \"index.min.json\".</string>
     <string name="error_repo_exists">Tento repozitář již existuje!</string>
     <string name="action_delete_repo">Odstranit repozitář</string>
     <string name="invalid_repo_name">Neplatná URL repozitáře</string>
@@ -833,7 +833,7 @@
     <string name="upcoming_calendar_next">Následující měsíc</string>
     <string name="upcoming_guide">Návod k nadcházejícím kapitolám</string>
     <string name="label_auto">Automaticky</string>
-    <string name="pref_mark_duplicate_read_chapter_read">Označit duplicitní přečtené kapitoly jako přečtené</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Označit duplicitní přečtenou kapitolu jako přečtenou</string>
     <string name="theme_monochrome">Černobílý</string>
     <string name="author">Autor</string>
     <string name="artist">Umělec</string>
@@ -860,4 +860,11 @@
     <string name="storage_failed_to_create_directory">Nepodařilo se vytvořit adresář: %s</string>
     <string name="clear_database_text">Chystáte se odstranit položky z databáze</string>
     <string name="clear_db_exclude_read">Ponechat položky s přečtenými kapitolami</string>
+    <string name="label_donate">Přispěj</string>
+    <string name="theme_catppuccin">Catppuccin</string>
+    <string name="pref_hide_missing_chapter_indicators">Skrýt indikátory chybějících kapitol</string>
+    <string name="pref_disallow_non_ascii_filenames">Nepovolovat soubory s non-ASCII znaky</string>
+    <string name="pref_disallow_non_ascii_filenames_details">Zajišťuje kompatibilitu s určitými úložnými médii, která nepodporují Unicode. Pokud je tato funkce povolena, budete muset ručně přejmenovat názvy složkek source a manga tak, že nahradíte non-ASCII znaky jejich malými hexadecimálními znaky v UTF-8. Názvy souborů kapitol není nutné přejmenovávat.</string>
+    <string name="pref_download_concurrent_sources">Souběžné stahování zdrojů</string>
+    <string name="pref_download_concurrent_pages">Souběžné stahování stránek</string>
 </resources>
