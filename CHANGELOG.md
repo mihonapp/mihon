@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Improved
+- Improved various aspects of the WebView multi window support added in 0.19.2 ([@TheUnlocked](https://github.com/TheUnlocked)) ([#2662](https://github.com/mihonapp/mihon/pull/2662))
 
 ## [v0.19.3] - 2025-11-04
 ### Fixed
