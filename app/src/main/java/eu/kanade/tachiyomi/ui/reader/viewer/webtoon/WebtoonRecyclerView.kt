@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.HapticFeedbackConstants
@@ -35,10 +34,6 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     private var firstVisibleItemPosition = 0
     private var lastVisibleItemPosition = 0
     private var currentScale = DEFAULT_RATE
-
-    private var isManuallyScrolling = false
-    private var hasTappedWhileScrolling = false
-
     var zoomOutDisabled = false
         set(value) {
             field = value
@@ -67,11 +62,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
         super.onMeasure(widthSpec, heightSpec)
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(e: MotionEvent): Boolean {
-        if (e.actionMasked == MotionEvent.ACTION_DOWN) {
-            hasTappedWhileScrolling = isManuallyScrolling
-        }
         detector.onTouchEvent(e)
         return super.onTouchEvent(e)
     }
@@ -91,9 +82,6 @@ class WebtoonRecyclerView @JvmOverloads constructor(
         val totalItemCount = layoutManager?.itemCount ?: 0
         atLastPosition = visibleItemCount > 0 && lastVisibleItemPosition == totalItemCount - 1
         atFirstPosition = firstVisibleItemPosition == 0
-        if (state == SCROLL_STATE_IDLE) {
-            isManuallyScrolling = false
-        }
     }
 
     private fun getPositionX(positionX: Float): Float {
@@ -227,9 +215,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     inner class GestureListener : GestureDetectorWithLongTap.Listener() {
 
         override fun onSingleTapConfirmed(ev: MotionEvent): Boolean {
-            if (!hasTappedWhileScrolling) {
-                tapListener?.invoke(ev)
-            }
+            tapListener?.invoke(ev)
             return false
         }
 
@@ -323,7 +309,6 @@ class WebtoonRecyclerView @JvmOverloads constructor(
 
                         if (startScroll) {
                             isZoomDragging = true
-                            isManuallyScrolling = true
                         }
                     }
 
