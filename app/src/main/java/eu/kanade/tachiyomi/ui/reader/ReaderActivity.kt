@@ -777,7 +777,8 @@ class ReaderActivity : BaseActivity() {
      * Updates viewer inset depending on fullscreen reader preferences.
      */
     private fun updateViewerInset(fullscreen: Boolean, drawUnderCutout: Boolean) {
-        val view = viewModel.state.value.viewer?.getView() ?: return
+        if (!::binding.isInitialized) return
+        val view = binding.viewerContainer
 
         view.applyInsetsPadding(ViewCompat.getRootWindowInsets(view), fullscreen, drawUnderCutout)
         ViewCompat.setOnApplyWindowInsetsListener(view) { view, windowInsets ->
