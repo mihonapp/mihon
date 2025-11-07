@@ -18,6 +18,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Fixed
 - Fix WebView crash introduced in 0.19.2 ([@bapeey](https://github.com/bapeey)) ([#2649](https://github.com/mihonapp/mihon/pull/2649))
 - Fix long strip reader not scrolling on consecutive taps ([@AntsyLich](https://github.com/AntsyLich)) ([#2650](https://github.com/mihonapp/mihon/pull/2650))
+- Fix extra padding appearing in reader after user interactions ([@AntsyLich](https://github.com/AntsyLich)) ([#2669](https://github.com/mihonapp/mihon/pull/2669))
 
 ## [v0.19.2] - 2025-11-02
 ### Added
