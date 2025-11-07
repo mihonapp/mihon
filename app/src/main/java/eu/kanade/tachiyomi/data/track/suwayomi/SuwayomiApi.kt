@@ -116,9 +116,10 @@ class SuwayomiApi(private val trackId: Long) {
         val markQuery = """
         |mutation MarkChaptersRead(${'$'}chapters: [Int!]!) {
         |  updateChapters(input: {ids: ${'$'}chapters, patch: {isRead: true}}) {
-        |    chapters {
-        |      id
-        |    }
+        |    __typename
+        |  }
+        |  deleteDownloadedChapters(input: {ids: ${'$'}chapters}) {
+        |    __typename
         |  }
         |}
         """.trimMargin()
@@ -143,9 +144,7 @@ class SuwayomiApi(private val trackId: Long) {
         val trackQuery = """
         |mutation TrackManga(${'$'}mangaId: Int!) {
         |  trackProgress(input: {mangaId: ${'$'}mangaId}) {
-        |    trackRecords {
-        |      lastChapterRead
-        |    }
+        |    __typename
         |  }
         |}
         """.trimMargin()
