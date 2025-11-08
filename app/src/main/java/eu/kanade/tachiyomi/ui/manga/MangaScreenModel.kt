@@ -402,6 +402,26 @@ class MangaScreenModel(
         }
     }
 
+    fun showEditInfoDialog() {
+        val manga = successState?.manga ?: return
+        updateSuccessState { it.copy(dialog = Dialog.EditInfo(manga)) }
+    }
+
+    fun updateMangaInfo(title: String, author: String?, artist: String?, description: String?) {
+        val manga = successState?.manga ?: return
+        screenModelScope.launchIO {
+            updateManga.await(
+                tachiyomi.domain.manga.model.MangaUpdate(
+                    id = manga.id,
+                    title = title,
+                    author = author,
+                    artist = artist,
+                    description = description,
+                ),
+            )
+        }
+    }
+
     /**
      * Returns true if the manga has any downloads.
      */
@@ -1080,6 +1100,7 @@ class MangaScreenModel(
         data class DuplicateManga(val manga: Manga, val duplicates: List<MangaWithChapterCount>) : Dialog
         data class Migrate(val target: Manga, val current: Manga) : Dialog
         data class SetFetchInterval(val manga: Manga) : Dialog
+        data class EditInfo(val manga: Manga) : Dialog
         data object SettingsSheet : Dialog
         data object TrackSheet : Dialog
         data object FullCover : Dialog

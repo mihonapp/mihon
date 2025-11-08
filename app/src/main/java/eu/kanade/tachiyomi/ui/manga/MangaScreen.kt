@@ -34,6 +34,7 @@ import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.presentation.manga.MangaScreen
 import eu.kanade.presentation.manga.components.DeleteChaptersDialog
+import eu.kanade.presentation.manga.components.EditMangaDialog
 import eu.kanade.presentation.manga.components.MangaCoverDialog
 import eu.kanade.presentation.manga.components.ScanlatorFilterDialog
 import eu.kanade.presentation.manga.components.SetIntervalDialog
@@ -149,6 +150,9 @@ class MangaScreen(
                     screenModel.showTrackDialog()
                 }
             },
+            onEditInfoClicked = screenModel::showEditInfoDialog,
+            onUpdateMangaInfo = screenModel::updateMangaInfo,
+            onDismissDialog = screenModel::dismissDialog,
             onTagSearch = { scope.launch { performGenreSearch(navigator, it, screenModel.source!!) } },
             onFilterButtonClicked = screenModel::showSettingsDialog,
             onRefresh = screenModel::fetchAllFromSource,
@@ -199,7 +203,6 @@ class MangaScreen(
                     },
                 )
             }
-
             is MangaScreenModel.Dialog.DuplicateManga -> {
                 DuplicateMangaDialog(
                     duplicates = dialog.duplicates,
@@ -209,7 +212,6 @@ class MangaScreen(
                     onMigrate = { screenModel.showMigrateDialog(it) },
                 )
             }
-
             is MangaScreenModel.Dialog.Migrate -> {
                 MigrateMangaDialog(
                     current = dialog.current,
@@ -217,6 +219,15 @@ class MangaScreen(
                     // Initiated from the context of [dialog.target] so we show [dialog.current].
                     onClickTitle = { navigator.push(MangaScreen(dialog.current.id)) },
                     onDismissRequest = onDismissRequest,
+                )
+            }
+            is MangaScreenModel.Dialog.EditInfo -> {
+                EditMangaDialog(
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = { title, author, artist, description ->
+                        screenModel.updateMangaInfo(title, author, artist, description)
+                    },
+                    manga = dialog.manga,
                 )
             }
             MangaScreenModel.Dialog.SettingsSheet -> ChapterSettingsDialog(

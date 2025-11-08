@@ -99,6 +99,7 @@
     <string name="delete_category_confirmation">Do you wish to delete the category \"%s\"?</string>
     <string name="delete_category">Delete category</string>
     <string name="action_edit_cover">Edit cover</string>
+    <string name="action_edit_info">Edit information</string>
     <string name="action_view_chapters">View chapters</string>
     <string name="action_pause">Pause</string>
     <string name="action_previous_chapter">Previous chapter</string>
