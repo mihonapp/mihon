@@ -52,7 +52,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     var tapListener: ((MotionEvent) -> Unit)? = null
     var longTapListener: ((MotionEvent) -> Boolean)? = null
 
-    var animatingFling = false
+    private var animatingFling = false
     private var tapDuringFling = false
 
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
@@ -221,6 +221,10 @@ class WebtoonRecyclerView @JvmOverloads constructor(
         if (scaleX < minRate) {
             zoom(currentScale, minRate, x, 0f, y, 0f)
         }
+    }
+
+    fun setAnimatingFling() {
+        animatingFling = true
     }
 
     inner class GestureListener : GestureDetectorWithLongTap.Listener() {
