@@ -53,6 +53,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     var longTapListener: ((MotionEvent) -> Boolean)? = null
 
     var animatingFling = false
+    private var tapDuringFling = false
 
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
         halfWidth = MeasureSpec.getSize(widthSpec) / 2
@@ -65,6 +66,10 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(e: MotionEvent): Boolean {
+        if (e.actionMasked == MotionEvent.ACTION_DOWN) {
+            tapDuringFling = animatingFling
+        }
+
         detector.onTouchEvent(e)
         return super.onTouchEvent(e)
     }
@@ -84,6 +89,10 @@ class WebtoonRecyclerView @JvmOverloads constructor(
         val totalItemCount = layoutManager?.itemCount ?: 0
         atLastPosition = visibleItemCount > 0 && lastVisibleItemPosition == totalItemCount - 1
         atFirstPosition = firstVisibleItemPosition == 0
+
+        if (state == SCROLL_STATE_IDLE) {
+            animatingFling = false
+        }
     }
 
     private fun getPositionX(positionX: Float): Float {
@@ -217,9 +226,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     inner class GestureListener : GestureDetectorWithLongTap.Listener() {
 
         override fun onSingleTapConfirmed(ev: MotionEvent): Boolean {
-            if (animatingFling) {
-                animatingFling = false
-            } else {
+            if (!tapDuringFling) {
                 tapListener?.invoke(ev)
             }
             return false
