@@ -7,8 +7,8 @@ import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
-import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.ConfigurableSource
+import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.sourcePreferences
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.addAll
@@ -121,22 +121,26 @@ class SuwayomiApi(private val trackId: Long) {
                 .mapNotNull { n -> n.id.takeIf { n.chapterNumber <= track.last_chapter_read } }
         }
 
-        val markQuery = if (deleteDownloadsOnServer) """
-        |mutation MarkChaptersRead(${'$'}chapters: [Int!]!) {
-        |  updateChapters(input: {ids: ${'$'}chapters, patch: {isRead: true}}) {
-        |    __typename
-        |  }
-        |  deleteDownloadedChapters(input: {ids: ${'$'}chapters}) {
-        |    __typename
-        |  }
-        |}
-        """.trimMargin() else """
-        |mutation MarkChaptersRead(${'$'}chapters: [Int!]!) {
-        |  updateChapters(input: {ids: ${'$'}chapters, patch: {isRead: true}}) {
-        |    __typename
-        |  }
-        |}
-        """.trimMargin()
+        val markQuery = if (deleteDownloadsOnServer) {
+            """
+            |mutation MarkChaptersRead(${'$'}chapters: [Int!]!) {
+            |  updateChapters(input: {ids: ${'$'}chapters, patch: {isRead: true}}) {
+            |    __typename
+            |  }
+            |  deleteDownloadedChapters(input: {ids: ${'$'}chapters}) {
+            |    __typename
+            |  }
+            |}
+            """.trimMargin()
+        } else {
+            """
+            |mutation MarkChaptersRead(${'$'}chapters: [Int!]!) {
+            |  updateChapters(input: {ids: ${'$'}chapters, patch: {isRead: true}}) {
+            |    __typename
+            |  }
+            |}
+            """.trimMargin()
+        }
         val markPayload = buildJsonObject {
             put("query", markQuery)
             putJsonObject("variables") {
