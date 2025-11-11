@@ -1,12 +1,15 @@
 package eu.kanade.tachiyomi.data.track.suwayomi
 
+import android.content.SharedPreferences
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
+import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.source.sourcePreferences
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.addAll
 import kotlinx.serialization.json.buildJsonObject
@@ -29,9 +32,12 @@ class SuwayomiApi(private val trackId: Long) {
 
     private val sourceManager: SourceManager by injectLazy()
     private val source: HttpSource by lazy { (sourceManager.get(sourceId) as HttpSource) }
+    private val configurableSource: ConfigurableSource by lazy { (sourceManager.get(sourceId) as ConfigurableSource) }
     private val client: OkHttpClient by lazy { source.client }
     private val baseUrl: String by lazy { source.baseUrl.trimEnd('/') }
     private val apiUrl: String by lazy { "$baseUrl/api/graphql" }
+
+    public fun sourcePreferences(): SharedPreferences = configurableSource.sourcePreferences()
 
     suspend fun getTrackSearch(mangaId: Long): TrackSearch = withIOContext {
         val query = """
@@ -79,9 +85,11 @@ class SuwayomiApi(private val trackId: Long) {
         }
     }
 
-    suspend fun updateProgress(track: Track): Track {
+    suspend fun updateProgress(track: Track, deleteDownloadsOnServer: Boolean = false): Track {
         val mangaId = track.remote_id
 
+        // TODO: Include a filter on the chapter number here
+        // Below, we only consider older chapters; since v2.1.1985 filtering works properly in the query
         val chaptersQuery = """
         |query GetMangaUnreadChapters(${'$'}mangaId: Int!) {
         |  chapters(condition: {mangaId: ${'$'}mangaId, isRead: false}) {
@@ -113,15 +121,26 @@ class SuwayomiApi(private val trackId: Long) {
                 .mapNotNull { n -> n.id.takeIf { n.chapterNumber <= track.last_chapter_read } }
         }
 
-        val markQuery = """
-        |mutation MarkChaptersRead(${'$'}chapters: [Int!]!) {
-        |  updateChapters(input: {ids: ${'$'}chapters, patch: {isRead: true}}) {
-        |    chapters {
-        |      id
-        |    }
-        |  }
-        |}
-        """.trimMargin()
+        val markQuery = if (deleteDownloadsOnServer) {
+            """
+            |mutation MarkChaptersRead(${'$'}chapters: [Int!]!) {
+            |  updateChapters(input: {ids: ${'$'}chapters, patch: {isRead: true}}) {
+            |    __typename
+            |  }
+            |  deleteDownloadedChapters(input: {ids: ${'$'}chapters}) {
+            |    __typename
+            |  }
+            |}
+            """.trimMargin()
+        } else {
+            """
+            |mutation MarkChaptersRead(${'$'}chapters: [Int!]!) {
+            |  updateChapters(input: {ids: ${'$'}chapters, patch: {isRead: true}}) {
+            |    __typename
+            |  }
+            |}
+            """.trimMargin()
+        }
         val markPayload = buildJsonObject {
             put("query", markQuery)
             putJsonObject("variables") {
@@ -143,9 +162,7 @@ class SuwayomiApi(private val trackId: Long) {
         val trackQuery = """
         |mutation TrackManga(${'$'}mangaId: Int!) {
         |  trackProgress(input: {mangaId: ${'$'}mangaId}) {
-        |    trackRecords {
-        |      lastChapterRead
-        |    }
+        |    __typename
         |  }
         |}
         """.trimMargin()
