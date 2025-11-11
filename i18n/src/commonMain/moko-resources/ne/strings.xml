@@ -245,11 +245,7 @@
     <string name="untrusted_extension">अविश्वसनीय एक्सटेन्शन</string>
     <string name="exclude">समावेश नगर्नुहोस्: %s</string>
     <string name="ext_installer_pref">इंस्टलर</string>
-    <string name="untrusted_extension_message">यो एक्सटेन्शन अविश्वसनीय प्रमाणपत्र सँग हस्ताक्षर गरिएको थियो र सक्रिय गरिएको थिएन।
-\n
-\nएक खराब एक्सटेन्शनले कुनै पनि भण्डारण लगइन प्रमाणहरू पढ्न वा मनमानी कोड कार्यान्वयन गर्न सक्छ।
-\n
-\nयस प्रमाणपत्रमा विश्वास गरेर तपाईंले यी जोखिमहरू स्वीकार गर्नुहुन्छ।</string>
+    <string name="untrusted_extension_message">खराब एक्सटेन्शनहरूले कुनै पनि भण्डारण लगइन प्रमाणहरू पढ्न वा मनमानी कोड कार्यान्वयन गर्न सक्छ। \n \nयस एक्सटेन्शनमा विश्वास गरेर तपाईंले यी जोखिमहरू स्वीकार गर्नुहुन्छ।</string>
     <string name="pref_fullscreen">पूर्ण स्क्रिन</string>
     <string name="pref_show_navigation_mode_summary">रिडर खोलिएको बेला छोटकरीमा देखाउनुहोस्</string>
     <string name="pref_dual_page_invert_summary">यदि विभाजित चौडा पृष्ठहरूको प्लेसमेन्ट पढ्ने दिशासँग मेल खाँदैन</string>
@@ -314,11 +310,9 @@
     <string name="scale_type_fit_height">फिट उचाइ</string>
     <string name="scale_type_fit_width">फिट चौडाइ</string>
     <string name="services">ट्र्याकर</string>
-    <string name="invalid_backup_file">अवैध ब्याकअप फाइल</string>
+    <string name="invalid_backup_file">अवैध ब्याकअप फाइल:</string>
     <string name="backup_created">ब्याकअप सिर्जना गरियो</string>
-    <string name="backup_restore_content_full">ब्याकअप फाइलबाट डेटा रिस्टोर हुनेछ।
-\n
-\nतपाईंले कुनै पनि छुटेको एक्सटेन्शनहरू स्थापना गर्न र तिनीहरूलाई प्रयोग गर्न पछि ट्र्याकिङ सेवाहरूमा लगइन गर्न आवश्यक हुनेछ।</string>
+    <string name="backup_restore_content_full">तपाईंले कुनै पनि छुटेको एक्सटेन्शनहरू स्थापना गर्न र तिनीहरूलाई प्रयोग गर्न पछि ट्र्याकिङ सेवाहरूमा लगइन गर्न आवश्यक हुनेछ।</string>
     <string name="restore_in_progress">रिस्टोर पहिले नै प्रगतिमा छ</string>
     <string name="label_network">नेटवर्किङ</string>
     <string name="restoring_backup_error">ब्याकअप रिस्टोर असफल भयो</string>
@@ -539,7 +533,7 @@
     <string name="manga_download">डाउनलोड</string>
     <string name="transition_no_previous">अघिल्लो अध्याय छैन</string>
     <string name="download_insufficient_space">थोरै जम्मा गर्ने ठाउँ भएको कारणले अध्याय डाउनलोड हुन सकिँदएन</string>
-    <string name="download_queue_size_warning">सावधान: ठूलो हिस्सामा डाउनलोड गर्नाले स्रोत ढिलो चल्न अनि/वा Mihon लाई अवरुद्घ गर्न सक्नेछ। थप जान्न ट्याप गर्नुहोस्।</string>
+    <string name="download_queue_size_warning">सावधान: ठूलो हिस्सामा डाउनलोड गर्नाले स्रोत ढिलो चल्न अनि/वा %s लाई अवरुद्घ गर्न सक्नेछ। थप जान्नको लागि यहाँ थिच्नुहोस्।।</string>
     <string name="manga_tracking_tab">ट्र्याकिङ</string>
     <string name="add_tracking">ट्र्याक गर्नुहोस्</string>
     <string name="reading">पढ्दै</string>
@@ -772,7 +766,7 @@
     <string name="label_add_repo_input">रिपो URL</string>
     <string name="label_extension_repos">एक्सटेन्शन रिपो</string>
     <string name="action_add_repo">रिपो थप्नुहोस्</string>
-    <string name="action_add_repo_message">Mihon मा अतिरिक्त रिपो थप्नुहोस्। URL को अन्त्यमा \"index.min.json\" हुनुपर्छ।</string>
+    <string name="action_add_repo_message">%s मा अतिरिक्त रिपो थप्नुहोस्। URL को अन्त्यमा \"index.min.json\" हुनुपर्छ।</string>
     <string name="action_apply">अप्लाई</string>
     <string name="delete_repo_confirmation">के तपाइँ रिपो \"%s\" हटाउन चाहनुहुन्छ?</string>
     <string name="action_open_repo">खुला स्रोत रिपो</string>
@@ -877,4 +871,11 @@
     <string name="migrationConfigScreen.selectPinnedLabel">पिन गरिएको स्रोतहरू तिप्नुहोस</string>
     <string name="migrationConfigScreen.continueButtonText">जारी</string>
     <string name="migrationConfigScreen.dataToMigrateHeader">माइग्रेट गर्नुपर्ने डाटा</string>
+    <string name="action_webview_close_tab">ट्याब बन्द गर्नुहोस्</string>
+    <string name="pref_disallow_non_ascii_filenames">गैर-ASCII फाइल नामहरूलाई अनुमति नदिनुहोस्</string>
+    <string name="pref_download_concurrent_sources">समवर्ती स्रोत डाउनलोडहरू</string>
+    <string name="pref_download_concurrent_pages">समवर्ती पृष्ठ डाउनलोडहरू</string>
+    <string name="pref_download_concurrent_pages_summary">प्रत्येक स्रोतबाट एकैसाथ डाउनलोड गरिने पृष्ठहरूको संख्या</string>
+    <string name="migrationConfigScreen.removeDownloadsTitle">स्थानान्तरण पछि हालको इन्ट्रीका डाउनलोडहरू मेटाउनुहोस्</string>
+    <string name="migrationConfigScreen.additionalSearchQueryLabel">थप किवर्डहरू (वैकल्पिक)</string>
 </resources>

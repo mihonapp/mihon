@@ -908,4 +908,5 @@
     <string name="pref_download_concurrent_sources">同时下载的图源数量</string>
     <string name="pref_download_concurrent_pages">同时下载的页数</string>
     <string name="pref_download_concurrent_pages_summary">每个图源同时下载的页数</string>
+    <string name="action_webview_close_tab">关闭标签</string>
 </resources>

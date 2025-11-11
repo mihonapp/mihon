@@ -111,7 +111,7 @@
     <string name="label_settings">ಸಂಯೋಜನೆಗಳು</string>
     <string name="label_more">ಇನ್ನಷ್ಟು</string>
     <string name="name">ಹೆಸರು</string>
-    <string name="restore_duration">%02d ನಿಮಿಷ, %02d ಸೆಕೆಂಡು</string>
+    <string name="restore_duration">%1$02d ನಿಮಿಷ, %2$02d ಸೆಕೆಂಡು</string>
     <string name="restore_completed">ಮರುಸ್ಥಾಪನೆ ಪೂರ್ಣಗೊಂಡಿದೆ</string>
     <string name="backup_created">ಬ್ಯಾಕಪ್ ರಚಿಸಲಾಗಿದೆ</string>
     <string name="pref_backup_interval">ಬ್ಯಾಕಪ್ ಆವರ್ತನ</string>

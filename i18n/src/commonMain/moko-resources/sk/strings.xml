@@ -521,7 +521,7 @@
     <string name="pref_dump_crash_logs_summary">Uložiť logy o chybách do súboru na zdieľanie s vývojármi</string>
     <string name="manga_cover">Obal</string>
     <string name="cover_saved">Obal uložený</string>
-    <string name="delete_category_confirmation">Prajete si vymazať kategóriu s?</string>
+    <string name="delete_category_confirmation">Prajete si vymazať kategóriu %s?</string>
     <string name="tapping_inverted_vertical">Vertikálne</string>
     <string name="backup_restore_missing_trackers">Sledovače, do ktorých nie ste prihlásení:</string>
     <string name="pref_dns_over_https">DNS cez HTTPS (DoH)</string>
@@ -601,7 +601,7 @@
     <string name="pref_clear_webview_data">Vymazanie údajov WebView</string>
     <string name="webview_data_deleted">Údaje WebView boli vymazané</string>
     <string name="manga_info_expand">Viac</string>
-    <string name="download_queue_size_warning">Upozornenie: Veľké hromadné sťahovanie môže viesť k spomaleniu zdrojov a/alebo blokovaniu Mihon. Klepnutím sa dozviete viac.</string>
+    <string name="download_queue_size_warning">Upozornenie: Veľké hromadné sťahovanie môže viesť k spomaleniu zdrojov a/alebo blokovaniu %s. Klepnutím sa dozviete viac.</string>
     <string name="notification_size_warning">Veľké aktualizácie poškodzujú zdroje a môžu viesť k pomalším aktualizáciám a tiež k zvýšeniu spotreby batérie. Klepnutím sa dozviete viac.</string>
     <string name="notification_update_error">Zlyhané aktualizácie: %1$d</string>
     <string name="creating_backup_error">Zálohovanie zlyhalo</string>

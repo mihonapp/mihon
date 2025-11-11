@@ -551,7 +551,7 @@
     <string name="channel_app_updates">Actualitzacions de l’aplicació</string>
     <string name="action_track">Segueix</string>
     <string name="ext_app_info">Informació de l’aplicació</string>
-    <string name="download_queue_size_warning">Advertència: Les baixades massa grosses poden fer que les fonts es tornin més lentes i/o bloquin el Mihon. Premeu per a obtenir-ne més informació.</string>
+    <string name="download_queue_size_warning">Advertència: Les baixades massa grosses poden fer que les fonts es tornin més lentes i/o bloquin el %s. Premeu per a obtenir-ne més informació.</string>
     <string name="notification_size_warning">Les actualitzacions grosses perjudiquen les fonts i poden implicar actualitzacions més lentes i un augment en l’ús de bateria. Premeu per a obtenir-ne més informació.</string>
     <string name="pref_landscape_zoom">Amplia automàticament les imatges amples</string>
     <string name="action_show_manga">Mostra l’element</string>
@@ -763,7 +763,7 @@
     <string name="label_extension_repos">Repositoris d’extensions</string>
     <string name="information_empty_repos">No heu definit cap repositori.</string>
     <string name="action_delete_repo">Suprimeix el repositori</string>
-    <string name="action_add_repo_message">Afegiu repositoris addicionals al Mihon. Ha de ser un URL que acabi amb «index.min.json».</string>
+    <string name="action_add_repo_message">Afegiu repositoris addicionals al %s. Ha de ser un URL que acabi amb «index.min.json».</string>
     <string name="error_repo_exists">Aquest repositori ja existeix!</string>
     <string name="invalid_repo_name">URL del repositori invàlid</string>
     <string name="delete_repo_confirmation">Voleu suprimir el repositori «%s»?</string>
