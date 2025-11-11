@@ -103,7 +103,7 @@ class WebtoonFrame(context: Context) : FrameLayout(context) {
             velocityX: Float,
             velocityY: Float,
         ): Boolean {
-            recycler?.setAnimatingFling()
+            recycler?.onManualScroll()
             return recycler?.zoomFling(velocityX.toInt(), velocityY.toInt()) ?: false
         }
     }
