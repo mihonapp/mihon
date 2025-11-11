@@ -301,7 +301,7 @@
     <string name="split_tall_images">Opdel høje billeder</string>
     <string name="disabled">Deaktiveret</string>
     <string name="last_read_chapter">Senest læste kapitel</string>
-    <string name="restore_duration">%02d min, %02d sek</string>
+    <string name="restore_duration">%1$02d min, %2$02d sek</string>
     <string name="pref_high">Høj</string>
     <string name="pref_restore_backup_summ">Gendan biblioteket fra sikkerhedskopi</string>
     <string name="spen_previous_page">Forrige side</string>

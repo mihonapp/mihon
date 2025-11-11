@@ -905,4 +905,8 @@
     <string name="pref_display_images_description">Αναπαράσταση εικόνων σε περιγραφές manga</string>
     <string name="pref_disallow_non_ascii_filenames">Απαγόρευση μη ASCII ονομάτων αρχείων</string>
     <string name="pref_disallow_non_ascii_filenames_details">Εξασφαλίζει συμβατότητα με ορισμένα μέσα αποθήκευσης που δεν υποστηρίζουν Unicode. Όταν αυτή η επιλογή είναι ενεργοποιημένη, θα πρέπει να μετονομάσετε χειροκίνητα τους φακέλους πηγής και manga, αντικαθιστώντας τους χαρακτήρες που δεν είναι ASCII με τις μικρές κεφαλαίες δεκαεξαδικές αναπαραστάσεις UTF-8. Τα αρχεία κεφαλαίων δε χρειάζεται να μετονομάζονται.</string>
+    <string name="action_webview_close_tab">Κλείσιμο καρτέλας</string>
+    <string name="pref_download_concurrent_sources">Ταυτόχρονες λήψεις πηγών</string>
+    <string name="pref_download_concurrent_pages">Ταυτόχρονες λήψεις σελίδων</string>
+    <string name="pref_download_concurrent_pages_summary">Σελίδες που λήφθηκαν ταυτόχρονα ανά πηγή</string>
 </resources>

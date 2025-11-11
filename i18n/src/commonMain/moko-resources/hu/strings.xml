@@ -499,7 +499,7 @@
     <string name="notification_new_chapters">Új fejezet</string>
     <string name="backup_in_progress">Biztonsági mentés már folyamatban van</string>
     <string name="not_installed">Nincs telepítve</string>
-    <string name="download_queue_size_warning">Figyelmeztetés: a tömeges letöltések a források lelassulásához és/vagy a Mihon leállásához vezethetnek. Koppintson további információért.</string>
+    <string name="download_queue_size_warning">Figyelmeztetés: a tömeges letöltések a források lelassulásához és/vagy a %s leállásához vezethetnek. Koppintson további információért.</string>
     <string name="learn_more">Koppintson további információért</string>
     <string name="notification_cover_update_failed">Nem sikerült a fedlap frissítése</string>
     <string name="notification_first_add_to_library">Először adja az elemet a könyvtárhoz</string>
@@ -755,7 +755,7 @@
     <string name="information_empty_repos">Nincsenek beállítva tárolók.</string>
     <string name="action_add_repo">Tároló felvétele</string>
     <string name="label_add_repo_input">Tároló URL</string>
-    <string name="action_add_repo_message">További tárolók hozzáadása a Mihonhoz. Ennek az URL-nek \"index.min.json\"-ra végződő URL-nek kell lennie.</string>
+    <string name="action_add_repo_message">További tárolók hozzáadása a %shoz. Ennek az URL-nek \"index.min.json\"-ra végződő URL-nek kell lennie.</string>
     <string name="error_repo_exists">Ez a tároló már létezik!</string>
     <string name="action_delete_repo">Tároló törlése</string>
     <string name="invalid_repo_name">Érvénytelen tároló URL</string>

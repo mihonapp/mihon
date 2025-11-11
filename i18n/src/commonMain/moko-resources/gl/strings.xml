@@ -576,7 +576,7 @@
     <string name="crash_screen_description">%s pechouse por un problema inesperado. Aconsellámoste que compartas os rexistros de erros na canle de soporte no Discord (en inglés).</string>
     <string name="crash_screen_restart_application">Reinicia a aplicación</string>
     <string name="source_filter_empty_screen">Non se atopou ninguna fonte instalada</string>
-    <string name="download_queue_size_warning">Advertencia: As descargas pesadas poden facer que as fontes se volvan máis lentas e/ou bloqueen Mihon. Preme para saber máis.</string>
+    <string name="download_queue_size_warning">Advertencia: As descargas pesadas poden facer que as fontes se volvan máis lentas e/ou bloqueen %s. Preme para saber máis.</string>
     <string name="update_check_open">Abrir no GitHub</string>
     <string name="download_notifier_downloader_title">Xestor de descargas</string>
     <string name="download_notifier_title_error">Erro</string>
@@ -704,7 +704,7 @@
     <string name="pref_relative_format">Marcas de tempo relativas</string>
     <string name="pref_library_update_smart_update">Actualizacións intelixentes</string>
     <string name="action_add_repo">Engadir un repositorio</string>
-    <string name="action_add_repo_message">Engade máis repositorios a Mihon. Debe ser unha dirección URL que remate en \"index.min.json\".</string>
+    <string name="action_add_repo_message">Engade máis repositorios a %s. Debe ser unha dirección URL que remate en \"index.min.json\".</string>
     <string name="action_delete_repo">Borrar repositorio</string>
     <string name="invalid_repo_name">A dirección URL do repositorio non é válida</string>
     <string name="delete_repo_confirmation">Queres eliminar o repositorio \"%s\"?</string>

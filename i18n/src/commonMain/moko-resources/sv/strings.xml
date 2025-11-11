@@ -541,7 +541,7 @@
     <string name="action_display_language_badge">Språk</string>
     <string name="connected_to_wifi">Bara över Wi-Fi</string>
     <string name="notification_size_warning">Stora uppdateringar skadar källor och kan leda till långsammare uppdateringar samt en ökad batterianvändning. Tryck för att få veta mer.</string>
-    <string name="download_queue_size_warning">Varning: stora massnerladdningar kan leda till att källor blir långsamma och/eller blockerar Mihon. Tryck för att få veta mer.</string>
+    <string name="download_queue_size_warning">Varning: stora massnerladdningar kan leda till att källor blir långsamma och/eller blockerar %s. Tryck för att få veta mer.</string>
     <string name="update_72hour">Var 3:e dag</string>
     <string name="ext_update_all">Uppdatera alla</string>
     <string name="channel_app_updates">Appuppdateringar</string>
@@ -778,7 +778,7 @@
     <string name="information_empty_repos">Du har inga förråd inställda.</string>
     <string name="action_add_repo">Lägg till förråd</string>
     <string name="label_add_repo_input">Förråd URL</string>
-    <string name="action_add_repo_message">Lägg till ytterliga förråd till Mihon. Detta ska vara en URL som slutar med \"index.min.json\".</string>
+    <string name="action_add_repo_message">Lägg till ytterliga förråd till %s. Detta ska vara en URL som slutar med \"index.min.json\".</string>
     <string name="error_repo_exists">Detta förråd existerar redan!</string>
     <string name="action_delete_repo">Ta bort förråd</string>
     <string name="invalid_repo_name">Ogiltig förråds URL</string>

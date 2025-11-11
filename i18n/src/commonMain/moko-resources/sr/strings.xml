@@ -325,7 +325,7 @@
     <string name="restore_in_progress">Враћање је већ у току</string>
     <string name="creating_backup_error">Прављење резервне копије није успело</string>
     <string name="backup_in_progress">Прављење резервне копије је већ у току</string>
-    <string name="restore_duration">%02d мин, %02d сек</string>
+    <string name="restore_duration">%1$02d мин, %2$02d сек</string>
     <string name="pref_webtoon_side_padding">Растојање од ивице</string>
     <string name="pref_category_reading">Читање</string>
     <string name="pref_always_show_chapter_transition">Увек прикажи транзицију поглавља</string>
@@ -546,7 +546,7 @@
     <string name="clear_history_completed">Историја је избрисана</string>
     <string name="clear_history_confirmation">Да ли сте сигурни? Цела историја ће бити изгубљена.</string>
     <string name="migration_help_guide">Водич за миграцију извора</string>
-    <string name="download_queue_size_warning">Упозорење: велики број преузимања може довести до успоравања извора и/или блокирања Mihon-а. Додирни да сазнаш више.</string>
+    <string name="download_queue_size_warning">Упозорење: велики број преузимања може довести до успоравања извора и/или блокирања %s-а. Додирни да сазнаш више.</string>
     <string name="notification_size_warning">Велика ажурирања штете изворима и могу довести до споријег ажурирања и повећања потрошње батерије. Кликни да сазнаш више.</string>
     <string name="ext_update_all">Ажурирај све</string>
     <string name="channel_app_updates">Ажурирања апликације</string>
@@ -739,7 +739,7 @@
     <string name="action_add_repo">Додај репозиторију</string>
     <string name="action_delete_repo">Избриши репозиторију</string>
     <string name="label_add_repo_input">URL репозиторије</string>
-    <string name="action_add_repo_message">Додај додатне репозиторије у Михон. Треба да буде URL који се завршава са „index.min.json”.</string>
+    <string name="action_add_repo_message">Додај додатне репозиторије у %s. Треба да буде URL који се завршава са „index.min.json”.</string>
     <string name="invalid_repo_name">Неисправан URL репозиторије</string>
     <string name="delete_repo_confirmation">Да ли желиш да избришеш репозиторију „%s”?</string>
     <string name="private_settings">Укључи и осетљива подешавања (нпр. токени за пријаву у пратиоце)</string>

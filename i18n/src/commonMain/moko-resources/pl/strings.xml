@@ -769,7 +769,7 @@
 \nWybrany folder:%2$s</string>
     <string name="ext_revoke_trust">Unieważnij zaufanie nieznanym rozszerzeniom</string>
     <string name="information_empty_repos">Nie masz ustawionych repozytoriów.</string>
-    <string name="action_add_repo_message">Dodaj repozytoria do Mihon. Powinien to być link z końcówką \"index.min.json\".</string>
+    <string name="action_add_repo_message">Dodaj repozytoria do %s. Powinien to być link z końcówką \"index.min.json\".</string>
     <string name="error_repo_exists">To repozytorium jest już dodane!</string>
     <string name="delete_repo_confirmation">Na pewno chcesz usunąć repozytorium \"%s\"?</string>
     <string name="action_open_repo">Repozytorium open source</string>

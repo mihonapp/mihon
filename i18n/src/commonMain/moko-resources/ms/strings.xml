@@ -542,7 +542,7 @@
     <string name="notification_size_warning">Kemas kini yang besar membahayakan sumber dan mengakibatkan sumber menjadi perlahan dan juga peningkatan penggunaan bateri. Ketik untuk ketahui selebihnya.</string>
     <string name="connected_to_wifi">Hanya menggunakan Wi-Fi</string>
     <string name="update_72hour">Setiap 3 hari</string>
-    <string name="download_queue_size_warning">Amaran: muat turun secara pukal besar boleh menyebabkan sumber menjadi lebih perlahan dan/atau menyekat Mihon %s. Ketik untuk ketahui selebihnya.</string>
+    <string name="download_queue_size_warning">Amaran: muat turun secara pukal besar boleh menyebabkan sumber menjadi lebih perlahan dan/atau menyekat %s. Ketik untuk ketahui selebihnya.</string>
     <string name="ext_update_all">Kemas kini semua</string>
     <string name="channel_app_updates">Kemas kini aplikasi</string>
     <string name="pref_auto_clear_chapter_cache">Hapus cache bab apabila membuka aplikasi</string>

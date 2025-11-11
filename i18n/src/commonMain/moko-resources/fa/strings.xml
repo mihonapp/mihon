@@ -343,7 +343,7 @@
     <string name="creating_backup">درحال ایجاد نسخه پشتیبان</string>
     <string name="backup_choice">چه چیزی را می خواهید پشتیبان گیری کنید ؟</string>
     <string name="backup_in_progress">پشتیبان گیری هنوز در حال انجام است</string>
-    <string name="restore_duration">%02d دقیقه, %02d ثانیه</string>
+    <string name="restore_duration">%1$02d دقیقه, %2$02d ثانیه</string>
     <string name="restore_completed">بازیابی کامل شد</string>
     <string name="backup_restore_missing_sources">منابع ناموجود:</string>
     <string name="invalid_backup_file_missing_manga">فایل پشتیبان حاوی هیچ ورودی کتابخانه نیست.</string>
@@ -598,7 +598,7 @@
     <string name="label_data_storage">داده های و ذخیره سازی</string>
     <string name="action_ok">باشه</string>
     <string name="action_sort_next_updated">به روز رسانی مورد انتظار بعدی</string>
-    <string name="download_queue_size_warning">هشدار: حجم زیاد بارگیری ممکن است باعث اهسته تر شدن سرعت ویا مسدود کردن Mihon از منبع شود. برای اطلاعات بیشتر لمس کنید.</string>
+    <string name="download_queue_size_warning">هشدار: حجم زیاد بارگیری ممکن است باعث اهسته تر شدن سرعت ویا مسدود کردن %s از منبع شود. برای اطلاعات بیشتر لمس کنید.</string>
     <string name="skipped_reason_not_always_update">به دلیل این که این مجموعه نیازی به به روز رسانی نداشت رد شد</string>
     <string name="skipped_reason_not_caught_up">به دلیل وجود چپتر های خوانده نشده رد شد</string>
     <string name="skipped_reason_not_started">به دلیل این که هیچ چپتری خوانده نشده بود رد شد</string>
@@ -643,7 +643,7 @@
     <string name="onboarding_action_finish">شروع کنید</string>
     <string name="onboarding_action_skip">پرش</string>
     <string name="ext_permission_install_apps_warning">مجوز برای نصب افزونه ها لازم است. به اینجا ضربه بزنید تا اعطا کنید.</string>
-    <string name="action_add_repo_message">به میهون مخازن اضافی اضافه کنید. این باید یک آدرس باشد که با \"index.min.json\" تمام شود.</string>
+    <string name="action_add_repo_message">به %s مخازن اضافی اضافه کنید. این باید یک آدرس باشد که با \"index.min.json\" تمام شود.</string>
     <string name="information_empty_repos">شما هیچ مخزنی برای تنظیم ندارید.</string>
     <string name="action_open_repo">مخزن منبع باز</string>
     <string name="pref_flash_page_summ">مقدار رد باقی مانده در نمایش گر های E-ink کاهش میابد</string>
