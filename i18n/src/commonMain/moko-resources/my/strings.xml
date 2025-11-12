@@ -81,7 +81,7 @@
     <string name="action_sort_tracker_score">ခြေရာခံ အမှတ်အားဖြင့် စီပါ</string>
     <string name="action_sort_random">ကျပန်းစီမှု</string>
     <string name="action_search">ရှာဖွေပါ</string>
-    <string name="action_search_hint">ရှာဖွေလိုသည်ကို ထည့်ပါ</string>
+    <string name="action_search_hint">ရှာဖွေလိုသည်ကို ထည့်ပါ…</string>
     <string name="action_search_settings">ရှာဖွေမှု ဆက်တင်များ</string>
     <string name="action_select_all">အားလုံးကို ရွေးချယ်ပါ</string>
     <string name="action_select_inverse">ရွေးချယ်မှု ပြောင်းပြန်ပါ</string>
@@ -255,7 +255,7 @@
     <string name="ext_info_age_rating">အသက်အကန့်အသတ်</string>
     <string name="ext_permission_install_apps_warning">ထည့်သွင်းရန် ခွင့်ပြုချက်လိုအပ်သည်။</string>
     <string name="ext_nsfw_short">၁၈+</string>
-    <string name="ext_install_service_notif">ထည့်သွင်းနေဆဲ</string>
+    <string name="ext_install_service_notif">ထည့်သွင်းနေဆဲ…</string>
     <string name="ext_nsfw_warning">ဤတွင် လိင်ပိုင်းဆိုင်ရာ အကြောင်းအရာများ (၁၈+နှစ်အထက်သာ သင့်လျော်သော) ပါဝင်နိုင်ပါသည်။</string>
     <string name="action_add_repo">repo ထည့်သွင်းရန်</string>
     <string name="error_repo_exists">repo ရှိပြီးသားဖြစ်သည်၊</string>

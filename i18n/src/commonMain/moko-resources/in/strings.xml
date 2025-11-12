@@ -908,4 +908,5 @@
     <string name="pref_download_concurrent_sources">Ambil berkas sumber secara bersamaan</string>
     <string name="pref_download_concurrent_pages">Ambil berkas halaman secara bersamaan</string>
     <string name="pref_download_concurrent_pages_summary">Halaman yang diunduh secara bersamaan per sumber</string>
+    <string name="action_webview_close_tab">Tutup tab</string>
 </resources>

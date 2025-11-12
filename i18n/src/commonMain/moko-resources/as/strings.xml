@@ -834,4 +834,7 @@
     <string name="pref_incognito_mode_extension_summary">সম্প্ৰসাৰণৰ বাবে ইতিহাস পঢ়া বন্ধ কৰক</string>
     <string name="label_auto">অটো</string>
     <string name="theme_monochrome">একবৰ্ণী</string>
+    <string name="clear_db_exclude_read">পঢ়া অধ্যায়সহ এন্ট্ৰিসমূহ ৰক্ষা কৰক</string>
+    <string name="author">লেখক</string>
+    <string name="artist">কলা</string>
 </resources>
