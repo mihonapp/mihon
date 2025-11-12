@@ -66,6 +66,63 @@ internal class RateLimitInterceptor(
     private val fairLock = Semaphore(1, true)
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        return chain.proceed(chain.request())
+        val call = chain.call()
+        if (call.isCanceled()) throw IOException("Canceled")
+
+        val request = chain.request()
+        when (host) {
+            null, request.url.host -> {} // need rate limit
+            else -> return chain.proceed(request)
+        }
+
+        try {
+            fairLock.acquire()
+        } catch (e: InterruptedException) {
+            throw IOException(e)
+        }
+
+        val requestQueue = this.requestQueue
+        val timestamp: Long
+
+        try {
+            synchronized(requestQueue) {
+                while (requestQueue.size >= permits) { // queue is full, remove expired entries
+                    val periodStart = SystemClock.elapsedRealtime() - rateLimitMillis
+                    var hasRemovedExpired = false
+                    while (!requestQueue.isEmpty() && requestQueue.first <= periodStart) {
+                        requestQueue.removeFirst()
+                        hasRemovedExpired = true
+                    }
+                    if (call.isCanceled()) {
+                        throw IOException("Canceled")
+                    } else if (hasRemovedExpired) {
+                        break
+                    } else {
+                        try { // wait for the first entry to expire, or notified by cached response
+                            (requestQueue as Object).wait(requestQueue.first - periodStart)
+                        } catch (_: InterruptedException) {
+                            continue
+                        }
+                    }
+                }
+
+                // add request to queue
+                timestamp = SystemClock.elapsedRealtime()
+                requestQueue.addLast(timestamp)
+            }
+        } finally {
+            fairLock.release()
+        }
+
+        val response = chain.proceed(request)
+        if (response.networkResponse == null) { // response is cached, remove it from queue
+            synchronized(requestQueue) {
+                if (requestQueue.isEmpty() || timestamp < requestQueue.first) return@synchronized
+                requestQueue.removeFirstOccurrence(timestamp)
+                (requestQueue as Object).notifyAll()
+            }
+        }
+
+        return response
     }
 }
