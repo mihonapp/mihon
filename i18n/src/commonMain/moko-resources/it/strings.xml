@@ -542,7 +542,7 @@
     <string name="notification_size_warning">Grossi aggiornamenti danneggiano le fonti, possono rallentare gli aggiornamenti e aumentare il consumo di batteria. Tocca per saperne di più.</string>
     <string name="connected_to_wifi">Solo su Wi-Fi</string>
     <string name="update_72hour">Ogni 3 giorni</string>
-    <string name="download_queue_size_warning">Attenzione: grossi download di massa possono rallentare le fonti e/o bloccare Mihon. Tocca per saperne di più.</string>
+    <string name="download_queue_size_warning">Attenzione: grossi download di massa possono rallentare le fonti e/o bloccare %s. Tocca per saperne di più.</string>
     <string name="ext_update_all">Aggiorna tutto</string>
     <string name="channel_app_updates">Aggiornamenti dell\'applicazione</string>
     <string name="pref_auto_clear_chapter_cache">Cancella la cache capitoli all\'avvio dell\'app</string>
@@ -781,7 +781,7 @@
     <string name="pref_library_update_smart_update">Aggiornamento intelligente</string>
     <string name="ext_revoke_trust">Revoca le estensioni sconosciute affidabili</string>
     <string name="information_empty_repos">Non hai repository impostate.</string>
-    <string name="action_add_repo_message">Aggiungi altri repository a Mihon. Questo dovrebbe essere un URL che termina con \"index.min.json\".</string>
+    <string name="action_add_repo_message">Aggiungi altri repository a %s. Questo dovrebbe essere un URL che termina con \"index.min.json\".</string>
     <string name="delete_repo_confirmation">Vuoi eleminare la repository \"%s\"?</string>
     <string name="invalid_backup_file_error">Errore completo:</string>
     <string name="manga_interval_expected_update">Si prevede che i nuovi capitoli saranno rilasciati tra circa %1$s, con controlli ogni %2$s.</string>

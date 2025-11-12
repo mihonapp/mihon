@@ -555,7 +555,7 @@
     <string name="clear_database_source_item_count">%1$d مدخلةً في قاعدة البيانات وليست في المكتبة</string>
     <string name="extension_api_error">فشل الحصول على قائمة الملحقات</string>
     <string name="ext_installer_shizuku_unavailable_dialog">ثبِّت «شيزوكو» وشغِّله لتستخدمه مثبِّت إضافات.</string>
-    <string name="download_queue_size_warning">%sتحذير: يمكن أن تؤدِّي التنزيلات كبيرة الحجم والعدد إلى إبطاء المصادر، وقد يُحظر %s منها بسبب ذلك. اضغط لمعرفة المزيد۔</string>
+    <string name="download_queue_size_warning">تحذير: يمكن أن تؤدِّي التنزيلات كبيرة الحجم والعدد إلى إبطاء المصادر، وقد يُحظر %s منها بسبب ذلك. اضغط لمعرفة المزيد۔</string>
     <string name="action_show_manga">إظهار الدخول</string>
     <string name="action_display_cover_only_grid">شبكة بالاغلفة</string>
     <string name="skipped_reason_not_started">تُخُطِّيت بسبب عدم وجود فصول قُرئت</string>
@@ -766,7 +766,7 @@
     <string name="ext_revoke_trust">إبطال الإضافات غير الموثوق بها</string>
     <string name="label_extension_repos">مستودع الإضافات</string>
     <string name="label_add_repo_input">رابط المستودع</string>
-    <string name="action_add_repo_message">إضافة مستودعات إضافية إلى ميهون. يجب أن يكون هذا الرابط ينتهي بـ \"index.min.json\".</string>
+    <string name="action_add_repo_message">إضافة مستودعات إضافية إلى %s. يجب أن يكون هذا الرابط ينتهي بـ \"index.min.json\".</string>
     <string name="error_repo_exists">هذا المستودع موجود بالفعل!</string>
     <string name="action_delete_repo">حذف المستودع</string>
     <string name="invalid_repo_name">رابط المستودع غير صالح</string>

@@ -328,7 +328,7 @@
     <string name="ext_installer_shizuku_unavailable_dialog">Shizuku ইন্সটল কৰক আৰু আৰম্ভ কৰক Shizuku এক্সটেনচন ইন্সটলাৰ হিচাপে ব্যৱহাৰ কৰিবলৈ।</string>
     <string name="action_add_repo">ৰেপো যোগ কৰক</string>
     <string name="label_add_repo_input">ৰেপো URL</string>
-    <string name="action_add_repo_message">Mihon-ত অতিৰিক্ত ৰেপো যোগ কৰক। এইটো এনেকুৱা এটা URL হ\'ব লাগিব যাৰ শেষত index.min.json থাকে।</string>
+    <string name="action_add_repo_message">%s-ত অতিৰিক্ত ৰেপো যোগ কৰক। এইটো এনেকুৱা এটা URL হ\'ব লাগিব যাৰ শেষত index.min.json থাকে।</string>
     <string name="action_delete_repo">ৰেপো মচক</string>
     <string name="invalid_repo_name">অবৈধ ৰেপো URL</string>
     <string name="delete_repo_confirmation">আপুনি কি ৰেপো %s মচিব বিচাৰে?</string>
@@ -748,7 +748,7 @@
     <string name="seconds_short">%ds</string>
     <string name="download_queue_error">অধ্যায়সমূহ ডাউনলোড কৰিবলৈ সক্ষম নহ\'ল। আপুনি ডাউনলোডৰ অংশত পুনৰ চেষ্টা কৰিব পাৰে</string>
     <string name="download_insufficient_space">পৰ্যাপ্ত স্থান নাথাকাৰ বাবে অধ্যায়সমূহ ডাউনলোড কৰিবলৈ সক্ষম নহ\'ল</string>
-    <string name="download_queue_size_warning">সতৰ্কতা: ডাঙৰ বাল্ক ডাউনলোডে মূলে ধীৰগতিত পৰিণত কৰিব পাৰে আৰু/অথবা Mihon ব্লক কৰিব পাৰে। অধিক জানিবলৈ টেপ কৰক।</string>
+    <string name="download_queue_size_warning">সতৰ্কতা: ডাঙৰ বাল্ক ডাউনলোডে মূলে ধীৰগতিত পৰিণত কৰিব পাৰে আৰু/অথবা %s ব্লক কৰিব পাৰে। অধিক জানিবলৈ টেপ কৰক।</string>
     <string name="notification_updating_progress">লাইব্রেৰী আপডেট হৈ আছে… (%s)</string>
     <string name="notification_size_warning">ডাঙৰ আপডেটসমূহে মূলে ক্ষতি কৰে আৰু ধীৰ গতিত আপডেট হব পাৰে আৰু বেটাৰী ব্যৱহাৰ বৃদ্ধি পাব পাৰে। অধিক জানিবলৈ টেপ কৰক।</string>
     <string name="notification_new_chapters">নতুন অধ্যায় পোৱা গৈছে</string>

@@ -392,7 +392,7 @@
     <string name="action_track">Pista</string>
     <string name="pref_backup_interval">Frekuenca rezervë</string>
     <string name="backup_restore_missing_trackers">I pa identifikuar ne gjurmuesit:</string>
-    <string name="restore_duration">%02d min, %02d sek</string>
+    <string name="restore_duration">%1$02d min, %2$02d sek</string>
     <string name="restore_miui_warning">Rezervimi/rivendosja mund të mos funksionojë siç duhet nëse Optimizimi MIUI është i çaktivizuar.</string>
     <string name="pref_reset_user_agent_string">Rivendos vargun e parazgjedhur të agjentit të përdoruesit</string>
     <string name="cache_delete_error">Ndodhi një gabim gjatë pastrimit</string>
@@ -612,7 +612,7 @@
     <string name="crash_screen_description">%s hasi në një gabim të papritur. Ne ju sugjerojmë që të fotografoni këtë mesazh, të hidhni regjistrat e aksidenteve dhe më pas ta shpërndani në kanalin tonë të mbështetjes në Discord.</string>
     <string name="crash_screen_restart_application">Rinisni aplikacionin</string>
     <string name="download_insufficient_space">Kapitujt nuk mund të shkarkoheshin për shkak të hapësirës së ulët të ruajtjes</string>
-    <string name="download_queue_size_warning">Paralajmërim: shkarkimet e mëdha me shumicë mund të çojnë në ngadalësimin e burimeve dhe/ose bllokimin e Mihon. Trokit për të mësuar më shumë.</string>
+    <string name="download_queue_size_warning">Paralajmërim: shkarkimet e mëdha me shumicë mund të çojnë në ngadalësimin e burimeve dhe/ose bllokimin e %s. Trokit për të mësuar më shumë.</string>
     <string name="notification_new_chapters">U gjetën kapituj të rinj</string>
     <string name="learn_more">Trokit për të mësuar më shumë</string>
     <string name="notification_cover_update_failed">Përditësimi i kopertinës dështoi</string>

@@ -899,4 +899,5 @@
     <string name="pref_download_concurrent_sources">同時下載的來源數目</string>
     <string name="pref_download_concurrent_pages">同時下載的頁數</string>
     <string name="pref_download_concurrent_pages_summary">每個來源同時下載的頁數</string>
+    <string name="action_webview_close_tab">關閉頁籤</string>
 </resources>

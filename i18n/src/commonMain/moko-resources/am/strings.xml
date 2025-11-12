@@ -270,7 +270,7 @@
     <string name="creating_backup">ምትኬን መፍጠር</string>
     <string name="backup_choice">ምትኬ ለማስቀመጥ ምን ይፈልጋሉ?</string>
     <string name="backup_in_progress">ምትኬ ቀድሞውኑ በሂደት ላይ ነው</string>
-    <string name="restore_duration">%02d ደቂቃ ፣ %02d ሰከንድ</string>
+    <string name="restore_duration">%1$02d ደቂቃ ፣ %2$02d ሰከንድ</string>
     <string name="restore_completed">እነበረበት መልስ ተጠናቅቋል</string>
     <string name="backup_restore_missing_trackers">መከታተያዎች አልገቡም:</string>
     <string name="backup_restore_missing_sources">የጠፋ ምንጮች:</string>

@@ -79,7 +79,7 @@
     <string name="creating_backup">Izveido dublējumu</string>
     <string name="backup_choice">Ko vēlaties dublēt?</string>
     <string name="backup_in_progress">Dublēšana jau notiek</string>
-    <string name="restore_duration">%02d min, %02d sec</string>
+    <string name="restore_duration">%1$02d min, %2$02d sec</string>
     <string name="restore_completed">Atjaunošana pabeigta</string>
     <string name="backup_restore_missing_sources">Trūkstošie avoti:</string>
     <string name="invalid_backup_file_missing_manga">Dublējumā nav neviena bibliotēkas ieraksta.</string>
@@ -509,7 +509,7 @@
     <string name="confirm_set_image_as_cover">Vai izmantot šo attēlu kā vāku?</string>
     <string name="pref_category_for_this_series">Priekš šīs sērijas</string>
     <string name="dropped">Pamests</string>
-    <string name="download_queue_size_warning">Brīdinājums: liela apjoma lejupielāde var izraisīt to, ka avoti kļūst lēnāki un/vai bloķē Mihon. Pieskarieties, lai uzzinātu vairāk.</string>
+    <string name="download_queue_size_warning">Brīdinājums: liela apjoma lejupielāde var izraisīt to, ka avoti kļūst lēnāki un/vai bloķē %s. Pieskarieties, lai uzzinātu vairāk.</string>
     <string name="skipped_reason_not_started">Izlaists, jo neviena nodaļa nav izlasīta</string>
     <string name="file_select_cover">Atlasiet vāka attēlu</string>
     <string name="file_select_backup">Atlasiet dublējuma failu</string>

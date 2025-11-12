@@ -625,7 +625,7 @@
     <string name="information_empty_repos">Пӗр хушмасен ҫӳпҫи те ҫук.</string>
     <string name="action_add_repo">Хушмасен ҫӳпҫи хуш</string>
     <string name="label_add_repo_input">Хушмасен ҫӳпҫин URL-ӗ</string>
-    <string name="action_add_repo_message">Mihon-а хушма хушмасен ҫӳпҫи хуш. «index.min.json» тенипе вӗҫленекен URL пулмалла.</string>
+    <string name="action_add_repo_message">%s-а хушма хушмасен ҫӳпҫи хуш. «index.min.json» тенипе вӗҫленекен URL пулмалла.</string>
     <string name="error_repo_exists">Ку хушмасен ҫӳпҫи унсӑрах пур!</string>
     <string name="action_delete_repo">Хушмасен ҫӳпҫине катерт</string>
     <string name="invalid_repo_name">Хушмасен ҫӳпҫин йӑнӑш URL-ӗ</string>

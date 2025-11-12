@@ -475,7 +475,7 @@
     <string name="reading">קריאה</string>
     <string name="login">התחברות</string>
     <string name="pinned_sources">נעוץ</string>
-    <string name="restore_duration">%02d דקות, %02d שניות</string>
+    <string name="restore_duration">%1$02d דקות, %2$02d שניות</string>
     <string name="restoring_backup_canceled">השחזור בוטל</string>
     <string name="backup_info">רצוי לשמור עותקים נוספים של גיבויים במקומות אחרים בנוסף.</string>
     <string name="database_clean">אין מה לנקות</string>
@@ -539,7 +539,7 @@
     <string name="clear_history_confirmation">אתה בטוח? כל ההיסטוריה תמחק.</string>
     <string name="migration_help_guide">מדריך נדידת מקורות</string>
     <string name="download_insufficient_space">לא ניתן להוריד פרקים כי אין מספיק מקום אחסון</string>
-    <string name="download_queue_size_warning">אזהרה: הורדות גדולות עלולות לגרום להאטה במקורות ו/או לחסימת Mihon. לחץ כדי ללמוד עוד.</string>
+    <string name="download_queue_size_warning">אזהרה: הורדות גדולות עלולות לגרום להאטה במקורות ו/או לחסימת %s. לחץ כדי ללמוד עוד.</string>
     <string name="local_invalid_format">פורמט פרק לא תקין</string>
     <string name="on_hiatus">בהפסקה</string>
     <string name="delete_category_confirmation">האם תרצה למחוק את הקטגוריה %s?</string>

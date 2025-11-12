@@ -357,7 +357,7 @@
     <string name="pref_dns_over_https">DNS sa HTTPS (DoH)</string>
     <string name="requires_app_restart">Nagkinahanglan nga i-restart ang app aron ma-epekto</string>
     <string name="backup_in_progress">Ang pag-backup nagpadayon na</string>
-    <string name="restore_duration">%02d minuto , %02d ikaduha</string>
+    <string name="restore_duration">%1$02d minuto , %2$02d ikaduha</string>
     <string name="backup_choice">Unsa ang gusto nimo i-backup?</string>
     <string name="backup_restore_content_full">Ang datos gikan sa backup file mapasig-uli.
 \n
