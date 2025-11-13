@@ -75,6 +75,12 @@ class ShellInterface : IShellInterface.Stub() {
             .invoke(pmInterface)
 
         val params = PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL).apply {
+            val installFlags = this::class.java.getField("installFlags")
+            installFlags.set(
+                this,
+                installFlags.getInt(this) or 0x00000002, // android.content.pm.PackageManager.INSTALL_REPLACE_EXISTING
+            )
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 setPackageSource(PackageInstaller.PACKAGE_SOURCE_STORE)
             }
