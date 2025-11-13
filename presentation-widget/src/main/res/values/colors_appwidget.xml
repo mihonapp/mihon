@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="appwidget_background">@color/tachiyomi_surface</color>
+    <color name="appwidget_coverscreen_background">#00000000</color>
+    <color name="appwidget_on_background">@color/tachiyomi_onSurface</color>
+    <color name="appwidget_surface_variant">@color/tachiyomi_surfaceVariant</color>
+    <color name="appwidget_on_surface_variant">@color/tachiyomi_onSurfaceVariant</color>
+    <color name="appwidget_secondary_container">@color/tachiyomi_secondaryContainer</color>
+    <color name="appwidget_on_secondary_container">@color/tachiyomi_onSecondaryContainer</color>
+</resources>

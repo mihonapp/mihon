@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="splash">@color/accent_blue</color>
+
+    <color name="cover_placeholder">#1F888888</color>
+
+    <!-- Default Theme -->
+    <color name="divider_default">@color/md_black_1000_12</color>
+
+    <!-- Blue Theme -->
+    <color name="accent_blue">#54759E</color>
+
+    <!-- AMOLED Mode -->
+    <color name="amoled_background">#000000</color>
+    <color name="amoled_onBackground">#FFFFFF</color>
+    <color name="amoled_surface">#000000</color>
+    <color name="amoled_onSurface">#FFFFFF</color>
+    <color name="amoled_surfaceContainer">#0C0C0C</color>
+    <color name="amoled_surfaceContainerHigh">#131313</color>
+    <color name="amoled_surfaceContainerHighest">#1B1B1B</color>
+
+    <!-- Material Design Colors -->
+    <color name="md_black_1000_12">#1F000000</color>
+    <color name="md_white_1000_12">#1FFFFFFF</color>
+
+</resources>

@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="appwidget_background_radius">16dp</dimen>
+    <dimen name="appwidget_inner_radius">12dp</dimen>
+</resources>

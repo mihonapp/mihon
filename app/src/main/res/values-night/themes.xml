@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--== AMOLED Mode Overlay ==-->
+    <style name="ThemeOverlay.Tachiyomi.Amoled" parent="">
+        <!-- Theme Colors -->
+        <item name="android:colorBackground">@color/amoled_background</item>
+        <item name="colorOnBackground">@color/amoled_onBackground</item>
+        <item name="colorSurface">@color/amoled_surface</item>
+        <item name="colorOnSurface">@color/amoled_onSurface</item>
+        <item name="colorSurfaceContainer">@color/amoled_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/amoled_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/amoled_surfaceContainerHighest</item>
+    </style>
+
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/appwidget_updates_description"
+    android:previewImage="@drawable/updates_grid_coverscreen_widget_preview"
+    android:initialLayout="@layout/appwidget_coverscreen_loading"
+    android:resizeMode="horizontal|vertical"
+    android:widgetCategory="keyguard" />

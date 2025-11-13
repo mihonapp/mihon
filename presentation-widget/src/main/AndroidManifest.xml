@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+
+        <receiver
+            android:name="tachiyomi.presentation.widget.UpdatesGridGlanceReceiver"
+            android:enabled="@bool/glance_appwidget_available"
+            android:exported="false"
+            android:label="@string/label_recent_updates">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/updates_grid_homescreen_widget_info" />
+        </receiver>
+        <receiver
+            android:name="tachiyomi.presentation.widget.UpdatesGridCoverScreenGlanceReceiver"
+            android:enabled="@bool/glance_appwidget_available"
+            android:exported="false"
+            android:label="@string/label_recent_updates">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/updates_grid_lockscreen_widget_info" />
+            <meta-data
+                android:name="com.samsung.android.appwidget.provider"
+                android:resource="@xml/updates_grid_samsung_cover_widget_info" />
+            <meta-data
+                android:name="com.samsung.android.sdk.subscreen.widget.support_visibility_callback"
+                android:value="true" />
+        </receiver>
+
+    </application>
+</manifest>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--========-->
+    <!--Toolbars-->
+    <!--========-->
+
+    <style name="Theme.Tachiyomi.ActionButton.Overflow" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">?attr/colorOnSurface</item>
+    </style>
+
+
+    <!--===========-->
+    <!--AlertDialog-->
+    <!--===========-->
+    <style name="ThemeOverlay.Tachiyomi.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="android:layout">@layout/m3_alert_dialog</item>
+        <item name="android:background">@drawable/material_popup_background</item>
+        <item name="dialogCornerRadius">@dimen/m3_alert_dialog_corner_size</item>
+    </style>
+
+
+    <!--===============-->
+    <!--Text Appearance-->
+    <!--===============-->
+    <style name="TextAppearance.Widget.Button" parent="TextAppearance.Material3.TitleSmall" />
+
+    <style name="TextAppearance.Widget.Menu" parent="TextAppearance.AppCompat.Menu">
+        <item name="android:textColor">?attr/colorOnBackground</item>
+    </style>
+
+    <style name="TextAppearance.Tachiyomi.Preference.Secondary" parent="TextAppearance.Material3.BodySmall" />
+
+    <style name="TextAppearance.Tachiyomi.SectionHeader" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+    </style>
+
+
+    <!--=======================-->
+    <!--Widgets.MaterialDivider-->
+    <!--=======================-->
+    <style name="Widget.Tachiyomi.MaterialDivider" parent="Widget.Material3.MaterialDivider">
+        <item name="dividerColor">@color/divider_default</item>
+    </style>
+
+
+    <!--==============-->
+    <!--Widgets.Switch-->
+    <!--==============-->
+    <style name="Widget.Tachiyomi.Switch" parent="Widget.Material3.CompoundButton.Switch">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Tachiyomi.Switch</item>
+    </style>
+
+    <style name="ThemeOverlay.Tachiyomi.Switch" parent="">
+        <item name="elevationOverlayEnabled">@bool/elevationOverlayEnabled</item>
+    </style>
+
+
+    <!--===========-->
+    <!--Preferences-->
+    <!--===========-->
+    <style name="PreferenceThemeOverlay.Tachiyomi">
+        <item name="preferenceCategoryTitleTextAppearance">?attr/textAppearanceBodyMedium</item>
+        <item name="switchPreferenceCompatStyle">@style/PreferenceThemeOverlay.Tachiyomi.SwitchPreferenceCompat</item>
+    </style>
+
+    <style name="PreferenceThemeOverlay.Tachiyomi.SwitchPreferenceCompat" parent="Preference.SwitchPreferenceCompat.Material">
+        <item name="android:widgetLayout">@layout/pref_widget_switch_material</item>
+    </style>
+
+</resources>

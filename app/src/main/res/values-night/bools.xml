@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="lightStatusBar">false</bool>
+    <bool name="lightNavigationBar">false</bool>
+    <bool name="elevationOverlayEnabled">true</bool>
+</resources>

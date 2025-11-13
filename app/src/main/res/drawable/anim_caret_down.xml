@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="caret_up"
+            android:width="24.0dip"
+            android:height="24.0dip"
+            android:viewportWidth="24.0"
+            android:viewportHeight="24.0">
+            <group
+                android:name="caret01"
+                android:rotation="90.0"
+                android:translateX="12.0"
+                android:translateY="15.0">
+                <group
+                    android:name="caret_l"
+                    android:rotation="45.0">
+                    <group
+                        android:name="caret_l_pivot"
+                        android:translateY="4.0">
+                        <group
+                            android:name="caret_l_rect_position"
+                            android:translateY="-1.0">
+                            <path
+                                android:name="caret_l_rect"
+                                android:fillColor="#000"
+                                android:pathData="M -1.0,-4.0 l 2.0,0.0 c 0.0,0.0 0.0,0.0 0.0,0.0 l 0.0,8.0 c 0.0,0.0 0.0,0.0 0.0,0.0 l -2.0,0.0 c 0.0,0.0 0.0,0.0 0.0,0.0 l 0.0,-8.0 c 0.0,0.0 0.0,0.0 0.0,0.0 Z" />
+                        </group>
+                    </group>
+                </group>
+                <group
+                    android:name="caret_r"
+                    android:rotation="-45.0">
+                    <group
+                        android:name="caret_r_pivot"
+                        android:translateY="-4.0">
+                        <group
+                            android:name="caret_r_rect_position"
+                            android:translateY="1.0">
+                            <path
+                                android:name="caret_r_rect"
+                                android:fillColor="#000"
+                                android:pathData="M -1.0,-4.0 l 2.0,0.0 c 0.0,0.0 0.0,0.0 0.0,0.0 l 0.0,8.0 c 0.0,0.0 0.0,0.0 0.0,0.0 l -2.0,0.0 c 0.0,0.0 0.0,0.0 0.0,0.0 l 0.0,-8.0 c 0.0,0.0 0.0,0.0 0.0,0.0 Z" />
+                        </group>
+                    </group>
+                </group>
+            </group>
+        </vector>
+    </aapt:attr>
+
+    <target android:name="caret01">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="300"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:pathData="M 12.0,9.0 c 0.0,0.66667 0.0,5.0 0.0,6.0"
+                android:propertyXName="translateX"
+                android:propertyYName="translateY" />
+        </aapt:attr>
+    </target>
+    <target android:name="caret_l">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="300"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="rotation"
+                android:valueFrom="-45.0"
+                android:valueTo="45.0"
+                android:valueType="floatType" />
+        </aapt:attr>
+    </target>
+    <target
+        android:name="caret_r">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="300"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="rotation"
+                android:valueFrom="45.0"
+                android:valueTo="-45.0"
+                android:valueType="floatType" />
+        </aapt:attr>
+    </target>
+</animated-vector>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="lock_after_mins">
+        <item quantity="one">پاش 1 خولەک</item>
+        <item quantity="other">پاش %1$s خولەک</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="one">دوێنێ</item>
+        <item quantity="other">%1$d ڕۆژ پێش ئێستا</item>
+    </plurals>
+</resources>

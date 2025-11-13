@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="restore_completed_message">
+        <item quantity="one">%1$s-n egin da errore %2$s-ekin</item>
+        <item quantity="other">%1$s-n egin da %2$s errorerekin</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="one">Atzo</item>
+        <item quantity="other">Duela %1$d egun</item>
+    </plurals>
+    <plurals name="lock_after_mins">
+        <item quantity="one">Minutu baten ostean</item>
+        <item quantity="other">%1$s minuturen ostean</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">Kapitulu bat saltatzen, iturria falta da edo iragazia izan da</item>
+        <item quantity="other">%d kapitulu saltatzen, iturria falta da edo iragaziak izan dira</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">Titulu baterako</item>
+        <item quantity="other">%d titulurako</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="one">1 geratzen da</item>
+        <item quantity="other">%1$s geratzen dira</item>
+    </plurals>
+    <plurals name="num_categories">
+        <item quantity="one">kategoria %d</item>
+        <item quantity="other">%d kategoria</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="one">kapitulu 1</item>
+        <item quantity="other">%1$s kapitulu</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="one">jarraitzaile 1</item>
+        <item quantity="other">%d jarraitzaile</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">Kapitulu berri bat</item>
+        <item quantity="other">%1$d kapitulu berri</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">Luzapen baten eguneraketa eskuragarri</item>
+        <item quantity="other">%d luzapenen eguneraketak eskuragarri</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">%1$s kapituluak eta bat gehiago</item>
+        <item quantity="other">%1$s kapituluak eta %2$d gehiago</item>
+    </plurals>
+</resources>

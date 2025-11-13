@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="relative_time">
+        <item quantity="one">ഇന്നലെ</item>
+        <item quantity="other">%1$d ദിവസം മുമ്പ്</item>
+    </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">നാളെ</item>
+        <item quantity="other">%1$d ദിവസത്തിനുള്ളിൽ</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="one">%2$s പിശകോടെ %1$s-നുള്ളിൽ ചെയ്തു</item>
+        <item quantity="other">%2$s പിശകുകളോടെ %1$s-നുള്ളിൽ ചെയ്തു</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">%d അധ്യായം ഒഴിവാക്കുന്നു, ഒന്നുകിൽ ഉറവിടം അത് കാണുന്നില്ല അല്ലെങ്കിൽ അത് ഫിൽട്ടർ ചെയ്തിരിക്കുന്നു</item>
+        <item quantity="other">%d അധ്യായങ്ങൾ ഒഴിവാക്കുന്നു, ഒന്നുകിൽ ഉറവിടം കാണുന്നില്ല അല്ലെങ്കിൽ അവ ഫിൽട്ടർ ചെയ്തിരിക്കുന്നു</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">വിപുലീകരണ അപ്ഡേറ്റ് ലഭ്യമാണ്</item>
+        <item quantity="other">%d വിപുലീകരണ അപ്‌ഡേറ്റുകൾ ലഭ്യമാണ്</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="one">അടുത്ത അധ്യായം</item>
+        <item quantity="other">അടുത്ത %d അധ്യായങ്ങൾ</item>
+    </plurals>
+    <plurals name="lock_after_mins">
+        <item quantity="one">%1$s മിനിറ്റിന് ശേഷം</item>
+        <item quantity="other">%1$s മിനിറ്റിന് ശേഷം</item>
+    </plurals>
+    <plurals name="num_categories">
+        <item quantity="one">%d വിഭാഗം</item>
+        <item quantity="other">%d വിഭാഗങ്ങൾ</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">അടുത്ത വായിക്കാത്ത അധ്യായം</item>
+        <item quantity="other">അടുത്ത %d വായിക്കാത്ത അധ്യായങ്ങൾ</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="one">%1$s ശേഷിക്കുന്നു</item>
+        <item quantity="other">%1$s ശേഷിക്കുന്നു</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">1 ദിവസം</item>
+        <item quantity="other">%d ദിവസം</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="one">%1$s അധ്യായം കാണുന്നില്ല</item>
+        <item quantity="other">%1$s അധ്യായങ്ങൾ കാണുന്നില്ല</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="one">%1$s അധ്യായം</item>
+        <item quantity="other">%1$s അധ്യായങ്ങൾ</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="one">%d ട്രാക്കർ</item>
+        <item quantity="other">%d ട്രാക്കറുകൾ</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">%1$d പുതിയ അധ്യായം</item>
+        <item quantity="other">%1$d പുതിയ അധ്യായങ്ങൾ</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">അധ്യായങ്ങൾ %1$s-ഉം പിന്നെ 1-ഉം</item>
+        <item quantity="other">%1$s അധ്യായങ്ങളും പിന്നെ %2$d-ഉം</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d റിപ്പോ</item>
+        <item quantity="other">%d റിപ്പോകൾ</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 പേജ്</item>
+        <item quantity="other">%1$s പേജ്</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">%d എൻട്രിക്ക്</item>
+        <item quantity="other">%d എൻട്രികൾക്കായി</item>
+    </plurals>
+</resources>

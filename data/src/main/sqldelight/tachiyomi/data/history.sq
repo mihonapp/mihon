@@ -1,0 +1,73 @@
+import java.util.Date;
+
+CREATE TABLE history(
+    _id INTEGER NOT NULL PRIMARY KEY,
+    chapter_id INTEGER NOT NULL UNIQUE,
+    last_read INTEGER AS Date,
+    time_read INTEGER NOT NULL,
+    FOREIGN KEY(chapter_id) REFERENCES chapters (_id)
+    ON DELETE CASCADE
+);
+
+CREATE INDEX history_history_chapter_id_index ON history(chapter_id);
+
+getHistoryByMangaId:
+SELECT
+H._id,
+H.chapter_id,
+H.last_read,
+H.time_read
+FROM history H
+JOIN chapters C
+ON H.chapter_id = C._id
+WHERE C.manga_id = :mangaId AND C._id = H.chapter_id;
+
+getHistoryByChapterUrl:
+SELECT
+H._id,
+H.chapter_id,
+H.last_read,
+H.time_read
+FROM history H
+JOIN chapters C
+ON H.chapter_id = C._id
+WHERE C.url = :chapterUrl AND C._id = H.chapter_id;
+
+resetHistoryById:
+UPDATE history
+SET last_read = 0
+WHERE _id = :historyId;
+
+resetHistoryByMangaId:
+UPDATE history
+SET last_read = 0
+WHERE _id IN (
+    SELECT H._id
+    FROM mangas M
+    INNER JOIN chapters C
+    ON M._id = C.manga_id
+    INNER JOIN history H
+    ON C._id = H.chapter_id
+    WHERE M._id = :mangaId
+);
+
+removeAllHistory:
+DELETE FROM history;
+
+removeResettedHistory:
+DELETE FROM history
+WHERE last_read = 0;
+
+upsert:
+INSERT INTO history(chapter_id, last_read, time_read)
+VALUES (:chapterId, :readAt, :time_read)
+ON CONFLICT(chapter_id)
+DO UPDATE
+SET
+    last_read = :readAt,
+    time_read = time_read + :time_read
+WHERE chapter_id = :chapterId;
+
+getReadDuration:
+SELECT coalesce(sum(time_read), 0)
+FROM history;

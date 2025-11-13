@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="restore_completed_message">
+        <item quantity="zero">Pabeigts %1$s ar %2$s kļūdām</item>
+        <item quantity="one">Pabeigts %1$s ar %2$s kļūdu</item>
+        <item quantity="other">Pabeigts %1$s ar %2$s kļūdām</item>
+    </plurals>
+    <plurals name="lock_after_mins">
+        <item quantity="zero">Pēc %1$s minūtēm</item>
+        <item quantity="one">Pēc %1$s minūtes</item>
+        <item quantity="other">Pēc %1$s minūtēm</item>
+    </plurals>
+    <plurals name="num_categories">
+        <item quantity="zero">%d kategoriju</item>
+        <item quantity="one">%d kategorija</item>
+        <item quantity="other">%d kategorijas</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="zero">Šodien</item>
+        <item quantity="one">Vakar</item>
+        <item quantity="other">Pirms %1$d dienām</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="zero">%1$s atlikušas</item>
+        <item quantity="one">%1$s atlikusi</item>
+        <item quantity="other">%1$s atlikušas</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="zero">%d izsekotāju</item>
+        <item quantity="one">%d izsekotājs</item>
+        <item quantity="other">%d izsekotāji</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="zero">Priekš %d ierakstiem</item>
+        <item quantity="one">Priekš %d ieraksta</item>
+        <item quantity="other">Priekš %d ierakstiem</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="zero">Izlaisti %d nodaļu, vai nu to nav avotā, vai arī tie ir izfiltrēti</item>
+        <item quantity="one">Izlaists %d nodaļa, vai nu tā nav avotā, vai arī tā ir izfiltrēta</item>
+        <item quantity="other">Izlaistas %d nodaļas, vai nu tās nav avotā, vai arī tās ir izfiltrētas</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="zero">%1$d jaunu nodaļu</item>
+        <item quantity="one">%1$d jauna nodaļa</item>
+        <item quantity="other">%1$d jaunas nodaļas</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="zero">%1$s nodaļu</item>
+        <item quantity="one">%1$s nodaļa</item>
+        <item quantity="other">%1$s nodaļas</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="zero">Pieejami %d paplašinājumi atjaunināšanai</item>
+        <item quantity="one">Pieejams %d paplašinājums atjaunināšanai</item>
+        <item quantity="other">Pieejami %d paplašinājumi atjaunināšanai</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="zero">Nodaļu %1$s</item>
+        <item quantity="one">Nodaļa %1$s un vēl 1</item>
+        <item quantity="other">Nodaļa %1$s un vēl %2$d</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="zero">Trūkst %1$s nodaļu</item>
+        <item quantity="one">Trūkst %1$s nodaļa</item>
+        <item quantity="other">Trūkst %1$s nodaļas</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="zero">Nākošā %d nodaļa</item>
+        <item quantity="one">Nākošā %d nodaļa</item>
+        <item quantity="other">Nākošās %d nodaļās</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="zero">Nākamā nelasītā nodaļa</item>
+        <item quantity="one">Nākamā nelasītā nodaļa</item>
+        <item quantity="other">Nākamās %d nelasītas nodaļas</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="zero">%d dienas</item>
+        <item quantity="one">%d diena</item>
+        <item quantity="other">%d dienas</item>
+    </plurals>
+</resources>

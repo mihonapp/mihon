@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="splash">#202125</color>
+
+    <!-- Default Theme -->
+    <color name="divider_default">@color/md_white_1000_12</color>
+</resources>

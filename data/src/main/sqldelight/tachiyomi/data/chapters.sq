@@ -1,0 +1,121 @@
+import kotlin.Boolean;
+
+CREATE TABLE chapters(
+    _id INTEGER NOT NULL PRIMARY KEY,
+    manga_id INTEGER NOT NULL,
+    url TEXT NOT NULL,
+    name TEXT NOT NULL,
+    scanlator TEXT,
+    read INTEGER AS Boolean NOT NULL,
+    bookmark INTEGER AS Boolean NOT NULL,
+    last_page_read INTEGER NOT NULL,
+    chapter_number REAL NOT NULL,
+    source_order INTEGER NOT NULL,
+    date_fetch INTEGER NOT NULL,
+    date_upload INTEGER NOT NULL,
+    last_modified_at INTEGER NOT NULL DEFAULT 0,
+    version INTEGER NOT NULL DEFAULT 0,
+    is_syncing INTEGER NOT NULL DEFAULT 0,
+    FOREIGN KEY(manga_id) REFERENCES mangas (_id)
+    ON DELETE CASCADE
+);
+
+CREATE INDEX chapters_manga_id_index ON chapters(manga_id);
+CREATE INDEX chapters_unread_by_manga_index ON chapters(manga_id, read) WHERE read = 0;
+
+CREATE TRIGGER update_last_modified_at_chapters
+AFTER UPDATE ON chapters
+FOR EACH ROW
+BEGIN
+  UPDATE chapters
+  SET last_modified_at = strftime('%s', 'now')
+  WHERE _id = new._id;
+END;
+
+CREATE TRIGGER update_chapter_and_manga_version AFTER UPDATE ON chapters
+WHEN new.is_syncing = 0 AND (
+    new.read != old.read OR
+    new.bookmark != old.bookmark OR
+    new.last_page_read != old.last_page_read
+)
+BEGIN
+    -- Update the chapter version
+    UPDATE chapters SET version = version + 1
+    WHERE _id = new._id;
+
+    -- Update the manga version
+    UPDATE mangas SET version = version + 1
+    WHERE _id = new.manga_id AND (SELECT is_syncing FROM mangas WHERE _id = new.manga_id) = 0;
+END;
+
+getChapterById:
+SELECT *
+FROM chapters
+WHERE _id = :id;
+
+getChaptersByMangaId:
+SELECT C.*
+FROM chapters C
+LEFT JOIN excluded_scanlators ES
+ON C.manga_id = ES.manga_id
+AND C.scanlator = ES.scanlator
+WHERE C.manga_id = :mangaId
+AND (
+    :applyScanlatorFilter = 0
+    OR ES.scanlator IS NULL
+);
+
+getScanlatorsByMangaId:
+SELECT scanlator
+FROM chapters
+WHERE manga_id = :mangaId;
+
+getBookmarkedChaptersByMangaId:
+SELECT *
+FROM chapters
+WHERE bookmark
+AND manga_id = :mangaId;
+
+getChapterByUrl:
+SELECT *
+FROM chapters
+WHERE url = :chapterUrl;
+
+getChapterByUrlAndMangaId:
+SELECT *
+FROM chapters
+WHERE url = :chapterUrl
+AND manga_id = :mangaId;
+
+removeChaptersWithIds:
+DELETE FROM chapters
+WHERE _id IN :chapterIds;
+
+resetIsSyncing:
+UPDATE chapters
+SET is_syncing = 0
+WHERE is_syncing = 1;
+
+insert:
+INSERT INTO chapters(manga_id, url, name, scanlator, read, bookmark, last_page_read, chapter_number, source_order, date_fetch, date_upload, last_modified_at, version, is_syncing)
+VALUES (:mangaId, :url, :name, :scanlator, :read, :bookmark, :lastPageRead, :chapterNumber, :sourceOrder, :dateFetch, :dateUpload, 0, :version, 0);
+
+update:
+UPDATE chapters
+SET manga_id = coalesce(:mangaId, manga_id),
+    url = coalesce(:url, url),
+    name = coalesce(:name, name),
+    scanlator = coalesce(:scanlator, scanlator),
+    read = coalesce(:read, read),
+    bookmark = coalesce(:bookmark, bookmark),
+    last_page_read = coalesce(:lastPageRead, last_page_read),
+    chapter_number = coalesce(:chapterNumber, chapter_number),
+    source_order = coalesce(:sourceOrder, source_order),
+    date_fetch = coalesce(:dateFetch, date_fetch),
+    date_upload = coalesce(:dateUpload, date_upload),
+    version = coalesce(:version, version),
+    is_syncing = coalesce(:isSyncing, is_syncing)
+WHERE _id = :chapterId;
+
+selectLastInsertedRowId:
+SELECT last_insert_rowid();

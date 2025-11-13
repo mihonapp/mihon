@@ -1,0 +1,24 @@
+CREATE TABLE sources(
+    _id INTEGER NOT NULL PRIMARY KEY,
+    lang TEXT NOT NULL,
+    name TEXT NOT NULL
+);
+
+findAll:
+SELECT *
+FROM sources;
+
+findOne:
+SELECT *
+FROM sources
+WHERE _id = :id;
+
+upsert:
+INSERT INTO sources(_id, lang, name)
+VALUES (:id, :lang, :name)
+ON CONFLICT(_id)
+DO UPDATE
+SET
+    lang = :lang,
+    name = :name
+WHERE _id = :id;

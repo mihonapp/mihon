@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="lock_after_mins">
+        <item quantity="one">Després d’%1$s minut</item>
+        <item quantity="many">Després de %1$s minuts</item>
+        <item quantity="other">Després de %1$s minuts</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">%1$d capítol nou</item>
+        <item quantity="many">%1$d capítols nous</item>
+        <item quantity="other">%1$d capítols nous</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">Capítols %1$s i 1 més</item>
+        <item quantity="many">Capítols %1$s i %2$d més</item>
+        <item quantity="other">Capítols %1$s i %2$d més</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">Per a %d element</item>
+        <item quantity="many">Per a %d elements</item>
+        <item quantity="other">Per a %d elements</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">Hi ha una actualització d’una extensió</item>
+        <item quantity="many">Hi ha actualitzacions de %d extensions</item>
+        <item quantity="other">Hi ha actualitzacions de %d extensions</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="one">En resta %1$s</item>
+        <item quantity="many">En resten %1$s</item>
+        <item quantity="other">En resten %1$s</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="one">Fet en %1$s amb %2$s error</item>
+        <item quantity="many">Fet en %1$s amb %2$s errors</item>
+        <item quantity="other">Fet en %1$s amb %2$s errors</item>
+    </plurals>
+    <plurals name="num_categories">
+        <item quantity="one">%d categoria</item>
+        <item quantity="many">%d categories</item>
+        <item quantity="other">%d categories</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="one">%1$s capítol</item>
+        <item quantity="many">%1$s capítols</item>
+        <item quantity="other">%1$s capítols</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="one">%d servei de seguiment</item>
+        <item quantity="many">%d serveis de seguiment</item>
+        <item quantity="other">%d serveis de seguiment</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">S’ha omès %d capítol. És possible que manqui a la font o que hagi estat filtrat</item>
+        <item quantity="many">S’han omès %d capítols. És possible que manquin a la font o que hagin estat filtrats</item>
+        <item quantity="other">S’han omès %d capítols. És possible que manquin a la font o que hagin estat filtrats</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="one">Ahir</item>
+        <item quantity="many">Fa %1$d dies</item>
+        <item quantity="other">Fa %1$d dies</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">El següent capítol no llegit</item>
+        <item quantity="many">Els següents %d capítols no llegits</item>
+        <item quantity="other">Els següents %d capítols no llegits</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="one">El següent capítol</item>
+        <item quantity="many">Els següents %d capítols</item>
+        <item quantity="other">Els següents %d capítols</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="one">Manca %1$s capítol</item>
+        <item quantity="many">Manquen %1$s capítols</item>
+        <item quantity="other">Manquen %1$s capítols</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">1 dia</item>
+        <item quantity="many">%d dies</item>
+        <item quantity="other">%d dies</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d repositori</item>
+        <item quantity="many">%d repositoris</item>
+        <item quantity="other">%d repositoris</item>
+    </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Demà</item>
+        <item quantity="many">D’aquí a %1$d dies</item>
+        <item quantity="other">D’aquí a %1$d dies</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 pàgina</item>
+        <item quantity="many">%1$s pàgines</item>
+        <item quantity="other">%1$s pàgines</item>
+    </plurals>
+</resources>

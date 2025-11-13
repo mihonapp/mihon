@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="num_categories">
+        <item quantity="one">%d ምድብ</item>
+        <item quantity="other">%d ምድቦች</item>
+    </plurals>
+    <plurals name="lock_after_mins">
+        <item quantity="one">ከ 1 ደቂቃ በኋላ</item>
+        <item quantity="other">ከ %1$s ደቂቃዎች በኋላ</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="one">ከ %2$s ስህተት ጋር በ %1$s ውስጥ ተከናውኗል</item>
+        <item quantity="other">ከ %2$s ስህተት ጋር በ %1$s ውስጥ ተከናውኗል</item>
+    </plurals>
+</resources>
