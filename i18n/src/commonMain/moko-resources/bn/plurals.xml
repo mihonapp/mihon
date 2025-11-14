@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="notification_chapters_multiple_and_more">
-        <item quantity="one">%1$s অধ্যায়সমূহ এবং ১টি আরও</item>
-        <item quantity="other">%1$s অধ্যায়সমূহ এবং %2$dটি আরও</item>
+        <item quantity="one">অধ্যায় %1$s এবং আরও ১টি</item>
+        <item quantity="other">অধ্যায় %1$s এবং আরও %2$dটি</item>
     </plurals>
     <plurals name="restore_completed_message">
-        <item quantity="one">%1$s সময়ে %2$s ত্রুটি সম্পন্ন</item>
-        <item quantity="other">%1$s সময়ে %2$sটি ত্রুটি সম্পন্ন</item>
+        <item quantity="one">%1$s-এ সম্পন্ন হয়েছে, তবে %2$s ত্রুটি ছিল</item>
+        <item quantity="other">%1$s-এ সম্পন্ন হয়েছে, তবে %2$sটি ত্রুটি ছিল</item>
     </plurals>
     <plurals name="num_categories">
-        <item quantity="one">১টি বিভাগ</item>
+        <item quantity="one">%dটি বিভাগ</item>
         <item quantity="other">%dটি বিভাগসমূহ</item>
     </plurals>
     <plurals name="lock_after_mins">
-        <item quantity="one">১ মিনিট পর</item>
+        <item quantity="one">%1$s মিনিট পর</item>
         <item quantity="other">%1$s মিনিট পর</item>
     </plurals>
     <plurals name="update_check_notification_ext_updates">
@@ -41,7 +41,7 @@
         <item quantity="other">%1$sটি অধ্যায়</item>
     </plurals>
     <plurals name="download_queue_summary">
-        <item quantity="one">১টি বাকি আছে</item>
+        <item quantity="one">%1$sটি বাকি আছে</item>
         <item quantity="other">%1$sটি বাকি আছে</item>
     </plurals>
     <plurals name="relative_time">
@@ -77,7 +77,15 @@
         <item quantity="other">%1$s পৃষ্ঠা</item>
     </plurals>
     <plurals name="migrationListScreen.migrateDialog.migrateTitle">
-        <item quantity="one">১টি এন্ট্রি স্থানান্তর?</item>
+        <item quantity="one">%1$dটি এন্ট্রি স্থানান্তর?</item>
         <item quantity="other">%1$dটি এন্ট্রি স্থানান্তর?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">%1$dটি এন্ট্রি কপি করবেন?</item>
+        <item quantity="other">%1$dটি এন্ট্রি কপি করবেন?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">একটি এন্ট্রি বাদ দেওয়া হয়েছে</item>
+        <item quantity="other">%1$dটি এন্ট্রি বাদ দেওয়া হয়েছে</item>
     </plurals>
 </resources>

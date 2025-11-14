@@ -878,4 +878,26 @@
     <string name="pref_download_concurrent_pages_summary">प्रत्येक स्रोतबाट एकैसाथ डाउनलोड गरिने पृष्ठहरूको संख्या</string>
     <string name="migrationConfigScreen.removeDownloadsTitle">स्थानान्तरण पछि हालको इन्ट्रीका डाउनलोडहरू मेटाउनुहोस्</string>
     <string name="migrationConfigScreen.additionalSearchQueryLabel">थप किवर्डहरू (वैकल्पिक)</string>
+    <string name="migrationConfigScreen.additionalSearchQuerySupportingText">थप किवर्डहरू थपेर खोज परिणामहरूलाई संकुचित गर्न मद्दत गर्दछ</string>
+    <string name="migrationConfigScreen.hideUnmatchedTitle">मिल्दो परिणाम नभएको इन्ट्रीहरू लुकाउनुहोस्</string>
+    <string name="migrationConfigScreen.hideWithoutUpdatesTitle">नयाँ अध्याय नभएका इन्ट्रीहरू लुकाउनुहोस्</string>
+    <string name="migrationConfigScreen.hideWithoutUpdatesSubtitle">मिल्दो इन्ट्रीमा थप अध्यायहरू भए मात्र इन्ट्री देखाउनुहोस्</string>
+    <string name="migrationConfigScreen.deepSearchModeTitle">उन्नत खोज मोड</string>
+    <string name="migrationConfigScreen.deepSearchModeSubtitle">फराकिलो खोजको लागि शीर्षकलाई किवर्डहरूमा विभाजन गर्दछ</string>
+    <string name="migrationListScreenTitle">स्थानान्तरण</string>
+    <string name="migrationListScreenTitleWithProgress">स्थानान्तरण (%1$d/%2$d)</string>
+    <string name="migrationListScreen.copyActionLabel">प्रतिलिपि गर्नुहोस्</string>
+    <string name="migrationListScreen.migrateActionLabel">स्थानान्तरण</string>
+    <string name="migrationListScreen.noMatchFoundText">कुनै विकल्प भेटिएन</string>
+    <string name="migrationListScreen.latestChapterLabel">नवीनतम: %1$s</string>
+    <string name="migrationListScreen.unknownLatestChapter">अज्ञात</string>
+    <string name="migrationListScreen.searchManuallyActionLabel">आफै खोज्नुहोस्</string>
+    <string name="migrationListScreen.skipActionLabel">स्थानान्तरण नगर्नुहोस्</string>
+    <string name="migrationListScreen.migrateNowActionLabel">अहिले स्थानान्तरण गर्नुहोस्</string>
+    <string name="migrationListScreen.copyNowActionLabel">अहिले प्रतिलिपि गर्नुहोस्</string>
+    <string name="migrationListScreen.exitDialogTitle">स्थानान्तरण रोक्न चाहनुहुन्छ?</string>
+    <string name="migrationListScreen.exitDialog.stopLabel">रोक्नुहोस्</string>
+    <string name="migrationListScreen.exitDialog.cancelLabel">रद्द गर्नुहोस्</string>
+    <string name="migrationListScreen.migrateDialog.copyLabel">प्रतिलिपि गर्नुहोस्</string>
+    <string name="migrationListScreen.matchWithoutChapterToast">कुनै अध्यायहरू फेला परेनन्, यो इन्ट्री स्थानान्तरणका लागि प्रयोग गर्न सकिँदैन</string>
 </resources>
