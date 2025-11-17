@@ -205,7 +205,7 @@
     <string name="onboarding_guides_returning_user">Reinstalling %s?</string>
 
     <!-- Preferences -->
-    <!-- Subsections -->
+      <!-- Subsections -->
     <string name="pref_category_general">General</string>
     <string name="pref_category_appearance">Appearance</string>
     <string name="pref_category_library">Library</string>
@@ -225,7 +225,7 @@
     <string name="pref_security_summary">App lock, secure screen</string>
     <string name="pref_advanced_summary">Dump crash logs, battery optimizations</string>
 
-    <!-- General section -->
+      <!-- General section -->
     <string name="pref_category_theme">Theme</string>
     <string name="pref_app_theme">App theme</string>
     <string name="theme_system">System</string>
@@ -273,7 +273,7 @@
 
     <string name="relative_time_today">Today</string>
 
-    <!-- Library section -->
+      <!-- Library section -->
     <string name="pref_category_display">Display</string>
     <string name="pref_library_columns">Items per row</string>
     <string name="portrait">Portrait</string>
@@ -326,7 +326,7 @@
     <string name="pref_disallow_non_ascii_filenames">Disallow non-ASCII filenames</string>
     <string name="pref_disallow_non_ascii_filenames_details">Ensures compatibility with certain storage media that don't support Unicode. When this is enabled, you'll need to manually rename source and manga folders by replacing non-ASCII characters with their lowercase UTF-8 hexadecimal representations. Chapter files don't need to be renamed.</string>
 
-    <!-- Extension section -->
+      <!-- Extension section -->
     <string name="multi_lang">Multi</string>
     <string name="ext_updates_pending">Updates pending</string>
     <string name="ext_update">Update</string>
@@ -380,7 +380,7 @@
     <string name="action_replace_repo_title">Signing Key Fingerprint Already Exists</string>
     <string name="action_replace_repo_message">Repository %1$s has the same Signing Key Fingerprint as %2$s.\nIf this is expected, %2$s will be replaced, otherwise contact your repo maintainer.</string>
 
-    <!-- Reader section -->
+      <!-- Reader section -->
     <string name="pref_fullscreen">Fullscreen</string>
     <string name="pref_show_navigation_mode">Show tap zones overlay</string>
     <string name="pref_show_navigation_mode_summary">Briefly show when reader is opened</string>
@@ -500,7 +500,7 @@
     <string name="pref_lowest">Lowest</string>
     <string name="pref_webtoon_disable_zoom_out">Disable zoom out</string>
 
-    <!-- Downloads section -->
+      <!-- Downloads section -->
     <string name="pref_category_delete_chapters">Delete chapters</string>
     <string name="pref_remove_after_marked_as_read">After manually marked as read</string>
     <string name="pref_remove_after_read">After reading automatically delete</string>
@@ -541,10 +541,10 @@
     <string name="enhanced_tracking_info">Provides enhanced features for specific sources. Entries are automatically tracked when added to your library.</string>
     <string name="track_activity_name">Tracker login</string>
 
-    <!-- Browse section -->
+      <!-- Browse section -->
     <string name="pref_hide_in_library_items">Hide entries already in library</string>
 
-    <!-- Data and storage section -->
+      <!-- Data and storage section -->
     <string name="pref_storage_location">Storage location</string>
     <string name="pref_storage_location_info">Used for automatic backups, chapter downloads, and local source.</string>
     <string name="pref_create_backup">Create backup</string>
@@ -599,7 +599,7 @@
     <string name="syncing_library">Syncing library</string>
     <string name="library_sync_complete">Library sync complete</string>
 
-    <!-- Advanced section -->
+      <!-- Advanced section -->
     <string name="label_network">Networking</string>
     <string name="pref_clear_cookies">Clear cookies</string>
     <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
@@ -642,7 +642,7 @@
     <string name="pref_update_library_manga_titles">Update library manga titles to match source</string>
     <string name="pref_update_library_manga_titles_summary">Warning: if a manga is renamed, it will be removed from the download queue (if present).</string>
 
-    <!-- About section -->
+      <!-- About section -->
     <string name="website">Website</string>
     <string name="version">Version</string>
     <string name="whats_new">What\'s new</string>
