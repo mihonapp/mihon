@@ -62,6 +62,7 @@ fun FailedUpdatesScreen(
     onClickCover: (MangaUpdateErrorWithManga) -> Unit,
     onClickMigrate: () -> Unit,
     onClearAll: () -> Unit,
+    onDeleteSelected: () -> Unit,
     onClearError: (Long) -> Unit,
     onSelectAll: (Boolean) -> Unit,
     onInvertSelection: () -> Unit,
@@ -79,6 +80,7 @@ fun FailedUpdatesScreen(
                 onSelectAll = { onSelectAll(true) },
                 onInvertSelection = onInvertSelection,
                 onClearAll = onClearAll,
+                onDeleteSelected = onDeleteSelected,
                 onStartSelection = { onSelectAll(true) },
                 actionModeCounter = state.selectedIds.size,
                 onCancelActionMode = { onSelectAll(false) },
@@ -120,6 +122,7 @@ private fun FailedUpdatesAppBar(
     onSelectAll: () -> Unit,
     onInvertSelection: () -> Unit,
     onClearAll: () -> Unit,
+    onDeleteSelected: () -> Unit,
     onStartSelection: () -> Unit,
     actionModeCounter: Int,
     onCancelActionMode: () -> Unit,
@@ -160,6 +163,11 @@ private fun FailedUpdatesAppBar(
                         title = stringResource(MR.strings.action_select_inverse),
                         icon = Icons.Outlined.FlipToBack,
                         onClick = onInvertSelection,
+                    ),
+                    AppBar.Action(
+                        title = stringResource(MR.strings.action_delete),
+                        icon = Icons.Outlined.Delete,
+                        onClick = onDeleteSelected,
                     ),
                 ),
             )
@@ -229,7 +237,7 @@ private fun FailedUpdateItem(
     onToggleSelection: (Boolean) -> Unit,
 ) {
     val haptic = LocalHapticFeedback.current
-
+    
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -324,6 +332,31 @@ fun FailedUpdatesClearAllDialog(
         onDismissRequest = onDismissRequest,
         title = { Text(text = stringResource(MR.strings.action_remove_everything)) },
         text = { Text(text = stringResource(MR.strings.confirm_clear_all_failed_updates)) },
+        confirmButton = {
+            TextButton(onClick = {
+                onConfirm()
+                onDismissRequest()
+            }) {
+                Text(text = stringResource(MR.strings.action_ok))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text(text = stringResource(MR.strings.action_cancel))
+            }
+        },
+    )
+}
+
+@Composable
+fun FailedUpdatesDeleteSelectedDialog(
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = { Text(text = stringResource(MR.strings.action_delete)) },
+        text = { Text(text = stringResource(MR.strings.confirm_delete_selected_failed_updates)) },
         confirmButton = {
             TextButton(onClick = {
                 onConfirm()

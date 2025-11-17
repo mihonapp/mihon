@@ -79,6 +79,16 @@ class FailedUpdatesScreenModel(
         }
     }
 
+    fun clearSelectedErrors() {
+        screenModelScope.launchIO {
+            selectedMangaIds.forEach { mangaId ->
+                deleteMangaUpdateError.await(mangaId)
+            }
+            selectedMangaIds.clear()
+            mutableState.update { it.copy(selectedIds = emptySet()) }
+        }
+    }
+
     fun cleanupNonFavorites() {
         screenModelScope.launchIO {
             try {
@@ -136,6 +146,7 @@ class FailedUpdatesScreenModel(
 
     sealed interface Dialog {
         data object ClearAllConfirmation : Dialog
+        data object DeleteSelectedConfirmation : Dialog
         data class MigrateSelected(val mangaIds: List<Long>) : Dialog
     }
 }

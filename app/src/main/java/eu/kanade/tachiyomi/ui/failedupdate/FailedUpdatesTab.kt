@@ -9,6 +9,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.failedupdate.FailedUpdatesClearAllDialog
+import eu.kanade.presentation.failedupdate.FailedUpdatesDeleteSelectedDialog
 import eu.kanade.presentation.failedupdate.FailedUpdatesScreen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import mihon.feature.migration.config.MigrationConfigScreen
@@ -38,6 +39,9 @@ data object FailedUpdatesTab : Screen {
             onClearAll = {
                 screenModel.setDialog(FailedUpdatesScreenModel.Dialog.ClearAllConfirmation)
             },
+            onDeleteSelected = {
+                screenModel.setDialog(FailedUpdatesScreenModel.Dialog.DeleteSelectedConfirmation)
+            },
             onClearError = { mangaId ->
                 screenModel.clearError(mangaId)
             },
@@ -54,6 +58,14 @@ data object FailedUpdatesTab : Screen {
                     onDismissRequest = onDismissDialog,
                     onConfirm = {
                         screenModel.clearAllErrors()
+                    },
+                )
+            }
+            is FailedUpdatesScreenModel.Dialog.DeleteSelectedConfirmation -> {
+                FailedUpdatesDeleteSelectedDialog(
+                    onDismissRequest = onDismissDialog,
+                    onConfirm = {
+                        screenModel.clearSelectedErrors()
                     },
                 )
             }
