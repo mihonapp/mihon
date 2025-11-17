@@ -7,8 +7,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -128,12 +133,12 @@ private fun FailedUpdatesAppBar(
                 AppBarActions(
                     persistentListOf(
                         AppBar.Action(
-                            title = "Migrate",
+                            title = stringResource(MR.strings.action_migrate),
                             icon = Icons.Outlined.SelectAll,
                             onClick = onStartSelection,
                         ),
                         AppBar.Action(
-                            title = "Clear All",
+                            title = stringResource(MR.strings.action_remove_everything),
                             icon = Icons.Outlined.DeleteSweep,
                             onClick = onClearAll,
                         ),
@@ -170,11 +175,16 @@ private fun FailedUpdatesBottomBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(
+                WindowInsets.navigationBars
+                    .only(WindowInsetsSides.Bottom)
+                    .asPaddingValues(),
+            )
             .padding(16.dp),
         horizontalArrangement = Arrangement.Center,
     ) {
         Button(onClick = onMigrateSelected) {
-            Text(text = "Migrate Selected")
+            Text(text = stringResource(MR.strings.action_migrate_selected))
         }
     }
 }
@@ -280,7 +290,7 @@ private fun FailedUpdateItem(
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
-                    text = item.error.errorMessage ?: "Unknown error",
+                    text = item.error.errorMessage ?: stringResource(MR.strings.unknown_error),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.error,
                     maxLines = 2,
@@ -312,8 +322,8 @@ fun FailedUpdatesClearAllDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(text = "Clear All Errors") },
-        text = { Text(text = "Are you sure you want to clear all failed update errors?") },
+        title = { Text(text = stringResource(MR.strings.action_remove_everything)) },
+        text = { Text(text = stringResource(MR.strings.confirm_clear_all_failed_updates)) },
         confirmButton = {
             TextButton(onClick = {
                 onConfirm()
