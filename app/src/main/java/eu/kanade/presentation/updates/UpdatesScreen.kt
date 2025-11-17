@@ -159,7 +159,7 @@ private fun UpdatesAppBar(
                         onClick = onCalendarClicked,
                     ),
                     AppBar.Action(
-                        title = "Failed Updates ($failedUpdatesCount)",
+                        title = "${stringResource(MR.strings.label_failed_updates)} ($failedUpdatesCount)",
                         icon = Icons.Outlined.Error,
                         onClick = onFailedUpdatesClicked,
                     ),

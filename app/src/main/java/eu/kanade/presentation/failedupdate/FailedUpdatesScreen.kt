@@ -229,7 +229,7 @@ private fun FailedUpdateItem(
     onToggleSelection: (Boolean) -> Unit,
 ) {
     val haptic = LocalHapticFeedback.current
-    
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -307,7 +307,7 @@ private fun FailedUpdateItem(
                 IconButton(onClick = onClearError) {
                     Icon(
                         imageVector = Icons.Outlined.Delete,
-                        contentDescription = "Clear error",
+                        contentDescription = stringResource(MR.strings.action_delete),
                     )
                 }
             }
