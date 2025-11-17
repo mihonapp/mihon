@@ -1,0 +1,336 @@
+package eu.kanade.presentation.failedupdate
+
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.DeleteSweep
+import androidx.compose.material.icons.outlined.FlipToBack
+import androidx.compose.material.icons.outlined.SelectAll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import eu.kanade.presentation.components.AppBar
+import eu.kanade.presentation.components.AppBarActions
+import eu.kanade.presentation.manga.components.MangaCover
+import eu.kanade.tachiyomi.ui.failedupdate.FailedUpdatesScreenModel
+import kotlinx.collections.immutable.persistentListOf
+import tachiyomi.domain.manga.model.MangaCover as MangaCoverData
+import tachiyomi.domain.updates.model.MangaUpdateErrorWithManga
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.i18n.stringResource
+import tachiyomi.presentation.core.screens.EmptyScreen
+import tachiyomi.presentation.core.screens.LoadingScreen
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
+@Composable
+fun FailedUpdatesScreen(
+    state: FailedUpdatesScreenModel.State,
+    onClickCover: (MangaUpdateErrorWithManga) -> Unit,
+    onClickMigrate: () -> Unit,
+    onClearAll: () -> Unit,
+    onClearError: (Long) -> Unit,
+    onSelectAll: (Boolean) -> Unit,
+    onInvertSelection: () -> Unit,
+    onToggleSelection: (MangaUpdateErrorWithManga, Boolean) -> Unit,
+    navigateUp: () -> Unit,
+) {
+    BackHandler(enabled = state.selectionMode) {
+        onSelectAll(false)
+    }
+
+    Scaffold(
+        topBar = { scrollBehavior ->
+            FailedUpdatesAppBar(
+                onNavigateUp = navigateUp,
+                onSelectAll = { onSelectAll(true) },
+                onInvertSelection = onInvertSelection,
+                onClearAll = onClearAll,
+                onStartSelection = { onSelectAll(true) },
+                actionModeCounter = state.selectedIds.size,
+                onCancelActionMode = { onSelectAll(false) },
+                scrollBehavior = scrollBehavior,
+            )
+        },
+        bottomBar = {
+            if (state.selectionMode) {
+                FailedUpdatesBottomBar(
+                    onMigrateSelected = onClickMigrate,
+                )
+            }
+        },
+    ) { contentPadding ->
+        when {
+            state.isLoading -> LoadingScreen(Modifier.padding(contentPadding))
+            state.items.isEmpty() -> EmptyScreen(
+                stringRes = MR.strings.information_empty_library,
+                modifier = Modifier.padding(contentPadding),
+            )
+            else -> {
+                FailedUpdatesList(
+                    items = state.items,
+                    selectedIds = state.selectedIds,
+                    selectionMode = state.selectionMode,
+                    onClickCover = onClickCover,
+                    onClearError = onClearError,
+                    onToggleSelection = onToggleSelection,
+                    contentPadding = contentPadding,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun FailedUpdatesAppBar(
+    onNavigateUp: () -> Unit,
+    onSelectAll: () -> Unit,
+    onInvertSelection: () -> Unit,
+    onClearAll: () -> Unit,
+    onStartSelection: () -> Unit,
+    actionModeCounter: Int,
+    onCancelActionMode: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior,
+) {
+    AppBar(
+        title = stringResource(MR.strings.label_failed_updates),
+        navigateUp = onNavigateUp,
+        actions = {
+            if (actionModeCounter == 0) {
+                AppBarActions(
+                    persistentListOf(
+                        AppBar.Action(
+                            title = "Migrate",
+                            icon = Icons.Outlined.SelectAll,
+                            onClick = onStartSelection,
+                        ),
+                        AppBar.Action(
+                            title = "Clear All",
+                            icon = Icons.Outlined.DeleteSweep,
+                            onClick = onClearAll,
+                        ),
+                    ),
+                )
+            }
+        },
+        actionModeCounter = actionModeCounter,
+        onCancelActionMode = onCancelActionMode,
+        actionModeActions = {
+            AppBarActions(
+                persistentListOf(
+                    AppBar.Action(
+                        title = stringResource(MR.strings.action_select_all),
+                        icon = Icons.Outlined.SelectAll,
+                        onClick = onSelectAll,
+                    ),
+                    AppBar.Action(
+                        title = stringResource(MR.strings.action_select_inverse),
+                        icon = Icons.Outlined.FlipToBack,
+                        onClick = onInvertSelection,
+                    ),
+                ),
+            )
+        },
+        scrollBehavior = scrollBehavior,
+    )
+}
+
+@Composable
+private fun FailedUpdatesBottomBar(
+    onMigrateSelected: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.Center,
+    ) {
+        Button(onClick = onMigrateSelected) {
+            Text(text = "Migrate Selected")
+        }
+    }
+}
+
+@Composable
+private fun FailedUpdatesList(
+    items: List<MangaUpdateErrorWithManga>,
+    selectedIds: Set<Long>,
+    selectionMode: Boolean,
+    onClickCover: (MangaUpdateErrorWithManga) -> Unit,
+    onClearError: (Long) -> Unit,
+    onToggleSelection: (MangaUpdateErrorWithManga, Boolean) -> Unit,
+    contentPadding: PaddingValues,
+) {
+    LazyColumn(
+        contentPadding = contentPadding,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        items(
+            items = items,
+            key = { it.error.mangaId },
+        ) { item ->
+            FailedUpdateItem(
+                item = item,
+                selectionMode = selectionMode,
+                selected = item.manga.id in selectedIds,
+                onClickCover = { onClickCover(item) },
+                onClearError = { onClearError(item.manga.id) },
+                onToggleSelection = { selected -> onToggleSelection(item, selected) },
+            )
+        }
+    }
+}
+
+@Composable
+private fun FailedUpdateItem(
+    item: MangaUpdateErrorWithManga,
+    selectionMode: Boolean,
+    selected: Boolean,
+    onClickCover: () -> Unit,
+    onClearError: () -> Unit,
+    onToggleSelection: (Boolean) -> Unit,
+) {
+    val haptic = LocalHapticFeedback.current
+    
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (selected) {
+                MaterialTheme.colorScheme.surfaceVariant
+            } else {
+                MaterialTheme.colorScheme.surface
+            },
+        ),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .combinedClickable(
+                    onClick = {
+                        if (selectionMode) {
+                            onToggleSelection(!selected)
+                        }
+                    },
+                    onLongClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onToggleSelection(true)
+                    },
+                )
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            if (selectionMode) {
+                Checkbox(
+                    checked = selected,
+                    onCheckedChange = onToggleSelection,
+                )
+            }
+
+            MangaCover.Book(
+                modifier = Modifier.height(96.dp),
+                data = MangaCoverData(
+                    mangaId = item.manga.id,
+                    sourceId = item.manga.source,
+                    isMangaFavorite = item.manga.favorite,
+                    url = item.manga.thumbnailUrl,
+                    lastModified = item.manga.coverLastModified,
+                ),
+                onClick = if (!selectionMode) onClickCover else null,
+            )
+
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                Text(
+                    text = item.manga.title,
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    text = item.error.errorMessage ?: "Unknown error",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    text = formatTimestamp(item.error.timestamp),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+
+            if (!selectionMode) {
+                IconButton(onClick = onClearError) {
+                    Icon(
+                        imageVector = Icons.Outlined.Delete,
+                        contentDescription = "Clear error",
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun FailedUpdatesClearAllDialog(
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = { Text(text = "Clear All Errors") },
+        text = { Text(text = "Are you sure you want to clear all failed update errors?") },
+        confirmButton = {
+            TextButton(onClick = {
+                onConfirm()
+                onDismissRequest()
+            }) {
+                Text(text = stringResource(MR.strings.action_ok))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text(text = stringResource(MR.strings.action_cancel))
+            }
+        },
+    )
+}
+
+private fun formatTimestamp(timestamp: Long): String {
+    val sdf = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
+    return sdf.format(Date(timestamp))
+}

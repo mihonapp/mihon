@@ -405,6 +405,11 @@ class MainActivity : BaseActivity() {
                 HomeScreen.Tab.Library(idToOpen)
             }
             Constants.SHORTCUT_UPDATES -> HomeScreen.Tab.Updates
+            Constants.SHORTCUT_FAILED_UPDATES -> {
+                navigator.popUntilRoot()
+                navigator.push(eu.kanade.tachiyomi.ui.failedupdate.FailedUpdatesTab)
+                return true
+            }
             Constants.SHORTCUT_HISTORY -> HomeScreen.Tab.History
             Constants.SHORTCUT_SOURCES -> HomeScreen.Tab.Browse(false)
             Constants.SHORTCUT_EXTENSIONS -> HomeScreen.Tab.Browse(true)

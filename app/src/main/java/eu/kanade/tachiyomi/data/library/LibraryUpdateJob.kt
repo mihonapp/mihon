@@ -64,6 +64,7 @@ import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.model.SourceNotInstalledException
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
+import tachiyomi.domain.updates.interactor.InsertMangaUpdateError
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
@@ -90,6 +91,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get()
     private val fetchInterval: FetchInterval = Injekt.get()
     private val filterChaptersForDownload: FilterChaptersForDownload = Injekt.get()
+    private val insertMangaUpdateError: InsertMangaUpdateError = Injekt.get()
 
     private val notifier = LibraryUpdateNotifier(context)
 
@@ -308,6 +310,16 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         }
 
         if (failedUpdates.isNotEmpty()) {
+            // Insert errors into database
+            failedUpdates.forEach { (manga, errorMessage) ->
+                try {
+                    insertMangaUpdateError.await(manga.id, errorMessage, System.currentTimeMillis())
+                } catch (e: Exception) {
+                    logcat(LogPriority.ERROR, e) { "Failed to insert update error for manga ${manga.title}" }
+                }
+            }
+            
+            // Still write error file for backward compatibility
             val errorFile = writeErrorFile(failedUpdates)
             notifier.showUpdateErrorNotification(
                 failedUpdates.size,

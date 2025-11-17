@@ -41,6 +41,8 @@ import tachiyomi.domain.chapter.model.ChapterUpdate
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.domain.updates.interactor.GetMangaUpdateErrorCount
+import tachiyomi.domain.updates.interactor.GetMangaUpdateErrors
 import tachiyomi.domain.updates.interactor.GetUpdates
 import tachiyomi.domain.updates.model.UpdatesWithRelations
 import uy.kohesive.injekt.Injekt
@@ -57,6 +59,7 @@ class UpdatesScreenModel(
     private val getManga: GetManga = Injekt.get(),
     private val getChapter: GetChapter = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
+    private val getMangaUpdateErrors: GetMangaUpdateErrors = Injekt.get(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) : StateScreenModel<UpdatesScreenModel.State>(State()) {
 
@@ -97,6 +100,15 @@ class UpdatesScreenModel(
             merge(downloadManager.statusFlow(), downloadManager.progressFlow())
                 .catch { logcat(LogPriority.ERROR, it) }
                 .collect(this@UpdatesScreenModel::updateDownloadState)
+        }
+
+        // Subscribe to failed updates count
+        screenModelScope.launchIO {
+            getMangaUpdateErrors.subscribe()
+                .catch { logcat(LogPriority.ERROR, it) }
+                .collectLatest { errors ->
+                    mutableState.update { it.copy(failedUpdatesCount = errors.size.toLong()) }
+                }
         }
     }
 
@@ -366,6 +378,7 @@ class UpdatesScreenModel(
         val isLoading: Boolean = true,
         val items: PersistentList<UpdatesItem> = persistentListOf(),
         val dialog: Dialog? = null,
+        val failedUpdatesCount: Long = 0,
     ) {
         val selected = items.filter { it.selected }
         val selectionMode = selected.isNotEmpty()

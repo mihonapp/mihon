@@ -157,7 +157,15 @@ class LibraryUpdateNotifier(
             setContentText(context.stringResource(MR.strings.action_show_errors))
             setSmallIcon(R.drawable.ic_mihon)
 
-            setContentIntent(NotificationReceiver.openErrorLogPendingActivity(context, uri))
+            // Use the new failed updates screen instead of opening the file
+            setContentIntent(NotificationReceiver.openFailedUpdatesPendingActivity(context))
+            
+            // Still add action to view the error log file for advanced users
+            addAction(
+                R.drawable.ic_folder_24dp,
+                "View Log",
+                NotificationReceiver.openErrorLogPendingActivity(context, uri),
+            )
         }
     }
 
