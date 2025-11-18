@@ -39,9 +39,4 @@ DELETE FROM manga_update_errors;
 
 deleteNonFavorites:
 DELETE FROM manga_update_errors
-WHERE manga_id IN (
-    SELECT manga_update_errors.manga_id
-    FROM manga_update_errors
-    LEFT JOIN mangas ON manga_update_errors.manga_id = mangas._id
-    WHERE mangas.favorite = 0 OR mangas._id IS NULL
-);
+WHERE manga_id NOT IN (SELECT _id FROM mangas WHERE favorite = 1);
