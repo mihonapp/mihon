@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import eu.kanade.presentation.more.stats.components.MangaReadTimeChart
 import eu.kanade.presentation.more.stats.components.StatsItem
 import eu.kanade.presentation.more.stats.components.StatsOverviewItem
 import eu.kanade.presentation.more.stats.data.StatsData
@@ -48,6 +49,9 @@ fun StatsScreenContent(
         }
         item {
             TrackerStats(state.trackers)
+        }
+        item {
+            MangaReadTimeSection(state.readDurationByManga)
         }
     }
 }
@@ -158,5 +162,18 @@ private fun LazyItemScope.TrackerStats(
                 stringResource(MR.strings.label_used),
             )
         }
+    }
+}
+
+@Composable
+private fun LazyItemScope.MangaReadTimeSection(
+    readDurations: List<tachiyomi.domain.history.model.ReadDurationByManga>,
+) {
+    if (readDurations.isEmpty()) return
+
+    SectionCard(MR.strings.label_read_duration) {
+        MangaReadTimeChart(
+            readDurations = readDurations,
+        )
     }
 }
