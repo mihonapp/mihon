@@ -22,7 +22,7 @@ data object FailedUpdatesTab : Screen {
         val screenModel = rememberScreenModel { FailedUpdatesScreenModel() }
         val state by screenModel.state.collectAsState()
 
-        // Clean up non-favorite errors when returning to this screen
+        // Clean up non-favorite errors when screen is opened
         LaunchedEffect(Unit) {
             screenModel.cleanupNonFavorites()
         }
