@@ -93,6 +93,7 @@ import tachiyomi.domain.chapter.model.NoChaptersException
 import tachiyomi.domain.chapter.service.calculateChapterGap
 import tachiyomi.domain.chapter.service.getChapterSort
 import tachiyomi.domain.chapter.service.missingChaptersCount
+import tachiyomi.domain.history.interactor.GetReadDurationForManga
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetMangaWithChapters
@@ -139,6 +140,7 @@ class MangaViewModel(
     private val sourceManager: SourceManager,
     private val refreshTracks: RefreshTracks,
     private val coverCache: CoverCache,
+    private val getReadDurationForManga: GetReadDurationForManga,
 ) : ViewModel() {
 
     private val subscriberGate = SubscriberGate()
@@ -1057,6 +1059,7 @@ class MangaViewModel(
         data class DuplicateManga(val manga: Manga, val duplicates: List<MangaWithChapterCount>) : Dialog
         data class Migrate(val target: Manga, val current: Manga) : Dialog
         data class SetFetchInterval(val manga: Manga) : Dialog
+        data class ReadingStats(val totalReadDuration: Long) : Dialog
         data object RemoveFromLibrary : Dialog
         data object SettingsSheet : Dialog
         data object TrackSheet : Dialog
@@ -1081,6 +1084,13 @@ class MangaViewModel(
 
     fun showCoverDialog() {
         dialog.value = Dialog.FullCover
+    }
+
+    fun showReadingStatsDialog() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val totalReadDuration = getReadDurationForManga.await(mangaId)
+            dialog.value = Dialog.ReadingStats(totalReadDuration = totalReadDuration)
+        }
     }
 
     fun showMigrateDialog(duplicate: Manga) {
