@@ -45,10 +45,7 @@ class FailedUpdatesScreenModel(
                     val validMangaIds = errorWithManga.map { it.manga.id }.toSet()
 
                     // Remove invalid selections (manga that no longer have errors)
-                    val invalidSelections = selectedMangaIds.filter { it !in validMangaIds }
-                    if (invalidSelections.isNotEmpty()) {
-                        selectedMangaIds.removeAll(invalidSelections.toSet())
-                    }
+                    selectedMangaIds.retainAll(validMangaIds)
 
                     mutableState.update {
                         it.copy(
