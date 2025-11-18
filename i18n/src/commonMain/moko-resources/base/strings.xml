@@ -118,6 +118,7 @@
     <string name="action_web_view" translatable="false">WebView</string>
     <string name="action_migrate">Migrate</string>
     <string name="action_migrate_selected">Migrate Selected</string>
+    <string name="action_view_log">View Log</string>
     <string name="action_display_mode">Display mode</string>
     <string name="action_display">Display</string>
     <string name="action_display_grid">Compact grid</string>

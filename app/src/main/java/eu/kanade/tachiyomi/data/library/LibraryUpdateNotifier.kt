@@ -159,11 +159,11 @@ class LibraryUpdateNotifier(
 
             // Use the new failed updates screen instead of opening the file
             setContentIntent(NotificationReceiver.openFailedUpdatesPendingActivity(context))
-            
+
             // Still add action to view the error log file for advanced users
             addAction(
                 R.drawable.ic_folder_24dp,
-                "View Log",
+                context.stringResource(MR.strings.action_view_log),
                 NotificationReceiver.openErrorLogPendingActivity(context, uri),
             )
         }
