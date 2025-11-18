@@ -58,6 +58,7 @@ import tachiyomi.presentation.core.screens.LoadingScreen
 fun FailedUpdatesScreen(
     state: FailedUpdatesScreenModel.State,
     onClickCover: (MangaUpdateErrorWithManga) -> Unit,
+    onClickItem: (MangaUpdateErrorWithManga) -> Unit,
     onClickMigrate: () -> Unit,
     onClearAll: () -> Unit,
     onDeleteSelected: () -> Unit,
@@ -105,6 +106,7 @@ fun FailedUpdatesScreen(
                     selectedIds = state.selectedIds,
                     selectionMode = state.selectionMode,
                     onClickCover = onClickCover,
+                    onClickItem = onClickItem,
                     onClearError = onClearError,
                     onToggleSelection = onToggleSelection,
                     contentPadding = contentPadding,
@@ -201,6 +203,7 @@ private fun FailedUpdatesList(
     selectedIds: Set<Long>,
     selectionMode: Boolean,
     onClickCover: (MangaUpdateErrorWithManga) -> Unit,
+    onClickItem: (MangaUpdateErrorWithManga) -> Unit,
     onClearError: (Long) -> Unit,
     onToggleSelection: (MangaUpdateErrorWithManga, Boolean) -> Unit,
     contentPadding: PaddingValues,
@@ -218,6 +221,7 @@ private fun FailedUpdatesList(
                 selectionMode = selectionMode,
                 selected = item.manga.id in selectedIds,
                 onClickCover = { onClickCover(item) },
+                onClickItem = { onClickItem(item) },
                 onClearError = { onClearError(item.manga.id) },
                 onToggleSelection = { selected -> onToggleSelection(item, selected) },
             )
@@ -231,6 +235,7 @@ private fun FailedUpdateItem(
     selectionMode: Boolean,
     selected: Boolean,
     onClickCover: () -> Unit,
+    onClickItem: () -> Unit,
     onClearError: () -> Unit,
     onToggleSelection: (Boolean) -> Unit,
 ) {
@@ -255,7 +260,8 @@ private fun FailedUpdateItem(
                     onClick = {
                         if (selectionMode) {
                             onToggleSelection(!selected)
-                        }
+                        } else
+                            onClickItem()
                     },
                     onLongClick = {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)

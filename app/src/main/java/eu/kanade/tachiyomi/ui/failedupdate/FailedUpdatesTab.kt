@@ -30,6 +30,10 @@ data object FailedUpdatesTab : Screen {
         FailedUpdatesScreen(
             state = state,
             onClickCover = { item -> navigator.push(MangaScreen(item.manga.id)) },
+            onClickItem = { item ->
+                // Navigate directly to migration for single manga
+                navigator.push(MigrationConfigScreen(item.manga.id))
+            },
             onClickMigrate = {
                 val selectedIds = screenModel.getSelectedMangaIds()
                 if (selectedIds.isNotEmpty()) {
