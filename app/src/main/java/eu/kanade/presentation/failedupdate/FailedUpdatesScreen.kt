@@ -134,7 +134,7 @@ private fun FailedUpdatesAppBar(
                 AppBarActions(
                     persistentListOf(
                         AppBar.Action(
-                            title = stringResource(MR.strings.action_migrate),
+                            title = stringResource(MR.strings.action_select_all),
                             icon = Icons.Outlined.SelectAll,
                             onClick = onStartSelection,
                         ),
