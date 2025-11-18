@@ -96,7 +96,7 @@ fun FailedUpdatesScreen(
         when {
             state.isLoading -> LoadingScreen(Modifier.padding(contentPadding))
             state.items.isEmpty() -> EmptyScreen(
-                stringRes = MR.strings.information_empty_library,
+                stringRes = MR.strings.information_empty_failed_updates,
                 modifier = Modifier.padding(contentPadding),
             )
             else -> {
