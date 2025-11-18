@@ -28,13 +28,7 @@ class FailedUpdatesScreenModel(
 
     init {
         // Clean up errors for non-favorite manga
-        screenModelScope.launchIO {
-            try {
-                deleteMangaUpdateError.awaitNonFavorites()
-            } catch (e: Exception) {
-                logcat(LogPriority.ERROR, e) { "Failed to clean up non-favorite errors" }
-            }
-        }
+        cleanupNonFavorites()
 
         screenModelScope.launchIO {
             getMangaUpdateErrors.subscribe()
@@ -46,16 +40,16 @@ class FailedUpdatesScreenModel(
                         val manga = getManga.await(error.mangaId) ?: return@mapNotNull null
                         MangaUpdateErrorWithManga(error, manga)
                     }
-                    
+
                     // Get current valid manga IDs
                     val validMangaIds = errorWithManga.map { it.manga.id }.toSet()
-                    
+
                     // Remove invalid selections (manga that no longer have errors)
                     val invalidSelections = selectedMangaIds.filter { it !in validMangaIds }
                     if (invalidSelections.isNotEmpty()) {
                         selectedMangaIds.removeAll(invalidSelections.toSet())
                     }
-                    
+
                     mutableState.update {
                         it.copy(
                             isLoading = false,
