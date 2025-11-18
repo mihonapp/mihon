@@ -42,6 +42,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
+import eu.kanade.presentation.components.relativeDateText
 import eu.kanade.presentation.manga.components.MangaCover
 import eu.kanade.tachiyomi.ui.failedupdate.FailedUpdatesScreenModel
 import kotlinx.collections.immutable.persistentListOf
@@ -52,9 +53,6 @@ import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 @Composable
 fun FailedUpdatesScreen(
@@ -237,7 +235,7 @@ private fun FailedUpdateItem(
     onToggleSelection: (Boolean) -> Unit,
 ) {
     val haptic = LocalHapticFeedback.current
-    
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -305,7 +303,7 @@ private fun FailedUpdateItem(
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
-                    text = formatTimestamp(item.error.timestamp),
+                    text = relativeDateText(item.error.timestamp),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -371,9 +369,4 @@ fun FailedUpdatesDeleteSelectedDialog(
             }
         },
     )
-}
-
-private fun formatTimestamp(timestamp: Long): String {
-    val sdf = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
-    return sdf.format(Date(timestamp))
 }
