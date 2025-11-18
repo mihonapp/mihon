@@ -35,6 +35,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.material.PullRefresh
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
@@ -159,7 +160,11 @@ private fun UpdatesAppBar(
                         onClick = onCalendarClicked,
                     ),
                     AppBar.Action(
-                        title = "${stringResource(MR.strings.label_failed_updates)} ($failedUpdatesCount)",
+                        title = pluralStringResource(
+                            MR.plurals.failed_updates,
+                            count = failedUpdatesCount.toInt(),
+                            failedUpdatesCount.toInt(),
+                        ),
                         icon = Icons.Outlined.Error,
                         onClick = onFailedUpdatesClicked,
                     ),
