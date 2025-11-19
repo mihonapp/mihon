@@ -1,7 +1,6 @@
 package eu.kanade.presentation.failedupdate
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
@@ -23,8 +23,6 @@ import androidx.compose.material.icons.outlined.FlipToBack
 import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,6 +33,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
@@ -50,6 +49,7 @@ import tachiyomi.domain.updates.model.MangaUpdateErrorWithManga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
@@ -211,7 +211,6 @@ private fun FailedUpdatesList(
 ) {
     FastScrollLazyColumn(
         contentPadding = contentPadding,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(
             items = items,
@@ -230,6 +229,8 @@ private fun FailedUpdatesList(
     }
 }
 
+private val FailedUpdateItemHeight = 96.dp
+
 @Composable
 private fun FailedUpdateItem(
     item: MangaUpdateErrorWithManga,
@@ -242,87 +243,79 @@ private fun FailedUpdateItem(
 ) {
     val haptic = LocalHapticFeedback.current
 
-    Card(
+    Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (selected) {
-                MaterialTheme.colorScheme.surfaceVariant
-            } else {
-                MaterialTheme.colorScheme.surface
-            },
-        ),
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .combinedClickable(
-                    onClick = {
-                        if (selectionMode) {
-                            onToggleSelection(!selected)
-                        } else
-                            onClickItem()
-                    },
-                    onLongClick = {
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        onToggleSelection(true)
-                    },
-                )
-                .padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            if (selectionMode) {
-                Checkbox(
-                    checked = selected,
-                    onCheckedChange = onToggleSelection,
-                )
-            }
-
-            MangaCover.Book(
-                modifier = Modifier.height(96.dp),
-                data = MangaCoverData(
-                    mangaId = item.manga.id,
-                    sourceId = item.manga.source,
-                    isMangaFavorite = item.manga.favorite,
-                    url = item.manga.thumbnailUrl,
-                    lastModified = item.manga.coverLastModified,
-                ),
-                onClick = if (!selectionMode) onClickCover else null,
+            .combinedClickable(
+                onClick = {
+                    if (selectionMode) {
+                        onToggleSelection(!selected)
+                    } else {
+                        onClickItem()
+                    }
+                },
+                onLongClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onToggleSelection(true)
+                },
             )
+            .height(FailedUpdateItemHeight)
+            .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small)
+            .alpha(if (selected) 0.38f else 1f),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        if (selectionMode) {
+            Checkbox(
+                checked = selected,
+                onCheckedChange = onToggleSelection,
+            )
+        }
 
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                Text(
-                    text = item.manga.title,
-                    style = MaterialTheme.typography.titleMedium,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Text(
-                    text = item.error.errorMessage ?: stringResource(MR.strings.unknown_error),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Text(
-                    text = relativeDateText(item.error.timestamp),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
+        MangaCover.Book(
+            modifier = Modifier.fillMaxHeight(),
+            data = MangaCoverData(
+                mangaId = item.manga.id,
+                sourceId = item.manga.source,
+                isMangaFavorite = item.manga.favorite,
+                url = item.manga.thumbnailUrl,
+                lastModified = item.manga.coverLastModified,
+            ),
+            onClick = if (!selectionMode) onClickCover else null,
+        )
 
-            if (!selectionMode) {
-                IconButton(onClick = onClearError) {
-                    Icon(
-                        imageVector = Icons.Outlined.Delete,
-                        contentDescription = stringResource(MR.strings.action_delete),
-                    )
-                }
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = MaterialTheme.padding.medium, end = MaterialTheme.padding.small),
+        ) {
+            Text(
+                text = item.manga.title,
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                text = item.error.errorMessage ?: stringResource(MR.strings.unknown_error),
+                modifier = Modifier.padding(top = 4.dp),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                text = relativeDateText(item.error.timestamp),
+                modifier = Modifier.padding(top = 2.dp),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+
+        if (!selectionMode) {
+            IconButton(onClick = onClearError) {
+                Icon(
+                    imageVector = Icons.Outlined.Delete,
+                    contentDescription = stringResource(MR.strings.action_delete),
+                    tint = MaterialTheme.colorScheme.onSurface,
+                )
             }
         }
     }
