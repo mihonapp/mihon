@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.domain.ui.UiPreferences
+import eu.kanade.domain.ui.model.StatsCoverStyle
 import eu.kanade.domain.ui.model.TabletUiMode
 import eu.kanade.domain.ui.model.ThemeMode
 import eu.kanade.domain.ui.model.setAppCompatDelegateThemeMode
@@ -125,6 +126,18 @@ object SettingsAppearanceScreen : SearchableSettings {
                         context.toast(MR.strings.requires_app_restart)
                         true
                     },
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    preference = uiPreferences.statsScreenCoverStyle(),
+                    entries = StatsCoverStyle.entries
+                        .associateWith {
+                            when (it) {
+                                StatsCoverStyle.SQUARE -> stringResource(MR.strings.pref_stats_cover_square)
+                                StatsCoverStyle.BOOK -> stringResource(MR.strings.pref_stats_cover_book)
+                            }
+                        }
+                        .toImmutableMap(),
+                    title = stringResource(MR.strings.pref_stats_cover_style),
                 ),
                 Preference.PreferenceItem.ListPreference(
                     preference = uiPreferences.dateFormat(),

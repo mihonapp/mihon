@@ -259,6 +259,10 @@
     <string name="pref_security">Security</string>
     <string name="pref_firebase">Analytics and Crash logs</string>
 
+    <string name="pref_stats_cover_style">Statistics cover style</string>
+    <string name="pref_stats_cover_square">Square (Compact)</string>
+    <string name="pref_stats_cover_book">Book (Full)</string>
+
     <string name="lock_with_biometrics">Require unlock</string>
     <string name="lock_when_idle">Lock when idle</string>
     <string name="lock_always">Always</string>
