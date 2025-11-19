@@ -33,6 +33,7 @@ import kotlin.time.toDuration
 fun StatsScreenContent(
     state: StatsScreenState.Success,
     paddingValues: PaddingValues,
+    onMangaClick: (Long) -> Unit,
 ) {
     LazyColumn(
         contentPadding = paddingValues,
@@ -51,7 +52,10 @@ fun StatsScreenContent(
             TrackerStats(state.trackers)
         }
         item {
-            MangaReadTimeSection(state.readDurationByManga)
+            MangaReadTimeSection(
+                state.readDurationByManga,
+                onMangaClick = onMangaClick,
+            )
         }
     }
 }
@@ -168,12 +172,14 @@ private fun LazyItemScope.TrackerStats(
 @Composable
 private fun LazyItemScope.MangaReadTimeSection(
     readDurations: List<tachiyomi.domain.history.model.ReadDurationByManga>,
+    onMangaClick: (Long) -> Unit,
 ) {
     if (readDurations.isEmpty()) return
 
     SectionCard(MR.strings.label_read_duration) {
         MangaReadTimeChart(
             readDurations = readDurations,
+            onMangaClick = onMangaClick,
         )
     }
 }

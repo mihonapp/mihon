@@ -1,6 +1,7 @@
 package eu.kanade.presentation.more.stats.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,6 +27,7 @@ import tachiyomi.domain.manga.model.MangaCover as MangaCoverData
 @Composable
 fun MangaReadTimeChart(
     readDurations: List<ReadDurationByManga>,
+    onMangaClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val maxTime = readDurations.maxOfOrNull { it.totalTimeRead } ?: 1L
@@ -40,6 +43,7 @@ fun MangaReadTimeChart(
                 timeRead = item.totalTimeRead,
                 maxTime = maxTime,
                 cover = item.cover,
+                onMangaClick = onMangaClick,
             )
         }
     }
@@ -52,17 +56,21 @@ private fun MangaReadTimeItem(
     timeRead: Long,
     maxTime: Long,
     cover: MangaCoverData,
+    onMangaClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onMangaClick(mangaId) }
+            .padding(vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         // Manga cover thumbnail
-        MangaCover.Square(
+        MangaCover.Book(
             data = cover,
-            modifier = Modifier.size(48.dp),
+            modifier = Modifier.size(48.dp,  60.dp),
             contentDescription = title,
         )
 
