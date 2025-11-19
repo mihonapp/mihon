@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.ui.model.StatsCoverStyle
+import eu.kanade.domain.ui.model.StatsProgressBarStyle
 import eu.kanade.presentation.manga.components.MangaCover
 import tachiyomi.domain.history.model.ReadDurationByManga
 import tachiyomi.domain.manga.model.MangaCover as MangaCoverData
@@ -38,8 +39,15 @@ fun MangaReadTimeChart(
 ) {
     val uiPreferences = remember { Injekt.get<UiPreferences>() }
     val coverStyle by uiPreferences.statsScreenCoverStyle().collectAsState()
+    val progressBarStyle by uiPreferences.statsScreenProgressBarStyle().collectAsState()
 
     val maxTime = readDurations.maxOfOrNull { it.totalTimeRead } ?: 1L
+    val totalTime = readDurations.sumOf { it.totalTimeRead }
+
+    val scaleBase = when (progressBarStyle) {
+        StatsProgressBarStyle.RELATIVE_TO_MAX -> maxTime
+        StatsProgressBarStyle.RELATIVE_TO_TOTAL -> totalTime
+    }
 
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -50,7 +58,7 @@ fun MangaReadTimeChart(
                 mangaId = item.mangaId,
                 title = item.title,
                 timeRead = item.totalTimeRead,
-                maxTime = maxTime,
+                scaleBase = scaleBase,
                 cover = item.cover,
                 coverStyle = coverStyle,
                 onMangaClick = onMangaClick,
@@ -64,7 +72,7 @@ private fun MangaReadTimeItem(
     mangaId: Long,
     title: String,
     timeRead: Long,
-    maxTime: Long,
+    scaleBase: Long,
     cover: MangaCoverData,
     coverStyle: StatsCoverStyle,
     onMangaClick: (Long) -> Unit,
@@ -114,7 +122,7 @@ private fun MangaReadTimeItem(
                     .clip(MaterialTheme.shapes.small)
                     .fillMaxWidth()
                     .height(12.dp),
-                progress = { (timeRead.toFloat() / maxTime.toFloat()).coerceIn(0f, 1f) },
+                progress = { (timeRead.toFloat() / scaleBase.toFloat()).coerceIn(0f, 1f) },
             )
 
             // Time text

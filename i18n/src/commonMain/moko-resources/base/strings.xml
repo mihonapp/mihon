@@ -259,6 +259,10 @@
     <string name="pref_security">Security</string>
     <string name="pref_firebase">Analytics and Crash logs</string>
 
+    <string name="pref_stats_progress_bar_style">Statistics progress bar scale</string>
+    <string name="pref_stats_progress_bar_style_summary">How to calculate progress bar length</string>
+    <string name="pref_stats_progress_relative_to_max">Relative to most-read manga</string>
+    <string name="pref_stats_progress_relative_to_total">Relative to total reading time</string>
     <string name="pref_stats_cover_style">Statistics cover style</string>
     <string name="pref_stats_cover_square">Square (Compact)</string>
     <string name="pref_stats_cover_book">Book (Full)</string>
