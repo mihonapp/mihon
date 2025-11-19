@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
@@ -49,6 +48,7 @@ import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.domain.manga.model.MangaCover as MangaCoverData
 import tachiyomi.domain.updates.model.MangaUpdateErrorWithManga
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
@@ -209,7 +209,7 @@ private fun FailedUpdatesList(
     onToggleSelection: (MangaUpdateErrorWithManga, Boolean) -> Unit,
     contentPadding: PaddingValues,
 ) {
-    LazyColumn(
+    FastScrollLazyColumn(
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
