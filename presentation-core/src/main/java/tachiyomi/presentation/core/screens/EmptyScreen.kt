@@ -40,11 +40,14 @@ fun EmptyScreen(
     stringRes: StringResource,
     modifier: Modifier = Modifier,
     actions: ImmutableList<EmptyScreenAction>? = null,
+    // When true, displays happy emoticons instead of sad ones (for positive empty states)
+    isHappy: Boolean = false,
 ) {
     EmptyScreen(
         message = stringResource(stringRes),
         modifier = modifier,
         actions = actions,
+        isHappy = isHappy,
     )
 }
 
@@ -53,8 +56,10 @@ fun EmptyScreen(
     message: String,
     modifier: Modifier = Modifier,
     actions: ImmutableList<EmptyScreenAction>? = null,
+    // When true, displays happy emoticons instead of sad ones (for positive empty states)
+    isHappy: Boolean = false,
 ) {
-    val face = remember { getRandomErrorFace() }
+    val face = remember(isHappy) { if (isHappy) getRandomHappyFace() else getRandomErrorFace() }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -114,6 +119,25 @@ private val ErrorFaces = listOf(
     "(¬_¬)",
 )
 
+private val HappyFaces = listOf(
+    "(•‿•)",
+    "(◕‿◕)",
+    "(｡◕‿◕｡)",
+    "(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧",
+    "(◠‿◠)",
+    "ヽ(•‿•)ノ",
+    "(¬‿¬)",
+    "( ‾́ ◡ ‾́ )",
+    "(づ｡◕‿‿◕｡)づ",
+    "ヽ(´▽`)/",
+    "(ﾉ´ヮ`)ﾉ*: ･ﾟ",
+    "(◕ᴗ◕✿)",
+)
+
 private fun getRandomErrorFace(): String {
     return ErrorFaces[Random.nextInt(ErrorFaces.size)]
+}
+
+private fun getRandomHappyFace(): String {
+    return HappyFaces[Random.nextInt(HappyFaces.size)]
 }

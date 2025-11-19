@@ -99,6 +99,7 @@ fun FailedUpdatesScreen(
             state.items.isEmpty() -> EmptyScreen(
                 stringRes = MR.strings.information_empty_failed_updates,
                 modifier = Modifier.padding(contentPadding),
+                isHappy = true,
             )
             else -> {
                 FailedUpdatesList(
