@@ -2,12 +2,12 @@
 aboutlib_version = "13.1.0"
 leakcanary = "2.14"
 moko = "0.25.1"
-okhttp_version = "5.3.1"
+okhttp_version = "5.3.2"
 shizuku_version = "13.1.5"
 sqldelight = "2.2.1"
 sqlite = "2.6.1"
 voyager = "1.1.0-beta03"
-spotless = "8.0.0"
+spotless = "8.1.0"
 ktlint-core = "1.7.1"
 firebase-bom = "34.6.0"
 markdown = "0.38.1"
@@ -23,7 +23,7 @@ okhttp-core = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp_ve
 okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp_version" }
 okhttp-brotli = { module = "com.squareup.okhttp3:okhttp-brotli", version.ref = "okhttp_version" }
 okhttp-dnsoverhttps = { module = "com.squareup.okhttp3:okhttp-dnsoverhttps", version.ref = "okhttp_version" }
-okio = "com.squareup.okio:okio:3.16.3"
+okio = "com.squareup.okio:okio:3.16.4"
 
 conscrypt-android = "org.conscrypt:conscrypt-android:2.5.3"
 
@@ -90,7 +90,7 @@ sqldelight-dialects-sql = { module = "app.cash.sqldelight:sqlite-3-38-dialect", 
 
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
-kotest-assertions = "io.kotest:kotest-assertions-core:6.0.4"
+kotest-assertions = "io.kotest:kotest-assertions-core:6.0.5"
 mockk = "io.mockk:mockk:1.14.6"
 
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
