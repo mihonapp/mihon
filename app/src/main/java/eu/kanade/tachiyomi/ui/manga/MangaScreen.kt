@@ -281,7 +281,7 @@ class MangaScreen(
                 )
             }
 
-            is MangaScreenModel.Dialog.ReadingStats -> {  // ADD THIS ENTIRE BLOCK
+            is MangaScreenModel.Dialog.ReadingStats -> {
                 MangaReadingStatsDialog(
                     totalReadDuration = dialog.totalReadDuration,
                     onDismissRequest = onDismissRequest,
