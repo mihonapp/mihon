@@ -34,12 +34,12 @@ import uy.kohesive.injekt.api.get
 @Composable
 fun MangaReadTimeChart(
     readDurations: List<ReadDurationByManga>,
+    progressBarStyle: StatsProgressBarStyle,
     onMangaClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val uiPreferences = remember { Injekt.get<UiPreferences>() }
     val coverStyle by uiPreferences.statsScreenCoverStyle().collectAsState()
-    val progressBarStyle by uiPreferences.statsScreenProgressBarStyle().collectAsState()
 
     val maxTime = readDurations.maxOfOrNull { it.totalTimeRead } ?: 1L
     val totalTime = readDurations.sumOf { it.totalTimeRead }

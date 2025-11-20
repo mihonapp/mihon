@@ -12,7 +12,6 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.ui.model.StatsCoverStyle
-import eu.kanade.domain.ui.model.StatsProgressBarStyle
 import eu.kanade.domain.ui.model.TabletUiMode
 import eu.kanade.domain.ui.model.ThemeMode
 import eu.kanade.domain.ui.model.setAppCompatDelegateThemeMode
@@ -127,19 +126,6 @@ object SettingsAppearanceScreen : SearchableSettings {
                         context.toast(MR.strings.requires_app_restart)
                         true
                     },
-                ),
-                Preference.PreferenceItem.ListPreference(
-                    preference = uiPreferences.statsScreenProgressBarStyle(),
-                    entries = StatsProgressBarStyle.entries
-                        .associateWith {
-                            when (it) {
-                                StatsProgressBarStyle.RELATIVE_TO_MAX -> stringResource(MR.strings.pref_stats_progress_relative_to_max)
-                                StatsProgressBarStyle.RELATIVE_TO_TOTAL -> stringResource(MR.strings.pref_stats_progress_relative_to_total)
-                            }
-                        }
-                        .toImmutableMap(),
-                    title = stringResource(MR.strings.pref_stats_progress_bar_style),
-                    subtitle = stringResource(MR.strings.pref_stats_progress_bar_style_summary),
                 ),
                 Preference.PreferenceItem.ListPreference(
                     preference = uiPreferences.statsScreenCoverStyle(),
