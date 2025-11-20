@@ -11,6 +11,12 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Added
+- Add a "Failed Updates" screen (Accessible in Updates tab) to view failed manga updates and mass migrate them ([@H1ghSyst3m](https://github.com/H1ghSyst3m)) ([#2714](https://github.com/mihonapp/mihon/pull/2714))
+
+### Improved
+- Show happy emotes on positive empty screens ([@H1ghSyst3m](https://github.com/H1ghSyst3m)) ([#2714](https://github.com/mihonapp/mihon/pull/2714))
+
 ### Fixed
 - Fix reader tap zones triggering after scrolling is stopped by tapping ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2680](https://github.com/mihonapp/mihon/pull/2680))
 
