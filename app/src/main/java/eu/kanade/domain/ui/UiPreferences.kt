@@ -5,7 +5,6 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import eu.kanade.domain.ui.model.AppTheme
 import eu.kanade.domain.ui.model.StatsCoverStyle
-import eu.kanade.domain.ui.model.StatsProgressBarStyle
 import eu.kanade.domain.ui.model.TabletUiMode
 import eu.kanade.domain.ui.model.ThemeMode
 import eu.kanade.tachiyomi.util.system.DeviceUtil
@@ -46,7 +45,6 @@ class UiPreferences(
 
     val statsScreenCoverStyle: Preference<StatsCoverStyle> = preferenceStore.getEnum("stats_screen_cover_style", StatsCoverStyle.SQUARE)
 
-    val statsScreenProgressBarStyle: Preference<StatsProgressBarStyle> = preferenceStore.getEnum("stats_screen_progress_bar_style", StatsProgressBarStyle.RELATIVE_TO_MAX)
 
     companion object {
         fun dateFormat(format: String): DateTimeFormatter = when (format) {

@@ -33,13 +33,13 @@ import tachiyomi.presentation.core.util.secondaryItemAlpha
 @Composable
 fun MangaReadTimeChart(
     readDurations: List<ReadDurationByManga>,
+    progressBarStyle: StatsProgressBarStyle,
     onMangaClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val uiPreferences = remember { context.appGraph.uiPreferences }
     val coverStyle by uiPreferences.statsScreenCoverStyle.collectAsState()
-    val progressBarStyle by uiPreferences.statsScreenProgressBarStyle.collectAsState()
 
     val maxTime = readDurations.maxOfOrNull { it.totalTimeRead } ?: 1L
     val totalTime = readDurations.sumOf { it.totalTimeRead }
