@@ -88,6 +88,9 @@ abstract class BaseTracker(
         if (track.status == getCompletionStatus() && track.total_chapters != 0L) {
             track.last_chapter_read = track.total_chapters.toDouble()
         }
+        if (track.status == getCompletionStatus() && track.finished_reading_date == 0L) {
+            track.finished_reading_date = System.currentTimeMillis()
+        }
         updateRemote(track)
     }
 
