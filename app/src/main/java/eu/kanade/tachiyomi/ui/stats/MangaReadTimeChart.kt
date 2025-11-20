@@ -51,7 +51,13 @@ fun MangaReadTimeChart(
 
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
+        verticalArrangement = Arrangement.spacedBy(
+            if (coverStyle == StatsCoverStyle.SQUARE) {
+                MaterialTheme.padding.extraSmall
+            } else {
+                MaterialTheme.padding.medium
+            }
+        ),
     ) {
         readDurations.forEach { item ->
             MangaReadTimeItem(
