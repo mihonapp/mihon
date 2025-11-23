@@ -317,8 +317,8 @@ class KavitaApi(private val client: OkHttpClient, interceptor: KavitaInterceptor
             authClient.newCall(
                 POST(
                     "$apiUrl/Tachiyomi/mark-chapter-until-as-read?seriesId=$seriesId&chapterNumber=${track.last_chapter_read}",
-                    body = "{}".toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-                )
+                    body = "{}".toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+                ),
             ).awaitSuccess()
         } else {
             // Volumes/Specials-only: Mark each volume individually
@@ -339,7 +339,7 @@ class KavitaApi(private val client: OkHttpClient, interceptor: KavitaInterceptor
     private suspend fun updateVolumesOnlyProgress(
         seriesId: Int,
         apiUrl: String,
-        lastChapterRead: Double
+        lastChapterRead: Double,
     ) {
         val requestUrl = "$apiUrl/Series/volumes?seriesId=$seriesId"
         val volumes = try {
@@ -366,11 +366,9 @@ class KavitaApi(private val client: OkHttpClient, interceptor: KavitaInterceptor
             authClient.newCall(
                 POST(
                     "$apiUrl/Reader/mark-volume-read",
-                    body = payload.toRequestBody("application/json".toMediaTypeOrNull())
-                )
+                    body = payload.toRequestBody("application/json".toMediaTypeOrNull()),
+                ),
             ).awaitSuccess()
         }
     }
-
-
 }

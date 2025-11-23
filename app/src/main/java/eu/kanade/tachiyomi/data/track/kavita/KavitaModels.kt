@@ -75,8 +75,7 @@ data class ChapterDto(
     val created: String,
     val lastModifiedUtc: String,
     val files: List<FileDto>? = null,
-) {
-}
+)
 
 @Serializable
 data class FileDto(
@@ -118,7 +117,6 @@ enum class ChapterType {
             }
     }
 }
-
 
 @Serializable
 data class AuthenticationDto(
