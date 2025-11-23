@@ -33,7 +33,7 @@ abstract class WebViewInterceptor(
         // Crashes on some devices. We skip this in some cases since the only impact is slower
         // WebView init in those rare cases.
         // See https://bugs.chromium.org/p/chromium/issues/detail?id=1279562
-        if (DeviceUtil.isMiui || Build.VERSION.SDK_INT == Build.VERSION_CODES.S && DeviceUtil.isSamsung) {
+        if (DeviceUtil.isMiui || (Build.VERSION.SDK_INT == Build.VERSION_CODES.S && DeviceUtil.isSamsung)) {
             return@lazy
         }
 

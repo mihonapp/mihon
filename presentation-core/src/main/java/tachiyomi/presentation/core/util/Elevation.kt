@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-/**
+/*
  * Straight copy from Compose M3 for Button fork
  */
 

@@ -29,3 +29,4 @@ ktlint_standard_function-expression-body = disabled
 ktlint_standard_function-signature = disabled
 ktlint_standard_type-argument-comment = disabled
 ktlint_standard_type-parameter-comment = disabled
+ktlint_standard_blank-line-between-when-conditions = disabled
