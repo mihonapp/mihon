@@ -12,6 +12,8 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.sourcePreferences
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import logcat.LogPriority
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
@@ -58,16 +60,21 @@ class Kavita(id: Long) : BaseTracker(id, "Kavita"), EnhancedTracker {
     override fun displayScore(track: DomainTrack): String = ""
 
     override suspend fun update(track: Track, didReadChapter: Boolean): Track {
-        if (track.status != COMPLETED) {
-            if (didReadChapter) {
-                if (track.last_chapter_read.toLong() == track.total_chapters && track.total_chapters > 0) {
-                    track.status = COMPLETED
-                } else {
-                    track.status = READING
-                }
+        val updatedTrack = api.updateProgress(track, didReadChapter)
+
+        try {
+            val refreshedTrack = api.getTrackSearch(track.tracking_url)
+
+            updatedTrack.apply {
+                total_chapters = refreshedTrack.total_chapters
+                status = refreshedTrack.status
+                last_chapter_read = refreshedTrack.last_chapter_read
             }
+        } catch (e: Exception) {
+            logcat(LogPriority.WARN, e) { "Failed to refresh track from Kavita" }
         }
-        return api.updateProgress(track)
+
+        return updatedTrack
     }
 
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {
@@ -79,10 +86,10 @@ class Kavita(id: Long) : BaseTracker(id, "Kavita"), EnhancedTracker {
     }
 
     override suspend fun refresh(track: Track): Track {
-        val remoteTrack = api.getTrackSearch(track.tracking_url)
-        track.copyPersonalFrom(remoteTrack)
-        track.total_chapters = remoteTrack.total_chapters
-        return track
+        logcat(LogPriority.DEBUG) { "Refreshing track from Kavita: ${track.tracking_url}" }
+
+        // Reuse the update logic to avoid duplication
+        return update(track, didReadChapter = false)
     }
 
     override suspend fun login(username: String, password: String) {
@@ -101,6 +108,7 @@ class Kavita(id: Long) : BaseTracker(id, "Kavita"), EnhancedTracker {
         try {
             api.getTrackSearch(manga.url)
         } catch (e: Exception) {
+            logcat(LogPriority.WARN, e) { "Could not match manga: ${manga.url}" }
             null
         }
 
@@ -140,7 +148,7 @@ class Kavita(id: Long) : BaseTracker(id, "Kavita"), EnhancedTracker {
             }
 
             authentication.apiUrl = prefApiUrl
-            authentication.jwtToken = token.toString()
+            authentication.jwtToken = token
         }
         authentications = oauth
     }
