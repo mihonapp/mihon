@@ -75,6 +75,12 @@ class ShellInterface : IShellInterface.Stub() {
             .invoke(pmInterface)
 
         val params = PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL).apply {
+            val installFlags = this::class.java.getField("installFlags")
+            installFlags.set(
+                this,
+                installFlags.getInt(this) or REPLACE_EXISTING_INSTALL_FLAG,
+            )
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 setPackageSource(PackageInstaller.PACKAGE_SOURCE_STORE)
             }
@@ -105,26 +111,27 @@ class ShellInterface : IShellInterface.Stub() {
             .getMethod("openSession", Int::class.java)
             .invoke(packageInstaller, sessionId)
 
-        (
-            session::class.java.getMethod(
-                "openWrite",
-                String::class.java,
-                Long::class.java,
-                Long::class.java,
-            ).invoke(session, "extension", 0L, apk.length) as ParcelFileDescriptor
-            ).let { fd ->
-            val revocable = Class.forName("android.os.SystemProperties")
-                .getMethod("getBoolean", String::class.java, Boolean::class.java)
-                .invoke(null, "fw.revocable_fd", false) as Boolean
+        session::class.java.getMethod(
+            "openWrite",
+            String::class.java,
+            Long::class.java,
+            Long::class.java,
+        )
+            .invoke(session, "extension", 0L, apk.length)
+            .let { it as ParcelFileDescriptor }
+            .let { fd ->
+                val revocable = Class.forName("android.os.SystemProperties")
+                    .getMethod("getBoolean", String::class.java, Boolean::class.java)
+                    .invoke(null, "fw.revocable_fd", false) as Boolean
 
-            if (revocable) {
-                ParcelFileDescriptor.AutoCloseOutputStream(fd)
-            } else {
-                Class.forName($$"android.os.FileBridge$FileBridgeOutputStream")
-                    .getConstructor(ParcelFileDescriptor::class.java)
-                    .newInstance(fd) as OutputStream
+                if (revocable) {
+                    ParcelFileDescriptor.AutoCloseOutputStream(fd)
+                } else {
+                    Class.forName($$"android.os.FileBridge$FileBridgeOutputStream")
+                        .getConstructor(ParcelFileDescriptor::class.java)
+                        .newInstance(fd) as OutputStream
+                }
             }
-        }
             .use { output ->
                 apk.createInputStream().use { input -> input.copyTo(output) }
             }
@@ -174,3 +181,7 @@ class ShellInterface : IShellInterface.Stub() {
         return shellContext.createPackageContext("com.android.shell", 0)
     }
 }
+
+// Constant hidden from the SDK
+// https://cs.android.com/android/platform/superproject/main/+/512046e84bcc51cc241bc6599f83ab345e93ab12:frameworks/base/core/java/android/content/pm/PackageManager.java;l=1682-1689
+private const val REPLACE_EXISTING_INSTALL_FLAG = 0x00000002
