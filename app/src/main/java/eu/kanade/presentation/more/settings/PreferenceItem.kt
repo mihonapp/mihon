@@ -26,7 +26,9 @@ import eu.kanade.presentation.more.settings.widget.SwitchPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.TitleFontSize
 import eu.kanade.presentation.more.settings.widget.TrackingPreferenceWidget
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import mihonx.auth.Auth
 import tachiyomi.presentation.core.components.BaseSliderItem
 import tachiyomi.presentation.core.util.collectAsState
 
@@ -166,7 +168,11 @@ internal fun PreferenceItem(
             }
             is Preference.PreferenceItem.TrackerPreference -> {
                 val isLoggedIn by item.tracker.let { tracker ->
-                    tracker.isLoggedInFlow.collectAsState(tracker.isLoggedIn)
+                    if (tracker is Auth) {
+                        tracker.authSession.map { it != null }.collectAsState(false)
+                    } else {
+                        tracker.isLoggedInFlow.collectAsState(tracker.isLoggedIn)
+                    }
                 }
                 TrackingPreferenceWidget(
                     tracker = item.tracker,

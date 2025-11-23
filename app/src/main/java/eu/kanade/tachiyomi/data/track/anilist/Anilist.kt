@@ -1,25 +1,33 @@
 package eu.kanade.tachiyomi.data.track.anilist
 
 import android.graphics.Color
+import androidx.core.net.toUri
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.DeletableTracker
-import eu.kanade.tachiyomi.data.track.anilist.dto.ALOAuth
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.serialization.json.Json
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import mihonx.auth.Auth
+import mihonx.auth.models.AuthSession
+import mihonx.auth.models.User
+import tachiyomi.core.common.preference.getAndSet
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
+class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker, Auth.OAuth {
 
     companion object {
+        private const val CLIENT_ID = "16329"
+        private const val BASE_URL = "https://anilist.co/api/v2"
+
         const val READING = 1L
         const val COMPLETED = 2L
         const val ON_HOLD = 3L
@@ -32,11 +40,28 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
         const val POINT_10_DECIMAL = "POINT_10_DECIMAL"
         const val POINT_5 = "POINT_5"
         const val POINT_3 = "POINT_3"
+
+        private const val SCORE_FORMAT = "score_format"
+        private const val ACCESS_TOKEN = "access_token"
     }
 
-    private val json: Json by injectLazy()
+    private val authSessionPreference = trackPreferences.authSession(this)
 
-    private val interceptor by lazy { AnilistInterceptor(this, getPassword()) }
+    private val scoreFormat: String
+        get() = authSessionPreference.get()?.memo[SCORE_FORMAT] ?: POINT_10
+
+    private val userId: Int?
+        get() = authSessionPreference.get()?.user?.id?.toIntOrNull()
+
+    private val interceptor = AnilistInterceptor(
+        token = authSessionPreference.get()?.memo[ACCESS_TOKEN]?.let(AnilistToken::from),
+        onTokenExpired = {
+            authSessionPreference.getAndSet { it?.copy(authExpired = true) }
+        },
+        onAuthRevoked = {
+            authSessionPreference.getAndSet { it?.copy(authRevoked = true) }
+        },
+    )
 
     private val api by lazy { AnilistApi(client, interceptor) }
 
@@ -44,16 +69,51 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
 
     override val supportsPrivateTracking: Boolean = true
 
-    private val scorePreference = trackPreferences.anilistScoreType()
+    override val authSession: Flow<AuthSession?>
+        get() = authSessionPreference.changes()
 
-    init {
-        // If the preference is an int from APIv1, logout user to force using APIv2
-        try {
-            scorePreference.get()
-        } catch (e: ClassCastException) {
-            logout()
-            scorePreference.delete()
-        }
+    override val isLoggedIn: Boolean
+        get() = authSessionPreference.get() != null
+
+    override val isLoggedInFlow: Flow<Boolean>
+        get() = authSession.map { it != null }
+
+    override fun getOAuthUrl(state: String): String {
+        return "$BASE_URL/oauth/authorize".toUri().buildUpon()
+            .appendQueryParameter("client_id", CLIENT_ID)
+            .appendQueryParameter("response_type", "token")
+            .appendQueryParameter("state", state)
+            .build()
+            .toString()
+    }
+
+    override suspend fun onOAuthCallback(data: Map<String, String>): Boolean {
+        val accessToken = data[ACCESS_TOKEN] ?: return false
+        val alToken = AnilistToken.from(accessToken)
+        interceptor.updateToken(alToken)
+        val alUser = api.getCurrentUser()
+        val user = User(
+            id = alToken.decoded.id,
+            name = alUser.name,
+            subtitle = if (alUser.donatorTier > 0) {
+                alUser.donatorBadge
+            } else {
+                null
+            },
+            avatar = alUser.avatar.large,
+        )
+        val session = AuthSession(
+            user = user,
+            authExpired = false,
+            authRevoked = false,
+            memo = mapOf(
+                ACCESS_TOKEN to accessToken,
+                SCORE_FORMAT to alUser.mediaListOptions.scoreFormat,
+            ),
+        )
+
+        trackPreferences.authSession(this).set(session)
+        return true
     }
 
     override fun getLogo() = R.drawable.ic_tracker_anilist
@@ -81,7 +141,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
     override fun getCompletionStatus(): Long = COMPLETED
 
     override fun getScoreList(): ImmutableList<String> {
-        return when (scorePreference.get()) {
+        return when (scoreFormat) {
             // 10 point
             POINT_10 -> IntRange(0, 10).map(Int::toString).toImmutableList()
             // 100 point
@@ -102,7 +162,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
     }
 
     override fun indexToScore(index: Int): Double {
-        return when (scorePreference.get()) {
+        return when (scoreFormat) {
             // 10 point
             POINT_10 -> index * 10.0
             // 100 point
@@ -126,7 +186,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
     override fun displayScore(track: DomainTrack): String {
         val score = track.score
 
-        return when (scorePreference.get()) {
+        return when (scoreFormat) {
             POINT_5 -> when (score) {
                 0.0 -> "0 ★"
                 else -> "${((score + 10) / 20).toInt()} ★"
@@ -144,13 +204,14 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
     }
 
     private suspend fun add(track: Track): Track {
+        logcat { "add" }
         return api.addLibManga(track)
     }
 
     override suspend fun update(track: Track, didReadChapter: Boolean): Track {
         // If user was using API v1 fetch library_id
         if (track.library_id == null || track.library_id!! == 0L) {
-            val libManga = api.findLibManga(track, getUsername().toInt())
+            val libManga = api.findLibManga(track, userId ?: return track)
                 ?: throw Exception("$track not found on user library")
             track.library_id = libManga.library_id
         }
@@ -174,7 +235,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
 
     override suspend fun delete(track: DomainTrack) {
         if (track.libraryId == null || track.libraryId == 0L) {
-            val libManga = api.findLibManga(track.toDbTrack(), getUsername().toInt()) ?: return
+            val libManga = api.findLibManga(track.toDbTrack(), userId ?: return) ?: return
             return api.deleteLibManga(track.copy(id = libManga.library_id!!))
         }
 
@@ -182,7 +243,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
     }
 
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {
-        val remoteTrack = api.findLibManga(track, getUsername().toInt())
+        val remoteTrack = api.findLibManga(track, userId!!)
         return if (remoteTrack != null) {
             track.copyPersonalFrom(remoteTrack, copyRemotePrivate = false)
             track.library_id = remoteTrack.library_id
@@ -206,42 +267,18 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
     }
 
     override suspend fun refresh(track: Track): Track {
-        val remoteTrack = api.getLibManga(track, getUsername().toInt())
+        val remoteTrack = api.getLibManga(track, userId ?: return track)
         track.copyPersonalFrom(remoteTrack)
         track.title = remoteTrack.title
         track.total_chapters = remoteTrack.total_chapters
         return track
     }
 
-    override suspend fun login(username: String, password: String) = login(password)
-
-    suspend fun login(token: String) {
-        try {
-            val oauth = api.createOAuth(token)
-            interceptor.setAuth(oauth)
-            val (username, scoreType) = api.getCurrentUser()
-            scorePreference.set(scoreType)
-            saveCredentials(username.toString(), oauth.accessToken)
-        } catch (e: Throwable) {
-            logout()
-        }
-    }
+    override suspend fun login(username: String, password: String) = throw UnsupportedOperationException()
 
     override fun logout() {
         super.logout()
-        trackPreferences.trackToken(this).delete()
-        interceptor.setAuth(null)
-    }
-
-    fun saveOAuth(alOAuth: ALOAuth?) {
-        trackPreferences.trackToken(this).set(json.encodeToString(alOAuth))
-    }
-
-    fun loadOAuth(): ALOAuth? {
-        return try {
-            json.decodeFromString<ALOAuth>(trackPreferences.trackToken(this).get())
-        } catch (e: Exception) {
-            null
-        }
+        interceptor.updateToken(null)
+        authSessionPreference.set(null)
     }
 }

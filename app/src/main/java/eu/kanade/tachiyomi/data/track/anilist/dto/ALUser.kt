@@ -16,8 +16,16 @@ data class ALUserViewer(
 
 @Serializable
 data class ALUserViewerData(
-    val id: Int,
+    val name: String,
+    val donatorBadge: String,
+    val donatorTier: Int,
+    val avatar: ALUserAvatar,
     val mediaListOptions: ALUserListOptions,
+)
+
+@Serializable
+data class ALUserAvatar(
+    val large: String,
 )
 
 @Serializable
