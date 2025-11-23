@@ -10,6 +10,9 @@ import eu.kanade.tachiyomi.data.track.myanimelist.MyAnimeList
 import eu.kanade.tachiyomi.data.track.shikimori.Shikimori
 import eu.kanade.tachiyomi.data.track.suwayomi.Suwayomi
 import kotlinx.coroutines.flow.combine
+import mihonx.auth.Auth
+import kotlin.io.encoding.Base64
+import kotlin.random.Random
 
 class TrackerManager {
 
@@ -18,6 +21,8 @@ class TrackerManager {
         const val KITSU = 3L
         const val KAVITA = 8L
     }
+
+    private val oAuthStates = mutableMapOf<Long, String>()
 
     val myAnimeList = MyAnimeList(1L)
     val aniList = Anilist(ANILIST)
@@ -42,4 +47,18 @@ class TrackerManager {
     fun get(id: Long) = trackers.find { it.id == id }
 
     fun getAll(ids: Set<Long>) = trackers.filter { it.id in ids }
+
+    fun getOAuthUrl(id: Long, tracker: Auth.OAuth): String {
+        val random = Base64.UrlSafe.encode(Random.nextBytes(9))
+        oAuthStates[id] = random
+        return tracker.getOAuthUrl(random)
+    }
+
+    suspend fun onOAuthCallback(data: Map<String, String>): Boolean {
+        val state = data["state"] ?: return false
+        val trackerIdAndState = oAuthStates.entries.firstOrNull { it.value == state } ?: return false
+        oAuthStates.remove(trackerIdAndState.key)
+        val tracker = trackers.firstOrNull { it is Auth.OAuth && it.id == trackerIdAndState.key } ?: return false
+        return (tracker as Auth.OAuth).onOAuthCallback(data)
+    }
 }

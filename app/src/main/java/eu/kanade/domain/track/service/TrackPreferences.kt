@@ -3,13 +3,23 @@ package eu.kanade.domain.track.service
 import eu.kanade.domain.track.model.AutoTrackState
 import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.anilist.Anilist
+import kotlinx.serialization.json.Json
+import mihonx.auth.models.AuthSession
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.preference.getEnum
 
 class TrackPreferences(
     private val preferenceStore: PreferenceStore,
+    private val json: Json,
 ) {
+
+    fun authSession(tracker: Tracker) = preferenceStore.getObjectFromString<AuthSession?>(
+        key = Preference.privateKey("pref_tracker_auth_session_${tracker.id}"),
+        defaultValue = null,
+        deserializer = { json.decodeFromString(it) },
+        serializer = { json.encodeToString(it) },
+    )
 
     fun trackUsername(tracker: Tracker) = preferenceStore.getString(
         Preference.privateKey("pref_mangasync_username_${tracker.id}"),

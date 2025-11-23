@@ -3,29 +3,27 @@ package eu.kanade.tachiyomi.ui.setting.track
 import android.net.Uri
 import androidx.lifecycle.lifecycleScope
 import tachiyomi.core.common.util.lang.launchIO
+import java.net.URLDecoder
 
 class TrackLoginActivity : BaseOAuthLoginActivity() {
 
     override fun handleResult(data: Uri?) {
-        when (data?.host) {
-            "anilist-auth" -> handleAnilist(data)
-            "bangumi-auth" -> handleBangumi(data)
-            "myanimelist-auth" -> handleMyAnimeList(data)
-            "shikimori-auth" -> handleShikimori(data)
-        }
-    }
-
-    private fun handleAnilist(data: Uri) {
-        val regex = "(?:access_token=)(.*?)(?:&)".toRegex()
-        val matchResult = regex.find(data.fragment.toString())
-        if (matchResult?.groups?.get(1) != null) {
+        if (data?.host == "anilist-auth") {
+            val queries = data.encodedFragment?.split("&")?.associate { part ->
+                val (key, value) = part.split("=")
+                URLDecoder.decode(key, "utf-8") to URLDecoder.decode(value, "utf-8")
+            }
+                .orEmpty()
             lifecycleScope.launchIO {
-                trackerManager.aniList.login(matchResult.groups[1]!!.value)
+                trackerManager.onOAuthCallback(queries)
                 returnToSettings()
             }
         } else {
-            trackerManager.aniList.logout()
-            returnToSettings()
+            when (data?.host) {
+                "bangumi-auth" -> handleBangumi(data)
+                "myanimelist-auth" -> handleMyAnimeList(data)
+                "shikimori-auth" -> handleShikimori(data)
+            }
         }
     }
 
