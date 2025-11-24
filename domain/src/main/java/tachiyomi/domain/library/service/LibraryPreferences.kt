@@ -7,6 +7,8 @@ import tachiyomi.core.common.preference.getEnum
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibrarySort
 import tachiyomi.domain.manga.model.Manga
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class LibraryPreferences(
     private val preferenceStore: PreferenceStore,
@@ -34,6 +36,8 @@ class LibraryPreferences(
 
     fun lastUpdatedTimestamp() = preferenceStore.getLong(Preference.appStateKey("library_update_last_timestamp"), 0L)
     fun autoUpdateInterval() = preferenceStore.getInt("pref_library_update_interval_key", 0)
+    fun autoUpdateTime() = preferenceStore.getString("pref_library_update_time_key", defaultValue = LocalTime.now().format(DateTimeFormatter.ofPattern("h:mm a")))
+
 
     fun autoUpdateDeviceRestrictions() = preferenceStore.getStringSet(
         "library_update_restriction",
