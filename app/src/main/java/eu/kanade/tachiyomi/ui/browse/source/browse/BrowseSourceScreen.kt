@@ -105,7 +105,7 @@ data class BrowseSourceScreen(
         val haptic = LocalHapticFeedback.current
         val uriHandler = LocalUriHandler.current
         val snackbarHostState = remember { SnackbarHostState() }
-        
+
         val onHelpClick = { uriHandler.openUri(LocalSource.HELP_URL) }
         val onWebViewClick = f@{
             val source = screenModel.source as? HttpSource ?: return@f
