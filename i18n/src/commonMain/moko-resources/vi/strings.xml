@@ -908,4 +908,5 @@
     <string name="pref_download_concurrent_sources">Tải xuống nguồn đồng thời</string>
     <string name="pref_download_concurrent_pages">Tải xuống trang đồng thời</string>
     <string name="pref_download_concurrent_pages_summary">Các trang được tải xuống đồng thời theo từng nguồn</string>
+    <string name="action_webview_close_tab">Đóng thẻ</string>
 </resources>
