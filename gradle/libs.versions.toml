@@ -90,7 +90,7 @@ sqldelight-dialects-sql = { module = "app.cash.sqldelight:sqlite-3-38-dialect", 
 
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
-kotest-assertions = "io.kotest:kotest-assertions-core:6.0.5"
+kotest-assertions = "io.kotest:kotest-assertions-core:6.0.7"
 mockk = "io.mockk:mockk:1.14.6"
 
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
