@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.LibraryBooks
+import androidx.compose.material.icons.outlined.CollectionsBookmark
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FilterList
+import androidx.compose.material.icons.outlined.LibraryBooks
 import androidx.compose.material.icons.outlined.NewReleases
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -187,6 +190,22 @@ data class BrowseSourceScreen(
                             )
                         }
                         if (state.filters.isNotEmpty()) {
+                            FilterChip(
+                                selected = false,
+                                onClick = {
+                                    screenModel.resetFilters()
+                                    screenModel.toggleShowOnlyInLibrary() }, //TODO
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.CollectionsBookmark,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(FilterChipDefaults.IconSize),
+                                    )
+                                },
+                                label = {
+                                    Text(text = "In Library") //TODO LOCALISE
+                                }
+                            )
                             FilterChip(
                                 selected = state.listing is Listing.Search,
                                 onClick = screenModel::openFilterSheet,
