@@ -10,6 +10,7 @@ import androidx.compose.material.icons.outlined.GetApp
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.QueryStats
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Shield
 import androidx.compose.material.icons.outlined.Storage
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
@@ -35,6 +36,8 @@ fun MoreScreen(
     onDownloadedOnlyChange: (Boolean) -> Unit,
     incognitoMode: Boolean,
     onIncognitoModeChange: (Boolean) -> Unit,
+    safeMode: Boolean,
+    onSafeModeChange: (Boolean) -> Unit,
     onClickDownloadQueue: () -> Unit,
     onClickCategories: () -> Unit,
     onClickStats: () -> Unit,
@@ -67,6 +70,16 @@ fun MoreScreen(
                     icon = ImageVector.vectorResource(R.drawable.ic_glasses_24dp),
                     checked = incognitoMode,
                     onCheckedChanged = onIncognitoModeChange,
+                )
+            }
+
+            item {
+                SwitchPreferenceWidget(
+                    title = stringResource(MR.strings.label_safe_mode),
+                    subtitle = stringResource(MR.strings.safe_mode_summary),
+                    icon = Icons.Outlined.Shield,
+                    checked = safeMode,
+                    onCheckedChanged = onSafeModeChange,
                 )
             }
 

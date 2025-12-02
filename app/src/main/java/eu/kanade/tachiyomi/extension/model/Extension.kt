@@ -71,4 +71,14 @@ sealed class Extension {
         override val lang: String? = null,
         override val isNsfw: Boolean = false,
     ) : Extension()
+
+    data class NotLoaded(
+        override val name: String,
+        override val pkgName: String,
+        override val versionName: String,
+        override val versionCode: Long,
+        override val libVersion: Double,
+        override val lang: String? = null,
+        override val isNsfw: Boolean = false,
+    ) : Extension()
 }

@@ -209,6 +209,7 @@ private fun ExtensionContent(
                         is Extension.Untrusted -> "extension-untrusted-${item.hashCode()}"
                         is Extension.Installed -> "extension-installed-${item.hashCode()}"
                         is Extension.Available -> "extension-available-${item.hashCode()}"
+                        is Extension.NotLoaded -> "extension-notLoaded-${item.hashCode()}"
                     }
                 },
             ) { item ->
@@ -222,6 +223,7 @@ private fun ExtensionContent(
                             is Extension.Untrusted -> {
                                 trustState = it
                             }
+                            is Extension.NotLoaded -> onUninstallExtension(it)
                         }
                     },
                     onLongClickItem = onLongClickItem,
@@ -246,6 +248,7 @@ private fun ExtensionContent(
                             is Extension.Untrusted -> {
                                 trustState = it
                             }
+                            is Extension.NotLoaded -> onUninstallExtension(it)
                         }
                     },
                 )
@@ -486,6 +489,7 @@ private fun ExtensionItemActions(
                             )
                         }
                     }
+                    is Extension.NotLoaded -> {}
                 }
             }
         }
