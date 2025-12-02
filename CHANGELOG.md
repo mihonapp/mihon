@@ -11,6 +11,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Added
+- Make long pressing global search results favorite the entry ([@Dorumin](https://github.com/Dorumin)) ([#2739](https://github.com/mihonapp/mihon/pull/2739))
+
 ### Fixed
 - Fix reader tap zones triggering after scrolling is stopped by tapping ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2680](https://github.com/mihonapp/mihon/pull/2680))
 - Fix shizuku installer not updating installed extensions ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2697](https://github.com/mihonapp/mihon/pull/2697))
