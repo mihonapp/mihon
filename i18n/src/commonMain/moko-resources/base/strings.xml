@@ -753,6 +753,7 @@
     <string name="chapter_paused">Paused</string>
     <string name="show_title">Source title</string>
     <string name="show_chapter_number">Chapter number</string>
+    <string name="expand_chapter_titles">Expand chapter titles</string>
     <string name="sort_by_source">By source</string>
     <string name="sort_by_number">By chapter number</string>
     <string name="sort_by_upload_date">By upload date</string>

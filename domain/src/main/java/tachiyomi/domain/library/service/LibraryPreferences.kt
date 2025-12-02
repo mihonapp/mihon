@@ -176,6 +176,8 @@ class LibraryPreferences(
     fun autoClearChapterCache() = preferenceStore.getBoolean("auto_clear_chapter_cache", false)
 
     fun hideMissingChapters() = preferenceStore.getBoolean("pref_hide_missing_chapter_indicators", false)
+
+    fun expandChapterTitles() = preferenceStore.getBoolean("expand_chapter_titles", false)
     // endregion
 
     // region Swipe Actions
