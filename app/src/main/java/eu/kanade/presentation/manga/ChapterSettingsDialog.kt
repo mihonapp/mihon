@@ -36,6 +36,7 @@ import tachiyomi.core.common.preference.TriState
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
+import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.RadioItem
 import tachiyomi.presentation.core.components.SortItem
 import tachiyomi.presentation.core.components.TriStateItem
@@ -55,6 +56,8 @@ fun ChapterSettingsDialog(
     onScanlatorFilterClicked: (() -> Unit),
     onSortModeChanged: (Long) -> Unit,
     onDisplayModeChanged: (Long) -> Unit,
+    expandChapterTitles: Boolean,
+    onExpandChapterTitlesChanged: (Boolean) -> Unit,
     onSetAsDefault: (applyToExistingManga: Boolean) -> Unit,
     onResetToDefault: () -> Unit,
 ) {
@@ -122,6 +125,8 @@ fun ChapterSettingsDialog(
                     DisplayPage(
                         displayMode = manga?.displayMode ?: 0,
                         onItemSelected = onDisplayModeChanged,
+                        expandChapterTitles = expandChapterTitles,
+                        onExpandChapterTitlesChanged = onExpandChapterTitlesChanged,
                     )
                 }
             }
@@ -214,6 +219,8 @@ private fun ColumnScope.SortPage(
 private fun ColumnScope.DisplayPage(
     displayMode: Long,
     onItemSelected: (Long) -> Unit,
+    expandChapterTitles: Boolean,
+    onExpandChapterTitlesChanged: (Boolean) -> Unit,
 ) {
     listOf(
         MR.strings.show_title to Manga.CHAPTER_DISPLAY_NAME,
@@ -225,6 +232,12 @@ private fun ColumnScope.DisplayPage(
             onClick = { onItemSelected(mode) },
         )
     }
+
+    CheckboxItem(
+        label = stringResource(MR.strings.expand_chapter_titles),
+        checked = expandChapterTitles,
+        onClick = { onExpandChapterTitlesChanged(!expandChapterTitles) },
+    )
 }
 
 @Composable
