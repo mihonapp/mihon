@@ -663,7 +663,8 @@
     <string name="pref_incognito_mode_extension_summary">Pause reading history for extension</string>
     <string name="notification_incognito_text">Disable incognito mode</string>
     <string name="downloaded_only_summary">Filters all entries in your library</string>
-
+    <string name="label_safe_mode">Safe mode</string>
+    <string name="safe_mode_summary">Disables loading of extensions and repositories</string>
 
     <!-- Login dialog -->
     <string name="login_title">Log in to %1$s</string>
@@ -888,6 +889,7 @@
     <string name="crash_screen_title">Whoops!</string>
     <string name="crash_screen_description">%s ran into an unexpected error. We suggest you share the crash logs in our support channel on Discord.</string>
     <string name="crash_screen_restart_application">Restart the application</string>
+    <string name="crash_screen_restart_safe_mode">Restart the application without loading extensions</string>
 
     <!-- Stats screen -->
     <string name="label_overview_section">Overview</string>
