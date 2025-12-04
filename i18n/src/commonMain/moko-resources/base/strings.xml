@@ -889,7 +889,7 @@
     <string name="crash_screen_title">Whoops!</string>
     <string name="crash_screen_description">%s ran into an unexpected error. We suggest you share the crash logs in our support channel on Discord.</string>
     <string name="crash_screen_restart_application">Restart the application</string>
-    <string name="crash_screen_restart_safe_mode">Restart the application without loading extensions</string>
+    <string name="crash_screen_restart_safe_mode">Restart in safe mode</string>
 
     <!-- Stats screen -->
     <string name="label_overview_section">Overview</string>

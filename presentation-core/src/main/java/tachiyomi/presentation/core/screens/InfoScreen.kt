@@ -42,8 +42,8 @@ fun InfoScreen(
     canAccept: Boolean = true,
     rejectText: String? = null,
     onRejectClick: (() -> Unit)? = null,
-    thirdButtonText: String? = null,
-    onThirdButtonClick: (() -> Unit)? = null,
+    cancelText: String? = null,
+    onCancelClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Scaffold(
@@ -82,12 +82,12 @@ fun InfoScreen(
                         Text(text = rejectText)
                     }
                 }
-                if (thirdButtonText != null && onThirdButtonClick != null) {
+                if (cancelText != null && onCancelClick != null) {
                     OutlinedButton(
                         modifier = Modifier.fillMaxWidth(),
-                        onClick = onThirdButtonClick,
+                        onClick = onCancelClick,
                     ) {
-                        Text(text = thirdButtonText)
+                        Text(text = cancelText)
                     }
                 }
             }
@@ -147,8 +147,8 @@ private fun InfoScaffoldPreview() {
         onAcceptClick = {},
         rejectText = "Reject",
         onRejectClick = {},
-        thirdButtonText = "Third button",
-        onThirdButtonClick = {},
+        cancelText = "Cancel",
+        onCancelClick = {},
     ) {
         Text("Hello world")
     }
