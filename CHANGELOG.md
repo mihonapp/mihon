@@ -18,6 +18,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add bookmarked chapters to chapter download options ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#2891](https://github.com/mihonapp/mihon/pull/2891))
 - Add `src:` prefix to search the library by source ID ([@MajorTanya](https://github.com/MajorTanya)) ([#2927](https://github.com/mihonapp/mihon/pull/2927))
   - Add `src:local` as a way to search for Local Source entries ([@MajorTanya](https://github.com/MajorTanya)) ([#2928](https://github.com/mihonapp/mihon/pull/2928))
+- Add a safe mode to start the app without loading any extensions ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2753](https://github.com/mihonapp/mihon/pull/2753))
 
 ### Improved
 - Minimize memory usage by reducing in-memory cover cache size ([@Lolle2000la](https://github.com/Lolle2000la)) ([#2266](https://github.com/mihonapp/mihon/pull/2266))
