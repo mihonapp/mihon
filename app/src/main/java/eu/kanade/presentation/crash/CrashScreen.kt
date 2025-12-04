@@ -42,8 +42,8 @@ fun CrashScreen(
         },
         rejectText = stringResource(MR.strings.crash_screen_restart_application),
         onRejectClick = { onRestartClick(false) },
-        thirdButtonText = stringResource(MR.strings.crash_screen_restart_safe_mode),
-        onThirdButtonClick = { onRestartClick(true) },
+        cancelText = stringResource(MR.strings.crash_screen_restart_safe_mode),
+        onCancelClick = { onRestartClick(true) },
     ) {
         Box(
             modifier = Modifier
