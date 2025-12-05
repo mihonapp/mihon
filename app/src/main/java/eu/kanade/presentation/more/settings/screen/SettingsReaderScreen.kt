@@ -170,6 +170,8 @@ object SettingsReaderScreen : SearchableSettings {
 
     @Composable
     private fun getReadingGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup {
+        val pagePreloadPref = readerPreferences.pagePreloadAmount()
+        val pagePreload by pagePreloadPref.collectAsState()
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_category_reading),
             preferenceItems = persistentListOf(
@@ -188,6 +190,13 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.alwaysShowChapterTransition(),
                     title = stringResource(MR.strings.pref_always_show_chapter_transition),
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = pagePreload,
+                    valueRange = ReaderPreferences.PAGE_PRELOAD_MIN..ReaderPreferences.PAGE_PRELOAD_MAX,
+                    title = stringResource(MR.strings.pref_page_preload_amount),
+                    valueString = pluralStringResource(MR.plurals.pref_pages, pagePreload, pagePreload),
+                    onValueChanged = { pagePreloadPref.set(it) },
                 ),
             ),
         )
