@@ -1,14 +1,19 @@
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- TODO: Use a proper icon -->
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/sc_collections_bookmark_48dp"
+        android:icon="@drawable/sc_outline_shield"
         android:shortcutDisabledMessage="@string/app_not_available"
-        android:shortcutId="show_library"
-        android:shortcutLongLabel="@string/label_library"
-        android:shortcutShortLabel="@string/label_library">
+        android:shortcutId="open_in_safe_mode"
+        android:shortcutLongLabel="@string/label_safe_mode"
+        android:shortcutShortLabel="@string/label_safe_mode">
         <intent
-            android:action="eu.kanade.tachiyomi.SHOW_LIBRARY"
-            android:targetClass="eu.kanade.tachiyomi.ui.main.MainActivity" />
+            android:action="android.intent.action.MAIN"
+            android:targetClass="eu.kanade.tachiyomi.ui.main.MainActivity">
+            <extra
+                android:name="safeMode"
+                android:value="true" />
+        </intent>
     </shortcut>
     <shortcut
         android:enabled="true"

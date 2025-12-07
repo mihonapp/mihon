@@ -77,7 +77,11 @@ class ExtensionsScreenModel(
                             } ||
                                 extension.name.contains(input, ignoreCase = true)
                         }
-                        is Extension.Untrusted -> extension.name.contains(input, ignoreCase = true)
+
+                        is Extension.Untrusted, is Extension.NotLoaded -> extension.name.contains(
+                            input,
+                            ignoreCase = true,
+                        )
                     }
                 }
             }
@@ -88,7 +92,7 @@ class ExtensionsScreenModel(
                 state.map { it.searchQuery }.distinctUntilChanged().debounce(SEARCH_DEBOUNCE_MILLIS),
                 currentDownloads,
                 getExtensions.subscribe(),
-            ) { query, downloads, (_updates, _installed, _available, _untrusted) ->
+            ) { query, downloads, (_updates, _installed, _available, _untrusted, _notLoaded) ->
                 val searchQuery = query ?: ""
 
                 val itemsGroups: ItemGroups = mutableMapOf()
@@ -100,8 +104,10 @@ class ExtensionsScreenModel(
 
                 val installed = _installed.filter(queryFilter(searchQuery)).map(extensionMapper(downloads))
                 val untrusted = _untrusted.filter(queryFilter(searchQuery)).map(extensionMapper(downloads))
-                if (installed.isNotEmpty() || untrusted.isNotEmpty()) {
-                    itemsGroups[ExtensionUiModel.Header.Resource(MR.strings.ext_installed)] = installed + untrusted
+                val notLoaded = _notLoaded.filter(queryFilter(searchQuery)).map(extensionMapper(downloads))
+                if (installed.isNotEmpty() || untrusted.isNotEmpty() || notLoaded.isNotEmpty()) {
+                    itemsGroups[ExtensionUiModel.Header.Resource(MR.strings.ext_installed)] =
+                        installed + untrusted + notLoaded
                 }
 
                 val languagesWithExtensions = _available

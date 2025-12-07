@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.pm.PackageInfoCompat
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.extension.interactor.TrustExtension
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.model.Extension
@@ -44,6 +45,11 @@ internal object ExtensionLoader {
     private val trustExtension: TrustExtension by injectLazy()
     private val loadNsfwSource by lazy {
         preferences.showNsfwSource().get()
+    }
+
+    private val basePreferences: BasePreferences by injectLazy()
+    private val safeMode by lazy {
+        basePreferences.safeMode().get()
     }
 
     private const val EXTENSION_FEATURE = "tachiyomi.extension"
@@ -246,6 +252,17 @@ internal object ExtensionLoader {
                     "$LIB_VERSION_MIN to $LIB_VERSION_MAX are allowed"
             }
             return LoadResult.Error
+        }
+
+        if (safeMode) {
+            val extension = Extension.NotLoaded(
+                extName,
+                pkgName,
+                versionName,
+                versionCode,
+                libVersion,
+            )
+            return LoadResult.NotLoaded(extension)
         }
 
         val signatures = getSignatures(pkgInfo)
