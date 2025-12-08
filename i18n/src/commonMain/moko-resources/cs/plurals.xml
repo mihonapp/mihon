@@ -95,4 +95,22 @@
         <item quantity="few">%1$s stránky</item>
         <item quantity="other">%1$s stránek</item>
     </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">Migrovat %1$d položku?</item>
+        <item quantity="few">Migrovat %1$d položky?</item>
+        <item quantity="many">Migrovat %1$d položek?</item>
+        <item quantity="other">Migrovat %1$d položek?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">Zkopírovat %1$d položku?</item>
+        <item quantity="few">Zkopírovat %1$d položky?</item>
+        <item quantity="many">Zkopírovat %1$d položkek?</item>
+        <item quantity="other">Zkopírovat %1$d položkek?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">Položka byla přeskočena</item>
+        <item quantity="few">%1$d položky byly přeskočeny</item>
+        <item quantity="many">%1$d položek bylo přeskočeno</item>
+        <item quantity="other">%1$d položek bylo přeskočeno</item>
+    </plurals>
 </resources>

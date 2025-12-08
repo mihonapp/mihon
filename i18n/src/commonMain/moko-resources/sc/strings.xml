@@ -70,7 +70,7 @@
     <string name="pref_category_tracking">Arrastamentu</string>
     <string name="pref_category_advanced">Avantzadas</string>
     <string name="pref_category_about">Informatziones</string>
-    <string name="pref_library_columns">Mannària de sa grìllia</string>
+    <string name="pref_library_columns">Elementos pro riga</string>
     <string name="portrait">Verticale</string>
     <string name="landscape">Orizontale</string>
     <string name="pref_library_update_interval">Agiornamentos automàticos</string>
@@ -94,7 +94,7 @@
     <string name="ext_installing">Installende</string>
     <string name="ext_installed">Installadas</string>
     <string name="ext_trust">Mi fido</string>
-    <string name="ext_untrusted">Nun mi fido</string>
+    <string name="ext_untrusted">Non mi fido</string>
     <string name="ext_uninstall">Disinstalla</string>
     <string name="untrusted_extension">Estensione non afidàbile</string>
     <string name="untrusted_extension_message">Un\'estensione mala diat pòdere lèghere totu sas informatziones de atzessu sarvadas o fàghere esecutare còdighe arbitràriu. \n \nPonende fide in custa estensione atzetas custos arriscos.</string>
@@ -138,10 +138,10 @@
     <string name="rotation_free">Lìbera</string>
     <string name="rotation_force_portrait">Blocadu in verticale</string>
     <string name="rotation_force_landscape">Blocadu in orizontale</string>
-    <string name="color_filter_r_value">R</string>
-    <string name="color_filter_g_value">G</string>
-    <string name="color_filter_b_value">B</string>
-    <string name="color_filter_a_value">A</string>
+    <string name="color_filter_r_value">Ruju</string>
+    <string name="color_filter_g_value">Birde</string>
+    <string name="color_filter_b_value">Biaitu</string>
+    <string name="color_filter_a_value">Alfa</string>
     <string name="pref_remove_after_marked_as_read">A pustis de l\'àere marcadu manualmente comente lèghidu</string>
     <string name="pref_remove_after_read">Iscantzella in automàticu a pustis de sa leghidura</string>
     <string name="disabled">Disabilitadu</string>
@@ -170,7 +170,6 @@
     <string name="cookies_cleared">Cookies iscantzellados</string>
     <string name="pref_clear_database">Isbòida sa base de datos</string>
     <string name="pref_clear_database_summary">Iscantzella sa cronologia pro sos elementos chi non sunt sarvados in sa biblioteca tua</string>
-    <string name="clear_database_confirmation">Seguru ses? Sos capìtulos lèghidos e su progressu de sos elementos chi non sunt in sa biblioteca s\'ant a pèrdere</string>
     <string name="clear_database_completed">Boghes iscantzelladas</string>
     <string name="version">Versione</string>
     <string name="pref_enable_acra">Imbia raportos a pitzu de sos arrestos anòmalos</string>
@@ -395,7 +394,7 @@
     <string name="updated_version">Agiornadu a v%1$s</string>
     <string name="whats_new">Ite b\'at de nou</string>
     <string name="download_insufficient_space">Iscarrigamentu de sos capìtulos fallidu pro neghe de su pagu ispàtziu lìberu in su discu</string>
-    <string name="action_global_search_query">Chirca «%1$s» globalmente</string>
+    <string name="action_global_search_query">Chirca \"%1$s\" globalmente</string>
     <string name="pref_category_reading_mode">Modalidade de leghidura</string>
     <string name="pref_category_theme">Tema</string>
     <string name="action_sort_date_added">Data de annanghidura</string>
@@ -541,7 +540,7 @@
     <string name="notification_size_warning">Sos agiornamentos mannos diant pòdere fàghere dannu a sas fontes e causare agiornamentos prus lentos e fintzas un\'impreu de sa bateria prus mannu. Toca pro nde ischire de prus.</string>
     <string name="update_72hour">Cada 3 dies</string>
     <string name="connected_to_wifi">Petzi cun su Wi-Fi</string>
-    <string name="download_queue_size_warning">Dae cara: sos iscarrigamentos de massa mannos diant pòdere rallentare sas fontes e/o blocare Mihon. Toca pro nde ischire de prus.</string>
+    <string name="download_queue_size_warning">Dae cara: sos iscarrigamentos de massa mannos diant pòdere rallentare sas fontes e/o blocare %s. Toca pro nde ischire de prus.</string>
     <string name="ext_update_all">Agiorna totu</string>
     <string name="channel_app_updates">Agiornamentos de s\'aplicatzione</string>
     <string name="clear_database_source_item_count">%1$d elementos chi non sunt in sa biblioteca in sa base de datos</string>
@@ -569,7 +568,6 @@
     <string name="action_move_to_top_all_for_series">Move sa sèrie cara a pitzos</string>
     <string name="disabled_nav">Disabilitadu</string>
     <string name="error_saving_picture">Errore in su sarvamentu de s\'immàgine</string>
-    <string name="update_check_fdroid_migration_info">B\'est una versione noa ufitziale a disponimentu. Toca pro imparare comente tramudare dae sas versiones no ufitziales de F-Droid.</string>
     <string name="update_check_open">Aberi in GitHub</string>
     <string name="empty_backup_error">Perunu elementu in biblioteca de pònnere in sa còpia de seguresa</string>
     <string name="pref_clear_webview_data">Isbòida sos datos de WebView</string>
@@ -675,9 +673,6 @@
     <string name="information_no_manga_category">Sa categoria est bòida</string>
     <string name="pref_library_update_show_tab_badge">Ammustra su nùmeru de non lèghidos in s\'icona de agiornamentu</string>
     <string name="copied_to_clipboard_plain">Copiadu in punta de billete</string>
-    <string name="confirm_add_duplicate_manga">Tenes giai un\'elementu in sa biblioteca tua cun su matessi nùmene.
-\n
-\nBoles sighire su matessi?</string>
     <string name="pref_skip_dupe_chapters">Brinca sos capìtulos duplicados</string>
     <string name="enhanced_services_not_installed">A disponimentu ma sa fonte no est installada: %s</string>
     <string name="track_error">Errore %1$s: %2$s</string>
@@ -689,11 +684,9 @@
     <string name="overlay_header">Istratu superiore</string>
     <string name="pref_page_rotate">Gira sas pàginas largas pro las adatare</string>
     <string name="pref_page_rotate_invert">Fùrria s\'orientamentu de sas pàginas largas giradas</string>
-    <string name="pref_library_columns_per_row">%d pro riga</string>
     <string name="pref_double_tap_zoom">Tocu dòpiu pro ismanniare</string>
-    <string name="pref_chapter_swipe_end">Atzione de iscurrimentu a destra</string>
-    <string name="pref_chapter_swipe">Iscurrimentu de capìtulu</string>
-    <string name="pref_chapter_swipe_start">Atzione de iscurrimentu a manca</string>
+    <string name="pref_chapter_swipe_end">Capìtulu iscurrende a destra</string>
+    <string name="pref_chapter_swipe_start">Capìtulu iscurrende a manca</string>
     <string name="pref_debug_info">Informatziones de depuratzione de còdighe</string>
     <string name="manga_display_interval_title">Càrcula cada</string>
     <string name="action_filter_interval_custom">Intervallu de recùperu personalizadu</string>
@@ -729,7 +722,6 @@
     <string name="pref_storage_location_info">Impreadu pro sas còpias de seguresa automàticas, sos iscarrigamentos de sos capìtulos e s\'orìgine locale.</string>
     <string name="action_apply">Àplica</string>
     <string name="action_revert_to_default">Riprìstina a sos valores predefinidos</string>
-    <string name="action_sort_category">Òrdina sas categorias</string>
     <string name="action_menu_overflow_description">Prus optziones</string>
     <string name="last_auto_backup_info">Ùrtima còpia de seguresa automàtica: %s</string>
     <string name="selected">Seletzionadu</string>
@@ -742,7 +734,6 @@
     <string name="action_bar_up_description">Nàviga cara a subra</string>
     <string name="action_sort_tracker_score">Votu de s\'arrastadore</string>
     <string name="label_data_storage">Datos e archiviatzione</string>
-    <string name="sort_category_confirmation">Boles ordinare sas categorias in manera alfabètica?</string>
     <string name="file_null_uri_error">Perunu archìviu seletzionadu</string>
     <string name="source_settings">Impostatziones de sas fontes</string>
     <string name="app_settings">Impostatziones de s\'aplicatzione</string>
@@ -784,11 +775,10 @@
     <string name="pref_library_update_smart_update">Agiornamentu inteligente</string>
     <string name="action_add_repo">Annanghe unu depòsitu</string>
     <string name="label_add_repo_input">URL de su depòsitu</string>
-    <string name="action_add_repo_message">Annanghe depòsitos additzionales a Mihon. Custu diat dèpere èssere un\'URL chi acabbat cun \"index.min.json\".</string>
+    <string name="action_add_repo_message">Annanghe depòsitos additzionales a %s. Custu diat dèpere èssere un\'URL chi acabbat cun \"index.min.json\".</string>
     <string name="private_settings">Include impostatziones sensìbiles ( a es. getones de intrada a sos arrastadores)</string>
     <string name="manga_interval_expected_update_soon">Luego</string>
     <string name="action_add_anyway">Annanghe su matessi</string>
-    <string name="action_migrate_duplicate">Tràmuda s\'elementu esistente</string>
     <string name="pref_webtoon_disable_zoom_out">Istuda sa ridutzione de ismanniada</string>
     <string name="onboarding_description">In antis de totus tocat a cunfigurare una paja de cosas. L\'as a pòdere semper modificare a pustis dae sas impostatziones.</string>
     <string name="onboarding_storage_action_select">Seletziona una cartella</string>
@@ -838,4 +828,43 @@
     <string name="pref_hardware_bitmap_threshold_default">Predefinidu (%d)</string>
     <string name="pref_hardware_bitmap_threshold_summary">Si su leghidore càrrigat un\'immàgine bianca, mìnima de pagu a pagu su lìmite.\nSeletzionadu: %s</string>
     <string name="pref_hardware_bitmap_threshold">Mannària màssima pro sa decodìfica hardware (bitmap) de sas immàgines</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Influentzat su rendimentu. Abilita·lu petzi si sa minimada de sa mannària màssima pro sa decodìfica hardware (bitmap) de sas immàgines non risolvet sos problemas de sas immàgines bòidas</string>
+    <string name="pref_incognito_mode_extension_summary">Pone in pàusa sa cronologia de letura pro s\'estensione</string>
+    <string name="label_auto">Automàticu</string>
+    <string name="library_list">Lista de sa biblioteca</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">Imprea su codificadore betzu pro su leghidore de immàgines longas</string>
+    <string name="export">Esporta</string>
+    <string name="theme_monochrome">Monocromo</string>
+    <string name="action_display_unread_badge">Capìtulos non lèghidos</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">A pustis de àere lèghidu unu capìtulu</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Marca sos capìtulos lèghidos duplicados comente lèghidos</string>
+    <string name="tracked_privately">Arrastadu in manera privada</string>
+    <string name="action_toggle_private_on">Arrasta in manera privada</string>
+    <string name="author">Autore</string>
+    <string name="artist">Artista</string>
+    <string name="library_exported">Biblioteca esportada</string>
+    <string name="action_toggle_private_off">Arrasta in manera pùblica</string>
+    <string name="pref_behavior">Cumportamentu</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">A pustis de su recùperu de unu capìtulu</string>
+    <string name="action_edit_notes">Modìfica notas</string>
+    <string name="action_notes">Notas</string>
+    <string name="notes_placeholder">M\'est agradadu cando…</string>
+    <string name="pref_update_library_manga_titles">Annoa sos tìtulos de sos manga in sa biblioteca pro chi currispondant cun sa fonte</string>
+    <string name="pref_update_library_manga_titles_summary">Dae cara: si unu manga mudat de nùmene, s\'at a bogare dae sa lista de iscarrigamentu (si b\'est).</string>
+    <string name="logging_in">Intrende…</string>
+    <string name="possible_duplicates_title">Duplicados possìbiles</string>
+    <string name="possible_duplicates_summary">Tenes elementos in s biblioteca tua cun nùmenes chi s\'assimìgiant.\n\nSeletziona un\'elementu pro lu tramudare o annànghere su matessi.</string>
+    <string name="storage_failed_to_create_download_directory">Creatzione de sa cartella de iscarrigamentu fallida</string>
+    <string name="storage_failed_to_create_directory">Non faghet a creare sa cartella: %s</string>
+    <string name="clear_database_text">Ses pro bogare elementos dae sa base de datos</string>
+    <string name="clear_db_exclude_read">Mantene sos elementos cun capìtulos lèghidos</string>
+    <string name="clear_database_history_warning">Sos capìtulos lèghidos e su progressu de sos elementos chi non sunt in sa biblioteca s\'ant a pèrdere</string>
+    <string name="migrationConfigScreen.selectNoneLabel">Non seletziones nudda</string>
+    <string name="migrationConfigScreen.selectPinnedLabel">Seletziona fontes apicadas</string>
+    <string name="theme_catppuccin">Gatuputzinu</string>
+    <string name="migrationConfigScreen.selectedHeader">Seletzionadu</string>
+    <string name="migrationConfigScreen.availableHeader">A disponimentu</string>
+    <string name="migrationConfigScreen.selectAllLabel">Seletziona totu</string>
+    <string name="migrationConfigScreen.selectEnabledLabel">Seletziona fontes abilitadas</string>
+    <string name="migrationConfigScreen.continueButtonText">Sighi</string>
 </resources>

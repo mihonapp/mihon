@@ -174,7 +174,6 @@
     <string name="cookies_cleared">Колачићи су избрисани</string>
     <string name="pref_clear_database">Избриши базу података</string>
     <string name="pref_clear_database_summary">Обриши историју за наслове који нису сачувани у твојој колекцији</string>
-    <string name="clear_database_confirmation">Да ли сте сигурни? Изгубићете прочитана поглавља и статус наслова који нису у колекцији</string>
     <string name="clear_database_completed">Уноси избрисани</string>
     <string name="version">Верзија</string>
     <string name="pref_enable_acra">Пошаљи извештаје грешака</string>
@@ -326,7 +325,7 @@
     <string name="restore_in_progress">Враћање је већ у току</string>
     <string name="creating_backup_error">Прављење резервне копије није успело</string>
     <string name="backup_in_progress">Прављење резервне копије је већ у току</string>
-    <string name="restore_duration">%02d мин, %02d сек</string>
+    <string name="restore_duration">%1$02d мин, %2$02d сек</string>
     <string name="pref_webtoon_side_padding">Растојање од ивице</string>
     <string name="pref_category_reading">Читање</string>
     <string name="pref_always_show_chapter_transition">Увек прикажи транзицију поглавља</string>
@@ -547,7 +546,7 @@
     <string name="clear_history_completed">Историја је избрисана</string>
     <string name="clear_history_confirmation">Да ли сте сигурни? Цела историја ће бити изгубљена.</string>
     <string name="migration_help_guide">Водич за миграцију извора</string>
-    <string name="download_queue_size_warning">Упозорење: велики број преузимања може довести до успоравања извора и/или блокирања Mihon-а. Додирни да сазнаш више.</string>
+    <string name="download_queue_size_warning">Упозорење: велики број преузимања може довести до успоравања извора и/или блокирања %s-а. Додирни да сазнаш више.</string>
     <string name="notification_size_warning">Велика ажурирања штете изворима и могу довести до споријег ажурирања и повећања потрошње батерије. Кликни да сазнаш више.</string>
     <string name="ext_update_all">Ажурирај све</string>
     <string name="channel_app_updates">Ажурирања апликације</string>
@@ -575,7 +574,6 @@
     <string name="skipped_reason_completed">Прескочено јер је наслов завршен</string>
     <string name="skipped_reason_not_caught_up">Прескочено јер има непрочитаних поглавља</string>
     <string name="disabled_nav">Onesposobljen</string>
-    <string name="update_check_fdroid_migration_info">Нова верзија је доступна у званичним издањима. Додирните да научите како да пређете са незваничних издања F-Droid-а.</string>
     <string name="empty_backup_error">Нема уноса у колекцији за прављење резервних копија</string>
     <string name="update_check_open">Отвори на GitHub-у</string>
     <string name="error_saving_picture">Грешка при чувању слике</string>
@@ -606,9 +604,6 @@
     <string name="updates_last_update_info">Последње ажурирање колекције било је: %s</string>
     <string name="updates_last_update_info_just_now">Управо сада</string>
     <string name="update_already_running">Ажурирање је већ у току</string>
-    <string name="confirm_add_duplicate_manga">Имате унос у колекцији са истим именом.
-\n
-\nДа ли још увек желите да наставите?</string>
     <string name="complete_list">Завршена листа</string>
     <string name="on_hold_list">Наслови на чекању</string>
     <string name="unfinished_list">Незавршени наслови</string>
@@ -693,10 +688,8 @@
     <string name="pref_hide_in_library_items">Сакри уносе који се већ налазе у колекцији</string>
     <string name="overlay_header">Прекривање</string>
     <string name="split_tall_images">Растави високе слике</string>
-    <string name="pref_library_columns_per_row">%d по реду</string>
     <string name="pref_chapter_swipe_end">Превуци удесно</string>
     <string name="pref_chapter_swipe_start">Превуци улево</string>
-    <string name="pref_chapter_swipe">Прелистај поглавље</string>
     <string name="pref_double_tap_zoom">Додирни двапут за зумирање</string>
     <string name="action_copy_to_clipboard">Копирај</string>
     <string name="pref_page_rotate_invert">Окрени положај широких страница</string>
@@ -746,7 +739,7 @@
     <string name="action_add_repo">Додај репозиторију</string>
     <string name="action_delete_repo">Избриши репозиторију</string>
     <string name="label_add_repo_input">URL репозиторије</string>
-    <string name="action_add_repo_message">Додај додатне репозиторије у Михон. Треба да буде URL који се завршава са „index.min.json”.</string>
+    <string name="action_add_repo_message">Додај додатне репозиторије у %s. Треба да буде URL који се завршава са „index.min.json”.</string>
     <string name="invalid_repo_name">Неисправан URL репозиторије</string>
     <string name="delete_repo_confirmation">Да ли желиш да избришеш репозиторију „%s”?</string>
     <string name="private_settings">Укључи и осетљива подешавања (нпр. токени за пријаву у пратиоце)</string>
@@ -785,8 +778,6 @@
     <string name="selected">Одабрано</string>
     <string name="action_menu_overflow_description">Више опција</string>
     <string name="action_bar_up_description">Навигација према горе</string>
-    <string name="action_sort_category">Сортирање категорија</string>
-    <string name="sort_category_confirmation">Да ли желиш да сортираш категорије по абецеди?</string>
     <string name="action_move_to_bottom_all_for_series">Премести серију на крај</string>
     <string name="app_settings">Подешавања апликације</string>
     <string name="source_settings">Подешавања извора</string>
@@ -801,7 +792,6 @@
     <string name="action_revert_to_default">Врати на подразумевано</string>
     <string name="action_add_anyway">Dodati svejedno</string>
     <string name="label_upcoming">Predstojeći</string>
-    <string name="action_migrate_duplicate">Migrirajte postojeći unos</string>
     <string name="action_replace_repo">Zameniti</string>
     <string name="action_replace_repo_title">Otisak prsta za otključavanje već postoji</string>
 </resources>

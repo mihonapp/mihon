@@ -225,7 +225,7 @@
     <string name="creating_backup">Хаппаас куопуйа оҥоһуута</string>
     <string name="backup_choice">Тугу куопуйалаары гынннын?</string>
     <string name="backup_in_progress">Хаппаас куопуйа оҥоруута туола турар</string>
-    <string name="restore_duration">%02d мүнүүтэ %02d сөкүүндэ</string>
+    <string name="restore_duration">%1$02d мүнүүтэ %2$02d сөкүүндэ</string>
     <string name="restore_completed">Төнүҥнэри бүттэ</string>
     <string name="backup_restore_missing_trackers">Трэкэрдар киирбэтилэр:</string>
     <string name="backup_restore_missing_sources">Суох төрүттэр:</string>
@@ -256,7 +256,6 @@
     <string name="pref_clear_chapter_cache">Түһүмэх кээһин ыраастааһын</string>
     <string name="label_data">Билим</string>
     <string name="cookies_cleared">Куки ыраастанна</string>
-    <string name="clear_database_confirmation">Эрэллэххин дуо? Ааҕыллыбыт түһүмэхтэр уонна бэбэлэтиэкэҕэ суох маанга туруга сүтүө</string>
     <string name="pref_clear_database_summary">Эн бэбэлэтиэкэҕэр суох маанга остуоруйатын сотторуу</string>
     <string name="pref_clear_database">Билим олоҕо ыраастааһына</string>
     <string name="pref_disable_battery_optimization">Батарея тупсарыытын араарыы</string>

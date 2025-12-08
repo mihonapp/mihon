@@ -5,6 +5,7 @@ SELECT
     chapters._id AS chapterId,
     chapters.name AS chapterName,
     chapters.scanlator,
+    chapters.url AS chapterUrl,
     chapters.read,
     chapters.bookmark,
     chapters.last_page_read,

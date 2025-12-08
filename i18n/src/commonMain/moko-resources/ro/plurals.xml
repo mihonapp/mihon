@@ -46,9 +46,9 @@
         <item quantity="other">%1$s de capitole</item>
     </plurals>
     <plurals name="num_trackers">
-        <item quantity="one">%d tracker</item>
-        <item quantity="few">%d trackere</item>
-        <item quantity="other">%d de trackere</item>
+        <item quantity="one">%d serviciu de urmărire</item>
+        <item quantity="few">%d servicii de urmărire</item>
+        <item quantity="other">%d de servicii de urmărire</item>
     </plurals>
     <plurals name="missing_chapters_warning">
         <item quantity="one">Omiterea %d capitol, fie că sursa lipsește, fie că a fost filtrată</item>
@@ -89,5 +89,25 @@
         <item quantity="one">Mâine</item>
         <item quantity="few">În %1$d zile</item>
         <item quantity="other">În %1$d de zile</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">O pagină</item>
+        <item quantity="few">%1$s pagini</item>
+        <item quantity="other">%1$s de pagini</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">Migrați %1$d intrare?</item>
+        <item quantity="few">Migrați %1$d intrări?</item>
+        <item quantity="other">Migrați %1$d de intrări?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">Copiați %1$d intrare?</item>
+        <item quantity="few">Copiați %1$d intrări?</item>
+        <item quantity="other">Copiați %1$d de intrări?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">O intrare a fost omisă</item>
+        <item quantity="few">%1$d intrări au fost omise</item>
+        <item quantity="other">%1$d de intrări au fost omise</item>
     </plurals>
 </resources>

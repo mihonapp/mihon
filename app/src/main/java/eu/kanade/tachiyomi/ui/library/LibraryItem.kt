@@ -14,6 +14,8 @@ data class LibraryItem(
     val sourceLanguage: String = "",
     private val sourceManager: SourceManager = Injekt.get(),
 ) {
+    val id: Long = libraryManga.id
+
     /**
      * Checks if a query matches the manga
      *
@@ -22,6 +24,9 @@ data class LibraryItem(
      */
     fun matches(constraint: String): Boolean {
         val sourceName by lazy { sourceManager.getOrStub(libraryManga.manga.source).getNameForMangaInfo() }
+        if (constraint.startsWith("id:", true)) {
+            return id == constraint.substringAfter("id:").toLongOrNull()
+        }
         return libraryManga.manga.title.contains(constraint, true) ||
             (libraryManga.manga.author?.contains(constraint, true) ?: false) ||
             (libraryManga.manga.artist?.contains(constraint, true) ?: false) ||

@@ -76,4 +76,8 @@
         <item quantity="one">অধ্যায়সমূহ %1$s আৰু 1 অধিক</item>
         <item quantity="other">অধ্যায়সমূহ %1$s আৰু %2$d অধিক</item>
     </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">%1$d প্ৰৱেশ প্ৰব্ৰজন কৰক?</item>
+        <item quantity="other">%1$d প্ৰবিষ্টসমূহ প্ৰব্ৰজন কৰক?</item>
+    </plurals>
 </resources>

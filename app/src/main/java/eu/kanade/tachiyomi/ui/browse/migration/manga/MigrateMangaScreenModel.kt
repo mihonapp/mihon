@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import logcat.LogPriority
+import mihon.core.common.utils.mutate
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.manga.model.Manga
@@ -57,9 +58,23 @@ class MigrateMangaScreenModel(
         }
     }
 
+    fun toggleSelection(item: Manga) {
+        mutableState.update { state ->
+            val selection = state.selection.mutate { list ->
+                if (!list.remove(item.id)) list.add(item.id)
+            }
+            state.copy(selection = selection)
+        }
+    }
+
+    fun clearSelection() {
+        mutableState.update { it.copy(selection = emptySet()) }
+    }
+
     @Immutable
     data class State(
         val source: Source? = null,
+        val selection: Set<Long> = emptySet(),
         private val titleList: ImmutableList<Manga>? = null,
     ) {
 
@@ -71,6 +86,8 @@ class MigrateMangaScreenModel(
 
         val isEmpty: Boolean
             get() = titles.isEmpty()
+
+        val selectionMode = selection.isNotEmpty()
     }
 }
 

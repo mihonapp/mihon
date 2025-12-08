@@ -36,6 +36,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -58,6 +59,7 @@ import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.theme.header
 import tachiyomi.presentation.core.util.collectAsState
+import tachiyomi.presentation.core.util.secondaryItemAlpha
 
 object SettingsItemsPaddings {
     val Horizontal = 24.dp
@@ -172,37 +174,71 @@ fun RadioItem(label: String, selected: Boolean, onClick: () -> Unit) {
 
 @Composable
 fun SliderItem(
-    label: String,
     value: Int,
-    valueText: String,
+    valueRange: IntProgression,
+    label: String,
     onChange: (Int) -> Unit,
-    max: Int,
-    min: Int = 0,
-    steps: Int = 0,
+    steps: Int = with(valueRange) { (last - first) - 1 },
+    valueString: String = value.toString(),
     labelStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     pillColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
 ) {
-    val haptic = LocalHapticFeedback.current
+    BaseSliderItem(
+        value = value,
+        valueRange = valueRange,
+        steps = steps,
+        title = label,
+        valueString = valueString,
+        onChange = onChange,
+        titleStyle = labelStyle,
+        pillColor = pillColor,
+        modifier = Modifier.padding(
+            horizontal = SettingsItemsPaddings.Horizontal,
+            vertical = SettingsItemsPaddings.Vertical,
+        ),
+    )
+}
 
+@Composable
+fun BaseSliderItem(
+    value: Int,
+    valueRange: IntProgression,
+    title: String,
+    onChange: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    subtitle: String? = null,
+    steps: Int = with(valueRange) { (last - first) - 1 },
+    valueString: String = value.toString(),
+    titleStyle: TextStyle = MaterialTheme.typography.titleLarge,
+    subtitleStyle: TextStyle = MaterialTheme.typography.bodySmall,
+    pillColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
+) {
+    val haptic = LocalHapticFeedback.current
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(
-                horizontal = SettingsItemsPaddings.Horizontal,
-                vertical = SettingsItemsPaddings.Vertical,
-            ),
+            .then(modifier),
+        verticalArrangement = Arrangement.spacedBy(2.dp),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
         ) {
-            Text(
-                text = label,
-                style = labelStyle,
-                modifier = Modifier.weight(1f),
-            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    style = titleStyle,
+                )
+                if (subtitle != null) {
+                    Text(
+                        text = subtitle,
+                        style = subtitleStyle,
+                        modifier = Modifier.secondaryItemAlpha(),
+                    )
+                }
+            }
             Pill(
-                text = valueText,
+                text = valueString,
                 style = MaterialTheme.typography.bodyMedium,
                 color = pillColor,
             )
@@ -214,7 +250,7 @@ fun SliderItem(
                 onChange(it)
                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
             },
-            valueRange = min..max,
+            valueRange = valueRange,
             steps = steps,
         )
     }
@@ -224,15 +260,18 @@ fun SliderItem(
 @PreviewLightDark
 fun SliderItemPreview() {
     MaterialTheme(if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()) {
+        var value by remember { mutableIntStateOf(0) }
         Surface {
-            SliderItem(
-                label = "Item per row",
-                valueText = "Auto",
-                value = 0,
-                onChange = {},
-                min = 0,
-                max = 10,
-                steps = 8,
+            BaseSliderItem(
+                value = value,
+                valueRange = 0..10,
+                title = "Item per row",
+                valueString = if (value == 0) "Auto" else value.toString(),
+                onChange = { value = it },
+                modifier = Modifier.padding(
+                    horizontal = SettingsItemsPaddings.Horizontal,
+                    vertical = SettingsItemsPaddings.Vertical,
+                ),
             )
         }
     }

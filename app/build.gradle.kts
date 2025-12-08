@@ -1,3 +1,4 @@
+import mihon.buildlogic.Config
 import mihon.buildlogic.getBuildTime
 import mihon.buildlogic.getCommitCount
 import mihon.buildlogic.getGitSha
@@ -10,10 +11,7 @@ plugins {
     alias(libs.plugins.aboutLibraries)
 }
 
-val includeAnalytics = project.hasProperty("with-analytics")
-val includeUpdater = project.hasProperty("with-updater")
-
-if (includeAnalytics) {
+if (Config.includeTelemetry) {
     pluginManager.apply {
         apply(libs.plugins.google.services.get().pluginId)
         apply(libs.plugins.firebase.crashlytics.get().pluginId)
@@ -28,15 +26,14 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 10
-        versionName = "0.17.1"
+        versionCode = 16
+        versionName = "0.19.3"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
         buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
-        buildConfigField("String", "BUILD_TIME", "\"${getBuildTime()}\"")
-        buildConfigField("boolean", "INCLUDE_ANALYTICS", "$includeAnalytics")
-        buildConfigField("boolean", "INCLUDE_UPDATER", "$includeUpdater")
-        buildConfigField("boolean", "PREVIEW", "false")
+        buildConfigField("String", "BUILD_TIME", "\"${getBuildTime(useLastCommitTime = false)}\"")
+        buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
+        buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -48,17 +45,22 @@ android {
             isPseudoLocalesEnabled = true
         }
         val release by getting {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = Config.enableCodeShrink
+            isShrinkResources = Config.enableCodeShrink
 
             proguardFiles("proguard-android-optimize.txt", "proguard-rules.pro")
+
+            buildConfigField("String", "BUILD_TIME", "\"${getBuildTime(useLastCommitTime = true)}\"")
         }
+
+        val commonMatchingFallbacks = listOf(release.name)
+
         create("foss") {
             initWith(release)
 
-            applicationIdSuffix = ".t-foss"
+            applicationIdSuffix = ".foss"
 
-            matchingFallbacks.add(release.name)
+            matchingFallbacks.addAll(commonMatchingFallbacks)
         }
         create("preview") {
             initWith(release)
@@ -68,9 +70,9 @@ android {
             versionNameSuffix = debug.versionNameSuffix
             signingConfig = debug.signingConfig
 
-            matchingFallbacks.add(release.name)
+            matchingFallbacks.addAll(commonMatchingFallbacks)
 
-            buildConfigField("boolean", "PREVIEW", "true")
+            buildConfigField("String", "BUILD_TIME", "\"${getBuildTime(useLastCommitTime = false)}\"")
         }
         create("benchmark") {
             initWith(release)
@@ -82,13 +84,11 @@ android {
 
             signingConfig = debug.signingConfig
 
-            matchingFallbacks.add(release.name)
+            matchingFallbacks.addAll(commonMatchingFallbacks)
         }
     }
 
     sourceSets {
-        val analyticsDir = if (includeAnalytics) "analytics-firebase" else "analytics-firebase-noop"
-        getByName("main").kotlin.srcDirs("src/$analyticsDir/kotlin")
         getByName("preview").res.srcDirs("src/debug/res")
         getByName("benchmark").res.srcDirs("src/debug/res")
     }
@@ -131,15 +131,16 @@ android {
     }
 
     dependenciesInfo {
-        includeInApk = false
+        includeInApk = Config.includeDependencyInfo
+        includeInBundle = Config.includeDependencyInfo
     }
 
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        aidl = true
 
         // Disable some unused things
-        aidl = false
         renderScript = false
         shaders = false
     }
@@ -179,6 +180,7 @@ dependencies {
     implementation(projects.domain)
     implementation(projects.presentationCore)
     implementation(projects.presentationWidget)
+    implementation(projects.telemetry)
 
     // Compose
     implementation(compose.activity)
@@ -259,8 +261,7 @@ dependencies {
     implementation(libs.directionalviewpager) {
         exclude(group = "androidx.viewpager", module = "viewpager")
     }
-    implementation(libs.insetter)
-    implementation(libs.bundles.richtext)
+    implementation(libs.richeditor.compose)
     implementation(libs.aboutLibraries.compose)
     implementation(libs.bundles.voyager)
     implementation(libs.compose.materialmotion)
@@ -268,22 +269,20 @@ dependencies {
     implementation(libs.compose.webview)
     implementation(libs.compose.grid)
     implementation(libs.reorderable)
+    implementation(libs.bundles.markdown)
 
     // Logging
     implementation(libs.logcat)
 
-    // Crash reports/analytics
-    if (includeAnalytics) {
-        implementation(platform(libs.firebase.bom))
-        implementation(libs.firebase.analytics)
-        implementation(libs.firebase.crashlytics)
-    }
-
     // Shizuku
     implementation(libs.bundles.shizuku)
 
+    // String similarity
+    implementation(libs.stringSimilarity)
+
     // Tests
     testImplementation(libs.bundles.test)
+    testRuntimeOnly(libs.junit.platform.launcher)
 
     // For detecting memory leaks; see https://square.github.io/leakcanary/
     // debugImplementation(libs.leakcanary.android)
@@ -293,14 +292,6 @@ dependencies {
 }
 
 androidComponents {
-    beforeVariants { variantBuilder ->
-        // Disables standardBenchmark
-        if (variantBuilder.buildType == "benchmark") {
-            variantBuilder.enable = variantBuilder.productFlavors.containsAll(
-                listOf("default" to "dev"),
-            )
-        }
-    }
     onVariants(selector().withFlavor("default" to "standard")) {
         // Only excluding in standard flavor because this breaks
         // Layout Inspector's Compose tree

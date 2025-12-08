@@ -36,6 +36,7 @@
     <string name="label_extensions">Extensions</string>
     <string name="label_extension_info">Extension info</string>
     <string name="label_help">Help</string>
+    <string name="label_donate">Donate</string>
     <string name="label_default">Default</string>
     <string name="label_warning">Warning</string>
     <string name="label_auto">Auto</string>
@@ -122,6 +123,7 @@
     <string name="action_display_list">List</string>
     <string name="action_display_cover_only_grid">Cover-only grid</string>
     <string name="action_display_download_badge">Downloaded chapters</string>
+    <string name="action_display_unread_badge">Unread chapters</string>
     <string name="action_display_local_badge">Local source</string>
     <string name="action_display_language_badge">Language</string>
     <string name="action_display_show_tabs">Show category tabs</string>
@@ -146,6 +148,8 @@
     <string name="action_move_to_top_all_for_series">Move series to top</string>
     <string name="action_move_to_bottom">Move to bottom</string>
     <string name="action_move_to_bottom_all_for_series">Move series to bottom</string>
+    <string name="action_notes">Notes</string>
+    <string name="action_edit_notes">Edit notes</string>
     <string name="action_install">Install</string>
     <string name="action_share">Share</string>
     <string name="action_save">Save</string>
@@ -160,10 +164,10 @@
     <string name="action_webview_back">Back</string>
     <string name="action_webview_forward">Forward</string>
     <string name="action_webview_refresh">Refresh</string>
+    <string name="action_webview_close_tab">Close tab</string>
     <string name="action_start_downloading_now">Start downloading now</string>
     <string name="action_not_now">Not now</string>
     <string name="action_add_anyway">Add anyway</string>
-    <string name="action_migrate_duplicate">Migrate existing entry</string>
 
     <!-- Operations -->
     <string name="loading">Loading…</string>
@@ -226,6 +230,7 @@
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
     <string name="theme_monet">Dynamic</string>
+    <string name="theme_catppuccin">Catppuccin</string>
     <string name="theme_greenapple">Green Apple</string>
     <string name="theme_lavender">Lavender</string>
     <string name="theme_midnightdusk">Midnight Dusk</string>
@@ -242,6 +247,7 @@
     <!-- "Today" instead of "2023-12-31" -->
     <string name="pref_relative_format_summary">\"%1$s\" instead of \"%2$s\"</string>
     <string name="pref_date_format">Date format</string>
+    <string name="pref_display_images_description">Render images in manga descriptions</string>
 
     <string name="pref_manage_notifications">Manage notifications</string>
     <string name="pref_app_language">App language</string>
@@ -292,7 +298,6 @@
     <string name="pref_update_only_started">Skip unstarted entries</string>
     <string name="pref_update_only_in_release_period">Predict next release time</string>
     <string name="pref_library_update_show_tab_badge">Show unread count on Updates icon</string>
-    <string name="pref_mark_duplicate_chapter_read">Mark new duplicate read chapters as read</string>
 
     <string name="pref_library_update_refresh_metadata">Automatically refresh metadata</string>
     <string name="pref_library_update_refresh_metadata_summary">Check for new cover and details when updating library</string>
@@ -306,11 +311,18 @@
     <string name="include">Include: %s</string>
     <string name="exclude">Exclude: %s</string>
 
-    <string name="pref_chapter_swipe">Chapter swipe</string>
+    <string name="pref_behavior">Behavior</string>
     <!-- This should be to the left for RTL locales -->
-    <string name="pref_chapter_swipe_end">Swipe to right action</string>
+    <string name="pref_chapter_swipe_end">Chapter on swipe to right</string>
     <!-- This should be to the right for RTL locales -->
-    <string name="pref_chapter_swipe_start">Swipe to left action</string>
+    <string name="pref_chapter_swipe_start">Chapter on swipe to left</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Mark duplicate read chapter as read</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">After reading a chapter</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">After fetching new chapter</string>
+
+    <string name="pref_hide_missing_chapter_indicators">Hide missing chapter indicators</string>
+    <string name="pref_disallow_non_ascii_filenames">Disallow non-ASCII filenames</string>
+    <string name="pref_disallow_non_ascii_filenames_details">Ensures compatibility with certain storage media that don't support Unicode. When this is enabled, you'll need to manually rename source and manga folders by replacing non-ASCII characters with their lowercase UTF-8 hexadecimal representations. Chapter files don't need to be renamed.</string>
 
       <!-- Extension section -->
     <string name="multi_lang">Multi</string>
@@ -355,7 +367,7 @@
     <string name="information_empty_repos">You have no repos set.</string>
     <string name="action_add_repo">Add repo</string>
     <string name="label_add_repo_input">Repo URL</string>
-    <string name="action_add_repo_message">Add additional repos to Mihon. This should be a URL that ends with \"index.min.json\".</string>
+    <string name="action_add_repo_message">Add additional repos to %s. This should be a URL that ends with \"index.min.json\".</string>
     <string name="error_repo_exists">This repo already exists!</string>
     <string name="action_delete_repo">Delete repo</string>
     <string name="invalid_repo_name">Invalid repo URL</string>
@@ -394,7 +406,7 @@
     <string name="pref_hardware_bitmap_threshold">Custom hardware bitmap threshold</string>
     <string name="pref_hardware_bitmap_threshold_default">Default (%d)</string>
     <string name="pref_hardware_bitmap_threshold_summary">If reader loads a blank image incrementally reduce the threshold.\nSelected: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv">Always decode long strip images with SSIV</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">Use legacy decoder for long strip reader</string>
     <string name="pref_always_decode_long_strip_with_ssiv_summary">Affects performance. Only enable if reducing bitmap threshold doesn\'t fix blank image issues</string>
     <string name="pref_display_profile">Custom display profile</string>
     <string name="pref_crop_borders">Crop borders</string>
@@ -494,6 +506,8 @@
     <string name="pref_remove_exclude_categories">Excluded categories</string>
     <string name="no_location_set">No storage location set</string>
     <string name="invalid_location">Invalid location: %s</string>
+    <string name="storage_failed_to_create_download_directory">Failed to create download directory</string>
+    <string name="storage_failed_to_create_directory">Failed to create directory: %s</string>
     <string name="disabled">Disabled</string>
     <string name="last_read_chapter">Last read chapter</string>
     <string name="second_to_last">Second to last read chapter</string>
@@ -510,6 +524,9 @@
     <string name="save_chapter_as_cbz">Save as CBZ archive</string>
     <string name="split_tall_images">Split tall images</string>
     <string name="split_tall_images_summary">Improves reader performance</string>
+    <string name="pref_download_concurrent_sources">Concurrent source downloads</string>
+    <string name="pref_download_concurrent_pages">Concurrent page downloads</string>
+    <string name="pref_download_concurrent_pages_summary">Pages downloaded simultaneously per source</string>
 
     <!-- Tracking section -->
     <string name="tracking_guide">Tracking guide</string>
@@ -596,7 +613,9 @@
     <string name="pref_clear_database">Clear database</string>
     <string name="pref_clear_database_summary">Delete history for entries that are not saved in your library</string>
     <string name="clear_database_source_item_count">%1$d non-library entries in database</string>
-    <string name="clear_database_confirmation">Are you sure? Read chapters and progress of non-library entries will be lost</string>
+    <string name="clear_database_text">You’re about to remove entries from the database</string>
+    <string name="clear_database_history_warning">Read chapters and progress of non-library entries will be lost</string>
+    <string name="clear_db_exclude_read">Keep entries with read chapters</string>
     <string name="clear_database_completed">Entries deleted</string>
     <string name="database_clean">Nothing to clear</string>
     <string name="pref_clear_webview_data">Clear WebView data</string>
@@ -618,6 +637,8 @@
     <string name="pref_verbose_logging">Verbose logging</string>
     <string name="pref_verbose_logging_summary">Print verbose logs to system log (reduces app performance)</string>
     <string name="pref_debug_info">Debug info</string>
+    <string name="pref_update_library_manga_titles">Update library manga titles to match source</string>
+    <string name="pref_update_library_manga_titles_summary">Warning: if a manga is renamed, it will be removed from the download queue (if present).</string>
 
       <!-- About section -->
     <string name="website">Website</string>
@@ -650,6 +671,7 @@
     <string name="email">Email address</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
+    <string name="logging_in">Logging in…</string>
     <string name="login_success">Logged in</string>
     <string name="logout_title">Log out from %1$s?</string>
     <string name="logout">Log out</string>
@@ -703,7 +725,8 @@
     <!-- missing confirm menu after Compose rewrite #7901 -->
     <string name="remove_from_library">Remove from library</string>
     <string name="unknown_title">Unknown title</string>
-    <string name="confirm_add_duplicate_manga">You have an entry in your library with the same name.\n\nDo you still wish to continue?</string>
+    <string name="possible_duplicates_title">Possible duplicates</string>
+    <string name="possible_duplicates_summary">You have entries in your library with a similar name.\n\nSelect an entry to migrate or add anyway.</string>
     <string name="manga_added_library">Added to library</string>
     <string name="manga_removed_library">Removed from library</string>
     <string name="manga_info_expand">More</string>
@@ -887,7 +910,7 @@
     <!-- Downloads activity and service -->
     <string name="download_queue_error">Couldn\'t download chapters. You can try again in the downloads section</string>
     <string name="download_insufficient_space">Couldn\'t download chapters due to low storage space</string>
-    <string name="download_queue_size_warning">Warning: large bulk downloads may lead to sources becoming slower and/or blocking Mihon. Tap to learn more.</string>
+    <string name="download_queue_size_warning">Warning: large bulk downloads may lead to sources becoming slower and/or blocking %s. Tap to learn more.</string>
 
     <!-- Library update service notifications -->
     <string name="notification_updating_progress">Updating library… (%s)</string>
@@ -980,4 +1003,47 @@
     <string name="exception_http">HTTP %d, check website in WebView</string>
     <string name="exception_offline">No Internet connection</string>
     <string name="exception_unknown_host">Couldn\'t reach %s</string>
+
+    <!-- Notes screen -->
+    <string name="notes_placeholder">Enjoyed the part where…</string>
+
+    <string name="migrationConfigScreen.selectedHeader">Selected</string>
+    <string name="migrationConfigScreen.availableHeader">Available</string>
+    <string name="migrationConfigScreen.selectAllLabel">Select all</string>
+    <string name="migrationConfigScreen.selectNoneLabel">Select none</string>
+    <string name="migrationConfigScreen.selectEnabledLabel">Select enabled sources</string>
+    <string name="migrationConfigScreen.selectPinnedLabel">Select pinned sources</string>
+    <string name="migrationConfigScreen.continueButtonText">Continue</string>
+    <string name="migrationConfigScreen.dataToMigrateHeader">Data to migrate</string>
+    <string name="migrationConfigScreen.removeDownloadsTitle">Delete downloads of current entry after migration</string>
+    <string name="migrationConfigScreen.additionalSearchQueryLabel">Additional keywords (optional)</string>
+    <string name="migrationConfigScreen.additionalSearchQuerySupportingText">Helps narrow down search results by adding additional keywords</string>
+    <string name="migrationConfigScreen.hideUnmatchedTitle">Hide entries without a match</string>
+    <string name="migrationConfigScreen.hideWithoutUpdatesTitle">Hide entries without newer chapters</string>
+    <string name="migrationConfigScreen.hideWithoutUpdatesSubtitle">Only show entry if the match has additional chapters</string>
+    <string name="migrationConfigScreen.enhancedOptionsWarning">These options are slow and dangerous and may lead to restrictions from sources</string>
+    <string name="migrationConfigScreen.deepSearchModeTitle">Advanced search mode</string>
+    <string name="migrationConfigScreen.deepSearchModeSubtitle">Breaks down the title into keywords for a wider search</string>
+    <string name="migrationConfigScreen.prioritizeByChaptersTitle">Match based on chapter number</string>
+    <string name="migrationConfigScreen.prioritizeByChaptersSubtitle">If enabled, chooses the match furthest ahead. Otherwise, picks the first match by source priority.</string>
+    <string name="migrationListScreenTitle">Migration</string>
+    <string name="migrationListScreenTitleWithProgress">Migration (%1$d/%2$d)</string>
+    <string name="migrationListScreen.copyActionLabel">Copy</string>
+    <string name="migrationListScreen.migrateActionLabel">Migrate</string>
+    <string name="migrationListScreen.noMatchFoundText">No alternatives found</string>
+    <string name="migrationListScreen.latestChapterLabel">Latest: %1$s</string>
+    <string name="migrationListScreen.unknownLatestChapter">Unknown</string>
+    <string name="migrationListScreen.searchManuallyActionLabel">Search manually</string>
+    <string name="migrationListScreen.skipActionLabel">Don\'t migrate</string>
+    <string name="migrationListScreen.migrateNowActionLabel">Migrate now</string>
+    <string name="migrationListScreen.copyNowActionLabel">Copy now</string>
+    <string name="migrationListScreen.copyNowActionLabel">Copy now</string>
+    <string name="migrationListScreen.exitDialogTitle">Stop migrating?</string>
+    <string name="migrationListScreen.exitDialog.stopLabel">Stop</string>
+    <string name="migrationListScreen.exitDialog.cancelLabel">Cancel</string>
+    <string name="migrationListScreen.migrateDialog.copyLabel">Copy</string>
+    <string name="migrationListScreen.migrateDialog.migrateLabel">Migrate</string>
+    <string name="migrationListScreen.migrateDialog.cancelLabel">Cancel</string>
+    <string name="migrationListScreen.progressDialog.cancelLabel">Cancel</string>
+    <string name="migrationListScreen.matchWithoutChapterToast">No chapters found, this entry cannot be used for migration</string>
 </resources>

@@ -12,14 +12,14 @@ class LibraryPreferences(
     private val preferenceStore: PreferenceStore,
 ) {
 
-    fun displayMode() = preferenceStore.getObject(
+    fun displayMode() = preferenceStore.getObjectFromString(
         "pref_display_mode_library",
         LibraryDisplayMode.default,
         LibraryDisplayMode.Serializer::serialize,
         LibraryDisplayMode.Serializer::deserialize,
     )
 
-    fun sortingMode() = preferenceStore.getObject(
+    fun sortingMode() = preferenceStore.getObjectFromString(
         "library_sorting_mode",
         LibrarySort.default,
         LibrarySort.Serializer::serialize,
@@ -57,6 +57,8 @@ class LibraryPreferences(
         "display_continue_reading_button",
         false,
     )
+
+    fun markDuplicateReadChapterAsRead() = preferenceStore.getStringSet("mark_duplicate_read_chapter_read", emptySet())
 
     // region Filter
 
@@ -98,6 +100,8 @@ class LibraryPreferences(
 
     fun downloadBadge() = preferenceStore.getBoolean("display_download_badge", false)
 
+    fun unreadBadge() = preferenceStore.getBoolean("display_unread_badge", true)
+
     fun localBadge() = preferenceStore.getBoolean("display_local_badge", true)
 
     fun languageBadge() = preferenceStore.getBoolean("display_language_badge", false)
@@ -118,8 +122,6 @@ class LibraryPreferences(
     fun categoryNumberOfItems() = preferenceStore.getBoolean("display_number_of_items", false)
 
     fun categorizedDisplaySettings() = preferenceStore.getBoolean("categorized_display", false)
-
-    fun markDuplicateChapterRead() = preferenceStore.getBoolean("mark_duplicate_chapter_read", false)
 
     fun updateCategories() = preferenceStore.getStringSet(LIBRARY_UPDATE_CATEGORIES_PREF_KEY, emptySet())
 
@@ -173,6 +175,7 @@ class LibraryPreferences(
 
     fun autoClearChapterCache() = preferenceStore.getBoolean("auto_clear_chapter_cache", false)
 
+    fun hideMissingChapters() = preferenceStore.getBoolean("pref_hide_missing_chapter_indicators", false)
     // endregion
 
     // region Swipe Actions
@@ -186,6 +189,10 @@ class LibraryPreferences(
         "pref_chapter_swipe_start_action",
         ChapterSwipeAction.ToggleRead,
     )
+
+    fun updateMangaTitles() = preferenceStore.getBoolean("pref_update_library_manga_titles", false)
+
+    fun disallowNonAsciiFilenames() = preferenceStore.getBoolean("disallow_non_ascii_filenames", false)
 
     // endregion
 
@@ -205,6 +212,9 @@ class LibraryPreferences(
         const val MANGA_HAS_UNREAD = "manga_fully_read"
         const val MANGA_NON_READ = "manga_started"
         const val MANGA_OUTSIDE_RELEASE_PERIOD = "manga_outside_release_period"
+
+        const val MARK_DUPLICATE_CHAPTER_READ_NEW = "new"
+        const val MARK_DUPLICATE_CHAPTER_READ_EXISTING = "existing"
 
         const val DEFAULT_CATEGORY_PREF_KEY = "default_category"
         private const val LIBRARY_UPDATE_CATEGORIES_PREF_KEY = "library_update_categories"

@@ -11,7 +11,6 @@
     <string name="unlock_app_title">%s আনলক কৰক</string>
     <string name="action_webview_forward">সামনে</string>
     <string name="action_webview_refresh">পুনৰপ্ৰাপ্তি কৰক</string>
-    <string name="action_migrate_duplicate">বিদ্যমান প্ৰৱিষ্টি স্থানান্তৰ কৰক</string>
     <string name="onboarding_action_next">পৰৱৰ্তী</string>
     <string name="pref_category_general">সাধাৰণ</string>
     <string name="pref_category_appearance">দেখাত</string>
@@ -20,7 +19,6 @@
     <string name="pref_category_about">বিষয়ে</string>
     <string name="lock_with_biometrics">আনলকৰ প্ৰয়োজন</string>
     <string name="lock_when_idle">নিশ্ক্ৰিয় হৈ থাকিলে লক কৰক</string>
-    <string name="pref_library_columns_per_row">%d প্ৰতিটো শাৰী</string>
     <string name="portrait">উল্লম্ব</string>
     <string name="landscape">অনুভূমিক</string>
     <string name="pref_category_library_update">সৰ্বসাধাৰণ সন্মিলনী</string>
@@ -143,8 +141,6 @@
     <string name="action_move_category">শ্ৰেণীবোৰ স্থাপন কৰক</string>
     <string name="delete_category_confirmation">আপুনি কি %s শ্ৰেণী মচিব বিচাৰে?</string>
     <string name="delete_category">শ্ৰেণী মচক</string>
-    <string name="action_sort_category">শ্ৰেণী বাছনি কৰক</string>
-    <string name="sort_category_confirmation">আপুনি কি শ্ৰেণীবোৰ বৰ্ণানুক্ৰমিকভাৱে বাছনি কৰিব বিচাৰে?</string>
     <string name="action_edit_cover">মুৰৰ পৃষ্ঠাটী সম্পাদনা কৰক</string>
     <string name="action_view_chapters">অধ্যায়বোৰ চাওক</string>
     <string name="action_pause">থামক</string>
@@ -277,7 +273,7 @@
     <string name="parental_controls_info">এইটো আনুষ্ঠানিকভাৱে অনুমোদিত নহয় বা ভুলকৈ চিহ্নিত কৰা এক্সটেনচনে NSFW (১৮+) বিষয়বস্তু দেখুৱাব পাৰে।</string>
     <string name="relative_time_today">আজি</string>
     <string name="pref_category_display">প্ৰদৰ্শন</string>
-    <string name="pref_library_columns">গ্ৰিড মাপ</string>
+    <string name="pref_library_columns">শাৰীপ্ৰতি বস্তুসমূহ</string>
     <string name="pref_library_update_interval">স্বয়ংক্ৰিয় আপডেট</string>
     <string name="update_never">বন্ধ</string>
     <string name="update_12hour">প্ৰতি ১২ ঘণ্টা</string>
@@ -298,7 +294,6 @@
     <string name="none">কোনোও নহয়</string>
     <string name="include">অন্তৰ্ভুক্ত: %s</string>
     <string name="exclude">বাদ দিয়া: %s</string>
-    <string name="pref_chapter_swipe">অধ্যায় চুইপ</string>
     <string name="pref_chapter_swipe_end">সোঁফালে চুইপ কৰা কাৰ্য</string>
     <string name="pref_chapter_swipe_start">বাওঁফালে চুইপ কৰা কাৰ্য</string>
     <string name="multi_lang">বহুভাষী</string>
@@ -333,7 +328,7 @@
     <string name="ext_installer_shizuku_unavailable_dialog">Shizuku ইন্সটল কৰক আৰু আৰম্ভ কৰক Shizuku এক্সটেনচন ইন্সটলাৰ হিচাপে ব্যৱহাৰ কৰিবলৈ।</string>
     <string name="action_add_repo">ৰেপো যোগ কৰক</string>
     <string name="label_add_repo_input">ৰেপো URL</string>
-    <string name="action_add_repo_message">Mihon-ত অতিৰিক্ত ৰেপো যোগ কৰক। এইটো এনেকুৱা এটা URL হ\'ব লাগিব যাৰ শেষত index.min.json থাকে।</string>
+    <string name="action_add_repo_message">%s-ত অতিৰিক্ত ৰেপো যোগ কৰক। এইটো এনেকুৱা এটা URL হ\'ব লাগিব যাৰ শেষত index.min.json থাকে।</string>
     <string name="action_delete_repo">ৰেপো মচক</string>
     <string name="invalid_repo_name">অবৈধ ৰেপো URL</string>
     <string name="delete_repo_confirmation">আপুনি কি ৰেপো %s মচিব বিচাৰে?</string>
@@ -432,10 +427,10 @@
     <string name="rotation_force_portrait">প’ৰট্ৰেইট তালাচি</string>
     <string name="rotation_force_landscape">ল্যান্ডস্কেপ তালাচি</string>
     <string name="rotation_reverse_portrait">প’ৰট্ৰেইট বিপৰীত</string>
-    <string name="color_filter_r_value">ৰ</string>
-    <string name="color_filter_g_value">গ</string>
-    <string name="color_filter_b_value">ব</string>
-    <string name="color_filter_a_value">আ</string>
+    <string name="color_filter_r_value">ৰঙা</string>
+    <string name="color_filter_g_value">সেউজীয়া</string>
+    <string name="color_filter_b_value">নীলা</string>
+    <string name="color_filter_a_value">আলফা</string>
     <string name="pref_always_show_chapter_transition">সৰ্বদা অধ্যায় পৰিবৰ্তন দেখুৱাও</string>
     <string name="pref_category_reading_mode">পঢ়াৰ মোড</string>
     <string name="pref_highest">সৰ্বোচ্চ</string>
@@ -528,7 +523,6 @@
     <string name="pref_clear_database">ডাটাবেচ মচা</string>
     <string name="pref_clear_database_summary">আপোনাৰ লাইব্ৰেৰিত সংৰক্ষণ কৰা হোৱা নথিৰ ইতিহাস মচা</string>
     <string name="clear_database_source_item_count">ডাটাবেচত %1$d লাইব্ৰেৰিত নথিৰ সংখ্যা</string>
-    <string name="clear_database_confirmation">আপোনি নিশ্চিত? লাইব্ৰেৰিত নথিৰ অধ্যায় আৰু অগ্ৰগতি হেৰুৱাব</string>
     <string name="clear_database_completed">নথি মচা হৈছে</string>
     <string name="database_clean">মচাৰ বাবে কিবা নাই</string>
     <string name="pref_clear_webview_data">WebView ডাটা মচা</string>
@@ -613,9 +607,6 @@
     <string name="remove_from_library">লাইব্ৰেৰী পৰা মচি দিয়ক</string>
     <string name="manga_removed_library">লাইব্ৰেৰী পৰা মচি দিয়া হৈছে</string>
     <string name="unknown_title">অজানা শিৰোনাম</string>
-    <string name="confirm_add_duplicate_manga">আপোনাৰ লাইব্ৰেৰীত এই নামৰ এটা প্ৰৱিষ্ট আছে।
-\n
-\nআপুনি এতিয়াও আগবঢ়াব খুজিছে নেকি?</string>
     <string name="manga_info_expand">অধিক</string>
     <string name="manga_info_collapse">সৰু</string>
     <string name="delete_downloads_for_manga">ডাউনলোড কৰা অধ্যায়সমূহ মচি দিব নেকি?</string>
@@ -757,7 +748,7 @@
     <string name="seconds_short">%ds</string>
     <string name="download_queue_error">অধ্যায়সমূহ ডাউনলোড কৰিবলৈ সক্ষম নহ\'ল। আপুনি ডাউনলোডৰ অংশত পুনৰ চেষ্টা কৰিব পাৰে</string>
     <string name="download_insufficient_space">পৰ্যাপ্ত স্থান নাথাকাৰ বাবে অধ্যায়সমূহ ডাউনলোড কৰিবলৈ সক্ষম নহ\'ল</string>
-    <string name="download_queue_size_warning">সতৰ্কতা: ডাঙৰ বাল্ক ডাউনলোডে মূলে ধীৰগতিত পৰিণত কৰিব পাৰে আৰু/অথবা Mihon ব্লক কৰিব পাৰে। অধিক জানিবলৈ টেপ কৰক।</string>
+    <string name="download_queue_size_warning">সতৰ্কতা: ডাঙৰ বাল্ক ডাউনলোডে মূলে ধীৰগতিত পৰিণত কৰিব পাৰে আৰু/অথবা %s ব্লক কৰিব পাৰে। অধিক জানিবলৈ টেপ কৰক।</string>
     <string name="notification_updating_progress">লাইব্রেৰী আপডেট হৈ আছে… (%s)</string>
     <string name="notification_size_warning">ডাঙৰ আপডেটসমূহে মূলে ক্ষতি কৰে আৰু ধীৰ গতিত আপডেট হব পাৰে আৰু বেটাৰী ব্যৱহাৰ বৃদ্ধি পাব পাৰে। অধিক জানিবলৈ টেপ কৰক।</string>
     <string name="notification_new_chapters">নতুন অধ্যায় পোৱা গৈছে</string>
@@ -786,7 +777,6 @@
     <string name="update_check_no_new_updates">নতুন আপডেট উপলব্ধ নাই</string>
     <string name="update_check_notification_download_in_progress">ডাউনলোড হৈছে…</string>
     <string name="update_check_notification_update_available">নতুন সংস্কৰণ উপলব্ধ!</string>
-    <string name="update_check_fdroid_migration_info">এখন নতুন সংস্কৰণ চৰকাৰী মুক্তিৰ পৰা উপলব্ধ। আনুষ্ঠানিক F-Droid মুক্তিৰ পৰা মাইগ্ৰেট কৰিবলৈ কেনেকৈ শিকিবলৈ টেপ কৰক।</string>
     <string name="information_no_recent">কোনো নতুন আপডেট নাই</string>
     <string name="information_no_recent_manga">সম্প্ৰতি কিবা পঢ়া হোৱা নাই</string>
     <string name="information_empty_library">আপোনাৰ লাইব্ৰেৰী খালী</string>
@@ -840,4 +830,11 @@
     <string name="pref_hardware_bitmap_threshold">কাষ্টম হাৰ্ডৱেৰ বিটম্যাপ থ্ৰেশহোল্ড</string>
     <string name="pref_hardware_bitmap_threshold_summary">যদি পাঠকে এটা খালী ছবি লোড কৰে ক্ৰমান্বয়ে থ্ৰেছহোল্ড হ্ৰাস কৰক। \nবাচনি কৰা: %s</string>
     <string name="pref_hardware_bitmap_threshold_default">ডিফল্ট (%d)</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">কাৰ্য্যক্ষমতাক প্ৰভাৱিত কৰে। কেৱল সামৰ্থবান কৰক যদি বিটমেপ থ্ৰেছহোল্ড হ্ৰাস কৰিলে খালী প্ৰতিমুৰ্তি সমস্যা সমাধান নহয়</string>
+    <string name="pref_incognito_mode_extension_summary">সম্প্ৰসাৰণৰ বাবে ইতিহাস পঢ়া বন্ধ কৰক</string>
+    <string name="label_auto">অটো</string>
+    <string name="theme_monochrome">একবৰ্ণী</string>
+    <string name="clear_db_exclude_read">পঢ়া অধ্যায়সহ এন্ট্ৰিসমূহ ৰক্ষা কৰক</string>
+    <string name="author">লেখক</string>
+    <string name="artist">কলা</string>
 </resources>

@@ -40,10 +40,10 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import kotlin.collections.map
 
 class HistoryScreenModel(
     private val addTracks: AddTracks = Injekt.get(),
@@ -175,9 +175,9 @@ class HistoryScreenModel(
         screenModelScope.launchIO {
             val manga = getManga.await(mangaId) ?: return@launchIO
 
-            val duplicate = getDuplicateLibraryManga.await(manga).getOrNull(0)
-            if (duplicate != null) {
-                mutableState.update { it.copy(dialog = Dialog.DuplicateManga(manga, duplicate)) }
+            val duplicates = getDuplicateLibraryManga(manga)
+            if (duplicates.isNotEmpty()) {
+                mutableState.update { it.copy(dialog = Dialog.DuplicateManga(manga, duplicates)) }
                 return@launchIO
             }
 
@@ -216,9 +216,9 @@ class HistoryScreenModel(
         }
     }
 
-    fun showMigrateDialog(currentManga: Manga, duplicate: Manga) {
+    fun showMigrateDialog(target: Manga, current: Manga) {
         mutableState.update { currentState ->
-            currentState.copy(dialog = Dialog.Migrate(newManga = currentManga, oldManga = duplicate))
+            currentState.copy(dialog = Dialog.Migrate(target = target, current = current))
         }
     }
 
@@ -247,12 +247,12 @@ class HistoryScreenModel(
     sealed interface Dialog {
         data object DeleteAll : Dialog
         data class Delete(val history: HistoryWithRelations) : Dialog
-        data class DuplicateManga(val manga: Manga, val duplicate: Manga) : Dialog
+        data class DuplicateManga(val manga: Manga, val duplicates: List<MangaWithChapterCount>) : Dialog
         data class ChangeCategory(
             val manga: Manga,
             val initialSelection: ImmutableList<CheckboxState<Category>>,
         ) : Dialog
-        data class Migrate(val newManga: Manga, val oldManga: Manga) : Dialog
+        data class Migrate(val target: Manga, val current: Manga) : Dialog
     }
 
     sealed interface Event {

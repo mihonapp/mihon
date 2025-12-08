@@ -79,7 +79,7 @@
     <string name="creating_backup">Izveido dublējumu</string>
     <string name="backup_choice">Ko vēlaties dublēt?</string>
     <string name="backup_in_progress">Dublēšana jau notiek</string>
-    <string name="restore_duration">%02d min, %02d sec</string>
+    <string name="restore_duration">%1$02d min, %2$02d sec</string>
     <string name="restore_completed">Atjaunošana pabeigta</string>
     <string name="backup_restore_missing_sources">Trūkstošie avoti:</string>
     <string name="invalid_backup_file_missing_manga">Dublējumā nav neviena bibliotēkas ieraksta.</string>
@@ -386,7 +386,6 @@
     <string name="label_network">Tīkls</string>
     <string name="label_data">Dati</string>
     <string name="used_cache">Izmantots: %1$s</string>
-    <string name="clear_database_confirmation">Vai esi pārliecināts? Lasītās nodaļas un progress priekš ieraksta, kuras nav bibliotēkā, būs zudis</string>
     <string name="database_clean">Nav ko tīrīt</string>
     <string name="pref_disable_battery_optimization">Atspējot akumulatora optimizāciju</string>
     <string name="pref_restore_backup_summ">Atjaunot bibliotēku no dublējuma faila</string>
@@ -510,13 +509,12 @@
     <string name="confirm_set_image_as_cover">Vai izmantot šo attēlu kā vāku?</string>
     <string name="pref_category_for_this_series">Priekš šīs sērijas</string>
     <string name="dropped">Pamests</string>
-    <string name="download_queue_size_warning">Brīdinājums: liela apjoma lejupielāde var izraisīt to, ka avoti kļūst lēnāki un/vai bloķē Mihon. Pieskarieties, lai uzzinātu vairāk.</string>
+    <string name="download_queue_size_warning">Brīdinājums: liela apjoma lejupielāde var izraisīt to, ka avoti kļūst lēnāki un/vai bloķē %s. Pieskarieties, lai uzzinātu vairāk.</string>
     <string name="skipped_reason_not_started">Izlaists, jo neviena nodaļa nav izlasīta</string>
     <string name="file_select_cover">Atlasiet vāka attēlu</string>
     <string name="file_select_backup">Atlasiet dublējuma failu</string>
     <string name="spen_previous_page">Iepriekšējā lapa</string>
     <string name="copy">Kopēt</string>
-    <string name="update_check_fdroid_migration_info">Jaunā versija ir pieejama no oficiālajām versijām. Pieskarieties, lai uzzinātu, kā migrēt no neoficiālajām F-Droid versijām.</string>
     <string name="score">Vērtējums</string>
     <string name="clear_history_completed">Vēsture izdzēsta</string>
     <string name="theme_lavender">Lavanda</string>
@@ -619,9 +617,6 @@
     <string name="multi_lang">Vairāku</string>
     <string name="download_ahead">Lejupielādēt uz priekšu</string>
     <string name="download_ahead_info">Darbojas tikai ja pašreizējā nodaļa + nākošā nodaļa ir jau lejupielādēta.</string>
-    <string name="confirm_add_duplicate_manga">Jūsu bibliotēkā ir ieraksts ar tādu pašu nosaukumu.
-\n
-\nVai joprojām vēlaties turpināt?</string>
     <string name="pref_invalidate_download_cache">Nederīgs lejupielāžu indekss</string>
     <string name="label_overview_section">Pārskats</string>
     <string name="label_stats">Statistika</string>
@@ -718,14 +713,11 @@
     <string name="action_ok">OK</string>
     <string name="pref_update_only_in_release_period">Ārpus paredzamā izlaišanas perioda</string>
     <string name="pref_double_tap_zoom">Dubult-pieskarieties, lai tuvinātu</string>
-    <string name="pref_library_columns_per_row">%d katrā rindā</string>
     <string name="unlock_app_title">Atbloķēt %s</string>
-    <string name="pref_chapter_swipe">Vilkt nodaļas</string>
     <string name="manga_display_modified_interval_title">Atjaunināt katru</string>
     <string name="exception_http">HTTP %d, pārbaudiet vietni iekš WebView</string>
     <string name="exception_offline">Nav interneta savienojuma</string>
     <string name="exception_unknown_host">Nevarēja sasniegt %s</string>
-    <string name="action_sort_category">Kārtot kategorijas</string>
     <string name="action_sort_tracker_score">Izsekošanas rezultāts</string>
     <string name="label_data_storage">Dati un uzglabāšana</string>
     <string name="pref_storage_location">Krātuves atrašanās vieta</string>
@@ -746,7 +738,6 @@
     <string name="pref_storage_usage">Krātuves izmantošana</string>
     <string name="notification_updating_progress">Bibliotēkas atjaunināšana... (%s)</string>
     <string name="action_bar_up_description">Virzīties uz augšu</string>
-    <string name="sort_category_confirmation">Vai vēlaties kategorijas sakārtot pēc alfabēta?</string>
     <string name="file_null_uri_error">Nav atlasīts neviens fails</string>
     <string name="source_settings">Avota iestatījumi</string>
     <string name="app_settings">Lietotnes iestatījumi</string>

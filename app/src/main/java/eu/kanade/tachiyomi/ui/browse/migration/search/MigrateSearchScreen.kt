@@ -8,7 +8,10 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.browse.MigrateSearchScreen
 import eu.kanade.presentation.util.Screen
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchScreenModel
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
+import mihon.feature.migration.dialog.MigrateMangaDialog
+import mihon.feature.migration.list.MigrationListScreen
 
 class MigrateSearchScreen(private val mangaId: Long) : Screen() {
 
@@ -19,42 +22,46 @@ class MigrateSearchScreen(private val mangaId: Long) : Screen() {
         val screenModel = rememberScreenModel { MigrateSearchScreenModel(mangaId = mangaId) }
         val state by screenModel.state.collectAsState()
 
-        val dialogScreenModel = rememberScreenModel { MigrateSearchScreenDialogScreenModel(mangaId = mangaId) }
-        val dialogState by dialogScreenModel.state.collectAsState()
-
         MigrateSearchScreen(
             state = state,
-            fromSourceId = dialogState.manga?.source,
+            fromSourceId = state.from?.source,
             navigateUp = navigator::pop,
             onChangeSearchQuery = screenModel::updateSearchQuery,
             onSearch = { screenModel.search() },
             getManga = { screenModel.getManga(it) },
             onChangeSearchFilter = screenModel::setSourceFilter,
             onToggleResults = screenModel::toggleFilterResults,
-            onClickSource = {
-                navigator.push(SourceSearchScreen(dialogState.manga!!, it.id, state.searchQuery))
+            onClickSource = { navigator.push(MigrateSourceSearchScreen(state.from!!, it.id, state.searchQuery)) },
+            onClickItem = {
+                val migrateListScreen = navigator.items
+                    .filterIsInstance<MigrationListScreen>()
+                    .lastOrNull()
+
+                if (migrateListScreen == null) {
+                    screenModel.setMigrateDialog(mangaId, it)
+                } else {
+                    migrateListScreen.addMatchOverride(current = mangaId, target = it.id)
+                    navigator.popUntil { screen -> screen is MigrationListScreen }
+                }
             },
-            onClickItem = { dialogScreenModel.setDialog(MigrateSearchScreenDialogScreenModel.Dialog.Migrate(it)) },
             onLongClickItem = { navigator.push(MangaScreen(it.id, true)) },
         )
 
-        when (val dialog = dialogState.dialog) {
-            is MigrateSearchScreenDialogScreenModel.Dialog.Migrate -> {
-                MigrateDialog(
-                    oldManga = dialogState.manga!!,
-                    newManga = dialog.manga,
-                    screenModel = rememberScreenModel { MigrateDialogScreenModel() },
-                    onDismissRequest = { dialogScreenModel.setDialog(null) },
-                    onClickTitle = {
-                        navigator.push(MangaScreen(dialog.manga.id, true))
-                    },
-                    onPopScreen = {
+        when (val dialog = state.dialog) {
+            is SearchScreenModel.Dialog.Migrate -> {
+                MigrateMangaDialog(
+                    current = dialog.current,
+                    target = dialog.target,
+                    // Initiated from the context of [dialog.current] so we show [dialog.target].
+                    onClickTitle = { navigator.push(MangaScreen(dialog.target.id, true)) },
+                    onDismissRequest = { screenModel.clearDialog() },
+                    onComplete = {
                         if (navigator.lastItem is MangaScreen) {
                             val lastItem = navigator.lastItem
                             navigator.popUntil { navigator.items.contains(lastItem) }
-                            navigator.push(MangaScreen(dialog.manga.id))
+                            navigator.push(MangaScreen(dialog.target.id))
                         } else {
-                            navigator.replace(MangaScreen(dialog.manga.id))
+                            navigator.replace(MangaScreen(dialog.target.id))
                         }
                     },
                 )

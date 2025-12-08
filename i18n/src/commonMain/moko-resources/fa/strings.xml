@@ -326,7 +326,6 @@
     <string name="pref_disable_battery_optimization">غیر فعال کردن بهینه سازی باتری</string>
     <string name="pref_refresh_library_covers">تازه کردن عکس روی جلد مانگاها</string>
     <string name="clear_database_completed">اطلاعات حذف شدند</string>
-    <string name="clear_database_confirmation">آیا مطمئن هستید؟ اطلاعات قسمت های خوانده شده برای مانگاهایی که در کتابخانه اضافه نشده از دست خواهد رفت</string>
     <string name="pref_clear_database_summary">حذف سابقه برای مانگاهایی که در کتابخانه ذخیره نشده اند</string>
     <string name="pref_clear_database">پاک کردن پایگاه داده</string>
     <string name="cookies_cleared">کوکی ها پاک شدند</string>
@@ -344,7 +343,7 @@
     <string name="creating_backup">درحال ایجاد نسخه پشتیبان</string>
     <string name="backup_choice">چه چیزی را می خواهید پشتیبان گیری کنید ؟</string>
     <string name="backup_in_progress">پشتیبان گیری هنوز در حال انجام است</string>
-    <string name="restore_duration">%02d دقیقه, %02d ثانیه</string>
+    <string name="restore_duration">%1$02d دقیقه, %2$02d ثانیه</string>
     <string name="restore_completed">بازیابی کامل شد</string>
     <string name="backup_restore_missing_sources">منابع ناموجود:</string>
     <string name="invalid_backup_file_missing_manga">فایل پشتیبان حاوی هیچ ورودی کتابخانه نیست.</string>
@@ -458,7 +457,6 @@
     <string name="channel_app_updates">بروزرسانی برنامه</string>
     <string name="pref_navigate_pan">هنگام ضربه زدن تصاویر را عریض کنید</string>
     <string name="pref_landscape_zoom">بزرگنمایی تصویر چشم انداز</string>
-    <string name="update_check_fdroid_migration_info">نسخه جدیدی از نسخه‌های رسمی موجود است. برای یادگیری نحوه انتقال از نسخه‌های غیررسمی اف دروید، ضربه بزنید.</string>
     <string name="action_sort_last_manga_update">بررسی آخرین به روزرسانی</string>
     <string name="action_sort_unread_count">تعداد نخوانده‌ها</string>
     <string name="skipped_reason_completed">به دلیل کامل‌بودن سری، رد شد</string>
@@ -591,7 +589,6 @@
     <string name="delete_downloaded">پاک کردن قسمت های دانلود شده</string>
     <string name="action_apply">ذخیره</string>
     <string name="action_revert_to_default">باز نشانی به حالت اولیه</string>
-    <string name="action_sort_category">منظم کردن دسته بندی ها</string>
     <string name="action_menu_overflow_description">گزینه های بیشتر</string>
     <string name="selected">انتخاب شده</string>
     <string name="not_selected">انتخاب نشده</string>
@@ -599,16 +596,14 @@
     <string name="action_bar_up_description">برو به بالا</string>
     <string name="action_sort_tracker_score">امتیاز رهگیز</string>
     <string name="label_data_storage">داده های و ذخیره سازی</string>
-    <string name="sort_category_confirmation">آیا مایلید که دسته بندی ها را به ترتیب الفبا منظم کنید؟</string>
     <string name="action_ok">باشه</string>
     <string name="action_sort_next_updated">به روز رسانی مورد انتظار بعدی</string>
-    <string name="download_queue_size_warning">هشدار: حجم زیاد بارگیری ممکن است باعث اهسته تر شدن سرعت ویا مسدود کردن Mihon از منبع شود. برای اطلاعات بیشتر لمس کنید.</string>
+    <string name="download_queue_size_warning">هشدار: حجم زیاد بارگیری ممکن است باعث اهسته تر شدن سرعت ویا مسدود کردن %s از منبع شود. برای اطلاعات بیشتر لمس کنید.</string>
     <string name="skipped_reason_not_always_update">به دلیل این که این مجموعه نیازی به به روز رسانی نداشت رد شد</string>
     <string name="skipped_reason_not_caught_up">به دلیل وجود چپتر های خوانده نشده رد شد</string>
     <string name="skipped_reason_not_started">به دلیل این که هیچ چپتری خوانده نشده بود رد شد</string>
     <string name="notification_update_error">%1$d بروز رسانی ناموفق</string>
     <string name="pref_relative_format_summary">\"%1$s\" به جای \"%2$s\"</string>
-    <string name="pref_library_columns_per_row">%d در هر ردیف</string>
     <string name="pref_page_rotate">صفحات عریض را بچرخان تا جا شوند</string>
     <string name="popular">محبوب</string>
     <string name="pref_chapter_swipe_end">حرکت کشیدن به راست</string>
@@ -631,7 +626,6 @@
     <string name="onboarding_guides_returning_user">نصب مجدد %s؟</string>
     <string name="pref_relative_format">زمان بندی های نسبی</string>
     <string name="pref_library_update_smart_update">به روز رسانی هوشمند</string>
-    <string name="pref_chapter_swipe">کشیدن قسمت</string>
     <string name="ext_revoke_trust">لغو اعتماد افزونه های ناشناخته</string>
     <string name="label_extension_repos">مخازن افزونه ها</string>
     <string name="action_add_repo">اضافه کردن مخزن</string>
@@ -649,7 +643,7 @@
     <string name="onboarding_action_finish">شروع کنید</string>
     <string name="onboarding_action_skip">پرش</string>
     <string name="ext_permission_install_apps_warning">مجوز برای نصب افزونه ها لازم است. به اینجا ضربه بزنید تا اعطا کنید.</string>
-    <string name="action_add_repo_message">به میهون مخازن اضافی اضافه کنید. این باید یک آدرس باشد که با \"index.min.json\" تمام شود.</string>
+    <string name="action_add_repo_message">به %s مخازن اضافی اضافه کنید. این باید یک آدرس باشد که با \"index.min.json\" تمام شود.</string>
     <string name="information_empty_repos">شما هیچ مخزنی برای تنظیم ندارید.</string>
     <string name="action_open_repo">مخزن منبع باز</string>
     <string name="pref_flash_page_summ">مقدار رد باقی مانده در نمایش گر های E-ink کاهش میابد</string>

@@ -252,10 +252,10 @@ private fun ColumnScope.DisplayPage(
 
         val columns by columnPreference.collectAsState()
         SliderItem(
-            label = stringResource(MR.strings.pref_library_columns),
-            max = 10,
             value = columns,
-            valueText = if (columns > 0) {
+            valueRange = 0..10,
+            label = stringResource(MR.strings.pref_library_columns),
+            valueString = if (columns > 0) {
                 columns.toString()
             } else {
                 stringResource(MR.strings.label_auto)
@@ -269,6 +269,10 @@ private fun ColumnScope.DisplayPage(
     CheckboxItem(
         label = stringResource(MR.strings.action_display_download_badge),
         pref = screenModel.libraryPreferences.downloadBadge(),
+    )
+    CheckboxItem(
+        label = stringResource(MR.strings.action_display_unread_badge),
+        pref = screenModel.libraryPreferences.unreadBadge(),
     )
     CheckboxItem(
         label = stringResource(MR.strings.action_display_local_badge),

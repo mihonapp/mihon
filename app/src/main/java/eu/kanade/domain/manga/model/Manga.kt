@@ -69,22 +69,6 @@ fun Manga.copyFrom(other: SManga): Manga {
     )
 }
 
-fun SManga.toDomainManga(sourceId: Long): Manga {
-    return Manga.create().copy(
-        url = url,
-        title = title,
-        artist = artist,
-        author = author,
-        description = description,
-        genre = getGenres(),
-        status = status.toLong(),
-        thumbnailUrl = thumbnail_url,
-        updateStrategy = update_strategy,
-        initialized = initialized,
-        source = sourceId,
-    )
-}
-
 fun Manga.hasCustomCover(coverCache: CoverCache = Injekt.get()): Boolean {
     return coverCache.getCustomCoverFile(id).exists()
 }

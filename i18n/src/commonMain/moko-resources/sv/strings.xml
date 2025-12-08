@@ -70,7 +70,7 @@
     <string name="pref_category_tracking">Spårning</string>
     <string name="pref_category_advanced">Avancerat</string>
     <string name="pref_category_about">Om appen</string>
-    <string name="pref_library_columns">Rutnätets storlek</string>
+    <string name="pref_library_columns">Objekt per rad</string>
     <string name="portrait">Porträtt</string>
     <string name="landscape">Landskap</string>
     <string name="pref_library_update_interval">Automatiska uppdateringar</string>
@@ -139,10 +139,10 @@
     <string name="rotation_free">Upplåst</string>
     <string name="rotation_force_portrait">Låst porträtt</string>
     <string name="rotation_force_landscape">Låst liggande</string>
-    <string name="color_filter_r_value">R</string>
-    <string name="color_filter_g_value">G</string>
-    <string name="color_filter_b_value">B</string>
-    <string name="color_filter_a_value">A</string>
+    <string name="color_filter_r_value">Röd</string>
+    <string name="color_filter_g_value">Grön</string>
+    <string name="color_filter_b_value">Blå</string>
+    <string name="color_filter_a_value">Transparens</string>
     <string name="pref_remove_after_marked_as_read">Efter manuellt markerad som läst</string>
     <string name="pref_remove_after_read">Ta bort automatiskt efter läsning</string>
     <string name="disabled">Inaktiverad</string>
@@ -171,7 +171,6 @@
     <string name="cookies_cleared">Cookies rensade</string>
     <string name="pref_clear_database">Rensa databas</string>
     <string name="pref_clear_database_summary">Ta bort historik för inlägg som inte finns i ditt bibliotek</string>
-    <string name="clear_database_confirmation">Är du säker på det? Lästa kapitel och framsteg för poster som inte finns i biblioteket kommer att gå förlorade</string>
     <string name="clear_database_completed">Inlägg raderade</string>
     <string name="version">Version</string>
     <string name="pref_enable_acra">Skicka kraschrapporter</string>
@@ -357,7 +356,7 @@
     <string name="restore_in_progress">Återställningen pågår redan</string>
     <string name="creating_backup_error">Säkerhetskopiering misslyckades</string>
     <string name="backup_in_progress">Säkerhetskopiering pågår redan</string>
-    <string name="restore_duration">%02d minuter, %02d sekunder</string>
+    <string name="restore_duration">%1$02d minuter, %2$02d sekunder</string>
     <string name="label_downloaded_only">Endast nedladdat</string>
     <string name="downloaded_only_summary">Filtrerar alla poster i ditt bibliotek</string>
     <string name="viewer">Läsläge</string>
@@ -542,7 +541,7 @@
     <string name="action_display_language_badge">Språk</string>
     <string name="connected_to_wifi">Bara över Wi-Fi</string>
     <string name="notification_size_warning">Stora uppdateringar skadar källor och kan leda till långsammare uppdateringar samt en ökad batterianvändning. Tryck för att få veta mer.</string>
-    <string name="download_queue_size_warning">Varning: stora massnerladdningar kan leda till att källor blir långsamma och/eller blockerar Mihon. Tryck för att få veta mer.</string>
+    <string name="download_queue_size_warning">Varning: stora massnerladdningar kan leda till att källor blir långsamma och/eller blockerar %s. Tryck för att få veta mer.</string>
     <string name="update_72hour">Var 3:e dag</string>
     <string name="ext_update_all">Uppdatera alla</string>
     <string name="channel_app_updates">Appuppdateringar</string>
@@ -571,7 +570,6 @@
     <string name="action_move_to_top_all_for_series">Flytta serien till toppen</string>
     <string name="disabled_nav">Inaktiverad</string>
     <string name="error_saving_picture">Fel vid lagring av bild</string>
-    <string name="update_check_fdroid_migration_info">En ny version finns tillgänglig i de officiella utgåvorna. Tryck på för att lära dig hur du flyttar från inofficiella F-Droid-versioner.</string>
     <string name="empty_backup_error">Inga biblioteksposter att säkerhetskopiera</string>
     <string name="update_check_open">Öppna på GitHub</string>
     <string name="pref_clear_webview_data">Rensa data från WebView</string>
@@ -652,7 +650,7 @@
     <string name="action_display_show_continue_reading_button">Fortsätt läsa knapp</string>
     <string name="action_not_now">Inte nu</string>
     <string name="action_open_random_manga">Öppna en slumpmässig manga</string>
-    <string name="pref_invalidate_download_cache">Gör nedladdningsindexet ogiltigt</string>
+    <string name="pref_invalidate_download_cache">Omindexera nedladdningar</string>
     <string name="pref_invalidate_download_cache_summary">Tvinga appen att läsa in nedladdade kapitel på nytt</string>
     <string name="fdroid_warning">F-Droid-versioner stöds inte officiellt.
 \nTryck för att få veta mer.</string>
@@ -671,9 +669,6 @@
     <string name="seconds_short">%ds</string>
     <string name="label_used">Använd</string>
     <string name="not_applicable">N/A</string>
-    <string name="confirm_add_duplicate_manga">Du har en post i ditt bibliotek med samma namn.
-\n
-\nVill du fortfarande fortsätta?</string>
     <string name="track_remove_date_conf_title">Ta bort datum?</string>
     <string name="label_titles_section">Inlägg</string>
     <string name="label_titles_in_global_update">I global uppdatering</string>
@@ -701,12 +696,10 @@
     <string name="manga_display_modified_interval_title">Ställ in för att uppdatera varje</string>
     <string name="has_results">Har resultat</string>
     <string name="label_completed_titles">Avslutade inlägg</string>
-    <string name="pref_library_columns_per_row">%d per rad</string>
     <string name="library_sync_complete">Bibliotekssynkronisering slutförd</string>
     <string name="download_cache_invalidated">Index för nedladdningar ogiltigt</string>
     <string name="label_overview_section">Översikt</string>
     <string name="delete_downloaded">Radera nedladdat</string>
-    <string name="pref_chapter_swipe">Kapitel svepning</string>
     <string name="pref_chapter_swipe_end">Svep till höger åtgärd</string>
     <string name="pref_chapter_swipe_start">Svep till vänster åtgärd</string>
     <string name="label_read_duration">Lästid</string>
@@ -722,9 +715,7 @@
     <string name="exception_unknown_host">Kunde inte nå %s</string>
     <string name="unlock_app_title">Lås upp %s</string>
     <string name="action_move_to_bottom_all_for_series">Flytta serien till botten</string>
-    <string name="action_sort_category">Sortera kategorier</string>
     <string name="notification_updating_progress">Uppdaterar biblioteket... (%s)</string>
-    <string name="sort_category_confirmation">Vill du sortera kategorierna i alfabetisk ordning?</string>
     <string name="source_settings">Inställningar för källa</string>
     <string name="app_settings">Appinställningar</string>
     <string name="pref_relative_format">Relativa tidsstämplar</string>
@@ -787,7 +778,7 @@
     <string name="information_empty_repos">Du har inga förråd inställda.</string>
     <string name="action_add_repo">Lägg till förråd</string>
     <string name="label_add_repo_input">Förråd URL</string>
-    <string name="action_add_repo_message">Lägg till ytterliga förråd till Mihon. Detta ska vara en URL som slutar med \"index.min.json\".</string>
+    <string name="action_add_repo_message">Lägg till ytterliga förråd till %s. Detta ska vara en URL som slutar med \"index.min.json\".</string>
     <string name="error_repo_exists">Detta förråd existerar redan!</string>
     <string name="action_delete_repo">Ta bort förråd</string>
     <string name="invalid_repo_name">Ogiltig förråds URL</string>
@@ -801,7 +792,6 @@
     <string name="label_upcoming">Kommande</string>
     <string name="upcoming_calendar_prev">Föregående månad</string>
     <string name="upcoming_calendar_next">Nästa månad</string>
-    <string name="action_migrate_duplicate">Migrera existerande post</string>
     <string name="action_replace_repo_title">Signeringsnyckel-fingeravtryck finns redan</string>
     <string name="action_replace_repo_message">Förrådet %1$s har samma Signering av nyckelfingeravtryck som %2$s.
 \nOm detta förväntas kommer %2$s att ersättas, annars kontakta den förråds-ansvarige.</string>
@@ -820,4 +810,34 @@
     <string name="invalid_backup_file_json">JSON säkerhetskopering stöds inte</string>
     <string name="extensionRepo_settings">Tilläggsförråd</string>
     <string name="action_copy_link">Kopiera länk</string>
+    <string name="action_sort_random">Slumpmässigt</string>
+    <string name="onboarding_permission_crashlytics">Skicka kraschloggar</string>
+    <string name="onboarding_permission_crashlytics_description">Skicka anonymiserade kraschloggar till utvecklarna.</string>
+    <string name="onboarding_permission_analytics_description">Skicka anonymiserade användningsdata för att förbättra appens funktioner.</string>
+    <string name="pref_security">Säkerhet</string>
+    <string name="add_repo_confirmation">Vill du verkligen lägga till förrådet \"%s\"?</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Om läsaren laddar en tom bild, minska stegvis tröskelvärdet.\nVal: %s</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Påverkar prestandan. Aktivera endast om minskning av bitmapströskeln inte fixar problem gällande tomma bilder</string>
+    <string name="pref_auto_update_manga_on_mark_read">Uppdatera läsförlopp vid markering som läst</string>
+    <string name="ext_remove">Ta bort</string>
+    <string name="ext_confirm_remove">Ta bort tillägg?</string>
+    <string name="remove_private_extension_message">Vill du verkligen ta bort tillägget \"%s\"?</string>
+    <string name="pref_hardware_bitmap_threshold_default">Standard (%d)</string>
+    <string name="onboarding_permission_analytics">Tillåt insamling av användningsdata</string>
+    <string name="pref_firebase">Användningsdata och kraschloggar</string>
+    <string name="non_library_settings">Alla färdiglästa artiklar</string>
+    <string name="pref_incognito_mode_extension_summary">Pausa tilläggets läshistorik</string>
+    <string name="trackers_updated_summary">Spårare har uppdaterats till kapitel %d</string>
+    <string name="firebase_summary">Att skicka kraschloggar och användningsdata tillåter oss att identifiera och korrigera fel, förbättra prestanda samt göra framtida uppdateringar mer relevanta till dina behov</string>
+    <string name="confirm_tracker_update">Uppdatera spårare till kapitel %d?</string>
+    <string name="pref_hardware_bitmap_threshold">Anpassad hårdvarubitmapströskel</string>
+    <string name="action_toggle_private_off">Spåra offentligt</string>
+    <string name="theme_monochrome">Monokrom</string>
+    <string name="export">Exportera</string>
+    <string name="library_exported">Bibliotek Exporterat</string>
+    <string name="library_list">Bibliotekslista</string>
+    <string name="author">Författare</string>
+    <string name="artist">Tecknare</string>
+    <string name="tracked_privately">Spåras privat</string>
+    <string name="action_toggle_private_on">Spåra privat</string>
 </resources>
