@@ -35,8 +35,9 @@ import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.ChapterListDisplaySwitch
+import tachiyomi.presentation.core.components.HeadingItem
 import tachiyomi.presentation.core.components.LabeledCheckbox
-import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.RadioItem
 import tachiyomi.presentation.core.components.SortItem
 import tachiyomi.presentation.core.components.TriStateItem
@@ -222,6 +223,7 @@ private fun ColumnScope.DisplayPage(
     expandChapterTitles: Boolean,
     onExpandChapterTitlesChanged: (Boolean) -> Unit,
 ) {
+    HeadingItem(MR.strings.action_display_mode)
     listOf(
         MR.strings.show_title to Manga.CHAPTER_DISPLAY_NAME,
         MR.strings.show_chapter_number to Manga.CHAPTER_DISPLAY_NUMBER,
@@ -233,7 +235,7 @@ private fun ColumnScope.DisplayPage(
         )
     }
 
-    CheckboxItem(
+    ChapterListDisplaySwitch(
         label = stringResource(MR.strings.expand_chapter_titles),
         checked = expandChapterTitles,
         onClick = { onExpandChapterTitlesChanged(!expandChapterTitles) },
