@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.data.track
 
 import androidx.annotation.CallSuper
-import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.data.database.models.Track
@@ -23,9 +22,6 @@ interface Tracker {
     val supportsReadingDates: Boolean
 
     val supportsPrivateTracking: Boolean
-
-    @ColorInt
-    fun getLogoColor(): Int
 
     @DrawableRes
     fun getLogo(): Int

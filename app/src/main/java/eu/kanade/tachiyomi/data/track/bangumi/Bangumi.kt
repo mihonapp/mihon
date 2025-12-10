@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.track.bangumi
 
-import android.graphics.Color
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
@@ -79,9 +78,7 @@ class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
         return track
     }
 
-    override fun getLogo() = R.drawable.ic_tracker_bangumi
-
-    override fun getLogoColor() = Color.rgb(240, 145, 153)
+    override fun getLogo() = R.drawable.brand_bangumi
 
     override fun getStatusList(): List<Long> {
         return listOf(READING, COMPLETED, ON_HOLD, DROPPED, PLAN_TO_READ)
