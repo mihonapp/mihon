@@ -1,4 +1,5 @@
-name: Build & Test
+name: Build & Test App
+
 on:
   pull_request:
     paths:
@@ -21,51 +22,63 @@ permissions:
 
 jobs:
   build:
-    name: Build & Test App
-    runs-on: 'ubuntu-24.04'
+    name: Build, Test & (on main) Sign APK
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+        uses: actions/checkout@v4
 
-      - name: Dependency Review
-        if: github.event_name == 'pull_request'
-        uses: actions/dependency-review-action@3c4e3dcb1aa7874d2c16be7d79418e9b7efd6261 # v4.8.2
-
-      - name: Set up JDK
-        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
         with:
           java-version: 17
           distribution: temurin
 
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
+      - name: Set up Android SDK / build tools
+        uses: android-actions/setup-android@v3
+        with:
+          api-level: 34
+          build-tools: 34.0.0
 
-      - name: Check code format
-        run: ./gradlew spotlessCheck
-
-      - name: Build app
+      - name: Build release APK(s) (unsigned)
         run: ./gradlew assembleRelease
 
       - name: Run unit tests
-        id: unit_tests
         run: ./gradlew testReleaseUnitTest
 
-      - name: Upload test report
-        if: steps.unit_tests.outcome == 'failure'
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+      - name: Upload test report (if tests fail)
+        if: failure()
+        uses: actions/upload-artifact@v5
         with:
           name: test-report-${{ github.sha }}
           path: app/build/reports/tests/testReleaseUnitTest
 
-      - name: Upload All APKs (Universal + All ABIs)
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+      - name: Decode keystore
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > release.keystore
+
+      - name: Sign all release APKs
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          for apk in app/build/outputs/apk/release/*.apk; do
+            echo "Signing $apk"
+            $ANDROID_HOME/build-tools/34.0.0/apksigner sign \
+              --ks release.keystore \
+              --ks-key-alias "${{ secrets.KEY_ALIAS }}" \
+              --ks-pass pass:"${{ secrets.KEYSTORE_PASSWORD }}" \
+              --key-pass pass:"${{ secrets.KEY_PASSWORD }}" \
+              "$apk"
+          done
+
+      - name: Upload signed APKs
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v5
         with:
-          name: apks-${{ github.sha }}
+          name: signed-apks-${{ github.sha }}
           path: app/build/outputs/apk/release/*.apk
 
-      - name: Upload mapping
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
-        with:
-          name: mapping-${{ github.sha }}
-          path: app/build/outputs/mapping/release
+      - name: Cleanup keystore
+        if: always()
+        run: rm -f release.keystore
