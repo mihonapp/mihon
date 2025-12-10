@@ -48,9 +48,8 @@ internal object ExtensionLoader {
     }
 
     private val basePreferences: BasePreferences by injectLazy()
-    private val safeMode by lazy {
-        basePreferences.safeMode().get()
-    }
+    private val safeMode: Boolean
+        get() = basePreferences.safeMode().get()
 
     private const val EXTENSION_FEATURE = "tachiyomi.extension"
     private const val METADATA_SOURCE_CLASS = "tachiyomi.extension.class"
