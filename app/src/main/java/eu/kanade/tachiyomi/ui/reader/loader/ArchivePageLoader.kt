@@ -14,10 +14,20 @@ internal class ArchivePageLoader(private val reader: ArchiveReader) : PageLoader
 
     override suspend fun getPages(): List<ReaderPage> = reader.useEntries { entries ->
         entries
-            .filter { it.isFile && ImageUtil.isImage(it.name) { reader.getInputStream(it.name)!! } }
+            .filter { entry -> 
+                entry.isFile && (
+                    entry.name.endsWith(".html", ignoreCase = true) ||
+                    ImageUtil.isImage(entry.name) { reader.getInputStream(entry.name)!! }
+                )
+            }
             .sortedWith { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) }
             .mapIndexed { i, entry ->
-                ReaderPage(i).apply {
+                val isHtml = entry.name.endsWith(".html", ignoreCase = true)
+                val textContent = if (isHtml) {
+                    reader.getInputStream(entry.name)?.use { it.bufferedReader().readText() }
+                } else null
+                
+                ReaderPage(i, text = textContent).apply {
                     stream = { reader.getInputStream(entry.name)!! }
                     status = Page.State.Ready
                 }

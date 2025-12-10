@@ -105,10 +105,18 @@ internal fun LazyListScope.updatesUiItems(
                     readProgress = updatesItem.update.lastPageRead
                         .takeIf { !updatesItem.update.read && it > 0L }
                         ?.let {
-                            stringResource(
-                                MR.strings.chapter_progress,
-                                it + 1,
-                            )
+                            if (updatesItem.isNovel) {
+                                // For novels, lastPageRead stores progress percentage (0-100)
+                                stringResource(
+                                    MR.strings.chapter_progress_novel,
+                                    it.toInt(),
+                                )
+                            } else {
+                                stringResource(
+                                    MR.strings.chapter_progress,
+                                    it + 1,
+                                )
+                            }
                         },
                     onLongClick = {
                         onUpdateSelected(updatesItem, !updatesItem.selected, true, true)

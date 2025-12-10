@@ -43,9 +43,16 @@ import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.updates.interactor.GetUpdates
 import tachiyomi.domain.updates.model.UpdatesWithRelations
+import eu.kanade.tachiyomi.source.isNovelSource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.ZonedDateTime
+
+enum class UpdatesFilter {
+    ALL,
+    MANGA,
+    NOVELS;
+}
 
 class UpdatesScreenModel(
     private val sourceManager: SourceManager = Injekt.get(),
@@ -101,7 +108,21 @@ class UpdatesScreenModel(
     }
 
     private fun List<UpdatesWithRelations>.toUpdateItems(): PersistentList<UpdatesItem> {
+        val currentFilter = state.value.filter
         return this
+            .filter { update ->
+                when (currentFilter) {
+                    UpdatesFilter.ALL -> true
+                    UpdatesFilter.MANGA -> {
+                        val source = sourceManager.getOrStub(update.sourceId)
+                        !source.isNovelSource()
+                    }
+                    UpdatesFilter.NOVELS -> {
+                        val source = sourceManager.getOrStub(update.sourceId)
+                        source.isNovelSource()
+                    }
+                }
+            }
             .map { update ->
                 val activeDownload = downloadManager.getQueuedDownloadOrNull(update.chapterId)
                 val downloaded = downloadManager.isChapterDownloaded(
@@ -116,11 +137,13 @@ class UpdatesScreenModel(
                     downloaded -> Download.State.DOWNLOADED
                     else -> Download.State.NOT_DOWNLOADED
                 }
+                val source = sourceManager.getOrStub(update.sourceId)
                 UpdatesItem(
                     update = update,
                     downloadStateProvider = { downloadState },
                     downloadProgressProvider = { activeDownload?.progress ?: 0 },
                     selected = update.chapterId in selectedChapterIds,
+                    isNovel = source.isNovelSource(),
                 )
             }
             .toPersistentList()
@@ -366,6 +389,7 @@ class UpdatesScreenModel(
         val isLoading: Boolean = true,
         val items: PersistentList<UpdatesItem> = persistentListOf(),
         val dialog: Dialog? = null,
+        val filter: UpdatesFilter = UpdatesFilter.ALL,
     ) {
         val selected = items.filter { it.selected }
         val selectionMode = selected.isNotEmpty()
@@ -385,6 +409,10 @@ class UpdatesScreenModel(
         }
     }
 
+    fun setFilter(filter: UpdatesFilter) {
+        mutableState.update { it.copy(filter = filter) }
+    }
+
     sealed interface Dialog {
         data class DeleteConfirmation(val toDelete: List<UpdatesItem>) : Dialog
     }
@@ -401,4 +429,5 @@ data class UpdatesItem(
     val downloadStateProvider: () -> Download.State,
     val downloadProgressProvider: () -> Int,
     val selected: Boolean = false,
+    val isNovel: Boolean = false,
 )

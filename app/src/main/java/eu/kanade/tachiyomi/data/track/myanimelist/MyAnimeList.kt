@@ -133,6 +133,22 @@ class MyAnimeList(id: Long) : BaseTracker(id, "MyAnimeList"), DeletableTracker {
         return api.search(query)
     }
 
+    override suspend fun searchNovels(query: String): List<TrackSearch> {
+        if (query.startsWith(SEARCH_ID_PREFIX)) {
+            query.substringAfter(SEARCH_ID_PREFIX).toIntOrNull()?.let { id ->
+                return listOf(api.getMangaDetails(id))
+            }
+        }
+
+        if (query.startsWith(SEARCH_LIST_PREFIX)) {
+            query.substringAfter(SEARCH_LIST_PREFIX).let { title ->
+                return api.findListItems(title)
+            }
+        }
+
+        return api.searchNovels(query)
+    }
+
     override suspend fun refresh(track: Track): Track {
         return api.findListItem(track) ?: add(track)
     }

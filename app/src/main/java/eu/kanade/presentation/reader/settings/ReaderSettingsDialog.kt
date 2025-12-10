@@ -25,6 +25,30 @@ fun ReaderSettingsDialog(
     onShowMenus: () -> Unit,
     onHideMenus: () -> Unit,
     screenModel: ReaderSettingsScreenModel,
+    isNovelMode: Boolean = false,
+) {
+    if (isNovelMode) {
+        NovelReaderSettingsDialog(
+            onDismissRequest = onDismissRequest,
+            onShowMenus = onShowMenus,
+            screenModel = screenModel,
+        )
+    } else {
+        MangaReaderSettingsDialog(
+            onDismissRequest = onDismissRequest,
+            onShowMenus = onShowMenus,
+            onHideMenus = onHideMenus,
+            screenModel = screenModel,
+        )
+    }
+}
+
+@Composable
+private fun MangaReaderSettingsDialog(
+    onDismissRequest: () -> Unit,
+    onShowMenus: () -> Unit,
+    onHideMenus: () -> Unit,
+    screenModel: ReaderSettingsScreenModel,
 ) {
     val tabTitles = persistentListOf(
         stringResource(MR.strings.pref_category_reading_mode),
@@ -65,6 +89,33 @@ fun ReaderSettingsDialog(
                     1 -> GeneralPage(screenModel)
                     2 -> ColorFilterPage(screenModel)
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun NovelReaderSettingsDialog(
+    onDismissRequest: () -> Unit,
+    onShowMenus: () -> Unit,
+    screenModel: ReaderSettingsScreenModel,
+) {
+    BoxWithConstraints {
+        TabbedDialog(
+            modifier = Modifier.heightIn(max = maxHeight * 0.75f),
+            onDismissRequest = {
+                onDismissRequest()
+                onShowMenus()
+            },
+            tabTitles = persistentListOf(stringResource(MR.strings.pref_category_novel)),
+            pagerState = rememberPagerState { 1 },
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(vertical = TabbedDialogPaddings.Vertical)
+                    .verticalScroll(rememberScrollState()),
+            ) {
+                NovelPage(screenModel)
             }
         }
     }

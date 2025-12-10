@@ -2,18 +2,41 @@ package eu.kanade.tachiyomi.source.model
 
 import android.net.Uri
 import eu.kanade.tachiyomi.network.ProgressListener
+import kotlin.jvm.internal.DefaultConstructorMarker
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-open class Page(
+open class Page @JvmOverloads constructor(
     val index: Int,
     val url: String = "",
     var imageUrl: String? = null,
     @Transient var uri: Uri? = null, // Deprecated but can't be deleted due to extensions
+    var text: String? = null, // Added for Novel support - MUST be last for binary compatibility
 ) : ProgressListener {
+
+    /**
+     * Binary compatibility constructor that matches extensions compiled with 4-param Page.
+     * Extensions call the synthetic constructor: Page(index, url, imageUrl, uri, defaults, marker)
+     * This provides that exact signature.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(
+        index: Int,
+        url: String?,
+        imageUrl: String?,
+        uri: Uri?,
+        defaults: Int,
+        marker: DefaultConstructorMarker?
+    ) : this(
+        index = index,
+        url = if (defaults and 0x1 != 0) "" else url ?: "",
+        imageUrl = if (defaults and 0x2 != 0) null else imageUrl,
+        uri = if (defaults and 0x4 != 0) null else uri,
+        text = null // Always null for extensions compiled without text support
+    )
 
     val number: Int
         get() = index + 1

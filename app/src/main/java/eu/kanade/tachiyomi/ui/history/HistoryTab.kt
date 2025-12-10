@@ -23,6 +23,7 @@ import eu.kanade.presentation.history.components.HistoryDeleteDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.util.Tab
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.ui.history.HistoryFilter
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
@@ -48,7 +49,7 @@ data object HistoryTab : Tab {
             val isSelected = LocalTabNavigator.current.current.key == key
             val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_history_enter)
             return TabOptions(
-                index = 2u,
+                index = 3u,
                 title = stringResource(MR.strings.label_recent_manga),
                 icon = rememberAnimatedVectorPainter(image, isSelected),
             )
@@ -73,6 +74,7 @@ data object HistoryTab : Tab {
             onClickResume = screenModel::getNextChapterForManga,
             onDialogChange = screenModel::setDialog,
             onClickFavorite = screenModel::addFavorite,
+            onFilterSelected = screenModel::setFilter,
         )
 
         val onDismissRequest = { screenModel.setDialog(null) }

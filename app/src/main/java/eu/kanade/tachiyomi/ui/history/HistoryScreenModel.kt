@@ -8,6 +8,7 @@ import eu.kanade.core.util.insertSeparators
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.presentation.history.HistoryUiModel
+import eu.kanade.tachiyomi.source.isNovelSource
 import eu.kanade.tachiyomi.util.lang.toLocalDate
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -45,6 +46,8 @@ import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
+enum class HistoryFilter { ALL, MANGA, NOVELS }
+
 class HistoryScreenModel(
     private val addTracks: AddTracks = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
@@ -65,19 +68,30 @@ class HistoryScreenModel(
 
     init {
         screenModelScope.launch {
-            state.map { it.searchQuery }
+            state.map { it.searchQuery to it.filter }
                 .distinctUntilChanged()
-                .flatMapLatest { query ->
+                .flatMapLatest { (query, filter) ->
                     getHistory.subscribe(query ?: "")
                         .distinctUntilChanged()
                         .catch { error ->
                             logcat(LogPriority.ERROR, error)
                             _events.send(Event.InternalError)
                         }
-                        .map { it.toHistoryUiModels() }
+                        .map { histories -> histories.filterBy(filter).toHistoryUiModels() }
                         .flowOn(Dispatchers.IO)
                 }
                 .collect { newList -> mutableState.update { it.copy(list = newList) } }
+        }
+    }
+
+    private fun List<HistoryWithRelations>.filterBy(filter: HistoryFilter): List<HistoryWithRelations> {
+        return filter { history ->
+            val isNovel = sourceManager.getOrStub(history.coverData.sourceId).isNovelSource()
+            when (filter) {
+                HistoryFilter.ALL -> true
+                HistoryFilter.MANGA -> !isNovel
+                HistoryFilter.NOVELS -> isNovel
+            }
         }
     }
 
@@ -131,6 +145,10 @@ class HistoryScreenModel(
 
     fun updateSearchQuery(query: String?) {
         mutableState.update { it.copy(searchQuery = query) }
+    }
+
+    fun setFilter(filter: HistoryFilter) {
+        mutableState.update { it.copy(filter = filter) }
     }
 
     fun setDialog(dialog: Dialog?) {
@@ -241,6 +259,7 @@ class HistoryScreenModel(
     data class State(
         val searchQuery: String? = null,
         val list: List<HistoryUiModel>? = null,
+        val filter: HistoryFilter = HistoryFilter.ALL,
         val dialog: Dialog? = null,
     )
 

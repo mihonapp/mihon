@@ -2,6 +2,8 @@ package eu.kanade.tachiyomi.ui.reader.loader
 
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.database.models.toDomainChapter
+import eu.kanade.tachiyomi.source.fetchNovelPageText
+import eu.kanade.tachiyomi.source.isNovelSource
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
@@ -72,7 +74,7 @@ internal class HttpPageLoader(
         }
         return pages.mapIndexed { index, page ->
             // Don't trust sources and use our own indexing
-            ReaderPage(index, page.url, page.imageUrl)
+            ReaderPage(index, page.url, page.imageUrl, page.text)
         }
     }
 
@@ -164,16 +166,45 @@ internal class HttpPageLoader(
     /**
      * Loads the page, retrieving the image URL and downloading the image if necessary.
      * Downloaded images are stored in the chapter cache.
+     * For novel sources, fetches the text content instead.
      *
      * @param page the page whose source image has to be downloaded.
      */
     private suspend fun internalLoadPage(page: ReaderPage) {
         try {
+            // Check if this is a novel source
+            if (source.isNovelSource()) {
+                // For novels, fetch text content instead of images
+                if (page.text.isNullOrEmpty()) {
+                    page.status = Page.State.LoadPage
+                    page.text = source.fetchNovelPageText(page)
+                }
+                page.status = Page.State.Ready
+                return
+            }
+
+            // For manga sources, handle images
             if (page.imageUrl.isNullOrEmpty()) {
                 page.status = Page.State.LoadPage
-                page.imageUrl = source.getImageUrl(page)
+                // Need to fetch imageUrl from page.url
+                // Some sources set imageUrl directly in pageListParse, others need getImageUrl
+                if (page.url.isNotBlank()) {
+                    page.imageUrl = source.getImageUrl(page)
+                } else {
+                    // Page has no URL - this may be a novel source being treated as manga
+                    // or a source that returns empty pages. Mark as error rather than crashing.
+                    throw IllegalStateException(
+                        "Page ${page.index} has no URL and no imageUrl. " +
+                            "This may indicate a novel source being used incorrectly or an issue with the source."
+                    )
+                }
             }
             val imageUrl = page.imageUrl!!
+            
+            // Validate the image URL
+            if (imageUrl.isBlank()) {
+                throw IllegalStateException("Page ${page.index} has an empty image URL")
+            }
 
             if (!chapterCache.isImageInCache(imageUrl)) {
                 page.status = Page.State.DownloadImage

@@ -55,6 +55,12 @@ interface Tracker {
 
     suspend fun search(query: String): List<TrackSearch>
 
+    /**
+     * Search for novels specifically. By default, falls back to regular search.
+     * Trackers that support novel filtering (like AniList) should override this.
+     */
+    suspend fun searchNovels(query: String): List<TrackSearch> = search(query)
+
     suspend fun refresh(track: Track): Track
 
     suspend fun login(username: String, password: String)

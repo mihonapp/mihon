@@ -30,7 +30,7 @@ fun Screen.sourcesTab(): TabContent {
     val state by screenModel.state.collectAsState()
 
     return TabContent(
-        titleRes = MR.strings.label_sources,
+        titleRes = MR.strings.label_manga_sources,
         actions = persistentListOf(
             AppBar.Action(
                 title = stringResource(MR.strings.action_global_search),

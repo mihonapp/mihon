@@ -53,6 +53,7 @@ import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import eu.kanade.tachiyomi.source.isNovelSource
 import eu.kanade.tachiyomi.util.lang.convertEpochMillisZone
 import eu.kanade.tachiyomi.util.lang.toLocalDate
 import eu.kanade.tachiyomi.util.system.copyToClipboard
@@ -157,6 +158,7 @@ data class TrackInfoDialogHomeScreen(
                             initialQuery = it.track?.title ?: mangaTitle,
                             currentUrl = it.track?.remoteUrl,
                             serviceId = it.tracker.id,
+                            sourceId = sourceId,
                         ),
                     )
                 }
@@ -255,8 +257,17 @@ data class TrackInfoDialogHomeScreen(
         }
 
         private fun List<Track>.mapToTrackItem(): List<TrackItem> {
-            val loggedInTrackers = Injekt.get<TrackerManager>().loggedInTrackers()
+            val trackerManager = Injekt.get<TrackerManager>()
             val source = Injekt.get<SourceManager>().getOrStub(sourceId)
+            val isNovel = source.isNovelSource()
+            
+            // Get appropriate trackers based on source type
+            val loggedInTrackers = if (isNovel) {
+                trackerManager.loggedInNovelTrackers()
+            } else {
+                trackerManager.loggedInMangaTrackers()
+            }
+            
             return loggedInTrackers
                 // Map to TrackItem
                 .map { service -> TrackItem(find { it.trackerId == service.id }, service) }
@@ -647,6 +658,7 @@ data class TrackerSearchScreen(
     private val initialQuery: String,
     private val currentUrl: String?,
     private val serviceId: Long,
+    private val sourceId: Long,
 ) : Screen() {
 
     @Composable
@@ -658,6 +670,7 @@ data class TrackerSearchScreen(
                 currentUrl = currentUrl,
                 initialQuery = initialQuery,
                 tracker = Injekt.get<TrackerManager>().get(serviceId)!!,
+                sourceId = sourceId,
             )
         }
 
@@ -686,9 +699,14 @@ data class TrackerSearchScreen(
         private val currentUrl: String? = null,
         initialQuery: String,
         private val tracker: Tracker,
+        private val sourceId: Long,
     ) : StateScreenModel<Model.State>(State()) {
 
         val supportsPrivateTracking = tracker.supportsPrivateTracking
+        
+        private val isNovelSource: Boolean by lazy {
+            Injekt.get<SourceManager>().getOrStub(sourceId).isNovelSource()
+        }
 
         init {
             // Run search on first launch
@@ -704,7 +722,12 @@ data class TrackerSearchScreen(
 
                 val result = withIOContext {
                     try {
-                        val results = tracker.search(query)
+                        // Use searchNovels for novel sources, regular search for manga
+                        val results = if (isNovelSource) {
+                            tracker.searchNovels(query)
+                        } else {
+                            tracker.search(query)
+                        }
                         Result.success(results)
                     } catch (e: Throwable) {
                         Result.failure(e)

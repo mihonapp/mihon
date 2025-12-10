@@ -12,6 +12,7 @@ CREATE TABLE mangas(
     description TEXT,
     genre TEXT AS List<String>,
     title TEXT NOT NULL,
+    alternative_titles TEXT AS List<String>,
     status INTEGER NOT NULL,
     thumbnail_url TEXT,
     favorite INTEGER AS Boolean NOT NULL,
@@ -182,8 +183,8 @@ AND (
 );
 
 insert:
-INSERT INTO mangas(source, url, artist, author, description, genre, title, status, thumbnail_url, favorite, last_update, next_update, initialized, viewer, chapter_flags, cover_last_modified, date_added, update_strategy, calculate_interval, last_modified_at, version, notes)
-VALUES (:source, :url, :artist, :author, :description, :genre, :title, :status, :thumbnailUrl, :favorite, :lastUpdate, :nextUpdate, :initialized, :viewerFlags, :chapterFlags, :coverLastModified, :dateAdded, :updateStrategy, :calculateInterval, 0, :version, :notes);
+INSERT INTO mangas(source, url, artist, author, description, genre, title, alternative_titles, status, thumbnail_url, favorite, last_update, next_update, initialized, viewer, chapter_flags, cover_last_modified, date_added, update_strategy, calculate_interval, last_modified_at, version, notes)
+VALUES (:source, :url, :artist, :author, :description, :genre, :title, :alternativeTitles, :status, :thumbnailUrl, :favorite, :lastUpdate, :nextUpdate, :initialized, :viewerFlags, :chapterFlags, :coverLastModified, :dateAdded, :updateStrategy, :calculateInterval, 0, :version, :notes);
 
 update:
 UPDATE mangas SET
@@ -194,6 +195,7 @@ UPDATE mangas SET
     description = coalesce(:description, description),
     genre = coalesce(:genre, genre),
     title = coalesce(:title, title),
+    alternative_titles = coalesce(:alternativeTitles, alternative_titles),
     status = coalesce(:status, status),
     thumbnail_url = coalesce(:thumbnailUrl, thumbnail_url),
     favorite = coalesce(:favorite, favorite),
@@ -217,12 +219,12 @@ SELECT last_insert_rowid();
 insertNetworkManga {
     -- Insert the manga if it doesn't exist already
     INSERT INTO mangas(
-        source, url, artist, author, description, genre, title, status, thumbnail_url, favorite,
+        source, url, artist, author, description, genre, title, alternative_titles, status, thumbnail_url, favorite,
         last_update, next_update, initialized, viewer, chapter_flags, cover_last_modified, date_added,
         update_strategy, calculate_interval, last_modified_at, version
     )
     SELECT
-        :source, :url, :artist, :author, :description, :genre, :title, :status, :thumbnailUrl, :favorite,
+        :source, :url, :artist, :author, :description, :genre, :title, :alternativeTitles, :status, :thumbnailUrl, :favorite,
         :lastUpdate, :nextUpdate, :initialized, :viewerFlags, :chapterFlags, :coverLastModified, :dateAdded,
         :updateStrategy, :calculateInterval, 0, :version
     WHERE NOT EXISTS(SELECT 0 FROM mangas WHERE source = :source AND url = :url);
@@ -236,6 +238,7 @@ insertNetworkManga {
         artist = CASE WHEN :updateDetails THEN :artist ELSE artist END,
         description = CASE WHEN :updateDetails THEN :description ELSE description END,
         genre = CASE WHEN :updateDetails THEN :genre ELSE genre END,
+        alternative_titles = CASE WHEN :updateDetails THEN :alternativeTitles ELSE alternative_titles END,
         status = CASE WHEN :updateDetails THEN :status ELSE status END,
         update_strategy = CASE WHEN :updateDetails THEN :updateStrategy ELSE update_strategy END,
         initialized = :updateDetails

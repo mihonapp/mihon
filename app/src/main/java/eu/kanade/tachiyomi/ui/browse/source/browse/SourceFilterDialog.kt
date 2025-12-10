@@ -4,17 +4,32 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.outlined.BookmarkBorder
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import eu.kanade.domain.source.model.FilterPreset
 import eu.kanade.presentation.components.AdaptiveSheet
 import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.source.model.FilterList
@@ -37,8 +52,14 @@ fun SourceFilterDialog(
     onReset: () -> Unit,
     onFilter: () -> Unit,
     onUpdate: (FilterList) -> Unit,
+    onOpenPresets: () -> Unit,
+    @Suppress("UNUSED_PARAMETER") presets: List<FilterPreset>,
+    onSavePreset: (name: String, setAsDefault: Boolean) -> Unit,
+    @Suppress("UNUSED_PARAMETER") onLoadPreset: (Long) -> Unit,
+    @Suppress("UNUSED_PARAMETER") onDeletePreset: (Long) -> Unit,
 ) {
     val updateFilters = { onUpdate(filters) }
+    var showSaveDialog by remember { mutableStateOf(false) }
 
     AdaptiveSheet(onDismissRequest = onDismissRequest) {
         LazyColumn {
@@ -47,6 +68,7 @@ fun SourceFilterDialog(
                     modifier = Modifier
                         .background(MaterialTheme.colorScheme.background)
                         .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     TextButton(onClick = onReset) {
                         Text(
@@ -54,6 +76,22 @@ fun SourceFilterDialog(
                             style = LocalTextStyle.current.copy(
                                 color = MaterialTheme.colorScheme.primary,
                             ),
+                        )
+                    }
+
+                    // Save icon
+                    IconButton(onClick = { showSaveDialog = true }) {
+                        Icon(
+                            imageVector = Icons.Filled.Save,
+                            contentDescription = "Save preset",
+                        )
+                    }
+
+                    // Open presets modal instead of dropdown
+                    IconButton(onClick = onOpenPresets) {
+                        Icon(
+                            imageVector = Icons.Outlined.BookmarkBorder,
+                            contentDescription = "Presets",
                         )
                     }
 
@@ -73,6 +111,16 @@ fun SourceFilterDialog(
                 FilterItem(it, updateFilters)
             }
         }
+    }
+
+    if (showSaveDialog) {
+        SavePresetDialog(
+            onDismiss = { showSaveDialog = false },
+            onSave = { name, setAsDefault ->
+                onSavePreset(name, setAsDefault)
+                showSaveDialog = false
+            },
+        )
     }
 }
 
@@ -179,4 +227,58 @@ private fun TriState.toTriStateInt(): Int {
         TriState.ENABLED_IS -> Filter.TriState.STATE_INCLUDE
         TriState.ENABLED_NOT -> Filter.TriState.STATE_EXCLUDE
     }
+}
+
+@Composable
+private fun SavePresetDialog(
+    onDismiss: () -> Unit,
+    onSave: (String, Boolean) -> Unit,
+) {
+    var presetName by remember { mutableStateOf("") }
+    var setAsDefault by remember { mutableStateOf(false) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Save Filter Preset") },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = presetName,
+                    onValueChange = { presetName = it },
+                    label = { Text("Preset Name") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Checkbox(
+                        checked = setAsDefault,
+                        onCheckedChange = { setAsDefault = it },
+                    )
+                    Text(
+                        text = "Set as default preset",
+                        modifier = Modifier.padding(start = 8.dp),
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onSave(presetName, setAsDefault) },
+                enabled = presetName.isNotBlank(),
+            ) {
+                Text(stringResource(MR.strings.action_save))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(MR.strings.action_cancel))
+            }
+        },
+    )
 }

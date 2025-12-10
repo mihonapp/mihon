@@ -128,6 +128,11 @@ data class MigrateSourceSearchScreen(
                     onReset = screenModel::resetFilters,
                     onFilter = { screenModel.search(filters = state.filters) },
                     onUpdate = screenModel::setFilters,
+                    onOpenPresets = { /* Migration search doesn't support presets */ },
+                    presets = emptyList(),
+                    onSavePreset = { _, _ -> },
+                    onLoadPreset = { },
+                    onDeletePreset = { },
                 )
             }
             is BrowseSourceScreenModel.Dialog.Migrate -> {

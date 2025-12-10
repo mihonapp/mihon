@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.extension.model.LoadResult
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceFactory
+import eu.kanade.tachiyomi.source.isNovelSource
 import eu.kanade.tachiyomi.util.lang.Hash
 import eu.kanade.tachiyomi.util.storage.copyAndSetReadOnlyTo
 import eu.kanade.tachiyomi.util.system.ChildFirstPathClassLoader
@@ -50,6 +51,7 @@ internal object ExtensionLoader {
     private const val METADATA_SOURCE_CLASS = "tachiyomi.extension.class"
     private const val METADATA_SOURCE_FACTORY = "tachiyomi.extension.factory"
     private const val METADATA_NSFW = "tachiyomi.extension.nsfw"
+    private const val METADATA_NOVEL = "tachiyomi.extension.novel"
     const val LIB_VERSION_MIN = 1.4
     const val LIB_VERSION_MAX = 1.5
 
@@ -253,6 +255,7 @@ internal object ExtensionLoader {
             logcat(LogPriority.WARN) { "Package $pkgName isn't signed" }
             return LoadResult.Error
         } else if (!trustExtension.isTrusted(pkgInfo, signatures)) {
+            val isNovelExt = appInfo.metaData.getInt(METADATA_NOVEL) == 1
             val extension = Extension.Untrusted(
                 extName,
                 pkgName,
@@ -260,6 +263,7 @@ internal object ExtensionLoader {
                 versionCode,
                 libVersion,
                 signatures.last(),
+                isNovel = isNovelExt,
             )
             logcat(LogPriority.WARN) { "Extension $pkgName isn't trusted" }
             return LoadResult.Untrusted(extension)
@@ -318,6 +322,7 @@ internal object ExtensionLoader {
             libVersion = libVersion,
             lang = lang,
             isNsfw = isNsfw,
+            isNovel = sources.any { it.isNovelSource() },
             sources = sources,
             pkgFactory = appInfo.metaData.getString(METADATA_SOURCE_FACTORY),
             icon = appInfo.loadIcon(pkgManager),

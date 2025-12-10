@@ -64,7 +64,6 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.UpdateChapter
 import tachiyomi.domain.chapter.model.ChapterUpdate
-import tachiyomi.domain.chapter.service.getChapterSort
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.history.interactor.GetNextChapters
 import tachiyomi.domain.history.interactor.UpsertHistory
@@ -74,6 +73,7 @@ import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.source.local.isLocal
+import eu.kanade.tachiyomi.source.isNovelSource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.Instant
@@ -205,8 +205,23 @@ class ReaderViewModel @JvmOverloads constructor(
             else -> chapters
         }
 
-        chaptersForReader
-            .sortedWith(getChapterSort(manga, sortDescending = false))
+        // Sort chapters based on manga type and user preference
+        // For novels: use the user's preference (source order or chapter number)
+        // For manga: sort by chapter number for proper reading flow
+        val isNovel = sourceManager.getOrStub(manga.source).isNovelSource()
+        val sortedChapters = if (isNovel) {
+            val sortOrder = readerPreferences.novelChapterSortOrder().get()
+            when (sortOrder) {
+                "chapter_number" -> chaptersForReader.sortedBy { it.chapterNumber }
+                else -> chaptersForReader.sortedBy { it.sourceOrder }  // "source" - use source order
+            }
+        } else {
+            // Always sort by chapter number in ascending order for manga reader
+            // This ensures proper reading flow: Ch1 → Ch2 → Ch3
+            chaptersForReader.sortedBy { it.chapterNumber }
+        }
+        
+        sortedChapters
             .run {
                 if (readerPreferences.skipDupe().get()) {
                     removeDuplicates(selectedChapter)
@@ -384,6 +399,35 @@ class ReaderViewModel @JvmOverloads constructor(
     }
 
     /**
+     * Reloads the current chapter. If fromSource is true, it will fetch from the source,
+     * otherwise it will reload the local/downloaded version.
+     */
+    fun reloadChapter(fromSource: Boolean = false) {
+        val currChapter = state.value.viewerChapters?.currChapter ?: return
+        val loader = loader ?: return
+        
+        viewModelScope.launchIO {
+            try {
+                // Reset chapter state to force reload
+                currChapter.state = ReaderChapter.State.Wait
+                
+                // If reloading from source, we need to clear the downloaded flag temporarily
+                // This is handled in the loader based on chapter state
+                
+                loadChapter(loader, currChapter)
+                
+                // Notify the viewer to refresh
+                withUIContext {
+                    state.value.viewer?.setChapters(state.value.viewerChapters!!)
+                }
+            } catch (e: Throwable) {
+                if (e is CancellationException) throw e
+                logcat(LogPriority.ERROR, e) { "Failed to reload chapter" }
+            }
+        }
+    }
+
+    /**
      * Called when the viewers decide it's a good time to preload a [chapter] and improve the UX so
      * that the user doesn't have to wait too long to continue reading.
      */
@@ -461,6 +505,56 @@ class ReaderViewModel @JvmOverloads constructor(
         }
 
         eventChannel.trySend(Event.PageChanged)
+    }
+
+    /**
+     * Saves reading progress for novel chapters using percentage (0-100).
+     * Used by NovelViewer to save scroll position.
+     */
+    fun saveNovelProgress(page: ReaderPage, progressPercentage: Int) {
+        val selectedChapter = page.chapter
+        
+        if (incognitoMode) return
+        
+        viewModelScope.launchNonCancellable {
+            val clampedProgress = progressPercentage.coerceIn(0, 100)
+            val currentProgress = selectedChapter.chapter.last_page_read
+            
+            // Don't decrease progress (unless explicitly resetting or user scrolled back significantly)
+            // Allow small decreases (within 5%) for minor scroll adjustments
+            if (clampedProgress < currentProgress - 5 && clampedProgress > 0) {
+                logcat(LogPriority.DEBUG) { 
+                    "NovelProgress: Skipping save - new progress $clampedProgress% is less than current $currentProgress%" 
+                }
+                return@launchNonCancellable
+            }
+            
+            selectedChapter.chapter.last_page_read = clampedProgress
+            
+            // Mark as read if at the end (95% or more)
+            if (clampedProgress >= 95 && !selectedChapter.chapter.read) {
+                selectedChapter.chapter.read = true
+                updateTrackChapterRead(selectedChapter)
+                deleteChapterIfNeeded(selectedChapter)
+            }
+            
+            updateChapter.await(
+                ChapterUpdate(
+                    id = selectedChapter.chapter.id!!,
+                    read = selectedChapter.chapter.read,
+                    lastPageRead = selectedChapter.chapter.last_page_read.toLong(),
+                ),
+            )
+            
+            logcat(LogPriority.DEBUG) { "NovelProgress: Saved ${clampedProgress}% for ${selectedChapter.chapter.name}" }
+        }
+    }
+
+    /**
+     * Update the novel progress percentage in the state for UI display (e.g., slider).
+     */
+    fun updateNovelProgressPercent(progress: Int) {
+        mutableState.update { it.copy(novelProgressPercent = progress.coerceIn(0, 100)) }
     }
 
     private fun downloadNextChapters() {
@@ -670,8 +764,15 @@ class ReaderViewModel @JvmOverloads constructor(
 
     /**
      * Returns the viewer position used by this manga or the default one.
+     * For novel sources, always returns NOVEL mode.
      */
     fun getMangaReadingMode(resolveDefault: Boolean = true): Int {
+        // For novel sources, always use novel reader
+        val source = manga?.source?.let { sourceManager.getOrStub(it) }
+        if (source?.isNovelSource() == true) {
+            return ReadingMode.NOVEL.flagValue
+        }
+        
         val default = readerPreferences.defaultReadingMode().get()
         val readingMode = ReadingMode.fromPreference(manga?.readingMode?.toInt())
         return when {
@@ -957,6 +1058,10 @@ class ReaderViewModel @JvmOverloads constructor(
         val bookmarked: Boolean = false,
         val isLoadingAdjacentChapter: Boolean = false,
         val currentPage: Int = -1,
+        /**
+         * Current reading progress for novel viewer (0-100 percentage).
+         */
+        val novelProgressPercent: Int = 0,
 
         /**
          * Viewer used to display the pages (pager, webtoon, ...).

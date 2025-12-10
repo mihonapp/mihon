@@ -1,8 +1,11 @@
 package eu.kanade.presentation.library
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -11,12 +14,14 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
 import eu.kanade.tachiyomi.ui.library.LibrarySettingsScreenModel
@@ -51,6 +56,7 @@ fun LibrarySettingsDialog(
             stringResource(MR.strings.action_filter),
             stringResource(MR.strings.action_sort),
             stringResource(MR.strings.action_display),
+            "Extensions",
         ),
     ) { page ->
         Column(
@@ -67,6 +73,9 @@ fun LibrarySettingsDialog(
                     screenModel = screenModel,
                 )
                 2 -> DisplayPage(
+                    screenModel = screenModel,
+                )
+                3 -> ExtensionsPage(
                     screenModel = screenModel,
                 )
             }
@@ -287,6 +296,16 @@ private fun ColumnScope.DisplayPage(
         pref = screenModel.libraryPreferences.showContinueReadingButton(),
     )
 
+    val titleMaxLines by screenModel.libraryPreferences.titleMaxLines().collectAsState()
+    SliderItem(
+        value = titleMaxLines,
+        valueRange = 1..5,
+        label = "Title Max Lines",
+        valueString = titleMaxLines.toString(),
+        onChange = screenModel.libraryPreferences.titleMaxLines()::set,
+        pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+    )
+
     HeadingItem(MR.strings.tabs_header)
     CheckboxItem(
         label = stringResource(MR.strings.action_display_show_tabs),
@@ -296,4 +315,55 @@ private fun ColumnScope.DisplayPage(
         label = stringResource(MR.strings.action_display_show_number_of_items),
         pref = screenModel.libraryPreferences.categoryNumberOfItems(),
     )
+}
+
+@Composable
+private fun ColumnScope.ExtensionsPage(
+    screenModel: LibrarySettingsScreenModel,
+) {
+    val excludedExtensions by screenModel.libraryPreferences.excludedExtensions().collectAsState()
+    val availableExtensions by screenModel.extensionsFlow.collectAsState()
+
+    HeadingItem(MR.strings.label_extensions)
+    
+    if (availableExtensions.isEmpty()) {
+        Text(
+            text = "No extensions with library entries",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(horizontal = TabbedDialogPaddings.Horizontal),
+        )
+    } else {
+        // Check All / Uncheck All buttons
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = TabbedDialogPaddings.Horizontal, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            TextButton(
+                onClick = { screenModel.checkAllExtensions() },
+                modifier = Modifier.weight(1f),
+            ) {
+                Text("Check All")
+            }
+            TextButton(
+                onClick = { screenModel.uncheckAllExtensions() },
+                modifier = Modifier.weight(1f),
+            ) {
+                Text("Uncheck All")
+            }
+        }
+        
+        availableExtensions.forEach { (sourceId, sourceName) ->
+            // Extension is checked if it's NOT in the excluded set
+            val isChecked = sourceId.toString() !in excludedExtensions
+            CheckboxItem(
+                label = sourceName,
+                checked = isChecked,
+                onClick = {
+                    screenModel.toggleExtensionFilter(sourceId.toString(), !isChecked)
+                },
+            )
+        }
+    }
 }

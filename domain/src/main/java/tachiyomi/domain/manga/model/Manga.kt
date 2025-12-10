@@ -21,6 +21,7 @@ data class Manga(
     val coverLastModified: Long,
     val url: String,
     val title: String,
+    val alternativeTitles: List<String>,
     val artist: String?,
     val author: String?,
     val description: String?,
@@ -128,6 +129,7 @@ data class Manga(
             favoriteModifiedAt = null,
             version = 0L,
             notes = "",
+            alternativeTitles = emptyList(),
         )
     }
 }

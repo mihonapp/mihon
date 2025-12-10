@@ -4,18 +4,33 @@ import android.view.LayoutInflater
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Sort
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.Pause
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -29,16 +44,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.ViewCompat
 import androidx.core.view.updatePadding
@@ -55,7 +71,6 @@ import eu.kanade.tachiyomi.databinding.DownloadListBinding
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.core.common.util.lang.launchUI
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.components.Pill
 import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
@@ -69,10 +84,23 @@ object DownloadQueueScreen : Screen() {
         val navigator = LocalNavigator.currentOrThrow
         val scope = rememberCoroutineScope()
         val screenModel = rememberScreenModel { DownloadQueueScreenModel() }
-        val downloadList by screenModel.state.collectAsState()
-        val downloadCount by remember {
-            derivedStateOf { downloadList.sumOf { it.subItems.size } }
+        val mangaList by screenModel.state.collectAsState()
+        val novelList by screenModel.novelState.collectAsState()
+        val titleMaxLines by screenModel.titleMaxLines.collectAsState()
+
+        var selectedTab by remember { mutableStateOf(0) }
+
+        val mangaCount by remember {
+            derivedStateOf { mangaList.sumOf { it.subItems.size } }
         }
+        val novelCount by remember {
+            derivedStateOf { novelList.sumOf { it.totalChapters } }
+        }
+
+        val tabs = listOf(
+            "${stringResource(MR.strings.label_manga)} ($mangaCount)",
+            "${stringResource(MR.strings.label_novels)} ($novelCount)"
+        )
 
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
         var fabExpanded by remember { mutableStateOf(true) }
@@ -109,21 +137,11 @@ object DownloadQueueScreen : Screen() {
                                 modifier = Modifier.weight(1f, false),
                                 overflow = TextOverflow.Ellipsis,
                             )
-                            if (downloadCount > 0) {
-                                val pillAlpha = if (isSystemInDarkTheme()) 0.12f else 0.08f
-                                Pill(
-                                    text = "$downloadCount",
-                                    modifier = Modifier.padding(start = 4.dp),
-                                    color = MaterialTheme.colorScheme.onBackground
-                                        .copy(alpha = pillAlpha),
-                                    fontSize = 14.sp,
-                                )
-                            }
                         }
                     },
                     navigateUp = navigator::pop,
                     actions = {
-                        if (downloadList.isNotEmpty()) {
+                        if ((selectedTab == 0 && mangaList.isNotEmpty()) || (selectedTab == 1 && novelList.isNotEmpty())) {
                             var sortExpanded by remember { mutableStateOf(false) }
                             val onDismissRequest = { sortExpanded = false }
                             DropdownMenu(
@@ -202,7 +220,7 @@ object DownloadQueueScreen : Screen() {
             },
             floatingActionButton = {
                 AnimatedVisibility(
-                    visible = downloadList.isNotEmpty(),
+                    visible = (selectedTab == 0 && mangaList.isNotEmpty()) || (selectedTab == 1 && novelList.isNotEmpty()),
                     enter = fadeIn(),
                     exit = fadeOut(),
                 ) {
@@ -236,55 +254,253 @@ object DownloadQueueScreen : Screen() {
                 }
             },
         ) { contentPadding ->
-            if (downloadList.isEmpty()) {
-                EmptyScreen(
-                    stringRes = MR.strings.information_no_downloads,
-                    modifier = Modifier.padding(contentPadding),
-                )
-                return@Scaffold
+            Column(modifier = Modifier.padding(top = contentPadding.calculateTopPadding())) {
+                TabRow(selectedTabIndex = selectedTab) {
+                    tabs.forEachIndexed { index, titleRes ->
+                        Tab(
+                            selected = selectedTab == index,
+                            onClick = { selectedTab = index },
+                            text = { Text(titleRes) }
+                        )
+                    }
+                }
+
+                if (selectedTab == 0 && mangaList.isEmpty() || selectedTab == 1 && novelList.isEmpty()) {
+                    EmptyScreen(
+                        stringRes = MR.strings.information_no_downloads,
+                    )
+                } else {
+                    val density = LocalDensity.current
+                    val layoutDirection = LocalLayoutDirection.current
+                    val left = with(density) { contentPadding.calculateLeftPadding(layoutDirection).toPx().roundToInt() }
+                    val right = with(density) { contentPadding.calculateRightPadding(layoutDirection).toPx().roundToInt() }
+                    val bottom = with(density) { contentPadding.calculateBottomPadding().toPx().roundToInt() }
+
+                    Box(modifier = Modifier.nestedScroll(nestedScrollConnection)) {
+                        if (selectedTab == 0) {
+                            AndroidView(
+                                modifier = Modifier.fillMaxWidth(),
+                                factory = { context ->
+                                    screenModel.controllerBinding = DownloadListBinding.inflate(LayoutInflater.from(context))
+                                    screenModel.adapter = DownloadAdapter(screenModel.listener)
+                                    screenModel.controllerBinding.root.adapter = screenModel.adapter
+                                    screenModel.adapter?.isHandleDragEnabled = true
+                                    screenModel.controllerBinding.root.layoutManager = LinearLayoutManager(context)
+
+                                    ViewCompat.setNestedScrollingEnabled(screenModel.controllerBinding.root, true)
+
+                                    scope.launchUI {
+                                        screenModel.getDownloadStatusFlow()
+                                            .collect(screenModel::onStatusChange)
+                                    }
+                                    scope.launchUI {
+                                        screenModel.getDownloadProgressFlow()
+                                            .collect(screenModel::onUpdateDownloadedPages)
+                                    }
+
+                                    screenModel.controllerBinding.root
+                                },
+                                update = {
+                                    screenModel.controllerBinding.root
+                                        .updatePadding(
+                                            left = left,
+                                            top = 0,
+                                            right = right,
+                                            bottom = bottom,
+                                        )
+
+                                    screenModel.adapter?.updateDataSet(mangaList)
+                                },
+                            )
+                        } else {
+                            androidx.compose.foundation.lazy.LazyColumn(
+                                contentPadding = androidx.compose.foundation.layout.PaddingValues(
+                                    top = 8.dp,
+                                    bottom = 80.dp,
+                                    start = 16.dp,
+                                    end = 16.dp,
+                                ),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier.fillMaxSize(),
+                            ) {
+                                items(
+                                    items = novelList,
+                                    key = { it.manga.id },
+                                ) { item ->
+                                    NovelDownloadCard(
+                                        item = item,
+                                        titleMaxLines = titleMaxLines,
+                                        onCancel = { screenModel.cancel(item.subItems) },
+                                        onMoveToTop = { screenModel.reorder(item.subItems + (novelList.flatMap { it.subItems } - item.subItems.toSet())) },
+                                        onMoveToBottom = { screenModel.reorder((novelList.flatMap { it.subItems } - item.subItems.toSet()) + item.subItems) },
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun NovelDownloadCard(
+    item: NovelDownloadItem,
+    titleMaxLines: Int,
+    onCancel: () -> Unit,
+    onMoveToTop: () -> Unit,
+    onMoveToBottom: () -> Unit,
+) {
+    var showMenu by remember { mutableStateOf(false) }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = if (item.isActive) {
+                MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
+            } else {
+                MaterialTheme.colorScheme.surfaceVariant
+            },
+        ),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = item.sourceName,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                    Text(
+                        text = item.manga.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = titleMaxLines,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "${item.downloadedChapters}/${item.totalChapters} chapters",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+
+                Box {
+                    IconButton(onClick = { showMenu = true }) {
+                        Icon(
+                            imageVector = Icons.Default.MoreVert,
+                            contentDescription = "More options",
+                        )
+                    }
+
+                    DropdownMenu(
+                        expanded = showMenu,
+                        onDismissRequest = { showMenu = false },
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Move to top") },
+                            onClick = {
+                                onMoveToTop()
+                                showMenu = false
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.KeyboardArrowUp,
+                                    contentDescription = null
+                                )
+                            },
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Move to bottom") },
+                            onClick = {
+                                onMoveToBottom()
+                                showMenu = false
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.KeyboardArrowDown,
+                                    contentDescription = null
+                                )
+                            },
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Cancel") },
+                            onClick = {
+                                onCancel()
+                                showMenu = false
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = null
+                                )
+                            },
+                        )
+                    }
+                }
             }
 
-            val density = LocalDensity.current
-            val layoutDirection = LocalLayoutDirection.current
-            val left = with(density) { contentPadding.calculateLeftPadding(layoutDirection).toPx().roundToInt() }
-            val top = with(density) { contentPadding.calculateTopPadding().toPx().roundToInt() }
-            val right = with(density) { contentPadding.calculateRightPadding(layoutDirection).toPx().roundToInt() }
-            val bottom = with(density) { contentPadding.calculateBottomPadding().toPx().roundToInt() }
+            Spacer(modifier = Modifier.height(12.dp))
 
-            Box(modifier = Modifier.nestedScroll(nestedScrollConnection)) {
-                AndroidView(
-                    modifier = Modifier.fillMaxWidth(),
-                    factory = { context ->
-                        screenModel.controllerBinding = DownloadListBinding.inflate(LayoutInflater.from(context))
-                        screenModel.adapter = DownloadAdapter(screenModel.listener)
-                        screenModel.controllerBinding.root.adapter = screenModel.adapter
-                        screenModel.adapter?.isHandleDragEnabled = true
-                        screenModel.controllerBinding.root.layoutManager = LinearLayoutManager(context)
+            // Progress bar
+            LinearProgressIndicator(
+                progress = { item.overallProgress },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
+                    .clip(MaterialTheme.shapes.small),
+                color = when {
+                    item.hasError -> MaterialTheme.colorScheme.error
+                    item.isActive -> MaterialTheme.colorScheme.primary
+                    else -> MaterialTheme.colorScheme.secondary
+                },
+                trackColor = MaterialTheme.colorScheme.surfaceVariant,
+            )
 
-                        ViewCompat.setNestedScrollingEnabled(screenModel.controllerBinding.root, true)
+            Spacer(modifier = Modifier.height(8.dp))
 
-                        scope.launchUI {
-                            screenModel.getDownloadStatusFlow()
-                                .collect(screenModel::onStatusChange)
-                        }
-                        scope.launchUI {
-                            screenModel.getDownloadProgressFlow()
-                                .collect(screenModel::onUpdateDownloadedPages)
-                        }
-
-                        screenModel.controllerBinding.root
+            // Status row
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = item.statusText,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = when {
+                        item.hasError -> MaterialTheme.colorScheme.error
+                        item.isActive -> MaterialTheme.colorScheme.primary
+                        else -> MaterialTheme.colorScheme.onSurfaceVariant
                     },
-                    update = {
-                        screenModel.controllerBinding.root
-                            .updatePadding(
-                                left = left,
-                                top = top,
-                                right = right,
-                                bottom = bottom,
-                            )
+                )
 
-                        screenModel.adapter?.updateDataSet(downloadList)
-                    },
+                val currentDownload = item.currentDownload
+                if (currentDownload != null) {
+                    Text(
+                        text = "Chapter: ${currentDownload.chapter.name}",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false).padding(start = 8.dp),
+                    )
+                }
+
+                Text(
+                    text = "${(item.overallProgress * 100).toInt()}%",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }

@@ -1,6 +1,8 @@
 package eu.kanade.presentation.updates
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -8,8 +10,10 @@ import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.FlipToBack
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.SelectAll
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastAll
 import androidx.compose.ui.util.fastAny
 import eu.kanade.presentation.components.AppBar
@@ -25,6 +30,7 @@ import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.manga.components.ChapterDownloadAction
 import eu.kanade.presentation.manga.components.MangaBottomActionMenu
 import eu.kanade.tachiyomi.data.download.model.Download
+import eu.kanade.tachiyomi.ui.updates.UpdatesFilter
 import eu.kanade.tachiyomi.ui.updates.UpdatesItem
 import eu.kanade.tachiyomi.ui.updates.UpdatesScreenModel
 import kotlinx.collections.immutable.persistentListOf
@@ -56,6 +62,7 @@ fun UpdateScreen(
     onMultiDeleteClicked: (List<UpdatesItem>) -> Unit,
     onUpdateSelected: (UpdatesItem, Boolean, Boolean, Boolean) -> Unit,
     onOpenChapter: (UpdatesItem) -> Unit,
+    onFilterSelected: (UpdatesFilter) -> Unit = {},
 ) {
     BackHandler(enabled = state.selectionMode) {
         onSelectAll(false)
@@ -112,6 +119,32 @@ fun UpdateScreen(
                     FastScrollLazyColumn(
                         contentPadding = contentPadding,
                     ) {
+                        // Filter chips row
+                        item(key = "filter_chips") {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                FilterChip(
+                                    selected = state.filter == UpdatesFilter.ALL,
+                                    onClick = { onFilterSelected(UpdatesFilter.ALL) },
+                                    label = { Text(stringResource(MR.strings.all)) },
+                                )
+                                FilterChip(
+                                    selected = state.filter == UpdatesFilter.MANGA,
+                                    onClick = { onFilterSelected(UpdatesFilter.MANGA) },
+                                    label = { Text(stringResource(MR.strings.label_manga)) },
+                                )
+                                FilterChip(
+                                    selected = state.filter == UpdatesFilter.NOVELS,
+                                    onClick = { onFilterSelected(UpdatesFilter.NOVELS) },
+                                    label = { Text(stringResource(MR.strings.label_novels)) },
+                                )
+                            }
+                        }
+
                         updatesLastUpdatedItem(lastUpdated)
 
                         updatesUiItems(

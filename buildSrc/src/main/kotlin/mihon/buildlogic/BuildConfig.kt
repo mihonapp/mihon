@@ -10,7 +10,7 @@ interface BuildConfig {
 }
 
 val Project.Config: BuildConfig get() = object : BuildConfig {
-    override val includeTelemetry: Boolean = project.hasProperty("include-telemetry")
+    override val includeTelemetry: Boolean = false
     override val enableUpdater: Boolean = project.hasProperty("enable-updater")
     override val enableCodeShrink: Boolean = !project.hasProperty("disable-code-shrink")
     override val includeDependencyInfo: Boolean = project.hasProperty("include-dependency-info")

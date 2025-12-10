@@ -1,6 +1,7 @@
 package eu.kanade.domain.source.interactor
 
 import eu.kanade.domain.source.service.SourcePreferences
+import eu.kanade.tachiyomi.source.isNovelSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -8,11 +9,13 @@ import tachiyomi.domain.source.model.Pin
 import tachiyomi.domain.source.model.Pins
 import tachiyomi.domain.source.model.Source
 import tachiyomi.domain.source.repository.SourceRepository
+import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.source.local.isLocal
 
 class GetEnabledSources(
     private val repository: SourceRepository,
     private val preferences: SourcePreferences,
+    private val sourceManager: SourceManager,
 ) {
 
     fun subscribe(): Flow<List<Source>> {
@@ -26,6 +29,7 @@ class GetEnabledSources(
             sources
                 .filter { it.lang in enabledLanguages || it.isLocal() }
                 .filterNot { it.id.toString() in disabledSources }
+                .filterNot { sourceManager.get(it.id)?.isNovelSource() == true }
                 .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
                 .flatMap {
                     val flag = if ("${it.id}" in pinnedSourceIds) Pins.pinned else Pins.unpinned

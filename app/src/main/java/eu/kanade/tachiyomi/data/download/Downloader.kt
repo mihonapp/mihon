@@ -9,6 +9,8 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateNotifier
 import eu.kanade.tachiyomi.data.notification.NotificationHandler
 import eu.kanade.tachiyomi.source.UnmeteredSource
+import eu.kanade.tachiyomi.source.isNovelSource
+import eu.kanade.tachiyomi.source.fetchNovelPageText
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.storage.DiskUtil
@@ -61,6 +63,8 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
 import java.util.Locale
+import kotlin.random.Random
+import tachiyomi.domain.download.service.NovelDownloadPreferences
 
 /**
  * This class is the one in charge of downloading chapters.
@@ -74,6 +78,7 @@ class Downloader(
     private val sourceManager: SourceManager = Injekt.get(),
     private val chapterCache: ChapterCache = Injekt.get(),
     private val downloadPreferences: DownloadPreferences = Injekt.get(),
+    private val novelDownloadPreferences: NovelDownloadPreferences = Injekt.get(),
     private val xml: XML = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
     private val getTracks: GetTracks = Injekt.get(),
@@ -236,8 +241,52 @@ class Downloader(
         }
     }
 
+    /**
+     * Track the last download time per source for throttling
+     */
+    private val lastDownloadTimePerSource = mutableMapOf<Long, Long>()
+
+    /**
+     * Get the throttle delay for a novel download based on preferences
+     */
+    private fun getThrottleDelay(sourceId: Long): Long {
+        if (!novelDownloadPreferences.enableThrottling().get()) {
+            return 0L
+        }
+        
+        val baseDelay = novelDownloadPreferences.downloadDelay().get().toLong()
+        val randomRange = novelDownloadPreferences.randomDelayRange().get()
+        val randomDelay = if (randomRange > 0) Random.nextLong(0, randomRange.toLong()) else 0L
+        
+        return baseDelay + randomDelay
+    }
+
+    /**
+     * Wait for throttle delay if needed for novel sources
+     */
+    private suspend fun waitForThrottle(download: Download) {
+        if (!download.source.isNovelSource()) return
+        
+        val sourceId = download.source.id
+        val now = System.currentTimeMillis()
+        val lastTime = lastDownloadTimePerSource[sourceId] ?: 0L
+        val throttleDelay = getThrottleDelay(sourceId)
+        
+        val timeSinceLastDownload = now - lastTime
+        if (timeSinceLastDownload < throttleDelay) {
+            val waitTime = throttleDelay - timeSinceLastDownload
+            logcat(LogPriority.DEBUG) { "Throttling novel download for ${waitTime}ms (source: ${download.source.name})" }
+            delay(waitTime)
+        }
+        
+        lastDownloadTimePerSource[sourceId] = System.currentTimeMillis()
+    }
+
     private fun CoroutineScope.launchDownloadJob(download: Download) = launchIO {
         try {
+            // Apply throttling for novel sources
+            waitForThrottle(download)
+            
             downloadChapter(download)
 
             // Remove successful download from queue
@@ -271,46 +320,66 @@ class Downloader(
      * @param autoStart whether to start the downloader after enqueing the chapters.
      */
     fun queueChapters(manga: Manga, chapters: List<Chapter>, autoStart: Boolean) {
-        if (chapters.isEmpty()) return
+        logcat { "queueChapters called: manga=${manga.title}, chapters=${chapters.size}, autoStart=$autoStart" }
+        if (chapters.isEmpty()) {
+            logcat { "queueChapters: No chapters to queue" }
+            return
+        }
 
-        val source = sourceManager.get(manga.source) as? HttpSource ?: return
+        val source = sourceManager.get(manga.source) as? HttpSource
+        if (source == null) {
+            logcat { "queueChapters: Source is null or not HttpSource. sourceId=${manga.source}" }
+            return
+        }
+        logcat { "queueChapters: Source is ${source.name}, isNovelSource=${source.isNovelSource()}" }
+        
         val wasEmpty = queueState.value.isEmpty()
-        val chaptersToQueue = chapters.asSequence()
-            // Filter out those already downloaded.
-            .filter { provider.findChapterDir(it.name, it.scanlator, it.url, manga.title, source) == null }
-            // Add chapters to queue from the start.
-            .sortedByDescending { it.sourceOrder }
-            // Filter out those already enqueued.
-            .filter { chapter -> queueState.value.none { it.chapter.id == chapter.id } }
-            // Create a download for each one.
-            .map { Download(source, manga, it) }
-            .toList()
+        
+        // Use a background thread for the heavy lifting of checking file existence
+        launchIO {
+            // Optimize: Use batch directory check instead of per-chapter filesystem calls
+            val (_, downloadedDirs) = provider.findChapterDirs(chapters, manga, source)
+            val downloadedChapterIds = downloadedDirs.indices.filter { downloadedDirs[it] != null }.map { chapters[it].id }.toSet()
+            
+            val chaptersToQueue = chapters.asSequence()
+                // Filter out those already downloaded (using batch result)
+                .filter { it.id !in downloadedChapterIds }
+                // Add chapters to queue from the start.
+                .sortedByDescending { it.sourceOrder }
+                // Filter out those already enqueued.
+                .filter { chapter -> queueState.value.none { it.chapter.id == chapter.id } }
+                // Create a download for each one.
+                .map { Download(source, manga, it) }
+                .toList()
 
-        if (chaptersToQueue.isNotEmpty()) {
-            addAllToQueue(chaptersToQueue)
+            logcat { "queueChapters: ${chaptersToQueue.size} chapters to queue after filtering" }
+            
+            if (chaptersToQueue.isNotEmpty()) {
+                addAllToQueue(chaptersToQueue)
 
-            // Start downloader if needed
-            if (autoStart && wasEmpty) {
-                val queuedDownloads = queueState.value.count { it.source !is UnmeteredSource }
-                val maxDownloadsFromSource = queueState.value
-                    .groupBy { it.source }
-                    .filterKeys { it !is UnmeteredSource }
-                    .maxOfOrNull { it.value.size }
-                    ?: 0
-                if (
-                    queuedDownloads > DOWNLOADS_QUEUED_WARNING_THRESHOLD ||
-                    maxDownloadsFromSource > CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD
-                ) {
-                    notifier.onWarning(
-                        context.stringResource(
-                            MR.strings.download_queue_size_warning,
-                            context.stringResource(MR.strings.app_name),
-                        ),
-                        WARNING_NOTIF_TIMEOUT_MS,
-                        NotificationHandler.openUrl(context, LibraryUpdateNotifier.HELP_WARNING_URL),
-                    )
+                // Start downloader if needed
+                if (autoStart && wasEmpty) {
+                    val queuedDownloads = queueState.value.count { it.source !is UnmeteredSource }
+                    val maxDownloadsFromSource = queueState.value
+                        .groupBy { it.source }
+                        .filterKeys { it !is UnmeteredSource }
+                        .maxOfOrNull { it.value.size }
+                        ?: 0
+                    if (
+                        queuedDownloads > DOWNLOADS_QUEUED_WARNING_THRESHOLD ||
+                        maxDownloadsFromSource > CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD
+                    ) {
+                        notifier.onWarning(
+                            context.stringResource(
+                                MR.strings.download_queue_size_warning,
+                                context.stringResource(MR.strings.app_name),
+                            ),
+                            WARNING_NOTIF_TIMEOUT_MS,
+                            NotificationHandler.openUrl(context, LibraryUpdateNotifier.HELP_WARNING_URL),
+                        )
+                    }
+                    DownloadJob.start(context)
                 }
-                DownloadJob.start(context)
             }
         }
     }
@@ -356,7 +425,15 @@ class Downloader(
                     throw Exception(context.stringResource(MR.strings.page_list_empty_error))
                 }
                 // Don't trust index from source
-                val reIndexedPages = pages.mapIndexed { index, page -> Page(index, page.url, page.imageUrl, page.uri) }
+                val reIndexedPages = pages.mapIndexed { index, page -> 
+                    Page(
+                        index = index, 
+                        url = page.url, 
+                        imageUrl = page.imageUrl, 
+                        uri = page.uri, 
+                        text = page.text
+                    ) 
+                }
                 download.pages = reIndexedPages
                 reIndexedPages
             }
@@ -368,11 +445,12 @@ class Downloader(
 
             download.status = Download.State.DOWNLOADING
 
-            // Start downloading images, consider we can have downloaded images already
-            pageList.asFlow().flatMapMerge(concurrency = downloadPreferences.parallelPageLimit().get()) { page ->
+            // Start downloading images/text, consider we can have downloaded images already
+            val isNovel = download.source.isNovelSource()
+            pageList.asFlow().flatMapMerge(concurrency = if (isNovel) 1 else downloadPreferences.parallelPageLimit().get()) { page ->
                 flow {
-                    // Fetch image URL if necessary
-                    if (page.imageUrl.isNullOrEmpty()) {
+                    // For novel sources, skip image URL fetching - we'll get text content instead
+                    if (!isNovel && page.imageUrl.isNullOrEmpty()) {
                         page.status = Page.State.LoadPage
                         try {
                             page.imageUrl = download.source.getImageUrl(page)
@@ -433,8 +511,43 @@ class Downloader(
      * @param tmpDir the temporary directory of the download.
      */
     private suspend fun getOrDownloadImage(page: Page, download: Download, tmpDir: UniFile) {
-        // If the image URL is empty, do nothing
+        logcat { "getOrDownloadImage: page=${page.number}, url=${page.url}, imageUrl=${page.imageUrl}, text=${page.text?.take(50)}, isNovelSource=${download.source.isNovelSource()}" }
+        
+        // If the page has text, save it as a text file
+        if (page.text == null && download.source.isNovelSource()) {
+            logcat { "  -> Fetching novel page text for page ${page.number}" }
+            try {
+                page.text = download.source.fetchNovelPageText(page)
+                logcat { "  -> Fetched text, length=${page.text?.length ?: 0}" }
+            } catch (e: Throwable) {
+                logcat(LogPriority.ERROR, e) { "  -> Error fetching novel page text" }
+                page.status = Page.State.Error(e)
+                return
+            }
+        }
+
+        if (page.text != null) {
+            val digitCount = (download.pages?.size ?: 0).toString().length.coerceAtLeast(3)
+            val filename = "%0${digitCount}d.html".format(Locale.ENGLISH, page.number)
+            logcat { "  -> Saving text to $filename" }
+            val file = tmpDir.createFile(filename)!!
+            file.openOutputStream().use { it.write(page.text!!.toByteArray()) }
+            page.uri = file.uri
+            page.progress = 100
+            page.status = Page.State.Ready
+            return
+        }
+
+        // If the image URL is empty, handle based on source type
         if (page.imageUrl == null) {
+            if (download.source.isNovelSource()) {
+                // For novel sources with no text and no imageUrl, mark as ready (empty page)
+                logcat { "  -> Novel page ${page.number} has no content, marking as ready" }
+                page.progress = 100
+                page.status = Page.State.Ready
+            } else {
+                logcat { "  -> No imageUrl and no text, skipping page ${page.number}" }
+            }
             return
         }
 
@@ -574,12 +687,19 @@ class Downloader(
         // Page list hasn't been initialized
         val downloadPageCount = download.pages?.size ?: return false
 
-        // Ensure that all pages have been downloaded
+        // Ensure that all pages have been downloaded (marked as Ready)
         if (download.downloadedImages != downloadPageCount) {
+            logcat { "isDownloadSuccessful: downloadedImages=${download.downloadedImages} != downloadPageCount=$downloadPageCount" }
             return false
         }
 
-        // Ensure that the chapter folder has all the pages
+        // For novel sources, pages might not create files (empty pages)
+        if (download.source.isNovelSource()) {
+            // Just check that all pages are marked as Ready
+            return true
+        }
+
+        // Ensure that the chapter folder has all the pages (for manga)
         val downloadedImagesCount = tmpDir.listFiles().orEmpty().count {
             val fileName = it.name.orEmpty()
             when {

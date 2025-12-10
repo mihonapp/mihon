@@ -32,6 +32,8 @@ class LibraryPreferences(
 
     fun landscapeColumns() = preferenceStore.getInt("pref_library_columns_landscape_key", 0)
 
+    fun titleMaxLines() = preferenceStore.getInt("pref_library_title_max_lines", 2)
+
     fun lastUpdatedTimestamp() = preferenceStore.getLong(Preference.appStateKey("library_update_last_timestamp"), 0L)
     fun autoUpdateInterval() = preferenceStore.getInt("pref_library_update_interval_key", 0)
 
@@ -93,6 +95,11 @@ class LibraryPreferences(
         "pref_filter_library_tracked_${id}_v2",
         TriState.DISABLED,
     )
+
+    fun filterExtensions() = preferenceStore.getStringSet("pref_filter_library_extensions", emptySet())
+    
+    // Stores extension IDs that are excluded (unchecked) from the library filter
+    fun excludedExtensions() = preferenceStore.getStringSet("pref_excluded_library_extensions", emptySet())
 
     // endregion
 

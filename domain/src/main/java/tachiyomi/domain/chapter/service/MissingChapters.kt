@@ -8,6 +8,16 @@ fun List<Double>.missingChaptersCount(): Int {
         return 0
     }
 
+    // Count how many chapters have unknown/unrecognized numbers
+    val unknownCount = this.count { it == -1.0 }
+    val totalCount = this.size
+    
+    // If more than half of the chapters have unknown numbers, don't show missing chapters warning
+    // This is common for novel sources where chapter numbers can't be parsed from titles
+    if (unknownCount > totalCount / 2) {
+        return 0
+    }
+
     val chapters = this
         // Ignore unknown chapter numbers
         .filterNot { it == -1.0 }

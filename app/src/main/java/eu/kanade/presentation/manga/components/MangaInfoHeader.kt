@@ -367,6 +367,7 @@ private fun MangaAndSourceTitlesLarge(
         Spacer(modifier = Modifier.height(16.dp))
         MangaContentInfo(
             title = manga.title,
+            alternativeTitles = manga.alternativeTitles,
             author = manga.author,
             artist = manga.artist,
             status = manga.status,
@@ -410,6 +411,7 @@ private fun MangaAndSourceTitlesSmall(
         ) {
             MangaContentInfo(
                 title = manga.title,
+                alternativeTitles = manga.alternativeTitles,
                 author = manga.author,
                 artist = manga.artist,
                 status = manga.status,
@@ -424,12 +426,14 @@ private fun MangaAndSourceTitlesSmall(
 @Composable
 private fun ColumnScope.MangaContentInfo(
     title: String,
+    alternativeTitles: List<String>,
     author: String?,
     artist: String?,
     status: Long,
     sourceName: String,
     isStubSource: Boolean,
     doSearch: (query: String, global: Boolean) -> Unit,
+    onEditAlternativeTitles: (() -> Unit)? = null,
     textAlign: TextAlign? = LocalTextStyle.current.textAlign,
 ) {
     val context = LocalContext.current
@@ -449,6 +453,45 @@ private fun ColumnScope.MangaContentInfo(
         ),
         textAlign = textAlign,
     )
+
+    // Alternative titles section - clickable to edit
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = if (textAlign == TextAlign.Center) Arrangement.Center else Arrangement.Start,
+    ) {
+        if (alternativeTitles.isNotEmpty()) {
+            Text(
+                text = alternativeTitles.joinToString(" • "),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier
+                    .weight(1f, fill = false)
+                    .clickableNoIndication(
+                        onLongClick = {
+                            context.copyToClipboard(
+                                alternativeTitles.joinToString("\n"),
+                                alternativeTitles.joinToString("\n"),
+                            )
+                        },
+                        onClick = { onEditAlternativeTitles?.invoke() },
+                    ),
+                textAlign = textAlign,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+        } else if (onEditAlternativeTitles != null) {
+            Text(
+                text = "Add alternative titles",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.clickableNoIndication(
+                    onClick = { onEditAlternativeTitles() },
+                ),
+                textAlign = textAlign,
+            )
+        }
+    }
 
     Spacer(modifier = Modifier.height(2.dp))
 

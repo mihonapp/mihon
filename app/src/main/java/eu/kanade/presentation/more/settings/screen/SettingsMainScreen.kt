@@ -185,16 +185,28 @@ object SettingsMainScreen : Screen() {
             screen = SettingsLibraryScreen,
         ),
         Item(
-            titleRes = MR.strings.pref_category_reader,
-            subtitleRes = MR.strings.pref_reader_summary,
+            titleRes = MR.strings.pref_category_manga_reader,
+            subtitleRes = MR.strings.pref_manga_reader_summary,
             icon = Icons.AutoMirrored.Outlined.ChromeReaderMode,
             screen = SettingsReaderScreen,
+        ),
+        Item(
+            titleRes = MR.strings.pref_category_novel_reader,
+            subtitleRes = MR.strings.pref_novel_reader_summary,
+            icon = Icons.AutoMirrored.Outlined.ChromeReaderMode,
+            screen = SettingsNovelReaderScreen,
         ),
         Item(
             titleRes = MR.strings.pref_category_downloads,
             subtitleRes = MR.strings.pref_downloads_summary,
             icon = Icons.Outlined.GetApp,
             screen = SettingsDownloadScreen,
+        ),
+        Item(
+            titleRes = MR.strings.pref_category_novel_downloads,
+            subtitleRes = MR.strings.pref_novel_download_throttling_summary,
+            icon = Icons.Outlined.GetApp,
+            screen = SettingsNovelDownloadScreen,
         ),
         Item(
             titleRes = MR.strings.pref_category_tracking,

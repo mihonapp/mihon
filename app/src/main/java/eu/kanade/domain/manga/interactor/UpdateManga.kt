@@ -116,4 +116,10 @@ class UpdateManga(
             MangaUpdate(id = mangaId, favorite = favorite, dateAdded = dateAdded),
         )
     }
+
+    suspend fun awaitUpdateAlternativeTitles(mangaId: Long, alternativeTitles: List<String>): Boolean {
+        return mangaRepository.update(
+            MangaUpdate(id = mangaId, alternativeTitles = alternativeTitles),
+        )
+    }
 }

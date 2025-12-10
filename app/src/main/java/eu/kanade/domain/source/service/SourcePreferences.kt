@@ -1,7 +1,10 @@
 package eu.kanade.domain.source.service
 
 import eu.kanade.domain.source.interactor.SetMigrateSorting
+import eu.kanade.domain.source.model.FilterPresetList
 import eu.kanade.tachiyomi.util.system.LocaleHelper
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import mihon.domain.migration.models.MigrationFlag
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
@@ -74,4 +77,13 @@ class SourcePreferences(
     fun migrationHideUnmatched() = preferenceStore.getBoolean("migration_hide_unmatched", false)
 
     fun migrationHideWithoutUpdates() = preferenceStore.getBoolean("migration_hide_without_updates", false)
+
+    fun filterPresets(sourceId: Long) = preferenceStore.getObjectFromString(
+        "filter_presets_$sourceId",
+        FilterPresetList(),
+        { Json.encodeToString(it) },
+        { Json.decodeFromString(it) },
+    )
+
+    fun autoApplyFilterPresets() = preferenceStore.getBoolean("auto_apply_filter_presets", true)
 }

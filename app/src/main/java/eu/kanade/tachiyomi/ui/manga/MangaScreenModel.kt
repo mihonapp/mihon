@@ -84,6 +84,7 @@ import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.service.SourceManager
+import eu.kanade.tachiyomi.source.isNovelSource
 import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.i18n.MR
 import tachiyomi.source.local.isLocal
@@ -220,10 +221,11 @@ class MangaScreenModel(
             val needRefreshChapter = chapters.isEmpty()
 
             // Show what we have earlier
+            val source = Injekt.get<SourceManager>().getOrStub(manga.source)
             mutableState.update {
                 State.Success(
                     manga = manga,
-                    source = Injekt.get<SourceManager>().getOrStub(manga.source),
+                    source = source,
                     isFromSource = isFromSource,
                     chapters = chapters,
                     availableScanlators = getAvailableScanlators.await(mangaId),
@@ -231,6 +233,7 @@ class MangaScreenModel(
                     isRefreshingData = needRefreshInfo || needRefreshChapter,
                     dialog = null,
                     hideMissingChapters = libraryPreferences.hideMissingChapters().get(),
+                    isNovel = source.isNovelSource(),
                 )
             }
 
@@ -470,6 +473,15 @@ class MangaScreenModel(
      */
     private fun moveMangaToCategory(category: Category?) {
         moveMangaToCategories(listOfNotNull(category))
+    }
+
+    /**
+     * Update the alternative titles of the manga.
+     */
+    fun updateAlternativeTitles(alternativeTitles: List<String>) {
+        screenModelScope.launchIO {
+            updateManga.awaitUpdateAlternativeTitles(mangaId, alternativeTitles)
+        }
     }
 
     // Manga info - end
@@ -1080,6 +1092,7 @@ class MangaScreenModel(
         data class DuplicateManga(val manga: Manga, val duplicates: List<MangaWithChapterCount>) : Dialog
         data class Migrate(val target: Manga, val current: Manga) : Dialog
         data class SetFetchInterval(val manga: Manga) : Dialog
+        data class EditAlternativeTitles(val manga: Manga) : Dialog
         data object SettingsSheet : Dialog
         data object TrackSheet : Dialog
         data object FullCover : Dialog
@@ -1110,6 +1123,11 @@ class MangaScreenModel(
         updateSuccessState { it.copy(dialog = Dialog.Migrate(target = manga, current = duplicate)) }
     }
 
+    fun showEditAlternativeTitlesDialog() {
+        val manga = successState?.manga ?: return
+        updateSuccessState { it.copy(dialog = Dialog.EditAlternativeTitles(manga)) }
+    }
+
     fun setExcludedScanlators(excludedScanlators: Set<String>) {
         screenModelScope.launchIO {
             setExcludedScanlators.await(mangaId, excludedScanlators)
@@ -1134,6 +1152,7 @@ class MangaScreenModel(
             val dialog: Dialog? = null,
             val hasPromptedToAddBefore: Boolean = false,
             val hideMissingChapters: Boolean = false,
+            val isNovel: Boolean = false,
         ) : State {
             val processedChapters by lazy {
                 chapters.applyFilters(manga).toList()

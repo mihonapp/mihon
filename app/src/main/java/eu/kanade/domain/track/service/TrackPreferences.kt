@@ -42,4 +42,14 @@ class TrackPreferences(
         "pref_auto_update_manga_on_mark_read",
         AutoTrackState.ALWAYS,
     )
+
+    // NovelUpdates Settings
+    fun novelUpdatesMarkChaptersAsRead() = preferenceStore.getBoolean("novelupdates_mark_chapters_read", true)
+    
+    fun novelUpdatesSyncReadingList() = preferenceStore.getBoolean("novelupdates_sync_reading_list", true)
+
+    // NovelList Settings
+    fun novelListMarkChaptersAsRead() = preferenceStore.getBoolean("novellist_mark_chapters_read", true)
+    
+    fun novelListSyncReadingList() = preferenceStore.getBoolean("novellist_sync_reading_list", true)
 }

@@ -20,6 +20,7 @@ internal fun LibraryComfortableGrid(
     onClickContinueReading: ((LibraryManga) -> Unit)?,
     searchQuery: String?,
     onGlobalSearchClicked: () -> Unit,
+    titleMaxLines: Int = 2,
 ) {
     LazyLibraryGrid(
         modifier = Modifier.fillMaxSize(),
@@ -60,6 +61,7 @@ internal fun LibraryComfortableGrid(
                 } else {
                     null
                 },
+                titleMaxLines = titleMaxLines,
             )
         }
     }

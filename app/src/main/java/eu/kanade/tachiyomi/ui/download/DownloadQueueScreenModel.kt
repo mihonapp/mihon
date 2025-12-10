@@ -7,7 +7,9 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.databinding.DownloadListBinding
+import eu.kanade.tachiyomi.source.isNovelSource
 import eu.kanade.tachiyomi.source.model.Page
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,19 +19,64 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import logcat.logcat
+import tachiyomi.domain.library.service.LibraryPreferences
+import tachiyomi.domain.manga.model.Manga
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
+data class NovelDownloadItem(
+    val manga: Manga,
+    val sourceName: String,
+    val subItems: List<Download>,
+    val initialTotal: Int,  // Total chapters when the download batch started
+) {
+    val remainingChapters: Int get() = subItems.size
+    // Downloaded chapters = initial total - remaining (since completed are removed from queue)
+    val downloadedChapters: Int get() = (initialTotal - remainingChapters).coerceAtLeast(0)
+    val totalChapters: Int get() = initialTotal
+    val currentDownload: Download? get() = subItems.find { it.status == Download.State.DOWNLOADING }
+    
+    val overallProgress: Float get() {
+        if (totalChapters == 0) return 0f
+        val downloadedWeight = downloadedChapters.toFloat()
+        val currentProgress = currentDownload?.progress?.div(100f) ?: 0f
+        return (downloadedWeight + currentProgress) / totalChapters
+    }
+    
+    val isActive: Boolean get() = currentDownload != null
+    val hasError: Boolean get() = subItems.any { it.status == Download.State.ERROR }
+    
+    val statusText: String get() = when {
+        hasError -> "Error"
+        isActive -> "Downloading"
+        subItems.all { it.status == Download.State.QUEUE } && subItems.isNotEmpty() -> "Queued"
+        downloadedChapters == totalChapters -> "Completed"
+        else -> "Pending"
+    }
+}
+
 class DownloadQueueScreenModel(
     private val downloadManager: DownloadManager = Injekt.get(),
+    private val libraryPreferences: LibraryPreferences = Injekt.get(),
 ) : ScreenModel {
 
     private val _state = MutableStateFlow(emptyList<DownloadHeaderItem>())
     val state = _state.asStateFlow()
+
+    private val _novelState = MutableStateFlow(emptyList<NovelDownloadItem>())
+    val novelState = _novelState.asStateFlow()
+    
+    // Track the initial total for each manga to show accurate progress
+    private val initialTotals = mutableMapOf<Long, Int>()
+    
+    val titleMaxLines = libraryPreferences.titleMaxLines().changes()
+        .stateIn(screenModelScope, SharingStarted.Lazily, libraryPreferences.titleMaxLines().get())
 
     lateinit var controllerBinding: DownloadListBinding
 
@@ -119,15 +166,51 @@ class DownloadQueueScreenModel(
         screenModelScope.launch {
             downloadManager.queueState
                 .map { downloads ->
-                    downloads
-                        .groupBy { it.source }
+                    val (novels, mangas) = downloads.partition { it.source.isNovelSource() }
+
+                    val mangaItems = mangas.groupBy { it.source }
                         .map { entry ->
                             DownloadHeaderItem(entry.key.id, entry.key.name, entry.value.size).apply {
                                 addSubItems(0, entry.value.map { DownloadItem(it, this) })
                             }
                         }
+
+                    val novelItems = novels.groupBy { it.manga.id }
+                        .map { (mangaId, downloads) ->
+                            val manga = downloads.first().manga
+                            val sourceName = downloads.first().source.name
+                            
+                            // Track initial total - use max of current count and stored count
+                            val currentCount = downloads.size
+                            val storedTotal = initialTotals[mangaId] ?: 0
+                            
+                            // If current count is greater, this is a new batch or first time seeing this
+                            val initialTotal = if (currentCount > storedTotal) {
+                                initialTotals[mangaId] = currentCount
+                                currentCount
+                            } else {
+                                storedTotal
+                            }
+                            
+                            NovelDownloadItem(
+                                manga = manga,
+                                sourceName = sourceName,
+                                subItems = downloads,
+                                initialTotal = initialTotal,
+                            )
+                        }
+                    
+                    // Clean up initialTotals for manga no longer in queue
+                    val currentMangaIds = novels.map { it.manga.id }.toSet()
+                    initialTotals.keys.removeAll { it !in currentMangaIds }
+                    
+                    Pair(mangaItems, novelItems)
                 }
-                .collect { newList -> _state.update { newList } }
+                .flowOn(Dispatchers.Default)
+                .collect { (mangaItems, novelItems) ->
+                    _state.update { mangaItems }
+                    _novelState.update { novelItems }
+                }
         }
     }
 

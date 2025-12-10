@@ -13,4 +13,6 @@ class SChapterImpl : SChapter {
     override var chapter_number: Float = -1f
 
     override var scanlator: String? = null
+
+    override var locked: Boolean = false
 }

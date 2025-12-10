@@ -16,12 +16,15 @@ interface SChapter : Serializable {
 
     var scanlator: String?
 
+    var locked: Boolean
+
     fun copyFrom(other: SChapter) {
         name = other.name
         url = other.url
         date_upload = other.date_upload
         chapter_number = other.chapter_number
         scanlator = other.scanlator
+        locked = other.locked
     }
 
     companion object {

@@ -42,6 +42,7 @@ fun LibraryPager(
     onClickManga: (Category, LibraryManga) -> Unit,
     onLongClickManga: (Category, LibraryManga) -> Unit,
     onClickContinueReading: ((LibraryManga) -> Unit)?,
+    titleMaxLines: Int = 2,
 ) {
     HorizontalPager(
         modifier = Modifier.fillMaxSize(),
@@ -116,6 +117,7 @@ fun LibraryPager(
                     onClickContinueReading = onClickContinueReading,
                     searchQuery = searchQuery,
                     onGlobalSearchClicked = onGlobalSearchClicked,
+                    titleMaxLines = titleMaxLines,
                 )
             }
         }

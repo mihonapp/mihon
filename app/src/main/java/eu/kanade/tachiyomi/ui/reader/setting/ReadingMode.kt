@@ -9,7 +9,10 @@ import eu.kanade.tachiyomi.ui.reader.viewer.pager.L2RPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.VerticalPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.text.NovelViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.text.NovelWebViewViewer
 import tachiyomi.i18n.MR
+import uy.kohesive.injekt.injectLazy
 
 enum class ReadingMode(
     val stringRes: StringResource,
@@ -54,10 +57,19 @@ enum class ReadingMode(
         Direction.Vertical,
         ViewerType.Webtoon,
     ),
+    NOVEL(
+        MR.strings.novel_viewer,
+        R.drawable.ic_reader_default_24dp,
+        0x00000006,
+        Direction.Vertical,
+        ViewerType.Text,
+    ),
     ;
 
     companion object {
         const val MASK = 0x00000007
+
+        private val readerPreferences: ReaderPreferences by injectLazy()
 
         fun fromPreference(preference: Int?): ReadingMode = entries.find { it.flagValue == preference } ?: DEFAULT
 
@@ -73,6 +85,14 @@ enum class ReadingMode(
                 VERTICAL -> VerticalPagerViewer(activity)
                 WEBTOON -> WebtoonViewer(activity)
                 CONTINUOUS_VERTICAL -> WebtoonViewer(activity, isContinuous = false)
+                NOVEL -> {
+                    val renderingMode = readerPreferences.novelRenderingMode().get()
+                    if (renderingMode == "webview") {
+                        NovelWebViewViewer(activity)
+                    } else {
+                        NovelViewer(activity)
+                    }
+                }
                 DEFAULT -> throw IllegalStateException("Preference value must be resolved: $preference")
             }
         }
@@ -86,5 +106,6 @@ enum class ReadingMode(
     sealed interface ViewerType {
         data object Pager : ViewerType
         data object Webtoon : ViewerType
+        data object Text : ViewerType
     }
 }

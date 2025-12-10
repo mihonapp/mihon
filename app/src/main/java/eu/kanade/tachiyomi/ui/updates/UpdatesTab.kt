@@ -39,7 +39,7 @@ data object UpdatesTab : Tab {
             val isSelected = LocalTabNavigator.current.current.key == key
             val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_updates_enter)
             return TabOptions(
-                index = 1u,
+                index = 2u,
                 title = stringResource(MR.strings.label_recent_updates),
                 icon = rememberAnimatedVectorPainter(image, isSelected),
             )
@@ -74,6 +74,7 @@ data object UpdatesTab : Tab {
                 context.startActivity(intent)
             },
             onCalendarClicked = { navigator.push(UpcomingScreen()) },
+            onFilterSelected = screenModel::setFilter,
         )
 
         val onDismissDialog = { screenModel.setDialog(null) }

@@ -12,6 +12,7 @@ import eu.kanade.core.util.fastFilterNot
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.manga.interactor.UpdateManga
+import eu.kanade.domain.manga.model.toSManga
 import eu.kanade.presentation.components.SEARCH_DEBOUNCE_MILLIS
 import eu.kanade.presentation.library.components.LibraryToolbarTitle
 import eu.kanade.presentation.manga.DownloadAction
@@ -21,6 +22,7 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.source.isNovelSource
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.collections.immutable.ImmutableList
@@ -83,7 +85,14 @@ class LibraryScreenModel(
     private val downloadManager: DownloadManager = Injekt.get(),
     private val downloadCache: DownloadCache = Injekt.get(),
     private val trackerManager: TrackerManager = Injekt.get(),
+    private val type: LibraryType = LibraryType.All,
 ) : StateScreenModel<LibraryScreenModel.State>(State()) {
+
+    enum class LibraryType {
+        All,
+        Manga,
+        Novel,
+    }
 
     init {
         mutableState.update { state ->
@@ -244,6 +253,11 @@ class LibraryScreenModel(
             !isExcluded && isIncluded
         }
 
+        val filterFnExtensions: (LibraryItem) -> Boolean = { item ->
+            // If extension is in excluded set, hide it
+            item.libraryManga.manga.source.toString() !in preferences.excludedExtensions
+        }
+
         return fastFilter {
             filterFnDownloaded(it) &&
                 filterFnUnread(it) &&
@@ -251,7 +265,8 @@ class LibraryScreenModel(
                 filterFnBookmarked(it) &&
                 filterFnCompleted(it) &&
                 filterFnIntervalCustom(it) &&
-                filterFnTracking(it)
+                filterFnTracking(it) &&
+                filterFnExtensions(it)
         }
     }
 
@@ -350,35 +365,44 @@ class LibraryScreenModel(
         }
     }
 
+    private fun isNovel(sourceId: Long): Boolean {
+        return sourceManager.get(sourceId)?.isNovelSource() == true
+    }
+
     private fun getLibraryItemPreferencesFlow(): Flow<ItemPreferences> {
         return combine(
-            libraryPreferences.downloadBadge().changes(),
-            libraryPreferences.unreadBadge().changes(),
-            libraryPreferences.localBadge().changes(),
-            libraryPreferences.languageBadge().changes(),
-            libraryPreferences.autoUpdateMangaRestrictions().changes(),
-
-            preferences.downloadedOnly().changes(),
-            libraryPreferences.filterDownloaded().changes(),
-            libraryPreferences.filterUnread().changes(),
-            libraryPreferences.filterStarted().changes(),
-            libraryPreferences.filterBookmarked().changes(),
-            libraryPreferences.filterCompleted().changes(),
-            libraryPreferences.filterIntervalCustom().changes(),
-        ) {
+            combine(
+                libraryPreferences.downloadBadge().changes(),
+                libraryPreferences.unreadBadge().changes(),
+                libraryPreferences.localBadge().changes(),
+                libraryPreferences.languageBadge().changes(),
+                libraryPreferences.autoUpdateMangaRestrictions().changes(),
+                preferences.downloadedOnly().changes(),
+            ) { arr -> arr },
+            combine(
+                libraryPreferences.filterDownloaded().changes(),
+                libraryPreferences.filterUnread().changes(),
+                libraryPreferences.filterStarted().changes(),
+                libraryPreferences.filterBookmarked().changes(),
+                libraryPreferences.filterCompleted().changes(),
+                libraryPreferences.filterIntervalCustom().changes(),
+                libraryPreferences.excludedExtensions().changes(),
+            ) { arr -> arr },
+        ) { first, second ->
             ItemPreferences(
-                downloadBadge = it[0] as Boolean,
-                unreadBadge = it[1] as Boolean,
-                localBadge = it[2] as Boolean,
-                languageBadge = it[3] as Boolean,
-                skipOutsideReleasePeriod = LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in (it[4] as Set<*>),
-                globalFilterDownloaded = it[5] as Boolean,
-                filterDownloaded = it[6] as TriState,
-                filterUnread = it[7] as TriState,
-                filterStarted = it[8] as TriState,
-                filterBookmarked = it[9] as TriState,
-                filterCompleted = it[10] as TriState,
-                filterIntervalCustom = it[11] as TriState,
+                downloadBadge = first[0] as Boolean,
+                unreadBadge = first[1] as Boolean,
+                localBadge = first[2] as Boolean,
+                languageBadge = first[3] as Boolean,
+                skipOutsideReleasePeriod = LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in (first[4] as Set<*>),
+                globalFilterDownloaded = first[5] as Boolean,
+                filterDownloaded = second[0] as TriState,
+                filterUnread = second[1] as TriState,
+                filterStarted = second[2] as TriState,
+                filterBookmarked = second[3] as TriState,
+                filterCompleted = second[4] as TriState,
+                filterIntervalCustom = second[5] as TriState,
+                excludedExtensions = @Suppress("UNCHECKED_CAST") (second[6] as Set<String>),
             )
         }
     }
@@ -389,8 +413,16 @@ class LibraryScreenModel(
             getLibraryItemPreferencesFlow(),
             downloadCache.changes,
         ) { libraryManga, preferences, _ ->
-            libraryManga.map { manga ->
-                LibraryItem(
+            libraryManga
+                .filter { item ->
+                    when (type) {
+                        LibraryType.All -> true
+                        LibraryType.Manga -> !isNovel(item.manga.source)
+                        LibraryType.Novel -> isNovel(item.manga.source)
+                    }
+                }
+                .map { manga ->
+                    LibraryItem(
                     libraryManga = manga,
                     downloadCount = if (preferences.downloadBadge) {
                         downloadManager.getDownloadCount(manga.manga).toLong()
@@ -493,6 +525,15 @@ class LibraryScreenModel(
 
                 downloadManager.downloadChapters(manga, chapters)
             }
+        }
+    }
+
+    /**
+     * Show confirmation dialog for marking mangas read/unread.
+     */
+    fun showMarkReadConfirmation(read: Boolean) {
+        mutableState.update {
+            it.copy(dialog = Dialog.MarkReadConfirmation(read))
         }
     }
 
@@ -652,6 +693,23 @@ class LibraryScreenModel(
         }
     }
 
+    /**
+     * Returns the URLs of the selected manga.
+     * Uses the source's getMangaUrl method to get the proper URL for each manga.
+     */
+    fun getSelectedMangaUrls(): List<String> {
+        return state.value.selectedManga.mapNotNull { manga ->
+            val source = sourceManager.get(manga.source) as? HttpSource
+            source?.let {
+                try {
+                    it.getMangaUrl(manga.toSManga())
+                } catch (e: Exception) {
+                    null
+                }
+            }
+        }
+    }
+
     fun search(query: String?) {
         mutableState.update { it.copy(searchQuery = query) }
     }
@@ -698,13 +756,19 @@ class LibraryScreenModel(
         mutableState.update { it.copy(dialog = null) }
     }
 
+    fun openMassImportDialog() {
+        mutableState.update { it.copy(dialog = Dialog.MassImport) }
+    }
+
     sealed interface Dialog {
         data object SettingsSheet : Dialog
+        data object MassImport : Dialog
         data class ChangeCategory(
             val manga: List<Manga>,
             val initialSelection: ImmutableList<CheckboxState<Category>>,
         ) : Dialog
         data class DeleteManga(val manga: List<Manga>) : Dialog
+        data class MarkReadConfirmation(val read: Boolean) : Dialog
     }
 
     @Immutable
@@ -722,6 +786,7 @@ class LibraryScreenModel(
         val filterBookmarked: TriState,
         val filterCompleted: TriState,
         val filterIntervalCustom: TriState,
+        val excludedExtensions: Set<String>,
     )
 
     @Immutable

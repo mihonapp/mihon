@@ -1,6 +1,7 @@
 package eu.kanade.presentation.history
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import eu.kanade.tachiyomi.ui.history.HistoryFilter
 import eu.kanade.tachiyomi.ui.history.HistoryScreenModel
 import tachiyomi.domain.history.model.HistoryWithRelations
 import tachiyomi.domain.manga.model.MangaCover
@@ -23,6 +24,7 @@ class HistoryScreenModelStateProvider : PreviewParameterProvider<HistoryScreenMo
             .plus(HistoryUiModelExamples.header { it.minus(2, ChronoUnit.DAYS) })
             .plus(HistoryUiModelExamples.items().take(7))
             .toList(),
+        filter = HistoryFilter.ALL,
         dialog = null,
     )
 
@@ -32,6 +34,7 @@ class HistoryScreenModelStateProvider : PreviewParameterProvider<HistoryScreenMo
             HistoryUiModelExamples.headerToday,
             HistoryUiModelExamples.items().first(),
         ),
+        filter = HistoryFilter.ALL,
         dialog = null,
     )
 
@@ -41,22 +44,26 @@ class HistoryScreenModelStateProvider : PreviewParameterProvider<HistoryScreenMo
             HistoryUiModelExamples.headerTomorrow,
             HistoryUiModelExamples.items().first(),
         ),
+        filter = HistoryFilter.ALL,
         dialog = null,
     )
 
     private val empty = HistoryScreenModel.State(
         searchQuery = null,
         list = listOf(),
+        filter = HistoryFilter.ALL,
         dialog = null,
     )
 
     private val loadingWithSearchQuery = HistoryScreenModel.State(
         searchQuery = "Example Search Query",
+        filter = HistoryFilter.ALL,
     )
 
     private val loading = HistoryScreenModel.State(
         searchQuery = null,
         list = null,
+        filter = HistoryFilter.ALL,
         dialog = null,
     )
 

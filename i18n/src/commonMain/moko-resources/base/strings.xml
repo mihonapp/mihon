@@ -2,6 +2,53 @@
 <resources>
     <string name="app_name" translatable="false">Mihon</string>
 
+    <string name="pref_font_size">Font size</string>
+    <string name="pref_font_family">Font family</string>
+    <string name="pref_novel_theme">Theme</string>
+    <string name="pref_category_novel">Novel</string>
+    <string name="pref_novel_custom_css">Custom CSS</string>
+    <string name="pref_novel_custom_js">Custom JavaScript</string>
+    <string name="pref_novel_line_height">Line height</string>
+    <string name="pref_novel_text_align">Text alignment</string>
+    <string name="pref_novel_auto_scroll">Auto scroll</string>
+    <string name="pref_novel_auto_scroll_speed">Auto scroll speed</string>
+    <string name="pref_novel_volume_keys_scroll">Volume keys scroll</string>
+    <string name="pref_novel_tap_to_scroll">Tap to scroll</string>
+    <string name="pref_novel_text_selectable">Enable text selection</string>
+    <string name="pref_novel_hide_chapter_title">Hide chapter title in content</string>
+    <string name="pref_novel_use_original_fonts">Use source\'s original fonts</string>
+    <string name="pref_novel_margin_left">Left margin</string>
+    <string name="pref_novel_margin_right">Right margin</string>
+    <string name="pref_novel_margin_top">Top margin</string>
+    <string name="pref_novel_margin_bottom">Bottom margin</string>
+    <string name="pref_novel_font_color">Font color</string>
+    <string name="pref_novel_background_color">Background color</string>
+    <string name="pref_novel_paragraph_indent">Paragraph indent</string>
+    <string name="pref_novel_rendering_mode">Rendering mode</string>
+    <string name="pref_novel_tts">Text to speech</string>
+    <string name="action_reload_chapter">Reload chapter</string>
+    <string name="action_reload_local">Reload from local</string>
+    <string name="action_reload_source">Reload from source</string>
+    <string name="action_scroll_to_top">Scroll to top</string>
+    <string name="action_start_auto_scroll">Start auto-scroll</string>
+    <string name="action_stop_auto_scroll">Stop auto-scroll</string>
+    <string name="action_copy_links">Copy links</string>
+    <string name="action_mass_import">Mass import</string>
+    <string name="novel_snippet_title">Snippet title</string>
+    <string name="novel_snippet_code">Code</string>
+    <string name="novel_add_snippet">Add snippet</string>
+    <string name="novel_edit_snippet">Edit snippet</string>
+    <string name="novel_delete_snippet">Delete snippet</string>
+    <string name="pref_novel_infinite_scroll">Infinite scroll (auto-load next chapter)</string>
+    <string name="pref_novel_chapter_sort_order">Chapter order</string>
+    <string name="pref_novel_progress_slider">Show progress slider</string>
+    <string name="pref_novel_css_snippets">CSS Snippets</string>
+    <string name="pref_novel_js_snippets">JavaScript Snippets</string>
+    <string name="novel_add_css_snippet">Add CSS snippet</string>
+    <string name="novel_edit_css_snippet">Edit CSS snippet</string>
+    <string name="novel_add_js_snippet">Add JavaScript snippet</string>
+    <string name="novel_edit_js_snippet">Edit JavaScript snippet</string>
+
     <!-- Generic strings -->
     <string name="on">On</string>
     <string name="off">Off</string>
@@ -24,16 +71,23 @@
     <string name="label_more">More</string>
     <string name="label_settings">Settings</string>
     <string name="label_download_queue">Download queue</string>
+    <string name="label_novel_download_queue">Novel downloads</string>
     <string name="label_library">Library</string>
     <string name="label_recent_updates">Updates</string>
     <string name="label_upcoming">Upcoming</string>
     <string name="label_recent_manga">History</string>
     <string name="label_sources">Sources</string>
+    <string name="label_manga_sources">Manga Sources</string>
+    <string name="label_novel_sources">Novel Sources</string>
+    <string name="label_manga">Manga</string>
+    <string name="label_novels">Novels</string>
     <string name="label_backup">Backup and restore</string>
     <string name="label_data_storage">Data and storage</string>
     <string name="label_stats">Statistics</string>
     <string name="label_migration">Migrate</string>
     <string name="label_extensions">Extensions</string>
+    <string name="label_manga_extensions">Manga Extensions</string>
+    <string name="label_novel_extensions">Novel Extensions</string>
     <string name="label_extension_info">Extension info</string>
     <string name="label_help">Help</string>
     <string name="label_donate">Donate</string>
@@ -150,6 +204,7 @@
     <string name="action_move_to_bottom_all_for_series">Move series to bottom</string>
     <string name="action_notes">Notes</string>
     <string name="action_edit_notes">Edit notes</string>
+    <string name="action_edit_alt_titles">Edit alternative titles</string>
     <string name="action_install">Install</string>
     <string name="action_share">Share</string>
     <string name="action_save">Save</string>
@@ -208,6 +263,8 @@
     <string name="pref_category_appearance">Appearance</string>
     <string name="pref_category_library">Library</string>
     <string name="pref_category_reader">Reader</string>
+    <string name="pref_category_manga_reader">Manga Reader</string>
+    <string name="pref_category_novel_reader">Novel Reader</string>
     <string name="pref_category_downloads">Downloads</string>
     <string name="pref_category_tracking">Tracking</string>
     <string name="pref_category_advanced">Advanced</string>
@@ -216,6 +273,8 @@
     <string name="pref_appearance_summary">Theme, date &amp; time format</string>
     <string name="pref_library_summary">Categories, global update, chapter swipe</string>
     <string name="pref_reader_summary">Reading mode, display, navigation</string>
+    <string name="pref_manga_reader_summary">Manga reading mode, display, navigation</string>
+    <string name="pref_novel_reader_summary">Novel reading mode, fonts, colors</string>
     <string name="pref_downloads_summary">Automatic download, download ahead</string>
     <string name="pref_tracking_summary">One-way progress sync, enhanced sync</string>
     <string name="pref_browse_summary">Sources, extensions, global search</string>
@@ -456,6 +515,7 @@
     <string name="vertical_viewer">Paged (vertical)</string>
     <string name="webtoon_viewer">Long strip</string>
     <string name="vertical_plus_viewer">Long strip with gaps</string>
+    <string name="novel_viewer">Novel (text)</string>
     <string name="pager_viewer">Paged</string>
     <string name="pref_viewer_nav">Tap zones</string>
     <string name="pref_image_scale_type">Scale type</string>
@@ -527,6 +587,26 @@
     <string name="pref_download_concurrent_sources">Concurrent source downloads</string>
     <string name="pref_download_concurrent_pages">Concurrent page downloads</string>
     <string name="pref_download_concurrent_pages_summary">Pages downloaded simultaneously per source</string>
+
+    <!-- Novel Download Throttling -->
+    <string name="pref_category_novel_downloads">Novel Downloads</string>
+    <string name="pref_novel_download_throttling">Enable throttling</string>
+    <string name="pref_novel_download_throttling_summary">Add delays between downloads to avoid rate limiting</string>
+    <string name="pref_novel_download_delay">Download delay</string>
+    <string name="pref_novel_download_delay_summary">Base delay between chapter downloads (ms)</string>
+    <string name="pref_novel_random_delay">Random delay range</string>
+    <string name="pref_novel_random_delay_summary">Additional random delay (0 to this value in ms)</string>
+    <string name="pref_novel_update_throttling">Update throttling</string>
+    <string name="pref_novel_update_throttling_summary">Add delays during library updates for novels</string>
+    <string name="pref_novel_update_delay">Update delay</string>
+    <string name="pref_novel_update_delay_summary">Delay between checking novels during updates (ms)</string>
+    <string name="pref_novel_mass_import_throttling">Mass import throttling</string>
+    <string name="pref_novel_mass_import_throttling_summary">Add delays during mass import operations</string>
+    <string name="pref_novel_mass_import_delay">Mass import delay</string>
+    <string name="pref_novel_mass_import_delay_summary">Delay between imports (ms)</string>
+    <string name="pref_novel_parallel_downloads">Parallel novel downloads</string>
+    <string name="pref_novel_source_overrides">Source-specific overrides</string>
+    <string name="pref_novel_source_overrides_summary">Configure delays for specific sources</string>
 
     <!-- Tracking section -->
     <string name="tracking_guide">Tracking guide</string>
@@ -832,6 +912,7 @@
     <string name="cover_updated">Cover updated</string>
     <string name="share_page_info">%1$s: %2$s, page %3$d</string>
     <string name="chapter_progress">Page: %1$d</string>
+    <string name="chapter_progress_novel">%1$d%%</string>
     <string name="no_next_chapter">Next chapter not found</string>
     <string name="decode_image_error">The image couldn\'t be loaded</string>
     <string name="confirm_set_image_as_cover">Use this image as cover art?</string>

@@ -16,6 +16,8 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.core.preference.asState
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.source.interactor.GetIncognitoState
+import eu.kanade.domain.source.interactor.ManageFilterPresets
+import eu.kanade.domain.source.model.FilterPreset
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.presentation.util.ioCoroutineScope
@@ -25,7 +27,12 @@ import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.MutableStateFlow
+import logcat.LogPriority
+import logcat.logcat
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.firstOrNull
@@ -57,7 +64,7 @@ class BrowseSourceScreenModel(
     private val sourceId: Long,
     listingQuery: String?,
     sourceManager: SourceManager = Injekt.get(),
-    sourcePreferences: SourcePreferences = Injekt.get(),
+    private val sourcePreferences: SourcePreferences = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
     private val coverCache: CoverCache = Injekt.get(),
     private val getRemoteManga: GetRemoteManga = Injekt.get(),
@@ -69,13 +76,26 @@ class BrowseSourceScreenModel(
     private val updateManga: UpdateManga = Injekt.get(),
     private val addTracks: AddTracks = Injekt.get(),
     private val getIncognitoState: GetIncognitoState = Injekt.get(),
+    private val manageFilterPresets: ManageFilterPresets = Injekt.get(),
 ) : StateScreenModel<BrowseSourceScreenModel.State>(State(Listing.valueOf(listingQuery))) {
 
     var displayMode by sourcePreferences.sourceDisplayMode().asState(screenModelScope)
 
     val source = sourceManager.getOrStub(sourceId)
 
+    // Filter Preset Management - declared before init to avoid NPE
+    private val _filterPresets = MutableStateFlow<List<FilterPreset>>(emptyList())
+    val filterPresets: StateFlow<List<FilterPreset>> = _filterPresets.asStateFlow()
+    
+    // Auto-apply filter presets as a StateFlow that updates when preference changes
+    val autoApplyFilterPresets: StateFlow<Boolean> = sourcePreferences.autoApplyFilterPresets()
+        .changes()
+        .stateIn(screenModelScope, SharingStarted.Lazily, sourcePreferences.autoApplyFilterPresets().get())
+
     init {
+        // Load filter presets from storage
+        refreshFilterPresets()
+        
         if (source is CatalogueSource) {
             mutableState.update {
                 var query: String? = null
@@ -91,6 +111,11 @@ class BrowseSourceScreenModel(
                     filters = source.getFilterList(),
                     toolbarQuery = query,
                 )
+            }
+            
+            // Apply default preset if auto-apply is enabled (async)
+            screenModelScope.launch {
+                applyDefaultPresetIfEnabled()
             }
         }
 
@@ -306,6 +331,89 @@ class BrowseSourceScreenModel(
         setDialog(Dialog.Filter)
     }
 
+    fun openPresetSheet() {
+        // Refresh presets from storage when opening sheet
+        refreshFilterPresets()
+        setDialog(Dialog.FilterPresets)
+    }
+
+    private fun refreshFilterPresets() {
+        _filterPresets.value = manageFilterPresets.getPresets(sourceId).presets
+    }
+
+    fun saveFilterPreset(name: String, setAsDefault: Boolean) {
+        if (source !is CatalogueSource) return
+        
+        logcat(LogPriority.DEBUG) { "BrowseSource: saveFilterPreset name=$name, setAsDefault=$setAsDefault, sourceId=$sourceId" }
+        manageFilterPresets.savePreset(
+            sourceId = sourceId,
+            name = name,
+            filters = state.value.filters,
+            setAsDefault = setAsDefault,
+        )
+        // Immediately refresh the presets list
+        refreshFilterPresets()
+        logcat(LogPriority.INFO) { "BrowseSource: Preset '$name' saved" }
+    }
+
+    fun loadFilterPreset(presetId: Long) {
+        if (source !is CatalogueSource) return
+        
+        logcat(LogPriority.DEBUG) { "BrowseSource: loadFilterPreset presetId=$presetId, sourceId=$sourceId" }
+        val presetState = manageFilterPresets.loadPresetState(sourceId, presetId)
+        if (presetState != null) {
+            logcat(LogPriority.DEBUG) { "BrowseSource: Loaded preset state, applying..." }
+            val filters = source.getFilterList()
+            ManageFilterPresets.applyPresetState(filters, presetState)
+            setFilters(filters)
+            logcat(LogPriority.INFO) { "BrowseSource: Preset applied successfully" }
+        } else {
+            logcat(LogPriority.WARN) { "BrowseSource: Preset state is null for presetId=$presetId" }
+        }
+    }
+
+    fun deleteFilterPreset(presetId: Long) {
+        logcat(LogPriority.DEBUG) { "BrowseSource: deleteFilterPreset presetId=$presetId" }
+        manageFilterPresets.deletePreset(sourceId, presetId)
+        // Immediately refresh the presets list
+        refreshFilterPresets()
+        logcat(LogPriority.INFO) { "BrowseSource: Preset deleted" }
+    }
+
+    fun setDefaultFilterPreset(presetId: Long?) {
+        logcat(LogPriority.DEBUG) { "BrowseSource: setDefaultFilterPreset presetId=$presetId" }
+        manageFilterPresets.setDefaultPreset(sourceId, presetId)
+        // Immediately refresh the presets list  
+        refreshFilterPresets()
+        logcat(LogPriority.INFO) { "BrowseSource: Default preset set" }
+    }
+
+    fun getAutoApplyPresets(): Boolean {
+        return manageFilterPresets.getAutoApplyEnabled()
+    }
+
+    fun setAutoApplyPresets(enabled: Boolean) {
+        logcat(LogPriority.DEBUG) { "BrowseSource: setAutoApplyPresets=$enabled" }
+        manageFilterPresets.setAutoApplyEnabled(enabled)
+    }
+
+    private fun applyDefaultPresetIfEnabled() {
+        if (source !is CatalogueSource) return
+        if (!manageFilterPresets.getAutoApplyEnabled()) return
+        
+        logcat(LogPriority.DEBUG) { "BrowseSource: applyDefaultPresetIfEnabled sourceId=$sourceId" }
+        val presetState = manageFilterPresets.getDefaultPresetState(sourceId)
+        if (presetState != null) {
+            logcat(LogPriority.DEBUG) { "BrowseSource: Found default preset, applying..." }
+            val filters = source.getFilterList()
+            ManageFilterPresets.applyPresetState(filters, presetState)
+            mutableState.update { it.copy(filters = filters) }
+            logcat(LogPriority.INFO) { "BrowseSource: Default preset applied" }
+        } else {
+            logcat(LogPriority.DEBUG) { "BrowseSource: No default preset found" }
+        }
+    }
+
     fun setDialog(dialog: Dialog?) {
         mutableState.update { it.copy(dialog = dialog) }
     }
@@ -335,6 +443,7 @@ class BrowseSourceScreenModel(
 
     sealed interface Dialog {
         data object Filter : Dialog
+        data object FilterPresets : Dialog
         data class RemoveManga(val manga: Manga) : Dialog
         data class AddDuplicateManga(val manga: Manga, val duplicates: List<MangaWithChapterCount>) : Dialog
         data class ChangeMangaCategory(

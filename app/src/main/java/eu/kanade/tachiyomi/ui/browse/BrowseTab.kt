@@ -17,9 +17,12 @@ import eu.kanade.presentation.components.TabbedScreen
 import eu.kanade.presentation.util.Tab
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionsScreenModel
+import eu.kanade.tachiyomi.ui.browse.extension.NovelExtensionsScreenModel
 import eu.kanade.tachiyomi.ui.browse.extension.extensionsTab
+import eu.kanade.tachiyomi.ui.browse.extension.novelExtensionsTab
 import eu.kanade.tachiyomi.ui.browse.migration.sources.migrateSourceTab
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
+import eu.kanade.tachiyomi.ui.browse.source.novelSourcesTab
 import eu.kanade.tachiyomi.ui.browse.source.sourcesTab
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import kotlinx.collections.immutable.persistentListOf
@@ -38,7 +41,7 @@ data object BrowseTab : Tab {
             val isSelected = LocalTabNavigator.current.current.key == key
             val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_browse_enter)
             return TabOptions(
-                index = 3u,
+                index = 4u,
                 title = stringResource(MR.strings.browse),
                 icon = rememberAnimatedVectorPainter(image, isSelected),
             )
@@ -62,9 +65,14 @@ data object BrowseTab : Tab {
         val extensionsScreenModel = rememberScreenModel { ExtensionsScreenModel() }
         val extensionsState by extensionsScreenModel.state.collectAsState()
 
+        val novelExtensionsScreenModel = rememberScreenModel { NovelExtensionsScreenModel() }
+        val novelExtensionsState by novelExtensionsScreenModel.state.collectAsState()
+
         val tabs = persistentListOf(
             sourcesTab(),
+            novelSourcesTab(),
             extensionsTab(extensionsScreenModel),
+            novelExtensionsTab(novelExtensionsScreenModel),
             migrateSourceTab(),
         )
 
@@ -74,12 +82,21 @@ data object BrowseTab : Tab {
             titleRes = MR.strings.browse,
             tabs = tabs,
             state = state,
-            searchQuery = extensionsState.searchQuery,
-            onChangeSearchQuery = extensionsScreenModel::search,
+            searchQuery = when (state.currentPage) {
+                2 -> extensionsState.searchQuery
+                3 -> novelExtensionsState.searchQuery
+                else -> null
+            },
+            onChangeSearchQuery = { query ->
+                when (state.currentPage) {
+                    2 -> extensionsScreenModel.search(query)
+                    3 -> novelExtensionsScreenModel.search(query)
+                }
+            },
         )
         LaunchedEffect(Unit) {
             switchToExtensionTabChannel.receiveAsFlow()
-                .collectLatest { state.scrollToPage(1) }
+                .collectLatest { state.scrollToPage(2) }
         }
 
         LaunchedEffect(Unit) {

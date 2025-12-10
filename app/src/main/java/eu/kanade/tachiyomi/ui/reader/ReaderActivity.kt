@@ -30,9 +30,12 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -55,6 +58,7 @@ import eu.kanade.presentation.reader.ReaderContentOverlay
 import eu.kanade.presentation.reader.ReaderPageActionsDialog
 import eu.kanade.presentation.reader.ReaderPageIndicator
 import eu.kanade.presentation.reader.ReadingModeSelectDialog
+import eu.kanade.presentation.reader.appbars.NovelReaderAppBars
 import eu.kanade.presentation.reader.appbars.ReaderAppBars
 import eu.kanade.presentation.reader.settings.ReaderSettingsDialog
 import eu.kanade.tachiyomi.R
@@ -76,6 +80,8 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
+import eu.kanade.tachiyomi.ui.reader.viewer.text.NovelViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.text.NovelWebViewViewer
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.isNightMode
 import eu.kanade.tachiyomi.util.system.openInBrowser
@@ -258,7 +264,8 @@ class ReaderActivity : BaseActivity() {
         }
 
         Box(modifier = Modifier.fillMaxSize()) {
-            if (!state.menuVisible && showPageNumber) {
+            val isNovelMode = state.viewer is NovelViewer || state.viewer is NovelWebViewViewer
+            if (!state.menuVisible && showPageNumber && !isNovelMode) {
                 ReaderPageIndicator(
                     currentPage = state.currentPage,
                     totalPages = state.totalPages,
@@ -296,6 +303,7 @@ class ReaderActivity : BaseActivity() {
                     onShowMenus = { setMenuVisibility(true) },
                     onHideMenus = { setMenuVisibility(false) },
                     screenModel = settingsScreenModel,
+                    isNovelMode = state.viewer is NovelViewer || state.viewer is NovelWebViewViewer,
                 )
             }
             is ReaderViewModel.Dialog.ReadingModeSelect -> {
@@ -450,53 +458,138 @@ class ReaderActivity : BaseActivity() {
         }
 
         val isHttpSource = viewModel.getSource() is HttpSource
+        val isNovelViewer = state.viewer is NovelViewer || state.viewer is NovelWebViewViewer
+        
+        if (isNovelViewer) {
+            var isAutoScrolling by remember { mutableStateOf(false) }
+            
+            // Get common callbacks that work for both viewer types
+            val onScrollToTop: () -> Unit = {
+                when (val viewer = state.viewer) {
+                    is NovelViewer -> viewer.scrollToTop()
+                    is NovelWebViewViewer -> viewer.scrollToTop()
+                }
+            }
+            val onToggleAutoScroll: () -> Unit = {
+                when (val viewer = state.viewer) {
+                    is NovelViewer -> {
+                        viewer.toggleAutoScroll()
+                        isAutoScrolling = viewer.isAutoScrollActive()
+                    }
+                    is NovelWebViewViewer -> {
+                        viewer.toggleAutoScroll()
+                        isAutoScrolling = viewer.isAutoScrollActive()
+                    }
+                }
+            }
+            
+            // Get novel progress for slider - use state from ViewModel for real-time updates
+            val showProgressSlider by readerPreferences.novelShowProgressSlider().collectAsState()
+            
+            // Use state.novelProgressPercent for slider value, which is updated via onNovelProgressChanged callback
+            val novelProgressFromState = state.novelProgressPercent
+            
+            // Also sync from viewer when menu becomes visible (for initial sync)
+            LaunchedEffect(state.menuVisible) {
+                if (state.menuVisible) {
+                    val viewer = state.viewer
+                    if (viewer is NovelViewer) {
+                        viewModel.updateNovelProgressPercent(viewer.getProgressPercent())
+                    } else if (viewer is NovelWebViewViewer) {
+                        viewModel.updateNovelProgressPercent(viewer.getProgressPercent())
+                    }
+                }
+            }
+            
+            NovelReaderAppBars(
+                visible = state.menuVisible,
+                
+                novelTitle = state.manga?.title,
+                chapterTitle = state.currentChapter?.chapter?.name,
+                navigateUp = onBackPressedDispatcher::onBackPressed,
+                onClickTopAppBar = ::openMangaScreen,
+                bookmarked = state.bookmarked,
+                onToggleBookmarked = viewModel::toggleChapterBookmark,
+                onOpenInWebView = ::openChapterInWebView.takeIf { isHttpSource },
+                onOpenInBrowser = ::openChapterInBrowser.takeIf { isHttpSource },
+                onShare = ::shareChapter.takeIf { isHttpSource },
+                onReloadLocal = { viewModel.reloadChapter(fromSource = false) },
+                onReloadSource = { viewModel.reloadChapter(fromSource = true) },
+                
+                showProgressSlider = showProgressSlider,
+                currentProgress = novelProgressFromState,
+                onProgressChange = { newProgress ->
+                    viewModel.updateNovelProgressPercent(newProgress)
+                    val viewer = state.viewer
+                    if (viewer is NovelViewer) {
+                        viewer.setProgressPercent(newProgress)
+                    } else if (viewer is NovelWebViewViewer) {
+                        viewer.setProgressPercent(newProgress)
+                    }
+                },
+                
+                onNextChapter = ::loadNextChapter,
+                enabledNext = state.viewerChapters?.nextChapter != null,
+                onPreviousChapter = ::loadPreviousChapter,
+                enabledPrevious = state.viewerChapters?.prevChapter != null,
+                
+                orientation = ReaderOrientation.fromPreference(
+                    viewModel.getMangaOrientation(resolveDefault = false),
+                ),
+                onClickOrientation = viewModel::openOrientationModeSelectDialog,
+                onClickSettings = viewModel::openSettingsDialog,
+                onScrollToTop = onScrollToTop,
+                isAutoScrolling = isAutoScrolling,
+                onToggleAutoScroll = onToggleAutoScroll,
+            )
+        } else {
+            val cropBorderPaged by readerPreferences.cropBorders().collectAsState()
+            val cropBorderWebtoon by readerPreferences.cropBordersWebtoon().collectAsState()
+            val isPagerType = ReadingMode.isPagerType(viewModel.getMangaReadingMode())
+            val cropEnabled = if (isPagerType) cropBorderPaged else cropBorderWebtoon
 
-        val cropBorderPaged by readerPreferences.cropBorders().collectAsState()
-        val cropBorderWebtoon by readerPreferences.cropBordersWebtoon().collectAsState()
-        val isPagerType = ReadingMode.isPagerType(viewModel.getMangaReadingMode())
-        val cropEnabled = if (isPagerType) cropBorderPaged else cropBorderWebtoon
+            ReaderAppBars(
+                visible = state.menuVisible,
 
-        ReaderAppBars(
-            visible = state.menuVisible,
+                mangaTitle = state.manga?.title,
+                chapterTitle = state.currentChapter?.chapter?.name,
+                navigateUp = onBackPressedDispatcher::onBackPressed,
+                onClickTopAppBar = ::openMangaScreen,
+                bookmarked = state.bookmarked,
+                onToggleBookmarked = viewModel::toggleChapterBookmark,
+                onOpenInWebView = ::openChapterInWebView.takeIf { isHttpSource },
+                onOpenInBrowser = ::openChapterInBrowser.takeIf { isHttpSource },
+                onShare = ::shareChapter.takeIf { isHttpSource },
 
-            mangaTitle = state.manga?.title,
-            chapterTitle = state.currentChapter?.chapter?.name,
-            navigateUp = onBackPressedDispatcher::onBackPressed,
-            onClickTopAppBar = ::openMangaScreen,
-            bookmarked = state.bookmarked,
-            onToggleBookmarked = viewModel::toggleChapterBookmark,
-            onOpenInWebView = ::openChapterInWebView.takeIf { isHttpSource },
-            onOpenInBrowser = ::openChapterInBrowser.takeIf { isHttpSource },
-            onShare = ::shareChapter.takeIf { isHttpSource },
+                viewer = state.viewer,
+                onNextChapter = ::loadNextChapter,
+                enabledNext = state.viewerChapters?.nextChapter != null,
+                onPreviousChapter = ::loadPreviousChapter,
+                enabledPrevious = state.viewerChapters?.prevChapter != null,
+                currentPage = state.currentPage,
+                totalPages = state.totalPages,
+                onPageIndexChange = {
+                    isScrollingThroughPages = true
+                    moveToPageIndex(it)
+                },
 
-            viewer = state.viewer,
-            onNextChapter = ::loadNextChapter,
-            enabledNext = state.viewerChapters?.nextChapter != null,
-            onPreviousChapter = ::loadPreviousChapter,
-            enabledPrevious = state.viewerChapters?.prevChapter != null,
-            currentPage = state.currentPage,
-            totalPages = state.totalPages,
-            onPageIndexChange = {
-                isScrollingThroughPages = true
-                moveToPageIndex(it)
-            },
-
-            readingMode = ReadingMode.fromPreference(
-                viewModel.getMangaReadingMode(resolveDefault = false),
-            ),
-            onClickReadingMode = viewModel::openReadingModeSelectDialog,
-            orientation = ReaderOrientation.fromPreference(
-                viewModel.getMangaOrientation(resolveDefault = false),
-            ),
-            onClickOrientation = viewModel::openOrientationModeSelectDialog,
-            cropEnabled = cropEnabled,
-            onClickCropBorder = {
-                val enabled = viewModel.toggleCropBorders()
-                menuToggleToast?.cancel()
-                menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
-            },
-            onClickSettings = viewModel::openSettingsDialog,
-        )
+                readingMode = ReadingMode.fromPreference(
+                    viewModel.getMangaReadingMode(resolveDefault = false),
+                ),
+                onClickReadingMode = viewModel::openReadingModeSelectDialog,
+                orientation = ReaderOrientation.fromPreference(
+                    viewModel.getMangaOrientation(resolveDefault = false),
+                ),
+                onClickOrientation = viewModel::openOrientationModeSelectDialog,
+                cropEnabled = cropEnabled,
+                onClickCropBorder = {
+                    val enabled = viewModel.toggleCropBorders()
+                    menuToggleToast?.cancel()
+                    menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
+                },
+                onClickSettings = viewModel::openSettingsDialog,
+            )
+        }
     }
 
     /**
@@ -582,8 +675,12 @@ class ReaderActivity : BaseActivity() {
 
     private fun showReadingModeToast(mode: Int) {
         try {
+            val readingMode = ReadingMode.fromPreference(mode)
+            // Skip toast for novel mode - it's obvious we're reading text
+            if (readingMode == ReadingMode.NOVEL) return
+            
             readingModeToast?.cancel()
-            readingModeToast = toast(ReadingMode.fromPreference(mode).stringRes)
+            readingModeToast = toast(readingMode.stringRes)
         } catch (_: ArrayIndexOutOfBoundsException) {
             logcat(LogPriority.ERROR) { "Unknown reading mode: $mode" }
         }
@@ -645,7 +742,7 @@ class ReaderActivity : BaseActivity() {
      * Tells the presenter to load the next chapter and mark it as active. The progress dialog
      * should be automatically shown.
      */
-    private fun loadNextChapter() {
+    internal fun loadNextChapter() {
         lifecycleScope.launch {
             viewModel.loadNextChapter()
             moveToPageIndex(0)
@@ -656,7 +753,7 @@ class ReaderActivity : BaseActivity() {
      * Tells the presenter to load the previous chapter and mark it as active. The progress dialog
      * should be automatically shown.
      */
-    private fun loadPreviousChapter() {
+    internal fun loadPreviousChapter() {
         lifecycleScope.launch {
             viewModel.loadPreviousChapter()
             moveToPageIndex(0)
@@ -669,6 +766,23 @@ class ReaderActivity : BaseActivity() {
      */
     fun onPageSelected(page: ReaderPage) {
         viewModel.onPageSelected(page)
+    }
+
+    /**
+     * Called from the novel viewer to save reading progress with a percentage.
+     * Progress is stored as percentage (0-100) in last_page_read.
+     */
+    fun saveNovelProgress(page: ReaderPage, progressPercentage: Int) {
+        viewModel.saveNovelProgress(page, progressPercentage)
+    }
+
+    /**
+     * Called from the novel viewer when scroll progress changes.
+     * Updates the progress slider in real-time.
+     */
+    fun onNovelProgressChanged(progress: Float) {
+        val percentage = (progress * 100).toInt().coerceIn(0, 100)
+        viewModel.updateNovelProgressPercent(percentage)
     }
 
     /**
@@ -862,6 +976,23 @@ class ReaderActivity : BaseActivity() {
                 .onEach(::setCustomBrightness)
                 .launchIn(lifecycleScope)
 
+            // Novel-specific brightness
+            readerPreferences.novelCustomBrightness().changes()
+                .onEach(::setNovelCustomBrightness)
+                .launchIn(lifecycleScope)
+
+            // Apply novel brightness when viewer changes to a novel viewer
+            viewModel.state
+                .map { it.viewer }
+                .distinctUntilChanged()
+                .filterNotNull()
+                .onEach { viewer ->
+                    if (viewer is NovelViewer || viewer is NovelWebViewViewer) {
+                        setNovelCustomBrightness(readerPreferences.novelCustomBrightness().get())
+                    }
+                }
+                .launchIn(lifecycleScope)
+
             combine(
                 readerPreferences.grayscale().changes(),
                 readerPreferences.invertedColors().changes(),
@@ -877,6 +1008,23 @@ class ReaderActivity : BaseActivity() {
             ) { fullscreen, drawUnderCutout -> fullscreen to drawUnderCutout }
                 .onEach { (fullscreen, drawUnderCutout) ->
                     updateViewerInset(fullscreen, drawUnderCutout)
+                }
+                .launchIn(lifecycleScope)
+            
+            // Re-create viewer when novel rendering mode changes
+            readerPreferences.novelRenderingMode().changes()
+                .drop(1) // Skip initial value
+                .onEach {
+                    val currentViewer = viewModel.state.value.viewer
+                    // Only re-create if currently using a novel viewer
+                    if (currentViewer is NovelViewer || currentViewer is NovelWebViewViewer) {
+                        updateViewer()
+                        viewModel.state.value.viewerChapters?.let { chapters ->
+                            setChapters(chapters)
+                        }
+                        // Re-apply brightness for novel viewers
+                        setNovelCustomBrightness(readerPreferences.novelCustomBrightness().get())
+                    }
                 }
                 .launchIn(lifecycleScope)
         }
@@ -926,8 +1074,32 @@ class ReaderActivity : BaseActivity() {
          * Sets the custom brightness overlay according to [enabled].
          */
         private fun setCustomBrightness(enabled: Boolean) {
+            // Skip if using novel viewer with its own brightness setting
+            val viewer = viewModel.state.value.viewer
+            if (viewer is NovelViewer || viewer is NovelWebViewViewer) {
+                return
+            }
             if (enabled) {
                 readerPreferences.customBrightnessValue().changes()
+                    .sample(100)
+                    .onEach(::setCustomBrightnessValue)
+                    .launchIn(lifecycleScope)
+            } else {
+                setCustomBrightnessValue(0)
+            }
+        }
+
+        /**
+         * Sets the novel-specific custom brightness overlay according to [enabled].
+         */
+        private fun setNovelCustomBrightness(enabled: Boolean) {
+            // Only apply if using novel viewer
+            val viewer = viewModel.state.value.viewer
+            if (viewer !is NovelViewer && viewer !is NovelWebViewViewer) {
+                return
+            }
+            if (enabled) {
+                readerPreferences.novelCustomBrightnessValue().changes()
                     .sample(100)
                     .onEach(::setCustomBrightnessValue)
                     .launchIn(lifecycleScope)

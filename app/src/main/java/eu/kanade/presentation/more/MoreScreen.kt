@@ -31,11 +31,13 @@ import tachiyomi.presentation.core.i18n.stringResource
 @Composable
 fun MoreScreen(
     downloadQueueStateProvider: () -> DownloadQueueState,
+    novelDownloadCount: Int,
     downloadedOnly: Boolean,
     onDownloadedOnlyChange: (Boolean) -> Unit,
     incognitoMode: Boolean,
     onIncognitoModeChange: (Boolean) -> Unit,
     onClickDownloadQueue: () -> Unit,
+    onClickNovelDownloadQueue: () -> Unit,
     onClickCategories: () -> Unit,
     onClickStats: () -> Unit,
     onClickDataAndStorage: () -> Unit,

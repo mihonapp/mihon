@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -52,7 +54,9 @@ import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.track.anilist.AnilistApi
 import eu.kanade.tachiyomi.data.track.bangumi.BangumiApi
 import eu.kanade.tachiyomi.data.track.myanimelist.MyAnimeListApi
+import eu.kanade.tachiyomi.data.track.novellist.NovelList
 import eu.kanade.tachiyomi.data.track.shikimori.ShikimoriApi
+import eu.kanade.tachiyomi.ui.webview.TrackerWebViewLoginActivity
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.persistentListOf
@@ -105,6 +109,13 @@ object SettingsTrackingScreen : SearchableSettings {
                 is LogoutDialog -> {
                     TrackingLogoutDialog(
                         tracker = tracker,
+                        onDismissRequest = { dialog = null },
+                    )
+                }
+                is NovelTrackerLoginDialog -> {
+                    NovelTrackerLoginDialogContent(
+                        tracker = tracker,
+                        trackerName = trackerName,
                         onDismissRequest = { dialog = null },
                     )
                 }
@@ -172,6 +183,60 @@ object SettingsTrackingScreen : SearchableSettings {
                         logout = { dialog = LogoutDialog(trackerManager.bangumi) },
                     ),
                     Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.tracking_info)),
+                ),
+            ),
+            Preference.PreferenceGroup(
+                title = "Novel Trackers",
+                preferenceItems = persistentListOf(
+                    Preference.PreferenceItem.TrackerPreference(
+                        tracker = trackerManager.novelUpdates,
+                        login = { 
+                            // Use WebView-based login for NovelUpdates
+                            val intent = TrackerWebViewLoginActivity.newIntent(
+                                context,
+                                trackerId = 10L,
+                                trackerName = "NovelUpdates",
+                                loginUrl = "https://www.novelupdates.com/login/"
+                            )
+                            context.startActivity(intent)
+                        },
+                        logout = { dialog = LogoutDialog(trackerManager.novelUpdates) },
+                    ),
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = trackPreferences.novelUpdatesMarkChaptersAsRead(),
+                        title = "Mark chapters as read on NovelUpdates",
+                        subtitle = "Automatically mark chapters as read when you read them in the app",
+                    ),
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = trackPreferences.novelUpdatesSyncReadingList(),
+                        title = "Sync reading list",
+                        subtitle = "Keep reading list status in sync with NovelUpdates",
+                    ),
+                    Preference.PreferenceItem.TrackerPreference(
+                        tracker = trackerManager.novelList,
+                        login = { 
+                            // Use WebView-based login for NovelList
+                            val intent = TrackerWebViewLoginActivity.newIntent(
+                                context,
+                                trackerId = 11L,
+                                trackerName = "NovelList",
+                                loginUrl = "https://www.novellist.co/sign-in"
+                            )
+                            context.startActivity(intent)
+                        },
+                        logout = { dialog = LogoutDialog(trackerManager.novelList) },
+                    ),
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = trackPreferences.novelListMarkChaptersAsRead(),
+                        title = "Mark chapters as read on NovelList",
+                        subtitle = "Automatically mark chapters as read when you read them in the app",
+                    ),
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = trackPreferences.novelListSyncReadingList(),
+                        title = "Sync reading list",
+                        subtitle = "Keep reading list status in sync with NovelList",
+                    ),
+                    Preference.PreferenceItem.InfoPreference("Login via WebView. Cookies will be automatically extracted after successful login."),
                 ),
             ),
             Preference.PreferenceGroup(
@@ -352,6 +417,117 @@ object SettingsTrackingScreen : SearchableSettings {
             },
         )
     }
+
+    @Composable
+    private fun NovelTrackerLoginDialogContent(
+        tracker: Tracker,
+        trackerName: String,
+        onDismissRequest: () -> Unit,
+    ) {
+        val context = LocalContext.current
+        val scope = rememberCoroutineScope()
+
+        var token by remember { mutableStateOf(TextFieldValue(tracker.getPassword())) }
+        var processing by remember { mutableStateOf(false) }
+        var inputError by remember { mutableStateOf(false) }
+
+        val instructions = when (trackerName) {
+            "NovelList" -> "1. Login to novellist.co in browser\n2. Open DevTools (F12) → Application → Cookies\n3. Find 'novellist' cookie\n4. If it starts with 'base64-', decode it and extract 'access_token'\n5. Paste the token below"
+            "NovelUpdates" -> "1. Login to novelupdates.com in browser\n2. Open DevTools (F12) → Application → Cookies\n3. Copy all cookie values\n4. Paste below as: cookie_name=value; cookie_name2=value2"
+            else -> "Enter your authentication token"
+        }
+
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            title = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "Login to $trackerName",
+                        modifier = Modifier.weight(1f),
+                    )
+                    IconButton(onClick = onDismissRequest) {
+                        Icon(
+                            imageVector = Icons.Outlined.Close,
+                            contentDescription = stringResource(MR.strings.action_close),
+                        )
+                    }
+                }
+            },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text(
+                        text = instructions,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    
+                    var hideToken by remember { mutableStateOf(true) }
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = token,
+                        onValueChange = { token = it },
+                        label = { Text("Token / Cookies") },
+                        trailingIcon = {
+                            IconButton(onClick = { hideToken = !hideToken }) {
+                                Icon(
+                                    imageVector = if (hideToken) {
+                                        Icons.Filled.Visibility
+                                    } else {
+                                        Icons.Filled.VisibilityOff
+                                    },
+                                    contentDescription = null,
+                                )
+                            }
+                        },
+                        visualTransformation = if (hideToken) {
+                            PasswordVisualTransformation()
+                        } else {
+                            VisualTransformation.None
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Done,
+                        ),
+                        singleLine = false,
+                        maxLines = 3,
+                        isError = inputError && !processing,
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = !processing && token.text.isNotBlank(),
+                    onClick = {
+                        scope.launchIO {
+                            processing = true
+                            val result = runCatching {
+                                tracker.login("", token.text.trim())
+                            }
+                            inputError = result.isFailure
+                            processing = false
+                            if (result.isSuccess) {
+                                withUIContext {
+                                    onDismissRequest()
+                                    context.toast(MR.strings.login_success)
+                                }
+                            } else {
+                                withUIContext {
+                                    context.toast(result.exceptionOrNull()?.message ?: "Login failed")
+                                }
+                            }
+                        }
+                    },
+                ) {
+                    if (processing) {
+                        CircularProgressIndicator(modifier = Modifier.height(16.dp))
+                    } else {
+                        Text(text = stringResource(MR.strings.login))
+                    }
+                }
+            },
+        )
+    }
 }
 
 private data class LoginDialog(
@@ -361,4 +537,9 @@ private data class LoginDialog(
 
 private data class LogoutDialog(
     val tracker: Tracker,
+)
+
+private data class NovelTrackerLoginDialog(
+    val tracker: Tracker,
+    val trackerName: String,
 )

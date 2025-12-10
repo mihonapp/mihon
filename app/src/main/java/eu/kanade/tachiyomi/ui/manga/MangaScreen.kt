@@ -165,6 +165,7 @@ class MangaScreen(
                 navigator.push(MigrationConfigScreen(successState.manga.id))
             }.takeIf { successState.manga.favorite },
             onEditNotesClicked = { navigator.push(MangaNotesScreen(manga = successState.manga)) },
+            onEditAlternativeTitlesClicked = screenModel::showEditAlternativeTitlesDialog,
             onMultiBookmarkClicked = screenModel::bookmarkChapters,
             onMultiMarkAsReadClicked = screenModel::markChaptersRead,
             onMarkPreviousAsReadClicked = screenModel::markPreviousChapterRead,
@@ -276,6 +277,13 @@ class MangaScreen(
                     onDismissRequest = onDismissRequest,
                     onValueChanged = { interval: Int -> screenModel.setFetchInterval(dialog.manga, interval) }
                         .takeIf { screenModel.isUpdateIntervalEnabled },
+                )
+            }
+            is MangaScreenModel.Dialog.EditAlternativeTitles -> {
+                eu.kanade.presentation.manga.components.EditAlternativeTitlesDialog(
+                    currentTitles = dialog.manga.alternativeTitles,
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = { titles -> screenModel.updateAlternativeTitles(titles) },
                 )
             }
         }

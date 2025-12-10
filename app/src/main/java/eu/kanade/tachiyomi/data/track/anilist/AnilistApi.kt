@@ -156,6 +156,70 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                         |title {
                             |userPreferred
                         |}
+                        |synonyms
+                        |coverImage {
+                            |large
+                        |}
+                        |format
+                        |status
+                        |chapters
+                        |description
+                        |startDate {
+                            |year
+                            |month
+                            |day
+                        |}
+                        |averageScore
+                    |}
+                |}
+            |}
+            |
+            """.trimMargin()
+            val payload = buildJsonObject {
+                put("query", query)
+                putJsonObject("variables") {
+                    put("query", search)
+                }
+            }
+            with(json) {
+                authClient.newCall(
+                    POST(
+                        API_URL,
+                        body = payload.toString().toRequestBody(jsonMime),
+                    ),
+                )
+                    .awaitSuccess()
+                    .parseAs<ALSearchResult>()
+                    .data.page.media
+                    .map { it.toALManga().toTrack() }
+            }
+        }
+    }
+
+    suspend fun searchNovels(search: String): List<TrackSearch> {
+        return withIOContext {
+            val query = """
+            |query Search(${'$'}query: String) {
+                |Page (perPage: 50) {
+                    |media(search: ${'$'}query, type: MANGA, format_in: [NOVEL]) {
+                        |id
+                        |staff {
+                            |edges {
+                                |role
+                                |id
+                                |node {
+                                    |name {
+                                        |full
+                                        |userPreferred
+                                        |native
+                                    |}
+                                |}
+                            |}
+                        |}
+                        |title {
+                            |userPreferred
+                        |}
+                        |synonyms
                         |coverImage {
                             |large
                         |}

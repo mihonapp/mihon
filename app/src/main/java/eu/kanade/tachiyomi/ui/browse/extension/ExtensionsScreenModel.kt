@@ -12,6 +12,7 @@ import eu.kanade.presentation.components.SEARCH_DEBOUNCE_MILLIS
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
+import eu.kanade.tachiyomi.extension.model.isNovel
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import kotlinx.coroutines.delay
@@ -93,18 +94,19 @@ class ExtensionsScreenModel(
 
                 val itemsGroups: ItemGroups = mutableMapOf()
 
-                val updates = _updates.filter(queryFilter(searchQuery)).map(extensionMapper(downloads))
+                val updates = _updates.filter { !it.isNovel() }.filter(queryFilter(searchQuery)).map(extensionMapper(downloads))
                 if (updates.isNotEmpty()) {
                     itemsGroups[ExtensionUiModel.Header.Resource(MR.strings.ext_updates_pending)] = updates
                 }
 
-                val installed = _installed.filter(queryFilter(searchQuery)).map(extensionMapper(downloads))
-                val untrusted = _untrusted.filter(queryFilter(searchQuery)).map(extensionMapper(downloads))
+                val installed = _installed.filter { !it.isNovel() }.filter(queryFilter(searchQuery)).map(extensionMapper(downloads))
+                val untrusted = _untrusted.filter { !it.isNovel() }.filter(queryFilter(searchQuery)).map(extensionMapper(downloads))
                 if (installed.isNotEmpty() || untrusted.isNotEmpty()) {
                     itemsGroups[ExtensionUiModel.Header.Resource(MR.strings.ext_installed)] = installed + untrusted
                 }
 
                 val languagesWithExtensions = _available
+                    .filter { !it.isNovel() }
                     .filter(queryFilter(searchQuery))
                     .groupBy { it.lang }
                     .toSortedMap(LocaleHelper.comparator)

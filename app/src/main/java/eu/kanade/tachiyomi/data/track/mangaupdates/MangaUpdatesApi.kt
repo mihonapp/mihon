@@ -172,6 +172,35 @@ class MangaUpdatesApi(
         }
     }
 
+    /**
+     * Search for novels specifically on MangaUpdates.
+     * Uses include_types: ["Novel"] to filter for novels only.
+     */
+    suspend fun searchNovels(query: String): List<MURecord> {
+        val body = buildJsonObject {
+            put("search", query)
+            put(
+                "include_types",
+                buildJsonArray {
+                    add("Novel")
+                },
+            )
+        }
+
+        return with(json) {
+            client.newCall(
+                POST(
+                    url = "$BASE_URL/v1/series/search",
+                    body = body.toString().toRequestBody(CONTENT_TYPE),
+                ),
+            )
+                .awaitSuccess()
+                .parseAs<MUSearchResult>()
+                .results
+                .map { it.record }
+        }
+    }
+
     suspend fun authenticate(username: String, password: String): MUContext? {
         val body = buildJsonObject {
             put("username", username)

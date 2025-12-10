@@ -240,12 +240,38 @@ data class BrowseSourceScreen(
         val onDismissRequest = { screenModel.setDialog(null) }
         when (val dialog = state.dialog) {
             is BrowseSourceScreenModel.Dialog.Filter -> {
+                val presets by screenModel.filterPresets.collectAsState()
                 SourceFilterDialog(
                     onDismissRequest = onDismissRequest,
                     filters = state.filters,
                     onReset = screenModel::resetFilters,
                     onFilter = { screenModel.search(filters = state.filters) },
                     onUpdate = screenModel::setFilters,
+                    onOpenPresets = screenModel::openPresetSheet,
+                    presets = presets,
+                    onSavePreset = screenModel::saveFilterPreset,
+                    onLoadPreset = screenModel::loadFilterPreset,
+                    onDeletePreset = screenModel::deleteFilterPreset,
+                )
+            }
+            is BrowseSourceScreenModel.Dialog.FilterPresets -> {
+                val presets by screenModel.filterPresets.collectAsState()
+                val autoApplyEnabled by screenModel.autoApplyFilterPresets.collectAsState()
+                FilterPresetsDialog(
+                    onDismissRequest = onDismissRequest,
+                    presets = presets,
+                    currentFilters = state.filters,
+                    autoApplyEnabled = autoApplyEnabled,
+                    onSavePreset = { name, setAsDefault ->
+                        screenModel.saveFilterPreset(name, setAsDefault)
+                    },
+                    onLoadPreset = { presetId ->
+                        screenModel.loadFilterPreset(presetId)
+                        screenModel.setDialog(BrowseSourceScreenModel.Dialog.Filter)
+                    },
+                    onDeletePreset = screenModel::deleteFilterPreset,
+                    onSetDefaultPreset = screenModel::setDefaultFilterPreset,
+                    onToggleAutoApply = screenModel::setAutoApplyPresets,
                 )
             }
             is BrowseSourceScreenModel.Dialog.AddDuplicateManga -> {

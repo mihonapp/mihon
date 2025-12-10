@@ -160,8 +160,21 @@ class DownloadManager(
      */
     fun buildPageList(source: Source, manga: Manga, chapter: Chapter): List<Page> {
         val chapterDir = provider.findChapterDir(chapter.name, chapter.scanlator, chapter.url, manga.title, source)
-        val files = chapterDir?.listFiles().orEmpty()
-            .filter { it.isFile && ImageUtil.isImage(it.name) { it.openInputStream() } }
+        logcat { "buildPageList: chapterDir=$chapterDir, exists=${chapterDir?.exists()}, isDir=${chapterDir?.isDirectory}" }
+        
+        val allFiles = chapterDir?.listFiles().orEmpty()
+        logcat { "buildPageList: found ${allFiles.size} files in directory" }
+        allFiles.forEach { file ->
+            logcat { "  - file: ${file.name}, isFile=${file.isFile}, isHtml=${file.name?.endsWith(".html")}" }
+        }
+        
+        val files = allFiles.filter { file -> 
+            file.isFile && (
+                file.name?.endsWith(".html") == true ||
+                ImageUtil.isImage(file.name) { file.openInputStream() }
+            )
+        }
+        logcat { "buildPageList: filtered to ${files.size} files" }
 
         if (files.isEmpty()) {
             throw Exception(context.stringResource(MR.strings.page_list_empty_error))

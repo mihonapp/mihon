@@ -38,6 +38,8 @@ class TrackSearch : Track {
 
     var artists: List<String> = emptyList()
 
+    var synonyms: List<String> = emptyList()
+
     var cover_url: String = ""
 
     var summary: String = ""

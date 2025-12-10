@@ -45,6 +45,7 @@ fun LibraryContent(
     getDisplayMode: (Int) -> PreferenceMutableState<LibraryDisplayMode>,
     getColumnsForOrientation: (Boolean) -> PreferenceMutableState<Int>,
     getItemsForCategory: (Category) -> List<LibraryItem>,
+    titleMaxLines: Int = 2,
 ) {
     Column(
         modifier = Modifier.padding(
@@ -110,6 +111,7 @@ fun LibraryContent(
                 },
                 onLongClickManga = onToggleRangeSelection,
                 onClickContinueReading = onContinueReadingClicked,
+                titleMaxLines = titleMaxLines,
             )
         }
 

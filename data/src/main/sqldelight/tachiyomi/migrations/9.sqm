@@ -1,0 +1,1 @@
+ALTER TABLE mangas ADD COLUMN alternative_titles TEXT AS List<String>;

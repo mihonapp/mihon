@@ -13,6 +13,7 @@ fun Chapter.toSChapter(): SChapter {
         it.date_upload = dateUpload
         it.chapter_number = chapterNumber.toFloat()
         it.scanlator = scanlator
+        it.locked = locked
     }
 }
 
@@ -23,6 +24,7 @@ fun Chapter.copyFromSChapter(sChapter: SChapter): Chapter {
         dateUpload = sChapter.date_upload,
         chapterNumber = sChapter.chapter_number.toDouble(),
         scanlator = sChapter.scanlator?.ifBlank { null }?.trim(),
+        locked = sChapter.locked,
     )
 }
 

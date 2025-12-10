@@ -30,6 +30,7 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.library.DeleteLibraryMangaDialog
 import eu.kanade.presentation.library.LibrarySettingsDialog
+import eu.kanade.presentation.library.MarkReadConfirmationDialog
 import eu.kanade.presentation.library.components.LibraryContent
 import eu.kanade.presentation.library.components.LibraryToolbar
 import eu.kanade.presentation.manga.components.LibraryBottomActionMenu
@@ -87,9 +88,10 @@ data object LibraryTab : Tab {
         val scope = rememberCoroutineScope()
         val haptic = LocalHapticFeedback.current
 
-        val screenModel = rememberScreenModel { LibraryScreenModel() }
-        val settingsScreenModel = rememberScreenModel { LibrarySettingsScreenModel() }
+        val screenModel = rememberScreenModel { LibraryScreenModel(type = LibraryScreenModel.LibraryType.Manga) }
+        val settingsScreenModel = rememberScreenModel { LibrarySettingsScreenModel(type = LibraryScreenModel.LibraryType.Manga) }
         val state by screenModel.state.collectAsState()
+        val titleMaxLines by settingsScreenModel.libraryPreferences.titleMaxLines().changes().collectAsState(settingsScreenModel.libraryPreferences.titleMaxLines().get())
 
         val snackbarHostState = remember { SnackbarHostState() }
 
@@ -145,8 +147,8 @@ data object LibraryTab : Tab {
                 LibraryBottomActionMenu(
                     visible = state.selectionMode,
                     onChangeCategoryClicked = screenModel::openChangeCategoryDialog,
-                    onMarkAsReadClicked = { screenModel.markReadSelection(true) },
-                    onMarkAsUnreadClicked = { screenModel.markReadSelection(false) },
+                    onMarkAsReadClicked = { screenModel.showMarkReadConfirmation(true) },
+                    onMarkAsUnreadClicked = { screenModel.showMarkReadConfirmation(false) },
                     onDownloadClicked = screenModel::performDownloadAction
                         .takeIf { state.selectedManga.fastAll { !it.isLocal() } },
                     onDeleteClicked = screenModel::openDeleteMangaDialog,
@@ -214,6 +216,7 @@ data object LibraryTab : Tab {
                         getDisplayMode = { screenModel.getDisplayMode() },
                         getColumnsForOrientation = { screenModel.getColumnsForOrientation(it) },
                         getItemsForCategory = { state.getItemsForCategory(it) },
+                        titleMaxLines = titleMaxLines,
                     )
                 }
             }
@@ -251,6 +254,18 @@ data object LibraryTab : Tab {
                         screenModel.clearSelection()
                     },
                 )
+            }
+            is LibraryScreenModel.Dialog.MarkReadConfirmation -> {
+                MarkReadConfirmationDialog(
+                    read = dialog.read,
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = {
+                        screenModel.markReadSelection(dialog.read)
+                    },
+                )
+            }
+            is LibraryScreenModel.Dialog.MassImport -> {
+                // Mass import is only used in NovelsTab, not here
             }
             null -> {}
         }

@@ -163,6 +163,59 @@ class ReaderPreferences(
         LOWEST(47),
     }
 
+    // region Novel
+    fun novelFontSize() = preferenceStore.getInt("pref_novel_font_size", 16)
+    fun novelFontFamily() = preferenceStore.getString("pref_novel_font_family", "sans-serif")
+    fun novelTheme() = preferenceStore.getString("pref_novel_theme", "light")
+    fun novelLineHeight() = preferenceStore.getFloat("pref_novel_line_height", 1.6f)
+    fun novelTextAlign() = preferenceStore.getString("pref_novel_text_align", "left")
+    fun novelAutoScrollSpeed() = preferenceStore.getInt("pref_novel_auto_scroll_speed", 30)
+    fun novelVolumeKeysScroll() = preferenceStore.getBoolean("pref_novel_volume_keys_scroll", false)
+    fun novelTapToScroll() = preferenceStore.getBoolean("pref_novel_tap_to_scroll", false)
+    fun novelTextSelectable() = preferenceStore.getBoolean("pref_novel_text_selectable", true)
+    // Font color (stored as ARGB int, 0 means use theme default)
+    // Note: Using 0 instead of -1 because 0xFFFFFFFF (white) = -1 as signed int
+    fun novelFontColor() = preferenceStore.getInt("pref_novel_font_color", 0)
+    // Background color (stored as ARGB int, 0 means use theme default)
+    // Note: Using 0 instead of -1 because 0xFFFFFFFF (white) = -1 as signed int
+    fun novelBackgroundColor() = preferenceStore.getInt("pref_novel_background_color", 0)
+    // Paragraph indentation in em units (0 = no indent, default 2em)
+    fun novelParagraphIndent() = preferenceStore.getFloat("pref_novel_paragraph_indent", 0f)
+    // Margin preferences (in dp)
+    fun novelMarginLeft() = preferenceStore.getInt("pref_novel_margin_left", 16)
+    fun novelMarginRight() = preferenceStore.getInt("pref_novel_margin_right", 16)
+    fun novelMarginTop() = preferenceStore.getInt("pref_novel_margin_top", 16)
+    fun novelMarginBottom() = preferenceStore.getInt("pref_novel_margin_bottom", 16)
+    // Rendering mode: "default" = custom parser, "webview" = WebView rendering
+    fun novelRenderingMode() = preferenceStore.getString("pref_novel_rendering_mode", "default")
+    // Custom CSS/JS stored as JSON array of {title, code} objects
+    fun novelCustomCss() = preferenceStore.getString("pref_novel_custom_css", "")
+    fun novelCustomJs() = preferenceStore.getString("pref_novel_custom_js", "")
+    fun novelCustomCssSnippets() = preferenceStore.getString("pref_novel_css_snippets", "[]")
+    fun novelCustomJsSnippets() = preferenceStore.getString("pref_novel_js_snippets", "[]")
+    // Global CSS/JS presets stored as JSON array of {name, css, js} objects
+    fun novelGlobalPresets() = preferenceStore.getString("pref_novel_global_presets", "[]")
+    // Currently active global preset name (empty = none)
+    fun novelActivePreset() = preferenceStore.getString("pref_novel_active_preset", "")
+    // Infinite scroll - automatically load next/previous chapters
+    fun novelInfiniteScroll() = preferenceStore.getBoolean("pref_novel_infinite_scroll", false)
+    // Keep chapters loaded in memory (0 = only current, 1 = current + prev, 2 = current + next, 3 = both)
+    fun novelKeepChaptersLoaded() = preferenceStore.getInt("pref_novel_keep_chapters_loaded", 0)
+    // Custom brightness for novel reader
+    fun novelCustomBrightness() = preferenceStore.getBoolean("pref_novel_custom_brightness", false)
+    // Brightness value for novel reader (-75 to 100, 0 = system)
+    fun novelCustomBrightnessValue() = preferenceStore.getInt("pref_novel_custom_brightness_value", 0)
+    // Show progress slider in novel reader (allows scrolling to position in current chapter)
+    fun novelShowProgressSlider() = preferenceStore.getBoolean("pref_novel_show_progress_slider", true)
+    // Hide chapter title in novel content
+    fun novelHideChapterTitle() = preferenceStore.getBoolean("pref_novel_hide_chapter_title", false)
+    // Use source's original fonts (don't force a specific font family)
+    fun novelUseOriginalFonts() = preferenceStore.getBoolean("pref_novel_use_original_fonts", false)
+    // Chapter sort order for novel reader: "source" = use source order, "chapter_number" = sort by chapter number
+    // Default is "source" since many novel sources don't provide proper chapter numbers
+    fun novelChapterSortOrder() = preferenceStore.getString("pref_novel_chapter_sort_order", "source")
+    // endregion
+
     companion object {
         const val WEBTOON_PADDING_MIN = 0
         const val WEBTOON_PADDING_MAX = 25

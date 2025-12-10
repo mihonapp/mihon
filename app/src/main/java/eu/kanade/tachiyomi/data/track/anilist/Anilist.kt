@@ -205,6 +205,10 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
         return api.search(query)
     }
 
+    override suspend fun searchNovels(query: String): List<TrackSearch> {
+        return api.searchNovels(query)
+    }
+
     override suspend fun refresh(track: Track): Track {
         val remoteTrack = api.getLibManga(track, getUsername().toInt())
         track.copyPersonalFrom(remoteTrack)

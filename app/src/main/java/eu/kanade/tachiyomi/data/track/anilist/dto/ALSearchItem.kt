@@ -14,6 +14,7 @@ data class ALSearchItem(
     val chapters: Long?,
     val averageScore: Int?,
     val staff: ALStaff,
+    val synonyms: List<String>? = null,
 ) {
     fun toALManga(): ALManga = ALManga(
         remoteId = id,
@@ -26,6 +27,7 @@ data class ALSearchItem(
         totalChapters = chapters ?: 0,
         averageScore = averageScore ?: -1,
         staff = staff,
+        synonyms = synonyms ?: emptyList(),
     )
 }
 

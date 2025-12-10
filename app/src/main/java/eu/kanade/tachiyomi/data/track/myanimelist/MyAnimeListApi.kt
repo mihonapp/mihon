@@ -91,6 +91,25 @@ class MyAnimeListApi(
         }
     }
 
+    suspend fun searchNovels(query: String): List<TrackSearch> {
+        return withIOContext {
+            val url = "$BASE_API_URL/manga".toUri().buildUpon()
+                // MAL API throws a 400 when the query is over 64 characters...
+                .appendQueryParameter("q", query.take(64))
+                .appendQueryParameter("nsfw", "true")
+                .build()
+            with(json) {
+                authClient.newCall(GET(url.toString()))
+                    .awaitSuccess()
+                    .parseAs<MALSearchResult>()
+                    .data
+                    .map { async { getMangaDetails(it.node.id) } }
+                    .awaitAll()
+                    .filter { it.publishing_type.contains("novel") || it.publishing_type.contains("light_novel") }
+            }
+        }
+    }
+
     suspend fun getMangaDetails(id: Int): TrackSearch {
         return withIOContext {
             val url = "$BASE_API_URL/manga".toUri().buildUpon()
