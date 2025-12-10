@@ -92,9 +92,12 @@ data object NovelsTab : Tab {
 
         // Pass LibraryType.Novel
         val screenModel = rememberScreenModel { LibraryScreenModel(type = LibraryScreenModel.LibraryType.Novel) }
-        val settingsScreenModel = rememberScreenModel { LibrarySettingsScreenModel(type = LibraryScreenModel.LibraryType.Novel) }
+        val settingsScreenModel =
+            rememberScreenModel { LibrarySettingsScreenModel(type = LibraryScreenModel.LibraryType.Novel) }
         val state by screenModel.state.collectAsState()
-        val titleMaxLines by settingsScreenModel.libraryPreferences.titleMaxLines().changes().collectAsState(settingsScreenModel.libraryPreferences.titleMaxLines().get())
+        val titleMaxLines by settingsScreenModel.libraryPreferences.titleMaxLines().changes().collectAsState(
+            settingsScreenModel.libraryPreferences.titleMaxLines().get(),
+        )
 
         val snackbarHostState = remember { SnackbarHostState() }
 
@@ -281,7 +284,7 @@ data object NovelsTab : Tab {
                     onImportComplete = { added, skipped, errored ->
                         scope.launch {
                             snackbarHostState.showSnackbar(
-                                "Imported: $added added, $skipped skipped, $errored errors"
+                                "Imported: $added added, $skipped skipped, $errored errors",
                             )
                         }
                     },

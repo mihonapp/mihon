@@ -20,9 +20,9 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.track.TrackerManager
+import eu.kanade.tachiyomi.source.isNovelSource
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
-import eu.kanade.tachiyomi.source.isNovelSource
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.collections.immutable.ImmutableList
@@ -423,29 +423,29 @@ class LibraryScreenModel(
                 }
                 .map { manga ->
                     LibraryItem(
-                    libraryManga = manga,
-                    downloadCount = if (preferences.downloadBadge) {
-                        downloadManager.getDownloadCount(manga.manga).toLong()
-                    } else {
-                        0
-                    },
-                    unreadCount = if (preferences.unreadBadge) {
-                        manga.unreadCount
-                    } else {
-                        0
-                    },
-                    isLocal = if (preferences.localBadge) {
-                        manga.manga.isLocal()
-                    } else {
-                        false
-                    },
-                    sourceLanguage = if (preferences.languageBadge) {
-                        sourceManager.getOrStub(manga.manga.source).lang
-                    } else {
-                        ""
-                    },
-                )
-            }
+                        libraryManga = manga,
+                        downloadCount = if (preferences.downloadBadge) {
+                            downloadManager.getDownloadCount(manga.manga).toLong()
+                        } else {
+                            0
+                        },
+                        unreadCount = if (preferences.unreadBadge) {
+                            manga.unreadCount
+                        } else {
+                            0
+                        },
+                        isLocal = if (preferences.localBadge) {
+                            manga.manga.isLocal()
+                        } else {
+                            false
+                        },
+                        sourceLanguage = if (preferences.languageBadge) {
+                            sourceManager.getOrStub(manga.manga.source).lang
+                        } else {
+                            ""
+                        },
+                    )
+                }
         }
     }
 

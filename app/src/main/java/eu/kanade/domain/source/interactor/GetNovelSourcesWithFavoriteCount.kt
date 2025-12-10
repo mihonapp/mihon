@@ -24,7 +24,7 @@ class GetNovelSourcesWithFavoriteCount(
             repository.getSourcesWithFavoriteCount(),
         ) { direction, mode, list ->
             list
-                .filter { (source, _) -> 
+                .filter { (source, _) ->
                     val actualSource = sourceManager.get(source.id)
                     !source.isLocal() && actualSource?.isNovelSource() == true
                 }

@@ -459,10 +459,10 @@ class ReaderActivity : BaseActivity() {
 
         val isHttpSource = viewModel.getSource() is HttpSource
         val isNovelViewer = state.viewer is NovelViewer || state.viewer is NovelWebViewViewer
-        
+
         if (isNovelViewer) {
             var isAutoScrolling by remember { mutableStateOf(false) }
-            
+
             // Get common callbacks that work for both viewer types
             val onScrollToTop: () -> Unit = {
                 when (val viewer = state.viewer) {
@@ -482,13 +482,13 @@ class ReaderActivity : BaseActivity() {
                     }
                 }
             }
-            
+
             // Get novel progress for slider - use state from ViewModel for real-time updates
             val showProgressSlider by readerPreferences.novelShowProgressSlider().collectAsState()
-            
+
             // Use state.novelProgressPercent for slider value, which is updated via onNovelProgressChanged callback
             val novelProgressFromState = state.novelProgressPercent
-            
+
             // Also sync from viewer when menu becomes visible (for initial sync)
             LaunchedEffect(state.menuVisible) {
                 if (state.menuVisible) {
@@ -500,10 +500,10 @@ class ReaderActivity : BaseActivity() {
                     }
                 }
             }
-            
+
             NovelReaderAppBars(
                 visible = state.menuVisible,
-                
+
                 novelTitle = state.manga?.title,
                 chapterTitle = state.currentChapter?.chapter?.name,
                 navigateUp = onBackPressedDispatcher::onBackPressed,
@@ -515,7 +515,7 @@ class ReaderActivity : BaseActivity() {
                 onShare = ::shareChapter.takeIf { isHttpSource },
                 onReloadLocal = { viewModel.reloadChapter(fromSource = false) },
                 onReloadSource = { viewModel.reloadChapter(fromSource = true) },
-                
+
                 showProgressSlider = showProgressSlider,
                 currentProgress = novelProgressFromState,
                 onProgressChange = { newProgress ->
@@ -527,12 +527,12 @@ class ReaderActivity : BaseActivity() {
                         viewer.setProgressPercent(newProgress)
                     }
                 },
-                
+
                 onNextChapter = ::loadNextChapter,
                 enabledNext = state.viewerChapters?.nextChapter != null,
                 onPreviousChapter = ::loadPreviousChapter,
                 enabledPrevious = state.viewerChapters?.prevChapter != null,
-                
+
                 orientation = ReaderOrientation.fromPreference(
                     viewModel.getMangaOrientation(resolveDefault = false),
                 ),
@@ -678,7 +678,7 @@ class ReaderActivity : BaseActivity() {
             val readingMode = ReadingMode.fromPreference(mode)
             // Skip toast for novel mode - it's obvious we're reading text
             if (readingMode == ReadingMode.NOVEL) return
-            
+
             readingModeToast?.cancel()
             readingModeToast = toast(readingMode.stringRes)
         } catch (_: ArrayIndexOutOfBoundsException) {
@@ -1010,7 +1010,7 @@ class ReaderActivity : BaseActivity() {
                     updateViewerInset(fullscreen, drawUnderCutout)
                 }
                 .launchIn(lifecycleScope)
-            
+
             // Re-create viewer when novel rendering mode changes
             readerPreferences.novelRenderingMode().changes()
                 .drop(1) // Skip initial value

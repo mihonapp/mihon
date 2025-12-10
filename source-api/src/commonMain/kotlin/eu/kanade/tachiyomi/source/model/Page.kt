@@ -2,11 +2,11 @@ package eu.kanade.tachiyomi.source.model
 
 import android.net.Uri
 import eu.kanade.tachiyomi.network.ProgressListener
-import kotlin.jvm.internal.DefaultConstructorMarker
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import kotlin.jvm.internal.DefaultConstructorMarker
 
 @Serializable
 open class Page @JvmOverloads constructor(
@@ -29,13 +29,13 @@ open class Page @JvmOverloads constructor(
         imageUrl: String?,
         uri: Uri?,
         defaults: Int,
-        marker: DefaultConstructorMarker?
+        marker: DefaultConstructorMarker?,
     ) : this(
         index = index,
         url = if (defaults and 0x1 != 0) "" else url ?: "",
         imageUrl = if (defaults and 0x2 != 0) null else imageUrl,
         uri = if (defaults and 0x4 != 0) null else uri,
-        text = null // Always null for extensions compiled without text support
+        text = null, // Always null for extensions compiled without text support
     )
 
     val number: Int

@@ -195,12 +195,12 @@ internal class HttpPageLoader(
                     // or a source that returns empty pages. Mark as error rather than crashing.
                     throw IllegalStateException(
                         "Page ${page.index} has no URL and no imageUrl. " +
-                            "This may indicate a novel source being used incorrectly or an issue with the source."
+                            "This may indicate a novel source being used incorrectly or an issue with the source.",
                     )
                 }
             }
             val imageUrl = page.imageUrl!!
-            
+
             // Validate the image URL
             if (imageUrl.isBlank()) {
                 throw IllegalStateException("Page ${page.index} has an empty image URL")

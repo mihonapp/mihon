@@ -27,9 +27,9 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import logcat.LogPriority
@@ -46,48 +46,51 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
     private lateinit var webView: WebView
     private var loadingIndicator: ReaderProgressIndicator? = null
     private val preferences: ReaderPreferences by injectLazy()
-    
+
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var loadJob: Job? = null
     private var currentPage: ReaderPage? = null
     private var currentChapters: ViewerChapters? = null
-    
+
     // Track scroll progress
     private var lastSavedProgress = 0f
-    
+
     // Auto-scroll state
     private var isAutoScrolling = false
     private var autoScrollJob: Job? = null
-    
-    private val gestureDetector = GestureDetector(activity, object : GestureDetector.SimpleOnGestureListener() {
-        override fun onDown(e: MotionEvent): Boolean = true
-        
-        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-            val viewWidth = container.width.toFloat()
-            val viewHeight = container.height.toFloat()
-            val x = e.x
-            val y = e.y
-            
-            // Define center region (middle third of the screen)
-            val centerXStart = viewWidth / 3
-            val centerXEnd = viewWidth * 2 / 3
-            val centerYStart = viewHeight / 3
-            val centerYEnd = viewHeight * 2 / 3
-            
-            if (x in centerXStart..centerXEnd && y in centerYStart..centerYEnd) {
-                activity.toggleMenu()
-                return true
+
+    private val gestureDetector = GestureDetector(
+        activity,
+        object : GestureDetector.SimpleOnGestureListener() {
+            override fun onDown(e: MotionEvent): Boolean = true
+
+            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                val viewWidth = container.width.toFloat()
+                val viewHeight = container.height.toFloat()
+                val x = e.x
+                val y = e.y
+
+                // Define center region (middle third of the screen)
+                val centerXStart = viewWidth / 3
+                val centerXEnd = viewWidth * 2 / 3
+                val centerYStart = viewHeight / 3
+                val centerYEnd = viewHeight * 2 / 3
+
+                if (x in centerXStart..centerXEnd && y in centerYStart..centerYEnd) {
+                    activity.toggleMenu()
+                    return true
+                }
+
+                return false
             }
-            
-            return false
-        }
-    })
+        },
+    )
 
     init {
         initWebView()
         observePreferences()
     }
-    
+
     @SuppressLint("SetJavaScriptEnabled", "ClickableViewAccessibility")
     private fun initWebView() {
         webView = WebView(activity).apply {
@@ -101,7 +104,7 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
                 displayZoomControls = false
                 cacheMode = WebSettings.LOAD_DEFAULT
             }
-            
+
             webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
@@ -111,19 +114,19 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
                     restoreScrollPosition()
                 }
             }
-            
+
             // Add JavaScript interface for progress saving
             addJavascriptInterface(WebViewInterface(), "Android")
-            
+
             setOnTouchListener { _, event ->
                 gestureDetector.onTouchEvent(event)
                 false
             }
         }
-        
+
         container.addView(webView, FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
     }
-    
+
     private fun observePreferences() {
         scope.launch {
             merge(
@@ -143,23 +146,23 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
                 preferences.novelCustomCssSnippets().changes(),
                 preferences.novelUseOriginalFonts().changes(),
             ).drop(17) // Drop initial emissions from all 17 preferences
-            .collect {
-                injectCustomStyles()
-            }
+                .collect {
+                    injectCustomStyles()
+                }
         }
-        
+
         // Observe JS changes separately to re-inject scripts
         scope.launch {
             merge(
                 preferences.novelCustomJs().changes(),
                 preferences.novelCustomJsSnippets().changes(),
             ).drop(2)
-            .collect {
-                injectCustomScript()
-            }
+                .collect {
+                    injectCustomScript()
+                }
         }
     }
-    
+
     private fun injectCustomStyles() {
         val fontSize = preferences.novelFontSize().get()
         val fontFamily = preferences.novelFontFamily().get()
@@ -173,17 +176,17 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
         val paragraphIndent = preferences.novelParagraphIndent().get()
         val textAlign = preferences.novelTextAlign().get()
         val theme = preferences.novelTheme().get()
-        
+
         val (themeBgColor, themeTextColor) = getThemeColors(theme)
         val finalBgColor = if (theme == "custom" && backgroundColor != -1) backgroundColor else themeBgColor
         val finalTextColor = if (fontColor != -1) fontColor else themeTextColor
-        
+
         val bgColorHex = String.format("#%06X", 0xFFFFFF and finalBgColor)
         val textColorHex = String.format("#%06X", 0xFFFFFF and finalTextColor)
-        
+
         val customCss = preferences.novelCustomCss().get()
         val useOriginalFonts = preferences.novelUseOriginalFonts().get()
-        
+
         // Collect enabled CSS snippets
         val cssSnippetsJson = preferences.novelCustomCssSnippets().get()
         val enabledSnippetsCss = try {
@@ -193,15 +196,15 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
             logcat(LogPriority.ERROR) { "Failed to parse CSS snippets: ${e.message}" }
             ""
         }
-        
+
         // Only include font-family if not using original fonts
         val fontFamilyCss = if (useOriginalFonts) "" else "font-family: $fontFamily;"
-        
+
         val css = """
             body {
                 font-size: ${fontSize}px;
                 $fontFamilyCss
-                line-height: ${lineHeight};
+                line-height: $lineHeight;
                 margin: ${marginTop}px ${marginRight}px ${marginBottom}px ${marginLeft}px;
                 color: $textColorHex !important;
                 background-color: $bgColorHex !important;
@@ -218,7 +221,7 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
             $customCss
             $enabledSnippetsCss
         """.trimIndent().replace("\n", " ")
-        
+
         val js = """
             (function() {
                 var style = document.getElementById('mihon-custom-style');
@@ -230,16 +233,16 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
                 style.textContent = `$css`;
             })();
         """
-        
+
         webView.evaluateJavascript(js, null)
     }
-    
+
     private fun injectCustomScript() {
         val customJs = preferences.novelCustomJs().get()
         if (customJs.isNotBlank()) {
             webView.evaluateJavascript(customJs, null)
         }
-        
+
         // Inject enabled JS snippets
         val jsSnippetsJson = preferences.novelCustomJsSnippets().get()
         try {
@@ -250,7 +253,7 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
         } catch (e: Exception) {
             logcat(LogPriority.ERROR) { "Failed to parse JS snippets: ${e.message}" }
         }
-        
+
         // Add scroll tracking script with infinite scroll support
         val infiniteScrollEnabled = preferences.novelInfiniteScroll().get()
         val scrollTrackingScript = """
@@ -259,21 +262,21 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
                 var saveTimeout = null;
                 var loadingNext = false;
                 var infiniteScrollEnabled = $infiniteScrollEnabled;
-                
+
                 window.addEventListener('scroll', function() {
                     var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
                     var scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
                     var progress = scrollHeight > 0 ? scrollTop / scrollHeight : 0;
-                    
+
                     if (Math.abs(progress - lastProgress) > 0.01) {
                         lastProgress = progress;
-                        
+
                         clearTimeout(saveTimeout);
                         saveTimeout = setTimeout(function() {
                             Android.onScrollProgress(progress);
                         }, 500);
                     }
-                    
+
                     // Infinite scroll: load next chapter when near bottom
                     if (infiniteScrollEnabled && progress > 0.95 && !loadingNext) {
                         loadingNext = true;
@@ -286,7 +289,7 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
         """
         webView.evaluateJavascript(scrollTrackingScript, null)
     }
-    
+
     private fun restoreScrollPosition() {
         currentPage?.let { page ->
             val savedProgress = page.chapter.chapter.last_page_read
@@ -303,12 +306,12 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
             }
         }
     }
-    
+
     private fun getThemeColors(theme: String): Pair<Int, Int> {
         val backgroundColor = preferences.novelBackgroundColor().get()
         val fontColor = preferences.novelFontColor().get()
-        
-        return when(theme) {
+
+        return when (theme) {
             "dark" -> 0xFF121212.toInt() to 0xFFE0E0E0.toInt()
             "sepia" -> 0xFFF4ECD8.toInt() to 0xFF5B4636.toInt()
             "black" -> 0xFF000000.toInt() to 0xFFCCCCCC.toInt()
@@ -324,12 +327,12 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
     override fun destroy() {
         // Save progress before destroying
         saveProgress()
-        
+
         scope.cancel()
         loadJob?.cancel()
         webView.destroy()
     }
-    
+
     private fun saveProgress() {
         currentPage?.let { page ->
             val progressValue = (lastSavedProgress * 100).toInt().coerceIn(0, 100)
@@ -342,19 +345,19 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
 
     override fun setChapters(chapters: ViewerChapters) {
         val page = chapters.currChapter.pages?.firstOrNull() as? ReaderPage ?: return
-        
+
         loadJob?.cancel()
         currentPage = page
         currentChapters = chapters
-        
+
         if (page.status == Page.State.Ready && !page.text.isNullOrEmpty()) {
             hideLoadingIndicator()
             displayContent(chapters.currChapter, page)
             return
         }
-        
+
         showLoadingIndicator()
-        
+
         loadJob = scope.launch {
             val loader = page.chapter.pageLoader
             if (loader == null) {
@@ -362,11 +365,11 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
                 hideLoadingIndicator()
                 return@launch
             }
-            
+
             launch(Dispatchers.IO) {
                 loader.loadPage(page)
             }
-            
+
             page.statusFlow.collectLatest { state ->
                 when (state) {
                     Page.State.Queue, Page.State.LoadPage -> {
@@ -385,24 +388,24 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
             }
         }
     }
-    
+
     private fun displayContent(chapter: ReaderChapter, page: ReaderPage) {
         var content = page.text
         if (content.isNullOrBlank()) {
             displayError(Exception("No text content available"))
             return
         }
-        
+
         // Optionally strip chapter title from content
         if (preferences.novelHideChapterTitle().get()) {
             content = stripChapterTitle(content, chapter.chapter.name)
         }
-        
+
         val theme = preferences.novelTheme().get()
         val (themeBgColor, themeTextColor) = getThemeColors(theme)
         val bgColorHex = String.format("#%06X", 0xFFFFFF and themeBgColor)
         val textColorHex = String.format("#%06X", 0xFFFFFF and themeTextColor)
-        
+
         val html = """
             <!DOCTYPE html>
             <html>
@@ -423,10 +426,10 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
             </body>
             </html>
         """.trimIndent()
-        
+
         webView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
     }
-    
+
     /**
      * Strips the chapter title from the beginning of the content.
      * Removes the first H1-H6 heading element or the first paragraph if it matches the chapter name.
@@ -438,7 +441,7 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
         if (matchResult != null) {
             return content.substring(matchResult.range.last + 1).trimStart()
         }
-        
+
         // Try to remove first paragraph if it closely matches chapter name (for sites that use <p> for title)
         val paragraphRegex = """^\s*<p[^>]*>(.*?)</p>\s*""".toRegex(RegexOption.IGNORE_CASE)
         val pMatch = paragraphRegex.find(content)
@@ -447,33 +450,37 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
             // Check if paragraph text is similar to chapter name (fuzzy match)
             if (pText.equals(chapterName, ignoreCase = true) ||
                 chapterName.contains(pText, ignoreCase = true) ||
-                pText.contains(chapterName, ignoreCase = true)) {
+                pText.contains(chapterName, ignoreCase = true)
+            ) {
                 return content.substring(pMatch.range.last + 1).trimStart()
             }
         }
-        
+
         // No title found to strip
         return content
     }
-    
+
     private fun showLoadingIndicator() {
         if (loadingIndicator == null) {
             loadingIndicator = ReaderProgressIndicator(activity).apply {
-                container.addView(this, FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT
-                ).apply {
-                    gravity = Gravity.CENTER
-                })
+                container.addView(
+                    this,
+                    FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                    ).apply {
+                        gravity = Gravity.CENTER
+                    },
+                )
             }
         }
         loadingIndicator?.show()
     }
-    
+
     private fun hideLoadingIndicator() {
         loadingIndicator?.hide()
     }
-    
+
     private fun displayError(error: Throwable) {
         val errorHtml = """
             <!DOCTYPE html>
@@ -486,7 +493,7 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
             </body>
             </html>
         """.trimIndent()
-        
+
         webView.loadDataWithBaseURL(null, errorHtml, "text/html", "UTF-8", null)
     }
 
@@ -496,7 +503,7 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
 
     override fun handleKeyEvent(event: KeyEvent): Boolean {
         val isUp = event.action == KeyEvent.ACTION_UP
-        
+
         when (event.keyCode) {
             KeyEvent.KEYCODE_MENU -> {
                 if (isUp) activity.toggleMenu()
@@ -539,7 +546,7 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
     }
 
     override fun handleGenericMotionEvent(event: MotionEvent): Boolean = false
-    
+
     /**
      * JavaScript interface for communication from WebView
      */
@@ -553,7 +560,7 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
                 activity.onNovelProgressChanged(progress)
             }
         }
-        
+
         @JavascriptInterface
         fun loadNextChapter() {
             activity.runOnUiThread {
@@ -562,7 +569,7 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
                 }
             }
         }
-        
+
         @JavascriptInterface
         fun loadPrevChapter() {
             activity.runOnUiThread {
@@ -572,31 +579,31 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
             }
         }
     }
-    
+
     /**
      * Scroll to the top of the content
      */
     fun scrollToTop() {
         webView.scrollTo(0, 0)
     }
-    
+
     /**
      * Toggle auto-scroll for WebView using JavaScript-based smooth scrolling
      */
     fun toggleAutoScroll() {
         isAutoScrolling = !isAutoScrolling
-        
+
         if (isAutoScrolling) {
             startAutoScroll()
         } else {
             stopAutoScroll()
         }
     }
-    
+
     private fun startAutoScroll() {
         val speed = preferences.novelAutoScrollSpeed().get().coerceAtLeast(1)
         isAutoScrolling = true
-        
+
         autoScrollJob?.cancel()
         autoScrollJob = scope.launch {
             while (isActive && isAutoScrolling) {
@@ -607,25 +614,25 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
                         window.scrollBy(0, 1);
                     })();
                     """.trimIndent(),
-                    null
+                    null,
                 )
                 // Delay based on speed - lower speed value = faster scroll
                 delay((50L - speed.coerceIn(1, 30) + 20).coerceAtLeast(20L))
             }
         }
     }
-    
+
     private fun stopAutoScroll() {
         isAutoScrolling = false
         autoScrollJob?.cancel()
         autoScrollJob = null
     }
-    
+
     /**
      * Check if auto-scroll is currently active
      */
     fun isAutoScrollActive(): Boolean = isAutoScrolling
-    
+
     /**
      * Gets the current scroll progress as percentage (0 to 100)
      */
@@ -633,7 +640,7 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
         // Return last saved progress since WebView scroll can't be accessed synchronously
         return (lastSavedProgress * 100).toInt().coerceIn(0, 100)
     }
-    
+
     /**
      * Sets the scroll position by progress percentage (0 to 100)
      */
@@ -647,10 +654,10 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer {
                 window.scrollTo(0, targetScroll);
             })();
             """.trimIndent(),
-            null
+            null,
         )
     }
-    
+
     /**
      * Reload the current chapter
      */

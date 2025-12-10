@@ -20,17 +20,17 @@ interface NovelSource {
 fun Source.isNovelSource(): Boolean {
     // First try direct instanceof check (works when same classloader)
     if (this is NovelSource) return true
-    
+
     // Fallback: check by interface name for cross-classloader compatibility
     val directInterfaces = this::class.java.interfaces.map { it.name }
     val allInterfaces = this::class.java.allInterfaces().map { it.name }
-    
+
     val isNovel = directInterfaces.contains("eu.kanade.tachiyomi.source.NovelSource") ||
         allInterfaces.contains("eu.kanade.tachiyomi.source.NovelSource")
-    
+
     // Uncomment for debugging
     // println("isNovelSource check for ${this::class.java.name}: direct=$directInterfaces, all=$allInterfaces, result=$isNovel")
-    
+
     return isNovel
 }
 
@@ -43,25 +43,30 @@ suspend fun Source.fetchNovelPageText(page: Page): String {
     if (this is NovelSource) {
         return this.fetchPageText(page)
     }
-    
+
     // Fallback: use reflection to call the method
     return suspendCoroutine { continuation ->
         try {
             val method = this::class.java.getMethod(
                 "fetchPageText",
                 Page::class.java,
-                Continuation::class.java
+                Continuation::class.java,
             )
+
             @Suppress("UNCHECKED_CAST")
-            val result = method.invoke(this, page, object : Continuation<String> {
-                override val context = continuation.context
-                override fun resumeWith(result: Result<String>) {
-                    result.fold(
-                        onSuccess = { continuation.resume(it) },
-                        onFailure = { continuation.resumeWithException(it) }
-                    )
-                }
-            })
+            val result = method.invoke(
+                this,
+                page,
+                object : Continuation<String> {
+                    override val context = continuation.context
+                    override fun resumeWith(result: Result<String>) {
+                        result.fold(
+                            onSuccess = { continuation.resume(it) },
+                            onFailure = { continuation.resumeWithException(it) },
+                        )
+                    }
+                },
+            )
             // If the method returns directly (shouldn't happen for suspend), handle it
             if (result != kotlin.coroutines.intrinsics.COROUTINE_SUSPENDED && result is String) {
                 continuation.resume(result)

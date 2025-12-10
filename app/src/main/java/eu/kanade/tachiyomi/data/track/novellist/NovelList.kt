@@ -2,34 +2,34 @@ package eu.kanade.tachiyomi.data.track.novellist
 
 import android.graphics.Color
 import android.util.Base64
+import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.serialization.json.Json
-import okhttp3.OkHttpClient
-import tachiyomi.domain.track.model.Track as DomainTrack
-import uy.kohesive.injekt.injectLazy
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.parseAs
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonArray
 import logcat.LogPriority
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
-import dev.icerock.moko.resources.StringResource
+import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
+import uy.kohesive.injekt.injectLazy
+import tachiyomi.domain.track.model.Track as DomainTrack
 
 /**
  * NovelList tracker implementation.
@@ -43,7 +43,7 @@ class NovelList(id: Long) : BaseTracker(id, "NovelList") {
     private val baseUrl = "https://novellist-be-960019704910.asia-east1.run.app"
 
     override fun getLogo() = R.drawable.ic_tracker_novellist
-    
+
     override fun getLogoColor(): Int = Color.parseColor("#3399FF")
 
     override fun getStatusList() = listOf(READING, COMPLETED, ON_HOLD, DROPPED, PLAN_TO_READ)
@@ -64,7 +64,7 @@ class NovelList(id: Long) : BaseTracker(id, "NovelList") {
     override fun getCompletionStatus() = COMPLETED
 
     override fun getScoreList(): ImmutableList<String> = persistentListOf(
-        "10", "9", "8", "7", "6", "5", "4", "3", "2", "1", ""
+        "10", "9", "8", "7", "6", "5", "4", "3", "2", "1", "",
     )
 
     override fun indexToScore(index: Int): Double {
@@ -153,12 +153,12 @@ class NovelList(id: Long) : BaseTracker(id, "NovelList") {
     override suspend fun update(track: Track, didReadChapter: Boolean): Track {
         val uuid = getUuidFromTrack(track)
         if (uuid.isEmpty()) return track
-        
+
         val url = "$baseUrl/api/users/current/reading-list/$uuid"
-        
+
         // Send OPTIONS preflight first
         sendOptionsRequest(url, "PUT")
-        
+
         val requestBody = buildJsonObject {
             put("chapter_count", track.last_chapter_read.toInt())
             put("status", mapStatusToApi(track.status))
@@ -178,12 +178,12 @@ class NovelList(id: Long) : BaseTracker(id, "NovelList") {
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {
         val uuid = getUuidFromTrack(track)
         if (uuid.isEmpty()) return track
-        
+
         val url = "$baseUrl/api/users/current/reading-list/$uuid"
-        
+
         // Send OPTIONS preflight first
         sendOptionsRequest(url, "PUT")
-        
+
         // NovelList uses PUT to the same endpoint for both adding and updating
         val requestBody = buildJsonObject {
             put("status", if (hasReadChapters) "IN_PROGRESS" else "PLANNED")
@@ -197,7 +197,7 @@ class NovelList(id: Long) : BaseTracker(id, "NovelList") {
             .build()
 
         client.newCall(request).awaitSuccess()
-        
+
         track.status = if (hasReadChapters) READING else PLAN_TO_READ
         return track
     }
@@ -224,7 +224,7 @@ class NovelList(id: Long) : BaseTracker(id, "NovelList") {
         return try {
             val response = client.newCall(request).awaitSuccess()
             val responseBody = response.body.string()
-            
+
             val jsonArray = json.decodeFromString<List<JsonObject>>(responseBody)
             jsonArray.map { obj ->
                 val track = TrackSearch.create(id)
@@ -232,12 +232,12 @@ class NovelList(id: Long) : BaseTracker(id, "NovelList") {
                 val idString = obj["id"]?.jsonPrimitive?.contentOrNull ?: ""
                 // Use hash for remote_id but keep UUID in tracking_url for API
                 track.remote_id = idString.hashCode().toLong().let { if (it < 0) -it else it }
-                track.title = obj["english_title"]?.jsonPrimitive?.contentOrNull 
-                    ?: obj["raw_title"]?.jsonPrimitive?.contentOrNull 
-                    ?: obj["title"]?.jsonPrimitive?.contentOrNull 
+                track.title = obj["english_title"]?.jsonPrimitive?.contentOrNull
+                    ?: obj["raw_title"]?.jsonPrimitive?.contentOrNull
+                    ?: obj["title"]?.jsonPrimitive?.contentOrNull
                     ?: ""
-                track.cover_url = obj["cover_image_link"]?.jsonPrimitive?.contentOrNull 
-                    ?: obj["image_url"]?.jsonPrimitive?.contentOrNull 
+                track.cover_url = obj["cover_image_link"]?.jsonPrimitive?.contentOrNull
+                    ?: obj["image_url"]?.jsonPrimitive?.contentOrNull
                     ?: ""
                 track.summary = obj["description"]?.jsonPrimitive?.contentOrNull ?: ""
                 val slug = obj["slug"]?.jsonPrimitive?.contentOrNull ?: idString
@@ -256,7 +256,7 @@ class NovelList(id: Long) : BaseTracker(id, "NovelList") {
     override suspend fun refresh(track: Track): Track {
         val uuid = getUuidFromTrack(track)
         if (uuid.isEmpty()) return track
-        
+
         val url = "$baseUrl/api/users/current/reading-list/$uuid"
         val request = buildAuthenticatedRequest(url)
             .get()
@@ -315,7 +315,7 @@ class NovelList(id: Long) : BaseTracker(id, "NovelList") {
         const val ON_HOLD = 3L
         const val DROPPED = 4L
         const val PLAN_TO_READ = 5L
-        
+
         const val LOGIN_URL = "https://www.novellist.co/login"
     }
 }

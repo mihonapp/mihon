@@ -89,9 +89,12 @@ data object LibraryTab : Tab {
         val haptic = LocalHapticFeedback.current
 
         val screenModel = rememberScreenModel { LibraryScreenModel(type = LibraryScreenModel.LibraryType.Manga) }
-        val settingsScreenModel = rememberScreenModel { LibrarySettingsScreenModel(type = LibraryScreenModel.LibraryType.Manga) }
+        val settingsScreenModel =
+            rememberScreenModel { LibrarySettingsScreenModel(type = LibraryScreenModel.LibraryType.Manga) }
         val state by screenModel.state.collectAsState()
-        val titleMaxLines by settingsScreenModel.libraryPreferences.titleMaxLines().changes().collectAsState(settingsScreenModel.libraryPreferences.titleMaxLines().get())
+        val titleMaxLines by settingsScreenModel.libraryPreferences.titleMaxLines().changes().collectAsState(
+            settingsScreenModel.libraryPreferences.titleMaxLines().get(),
+        )
 
         val snackbarHostState = remember { SnackbarHostState() }
 

@@ -16,6 +16,7 @@ import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
+import eu.kanade.tachiyomi.source.isNovelSource
 import eu.kanade.tachiyomi.util.lang.toLocalDate
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.mutate
@@ -43,7 +44,6 @@ import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.updates.interactor.GetUpdates
 import tachiyomi.domain.updates.model.UpdatesWithRelations
-import eu.kanade.tachiyomi.source.isNovelSource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.ZonedDateTime
@@ -51,7 +51,7 @@ import java.time.ZonedDateTime
 enum class UpdatesFilter {
     ALL,
     MANGA,
-    NOVELS;
+    NOVELS,
 }
 
 class UpdatesScreenModel(

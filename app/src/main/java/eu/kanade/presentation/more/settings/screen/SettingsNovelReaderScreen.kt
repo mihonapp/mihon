@@ -130,7 +130,7 @@ object SettingsNovelReaderScreen : SearchableSettings {
     @Composable
     private fun getAutoScrollGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup {
         val autoScrollSpeed = readerPreferences.novelAutoScrollSpeed().collectAsState().value
-        
+
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_novel_auto_scroll),
             preferenceItems = persistentListOf(

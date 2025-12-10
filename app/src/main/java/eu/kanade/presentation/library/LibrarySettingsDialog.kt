@@ -325,7 +325,7 @@ private fun ColumnScope.ExtensionsPage(
     val availableExtensions by screenModel.extensionsFlow.collectAsState()
 
     HeadingItem(MR.strings.label_extensions)
-    
+
     if (availableExtensions.isEmpty()) {
         Text(
             text = "No extensions with library entries",
@@ -353,7 +353,7 @@ private fun ColumnScope.ExtensionsPage(
                 Text("Uncheck All")
             }
         }
-        
+
         availableExtensions.forEach { (sourceId, sourceName) ->
             // Extension is checked if it's NOT in the excluded set
             val isChecked = sourceId.toString() !in excludedExtensions

@@ -99,7 +99,7 @@ object DownloadQueueScreen : Screen() {
 
         val tabs = listOf(
             "${stringResource(MR.strings.label_manga)} ($mangaCount)",
-            "${stringResource(MR.strings.label_novels)} ($novelCount)"
+            "${stringResource(MR.strings.label_novels)} ($novelCount)",
         )
 
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
@@ -141,7 +141,9 @@ object DownloadQueueScreen : Screen() {
                     },
                     navigateUp = navigator::pop,
                     actions = {
-                        if ((selectedTab == 0 && mangaList.isNotEmpty()) || (selectedTab == 1 && novelList.isNotEmpty())) {
+                        if ((selectedTab == 0 && mangaList.isNotEmpty()) ||
+                            (selectedTab == 1 && novelList.isNotEmpty())
+                        ) {
                             var sortExpanded by remember { mutableStateOf(false) }
                             val onDismissRequest = { sortExpanded = false }
                             DropdownMenu(
@@ -220,7 +222,8 @@ object DownloadQueueScreen : Screen() {
             },
             floatingActionButton = {
                 AnimatedVisibility(
-                    visible = (selectedTab == 0 && mangaList.isNotEmpty()) || (selectedTab == 1 && novelList.isNotEmpty()),
+                    visible =
+                    (selectedTab == 0 && mangaList.isNotEmpty()) || (selectedTab == 1 && novelList.isNotEmpty()),
                     enter = fadeIn(),
                     exit = fadeOut(),
                 ) {
@@ -260,20 +263,22 @@ object DownloadQueueScreen : Screen() {
                         Tab(
                             selected = selectedTab == index,
                             onClick = { selectedTab = index },
-                            text = { Text(titleRes) }
+                            text = { Text(titleRes) },
                         )
                     }
                 }
 
-                if (selectedTab == 0 && mangaList.isEmpty() || selectedTab == 1 && novelList.isEmpty()) {
+                if ((selectedTab == 0 && mangaList.isEmpty()) || (selectedTab == 1 && novelList.isEmpty())) {
                     EmptyScreen(
                         stringRes = MR.strings.information_no_downloads,
                     )
                 } else {
                     val density = LocalDensity.current
                     val layoutDirection = LocalLayoutDirection.current
-                    val left = with(density) { contentPadding.calculateLeftPadding(layoutDirection).toPx().roundToInt() }
-                    val right = with(density) { contentPadding.calculateRightPadding(layoutDirection).toPx().roundToInt() }
+                    val left =
+                        with(density) { contentPadding.calculateLeftPadding(layoutDirection).toPx().roundToInt() }
+                    val right =
+                        with(density) { contentPadding.calculateRightPadding(layoutDirection).toPx().roundToInt() }
                     val bottom = with(density) { contentPadding.calculateBottomPadding().toPx().roundToInt() }
 
                     Box(modifier = Modifier.nestedScroll(nestedScrollConnection)) {
@@ -281,7 +286,8 @@ object DownloadQueueScreen : Screen() {
                             AndroidView(
                                 modifier = Modifier.fillMaxWidth(),
                                 factory = { context ->
-                                    screenModel.controllerBinding = DownloadListBinding.inflate(LayoutInflater.from(context))
+                                    screenModel.controllerBinding =
+                                        DownloadListBinding.inflate(LayoutInflater.from(context))
                                     screenModel.adapter = DownloadAdapter(screenModel.listener)
                                     screenModel.controllerBinding.root.adapter = screenModel.adapter
                                     screenModel.adapter?.isHandleDragEnabled = true
@@ -331,8 +337,24 @@ object DownloadQueueScreen : Screen() {
                                         item = item,
                                         titleMaxLines = titleMaxLines,
                                         onCancel = { screenModel.cancel(item.subItems) },
-                                        onMoveToTop = { screenModel.reorder(item.subItems + (novelList.flatMap { it.subItems } - item.subItems.toSet())) },
-                                        onMoveToBottom = { screenModel.reorder((novelList.flatMap { it.subItems } - item.subItems.toSet()) + item.subItems) },
+                                        onMoveToTop = {
+                                            screenModel.reorder(
+                                                item.subItems + (
+                                                    novelList.flatMap {
+                                                        it.subItems
+                                                    } - item.subItems.toSet()
+                                                    ),
+                                            )
+                                        },
+                                        onMoveToBottom = {
+                                            screenModel.reorder(
+                                                (
+                                                    novelList.flatMap {
+                                                        it.subItems
+                                                    } - item.subItems.toSet()
+                                                    ) + item.subItems,
+                                            )
+                                        },
                                     )
                                 }
                             }
@@ -416,7 +438,7 @@ private fun NovelDownloadCard(
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowUp,
-                                    contentDescription = null
+                                    contentDescription = null,
                                 )
                             },
                         )
@@ -429,7 +451,7 @@ private fun NovelDownloadCard(
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowDown,
-                                    contentDescription = null
+                                    contentDescription = null,
                                 )
                             },
                         )
@@ -442,7 +464,7 @@ private fun NovelDownloadCard(
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Default.Close,
-                                    contentDescription = null
+                                    contentDescription = null,
                                 )
                             },
                         )

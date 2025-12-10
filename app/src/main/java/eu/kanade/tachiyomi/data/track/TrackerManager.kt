@@ -33,7 +33,19 @@ class TrackerManager {
     val novelUpdates = NovelUpdates(10L)
     val novelList = NovelList(11L)
 
-    val trackers = listOf(myAnimeList, aniList, kitsu, shikimori, bangumi, komga, mangaUpdates, kavita, suwayomi, novelUpdates, novelList)
+    val trackers = listOf(
+        myAnimeList,
+        aniList,
+        kitsu,
+        shikimori,
+        bangumi,
+        komga,
+        mangaUpdates,
+        kavita,
+        suwayomi,
+        novelUpdates,
+        novelList,
+    )
 
     /**
      * Trackers that support novel tracking.

@@ -35,7 +35,7 @@ internal class DownloadPageLoader(
     override suspend fun getPages(): List<ReaderPage> {
         val dbChapter = chapter.chapter
         logcat { "DownloadPageLoader.getPages: chapter=${dbChapter.name}, url=${dbChapter.url}" }
-        
+
         val chapterPath = downloadProvider.findChapterDir(
             dbChapter.name,
             dbChapter.scanlator,
@@ -43,8 +43,10 @@ internal class DownloadPageLoader(
             manga.title,
             source,
         )
-        logcat { "DownloadPageLoader.getPages: chapterPath=$chapterPath, exists=${chapterPath?.exists()}, isFile=${chapterPath?.isFile}" }
-        
+        logcat {
+            "DownloadPageLoader.getPages: chapterPath=$chapterPath, exists=${chapterPath?.exists()}, isFile=${chapterPath?.isFile}"
+        }
+
         return if (chapterPath?.isFile == true) {
             logcat { "DownloadPageLoader.getPages: Loading from archive" }
             getPagesFromArchive(chapterPath)
@@ -68,18 +70,20 @@ internal class DownloadPageLoader(
         logcat { "DownloadPageLoader.getPagesFromDirectory: Starting" }
         val pages = downloadManager.buildPageList(source, manga, chapter.chapter.toDomainChapter()!!)
         logcat { "DownloadPageLoader.getPagesFromDirectory: Got ${pages.size} pages from buildPageList" }
-        
+
         return pages.map { page ->
             val uriString = page.uri?.toString() ?: ""
             logcat { "DownloadPageLoader: Processing page ${page.index}, uri=$uriString" }
-            
+
             val textContent = if (uriString.endsWith(".html")) {
                 logcat { "DownloadPageLoader: Reading HTML content from $uriString" }
                 context.contentResolver.openInputStream(page.uri!!)?.use {
                     it.bufferedReader().readText()
                 }
-            } else null
-            
+            } else {
+                null
+            }
+
             logcat { "DownloadPageLoader: Page ${page.index} has ${textContent?.length ?: 0} chars of text" }
 
             ReaderPage(page.index, page.url, page.imageUrl, textContent) {

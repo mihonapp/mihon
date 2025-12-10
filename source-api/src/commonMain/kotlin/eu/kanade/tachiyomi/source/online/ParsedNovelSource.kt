@@ -37,14 +37,14 @@ abstract class ParsedNovelSource : ParsedHttpSource(), NovelSource {
      */
     open fun novelContentParse(document: Document): String {
         val element = document.select(novelContentSelector()).first() ?: return ""
-        
+
         // Fix relative URLs for images and other media
         element.select("img, video, audio, source").forEach { media ->
             if (media.hasAttr("src")) {
                 media.attr("src", media.absUrl("src"))
             }
         }
-        
+
         return element.html()
     }
 

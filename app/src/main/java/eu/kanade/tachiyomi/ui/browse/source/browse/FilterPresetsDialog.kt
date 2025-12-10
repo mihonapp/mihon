@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -166,7 +165,11 @@ private fun PresetItem(
                 Icon(
                     imageVector = if (preset.isDefault) Icons.Filled.Star else Icons.Outlined.StarBorder,
                     contentDescription = if (preset.isDefault) "Remove default" else "Set as default",
-                    tint = if (preset.isDefault) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                    tint = if (preset.isDefault) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    },
                 )
             }
             IconButton(onClick = onDelete) {

@@ -1,33 +1,33 @@
 package eu.kanade.tachiyomi.data.track.novelupdates
 
 import android.graphics.Color
+import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.serialization.json.Json
-import tachiyomi.domain.track.model.Track as DomainTrack
-import uy.kohesive.injekt.injectLazy
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.util.asJsoup
-import dev.icerock.moko.resources.StringResource
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.serialization.json.Json
 import logcat.LogPriority
-import tachiyomi.core.common.util.system.logcat
-import tachiyomi.i18n.MR
 import okhttp3.FormBody
 import okhttp3.Headers
+import tachiyomi.core.common.util.system.logcat
+import tachiyomi.i18n.MR
+import uy.kohesive.injekt.injectLazy
+import tachiyomi.domain.track.model.Track as DomainTrack
 
 /**
  * NovelUpdates tracker implementation.
  * Website: https://www.novelupdates.com
- * 
+ *
  * NovelUpdates is a web-based reading list tracker for web novels.
  * It uses cookie-based authentication from the website.
- * 
+ *
  * Status mapping from reading list IDs:
  * - 0: Reading (CURRENT)
  * - 1: Completed
@@ -42,7 +42,7 @@ class NovelUpdates(id: Long) : BaseTracker(id, "NovelUpdates") {
     private val baseUrl = "https://www.novelupdates.com"
 
     override fun getLogo() = R.drawable.ic_tracker_novelupdates
-    
+
     override fun getLogoColor(): Int = Color.parseColor("#15A8E6")
 
     override fun getStatusList() = listOf(READING, COMPLETED, ON_HOLD, DROPPED, PLAN_TO_READ)
@@ -63,7 +63,7 @@ class NovelUpdates(id: Long) : BaseTracker(id, "NovelUpdates") {
     override fun getCompletionStatus() = COMPLETED
 
     override fun getScoreList(): ImmutableList<String> = persistentListOf(
-        "10", "9", "8", "7", "6", "5", "4", "3", "2", "1", ""
+        "10", "9", "8", "7", "6", "5", "4", "3", "2", "1", "",
     )
 
     override fun indexToScore(index: Int): Double {
@@ -97,21 +97,21 @@ class NovelUpdates(id: Long) : BaseTracker(id, "NovelUpdates") {
         return try {
             val response = client.newCall(GET(seriesUrl, getAuthHeaders())).awaitSuccess()
             val document = response.asJsoup()
-            
+
             // Try shortlink meta
             val shortlink = document.select("link[rel=shortlink]").attr("href")
             val shortlinkMatch = Regex("p=(\\d+)").find(shortlink)
             if (shortlinkMatch != null) return shortlinkMatch.groupValues[1]
-            
+
             // Try activity stats link
             val activityLink = document.select("a[href*=activity-stats]").attr("href")
             val activityMatch = Regex("seriesid=(\\d+)").find(activityLink)
             if (activityMatch != null) return activityMatch.groupValues[1]
-            
+
             // Try hidden input
             val postId = document.select("input#mypostid").attr("value")
             if (postId.isNotEmpty()) return postId
-            
+
             null
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e) { "Failed to get novel ID from $seriesUrl" }
@@ -125,16 +125,16 @@ class NovelUpdates(id: Long) : BaseTracker(id, "NovelUpdates") {
     private suspend fun getReadingListStatus(novelId: String): Long? {
         return try {
             val response = client.newCall(
-                GET("$baseUrl/series/?p=$novelId", getAuthHeaders())
+                GET("$baseUrl/series/?p=$novelId", getAuthHeaders()),
             ).awaitSuccess()
             val document = response.asJsoup()
-            
+
             val sticon = document.select("div.sticon")
             // If "addme.png" is present, novel is not on any list
             if (sticon.select("img[src*=addme.png]").isNotEmpty()) {
                 return null
             }
-            
+
             // Extract list ID from reading list link
             val listLink = sticon.select("span.sttitle a").attr("href")
             val listMatch = Regex("list=(\\d+)").find(listLink)
@@ -164,23 +164,23 @@ class NovelUpdates(id: Long) : BaseTracker(id, "NovelUpdates") {
                 .add("action", "wi_notestagsfic")
                 .add("strSID", novelId)
                 .build()
-            
+
             val request = POST(
                 "$baseUrl/wp-admin/admin-ajax.php",
                 getAuthHeaders(),
-                formBody
+                formBody,
             )
-            
+
             val response = client.newCall(request).awaitSuccess()
             val responseText = response.body.string()
-            
+
             // Clean response (may end with "0")
             val cleanedText = responseText.trim().replace(Regex("}\\s*0+$"), "}")
-            
+
             // Parse JSON and extract notes
             val notesMatch = Regex("\"notes\"\\s*:\\s*\"([^\"]+)\"").find(cleanedText)
             val notes = notesMatch?.groupValues?.get(1) ?: return 0
-            
+
             // Find chapter count in notes
             val chapterMatch = Regex("total\\s+chapters\\s+read:\\s*(\\d+)", RegexOption.IGNORE_CASE).find(notes)
             chapterMatch?.groupValues?.get(1)?.toIntOrNull() ?: 0
@@ -200,33 +200,36 @@ class NovelUpdates(id: Long) : BaseTracker(id, "NovelUpdates") {
                 .add("action", "wi_notestagsfic")
                 .add("strSID", novelId)
                 .build()
-            
+
             val getRequest = POST(
                 "$baseUrl/wp-admin/admin-ajax.php",
                 getAuthHeaders(),
-                getNotesBody
+                getNotesBody,
             )
-            
+
             val getResponse = client.newCall(getRequest).awaitSuccess()
             val responseText = getResponse.body.string()
             val cleanedText = responseText.trim().replace(Regex("}\\s*0+$"), "}")
-            
+
             // Extract existing notes and tags
             val notesMatch = Regex("\"notes\"\\s*:\\s*\"([^\"]+)\"").find(cleanedText)
             val tagsMatch = Regex("\"tags\"\\s*:\\s*\"([^\"]+)\"").find(cleanedText)
             val existingNotes = notesMatch?.groupValues?.get(1) ?: ""
             val existingTags = tagsMatch?.groupValues?.get(1) ?: ""
-            
+
             // Update or add chapter count
             val chapterPattern = Regex("total\\s+chapters\\s+read:\\s*\\d+", RegexOption.IGNORE_CASE)
             val replacement = "total chapters read: $chapters"
             val updatedNotes = if (chapterPattern.containsMatchIn(existingNotes)) {
                 existingNotes.replace(chapterPattern, replacement)
             } else {
-                if (existingNotes.isEmpty()) replacement
-                else "$existingNotes<br/>$replacement"
+                if (existingNotes.isEmpty()) {
+                    replacement
+                } else {
+                    "$existingNotes<br/>$replacement"
+                }
             }
-            
+
             // Save updated notes
             val updateBody = FormBody.Builder()
                 .add("action", "wi_rlnotes")
@@ -234,13 +237,13 @@ class NovelUpdates(id: Long) : BaseTracker(id, "NovelUpdates") {
                 .add("strNotes", updatedNotes)
                 .add("strTags", existingTags)
                 .build()
-            
+
             val updateRequest = POST(
                 "$baseUrl/wp-admin/admin-ajax.php",
                 getAuthHeaders(),
-                updateBody
+                updateBody,
             )
-            
+
             client.newCall(updateRequest).awaitSuccess()
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e) { "Failed to update notes progress" }
@@ -254,7 +257,7 @@ class NovelUpdates(id: Long) : BaseTracker(id, "NovelUpdates") {
         try {
             val request = GET(
                 "$baseUrl/updatelist.php?sid=$novelId&lid=$listId&act=move",
-                getAuthHeaders()
+                getAuthHeaders(),
             )
             client.newCall(request).awaitSuccess()
         } catch (e: Exception) {
@@ -278,15 +281,15 @@ class NovelUpdates(id: Long) : BaseTracker(id, "NovelUpdates") {
 
     override suspend fun update(track: Track, didReadChapter: Boolean): Track {
         val novelId = track.remote_id.toString()
-        
+
         // Update reading list status
         moveToList(novelId, statusToListId(track.status))
-        
+
         // Update chapter progress in notes
         if (track.last_chapter_read > 0) {
             updateNotesProgress(novelId, track.last_chapter_read.toInt())
         }
-        
+
         return track
     }
 
@@ -298,17 +301,17 @@ class NovelUpdates(id: Long) : BaseTracker(id, "NovelUpdates") {
                 track.remote_id = novelId.toLongOrNull() ?: track.remote_id
             }
         }
-        
+
         // Check current list status
         val currentStatus = getReadingListStatus(track.remote_id.toString())
         track.status = currentStatus ?: if (hasReadChapters) READING else PLAN_TO_READ
-        
+
         // Get progress from notes
         val progress = getNotesProgress(track.remote_id.toString())
         if (progress > 0) {
             track.last_chapter_read = progress.toDouble()
         }
-        
+
         return track
     }
 
@@ -321,32 +324,32 @@ class NovelUpdates(id: Long) : BaseTracker(id, "NovelUpdates") {
             val document = response.asJsoup()
             document.select("div.search_main_box_nu").map { element ->
                 val track = TrackSearch.create(id)
-                val titleElement = element.select("div.search_title a").first() 
+                val titleElement = element.select("div.search_title a").first()
                     ?: element.select(".search_title a").first()
                 track.title = titleElement?.text()?.trim() ?: ""
                 track.tracking_url = titleElement?.attr("href") ?: ""
-                
+
                 // Try to get numeric ID from the page
                 val sidSpan = element.select("span[id^=sid]").first()
                 val sidId = sidSpan?.attr("id")
-                val numericId = sidId?.let { 
+                val numericId = sidId?.let {
                     Regex("sid(\\d+)").find(it)?.groupValues?.get(1)?.toLongOrNull()
                 }
-                
+
                 // Extract slug from URL
                 val slug = track.tracking_url.let {
                     Regex("series/([^/]+)/?").find(it)?.groupValues?.get(1) ?: ""
                 }
-                
+
                 // Use numeric ID if available, otherwise hash the slug
                 track.remote_id = numericId ?: slug.hashCode().toLong().let { if (it < 0) -it else it }
-                
+
                 // Get cover image
                 val coverImg = element.select("div.search_img_nu img, .search_img_nu img").first()
                 track.cover_url = coverImg?.attr("src")?.let { src ->
                     if (src.startsWith("http")) src else "$baseUrl$src"
                 } ?: ""
-                
+
                 // Get description (handling collapsed text)
                 val descContainer = element.select("div.search_body_nu").first()
                 val hiddenText = descContainer?.select(".testhide")?.text() ?: ""
@@ -356,7 +359,7 @@ class NovelUpdates(id: Long) : BaseTracker(id, "NovelUpdates") {
                     .replace("<<less", "")
                     .replace(Regex("\\s+"), " ")
                     .trim()
-                
+
                 // Try to get publishing status from genre tags
                 val genreText = element.select("div.search_genre, .search_genre").text()
                 track.publishing_status = when {
@@ -374,19 +377,19 @@ class NovelUpdates(id: Long) : BaseTracker(id, "NovelUpdates") {
 
     override suspend fun refresh(track: Track): Track {
         val novelId = track.remote_id.toString()
-        
+
         // Get current status from website
         val status = getReadingListStatus(novelId)
         if (status != null) {
             track.status = status
         }
-        
+
         // Get progress from notes
         val progress = getNotesProgress(novelId)
         if (progress > 0) {
             track.last_chapter_read = progress.toDouble()
         }
-        
+
         return track
     }
 

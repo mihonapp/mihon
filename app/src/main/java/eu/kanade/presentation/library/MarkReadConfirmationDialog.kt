@@ -33,15 +33,15 @@ fun MarkReadConfirmationDialog(
         title = {
             Text(
                 text = stringResource(
-                    if (read) MR.strings.action_mark_as_read else MR.strings.action_mark_as_unread
-                )
+                    if (read) MR.strings.action_mark_as_read else MR.strings.action_mark_as_unread,
+                ),
             )
         },
         text = {
             Text(
                 text = stringResource(
-                    MR.strings.are_you_sure
-                )
+                    MR.strings.are_you_sure,
+                ),
             )
         },
     )

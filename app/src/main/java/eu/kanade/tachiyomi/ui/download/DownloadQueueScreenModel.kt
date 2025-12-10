@@ -34,24 +34,25 @@ data class NovelDownloadItem(
     val manga: Manga,
     val sourceName: String,
     val subItems: List<Download>,
-    val initialTotal: Int,  // Total chapters when the download batch started
+    val initialTotal: Int, // Total chapters when the download batch started
 ) {
     val remainingChapters: Int get() = subItems.size
+
     // Downloaded chapters = initial total - remaining (since completed are removed from queue)
     val downloadedChapters: Int get() = (initialTotal - remainingChapters).coerceAtLeast(0)
     val totalChapters: Int get() = initialTotal
     val currentDownload: Download? get() = subItems.find { it.status == Download.State.DOWNLOADING }
-    
+
     val overallProgress: Float get() {
         if (totalChapters == 0) return 0f
         val downloadedWeight = downloadedChapters.toFloat()
         val currentProgress = currentDownload?.progress?.div(100f) ?: 0f
         return (downloadedWeight + currentProgress) / totalChapters
     }
-    
+
     val isActive: Boolean get() = currentDownload != null
     val hasError: Boolean get() = subItems.any { it.status == Download.State.ERROR }
-    
+
     val statusText: String get() = when {
         hasError -> "Error"
         isActive -> "Downloading"
@@ -71,10 +72,10 @@ class DownloadQueueScreenModel(
 
     private val _novelState = MutableStateFlow(emptyList<NovelDownloadItem>())
     val novelState = _novelState.asStateFlow()
-    
+
     // Track the initial total for each manga to show accurate progress
     private val initialTotals = mutableMapOf<Long, Int>()
-    
+
     val titleMaxLines = libraryPreferences.titleMaxLines().changes()
         .stateIn(screenModelScope, SharingStarted.Lazily, libraryPreferences.titleMaxLines().get())
 
@@ -179,11 +180,11 @@ class DownloadQueueScreenModel(
                         .map { (mangaId, downloads) ->
                             val manga = downloads.first().manga
                             val sourceName = downloads.first().source.name
-                            
+
                             // Track initial total - use max of current count and stored count
                             val currentCount = downloads.size
                             val storedTotal = initialTotals[mangaId] ?: 0
-                            
+
                             // If current count is greater, this is a new batch or first time seeing this
                             val initialTotal = if (currentCount > storedTotal) {
                                 initialTotals[mangaId] = currentCount
@@ -191,7 +192,7 @@ class DownloadQueueScreenModel(
                             } else {
                                 storedTotal
                             }
-                            
+
                             NovelDownloadItem(
                                 manga = manga,
                                 sourceName = sourceName,
@@ -199,11 +200,11 @@ class DownloadQueueScreenModel(
                                 initialTotal = initialTotal,
                             )
                         }
-                    
+
                     // Clean up initialTotals for manga no longer in queue
                     val currentMangaIds = novels.map { it.manga.id }.toSet()
                     initialTotals.keys.removeAll { it !in currentMangaIds }
-                    
+
                     Pair(mangaItems, novelItems)
                 }
                 .flowOn(Dispatchers.Default)

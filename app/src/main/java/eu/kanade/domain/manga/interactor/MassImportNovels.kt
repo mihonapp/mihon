@@ -68,7 +68,7 @@ class MassImportNovels(
     ): ImportResult {
         val result = ImportResult()
         val novelSources = getNovelSources()
-        
+
         if (novelSources.isEmpty()) {
             urls.forEach { url ->
                 result.errored.add(ErroredNovel(url, "No novel sources installed"))
@@ -97,7 +97,7 @@ class MassImportNovels(
                 val randomRange = novelDownloadPreferences.randomDelayRange().get()
                 val randomDelay = if (randomRange > 0) Random.nextLong(0, randomRange.toLong()) else 0L
                 val totalDelay = baseDelay + randomDelay
-                
+
                 val timeSinceLastImport = now - lastImportTime
                 if (timeSinceLastImport < totalDelay && lastImportTime > 0) {
                     delay(totalDelay - timeSinceLastImport)
@@ -151,13 +151,13 @@ class MassImportNovels(
             val sManga = source.getMangaDetails(
                 eu.kanade.tachiyomi.source.model.SManga.create().apply {
                     this.url = path
-                }
+                },
             )
             sManga.url = path
 
             // Convert to local manga and add to library
             val manga = networkToLocalManga(sManga.toDomainManga(source.id))
-            
+
             if (addToLibrary) {
                 // Update manga to be in library - persist to database
                 mangaRepository.update(
@@ -165,14 +165,13 @@ class MassImportNovels(
                         id = manga.id,
                         favorite = true,
                         dateAdded = System.currentTimeMillis(),
-                    )
+                    ),
                 )
                 val updatedManga = manga.copy(favorite = true)
                 result.added.add(ImportedNovel(sManga.title, url, updatedManga))
             } else {
                 result.added.add(ImportedNovel(sManga.title, url, manga))
             }
-            
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e) { "Failed to fetch novel from $url" }
             result.errored.add(ErroredNovel(url, "Failed to fetch: ${e.message}"))

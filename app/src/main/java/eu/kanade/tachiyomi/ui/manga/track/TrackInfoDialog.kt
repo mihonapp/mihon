@@ -260,14 +260,14 @@ data class TrackInfoDialogHomeScreen(
             val trackerManager = Injekt.get<TrackerManager>()
             val source = Injekt.get<SourceManager>().getOrStub(sourceId)
             val isNovel = source.isNovelSource()
-            
+
             // Get appropriate trackers based on source type
             val loggedInTrackers = if (isNovel) {
                 trackerManager.loggedInNovelTrackers()
             } else {
                 trackerManager.loggedInMangaTrackers()
             }
-            
+
             return loggedInTrackers
                 // Map to TrackItem
                 .map { service -> TrackItem(find { it.trackerId == service.id }, service) }
@@ -703,7 +703,7 @@ data class TrackerSearchScreen(
     ) : StateScreenModel<Model.State>(State()) {
 
         val supportsPrivateTracking = tracker.supportsPrivateTracking
-        
+
         private val isNovelSource: Boolean by lazy {
             Injekt.get<SourceManager>().getOrStub(sourceId).isNovelSource()
         }

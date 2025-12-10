@@ -22,6 +22,7 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.saver.Image
 import eu.kanade.tachiyomi.data.saver.ImageSaver
 import eu.kanade.tachiyomi.data.saver.Location
+import eu.kanade.tachiyomi.source.isNovelSource
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.loader.ChapterLoader
@@ -73,7 +74,6 @@ import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.source.local.isLocal
-import eu.kanade.tachiyomi.source.isNovelSource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.Instant
@@ -213,14 +213,14 @@ class ReaderViewModel @JvmOverloads constructor(
             val sortOrder = readerPreferences.novelChapterSortOrder().get()
             when (sortOrder) {
                 "chapter_number" -> chaptersForReader.sortedBy { it.chapterNumber }
-                else -> chaptersForReader.sortedBy { it.sourceOrder }  // "source" - use source order
+                else -> chaptersForReader.sortedBy { it.sourceOrder } // "source" - use source order
             }
         } else {
             // Always sort by chapter number in ascending order for manga reader
             // This ensures proper reading flow: Ch1 → Ch2 → Ch3
             chaptersForReader.sortedBy { it.chapterNumber }
         }
-        
+
         sortedChapters
             .run {
                 if (readerPreferences.skipDupe().get()) {
@@ -405,17 +405,17 @@ class ReaderViewModel @JvmOverloads constructor(
     fun reloadChapter(fromSource: Boolean = false) {
         val currChapter = state.value.viewerChapters?.currChapter ?: return
         val loader = loader ?: return
-        
+
         viewModelScope.launchIO {
             try {
                 // Reset chapter state to force reload
                 currChapter.state = ReaderChapter.State.Wait
-                
+
                 // If reloading from source, we need to clear the downloaded flag temporarily
                 // This is handled in the loader based on chapter state
-                
+
                 loadChapter(loader, currChapter)
-                
+
                 // Notify the viewer to refresh
                 withUIContext {
                     state.value.viewer?.setChapters(state.value.viewerChapters!!)
@@ -513,31 +513,31 @@ class ReaderViewModel @JvmOverloads constructor(
      */
     fun saveNovelProgress(page: ReaderPage, progressPercentage: Int) {
         val selectedChapter = page.chapter
-        
+
         if (incognitoMode) return
-        
+
         viewModelScope.launchNonCancellable {
             val clampedProgress = progressPercentage.coerceIn(0, 100)
             val currentProgress = selectedChapter.chapter.last_page_read
-            
+
             // Don't decrease progress (unless explicitly resetting or user scrolled back significantly)
             // Allow small decreases (within 5%) for minor scroll adjustments
             if (clampedProgress < currentProgress - 5 && clampedProgress > 0) {
-                logcat(LogPriority.DEBUG) { 
-                    "NovelProgress: Skipping save - new progress $clampedProgress% is less than current $currentProgress%" 
+                logcat(LogPriority.DEBUG) {
+                    "NovelProgress: Skipping save - new progress $clampedProgress% is less than current $currentProgress%"
                 }
                 return@launchNonCancellable
             }
-            
+
             selectedChapter.chapter.last_page_read = clampedProgress
-            
+
             // Mark as read if at the end (95% or more)
             if (clampedProgress >= 95 && !selectedChapter.chapter.read) {
                 selectedChapter.chapter.read = true
                 updateTrackChapterRead(selectedChapter)
                 deleteChapterIfNeeded(selectedChapter)
             }
-            
+
             updateChapter.await(
                 ChapterUpdate(
                     id = selectedChapter.chapter.id!!,
@@ -545,8 +545,8 @@ class ReaderViewModel @JvmOverloads constructor(
                     lastPageRead = selectedChapter.chapter.last_page_read.toLong(),
                 ),
             )
-            
-            logcat(LogPriority.DEBUG) { "NovelProgress: Saved ${clampedProgress}% for ${selectedChapter.chapter.name}" }
+
+            logcat(LogPriority.DEBUG) { "NovelProgress: Saved $clampedProgress% for ${selectedChapter.chapter.name}" }
         }
     }
 
@@ -772,7 +772,7 @@ class ReaderViewModel @JvmOverloads constructor(
         if (source?.isNovelSource() == true) {
             return ReadingMode.NOVEL.flagValue
         }
-        
+
         val default = readerPreferences.defaultReadingMode().get()
         val readingMode = ReadingMode.fromPreference(manga?.readingMode?.toInt())
         return when {

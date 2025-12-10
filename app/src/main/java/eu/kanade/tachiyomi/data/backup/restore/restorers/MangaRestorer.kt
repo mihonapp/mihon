@@ -131,7 +131,9 @@ class MangaRestorer(
                 version = manga.version,
                 isSyncing = 1,
                 notes = manga.notes,
-                alternativeTitles = manga.alternativeTitles.takeIf { it.isNotEmpty() }?.let { StringListColumnAdapter.encode(it) },
+                alternativeTitles = manga.alternativeTitles.takeIf {
+                    it.isNotEmpty()
+                }?.let { StringListColumnAdapter.encode(it) },
             )
         }
         return manga
@@ -265,7 +267,7 @@ class MangaRestorer(
                 notes = manga.notes,
                 alternativeTitles = manga.alternativeTitles,
 
-                )
+            )
             mangasQueries.selectLastInsertedRowId()
         }
     }

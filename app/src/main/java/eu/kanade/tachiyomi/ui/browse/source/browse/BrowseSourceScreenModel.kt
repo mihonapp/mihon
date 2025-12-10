@@ -28,8 +28,6 @@ import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
-import logcat.LogPriority
-import logcat.logcat
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,6 +38,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import logcat.LogPriority
+import logcat.logcat
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.mapAsCheckboxState
 import tachiyomi.core.common.util.lang.launchIO
@@ -86,7 +86,7 @@ class BrowseSourceScreenModel(
     // Filter Preset Management - declared before init to avoid NPE
     private val _filterPresets = MutableStateFlow<List<FilterPreset>>(emptyList())
     val filterPresets: StateFlow<List<FilterPreset>> = _filterPresets.asStateFlow()
-    
+
     // Auto-apply filter presets as a StateFlow that updates when preference changes
     val autoApplyFilterPresets: StateFlow<Boolean> = sourcePreferences.autoApplyFilterPresets()
         .changes()
@@ -95,7 +95,7 @@ class BrowseSourceScreenModel(
     init {
         // Load filter presets from storage
         refreshFilterPresets()
-        
+
         if (source is CatalogueSource) {
             mutableState.update {
                 var query: String? = null
@@ -112,7 +112,7 @@ class BrowseSourceScreenModel(
                     toolbarQuery = query,
                 )
             }
-            
+
             // Apply default preset if auto-apply is enabled (async)
             screenModelScope.launch {
                 applyDefaultPresetIfEnabled()
@@ -343,8 +343,10 @@ class BrowseSourceScreenModel(
 
     fun saveFilterPreset(name: String, setAsDefault: Boolean) {
         if (source !is CatalogueSource) return
-        
-        logcat(LogPriority.DEBUG) { "BrowseSource: saveFilterPreset name=$name, setAsDefault=$setAsDefault, sourceId=$sourceId" }
+
+        logcat(LogPriority.DEBUG) {
+            "BrowseSource: saveFilterPreset name=$name, setAsDefault=$setAsDefault, sourceId=$sourceId"
+        }
         manageFilterPresets.savePreset(
             sourceId = sourceId,
             name = name,
@@ -358,7 +360,7 @@ class BrowseSourceScreenModel(
 
     fun loadFilterPreset(presetId: Long) {
         if (source !is CatalogueSource) return
-        
+
         logcat(LogPriority.DEBUG) { "BrowseSource: loadFilterPreset presetId=$presetId, sourceId=$sourceId" }
         val presetState = manageFilterPresets.loadPresetState(sourceId, presetId)
         if (presetState != null) {
@@ -383,7 +385,7 @@ class BrowseSourceScreenModel(
     fun setDefaultFilterPreset(presetId: Long?) {
         logcat(LogPriority.DEBUG) { "BrowseSource: setDefaultFilterPreset presetId=$presetId" }
         manageFilterPresets.setDefaultPreset(sourceId, presetId)
-        // Immediately refresh the presets list  
+        // Immediately refresh the presets list
         refreshFilterPresets()
         logcat(LogPriority.INFO) { "BrowseSource: Default preset set" }
     }
@@ -400,7 +402,7 @@ class BrowseSourceScreenModel(
     private fun applyDefaultPresetIfEnabled() {
         if (source !is CatalogueSource) return
         if (!manageFilterPresets.getAutoApplyEnabled()) return
-        
+
         logcat(LogPriority.DEBUG) { "BrowseSource: applyDefaultPresetIfEnabled sourceId=$sourceId" }
         val presetState = manageFilterPresets.getDefaultPresetState(sourceId)
         if (presetState != null) {

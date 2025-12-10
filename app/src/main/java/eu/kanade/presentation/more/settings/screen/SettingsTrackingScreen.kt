@@ -54,7 +54,6 @@ import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.track.anilist.AnilistApi
 import eu.kanade.tachiyomi.data.track.bangumi.BangumiApi
 import eu.kanade.tachiyomi.data.track.myanimelist.MyAnimeListApi
-import eu.kanade.tachiyomi.data.track.novellist.NovelList
 import eu.kanade.tachiyomi.data.track.shikimori.ShikimoriApi
 import eu.kanade.tachiyomi.ui.webview.TrackerWebViewLoginActivity
 import eu.kanade.tachiyomi.util.system.openInBrowser
@@ -190,13 +189,13 @@ object SettingsTrackingScreen : SearchableSettings {
                 preferenceItems = persistentListOf(
                     Preference.PreferenceItem.TrackerPreference(
                         tracker = trackerManager.novelUpdates,
-                        login = { 
+                        login = {
                             // Use WebView-based login for NovelUpdates
                             val intent = TrackerWebViewLoginActivity.newIntent(
                                 context,
                                 trackerId = 10L,
                                 trackerName = "NovelUpdates",
-                                loginUrl = "https://www.novelupdates.com/login/"
+                                loginUrl = "https://www.novelupdates.com/login/",
                             )
                             context.startActivity(intent)
                         },
@@ -214,13 +213,13 @@ object SettingsTrackingScreen : SearchableSettings {
                     ),
                     Preference.PreferenceItem.TrackerPreference(
                         tracker = trackerManager.novelList,
-                        login = { 
+                        login = {
                             // Use WebView-based login for NovelList
                             val intent = TrackerWebViewLoginActivity.newIntent(
                                 context,
                                 trackerId = 11L,
                                 trackerName = "NovelList",
-                                loginUrl = "https://www.novellist.co/sign-in"
+                                loginUrl = "https://www.novellist.co/sign-in",
                             )
                             context.startActivity(intent)
                         },
@@ -236,7 +235,9 @@ object SettingsTrackingScreen : SearchableSettings {
                         title = "Sync reading list",
                         subtitle = "Keep reading list status in sync with NovelList",
                     ),
-                    Preference.PreferenceItem.InfoPreference("Login via WebView. Cookies will be automatically extracted after successful login."),
+                    Preference.PreferenceItem.InfoPreference(
+                        "Login via WebView. Cookies will be automatically extracted after successful login.",
+                    ),
                 ),
             ),
             Preference.PreferenceGroup(
@@ -432,8 +433,24 @@ object SettingsTrackingScreen : SearchableSettings {
         var inputError by remember { mutableStateOf(false) }
 
         val instructions = when (trackerName) {
-            "NovelList" -> "1. Login to novellist.co in browser\n2. Open DevTools (F12) → Application → Cookies\n3. Find 'novellist' cookie\n4. If it starts with 'base64-', decode it and extract 'access_token'\n5. Paste the token below"
-            "NovelUpdates" -> "1. Login to novelupdates.com in browser\n2. Open DevTools (F12) → Application → Cookies\n3. Copy all cookie values\n4. Paste below as: cookie_name=value; cookie_name2=value2"
+            "NovelList" -> {
+                // Use a raw string split across multiple source lines to keep line lengths short
+                """
+                1. Login to novellist.co in browser
+                2. Open DevTools (F12) → Application → Cookies
+                3. Find 'novellist' cookie
+                4. If it starts with 'base64-', decode it and extract 'access_token'
+                5. Paste the token below
+                """.trimIndent()
+            }
+            "NovelUpdates" -> {
+                """
+                1. Login to novelupdates.com in browser
+                2. Open DevTools (F12) → Application → Cookies
+                3. Copy all cookie values
+                4. Paste below as: cookie_name=value; cookie_name2=value2
+                """.trimIndent()
+            }
             else -> "Enter your authentication token"
         }
 
@@ -460,7 +477,7 @@ object SettingsTrackingScreen : SearchableSettings {
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                    
+
                     var hideToken by remember { mutableStateOf(true) }
                     OutlinedTextField(
                         modifier = Modifier.fillMaxWidth(),

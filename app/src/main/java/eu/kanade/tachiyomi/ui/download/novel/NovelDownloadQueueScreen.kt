@@ -55,11 +55,11 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.util.Screen
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.screens.EmptyScreen
-import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
+import tachiyomi.presentation.core.screens.EmptyScreen
 
 object NovelDownloadQueueScreen : Screen() {
 
@@ -171,7 +171,7 @@ private fun NovelDownloadCard(
     onMoveToBottom: () -> Unit,
 ) {
     var showMenu by remember { mutableStateOf(false) }
-    
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -212,7 +212,7 @@ private fun NovelDownloadCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                
+
                 Box {
                     IconButton(onClick = { showMenu = true }) {
                         Icon(
@@ -220,7 +220,7 @@ private fun NovelDownloadCard(
                             contentDescription = "More options",
                         )
                     }
-                    
+
                     DropdownMenu(
                         expanded = showMenu,
                         onDismissRequest = { showMenu = false },
@@ -267,9 +267,9 @@ private fun NovelDownloadCard(
                     }
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // Progress bar
             LinearProgressIndicator(
                 progress = { item.overallProgress },
@@ -284,9 +284,9 @@ private fun NovelDownloadCard(
                 },
                 trackColor = MaterialTheme.colorScheme.surfaceVariant,
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             // Status row
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -302,7 +302,7 @@ private fun NovelDownloadCard(
                         else -> MaterialTheme.colorScheme.onSurfaceVariant
                     },
                 )
-                
+
                 if (item.currentDownload != null) {
                     Text(
                         text = "Chapter: ${item.currentDownload?.chapter?.name ?: ""}",
@@ -313,7 +313,7 @@ private fun NovelDownloadCard(
                         modifier = Modifier.weight(1f, fill = false).padding(start = 8.dp),
                     )
                 }
-                
+
                 Text(
                     text = "${(item.overallProgress * 100).toInt()}%",
                     style = MaterialTheme.typography.labelMedium,

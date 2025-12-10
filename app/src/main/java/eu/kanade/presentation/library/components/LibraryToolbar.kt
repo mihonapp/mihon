@@ -119,7 +119,7 @@ private fun LibraryRegularToolbar(
                     onClick = onClickOpenRandomManga,
                 ),
             )
-            
+
             if (onClickMassImport != null) {
                 actions.add(
                     AppBar.OverflowAction(
@@ -128,7 +128,7 @@ private fun LibraryRegularToolbar(
                     ),
                 )
             }
-            
+
             AppBarActions(actions.toImmutableList())
         },
         scrollBehavior = scrollBehavior,

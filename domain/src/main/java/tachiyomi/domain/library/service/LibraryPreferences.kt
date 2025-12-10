@@ -97,7 +97,7 @@ class LibraryPreferences(
     )
 
     fun filterExtensions() = preferenceStore.getStringSet("pref_filter_library_extensions", emptySet())
-    
+
     // Stores extension IDs that are excluded (unchecked) from the library filter
     fun excludedExtensions() = preferenceStore.getStringSet("pref_excluded_library_extensions", emptySet())
 

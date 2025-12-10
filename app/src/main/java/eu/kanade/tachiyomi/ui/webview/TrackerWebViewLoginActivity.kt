@@ -10,16 +10,32 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Refresh
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import eu.kanade.presentation.theme.TachiyomiTheme
@@ -59,6 +75,7 @@ class TrackerWebViewLoginActivity : BaseActivity() {
             @Suppress("DEPRECATION")
             overridePendingTransition(R.anim.shared_axis_x_push_enter, R.anim.shared_axis_x_push_exit)
         }
+
         super.onCreate(savedInstanceState)
 
         if (!WebViewUtil.supportsWebView(this)) {
@@ -193,11 +210,11 @@ private fun TrackerWebViewLoginScreen(
                         settings.javaScriptEnabled = true
                         settings.domStorageEnabled = true
                         settings.databaseEnabled = true
-                        
+
                         // Enable cookies
                         CookieManager.getInstance().setAcceptCookie(true)
                         CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
-                        
+
                         webViewClient = object : WebViewClient() {
                             override fun onPageFinished(view: WebView?, url: String?) {
                                 super.onPageFinished(view, url)
@@ -205,26 +222,30 @@ private fun TrackerWebViewLoginScreen(
                                 currentUrl = url ?: loginUrl
                                 logcat(LogPriority.DEBUG) { "Page loaded: $url" }
                             }
-                            
-                            override fun onPageStarted(view: WebView?, url: String?, favicon: android.graphics.Bitmap?) {
+
+                            override fun onPageStarted(
+                                view: WebView?,
+                                url: String?,
+                                favicon: android.graphics.Bitmap?,
+                            ) {
                                 super.onPageStarted(view, url, favicon)
                                 isLoading = true
                             }
                         }
-                        
+
                         loadUrl(loginUrl)
                         webView = this
                     }
                 },
                 modifier = Modifier.fillMaxSize(),
             )
-            
+
             if (isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center),
                 )
             }
-            
+
             // Instructions card at the bottom
             Card(
                 modifier = Modifier
@@ -254,7 +275,7 @@ private fun TrackerWebViewLoginScreen(
 private suspend fun extractTokenFromCookies(trackerId: Long, currentUrl: String): String? {
     return withContext(Dispatchers.Main) {
         val cookieManager = CookieManager.getInstance()
-        
+
         when (trackerId) {
             // NovelUpdates - extract session cookies
             10L -> {
@@ -277,7 +298,7 @@ private suspend fun extractTokenFromCookies(trackerId: Long, currentUrl: String)
                     val regex = Regex("novellist=([^;]+)")
                     val match = regex.find(cookies)
                     val novellistCookie = match?.groupValues?.get(1)
-                    
+
                     if (novellistCookie != null) {
                         // Decode base64 if needed
                         val decoded = try {
@@ -292,7 +313,7 @@ private suspend fun extractTokenFromCookies(trackerId: Long, currentUrl: String)
                             logcat(LogPriority.ERROR, e) { "Failed to decode NovelList cookie" }
                             novellistCookie
                         }
-                        
+
                         // Extract access_token from JSON if present
                         try {
                             val jsonRegex = Regex("\"access_token\"\\s*:\\s*\"([^\"]+)\"")

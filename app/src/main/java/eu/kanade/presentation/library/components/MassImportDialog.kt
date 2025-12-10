@@ -54,15 +54,15 @@ fun MassImportDialog(
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
     val scope = rememberCoroutineScope()
-    
+
     var urlText by remember { mutableStateOf("") }
     var isImporting by remember { mutableStateOf(false) }
     var isCancelled by remember { mutableStateOf(false) }
     var progress by remember { mutableStateOf<MassImportNovels.ImportProgress?>(null) }
     var result by remember { mutableStateOf<MassImportNovels.ImportResult?>(null) }
-    
+
     val massImportNovels = remember { Injekt.get<MassImportNovels>() }
-    
+
     AlertDialog(
         onDismissRequest = {
             if (!isImporting) {
@@ -76,7 +76,7 @@ fun MassImportDialog(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(min = 200.dp, max = 400.dp)
+                    .heightIn(min = 200.dp, max = 400.dp),
             ) {
                 if (result != null) {
                     // Show results
@@ -105,23 +105,23 @@ fun MassImportDialog(
                             maxLines = 10,
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
                         )
-                        
+
                         IconButton(
                             onClick = {
-                                clipboardManager.getText()?.let { 
-                                    urlText = it.text 
+                                clipboardManager.getText()?.let {
+                                    urlText = it.text
                                 }
-                            }
+                            },
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.ContentPaste,
-                                contentDescription = "Paste from clipboard"
+                                contentDescription = "Paste from clipboard",
                             )
                         }
                     }
-                    
+
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     val urlCount = massImportNovels.parseUrls(urlText).size
                     Text(
                         text = "Found $urlCount URL(s)",
@@ -147,7 +147,7 @@ fun MassImportDialog(
                             isImporting = true
                             isCancelled = false
                             val urls = massImportNovels.parseUrls(urlText)
-                            
+
                             val importResult = withContext(Dispatchers.IO) {
                                 massImportNovels.import(
                                     urls = urls,
@@ -156,7 +156,7 @@ fun MassImportDialog(
                                     isCancelled = { isCancelled },
                                 )
                             }
-                            
+
                             result = importResult
                             isImporting = false
                             onImportComplete(
@@ -196,23 +196,23 @@ private fun ImportProgressView(
                 text = "Importing ${progress.current}/${progress.total}",
                 style = MaterialTheme.typography.titleMedium,
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             LinearProgressIndicator(
                 progress = { progress.current.toFloat() / progress.total },
                 modifier = Modifier.fillMaxWidth(),
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 text = progress.currentUrl,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 2,
             )
-            
+
             Text(
                 text = progress.status,
                 style = MaterialTheme.typography.bodySmall,
@@ -241,9 +241,9 @@ private fun ImportResultsView(
             text = "Import Complete",
             style = MaterialTheme.typography.titleMedium,
         )
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly,
@@ -252,21 +252,21 @@ private fun ImportResultsView(
             ResultStat("Skipped", result.skipped.size, MaterialTheme.colorScheme.tertiary)
             ResultStat("Errors", result.errored.size, MaterialTheme.colorScheme.error)
         }
-        
+
         if (result.errored.isNotEmpty()) {
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Text(
                 text = "Errors:",
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.error,
             )
-            
+
             Spacer(modifier = Modifier.height(4.dp))
-            
+
             // Group errors by error message
             val groupedErrors = result.errored.groupBy { it.error }
-            
+
             groupedErrors.forEach { (errorType, errors) ->
                 Text(
                     text = "$errorType (${errors.size}):",
@@ -290,21 +290,21 @@ private fun ImportResultsView(
                 }
                 Spacer(modifier = Modifier.height(4.dp))
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 TextButton(
-                    onClick = { 
+                    onClick = {
                         onCopyErrored(result.errored.joinToString("\n") { it.url })
-                    }
+                    },
                 ) {
                     Text("Copy all URLs")
                 }
-                
+
                 TextButton(
                     onClick = {
                         // Copy grouped by error type
@@ -313,7 +313,7 @@ private fun ImportResultsView(
                             "=== $error ===\n${urls.joinToString("\n") { it.url }}"
                         }
                         onCopyErrored(text)
-                    }
+                    },
                 ) {
                     Text("Copy grouped")
                 }

@@ -4,29 +4,31 @@ import eu.kanade.domain.source.model.FilterPreset
 import eu.kanade.domain.source.model.FilterPresetList
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.source.model.FilterList
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.booleanOrNull
-import kotlinx.serialization.json.int
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import logcat.LogPriority
 import logcat.logcat
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 class ManageFilterPresets(
     private val preferences: SourcePreferences,
 ) {
     fun getPresets(sourceId: Long): FilterPresetList {
         val presets = preferences.filterPresets(sourceId).get()
-        logcat(LogPriority.DEBUG) { "FilterPresets: getPresets for sourceId=$sourceId, found ${presets.presets.size} presets: ${presets.presets.map { it.name }}" }
+        // Split the large log message into two shorter lines to satisfy ktlint max line length
+        logcat(LogPriority.DEBUG) {
+            "FilterPresets: getPresets for sourceId=$sourceId, found ${presets.presets.size} presets"
+        }
+        logcat(LogPriority.DEBUG) { "FilterPresets: Preset names: ${presets.presets.map { it.name }}" }
         return presets
     }
 
@@ -42,14 +44,16 @@ class ManageFilterPresets(
         setAsDefault: Boolean = false,
     ): Result<Unit> {
         return runCatching {
-            logcat(LogPriority.DEBUG) { "FilterPresets: Starting savePreset for sourceId=$sourceId, name=$name, setAsDefault=$setAsDefault" }
-            
+            logcat(LogPriority.DEBUG) {
+                "FilterPresets: Starting savePreset for sourceId=$sourceId, name=$name, setAsDefault=$setAsDefault"
+            }
+
             val filterState = serializeFilters(filters)
             logcat(LogPriority.DEBUG) { "FilterPresets: Serialized filters to: ${filterState.take(200)}..." }
-            
+
             val currentPresets = preferences.filterPresets(sourceId).get()
             logcat(LogPriority.DEBUG) { "FilterPresets: Current presets count: ${currentPresets.presets.size}" }
-            
+
             val newPreset = FilterPreset(
                 id = System.currentTimeMillis(),
                 sourceId = sourceId,
@@ -58,17 +62,19 @@ class ManageFilterPresets(
                 isDefault = setAsDefault,
             )
             logcat(LogPriority.DEBUG) { "FilterPresets: Created new preset with id=${newPreset.id}, name=$name" }
-            
+
             val updatedPresets = if (setAsDefault) {
                 // Remove default flag from other presets
-                logcat(LogPriority.DEBUG) { "FilterPresets: Setting as default, clearing default flag from other presets" }
+                logcat(LogPriority.DEBUG) {
+                    "FilterPresets: Setting as default, clearing default flag from other presets"
+                }
                 currentPresets.presets.map { it.copy(isDefault = false) } + newPreset
             } else {
                 currentPresets.presets + newPreset
             }
-            
+
             logcat(LogPriority.DEBUG) { "FilterPresets: Updated presets count: ${updatedPresets.size}" }
-            
+
             preferences.filterPresets(sourceId).set(
                 FilterPresetList(updatedPresets),
             )
@@ -82,7 +88,9 @@ class ManageFilterPresets(
         logcat(LogPriority.DEBUG) { "FilterPresets: loadPresetState sourceId=$sourceId, presetId=$presetId" }
         val preset = getPresets(sourceId).presets.find { it.id == presetId }
         if (preset != null) {
-            logcat(LogPriority.DEBUG) { "FilterPresets: Found preset '${preset.name}' with state length=${preset.filterState.length}" }
+            logcat(LogPriority.DEBUG) {
+                "FilterPresets: Found preset '${preset.name}' with state length=${preset.filterState.length}"
+            }
         } else {
             logcat(LogPriority.WARN) { "FilterPresets: Preset $presetId not found for sourceId=$sourceId" }
         }
@@ -116,7 +124,9 @@ class ManageFilterPresets(
 
     fun getDefaultPresetState(sourceId: Long): String? {
         val preset = getPresets(sourceId).presets.find { it.isDefault }
-        logcat(LogPriority.DEBUG) { "FilterPresets: getDefaultPresetState sourceId=$sourceId, found default=${preset?.name}" }
+        logcat(LogPriority.DEBUG) {
+            "FilterPresets: getDefaultPresetState sourceId=$sourceId, found default=${preset?.name}"
+        }
         return preset?.filterState
     }
 
@@ -144,11 +154,16 @@ class ManageFilterPresets(
                         mapOf(
                             "index" to JsonPrimitive(filter.state?.index ?: 0),
                             "ascending" to JsonPrimitive(filter.state?.ascending ?: true),
-                        )
+                        ),
                     )
                     is eu.kanade.tachiyomi.source.model.Filter.Group<*> -> JsonArray(
                         filter.state.mapIndexed { i, groupFilter ->
-                            val name = if (groupFilter is eu.kanade.tachiyomi.source.model.Filter<*>) groupFilter.name else ""
+                            // Break the long conditional into multiple lines to avoid exceeding max line length
+                            val name = if (groupFilter is eu.kanade.tachiyomi.source.model.Filter<*>) {
+                                groupFilter.name
+                            } else {
+                                ""
+                            }
                             val groupState = when (groupFilter) {
                                 is eu.kanade.tachiyomi.source.model.Filter.CheckBox -> JsonPrimitive(groupFilter.state)
                                 is eu.kanade.tachiyomi.source.model.Filter.TriState -> JsonPrimitive(groupFilter.state)
@@ -159,9 +174,9 @@ class ManageFilterPresets(
                                     "index" to JsonPrimitive(i),
                                     "name" to JsonPrimitive(name),
                                     "state" to groupState,
-                                )
+                                ),
                             )
-                        }
+                        },
                     )
                     is eu.kanade.tachiyomi.source.model.Filter.Header -> JsonNull
                     is eu.kanade.tachiyomi.source.model.Filter.Separator -> JsonNull
@@ -172,28 +187,32 @@ class ManageFilterPresets(
                         "index" to JsonPrimitive(index),
                         "name" to JsonPrimitive(filter.name),
                         "state" to stateJson,
-                    )
+                    ),
                 )
             }
             val result = JsonArray(filterStates).toString()
-            logcat(LogPriority.DEBUG) { "FilterPresets: serializeFilters ${filters.size} filters -> ${result.length} chars" }
+            logcat(LogPriority.DEBUG) {
+                "FilterPresets: serializeFilters ${filters.size} filters -> ${result.length} chars"
+            }
             return result
         }
 
         fun applyPresetState(filters: FilterList, presetState: String) {
-            logcat(LogPriority.DEBUG) { "FilterPresets: applyPresetState for ${filters.size} filters, state length=${presetState.length}" }
+            logcat(LogPriority.DEBUG) {
+                "FilterPresets: applyPresetState for ${filters.size} filters, state length=${presetState.length}"
+            }
             try {
                 val states = Json.parseToJsonElement(presetState).jsonArray
                 logcat(LogPriority.DEBUG) { "FilterPresets: Deserialized ${states.size} filter states" }
-                
+
                 states.forEach { stateElement ->
                     val stateMap = stateElement.jsonObject
                     val index = stateMap["index"]?.jsonPrimitive?.intOrNull ?: return@forEach
                     if (index >= filters.size) return@forEach
-                    
+
                     val filter = filters[index]
                     val state = stateMap["state"]
-                    
+
                     when (filter) {
                         is eu.kanade.tachiyomi.source.model.Filter.CheckBox -> {
                             state?.jsonPrimitive?.booleanOrNull?.let { filter.state = it }
@@ -224,10 +243,10 @@ class ManageFilterPresets(
                                 val groupState = groupElement.jsonObject
                                 val groupIndex = groupState["index"]?.jsonPrimitive?.intOrNull ?: return@forEach
                                 if (groupIndex >= filter.state.size) return@forEach
-                                
+
                                 val groupFilter = filter.state[groupIndex]
                                 val groupFilterState = groupState["state"]
-                                
+
                                 when (groupFilter) {
                                     is eu.kanade.tachiyomi.source.model.Filter.CheckBox -> {
                                         groupFilterState?.jsonPrimitive?.booleanOrNull?.let { groupFilter.state = it }

@@ -247,7 +247,18 @@ internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
                                 modifier = Modifier.size(16.dp).padding(end = 4.dp),
                             )
                         }
-                        Text(label, modifier = Modifier.padding(start = if (displayColor != null || isCustom) 4.dp else 0.dp))
+                        Text(
+                            label,
+                            modifier = Modifier.padding(
+                                start = if (displayColor != null ||
+                                    isCustom
+                                ) {
+                                    4.dp
+                                } else {
+                                    0.dp
+                                },
+                            ),
+                        )
                     }
                 },
             )
@@ -300,7 +311,18 @@ internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
                                 modifier = Modifier.size(16.dp).padding(end = 4.dp),
                             )
                         }
-                        Text(label, modifier = Modifier.padding(start = if (displayColor != null || isCustom) 4.dp else 0.dp))
+                        Text(
+                            label,
+                            modifier = Modifier.padding(
+                                start = if (displayColor != null ||
+                                    isCustom
+                                ) {
+                                    4.dp
+                                } else {
+                                    0.dp
+                                },
+                            ),
+                        )
                     }
                 },
             )
@@ -408,7 +430,7 @@ internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
             pref = screenModel.preferences.novelInfiniteScroll(),
         )
     }
-    
+
     // Chapter Sort Order
     val chapterSortOrder by screenModel.preferences.novelChapterSortOrder().collectAsState()
     val sortOrderOptions = listOf(
@@ -472,12 +494,12 @@ internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
         val customJs by screenModel.preferences.novelCustomJs().collectAsState()
         val cssSnippetsJson by screenModel.preferences.novelCustomCssSnippets().collectAsState()
         val jsSnippetsJson by screenModel.preferences.novelCustomJsSnippets().collectAsState()
-        
+
         var showCssDialog by remember { mutableStateOf(false) }
         var showJsDialog by remember { mutableStateOf(false) }
         var editingCssSnippet by remember { mutableStateOf<Pair<Int, CodeSnippet>?>(null) }
         var editingJsSnippet by remember { mutableStateOf<Pair<Int, CodeSnippet>?>(null) }
-        
+
         val cssSnippets = remember(cssSnippetsJson) {
             try {
                 Json.decodeFromString<List<CodeSnippet>>(cssSnippetsJson)
@@ -485,7 +507,7 @@ internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
                 emptyList()
             }
         }
-        
+
         val jsSnippets = remember(jsSnippetsJson) {
             try {
                 Json.decodeFromString<List<CodeSnippet>>(jsSnippetsJson)
@@ -493,7 +515,7 @@ internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
                 emptyList()
             }
         }
-        
+
         // CSS Snippets Section
         SnippetSection(
             title = stringResource(MR.strings.pref_novel_css_snippets),
@@ -511,7 +533,7 @@ internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
                 screenModel.preferences.novelCustomCssSnippets().set(Json.encodeToString(updated))
             },
         )
-        
+
         // JS Snippets Section
         SnippetSection(
             title = stringResource(MR.strings.pref_novel_js_snippets),
@@ -529,7 +551,7 @@ internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
                 screenModel.preferences.novelCustomJsSnippets().set(Json.encodeToString(updated))
             },
         )
-        
+
         // CSS Add/Edit Dialog
         if (showCssDialog || editingCssSnippet != null) {
             SnippetEditDialog(
@@ -556,7 +578,7 @@ internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
                 },
             )
         }
-        
+
         // JS Add/Edit Dialog
         if (showJsDialog || editingJsSnippet != null) {
             SnippetEditDialog(
@@ -653,10 +675,16 @@ private fun SnippetSection(
                     }
                     Row {
                         IconButton(onClick = { onEditClick(index, snippet) }) {
-                            Icon(Icons.Outlined.Edit, contentDescription = stringResource(MR.strings.novel_edit_snippet))
+                            Icon(
+                                Icons.Outlined.Edit,
+                                contentDescription = stringResource(MR.strings.novel_edit_snippet),
+                            )
                         }
                         IconButton(onClick = { onDeleteClick(index) }) {
-                            Icon(Icons.Outlined.Delete, contentDescription = stringResource(MR.strings.novel_delete_snippet))
+                            Icon(
+                                Icons.Outlined.Delete,
+                                contentDescription = stringResource(MR.strings.novel_delete_snippet),
+                            )
                         }
                     }
                 }
@@ -739,7 +767,7 @@ private fun ColorPickerDialog(
     var green by remember { mutableIntStateOf((initialColor shr 8) and 0xFF) }
     var blue by remember { mutableIntStateOf(initialColor and 0xFF) }
     var hexInput by remember { mutableStateOf(String.format("%06X", initialColor and 0xFFFFFF)) }
-    
+
     val currentColor = (0xFF shl 24) or (red shl 16) or (green shl 8) or blue
 
     AlertDialog(
@@ -756,9 +784,9 @@ private fun ColorPickerDialog(
                         .background(Color(currentColor))
                         .border(2.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp)),
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 // Hex input
                 OutlinedTextField(
                     value = hexInput,
@@ -779,38 +807,38 @@ private fun ColorPickerDialog(
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 // Red slider
                 Text("Red: $red", style = MaterialTheme.typography.bodySmall)
                 Slider(
                     value = red.toFloat(),
-                    onValueChange = { 
+                    onValueChange = {
                         red = it.toInt()
                         hexInput = String.format("%06X", currentColor and 0xFFFFFF)
                     },
                     valueRange = 0f..255f,
                     modifier = Modifier.fillMaxWidth(),
                 )
-                
+
                 // Green slider
                 Text("Green: $green", style = MaterialTheme.typography.bodySmall)
                 Slider(
                     value = green.toFloat(),
-                    onValueChange = { 
+                    onValueChange = {
                         green = it.toInt()
                         hexInput = String.format("%06X", currentColor and 0xFFFFFF)
                     },
                     valueRange = 0f..255f,
                     modifier = Modifier.fillMaxWidth(),
                 )
-                
+
                 // Blue slider
                 Text("Blue: $blue", style = MaterialTheme.typography.bodySmall)
                 Slider(
                     value = blue.toFloat(),
-                    onValueChange = { 
+                    onValueChange = {
                         blue = it.toInt()
                         hexInput = String.format("%06X", currentColor and 0xFFFFFF)
                     },

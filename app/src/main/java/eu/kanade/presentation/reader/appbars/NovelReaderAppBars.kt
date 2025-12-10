@@ -67,7 +67,7 @@ private val readerBarsFadeAnimationSpec = tween<Float>(150)
 @Composable
 fun NovelReaderAppBars(
     visible: Boolean,
-    
+
     // Top bar
     novelTitle: String?,
     chapterTitle: String?,
@@ -80,18 +80,18 @@ fun NovelReaderAppBars(
     onShare: (() -> Unit)?,
     onReloadLocal: () -> Unit,
     onReloadSource: () -> Unit,
-    
+
     // Progress slider
     showProgressSlider: Boolean,
     currentProgress: Int, // 0-100 percentage
     onProgressChange: (Int) -> Unit,
-    
+
     // Bottom bar - navigation
     onNextChapter: () -> Unit,
     enabledNext: Boolean,
     onPreviousChapter: () -> Unit,
     enabledPrevious: Boolean,
-    
+
     // Bottom bar - actions
     orientation: ReaderOrientation,
     onClickOrientation: () -> Unit,
@@ -155,7 +155,7 @@ fun NovelReaderAppBars(
                         backgroundColor = backgroundColor,
                     )
                 }
-                
+
                 NovelReaderBottomBar(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -289,7 +289,7 @@ private fun NovelReaderBottomBar(
                 contentDescription = stringResource(MR.strings.action_previous_chapter),
             )
         }
-        
+
         // Scroll to top
         IconButton(onClick = onScrollToTop) {
             Icon(
@@ -297,17 +297,17 @@ private fun NovelReaderBottomBar(
                 contentDescription = stringResource(MR.strings.action_scroll_to_top),
             )
         }
-        
+
         // Auto-scroll toggle
         IconButton(onClick = onToggleAutoScroll) {
             Icon(
                 imageVector = if (isAutoScrolling) Icons.Outlined.Stop else Icons.Outlined.PlayArrow,
                 contentDescription = stringResource(
-                    if (isAutoScrolling) MR.strings.action_stop_auto_scroll else MR.strings.action_start_auto_scroll
+                    if (isAutoScrolling) MR.strings.action_stop_auto_scroll else MR.strings.action_start_auto_scroll,
                 ),
             )
         }
-        
+
         // Orientation
         IconButton(onClick = onClickOrientation) {
             Icon(
@@ -315,7 +315,7 @@ private fun NovelReaderBottomBar(
                 contentDescription = stringResource(MR.strings.rotation_type),
             )
         }
-        
+
         // Settings
         IconButton(onClick = onClickSettings) {
             Icon(
@@ -323,7 +323,7 @@ private fun NovelReaderBottomBar(
                 contentDescription = stringResource(MR.strings.action_settings),
             )
         }
-        
+
         // Next chapter - right position, right arrow icon
         IconButton(
             onClick = onNextChapter,
@@ -347,13 +347,13 @@ private fun NovelProgressSlider(
     val haptic = LocalHapticFeedback.current
     val interactionSource = remember { MutableInteractionSource() }
     val sliderDragged by interactionSource.collectIsDraggedAsState()
-    
+
     LaunchedEffect(currentProgress) {
         if (sliderDragged) {
             haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
         }
     }
-    
+
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(24.dp))
@@ -367,7 +367,7 @@ private fun NovelProgressSlider(
             // Taking up full length so the slider doesn't shift
             Text(text = "100%", color = Color.Transparent)
         }
-        
+
         Slider(
             modifier = Modifier
                 .weight(1f)
@@ -381,7 +381,7 @@ private fun NovelProgressSlider(
             },
             interactionSource = interactionSource,
         )
-        
+
         Text(text = "100%")
     }
 }
