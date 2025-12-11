@@ -21,7 +21,8 @@ fun relativeDateText(
         localDate = LocalDate.ofInstant(
             Instant.ofEpochMilli(dateEpochMillis),
             ZoneId.systemDefault(),
-        ),
+        )
+            .takeIf { dateEpochMillis != 0L },
     )
 }
 
