@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +18,7 @@ import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.suspendCancellableCoroutine
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.withIOContext
+import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.PriorityBlockingQueue
@@ -32,6 +34,7 @@ internal class HttpPageLoader(
     private val chapter: ReaderChapter,
     private val source: HttpSource,
     private val chapterCache: ChapterCache = Injekt.get(),
+    private val readerPreferences: ReaderPreferences = Injekt.get(),
 ) : PageLoader() {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -41,7 +44,7 @@ internal class HttpPageLoader(
      */
     private val queue = PriorityBlockingQueue<PriorityPage>()
 
-    private val preloadSize = 4
+    private val preloadAmountPref = readerPreferences.pagePreloadAmount()
 
     init {
         scope.launchIO {
@@ -96,7 +99,11 @@ internal class HttpPageLoader(
         if (page.status == Page.State.Queue) {
             queuedPages += PriorityPage(page, 1).also { queue.offer(it) }
         }
-        queuedPages += preloadNextPages(page, preloadSize)
+        val preloadAmount = preloadAmountPref.get().coerceIn(
+            ReaderPreferences.PAGE_PRELOAD_MIN,
+            ReaderPreferences.PAGE_PRELOAD_MAX,
+        )
+        queuedPages += preloadNextPages(page, preloadAmount)
 
         suspendCancellableCoroutine<Nothing> { continuation ->
             continuation.invokeOnCancellation {
