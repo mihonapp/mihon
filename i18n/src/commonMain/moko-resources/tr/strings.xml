@@ -850,7 +850,7 @@
     <string name="pref_mark_duplicate_read_chapter_read_new">Yeni bir bölüm geldiğinde</string>
     <string name="action_edit_notes">Notları düzenle</string>
     <string name="action_notes">Notlar</string>
-    <string name="notes_placeholder">…olduğu kısmı beğendim</string>
+    <string name="notes_placeholder">…olduğu kısmı beğendim.</string>
     <string name="possible_duplicates_title">Muhtemel yinelenenler</string>
     <string name="possible_duplicates_summary">Kitaplığınızda benzer isimli girdiler var.\n\nTaşımak için bir girdi seçin veya yine de ekleyin.</string>
     <string name="clear_database_history_warning">Kitaplıkta olmayan girdilerin okunmuş bölümleri ve ilerlemeleri kaybolacaktır</string>
