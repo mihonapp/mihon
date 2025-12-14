@@ -20,6 +20,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix mass migration not using the same search queries as individual migration ([@AntsyLich](https://github.com/AntsyLich)) ([#2736](https://github.com/mihonapp/mihon/pull/2736))
 - Fix reader not saving read duration when changing chapter ([@AntsyLich](https://github.com/AntsyLich), [@KotlinHero](https://github.com/KotlinHero)) ([#2784](https://github.com/mihonapp/mihon/pull/2784))
 
+### Added
+- Add an option to expend titles on manga pages ([@NathanBap](https://github.com/NathanBap)) ([#2738](https://github.com/mihonapp/mihon/issues/2738))
+
 ## [v0.19.3] - 2025-11-07
 ### Improved
 - Improved various aspects of the WebView multi window support ([@TheUnlocked](https://github.com/TheUnlocked)) ([#2662](https://github.com/mihonapp/mihon/pull/2662))
