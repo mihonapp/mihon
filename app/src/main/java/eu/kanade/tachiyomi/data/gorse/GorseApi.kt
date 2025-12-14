@@ -187,13 +187,16 @@ class GorseApi(
 
     /**
      * Get items similar to a given item
+     * Returns neighbors with Id and Score
      */
-    suspend fun getSimilarItems(itemId: String, n: Int = 3): Result<List<String>> = withIOContext {
+    suspend fun getSimilarItems(itemId: String, n: Int = 10): Result<List<GorseNeighborItem>> = withIOContext {
         try {
-            logcat(LogPriority.DEBUG) { "Gorse getSimilarItems URL: $baseUrl/api/item/$itemId/neighbors?n=$n" }
+            // URL encode the itemId since it may contain special characters (manga title)
+            val encodedItemId = java.net.URLEncoder.encode(itemId, "UTF-8")
+            logcat(LogPriority.DEBUG) { "Gorse getSimilarItems URL: $baseUrl/api/item/$encodedItemId/neighbors?n=$n" }
 
             val request = Request.Builder()
-                .url("$baseUrl/api/item/$itemId/neighbors?n=$n")
+                .url("$baseUrl/api/item/$encodedItemId/neighbors?n=$n")
                 .get()
                 .build()
 
@@ -204,8 +207,11 @@ class GorseApi(
             logcat(LogPriority.DEBUG) { "Gorse getSimilarItems response body: $responseBody" }
 
             if (response.isSuccessful && responseBody != null) {
-                val similarItems = json.decodeFromString<List<String>>(responseBody)
-                Result.success(similarItems)
+                val similarItems = json.decodeFromString<List<GorseNeighborItem>>(responseBody)
+                // Sort by score descending and take top n
+                val sortedItems = similarItems.sortedByDescending { it.score }
+                logcat(LogPriority.DEBUG) { "Gorse getSimilarItems parsed: ${sortedItems.size} items" }
+                Result.success(sortedItems)
             } else {
                 Result.failure(Exception("Failed to get similar items: ${response.code}, body: $responseBody"))
             }
@@ -369,4 +375,14 @@ data class GorseRecommendationItem(
     @SerialName("Labels") val labels: List<String> = emptyList(),
     @SerialName("Score") val score: Double = 0.0,
     @SerialName("Timestamp") val timestamp: String = "",
+)
+
+/**
+ * Response item for neighbors API (similar items)
+ * API returns: [{"Id": "string", "Score": 0}]
+ */
+@Serializable
+data class GorseNeighborItem(
+    @SerialName("Id") val id: String,
+    @SerialName("Score") val score: Double = 0.0,
 )

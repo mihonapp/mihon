@@ -31,29 +31,20 @@ class GorseService(
      */
     suspend fun markMangaRead(manga: Manga): Result<Unit> {
         return try {
-            // 首先确保用户存在
-            ensureUserExists().onFailure { 
-                logcat(LogPriority.WARN) { "Failed to ensure user exists for read action" }
-                // 继续执行，即使用户创建失败
-            }
-            
-            // 确保漫画元数据存在
-            ensureMangaExists(manga).onFailure {
-                logcat(LogPriority.WARN) { "Failed to ensure manga exists for read action" }
-                // 继续执行，即使漫画创建失败
-            }
-            
-            logcat(LogPriority.DEBUG) { "Marking manga '${manga.title}' as read in Gorse" }
-            val result = api.markItemRead(USER_ID, manga.id.toString())
+            val itemId = manga.title  // 使用漫画名称作为itemId
+            logcat(LogPriority.DEBUG) { "Marking manga '${manga.title}' as read in Gorse (itemId: $itemId)" }
+            val result = api.markItemRead(USER_ID, itemId)
             result.onSuccess {
                 logcat(LogPriority.INFO) { "Successfully marked manga '${manga.title}' as read in Gorse" }
-                _events.emit(GorseEvent.ItemMarkedRead(manga.title))
+                _events.emit(GorseEvent.ItemMarkedRead(manga.title, "已读标记成功发送"))
             }.onFailure { e ->
                 logcat(LogPriority.ERROR, e) { "Failed to mark manga '${manga.title}' as read in Gorse" }
+                _events.emit(GorseEvent.ItemMarkedReadFailed(manga.title, e.message ?: "未知错误"))
             }
             result
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e) { "Exception in markMangaRead for manga '${manga.title}'" }
+            _events.emit(GorseEvent.ItemMarkedReadFailed(manga.title, e.message ?: "异常: ${e.javaClass.simpleName}"))
             Result.failure(e)
         }
     }
@@ -63,29 +54,20 @@ class GorseService(
      */
     suspend fun markMangaLiked(manga: Manga): Result<Unit> {
         return try {
-            // 首先确保用户存在
-            ensureUserExists().onFailure { 
-                logcat(LogPriority.WARN) { "Failed to ensure user exists for like action" }
-                // 继续执行，即使用户创建失败
-            }
-            
-            // 确保漫画元数据存在
-            ensureMangaExists(manga).onFailure {
-                logcat(LogPriority.WARN) { "Failed to ensure manga exists for like action" }
-                // 继续执行，即使漫画创建失败
-            }
-            
-            logcat(LogPriority.DEBUG) { "Marking manga '${manga.title}' as liked in Gorse" }
-            val result = api.markItemLiked(USER_ID, manga.id.toString())
+            val itemId = manga.title  // 使用漫画名称作为itemId
+            logcat(LogPriority.DEBUG) { "Marking manga '${manga.title}' as liked in Gorse (itemId: $itemId)" }
+            val result = api.markItemLiked(USER_ID, itemId)
             result.onSuccess {
                 logcat(LogPriority.INFO) { "Successfully marked manga '${manga.title}' as liked in Gorse" }
-                _events.emit(GorseEvent.ItemLiked(manga.title))
+                _events.emit(GorseEvent.ItemLiked(manga.title, "喜欢标记成功发送"))
             }.onFailure { e ->
                 logcat(LogPriority.ERROR, e) { "Failed to mark manga '${manga.title}' as liked in Gorse" }
+                _events.emit(GorseEvent.ItemLikedFailed(manga.title, e.message ?: "未知错误"))
             }
             result
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e) { "Exception in markMangaLiked for manga '${manga.title}'" }
+            _events.emit(GorseEvent.ItemLikedFailed(manga.title, e.message ?: "异常: ${e.javaClass.simpleName}"))
             Result.failure(e)
         }
     }
@@ -95,8 +77,9 @@ class GorseService(
      */
     suspend fun removeMangaLike(manga: Manga): Result<Unit> {
         return try {
-            logcat(LogPriority.DEBUG) { "Removing like from manga '${manga.title}' in Gorse" }
-            val result = api.removeItemLike(USER_ID, manga.id.toString())
+            val itemId = manga.title  // 使用漫画名称作为itemId
+            logcat(LogPriority.DEBUG) { "Removing like from manga '${manga.title}' in Gorse (itemId: $itemId)" }
+            val result = api.removeItemLike(USER_ID, itemId)
             result.onSuccess {
                 logcat(LogPriority.INFO) { "Successfully removed like from manga '${manga.title}' in Gorse" }
                 _events.emit(GorseEvent.ItemUnliked(manga.title))
@@ -152,7 +135,8 @@ class GorseService(
             } else {
                 emptyList()
             }
-            api.insertMangaMetadata(manga.id.toString(), manga.title, categories)
+            // 使用漫画标题作为itemId
+            api.insertMangaMetadata(manga.title, manga.title, categories)
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e) { "Failed to ensure manga exists" }
             Result.failure(e)
@@ -161,13 +145,29 @@ class GorseService(
 
     /**
      * Get similar manga recommendations
+     * Returns list of GorseRecommendationItem sorted by score (highest first)
      */
-    suspend fun getSimilarManga(manga: Manga, count: Int = 3): List<String> {
+    suspend fun getSimilarManga(manga: Manga, count: Int = 10): List<GorseRecommendationItem> {
         return try {
-            val itemId = manga.id.toString()
+            val itemId = manga.title  // 使用漫画名称作为itemId
+            logcat(LogPriority.DEBUG) { "Getting similar manga for '${manga.title}' (itemId: $itemId)" }
             val result = api.getSimilarItems(itemId, count)
             if (result.isSuccess) {
-                result.getOrElse { emptyList() }
+                val neighbors = result.getOrElse { emptyList() }
+                // Convert GorseNeighborItem to GorseRecommendationItem
+                neighbors.map { neighbor ->
+                    GorseRecommendationItem(
+                        itemId = neighbor.id,
+                        score = neighbor.score,
+                        categories = emptyList(),
+                        labels = emptyList(),
+                        timestamp = "",
+                        comment = "",
+                        isHidden = false
+                    )
+                }.also {
+                    logcat(LogPriority.INFO) { "Got ${it.size} similar manga for '${manga.title}'" }
+                }
             } else {
                 logcat(LogPriority.ERROR) { "Failed to get similar manga from Gorse: ${result.exceptionOrNull()?.message}" }
                 emptyList()
@@ -210,8 +210,10 @@ class GorseService(
 }
 
 sealed class GorseEvent {
-    data class ItemMarkedRead(val title: String) : GorseEvent()
-    data class ItemLiked(val title: String) : GorseEvent()
+    data class ItemMarkedRead(val title: String, val message: String = "") : GorseEvent()
+    data class ItemMarkedReadFailed(val title: String, val error: String) : GorseEvent()
+    data class ItemLiked(val title: String, val message: String = "") : GorseEvent()
+    data class ItemLikedFailed(val title: String, val error: String) : GorseEvent()
     data class ItemUnliked(val title: String) : GorseEvent()
     data class ItemHidden(val itemId: String) : GorseEvent()
     data class Error(val message: String) : GorseEvent()

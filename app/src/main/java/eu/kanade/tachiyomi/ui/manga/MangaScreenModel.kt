@@ -253,6 +253,7 @@ class MangaScreenModel(
             
             // Load Gorse recommendations
             loadGorseRecommendations()
+            loadGorseSimilarRecommendations()
         }
     }
 
@@ -273,6 +274,28 @@ class MangaScreenModel(
             } catch (e: Exception) {
                 logcat(LogPriority.ERROR, e) { "Failed to load Gorse recommendations" }
                 updateSuccessState { it.copy(isLoadingGorseRecommendations = false) }
+            }
+        }
+    }
+
+    /**
+     * Load similar manga recommendations from Gorse based on current manga
+     */
+    fun loadGorseSimilarRecommendations() {
+        screenModelScope.launchIO {
+            try {
+                val manga = successState?.manga ?: return@launchIO
+                updateSuccessState { it.copy(isLoadingGorseSimilarRecommendations = true) }
+                val recommendations = gorseService.getSimilarManga(manga, 10)
+                updateSuccessState { 
+                    it.copy(
+                        gorseSimilarRecommendations = recommendations,
+                        isLoadingGorseSimilarRecommendations = false
+                    )
+                }
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e) { "Failed to load Gorse similar recommendations" }
+                updateSuccessState { it.copy(isLoadingGorseSimilarRecommendations = false) }
             }
         }
     }
@@ -1169,6 +1192,8 @@ class MangaScreenModel(
             val hasPromptedToAddBefore: Boolean = false,
             val gorseRecommendations: List<GorseRecommendationItem> = emptyList(),
             val isLoadingGorseRecommendations: Boolean = false,
+            val gorseSimilarRecommendations: List<GorseRecommendationItem> = emptyList(),
+            val isLoadingGorseSimilarRecommendations: Boolean = false,
         ) : State {
             val processedChapters by lazy {
                 chapters.applyFilters(manga).toList()

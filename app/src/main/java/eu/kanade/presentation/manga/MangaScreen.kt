@@ -53,6 +53,7 @@ import eu.kanade.presentation.manga.components.ChapterDownloadAction
 import eu.kanade.presentation.manga.components.ChapterHeader
 import eu.kanade.presentation.manga.components.ExpandableMangaDescription
 import eu.kanade.presentation.manga.components.GorseRecommendationsCard
+import eu.kanade.presentation.manga.components.GorseSimilarRecommendationsCard
 import eu.kanade.presentation.manga.components.MangaActionRow
 import eu.kanade.presentation.manga.components.MangaBottomActionMenu
 import eu.kanade.presentation.manga.components.MangaChapterListItem
@@ -450,6 +451,19 @@ private fun MangaScreenSmallImpl(
                     }
 
                     item(
+                        key = MangaScreenItem.GORSE_SIMILAR_RECOMMENDATIONS,
+                        contentType = MangaScreenItem.GORSE_SIMILAR_RECOMMENDATIONS,
+                    ) {
+                        GorseSimilarRecommendationsCard(
+                            recommendations = state.gorseSimilarRecommendations,
+                            isLoading = state.isLoadingGorseSimilarRecommendations,
+                            onRecommendationClick = onGorseRecommendationClicked,
+                            onRecommendationHide = onGorseRecommendationHide,
+                            modifier = Modifier.padding(vertical = 8.dp),
+                        )
+                    }
+
+                    item(
                         key = MangaScreenItem.CHAPTER_HEADER,
                         contentType = MangaScreenItem.CHAPTER_HEADER,
                     ) {
@@ -680,6 +694,13 @@ fun MangaScreenLargeImpl(
                         GorseRecommendationsCard(
                             recommendations = state.gorseRecommendations,
                             isLoading = state.isLoadingGorseRecommendations,
+                            onRecommendationClick = onGorseRecommendationClicked,
+                            onRecommendationHide = onGorseRecommendationHide,
+                            modifier = Modifier.padding(vertical = 8.dp),
+                        )
+                        GorseSimilarRecommendationsCard(
+                            recommendations = state.gorseSimilarRecommendations,
+                            isLoading = state.isLoadingGorseSimilarRecommendations,
                             onRecommendationClick = onGorseRecommendationClicked,
                             onRecommendationHide = onGorseRecommendationHide,
                             modifier = Modifier.padding(vertical = 8.dp),

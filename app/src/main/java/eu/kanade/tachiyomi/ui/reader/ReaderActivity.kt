@@ -434,18 +434,28 @@ class ReaderActivity : BaseActivity() {
                 onClickGorseLike = {
                     lifecycleScope.launch {
                         try {
+                            // 显示开始发送
+                            val manga = viewModel.manga
+                            menuToggleToast?.cancel()
+                            menuToggleToast = toast("正在发送${if (state.isLiked) "取消喜欢" else "喜欢"}标记到Gorse...")
+                            
                             val result = viewModel.toggleMangaLikeByGorse()
                             menuToggleToast?.cancel()
+                            
                             if (result.isSuccess) {
-                                val message = if (state.isLiked) "已取消喜欢" else "已标记为喜欢"
-                                menuToggleToast = toast(message)
+                                val action = if (state.isLiked) "取消喜欢" else "喜欢"
+                                val message = "✓ ${action}标记发送成功\n漫画: ${manga?.title}\nitemId: ${manga?.title}"
+                                menuToggleToast = toast(message, Toast.LENGTH_LONG)
                             } else {
                                 val error = result.exceptionOrNull()?.message ?: "未知错误"
-                                menuToggleToast = toast("操作失败: $error")
+                                val message = "✗ 操作失败\n漫画: ${manga?.title}\nitemId: ${manga?.title}\n错误: $error"
+                                menuToggleToast = toast(message, Toast.LENGTH_LONG)
                             }
                         } catch (e: Exception) {
                             menuToggleToast?.cancel()
-                            menuToggleToast = toast("操作异常: ${e.message}")
+                            val manga = viewModel.manga
+                            val message = "✗ 操作异常\n漫画: ${manga?.title}\n异常: ${e.message}"
+                            menuToggleToast = toast(message, Toast.LENGTH_LONG)
                         }
                     }
                 },

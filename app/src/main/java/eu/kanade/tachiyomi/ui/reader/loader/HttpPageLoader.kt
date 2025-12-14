@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +24,7 @@ import java.util.concurrent.PriorityBlockingQueue
 import kotlin.concurrent.atomics.AtomicInt
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.concurrent.atomics.incrementAndFetch
+import kotlin.math.max
 import kotlin.math.min
 
 /**
@@ -32,6 +34,7 @@ internal class HttpPageLoader(
     private val chapter: ReaderChapter,
     private val source: HttpSource,
     private val chapterCache: ChapterCache = Injekt.get(),
+    private val readerPreferences: ReaderPreferences = Injekt.get(),
 ) : PageLoader() {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -41,7 +44,8 @@ internal class HttpPageLoader(
      */
     private val queue = PriorityBlockingQueue<PriorityPage>()
 
-    private val preloadSize = 4
+    private val preloadSize: Int
+        get() = readerPreferences.preloadPages().get()
 
     init {
         scope.launchIO {
@@ -141,17 +145,23 @@ internal class HttpPageLoader(
     }
 
     /**
-     * Preloads the given [amount] of pages after the [currentPage] with a lower priority.
+     * Preloads pages around the [currentPage] with a lower priority.
+     * Preloads pages both before and after the current page for smoother reading experience.
      *
      * @return a list of [PriorityPage] that were added to the [queue]
      */
     private fun preloadNextPages(currentPage: ReaderPage, amount: Int): List<PriorityPage> {
         val pageIndex = currentPage.index
         val pages = currentPage.chapter.pages ?: return emptyList()
-        if (pageIndex == pages.lastIndex) return emptyList()
-
+        
+        // Preload 3 pages before and 'amount' pages after for better bidirectional navigation
+        val preloadBefore = min(3, amount / 3)
+        val startIndex = max(0, pageIndex - preloadBefore)
+        val endIndex = min(pages.lastIndex, pageIndex + amount)
+        
         return pages
-            .subList(pageIndex + 1, min(pageIndex + 1 + amount, pages.size))
+            .subList(startIndex, endIndex + 1)
+            .filter { it.index != pageIndex } // Exclude current page
             .mapNotNull {
                 if (it.status == Page.State.Queue) {
                     PriorityPage(it, 0).apply { queue.offer(this) }

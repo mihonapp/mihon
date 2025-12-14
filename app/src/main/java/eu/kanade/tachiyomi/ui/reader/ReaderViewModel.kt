@@ -573,15 +573,20 @@ class ReaderViewModel @JvmOverloads constructor(
         // Sync with Gorse when chapter is completed
         manga?.let { manga ->
             viewModelScope.launchNonCancellable {
+                // 显示开始发送的提示
+                withUIContext {
+                    eventChannel.send(Event.GorseSyncResult(true, "正在发送已读标记到Gorse...\n漫画: ${manga.title}"))
+                }
+                
                 val result = gorseService.markMangaRead(manga)
                 
                 // 发送同步结果事件
                 withUIContext {
                     if (result.isSuccess) {
-                        eventChannel.send(Event.GorseSyncResult(true, "已同步阅读记录到推荐系统"))
+                        eventChannel.send(Event.GorseSyncResult(true, "✓ 已读标记发送成功\n漫画: ${manga.title}\nitemId: ${manga.title}"))
                     } else {
                         val errorMsg = result.exceptionOrNull()?.message ?: "未知错误"
-                        eventChannel.send(Event.GorseSyncResult(false, "同步推荐系统失败: $errorMsg"))
+                        eventChannel.send(Event.GorseSyncResult(false, "✗ 已读标记发送失败\n漫画: ${manga.title}\nitemId: ${manga.title}\n错误: $errorMsg"))
                     }
                 }
             }
@@ -732,10 +737,11 @@ class ReaderViewModel @JvmOverloads constructor(
 
     /**
      * Get similar manga recommendations from Gorse (基于当前漫画的相似推荐)
+     * Returns list of manga titles (itemIds)
      */
     suspend fun getSimilarMangaFromGorse(): List<String> {
         return manga?.let { manga ->
-            gorseService.getSimilarManga(manga, 3)
+            gorseService.getSimilarManga(manga, 3).map { it.itemId }
         } ?: emptyList()
     }
 
