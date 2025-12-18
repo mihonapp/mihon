@@ -22,7 +22,7 @@ fun relativeDateText(
             Instant.ofEpochMilli(dateEpochMillis),
             ZoneId.systemDefault(),
         )
-            .takeIf { dateEpochMillis > 0L },
+            .takeIf { dateEpochMillis != 0L },
     )
 }
 
