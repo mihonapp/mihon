@@ -11,6 +11,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Added
+- Suwayomi tracker: Allow a small difference in chapter number for matching to avoid incorrect chapter progress sync ([@cpiber](https://github.com/cpiber)) ([#2657](https://github.com/mihonapp/mihon/pull/2675))
+
 ### Improved
 - Minimize memory usage by reducing in-memory cover cache size ([@Lolle2000la](https://github.com/Lolle2000la)) ([#2266](https://github.com/mihonapp/mihon/pull/2266))
 
