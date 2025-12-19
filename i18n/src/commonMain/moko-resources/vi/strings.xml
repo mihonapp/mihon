@@ -68,7 +68,7 @@
     <string name="all">Tất cả</string>
     <string name="pref_library_update_restriction">Những hạn chế cập nhật thiết bị tự động</string>
     <string name="charging">Khi đang sạc</string>
-    <string name="pref_update_only_non_completed">Đã có trạng thái \"Hoàn Thành\"</string>
+    <string name="pref_update_only_non_completed">Có trạng thái \"Đã hoàn thành\"</string>
     <string name="pref_auto_update_manga_sync">Cập nhật tiến triển sau khi đọc</string>
     <string name="pref_fullscreen">Toàn màn hình</string>
     <string name="pref_page_transitions">Hoạt ảnh chuyển trang</string>
@@ -534,7 +534,7 @@
     <string name="ext_installer_pref">Trình cài đặt</string>
     <string name="ext_installer_shizuku_stopped">Shizuku đang không chạy</string>
     <string name="ext_installer_legacy">Phần kế thừa</string>
-    <string name="pref_verbose_logging">Đăng nhập tường tận</string>
+    <string name="pref_verbose_logging">Ghi nhật ký chi tiết</string>
     <string name="action_display_language_badge">Ngôn ngữ</string>
     <string name="backup_info">Bạn nên giữ lại bản sao của sao lưu ở các nơi khác nữa.</string>
     <string name="pref_verbose_logging_summary">In các ghi chép tường tận đến cả ghi chép hệ thống ( giảm hiệu suất ứng dụng )</string>
@@ -770,7 +770,7 @@
     <string name="private_settings">Bao gồm những cài đặt nhạy cảm (ví dụ như token đăng nhập tracker)</string>
     <string name="action_add_anyway">Luôn luôn thêm</string>
     <string name="theme_nord">Phương bắc</string>
-    <string name="pref_library_update_smart_update">Cập nhật thông minh</string>
+    <string name="pref_library_update_smart_update">Tùy chọn bỏ qua cập nhật</string>
     <string name="label_upcoming">Sắp tới</string>
     <string name="onboarding_storage_help_info">Cập nhật từ phiên bản cũ hơn và không biết nên chọn gì? Tham khảo hướng dẫn để biết thêm thông tin.</string>
     <string name="action_add_repo_message">Thêm nguồn bổ sung vào %s. Địa chỉ URL này cần phải kết thúc với \"index.min.json\".</string>
@@ -908,4 +908,5 @@
     <string name="pref_download_concurrent_sources">Tải xuống nguồn đồng thời</string>
     <string name="pref_download_concurrent_pages">Tải xuống trang đồng thời</string>
     <string name="pref_download_concurrent_pages_summary">Các trang được tải xuống đồng thời theo từng nguồn</string>
+    <string name="action_webview_close_tab">Đóng thẻ</string>
 </resources>
