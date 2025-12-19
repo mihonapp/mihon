@@ -12,6 +12,7 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,12 +24,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import eu.kanade.presentation.manga.components.DotSeparatorText
 import eu.kanade.presentation.manga.components.MangaCover
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import eu.kanade.presentation.util.formatChapterNumber
 import eu.kanade.tachiyomi.util.lang.toTimestampString
 import tachiyomi.domain.history.model.HistoryWithRelations
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.material.SECONDARY_ALPHA
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 
@@ -70,26 +73,47 @@ fun HistoryItem(
             )
             val readAt = remember(history.readAt) { history.readAt?.toTimestampString() ?: "" }
             val chapterName = remember(history.chapterName) { history.chapterName.trim() }
-            Text(
-                text = when {
-                    chapterName.isNotEmpty() && readAt.isNotEmpty() -> stringResource(
-                        MR.strings.recent_manga_time_named,
-                        chapterName,
-                        readAt,
+            val chapterLabel = when {
+                chapterName.isNotEmpty() -> chapterName
+                history.chapterNumber > -1 -> stringResource(
+                    MR.strings.display_mode_chapter,
+                    formatChapterNumber(history.chapterNumber),
+                )
+                else -> ""
+            }
+
+            ProvideTextStyle(
+                value = MaterialTheme.typography.bodySmall.merge(
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = SECONDARY_ALPHA),
+                ),
+            ) {
+                when {
+                    readAt.isNotEmpty() && chapterLabel.isNotEmpty() -> Row(
+                        modifier = Modifier.padding(top = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(text = readAt, maxLines = 1)
+                        DotSeparatorText()
+                        Text(
+                            text = chapterLabel,
+                            modifier = Modifier.weight(1f),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                    readAt.isNotEmpty() -> Text(
+                        text = readAt,
+                        modifier = Modifier.padding(top = 4.dp),
+                        maxLines = 1,
                     )
-                    chapterName.isNotEmpty() -> chapterName
-                    history.chapterNumber > -1 && readAt.isNotEmpty() -> stringResource(
-                        MR.strings.recent_manga_time,
-                        formatChapterNumber(history.chapterNumber),
-                        readAt,
+                    chapterLabel.isNotEmpty() -> Text(
+                        text = chapterLabel,
+                        modifier = Modifier.padding(top = 4.dp),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
-                    else -> readAt
-                },
-                modifier = Modifier.padding(top = 4.dp),
-                style = textStyle,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+                }
+            }
         }
 
         if (!history.coverData.isMangaFavorite) {
