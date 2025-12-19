@@ -36,10 +36,13 @@ thumbnailUrl,
 source,
 favorite,
 cover_last_modified,
+chapters.name AS chapterName,
 chapterNumber,
 readAt,
 readDuration
 FROM historyView
+JOIN chapters
+ON chapters._id = historyView.chapterId
 WHERE historyView.readAt > 0
 AND maxReadAtChapterId = historyView.chapterId
 AND lower(historyView.title) LIKE ('%' || :query || '%')
@@ -55,10 +58,13 @@ thumbnailUrl,
 source,
 favorite,
 cover_last_modified,
+chapters.name AS chapterName,
 chapterNumber,
 readAt,
 readDuration
 FROM historyView
+JOIN chapters
+ON chapters._id = historyView.chapterId
 WHERE historyView.readAt > 0
 ORDER BY readAt DESC
 LIMIT 1;

@@ -68,19 +68,27 @@ fun HistoryItem(
                 overflow = TextOverflow.Ellipsis,
                 style = textStyle,
             )
-            val readAt = remember { history.readAt?.toTimestampString() ?: "" }
+            val readAt = remember(history.readAt) { history.readAt?.toTimestampString() ?: "" }
+            val chapterName = remember(history.chapterName) { history.chapterName.trim() }
             Text(
-                text = if (history.chapterNumber > -1) {
-                    stringResource(
+                text = when {
+                    chapterName.isNotEmpty() && readAt.isNotEmpty() -> stringResource(
+                        MR.strings.recent_manga_time_named,
+                        chapterName,
+                        readAt,
+                    )
+                    chapterName.isNotEmpty() -> chapterName
+                    history.chapterNumber > -1 && readAt.isNotEmpty() -> stringResource(
                         MR.strings.recent_manga_time,
                         formatChapterNumber(history.chapterNumber),
                         readAt,
                     )
-                } else {
-                    readAt
+                    else -> readAt
                 },
                 modifier = Modifier.padding(top = 4.dp),
                 style = textStyle,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
         }
 
