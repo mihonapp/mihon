@@ -35,6 +35,9 @@ import eu.kanade.tachiyomi.data.coil.MangaCoverFetcher
 import eu.kanade.tachiyomi.data.coil.MangaCoverKeyer
 import eu.kanade.tachiyomi.data.coil.MangaKeyer
 import eu.kanade.tachiyomi.data.coil.TachiyomiImageDecoder
+import eu.kanade.tachiyomi.data.download.DownloadJob
+import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.di.AppModule
 import eu.kanade.tachiyomi.di.PreferenceModule
@@ -46,8 +49,12 @@ import eu.kanade.tachiyomi.util.system.GLUtil
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.system.cancelNotification
+import eu.kanade.tachiyomi.util.system.networkStateFlow
 import eu.kanade.tachiyomi.util.system.notify
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.combineTransform
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import logcat.AndroidLogcatLogger
@@ -62,6 +69,7 @@ import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.widget.WidgetManager
 import uy.kohesive.injekt.Injekt
@@ -161,6 +169,26 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
         if (!LogcatLogger.isInstalled && networkPreferences.verboseLogging().get()) {
             LogcatLogger.install(AndroidLogcatLogger(LogPriority.VERBOSE))
         }
+
+        val downloadManager = Injekt.get<DownloadManager>()
+
+        // Auto-resume downloads that were stopped due to network changes
+        combineTransform(
+            applicationContext.networkStateFlow(),
+            Injekt.get<DownloadPreferences>().downloadOnlyOverWifi().changes(),
+            transform = { state, requireWifi -> emit(state.isOnline && (!requireWifi || state.isWifi)) },
+        )
+            .distinctUntilChanged()
+            .filter { it }
+            .onEach {
+                if (!downloadManager.stoppedByNetwork) return@onEach
+                if (DownloadJob.isRunning(applicationContext)) return@onEach
+                val hasQueuedDownloads = downloadManager.queueState.value.any { it.status == Download.State.QUEUE }
+                if (!hasQueuedDownloads) return@onEach
+
+                downloadManager.startDownloads()
+            }
+            .launchIn(scope)
 
         initializeMigrator()
     }

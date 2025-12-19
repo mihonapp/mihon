@@ -65,6 +65,14 @@ class DownloadManager(
     val isDownloaderRunning
         get() = DownloadJob.isRunningFlow(context)
 
+    @Volatile
+    var stoppedByNetwork: Boolean = false
+        private set
+
+    internal fun setStoppedByNetwork(stopped: Boolean) {
+        stoppedByNetwork = stopped
+    }
+
     /**
      * Tells the downloader to begin downloads.
      */

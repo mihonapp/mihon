@@ -88,12 +88,16 @@ class DownloadJob(context: Context, workerParams: WorkerParameters) : CoroutineW
         return if (state.isOnline) {
             val noWifi = requireWifi && !state.isWifi
             if (noWifi) {
+                downloadManager.setStoppedByNetwork(true)
                 downloadManager.downloaderStop(
                     applicationContext.getString(R.string.download_notifier_text_only_wifi),
                 )
+            } else {
+                downloadManager.setStoppedByNetwork(false)
             }
             !noWifi
         } else {
+            downloadManager.setStoppedByNetwork(true)
             downloadManager.downloaderStop(applicationContext.getString(R.string.download_notifier_no_network))
             false
         }
