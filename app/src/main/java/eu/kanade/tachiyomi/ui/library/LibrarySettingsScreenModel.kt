@@ -1,7 +1,9 @@
 package eu.kanade.tachiyomi.ui.library
 
+import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import eu.kanade.core.preference.asState
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import kotlinx.coroutines.flow.SharingStarted
@@ -35,6 +37,8 @@ class LibrarySettingsScreenModel(
             initialValue = trackerManager.loggedInTrackers(),
         )
 
+    val grouping by libraryPreferences.groupLibraryBy().asState(screenModelScope)
+
     fun toggleFilter(preference: (LibraryPreferences) -> Preference<TriState>) {
         preference(libraryPreferences).getAndSet {
             it.next()
@@ -52,6 +56,12 @@ class LibrarySettingsScreenModel(
     fun setSort(category: Category?, mode: LibrarySort.Type, direction: LibrarySort.Direction) {
         screenModelScope.launchIO {
             setSortModeForCategory.await(category, mode, direction)
+        }
+    }
+
+    fun setGrouping(grouping: Int) {
+        screenModelScope.launchIO {
+            libraryPreferences.groupLibraryBy().set(grouping)
         }
     }
 }

@@ -16,15 +16,23 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.util.fastForEach
+import dev.icerock.moko.resources.StringResource
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
 import eu.kanade.tachiyomi.ui.library.LibrarySettingsScreenModel
 import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
+import mihon.feature.common.utils.groupTypeDrawableRes
+import mihon.feature.common.utils.groupTypeStringRes
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryDisplayMode
+import tachiyomi.domain.library.model.LibraryGroup
 import tachiyomi.domain.library.model.LibrarySort
 import tachiyomi.domain.library.model.sort
 import tachiyomi.domain.library.service.LibraryPreferences
@@ -32,6 +40,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.BaseSortItem
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
+import tachiyomi.presentation.core.components.IconItem
 import tachiyomi.presentation.core.components.SettingsChipRow
 import tachiyomi.presentation.core.components.SliderItem
 import tachiyomi.presentation.core.components.SortItem
@@ -44,6 +53,7 @@ fun LibrarySettingsDialog(
     onDismissRequest: () -> Unit,
     screenModel: LibrarySettingsScreenModel,
     category: Category?,
+    hasCategories: Boolean,
 ) {
     TabbedDialog(
         onDismissRequest = onDismissRequest,
@@ -51,6 +61,7 @@ fun LibrarySettingsDialog(
             stringResource(MR.strings.action_filter),
             stringResource(MR.strings.action_sort),
             stringResource(MR.strings.action_display),
+            stringResource(MR.strings.group),
         ),
     ) { page ->
         Column(
@@ -68,6 +79,10 @@ fun LibrarySettingsDialog(
                 )
                 2 -> DisplayPage(
                     screenModel = screenModel,
+                )
+                3 -> GroupPage(
+                    screenModel = screenModel,
+                    hasCategories = hasCategories,
                 )
             }
         }
@@ -297,3 +312,48 @@ private fun ColumnScope.DisplayPage(
         pref = screenModel.libraryPreferences.categoryNumberOfItems(),
     )
 }
+
+@Composable
+private fun ColumnScope.GroupPage(
+    screenModel: LibrarySettingsScreenModel,
+    hasCategories: Boolean,
+) {
+    val trackers by screenModel.trackersFlow.collectAsState()
+    val groups = remember(hasCategories, trackers) {
+        buildList {
+            add(LibraryGroup.BY_DEFAULT)
+            add(LibraryGroup.BY_SOURCE)
+            add(LibraryGroup.BY_STATUS)
+            add(LibraryGroup.BY_LANGUAGE)
+            if (trackers.isNotEmpty()) {
+                add(LibraryGroup.BY_TRACK_STATUS)
+            }
+            if (hasCategories) {
+                add(LibraryGroup.UNGROUPED)
+            }
+        }.map {
+            GroupMode(
+                it,
+                it.groupTypeStringRes(hasCategories),
+                it.groupTypeDrawableRes(),
+            )
+        }.toImmutableList()
+    }
+
+    groups.fastForEach {
+        IconItem(
+            label = stringResource(it.nameRes),
+            icon = ImageVector.vectorResource(it.drawableRes),
+            selected = it.int == screenModel.grouping,
+            onClick = {
+                screenModel.setGrouping(it.int)
+            },
+        )
+    }
+}
+
+data class GroupMode(
+    val int: Int,
+    val nameRes: StringResource,
+    val drawableRes: Int,
+)
