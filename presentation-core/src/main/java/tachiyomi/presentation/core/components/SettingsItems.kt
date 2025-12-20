@@ -86,14 +86,18 @@ fun HeadingItem(text: String) {
 }
 
 @Composable
-fun IconItem(label: String, icon: ImageVector, onClick: () -> Unit) {
+fun IconItem(label: String, icon: ImageVector, selected: Boolean, onClick: () -> Unit) {
     BaseSettingsItem(
         label = label,
         widget = {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
+                tint = if (selected) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                },
             )
         },
         onClick = onClick,
