@@ -903,4 +903,10 @@
     <string name="migrationListScreen.migrateDialog.cancelLabel">إلغاء</string>
     <string name="migrationListScreen.progressDialog.cancelLabel">إلغاء</string>
     <string name="migrationListScreen.matchWithoutChapterToast">لم يتم العثور على فصول، لا يمكن استخدام هذا الإدخال للنقل</string>
+    <string name="action_webview_close_tab">أغلق التبويب</string>
+    <string name="pref_disallow_non_ascii_filenames">منع استخدام أسماء ملفات بغير الحروف اللاتينية</string>
+    <string name="pref_disallow_non_ascii_filenames_details">يضمن التوافق مع بعض وسائط التخزين التي لا تدعم الترميز الموحد. عند تفعيل هذا الخيار، ستحتاج إلى إعادة تسمية مجلدات المصدر والمانغا يدويًا عبر استبدال الأحرف غير التابعة لـ ASCII (المحارف اللاتينية) بتمثيلها السداسي العشري (hex) بنظام UTF-8 وبحروف صغيرة. ملفات الفصول لا تحتاج إلى إعادة تسمية.</string>
+    <string name="pref_download_concurrent_sources">تنزيل مصادر متعددة في وقت واحد</string>
+    <string name="pref_download_concurrent_pages">تنزيل صفحات متعددة في وقت واحد</string>
+    <string name="pref_download_concurrent_pages_summary">عدد الصفحات التي يتم تنزيلها في وقت واحد لكل مصدر</string>
 </resources>

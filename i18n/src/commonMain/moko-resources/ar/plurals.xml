@@ -153,18 +153,18 @@
         <item quantity="other">بعد %1$d أيام</item>
     </plurals>
     <plurals name="migrationListScreen.migrateDialog.migrateTitle">
-        <item quantity="zero">نقل %1$d مدخل</item>
-        <item quantity="one">نقل %1$d مدخل</item>
-        <item quantity="two">نقل %1$d مدخل</item>
-        <item quantity="few">نقل %1$d مدخل</item>
-        <item quantity="many">نقل %1$d مدخل</item>
-        <item quantity="other">نقل %1$d مدخل</item>
+        <item quantity="zero">نقل %1$d مدخل؟</item>
+        <item quantity="one">نقل مدخل؟</item>
+        <item quantity="two">نقل مدخلان؟</item>
+        <item quantity="few">نقل %1$d مداخل؟</item>
+        <item quantity="many">نقل %1$d مدخل؟</item>
+        <item quantity="other">نقل %1$d مدخل؟</item>
     </plurals>
     <plurals name="migrationListScreen.migrateDialog.copyTitle">
         <item quantity="zero">نسخ %1$d مدخل؟</item>
-        <item quantity="one">نسخ %1$d مدخل؟</item>
-        <item quantity="two">نسخ %1$d مدخل؟</item>
-        <item quantity="few">نسخ %1$d مدخل؟</item>
+        <item quantity="one">نسخ مدخل؟</item>
+        <item quantity="two">نسخ مدخلان؟</item>
+        <item quantity="few">نسخ %1$d مداخل؟</item>
         <item quantity="many">نسخ %1$d مدخل؟</item>
         <item quantity="other">نسخ %1$d مدخل؟</item>
     </plurals>

@@ -92,7 +92,7 @@
     <string name="secure_screen">უსაფრთხოების ფანჯარა</string>
     <string name="hide_notification_content">შეტყობინების შიგთავსის დამალვა</string>
     <string name="pref_category_display">დისპლეი</string>
-    <string name="pref_library_columns">ნივთები რიგში</string>
+    <string name="pref_library_columns">ელემენტი თითოეულ მწკრივში</string>
     <string name="portrait">პორტრეტი</string>
     <string name="landscape">პეიზაჟი</string>
     <string name="pref_category_library_update">განახლებები</string>
@@ -163,10 +163,10 @@
     <string name="rotation_free">თავისუფალი</string>
     <string name="rotation_force_portrait">პორტრეტის რეჟიმი</string>
     <string name="rotation_force_landscape">პეიზაჟის რეჟიმი</string>
-    <string name="color_filter_r_value">R</string>
-    <string name="color_filter_g_value">G</string>
-    <string name="color_filter_b_value">B</string>
-    <string name="color_filter_a_value">A</string>
+    <string name="color_filter_r_value">წითელი</string>
+    <string name="color_filter_g_value">მწვანე</string>
+    <string name="color_filter_b_value">ლურჯი</string>
+    <string name="color_filter_a_value">ალფა</string>
     <string name="pref_always_show_chapter_transition">ყოველთვის აჩვენე თავებს შორის გადასვლა</string>
     <string name="pref_category_reading">კითხვა</string>
     <string name="pref_webtoon_side_padding">ცარიელი არეა გვერდებზე</string>
