@@ -5,15 +5,14 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.source.isNovelSource
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import logcat.logcat
-import tachiyomi.domain.manga.model.Manga
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -25,7 +24,8 @@ import uy.kohesive.injekt.api.get
  * we track initialTotal separately to show accurate progress.
  */
 data class NovelDownloadItem(
-    val manga: Manga,
+    val mangaId: Long,
+    val mangaTitle: String,
     val sourceName: String,
     val downloads: List<Download>,
     val initialTotal: Int, // Total chapters when the download batch started
@@ -76,39 +76,42 @@ class NovelDownloadQueueScreenModel(
             // Filter only novel downloads and group by manga
             downloadManager.queueState
                 .map { downloads -> downloads.filter { it.source.isNovelSource() } }
-                .distinctUntilChanged()
-                .collectLatest { novelDownloads ->
-                    _state.update {
-                        novelDownloads
-                            .groupBy { it.manga.id }
-                            .map { (mangaId, mangaDownloads) ->
-                                // Track initial total - use max of current count and stored count
-                                val currentCount = mangaDownloads.size
-                                val storedTotal = initialTotals[mangaId] ?: 0
-
-                                // If current count is greater, this is a new batch or first time seeing this
-                                val initialTotal = if (currentCount > storedTotal) {
-                                    initialTotals[mangaId] = currentCount
-                                    currentCount
-                                } else {
-                                    storedTotal
-                                }
-
-                                NovelDownloadItem(
-                                    manga = mangaDownloads.first().manga,
-                                    sourceName = mangaDownloads.first().source.name,
-                                    downloads = mangaDownloads,
-                                    initialTotal = initialTotal,
-                                )
-                            }
-                    }
-
+                .map { novelDownloads ->
                     // Clean up initialTotals for manga no longer in queue
-                    val currentMangaIds = novelDownloads.map { it.manga.id }.toSet()
+                    val currentMangaIds = novelDownloads.asSequence().map { it.mangaId }.toSet()
                     initialTotals.keys.removeAll { it !in currentMangaIds }
 
-                    // Update running state
-                    _isRunning.value = downloadManager.isRunning
+                    val items = novelDownloads
+                        .groupBy { it.mangaId }
+                        .map { (mangaId, mangaDownloads) ->
+                            // Track initial total - use max of current count and stored count
+                            val currentCount = mangaDownloads.size
+                            val storedTotal = initialTotals[mangaId] ?: 0
+
+                            // If current count is greater, this is a new batch or first time seeing this
+                            val initialTotal = if (currentCount > storedTotal) {
+                                initialTotals[mangaId] = currentCount
+                                currentCount
+                            } else {
+                                storedTotal
+                            }
+
+                            NovelDownloadItem(
+                                mangaId = mangaId,
+                                mangaTitle = mangaDownloads.first().mangaTitle,
+                                sourceName = mangaDownloads.first().source.name,
+                                downloads = mangaDownloads,
+                                initialTotal = initialTotal,
+                            )
+                        }
+
+                    items to downloadManager.isRunning
+                }
+                // Avoid doing heavy list operations (filter/groupBy) on the main thread
+                .flowOn(Dispatchers.Default)
+                .collectLatest { (items, isRunning) ->
+                    _state.value = items
+                    _isRunning.value = isRunning
                 }
         }
 
@@ -140,7 +143,7 @@ class NovelDownloadQueueScreenModel(
      */
     fun cancelNovelDownloads(mangaId: Long) {
         val downloads = _state.value
-            .find { it.manga.id == mangaId }
+            .find { it.mangaId == mangaId }
             ?.downloads
             ?: return
 
@@ -159,8 +162,8 @@ class NovelDownloadQueueScreenModel(
      * Move novel downloads to top of queue
      */
     fun moveToTop(mangaId: Long) {
-        val novelItem = _state.value.find { it.manga.id == mangaId } ?: return
-        val otherDownloads = downloadManager.queueState.value.filter { it.manga.id != mangaId }
+        val novelItem = _state.value.find { it.mangaId == mangaId } ?: return
+        val otherDownloads = downloadManager.queueState.value.filter { it.mangaId != mangaId }
         downloadManager.reorderQueue(novelItem.downloads + otherDownloads)
     }
 
@@ -168,8 +171,8 @@ class NovelDownloadQueueScreenModel(
      * Move novel downloads to bottom of queue
      */
     fun moveToBottom(mangaId: Long) {
-        val novelItem = _state.value.find { it.manga.id == mangaId } ?: return
-        val otherDownloads = downloadManager.queueState.value.filter { it.manga.id != mangaId }
+        val novelItem = _state.value.find { it.mangaId == mangaId } ?: return
+        val otherDownloads = downloadManager.queueState.value.filter { it.mangaId != mangaId }
         downloadManager.reorderQueue(otherDownloads + novelItem.downloads)
     }
 

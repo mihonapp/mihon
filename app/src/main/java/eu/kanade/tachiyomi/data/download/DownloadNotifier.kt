@@ -39,6 +39,7 @@ internal class DownloadNotifier(private val context: Context) {
     private val errorNotificationBuilder by lazy {
         context.notificationBuilder(Notifications.CHANNEL_DOWNLOADER_ERROR) {
             setAutoCancel(false)
+            setOnlyAlertOnce(true)
         }
     }
 
@@ -86,7 +87,7 @@ internal class DownloadNotifier(private val context: Context) {
                 addAction(
                     R.drawable.ic_book_24dp,
                     context.stringResource(MR.strings.action_show_manga),
-                    NotificationReceiver.openEntryPendingActivity(context, download.manga.id),
+                    NotificationReceiver.openEntryPendingActivity(context, download.mangaId),
                 )
             }
 
@@ -100,9 +101,9 @@ internal class DownloadNotifier(private val context: Context) {
                 setContentTitle(downloadingProgressText)
                 setContentText(null)
             } else {
-                val title = download.manga.title.chop(15)
+                val title = download.mangaTitle.chop(15)
                 val quotedTitle = Pattern.quote(title)
-                val chapter = download.chapter.name.replaceFirst(
+                val chapter = download.chapterName.replaceFirst(
                     "$quotedTitle[\\s]*[-]*[\\s]*".toRegex(RegexOption.IGNORE_CASE),
                     "",
                 )
@@ -203,6 +204,10 @@ internal class DownloadNotifier(private val context: Context) {
      * @param mangaId the id of the entry that the error occurred on
      */
     fun onError(error: String? = null, chapter: String? = null, mangaTitle: String? = null, mangaId: Long? = null) {
+        // Intentionally suppressed: per-chapter download errors should not spam system notifications.
+        // Errors remain visible in-app (download queue) and in logs.
+        isDownloading = false
+        return
         // Create notification
         with(errorNotificationBuilder) {
             setContentTitle(

@@ -1,0 +1,18 @@
+-- Create translated_chapters table for storing translations
+CREATE TABLE IF NOT EXISTS translated_chapters(
+    _id INTEGER NOT NULL PRIMARY KEY,
+    chapter_id INTEGER NOT NULL,
+    manga_id INTEGER NOT NULL,
+    target_language TEXT NOT NULL,
+    engine_id TEXT NOT NULL,
+    translated_content TEXT NOT NULL,
+    date_translated INTEGER NOT NULL,
+    is_cached INTEGER NOT NULL DEFAULT 1,
+    FOREIGN KEY(chapter_id) REFERENCES chapters (_id) ON DELETE CASCADE,
+    FOREIGN KEY(manga_id) REFERENCES mangas (_id) ON DELETE CASCADE
+);
+
+-- Create indexes for performance
+CREATE INDEX IF NOT EXISTS translated_chapters_chapter_id_index ON translated_chapters(chapter_id);
+CREATE INDEX IF NOT EXISTS translated_chapters_manga_id_index ON translated_chapters(manga_id);
+CREATE INDEX IF NOT EXISTS translated_chapters_language_index ON translated_chapters(chapter_id, target_language);

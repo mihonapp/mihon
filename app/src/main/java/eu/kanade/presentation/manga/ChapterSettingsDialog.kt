@@ -218,6 +218,7 @@ private fun ColumnScope.DisplayPage(
     listOf(
         MR.strings.show_title to Manga.CHAPTER_DISPLAY_NAME,
         MR.strings.show_chapter_number to Manga.CHAPTER_DISPLAY_NUMBER,
+        MR.strings.show_chapter_both to Manga.CHAPTER_DISPLAY_BOTH,
     ).map { (titleRes, mode) ->
         RadioItem(
             label = stringResource(titleRes),

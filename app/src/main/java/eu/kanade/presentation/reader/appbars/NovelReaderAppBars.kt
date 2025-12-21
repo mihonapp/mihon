@@ -6,8 +6,10 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -21,6 +23,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -29,10 +32,13 @@ import androidx.compose.material.icons.automirrored.outlined.NavigateNext
 import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.PlayArrow
+import androidx.compose.material.icons.outlined.RecordVoiceOver
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Stop
+import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material.icons.outlined.VerticalAlignTop
+import androidx.compose.material.icons.outlined.VolumeUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -64,6 +70,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 private val readerBarsSlideAnimationSpec = tween<IntOffset>(200)
 private val readerBarsFadeAnimationSpec = tween<Float>(150)
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NovelReaderAppBars(
     visible: Boolean,
@@ -99,6 +106,11 @@ fun NovelReaderAppBars(
     onScrollToTop: () -> Unit,
     isAutoScrolling: Boolean,
     onToggleAutoScroll: () -> Unit,
+    isTranslating: Boolean,
+    onToggleTranslation: () -> Unit,
+    onLongPressTranslation: () -> Unit,
+    isTtsActive: Boolean,
+    onToggleTts: () -> Unit,
 ) {
     val backgroundColor = MaterialTheme.colorScheme
         .surfaceColorAtElevation(3.dp)
@@ -170,6 +182,11 @@ fun NovelReaderAppBars(
                     onScrollToTop = onScrollToTop,
                     isAutoScrolling = isAutoScrolling,
                     onToggleAutoScroll = onToggleAutoScroll,
+                    isTranslating = isTranslating,
+                    onToggleTranslation = onToggleTranslation,
+                    onLongPressTranslation = onLongPressTranslation,
+                    isTtsActive = isTtsActive,
+                    onToggleTts = onToggleTts,
                 )
             }
         }
@@ -260,6 +277,7 @@ private fun NovelReaderTopBar(
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun NovelReaderBottomBar(
     onNextChapter: () -> Unit,
@@ -272,6 +290,11 @@ private fun NovelReaderBottomBar(
     onScrollToTop: () -> Unit,
     isAutoScrolling: Boolean,
     onToggleAutoScroll: () -> Unit,
+    isTranslating: Boolean,
+    onToggleTranslation: () -> Unit,
+    onLongPressTranslation: () -> Unit,
+    isTtsActive: Boolean,
+    onToggleTts: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -298,6 +321,24 @@ private fun NovelReaderBottomBar(
             )
         }
 
+        // Translation toggle - tap for quick translate, long-press for language picker
+        Box(
+            modifier = Modifier
+                .combinedClickable(
+                    onClick = onToggleTranslation,
+                    onLongClick = onLongPressTranslation,
+                ),
+            contentAlignment = androidx.compose.ui.Alignment.Center,
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Translate,
+                contentDescription = stringResource(MR.strings.action_translate),
+                tint = if (isTranslating) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .size(48.dp)
+                    .padding(12.dp),
+            )
+        }
         // Auto-scroll toggle
         IconButton(onClick = onToggleAutoScroll) {
             Icon(
@@ -305,6 +346,15 @@ private fun NovelReaderBottomBar(
                 contentDescription = stringResource(
                     if (isAutoScrolling) MR.strings.action_stop_auto_scroll else MR.strings.action_start_auto_scroll,
                 ),
+            )
+        }
+
+        // TTS toggle
+        IconButton(onClick = onToggleTts) {
+            Icon(
+                imageVector = if (isTtsActive) Icons.Outlined.Stop else Icons.Outlined.RecordVoiceOver,
+                contentDescription = stringResource(MR.strings.pref_novel_tts),
+                tint = if (isTtsActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
             )
         }
 

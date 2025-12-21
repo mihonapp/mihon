@@ -24,6 +24,7 @@ object SettingsNovelDownloadScreen : SearchableSettings {
 
         return listOf(
             getDownloadThrottlingGroup(novelDownloadPreferences),
+            getImageEmbeddingGroup(novelDownloadPreferences),
             getUpdateThrottlingGroup(novelDownloadPreferences),
             getMassImportThrottlingGroup(novelDownloadPreferences),
         )
@@ -69,6 +70,44 @@ object SettingsNovelDownloadScreen : SearchableSettings {
                     valueRange = 1..50,
                     title = stringResource(MR.strings.pref_novel_parallel_downloads),
                     onValueChanged = { prefs.parallelNovelDownloads().set(it) },
+                ),
+            ),
+        )
+    }
+
+    @Composable
+    private fun getImageEmbeddingGroup(
+        prefs: NovelDownloadPreferences,
+    ): Preference.PreferenceGroup {
+        val enabled = prefs.downloadChapterImages().collectAsState().value
+        val maxSizeKb = prefs.maxImageSizeKb().collectAsState().value
+        val compressionQuality = prefs.imageCompressionQuality().collectAsState().value
+
+        return Preference.PreferenceGroup(
+            title = stringResource(MR.strings.pref_category_novel_images),
+            preferenceItems = persistentListOf(
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = prefs.downloadChapterImages(),
+                    title = stringResource(MR.strings.pref_novel_download_images),
+                    subtitle = stringResource(MR.strings.pref_novel_download_images_summary),
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = maxSizeKb,
+                    valueRange = 0..2000,
+                    title = stringResource(MR.strings.pref_novel_max_image_size),
+                    subtitle = stringResource(MR.strings.pref_novel_max_image_size_summary),
+                    valueString = if (maxSizeKb == 0) stringResource(MR.strings.no_limit) else "${maxSizeKb}KB",
+                    onValueChanged = { prefs.maxImageSizeKb().set(it) },
+                    enabled = enabled,
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = compressionQuality,
+                    valueRange = 10..100,
+                    title = stringResource(MR.strings.pref_novel_image_quality),
+                    subtitle = stringResource(MR.strings.pref_novel_image_quality_summary),
+                    valueString = "$compressionQuality%",
+                    onValueChanged = { prefs.imageCompressionQuality().set(it) },
+                    enabled = enabled,
                 ),
             ),
         )
@@ -125,6 +164,14 @@ object SettingsNovelDownloadScreen : SearchableSettings {
                     valueString = "${massImportDelay}ms",
                     onValueChanged = { prefs.massImportDelay().set(it) },
                     enabled = enabled,
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = prefs.parallelMassImport().collectAsState().value,
+                    valueRange = 1..10,
+                    title = "Concurrent Mass Imports",
+                    subtitle = "Number of novels to import simultaneously",
+                    valueString = "${prefs.parallelMassImport().collectAsState().value}",
+                    onValueChanged = { prefs.parallelMassImport().set(it) },
                 ),
             ),
         )

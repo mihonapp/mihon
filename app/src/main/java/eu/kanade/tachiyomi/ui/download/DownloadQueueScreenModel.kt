@@ -26,12 +26,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import logcat.logcat
 import tachiyomi.domain.library.service.LibraryPreferences
-import tachiyomi.domain.manga.model.Manga
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 data class NovelDownloadItem(
-    val manga: Manga,
+    val mangaId: Long,
+    val mangaTitle: String,
     val sourceName: String,
     val subItems: List<Download>,
     val initialTotal: Int, // Total chapters when the download batch started
@@ -138,7 +138,7 @@ class DownloadQueueScreenModel(
                         val (selectedSeries, otherSeries) = adapter?.currentItems
                             ?.filterIsInstance<DownloadItem>()
                             ?.map(DownloadItem::download)
-                            ?.partition { item.download.manga.id == it.manga.id }
+                            ?.partition { item.download.mangaId == it.mangaId }
                             ?: Pair(emptyList(), emptyList())
                         if (menuItem.itemId == R.id.move_to_top_series) {
                             reorder(selectedSeries + otherSeries)
@@ -152,7 +152,7 @@ class DownloadQueueScreenModel(
                     R.id.cancel_series -> {
                         val allDownloadsForSeries = adapter?.currentItems
                             ?.filterIsInstance<DownloadItem>()
-                            ?.filter { item.download.manga.id == it.download.manga.id }
+                            ?.filter { item.download.mangaId == it.download.mangaId }
                             ?.map(DownloadItem::download)
                         if (!allDownloadsForSeries.isNullOrEmpty()) {
                             cancel(allDownloadsForSeries)
@@ -169,16 +169,17 @@ class DownloadQueueScreenModel(
                 .map { downloads ->
                     val (novels, mangas) = downloads.partition { it.source.isNovelSource() }
 
-                    val mangaItems = mangas.groupBy { it.source }
-                        .map { entry ->
-                            DownloadHeaderItem(entry.key.id, entry.key.name, entry.value.size).apply {
-                                addSubItems(0, entry.value.map { DownloadItem(it, this) })
+                    val mangaItems = mangas.groupBy { it.source.id }
+                        .map { (sourceId, downloads) ->
+                            val source = downloads.first().source
+                            DownloadHeaderItem(sourceId, source.name, downloads.size).apply {
+                                addSubItems(0, downloads.map { DownloadItem(it, this) })
                             }
                         }
 
-                    val novelItems = novels.groupBy { it.manga.id }
+                    val novelItems = novels.groupBy { it.mangaId }
                         .map { (mangaId, downloads) ->
-                            val manga = downloads.first().manga
+                            val mangaTitle = downloads.first().mangaTitle
                             val sourceName = downloads.first().source.name
 
                             // Track initial total - use max of current count and stored count
@@ -194,7 +195,8 @@ class DownloadQueueScreenModel(
                             }
 
                             NovelDownloadItem(
-                                manga = manga,
+                                mangaId = mangaId,
+                                mangaTitle = mangaTitle,
                                 sourceName = sourceName,
                                 subItems = downloads,
                                 initialTotal = initialTotal,
@@ -202,7 +204,7 @@ class DownloadQueueScreenModel(
                         }
 
                     // Clean up initialTotals for manga no longer in queue
-                    val currentMangaIds = novels.map { it.manga.id }.toSet()
+                    val currentMangaIds = novels.map { it.mangaId }.toSet()
                     initialTotals.keys.removeAll { it !in currentMangaIds }
 
                     Pair(mangaItems, novelItems)
@@ -242,7 +244,31 @@ class DownloadQueueScreenModel(
     }
 
     fun reorder(downloads: List<Download>) {
+        reorderSubsetKeepingOthers(downloads)
+    }
+
+    fun reorderFullQueue(downloads: List<Download>) {
         downloadManager.reorderQueue(downloads)
+    }
+
+    private fun reorderSubsetKeepingOthers(downloads: List<Download>) {
+        if (downloads.isEmpty()) return
+
+        // Reorder only the provided downloads, while keeping everything else in-place.
+        // This prevents, for example, sorting the Manga tab from dropping Novel downloads.
+        val current = downloadManager.queueState.value
+        val chapterIds = downloads.asSequence().map { it.chapterId }.toSet()
+        val iterator = downloads.iterator()
+
+        val merged = current.map { existing ->
+            if (chapterIds.contains(existing.chapterId) && iterator.hasNext()) {
+                iterator.next()
+            } else {
+                existing
+            }
+        }
+
+        downloadManager.reorderQueue(merged)
     }
 
     fun cancel(downloads: List<Download>) {
@@ -261,7 +287,16 @@ class DownloadQueueScreenModel(
             }
             newDownloads.addAll(headerItem.subItems.map { it.download })
         }
-        reorder(newDownloads)
+        reorderSubsetKeepingOthers(newDownloads)
+    }
+
+    fun reorderNovelQueueByGroupOrder(groupOrder: List<Long>) {
+        // Build a reordered list of novel downloads based on the desired series (mangaId) ordering.
+        val groups = novelState.value.associateBy { it.mangaId }
+        val newDownloads = groupOrder.flatMap { mangaId ->
+            groups[mangaId]?.subItems.orEmpty()
+        }
+        reorderSubsetKeepingOthers(newDownloads)
     }
 
     /**
@@ -270,6 +305,8 @@ class DownloadQueueScreenModel(
      * @param download the download whose status has changed.
      */
     fun onStatusChange(download: Download) {
+        // Keep the row UI (e.g., error text) in sync with state changes.
+        getHolder(download)?.notifyStatus()
         when (download.status) {
             Download.State.DOWNLOADING -> {
                 launchProgressJob(download)
@@ -348,6 +385,6 @@ class DownloadQueueScreenModel(
      * @return the holder of the download or null if it's not bound.
      */
     private fun getHolder(download: Download): DownloadHolder? {
-        return controllerBinding.root.findViewHolderForItemId(download.chapter.id) as? DownloadHolder
+        return controllerBinding.root.findViewHolderForItemId(download.chapterId) as? DownloadHolder
     }
 }

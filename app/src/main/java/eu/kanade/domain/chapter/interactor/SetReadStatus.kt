@@ -10,12 +10,14 @@ import tachiyomi.domain.chapter.repository.ChapterRepository
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.repository.MangaRepository
+import tachiyomi.domain.translation.repository.TranslatedChapterRepository
 
 class SetReadStatus(
     private val downloadPreferences: DownloadPreferences,
     private val deleteDownload: DeleteDownload,
     private val mangaRepository: MangaRepository,
     private val chapterRepository: ChapterRepository,
+    private val translatedChapterRepository: TranslatedChapterRepository,
 ) {
 
     private val mapper = { chapter: Chapter, read: Boolean ->
@@ -44,6 +46,12 @@ class SetReadStatus(
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
             return@withNonCancellableContext Result.InternalError(e)
+        }
+
+        if (read) {
+            chaptersToUpdate.forEach { chapter ->
+                translatedChapterRepository.deleteAllForChapter(chapter.id)
+            }
         }
 
         if (read && downloadPreferences.removeAfterMarkedAsRead().get()) {

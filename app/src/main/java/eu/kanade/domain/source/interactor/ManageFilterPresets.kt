@@ -24,11 +24,6 @@ class ManageFilterPresets(
 ) {
     fun getPresets(sourceId: Long): FilterPresetList {
         val presets = preferences.filterPresets(sourceId).get()
-        // Split the large log message into two shorter lines to satisfy ktlint max line length
-        logcat(LogPriority.DEBUG) {
-            "FilterPresets: getPresets for sourceId=$sourceId, found ${presets.presets.size} presets"
-        }
-        logcat(LogPriority.DEBUG) { "FilterPresets: Preset names: ${presets.presets.map { it.name }}" }
         return presets
     }
 
@@ -44,15 +39,8 @@ class ManageFilterPresets(
         setAsDefault: Boolean = false,
     ): Result<Unit> {
         return runCatching {
-            logcat(LogPriority.DEBUG) {
-                "FilterPresets: Starting savePreset for sourceId=$sourceId, name=$name, setAsDefault=$setAsDefault"
-            }
-
             val filterState = serializeFilters(filters)
-            logcat(LogPriority.DEBUG) { "FilterPresets: Serialized filters to: ${filterState.take(200)}..." }
-
             val currentPresets = preferences.filterPresets(sourceId).get()
-            logcat(LogPriority.DEBUG) { "FilterPresets: Current presets count: ${currentPresets.presets.size}" }
 
             val newPreset = FilterPreset(
                 id = System.currentTimeMillis(),
@@ -61,56 +49,41 @@ class ManageFilterPresets(
                 filterState = filterState,
                 isDefault = setAsDefault,
             )
-            logcat(LogPriority.DEBUG) { "FilterPresets: Created new preset with id=${newPreset.id}, name=$name" }
 
             val updatedPresets = if (setAsDefault) {
-                // Remove default flag from other presets
-                logcat(LogPriority.DEBUG) {
-                    "FilterPresets: Setting as default, clearing default flag from other presets"
-                }
                 currentPresets.presets.map { it.copy(isDefault = false) } + newPreset
             } else {
                 currentPresets.presets + newPreset
             }
 
-            logcat(LogPriority.DEBUG) { "FilterPresets: Updated presets count: ${updatedPresets.size}" }
-
             preferences.filterPresets(sourceId).set(
                 FilterPresetList(updatedPresets),
             )
-            logcat(LogPriority.INFO) { "FilterPresets: Successfully saved preset '$name' for sourceId=$sourceId" }
+            logcat(LogPriority.INFO) { "FilterPresets: Saved preset '$name' for sourceId=$sourceId" }
         }.onFailure { error ->
             logcat(LogPriority.ERROR) { "FilterPresets: Failed to save preset: ${error.message}" }
         }
     }
 
     fun loadPresetState(sourceId: Long, presetId: Long): String? {
-        logcat(LogPriority.DEBUG) { "FilterPresets: loadPresetState sourceId=$sourceId, presetId=$presetId" }
         val preset = getPresets(sourceId).presets.find { it.id == presetId }
-        if (preset != null) {
-            logcat(LogPriority.DEBUG) {
-                "FilterPresets: Found preset '${preset.name}' with state length=${preset.filterState.length}"
-            }
-        } else {
+        if (preset == null) {
             logcat(LogPriority.WARN) { "FilterPresets: Preset $presetId not found for sourceId=$sourceId" }
         }
         return preset?.filterState
     }
 
     fun deletePreset(sourceId: Long, presetId: Long) {
-        logcat(LogPriority.DEBUG) { "FilterPresets: deletePreset sourceId=$sourceId, presetId=$presetId" }
         val currentPresets = preferences.filterPresets(sourceId).get()
         val presetToDelete = currentPresets.presets.find { it.id == presetId }
-        logcat(LogPriority.DEBUG) { "FilterPresets: Found preset to delete: ${presetToDelete?.name}" }
         val updatedPresets = currentPresets.presets.filter { it.id != presetId }
         preferences.filterPresets(sourceId).set(
             FilterPresetList(updatedPresets),
         )
-        logcat(LogPriority.INFO) { "FilterPresets: Deleted preset $presetId, remaining=${updatedPresets.size}" }
+        logcat(LogPriority.INFO) { "FilterPresets: Deleted preset ${presetToDelete?.name ?: presetId}" }
     }
 
     fun setDefaultPreset(sourceId: Long, presetId: Long?) {
-        logcat(LogPriority.DEBUG) { "FilterPresets: setDefaultPreset sourceId=$sourceId, presetId=$presetId" }
         val currentPresets = preferences.filterPresets(sourceId).get()
         val updatedPresets = currentPresets.presets.map { preset ->
             preset.copy(isDefault = preset.id == presetId)
@@ -124,20 +97,14 @@ class ManageFilterPresets(
 
     fun getDefaultPresetState(sourceId: Long): String? {
         val preset = getPresets(sourceId).presets.find { it.isDefault }
-        logcat(LogPriority.DEBUG) {
-            "FilterPresets: getDefaultPresetState sourceId=$sourceId, found default=${preset?.name}"
-        }
         return preset?.filterState
     }
 
     fun getAutoApplyEnabled(): Boolean {
-        val enabled = preferences.autoApplyFilterPresets().get()
-        logcat(LogPriority.DEBUG) { "FilterPresets: getAutoApplyEnabled=$enabled" }
-        return enabled
+        return preferences.autoApplyFilterPresets().get()
     }
 
     fun setAutoApplyEnabled(enabled: Boolean) {
-        logcat(LogPriority.DEBUG) { "FilterPresets: setAutoApplyEnabled=$enabled" }
         preferences.autoApplyFilterPresets().set(enabled)
         logcat(LogPriority.INFO) { "FilterPresets: Auto-apply presets set to $enabled" }
     }
@@ -191,19 +158,12 @@ class ManageFilterPresets(
                 )
             }
             val result = JsonArray(filterStates).toString()
-            logcat(LogPriority.DEBUG) {
-                "FilterPresets: serializeFilters ${filters.size} filters -> ${result.length} chars"
-            }
             return result
         }
 
         fun applyPresetState(filters: FilterList, presetState: String) {
-            logcat(LogPriority.DEBUG) {
-                "FilterPresets: applyPresetState for ${filters.size} filters, state length=${presetState.length}"
-            }
             try {
                 val states = Json.parseToJsonElement(presetState).jsonArray
-                logcat(LogPriority.DEBUG) { "FilterPresets: Deserialized ${states.size} filter states" }
 
                 states.forEach { stateElement ->
                     val stateMap = stateElement.jsonObject
@@ -266,7 +226,6 @@ class ManageFilterPresets(
             } catch (e: Exception) {
                 logcat(LogPriority.ERROR) { "FilterPresets: Failed to applyPresetState: ${e.message}" }
             }
-            logcat(LogPriority.INFO) { "FilterPresets: Preset state applied successfully" }
         }
     }
 }

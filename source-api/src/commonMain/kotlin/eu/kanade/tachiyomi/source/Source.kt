@@ -25,6 +25,15 @@ interface Source {
         get() = ""
 
     /**
+     * Whether this source provides novel (text-based) content instead of manga (image-based).
+     * Novel sources should return text content via [NovelSource.fetchPageText].
+     *
+     * @since extensions-lib 1.5
+     */
+    val isNovelSource: Boolean
+        get() = false
+
+    /**
      * Get the updated details for a manga.
      *
      * @since extensions-lib 1.5

@@ -76,6 +76,13 @@ object Notifications {
     const val ID_UPDATES_TO_EXTS = -401
     const val ID_EXTENSION_INSTALLER = -402
 
+    /**
+     * Notification channel and ids used by the mass import.
+     */
+    const val CHANNEL_MASS_IMPORT = "mass_import_channel"
+    const val ID_MASS_IMPORT_PROGRESS = -601
+    const val ID_MASS_IMPORT_COMPLETE = -602
+
     private val deprecatedChannels = listOf(
         "downloader_channel",
         "downloader_complete_channel",
@@ -166,6 +173,10 @@ object Notifications {
                 buildNotificationChannel(CHANNEL_EXTENSIONS_UPDATE, IMPORTANCE_DEFAULT) {
                     setGroup(GROUP_APK_UPDATES)
                     setName(context.stringResource(MR.strings.channel_ext_updates))
+                },
+                buildNotificationChannel(CHANNEL_MASS_IMPORT, IMPORTANCE_LOW) {
+                    setName(context.stringResource(MR.strings.channel_mass_import))
+                    setShowBadge(false)
                 },
             ),
         )

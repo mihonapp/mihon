@@ -71,7 +71,7 @@ data object LibraryTab : Tab {
             val isSelected = LocalTabNavigator.current.current.key == key
             val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_library_enter)
             return TabOptions(
-                index = 0u,
+                index = 1u,
                 title = stringResource(MR.strings.label_library),
                 icon = rememberAnimatedVectorPainter(image, isSelected),
             )
@@ -160,6 +160,7 @@ data object LibraryTab : Tab {
                         screenModel.clearSelection()
                         navigator.push(MigrationConfigScreen(selection))
                     },
+                    onTranslateClicked = screenModel::translateSelectedNovels,
                 )
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -269,6 +270,12 @@ data object LibraryTab : Tab {
             }
             is LibraryScreenModel.Dialog.MassImport -> {
                 // Mass import is only used in NovelsTab, not here
+            }
+            is LibraryScreenModel.Dialog.RemoveChapters -> {
+                // Remove chapters dialog - handled in NovelsTab
+            }
+            is LibraryScreenModel.Dialog.ImportEpub -> {
+                // Import EPUB is only used in NovelsTab, not here
             }
             null -> {}
         }

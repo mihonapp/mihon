@@ -7,31 +7,37 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 /**
- * A marker interface for sources that provide novels.
+ * Interface for sources that provide novel (text-based) content.
+ * Sources implementing this interface should:
+ * - Override [isNovelSource] to return true (done automatically if extending NovelHttpSource)
+ * - Implement [fetchPageText] to return the text content for a page
  */
 interface NovelSource {
+    /**
+     * Fetches the text content for a page.
+     * Called by HttpPageLoader when the source is identified as a novel source.
+     *
+     * @param page The page to fetch content for. Use page.url to make the request.
+     * @return The HTML or text content to display.
+     */
     suspend fun fetchPageText(page: Page): String
 }
 
 /**
- * Checks if this source implements the NovelSource interface.
- * This works across classloaders by checking the interface name.
+ * Checks if this source is a novel source.
+ * First checks the [Source.isNovelSource] property, then falls back to interface detection.
  */
 fun Source.isNovelSource(): Boolean {
-    // First try direct instanceof check (works when same classloader)
+    // First check the property (fastest, works for sources that set it)
+    if (this.isNovelSource) return true
+
+    // Then try direct instanceof check (works when same classloader)
     if (this is NovelSource) return true
 
     // Fallback: check by interface name for cross-classloader compatibility
-    val directInterfaces = this::class.java.interfaces.map { it.name }
     val allInterfaces = this::class.java.allInterfaces().map { it.name }
 
-    val isNovel = directInterfaces.contains("eu.kanade.tachiyomi.source.NovelSource") ||
-        allInterfaces.contains("eu.kanade.tachiyomi.source.NovelSource")
-
-    // Uncomment for debugging
-    // println("isNovelSource check for ${this::class.java.name}: direct=$directInterfaces, all=$allInterfaces, result=$isNovel")
-
-    return isNovel
+    return allInterfaces.contains("eu.kanade.tachiyomi.source.NovelSource")
 }
 
 /**

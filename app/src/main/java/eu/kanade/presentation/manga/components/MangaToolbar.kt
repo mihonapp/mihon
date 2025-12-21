@@ -39,6 +39,9 @@ fun MangaToolbar(
     onClickMigrate: (() -> Unit)?,
     onClickEditNotes: () -> Unit,
     onClickEditAltTitles: (() -> Unit)?,
+    onClickTranslate: (() -> Unit)? = null,
+    onClickTranslateDownloaded: (() -> Unit)? = null,
+    onClickExportEpub: (() -> Unit)? = null,
 
     // For action mode
     actionModeCounter: Int,
@@ -147,6 +150,30 @@ fun MangaToolbar(
                             AppBar.OverflowAction(
                                 title = stringResource(MR.strings.action_edit_alt_titles),
                                 onClick = onClickEditAltTitles,
+                            ),
+                        )
+                    }
+                    if (onClickTranslate != null) {
+                        add(
+                            AppBar.OverflowAction(
+                                title = stringResource(MR.strings.action_translate),
+                                onClick = onClickTranslate,
+                            ),
+                        )
+                    }
+                    if (onClickTranslateDownloaded != null) {
+                        add(
+                            AppBar.OverflowAction(
+                                title = stringResource(MR.strings.action_translate_downloaded),
+                                onClick = onClickTranslateDownloaded,
+                            ),
+                        )
+                    }
+                    if (onClickExportEpub != null) {
+                        add(
+                            AppBar.OverflowAction(
+                                title = stringResource(MR.strings.action_export_epub),
+                                onClick = onClickExportEpub,
                             ),
                         )
                     }

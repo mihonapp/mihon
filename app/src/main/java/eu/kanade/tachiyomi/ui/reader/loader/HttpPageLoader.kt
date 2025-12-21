@@ -172,18 +172,34 @@ internal class HttpPageLoader(
      */
     private suspend fun internalLoadPage(page: ReaderPage) {
         try {
-            // Check if this is a novel source
-            if (source.isNovelSource()) {
-                // For novels, fetch text content instead of images
-                if (page.text.isNullOrEmpty()) {
-                    page.status = Page.State.LoadPage
-                    page.text = source.fetchNovelPageText(page)
-                }
+            // Determine if this page should be treated as novel content
+            // A page is novel content if:
+            // 1. The source implements NovelSource AND
+            // 2. The page doesn't have an actual image URL set (imageUrl field)
+            // Note: page.url is used for fetching content, not as image indicator
+            val isNovel = source.isNovelSource()
+            val hasActualImageUrl = !page.imageUrl.isNullOrEmpty()
+            val hasTextData = !page.text.isNullOrEmpty()
+
+            // If text content is already present, consider this page ready regardless of source flag.
+            if (hasTextData) {
                 page.status = Page.State.Ready
                 return
             }
 
-            // For manga sources, handle images
+            // For NovelSource: treat as novel unless there's an actual image URL
+            // The page.url field is just used for fetchPageText, not for images
+            val treatAsNovel = isNovel && !hasActualImageUrl
+
+            if (treatAsNovel) {
+                // For novels, fetch text content instead of images
+                page.status = Page.State.LoadPage
+                page.text = source.fetchNovelPageText(page)
+                page.status = Page.State.Ready
+                return
+            }
+
+            // For manga sources (or novel sources with image pages), handle images
             if (page.imageUrl.isNullOrEmpty()) {
                 page.status = Page.State.LoadPage
                 // Need to fetch imageUrl from page.url
@@ -191,11 +207,10 @@ internal class HttpPageLoader(
                 if (page.url.isNotBlank()) {
                     page.imageUrl = source.getImageUrl(page)
                 } else {
-                    // Page has no URL - this may be a novel source being treated as manga
-                    // or a source that returns empty pages. Mark as error rather than crashing.
+                    // Page has no URL and no imageUrl - cannot load this page
                     throw IllegalStateException(
                         "Page ${page.index} has no URL and no imageUrl. " +
-                            "This may indicate a novel source being used incorrectly or an issue with the source.",
+                            "Check that the source's pageListParse returns valid pages.",
                     )
                 }
             }

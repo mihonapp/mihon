@@ -25,6 +25,12 @@ fun BrowseSourceComfortableGrid(
     contentPadding: PaddingValues,
     onMangaClick: (Manga) -> Unit,
     onMangaLongClick: (Manga) -> Unit,
+    selectionMode: Boolean = false,
+    selection: Set<Manga> = emptySet(),
+    translateTitles: Boolean = false,
+    translatedTitles: Map<Long, String> = emptyMap(),
+    onMangaVisible: (Manga) -> Unit = {},
+    titleMaxLines: Int = 2,
 ) {
     LazyVerticalGrid(
         columns = columns,
@@ -40,10 +46,24 @@ fun BrowseSourceComfortableGrid(
 
         items(count = mangaList.itemCount) { index ->
             val manga by mangaList[index]?.collectAsState() ?: return@items
+            val isSelected = selectionMode && manga in selection
+            val displayTitle = if (translateTitles) {
+                translatedTitles[manga.id] ?: manga.title
+            } else {
+                manga.title
+            }
+
+            if (translateTitles) {
+                onMangaVisible(manga)
+            }
+
             BrowseSourceComfortableGridItem(
                 manga = manga,
+                displayTitle = displayTitle,
                 onClick = { onMangaClick(manga) },
                 onLongClick = { onMangaLongClick(manga) },
+                isSelected = isSelected,
+                titleMaxLines = titleMaxLines,
             )
         }
 
@@ -58,11 +78,16 @@ fun BrowseSourceComfortableGrid(
 @Composable
 private fun BrowseSourceComfortableGridItem(
     manga: Manga,
+    displayTitle: String = manga.title,
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = onClick,
+    isSelected: Boolean = false,
+    titleMaxLines: Int = 2,
 ) {
     MangaComfortableGridItem(
-        title = manga.title,
+        isSelected = isSelected,
+        title = displayTitle,
+        titleMaxLines = titleMaxLines,
         coverData = MangaCover(
             mangaId = manga.id,
             sourceId = manga.source,

@@ -67,6 +67,9 @@ class UpdatesScreenModel(
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) : StateScreenModel<UpdatesScreenModel.State>(State()) {
 
+    @Volatile
+    private var latestUpdates: List<UpdatesWithRelations> = emptyList()
+
     private val _events: Channel<Event> = Channel(Int.MAX_VALUE)
     val events: Flow<Event> = _events.receiveAsFlow()
 
@@ -91,10 +94,12 @@ class UpdatesScreenModel(
                     _events.send(Event.InternalError)
                 }
                 .collectLatest { updates ->
+                    latestUpdates = updates
+                    val currentFilter = state.value.filter
                     mutableState.update {
                         it.copy(
                             isLoading = false,
-                            items = updates.toUpdateItems(),
+                            items = updates.toUpdateItems(currentFilter),
                         )
                     }
                 }
@@ -107,11 +112,10 @@ class UpdatesScreenModel(
         }
     }
 
-    private fun List<UpdatesWithRelations>.toUpdateItems(): PersistentList<UpdatesItem> {
-        val currentFilter = state.value.filter
+    private fun List<UpdatesWithRelations>.toUpdateItems(filter: UpdatesFilter): PersistentList<UpdatesItem> {
         return this
             .filter { update ->
-                when (currentFilter) {
+                when (filter) {
                     UpdatesFilter.ALL -> true
                     UpdatesFilter.MANGA -> {
                         val source = sourceManager.getOrStub(update.sourceId)
@@ -165,7 +169,7 @@ class UpdatesScreenModel(
     private fun updateDownloadState(download: Download) {
         mutableState.update { state ->
             val newItems = state.items.mutate { list ->
-                val modifiedIndex = list.indexOfFirst { it.update.chapterId == download.chapter.id }
+                val modifiedIndex = list.indexOfFirst { it.update.chapterId == download.chapterId }
                 if (modifiedIndex < 0) return@mutate
 
                 val item = list[modifiedIndex]
@@ -410,7 +414,12 @@ class UpdatesScreenModel(
     }
 
     fun setFilter(filter: UpdatesFilter) {
-        mutableState.update { it.copy(filter = filter) }
+        mutableState.update {
+            it.copy(
+                filter = filter,
+                items = latestUpdates.toUpdateItems(filter),
+            )
+        }
     }
 
     sealed interface Dialog {

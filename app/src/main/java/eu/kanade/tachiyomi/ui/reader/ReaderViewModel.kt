@@ -15,6 +15,7 @@ import eu.kanade.domain.manga.model.readingMode
 import eu.kanade.domain.source.interactor.GetIncognitoState
 import eu.kanade.domain.track.interactor.TrackChapter
 import eu.kanade.domain.track.service.TrackPreferences
+import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
@@ -22,6 +23,7 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.saver.Image
 import eu.kanade.tachiyomi.data.saver.ImageSaver
 import eu.kanade.tachiyomi.data.saver.Location
+import eu.kanade.tachiyomi.data.translation.TranslationService
 import eu.kanade.tachiyomi.source.isNovelSource
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -35,6 +37,8 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
+import eu.kanade.tachiyomi.ui.reader.viewer.text.NovelViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.text.NovelWebViewViewer
 import eu.kanade.tachiyomi.util.chapter.filterDownloaded
 import eu.kanade.tachiyomi.util.chapter.removeDuplicates
 import eu.kanade.tachiyomi.util.editCover
@@ -73,6 +77,7 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.domain.translation.service.TranslationPreferences
 import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -101,6 +106,8 @@ class ReaderViewModel @JvmOverloads constructor(
     private val setMangaViewerFlags: SetMangaViewerFlags = Injekt.get(),
     private val getIncognitoState: GetIncognitoState = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
+    private val translationPreferences: TranslationPreferences = Injekt.get(),
+    private val translationService: TranslationService = Injekt.get(),
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(State())
@@ -348,6 +355,21 @@ class ReaderViewModel @JvmOverloads constructor(
                 )
             }
         }
+
+        // Prioritize this chapter for translation if it's a novel and translation is enabled
+        // Manually read chapters get highest priority
+        val currentManga = manga
+        if (currentManga != null &&
+            sourceManager.get(currentManga.source)?.isNovelSource() == true &&
+            translationPreferences.translationEnabled().get()
+        ) {
+            translationService.enqueue(
+                manga = currentManga,
+                chapter = chapter.chapter.toDomainChapter()!!,
+                priority = TranslationService.PRIORITY_MANUAL_READ,
+            )
+        }
+
         return newChapters
     }
 
@@ -395,6 +417,129 @@ class ReaderViewModel @JvmOverloads constructor(
             logcat(LogPriority.ERROR, e)
         } finally {
             mutableState.update { it.copy(isLoadingAdjacentChapter = false) }
+        }
+    }
+
+    /**
+     * Prepares the next chapter for novel infinite-scroll without changing the active chapter.
+     * This loads the chapter's page list (via [ChapterLoader]) but does not update [State.viewerChapters].
+     */
+    suspend fun prepareNextChapterForInfiniteScroll(): ReaderChapter? {
+        val nextChapter = state.value.viewerChapters?.nextChapter ?: return null
+        prepareChapterForInfiniteScroll(nextChapter)
+        return nextChapter
+    }
+
+    /**
+     * Prepares the next chapter after [anchor] for novel infinite-scroll without changing the active chapter.
+     * This allows multi-chapter append without requiring the active chapter to change.
+     */
+    suspend fun prepareNextChapterForInfiniteScroll(anchor: ReaderChapter): ReaderChapter? {
+        val anchorPos = chapterList.indexOfFirst { it.chapter.id == anchor.chapter.id }
+        if (anchorPos < 0) return null
+        val nextChapter = chapterList.getOrNull(anchorPos + 1) ?: return null
+        prepareChapterForInfiniteScroll(nextChapter)
+        return nextChapter
+    }
+
+    /**
+     * Prepares the previous chapter for novel infinite-scroll without changing the active chapter.
+     */
+    suspend fun preparePreviousChapterForInfiniteScroll(): ReaderChapter? {
+        val prevChapter = state.value.viewerChapters?.prevChapter ?: return null
+        prepareChapterForInfiniteScroll(prevChapter)
+        return prevChapter
+    }
+
+    /**
+     * Prepares the previous chapter before [anchor] for novel infinite-scroll without changing the active chapter.
+     */
+    suspend fun preparePreviousChapterForInfiniteScroll(anchor: ReaderChapter): ReaderChapter? {
+        val anchorPos = chapterList.indexOfFirst { it.chapter.id == anchor.chapter.id }
+        if (anchorPos < 0) return null
+        val prevChapter = chapterList.getOrNull(anchorPos - 1) ?: return null
+        prepareChapterForInfiniteScroll(prevChapter)
+        return prevChapter
+    }
+
+    private suspend fun prepareChapterForInfiniteScroll(chapter: ReaderChapter) {
+        val loader = loader ?: return
+        if (chapter.state is ReaderChapter.State.Loaded || chapter.state == ReaderChapter.State.Loading) {
+            logcat(LogPriority.DEBUG) {
+                "ReaderViewModel: prepare skipped for chapter ${chapter.chapter.id}/${chapter.chapter.name}, already state=${chapter.state}"
+            }
+            return
+        }
+        logcat(LogPriority.DEBUG) {
+            "ReaderViewModel: prepare starting for chapter ${chapter.chapter.id}/${chapter.chapter.name}, state=${chapter.state}"
+        }
+        try {
+            withIOContext {
+                loader.loadChapter(chapter)
+            }
+            logcat(LogPriority.INFO) {
+                "ReaderViewModel: prepare finished for chapter ${chapter.chapter.id}/${chapter.chapter.name}, state=${chapter.state}, pages=${chapter.pages?.size ?: 0}"
+            }
+        } catch (e: Throwable) {
+            if (e is CancellationException) throw e
+            logcat(LogPriority.ERROR, e) {
+                "ReaderViewModel: prepare failed for chapter ${chapter.chapter.id}/${chapter.chapter.name}"
+            }
+        }
+    }
+
+    private fun shouldSetActiveWithoutReload(chapter: ReaderChapter): Boolean {
+        val isNovelViewer = state.value.viewer is NovelViewer || state.value.viewer is NovelWebViewViewer
+        if (!isNovelViewer) return false
+        if (!readerPreferences.novelInfiniteScroll().get()) return false
+
+        if (chapter.state !is ReaderChapter.State.Loaded) return false
+        val pages = chapter.pages ?: return false
+        return pages.isNotEmpty() && pages.all { it.status == Page.State.Ready }
+    }
+
+    /**
+     * Updates the active chapter pointers without calling [ChapterLoader.loadChapter].
+     * Used when switching between already-appended chapters during novel infinite-scroll.
+     */
+    private fun setActiveChapterWithoutReload(chapter: ReaderChapter) {
+        viewModelScope.launchIO {
+            flushReadTimer()
+            restartReadTimer()
+
+            val chapterPos = chapterList.indexOfFirst { it.chapter.id == chapter.chapter.id }
+            if (chapterPos < 0) return@launchIO
+
+            val newChapters = ViewerChapters(
+                chapter,
+                chapterList.getOrNull(chapterPos - 1),
+                chapterList.getOrNull(chapterPos + 1),
+            )
+
+            withUIContext {
+                mutableState.update {
+                    newChapters.ref()
+                    it.viewerChapters?.unref()
+                    chapterToDownload = cancelQueuedDownloads(newChapters.currChapter)
+                    it.copy(
+                        viewerChapters = newChapters,
+                        bookmarked = newChapters.currChapter.chapter.bookmark,
+                    )
+                }
+            }
+
+            val currentManga = manga
+            if (
+                currentManga != null &&
+                sourceManager.get(currentManga.source)?.isNovelSource() == true &&
+                translationPreferences.translationEnabled().get()
+            ) {
+                translationService.enqueue(
+                    manga = currentManga,
+                    chapter = chapter.chapter.toDomainChapter()!!,
+                    priority = TranslationService.PRIORITY_MANUAL_READ,
+                )
+            }
         }
     }
 
@@ -495,8 +640,13 @@ class ReaderViewModel @JvmOverloads constructor(
         }
 
         if (selectedChapter != getCurrentChapter()) {
-            logcat { "Setting ${selectedChapter.chapter.url} as active" }
-            loadNewChapter(selectedChapter)
+            if (shouldSetActiveWithoutReload(selectedChapter)) {
+                logcat { "Setting ${selectedChapter.chapter.url} as active (no reload)" }
+                setActiveChapterWithoutReload(selectedChapter)
+            } else {
+                logcat { "Setting ${selectedChapter.chapter.url} as active" }
+                loadNewChapter(selectedChapter)
+            }
         }
 
         val inDownloadRange = page.number.toDouble() / pages.size > 0.25
@@ -505,6 +655,14 @@ class ReaderViewModel @JvmOverloads constructor(
         }
 
         eventChannel.trySend(Event.PageChanged)
+    }
+
+    /**
+     * Updates the chapter shown in the novel top app bar based on scroll position.
+     * This does NOT change the active chapter or reload the viewer.
+     */
+    fun setNovelVisibleChapter(chapter: Chapter?) {
+        mutableState.update { it.copy(novelVisibleChapter = chapter) }
     }
 
     /**
@@ -763,6 +921,64 @@ class ReaderViewModel @JvmOverloads constructor(
     }
 
     /**
+     * Toggles translation mode for the current chapter.
+     * When toggled on, triggers reload to translate content.
+     * When toggled off, triggers reload to show original content.
+     */
+    fun toggleTranslation() {
+        val newState = !state.value.isTranslating
+        mutableState.update {
+            it.copy(isTranslating = newState)
+        }
+
+        // Send event to reload content with new translation state
+        viewModelScope.launchIO {
+            try {
+                eventChannel.send(Event.ReloadWithTranslation)
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e) { "Error reloading chapter for translation" }
+            }
+        }
+    }
+
+    /**
+     * Get the current target translation language.
+     */
+    fun getTargetTranslationLanguage(): String {
+        return translationService.getLastTargetLanguage()
+    }
+
+    /**
+     * Set the target translation language.
+     */
+    fun setTargetTranslationLanguage(language: String) {
+        translationService.setTargetLanguage(language)
+    }
+
+    /**
+     * Translate text content using the translation service.
+     */
+    suspend fun translateContent(content: String): String {
+        val chapter = getCurrentChapter()
+        val chapterId = chapter?.chapter?.id
+        val mangaId = manga?.id
+
+        if (readerPreferences.autoTranslate().get()) {
+            val detected = translationService.detectLanguage(content)
+            val target = translationPreferences.targetLanguage().get()
+
+            if (detected != null && detected.equals(target, ignoreCase = true)) {
+                return content
+            }
+        }
+        return translationService.translateChapterContent(
+            content = content,
+            chapterId = chapterId,
+            mangaId = mangaId,
+        )
+    }
+
+    /**
      * Returns the viewer position used by this manga or the default one.
      * For novel sources, always returns NOVEL mode.
      */
@@ -888,6 +1104,10 @@ class ReaderViewModel @JvmOverloads constructor(
 
     fun openSettingsDialog() {
         mutableState.update { it.copy(dialog = Dialog.Settings) }
+    }
+
+    fun openTranslationLanguageDialog() {
+        mutableState.update { it.copy(dialog = Dialog.TranslationLanguageSelect) }
     }
 
     fun closeDialog() {
@@ -1059,9 +1279,18 @@ class ReaderViewModel @JvmOverloads constructor(
         val isLoadingAdjacentChapter: Boolean = false,
         val currentPage: Int = -1,
         /**
+         * Chapter currently visible in the novel viewer (for app bar display only).
+         */
+        val novelVisibleChapter: Chapter? = null,
+        /**
          * Current reading progress for novel viewer (0-100 percentage).
          */
         val novelProgressPercent: Int = 0,
+
+        /**
+         * Whether translation is enabled for the current chapter.
+         */
+        val isTranslating: Boolean = false,
 
         /**
          * Viewer used to display the pages (pager, webtoon, ...).
@@ -1083,12 +1312,14 @@ class ReaderViewModel @JvmOverloads constructor(
         data object Settings : Dialog
         data object ReadingModeSelect : Dialog
         data object OrientationModeSelect : Dialog
+        data object TranslationLanguageSelect : Dialog
         data class PageActions(val page: ReaderPage) : Dialog
     }
 
     sealed interface Event {
         data object ReloadViewerChapters : Event
         data object PageChanged : Event
+        data object ReloadWithTranslation : Event
         data class SetOrientation(val orientation: Int) : Event
         data class SetCoverResult(val result: SetAsCoverResult) : Event
 

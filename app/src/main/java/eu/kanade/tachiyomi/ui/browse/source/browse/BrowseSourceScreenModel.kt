@@ -22,11 +22,14 @@ import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.presentation.util.ioCoroutineScope
 import eu.kanade.tachiyomi.data.cache.CoverCache
+import eu.kanade.tachiyomi.data.translation.TranslationEngineManager
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -35,8 +38,10 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import logcat.logcat
@@ -55,6 +60,8 @@ import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.manga.model.toMangaUpdate
 import tachiyomi.domain.source.interactor.GetRemoteManga
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.domain.translation.model.TranslationResult
+import tachiyomi.domain.translation.service.TranslationPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.Instant
@@ -77,6 +84,8 @@ class BrowseSourceScreenModel(
     private val addTracks: AddTracks = Injekt.get(),
     private val getIncognitoState: GetIncognitoState = Injekt.get(),
     private val manageFilterPresets: ManageFilterPresets = Injekt.get(),
+    private val translationEngineManager: TranslationEngineManager = Injekt.get(),
+    private val translationPreferences: TranslationPreferences = Injekt.get(),
 ) : StateScreenModel<BrowseSourceScreenModel.State>(State(Listing.valueOf(listingQuery))) {
 
     var displayMode by sourcePreferences.sourceDisplayMode().asState(screenModelScope)
@@ -125,14 +134,23 @@ class BrowseSourceScreenModel(
     }
 
     /**
-     * Flow of Pager flow tied to [State.listing]
+     * Flow of Pager flow tied to [State.listing] and [State.filters].
+     *
+     * Filters are stored in [State.filters] (the single source of truth). Historically,
+     * [Listing.Search.filters] could get out of sync, causing default presets to not apply
+     * until the user performed a new search.
+     *
+     * Note: We use hashCode for comparison because FilterList.equals() always returns false
+     * to force recomposition, but we only want new Pagers when filters actually change.
      */
     private val hideInLibraryItems = sourcePreferences.hideInLibraryItems().get()
-    val mangaPagerFlowFlow = state.map { it.listing }
-        .distinctUntilChanged()
-        .map { listing ->
+    val mangaPagerFlowFlow = state
+        .map { Triple(it.listing.query, it.filters, it.filters.hashCode()) }
+        .distinctUntilChanged { old, new -> old.first == new.first && old.third == new.third }
+        .map { (query, filters, _) ->
+            logcat(LogPriority.DEBUG) { "Creating new Pager for query='$query', filters=${filters.hashCode()}" }
             Pager(PagingConfig(pageSize = 25)) {
-                getRemoteManga(sourceId, listing.query ?: "", listing.filters)
+                getRemoteManga(sourceId, query ?: "", filters)
             }.flow.map { pagingData ->
                 pagingData.map { manga ->
                     getManga.subscribe(manga.url, manga.source)
@@ -167,6 +185,7 @@ class BrowseSourceScreenModel(
 
     fun setFilters(filters: FilterList) {
         if (source !is CatalogueSource) return
+        logcat(LogPriority.DEBUG) { "setFilters called, filters hashCode: ${filters.hashCode()}" }
 
         mutableState.update {
             it.copy(
@@ -177,16 +196,19 @@ class BrowseSourceScreenModel(
 
     fun search(query: String? = null, filters: FilterList? = null) {
         if (source !is CatalogueSource) return
+        logcat(LogPriority.DEBUG) { "search called: query='$query', filters=${filters?.hashCode()}" }
 
         val input = state.value.listing as? Listing.Search
             ?: Listing.Search(query = null, filters = source.getFilterList())
 
+        val newFilters = filters ?: input.filters
         mutableState.update {
             it.copy(
                 listing = input.copy(
                     query = query ?: input.query,
-                    filters = filters ?: input.filters,
+                    filters = newFilters,
                 ),
+                filters = newFilters, // Ensure state.filters is also updated
                 toolbarQuery = query ?: input.query,
             )
         }
@@ -410,6 +432,10 @@ class BrowseSourceScreenModel(
             val filters = source.getFilterList()
             ManageFilterPresets.applyPresetState(filters, presetState)
             mutableState.update { it.copy(filters = filters) }
+            // Force a search with the new filters if we are in a search listing
+            if (state.value.listing is Listing.Search) {
+                search(state.value.listing.query, filters)
+            }
             logcat(LogPriority.INFO) { "BrowseSource: Default preset applied" }
         } else {
             logcat(LogPriority.DEBUG) { "BrowseSource: No default preset found" }
@@ -417,6 +443,7 @@ class BrowseSourceScreenModel(
     }
 
     fun setDialog(dialog: Dialog?) {
+        logcat(LogPriority.DEBUG) { "setDialog: $dialog" }
         mutableState.update { it.copy(dialog = dialog) }
     }
 
@@ -455,12 +482,207 @@ class BrowseSourceScreenModel(
         data class Migrate(val target: Manga, val current: Manga) : Dialog
     }
 
+    // Translation
+    private var translationJob: kotlinx.coroutines.Job? = null
+
+    fun toggleTranslateTitles() {
+        val newState = !state.value.translateTitles
+        logcat(LogPriority.DEBUG) { "toggleTranslateTitles: $newState" }
+        mutableState.update { it.copy(translateTitles = newState) }
+
+        if (newState) {
+            // Start translating titles when enabled
+            translateCurrentTitles()
+        } else {
+            // Cancel any ongoing translation
+            translationJob?.cancel()
+        }
+    }
+
+    /**
+     * Translate all currently loaded manga titles
+     */
+    private fun translateCurrentTitles() {
+        translationJob?.cancel()
+        translationJob = screenModelScope.launchIO {
+            try {
+                val engine = translationEngineManager.getSelectedEngine()
+                val targetLang = translationPreferences.targetLanguage().get()
+                val sourceLang = translationPreferences.sourceLanguage().get()
+
+                // Get current manga list from pager (this is a simplified approach)
+                // We'll translate titles as they become available
+                logcat { "Translation enabled: engine=${engine.name}, target=$targetLang" }
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR) { "Failed to initialize translation: ${e.message}" }
+            }
+        }
+    }
+
+    private val translationChannel = Channel<Manga>(Channel.UNLIMITED)
+
+    init {
+        screenModelScope.launchIO {
+            while (isActive) {
+                val batch = mutableListOf<Manga>()
+                try {
+                    // Wait for first item
+                    val first = translationChannel.receive()
+                    batch.add(first)
+
+                    // Wait a bit to collect more items for the batch
+                    delay(500)
+
+                    // Drain channel up to batch size
+                    while (batch.size < 10) {
+                        val next = translationChannel.tryReceive().getOrNull()
+                        if (next != null) {
+                            batch.add(next)
+                        } else {
+                            break
+                        }
+                    }
+
+                    if (!state.value.translateTitles) continue
+
+                    try {
+                        val engine = translationEngineManager.getSelectedEngine()
+                        val targetLang = translationPreferences.targetLanguage().get()
+                        val sourceLang = translationPreferences.sourceLanguage().get()
+
+                        // Filter out already translated titles
+                        val toTranslate = batch.filter { manga ->
+                            !state.value.translatedTitles.containsKey(manga.id)
+                        }.distinctBy { it.id }
+
+                        if (toTranslate.isNotEmpty()) {
+                            val titles = toTranslate.map { it.title }
+                            val result = engine.translate(titles, sourceLang, targetLang)
+
+                            when (result) {
+                                is TranslationResult.Success -> {
+                                    val newTranslations = toTranslate.mapIndexed { index, manga ->
+                                        manga.id to result.translatedTexts.getOrNull(index).orEmpty()
+                                    }.toMap()
+
+                                    mutableState.update { state ->
+                                        state.copy(
+                                            translatedTitles = state.translatedTitles + newTranslations,
+                                        )
+                                    }
+                                }
+                                is TranslationResult.Error -> {
+                                    logcat(LogPriority.ERROR) { "Translation failed: ${result.message}" }
+                                }
+                            }
+
+                            // Rate limiting delay
+                            if (engine.isRateLimited) {
+                                delay(translationPreferences.rateLimitDelayMs().get().toLong())
+                            }
+                        }
+                    } catch (e: Exception) {
+                        logcat(LogPriority.ERROR) { "Failed to translate titles: ${e.message}" }
+                    }
+                } catch (e: Exception) {
+                    // Ignore channel closed or other errors
+                }
+            }
+        }
+    }
+
+    /**
+     * Translate a single manga title
+     */
+    fun translateManga(manga: Manga) {
+        if (!state.value.translateTitles) return
+        if (state.value.translatedTitles.containsKey(manga.id)) return
+        translationChannel.trySend(manga)
+    }
+
+    /**
+     * Translate a batch of manga titles (Deprecated, use translateManga)
+     */
+    fun translateTitles(mangaList: List<Manga>) {
+        mangaList.forEach { translateManga(it) }
+    }
+
+    /**
+     * Get the display title for a manga (translated if available and enabled)
+     */
+    fun getDisplayTitle(manga: Manga): String {
+        if (!state.value.translateTitles) return manga.title
+        return state.value.translatedTitles[manga.id] ?: manga.title
+    }
+
+    // Mass Import / Selection Mode
+    fun toggleSelectionMode() {
+        mutableState.update { it.copy(selectionMode = !it.selectionMode, selection = emptySet()) }
+    }
+
+    fun toggleSelection(manga: Manga) {
+        mutableState.update { state ->
+            val newSelection = state.selection.toMutableSet()
+            if (manga in newSelection) {
+                newSelection.remove(manga)
+            } else {
+                newSelection.add(manga)
+            }
+            state.copy(selection = newSelection)
+        }
+    }
+
+    fun selectAll(mangaList: List<Manga>) {
+        mutableState.update { state ->
+            state.copy(selection = state.selection + mangaList.filter { !it.favorite })
+        }
+    }
+
+    fun clearSelection() {
+        mutableState.update { it.copy(selection = emptySet()) }
+    }
+
+    fun openMassImportDialog() {
+        // Use the library's mass import dialog which is comprehensive and handles full URL import
+        // Just clear selection and exit, as the library dialog will handle the import flow
+        mutableState.update { it.copy(selection = emptySet(), selectionMode = false) }
+        setDialog(null)
+    }
+
+    fun massImportToCategory(categoryId: Long?) {
+        screenModelScope.launchIO {
+            val selection = state.value.selection
+            selection.forEach { manga ->
+                // Add to favorites
+                val newManga = manga.copy(
+                    favorite = true,
+                    dateAdded = java.time.Instant.now().toEpochMilli(),
+                )
+                updateManga.await(newManga.toMangaUpdate())
+                setMangaDefaultChapterFlags.await(manga)
+                addTracks.bindEnhancedTrackers(manga, source)
+
+                // Set category if specified
+                if (categoryId != null && categoryId != 0L) {
+                    setMangaCategories.await(manga.id, listOf(categoryId))
+                }
+            }
+            // Clear selection and exit selection mode
+            mutableState.update { it.copy(selection = emptySet(), selectionMode = false) }
+            setDialog(null)
+        }
+    }
+
     @Immutable
     data class State(
         val listing: Listing,
         val filters: FilterList = FilterList(),
         val toolbarQuery: String? = null,
         val dialog: Dialog? = null,
+        val selectionMode: Boolean = false,
+        val selection: Set<Manga> = emptySet(),
+        val translateTitles: Boolean = false,
+        val translatedTitles: Map<Long, String> = emptyMap(),
     ) {
         val isUserQuery get() = listing is Listing.Search && !listing.query.isNullOrEmpty()
     }

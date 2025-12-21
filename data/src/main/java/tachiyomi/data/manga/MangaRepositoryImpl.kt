@@ -98,6 +98,41 @@ class MangaRepositoryImpl(
         }
     }
 
+    override suspend fun setMangasCategories(mangaIds: List<Long>, categoryIds: List<Long>) {
+        handler.await(inTransaction = true) {
+            mangaIds.forEach { mangaId ->
+                mangas_categoriesQueries.deleteMangaCategoryByMangaId(mangaId)
+                categoryIds.forEach { categoryId ->
+                    mangas_categoriesQueries.insert(mangaId, categoryId)
+                }
+            }
+        }
+    }
+
+    override suspend fun addMangasCategories(mangaIds: List<Long>, categoryIds: List<Long>) {
+        handler.await(inTransaction = true) {
+            mangaIds.forEach { mangaId ->
+                categoryIds.forEach { categoryId ->
+                    try {
+                        mangas_categoriesQueries.insert(mangaId, categoryId)
+                    } catch (e: Exception) {
+                        // Ignore duplicates
+                    }
+                }
+            }
+        }
+    }
+
+    override suspend fun removeMangasCategories(mangaIds: List<Long>, categoryIds: List<Long>) {
+        handler.await(inTransaction = true) {
+            mangaIds.forEach { mangaId ->
+                categoryIds.forEach { categoryId ->
+                    mangas_categoriesQueries.deleteMangaCategory(mangaId, categoryId)
+                }
+            }
+        }
+    }
+
     override suspend fun update(update: MangaUpdate): Boolean {
         return try {
             partialUpdate(update)

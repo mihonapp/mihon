@@ -83,7 +83,6 @@ class DownloadManager(
      */
     fun pauseDownloads() {
         downloader.pause()
-        downloader.stop()
     }
 
     /**
@@ -101,7 +100,7 @@ class DownloadManager(
      * @param chapterId the chapter to check.
      */
     fun getQueuedDownloadOrNull(chapterId: Long): Download? {
-        return queueState.value.find { it.chapter.id == chapterId }
+        return queueState.value.find { it.chapterId == chapterId }
     }
 
     fun startDownloadNow(chapterId: Long) {
@@ -225,7 +224,7 @@ class DownloadManager(
     }
 
     fun cancelQueuedDownloads(downloads: List<Download>) {
-        removeFromDownloadQueue(downloads.map { it.chapter })
+        removeFromDownloadQueue(downloads.map { it.toDomainChapter() })
     }
 
     /**

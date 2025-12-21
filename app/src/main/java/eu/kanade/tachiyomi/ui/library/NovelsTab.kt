@@ -31,6 +31,8 @@ import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.library.DeleteLibraryMangaDialog
 import eu.kanade.presentation.library.LibrarySettingsDialog
 import eu.kanade.presentation.library.MarkReadConfirmationDialog
+import eu.kanade.presentation.library.RemoveChaptersDialog
+import eu.kanade.presentation.library.components.ImportEpubDialog
 import eu.kanade.presentation.library.components.LibraryContent
 import eu.kanade.presentation.library.components.LibraryToolbar
 import eu.kanade.presentation.library.components.MassImportDialog
@@ -39,7 +41,7 @@ import eu.kanade.presentation.more.onboarding.GETTING_STARTED_URL
 import eu.kanade.presentation.util.Tab
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
-import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.NovelGlobalSearchScreen
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.home.HomeScreen
 import eu.kanade.tachiyomi.ui.main.MainActivity
@@ -73,7 +75,7 @@ data object NovelsTab : Tab {
             val isSelected = LocalTabNavigator.current.current.key == key
             val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_library_enter)
             return TabOptions(
-                index = 1u, // Index 1, Library is 0
+                index = 0u,
                 title = "Novels", // Hardcoded for now, should be resource
                 icon = rememberAnimatedVectorPainter(image, isSelected),
             )
@@ -148,6 +150,7 @@ data object NovelsTab : Tab {
                     // For scroll overlay when no tab
                     scrollBehavior = scrollBehavior.takeIf { !state.showCategoryTabs },
                     onClickMassImport = screenModel::openMassImportDialog,
+                    onClickImportEpub = screenModel::openImportEpubDialog,
                 )
             },
             bottomBar = {
@@ -171,6 +174,13 @@ data object NovelsTab : Tab {
                         }
                         screenModel.clearSelection()
                     },
+                    onUpdateClicked = {
+                        screenModel.updateSelectedNovels()
+                    },
+                    onTranslateClicked = {
+                        screenModel.translateSelectedNovels()
+                    },
+                    onRemoveChaptersClicked = screenModel::openRemoveChaptersDialog,
                 )
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -224,7 +234,7 @@ data object NovelsTab : Tab {
                         },
                         onRefresh = { onClickRefresh(state.activeCategory) },
                         onGlobalSearchClicked = {
-                            navigator.push(GlobalSearchScreen(screenModel.state.value.searchQuery ?: ""))
+                            navigator.push(NovelGlobalSearchScreen(screenModel.state.value.searchQuery ?: ""))
                         },
                         getItemCountForCategory = { state.getItemCountForCategory(it) },
                         getDisplayMode = { screenModel.getDisplayMode() },
@@ -269,6 +279,14 @@ data object NovelsTab : Tab {
                     },
                 )
             }
+            is LibraryScreenModel.Dialog.RemoveChapters -> {
+                RemoveChaptersDialog(
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = {
+                        screenModel.removeChaptersFromSelectedManga(dialog.manga)
+                    },
+                )
+            }
             is LibraryScreenModel.Dialog.MarkReadConfirmation -> {
                 MarkReadConfirmationDialog(
                     read = dialog.read,
@@ -285,6 +303,18 @@ data object NovelsTab : Tab {
                         scope.launch {
                             snackbarHostState.showSnackbar(
                                 "Imported: $added added, $skipped skipped, $errored errors",
+                            )
+                        }
+                    },
+                )
+            }
+            is LibraryScreenModel.Dialog.ImportEpub -> {
+                ImportEpubDialog(
+                    onDismissRequest = onDismissRequest,
+                    onImportComplete = { success, errors ->
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                "EPUB Import: $success imported, $errors errors",
                             )
                         }
                     },

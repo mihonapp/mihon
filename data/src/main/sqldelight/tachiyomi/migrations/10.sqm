@@ -1,0 +1,2 @@
+-- Add content_type column to categories table (0=All, 1=Manga, 2=Novel)
+ALTER TABLE categories ADD COLUMN content_type INTEGER NOT NULL DEFAULT 0;

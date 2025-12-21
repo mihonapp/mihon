@@ -55,6 +55,8 @@ class LibraryPreferences(
 
     fun autoUpdateMetadata() = preferenceStore.getBoolean("auto_update_metadata", false)
 
+    fun autoUpdateThrottle() = preferenceStore.getInt("pref_library_update_throttle_ms", 0)
+
     fun showContinueReadingButton() = preferenceStore.getBoolean(
         "display_continue_reading_button",
         false,
@@ -161,7 +163,7 @@ class LibraryPreferences(
 
     fun displayChapterByNameOrNumber() = preferenceStore.getLong(
         "default_chapter_display_by_name_or_number",
-        Manga.CHAPTER_DISPLAY_NAME,
+        Manga.CHAPTER_DISPLAY_BOTH,
     )
 
     fun sortChapterByAscendingOrDescending() = preferenceStore.getLong(

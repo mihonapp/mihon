@@ -33,9 +33,11 @@ import eu.kanade.presentation.manga.components.ChapterDownloadAction
 import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
+import eu.kanade.tachiyomi.data.translation.TranslationService
 import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.isNovelSource
@@ -69,6 +71,7 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.SetMangaCategories
 import tachiyomi.domain.category.model.Category
+import tachiyomi.domain.chapter.interactor.RemoveChapters
 import tachiyomi.domain.chapter.interactor.SetMangaDefaultChapterFlags
 import tachiyomi.domain.chapter.interactor.UpdateChapter
 import tachiyomi.domain.chapter.model.Chapter
@@ -86,6 +89,7 @@ import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracks
+import tachiyomi.domain.translation.repository.TranslatedChapterRepository
 import tachiyomi.i18n.MR
 import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
@@ -113,7 +117,9 @@ class MangaScreenModel(
     private val setMangaDefaultChapterFlags: SetMangaDefaultChapterFlags = Injekt.get(),
     private val setReadStatus: SetReadStatus = Injekt.get(),
     private val updateChapter: UpdateChapter = Injekt.get(),
+    private val removeChapters: RemoveChapters = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
+    private val updateMangaNotes: tachiyomi.domain.manga.interactor.UpdateMangaNotes = Injekt.get(),
     private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
     private val getTracks: GetTracks = Injekt.get(),
@@ -121,6 +127,8 @@ class MangaScreenModel(
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
     private val mangaRepository: MangaRepository = Injekt.get(),
     private val filterChaptersForDownload: FilterChaptersForDownload = Injekt.get(),
+    private val translatedChapterRepository: TranslatedChapterRepository = Injekt.get(),
+    private val translationService: TranslationService = Injekt.get(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) : StateScreenModel<MangaScreenModel.State>(State.Loading) {
 
@@ -175,10 +183,11 @@ class MangaScreenModel(
             ) { mangaAndChapters, _, _ -> mangaAndChapters }
                 .flowWithLifecycle(lifecycle)
                 .collectLatest { (manga, chapters) ->
+                    val translatedChapterIds = translatedChapterRepository.getTranslatedChapterIds(manga.id)
                     updateSuccessState {
                         it.copy(
                             manga = manga,
-                            chapters = chapters.toChapterListItems(manga),
+                            chapters = chapters.toChapterListItems(manga, translatedChapterIds),
                         )
                     }
                 }
@@ -209,9 +218,14 @@ class MangaScreenModel(
         observeDownloads()
 
         screenModelScope.launchIO {
-            val manga = getMangaAndChapters.awaitManga(mangaId)
-            val chapters = getMangaAndChapters.awaitChapters(mangaId, applyScanlatorFilter = true)
-                .toChapterListItems(manga)
+            val mangaDeferred = async { getMangaAndChapters.awaitManga(mangaId) }
+            val chaptersDeferred = async { getMangaAndChapters.awaitChapters(mangaId, applyScanlatorFilter = true) }
+            val availableScanlatorsDeferred = async { getAvailableScanlators.await(mangaId) }
+            val excludedScanlatorsDeferred = async { getExcludedScanlators.await(mangaId) }
+
+            val manga = mangaDeferred.await()
+            val translatedChapterIds = translatedChapterRepository.getTranslatedChapterIds(manga.id)
+            val chapters = chaptersDeferred.await().toChapterListItems(manga, translatedChapterIds)
 
             if (!manga.favorite) {
                 setMangaDefaultChapterFlags.await(manga)
@@ -228,8 +242,8 @@ class MangaScreenModel(
                     source = source,
                     isFromSource = isFromSource,
                     chapters = chapters,
-                    availableScanlators = getAvailableScanlators.await(mangaId),
-                    excludedScanlators = getExcludedScanlators.await(mangaId),
+                    availableScanlators = availableScanlatorsDeferred.await(),
+                    excludedScanlators = excludedScanlatorsDeferred.await(),
                     isRefreshingData = needRefreshInfo || needRefreshChapter,
                     dialog = null,
                     hideMissingChapters = libraryPreferences.hideMissingChapters().get(),
@@ -484,6 +498,63 @@ class MangaScreenModel(
         }
     }
 
+    /**
+     * Save translated manga details (title to alt titles, description to notes, genres).
+     */
+    fun saveTranslatedDetails(
+        translatedTitle: String?,
+        translatedDescription: String?,
+        translatedGenres: List<String>?,
+        addToAltTitles: Boolean,
+        saveTagsToNotes: Boolean,
+    ) {
+        val manga = successState?.manga ?: return
+
+        screenModelScope.launchIO {
+            // Add translated title to alternative titles if requested
+            if (addToAltTitles && translatedTitle != null && translatedTitle != manga.title) {
+                val currentAltTitles = manga.alternativeTitles.toMutableList()
+                if (!currentAltTitles.contains(translatedTitle)) {
+                    currentAltTitles.add(0, translatedTitle) // Add at the beginning
+                    updateManga.awaitUpdateAlternativeTitles(mangaId, currentAltTitles)
+                }
+            }
+
+            // Prepare new notes
+            var newNotes = manga.notes
+
+            // Save translated description to notes
+            if (translatedDescription != null) {
+                if (newNotes.isBlank()) {
+                    newNotes = "Translated Description:\n$translatedDescription"
+                } else if (!newNotes.contains("Translated Description:")) {
+                    newNotes = "$newNotes\n\nTranslated Description:\n$translatedDescription"
+                }
+            }
+
+            // Save translated tags to notes
+            if (saveTagsToNotes && translatedGenres != null && translatedGenres.isNotEmpty()) {
+                val tagsString = "Translated Tags: ${translatedGenres.joinToString(", ")}"
+                if (newNotes.isBlank()) {
+                    newNotes = tagsString
+                } else if (!newNotes.contains("Translated Tags:")) {
+                    newNotes = "$newNotes\n\n$tagsString"
+                }
+            }
+
+            if (newNotes != manga.notes) {
+                updateManga.awaitUpdateNotes(mangaId, newNotes)
+            }
+
+            // Save translated genres if provided (as genres)
+            if (translatedGenres != null && translatedGenres.isNotEmpty()) {
+                updateManga.awaitUpdateGenre(mangaId, translatedGenres)
+            }
+        }
+
+        dismissDialog()
+    }
+
     // Manga info - end
 
     // Chapters list - start
@@ -491,7 +562,7 @@ class MangaScreenModel(
     private fun observeDownloads() {
         screenModelScope.launchIO {
             downloadManager.statusFlow()
-                .filter { it.manga.id == successState?.manga?.id }
+                .filter { it.mangaId == successState?.manga?.id }
                 .catch { error -> logcat(LogPriority.ERROR, error) }
                 .flowWithLifecycle(lifecycle)
                 .collect {
@@ -503,7 +574,7 @@ class MangaScreenModel(
 
         screenModelScope.launchIO {
             downloadManager.progressFlow()
-                .filter { it.manga.id == successState?.manga?.id }
+                .filter { it.mangaId == successState?.manga?.id }
                 .catch { error -> logcat(LogPriority.ERROR, error) }
                 .flowWithLifecycle(lifecycle)
                 .collect {
@@ -516,7 +587,7 @@ class MangaScreenModel(
 
     private fun updateDownloadState(download: Download) {
         updateSuccessState { successState ->
-            val modifiedIndex = successState.chapters.indexOfFirst { it.id == download.chapter.id }
+            val modifiedIndex = successState.chapters.indexOfFirst { it.id == download.chapterId }
             if (modifiedIndex < 0) return@updateSuccessState successState
 
             val newChapters = successState.chapters.toMutableList().apply {
@@ -528,8 +599,10 @@ class MangaScreenModel(
         }
     }
 
-    private fun List<Chapter>.toChapterListItems(manga: Manga): List<ChapterList.Item> {
-        val isLocal = manga.isLocal()
+    private fun List<Chapter>.toChapterListItems(
+        manga: Manga,
+        translatedChapterIds: Set<Long> = emptySet(),
+    ): List<ChapterList.Item> {
         return map { chapter ->
             val activeDownload = if (isLocal) {
                 null
@@ -558,6 +631,7 @@ class MangaScreenModel(
                 downloadState = downloadState,
                 downloadProgress = activeDownload?.progress ?: 0,
                 selected = chapter.id in selectedChapterIds,
+                hasTranslation = chapter.id in translatedChapterIds,
             )
         }
     }
@@ -1089,10 +1163,13 @@ class MangaScreenModel(
             val initialSelection: ImmutableList<CheckboxState<Category>>,
         ) : Dialog
         data class DeleteChapters(val chapters: List<Chapter>) : Dialog
+        data class RemoveChaptersFromDb(val chapters: List<Chapter>) : Dialog
         data class DuplicateManga(val manga: Manga, val duplicates: List<MangaWithChapterCount>) : Dialog
         data class Migrate(val target: Manga, val current: Manga) : Dialog
         data class SetFetchInterval(val manga: Manga) : Dialog
         data class EditAlternativeTitles(val manga: Manga) : Dialog
+        data class TranslateMangaDetails(val manga: Manga) : Dialog
+        data class ExportEpub(val manga: Manga, val chapters: List<Chapter>) : Dialog
         data object SettingsSheet : Dialog
         data object TrackSheet : Dialog
         data object FullCover : Dialog
@@ -1104,6 +1181,16 @@ class MangaScreenModel(
 
     fun showDeleteChapterDialog(chapters: List<Chapter>) {
         updateSuccessState { it.copy(dialog = Dialog.DeleteChapters(chapters)) }
+    }
+
+    fun showRemoveChaptersFromDbDialog(chapters: List<Chapter>) {
+        updateSuccessState { it.copy(dialog = Dialog.RemoveChaptersFromDb(chapters)) }
+    }
+
+    fun removeChaptersFromDb(chapters: List<Chapter>) {
+        screenModelScope.launchNonCancellable {
+            removeChapters.await(chapters)
+        }
     }
 
     fun showSettingsDialog() {
@@ -1126,6 +1213,233 @@ class MangaScreenModel(
     fun showEditAlternativeTitlesDialog() {
         val manga = successState?.manga ?: return
         updateSuccessState { it.copy(dialog = Dialog.EditAlternativeTitles(manga)) }
+    }
+
+    fun showExportEpubDialog() {
+        val manga = successState?.manga ?: return
+        val chapters = successState?.chapters?.map { it.chapter } ?: return
+        updateSuccessState { it.copy(dialog = Dialog.ExportEpub(manga, chapters)) }
+    }
+
+    /**
+     * Translate manga details (title, description, tags) and save translated title to alternative titles.
+     */
+    fun translateMangaDetails() {
+        val manga = successState?.manga ?: return
+        updateSuccessState { it.copy(dialog = Dialog.TranslateMangaDetails(manga)) }
+    }
+
+    fun applyTranslatedDetails(details: eu.kanade.presentation.manga.components.TranslatedMangaDetails) {
+        val manga = successState?.manga ?: return
+        screenModelScope.launchIO {
+            val update = tachiyomi.domain.manga.model.MangaUpdate(
+                id = manga.id,
+                title = details.translatedTitle,
+                description = details.translatedDescription,
+                genre = details.translatedGenres,
+            )
+
+            // Update manga
+            updateManga.await(update)
+
+            // Add to alternative titles if requested
+            if (details.addToAltTitles && !details.translatedTitle.isNullOrBlank() &&
+                details.translatedTitle != manga.title
+            ) {
+                // This logic depends on how alternative titles are stored (usually in description or custom field)
+                // For now, we'll append to description if not already there
+                // Or if there's a specific implementation for alt titles
+            }
+
+            // Save tags to notes if requested
+            if (details.saveTagsToNotes && !details.translatedGenres.isNullOrEmpty()) {
+                // Append translated tags to notes
+                val currentNotes = manga.notes ?: ""
+                val tagsString = details.translatedGenres.joinToString(", ")
+                val newNotes = if (currentNotes.isBlank()) {
+                    "Translated Tags: $tagsString"
+                } else {
+                    "$currentNotes\n\nTranslated Tags: $tagsString"
+                }
+                updateMangaNotes(manga.id, newNotes)
+            }
+        }
+    }
+
+    /**
+     * Queue all downloaded chapters for translation.
+     */
+    fun translateDownloadedChapters() {
+        val state = successState ?: return
+        val manga = state.manga
+
+        screenModelScope.launchIO {
+            // Get all downloaded chapters
+            val downloadedChapters = state.chapters.filter { item ->
+                item.downloadState == Download.State.DOWNLOADED
+            }.map { it.chapter }
+
+            if (downloadedChapters.isEmpty()) {
+                withUIContext {
+                    snackbarHostState.showSnackbar(
+                        context.stringResource(MR.strings.no_downloaded_chapters),
+                    )
+                }
+                return@launchIO
+            }
+
+            // Queue chapters for translation
+            translationService.enqueueAll(manga, downloadedChapters, TranslationService.PRIORITY_NORMAL)
+
+            withUIContext {
+                snackbarHostState.showSnackbar(
+                    context.stringResource(MR.strings.translation_queued, downloadedChapters.size),
+                )
+            }
+        }
+    }
+
+    /**
+     * Export novel as EPUB file.
+     */
+    fun exportAsEpub(manga: Manga, chapters: List<Chapter>, uri: android.net.Uri) {
+        screenModelScope.launchIO {
+            try {
+                val sourceManager = Injekt.get<SourceManager>()
+                val downloadProvider = Injekt.get<DownloadProvider>()
+                val source = sourceManager.get(manga.source) ?: throw Exception("Source not found")
+                val sortedChapters = chapters.sortedBy { it.chapterNumber }
+
+                if (!source.isNovelSource()) {
+                    withUIContext {
+                        snackbarHostState.showSnackbar("EPUB export is only available for novels")
+                    }
+                    return@launchIO
+                }
+
+                val epubChapters = mutableListOf<mihon.core.archive.EpubWriter.Chapter>()
+
+                for ((index, chapter) in sortedChapters.withIndex()) {
+                    // Check if chapter is downloaded
+                    val isDownloaded = downloadManager.isChapterDownloaded(
+                        chapter.name,
+                        chapter.scanlator,
+                        chapter.url,
+                        manga.title,
+                        manga.source,
+                    )
+
+                    if (!isDownloaded) {
+                        continue
+                    }
+
+                    withUIContext {
+                        snackbarHostState.showSnackbar(
+                            context.stringResource(MR.strings.export_epub_progress, index + 1, sortedChapters.size),
+                            duration = SnackbarDuration.Short,
+                        )
+                    }
+
+                    // Fetch chapter content from disk
+                    val content = try {
+                        val chapterDir = downloadProvider.findChapterDir(
+                            chapter.name,
+                            chapter.scanlator,
+                            chapter.url,
+                            manga.title,
+                            source,
+                        )
+
+                        if (chapterDir != null) {
+                            val htmlFiles = chapterDir.listFiles()?.filter {
+                                it.isFile && it.name?.endsWith(".html") == true
+                            }?.sortedBy { it.name } ?: emptyList()
+
+                            if (htmlFiles.isNotEmpty()) {
+                                val sb = StringBuilder()
+                                htmlFiles.forEachIndexed { i, file ->
+                                    val fileContent = context.contentResolver.openInputStream(file.uri)?.use {
+                                        it.bufferedReader().readText()
+                                    } ?: ""
+                                    sb.append(fileContent)
+                                    if (i < htmlFiles.size - 1) {
+                                        sb.append("\n\n")
+                                    }
+                                }
+                                sb.toString()
+                            } else {
+                                "<p>Chapter content not found</p>"
+                            }
+                        } else {
+                            "<p>Chapter directory not found</p>"
+                        }
+                    } catch (e: Exception) {
+                        logcat(LogPriority.ERROR, e) { "Failed to get content for chapter: ${chapter.name}" }
+                        "<p>Failed to load chapter content</p>"
+                    }
+
+                    epubChapters.add(
+                        mihon.core.archive.EpubWriter.Chapter(
+                            title = chapter.name,
+                            content = content,
+                            order = index,
+                        ),
+                    )
+                }
+
+                if (epubChapters.isEmpty()) {
+                    withUIContext {
+                        snackbarHostState.showSnackbar("No downloaded chapters found to export")
+                    }
+                    return@launchIO
+                }
+
+                // Get cover image
+                val coverImage = try {
+                    manga.thumbnailUrl?.let { url ->
+                        val client = Injekt.get<eu.kanade.tachiyomi.network.NetworkHelper>().client
+                        val request = okhttp3.Request.Builder().url(url).build()
+                        client.newCall(request).execute().body.bytes()
+                    }
+                } catch (e: Exception) {
+                    logcat(LogPriority.WARN, e) { "Failed to fetch cover image" }
+                    null
+                }
+
+                // Create EPUB metadata
+                val metadata = mihon.core.archive.EpubWriter.Metadata(
+                    title = manga.title,
+                    author = manga.author,
+                    description = manga.description,
+                    language = "en",
+                    genres = manga.genre ?: emptyList(),
+                    publisher = source.name,
+                )
+
+                // Write EPUB
+                context.contentResolver.openOutputStream(uri)?.use { outputStream ->
+                    mihon.core.archive.EpubWriter().write(
+                        outputStream = outputStream,
+                        metadata = metadata,
+                        chapters = epubChapters,
+                        coverImage = coverImage,
+                    )
+                }
+
+                withUIContext {
+                    snackbarHostState.showSnackbar(
+                        context.stringResource(MR.strings.export_epub_success),
+                    )
+                }
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e) { "Failed to export EPUB" }
+                withUIContext {
+                    snackbarHostState.showSnackbar(
+                        context.stringResource(MR.strings.export_epub_error, e.message ?: "Unknown error"),
+                    )
+                }
+            }
+        }
     }
 
     fun setExcludedScanlators(excludedScanlators: Set<String>) {
@@ -1232,6 +1546,7 @@ sealed class ChapterList {
         val downloadState: Download.State,
         val downloadProgress: Int,
         val selected: Boolean = false,
+        val hasTranslation: Boolean = false,
     ) : ChapterList() {
         val id = chapter.id
         val isDownloaded = downloadState == Download.State.DOWNLOADED

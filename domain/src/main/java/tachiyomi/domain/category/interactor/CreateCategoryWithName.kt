@@ -18,7 +18,7 @@ class CreateCategoryWithName(
             return sort.type.flag or sort.direction.flag
         }
 
-    suspend fun await(name: String): Result = withNonCancellableContext {
+    suspend fun await(name: String, contentType: Int = Category.CONTENT_TYPE_ALL): Result = withNonCancellableContext {
         val categories = categoryRepository.getAll()
         val nextOrder = categories.maxOfOrNull { it.order }?.plus(1) ?: 0
         val newCategory = Category(
@@ -26,6 +26,7 @@ class CreateCategoryWithName(
             name = name,
             order = nextOrder,
             flags = initialFlags,
+            contentType = contentType,
         )
 
         try {

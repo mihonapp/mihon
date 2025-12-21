@@ -16,11 +16,19 @@ class GetCategories(
         return categoryRepository.getCategoriesByMangaIdAsFlow(mangaId)
     }
 
+    fun subscribeByContentType(contentType: Int): Flow<List<Category>> {
+        return categoryRepository.getCategoriesByContentTypeAsFlow(contentType)
+    }
+
     suspend fun await(): List<Category> {
         return categoryRepository.getAll()
     }
 
     suspend fun await(mangaId: Long): List<Category> {
         return categoryRepository.getCategoriesByMangaId(mangaId)
+    }
+
+    suspend fun awaitByContentType(contentType: Int): List<Category> {
+        return categoryRepository.getCategoriesByContentType(contentType)
     }
 }

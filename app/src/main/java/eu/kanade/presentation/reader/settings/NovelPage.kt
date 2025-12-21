@@ -1,5 +1,6 @@
 package eu.kanade.presentation.reader.settings
 
+import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -15,6 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -25,36 +28,52 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import tachiyomi.domain.translation.service.TranslationPreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.CheckboxItem
+import tachiyomi.presentation.core.components.HeadingItem
 import tachiyomi.presentation.core.components.SettingsChipRow
 import tachiyomi.presentation.core.components.SliderItem
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 @Serializable
 data class CodeSnippet(
@@ -92,8 +111,8 @@ private val renderingModes = listOf(
     "WebView" to "webview",
 )
 
-// Predefined font colors (ARGB int format, 0 = theme default, -2 = custom)
-// Note: Using 0 instead of -1 for default because 0xFFFFFFFF (white) = -1 as signed int
+// Predefined font colors (ARGB int format, 0 = theme default, Int.MIN_VALUE = custom)
+// Note: Need to use special marker values because white = 0xFFFFFFFF = -1 as signed int
 private val fontColors = listOf(
     "Default" to 0,
     "Black" to 0xFF000000.toInt(),
@@ -102,11 +121,11 @@ private val fontColors = listOf(
     "Dark Gray" to 0xFF404040.toInt(),
     "Light Gray" to 0xFFC0C0C0.toInt(),
     "Sepia" to 0xFF5C4033.toInt(),
-    "Custom" to -2,
+    "Custom" to Int.MIN_VALUE,
 )
 
-// Predefined background colors (ARGB int format, 0 = theme default, -2 = custom)
-// Note: Using 0 instead of -1 for default because 0xFFFFFFFF (white) = -1 as signed int
+// Predefined background colors (ARGB int format, 0 = theme default, Int.MIN_VALUE = custom)
+// Note: Need to use special marker values because white = 0xFFFFFFFF = -1 as signed int
 private val backgroundColors = listOf(
     "Default" to 0,
     "White" to 0xFFFFFFFF.toInt(),
@@ -115,57 +134,62 @@ private val backgroundColors = listOf(
     "Dark Gray" to 0xFF1A1A1A.toInt(),
     "Sepia" to 0xFFF4ECD8.toInt(),
     "Cream" to 0xFFFFFDD0.toInt(),
-    "Custom" to -2,
+    "Custom" to Int.MIN_VALUE,
 )
 
 @Composable
 internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
+    val pagerState = rememberPagerState(pageCount = { 4 })
+    val scope = rememberCoroutineScope()
+    val renderingMode by screenModel.preferences.novelRenderingMode().collectAsState()
+
+    val tabs = listOf(
+        stringResource(MR.strings.novel_tab_reading),
+        stringResource(MR.strings.novel_tab_appearance),
+        stringResource(MR.strings.novel_tab_controls),
+        stringResource(MR.strings.novel_tab_advanced),
+    )
+
+    PrimaryScrollableTabRow(
+        selectedTabIndex = pagerState.currentPage,
+        edgePadding = 0.dp,
+    ) {
+        tabs.forEachIndexed { index, title ->
+            Tab(
+                selected = pagerState.currentPage == index,
+                onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
+                text = { Text(title) },
+            )
+        }
+    }
+
+    HorizontalPager(
+        state = pagerState,
+        modifier = Modifier.weight(1f),
+    ) { page ->
+        Column(modifier = Modifier.fillMaxWidth()) {
+            when (page) {
+                0 -> NovelReadingTab(screenModel, renderingMode)
+                1 -> NovelAppearanceTab(screenModel, renderingMode)
+                2 -> NovelControlsTab(screenModel, renderingMode)
+                3 -> NovelAdvancedTab(screenModel, renderingMode)
+            }
+        }
+    }
+}
+
+@Composable
+internal fun ColumnScope.NovelReadingTab(screenModel: ReaderSettingsScreenModel, renderingMode: String) {
     val fontSize by screenModel.preferences.novelFontSize().collectAsState()
-    var showFontColorPicker by remember { mutableStateOf(false) }
-    var showBgColorPicker by remember { mutableStateOf(false) }
-    val fontFamily by screenModel.preferences.novelFontFamily().collectAsState()
-    val theme by screenModel.preferences.novelTheme().collectAsState()
     val lineHeight by screenModel.preferences.novelLineHeight().collectAsState()
-    val textAlign by screenModel.preferences.novelTextAlign().collectAsState()
-    val autoScrollSpeed by screenModel.preferences.novelAutoScrollSpeed().collectAsState()
-    val volumeKeysScroll by screenModel.preferences.novelVolumeKeysScroll().collectAsState()
-    val tapToScroll by screenModel.preferences.novelTapToScroll().collectAsState()
-    val textSelectable by screenModel.preferences.novelTextSelectable().collectAsState()
-    val fontColor by screenModel.preferences.novelFontColor().collectAsState()
-    val backgroundColor by screenModel.preferences.novelBackgroundColor().collectAsState()
     val paragraphIndent by screenModel.preferences.novelParagraphIndent().collectAsState()
+    val paragraphSpacing by screenModel.preferences.novelParagraphSpacing().collectAsState()
     val marginLeft by screenModel.preferences.novelMarginLeft().collectAsState()
     val marginRight by screenModel.preferences.novelMarginRight().collectAsState()
     val marginTop by screenModel.preferences.novelMarginTop().collectAsState()
     val marginBottom by screenModel.preferences.novelMarginBottom().collectAsState()
-    val renderingMode by screenModel.preferences.novelRenderingMode().collectAsState()
-
-    // Show color picker dialogs
-    if (showFontColorPicker) {
-        ColorPickerDialog(
-            title = stringResource(MR.strings.pref_novel_font_color),
-            initialColor = if (fontColor > 0) fontColor else 0xFF000000.toInt(),
-            onDismiss = { showFontColorPicker = false },
-            onConfirm = { color ->
-                screenModel.preferences.novelFontColor().set(color)
-                showFontColorPicker = false
-            },
-        )
-    }
-
-    if (showBgColorPicker) {
-        ColorPickerDialog(
-            title = stringResource(MR.strings.pref_novel_background_color),
-            initialColor = if (backgroundColor > 0) backgroundColor else 0xFFFFFFFF.toInt(),
-            onDismiss = { showBgColorPicker = false },
-            onConfirm = { color ->
-                screenModel.preferences.novelBackgroundColor().set(color)
-                // Switch to custom theme when custom background is set
-                screenModel.preferences.novelTheme().set("custom")
-                showBgColorPicker = false
-            },
-        )
-    }
+    val fontFamily by screenModel.preferences.novelFontFamily().collectAsState()
+    val textAlign by screenModel.preferences.novelTextAlign().collectAsState()
 
     // Rendering Mode
     SettingsChipRow(MR.strings.pref_novel_rendering_mode) {
@@ -194,22 +218,129 @@ internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
         onChange = { screenModel.preferences.novelLineHeight().set(it / 10f) },
     )
 
-    // Paragraph Indentation (WebView mode only - CSS text-indent doesn't work with Html.fromHtml)
+    // Paragraph Indentation
+    SliderItem(
+        label = stringResource(MR.strings.pref_novel_paragraph_indent),
+        value = (paragraphIndent * 10).toInt(),
+        valueRange = 0..100,
+        onChange = { screenModel.preferences.novelParagraphIndent().set(it / 10f) },
+    )
+
+    // Paragraph Spacing
+    SliderItem(
+        label = stringResource(MR.strings.pref_novel_paragraph_spacing),
+        value = (paragraphSpacing * 10).toInt(),
+        valueRange = 0..30,
+        onChange = { screenModel.preferences.novelParagraphSpacing().set(it / 10f) },
+    )
+
+    // Margins
+    SliderItem(
+        label = stringResource(MR.strings.pref_novel_margin_left),
+        value = marginLeft,
+        valueRange = 0..100,
+        onChange = { screenModel.preferences.novelMarginLeft().set(it) },
+    )
+    SliderItem(
+        label = stringResource(MR.strings.pref_novel_margin_right),
+        value = marginRight,
+        valueRange = 0..100,
+        onChange = { screenModel.preferences.novelMarginRight().set(it) },
+    )
+    SliderItem(
+        label = stringResource(MR.strings.pref_novel_margin_top),
+        value = marginTop,
+        valueRange = 0..300,
+        onChange = { screenModel.preferences.novelMarginTop().set(it) },
+    )
+    SliderItem(
+        label = stringResource(MR.strings.pref_novel_margin_bottom),
+        value = marginBottom,
+        valueRange = 0..300,
+        onChange = { screenModel.preferences.novelMarginBottom().set(it) },
+    )
+
+    // Font Family
+    SettingsChipRow(MR.strings.pref_font_family) {
+        novelFonts.map { (label, value) ->
+            FilterChip(
+                selected = fontFamily == value,
+                onClick = { screenModel.preferences.novelFontFamily().set(value) },
+                label = { Text(label) },
+            )
+        }
+    }
+
+    // Use Original Fonts (WebView mode only)
     if (renderingMode == "webview") {
-        SliderItem(
-            label = stringResource(MR.strings.pref_novel_paragraph_indent),
-            value = (paragraphIndent * 10).toInt(),
-            valueRange = 0..50, // 0 to 5em
-            onChange = { screenModel.preferences.novelParagraphIndent().set(it / 10f) },
+        CheckboxItem(
+            label = stringResource(MR.strings.pref_novel_use_original_fonts),
+            pref = screenModel.preferences.novelUseOriginalFonts(),
         )
+    }
+
+    // Text Alignment
+    SettingsChipRow(MR.strings.pref_novel_text_align) {
+        textAlignments.map { (label, value) ->
+            FilterChip(
+                selected = textAlign == value,
+                onClick = { screenModel.preferences.novelTextAlign().set(value) },
+                label = { Text(label) },
+            )
+        }
+    }
+}
+
+@Composable
+internal fun ColumnScope.NovelAppearanceTab(screenModel: ReaderSettingsScreenModel, renderingMode: String) {
+    val theme by screenModel.preferences.novelTheme().collectAsState()
+    val fontColor by screenModel.preferences.novelFontColor().collectAsState()
+    val backgroundColor by screenModel.preferences.novelBackgroundColor().collectAsState()
+    var showFontColorPicker by remember { mutableStateOf(false) }
+    var showBgColorPicker by remember { mutableStateOf(false) }
+
+    // Color picker dialogs
+    if (showFontColorPicker) {
+        ColorPickerDialog(
+            title = stringResource(MR.strings.pref_novel_font_color),
+            initialColor = if (fontColor > 0) fontColor else 0xFF000000.toInt(),
+            onDismiss = { showFontColorPicker = false },
+            onConfirm = { color ->
+                screenModel.preferences.novelFontColor().set(color)
+                showFontColorPicker = false
+            },
+        )
+    }
+
+    if (showBgColorPicker) {
+        ColorPickerDialog(
+            title = stringResource(MR.strings.pref_novel_background_color),
+            initialColor = if (backgroundColor > 0) backgroundColor else 0xFFFFFFFF.toInt(),
+            onDismiss = { showBgColorPicker = false },
+            onConfirm = { color ->
+                screenModel.preferences.novelBackgroundColor().set(color)
+                screenModel.preferences.novelTheme().set("custom")
+                showBgColorPicker = false
+            },
+        )
+    }
+
+    // Theme
+    SettingsChipRow(MR.strings.pref_novel_theme) {
+        novelThemes.map { (label, value) ->
+            FilterChip(
+                selected = theme == value,
+                onClick = { screenModel.preferences.novelTheme().set(value) },
+                label = { Text(label) },
+            )
+        }
     }
 
     // Font Color
     SettingsChipRow(MR.strings.pref_novel_font_color) {
         fontColors.map { (label, colorValue) ->
-            val isCustom = colorValue == -2
+            val isCustom = colorValue == Int.MIN_VALUE
             val isSelected = if (isCustom) {
-                // Custom is selected if fontColor is not in predefined list (0 = default)
                 fontColors.none { it.second == fontColor } && fontColor != 0
             } else {
                 fontColor == colorValue
@@ -226,8 +357,8 @@ internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
                 label = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         val displayColor = when {
-                            isCustom && isSelected -> Color(fontColor)
-                            colorValue > 0 -> Color(colorValue)
+                            isCustom && isSelected && fontColor != 0 -> Color(fontColor)
+                            !isCustom && colorValue != 0 -> Color(colorValue)
                             else -> null
                         }
                         if (displayColor != null) {
@@ -236,15 +367,14 @@ internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
                                     .size(16.dp)
                                     .clip(CircleShape)
                                     .background(displayColor)
-                                    .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
-                                    .padding(end = 4.dp),
+                                    .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape),
                             )
                         }
                         if (isCustom) {
                             Icon(
                                 Icons.Outlined.Palette,
                                 contentDescription = null,
-                                modifier = Modifier.size(16.dp).padding(end = 4.dp),
+                                modifier = Modifier.size(16.dp),
                             )
                         }
                         Text(
@@ -268,9 +398,8 @@ internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
     // Background Color
     SettingsChipRow(MR.strings.pref_novel_background_color) {
         backgroundColors.map { (label, colorValue) ->
-            val isCustom = colorValue == -2
+            val isCustom = colorValue == Int.MIN_VALUE
             val isSelected = if (isCustom) {
-                // Custom is selected if backgroundColor is not in predefined list (0 = default)
                 backgroundColors.none { it.second == backgroundColor } && backgroundColor != 0
             } else {
                 backgroundColor == colorValue
@@ -290,8 +419,8 @@ internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
                 label = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         val displayColor = when {
-                            isCustom && isSelected -> Color(backgroundColor)
-                            colorValue > 0 -> Color(colorValue)
+                            isCustom && isSelected && backgroundColor != 0 -> Color(backgroundColor)
+                            !isCustom && colorValue != 0 -> Color(colorValue)
                             else -> null
                         }
                         if (displayColor != null) {
@@ -300,15 +429,14 @@ internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
                                     .size(16.dp)
                                     .clip(CircleShape)
                                     .background(displayColor)
-                                    .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
-                                    .padding(end = 4.dp),
+                                    .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape),
                             )
                         }
                         if (isCustom) {
                             Icon(
                                 Icons.Outlined.Palette,
                                 contentDescription = null,
-                                modifier = Modifier.size(16.dp).padding(end = 4.dp),
+                                modifier = Modifier.size(16.dp),
                             )
                         }
                         Text(
@@ -329,43 +457,41 @@ internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
         }
     }
 
-    // Margin Left
-    SliderItem(
-        label = stringResource(MR.strings.pref_novel_margin_left),
-        value = marginLeft,
-        valueRange = 0..1000,
-        onChange = { screenModel.preferences.novelMarginLeft().set(it) },
+    // Custom Brightness
+    val novelCustomBrightness by screenModel.preferences.novelCustomBrightness().collectAsState()
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_custom_brightness),
+        pref = screenModel.preferences.novelCustomBrightness(),
     )
 
-    // Margin Right
-    SliderItem(
-        label = stringResource(MR.strings.pref_novel_margin_right),
-        value = marginRight,
-        valueRange = 0..1000,
-        onChange = { screenModel.preferences.novelMarginRight().set(it) },
-    )
+    if (novelCustomBrightness) {
+        val novelCustomBrightnessValue by screenModel.preferences.novelCustomBrightnessValue().collectAsState()
+        SliderItem(
+            value = novelCustomBrightnessValue,
+            valueRange = -75..100,
+            steps = 0,
+            label = stringResource(MR.strings.pref_custom_brightness),
+            onChange = { screenModel.preferences.novelCustomBrightnessValue().set(it) },
+        )
+    }
 
-    // Margin Top
-    SliderItem(
-        label = stringResource(MR.strings.pref_novel_margin_top),
-        value = marginTop,
-        valueRange = 0..1000,
-        onChange = { screenModel.preferences.novelMarginTop().set(it) },
+    // Keep Screen On
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_novel_keep_screen_on),
+        pref = screenModel.preferences.novelKeepScreenOn(),
     )
+}
 
-    // Margin Bottom
-    SliderItem(
-        label = stringResource(MR.strings.pref_novel_margin_bottom),
-        value = marginBottom,
-        valueRange = 0..1000,
-        onChange = { screenModel.preferences.novelMarginBottom().set(it) },
-    )
+@Composable
+internal fun ColumnScope.NovelControlsTab(screenModel: ReaderSettingsScreenModel, renderingMode: String) {
+    val autoScrollSpeed by screenModel.preferences.novelAutoScrollSpeed().collectAsState()
+    val chapterSortOrder by screenModel.preferences.novelChapterSortOrder().collectAsState()
 
     // Auto Scroll Speed
     SliderItem(
         label = stringResource(MR.strings.pref_novel_auto_scroll_speed),
         value = autoScrollSpeed,
-        valueRange = 0..30,
+        valueRange = 1..10,
         onChange = { screenModel.preferences.novelAutoScrollSpeed().set(it) },
     )
 
@@ -381,6 +507,12 @@ internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
         pref = screenModel.preferences.novelTapToScroll(),
     )
 
+    // Swipe Navigation
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_novel_swipe_navigation),
+        pref = screenModel.preferences.novelSwipeNavigation(),
+    )
+
     // Text Selection
     CheckboxItem(
         label = stringResource(MR.strings.pref_novel_text_selectable),
@@ -393,46 +525,80 @@ internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
         pref = screenModel.preferences.novelHideChapterTitle(),
     )
 
-    // Progress Slider (show slider in menu to navigate within chapter)
+    // Force Lowercase Text
+    CheckboxItem(
+        label = "Force text to lowercase",
+        pref = screenModel.preferences.novelForceTextLowercase(),
+    )
+
+    // Chapter Title Display Format
+    val chapterTitleDisplay by screenModel.preferences.novelChapterTitleDisplay().collectAsState()
+    val titleDisplayOptions = listOf(
+        "Name only" to 0,
+        "Number only" to 1,
+        "Both" to 2,
+    )
+    // Note: SettingsChipRow already calls HeadingItem internally
+    SettingsChipRow(MR.strings.pref_novel_chapter_title_display) {
+        titleDisplayOptions.map { (label, value) ->
+            FilterChip(
+                selected = chapterTitleDisplay == value,
+                onClick = { screenModel.preferences.novelChapterTitleDisplay().set(value) },
+                label = { Text(label) },
+            )
+        }
+    }
+
+    // Progress Slider
     CheckboxItem(
         label = stringResource(MR.strings.pref_novel_progress_slider),
         pref = screenModel.preferences.novelShowProgressSlider(),
     )
 
-    // Custom Brightness
-    val novelCustomBrightness by screenModel.preferences.novelCustomBrightness().collectAsState()
+    // Infinite Scroll
+    val infiniteScrollEnabled by screenModel.preferences.novelInfiniteScroll().collectAsState()
     CheckboxItem(
-        label = stringResource(MR.strings.pref_custom_brightness),
-        pref = screenModel.preferences.novelCustomBrightness(),
+        label = stringResource(MR.strings.pref_novel_infinite_scroll),
+        checked = infiniteScrollEnabled,
+        onClick = { screenModel.preferences.novelInfiniteScroll().set(!infiniteScrollEnabled) },
     )
 
-    /*
-     * Sets the brightness of the screen. Range is [-75, 100].
-     * From -75 to -1 a semi-transparent black view is shown at the top with the minimum brightness.
-     * From 1 to 100 it sets that value as brightness.
-     * 0 sets system brightness and hides the overlay.
-     */
-    if (novelCustomBrightness) {
-        val novelCustomBrightnessValue by screenModel.preferences.novelCustomBrightnessValue().collectAsState()
+    // Auto-load next chapter at percentage (only relevant when infinite scroll is enabled)
+    val autoLoadAt by screenModel.preferences.novelAutoLoadNextChapterAt().collectAsState()
+    LaunchedEffect(autoLoadAt) {
+        // Older installs may have persisted 0; treat it as legacy/unset and normalize to default.
+        if (autoLoadAt <= 0) {
+            screenModel.preferences.novelAutoLoadNextChapterAt().set(95)
+        }
+    }
+    if (infiniteScrollEnabled) {
+        val effectiveAutoLoadAt = if (autoLoadAt > 0) autoLoadAt else 95
         SliderItem(
-            value = novelCustomBrightnessValue,
-            valueRange = -75..100,
-            steps = 0,
-            label = stringResource(MR.strings.pref_custom_brightness),
-            onChange = { screenModel.preferences.novelCustomBrightnessValue().set(it) },
+            label = stringResource(MR.strings.pref_novel_auto_load_next_at),
+            value = effectiveAutoLoadAt,
+            valueRange = 1..99,
+            valueString = "$effectiveAutoLoadAt%",
+            onChange = { screenModel.preferences.novelAutoLoadNextChapterAt().set(it) },
         )
     }
 
-    // Infinite Scroll (for custom mode)
+    // Block Media (WebView only)
+    if (renderingMode == "webview") {
+        CheckboxItem(
+            label = stringResource(MR.strings.pref_novel_block_media),
+            pref = screenModel.preferences.novelBlockMedia(),
+        )
+    }
+
+    // Show Raw HTML (Custom Parser only) - for debugging
     if (renderingMode == "default") {
         CheckboxItem(
-            label = stringResource(MR.strings.pref_novel_infinite_scroll),
-            pref = screenModel.preferences.novelInfiniteScroll(),
+            label = stringResource(MR.strings.pref_novel_show_raw_html),
+            pref = screenModel.preferences.novelShowRawHtml(),
         )
     }
 
     // Chapter Sort Order
-    val chapterSortOrder by screenModel.preferences.novelChapterSortOrder().collectAsState()
     val sortOrderOptions = listOf(
         "Source order" to "source",
         "Chapter number" to "chapter_number",
@@ -447,164 +613,210 @@ internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
         }
     }
 
-    // Theme
-    SettingsChipRow(MR.strings.pref_novel_theme) {
-        novelThemes.map { (label, value) ->
-            FilterChip(
-                selected = theme == value,
-                onClick = { screenModel.preferences.novelTheme().set(value) },
-                label = { Text(label) },
-            )
-        }
-    }
+    // TTS Settings Section
+    TtsSettingsSection(screenModel)
 
-    // Font Family
-    SettingsChipRow(MR.strings.pref_font_family) {
-        novelFonts.map { (label, value) ->
-            FilterChip(
-                selected = fontFamily == value,
-                onClick = { screenModel.preferences.novelFontFamily().set(value) },
-                label = { Text(label) },
-            )
-        }
-    }
+    // Translation Settings Section
+    TranslationSettingsSection()
+}
 
-    // Use Original Fonts (WebView mode only - allows HTML to use its native fonts, bold, italics)
-    if (renderingMode == "webview") {
+@Composable
+private fun ColumnScope.TranslationSettingsSection() {
+    val translationPreferences: TranslationPreferences = Injekt.get()
+
+    val translationEnabled by translationPreferences.translationEnabled().collectAsState()
+    val realtimeEnabled by translationPreferences.realTimeTranslation().collectAsState()
+    val selectedEngineId by translationPreferences.selectedEngineId().collectAsState()
+    val targetLanguage by translationPreferences.targetLanguage().collectAsState()
+
+    HeadingItem(MR.strings.pref_novel_translation_settings)
+
+    // Enable Translation Feature
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_novel_translation_enabled),
+        checked = translationEnabled,
+        onClick = { translationPreferences.translationEnabled().set(!translationEnabled) },
+    )
+
+    if (translationEnabled) {
+        // Real-time Translation Toggle
         CheckboxItem(
-            label = stringResource(MR.strings.pref_novel_use_original_fonts),
-            pref = screenModel.preferences.novelUseOriginalFonts(),
+            label = stringResource(MR.strings.pref_novel_realtime_translation),
+            checked = realtimeEnabled,
+            onClick = { translationPreferences.realTimeTranslation().set(!realtimeEnabled) },
         )
-    }
 
-    // Text Alignment
-    SettingsChipRow(MR.strings.pref_novel_text_align) {
-        textAlignments.map { (label, value) ->
-            FilterChip(
-                selected = textAlign == value,
-                onClick = { screenModel.preferences.novelTextAlign().set(value) },
-                label = { Text(label) },
-            )
-        }
-    }
-
-    // CSS/JS Snippets (WebView mode only)
-    if (renderingMode == "webview") {
-        val customCss by screenModel.preferences.novelCustomCss().collectAsState()
-        val customJs by screenModel.preferences.novelCustomJs().collectAsState()
-        val cssSnippetsJson by screenModel.preferences.novelCustomCssSnippets().collectAsState()
-        val jsSnippetsJson by screenModel.preferences.novelCustomJsSnippets().collectAsState()
-
-        var showCssDialog by remember { mutableStateOf(false) }
-        var showJsDialog by remember { mutableStateOf(false) }
-        var editingCssSnippet by remember { mutableStateOf<Pair<Int, CodeSnippet>?>(null) }
-        var editingJsSnippet by remember { mutableStateOf<Pair<Int, CodeSnippet>?>(null) }
-
-        val cssSnippets = remember(cssSnippetsJson) {
-            try {
-                Json.decodeFromString<List<CodeSnippet>>(cssSnippetsJson)
-            } catch (e: Exception) {
-                emptyList()
+        // Show current engine and language
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Column {
+                Text(
+                    text = stringResource(MR.strings.pref_novel_translation_engine_label),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Text(
+                    text = if (selectedEngineId >
+                        0L
+                    ) {
+                        "Engine #$selectedEngineId"
+                    } else {
+                        stringResource(MR.strings.not_configured)
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = stringResource(MR.strings.pref_novel_translation_target_label),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Text(
+                    text = targetLanguage.ifEmpty { stringResource(MR.strings.not_configured) },
+                    style = MaterialTheme.typography.bodyMedium,
+                )
             }
         }
 
-        val jsSnippets = remember(jsSnippetsJson) {
-            try {
-                Json.decodeFromString<List<CodeSnippet>>(jsSnippetsJson)
-            } catch (e: Exception) {
-                emptyList()
+        // Hint to configure in settings
+        Text(
+            text = stringResource(MR.strings.pref_novel_translation_hint),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+        )
+    }
+}
+
+@Composable
+internal fun ColumnScope.NovelAdvancedTab(screenModel: ReaderSettingsScreenModel, renderingMode: String) {
+    if (renderingMode != "webview") {
+        Text(
+            text = stringResource(MR.strings.novel_advanced_webview_only),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(16.dp),
+        )
+        return
+    }
+
+    val cssSnippetsJson by screenModel.preferences.novelCustomCssSnippets().collectAsState()
+    val jsSnippetsJson by screenModel.preferences.novelCustomJsSnippets().collectAsState()
+
+    var showCssDialog by remember { mutableStateOf(false) }
+    var showJsDialog by remember { mutableStateOf(false) }
+    var editingCssSnippet by remember { mutableStateOf<Pair<Int, CodeSnippet>?>(null) }
+    var editingJsSnippet by remember { mutableStateOf<Pair<Int, CodeSnippet>?>(null) }
+
+    val cssSnippets = remember(cssSnippetsJson) {
+        try {
+            Json.decodeFromString<List<CodeSnippet>>(cssSnippetsJson)
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    val jsSnippets = remember(jsSnippetsJson) {
+        try {
+            Json.decodeFromString<List<CodeSnippet>>(jsSnippetsJson)
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    // CSS Snippets Section
+    SnippetSection(
+        title = stringResource(MR.strings.pref_novel_css_snippets),
+        snippets = cssSnippets,
+        onAddClick = { showCssDialog = true },
+        onEditClick = { index, snippet -> editingCssSnippet = index to snippet },
+        onDeleteClick = { index ->
+            val updated = cssSnippets.toMutableList().apply { removeAt(index) }
+            screenModel.preferences.novelCustomCssSnippets().set(Json.encodeToString(updated))
+        },
+        onToggleClick = { index ->
+            val updated = cssSnippets.toMutableList().apply {
+                this[index] = this[index].copy(enabled = !this[index].enabled)
             }
-        }
+            screenModel.preferences.novelCustomCssSnippets().set(Json.encodeToString(updated))
+        },
+    )
 
-        // CSS Snippets Section
-        SnippetSection(
-            title = stringResource(MR.strings.pref_novel_css_snippets),
-            snippets = cssSnippets,
-            onAddClick = { showCssDialog = true },
-            onEditClick = { index, snippet -> editingCssSnippet = index to snippet },
-            onDeleteClick = { index ->
-                val updated = cssSnippets.toMutableList().apply { removeAt(index) }
-                screenModel.preferences.novelCustomCssSnippets().set(Json.encodeToString(updated))
+    // JS Snippets Section
+    SnippetSection(
+        title = stringResource(MR.strings.pref_novel_js_snippets),
+        snippets = jsSnippets,
+        onAddClick = { showJsDialog = true },
+        onEditClick = { index, snippet -> editingJsSnippet = index to snippet },
+        onDeleteClick = { index ->
+            val updated = jsSnippets.toMutableList().apply { removeAt(index) }
+            screenModel.preferences.novelCustomJsSnippets().set(Json.encodeToString(updated))
+        },
+        onToggleClick = { index ->
+            val updated = jsSnippets.toMutableList().apply {
+                this[index] = this[index].copy(enabled = !this[index].enabled)
+            }
+            screenModel.preferences.novelCustomJsSnippets().set(Json.encodeToString(updated))
+        },
+    )
+
+    // CSS Add/Edit Dialog
+    if (showCssDialog || editingCssSnippet != null) {
+        SnippetEditDialog(
+            title = if (editingCssSnippet != null) {
+                stringResource(MR.strings.novel_edit_css_snippet)
+            } else {
+                stringResource(MR.strings.novel_add_css_snippet)
             },
-            onToggleClick = { index ->
-                val updated = cssSnippets.toMutableList().apply {
-                    this[index] = this[index].copy(enabled = !this[index].enabled)
+            initialSnippet = editingCssSnippet?.second,
+            onDismiss = {
+                showCssDialog = false
+                editingCssSnippet = null
+            },
+            onConfirm = { snippet ->
+                val updated = cssSnippets.toMutableList()
+                if (editingCssSnippet != null) {
+                    updated[editingCssSnippet!!.first] = snippet
+                } else {
+                    updated.add(snippet)
                 }
                 screenModel.preferences.novelCustomCssSnippets().set(Json.encodeToString(updated))
+                showCssDialog = false
+                editingCssSnippet = null
             },
         )
+    }
 
-        // JS Snippets Section
-        SnippetSection(
-            title = stringResource(MR.strings.pref_novel_js_snippets),
-            snippets = jsSnippets,
-            onAddClick = { showJsDialog = true },
-            onEditClick = { index, snippet -> editingJsSnippet = index to snippet },
-            onDeleteClick = { index ->
-                val updated = jsSnippets.toMutableList().apply { removeAt(index) }
-                screenModel.preferences.novelCustomJsSnippets().set(Json.encodeToString(updated))
+    // JS Add/Edit Dialog
+    if (showJsDialog || editingJsSnippet != null) {
+        SnippetEditDialog(
+            title = if (editingJsSnippet != null) {
+                stringResource(MR.strings.novel_edit_js_snippet)
+            } else {
+                stringResource(MR.strings.novel_add_js_snippet)
             },
-            onToggleClick = { index ->
-                val updated = jsSnippets.toMutableList().apply {
-                    this[index] = this[index].copy(enabled = !this[index].enabled)
+            initialSnippet = editingJsSnippet?.second,
+            onDismiss = {
+                showJsDialog = false
+                editingJsSnippet = null
+            },
+            onConfirm = { snippet ->
+                val updated = jsSnippets.toMutableList()
+                if (editingJsSnippet != null) {
+                    updated[editingJsSnippet!!.first] = snippet
+                } else {
+                    updated.add(snippet)
                 }
                 screenModel.preferences.novelCustomJsSnippets().set(Json.encodeToString(updated))
+                showJsDialog = false
+                editingJsSnippet = null
             },
         )
-
-        // CSS Add/Edit Dialog
-        if (showCssDialog || editingCssSnippet != null) {
-            SnippetEditDialog(
-                title = if (editingCssSnippet != null) {
-                    stringResource(MR.strings.novel_edit_css_snippet)
-                } else {
-                    stringResource(MR.strings.novel_add_css_snippet)
-                },
-                initialSnippet = editingCssSnippet?.second,
-                onDismiss = {
-                    showCssDialog = false
-                    editingCssSnippet = null
-                },
-                onConfirm = { snippet ->
-                    val updated = cssSnippets.toMutableList()
-                    if (editingCssSnippet != null) {
-                        updated[editingCssSnippet!!.first] = snippet
-                    } else {
-                        updated.add(snippet)
-                    }
-                    screenModel.preferences.novelCustomCssSnippets().set(Json.encodeToString(updated))
-                    showCssDialog = false
-                    editingCssSnippet = null
-                },
-            )
-        }
-
-        // JS Add/Edit Dialog
-        if (showJsDialog || editingJsSnippet != null) {
-            SnippetEditDialog(
-                title = if (editingJsSnippet != null) {
-                    stringResource(MR.strings.novel_edit_js_snippet)
-                } else {
-                    stringResource(MR.strings.novel_add_js_snippet)
-                },
-                initialSnippet = editingJsSnippet?.second,
-                onDismiss = {
-                    showJsDialog = false
-                    editingJsSnippet = null
-                },
-                onConfirm = { snippet ->
-                    val updated = jsSnippets.toMutableList()
-                    if (editingJsSnippet != null) {
-                        updated[editingJsSnippet!!.first] = snippet
-                    } else {
-                        updated.add(snippet)
-                    }
-                    screenModel.preferences.novelCustomJsSnippets().set(Json.encodeToString(updated))
-                    showJsDialog = false
-                    editingJsSnippet = null
-                },
-            )
-        }
     }
 }
 
@@ -750,6 +962,121 @@ private fun SnippetEditDialog(
                 Text(stringResource(MR.strings.action_cancel))
             }
         },
+    )
+}
+
+/**
+ * TTS (Text-to-Speech) settings section
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ColumnScope.TtsSettingsSection(screenModel: ReaderSettingsScreenModel) {
+    val context = LocalContext.current
+    val ttsSpeed by screenModel.preferences.novelTtsSpeed().collectAsState()
+    val ttsPitch by screenModel.preferences.novelTtsPitch().collectAsState()
+    val ttsVoice by screenModel.preferences.novelTtsVoice().collectAsState()
+    val ttsAutoNextChapter by screenModel.preferences.novelTtsAutoNextChapter().collectAsState()
+
+    // Load available voices using TTS
+    val availableVoices = remember { mutableStateListOf<Pair<String, String>>() }
+    var ttsReady by remember { mutableStateOf(false) }
+
+    DisposableEffect(Unit) {
+        var tts: TextToSpeech? = null
+        tts = TextToSpeech(context) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                ttsReady = true
+                val voices = tts?.voices ?: emptySet()
+                availableVoices.clear()
+                availableVoices.add("" to "Default (System)")
+                voices.filter { !it.isNetworkConnectionRequired }
+                    .sortedBy { "${it.locale.displayLanguage} (${it.name})" }
+                    .forEach { voice ->
+                        val displayName = "${voice.locale.displayLanguage} (${voice.name})"
+                        availableVoices.add(voice.name to displayName)
+                    }
+            }
+        }
+        onDispose {
+            tts?.shutdown()
+        }
+    }
+
+    Spacer(modifier = Modifier.height(8.dp))
+
+    // Section Header
+    Text(
+        text = stringResource(MR.strings.pref_novel_tts_section),
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+    )
+
+    // Voice Selection Dropdown
+    if (availableVoices.isNotEmpty()) {
+        var expanded by remember { mutableStateOf(false) }
+        val selectedVoiceDisplay = availableVoices.find { it.first == ttsVoice }?.second
+            ?: "Default (System)"
+
+        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)) {
+            Text(
+                text = stringResource(MR.strings.pref_novel_tts_voice),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = !expanded },
+            ) {
+                OutlinedTextField(
+                    value = selectedVoiceDisplay,
+                    onValueChange = { },
+                    readOnly = true,
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth(),
+                )
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                ) {
+                    availableVoices.forEach { (voiceName, displayName) ->
+                        DropdownMenuItem(
+                            text = { Text(displayName) },
+                            onClick = {
+                                screenModel.preferences.novelTtsVoice().set(voiceName)
+                                expanded = false
+                            },
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    // Speech Speed Slider (0.5x to 2.0x)
+    SliderItem(
+        label = stringResource(MR.strings.pref_novel_tts_speed),
+        value = (ttsSpeed * 10).toInt(),
+        valueRange = 5..20,
+        onChange = { screenModel.preferences.novelTtsSpeed().set(it / 10f) },
+        valueString = String.format("%.1fx", ttsSpeed),
+    )
+
+    // Speech Pitch Slider (0.5x to 2.0x)
+    SliderItem(
+        label = stringResource(MR.strings.pref_novel_tts_pitch),
+        value = (ttsPitch * 10).toInt(),
+        valueRange = 5..20,
+        onChange = { screenModel.preferences.novelTtsPitch().set(it / 10f) },
+        valueString = String.format("%.1fx", ttsPitch),
+    )
+
+    // Auto-play next chapter
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_novel_tts_auto_next),
+        pref = screenModel.preferences.novelTtsAutoNextChapter(),
     )
 }
 

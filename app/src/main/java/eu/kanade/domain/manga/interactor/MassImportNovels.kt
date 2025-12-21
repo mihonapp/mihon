@@ -1,12 +1,28 @@
 package eu.kanade.domain.manga.interactor
 
+import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.manga.model.toSManga
 import eu.kanade.tachiyomi.source.isNovelSource
 import eu.kanade.tachiyomi.source.online.HttpSource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.category.interactor.SetMangaCategories
 import tachiyomi.domain.download.service.NovelDownloadPreferences
+import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.interactor.GetMangaByUrlAndSourceId
 import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.manga.model.Manga
@@ -15,6 +31,8 @@ import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.net.URI
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.random.Random
 
 /**
@@ -27,6 +45,8 @@ class MassImportNovels(
     private val getMangaByUrlAndSourceId: GetMangaByUrlAndSourceId = Injekt.get(),
     private val novelDownloadPreferences: NovelDownloadPreferences = Injekt.get(),
     private val mangaRepository: MangaRepository = Injekt.get(),
+    private val setMangaCategories: SetMangaCategories = Injekt.get(),
+    private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get(),
 ) {
     /**
      * Result of mass import operation
@@ -35,6 +55,10 @@ class MassImportNovels(
         val added: MutableList<ImportedNovel> = mutableListOf(),
         val skipped: MutableList<SkippedNovel> = mutableListOf(),
         val errored: MutableList<ErroredNovel> = mutableListOf(),
+        // Prefilter results
+        val prefilterInvalid: List<Pair<String, String>> = emptyList(),
+        val prefilterDuplicates: List<String> = emptyList(),
+        val prefilterAlreadyInLibrary: List<String> = emptyList(),
     )
 
     data class ImportedNovel(val title: String, val url: String, val manga: Manga)
@@ -49,71 +73,246 @@ class MassImportNovels(
         val total: Int,
         val currentUrl: String,
         val status: String,
+        val isRunning: Boolean = false,
+        val activeImports: List<String> = emptyList(), // Track concurrent imports
+        val concurrency: Int = 1,
     )
+
+    private val _progress = MutableStateFlow<ImportProgress?>(null)
+    val progress = _progress.asStateFlow()
+
+    private val _result = MutableStateFlow<ImportResult?>(null)
+    val result = _result.asStateFlow()
+
+    private var isCancelled = false
+    private val importScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private var runningJob: Job? = null
+
+    fun cancel() {
+        isCancelled = true
+        runningJob?.cancel()
+        runningJob = null
+        _progress.update { it?.copy(isRunning = false, status = "Cancelled") }
+    }
+
+    fun clear() {
+        _progress.value = null
+        _result.value = null
+        isCancelled = false
+    }
+
+    fun startImport(
+        urls: List<String>,
+        addToLibrary: Boolean = true,
+        categoryId: Long? = null,
+        fetchDetails: Boolean = true,
+        fetchChapters: Boolean = false,
+    ): Job {
+        // Cancel any previous run
+        cancel()
+        isCancelled = false
+        _result.value = null
+
+        val job = importScope.launch {
+            importInternal(
+                urls = urls,
+                addToLibrary = addToLibrary,
+                categoryId = categoryId,
+                fetchDetails = fetchDetails,
+                fetchChapters = fetchChapters,
+            )
+        }
+        runningJob = job
+        return job
+    }
 
     /**
      * Import novels from a list of URLs
      *
      * @param urls List of URLs to import
      * @param addToLibrary Whether to add imported novels to library
-     * @param onProgress Callback for progress updates
-     * @param isCancelled Function to check if operation should be cancelled
-     * @return ImportResult with added, skipped, and errored novels
      */
     suspend fun import(
         urls: List<String>,
         addToLibrary: Boolean = true,
-        onProgress: (ImportProgress) -> Unit = {},
-        isCancelled: () -> Boolean = { false },
-    ): ImportResult {
-        val result = ImportResult()
+    ) {
+        importInternal(
+            urls = urls,
+            addToLibrary = addToLibrary,
+            categoryId = null,
+            fetchDetails = true,
+            fetchChapters = false,
+        )
+    }
+
+    private suspend fun importInternal(
+        urls: List<String>,
+        addToLibrary: Boolean,
+        categoryId: Long?,
+        fetchDetails: Boolean,
+        fetchChapters: Boolean,
+    ) {
+        isCancelled = false
+        _result.value = null
+
         val novelSources = getNovelSources()
+
+        // Prefilter: build an in-memory index of library entries to avoid per-URL DB hits.
+        // Key is (sourceId,urlPath) where urlPath matches the stored manga.url format.
+        val libraryUrlIndex: Set<Pair<Long, String>> = try {
+            mangaRepository.getLibraryManga()
+                .asSequence()
+                .map(LibraryManga::manga)
+                .map { it.source to it.url }
+                .toSet()
+        } catch (e: Exception) {
+            logcat(LogPriority.WARN, e) { "Failed to build library URL index for mass import" }
+            emptySet()
+        }
+
+        // Analyze URLs to separate valid ones from invalid/duplicates/already in library
+        val rawUrls = urls.map { it.trim() }.filter { it.isNotEmpty() }
+        val validUrls = mutableListOf<String>()
+        val invalidUrls = mutableListOf<Pair<String, String>>()
+        val duplicateUrls = mutableListOf<String>()
+        val alreadyInLibrary = mutableListOf<String>()
+        val seenKeys = mutableSetOf<String>()
+
+        for (url in rawUrls) {
+            // Check deduplication
+            val key = urlDedupKey(url)
+            if (key in seenKeys) {
+                duplicateUrls.add(url)
+                continue
+            }
+            seenKeys.add(key)
+
+            // Check for valid URL
+            if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                invalidUrls.add(url to "Not a valid URL")
+                continue
+            }
+
+            // Check if source exists
+            val source = findMatchingSource(url, novelSources)
+            if (source == null) {
+                invalidUrls.add(url to "No matching source")
+                continue
+            }
+
+            // Check if already in library
+            val path = extractPathFromUrl(url, source.baseUrl)
+            if (libraryUrlIndex.contains(source.id to path)) {
+                alreadyInLibrary.add(url)
+                continue
+            }
+
+            validUrls.add(url)
+        }
+
+        // Create result with prefilter data
+        val currentResult = ImportResult(
+            prefilterInvalid = invalidUrls,
+            prefilterDuplicates = duplicateUrls,
+            prefilterAlreadyInLibrary = alreadyInLibrary,
+        )
+
+        val cleanUrls = validUrls
 
         if (novelSources.isEmpty()) {
             urls.forEach { url ->
-                result.errored.add(ErroredNovel(url, "No novel sources installed"))
+                currentResult.errored.add(ErroredNovel(url, "No novel sources installed"))
             }
-            return result
+            _result.value = currentResult
+            return
         }
 
-        var lastImportTime = 0L
+        val concurrency = novelDownloadPreferences.parallelMassImport().get()
+        val semaphore = Semaphore(concurrency)
+        val completedCount = AtomicInteger(0)
+        val activeImports = java.util.concurrent.ConcurrentHashMap<String, Boolean>()
 
-        urls.forEachIndexed { index, url ->
-            if (isCancelled()) {
-                return result
-            }
+        _progress.value = ImportProgress(0, cleanUrls.size, "", "Starting...", true, emptyList(), concurrency)
 
-            val cleanUrl = url.trim()
-            if (cleanUrl.isEmpty()) {
-                return@forEachIndexed
-            }
+        // Group URLs by source to apply delays per-source instead of globally
+        val urlsBySource = cleanUrls.groupBy { url ->
+            findMatchingSource(url, novelSources)?.id ?: -1L
+        }
 
-            onProgress(ImportProgress(index + 1, urls.size, cleanUrl, "Processing..."))
+        coroutineScope {
+            urlsBySource.values.map { urlsForSource ->
+                async {
+                    for ((index, url) in urlsForSource.withIndex()) {
+                        if (isCancelled) return@async
 
-            // Apply throttling
-            if (novelDownloadPreferences.enableMassImportThrottling().get()) {
-                val now = System.currentTimeMillis()
-                val baseDelay = novelDownloadPreferences.massImportDelay().get().toLong()
-                val randomRange = novelDownloadPreferences.randomDelayRange().get()
-                val randomDelay = if (randomRange > 0) Random.nextLong(0, randomRange.toLong()) else 0L
-                val totalDelay = baseDelay + randomDelay
+                        // Apply per-source throttling: delay only between imports from SAME source.
+                        // Do NOT hold the global semaphore permit while delaying.
+                        if (index > 0 && novelDownloadPreferences.enableMassImportThrottling().get()) {
+                            val baseDelay = novelDownloadPreferences.massImportDelay().get().toLong()
+                            val randomRange = novelDownloadPreferences.randomDelayRange().get()
+                            val randomDelay = if (randomRange > 0) Random.nextLong(0, randomRange.toLong()) else 0L
+                            delay(baseDelay + randomDelay)
+                        }
 
-                val timeSinceLastImport = now - lastImportTime
-                if (timeSinceLastImport < totalDelay && lastImportTime > 0) {
-                    delay(totalDelay - timeSinceLastImport)
+                        semaphore.withPermit {
+                            if (isCancelled) return@withPermit
+
+                            val cleanUrl = url.trim()
+                            if (cleanUrl.isEmpty()) return@withPermit
+
+                            // Track this import as active
+                            activeImports[cleanUrl] = true
+                            _progress.update {
+                                it?.copy(
+                                    current = (completedCount.get() + 1).coerceAtMost(cleanUrls.size),
+                                    currentUrl = cleanUrl,
+                                    status = "Processing ${activeImports.size} novel(s)...",
+                                    activeImports = activeImports.keys().toList(),
+                                )
+                            }
+
+                            try {
+                                processUrl(
+                                    url = cleanUrl,
+                                    novelSources = novelSources,
+                                    result = currentResult,
+                                    addToLibrary = addToLibrary,
+                                    categoryId = categoryId,
+                                    fetchDetails = fetchDetails,
+                                    fetchChapters = fetchChapters,
+                                    libraryUrlIndex = libraryUrlIndex,
+                                )
+                            } catch (e: Exception) {
+                                logcat(LogPriority.ERROR, e) { "Error importing $cleanUrl" }
+                                synchronized(currentResult) {
+                                    currentResult.errored.add(ErroredNovel(cleanUrl, e.message ?: "Unknown error"))
+                                }
+                            }
+
+                            // Remove from active imports
+                            activeImports.remove(cleanUrl)
+                            val done = completedCount.incrementAndGet()
+                            _progress.update {
+                                val statusText = if (activeImports.isEmpty()) {
+                                    "Finishing..."
+                                } else {
+                                    "Processing ${activeImports.size} novel(s)..."
+                                }
+
+                                it?.copy(
+                                    current = done.coerceAtMost(cleanUrls.size),
+                                    activeImports = activeImports.keys().toList(),
+                                    status = statusText,
+                                )
+                            }
+                        }
+                    }
                 }
-                lastImportTime = System.currentTimeMillis()
-            }
-
-            try {
-                processUrl(cleanUrl, novelSources, result, addToLibrary)
-            } catch (e: Exception) {
-                logcat(LogPriority.ERROR, e) { "Error importing $cleanUrl" }
-                result.errored.add(ErroredNovel(cleanUrl, e.message ?: "Unknown error"))
-            }
+            }.awaitAll()
         }
 
-        return result
+        _progress.update { it?.copy(isRunning = false, status = "Complete") }
+        _result.value = currentResult
     }
 
     /**
@@ -124,25 +323,65 @@ class MassImportNovels(
         novelSources: List<HttpSource>,
         result: ImportResult,
         addToLibrary: Boolean,
+        categoryId: Long?,
+        fetchDetails: Boolean,
+        fetchChapters: Boolean,
+        libraryUrlIndex: Set<Pair<Long, String>>,
     ) {
         // Find matching source based on URL
         val source = findMatchingSource(url, novelSources)
         if (source == null) {
-            result.errored.add(ErroredNovel(url, "No matching source found for URL"))
+            synchronized(result) {
+                result.errored.add(ErroredNovel(url, "No matching source found for URL"))
+            }
             return
         }
 
         // Extract path from URL
         val path = extractPathFromUrl(url, source.baseUrl)
         if (path.isEmpty()) {
-            result.errored.add(ErroredNovel(url, "Could not extract path from URL"))
+            synchronized(result) {
+                result.errored.add(ErroredNovel(url, "Could not extract path from URL"))
+            }
             return
         }
 
-        // Check if already in library
+        // Fast path: already in library
+        if (libraryUrlIndex.contains(source.id to path)) {
+            synchronized(result) {
+                result.skipped.add(SkippedNovel(url, url, "Already in library"))
+            }
+            return
+        }
+
+        // Check if already in DB/library
         val existingManga = getMangaByUrlAndSourceId.await(path, source.id)
         if (existingManga != null && existingManga.favorite) {
-            result.skipped.add(SkippedNovel(existingManga.title, url, "Already in library"))
+            synchronized(result) {
+                result.skipped.add(SkippedNovel(existingManga.title, url, "Already in library"))
+            }
+            return
+        }
+
+        // If the manga exists but isn't in library, we can often avoid refetching details.
+        // Only fetch details if requested (or if we need chapters).
+        if (existingManga != null && addToLibrary && !fetchDetails && !fetchChapters) {
+            mangaRepository.update(
+                MangaUpdate(
+                    id = existingManga.id,
+                    favorite = true,
+                    dateAdded = System.currentTimeMillis(),
+                ),
+            )
+            val updatedManga = existingManga.copy(favorite = true)
+
+            if (categoryId != null && categoryId != 0L) {
+                setMangaCategories.await(updatedManga.id, listOf(categoryId))
+            }
+
+            synchronized(result) {
+                result.added.add(ImportedNovel(updatedManga.title, url, updatedManga))
+            }
             return
         }
 
@@ -154,6 +393,15 @@ class MassImportNovels(
                 },
             )
             sManga.url = path
+
+            // Validate that essential fields are initialized
+            try {
+                // Access title to check if it's initialized
+                @Suppress("UNUSED_VARIABLE")
+                val titleCheck = sManga.title
+            } catch (e: UninitializedPropertyAccessException) {
+                throw Exception("Extension failed to parse novel title from $url")
+            }
 
             // Convert to local manga and add to library
             val manga = networkToLocalManga(sManga.toDomainManga(source.id))
@@ -168,13 +416,35 @@ class MassImportNovels(
                     ),
                 )
                 val updatedManga = manga.copy(favorite = true)
-                result.added.add(ImportedNovel(sManga.title, url, updatedManga))
+
+                // Assign category if requested (0/null means default)
+                if (categoryId != null && categoryId != 0L) {
+                    setMangaCategories.await(updatedManga.id, listOf(categoryId))
+                }
+
+                // Optionally fetch/sync chapter list
+                if (fetchChapters) {
+                    try {
+                        val sChapters = source.getChapterList(updatedManga.toSManga())
+                        syncChaptersWithSource.await(sChapters, updatedManga, source)
+                    } catch (e: Exception) {
+                        logcat(LogPriority.WARN, e) { "Failed to sync chapters for $url" }
+                    }
+                }
+
+                synchronized(result) {
+                    result.added.add(ImportedNovel(sManga.title, url, updatedManga))
+                }
             } else {
-                result.added.add(ImportedNovel(sManga.title, url, manga))
+                synchronized(result) {
+                    result.added.add(ImportedNovel(sManga.title, url, manga))
+                }
             }
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e) { "Failed to fetch novel from $url" }
-            result.errored.add(ErroredNovel(url, "Failed to fetch: ${e.message}"))
+            synchronized(result) {
+                result.errored.add(ErroredNovel(url, "Failed to fetch: ${e.message}"))
+            }
         }
     }
 
@@ -191,11 +461,12 @@ class MassImportNovels(
      * Find source that matches the given URL
      */
     private fun findMatchingSource(url: String, sources: List<HttpSource>): HttpSource? {
+        val normalizedUrl = stripScheme(url).removeSuffix("/")
         return sources.find { source ->
             try {
-                val baseUrl = source.baseUrl.removeSuffix("/")
-                url.startsWith(baseUrl)
-            } catch (e: Exception) {
+                val baseUrl = stripScheme(source.baseUrl).removeSuffix("/")
+                normalizedUrl.startsWith(baseUrl)
+            } catch (_: Exception) {
                 false
             }
         }
@@ -205,11 +476,65 @@ class MassImportNovels(
      * Extract path from full URL
      */
     private fun extractPathFromUrl(url: String, baseUrl: String): String {
-        val normalizedBase = baseUrl.removeSuffix("/")
-        return if (url.startsWith(normalizedBase)) {
-            url.removePrefix(normalizedBase)
-        } else {
-            url
+        return try {
+            val baseUri = URI(baseUrl)
+            val urlUri = URI(url)
+
+            val baseHost = baseUri.host?.lowercase()
+            val urlHost = urlUri.host?.lowercase()
+
+            // If hosts match, use path+query regardless of scheme.
+            if (baseHost != null && urlHost != null && baseHost == urlHost) {
+                buildString {
+                    append(urlUri.rawPath ?: "")
+                    val q = urlUri.rawQuery
+                    if (!q.isNullOrBlank()) {
+                        append('?')
+                        append(q)
+                    }
+                }
+            } else {
+                val normalizedBase = stripScheme(baseUrl).removeSuffix("/")
+                val normalizedUrl = stripScheme(url)
+                if (normalizedUrl.startsWith(normalizedBase)) {
+                    normalizedUrl.removePrefix(normalizedBase)
+                } else {
+                    normalizedUrl
+                }
+            }
+        } catch (_: Exception) {
+            val normalizedBase = stripScheme(baseUrl).removeSuffix("/")
+            val normalizedUrl = stripScheme(url)
+            if (normalizedUrl.startsWith(normalizedBase)) {
+                normalizedUrl.removePrefix(normalizedBase)
+            } else {
+                normalizedUrl
+            }
+        }
+    }
+
+    private fun stripScheme(url: String): String {
+        // Keep it simple: remove any leading scheme:// and lowercase for comparison.
+        return url.trim()
+            .replace(Regex("^[a-zA-Z][a-zA-Z0-9+\\-.]*://"), "")
+            .lowercase()
+    }
+
+    private fun urlDedupKey(url: String): String {
+        return try {
+            val uri = URI(url.trim())
+            buildString {
+                append(uri.host?.lowercase() ?: "")
+                append(uri.rawPath?.trimEnd('/') ?: "")
+                val q = uri.rawQuery
+                if (!q.isNullOrBlank()) {
+                    append('?')
+                    append(q)
+                }
+            }
+        } catch (_: Exception) {
+            // Fallback: ignore scheme, trim trailing slash
+            stripScheme(url).removeSuffix("/")
         }
     }
 
@@ -221,7 +546,81 @@ class MassImportNovels(
             .split("\n", ",", ";", " ")
             .map { it.trim() }
             .filter { it.isNotEmpty() && (it.startsWith("http://") || it.startsWith("https://")) }
-            .distinct()
+            .distinctBy { urlDedupKey(it) }
+    }
+
+    /**
+     * Result of URL analysis/prefiltering
+     */
+    data class UrlAnalysisResult(
+        val validUrls: List<String>,
+        val invalidUrls: List<Pair<String, String>>, // URL to reason
+        val duplicateUrls: List<String>,
+        val alreadyInLibrary: List<String>,
+    ) {
+        val totalValid get() = validUrls.size
+        val totalInvalid get() = invalidUrls.size + duplicateUrls.size + alreadyInLibrary.size
+    }
+
+    /**
+     * Analyze URLs before import to give user feedback
+     */
+    suspend fun analyzeUrls(text: String): UrlAnalysisResult {
+        val novelSources = getNovelSources()
+        val libraryUrlIndex: Set<Pair<Long, String>> = try {
+            mangaRepository.getLibraryManga()
+                .asSequence()
+                .map(LibraryManga::manga)
+                .map { it.source to it.url }
+                .toSet()
+        } catch (e: Exception) {
+            emptySet()
+        }
+
+        val rawLines = text.split("\n", ",", ";", " ")
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
+
+        val validUrls = mutableListOf<String>()
+        val invalidUrls = mutableListOf<Pair<String, String>>()
+        val duplicateUrls = mutableListOf<String>()
+        val alreadyInLibrary = mutableListOf<String>()
+
+        val seenKeys = mutableSetOf<String>()
+
+        for (line in rawLines) {
+            // Check if it's a valid URL
+            if (!line.startsWith("http://") && !line.startsWith("https://")) {
+                invalidUrls.add(line to "Not a valid URL")
+                continue
+            }
+
+            // Check for duplicates
+            val key = urlDedupKey(line)
+            if (key in seenKeys) {
+                duplicateUrls.add(line)
+                continue
+            }
+            seenKeys.add(key)
+
+            // Check if source exists
+            val source = findMatchingSource(line, novelSources)
+            if (source == null) {
+                invalidUrls.add(line to "No matching source")
+                continue
+            }
+
+            // Check if already in library
+            val path = extractPathFromUrl(line, source.baseUrl)
+            if (libraryUrlIndex.contains(source.id to path)) {
+                alreadyInLibrary.add(line)
+                continue
+            }
+
+            validUrls.add(line)
+        }
+
+        return UrlAnalysisResult(validUrls, invalidUrls, duplicateUrls, alreadyInLibrary)
     }
 }
 

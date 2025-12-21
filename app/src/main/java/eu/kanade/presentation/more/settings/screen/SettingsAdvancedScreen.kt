@@ -65,6 +65,7 @@ import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.ResetViewerFlags
+import tachiyomi.domain.translation.repository.TranslatedChapterRepository
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
@@ -176,6 +177,36 @@ object SettingsAdvancedScreen : SearchableSettings {
     private fun getDataGroup(): Preference.PreferenceGroup {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
+        val scope = rememberCoroutineScope()
+        var showDeleteTranslationsDialog by remember { mutableStateOf(false) }
+
+        if (showDeleteTranslationsDialog) {
+            AlertDialog(
+                onDismissRequest = { showDeleteTranslationsDialog = false },
+                title = { Text(text = "Delete all translations") },
+                text = {
+                    Text(text = "Are you sure you want to delete all downloaded translations? This cannot be undone.")
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            scope.launch {
+                                Injekt.get<TranslatedChapterRepository>().deleteAll()
+                                context.toast("All translations deleted")
+                                showDeleteTranslationsDialog = false
+                            }
+                        },
+                    ) {
+                        Text(text = stringResource(MR.strings.action_delete))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showDeleteTranslationsDialog = false }) {
+                        Text(text = stringResource(MR.strings.action_cancel))
+                    }
+                },
+            )
+        }
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.label_data),
@@ -192,6 +223,11 @@ object SettingsAdvancedScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_clear_database),
                     subtitle = stringResource(MR.strings.pref_clear_database_summary),
                     onClick = { navigator.push(ClearDatabaseScreen()) },
+                ),
+                Preference.PreferenceItem.TextPreference(
+                    title = "Delete all translations",
+                    subtitle = "Deletes all downloaded translations",
+                    onClick = { showDeleteTranslationsDialog = true },
                 ),
             ),
         )

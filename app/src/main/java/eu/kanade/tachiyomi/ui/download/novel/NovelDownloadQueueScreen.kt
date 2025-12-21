@@ -148,13 +148,13 @@ object NovelDownloadQueueScreen : Screen() {
                 ) {
                     items(
                         items = downloadList,
-                        key = { it.manga.id },
+                        key = { it.mangaId },
                     ) { item ->
                         NovelDownloadCard(
                             item = item,
-                            onCancel = { screenModel.cancelNovelDownloads(item.manga.id) },
-                            onMoveToTop = { screenModel.moveToTop(item.manga.id) },
-                            onMoveToBottom = { screenModel.moveToBottom(item.manga.id) },
+                            onCancel = { screenModel.cancelNovelDownloads(item.mangaId) },
+                            onMoveToTop = { screenModel.moveToTop(item.mangaId) },
+                            onMoveToBottom = { screenModel.moveToBottom(item.mangaId) },
                         )
                     }
                 }
@@ -199,7 +199,7 @@ private fun NovelDownloadCard(
                         color = MaterialTheme.colorScheme.primary,
                     )
                     Text(
-                        text = item.manga.title,
+                        text = item.mangaTitle,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         maxLines = 2,
@@ -305,7 +305,7 @@ private fun NovelDownloadCard(
 
                 if (item.currentDownload != null) {
                     Text(
-                        text = "Chapter: ${item.currentDownload?.chapter?.name ?: ""}",
+                        text = "Chapter: ${item.currentDownload?.chapterName ?: ""}",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,

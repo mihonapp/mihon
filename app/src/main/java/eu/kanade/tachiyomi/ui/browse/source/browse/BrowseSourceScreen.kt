@@ -9,14 +9,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Checklist
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.NewReleases
+import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -24,8 +27,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
@@ -41,6 +46,7 @@ import eu.kanade.presentation.browse.MissingSourceScreen
 import eu.kanade.presentation.browse.components.BrowseSourceToolbar
 import eu.kanade.presentation.browse.components.RemoveMangaDialog
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
+import eu.kanade.presentation.library.components.MassImportDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.Screen
@@ -105,6 +111,18 @@ data class BrowseSourceScreen(
         val haptic = LocalHapticFeedback.current
         val uriHandler = LocalUriHandler.current
         val snackbarHostState = remember { SnackbarHostState() }
+        var showMassImportDialog by remember { mutableStateOf(false) }
+        var lastImportResult by remember { mutableStateOf<Triple<Int, Int, Int>?>(null) }
+
+        // Show snackbar when import completes
+        LaunchedEffect(lastImportResult) {
+            lastImportResult?.let { (added, skipped, errored) ->
+                snackbarHostState.showSnackbar(
+                    message = "Imported: $added added, $skipped skipped, $errored errors",
+                    duration = SnackbarDuration.Short,
+                )
+            }
+        }
 
         val onHelpClick = { uriHandler.openUri(LocalSource.HELP_URL) }
         val onWebViewClick = f@{
@@ -203,6 +221,62 @@ data class BrowseSourceScreen(
                                 },
                             )
                         }
+                        // Translation chip
+                        FilterChip(
+                            selected = state.translateTitles,
+                            onClick = screenModel::toggleTranslateTitles,
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.Translate,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(FilterChipDefaults.IconSize),
+                                )
+                            },
+                            label = {
+                                Text(text = stringResource(MR.strings.action_translate))
+                            },
+                        )
+                        // Multi-select chip for mass import
+                        FilterChip(
+                            selected = state.selectionMode,
+                            onClick = screenModel::toggleSelectionMode,
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.Checklist,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(FilterChipDefaults.IconSize),
+                                )
+                            },
+                            label = {
+                                Text(
+                                    text = if (state.selectionMode && state.selection.isNotEmpty()) {
+                                        "${state.selection.size} selected"
+                                    } else {
+                                        "Select"
+                                    },
+                                )
+                            },
+                        )
+                        // Add to library button when in selection mode with items selected
+                        if (state.selectionMode && state.selection.isNotEmpty()) {
+                            FilterChip(
+                                selected = true,
+                                onClick = { showMassImportDialog = true },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Favorite,
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(FilterChipDefaults.IconSize),
+                                    )
+                                },
+                                label = {
+                                    Text(text = stringResource(MR.strings.action_add_to_library))
+                                },
+                            )
+                        }
                     }
 
                     HorizontalDivider()
@@ -220,18 +294,35 @@ data class BrowseSourceScreen(
                 onWebViewClick = onWebViewClick,
                 onHelpClick = { uriHandler.openUri(Constants.URL_HELP) },
                 onLocalSourceHelpClick = onHelpClick,
-                onMangaClick = { navigator.push((MangaScreen(it.id, true))) },
+                selectionMode = state.selectionMode,
+                selection = state.selection,
+                translateTitles = state.translateTitles,
+                translatedTitles = state.translatedTitles,
+                onTranslateManga = screenModel::translateManga,
+                onMangaClick = { manga ->
+                    if (state.selectionMode) {
+                        screenModel.toggleSelection(manga)
+                    } else {
+                        navigator.push(MangaScreen(manga.id, true))
+                    }
+                },
                 onMangaLongClick = { manga ->
-                    scope.launchIO {
-                        val duplicates = screenModel.getDuplicateLibraryManga(manga)
-                        when {
-                            manga.favorite -> screenModel.setDialog(BrowseSourceScreenModel.Dialog.RemoveManga(manga))
-                            duplicates.isNotEmpty() -> screenModel.setDialog(
-                                BrowseSourceScreenModel.Dialog.AddDuplicateManga(manga, duplicates),
-                            )
-                            else -> screenModel.addFavorite(manga)
+                    if (state.selectionMode) {
+                        screenModel.toggleSelection(manga)
+                    } else {
+                        scope.launchIO {
+                            val duplicates = screenModel.getDuplicateLibraryManga(manga)
+                            when {
+                                manga.favorite -> screenModel.setDialog(
+                                    BrowseSourceScreenModel.Dialog.RemoveManga(manga),
+                                )
+                                duplicates.isNotEmpty() -> screenModel.setDialog(
+                                    BrowseSourceScreenModel.Dialog.AddDuplicateManga(manga, duplicates),
+                                )
+                                else -> screenModel.addFavorite(manga)
+                            }
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         }
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     }
                 },
             )
@@ -314,6 +405,27 @@ data class BrowseSourceScreen(
                 )
             }
             else -> {}
+        }
+
+        // Show the library's comprehensive mass import dialog for URL-based imports
+        if (showMassImportDialog) {
+            // Prefill dialog with selected novels' URLs (one per line)
+            val selected = screenModel.state.value.selection
+            val initialText = selected.joinToString("\\n") { manga ->
+                val url = manga.url
+                if (url.startsWith("http")) url else ((screenModel.source as? HttpSource)?.baseUrl ?: "") + url
+            }
+
+            MassImportDialog(
+                onDismissRequest = { showMassImportDialog = false },
+                onImportComplete = { added, skipped, errored ->
+                    // Clear selection after import
+                    screenModel.clearSelection()
+                    // Store result to trigger snackbar via LaunchedEffect
+                    lastImportResult = Triple(added, skipped, errored)
+                },
+                initialText = initialText,
+            )
         }
 
         LaunchedEffect(Unit) {

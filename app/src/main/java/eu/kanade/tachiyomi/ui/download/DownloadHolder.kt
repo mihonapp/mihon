@@ -1,12 +1,16 @@
 package eu.kanade.tachiyomi.ui.download
 
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ItemTouchHelper
 import eu.davidea.viewholders.FlexibleViewHolder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.databinding.DownloadItemBinding
+import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.view.popupMenu
+import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.i18n.MR
 
 /**
  * Class used to hold the data of a download.
@@ -35,10 +39,10 @@ class DownloadHolder(private val view: View, val adapter: DownloadAdapter) :
     fun bind(download: Download) {
         this.download = download
         // Update the chapter name.
-        binding.chapterTitle.text = download.chapter.name
+        binding.chapterTitle.text = download.chapterName
 
         // Update the manga title
-        binding.mangaFullTitle.text = download.manga.title
+        binding.mangaFullTitle.text = download.mangaTitle
 
         // Update the progress bar and the number of downloaded pages
         val pages = download.pages
@@ -50,6 +54,25 @@ class DownloadHolder(private val view: View, val adapter: DownloadAdapter) :
             binding.downloadProgress.max = pages.size * 100
             notifyProgress()
             notifyDownloadedPages()
+        }
+
+        notifyStatus()
+    }
+
+    fun notifyStatus() {
+        val error = download.error
+        val shouldShowError = download.status == Download.State.ERROR && !error.isNullOrBlank()
+        binding.downloadErrorText.isVisible = shouldShowError
+
+        if (shouldShowError) {
+            binding.downloadErrorText.text = error
+            binding.downloadErrorText.setOnClickListener {
+                val label = view.context.stringResource(MR.strings.download_error_details)
+                view.context.copyToClipboard(label, error)
+            }
+        } else {
+            binding.downloadErrorText.text = ""
+            binding.downloadErrorText.setOnClickListener(null)
         }
     }
 

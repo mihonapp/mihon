@@ -5,7 +5,10 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.source.isNovelSource
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import tachiyomi.core.common.preference.Preference
@@ -44,22 +47,24 @@ class LibrarySettingsScreenModel(
 
     val extensionsFlow = getLibraryManga.subscribe()
         .map { libraryManga ->
-            libraryManga
-                .map { it.manga.source }
-                .distinct()
-                .mapNotNull { sourceId ->
-                    val source = sourceManager.getOrStub(sourceId)
-                    // Filter extensions based on library type
-                    val isNovel = source.isNovelSource()
-                    val shouldInclude = when (type) {
-                        LibraryScreenModel.LibraryType.All -> true
-                        LibraryScreenModel.LibraryType.Manga -> !isNovel
-                        LibraryScreenModel.LibraryType.Novel -> isNovel
-                    }
-                    if (shouldInclude) sourceId to source.name else null
+            libraryManga.map { it.manga.source }.distinct()
+        }
+        .distinctUntilChanged()
+        .map { sourceIds ->
+            sourceIds.mapNotNull { sourceId ->
+                val source = sourceManager.getOrStub(sourceId)
+                // Filter extensions based on library type
+                val isNovel = source.isNovelSource()
+                val shouldInclude = when (type) {
+                    LibraryScreenModel.LibraryType.All -> true
+                    LibraryScreenModel.LibraryType.Manga -> !isNovel
+                    LibraryScreenModel.LibraryType.Novel -> isNovel
                 }
+                if (shouldInclude) sourceId to source.name else null
+            }
                 .sortedBy { it.second }
         }
+        .flowOn(Dispatchers.IO)
         .stateIn(
             scope = screenModelScope,
             started = SharingStarted.WhileSubscribed(5.seconds.inWholeMilliseconds),

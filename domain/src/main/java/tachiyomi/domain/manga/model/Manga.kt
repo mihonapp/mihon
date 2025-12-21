@@ -102,7 +102,8 @@ data class Manga(
 
         const val CHAPTER_DISPLAY_NAME = 0x00000000L
         const val CHAPTER_DISPLAY_NUMBER = 0x00100000L
-        const val CHAPTER_DISPLAY_MASK = 0x00100000L
+        const val CHAPTER_DISPLAY_BOTH = 0x00200000L
+        const val CHAPTER_DISPLAY_MASK = 0x00300000L
 
         fun create() = Manga(
             id = -1L,

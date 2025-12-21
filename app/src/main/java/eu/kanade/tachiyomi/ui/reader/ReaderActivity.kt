@@ -58,6 +58,7 @@ import eu.kanade.presentation.reader.ReaderContentOverlay
 import eu.kanade.presentation.reader.ReaderPageActionsDialog
 import eu.kanade.presentation.reader.ReaderPageIndicator
 import eu.kanade.presentation.reader.ReadingModeSelectDialog
+import eu.kanade.presentation.reader.TranslationLanguageSelectDialog
 import eu.kanade.presentation.reader.appbars.NovelReaderAppBars
 import eu.kanade.presentation.reader.appbars.ReaderAppBars
 import eu.kanade.presentation.reader.settings.ReaderSettingsDialog
@@ -88,6 +89,8 @@ import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setComposeContent
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
@@ -206,7 +209,17 @@ class ReaderActivity : BaseActivity() {
         viewModel.state
             .map { it.isLoadingAdjacentChapter }
             .distinctUntilChanged()
-            .onEach(::setProgressDialog)
+            .onEach { isLoading ->
+                // Skip loading dialog for infinite scroll - the viewer handles inline indicators
+                val isNovelViewer = viewModel.state.value.viewer is NovelViewer ||
+                    viewModel.state.value.viewer is NovelWebViewViewer
+                val infiniteScrollEnabled = readerPreferences.novelInfiniteScroll().get()
+                if (isNovelViewer && infiniteScrollEnabled) {
+                    // Don't show popup for infinite scroll - viewer shows inline indicators
+                    return@onEach
+                }
+                setProgressDialog(isLoading)
+            }
             .launchIn(lifecycleScope)
 
         viewModel.state
@@ -228,6 +241,10 @@ class ReaderActivity : BaseActivity() {
                 when (event) {
                     ReaderViewModel.Event.ReloadViewerChapters -> {
                         viewModel.state.value.viewerChapters?.let(::setChapters)
+                    }
+                    ReaderViewModel.Event.ReloadWithTranslation -> {
+                        // Force reload content with new translation state
+                        reloadContentWithTranslation()
                     }
                     ReaderViewModel.Event.PageChanged -> {
                         displayRefreshHost.flash()
@@ -325,6 +342,27 @@ class ReaderActivity : BaseActivity() {
                     onChange = { stringRes ->
                         menuToggleToast?.cancel()
                         menuToggleToast = toast(stringRes)
+                    },
+                )
+            }
+            is ReaderViewModel.Dialog.TranslationLanguageSelect -> {
+                TranslationLanguageSelectDialog(
+                    onDismissRequest = onDismissRequest,
+                    currentLanguage = viewModel.getTargetTranslationLanguage(),
+                    autoTranslateEnabled = readerPreferences.autoTranslate().get(),
+                    onToggleAutoTranslate = { enabled ->
+                        readerPreferences.autoTranslate().set(enabled)
+                    },
+                    onSelectLanguage = { languageCode ->
+                        viewModel.setTargetTranslationLanguage(languageCode)
+                        // Optionally trigger translation with new language
+                        if (!viewModel.state.value.isTranslating) {
+                            viewModel.toggleTranslation()
+                        } else {
+                            // Retrigger translation with new language
+                            viewModel.toggleTranslation() // Turn off
+                            viewModel.toggleTranslation() // Turn on with new language
+                        }
                     },
                 )
             }
@@ -489,6 +527,13 @@ class ReaderActivity : BaseActivity() {
             // Use state.novelProgressPercent for slider value, which is updated via onNovelProgressChanged callback
             val novelProgressFromState = state.novelProgressPercent
 
+            var isTtsActive by remember { mutableStateOf(false) }
+            LaunchedEffect(state.menuVisible) {
+                if (state.menuVisible) {
+                    isTtsActive = (state.viewer as? NovelViewer)?.isTtsSpeaking() == true
+                }
+            }
+
             // Also sync from viewer when menu becomes visible (for initial sync)
             LaunchedEffect(state.menuVisible) {
                 if (state.menuVisible) {
@@ -501,11 +546,49 @@ class ReaderActivity : BaseActivity() {
                 }
             }
 
+            // Format chapter title based on preference
+            val chapterTitleDisplay by readerPreferences.novelChapterTitleDisplay().collectAsState()
+            val formattedChapterTitle = remember(state.currentChapter, chapterTitleDisplay) {
+                val chapter = state.novelVisibleChapter ?: state.currentChapter?.chapter
+                if (chapter == null) {
+                    null
+                } else {
+                    when (chapterTitleDisplay) {
+                        1 -> { // Number only
+                            if (chapter.chapter_number >= 0) {
+                                "Chapter ${chapter.chapter_number.let {
+                                    if (it == it.toLong().toFloat()) it.toLong().toString() else it.toString()
+                                }}"
+                            } else {
+                                chapter.name // Fallback to name if no valid number
+                            }
+                        }
+                        2 -> { // Both name and number
+                            if (chapter.chapter_number >= 0) {
+                                val numStr = chapter.chapter_number.let {
+                                    if (it ==
+                                        it.toLong().toFloat()
+                                    ) {
+                                        it.toLong().toString()
+                                    } else {
+                                        it.toString()
+                                    }
+                                }
+                                "Ch. $numStr: ${chapter.name}"
+                            } else {
+                                chapter.name // Fallback to name if no valid number
+                            }
+                        }
+                        else -> chapter.name // 0 = Name only (default)
+                    }
+                }
+            }
+
             NovelReaderAppBars(
                 visible = state.menuVisible,
 
                 novelTitle = state.manga?.title,
-                chapterTitle = state.currentChapter?.chapter?.name,
+                chapterTitle = formattedChapterTitle,
                 navigateUp = onBackPressedDispatcher::onBackPressed,
                 onClickTopAppBar = ::openMangaScreen,
                 bookmarked = state.bookmarked,
@@ -528,9 +611,35 @@ class ReaderActivity : BaseActivity() {
                     }
                 },
 
-                onNextChapter = ::loadNextChapter,
+                onNextChapter = {
+                    loadNextChapter()
+                    // Sync slider after navigation
+                    lifecycleScope.launch {
+                        delay(100)
+                        val viewer = viewModel.state.value.viewer
+                        val progress = when (viewer) {
+                            is NovelViewer -> viewer.getProgressPercent()
+                            is NovelWebViewViewer -> viewer.getProgressPercent()
+                            else -> 0
+                        }
+                        viewModel.updateNovelProgressPercent(progress)
+                    }
+                },
                 enabledNext = state.viewerChapters?.nextChapter != null,
-                onPreviousChapter = ::loadPreviousChapter,
+                onPreviousChapter = {
+                    loadPreviousChapter()
+                    // Sync slider after navigation
+                    lifecycleScope.launch {
+                        delay(100)
+                        val viewer = viewModel.state.value.viewer
+                        val progress = when (viewer) {
+                            is NovelViewer -> viewer.getProgressPercent()
+                            is NovelWebViewViewer -> viewer.getProgressPercent()
+                            else -> 0
+                        }
+                        viewModel.updateNovelProgressPercent(progress)
+                    }
+                },
                 enabledPrevious = state.viewerChapters?.prevChapter != null,
 
                 orientation = ReaderOrientation.fromPreference(
@@ -541,6 +650,33 @@ class ReaderActivity : BaseActivity() {
                 onScrollToTop = onScrollToTop,
                 isAutoScrolling = isAutoScrolling,
                 onToggleAutoScroll = onToggleAutoScroll,
+                isTranslating = state.isTranslating,
+                onToggleTranslation = viewModel::toggleTranslation,
+                onLongPressTranslation = viewModel::openTranslationLanguageDialog,
+                isTtsActive = isTtsActive,
+                onToggleTts = {
+                    val viewer = state.viewer
+                    when (viewer) {
+                        is NovelViewer -> {
+                            if (viewer.isTtsSpeaking()) {
+                                viewer.stopTts()
+                                isTtsActive = false
+                            } else {
+                                viewer.startTts()
+                                isTtsActive = true
+                            }
+                        }
+                        is NovelWebViewViewer -> {
+                            if (viewer.isTtsSpeaking()) {
+                                viewer.stopTts()
+                                isTtsActive = false
+                            } else {
+                                viewer.startTts()
+                                isTtsActive = true
+                            }
+                        }
+                    }
+                },
             )
         } else {
             val cropBorderPaged by readerPreferences.cropBorders().collectAsState()
@@ -721,9 +857,7 @@ class ReaderActivity : BaseActivity() {
      */
     private fun setProgressDialog(show: Boolean) {
         if (show) {
-            viewModel.showLoadingDialog()
         } else {
-            viewModel.closeDialog()
         }
     }
 
@@ -745,7 +879,13 @@ class ReaderActivity : BaseActivity() {
     internal fun loadNextChapter() {
         lifecycleScope.launch {
             viewModel.loadNextChapter()
-            moveToPageIndex(0)
+            // Only reset to page 0 if NOT using infinite scroll for novel viewers
+            val isNovelViewer = viewModel.state.value.viewer is NovelViewer ||
+                viewModel.state.value.viewer is NovelWebViewViewer
+            val infiniteScrollEnabled = readerPreferences.novelInfiniteScroll().get()
+            if (!(isNovelViewer && infiniteScrollEnabled)) {
+                moveToPageIndex(0)
+            }
         }
     }
 
@@ -756,7 +896,13 @@ class ReaderActivity : BaseActivity() {
     internal fun loadPreviousChapter() {
         lifecycleScope.launch {
             viewModel.loadPreviousChapter()
-            moveToPageIndex(0)
+            // Only reset to page 0 if NOT using infinite scroll for novel viewers
+            val isNovelViewer = viewModel.state.value.viewer is NovelViewer ||
+                viewModel.state.value.viewer is NovelWebViewViewer
+            val infiniteScrollEnabled = readerPreferences.novelInfiniteScroll().get()
+            if (!(isNovelViewer && infiniteScrollEnabled)) {
+                moveToPageIndex(0)
+            }
         }
     }
 
@@ -824,6 +970,49 @@ class ReaderActivity : BaseActivity() {
     fun hideMenu() {
         if (viewModel.state.value.menuVisible) {
             setMenuVisibility(false)
+        }
+    }
+
+    /**
+     * Check if translation mode is currently enabled.
+     */
+    fun isTranslationEnabled(): Boolean {
+        return viewModel.state.value.isTranslating
+    }
+
+    /**
+     * Reload content with current translation state.
+     * Called when translation is toggled to re-render existing content.
+     */
+    private fun reloadContentWithTranslation() {
+        val state = viewModel.state.value
+        val viewer = state.viewer
+
+        when (viewer) {
+            is NovelViewer -> viewer.reloadWithTranslation()
+            is NovelWebViewViewer -> viewer.reloadWithTranslation()
+            else -> {
+                // For other viewers, just reload chapters
+                state.viewerChapters?.let(::setChapters)
+            }
+        }
+    }
+
+    /**
+     * Translate text content using the translation service.
+     * Returns translated text if translation is enabled and successful,
+     * otherwise returns original text.
+     */
+    suspend fun translateContentIfEnabled(content: String): String {
+        if (!isTranslationEnabled()) return content
+        return try {
+            viewModel.translateContent(content)
+        } catch (e: CancellationException) {
+            logcat(LogPriority.DEBUG) { "Translation was cancelled" }
+            content
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Translation failed" }
+            content
         }
     }
 

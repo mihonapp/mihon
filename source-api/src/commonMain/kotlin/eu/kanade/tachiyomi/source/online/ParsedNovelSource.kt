@@ -12,6 +12,9 @@ import org.jsoup.nodes.Document
  */
 abstract class ParsedNovelSource : ParsedHttpSource(), NovelSource {
 
+    // Mark this as a novel source for HttpPageLoader detection
+    override val isNovelSource: Boolean = true
+
     override suspend fun fetchPageText(page: Page): String {
         val response = client.newCall(GET(page.url, headers)).awaitSuccess()
         val document = response.asJsoup()

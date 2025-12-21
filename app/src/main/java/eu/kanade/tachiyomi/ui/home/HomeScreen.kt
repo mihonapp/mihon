@@ -73,8 +73,8 @@ object HomeScreen : Screen() {
     private const val TabNavigatorKey = "HomeTabs"
 
     private val TABS = listOf(
-        LibraryTab,
         NovelsTab,
+        LibraryTab,
         UpdatesTab,
         HistoryTab,
         BrowseTab,
@@ -85,7 +85,7 @@ object HomeScreen : Screen() {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         TabNavigator(
-            tab = LibraryTab,
+            tab = NovelsTab,
             key = TabNavigatorKey,
         ) { tabNavigator ->
             // Provide usable navigator to content screen

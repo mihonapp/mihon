@@ -1,6 +1,8 @@
 package eu.kanade.presentation.library.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,9 +15,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.ContentPaste
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -25,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,10 +44,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import eu.kanade.domain.manga.interactor.MassImportNovels
+import eu.kanade.presentation.category.visualName
 import eu.kanade.tachiyomi.util.system.copyToClipboard
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.category.model.Category
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import uy.kohesive.injekt.Injekt
@@ -50,38 +57,74 @@ import uy.kohesive.injekt.api.get
 fun MassImportDialog(
     onDismissRequest: () -> Unit,
     onImportComplete: (added: Int, skipped: Int, errored: Int) -> Unit,
+    initialText: String = "",
 ) {
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
-    val scope = rememberCoroutineScope()
 
-    var urlText by remember { mutableStateOf("") }
-    var isImporting by remember { mutableStateOf(false) }
-    var isCancelled by remember { mutableStateOf(false) }
-    var progress by remember { mutableStateOf<MassImportNovels.ImportProgress?>(null) }
-    var result by remember { mutableStateOf<MassImportNovels.ImportResult?>(null) }
+    var urlText by remember { mutableStateOf(initialText) }
+
+    var selectedCategoryId by remember { mutableStateOf<Long?>(null) }
+    var categoryDropdownExpanded by remember { mutableStateOf(false) }
+    var fetchDetails by remember { mutableStateOf(true) }
+    var syncChapterList by remember { mutableStateOf(false) }
+    var didNotifyComplete by remember { mutableStateOf(false) }
 
     val massImportNovels = remember { Injekt.get<MassImportNovels>() }
+    val progress by massImportNovels.progress.collectAsState()
+    val result by massImportNovels.result.collectAsState()
+
+    val getCategories = remember { Injekt.get<GetCategories>() }
+    val categories by getCategories.subscribe().collectAsState(initial = emptyList())
+
+    val isImporting = progress?.isRunning == true
+
+    LaunchedEffect(result) {
+        val r = result
+        if (r == null) {
+            didNotifyComplete = false
+            return@LaunchedEffect
+        }
+        if (!didNotifyComplete) {
+            didNotifyComplete = true
+            onImportComplete(r.added.size, r.skipped.size, r.errored.size)
+
+            // Remove skipped and errored URLs from input box
+            val urlsToRemove = mutableSetOf<String>()
+            urlsToRemove.addAll(r.skipped.map { it.url })
+            urlsToRemove.addAll(r.errored.map { it.url })
+            urlsToRemove.addAll(r.prefilterInvalid.map { it.first })
+            urlsToRemove.addAll(r.prefilterDuplicates)
+            urlsToRemove.addAll(r.prefilterAlreadyInLibrary)
+
+            if (urlsToRemove.isNotEmpty()) {
+                val remainingUrls = urlText.split("\n")
+                    .filter { line ->
+                        val trimmed = line.trim()
+                        trimmed.isNotEmpty() && !urlsToRemove.any { url -> trimmed.contains(url) }
+                    }
+                    .joinToString("\n")
+                urlText = remainingUrls
+            }
+        }
+    }
 
     AlertDialog(
         onDismissRequest = {
-            if (!isImporting) {
-                onDismissRequest()
-            } else {
-                isCancelled = true
-            }
+            // Always allow dismissing, import continues in background
+            onDismissRequest()
         },
         title = { Text("Mass Import Novels") },
         text = {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = 200.dp, max = 400.dp),
+                    .fillMaxWidth(),
             ) {
-                if (result != null) {
+                val currentResult = result
+                if (currentResult != null) {
                     // Show results
                     ImportResultsView(
-                        result = result!!,
+                        result = currentResult,
                         onCopyErrored = { urls ->
                             context.copyToClipboard("Errored URLs", urls)
                         },
@@ -90,6 +133,110 @@ fun MassImportDialog(
                     // Show progress
                     ImportProgressView(progress = progress)
                 } else {
+                    // Options
+                    val userCategories = remember(categories) {
+                        categories
+                            .asSequence()
+                            .filterNot(Category::isSystemCategory)
+                            // Only show categories relevant to novels.
+                            // Keep "All" and "Novel" categories; exclude manga-only categories.
+                            .filter { it.contentType != Category.CONTENT_TYPE_MANGA }
+                            .toList()
+                    }
+                    val defaultCategoryName = stringResource(MR.strings.default_category)
+                    val selectedCategoryName = if (selectedCategoryId == null) {
+                        defaultCategoryName
+                    } else {
+                        userCategories.firstOrNull { it.id == selectedCategoryId }?.visualName ?: defaultCategoryName
+                    }
+
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        OutlinedTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            readOnly = true,
+                            enabled = false,
+                            value = selectedCategoryName,
+                            onValueChange = {},
+                            label = { Text("Category") },
+                            trailingIcon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.ArrowDropDown,
+                                    contentDescription = null,
+                                )
+                            },
+                            colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
+                                disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                                disabledBorderColor = MaterialTheme.colorScheme.outline,
+                                disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            ),
+                        )
+                        // Transparent click overlay
+                        Box(
+                            modifier = Modifier
+                                .matchParentSize()
+                                .clickable { categoryDropdownExpanded = true },
+                        )
+
+                        DropdownMenu(
+                            expanded = categoryDropdownExpanded,
+                            onDismissRequest = { categoryDropdownExpanded = false },
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text(defaultCategoryName) },
+                                onClick = {
+                                    selectedCategoryId = null
+                                    categoryDropdownExpanded = false
+                                },
+                            )
+                            userCategories.forEach { category ->
+                                DropdownMenuItem(
+                                    text = { Text(category.visualName) },
+                                    onClick = {
+                                        selectedCategoryId = category.id
+                                        categoryDropdownExpanded = false
+                                    },
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Checkbox(
+                            checked = syncChapterList,
+                            onCheckedChange = { syncChapterList = it },
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Sync chapter list during import",
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Checkbox(
+                            checked = fetchDetails,
+                            onCheckedChange = { fetchDetails = it },
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Fetch metadata (description) during import",
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
                     // Show input
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -122,49 +269,107 @@ fun MassImportDialog(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    val urlCount = massImportNovels.parseUrls(urlText).size
-                    Text(
-                        text = "Found $urlCount URL(s)",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                    // URL analysis with prefiltering
+                    val scope = rememberCoroutineScope()
+                    var analysisResult by remember { mutableStateOf<MassImportNovels.UrlAnalysisResult?>(null) }
+                    var isAnalyzing by remember { mutableStateOf(false) }
+
+                    LaunchedEffect(urlText) {
+                        // Debounce analysis
+                        kotlinx.coroutines.delay(300)
+                        if (urlText.isNotBlank()) {
+                            isAnalyzing = true
+                            analysisResult = massImportNovels.analyzeUrls(urlText)
+                            isAnalyzing = false
+                        } else {
+                            analysisResult = null
+                        }
+                    }
+
+                    if (isAnalyzing) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.height(16.dp).width(16.dp),
+                                strokeWidth = 2.dp,
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Analyzing URLs...",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    } else {
+                        analysisResult?.let { analysis ->
+                            Column {
+                                Text(
+                                    text = "✓ ${analysis.totalValid} valid URL(s) to import",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.primary,
+                                )
+                                if (analysis.alreadyInLibrary.isNotEmpty()) {
+                                    Text(
+                                        text = "○ ${analysis.alreadyInLibrary.size} already in library (will skip)",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                }
+                                if (analysis.duplicateUrls.isNotEmpty()) {
+                                    Text(
+                                        text = "○ ${analysis.duplicateUrls.size} duplicate(s) removed",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                }
+                                if (analysis.invalidUrls.isNotEmpty()) {
+                                    Text(
+                                        text = "✗ ${analysis.invalidUrls.size} invalid (no source/not URL)",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.error,
+                                    )
+                                }
+                            }
+                        } ?: run {
+                            val urlCount = massImportNovels.parseUrls(urlText).size
+                            Text(
+                                text = "Found $urlCount URL(s)",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    }
                 }
             }
         },
         confirmButton = {
-            if (result != null) {
-                TextButton(onClick = onDismissRequest) {
-                    Text("Close")
+            val currentResult = result
+            if (currentResult != null) {
+                Row {
+                    TextButton(onClick = {
+                        massImportNovels.clear()
+                        urlText = ""
+                    }) {
+                        Text("Start New Import")
+                    }
+                    TextButton(onClick = onDismissRequest) {
+                        Text("Close")
+                    }
                 }
             } else if (isImporting) {
-                TextButton(onClick = { isCancelled = true }) {
+                TextButton(onClick = { massImportNovels.cancel() }) {
                     Text("Cancel")
                 }
             } else {
                 TextButton(
                     onClick = {
-                        scope.launch {
-                            isImporting = true
-                            isCancelled = false
-                            val urls = massImportNovels.parseUrls(urlText)
-
-                            val importResult = withContext(Dispatchers.IO) {
-                                massImportNovels.import(
-                                    urls = urls,
-                                    addToLibrary = true,
-                                    onProgress = { p -> progress = p },
-                                    isCancelled = { isCancelled },
-                                )
-                            }
-
-                            result = importResult
-                            isImporting = false
-                            onImportComplete(
-                                importResult.added.size,
-                                importResult.skipped.size,
-                                importResult.errored.size,
-                            )
-                        }
+                        val urls = massImportNovels.parseUrls(urlText)
+                        massImportNovels.startImport(
+                            urls = urls,
+                            addToLibrary = true,
+                            categoryId = selectedCategoryId,
+                            fetchDetails = fetchDetails,
+                            fetchChapters = syncChapterList,
+                        )
                     },
                     enabled = urlText.isNotBlank(),
                 ) {
@@ -177,9 +382,40 @@ fun MassImportDialog(
                 TextButton(onClick = onDismissRequest) {
                     Text(stringResource(MR.strings.action_cancel))
                 }
+            } else if (isImporting) {
+                TextButton(onClick = onDismissRequest) {
+                    Text("Hide")
+                }
             }
         },
     )
+}
+
+@Composable
+private fun CategoryItem(
+    name: String,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        androidx.compose.material3.RadioButton(
+            selected = isSelected,
+            onClick = onClick,
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = name,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 8.dp),
+        )
+    }
 }
 
 @Composable
@@ -197,6 +433,14 @@ private fun ImportProgressView(
                 style = MaterialTheme.typography.titleMedium,
             )
 
+            if (progress.concurrency > 1) {
+                Text(
+                    text = "(${progress.activeImports.size} concurrent)",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+
             Spacer(modifier = Modifier.height(8.dp))
 
             LinearProgressIndicator(
@@ -206,12 +450,33 @@ private fun ImportProgressView(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text = progress.currentUrl,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 2,
-            )
+            // Show all active imports when concurrent
+            if (progress.activeImports.isNotEmpty()) {
+                Column {
+                    progress.activeImports.take(5).forEach { url ->
+                        Text(
+                            text = "• ${url.take(50)}${if (url.length > 50) "..." else ""}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                        )
+                    }
+                    if (progress.activeImports.size > 5) {
+                        Text(
+                            text = "... and ${progress.activeImports.size - 5} more",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+            } else {
+                Text(
+                    text = progress.currentUrl,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 2,
+                )
+            }
 
             Text(
                 text = progress.status,
@@ -251,6 +516,40 @@ private fun ImportResultsView(
             ResultStat("Added", result.added.size, MaterialTheme.colorScheme.primary)
             ResultStat("Skipped", result.skipped.size, MaterialTheme.colorScheme.tertiary)
             ResultStat("Errors", result.errored.size, MaterialTheme.colorScheme.error)
+        }
+
+        // Prefilter results section
+        val totalPrefiltered =
+            result.prefilterInvalid.size + result.prefilterDuplicates.size + result.prefilterAlreadyInLibrary.size
+        if (totalPrefiltered > 0) {
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "Prefiltered ($totalPrefiltered):",
+                style = MaterialTheme.typography.titleSmall,
+            )
+
+            if (result.prefilterAlreadyInLibrary.isNotEmpty()) {
+                Text(
+                    text = "○ ${result.prefilterAlreadyInLibrary.size} already in library",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            if (result.prefilterDuplicates.isNotEmpty()) {
+                Text(
+                    text = "○ ${result.prefilterDuplicates.size} duplicate URL(s)",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            if (result.prefilterInvalid.isNotEmpty()) {
+                Text(
+                    text = "○ ${result.prefilterInvalid.size} invalid URL(s)",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
 
         if (result.errored.isNotEmpty()) {

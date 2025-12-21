@@ -15,4 +15,28 @@ class SetMangaCategories(
             logcat(LogPriority.ERROR, e)
         }
     }
+
+    suspend fun await(mangaIds: List<Long>, categoryIds: List<Long>) {
+        try {
+            mangaRepository.setMangasCategories(mangaIds, categoryIds)
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+        }
+    }
+
+    suspend fun add(mangaIds: List<Long>, categoryIds: List<Long>) {
+        try {
+            mangaRepository.addMangasCategories(mangaIds, categoryIds)
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+        }
+    }
+
+    suspend fun remove(mangaIds: List<Long>, categoryIds: List<Long>) {
+        try {
+            mangaRepository.removeMangasCategories(mangaIds, categoryIds)
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+        }
+    }
 }

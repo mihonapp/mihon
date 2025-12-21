@@ -13,17 +13,42 @@ import kotlinx.coroutines.flow.flow
 import tachiyomi.domain.chapter.interactor.GetChapter
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.interactor.GetManga
-import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 data class Download(
     val source: HttpSource,
-    val manga: Manga,
-    val chapter: Chapter,
+    val mangaId: Long,
+    val mangaTitle: String,
+    val chapterId: Long,
+    val chapterName: String,
+    val chapterUrl: String,
+    val chapterScanlator: String?,
+    val chapterDateUpload: Long,
+    val chapterNumber: Double,
 ) {
     var pages: List<Page>? = null
+
+    /**
+     * Optional error details for the most recent failure.
+     * Not persisted; used for UI display/copy.
+     */
+    @Transient
+    var error: String? = null
+
+    fun setError(e: Throwable) {
+        val message = e.message?.takeIf { it.isNotBlank() } ?: e::class.java.simpleName
+        error = buildString {
+            append(message)
+            append('\n')
+            append(e.stackTraceToString())
+        }
+    }
+
+    fun clearError() {
+        error = null
+    }
 
     val totalProgress: Int
         get() = pages?.sumOf(Page::progress) ?: 0
@@ -72,6 +97,24 @@ data class Download(
     }
 
     companion object {
+        fun from(
+            manga: tachiyomi.domain.manga.model.Manga,
+            chapter: tachiyomi.domain.chapter.model.Chapter,
+            source: HttpSource,
+        ): Download {
+            return Download(
+                source = source,
+                mangaId = manga.id,
+                mangaTitle = manga.title,
+                chapterId = chapter.id,
+                chapterName = chapter.name,
+                chapterUrl = chapter.url,
+                chapterScanlator = chapter.scanlator,
+                chapterDateUpload = chapter.dateUpload,
+                chapterNumber = chapter.chapterNumber,
+            )
+        }
+
         suspend fun fromChapterId(
             chapterId: Long,
             getChapter: GetChapter = Injekt.get(),
@@ -82,7 +125,27 @@ data class Download(
             val manga = getManga.await(chapter.mangaId) ?: return null
             val source = sourceManager.get(manga.source) as? HttpSource ?: return null
 
-            return Download(source, manga, chapter)
+            return from(manga = manga, chapter = chapter, source = source)
         }
+    }
+
+    fun toDomainChapter(): Chapter {
+        return Chapter(
+            id = chapterId,
+            mangaId = mangaId,
+            read = false,
+            bookmark = false,
+            lastPageRead = 0,
+            dateFetch = 0,
+            sourceOrder = 0,
+            url = chapterUrl,
+            name = chapterName,
+            dateUpload = chapterDateUpload,
+            chapterNumber = chapterNumber,
+            scanlator = chapterScanlator,
+            lastModifiedAt = 0,
+            version = 1,
+            locked = false,
+        )
     }
 }

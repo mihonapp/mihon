@@ -28,9 +28,11 @@ import androidx.compose.material.icons.outlined.BookmarkAdd
 import androidx.compose.material.icons.outlined.BookmarkRemove
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.DeleteForever
 import androidx.compose.material.icons.outlined.DoneAll
 import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.RemoveDone
 import androidx.compose.material.icons.outlined.SwapCalls
 import androidx.compose.material3.DropdownMenuItem
@@ -78,6 +80,7 @@ fun MangaBottomActionMenu(
     onMarkPreviousAsReadClicked: (() -> Unit)? = null,
     onDownloadClicked: (() -> Unit)? = null,
     onDeleteClicked: (() -> Unit)? = null,
+    onRemoveFromDbClicked: (() -> Unit)? = null,
 ) {
     AnimatedVisibility(
         visible = visible,
@@ -91,11 +94,11 @@ fun MangaBottomActionMenu(
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
         ) {
             val haptic = LocalHapticFeedback.current
-            val confirm = remember { mutableStateListOf(false, false, false, false, false, false, false) }
+            val confirm = remember { mutableStateListOf(false, false, false, false, false, false, false, false) }
             var resetJob: Job? = remember { null }
             val onLongClickItem: (Int) -> Unit = { toConfirmIndex ->
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                (0..<7).forEach { i -> confirm[i] = i == toConfirmIndex }
+                (0..<8).forEach { i -> confirm[i] = i == toConfirmIndex }
                 resetJob?.cancel()
                 resetJob = scope.launch {
                     delay(1.seconds)
@@ -174,6 +177,15 @@ fun MangaBottomActionMenu(
                         onClick = onDeleteClicked,
                     )
                 }
+                if (onRemoveFromDbClicked != null) {
+                    Button(
+                        title = stringResource(MR.strings.action_remove_from_db),
+                        icon = Icons.Outlined.DeleteForever,
+                        toConfirm = confirm[7],
+                        onLongClick = { onLongClickItem(7) },
+                        onClick = onRemoveFromDbClicked,
+                    )
+                }
             }
         }
     }
@@ -240,6 +252,9 @@ fun LibraryBottomActionMenu(
     onMigrateClicked: () -> Unit,
     modifier: Modifier = Modifier,
     onCopyLinksClicked: (() -> Unit)? = null,
+    onUpdateClicked: (() -> Unit)? = null,
+    onTranslateClicked: (() -> Unit)? = null,
+    onRemoveChaptersClicked: (() -> Unit)? = null,
 ) {
     AnimatedVisibility(
         visible = visible,
@@ -340,6 +355,15 @@ fun LibraryBottomActionMenu(
                             onDismissRequest = { overflowMenuOpen = false },
                             offset = BottomBarMenuDpOffset,
                         ) {
+                            if (onUpdateClicked != null) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(MR.strings.action_update_library)) },
+                                    onClick = {
+                                        overflowMenuOpen = false
+                                        onUpdateClicked()
+                                    },
+                                )
+                            }
                             DropdownMenuItem(
                                 text = { Text(stringResource(MR.strings.migrate)) },
                                 onClick = onMigrateClicked,
@@ -354,6 +378,24 @@ fun LibraryBottomActionMenu(
                                     onClick = {
                                         overflowMenuOpen = false
                                         onCopyLinksClicked()
+                                    },
+                                )
+                            }
+                            if (onTranslateClicked != null) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(MR.strings.action_translate)) },
+                                    onClick = {
+                                        overflowMenuOpen = false
+                                        onTranslateClicked()
+                                    },
+                                )
+                            }
+                            if (onRemoveChaptersClicked != null) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(MR.strings.action_remove_chapters)) },
+                                    onClick = {
+                                        overflowMenuOpen = false
+                                        onRemoveChaptersClicked()
                                     },
                                 )
                             }

@@ -14,6 +14,7 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.i18n.MR
+import tachiyomi.source.local.LocalNovelSource
 import tachiyomi.source.local.LocalSource
 import tachiyomi.source.local.io.Format
 
@@ -98,8 +99,12 @@ class ChapterLoader(
                     is Format.Directory -> DirectoryPageLoader(format.file)
                     is Format.Archive -> ArchivePageLoader(format.file.archiveReader(context))
                     is Format.Epub -> EpubPageLoader(format.file.epubReader(context))
+                    is Format.Text, is Format.Html -> error(
+                        context.stringResource(MR.strings.loader_not_implemented_error),
+                    )
                 }
             }
+            source is LocalNovelSource -> LocalNovelPageLoader(chapter, source)
             source is HttpSource -> HttpPageLoader(chapter, source)
             source is StubSource -> error(context.stringResource(MR.strings.source_not_installed, source.toString()))
             else -> error(context.stringResource(MR.strings.loader_not_implemented_error))

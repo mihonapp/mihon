@@ -35,6 +35,7 @@ import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.presentation.manga.MangaScreen
 import eu.kanade.presentation.manga.components.DeleteChaptersDialog
 import eu.kanade.presentation.manga.components.MangaCoverDialog
+import eu.kanade.presentation.manga.components.RemoveChaptersFromDbDialog
 import eu.kanade.presentation.manga.components.ScanlatorFilterDialog
 import eu.kanade.presentation.manga.components.SetIntervalDialog
 import eu.kanade.presentation.util.AssistContentScreen
@@ -166,10 +167,14 @@ class MangaScreen(
             }.takeIf { successState.manga.favorite },
             onEditNotesClicked = { navigator.push(MangaNotesScreen(manga = successState.manga)) },
             onEditAlternativeTitlesClicked = screenModel::showEditAlternativeTitlesDialog,
+            onTranslateClicked = screenModel::translateMangaDetails,
+            onTranslateDownloadedClicked = screenModel::translateDownloadedChapters,
+            onExportEpubClicked = screenModel::showExportEpubDialog.takeIf { successState.isNovel },
             onMultiBookmarkClicked = screenModel::bookmarkChapters,
             onMultiMarkAsReadClicked = screenModel::markChaptersRead,
             onMarkPreviousAsReadClicked = screenModel::markPreviousChapterRead,
             onMultiDeleteClicked = screenModel::showDeleteChapterDialog,
+            onMultiRemoveFromDbClicked = screenModel::showRemoveChaptersFromDbDialog,
             onChapterSwipe = screenModel::chapterSwipe,
             onChapterSelected = screenModel::toggleSelection,
             onAllChapterSelected = screenModel::toggleAllSelection,
@@ -197,6 +202,15 @@ class MangaScreen(
                     onConfirm = {
                         screenModel.toggleAllSelection(false)
                         screenModel.deleteChapters(dialog.chapters)
+                    },
+                )
+            }
+            is MangaScreenModel.Dialog.RemoveChaptersFromDb -> {
+                RemoveChaptersFromDbDialog(
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = {
+                        screenModel.toggleAllSelection(false)
+                        screenModel.removeChaptersFromDb(dialog.chapters)
                     },
                 )
             }
@@ -284,6 +298,31 @@ class MangaScreen(
                     currentTitles = dialog.manga.alternativeTitles,
                     onDismissRequest = onDismissRequest,
                     onConfirm = { titles -> screenModel.updateAlternativeTitles(titles) },
+                )
+            }
+            is MangaScreenModel.Dialog.TranslateMangaDetails -> {
+                eu.kanade.presentation.manga.components.TranslateMangaDetailsDialog(
+                    manga = dialog.manga,
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = { details ->
+                        screenModel.saveTranslatedDetails(
+                            details.translatedTitle,
+                            details.translatedDescription,
+                            details.translatedGenres,
+                            details.addToAltTitles,
+                            details.saveTagsToNotes,
+                        )
+                    },
+                )
+            }
+            is MangaScreenModel.Dialog.ExportEpub -> {
+                eu.kanade.presentation.manga.components.ExportEpubDialog(
+                    manga = dialog.manga,
+                    chapters = dialog.chapters,
+                    onDismissRequest = onDismissRequest,
+                    onExport = { uri ->
+                        screenModel.exportAsEpub(dialog.manga, dialog.chapters, uri)
+                    },
                 )
             }
         }

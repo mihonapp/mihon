@@ -75,6 +75,7 @@ fun MangaCompactGridItem(
     onLongClick: () -> Unit,
     isSelected: Boolean = false,
     title: String? = null,
+    titleMaxLines: Int = 2,
     onClickContinueReading: (() -> Unit)? = null,
     coverAlpha: Float = 1f,
     coverBadgeStart: @Composable (RowScope.() -> Unit)? = null,
@@ -101,6 +102,7 @@ fun MangaCompactGridItem(
                     CoverTextOverlay(
                         title = title,
                         onClickContinueReading = onClickContinueReading,
+                        titleMaxLines = titleMaxLines,
                     )
                 } else if (onClickContinueReading != null) {
                     ContinueReadingButton(
@@ -124,6 +126,7 @@ fun MangaCompactGridItem(
 private fun BoxScope.CoverTextOverlay(
     title: String,
     onClickContinueReading: (() -> Unit)? = null,
+    titleMaxLines: Int = 2,
 ) {
     Box(
         modifier = Modifier
@@ -155,6 +158,7 @@ private fun BoxScope.CoverTextOverlay(
                 ),
             ),
             minLines = 1,
+            maxLines = titleMaxLines,
         )
         if (onClickContinueReading != null) {
             ContinueReadingButton(
@@ -338,6 +342,7 @@ fun MangaListItem(
     isSelected: Boolean = false,
     coverAlpha: Float = 1f,
     onClickContinueReading: (() -> Unit)? = null,
+    titleMaxLines: Int = 2,
 ) {
     Row(
         modifier = Modifier
@@ -361,7 +366,7 @@ fun MangaListItem(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .weight(1f),
-            maxLines = 2,
+            maxLines = titleMaxLines,
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.bodyMedium,
         )

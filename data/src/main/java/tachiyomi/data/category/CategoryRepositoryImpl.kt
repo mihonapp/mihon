@@ -35,12 +35,25 @@ class CategoryRepositoryImpl(
         }
     }
 
+    override suspend fun getCategoriesByContentType(contentType: Int): List<Category> {
+        return handler.awaitList {
+            categoriesQueries.getCategoriesByContentType(contentType.toLong(), ::mapCategory)
+        }
+    }
+
+    override fun getCategoriesByContentTypeAsFlow(contentType: Int): Flow<List<Category>> {
+        return handler.subscribeToList {
+            categoriesQueries.getCategoriesByContentType(contentType.toLong(), ::mapCategory)
+        }
+    }
+
     override suspend fun insert(category: Category) {
         handler.await {
             categoriesQueries.insert(
                 name = category.name,
                 order = category.order,
                 flags = category.flags,
+                contentType = category.contentType.toLong(),
             )
         }
     }
@@ -64,6 +77,7 @@ class CategoryRepositoryImpl(
             name = update.name,
             order = update.order,
             flags = update.flags,
+            contentType = update.contentType?.toLong(),
             categoryId = update.id,
         )
     }
@@ -87,12 +101,14 @@ class CategoryRepositoryImpl(
         name: String,
         order: Long,
         flags: Long,
+        contentType: Long,
     ): Category {
         return Category(
             id = id,
             name = name,
             order = order,
             flags = flags,
+            contentType = contentType.toInt(),
         )
     }
 }

@@ -16,6 +16,7 @@
     <string name="pref_novel_tap_to_scroll">Tap to scroll</string>
     <string name="pref_novel_text_selectable">Enable text selection</string>
     <string name="pref_novel_hide_chapter_title">Hide chapter title in content</string>
+    <string name="pref_novel_chapter_title_display">Chapter title format</string>
     <string name="pref_novel_use_original_fonts">Use source\'s original fonts</string>
     <string name="pref_novel_margin_left">Left margin</string>
     <string name="pref_novel_margin_right">Right margin</string>
@@ -24,16 +25,36 @@
     <string name="pref_novel_font_color">Font color</string>
     <string name="pref_novel_background_color">Background color</string>
     <string name="pref_novel_paragraph_indent">Paragraph indent</string>
+    <string name="pref_novel_paragraph_spacing">Paragraph spacing</string>
+    <string name="pref_novel_block_media">Block images and videos</string>
+    <string name="pref_novel_show_raw_html">Show raw HTML</string>
+    <string name="pref_novel_keep_screen_on">Keep screen on</string>
+    <string name="pref_novel_swipe_navigation">Swipe to change chapters</string>
     <string name="pref_novel_rendering_mode">Rendering mode</string>
+    <string name="pref_novel_auto_load_next_at">Auto-load next chapter at %</string>
     <string name="pref_novel_tts">Text to speech</string>
+    <string name="novel_tab_reading">Reading</string>
+    <string name="novel_tab_appearance">Appearance</string>
+    <string name="novel_tab_controls">Controls</string>
+    <string name="novel_tab_advanced">Advanced</string>
+    <string name="novel_advanced_webview_only">Advanced settings are only available in WebView rendering mode.</string>
     <string name="action_reload_chapter">Reload chapter</string>
     <string name="action_reload_local">Reload from local</string>
     <string name="action_reload_source">Reload from source</string>
     <string name="action_scroll_to_top">Scroll to top</string>
+    <string name="action_translate">Translate</string>
+    <string name="action_translate_downloaded">Translate downloaded chapters</string>
+    <string name="action_export_epub">Export as EPUB</string>
+    <string name="action_export_epub_bulk">Export selected as EPUB</string>
+    <string name="export_epub_progress">Exporting %1$d of %2$d chapters…</string>
+    <string name="export_epub_success">EPUB exported successfully</string>
+    <string name="export_epub_error">Failed to export EPUB: %s</string>
+    <string name="action_remove_chapters">Remove chapters</string>
     <string name="action_start_auto_scroll">Start auto-scroll</string>
     <string name="action_stop_auto_scroll">Stop auto-scroll</string>
     <string name="action_copy_links">Copy links</string>
     <string name="action_mass_import">Mass import</string>
+    <string name="action_add_to_library">Add to library</string>
     <string name="novel_snippet_title">Snippet title</string>
     <string name="novel_snippet_code">Code</string>
     <string name="novel_add_snippet">Add snippet</string>
@@ -48,6 +69,24 @@
     <string name="novel_edit_css_snippet">Edit CSS snippet</string>
     <string name="novel_add_js_snippet">Add JavaScript snippet</string>
     <string name="novel_edit_js_snippet">Edit JavaScript snippet</string>
+
+    <!-- TTS Settings -->
+    <string name="pref_novel_tts_section">Text-to-Speech</string>
+    <string name="pref_novel_tts_speed">Speech speed</string>
+    <string name="pref_novel_tts_pitch">Speech pitch</string>
+    <string name="pref_novel_tts_voice">Voice</string>
+    <string name="pref_novel_tts_voice_default">System default</string>
+    <string name="pref_novel_tts_auto_next">Auto-play next chapter</string>
+
+    <!-- Translation Settings -->
+    <string name="pref_novel_translation_settings">Translation</string>
+    <string name="pref_novel_translation_enabled">Enable translation</string>
+    <string name="pref_novel_realtime_translation">Real-time translation while reading</string>
+    <string name="pref_novel_translation_engine_label">Engine</string>
+    <string name="pref_novel_translation_target_label">Target language</string>
+    <string name="pref_novel_translation_hint">Configure translation engines in Settings → Novel → Translation</string>
+    <string name="action_disable_translation">Disable translation</string>
+    <string name="not_configured">Not configured</string>
 
     <!-- Generic strings -->
     <string name="on">On</string>
@@ -84,7 +123,8 @@
     <string name="label_backup">Backup and restore</string>
     <string name="label_data_storage">Data and storage</string>
     <string name="label_stats">Statistics</string>
-    <string name="label_migration">Migrate</string>
+    <string name="label_migration">Migrate Manga</string>
+    <string name="label_novel_migration">Migrate Novels</string>
     <string name="label_extensions">Extensions</string>
     <string name="label_manga_extensions">Manga Extensions</string>
     <string name="label_novel_extensions">Novel Extensions</string>
@@ -139,6 +179,7 @@
     <string name="action_bookmark">Bookmark chapter</string>
     <string name="action_remove_bookmark">Unbookmark chapter</string>
     <string name="action_delete">Delete</string>
+    <string name="action_remove_from_db">Remove from database</string>
     <string name="action_update_library">Update library</string>
     <string name="action_enable_all">Enable all</string>
     <string name="action_disable_all">Disable all</string>
@@ -152,6 +193,10 @@
     <string name="action_move_category">Set categories</string>
     <string name="delete_category_confirmation">Do you wish to delete the category \"%s\"?</string>
     <string name="delete_category">Delete category</string>
+    <string name="category_content_type">Content type</string>
+    <string name="category_content_type_all">All (Manga &amp; Novels)</string>
+    <string name="category_content_type_manga">Manga only</string>
+    <string name="category_content_type_novel">Novels only</string>
     <string name="action_edit_cover">Edit cover</string>
     <string name="action_view_chapters">View chapters</string>
     <string name="action_pause">Pause</string>
@@ -194,6 +239,9 @@
     <string name="action_sort">Sort</string>
     <string name="action_order_by_upload_date">By upload date</string>
     <string name="action_order_by_chapter_number">By chapter number</string>
+    <string name="action_order_by_progress">By progress</string>
+    <string name="action_order_by_total_chapters">By total chapters</string>
+    <string name="action_order_by_extension">By extension</string>
     <string name="action_newest">Newest</string>
     <string name="action_oldest">Oldest</string>
     <string name="action_asc">Ascending</string>
@@ -608,6 +656,49 @@
     <string name="pref_novel_source_overrides">Source-specific overrides</string>
     <string name="pref_novel_source_overrides_summary">Configure delays for specific sources</string>
 
+    <!-- Novel Image Embedding -->
+    <string name="pref_category_novel_images">Chapter Images</string>
+    <string name="pref_novel_download_images">Download chapter images</string>
+    <string name="pref_novel_download_images_summary">Embed images from chapter HTML as base64 for offline viewing</string>
+    <string name="pref_novel_max_image_size">Max image size</string>
+    <string name="pref_novel_max_image_size_summary">Images larger than this will be compressed (0 = no limit)</string>
+    <string name="pref_novel_image_quality">Compression quality</string>
+    <string name="pref_novel_image_quality_summary">Quality for compressed images (higher = larger file)</string>
+
+    <!-- Translation Services -->
+    <string name="pref_category_translation">Translation</string>
+    <string name="pref_translation_general">General</string>
+    <string name="pref_translation_enabled">Enable translation</string>
+    <string name="pref_translation_enabled_summary">Allow translating novel chapters</string>
+    <string name="pref_translation_engine">Translation engine</string>
+    <string name="pref_translation_source_language">Source language</string>
+    <string name="pref_translation_target_language">Target language</string>
+    <string name="pref_translation_auto_download">Auto-download before translating</string>
+    <string name="pref_translation_auto_download_summary">Download chapter content if not already available</string>
+    <string name="pref_translation_auto_translate">Auto-translate downloads</string>
+    <string name="pref_translation_auto_translate_summary">Automatically translate chapters when downloaded</string>
+    <string name="pref_translation_rate_limit">Rate Limiting</string>
+    <string name="pref_translation_rate_limit_delay">Delay between requests</string>
+    <string name="pref_translation_rate_limit_delay_summary">Wait time between translation requests (ms)</string>
+    <string name="pref_translation_timeout">Request timeout</string>
+    <string name="pref_translation_timeout_summary">Maximum time to wait for translation response (seconds)</string>
+    <string name="pref_translation_warning_threshold">Warning threshold</string>
+    <string name="pref_translation_warning_threshold_summary">Show warning when translating more than this many chapters</string>
+    <string name="pref_translation_bypass_warning">Bypass rate limit warning</string>
+    <string name="pref_translation_bypass_warning_summary">Don\'t show warning for large batch translations</string>
+    <string name="pref_translation_max_parallel">Max parallel translations</string>
+    <string name="pref_translation_max_parallel_summary">For offline engines only</string>
+    <string name="pref_translation_api_keys">API Configuration</string>
+    <string name="pref_translation_openai_key">OpenAI API key</string>
+    <string name="pref_translation_deepseek_key">DeepSeek API key</string>
+    <string name="pref_translation_libretranslate_url">LibreTranslate server URL</string>
+    <string name="pref_translation_ollama_url">Ollama server URL</string>
+    <string name="pref_translation_ollama_model">Ollama model name</string>
+    <string name="not_set">Not set</string>
+    <string name="no_limit">No limit</string>
+    <string name="no_downloaded_chapters">No downloaded chapters found</string>
+    <string name="translation_queued">Queued %d chapters for translation</string>
+
     <!-- Tracking section -->
     <string name="tracking_guide">Tracking guide</string>
     <string name="pref_auto_update_manga_sync">Update progress after reading</string>
@@ -772,6 +863,7 @@
     <string name="no_more_results">No more results</string>
     <string name="no_results_found">No results found</string>
     <string name="local_source">Local source</string>
+    <string name="local_novel_source">Local novels</string>
     <string name="other_source">Other</string>
     <string name="last_used_source">Last used</string>
     <string name="pinned_sources">Pinned</string>
@@ -833,6 +925,7 @@
     <string name="chapter_paused">Paused</string>
     <string name="show_title">Source title</string>
     <string name="show_chapter_number">Chapter number</string>
+    <string name="show_chapter_both">Both (Number + Title)</string>
     <string name="sort_by_source">By source</string>
     <string name="sort_by_number">By chapter number</string>
     <string name="sort_by_upload_date">By upload date</string>
@@ -844,6 +937,8 @@
     <string name="error_saving_cover">Error saving cover</string>
     <string name="error_sharing_cover">Error sharing cover</string>
     <string name="confirm_delete_chapters">Are you sure you want to delete the selected chapters?</string>
+    <string name="confirm_remove_chapters_from_db">Are you sure you want to remove the selected chapters from the database? Downloaded files will not be affected.</string>
+    <string name="confirm_remove_chapters_from_library">Are you sure you want to remove all chapters from the selected entries? Downloaded files will not be affected.</string>
     <string name="chapter_settings">Chapter settings</string>
     <string name="confirm_set_chapter_settings">Are you sure you want to save these settings as default?</string>
     <string name="also_set_chapter_settings_for_library">Also apply to all entries in my library</string>
@@ -991,6 +1086,7 @@
     <!-- Downloads activity and service -->
     <string name="download_queue_error">Couldn\'t download chapters. You can try again in the downloads section</string>
     <string name="download_insufficient_space">Couldn\'t download chapters due to low storage space</string>
+    <string name="download_error_details">Download error</string>
     <string name="download_queue_size_warning">Warning: large bulk downloads may lead to sources becoming slower and/or blocking %s. Tap to learn more.</string>
 
     <!-- Library update service notifications -->
@@ -1069,6 +1165,9 @@
     <string name="channel_new_chapters">Chapter updates</string>
     <string name="channel_app_updates">App updates</string>
     <string name="channel_ext_updates">Extension updates</string>
+    <string name="channel_mass_import">Mass Import</string>
+    <string name="mass_import_progress_title">Mass Import Progress</string>
+    <string name="mass_import_complete_title">Mass Import Complete</string>
 
     <!-- S Pen actions -->
     <string name="spen_previous_page">Previous page</string>

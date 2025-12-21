@@ -2,11 +2,12 @@ CREATE TABLE categories(
     _id INTEGER NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
     sort INTEGER NOT NULL,
-    flags INTEGER NOT NULL
+    flags INTEGER NOT NULL,
+    content_type INTEGER NOT NULL DEFAULT 0
 );
 
 -- Insert system category
-INSERT OR IGNORE INTO categories(_id, name, sort, flags) VALUES (0, "", -1, 0);
+INSERT OR IGNORE INTO categories(_id, name, sort, flags, content_type) VALUES (0, "", -1, 0, 0);
 -- Disallow deletion of default category
 CREATE TRIGGER IF NOT EXISTS system_category_delete_trigger BEFORE DELETE
 ON categories
@@ -27,7 +28,8 @@ SELECT
 _id AS id,
 name,
 sort AS `order`,
-flags
+flags,
+content_type
 FROM categories
 ORDER BY sort;
 
@@ -36,15 +38,27 @@ SELECT
 C._id AS id,
 C.name,
 C.sort AS `order`,
-C.flags
+C.flags,
+C.content_type
 FROM categories C
 JOIN mangas_categories MC
 ON C._id = MC.category_id
 WHERE MC.manga_id = :mangaId;
 
+getCategoriesByContentType:
+SELECT
+_id AS id,
+name,
+sort AS `order`,
+flags,
+content_type
+FROM categories
+WHERE content_type = :contentType OR content_type = 0
+ORDER BY sort;
+
 insert:
-INSERT INTO categories(name, sort, flags)
-VALUES (:name, :order, :flags);
+INSERT INTO categories(name, sort, flags, content_type)
+VALUES (:name, :order, :flags, :contentType);
 
 delete:
 DELETE FROM categories
@@ -54,7 +68,8 @@ update:
 UPDATE categories
 SET name = coalesce(:name, name),
     sort = coalesce(:order, sort),
-    flags = coalesce(:flags, flags)
+    flags = coalesce(:flags, flags),
+    content_type = coalesce(:contentType, content_type)
 WHERE _id = :categoryId;
 
 updateAllFlags:

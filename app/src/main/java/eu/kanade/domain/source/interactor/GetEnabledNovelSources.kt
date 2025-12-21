@@ -10,6 +10,7 @@ import tachiyomi.domain.source.model.Pins
 import tachiyomi.domain.source.model.Source
 import tachiyomi.domain.source.repository.SourceRepository
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.source.local.isLocalNovel
 
 class GetEnabledNovelSources(
     private val repository: SourceRepository,
@@ -26,9 +27,9 @@ class GetEnabledNovelSources(
             repository.getSources(),
         ) { pinnedSourceIds, enabledLanguages, disabledSources, lastUsedSource, sources ->
             sources
-                .filter { it.lang in enabledLanguages }
+                .filter { it.lang in enabledLanguages || it.isLocalNovel() }
                 .filterNot { it.id.toString() in disabledSources }
-                .filter { sourceManager.get(it.id)?.isNovelSource() == true }
+                .filter { sourceManager.get(it.id)?.isNovelSource() == true || it.isLocalNovel() }
                 .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
                 .flatMap {
                     val flag = if ("${it.id}" in pinnedSourceIds) Pins.pinned else Pins.unpinned

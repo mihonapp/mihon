@@ -335,6 +335,7 @@ actual class LocalSource(
                         }
 
                     entry?.let { coverManager.update(manga, it.openInputStream()) }
+                    null
                 }
                 is Format.Archive -> {
                     format.file.archiveReader(context).use { reader ->
@@ -346,6 +347,7 @@ actual class LocalSource(
 
                         entry?.let { coverManager.update(manga, reader.getInputStream(it.name)!!) }
                     }
+                    null
                 }
                 is Format.Epub -> {
                     format.file.epubReader(context).use { epub ->
@@ -353,6 +355,11 @@ actual class LocalSource(
 
                         entry?.let { coverManager.update(manga, epub.getInputStream(it)!!) }
                     }
+                    null
+                }
+                is Format.Text, is Format.Html -> {
+                    // Text and HTML files don't have cover images
+                    null
                 }
             }
         } catch (e: Throwable) {

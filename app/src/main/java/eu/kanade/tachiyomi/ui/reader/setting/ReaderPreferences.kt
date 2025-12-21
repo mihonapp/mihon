@@ -77,6 +77,8 @@ class ReaderPreferences(
 
     fun webtoonDisableZoomOut() = preferenceStore.getBoolean("webtoon_disable_zoom_out", false)
 
+    fun autoTranslate() = preferenceStore.getBoolean("pref_auto_translate", false)
+
     // endregion
 
     // region Split two page spread
@@ -224,12 +226,42 @@ class ReaderPreferences(
     // Hide chapter title in novel content
     fun novelHideChapterTitle() = preferenceStore.getBoolean("pref_novel_hide_chapter_title", false)
 
+    // Force lowercase for all chapter content
+    fun novelForceTextLowercase() = preferenceStore.getBoolean("pref_novel_force_lowercase", false)
+
     // Use source's original fonts (don't force a specific font family)
     fun novelUseOriginalFonts() = preferenceStore.getBoolean("pref_novel_use_original_fonts", false)
 
     // Chapter sort order for novel reader: "source" = use source order, "chapter_number" = sort by chapter number
     // Default is "source" since many novel sources don't provide proper chapter numbers
     fun novelChapterSortOrder() = preferenceStore.getString("pref_novel_chapter_sort_order", "source")
+
+    // Block media elements (images, videos) in WebView - useful for ad blocking
+    fun novelBlockMedia() = preferenceStore.getBoolean("pref_novel_block_media", false)
+
+    // Keep screen on while reading
+    fun novelKeepScreenOn() = preferenceStore.getBoolean("pref_novel_keep_screen_on", false)
+
+    // Paragraph spacing (additional space between paragraphs in em units)
+    fun novelParagraphSpacing() = preferenceStore.getFloat("pref_novel_paragraph_spacing", 0.5f)
+
+    // Swipe navigation - swipe left/right to change chapters
+    fun novelSwipeNavigation() = preferenceStore.getBoolean("pref_novel_swipe_navigation", true)
+
+    // Chapter title display format: 0 = name only, 1 = number only, 2 = both (name + number)
+    fun novelChapterTitleDisplay() = preferenceStore.getInt("pref_novel_chapter_title_display", 2)
+
+    // Auto-load next chapter at percentage (legacy 0 may exist; treated as default)
+    fun novelAutoLoadNextChapterAt() = preferenceStore.getInt("pref_novel_auto_load_next_at", 95)
+
+    // Show raw HTML (display HTML tags without parsing) - useful for debugging
+    fun novelShowRawHtml() = preferenceStore.getBoolean("pref_novel_show_raw_html", false)
+
+    // TTS (Text-to-Speech) preferences
+    fun novelTtsSpeed() = preferenceStore.getFloat("pref_novel_tts_speed", 1.0f)
+    fun novelTtsPitch() = preferenceStore.getFloat("pref_novel_tts_pitch", 1.0f)
+    fun novelTtsVoice() = preferenceStore.getString("pref_novel_tts_voice", "")
+    fun novelTtsAutoNextChapter() = preferenceStore.getBoolean("pref_novel_tts_auto_next", true)
     // endregion
 
     companion object {

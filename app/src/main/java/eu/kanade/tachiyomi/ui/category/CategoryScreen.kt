@@ -50,7 +50,7 @@ class CategoryScreen : Screen() {
             CategoryDialog.Create -> {
                 CategoryCreateDialog(
                     onDismissRequest = screenModel::dismissDialog,
-                    onCreate = screenModel::createCategory,
+                    onCreate = { name, contentType -> screenModel.createCategory(name, contentType) },
                     categories = successState.categories.fastMap { it.name }.toImmutableList(),
                 )
             }

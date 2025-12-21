@@ -1,6 +1,7 @@
 package eu.kanade.presentation.category.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -48,10 +49,23 @@ fun ReorderableCollectionItemScope.CategoryListItem(
                     .padding(MaterialTheme.padding.medium)
                     .draggableHandle(),
             )
-            Text(
-                text = category.name,
+            Column(
                 modifier = Modifier.weight(1f),
-            )
+            ) {
+                Text(
+                    text = category.name,
+                )
+                val contentTypeText = when (category.contentType) {
+                    Category.CONTENT_TYPE_MANGA -> stringResource(MR.strings.category_content_type_manga)
+                    Category.CONTENT_TYPE_NOVEL -> stringResource(MR.strings.category_content_type_novel)
+                    else -> stringResource(MR.strings.category_content_type_all)
+                }
+                Text(
+                    text = contentTypeText,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
             IconButton(onClick = onRename) {
                 Icon(
                     imageVector = Icons.Outlined.Edit,

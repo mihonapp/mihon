@@ -12,6 +12,8 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.paging.LoadState
@@ -49,9 +51,14 @@ fun BrowseSourceContent(
     onLocalSourceHelpClick: () -> Unit,
     onMangaClick: (Manga) -> Unit,
     onMangaLongClick: (Manga) -> Unit,
+    selectionMode: Boolean = false,
+    selection: Set<Manga> = emptySet(),
+    translateTitles: Boolean = false,
+    translatedTitles: Map<Long, String> = emptyMap(),
+    onTranslateManga: (Manga) -> Unit = {},
+    titleMaxLines: Int = 2,
 ) {
     val context = LocalContext.current
-
     val errorState = mangaList.loadState.refresh.takeIf { it is LoadState.Error }
         ?: mangaList.loadState.append.takeIf { it is LoadState.Error }
 
@@ -117,6 +124,9 @@ fun BrowseSourceContent(
         return
     }
 
+    // Track items that have been submitted for translation to prevent duplicates
+    // Not needed anymore as we use onMangaVisible and check in Model
+
     when (displayMode) {
         LibraryDisplayMode.ComfortableGrid -> {
             BrowseSourceComfortableGrid(
@@ -125,6 +135,12 @@ fun BrowseSourceContent(
                 contentPadding = contentPadding,
                 onMangaClick = onMangaClick,
                 onMangaLongClick = onMangaLongClick,
+                selectionMode = selectionMode,
+                selection = selection,
+                translateTitles = translateTitles,
+                translatedTitles = translatedTitles,
+                onMangaVisible = onTranslateManga,
+                titleMaxLines = titleMaxLines,
             )
         }
         LibraryDisplayMode.List -> {
@@ -133,6 +149,12 @@ fun BrowseSourceContent(
                 contentPadding = contentPadding,
                 onMangaClick = onMangaClick,
                 onMangaLongClick = onMangaLongClick,
+                selectionMode = selectionMode,
+                selection = selection,
+                translateTitles = translateTitles,
+                translatedTitles = translatedTitles,
+                onMangaVisible = onTranslateManga,
+                titleMaxLines = titleMaxLines,
             )
         }
         LibraryDisplayMode.CompactGrid, LibraryDisplayMode.CoverOnlyGrid -> {
@@ -142,6 +164,12 @@ fun BrowseSourceContent(
                 contentPadding = contentPadding,
                 onMangaClick = onMangaClick,
                 onMangaLongClick = onMangaLongClick,
+                selectionMode = selectionMode,
+                selection = selection,
+                translateTitles = translateTitles,
+                translatedTitles = translatedTitles,
+                onMangaVisible = onTranslateManga,
+                titleMaxLines = titleMaxLines,
             )
         }
     }

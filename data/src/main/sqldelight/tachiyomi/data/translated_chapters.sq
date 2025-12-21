@@ -1,0 +1,141 @@
+import kotlin.Boolean;
+
+CREATE TABLE translated_chapters(
+    _id INTEGER NOT NULL PRIMARY KEY,
+    chapter_id INTEGER NOT NULL,
+    manga_id INTEGER NOT NULL,
+    target_language TEXT NOT NULL,
+    engine_id TEXT NOT NULL,
+    translated_content TEXT NOT NULL,
+    date_translated INTEGER NOT NULL,
+    is_cached INTEGER AS Boolean NOT NULL DEFAULT 1,
+    FOREIGN KEY(chapter_id) REFERENCES chapters (_id) ON DELETE CASCADE,
+    FOREIGN KEY(manga_id) REFERENCES mangas (_id) ON DELETE CASCADE
+);
+
+CREATE INDEX translated_chapters_chapter_id_index ON translated_chapters(chapter_id);
+CREATE INDEX translated_chapters_manga_id_index ON translated_chapters(manga_id);
+CREATE INDEX translated_chapters_language_index ON translated_chapters(chapter_id, target_language);
+
+-- Get translated chapter by chapter ID and language
+getTranslatedChapter:
+SELECT *
+FROM translated_chapters
+WHERE chapter_id = :chapterId AND target_language = :targetLanguage
+LIMIT 1;
+
+-- Get all translations for a chapter
+getAllTranslationsForChapter:
+SELECT *
+FROM translated_chapters
+WHERE chapter_id = :chapterId;
+
+-- Get all translated languages for a manga
+getTranslatedLanguagesForManga:
+SELECT DISTINCT target_language
+FROM translated_chapters
+WHERE manga_id = :mangaId;
+
+-- Check if chapter has translation for language
+hasTranslation:
+SELECT EXISTS(
+    SELECT 1 FROM translated_chapters
+    WHERE chapter_id = :chapterId AND target_language = :targetLanguage
+) AS has_translation;
+
+-- Get chapters with translations for a manga
+getChaptersWithTranslations:
+SELECT DISTINCT chapter_id, target_language, engine_id, date_translated
+FROM translated_chapters
+WHERE manga_id = :mangaId;
+
+-- Insert or update translated chapter
+upsert:
+INSERT OR REPLACE INTO translated_chapters(
+    _id,
+    chapter_id,
+    manga_id,
+    target_language,
+    engine_id,
+    translated_content,
+    date_translated,
+    is_cached
+)
+VALUES (
+    COALESCE((SELECT _id FROM translated_chapters WHERE chapter_id = :chapterId AND target_language = :targetLanguage), NULL),
+    :chapterId,
+    :mangaId,
+    :targetLanguage,
+    :engineId,
+    :translatedContent,
+    :dateTranslated,
+    :isCached
+);
+
+-- Insert new translation
+insert:
+INSERT INTO translated_chapters(
+    chapter_id,
+    manga_id,
+    target_language,
+    engine_id,
+    translated_content,
+    date_translated,
+    is_cached
+)
+VALUES (
+    :chapterId,
+    :mangaId,
+    :targetLanguage,
+    :engineId,
+    :translatedContent,
+    :dateTranslated,
+    :isCached
+);
+
+-- Delete translation
+deleteTranslation:
+DELETE FROM translated_chapters
+WHERE chapter_id = :chapterId AND target_language = :targetLanguage;
+
+-- Delete all translations for a chapter
+deleteAllForChapter:
+DELETE FROM translated_chapters
+WHERE chapter_id = :chapterId;
+
+-- Delete all translations for a manga
+deleteAllForManga:
+DELETE FROM translated_chapters
+WHERE manga_id = :mangaId;
+
+-- Get recent translations
+getRecentTranslations:
+SELECT *
+FROM translated_chapters
+ORDER BY date_translated DESC
+LIMIT :limit;
+
+-- Get total size of cached translations
+getCacheSize:
+SELECT SUM(LENGTH(translated_content)) AS total_size
+FROM translated_chapters
+WHERE is_cached = 1;
+
+-- Get old cached translations
+getOldCachedTranslations:
+SELECT * FROM translated_chapters
+WHERE is_cached = 1 AND date_translated < :olderThan;
+
+-- Clear old cached translations
+clearOldCache:
+DELETE FROM translated_chapters
+WHERE is_cached = 1 AND date_translated < :olderThan;
+
+-- Get all translated chapters
+getAll:
+SELECT *
+FROM translated_chapters;
+
+-- Delete all translated chapters
+deleteAll:
+DELETE FROM translated_chapters;

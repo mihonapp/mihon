@@ -36,6 +36,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
@@ -240,19 +241,25 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         val failedUpdates = CopyOnWriteArrayList<Pair<Manga, String?>>()
         val hasDownloads = AtomicBoolean(false)
         val fetchWindow = fetchInterval.getWindow(ZonedDateTime.now())
+        val updateThrottlingMs = libraryPreferences.autoUpdateThrottle().get().toLong()
 
         coroutineScope {
             mangaToUpdate.groupBy { it.manga.source }.values
                 .map { mangaInSource ->
                     async {
                         semaphore.withPermit {
-                            mangaInSource.forEach { libraryManga ->
+                            mangaInSource.forEachIndexed { index, libraryManga ->
                                 val manga = libraryManga.manga
                                 ensureActive()
 
+                                // Apply per-source throttling: delay only between updates from SAME source
+                                if (index > 0 && updateThrottlingMs > 0) {
+                                    delay(updateThrottlingMs)
+                                }
+
                                 // Don't continue to update if manga is not in library
                                 if (getManga.await(manga.id)?.favorite != true) {
-                                    return@forEach
+                                    return@forEachIndexed
                                 }
 
                                 withUpdateNotification(

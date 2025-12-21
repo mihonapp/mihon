@@ -42,6 +42,7 @@ fun LibraryToolbar(
     onSearchQueryChange: (String?) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior?,
     onClickMassImport: (() -> Unit)? = null,
+    onClickImportEpub: (() -> Unit)? = null,
 ) = when {
     selectedCount > 0 -> LibrarySelectionToolbar(
         selectedCount = selectedCount,
@@ -60,6 +61,7 @@ fun LibraryToolbar(
         onClickOpenRandomManga = onClickOpenRandomManga,
         scrollBehavior = scrollBehavior,
         onClickMassImport = onClickMassImport,
+        onClickImportEpub = onClickImportEpub,
     )
 }
 
@@ -75,6 +77,7 @@ private fun LibraryRegularToolbar(
     onClickOpenRandomManga: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior?,
     onClickMassImport: (() -> Unit)? = null,
+    onClickImportEpub: (() -> Unit)? = null,
 ) {
     val pillAlpha = if (isSystemInDarkTheme()) 0.12f else 0.08f
     SearchToolbar(
@@ -125,6 +128,15 @@ private fun LibraryRegularToolbar(
                     AppBar.OverflowAction(
                         title = stringResource(MR.strings.action_mass_import),
                         onClick = onClickMassImport,
+                    ),
+                )
+            }
+
+            if (onClickImportEpub != null) {
+                actions.add(
+                    AppBar.OverflowAction(
+                        title = "Import EPUB",
+                        onClick = onClickImportEpub,
                     ),
                 )
             }

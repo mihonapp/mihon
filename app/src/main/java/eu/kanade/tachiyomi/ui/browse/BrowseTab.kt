@@ -21,6 +21,7 @@ import eu.kanade.tachiyomi.ui.browse.extension.NovelExtensionsScreenModel
 import eu.kanade.tachiyomi.ui.browse.extension.extensionsTab
 import eu.kanade.tachiyomi.ui.browse.extension.novelExtensionsTab
 import eu.kanade.tachiyomi.ui.browse.migration.sources.migrateSourceTab
+import eu.kanade.tachiyomi.ui.browse.migration.sources.novelMigrateSourceTab
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
 import eu.kanade.tachiyomi.ui.browse.source.novelSourcesTab
 import eu.kanade.tachiyomi.ui.browse.source.sourcesTab
@@ -69,10 +70,11 @@ data object BrowseTab : Tab {
         val novelExtensionsState by novelExtensionsScreenModel.state.collectAsState()
 
         val tabs = persistentListOf(
-            sourcesTab(),
             novelSourcesTab(),
-            extensionsTab(extensionsScreenModel),
+            sourcesTab(),
             novelExtensionsTab(novelExtensionsScreenModel),
+            extensionsTab(extensionsScreenModel),
+            novelMigrateSourceTab(),
             migrateSourceTab(),
         )
 
@@ -83,20 +85,20 @@ data object BrowseTab : Tab {
             tabs = tabs,
             state = state,
             searchQuery = when (state.currentPage) {
-                2 -> extensionsState.searchQuery
-                3 -> novelExtensionsState.searchQuery
+                2 -> novelExtensionsState.searchQuery
+                3 -> extensionsState.searchQuery
                 else -> null
             },
             onChangeSearchQuery = { query ->
                 when (state.currentPage) {
-                    2 -> extensionsScreenModel.search(query)
-                    3 -> novelExtensionsScreenModel.search(query)
+                    2 -> novelExtensionsScreenModel.search(query)
+                    3 -> extensionsScreenModel.search(query)
                 }
             },
         )
         LaunchedEffect(Unit) {
             switchToExtensionTabChannel.receiveAsFlow()
-                .collectLatest { state.scrollToPage(2) }
+                .collectLatest { state.scrollToPage(3) }
         }
 
         LaunchedEffect(Unit) {

@@ -11,6 +11,7 @@ import eu.kanade.core.preference.asState
 import eu.kanade.core.util.fastFilterNot
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.chapter.interactor.SetReadStatus
+import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.toSManga
 import eu.kanade.presentation.components.SEARCH_DEBOUNCE_MILLIS
@@ -20,6 +21,7 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.track.TrackerManager
+import eu.kanade.tachiyomi.data.translation.TranslationService
 import eu.kanade.tachiyomi.source.isNovelSource
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -27,6 +29,8 @@ import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -40,16 +44,20 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
+import logcat.LogPriority
 import mihon.core.common.utils.mutate
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.core.common.util.lang.compareToWithCollator
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.launchNonCancellable
+import tachiyomi.core.common.util.lang.withIOContext
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.SetMangaCategories
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
+import tachiyomi.domain.chapter.interactor.RemoveChapters
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.history.interactor.GetNextChapters
 import tachiyomi.domain.library.model.LibraryDisplayMode
@@ -75,9 +83,11 @@ class LibraryScreenModel(
     private val getTracksPerManga: GetTracksPerManga = Injekt.get(),
     private val getNextChapters: GetNextChapters = Injekt.get(),
     private val getChaptersByMangaId: GetChaptersByMangaId = Injekt.get(),
+    private val removeChapters: RemoveChapters = Injekt.get(),
     private val setReadStatus: SetReadStatus = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
+    private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get(),
     private val preferences: BasePreferences = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
     private val coverCache: CoverCache = Injekt.get(),
@@ -99,9 +109,16 @@ class LibraryScreenModel(
             state.copy(activeCategoryIndex = libraryPreferences.lastUsedCategory().get())
         }
         screenModelScope.launchIO {
+            // Subscribe to categories filtered by content type based on library type
+            val categoriesFlow = when (type) {
+                LibraryType.All -> getCategories.subscribe()
+                LibraryType.Manga -> getCategories.subscribeByContentType(Category.CONTENT_TYPE_MANGA)
+                LibraryType.Novel -> getCategories.subscribeByContentType(Category.CONTENT_TYPE_NOVEL)
+            }
+
             combine(
                 state.map { it.searchQuery }.distinctUntilChanged().debounce(SEARCH_DEBOUNCE_MILLIS),
-                getCategories.subscribe(),
+                categoriesFlow,
                 getFavoritesFlow(),
                 combine(getTracksPerManga.subscribe(), getTrackingFiltersFlow(), ::Pair),
                 getLibraryItemPreferencesFlow(),
@@ -529,6 +546,27 @@ class LibraryScreenModel(
     }
 
     /**
+     * Queues all downloaded chapters from the selected novels for translation.
+     * Only processes chapters that haven't been translated yet.
+     */
+    fun translateSelectedNovels() {
+        val translationService: TranslationService = Injekt.get()
+        val mangas = state.value.selectedManga.filter { manga ->
+            // Only process novels (not manga)
+            val source = sourceManager.get(manga.source)
+            source?.isNovelSource() == true
+        }
+        clearSelection()
+        screenModelScope.launchNonCancellable {
+            mangas.forEach { manga ->
+                val chapters = getChaptersByMangaId.await(manga.id)
+                // Queue all chapters for translation (TranslationService will skip already translated ones)
+                translationService.enqueueAll(manga, chapters)
+            }
+        }
+    }
+
+    /**
      * Show confirmation dialog for marking mangas read/unread.
      */
     fun showMarkReadConfirmation(read: Boolean) {
@@ -593,14 +631,12 @@ class LibraryScreenModel(
      */
     fun setMangaCategories(mangaList: List<Manga>, addCategories: List<Long>, removeCategories: List<Long>) {
         screenModelScope.launchNonCancellable {
-            mangaList.forEach { manga ->
-                val categoryIds = getCategories.await(manga.id)
-                    .map { it.id }
-                    .subtract(removeCategories.toSet())
-                    .plus(addCategories)
-                    .toList()
-
-                setMangaCategories.await(manga.id, categoryIds)
+            val mangaIds = mangaList.map { it.id }
+            if (addCategories.isNotEmpty()) {
+                setMangaCategories.add(mangaIds, addCategories)
+            }
+            if (removeCategories.isNotEmpty()) {
+                setMangaCategories.remove(mangaIds, removeCategories)
             }
         }
     }
@@ -710,6 +746,41 @@ class LibraryScreenModel(
         }
     }
 
+    /**
+     * Update selected novels by fetching chapters from source
+     */
+    fun updateSelectedNovels() {
+        val selectedManga = state.value.selectedManga
+        if (selectedManga.isEmpty()) return
+
+        screenModelScope.launchIO {
+            val results = selectedManga.map { manga ->
+                async {
+                    try {
+                        val source = sourceManager.get(manga.source) as? HttpSource
+                        if (source == null) {
+                            logcat(LogPriority.WARN) { "No source for ${manga.title}" }
+                            return@async false
+                        }
+
+                        // Fetch chapters from source
+                        val chapters = withIOContext { source.getChapterList(manga.toSManga()) }
+                        syncChaptersWithSource.await(chapters, manga, source)
+                        logcat(LogPriority.DEBUG) { "Updated ${manga.title}: ${chapters.size} chapters" }
+                        true
+                    } catch (e: Exception) {
+                        logcat(LogPriority.ERROR, e) { "Failed to update ${manga.title}" }
+                        false
+                    }
+                }
+            }
+            val outcomes = results.awaitAll()
+            val successCount = outcomes.count { it }
+            logcat(LogPriority.INFO) { "Batch update complete: $successCount/${selectedManga.size} succeeded" }
+        }
+        clearSelection()
+    }
+
     fun search(query: String?) {
         mutableState.update { it.copy(searchQuery = query) }
     }
@@ -752,6 +823,20 @@ class LibraryScreenModel(
         mutableState.update { it.copy(dialog = Dialog.DeleteManga(state.value.selectedManga)) }
     }
 
+    fun openRemoveChaptersDialog() {
+        mutableState.update { it.copy(dialog = Dialog.RemoveChapters(state.value.selectedManga)) }
+    }
+
+    fun removeChaptersFromSelectedManga(mangaList: List<Manga>) {
+        screenModelScope.launchNonCancellable {
+            mangaList.forEach { manga ->
+                val chapters = getChaptersByMangaId.await(manga.id)
+                removeChapters.await(chapters)
+            }
+        }
+        clearSelection()
+    }
+
     fun closeDialog() {
         mutableState.update { it.copy(dialog = null) }
     }
@@ -760,14 +845,20 @@ class LibraryScreenModel(
         mutableState.update { it.copy(dialog = Dialog.MassImport) }
     }
 
+    fun openImportEpubDialog() {
+        mutableState.update { it.copy(dialog = Dialog.ImportEpub) }
+    }
+
     sealed interface Dialog {
         data object SettingsSheet : Dialog
         data object MassImport : Dialog
+        data object ImportEpub : Dialog
         data class ChangeCategory(
             val manga: List<Manga>,
             val initialSelection: ImmutableList<CheckboxState<Category>>,
         ) : Dialog
         data class DeleteManga(val manga: List<Manga>) : Dialog
+        data class RemoveChapters(val manga: List<Manga>) : Dialog
         data class MarkReadConfirmation(val read: Boolean) : Dialog
     }
 

@@ -122,4 +122,16 @@ class UpdateManga(
             MangaUpdate(id = mangaId, alternativeTitles = alternativeTitles),
         )
     }
+
+    suspend fun awaitUpdateNotes(mangaId: Long, notes: String): Boolean {
+        return mangaRepository.update(
+            MangaUpdate(id = mangaId, notes = notes),
+        )
+    }
+
+    suspend fun awaitUpdateGenre(mangaId: Long, genre: List<String>): Boolean {
+        return mangaRepository.update(
+            MangaUpdate(id = mangaId, genre = genre),
+        )
+    }
 }

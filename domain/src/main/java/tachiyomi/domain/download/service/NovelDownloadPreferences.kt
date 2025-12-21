@@ -67,6 +67,14 @@ class NovelDownloadPreferences(
     )
 
     /**
+     * Number of concurrent mass imports
+     */
+    fun parallelMassImport() = preferenceStore.getInt(
+        "novel_parallel_mass_import",
+        1, // Default 1
+    )
+
+    /**
      * Stored source-specific overrides as JSON string
      * Format: Map<sourceId: Long, SourceOverride>
      */
@@ -81,6 +89,30 @@ class NovelDownloadPreferences(
     fun parallelNovelDownloads() = preferenceStore.getInt(
         "novel_parallel_downloads",
         1, // Default to 1 for rate limiting
+    )
+
+    /**
+     * Download images from chapter HTML and embed them as base64
+     */
+    fun downloadChapterImages() = preferenceStore.getBoolean(
+        "novel_download_chapter_images",
+        false,
+    )
+
+    /**
+     * Maximum image size in KB before compression (0 = no limit)
+     */
+    fun maxImageSizeKb() = preferenceStore.getInt(
+        "novel_max_image_size_kb",
+        500, // Default 500KB
+    )
+
+    /**
+     * Image compression quality (1-100)
+     */
+    fun imageCompressionQuality() = preferenceStore.getInt(
+        "novel_image_compression_quality",
+        80,
     )
 
     companion object {

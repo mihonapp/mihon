@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.Pause
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -49,6 +51,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
@@ -67,7 +70,9 @@ import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.components.NestedMenuItem
 import eu.kanade.presentation.util.Screen
+import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.databinding.DownloadListBinding
+import eu.kanade.tachiyomi.util.system.copyToClipboard
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.core.common.util.lang.launchUI
 import tachiyomi.i18n.MR
@@ -76,6 +81,12 @@ import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import kotlin.math.roundToInt
+
+private enum class DownloadQueueFilter {
+    All,
+    Active,
+    Errors,
+}
 
 object DownloadQueueScreen : Screen() {
 
@@ -89,6 +100,51 @@ object DownloadQueueScreen : Screen() {
         val titleMaxLines by screenModel.titleMaxLines.collectAsState()
 
         var selectedTab by remember { mutableStateOf(0) }
+        var filterMode by remember { mutableStateOf(DownloadQueueFilter.All) }
+        val canReorder = filterMode == DownloadQueueFilter.All
+
+        val filteredMangaList by remember(mangaList, filterMode) {
+            derivedStateOf {
+                if (filterMode == DownloadQueueFilter.All) return@derivedStateOf mangaList
+
+                mangaList.mapNotNull { header ->
+                    val filteredDownloads = header.subItems
+                        .map { it.download }
+                        .filter {
+                            when (filterMode) {
+                                DownloadQueueFilter.Active ->
+                                    it.status == Download.State.DOWNLOADING ||
+                                        it.status == Download.State.QUEUE
+                                DownloadQueueFilter.Errors -> it.status == Download.State.ERROR
+                                DownloadQueueFilter.All -> true
+                            }
+                        }
+
+                    if (filteredDownloads.isEmpty()) return@mapNotNull null
+
+                    DownloadHeaderItem(
+                        id = header.id,
+                        name = header.name,
+                        size = filteredDownloads.size,
+                    ).apply {
+                        addSubItems(0, filteredDownloads.map { DownloadItem(it, this) })
+                    }
+                }
+            }
+        }
+
+        val filteredNovelList by remember(novelList, filterMode) {
+            derivedStateOf {
+                when (filterMode) {
+                    DownloadQueueFilter.All -> novelList
+                    DownloadQueueFilter.Active -> novelList.filter {
+                        it.isActive ||
+                            it.subItems.any { d -> d.status == Download.State.QUEUE }
+                    }
+                    DownloadQueueFilter.Errors -> novelList.filter { it.hasError }
+                }
+            }
+        }
 
         val mangaCount by remember {
             derivedStateOf { mangaList.sumOf { it.subItems.size } }
@@ -112,7 +168,11 @@ object DownloadQueueScreen : Screen() {
                     return scrollBehavior.nestedScrollConnection.onPreScroll(available, source)
                 }
 
-                override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
+                override fun onPostScroll(
+                    consumed: Offset,
+                    available: Offset,
+                    source: NestedScrollSource,
+                ): Offset {
                     return scrollBehavior.nestedScrollConnection.onPostScroll(consumed, available, source)
                 }
 
@@ -141,73 +201,212 @@ object DownloadQueueScreen : Screen() {
                     },
                     navigateUp = navigator::pop,
                     actions = {
-                        if ((selectedTab == 0 && mangaList.isNotEmpty()) ||
-                            (selectedTab == 1 && novelList.isNotEmpty())
+                        if ((selectedTab == 0 && filteredMangaList.isNotEmpty()) ||
+                            (selectedTab == 1 && filteredNovelList.isNotEmpty())
                         ) {
                             var sortExpanded by remember { mutableStateOf(false) }
+                            var filterExpanded by remember { mutableStateOf(false) }
                             val onDismissRequest = { sortExpanded = false }
+
                             DropdownMenu(
-                                expanded = sortExpanded,
+                                expanded = filterExpanded,
+                                onDismissRequest = { filterExpanded = false },
+                            ) {
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(MR.strings.all)) },
+                                    onClick = {
+                                        filterMode = DownloadQueueFilter.All
+                                        filterExpanded = false
+                                    },
+                                )
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(MR.strings.ext_downloading)) },
+                                    onClick = {
+                                        filterMode = DownloadQueueFilter.Active
+                                        filterExpanded = false
+                                    },
+                                )
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(MR.strings.channel_errors)) },
+                                    onClick = {
+                                        filterMode = DownloadQueueFilter.Errors
+                                        filterExpanded = false
+                                    },
+                                )
+                            }
+
+                            DropdownMenu(
+                                expanded = sortExpanded && canReorder,
                                 onDismissRequest = onDismissRequest,
                             ) {
-                                NestedMenuItem(
-                                    text = { Text(text = stringResource(MR.strings.action_order_by_upload_date)) },
-                                    children = { closeMenu ->
-                                        DropdownMenuItem(
-                                            text = { Text(text = stringResource(MR.strings.action_newest)) },
-                                            onClick = {
-                                                screenModel.reorderQueue(
-                                                    { it.download.chapter.dateUpload },
-                                                    true,
+                                if (selectedTab == 1) {
+                                    // Novel queue sorts (series-level)
+                                    DropdownMenuItem(
+                                        text = {
+                                            Text(text = stringResource(MR.strings.action_order_by_progress))
+                                        },
+                                        onClick = {
+                                            val order = novelList
+                                                .sortedByDescending { it.overallProgress }
+                                                .map { it.mangaId }
+                                            screenModel.reorderNovelQueueByGroupOrder(order)
+                                            onDismissRequest()
+                                        },
+                                    )
+                                    DropdownMenuItem(
+                                        text = {
+                                            Text(text = stringResource(MR.strings.action_order_by_total_chapters))
+                                        },
+                                        onClick = {
+                                            val order = novelList
+                                                .sortedByDescending { it.totalChapters }
+                                                .map { it.mangaId }
+                                            screenModel.reorderNovelQueueByGroupOrder(order)
+                                            onDismissRequest()
+                                        },
+                                    )
+                                    DropdownMenuItem(
+                                        text = {
+                                            Text(text = stringResource(MR.strings.action_order_by_extension))
+                                        },
+                                        onClick = {
+                                            val order = novelList
+                                                .sortedWith(
+                                                    compareBy<NovelDownloadItem>(
+                                                        { it.sourceName.lowercase() },
+                                                        { it.mangaTitle.lowercase() },
+                                                    ),
                                                 )
-                                                closeMenu()
-                                            },
-                                        )
-                                        DropdownMenuItem(
-                                            text = { Text(text = stringResource(MR.strings.action_oldest)) },
-                                            onClick = {
-                                                screenModel.reorderQueue(
-                                                    { it.download.chapter.dateUpload },
-                                                    false,
-                                                )
-                                                closeMenu()
-                                            },
-                                        )
-                                    },
-                                )
-                                NestedMenuItem(
-                                    text = { Text(text = stringResource(MR.strings.action_order_by_chapter_number)) },
-                                    children = { closeMenu ->
-                                        DropdownMenuItem(
-                                            text = { Text(text = stringResource(MR.strings.action_asc)) },
-                                            onClick = {
-                                                screenModel.reorderQueue(
-                                                    { it.download.chapter.chapterNumber },
-                                                    false,
-                                                )
-                                                closeMenu()
-                                            },
-                                        )
-                                        DropdownMenuItem(
-                                            text = { Text(text = stringResource(MR.strings.action_desc)) },
-                                            onClick = {
-                                                screenModel.reorderQueue(
-                                                    { it.download.chapter.chapterNumber },
-                                                    true,
-                                                )
-                                                closeMenu()
-                                            },
-                                        )
-                                    },
-                                )
+                                                .map { it.mangaId }
+                                            screenModel.reorderNovelQueueByGroupOrder(order)
+                                            onDismissRequest()
+                                        },
+                                    )
+                                } else {
+                                    NestedMenuItem(
+                                        text = {
+                                            Text(text = stringResource(MR.strings.action_order_by_upload_date))
+                                        },
+                                        children = { closeMenu ->
+                                            DropdownMenuItem(
+                                                text = { Text(text = stringResource(MR.strings.action_newest)) },
+                                                onClick = {
+                                                    screenModel.reorderQueue(
+                                                        { it.download.chapterDateUpload },
+                                                        true,
+                                                    )
+                                                    closeMenu()
+                                                },
+                                            )
+                                            DropdownMenuItem(
+                                                text = { Text(text = stringResource(MR.strings.action_oldest)) },
+                                                onClick = {
+                                                    screenModel.reorderQueue(
+                                                        { it.download.chapterDateUpload },
+                                                        false,
+                                                    )
+                                                    closeMenu()
+                                                },
+                                            )
+                                        },
+                                    )
+                                    NestedMenuItem(
+                                        text = {
+                                            Text(text = stringResource(MR.strings.action_order_by_chapter_number))
+                                        },
+                                        children = { closeMenu ->
+                                            DropdownMenuItem(
+                                                text = { Text(text = stringResource(MR.strings.action_asc)) },
+                                                onClick = {
+                                                    screenModel.reorderQueue(
+                                                        { it.download.chapterNumber },
+                                                        false,
+                                                    )
+                                                    closeMenu()
+                                                },
+                                            )
+                                            DropdownMenuItem(
+                                                text = { Text(text = stringResource(MR.strings.action_desc)) },
+                                                onClick = {
+                                                    screenModel.reorderQueue(
+                                                        { it.download.chapterNumber },
+                                                        true,
+                                                    )
+                                                    closeMenu()
+                                                },
+                                            )
+                                        },
+                                    )
+
+                                    NestedMenuItem(
+                                        text = {
+                                            Text(text = stringResource(MR.strings.action_order_by_progress))
+                                        },
+                                        children = { closeMenu ->
+                                            DropdownMenuItem(
+                                                text = { Text(text = stringResource(MR.strings.action_desc)) },
+                                                onClick = {
+                                                    screenModel.reorderQueue(
+                                                        { it.download.progress },
+                                                        true,
+                                                    )
+                                                    closeMenu()
+                                                },
+                                            )
+                                            DropdownMenuItem(
+                                                text = { Text(text = stringResource(MR.strings.action_asc)) },
+                                                onClick = {
+                                                    screenModel.reorderQueue(
+                                                        { it.download.progress },
+                                                        false,
+                                                    )
+                                                    closeMenu()
+                                                },
+                                            )
+                                        },
+                                    )
+
+                                    NestedMenuItem(
+                                        text = {
+                                            Text(text = stringResource(MR.strings.action_order_by_extension))
+                                        },
+                                        children = { closeMenu ->
+                                            DropdownMenuItem(
+                                                text = { Text(text = stringResource(MR.strings.action_asc)) },
+                                                onClick = {
+                                                    screenModel.reorderQueue(
+                                                        { it.download.source.name.lowercase() },
+                                                        false,
+                                                    )
+                                                    closeMenu()
+                                                },
+                                            )
+                                            DropdownMenuItem(
+                                                text = { Text(text = stringResource(MR.strings.action_desc)) },
+                                                onClick = {
+                                                    screenModel.reorderQueue(
+                                                        { it.download.source.name.lowercase() },
+                                                        true,
+                                                    )
+                                                    closeMenu()
+                                                },
+                                            )
+                                        },
+                                    )
+                                }
                             }
 
                             AppBarActions(
                                 persistentListOf(
                                     AppBar.Action(
+                                        title = stringResource(MR.strings.action_filter),
+                                        icon = Icons.Outlined.FilterList,
+                                        onClick = { filterExpanded = true },
+                                    ),
+                                    AppBar.Action(
                                         title = stringResource(MR.strings.action_sort),
                                         icon = Icons.AutoMirrored.Outlined.Sort,
-                                        onClick = { sortExpanded = true },
+                                        onClick = { if (canReorder) sortExpanded = true },
                                     ),
                                     AppBar.OverflowAction(
                                         title = stringResource(MR.strings.action_cancel_all),
@@ -223,7 +422,8 @@ object DownloadQueueScreen : Screen() {
             floatingActionButton = {
                 AnimatedVisibility(
                     visible =
-                    (selectedTab == 0 && mangaList.isNotEmpty()) || (selectedTab == 1 && novelList.isNotEmpty()),
+                    (selectedTab == 0 && mangaList.isNotEmpty()) ||
+                        (selectedTab == 1 && novelList.isNotEmpty()),
                     enter = fadeIn(),
                     exit = fadeOut(),
                 ) {
@@ -268,17 +468,21 @@ object DownloadQueueScreen : Screen() {
                     }
                 }
 
-                if ((selectedTab == 0 && mangaList.isEmpty()) || (selectedTab == 1 && novelList.isEmpty())) {
+                if ((selectedTab == 0 && filteredMangaList.isEmpty()) ||
+                    (selectedTab == 1 && filteredNovelList.isEmpty())
+                ) {
                     EmptyScreen(
                         stringRes = MR.strings.information_no_downloads,
                     )
                 } else {
                     val density = LocalDensity.current
                     val layoutDirection = LocalLayoutDirection.current
-                    val left =
-                        with(density) { contentPadding.calculateLeftPadding(layoutDirection).toPx().roundToInt() }
-                    val right =
-                        with(density) { contentPadding.calculateRightPadding(layoutDirection).toPx().roundToInt() }
+                    val left = with(density) {
+                        contentPadding.calculateLeftPadding(layoutDirection).toPx().roundToInt()
+                    }
+                    val right = with(density) {
+                        contentPadding.calculateRightPadding(layoutDirection).toPx().roundToInt()
+                    }
                     val bottom = with(density) { contentPadding.calculateBottomPadding().toPx().roundToInt() }
 
                     Box(modifier = Modifier.nestedScroll(nestedScrollConnection)) {
@@ -290,10 +494,14 @@ object DownloadQueueScreen : Screen() {
                                         DownloadListBinding.inflate(LayoutInflater.from(context))
                                     screenModel.adapter = DownloadAdapter(screenModel.listener)
                                     screenModel.controllerBinding.root.adapter = screenModel.adapter
-                                    screenModel.adapter?.isHandleDragEnabled = true
-                                    screenModel.controllerBinding.root.layoutManager = LinearLayoutManager(context)
+                                    screenModel.adapter?.isHandleDragEnabled = canReorder
+                                    screenModel.controllerBinding.root.layoutManager =
+                                        LinearLayoutManager(context)
 
-                                    ViewCompat.setNestedScrollingEnabled(screenModel.controllerBinding.root, true)
+                                    ViewCompat.setNestedScrollingEnabled(
+                                        screenModel.controllerBinding.root,
+                                        true,
+                                    )
 
                                     scope.launchUI {
                                         screenModel.getDownloadStatusFlow()
@@ -315,7 +523,8 @@ object DownloadQueueScreen : Screen() {
                                             bottom = bottom,
                                         )
 
-                                    screenModel.adapter?.updateDataSet(mangaList)
+                                    screenModel.adapter?.isHandleDragEnabled = canReorder
+                                    screenModel.adapter?.updateDataSet(filteredMangaList)
                                 },
                             )
                         } else {
@@ -330,8 +539,8 @@ object DownloadQueueScreen : Screen() {
                                 modifier = Modifier.fillMaxSize(),
                             ) {
                                 items(
-                                    items = novelList,
-                                    key = { it.manga.id },
+                                    items = filteredNovelList,
+                                    key = { it.mangaId },
                                 ) { item ->
                                     NovelDownloadCard(
                                         item = item,
@@ -374,6 +583,8 @@ private fun NovelDownloadCard(
     onMoveToTop: () -> Unit,
     onMoveToBottom: () -> Unit,
 ) {
+    val context = LocalContext.current
+    val errorLabel = stringResource(MR.strings.download_error_details)
     var showMenu by remember { mutableStateOf(false) }
 
     Card(
@@ -403,7 +614,7 @@ private fun NovelDownloadCard(
                         color = MaterialTheme.colorScheme.primary,
                     )
                     Text(
-                        text = item.manga.title,
+                        text = item.mangaTitle,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         maxLines = titleMaxLines,
@@ -510,7 +721,7 @@ private fun NovelDownloadCard(
                 val currentDownload = item.currentDownload
                 if (currentDownload != null) {
                     Text(
-                        text = "Chapter: ${currentDownload.chapter.name}",
+                        text = "Chapter: ${currentDownload.chapterName}",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
@@ -523,6 +734,28 @@ private fun NovelDownloadCard(
                     text = "${(item.overallProgress * 100).toInt()}%",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+
+            val errorDetails: String? = remember(item.subItems) {
+                item.subItems.firstOrNull { it.status == Download.State.ERROR }
+                    ?.error
+                    ?.takeIf { it.isNotBlank() }
+            }
+            if (errorDetails != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = errorDetails,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.clickable {
+                        context.copyToClipboard(
+                            label = errorLabel,
+                            content = errorDetails,
+                        )
+                    },
                 )
             }
         }
