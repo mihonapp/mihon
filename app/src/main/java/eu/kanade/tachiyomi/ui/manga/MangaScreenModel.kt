@@ -604,12 +604,13 @@ class MangaScreenModel(
         translatedChapterIds: Set<Long> = emptySet(),
     ): List<ChapterList.Item> {
         return map { chapter ->
-            val activeDownload = if (isLocal) {
+            val isMangaLocal = manga.isLocal()
+            val activeDownload = if (isMangaLocal) {
                 null
             } else {
                 downloadManager.getQueuedDownloadOrNull(chapter.id)
             }
-            val downloaded = if (isLocal) {
+            val downloaded = if (isMangaLocal) {
                 true
             } else {
                 downloadManager.isChapterDownloaded(
