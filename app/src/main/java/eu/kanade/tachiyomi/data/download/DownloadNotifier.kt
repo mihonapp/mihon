@@ -64,6 +64,10 @@ internal class DownloadNotifier(private val context: Context) {
         context.cancelNotification(Notifications.ID_DOWNLOAD_CHAPTER_PROGRESS)
     }
 
+    fun dismissPaused() {
+        context.cancelNotification(Notifications.ID_DOWNLOAD_CHAPTER_PAUSED)
+    }
+
     /**
      * Called when download progress changes.
      *
@@ -72,6 +76,7 @@ internal class DownloadNotifier(private val context: Context) {
     fun onProgressChange(download: Download) {
         with(progressNotificationBuilder) {
             if (!isDownloading) {
+                dismissPaused()
                 setSmallIcon(android.R.drawable.stat_sys_download)
                 clearActions()
                 // Open download manager when clicked
@@ -121,6 +126,7 @@ internal class DownloadNotifier(private val context: Context) {
      * Show notification when download is paused.
      */
     fun onPaused() {
+        dismissProgress()
         with(progressNotificationBuilder) {
             setContentTitle(context.stringResource(MR.strings.chapter_paused))
             setContentText(context.stringResource(MR.strings.download_notifier_download_paused))
@@ -143,7 +149,7 @@ internal class DownloadNotifier(private val context: Context) {
                 NotificationReceiver.clearDownloadsPendingBroadcast(context),
             )
 
-            show(Notifications.ID_DOWNLOAD_CHAPTER_PROGRESS)
+            show(Notifications.ID_DOWNLOAD_CHAPTER_PAUSED)
         }
 
         // Reset initial values
@@ -155,6 +161,7 @@ internal class DownloadNotifier(private val context: Context) {
      */
     fun onComplete() {
         dismissProgress()
+        dismissPaused()
 
         // Reset states to default
         isDownloading = false
