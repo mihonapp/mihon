@@ -226,8 +226,7 @@ class PagerPageHolder(
         val side =
             if (viewer.areWidePagesLTR == (page is InsertPage)) {
                 ImageUtil.Side.RIGHT
-            }
-            else {
+            } else {
                 ImageUtil.Side.LEFT
             }
 

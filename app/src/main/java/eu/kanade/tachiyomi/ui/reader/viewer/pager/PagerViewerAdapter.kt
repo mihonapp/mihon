@@ -228,8 +228,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
             if (index == currentIndex) {
                 if (viewer is R2LPagerViewer) {
                     viewer.pager.setCurrentItem(index)
-                }
-                else {
+                } else {
                     viewer.pager.setCurrentItem(index - 1)
                 }
             }
@@ -251,16 +250,14 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
                     }
                     if (previousIndex != -1) {
                         items.add(previousIndex + 1, page)
-                    }
-                    else {
+                    } else {
                         items.add(0, page)
                     }
-                }
-                else {
+                } else {
                     val previousIndex = items.indexOfFirst {
-                        it is ReaderPage
-                            && it.chapter.chapter.id == page.chapter.chapter.id
-                            && it.index == page.index - 1
+                        it is ReaderPage &&
+                            it.chapter.chapter.id == page.chapter.chapter.id &&
+                            it.index == page.index - 1
                     }
                     if (previousIndex != -1) {
                         items.add(previousIndex + 1, page)
@@ -282,11 +279,10 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         data object Skip : PreprocessedPageInfo
     }
 
-    private fun<T : MutableList<Any>, R> T.withOrder(reversed: Boolean, block: (T) -> R): R {
+    private fun <T : MutableList<Any>, R> T.withOrder(reversed: Boolean, block: (T) -> R): R {
         return if (!reversed) {
             block(this)
-        }
-        else {
+        } else {
             reverse()
             try {
                 block(this)

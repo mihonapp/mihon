@@ -346,8 +346,7 @@ object ImageUtil {
         val image =
             try {
                 imageSource.toBitmap()
-            }
-            catch (e: Throwable) {
+            } catch (e: Throwable) {
                 return whiteColor.toDrawable()
             }
 
@@ -596,8 +595,7 @@ object ImageUtil {
         return ImageDecoder.newInstance(Buffer().readFrom(streamFn()).inputStream())?.run {
             try {
                 decode()
-            }
-            finally {
+            } finally {
                 recycle()
             }
         }

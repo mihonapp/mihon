@@ -233,11 +233,13 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     }
 
     private fun createInterceptionManager(): PageLoaderInterceptorManager {
-        return PageLoaderInterceptorManager(buildList {
-            if (config.dualPageFusion && !config.dualPageSplit) {
-                add { SpreadFusionInterceptor(it, areWidePagesLTR) }
-            }
-        })
+        return PageLoaderInterceptorManager(
+            buildList {
+                if (config.dualPageFusion && !config.dualPageSplit) {
+                    add { SpreadFusionInterceptor(it, areWidePagesLTR) }
+                }
+            },
+        )
     }
 
     fun getInterceptedPage(page: ReaderPage): ReaderPage {

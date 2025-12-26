@@ -64,8 +64,7 @@ class SpreadFusionInterceptor(pages: List<ReaderPage>, private val isLTR: Boolea
         if (isLTR) {
             leftPage = page1
             rightPage = page2
-        }
-        else {
+        } else {
             leftPage = page2
             rightPage = page1
         }
@@ -74,21 +73,23 @@ class SpreadFusionInterceptor(pages: List<ReaderPage>, private val isLTR: Boolea
         val rightBitmapFn = rightPage.bitmap ?: return false
 
         if (!SpreadDetector.isSpread(
-            getOrCreateWeaklyCachedBitmap(leftPage, leftBitmapFn),
-            getOrCreateWeaklyCachedBitmap(rightPage, rightBitmapFn),
-        )) {
+                getOrCreateWeaklyCachedBitmap(leftPage, leftBitmapFn),
+                getOrCreateWeaklyCachedBitmap(rightPage, rightBitmapFn),
+            )
+        ) {
             return false
         }
 
         page1.output.apply {
-            bitmap = { ImageUtil.mergeHorizontal(
-                getOrCreateWeaklyCachedBitmap(leftPage, leftBitmapFn),
-                getOrCreateWeaklyCachedBitmap(rightPage, rightBitmapFn),
-            ) }
+            bitmap = {
+                ImageUtil.mergeHorizontal(
+                    getOrCreateWeaklyCachedBitmap(leftPage, leftBitmapFn),
+                    getOrCreateWeaklyCachedBitmap(rightPage, rightBitmapFn),
+                )
+            }
             if (status == Page.State.Ready) {
                 refreshStatus()
-            }
-            else {
+            } else {
                 status = Page.State.Ready
             }
         }
@@ -109,8 +110,7 @@ class SpreadFusionInterceptor(pages: List<ReaderPage>, private val isLTR: Boolea
         locks.forEach { it.lock() }
         try {
             block()
-        }
-        finally {
+        } finally {
             locks.forEach { it.unlock() }
         }
     }
@@ -129,8 +129,7 @@ class SpreadFusionInterceptor(pages: List<ReaderPage>, private val isLTR: Boolea
         return weakBitmapCache[page]?.let {
             if (it.first != page.imageHashCode()) {
                 null
-            }
-            else {
+            } else {
                 it.second.get()
             }
         } ?: bitmapFn().let {

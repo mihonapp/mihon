@@ -18,6 +18,7 @@ abstract class PageLoaderInterceptor(protected val outputPages: List<ReaderPage>
             status = interceptedPage.status
         }
     }
+
     /**
      * Called when the page is first loaded, and whenever its progress changes.
      *

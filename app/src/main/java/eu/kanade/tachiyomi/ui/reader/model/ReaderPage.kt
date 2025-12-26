@@ -18,13 +18,13 @@ open class ReaderPage(
 ) : Page(index, url, imageUrl, null) {
     open lateinit var chapter: ReaderChapter
 
-    private val _refreshFlow = MutableSharedFlow<State>(
+    private val refreshFlow = MutableSharedFlow<State>(
         replay = 0,
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
 
-    override val statusFlow = merge(super.statusFlow, _refreshFlow).conflate()
+    override val statusFlow = merge(super.statusFlow, refreshFlow).conflate()
 
     /**
      * Re-emits the latest value of [statusFlow], notifying listeners that something has changed even though neither
@@ -33,16 +33,16 @@ open class ReaderPage(
      * This is most often used when the image changes while the current status is already [Ready][Page.State.Ready].
      */
     fun refreshStatus() {
-        _refreshFlow.tryEmit(status)
+        refreshFlow.tryEmit(status)
     }
 
-    private var _backingStream = stream
+    private var _stream = stream
 
     /**
      * We don't want to need to hold the bitmap in memory for the entire lifetime of the page,
      * so wrapping it in a thunk allows the bitmap to be generated on the fly when requested.
      */
-    private var _backingBitmap: (() -> Bitmap)? = null
+    private var _bitmap: (() -> Bitmap)? = null
 
     /**
      * A view of this page's image data represented as an [InputStream] thunk.
@@ -53,14 +53,16 @@ open class ReaderPage(
      * @see imageHashCode
      */
     var stream: (() -> InputStream)?
-        get() = _backingStream ?: _backingBitmap?.let { {
-            Buffer().apply {
-                it().compress(Bitmap.CompressFormat.PNG, 100, outputStream())
-            }.inputStream()
-        } }
+        get() = _stream ?: _bitmap?.let {
+            {
+                Buffer().apply {
+                    it().compress(Bitmap.CompressFormat.PNG, 100, outputStream())
+                }.inputStream()
+            }
+        }
         set(value) {
-            _backingStream = value
-            _backingBitmap = null
+            _stream = value
+            _bitmap = null
         }
 
     /**
@@ -75,21 +77,23 @@ open class ReaderPage(
      * @see imageHashCode
      */
     var bitmap: (() -> Bitmap)?
-        get() = _backingBitmap ?: _backingStream?.let { {
-            ImageUtil.decodeBitmapFromInputStreamFn(it)!!
-        } }
+        get() = _bitmap ?: _stream?.let {
+            {
+                ImageUtil.decodeBitmapFromInputStreamFn(it)!!
+            }
+        }
         set(value) {
-            _backingStream = null
-            _backingBitmap = value
+            _stream = null
+            _bitmap = value
         }
 
     /**
      * Returns the hash code of the backing image thunk. This is useful when you need a stable way to know whether two
      * images are the same without actually evaluating them.
      */
-    fun imageHashCode() = (_backingStream ?: _backingBitmap).hashCode()
+    fun imageHashCode() = (_stream ?: _bitmap).hashCode()
 
     fun getImageSource(): ImageUtil.ImageSource? =
-        _backingBitmap?.let { ImageUtil.ImageSource.FromBitmap(it()) }
-            ?: _backingStream?.let { ImageUtil.ImageSource.FromBuffer(Buffer().readFrom(it())) }
+        _bitmap?.let { ImageUtil.ImageSource.FromBitmap(it()) }
+            ?: _stream?.let { ImageUtil.ImageSource.FromBuffer(Buffer().readFrom(it())) }
 }

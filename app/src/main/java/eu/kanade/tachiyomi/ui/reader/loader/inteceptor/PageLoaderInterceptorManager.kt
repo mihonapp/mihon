@@ -32,12 +32,12 @@ class PageLoaderInterceptorManager(private val interceptors: List<(List<ReaderPa
                     collectorFlows[page.index].add(
                         page.statusFlow.onEach {
                             interceptor.onStatus(page)
-                        }
+                        },
                     )
                     collectorFlows[page.index].add(
                         page.progressFlow.onEach {
                             interceptor.onProgress(page)
-                        }
+                        },
                     )
                 }
                 proxyPages
@@ -78,8 +78,7 @@ class PageLoaderInterceptorManager(private val interceptors: List<(List<ReaderPa
                     flows.forEach { it.launchIn(this) }
                 }
             }
-        }
-        else {
+        } else {
             pageLoader.loadPage(page)
         }
     }
@@ -88,9 +87,8 @@ class PageLoaderInterceptorManager(private val interceptors: List<(List<ReaderPa
         page.chapter.pageLoader?.retryPage(if (page is ProxyPage) page.originalPage else page)
     }
 
-    private class ProxyPage(val originalPage: ReaderPage)
-        : ReaderPage(originalPage.index, originalPage.url, originalPage.imageUrl)
-    {
+    private class ProxyPage(val originalPage: ReaderPage) :
+        ReaderPage(originalPage.index, originalPage.url, originalPage.imageUrl) {
         init {
             chapter = originalPage.chapter
         }

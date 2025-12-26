@@ -202,11 +202,13 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
     }
 
     private fun createInterceptionManager(): PageLoaderInterceptorManager {
-        return PageLoaderInterceptorManager(buildList {
-            if (config.dualPageFusion && !config.dualPageSplit) {
-                add { SpreadFusionInterceptor(it, areWidePagesLTR) }
-            }
-        })
+        return PageLoaderInterceptorManager(
+            buildList {
+                if (config.dualPageFusion && !config.dualPageSplit) {
+                    add { SpreadFusionInterceptor(it, areWidePagesLTR) }
+                }
+            },
+        )
     }
 
     /**
@@ -396,8 +398,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         val position = layoutManager.findLastEndVisibleItemPosition()
         if (position == RecyclerView.NO_POSITION) {
             adapter.notifyDataSetChanged()
-        }
-        else {
+        } else {
             adapter.notifyItemRangeChanged(
                 max(0, position - 3),
                 min(position + 3, adapter.itemCount - 1),

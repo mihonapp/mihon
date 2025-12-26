@@ -103,7 +103,7 @@ class PagerConfig(
         readerPreferences.dualPageFusionPaged()
             .register(
                 { dualPageFusion = it },
-                { imagePropertyChangedListener?.invoke() }
+                { imagePropertyChangedListener?.invoke() },
             )
 
         readerPreferences.dualPageInvertPaged()

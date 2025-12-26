@@ -273,7 +273,7 @@ object SettingsReaderScreen : SearchableSettings {
                     preference = dualPageFusionPref,
                     title = stringResource(MR.strings.pref_dual_page_fusion),
                     subtitle = stringResource(MR.strings.pref_dual_page_fusion_summary),
-                    enabled = !dualPageSplit
+                    enabled = !dualPageSplit,
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.dualPageInvertPaged(),
@@ -373,7 +373,7 @@ object SettingsReaderScreen : SearchableSettings {
                     preference = dualPageFusionPref,
                     title = stringResource(MR.strings.pref_dual_page_fusion),
                     subtitle = stringResource(MR.strings.pref_dual_page_fusion_summary),
-                    enabled = !dualPageSplit
+                    enabled = !dualPageSplit,
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.dualPageInvertWebtoon(),

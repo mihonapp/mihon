@@ -123,7 +123,7 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
         pref = dualPageSplitPagedPref,
         onClick = {
             dualPageRotateToFitPref.set(false)
-        }
+        },
     )
 
     if (!dualPageSplitPaged) {
@@ -145,7 +145,7 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
         pref = dualPageRotateToFitPref,
         onClick = {
             dualPageSplitPagedPref.set(false)
-        }
+        },
     )
 
     if (dualPageRotateToFit) {
@@ -202,7 +202,7 @@ private fun ColumnScope.WebtoonViewerSettings(screenModel: ReaderSettingsScreenM
         pref = dualPageSplitWebtoonPref,
         onClick = {
             dualPageRotateToFitWebtoonPref.set(false)
-        }
+        },
     )
 
     if (!dualPageSplitWebtoon) {
@@ -224,7 +224,7 @@ private fun ColumnScope.WebtoonViewerSettings(screenModel: ReaderSettingsScreenM
         pref = dualPageRotateToFitWebtoonPref,
         onClick = {
             dualPageSplitWebtoonPref.set(false)
-        }
+        },
     )
 
     if (dualPageRotateToFitWebtoon) {
