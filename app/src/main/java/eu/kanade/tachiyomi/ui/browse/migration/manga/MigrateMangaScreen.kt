@@ -9,11 +9,14 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SmallExtendedFloatingActionButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import cafe.adriel.voyager.core.model.rememberScreenModel
@@ -29,7 +32,6 @@ import mihon.feature.migration.config.MigrationConfigScreen
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
-import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
@@ -75,20 +77,22 @@ data class MigrateMangaScreen(
                 )
             },
             floatingActionButton = {
-                if (state.selectionMode) {
-                    ExtendedFloatingActionButton(
-                        text = { Text(text = stringResource(MR.strings.migrationConfigScreen_continueButtonText)) },
-                        icon = {
-                            Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowForward, contentDescription = null)
-                        },
-                        onClick = {
-                            val selection = state.selection
-                            screenModel.clearSelection()
-                            navigator.push(MigrationConfigScreen(selection))
-                        },
-                        expanded = lazyListState.shouldExpandFAB(),
-                    )
-                }
+                SmallExtendedFloatingActionButton(
+                    text = { Text(text = stringResource(MR.strings.migrationConfigScreen_continueButtonText)) },
+                    icon = {
+                        Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowForward, contentDescription = null)
+                    },
+                    onClick = {
+                        val selection = state.selection
+                        screenModel.clearSelection()
+                        navigator.push(MigrationConfigScreen(selection))
+                    },
+                    expanded = lazyListState.shouldExpandFAB(),
+                    modifier = Modifier.animateFloatingActionButton(
+                        visible = state.selectionMode,
+                        alignment = Alignment.BottomEnd,
+                    ),
+                )
             },
         ) { contentPadding ->
             if (state.isEmpty) {
