@@ -52,6 +52,7 @@ coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp" }
 
 subsamplingscaleimageview = "com.github.tachiyomiorg:subsampling-scale-image-view:66e0db195d"
 image-decoder = "com.github.tachiyomiorg:image-decoder:41c059e540"
+manga-vision = "io.github.theunlocked:manga-vision:a851a95"
 
 natural-comparator = "com.github.gpanther:java-nat-sort:natural-comparator-1.1"
 

@@ -42,7 +42,13 @@ class WebtoonConfig(
 
     var doubleTapZoomChangedListener: ((Boolean) -> Unit)? = null
 
-    val theme = readerPreferences.readerTheme().get()
+    var theme = 0
+        private set
+
+    override var navigator: ViewerNavigation = defaultNavigation()
+        set(value) {
+            field = value.also { it.invertMode = tappingInverted }
+        }
 
     init {
         readerPreferences.cropBordersWebtoon()
@@ -51,18 +57,24 @@ class WebtoonConfig(
         readerPreferences.webtoonSidePadding()
             .register({ sidePadding = it }, { imagePropertyChangedListener?.invoke() })
 
+        readerPreferences.webtoonNavInverted()
+            .register(
+                { tappingInverted = it },
+                {
+                    navigator.invertMode = it
+                    navigationModeChangedListener?.invoke()
+                },
+            )
+
         readerPreferences.navigationModeWebtoon()
             .register({ navigationMode = it }, { updateNavigation(it) })
-
-        readerPreferences.webtoonNavInverted()
-            .register({ tappingInverted = it }, { navigator.invertMode = it })
-        readerPreferences.webtoonNavInverted().changes()
-            .drop(1)
-            .onEach { navigationModeChangedListener?.invoke() }
-            .launchIn(scope)
+        updateNavigation(navigationMode)
 
         readerPreferences.dualPageSplitWebtoon()
             .register({ dualPageSplit = it }, { imagePropertyChangedListener?.invoke() })
+
+        readerPreferences.dualPageFusionWebtoon()
+            .register({ dualPageFusion = it }, { imagePropertyChangedListener?.invoke() })
 
         readerPreferences.dualPageInvertWebtoon()
             .register({ dualPageInvert = it }, { imagePropertyChangedListener?.invoke() })
@@ -91,17 +103,9 @@ class WebtoonConfig(
                 { doubleTapZoomChangedListener?.invoke(it) },
             )
 
-        readerPreferences.readerTheme().changes()
-            .drop(1)
-            .distinctUntilChanged()
-            .onEach { themeChangedListener?.invoke() }
-            .launchIn(scope)
+        readerPreferences.readerTheme()
+            .register({ theme = it }, { themeChangedListener?.invoke() })
     }
-
-    override var navigator: ViewerNavigation = defaultNavigation()
-        set(value) {
-            field = value.also { it.invertMode = tappingInverted }
-        }
 
     override fun defaultNavigation(): ViewerNavigation {
         return LNavigation()

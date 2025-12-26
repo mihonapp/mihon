@@ -19,8 +19,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import logcat.LogPriority
-import okio.Buffer
-import okio.BufferedSource
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.withIOContext
@@ -36,14 +34,15 @@ import tachiyomi.i18n.MR
 class PagerPageHolder(
     readerThemedContext: Context,
     val viewer: PagerViewer,
-    val page: ReaderPage,
+    page: ReaderPage,
 ) : ReaderPageImageView(readerThemedContext), ViewPagerAdapter.PositionableView {
 
     /**
      * Item that identifies this view. Needed by the adapter to not recreate views.
      */
-    override val item
-        get() = page
+    override val item = page
+
+    private val page = viewer.getInterceptedPage(page)
 
     /**
      * Loading progress bar to indicate the current progress.
@@ -95,7 +94,7 @@ class PagerPageHolder(
 
         supervisorScope {
             launchIO {
-                loader.loadPage(page)
+                viewer.loadPage(page)
             }
             page.statusFlow.collectLatest { state ->
                 when (state) {
@@ -108,6 +107,7 @@ class PagerPageHolder(
                         }
                     }
                     Page.State.Ready -> setImage()
+                    Page.State.Skip -> setSkip()
                     is Page.State.Error -> setError(state.error)
                 }
             }
@@ -147,31 +147,29 @@ class PagerPageHolder(
     private suspend fun setImage() {
         progressIndicator?.setProgress(0)
 
-        val streamFn = page.stream ?: return
-
         try {
             val (source, isAnimated, background) = withIOContext {
-                val source = streamFn().use { process(item, Buffer().readFrom(it)) }
+                val source = process(page, page.getImageSource() ?: return@withIOContext null)
                 val isAnimated = ImageUtil.isAnimatedAndSupported(source)
                 val background = if (!isAnimated && viewer.config.automaticBackground) {
-                    ImageUtil.chooseBackground(context, source.peek().inputStream())
+                    ImageUtil.chooseBackground(context, source)
                 } else {
                     null
                 }
                 Triple(source, isAnimated, background)
-            }
+            } ?: return
             withUIContext {
-                setImage(
-                    source,
-                    isAnimated,
-                    Config(
-                        zoomDuration = viewer.config.doubleTapAnimDuration,
-                        minimumScaleType = viewer.config.imageScaleType,
-                        cropBorders = viewer.config.imageCropBorders,
-                        zoomStartPosition = viewer.config.imageZoomType,
-                        landscapeZoom = viewer.config.landscapeZoom,
-                    ),
+                val config = Config(
+                    zoomDuration = viewer.config.doubleTapAnimDuration,
+                    minimumScaleType = viewer.config.imageScaleType,
+                    cropBorders = viewer.config.imageCropBorders,
+                    zoomStartPosition = viewer.config.imageZoomType,
+                    landscapeZoom = viewer.config.landscapeZoom,
                 )
+                when (source) {
+                    is ImageUtil.ImageSource.FromBitmap -> setImage(source.bitmap, config)
+                    is ImageUtil.ImageSource.FromBuffer -> setImage(source.buffer, isAnimated, config)
+                }
                 if (!isAnimated) {
                     pageBackground = background
                 }
@@ -185,7 +183,13 @@ class PagerPageHolder(
         }
     }
 
-    private fun process(page: ReaderPage, imageSource: BufferedSource): BufferedSource {
+    private fun setSkip() {
+        progressIndicator?.setProgress(0)
+        removeErrorLayout()
+        viewer.onPageSkip(page)
+    }
+
+    private fun process(page: ReaderPage, imageSource: ImageUtil.ImageSource): ImageUtil.ImageSource {
         if (viewer.config.dualPageRotateToFit) {
             return rotateDualPage(imageSource)
         }
@@ -208,7 +212,7 @@ class PagerPageHolder(
         return splitInHalf(imageSource)
     }
 
-    private fun rotateDualPage(imageSource: BufferedSource): BufferedSource {
+    private fun rotateDualPage(imageSource: ImageUtil.ImageSource): ImageUtil.ImageSource {
         val isDoublePage = ImageUtil.isWideImage(imageSource)
         return if (isDoublePage) {
             val rotation = if (viewer.config.dualPageRotateToFitInvert) -90f else 90f
@@ -218,21 +222,13 @@ class PagerPageHolder(
         }
     }
 
-    private fun splitInHalf(imageSource: BufferedSource): BufferedSource {
-        var side = when {
-            viewer is L2RPagerViewer && page is InsertPage -> ImageUtil.Side.RIGHT
-            viewer !is L2RPagerViewer && page is InsertPage -> ImageUtil.Side.LEFT
-            viewer is L2RPagerViewer && page !is InsertPage -> ImageUtil.Side.LEFT
-            viewer !is L2RPagerViewer && page !is InsertPage -> ImageUtil.Side.RIGHT
-            else -> error("We should choose a side!")
-        }
-
-        if (viewer.config.dualPageInvert) {
-            side = when (side) {
-                ImageUtil.Side.RIGHT -> ImageUtil.Side.LEFT
-                ImageUtil.Side.LEFT -> ImageUtil.Side.RIGHT
+    private fun splitInHalf(imageSource: ImageUtil.ImageSource): ImageUtil.ImageSource {
+        val side =
+            if (viewer.areWidePagesLTR == (page is InsertPage)) {
+                ImageUtil.Side.RIGHT
+            } else {
+                ImageUtil.Side.LEFT
             }
-        }
 
         return ImageUtil.splitInHalf(imageSource, side)
     }
@@ -276,7 +272,7 @@ class PagerPageHolder(
             errorLayout = ReaderErrorBinding.inflate(LayoutInflater.from(context), this, true)
             errorLayout?.actionRetry?.viewer = viewer
             errorLayout?.actionRetry?.setOnClickListener {
-                page.chapter.pageLoader?.retryPage(page)
+                viewer.retryPage(page)
             }
         }
 

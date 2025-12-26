@@ -198,11 +198,13 @@ object SettingsReaderScreen : SearchableSettings {
         val navModePref = readerPreferences.navigationModePager()
         val imageScaleTypePref = readerPreferences.imageScaleType()
         val dualPageSplitPref = readerPreferences.dualPageSplitPaged()
+        val dualPageFusionPref = readerPreferences.dualPageFusionPaged()
         val rotateToFitPref = readerPreferences.dualPageRotateToFit()
 
         val navMode by navModePref.collectAsState()
         val imageScaleType by imageScaleTypePref.collectAsState()
         val dualPageSplit by dualPageSplitPref.collectAsState()
+        val dualPageFusion by dualPageFusionPref.collectAsState()
         val rotateToFit by rotateToFitPref.collectAsState()
 
         return Preference.PreferenceGroup(
@@ -268,10 +270,16 @@ object SettingsReaderScreen : SearchableSettings {
                     },
                 ),
                 Preference.PreferenceItem.SwitchPreference(
+                    preference = dualPageFusionPref,
+                    title = stringResource(MR.strings.pref_dual_page_fusion),
+                    subtitle = stringResource(MR.strings.pref_dual_page_fusion_summary),
+                    enabled = !dualPageSplit,
+                ),
+                Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.dualPageInvertPaged(),
                     title = stringResource(MR.strings.pref_dual_page_invert),
                     subtitle = stringResource(MR.strings.pref_dual_page_invert_summary),
-                    enabled = dualPageSplit,
+                    enabled = dualPageSplit || dualPageFusion,
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     preference = rotateToFitPref,
@@ -296,11 +304,13 @@ object SettingsReaderScreen : SearchableSettings {
 
         val navModePref = readerPreferences.navigationModeWebtoon()
         val dualPageSplitPref = readerPreferences.dualPageSplitWebtoon()
+        val dualPageFusionPref = readerPreferences.dualPageFusionWebtoon()
         val rotateToFitPref = readerPreferences.dualPageRotateToFitWebtoon()
         val webtoonSidePaddingPref = readerPreferences.webtoonSidePadding()
 
         val navMode by navModePref.collectAsState()
         val dualPageSplit by dualPageSplitPref.collectAsState()
+        val dualPageFusion by dualPageFusionPref.collectAsState()
         val rotateToFit by rotateToFitPref.collectAsState()
         val webtoonSidePadding by webtoonSidePaddingPref.collectAsState()
 
@@ -360,10 +370,16 @@ object SettingsReaderScreen : SearchableSettings {
                     },
                 ),
                 Preference.PreferenceItem.SwitchPreference(
+                    preference = dualPageFusionPref,
+                    title = stringResource(MR.strings.pref_dual_page_fusion),
+                    subtitle = stringResource(MR.strings.pref_dual_page_fusion_summary),
+                    enabled = !dualPageSplit,
+                ),
+                Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.dualPageInvertWebtoon(),
                     title = stringResource(MR.strings.pref_dual_page_invert),
                     subtitle = stringResource(MR.strings.pref_dual_page_invert_summary),
-                    enabled = dualPageSplit,
+                    enabled = dualPageSplit || dualPageFusion,
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     preference = rotateToFitPref,

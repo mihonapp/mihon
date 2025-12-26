@@ -79,13 +79,17 @@ class ReaderPreferences(
 
     // endregion
 
-    // region Split two page spread
+    // region Two page spreads
 
     fun dualPageSplitPaged() = preferenceStore.getBoolean("pref_dual_page_split", false)
+
+    fun dualPageFusionPaged() = preferenceStore.getBoolean("pref_dual_page_fusion_paged", false)
 
     fun dualPageInvertPaged() = preferenceStore.getBoolean("pref_dual_page_invert", false)
 
     fun dualPageSplitWebtoon() = preferenceStore.getBoolean("pref_dual_page_split_webtoon", false)
+
+    fun dualPageFusionWebtoon() = preferenceStore.getBoolean("pref_dual_page_fusion_webtoon", false)
 
     fun dualPageInvertWebtoon() = preferenceStore.getBoolean("pref_dual_page_invert_webtoon", false)
 
