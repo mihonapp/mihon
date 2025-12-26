@@ -1,10 +1,11 @@
 package eu.kanade.presentation.theme
 
+import android.content.Context
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.ui.model.AppTheme
@@ -53,26 +54,36 @@ private fun BaseTachiyomiTheme(
     isAmoled: Boolean,
     content: @Composable () -> Unit,
 ) {
+    val context = LocalContext.current
+    val isDark = isSystemInDarkTheme()
     MaterialTheme(
-        colorScheme = getThemeColorScheme(appTheme, isAmoled),
+        colorScheme = remember(appTheme, isDark, isAmoled) {
+            getThemeColorScheme(
+                context = context,
+                appTheme = appTheme,
+                isDark = isDark,
+                isAmoled = isAmoled,
+            )
+        },
         content = content,
     )
 }
 
-@Composable
-@ReadOnlyComposable
 private fun getThemeColorScheme(
+    context: Context,
     appTheme: AppTheme,
+    isDark: Boolean,
     isAmoled: Boolean,
 ): ColorScheme {
     val colorScheme = if (appTheme == AppTheme.MONET) {
-        MonetColorScheme(LocalContext.current)
+        MonetColorScheme(context)
     } else {
         colorSchemes.getOrDefault(appTheme, TachiyomiColorScheme)
     }
     return colorScheme.getColorScheme(
-        isSystemInDarkTheme(),
-        isAmoled,
+        isDark = isDark,
+        isAmoled = isAmoled,
+        overrideDarkSurfaceContainers = appTheme != AppTheme.MONET,
     )
 }
 
