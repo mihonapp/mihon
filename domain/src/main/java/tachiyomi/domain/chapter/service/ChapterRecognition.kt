@@ -22,7 +22,13 @@ object ChapterRecognition {
      * Regex used to remove unwanted tags
      * Example Prison School 12 v.1 vol004 version1243 volume64 -R> Prison School 12
      */
-    private val unwanted = Regex("""\b(?:v|ver|vol|version|volume|season|s)[^a-z]?[0-9]+""")
+    private val unwanted = Regex("""\b(?:v|ver|version|season|s)[^a-z]?[0-9]+""")
+
+    /**
+     * Regex used to remove volume component
+     * Example Volume 10 #58: A Fierce Battle
+     */
+    private val unwantedVolume = Regex("""([Vv]ol(ume)?)[ .]?$NUMBER_PATTERN""")
 
     /**
      * Regex used to remove unwanted whitespace
@@ -49,6 +55,8 @@ object ChapterRecognition {
             .replace('-', '.')
             // Remove unwanted white spaces.
             .replace(unwantedWhiteSpace, "")
+            // Remove unwanted volume component.
+            .replace(unwantedVolume, "")
 
         val numberMatch = number.findAll(cleanChapterName)
 
