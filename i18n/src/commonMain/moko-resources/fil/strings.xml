@@ -907,4 +907,6 @@
     <string name="pref_download_concurrent_pages">Kasabay na pag-download ng pahina</string>
     <string name="pref_download_concurrent_pages_summary">Mga pahina na nai-download nang sabay-sabay kada source</string>
     <string name="action_webview_close_tab">Isara ang tab</string>
+    <string name="theme_catppuccin">Catppuccin</string>
+    <string name="migrationConfigScreen.availableHeader">Maaaring Magamit</string>
 </resources>

@@ -85,7 +85,7 @@
         <item quantity="other">Kopyahin ang %1$d na mga entry?</item>
     </plurals>
     <plurals name="migrationListScreen.migrateDialog.skipText">
-        <item quantity="one">Mayroong entry ay nalaktawan</item>
-        <item quantity="other">%1$d na mga entry ay nalaktawan</item>
+        <item quantity="one">Isang entry ang nilaktawan</item>
+        <item quantity="other">%1$d (na) entry ang nilaktawan</item>
     </plurals>
 </resources>
