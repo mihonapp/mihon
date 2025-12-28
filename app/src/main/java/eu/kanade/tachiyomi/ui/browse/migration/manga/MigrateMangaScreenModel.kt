@@ -71,13 +71,19 @@ class MigrateMangaScreenModel(
         mutableState.update { it.copy(selection = emptySet()) }
     }
 
+    // 🆕 Add this function for "Select All"
+    fun selectAll(mangaList: List<Manga>) {
+        mutableState.update { state ->
+            state.copy(selection = mangaList.map { it.id }.toSet())
+        }
+    }
+
     @Immutable
     data class State(
         val source: Source? = null,
         val selection: Set<Long> = emptySet(),
         private val titleList: ImmutableList<Manga>? = null,
     ) {
-
         val titles: ImmutableList<Manga>
             get() = titleList ?: persistentListOf()
 
@@ -87,7 +93,8 @@ class MigrateMangaScreenModel(
         val isEmpty: Boolean
             get() = titles.isEmpty()
 
-        val selectionMode = selection.isNotEmpty()
+        val selectionMode: Boolean
+            get() = selection.isNotEmpty()
     }
 }
 

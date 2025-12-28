@@ -8,7 +8,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowForward
+import androidx.compose.material.icons.filled.DoneAll
+import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.SmallExtendedFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.animateFloatingActionButton
@@ -65,7 +68,11 @@ data class MigrateMangaScreen(
         Scaffold(
             topBar = { scrollBehavior ->
                 AppBar(
-                    title = state.source!!.name,
+                    title = if (state.selectionMode) {
+                        "${state.selection.size} selected"
+                    } else {
+                        state.source!!.name
+                    },
                     navigateUp = {
                         if (state.selectionMode) {
                             screenModel.clearSelection()
@@ -74,6 +81,34 @@ data class MigrateMangaScreen(
                         }
                     },
                     scrollBehavior = scrollBehavior,
+                    actions = {
+                        // 🆕 Select All / Deselect All Button
+                        if (state.selectionMode && state.titles.isNotEmpty()) {
+                            val isAllSelected = state.selection.size == state.titles.size
+                            IconButton(
+                                onClick = {
+                                    if (isAllSelected) {
+                                        screenModel.clearSelection()
+                                        context.toast("Deselected all manga")
+                                    } else {
+                                        screenModel.selectAll(state.titles)
+                                        context.toast("Selected all manga")
+                                    }
+                                },
+                            ) {
+                                Icon(
+                                    imageVector = if (isAllSelected)
+                                        Icons.Default.DoneAll
+                                    else
+                                        Icons.Default.SelectAll,
+                                    contentDescription = if (isAllSelected)
+                                        "Deselect All"
+                                    else
+                                        "Select All",
+                                )
+                            }
+                        }
+                    },
                 )
             },
             floatingActionButton = {
