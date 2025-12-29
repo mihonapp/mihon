@@ -127,6 +127,15 @@ class LibraryPreferences(
 
     fun updateCategoriesExclude() = preferenceStore.getStringSet(LIBRARY_UPDATE_CATEGORIES_EXCLUDE_PREF_KEY, emptySet())
 
+    fun pullRefreshDisabledCategories() = preferenceStore.getStringSet(
+        LIBRARY_PULL_REFRESH_DISABLED_CATEGORIES_PREF_KEY,
+        emptySet(),
+    )
+
+    fun pullRefreshDisabledCategoryIds(): Set<Long> = pullRefreshDisabledCategories().get().mapNotNull {
+        it.toLongOrNull()
+    }.toSet()
+
     // endregion
 
     // region Chapter
@@ -219,10 +228,12 @@ class LibraryPreferences(
         const val DEFAULT_CATEGORY_PREF_KEY = "default_category"
         private const val LIBRARY_UPDATE_CATEGORIES_PREF_KEY = "library_update_categories"
         private const val LIBRARY_UPDATE_CATEGORIES_EXCLUDE_PREF_KEY = "library_update_categories_exclude"
+        private const val LIBRARY_PULL_REFRESH_DISABLED_CATEGORIES_PREF_KEY = "library_pull_refresh_disabled_categories"
         val categoryPreferenceKeys = setOf(
             DEFAULT_CATEGORY_PREF_KEY,
             LIBRARY_UPDATE_CATEGORIES_PREF_KEY,
             LIBRARY_UPDATE_CATEGORIES_EXCLUDE_PREF_KEY,
+            LIBRARY_PULL_REFRESH_DISABLED_CATEGORIES_PREF_KEY,
         )
     }
 }

@@ -85,6 +85,9 @@ class LibraryScreenModel(
     private val trackerManager: TrackerManager = Injekt.get(),
 ) : StateScreenModel<LibraryScreenModel.State>(State()) {
 
+    val pullRefreshDisabledCategoryIds: Set<Long>
+        get() = libraryPreferences.pullRefreshDisabledCategoryIds()
+
     init {
         mutableState.update { state ->
             state.copy(activeCategoryIndex = libraryPreferences.lastUsedCategory().get())

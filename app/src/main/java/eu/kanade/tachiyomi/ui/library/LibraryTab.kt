@@ -93,7 +93,18 @@ data object LibraryTab : Tab {
 
         val snackbarHostState = remember { SnackbarHostState() }
 
-        val onClickRefresh: (Category?) -> Boolean = { category ->
+        val onClickRefresh: (Category?) -> Boolean = onClickRefresh@{ category ->
+            // ✅ BLOCK refresh for disabled categories
+            if (category != null &&
+                category.id in screenModel.pullRefreshDisabledCategoryIds
+            ) {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        context.stringResource(MR.strings.pref_pull_refresh_disabled),
+                    )
+                }
+                return@onClickRefresh false
+            }
             val started = LibraryUpdateJob.startNow(context, category)
             scope.launch {
                 val msgRes = when {

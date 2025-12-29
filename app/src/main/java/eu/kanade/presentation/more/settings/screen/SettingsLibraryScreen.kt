@@ -18,6 +18,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.category.visualName
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.widget.TriStateListDialog
+import eu.kanade.presentation.more.settings.widget.TriStateMode
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import kotlinx.collections.immutable.persistentListOf
@@ -59,7 +60,7 @@ object SettingsLibraryScreen : SearchableSettings {
         return listOf(
             getCategoriesGroup(LocalNavigator.currentOrThrow, allCategories, libraryPreferences),
             getGlobalUpdateGroup(allCategories, libraryPreferences),
-            getBehaviorGroup(libraryPreferences),
+            getBehaviorGroup(allCategories, libraryPreferences),
         )
     }
 
@@ -213,8 +214,60 @@ object SettingsLibraryScreen : SearchableSettings {
 
     @Composable
     private fun getBehaviorGroup(
+        allCategories: List<Category>,
         libraryPreferences: LibraryPreferences,
     ): Preference.PreferenceGroup {
+        val disabledPref = libraryPreferences.pullRefreshDisabledCategories()
+        val disabled by disabledPref.collectAsState()
+
+        var showDialog by rememberSaveable { mutableStateOf(false) }
+
+        val selectableCategories = buildList {
+            allCategories.firstOrNull(Category::isSystemCategory)?.let { add(it) }
+            addAll(allCategories.filterNot(Category::isSystemCategory))
+        }
+
+        val allLabel = stringResource(MR.strings.all)
+        val noneLabel = stringResource(MR.strings.none)
+
+        val enabled = selectableCategories.filterNot { it.id.toString() in disabled }
+
+        val enabledNames = enabled.map { it.visualName }
+        val disabledNames = selectableCategories
+            .filter { it.id.toString() in disabled }
+            .map { it.visualName }
+
+        val enabledLabel = when {
+            enabledNames.isEmpty() -> noneLabel
+            enabledNames.size == selectableCategories.size -> allLabel
+            else -> enabledNames.joinToString()
+        }
+
+        val disabledLabel = when {
+            disabledNames.isEmpty() -> noneLabel
+            disabledNames.size == selectableCategories.size -> allLabel
+            else -> disabledNames.joinToString()
+        }
+
+        if (showDialog) {
+            TriStateListDialog(
+                title = stringResource(MR.strings.pref_pull_refresh),
+                message = stringResource(MR.strings.pref_pull_refresh_category_desc),
+                items = selectableCategories,
+                initialChecked = emptyList(),
+                initialInversed = selectableCategories.filter {
+                    it.id.toString() in disabled
+                },
+                itemLabel = { it.visualName },
+                onDismissRequest = { showDialog = false },
+                stateMode = TriStateMode.TWO_STATE,
+                onValueChanged = { _, inversed ->
+                    disabledPref.set(inversed.map { it.id.toString() }.toSet())
+                    showDialog = false
+                },
+            )
+        }
+
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_behavior),
             preferenceItems = persistentListOf(
@@ -245,6 +298,15 @@ object SettingsLibraryScreen : SearchableSettings {
                             stringResource(MR.strings.action_download),
                     ),
                     title = stringResource(MR.strings.pref_chapter_swipe_end),
+                ),
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.pref_pull_refresh),
+                    subtitle = stringResource(
+                        MR.strings.pref_pull_refresh_summary,
+                        enabledLabel,
+                        disabledLabel,
+                    ),
+                    onClick = { showDialog = true },
                 ),
                 Preference.PreferenceItem.MultiSelectListPreference(
                     preference = libraryPreferences.markDuplicateReadChapterAsRead(),

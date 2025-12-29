@@ -37,6 +37,11 @@ private enum class State {
     UNCHECKED,
 }
 
+enum class TriStateMode {
+    THREE_STATE, // existing behavior
+    TWO_STATE, // ENABLED ↔ DISABLED only
+}
+
 @Composable
 fun <T> TriStateListDialog(
     title: String,
@@ -47,17 +52,17 @@ fun <T> TriStateListDialog(
     itemLabel: @Composable (T) -> String,
     onDismissRequest: () -> Unit,
     onValueChanged: (newIncluded: List<T>, newExcluded: List<T>) -> Unit,
+    stateMode: TriStateMode = TriStateMode.THREE_STATE,
 ) {
     val selected = remember {
-        items
-            .map {
-                when (it) {
-                    in initialChecked -> State.CHECKED
-                    in initialInversed -> State.INVERSED
-                    else -> State.UNCHECKED
-                }
+        items.map { item ->
+            when {
+                item in initialInversed -> State.INVERSED
+                item in initialChecked -> State.CHECKED
+                stateMode == TriStateMode.TWO_STATE -> State.CHECKED
+                else -> State.UNCHECKED
             }
-            .toMutableStateList()
+        }.toMutableStateList()
     }
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -80,10 +85,17 @@ fun <T> TriStateListDialog(
                                 modifier = Modifier
                                     .clip(MaterialTheme.shapes.small)
                                     .clickable {
-                                        selected[index] = when (state) {
-                                            State.UNCHECKED -> State.CHECKED
-                                            State.CHECKED -> State.INVERSED
-                                            State.INVERSED -> State.UNCHECKED
+                                        selected[index] = when (stateMode) {
+                                            TriStateMode.THREE_STATE -> when (state) {
+                                                State.UNCHECKED -> State.CHECKED
+                                                State.CHECKED -> State.INVERSED
+                                                State.INVERSED -> State.UNCHECKED
+                                            }
+                                            TriStateMode.TWO_STATE -> when (state) {
+                                                State.CHECKED -> State.INVERSED
+                                                State.INVERSED -> State.CHECKED
+                                                State.UNCHECKED -> State.CHECKED // fallback
+                                            }
                                         }
                                     }
                                     .defaultMinSize(minHeight = 48.dp)
