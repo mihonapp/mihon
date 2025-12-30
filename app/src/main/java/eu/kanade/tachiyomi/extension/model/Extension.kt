@@ -13,6 +13,7 @@ sealed class Extension {
     abstract val libVersion: Double
     abstract val lang: String?
     abstract val isNsfw: Boolean
+    abstract val isShared: Boolean
 
     data class Installed(
         override val name: String,
@@ -27,7 +28,7 @@ sealed class Extension {
         val icon: Drawable?,
         val hasUpdate: Boolean = false,
         val isObsolete: Boolean = false,
-        val isShared: Boolean,
+        override val isShared: Boolean,
         val repoUrl: String? = null,
     ) : Extension()
 
@@ -39,6 +40,7 @@ sealed class Extension {
         override val libVersion: Double,
         override val lang: String,
         override val isNsfw: Boolean,
+        override val isShared: Boolean = false,
         val sources: List<Source>,
         val apkName: String,
         val iconUrl: String,
@@ -70,6 +72,7 @@ sealed class Extension {
         val signatureHash: String,
         override val lang: String? = null,
         override val isNsfw: Boolean = false,
+        override val isShared: Boolean,
     ) : Extension()
 
     data class NotLoaded(
@@ -80,5 +83,6 @@ sealed class Extension {
         override val libVersion: Double,
         override val lang: String? = null,
         override val isNsfw: Boolean = false,
+        override val isShared: Boolean,
     ) : Extension()
 }

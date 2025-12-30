@@ -255,11 +255,12 @@ internal object ExtensionLoader {
 
         if (safeMode) {
             val extension = Extension.NotLoaded(
-                extName,
-                pkgName,
-                versionName,
-                versionCode,
-                libVersion,
+                name = extName,
+                pkgName = pkgName,
+                versionName = versionName,
+                versionCode = versionCode,
+                libVersion = libVersion,
+                isShared = extensionInfo.isShared,
             )
             return LoadResult.NotLoaded(extension)
         }
@@ -270,12 +271,13 @@ internal object ExtensionLoader {
             return LoadResult.Error
         } else if (!trustExtension.isTrusted(pkgInfo, signatures)) {
             val extension = Extension.Untrusted(
-                extName,
-                pkgName,
-                versionName,
-                versionCode,
-                libVersion,
-                signatures.last(),
+                name = extName,
+                pkgName = pkgName,
+                versionName = versionName,
+                versionCode = versionCode,
+                libVersion = libVersion,
+                signatureHash = signatures.last(),
+                isShared = extensionInfo.isShared,
             )
             logcat(LogPriority.WARN) { "Extension $pkgName isn't trusted" }
             return LoadResult.Untrusted(extension)
