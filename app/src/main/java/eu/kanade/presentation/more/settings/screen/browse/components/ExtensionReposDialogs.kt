@@ -1,6 +1,7 @@
 package eu.kanade.presentation.more.settings.screen.browse.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedTextField
