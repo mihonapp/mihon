@@ -1,8 +1,7 @@
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- TODO: Use a proper icon -->
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/sc_outline_shield"
+        android:icon="@drawable/sc_safe_mode"
         android:shortcutDisabledMessage="@string/app_not_available"
         android:shortcutId="open_in_safe_mode"
         android:shortcutLongLabel="@string/label_safe_mode"
