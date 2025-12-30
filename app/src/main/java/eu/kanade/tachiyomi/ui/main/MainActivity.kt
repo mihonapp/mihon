@@ -59,6 +59,7 @@ import eu.kanade.presentation.components.AppStateBanners
 import eu.kanade.presentation.components.DownloadedOnlyBannerBackgroundColor
 import eu.kanade.presentation.components.IncognitoModeBannerBackgroundColor
 import eu.kanade.presentation.components.IndexingBannerBackgroundColor
+import eu.kanade.presentation.components.SafeModeBannerBackgroundColor
 import eu.kanade.presentation.more.settings.screen.browse.ExtensionReposScreen
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
 import eu.kanade.presentation.util.AssistContentScreen
@@ -139,6 +140,12 @@ class MainActivity : BaseActivity() {
             return
         }
 
+        if (intent.getBooleanExtra("safeMode", false)) {
+            preferences.safeMode().set(true)
+        }
+
+        val safeMode = preferences.safeMode().get()
+
         setComposeContent {
             val context = LocalContext.current
 
@@ -151,6 +158,7 @@ class MainActivity : BaseActivity() {
                 indexing -> IndexingBannerBackgroundColor
                 downloadOnly -> DownloadedOnlyBannerBackgroundColor
                 incognito -> IncognitoModeBannerBackgroundColor
+                safeMode -> SafeModeBannerBackgroundColor
                 else -> MaterialTheme.colorScheme.surface
             }
             LaunchedEffect(isSystemInDarkTheme, statusBarBackgroundColor) {
@@ -191,6 +199,7 @@ class MainActivity : BaseActivity() {
                             downloadedOnlyMode = downloadOnly,
                             incognitoMode = incognito,
                             indexing = indexing,
+                            safeMode = safeMode,
                             modifier = Modifier.windowInsetsPadding(scaffoldInsets),
                         )
                     },
