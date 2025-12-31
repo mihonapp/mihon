@@ -896,4 +896,8 @@
     <string name="tracked_privately">Sekvata private</string>
     <string name="pref_disallow_non_ascii_filenames">Malpermesi ne-ASCII-dosiernomojn</string>
     <string name="pref_disallow_non_ascii_filenames_details">Certigas kongruon kun certaj konservejaj dosiersistemoj kiuj ne subtenas Unikodon. Kiam tio estas ŝaltita, vi bezonos permane renomi dosierujojn de fontoj kaj mangaoj anstataŭigante ne-ASCII-signojn per iliaj minusklaj UTF-8-deksesumaj prezentoj. Ĉapitraj dosieroj ne necesas esti renomitaj.</string>
+    <string name="action_webview_close_tab">Fermi langeton</string>
+    <string name="pref_download_concurrent_sources">Kunrulaj elŝutoj de fontoj</string>
+    <string name="pref_download_concurrent_pages">Kunrulaj elŝutoj de paĝoj</string>
+    <string name="pref_download_concurrent_pages_summary">Paĝoj elŝutitaj sammomente por fonto</string>
 </resources>

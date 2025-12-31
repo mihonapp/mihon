@@ -1,5 +1,5 @@
 [versions]
-aboutlib_version = "13.1.0"
+aboutlib_version = "13.2.1"
 leakcanary = "2.14"
 moko = "0.25.2"
 okhttp_version = "5.3.2"
@@ -9,9 +9,10 @@ sqlite = "2.6.2"
 voyager = "1.1.0-beta03"
 spotless = "8.1.0"
 ktlint-core = "1.8.0"
-firebase-bom = "34.6.0"
-markdown = "0.38.1"
+firebase-bom = "34.7.0"
+markdown = "0.39.0"
 junit = "6.0.1"
+materialKolor = "5.0.0-alpha04"
 
 [libraries]
 desugar = "com.android.tools:desugar_jdk_libs:2.1.5"
@@ -90,8 +91,8 @@ sqldelight-dialects-sql = { module = "app.cash.sqldelight:sqlite-3-38-dialect", 
 
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
-kotest-assertions = "io.kotest:kotest-assertions-core:6.0.5"
-mockk = "io.mockk:mockk:1.14.6"
+kotest-assertions = "io.kotest:kotest-assertions-core:6.0.7"
+mockk = "io.mockk:mockk:1.14.7"
 
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
@@ -105,6 +106,8 @@ markdown-core = { module = "com.mikepenz:multiplatform-markdown-renderer", versi
 markdown-coil = { module = "com.mikepenz:multiplatform-markdown-renderer-coil3", version.ref = "markdown" }
 
 stringSimilarity = { module = "com.aallam.similarity:string-similarity-kotlin", version = "0.1.0" }
+
+materialKolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
 
 [plugins]
 google-services = { id = "com.google.gms.google-services", version = "4.4.4" }
