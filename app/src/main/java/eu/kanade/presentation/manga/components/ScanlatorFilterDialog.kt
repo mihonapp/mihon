@@ -25,16 +25,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import eu.kanade.domain.manga.model.ScanlatorFilter
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.stringResource
-
-import androidx.compose.ui.draw.alpha
-
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun ScanlatorFilterDialog(
@@ -51,7 +49,9 @@ fun ScanlatorFilterDialog(
         val hiddenScanlators = hiddenFilters.map { it.scanlator ?: "" }
 
         val knownScanlators = visibleScanlators.toSet() + hiddenScanlators.toSet()
-        val newScanlators = availableScanlators.filter { it !in knownScanlators }.sortedWith(String.CASE_INSENSITIVE_ORDER)
+        val newScanlators = availableScanlators.filter {
+            it !in knownScanlators
+        }.sortedWith(String.CASE_INSENSITIVE_ORDER)
 
         val list = mutableListOf<ScanlatorUiModel>()
         visibleFilters.forEach { list.add(ScanlatorUiModel(it.scanlator ?: "", false)) }
@@ -83,11 +83,11 @@ fun ScanlatorFilterDialog(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .alpha(if (item.hidden) 0.38f else 1f),
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 IconButton(
                                     onClick = {},
-                                    modifier = Modifier.draggableHandle()
+                                    modifier = Modifier.draggableHandle(),
                                 ) {
                                     Icon(Icons.Rounded.DragHandle, contentDescription = null)
                                 }
@@ -95,7 +95,7 @@ fun ScanlatorFilterDialog(
                                 Text(
                                     text = if (item.name.isEmpty()) stringResource(MR.strings.scanlator) else item.name,
                                     modifier = Modifier.weight(1f).padding(start = 8.dp),
-                                    style = MaterialTheme.typography.bodyMedium
+                                    style = MaterialTheme.typography.bodyMedium,
                                 )
 
                                 IconButton(onClick = {
@@ -113,8 +113,12 @@ fun ScanlatorFilterDialog(
                                     }
                                 }) {
                                     Icon(
-                                        imageVector = if (item.hidden) Icons.Rounded.VisibilityOff else Icons.Rounded.Visibility,
-                                        contentDescription = null
+                                        imageVector = if (item.hidden) {
+                                            Icons.Rounded.VisibilityOff
+                                        } else {
+                                            Icons.Rounded.Visibility
+                                        },
+                                        contentDescription = null,
                                     )
                                 }
                             }
@@ -126,14 +130,14 @@ fun ScanlatorFilterDialog(
         confirmButton = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 if (scanlatorFilter.isNotEmpty()) {
                     TextButton(
                         onClick = {
                             onConfirm(emptyList())
                             onDismissRequest()
-                        }
+                        },
                     ) {
                         Text(text = stringResource(MR.strings.action_reset))
                     }
@@ -147,12 +151,12 @@ fun ScanlatorFilterDialog(
                         val result = items.mapIndexed { index, item ->
                             ScanlatorFilter(
                                 scanlator = item.name.ifEmpty { null },
-                                priority = if (item.hidden) -1 else index
+                                priority = if (item.hidden) -1 else index,
                             )
                         }
                         onConfirm(result)
                         onDismissRequest()
-                    }
+                    },
                 ) {
                     Text(text = stringResource(MR.strings.action_apply))
                 }
@@ -163,7 +167,7 @@ fun ScanlatorFilterDialog(
 
 class ScanlatorUiModel(
     val name: String,
-    initialHidden: Boolean
+    initialHidden: Boolean,
 ) {
     var hidden by mutableStateOf(initialHidden)
 }

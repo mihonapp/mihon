@@ -427,7 +427,7 @@ class MangaRestorer(
     private suspend fun restoreScanlatorFilters(
         manga: Manga,
         scanlatorFilters: List<BackupScanlatorFilter>,
-        excludedScanlators: List<String>
+        excludedScanlators: List<String>,
     ) {
         if (scanlatorFilters.isEmpty() && excludedScanlators.isEmpty()) return
 

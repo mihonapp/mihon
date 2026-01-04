@@ -280,14 +280,15 @@ class MangaScreen(
             }
         }
 
-                    if (showScanlatorsDialog) {
-                        ScanlatorFilterDialog(
-                            availableScanlators = successState.availableScanlators,
-                            scanlatorFilter = successState.scanlatorFilter,
-                            onDismissRequest = { showScanlatorsDialog = false },
-                            onConfirm = screenModel::setScanlatorFilter,
-                        )
-                    }    }
+        if (showScanlatorsDialog) {
+            ScanlatorFilterDialog(
+                availableScanlators = successState.availableScanlators,
+                scanlatorFilter = successState.scanlatorFilter,
+                onDismissRequest = { showScanlatorsDialog = false },
+                onConfirm = screenModel::setScanlatorFilter,
+            )
+        }
+    }
 
     private fun continueReading(context: Context, unreadChapter: Chapter?) {
         if (unreadChapter != null) openChapter(context, unreadChapter)
