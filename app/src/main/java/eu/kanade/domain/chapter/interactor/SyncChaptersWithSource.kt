@@ -3,7 +3,9 @@ package eu.kanade.domain.chapter.interactor
 import eu.kanade.domain.chapter.model.copyFromSChapter
 import eu.kanade.domain.chapter.model.toSChapter
 import eu.kanade.domain.manga.interactor.GetScanlatorFilter
+import eu.kanade.domain.manga.interactor.SetScanlatorFilter
 import eu.kanade.domain.manga.interactor.UpdateManga
+import eu.kanade.domain.manga.model.ScanlatorFilter
 import eu.kanade.domain.manga.model.toSManga
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
@@ -35,6 +37,7 @@ class SyncChaptersWithSource(
     private val updateChapter: UpdateChapter,
     private val getChaptersByMangaId: GetChaptersByMangaId,
     private val getScanlatorFilter: GetScanlatorFilter,
+    private val setScanlatorFilter: SetScanlatorFilter,
     private val libraryPreferences: LibraryPreferences,
 ) {
 
@@ -221,7 +224,27 @@ class SyncChaptersWithSource(
         // Note that last_update actually represents last time the chapter list changed at all
         updateManga.awaitUpdateLastUpdate(manga.id)
 
-        val excludedScanlators = getScanlatorFilter.await(manga.id)
+        // Sync scanlator filters
+        val currentScanlators = chapterRepository.getScanlatorsByMangaId(manga.id).toSet()
+        val currentFilters = getScanlatorFilter.await(manga.id)
+
+        val validFilters = currentFilters.filter { (it.scanlator ?: "") in currentScanlators }
+        val existingScanlators = validFilters.map { it.scanlator ?: "" }.toSet()
+        val newScanlators = currentScanlators.minus(existingScanlators).sortedWith(String.CASE_INSENSITIVE_ORDER)
+
+        val updatedFilters = if (validFilters.size != currentFilters.size || newScanlators.isNotEmpty()) {
+            val maxPriority = validFilters.filter { it.priority != -1 }.maxOfOrNull { it.priority } ?: -1
+            val newFilters = newScanlators.mapIndexed { index, scanlator ->
+                ScanlatorFilter(scanlator.ifEmpty { null }, maxPriority + 1 + index)
+            }
+            val combined = validFilters + newFilters
+            setScanlatorFilter.await(manga.id, combined)
+            combined
+        } else {
+            validFilters
+        }
+
+        val excludedScanlators = updatedFilters
             .filter { it.priority == -1 }
             .map { it.scanlator }
             .toHashSet()
