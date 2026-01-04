@@ -1,0 +1,27 @@
+CREATE TABLE scanlator_filter(
+    manga_id INTEGER NOT NULL,
+    scanlator TEXT,
+    priority INTEGER NOT NULL,
+    FOREIGN KEY(manga_id) REFERENCES mangas (_id)
+    ON DELETE CASCADE
+);
+
+CREATE INDEX scanlator_filter_manga_id_index ON scanlator_filter(manga_id);
+
+insert:
+INSERT INTO scanlator_filter(manga_id, scanlator, priority)
+VALUES (:mangaId, :scanlator, :priority);
+
+deleteForManga:
+DELETE FROM scanlator_filter
+WHERE manga_id = :mangaId;
+
+deleteByMangaIdAndScanlator:
+DELETE FROM scanlator_filter
+WHERE manga_id = :mangaId
+AND scanlator IS :scanlator;
+
+getScanlatorFilterByMangaId:
+SELECT scanlator, priority
+FROM scanlator_filter
+WHERE manga_id = :mangaId;

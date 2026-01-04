@@ -4,6 +4,7 @@ import eu.kanade.tachiyomi.data.backup.create.BackupOptions
 import eu.kanade.tachiyomi.data.backup.models.BackupChapter
 import eu.kanade.tachiyomi.data.backup.models.BackupHistory
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
+import eu.kanade.tachiyomi.data.backup.models.BackupScanlatorFilter
 import eu.kanade.tachiyomi.data.backup.models.backupChapterMapper
 import eu.kanade.tachiyomi.data.backup.models.backupTrackMapper
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
@@ -30,9 +31,13 @@ class MangaBackupCreator(
         // Entry for this manga
         val mangaObject = manga.toBackupManga()
 
-        mangaObject.excludedScanlators = handler.awaitList {
-            excluded_scanlatorsQueries.getExcludedScanlatorsByMangaId(manga.id)
+        val filters = handler.awaitList {
+            scanlator_filterQueries.getScanlatorFilterByMangaId(manga.id)
         }
+        mangaObject.scanlatorFilters = filters.map { BackupScanlatorFilter(it.scanlator, it.priority.toInt()) }
+        mangaObject.excludedScanlators = filters
+            .filter { it.priority.toInt() == -1 }
+            .mapNotNull { it.scanlator }
 
         if (options.chapters) {
             // Backup all the chapters

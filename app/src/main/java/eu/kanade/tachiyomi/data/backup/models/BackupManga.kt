@@ -43,6 +43,7 @@ data class BackupManga(
     @ProtoNumber(109) var version: Long = 0,
     @ProtoNumber(110) var notes: String = "",
     @ProtoNumber(111) var initialized: Boolean = false,
+    @ProtoNumber(112) var scanlatorFilters: List<BackupScanlatorFilter> = emptyList(),
 ) {
     fun getMangaImpl(): Manga {
         return Manga.create().copy(
