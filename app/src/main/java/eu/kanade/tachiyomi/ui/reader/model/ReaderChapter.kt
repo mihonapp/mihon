@@ -21,6 +21,7 @@ data class ReaderChapter(val chapter: Chapter) {
     var pageLoader: PageLoader? = null
 
     var requestedPage: Int = 0
+    var requestedPageSecond: Int = -1
 
     private var references = 0
 

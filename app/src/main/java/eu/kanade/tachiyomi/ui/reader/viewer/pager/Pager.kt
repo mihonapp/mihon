@@ -17,6 +17,10 @@ open class Pager(
     isHorizontal: Boolean = true,
 ) : DirectionalViewPager(context, isHorizontal) {
 
+    init {
+        isSaveEnabled = false
+    }
+
     /**
      * Tap listener function to execute when a tap is detected.
      */

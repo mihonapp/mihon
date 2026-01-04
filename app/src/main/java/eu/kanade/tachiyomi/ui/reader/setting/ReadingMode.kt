@@ -54,6 +54,20 @@ enum class ReadingMode(
         Direction.Vertical,
         ViewerType.Webtoon,
     ),
+    DUAL_PAGE_LTR(
+        MR.strings.dual_page_ltr_viewer,
+        R.drawable.ic_reader_ltr_24dp,
+        0x00000006,
+        Direction.Horizontal,
+        ViewerType.Pager,
+    ),
+    DUAL_PAGE_RTL(
+        MR.strings.dual_page_rtl_viewer,
+        R.drawable.ic_reader_rtl_24dp,
+        0x00000007,
+        Direction.Horizontal,
+        ViewerType.Pager,
+    ),
     ;
 
     companion object {
@@ -70,6 +84,8 @@ enum class ReadingMode(
             return when (fromPreference(preference)) {
                 LEFT_TO_RIGHT -> L2RPagerViewer(activity)
                 RIGHT_TO_LEFT -> R2LPagerViewer(activity)
+                DUAL_PAGE_LTR -> L2RPagerViewer(activity)
+                DUAL_PAGE_RTL -> R2LPagerViewer(activity)
                 VERTICAL -> VerticalPagerViewer(activity)
                 WEBTOON -> WebtoonViewer(activity)
                 CONTINUOUS_VERTICAL -> WebtoonViewer(activity, isContinuous = false)
