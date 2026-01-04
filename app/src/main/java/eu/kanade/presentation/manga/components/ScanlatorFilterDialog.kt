@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -34,6 +33,8 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
 import androidx.compose.ui.draw.alpha
+
+import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 
 @Composable
 fun ScanlatorFilterDialog(
@@ -72,7 +73,7 @@ fun ScanlatorFilterDialog(
             if (items.isEmpty()) {
                 Text(text = stringResource(MR.strings.no_scanlators_found))
             } else {
-                LazyColumn(
+                ScrollbarLazyColumn(
                     state = lazyListState,
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
