@@ -30,7 +30,7 @@ conscrypt-android = "org.conscrypt:conscrypt-android:2.5.3"
 
 quickjs-android = { group = "com.github.zhanghai.quickjs-java", name = "quickjs-android", version = "547f5b1597" }
 
-jsoup = "org.jsoup:jsoup:1.21.2"
+jsoup = "org.jsoup:jsoup:1.22.1"
 
 disklrucache = "com.jakewharton:disklrucache:2.0.2"
 unifile = "com.github.tachiyomiorg:unifile:e0def6b3dc"
