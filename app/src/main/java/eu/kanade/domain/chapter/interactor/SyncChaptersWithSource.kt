@@ -228,20 +228,24 @@ class SyncChaptersWithSource(
         val currentScanlators = chapterRepository.getScanlatorsByMangaId(manga.id).toSet()
         val currentFilters = getScanlatorFilter.await(manga.id)
 
-        val validFilters = currentFilters.filter { (it.scanlator ?: "") in currentScanlators }
-        val existingScanlators = validFilters.map { it.scanlator ?: "" }.toSet()
-        val newScanlators = currentScanlators.minus(existingScanlators).sortedWith(String.CASE_INSENSITIVE_ORDER)
+        val updatedFilters = if (currentFilters.isNotEmpty()) {
+            val validFilters = currentFilters.filter { (it.scanlator ?: "") in currentScanlators }
+            val existingScanlators = validFilters.map { it.scanlator ?: "" }.toSet()
+            val newScanlators = currentScanlators.minus(existingScanlators).sortedWith(String.CASE_INSENSITIVE_ORDER)
 
-        val updatedFilters = if (validFilters.size != currentFilters.size || newScanlators.isNotEmpty()) {
-            val maxPriority = validFilters.filter { it.priority != -1 }.maxOfOrNull { it.priority } ?: -1
-            val newFilters = newScanlators.mapIndexed { index, scanlator ->
-                ScanlatorFilter(scanlator.ifEmpty { null }, maxPriority + 1 + index)
+            if (validFilters.size != currentFilters.size || newScanlators.isNotEmpty()) {
+                val maxPriority = validFilters.filter { it.priority != -1 }.maxOfOrNull { it.priority } ?: -1
+                val newFilters = newScanlators.mapIndexed { index, scanlator ->
+                    ScanlatorFilter(scanlator.ifEmpty { null }, maxPriority + 1 + index)
+                }
+                val combined = validFilters + newFilters
+                setScanlatorFilter.await(manga.id, combined)
+                combined
+            } else {
+                validFilters
             }
-            val combined = validFilters + newFilters
-            setScanlatorFilter.await(manga.id, combined)
-            combined
         } else {
-            validFilters
+            emptyList()
         }
 
         val excludedScanlators = updatedFilters
