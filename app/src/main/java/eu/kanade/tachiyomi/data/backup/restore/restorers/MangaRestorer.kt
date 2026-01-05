@@ -19,6 +19,7 @@ import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.domain.track.interactor.InsertTrack
 import tachiyomi.domain.track.model.Track
+import tachiyomi.i18n.MR.strings.manga
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.ZonedDateTime
@@ -430,26 +431,33 @@ class MangaRestorer(
         scanlatorFilters: List<BackupScanlatorFilter>,
         excludedScanlators: List<String>,
     ) {
-        if (scanlatorFilters.isEmpty() && excludedScanlators.isEmpty()) return
+        val backupFilters = scanlatorFilters.map { ScanlatorFilter(it.scanlator, it.priority) } +
+            excludedScanlators.map { ScanlatorFilter(it, ScanlatorFilter.EXCLUDED) }
 
-        val existingFilters = handler.awaitList {
-            scanlator_filterQueries.getScanlatorFilterByMangaId(manga.id)
-        }
-        val existingScanlators = existingFilters.map { it.scanlator }.toSet()
+        handler.await(inTransaction = true) {
+            val availableScanlators = chaptersQueries.getScanlatorsByMangaId(manga.id) { it.orEmpty() }
+                .executeAsList()
+                .toSet()
 
-        handler.await(true) {
-            if (scanlatorFilters.isNotEmpty()) {
-                scanlatorFilters.forEach { filter ->
-                    if (filter.scanlator !in existingScanlators) {
-                        scanlator_filterQueries.insert(manga.id, filter.scanlator, filter.priority.toLong())
-                    }
+            val existingScanlators = backupFilters.map { it.scanlator.orEmpty() }.toSet()
+
+            val allFilters = backupFilters.toMutableList()
+
+            val newScanlators = availableScanlators.minus(existingScanlators).sortedWith(String.CASE_INSENSITIVE_ORDER)
+
+            if (newScanlators.isNotEmpty()) {
+                val maxPriority = allFilters.filter { it.priority != ScanlatorFilter.EXCLUDED }
+                    .maxOfOrNull { it.priority } ?: -1
+
+                newScanlators.forEachIndexed { index, scanlator ->
+                    allFilters.add(ScanlatorFilter(scanlator.ifEmpty { null }, maxPriority + 1 + index))
                 }
-            } else if (excludedScanlators.isNotEmpty()) {
-                excludedScanlators.forEach { scanlator ->
-                    if (scanlator !in existingScanlators) {
-                        scanlator_filterQueries.insert(manga.id, scanlator, ScanlatorFilter.EXCLUDED.toLong())
-                    }
-                }
+            }
+
+            scanlator_filterQueries.deleteForManga(manga.id)
+
+            allFilters.forEach { filter ->
+                scanlator_filterQueries.insert(manga.id, filter.scanlator, filter.priority.toLong())
             }
         }
     }
