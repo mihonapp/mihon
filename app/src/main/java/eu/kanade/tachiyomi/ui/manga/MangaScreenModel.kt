@@ -1190,28 +1190,11 @@ class MangaScreenModel(
                 val unreadFilter = manga.unreadFilter
                 val downloadedFilter = manga.downloadedFilter
                 val bookmarkedFilter = manga.bookmarkedFilter
-                val priorityMap = scanlatorFilter.associate { it.scanlator to it.priority }
 
-                val filteredSequence = asSequence()
+                return asSequence()
                     .filter { (chapter) -> applyFilter(unreadFilter) { !chapter.read } }
                     .filter { (chapter) -> applyFilter(bookmarkedFilter) { chapter.bookmark } }
                     .filter { applyFilter(downloadedFilter) { it.isDownloaded || isLocalManga } }
-
-                val processedSequence = if (scanlatorFilter.isNotEmpty()) {
-                    filteredSequence
-                        .groupBy { it.chapter.chapterNumber }
-                        .values.asSequence()
-                        .map { group ->
-                            if (group.size == 1) return@map group.first()
-                            group.minBy { item ->
-                                priorityMap[item.chapter.scanlator] ?: Int.MAX_VALUE
-                            }
-                        }
-                } else {
-                    filteredSequence
-                }
-
-                return processedSequence
                     .sortedWith { (chapter1), (chapter2) -> getChapterSort(manga).invoke(chapter1, chapter2) }
             }
         }
