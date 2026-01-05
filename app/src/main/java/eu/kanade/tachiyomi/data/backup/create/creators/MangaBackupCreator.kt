@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.data.backup.create.creators
 
+import eu.kanade.domain.manga.model.ScanlatorFilter
 import eu.kanade.tachiyomi.data.backup.create.BackupOptions
 import eu.kanade.tachiyomi.data.backup.models.BackupChapter
 import eu.kanade.tachiyomi.data.backup.models.BackupHistory
@@ -36,7 +37,7 @@ class MangaBackupCreator(
         }
         mangaObject.scanlatorFilters = filters.map { BackupScanlatorFilter(it.scanlator, it.priority.toInt()) }
         mangaObject.excludedScanlators = filters
-            .filter { it.priority.toInt() == -1 }
+            .filter { it.priority.toInt() == ScanlatorFilter.EXCLUDED }
             .mapNotNull { it.scanlator }
 
         if (options.chapters) {

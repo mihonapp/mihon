@@ -78,7 +78,7 @@ fun ScanlatorFilterDialog(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     items(items, key = { it.name }) { item ->
-                        ReorderableItem(reorderableState, key = item.name) { isDragging ->
+                        ReorderableItem(reorderableState, key = item.name) { _ ->
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -93,7 +93,7 @@ fun ScanlatorFilterDialog(
                                 }
 
                                 Text(
-                                    text = if (item.name.isEmpty()) stringResource(MR.strings.scanlator) else item.name,
+                                    text = item.name.ifEmpty { stringResource(MR.strings.unknown_scanlator) },
                                     modifier = Modifier.weight(1f).padding(start = 8.dp),
                                     style = MaterialTheme.typography.bodyMedium,
                                 )
