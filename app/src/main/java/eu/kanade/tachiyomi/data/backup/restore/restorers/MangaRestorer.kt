@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.backup.restore.restorers
 
 import eu.kanade.domain.manga.interactor.UpdateManga
+import eu.kanade.domain.manga.model.ScanlatorFilter
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.models.BackupChapter
 import eu.kanade.tachiyomi.data.backup.models.BackupHistory
@@ -446,7 +447,7 @@ class MangaRestorer(
             } else if (excludedScanlators.isNotEmpty()) {
                 excludedScanlators.forEach { scanlator ->
                     if (scanlator !in existingScanlators) {
-                        scanlator_filterQueries.insert(manga.id, scanlator, -1)
+                        scanlator_filterQueries.insert(manga.id, scanlator, ScanlatorFilter.EXCLUDED.toLong())
                     }
                 }
             }

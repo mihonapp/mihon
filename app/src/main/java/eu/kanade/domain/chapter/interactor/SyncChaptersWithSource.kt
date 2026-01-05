@@ -234,7 +234,8 @@ class SyncChaptersWithSource(
             val newScanlators = currentScanlators.minus(existingScanlators).sortedWith(String.CASE_INSENSITIVE_ORDER)
 
             if (validFilters.size != currentFilters.size || newScanlators.isNotEmpty()) {
-                val maxPriority = validFilters.filter { it.priority != -1 }.maxOfOrNull { it.priority } ?: -1
+                // max means lowest priority in filter
+                val maxPriority = validFilters.filter { it.priority != ScanlatorFilter.EXCLUDED }.maxOfOrNull { it.priority } ?: -1
                 val newFilters = newScanlators.mapIndexed { index, scanlator ->
                     ScanlatorFilter(scanlator.ifEmpty { null }, maxPriority + 1 + index)
                 }
@@ -249,7 +250,7 @@ class SyncChaptersWithSource(
         }
 
         val excludedScanlators = updatedFilters
-            .filter { it.priority == -1 }
+            .filter { it.priority == ScanlatorFilter.EXCLUDED }
             .map { it.scanlator }
             .toHashSet()
 

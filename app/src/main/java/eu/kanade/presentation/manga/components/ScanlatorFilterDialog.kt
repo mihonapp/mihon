@@ -42,8 +42,8 @@ fun ScanlatorFilterDialog(
     onConfirm: (List<ScanlatorFilter>) -> Unit,
 ) {
     val items = remember(availableScanlators, scanlatorFilter) {
-        val visibleFilters = scanlatorFilter.filter { it.priority != -1 }.sortedBy { it.priority }
-        val hiddenFilters = scanlatorFilter.filter { it.priority == -1 }
+        val visibleFilters = scanlatorFilter.filter { it.priority != ScanlatorFilter.EXCLUDED }.sortedBy { it.priority }
+        val hiddenFilters = scanlatorFilter.filter { it.priority == ScanlatorFilter.EXCLUDED }
 
         val visibleScanlators = visibleFilters.map { it.scanlator ?: "" }
         val hiddenScanlators = hiddenFilters.map { it.scanlator ?: "" }
@@ -151,7 +151,7 @@ fun ScanlatorFilterDialog(
                         val result = items.mapIndexed { index, item ->
                             ScanlatorFilter(
                                 scanlator = item.name.ifEmpty { null },
-                                priority = if (item.hidden) -1 else index,
+                                priority = if (item.hidden) ScanlatorFilter.EXCLUDED else index,
                             )
                         }
                         onConfirm(result)
