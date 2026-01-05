@@ -12,6 +12,17 @@ INSERT INTO scanlator_filter(manga_id, scanlator, priority)
 SELECT manga_id, scanlator, -1
 FROM excluded_scanlators;
 
+INSERT INTO scanlator_filter(manga_id, scanlator, priority)
+SELECT
+    C.manga_id,
+    C.scanlator,
+    (ROW_NUMBER() OVER (PARTITION BY C.manga_id ORDER BY C.scanlator COLLATE NOCASE)) - 1
+FROM chapters C
+INNER JOIN (SELECT DISTINCT manga_id FROM excluded_scanlators) E ON C.manga_id = E.manga_id
+WHERE C.scanlator IS NOT NULL
+AND C.scanlator NOT IN (SELECT scanlator FROM excluded_scanlators WHERE manga_id = C.manga_id)
+GROUP BY C.manga_id, C.scanlator;
+
 DROP TABLE excluded_scanlators;
 
 DROP VIEW IF EXISTS libraryView;
