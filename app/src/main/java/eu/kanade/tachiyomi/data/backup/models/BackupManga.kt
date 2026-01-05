@@ -39,6 +39,7 @@ data class BackupManga(
     @ProtoNumber(106) var lastModifiedAt: Long = 0,
     @ProtoNumber(107) var favoriteModifiedAt: Long? = null,
     // Mihon values start here
+    @Deprecated("Use scanlatorFilters instead")
     @ProtoNumber(108) var excludedScanlators: List<String> = emptyList(),
     @ProtoNumber(109) var version: Long = 0,
     @ProtoNumber(110) var notes: String = "",

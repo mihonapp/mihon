@@ -42,8 +42,7 @@ fun ScanlatorFilterDialog(
     onConfirm: (List<ScanlatorFilter>) -> Unit,
 ) {
     val items = remember(availableScanlators, scanlatorFilter) {
-        val visibleFilters = scanlatorFilter.filter { it.priority != ScanlatorFilter.EXCLUDED }.sortedBy { it.priority }
-        val hiddenFilters = scanlatorFilter.filter { it.priority == ScanlatorFilter.EXCLUDED }
+        val (hiddenFilters, visibleFilters) = scanlatorFilter.partition { it.priority == ScanlatorFilter.EXCLUDED }
 
         val visibleScanlators = visibleFilters.map { it.scanlator ?: "" }
         val hiddenScanlators = hiddenFilters.map { it.scanlator ?: "" }
@@ -53,10 +52,9 @@ fun ScanlatorFilterDialog(
             it !in knownScanlators
         }.sortedWith(String.CASE_INSENSITIVE_ORDER)
 
-        val list = mutableListOf<ScanlatorUiModel>()
-        visibleFilters.forEach { list.add(ScanlatorUiModel(it.scanlator ?: "", false)) }
-        newScanlators.forEach { list.add(ScanlatorUiModel(it, false)) }
-        hiddenFilters.forEach { list.add(ScanlatorUiModel(it.scanlator ?: "", true)) }
+        val list = (visibleFilters.sortedBy { it.priority }.map { ScanlatorUiModel(it.scanlator ?: "", false) } +
+            newScanlators.map { ScanlatorUiModel(it, false) } +
+            hiddenFilters.map { ScanlatorUiModel(it.scanlator ?: "", true) })
 
         list.toMutableStateList()
     }

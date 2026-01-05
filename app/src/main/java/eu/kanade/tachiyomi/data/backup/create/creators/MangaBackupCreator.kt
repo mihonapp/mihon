@@ -36,9 +36,6 @@ class MangaBackupCreator(
             scanlator_filterQueries.getScanlatorFilterByMangaId(manga.id)
         }
         mangaObject.scanlatorFilters = filters.map { BackupScanlatorFilter(it.scanlator, it.priority.toInt()) }
-        mangaObject.excludedScanlators = filters
-            .filter { it.priority.toInt() == ScanlatorFilter.EXCLUDED }
-            .mapNotNull { it.scanlator }
 
         if (options.chapters) {
             // Backup all the chapters
