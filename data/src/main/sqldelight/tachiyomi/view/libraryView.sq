@@ -24,7 +24,24 @@ LEFT JOIN (
     AND chapters.scanlator IS SF.scanlator
     LEFT JOIN history
     ON chapters._id = history.chapter_id
-    WHERE coalesce(SF.priority, 0) >= 0
+    WHERE (
+        NOT EXISTS (SELECT 1 FROM scanlator_filter WHERE manga_id = chapters.manga_id)
+        OR (
+            coalesce(SF.priority, 0) >= 0
+            AND chapters._id = (
+                SELECT C2._id
+                FROM chapters C2
+                LEFT JOIN scanlator_filter SF2
+                ON C2.manga_id = SF2.manga_id
+                AND C2.scanlator IS SF2.scanlator
+                WHERE C2.manga_id = chapters.manga_id
+                AND C2.chapter_number = chapters.chapter_number
+                AND coalesce(SF2.priority, 0) >= 0
+                ORDER BY coalesce(SF2.priority, 10000000) ASC, C2._id ASC
+                LIMIT 1
+            )
+        )
+    )
     GROUP BY chapters.manga_id
 ) AS C
 ON M._id = C.manga_id
