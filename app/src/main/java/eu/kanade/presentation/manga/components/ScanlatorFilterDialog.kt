@@ -41,22 +41,21 @@ fun ScanlatorFilterDialog(
     onDismissRequest: () -> Unit,
     onConfirm: (List<ScanlatorFilter>) -> Unit,
 ) {
-    val items = remember(availableScanlators, scanlatorFilter) {
-        val (hiddenFilters, visibleFilters) = scanlatorFilter.partition { it.priority == ScanlatorFilter.EXCLUDED }
-
-        val visibleScanlators = visibleFilters.map { it.scanlator ?: "" }
-        val hiddenScanlators = hiddenFilters.map { it.scanlator ?: "" }
-
-        val knownScanlators = visibleScanlators.toSet() + hiddenScanlators.toSet()
-        val newScanlators = availableScanlators.filter {
-            it !in knownScanlators
-        }.sortedWith(String.CASE_INSENSITIVE_ORDER)
-
-        val list = (visibleFilters.sortedBy { it.priority }.map { ScanlatorUiModel(it.scanlator ?: "", false) } +
-            newScanlators.map { ScanlatorUiModel(it, false) } +
-            hiddenFilters.map { ScanlatorUiModel(it.scanlator ?: "", true) })
-
-        list.toMutableStateList()
+    val items = remember(scanlatorFilter, availableScanlators) {
+        if (scanlatorFilter.isEmpty()) {
+            availableScanlators
+                .sortedWith(String.CASE_INSENSITIVE_ORDER)
+                .map { ScanlatorUiModel(it, false) }
+                .toMutableStateList()
+        } else {
+            scanlatorFilter
+                .sortedWith(
+                    compareBy<ScanlatorFilter> { it.priority == ScanlatorFilter.EXCLUDED }
+                        .thenBy { it.priority },
+                )
+                .map { ScanlatorUiModel(it.scanlator ?: "", it.priority == ScanlatorFilter.EXCLUDED) }
+                .toMutableStateList()
+        }
     }
 
     val lazyListState = rememberLazyListState()

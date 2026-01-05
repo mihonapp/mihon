@@ -435,29 +435,36 @@ class MangaRestorer(
             excludedScanlators.map { ScanlatorFilter(it, ScanlatorFilter.EXCLUDED) }
 
         handler.await(inTransaction = true) {
-            val availableScanlators = chaptersQueries.getScanlatorsByMangaId(manga.id) { it.orEmpty() }
-                .executeAsList()
-                .toSet()
+            val existingFilters = scanlator_filterQueries.getScanlatorFilterByMangaId(manga.id).executeAsList()
+                .map { ScanlatorFilter(it.scanlator, it.priority.toInt()) }
 
-            val existingScanlators = backupFilters.map { it.scanlator.orEmpty() }.toSet()
+            val baseFilters = backupFilters.ifEmpty { existingFilters }
 
-            val allFilters = backupFilters.toMutableList()
+            if (baseFilters.isNotEmpty()) {
+                val availableScanlators = chaptersQueries.getScanlatorsByMangaId(manga.id) { it.orEmpty() }
+                    .executeAsList()
+                    .toSet()
 
-            val newScanlators = availableScanlators.minus(existingScanlators).sortedWith(String.CASE_INSENSITIVE_ORDER)
+                val validFilters = baseFilters.filter { (it.scanlator ?: "") in availableScanlators }
+                val coveredScanlators = validFilters.map { it.scanlator.orEmpty() }.toSet()
+                val newScanlators = availableScanlators.minus(coveredScanlators).sortedWith(String.CASE_INSENSITIVE_ORDER)
 
-            if (newScanlators.isNotEmpty()) {
-                val maxPriority = allFilters.filter { it.priority != ScanlatorFilter.EXCLUDED }
-                    .maxOfOrNull { it.priority } ?: -1
-
-                newScanlators.forEachIndexed { index, scanlator ->
-                    allFilters.add(ScanlatorFilter(scanlator.ifEmpty { null }, maxPriority + 1 + index))
+                val combined = if (newScanlators.isNotEmpty()) {
+                    val maxPriority = validFilters.filter { it.priority != ScanlatorFilter.EXCLUDED }
+                        .maxOfOrNull { it.priority } ?: -1
+                    validFilters + newScanlators.mapIndexed { index, scanlator ->
+                        ScanlatorFilter(scanlator.ifEmpty { null }, maxPriority + 1 + index)
+                    }
+                } else {
+                    validFilters
                 }
-            }
 
-            scanlator_filterQueries.deleteForManga(manga.id)
-
-            allFilters.forEach { filter ->
-                scanlator_filterQueries.insert(manga.id, filter.scanlator, filter.priority.toLong())
+                if (combined.size != existingFilters.size || combined != existingFilters) {
+                    scanlator_filterQueries.deleteForManga(manga.id)
+                    combined.forEach { filter ->
+                        scanlator_filterQueries.insert(manga.id, filter.scanlator, filter.priority.toLong())
+                    }
+                }
             }
         }
     }
