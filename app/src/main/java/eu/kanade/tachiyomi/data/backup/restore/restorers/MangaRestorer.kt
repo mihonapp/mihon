@@ -447,7 +447,9 @@ class MangaRestorer(
 
                 val validFilters = baseFilters.filter { (it.scanlator ?: "") in availableScanlators }
                 val coveredScanlators = validFilters.map { it.scanlator.orEmpty() }.toSet()
-                val newScanlators = availableScanlators.minus(coveredScanlators).sortedWith(String.CASE_INSENSITIVE_ORDER)
+                val newScanlators = availableScanlators.minus(
+                    coveredScanlators,
+                ).sortedWith(String.CASE_INSENSITIVE_ORDER)
 
                 val combined = if (newScanlators.isNotEmpty()) {
                     val maxPriority = validFilters.filter { it.priority != ScanlatorFilter.EXCLUDED }

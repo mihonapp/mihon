@@ -237,7 +237,8 @@ class SyncChaptersWithSource(
 
             if (validFilters.size != currentFilters.size || newScanlators.isNotEmpty()) {
                 // max means lowest priority in filter
-                val maxPriority = validFilters.filter { it.priority != ScanlatorFilter.EXCLUDED }.maxOfOrNull { it.priority } ?: -1
+                val maxPriority =
+                    validFilters.filter { it.priority != ScanlatorFilter.EXCLUDED }.maxOfOrNull { it.priority } ?: -1
                 val newFilters = newScanlators.mapIndexed { index, scanlator ->
                     ScanlatorFilter(scanlator.ifEmpty { null }, maxPriority + 1 + index)
                 }
