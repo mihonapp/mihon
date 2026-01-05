@@ -224,6 +224,8 @@ class SyncChaptersWithSource(
         // Note that last_update actually represents last time the chapter list changed at all
         updateManga.awaitUpdateLastUpdate(manga.id)
 
+        updatedToAdd = updatedToAdd.filterNot { it.url in changedOrDuplicateReadUrls }
+
         // Sync scanlator filters
         val currentScanlators = chapterRepository.getScanlatorsByMangaId(manga.id).toSet()
         val currentFilters = getScanlatorFilter.await(manga.id)
@@ -249,11 +251,32 @@ class SyncChaptersWithSource(
             emptyList()
         }
 
+        if (updatedFilters.isEmpty()) {
+            return updatedToAdd
+        }
+
         val excludedScanlators = updatedFilters
             .filter { it.priority == ScanlatorFilter.EXCLUDED }
             .map { it.scanlator }
             .toHashSet()
 
-        return updatedToAdd.filterNot { it.url in changedOrDuplicateReadUrls || it.scanlator in excludedScanlators }
+        val priorityMap = updatedFilters
+            .filter { it.priority != ScanlatorFilter.EXCLUDED }
+            .associate { it.scanlator to it.priority }
+
+        fun getPriority(scanlator: String?): Int = priorityMap[scanlator] ?: Int.MAX_VALUE
+
+        val candidates = updatedToAdd.filterNot { it.scanlator in excludedScanlators }
+        val existingValid = dbChapters.filterNot { it.scanlator in excludedScanlators }
+        val allChaptersByNumber = (existingValid + candidates).groupBy { it.chapterNumber }
+
+        return candidates
+            .filter { candidate ->
+                val duplicateChapters = allChaptersByNumber[candidate.chapterNumber] ?: return@filter true
+                val candidatePriority = getPriority(candidate.scanlator)
+                duplicateChapters.none { other ->
+                    other.url != candidate.url && getPriority(other.scanlator) < candidatePriority
+                }
+            }
     }
 }
