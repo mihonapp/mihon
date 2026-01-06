@@ -11,7 +11,7 @@ spotless = "8.1.0"
 ktlint-core = "1.8.0"
 firebase-bom = "34.7.0"
 markdown = "0.39.0"
-junit = "6.0.1"
+junit = "6.0.2"
 materialKolor = "5.0.0-alpha04"
 
 [libraries]
