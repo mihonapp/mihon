@@ -83,7 +83,7 @@ actual class LocalSource(
             0L
         }
 
-        var mangaDirs = fileSystem.getFilesInBaseDirectory()
+        var allMangaDirs = fileSystem.getFilesInBaseDirectory()
             // Filter out files that are hidden and is not a folder
             .filter { it.isDirectory && !it.name.orEmpty().startsWith('.') }
             .distinctBy { it.name }
@@ -95,7 +95,9 @@ actual class LocalSource(
                 } else {
                     it.lastModified() >= lastModifiedLimit
                 }
-            }
+            }.chunked(MANGA_PER_PAGE)
+
+        var mangaDirs = allMangaDirs.getOrElse(page - 1) { emptyList() }
 
         filters.forEach { filter ->
             when (filter) {
@@ -135,7 +137,7 @@ actual class LocalSource(
             }
             .awaitAll()
 
-        MangasPage(mangas, false)
+        MangasPage(mangas, allMangaDirs.getOrNull(page) != null)
     }
 
     // Manga details related
@@ -364,6 +366,7 @@ actual class LocalSource(
     companion object {
         const val ID = 0L
         const val HELP_URL = "https://mihon.app/docs/guides/local-source/"
+        const val MANGA_PER_PAGE = 15
 
         private val LATEST_THRESHOLD = 7.days.inWholeMilliseconds
     }
