@@ -124,7 +124,13 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
     override fun onDestroy() {
         Shizuku.removeBinderDeadListener(shizukuDeadListener)
         Shizuku.removeRequestPermissionResultListener(shizukuPermissionListener)
-        Shizuku.unbindUserService(shizukuArgs, connection, true)
+        if (Shizuku.pingBinder()) {
+            try {
+                Shizuku.unbindUserService(shizukuArgs, connection, true)
+            } catch (e: Exception) {
+                logcat(LogPriority.WARN, e) { "Failed to unbind shizuku service" }
+            }
+        }
         service.unregisterReceiver(receiver)
         logcat { "ShizukuInstaller destroy" }
         scope.cancel()
