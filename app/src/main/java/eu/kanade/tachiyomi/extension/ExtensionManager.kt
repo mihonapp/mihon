@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.extension
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.extension.interactor.TrustExtension
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.api.ExtensionApi
@@ -43,6 +44,7 @@ class ExtensionManager(
     private val context: Context,
     private val preferences: SourcePreferences = Injekt.get(),
     private val trustExtension: TrustExtension = Injekt.get(),
+    private val basePreferences: BasePreferences = Injekt.get(),
 ) {
 
     val scope = CoroutineScope(SupervisorJob())
@@ -70,6 +72,13 @@ class ExtensionManager(
 
     private val untrustedExtensionMapFlow = MutableStateFlow(emptyMap<String, Extension.Untrusted>())
     val untrustedExtensionsFlow = untrustedExtensionMapFlow.mapExtensions(scope)
+
+    private val notLoadedExtensionFlowMap = MutableStateFlow(emptyMap<String, Extension.NotLoaded>())
+    val notLoadedExtensionsFlow = notLoadedExtensionFlowMap.mapExtensions(scope)
+
+    private val safeMode by lazy {
+        basePreferences.safeMode().get()
+    }
 
     init {
         initExtensions()
@@ -128,6 +137,10 @@ class ExtensionManager(
             .filterIsInstance<LoadResult.Untrusted>()
             .associate { it.extension.pkgName to it.extension }
 
+        notLoadedExtensionFlowMap.value = extensions
+            .filterIsInstance<LoadResult.NotLoaded>()
+            .associate { it.extension.pkgName to it.extension }
+
         _isInitialized.value = true
     }
 
@@ -135,6 +148,8 @@ class ExtensionManager(
      * Finds the available extensions in the [api] and updates [availableExtensionMapFlow].
      */
     suspend fun findAvailableExtensions() {
+        if (safeMode) return
+
         val extensions: List<Extension.Available> = try {
             api.findExtensions()
         } catch (e: Exception) {

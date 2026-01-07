@@ -40,6 +40,8 @@ val IncognitoModeBannerBackgroundColor
     @Composable get() = MaterialTheme.colorScheme.primary
 val IndexingBannerBackgroundColor
     @Composable get() = MaterialTheme.colorScheme.secondary
+val SafeModeBannerBackgroundColor
+    @Composable get() = MaterialTheme.colorScheme.error
 
 @Composable
 fun WarningBanner(
@@ -63,6 +65,7 @@ fun AppStateBanners(
     downloadedOnlyMode: Boolean,
     incognitoMode: Boolean,
     indexing: Boolean,
+    safeMode: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
@@ -110,7 +113,21 @@ fun AppStateBanners(
         }.fastMap { it.measure(constraints) }
         val incognitoHeight = incognitoPlaceable.fastMaxBy { it.height }?.height ?: 0
 
-        layout(constraints.maxWidth, indexingHeight + downloadedOnlyHeight + incognitoHeight) {
+        val safeModePlaceable = subcompose(3) {
+            AnimatedVisibility(
+                visible = safeMode,
+                enter = expandVertically(),
+                exit = shrinkVertically(),
+            ) {
+                val top = (mainInsetsTop - indexingHeight - downloadedOnlyHeight - incognitoHeight).coerceAtLeast(0)
+                SafeModeBanner(
+                    modifier = Modifier.windowInsetsPadding(WindowInsets(top = top)),
+                )
+            }
+        }.fastMap { it.measure(constraints) }
+        val safeModeHeight = safeModePlaceable.fastMaxBy { it.height }?.height ?: 0
+
+        layout(constraints.maxWidth, indexingHeight + downloadedOnlyHeight + incognitoHeight + safeModeHeight) {
             indexingPlaceable.fastForEach {
                 it.place(0, 0)
             }
@@ -119,6 +136,9 @@ fun AppStateBanners(
             }
             incognitoPlaceable.fastForEach {
                 it.place(0, indexingHeight + downloadedOnlyHeight)
+            }
+            safeModePlaceable.fastForEach {
+                it.place(0, indexingHeight + downloadedOnlyHeight + incognitoHeight)
             }
         }
     }
@@ -149,6 +169,21 @@ private fun IncognitoModeBanner(modifier: Modifier = Modifier) {
             .padding(4.dp)
             .then(modifier),
         color = MaterialTheme.colorScheme.onPrimary,
+        textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.labelMedium,
+    )
+}
+
+@Composable
+private fun SafeModeBanner(modifier: Modifier = Modifier) {
+    Text(
+        text = stringResource(MR.strings.label_safe_mode),
+        modifier = Modifier
+            .background(SafeModeBannerBackgroundColor)
+            .fillMaxWidth()
+            .padding(4.dp)
+            .then(modifier),
+        color = MaterialTheme.colorScheme.onError,
         textAlign = TextAlign.Center,
         style = MaterialTheme.typography.labelMedium,
     )
