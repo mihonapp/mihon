@@ -19,7 +19,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Changed
 - Update tracker icons ([@AntsyLich](https://github.com/AntsyLich)) ([#2773](https://github.com/mihonapp/mihon/pull/2773))
-- Suwayomi tracker: Allow a small difference in chapter number for matching to avoid incorrect chapter progress sync ([@cpiber](https://github.com/cpiber)) ([#2657](https://github.com/mihonapp/mihon/pull/2675))
+- Add a small increment to chapter number before comparison to fix progress sync issues for Suwayomi ([@cpiber](https://github.com/cpiber)) ([#2657](https://github.com/mihonapp/mihon/pull/2675))
 
 ### Fixed
 - Fix reader tap zones triggering after scrolling is stopped by tapping ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2680](https://github.com/mihonapp/mihon/pull/2680))
