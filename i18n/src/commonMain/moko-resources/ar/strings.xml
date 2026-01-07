@@ -3,9 +3,9 @@
     <string name="name">الاسم</string>
     <string name="categories">الفئات</string>
     <string name="manga">إدخالات المكتبة</string>
-    <string name="chapters">الفصول</string>
-    <string name="track">التعقب</string>
-    <string name="history">التاريخ</string>
+    <string name="chapters">فصول</string>
+    <string name="track">تعقب</string>
+    <string name="history">تاريخ</string>
     <string name="label_settings">اﻹعدادات</string>
     <string name="label_download_queue">قائمة التنزيلات</string>
     <string name="label_library">المكتبة</string>
@@ -702,7 +702,7 @@
     <string name="track_delete_text">هذا يزيل التتبع محليًّا.</string>
     <string name="action_ok">حسنًا</string>
     <string name="track_delete_remote_text">وكذلك أزله من %s</string>
-    <string name="delete_downloaded">احذف ما نُزِّل</string>
+    <string name="delete_downloaded">حذف التنزيلات</string>
     <string name="syncing_library">تُزامن المكتبة</string>
     <string name="library_sync_complete">انتهت مزامنة المكتبة</string>
     <string name="has_results">وُجدت نتائج</string>
@@ -732,7 +732,7 @@
     <string name="action_apply">نفِّذ</string>
     <string name="action_revert_to_default">صفِّر</string>
     <string name="no_scanlators_found">لم يُعثَر على مترجمين</string>
-    <string name="scanlator">المترجم</string>
+    <string name="scanlator">سكانليتور</string>
     <string name="exclude_scanlators">احجب بعض المترجمين</string>
     <string name="action_menu_overflow_description">خيارات أكثر</string>
     <string name="selected">محدَّد</string>
