@@ -109,9 +109,9 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
     override fun processEntry(entry: Entry) {
         super.processEntry(entry)
         try {
-            shellInterface?.install(
-                service.contentResolver.openAssetFileDescriptor(entry.uri, "r"),
-            )
+            service.contentResolver.openAssetFileDescriptor(entry.uri, "r").use {
+                shellInterface?.install(it)
+            }
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e) { "Failed to install extension ${entry.downloadId} ${entry.uri}" }
             continueQueue(InstallStep.Error)
