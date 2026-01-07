@@ -18,7 +18,7 @@ data class MALManga(
     val mediaType: String,
     @SerialName("start_date")
     val startDate: String?,
-    val authors: List<MALAuthorNode>,
+    val authors: List<MALAuthorNode> = emptyList(),
 )
 
 @Serializable
