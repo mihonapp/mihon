@@ -13,13 +13,16 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ## [Unreleased]
 ### Added
 - Automatically remove downloads on Suwayomi after reading, configurable via extension settings ([@cpiber](https://github.com/cpiber)) ([#2673](https://github.com/mihonapp/mihon/pull/2673))
+- Display author & artist name in MAL search results ([@MajorTanya](https://github.com/MajorTanya)) ([#2833](https://github.com/mihonapp/mihon/pull/2833))
 - Filter Scanlator by priority  ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#2828](https://github.com/mihonapp/mihon/pull/2828))
 
 ### Improved
 - Minimize memory usage by reducing in-memory cover cache size ([@Lolle2000la](https://github.com/Lolle2000la)) ([#2266](https://github.com/mihonapp/mihon/pull/2266))
+- Optimize MAL search queries ([@MajorTanya](https://github.com/MajorTanya)) ([#2832](https://github.com/mihonapp/mihon/pull/2832))
 
 ### Changed
 - Update tracker icons ([@AntsyLich](https://github.com/AntsyLich)) ([#2773](https://github.com/mihonapp/mihon/pull/2773))
+- Add a small increment to chapter number before comparison to fix progress sync issues for Suwayomi ([@cpiber](https://github.com/cpiber)) ([#2657](https://github.com/mihonapp/mihon/pull/2675))
 
 ### Fixed
 - Fix reader tap zones triggering after scrolling is stopped by tapping ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2680](https://github.com/mihonapp/mihon/pull/2680))

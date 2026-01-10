@@ -95,4 +95,19 @@
         <item quantity="many">%1$s pàgines</item>
         <item quantity="other">%1$s pàgines</item>
     </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">Voleu migrar %1$d element?</item>
+        <item quantity="many">Voleu migrar %1$d elements?</item>
+        <item quantity="other">Voleu migrar %1$d elements?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">Voleu copiar %1$d element?</item>
+        <item quantity="many">Voleu copiar %1$d elements?</item>
+        <item quantity="other">Voleu copiar %1$d elements?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">S’ha omès un element</item>
+        <item quantity="many">S’han omès %1$d elements</item>
+        <item quantity="other">S’han omès %1$d elements</item>
+    </plurals>
 </resources>
