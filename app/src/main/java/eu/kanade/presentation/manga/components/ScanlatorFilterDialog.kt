@@ -45,7 +45,6 @@ fun ScanlatorFilterDialog(
     val items = remember(scanlatorFilter, availableScanlators) {
         if (scanlatorFilter.isEmpty()) {
             availableScanlators
-                .sortedWith(String.CASE_INSENSITIVE_ORDER)
                 .mapIndexed { index, scanlator -> ScanlatorUiModel(scanlator, index, false) }
                 .toMutableStateList()
         } else {

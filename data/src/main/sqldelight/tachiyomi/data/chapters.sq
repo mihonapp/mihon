@@ -102,7 +102,9 @@ WHERE
 getScanlatorsByMangaId:
 SELECT scanlator
 FROM chapters
-WHERE manga_id = :mangaId;
+WHERE manga_id = :mangaId
+GROUP BY scanlator
+ORDER BY count(*) DESC, max(date_upload) DESC;
 
 getBookmarkedChaptersByMangaId:
 SELECT *

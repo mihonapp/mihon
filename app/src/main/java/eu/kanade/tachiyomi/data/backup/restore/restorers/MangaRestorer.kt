@@ -445,13 +445,11 @@ class MangaRestorer(
             if (baseFilters.isNotEmpty()) {
                 val availableScanlators = chaptersQueries.getScanlatorsByMangaId(manga.id) { it.orEmpty() }
                     .executeAsList()
-                    .toSet()
+                    .distinct()
 
                 val validFilters = baseFilters.filter { (it.scanlator ?: "") in availableScanlators }
                 val coveredScanlators = validFilters.map { it.scanlator.orEmpty() }.toSet()
-                val newScanlators = availableScanlators.minus(
-                    coveredScanlators,
-                ).sortedWith(String.CASE_INSENSITIVE_ORDER)
+                val newScanlators = availableScanlators.minus(coveredScanlators)
 
                 val combined = if (newScanlators.isNotEmpty()) {
                     val maxPriority = validFilters.maxOfOrNull { it.priority } ?: -1

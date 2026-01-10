@@ -17,7 +17,7 @@ INSERT INTO scanlator_filter(manga_id, scanlator, priority, excluded)
 SELECT
     C.manga_id,
     C.scanlator,
-    (ROW_NUMBER() OVER (PARTITION BY C.manga_id ORDER BY C.scanlator COLLATE NOCASE)) - 1,
+    (ROW_NUMBER() OVER (PARTITION BY C.manga_id ORDER BY count(*) DESC, max(C.date_upload) DESC)) - 1,
     0
 FROM chapters C
 INNER JOIN (SELECT DISTINCT manga_id FROM excluded_scanlators) E ON C.manga_id = E.manga_id

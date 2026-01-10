@@ -233,8 +233,15 @@ class SyncChaptersWithSource(
         val updatedFilters = if (currentFilters.isNotEmpty()) {
             val validFilters = currentFilters.filter { (it.scanlator ?: "") in currentScanlators }
             val existingScanlators = validFilters.map { it.scanlator ?: "" }.toSet()
+            
+            val allChapters = dbChapters + updatedToAdd
+            val scanlatorStats = allChapters.groupBy { it.scanlator }
+            
             val newScanlators = currentScanlators.minus(existingScanlators)
-                .sortedWith(String.CASE_INSENSITIVE_ORDER)
+                .sortedWith(
+                    compareByDescending<String> { scanlatorStats[it]?.size ?: 0 }
+                        .thenByDescending { scanlatorStats[it]?.maxOfOrNull { c -> c.dateUpload } ?: 0 }
+                )
 
             if (validFilters.size != currentFilters.size || newScanlators.isNotEmpty()) {
                 // max means lowest priority in filter
