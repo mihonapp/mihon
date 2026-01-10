@@ -54,31 +54,49 @@ FROM chapters
 WHERE _id = :id;
 
 getChaptersByMangaId:
-SELECT C.*
-FROM chapters C
-LEFT JOIN scanlator_filter SF
-ON C.manga_id = SF.manga_id
-AND C.scanlator IS SF.scanlator
-WHERE C.manga_id = :mangaId
-AND (
+WITH FilteredChapters AS (
+    SELECT
+        C.*,
+        coalesce(SF.priority, 0) AS filter_priority,
+        ROW_NUMBER() OVER (
+            PARTITION BY C.manga_id, C.chapter_number
+            ORDER BY 
+                CASE WHEN coalesce(SF.priority, 10000000) < 0 THEN 10000001 ELSE coalesce(SF.priority, 10000000) END ASC,
+                C._id ASC
+        ) AS rank,
+        CASE WHEN MWF.manga_id IS NOT NULL THEN 1 ELSE 0 END AS has_filter
+    FROM chapters C
+    LEFT JOIN scanlator_filter SF
+        ON C.manga_id = SF.manga_id
+        AND C.scanlator IS SF.scanlator
+    LEFT JOIN (SELECT DISTINCT manga_id FROM scanlator_filter) MWF
+        ON C.manga_id = MWF.manga_id
+    WHERE C.manga_id = :mangaId
+)
+SELECT
+    _id,
+    manga_id,
+    url,
+    name,
+    scanlator,
+    read,
+    bookmark,
+    last_page_read,
+    chapter_number,
+    source_order,
+    date_fetch,
+    date_upload,
+    last_modified_at,
+    version,
+    is_syncing
+FROM FilteredChapters
+WHERE
     :applyScanlatorFilter = 0
-    OR NOT EXISTS (SELECT 1 FROM scanlator_filter WHERE manga_id = :mangaId)
+    OR has_filter = 0
     OR (
-        coalesce(SF.priority, 0) >= 0
-        AND C._id = (
-            SELECT C2._id
-            FROM chapters C2
-            LEFT JOIN scanlator_filter SF2
-            ON C2.manga_id = SF2.manga_id
-            AND C2.scanlator IS SF2.scanlator
-            WHERE C2.manga_id = C.manga_id
-            AND C2.chapter_number = C.chapter_number
-            AND coalesce(SF2.priority, 0) >= 0
-            ORDER BY coalesce(SF2.priority, 10000000) ASC, C2._id ASC
-            LIMIT 1
-        )
-    )
-);
+        filter_priority >= 0
+        AND rank = 1
+    );
 
 getScanlatorsByMangaId:
 SELECT scanlator

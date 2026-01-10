@@ -1,4 +1,22 @@
 CREATE VIEW updatesView AS
+WITH UpdatesFilteredChapters AS (
+    SELECT
+        C.*,
+        coalesce(SF.priority, 0) AS filter_priority,
+        ROW_NUMBER() OVER (
+            PARTITION BY C.manga_id, C.chapter_number
+            ORDER BY 
+                CASE WHEN coalesce(SF.priority, 10000000) < 0 THEN 10000001 ELSE coalesce(SF.priority, 10000000) END ASC,
+                C._id ASC
+        ) AS rank,
+        CASE WHEN MWF.manga_id IS NOT NULL THEN 1 ELSE 0 END AS has_filter
+    FROM chapters C
+    LEFT JOIN scanlator_filter SF
+        ON C.manga_id = SF.manga_id
+        AND C.scanlator IS SF.scanlator
+    LEFT JOIN (SELECT DISTINCT manga_id FROM scanlator_filter) MWF
+        ON C.manga_id = MWF.manga_id
+)
 SELECT
     mangas._id AS mangaId,
     mangas.title AS mangaTitle,
@@ -15,29 +33,15 @@ SELECT
     mangas.cover_last_modified AS coverLastModified,
     chapters.date_upload AS dateUpload,
     chapters.date_fetch AS datefetch
-FROM mangas JOIN chapters
+FROM mangas JOIN UpdatesFilteredChapters AS chapters
 ON mangas._id = chapters.manga_id
-LEFT JOIN scanlator_filter SF
-ON chapters.manga_id = SF.manga_id
-AND chapters.scanlator IS SF.scanlator
 WHERE favorite = 1
 AND date_fetch > date_added
 AND (
-    NOT EXISTS (SELECT 1 FROM scanlator_filter WHERE manga_id = chapters.manga_id)
+    has_filter = 0
     OR (
-        coalesce(SF.priority, 0) >= 0
-        AND chapters._id = (
-            SELECT C2._id
-            FROM chapters C2
-            LEFT JOIN scanlator_filter SF2
-            ON C2.manga_id = SF2.manga_id
-            AND C2.scanlator IS SF2.scanlator
-            WHERE C2.manga_id = chapters.manga_id
-            AND C2.chapter_number = chapters.chapter_number
-            AND coalesce(SF2.priority, 0) >= 0
-            ORDER BY coalesce(SF2.priority, 10000000) ASC, C2._id ASC
-            LIMIT 1
-        )
+        filter_priority >= 0
+        AND rank = 1
     )
 )
 ORDER BY date_fetch DESC;
