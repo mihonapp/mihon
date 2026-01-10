@@ -5,4 +5,3 @@ data class ScanlatorFilter(
     val priority: Int,
     val excluded: Boolean,
 )
-

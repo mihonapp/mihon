@@ -139,7 +139,11 @@ fun ScanlatorFilterDialog(
                                                     } else {
                                                         items.forEach { it.excluded = false }
                                                     }
-                                                    items.sortWith(compareBy<ScanlatorUiModel> { it.excluded }.thenBy { it.priority })
+                                                    items.sortWith(
+                                                        compareBy<ScanlatorUiModel> {
+                                                            it.excluded
+                                                        }.thenBy { it.priority },
+                                                    )
                                                 },
                                             )
                                             .padding(8.dp),
