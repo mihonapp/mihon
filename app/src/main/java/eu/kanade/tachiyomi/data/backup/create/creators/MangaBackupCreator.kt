@@ -35,7 +35,13 @@ class MangaBackupCreator(
         val filters = handler.awaitList {
             scanlator_filterQueries.getScanlatorFilterByMangaId(manga.id)
         }
-        mangaObject.scanlatorFilters = filters.map { BackupScanlatorFilter(it.scanlator, it.priority.toInt()) }
+        mangaObject.scanlatorFilters = filters.map {
+            BackupScanlatorFilter(
+                it.scanlator,
+                it.priority.toInt(),
+                it.excluded == 1L,
+            )
+        }
 
         if (options.chapters) {
             // Backup all the chapters

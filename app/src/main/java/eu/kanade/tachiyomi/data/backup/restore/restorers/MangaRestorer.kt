@@ -431,12 +431,14 @@ class MangaRestorer(
         scanlatorFilters: List<BackupScanlatorFilter>,
         excludedScanlators: List<String>,
     ) {
-        val backupFilters = scanlatorFilters.map { ScanlatorFilter(it.scanlator, it.priority) } +
-            excludedScanlators.map { ScanlatorFilter(it, ScanlatorFilter.EXCLUDED) }
+        val backupFilters = scanlatorFilters.map {
+            ScanlatorFilter(it.scanlator, it.priority, it.excluded)
+        } +
+            excludedScanlators.map { ScanlatorFilter(it, 0, true) }
 
         handler.await(inTransaction = true) {
             val existingFilters = scanlator_filterQueries.getScanlatorFilterByMangaId(manga.id).executeAsList()
-                .map { ScanlatorFilter(it.scanlator, it.priority.toInt()) }
+                .map { ScanlatorFilter(it.scanlator, it.priority.toInt(), it.excluded == 1L) }
 
             val baseFilters = backupFilters.ifEmpty { existingFilters }
 
@@ -452,10 +454,9 @@ class MangaRestorer(
                 ).sortedWith(String.CASE_INSENSITIVE_ORDER)
 
                 val combined = if (newScanlators.isNotEmpty()) {
-                    val maxPriority = validFilters.filter { it.priority != ScanlatorFilter.EXCLUDED }
-                        .maxOfOrNull { it.priority } ?: -1
+                    val maxPriority = validFilters.maxOfOrNull { it.priority } ?: -1
                     validFilters + newScanlators.mapIndexed { index, scanlator ->
-                        ScanlatorFilter(scanlator.ifEmpty { null }, maxPriority + 1 + index)
+                        ScanlatorFilter(scanlator.ifEmpty { null }, maxPriority + 1 + index, false)
                     }
                 } else {
                     validFilters
@@ -464,7 +465,12 @@ class MangaRestorer(
                 if (combined.size != existingFilters.size || combined != existingFilters) {
                     scanlator_filterQueries.deleteForManga(manga.id)
                     combined.forEach { filter ->
-                        scanlator_filterQueries.insert(manga.id, filter.scanlator, filter.priority.toLong())
+                        scanlator_filterQueries.insert(
+                            manga.id,
+                            filter.scanlator,
+                            filter.priority.toLong(),
+                            if (filter.excluded) 1L else 0L,
+                        )
                     }
                 }
             }

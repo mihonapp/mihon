@@ -7,4 +7,5 @@ import kotlinx.serialization.protobuf.ProtoNumber
 data class BackupScanlatorFilter(
     @ProtoNumber(1) val scanlator: String? = null,
     @ProtoNumber(2) val priority: Int,
+    @ProtoNumber(3) val excluded: Boolean = false,
 )

@@ -2,21 +2,23 @@ CREATE TABLE scanlator_filter(
     manga_id INTEGER NOT NULL,
     scanlator TEXT,
     priority INTEGER NOT NULL,
+    excluded INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY(manga_id) REFERENCES mangas (_id)
     ON DELETE CASCADE
 );
 
 CREATE INDEX scanlator_filter_manga_id_index ON scanlator_filter(manga_id);
 
-INSERT INTO scanlator_filter(manga_id, scanlator, priority)
-SELECT manga_id, scanlator, -1
+INSERT INTO scanlator_filter(manga_id, scanlator, priority, excluded)
+SELECT manga_id, scanlator, 1000, 1
 FROM excluded_scanlators;
 
-INSERT INTO scanlator_filter(manga_id, scanlator, priority)
+INSERT INTO scanlator_filter(manga_id, scanlator, priority, excluded)
 SELECT
     C.manga_id,
     C.scanlator,
-    (ROW_NUMBER() OVER (PARTITION BY C.manga_id ORDER BY C.scanlator COLLATE NOCASE)) - 1
+    (ROW_NUMBER() OVER (PARTITION BY C.manga_id ORDER BY C.scanlator COLLATE NOCASE)) - 1,
+    0
 FROM chapters C
 INNER JOIN (SELECT DISTINCT manga_id FROM excluded_scanlators) E ON C.manga_id = E.manga_id
 WHERE C.scanlator IS NOT NULL
@@ -32,11 +34,12 @@ CREATE VIEW libraryView AS
 WITH FilteredChapters AS (
     SELECT
         C.*,
-        coalesce(SF.priority, 0) AS filter_priority,
+        coalesce(SF.excluded, 0) AS filter_excluded,
         ROW_NUMBER() OVER (
             PARTITION BY C.manga_id, C.chapter_number
             ORDER BY 
-                CASE WHEN coalesce(SF.priority, 10000000) < 0 THEN 10000001 ELSE coalesce(SF.priority, 10000000) END ASC,
+                CASE WHEN coalesce(SF.excluded, 0) = 1 THEN 1 ELSE 0 END ASC,
+                coalesce(SF.priority, 10000000) ASC,
                 C._id ASC
         ) AS rank,
         CASE WHEN MWF.manga_id IS NOT NULL THEN 1 ELSE 0 END AS has_filter
@@ -72,7 +75,7 @@ LEFT JOIN (
     WHERE (
         has_filter = 0
         OR (
-            filter_priority >= 0
+            filter_excluded = 0
             AND rank = 1
         )
     )
@@ -91,11 +94,12 @@ CREATE VIEW updatesView AS
 WITH UpdatesFilteredChapters AS (
     SELECT
         C.*,
-        coalesce(SF.priority, 0) as filter_priority,
+        coalesce(SF.excluded, 0) AS filter_excluded,
         ROW_NUMBER() OVER (
             PARTITION BY C.manga_id, C.chapter_number
             ORDER BY 
-                CASE WHEN coalesce(SF.priority, 10000000) < 0 THEN 10000001 ELSE coalesce(SF.priority, 10000000) END ASC,
+                CASE WHEN coalesce(SF.excluded, 0) = 1 THEN 1 ELSE 0 END ASC,
+                coalesce(SF.priority, 10000000) ASC,
                 C._id ASC
         ) AS rank,
         CASE WHEN MWF.manga_id IS NOT NULL THEN 1 ELSE 0 END AS has_filter
@@ -129,7 +133,7 @@ AND date_fetch > date_added
 AND (
     has_filter = 0
     OR (
-        filter_priority >= 0
+        filter_excluded = 0
         AND rank = 1
     )
 )

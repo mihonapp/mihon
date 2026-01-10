@@ -57,11 +57,12 @@ getChaptersByMangaId:
 WITH FilteredChapters AS (
     SELECT
         C.*,
-        coalesce(SF.priority, 0) AS filter_priority,
+        coalesce(SF.excluded, 0) AS filter_excluded,
         ROW_NUMBER() OVER (
             PARTITION BY C.manga_id, C.chapter_number
             ORDER BY 
-                CASE WHEN coalesce(SF.priority, 10000000) < 0 THEN 10000001 ELSE coalesce(SF.priority, 10000000) END ASC,
+                CASE WHEN coalesce(SF.excluded, 0) = 1 THEN 1 ELSE 0 END ASC,
+                coalesce(SF.priority, 10000000) ASC,
                 C._id ASC
         ) AS rank,
         CASE WHEN MWF.manga_id IS NOT NULL THEN 1 ELSE 0 END AS has_filter
@@ -94,7 +95,7 @@ WHERE
     :applyScanlatorFilter = 0
     OR has_filter = 0
     OR (
-        filter_priority >= 0
+        filter_excluded = 0
         AND rank = 1
     );
 

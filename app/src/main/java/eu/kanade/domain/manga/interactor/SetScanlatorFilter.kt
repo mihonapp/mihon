@@ -12,7 +12,12 @@ class SetScanlatorFilter(
             scanlator_filterQueries.deleteForManga(mangaId)
             filters.forEach {
                 val scanlator = it.scanlator?.takeUnless { s -> s.isEmpty() }
-                scanlator_filterQueries.insert(mangaId, scanlator, it.priority.toLong())
+                scanlator_filterQueries.insert(
+                    mangaId,
+                    scanlator,
+                    it.priority.toLong(),
+                    if (it.excluded) 1L else 0L,
+                )
             }
         }
     }

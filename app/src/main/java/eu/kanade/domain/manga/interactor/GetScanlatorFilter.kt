@@ -13,7 +13,7 @@ class GetScanlatorFilter(
         return handler.awaitList {
             scanlator_filterQueries.getScanlatorFilterByMangaId(mangaId)
         }
-            .map { ScanlatorFilter(it.scanlator, it.priority.toInt()) }
+            .map { ScanlatorFilter(it.scanlator, it.priority.toInt(), it.excluded == 1L) }
     }
 
     fun subscribe(mangaId: Long): Flow<List<ScanlatorFilter>> {
@@ -21,7 +21,7 @@ class GetScanlatorFilter(
             scanlator_filterQueries.getScanlatorFilterByMangaId(mangaId)
         }
             .map { list ->
-                list.map { ScanlatorFilter(it.scanlator, it.priority.toInt()) }
+                list.map { ScanlatorFilter(it.scanlator, it.priority.toInt(), it.excluded == 1L) }
             }
     }
 }

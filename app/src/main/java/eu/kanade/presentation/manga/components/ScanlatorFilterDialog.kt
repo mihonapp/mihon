@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -45,21 +46,28 @@ fun ScanlatorFilterDialog(
         if (scanlatorFilter.isEmpty()) {
             availableScanlators
                 .sortedWith(String.CASE_INSENSITIVE_ORDER)
-                .map { ScanlatorUiModel(it, false) }
+                .mapIndexed { index, scanlator -> ScanlatorUiModel(scanlator, index, false) }
                 .toMutableStateList()
         } else {
             scanlatorFilter
                 .sortedWith(
-                    compareBy<ScanlatorFilter> { it.priority == ScanlatorFilter.EXCLUDED }
+                    compareBy<ScanlatorFilter> { it.excluded }
                         .thenBy { it.priority },
                 )
-                .map { ScanlatorUiModel(it.scanlator ?: "", it.priority == ScanlatorFilter.EXCLUDED) }
+                .map { ScanlatorUiModel(it.scanlator ?: "", it.priority, it.excluded) }
                 .toMutableStateList()
         }
     }
 
     val lazyListState = rememberLazyListState()
     val reorderableState = rememberReorderableLazyListState(lazyListState) { from, to ->
+        // Swap priorities to preserve the set of values
+        val fromItem = items[from.index]
+        val toItem = items[to.index]
+        val tmp = fromItem.priority
+        fromItem.priority = toItem.priority
+        toItem.priority = tmp
+
         items.add(to.index, items.removeAt(from.index))
     }
 
@@ -75,16 +83,17 @@ fun ScanlatorFilterDialog(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     items(items, key = { it.name }) { item ->
-                        ReorderableItem(reorderableState, key = item.name) { _ ->
+                        ReorderableItem(reorderableState, key = item.name, enabled = !item.excluded) { _ ->
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .alpha(if (item.hidden) 0.38f else 1f),
+                                    .alpha(if (item.excluded) 0.38f else 1f),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 IconButton(
                                     onClick = {},
                                     modifier = Modifier.draggableHandle(),
+                                    enabled = !item.excluded,
                                 ) {
                                     Icon(Icons.Rounded.DragHandle, contentDescription = null)
                                 }
@@ -96,21 +105,20 @@ fun ScanlatorFilterDialog(
                                 )
 
                                 IconButton(onClick = {
-                                    item.hidden = !item.hidden
+                                    item.excluded = !item.excluded
                                     items.remove(item)
-                                    if (item.hidden) {
-                                        items.add(item)
-                                    } else {
-                                        val firstHiddenIndex = items.indexOfFirst { it.hidden }
-                                        if (firstHiddenIndex != -1) {
-                                            items.add(firstHiddenIndex, item)
+                                    // Find insertion index based on sort order (Excluded, Priority)
+                                    val insertIndex = items.indexOfFirst {
+                                        if (item.excluded) {
+                                            it.excluded && it.priority > item.priority
                                         } else {
-                                            items.add(item)
+                                            it.excluded || it.priority > item.priority
                                         }
-                                    }
+                                    }.takeIf { it != -1 } ?: items.size
+                                    items.add(insertIndex, item)
                                 }) {
                                     Icon(
-                                        imageVector = if (item.hidden) {
+                                        imageVector = if (item.excluded) {
                                             Icons.Rounded.VisibilityOff
                                         } else {
                                             Icons.Rounded.Visibility
@@ -145,10 +153,11 @@ fun ScanlatorFilterDialog(
                 }
                 TextButton(
                     onClick = {
-                        val result = items.mapIndexed { index, item ->
+                        val result = items.map { item ->
                             ScanlatorFilter(
                                 scanlator = item.name.ifEmpty { null },
-                                priority = if (item.hidden) ScanlatorFilter.EXCLUDED else index,
+                                priority = item.priority,
+                                excluded = item.excluded,
                             )
                         }
                         onConfirm(result)
@@ -164,7 +173,9 @@ fun ScanlatorFilterDialog(
 
 class ScanlatorUiModel(
     val name: String,
-    initialHidden: Boolean,
+    initialPriority: Int,
+    initialExcluded: Boolean,
 ) {
-    var hidden by mutableStateOf(initialHidden)
+    var priority by mutableIntStateOf(initialPriority)
+    var excluded by mutableStateOf(initialExcluded)
 }
