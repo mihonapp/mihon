@@ -1,12 +1,16 @@
 package eu.kanade.presentation.manga.components
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DragHandle
 import androidx.compose.material.icons.rounded.Visibility
@@ -27,6 +31,7 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import eu.kanade.domain.manga.model.ScanlatorFilter
 import sh.calvin.reorderable.ReorderableItem
@@ -35,6 +40,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.i18n.stringResource
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ScanlatorFilterDialog(
     availableScanlators: Set<String>,
@@ -103,19 +109,7 @@ fun ScanlatorFilterDialog(
                                     style = MaterialTheme.typography.bodyMedium,
                                 )
 
-                                IconButton(onClick = {
-                                    item.excluded = !item.excluded
-                                    items.remove(item)
-                                    // Find insertion index based on sort order (Excluded, Priority)
-                                    val insertIndex = items.indexOfFirst {
-                                        if (item.excluded) {
-                                            it.excluded && it.priority > item.priority
-                                        } else {
-                                            it.excluded || it.priority > item.priority
-                                        }
-                                    }.takeIf { it != -1 } ?: items.size
-                                    items.add(insertIndex, item)
-                                }) {
+                                Box {
                                     Icon(
                                         imageVector = if (item.excluded) {
                                             Icons.Rounded.VisibilityOff
@@ -123,6 +117,32 @@ fun ScanlatorFilterDialog(
                                             Icons.Rounded.Visibility
                                         },
                                         contentDescription = null,
+                                        modifier = Modifier
+                                            .clip(CircleShape)
+                                            .combinedClickable(
+                                                onClick = {
+                                                    item.excluded = !item.excluded
+                                                    items.remove(item)
+                                                    val insertIndex = items.indexOfFirst {
+                                                        if (item.excluded) {
+                                                            it.excluded && it.priority > item.priority
+                                                        } else {
+                                                            it.excluded || it.priority > item.priority
+                                                        }
+                                                    }.takeIf { it != -1 } ?: items.size
+                                                    items.add(insertIndex, item)
+                                                },
+                                                onLongClick = {
+                                                    val othersVisible = items.any { !it.excluded && it != item }
+                                                    if (othersVisible) {
+                                                        items.forEach { it.excluded = (it != item) }
+                                                    } else {
+                                                        items.forEach { it.excluded = false }
+                                                    }
+                                                    items.sortWith(compareBy<ScanlatorUiModel> { it.excluded }.thenBy { it.priority })
+                                                },
+                                            )
+                                            .padding(8.dp),
                                     )
                                 }
                             }
