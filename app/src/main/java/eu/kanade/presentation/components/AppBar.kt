@@ -281,14 +281,14 @@ fun SearchToolbar(
     val textFieldState = rememberTextFieldState(searchQuery ?: "")
 
     LaunchedEffect(textFieldState.text) {
-        if (textFieldState.text.isNotEmpty()) {
+        if (searchQuery != null) {
             onChangeSearchQuery(textFieldState.text.toString())
         }
     }
 
-    val onClickCloseSearch: () -> Unit = {
-        textFieldState.clearText()
+    val clickCloseSearch: () -> Unit = {
         onClickCloseSearch()
+        textFieldState.clearText()
     }
 
     AppBar(
@@ -342,7 +342,7 @@ fun SearchToolbar(
                 },
             )
         },
-        navigateUp = if (searchQuery == null) navigateUp else onClickCloseSearch,
+        navigateUp = if (searchQuery == null) navigateUp else clickCloseSearch,
         actions = {
             key("search") {
                 val onClick = {
