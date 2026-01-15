@@ -27,4 +27,9 @@ class UpdatesPreferences(
         "pref_filter_updates_bookmarked",
         TriState.DISABLED,
     )
+
+    fun filterExcludedScanlators() = preferenceStore.getBoolean(
+        "pref_filter_updates_hide_excluded_scanlators",
+        false,
+    )
 }

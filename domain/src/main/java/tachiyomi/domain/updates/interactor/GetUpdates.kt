@@ -18,6 +18,7 @@ class GetUpdates(
         unread: Boolean?,
         started: Boolean?,
         bookmarked: Boolean?,
+        hideExcludedScanlators: Boolean,
     ): Flow<List<UpdatesWithRelations>> {
         return repository.subscribeAll(
             instant.toEpochMilli(),
@@ -25,6 +26,7 @@ class GetUpdates(
             unread = unread,
             started = started,
             bookmarked = bookmarked,
+            hideExcludedScanlators = hideExcludedScanlators,
         )
     }
 

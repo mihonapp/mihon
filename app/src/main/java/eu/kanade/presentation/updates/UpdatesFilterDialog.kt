@@ -12,8 +12,10 @@ import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
 import eu.kanade.tachiyomi.ui.updates.UpdatesSettingsScreenModel
 import kotlinx.collections.immutable.persistentListOf
+import tachiyomi.core.common.preference.getAndSet
 import tachiyomi.domain.updates.service.UpdatesPreferences
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.TriStateItem
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
@@ -69,5 +71,12 @@ private fun ColumnScope.FilterSheet(
         label = stringResource(MR.strings.action_filter_bookmarked),
         state = filterBookmarked,
         onClick = { screenModel.toggleFilter(UpdatesPreferences::filterBookmarked) },
+    )
+
+    val filterExcludedScanlators by screenModel.updatesPreferences.filterExcludedScanlators().collectAsState()
+    CheckboxItem(
+        label = stringResource(MR.strings.action_hide_excluded_scanlators),
+        checked = filterExcludedScanlators,
+        onClick = { screenModel.updatesPreferences.filterExcludedScanlators().getAndSet { !it } },
     )
 }

@@ -32,6 +32,7 @@ class UpdatesRepositoryImpl(
         unread: Boolean?,
         started: Boolean?,
         bookmarked: Boolean?,
+        hideExcludedScanlators: Boolean,
     ): Flow<List<UpdatesWithRelations>> {
         return databaseHandler.subscribeToList {
             updatesViewQueries.getRecentUpdatesWithFilters(
@@ -42,6 +43,7 @@ class UpdatesRepositoryImpl(
                 // SQLDelight does not want to generate this as a Boolean
                 started = started?.toLong(),
                 bookmarked = bookmarked,
+                hideExcludedScanlators = hideExcludedScanlators.toLong(),
                 mapper = ::mapUpdatesWithRelations,
             )
         }
@@ -78,6 +80,7 @@ class UpdatesRepositoryImpl(
         coverLastModified: Long,
         dateUpload: Long,
         dateFetch: Long,
+        excludedScanlator: String?,
     ): UpdatesWithRelations = UpdatesWithRelations(
         mangaId = mangaId,
         mangaTitle = mangaTitle,

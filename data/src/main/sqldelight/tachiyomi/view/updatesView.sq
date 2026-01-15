@@ -14,9 +14,13 @@ SELECT
     mangas.thumbnail_url AS thumbnailUrl,
     mangas.cover_last_modified AS coverLastModified,
     chapters.date_upload AS dateUpload,
-    chapters.date_fetch AS datefetch
+    chapters.date_fetch AS datefetch,
+    excluded_scanlators.scanlator AS excludedScanlator
 FROM mangas JOIN chapters
 ON mangas._id = chapters.manga_id
+LEFT JOIN excluded_scanlators
+ON mangas._id = excluded_scanlators.manga_id
+AND chapters.scanlator = excluded_scanlators.scanlator
 WHERE favorite = 1
 AND date_fetch > date_added
 ORDER BY date_fetch DESC;
@@ -39,6 +43,10 @@ AND (
     OR :started IS NULL
 )
 AND (bookmark = :bookmarked OR :bookmarked IS NULL)
+AND (
+    (:hideExcludedScanlators = 1 AND excludedScanlator IS NULL)
+    OR :hideExcludedScanlators = 0
+)
 LIMIT :limit;
 
 getUpdatesByReadStatus:
