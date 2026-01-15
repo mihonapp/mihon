@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
@@ -83,24 +84,32 @@ class UpdatesScreenModel(
             val limit = ZonedDateTime.now().minusMonths(3).toInstant()
 
             combine(
-                getUpdates.subscribe(limit).distinctUntilChanged(),
+                // needed for SQL filters (unread, started, bookmarked, etc)
+                getUpdatesItemPreferenceFlow()
+                    .distinctUntilChanged()
+                    .flatMapLatest {
+                        getUpdates.subscribe(
+                            limit,
+                            unread = it.filterUnread.toNullableBoolean(),
+                            started = it.filterStarted.toNullableBoolean(),
+                            bookmarked = it.filterBookmarked.toNullableBoolean(),
+                        ).distinctUntilChanged()
+                    },
                 downloadCache.changes,
                 downloadManager.queueState,
-                getUpdatesItemPreferenceFlow(),
+                // needed for Kotlin filters (downloaded)
+                getUpdatesItemPreferenceFlow().distinctUntilChanged(),
             ) { updates, _, _, itemPreferences ->
                 updates
                     .toUpdateItems()
                     .applyFilters(itemPreferences)
+                    .toPersistentList()
             }
-                .catch {
-                    logcat(LogPriority.ERROR, it)
-                    _events.send(Event.InternalError)
-                }
-                .collectLatest { updatesItems ->
+                .collectLatest { updateItems ->
                     mutableState.update {
                         it.copy(
                             isLoading = false,
-                            items = updatesItems.toPersistentList(),
+                            items = updateItems,
                         )
                     }
                 }
@@ -135,9 +144,6 @@ class UpdatesScreenModel(
         preferences: ItemPreferences,
     ): List<UpdatesItem> {
         val filterDownloaded = preferences.filterDownloaded
-        val filterUnread = preferences.filterUnread
-        val filterStarted = preferences.filterStarted
-        val filterBookmarked = preferences.filterBookmarked
 
         val filterFnDownloaded: (UpdatesItem) -> Boolean = {
             applyFilter(filterDownloaded) {
@@ -145,29 +151,8 @@ class UpdatesScreenModel(
             }
         }
 
-        val filterFnUnread: (UpdatesItem) -> Boolean = {
-            applyFilter(filterUnread) {
-                !it.update.read
-            }
-        }
-
-        val filterFnUnfinished: (UpdatesItem) -> Boolean = {
-            applyFilter(filterStarted) {
-                !it.update.read && it.update.lastPageRead > 0
-            }
-        }
-
-        val filterFnBookmarked: (UpdatesItem) -> Boolean = {
-            applyFilter(filterBookmarked) {
-                it.update.bookmark
-            }
-        }
-
         return fastFilter {
-            filterFnDownloaded(it) &&
-                filterFnUnread(it) &&
-                filterFnUnfinished(it) &&
-                filterFnBookmarked(it)
+            filterFnDownloaded(it)
         }
     }
 
@@ -492,6 +477,14 @@ class UpdatesScreenModel(
     sealed interface Event {
         data object InternalError : Event
         data class LibraryUpdateTriggered(val started: Boolean) : Event
+    }
+}
+
+private fun TriState.toNullableBoolean(): Boolean? {
+    return when (this) {
+        TriState.DISABLED -> null
+        TriState.ENABLED_IS -> true
+        TriState.ENABLED_NOT -> false
     }
 }
 

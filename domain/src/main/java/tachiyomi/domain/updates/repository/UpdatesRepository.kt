@@ -7,7 +7,13 @@ interface UpdatesRepository {
 
     suspend fun awaitWithRead(read: Boolean, after: Long, limit: Long): List<UpdatesWithRelations>
 
-    fun subscribeAll(after: Long, limit: Long): Flow<List<UpdatesWithRelations>>
+    fun subscribeAll(
+        after: Long,
+        limit: Long,
+        unread: Boolean?,
+        started: Boolean?,
+        bookmarked: Boolean?,
+    ): Flow<List<UpdatesWithRelations>>
 
     fun subscribeWithRead(read: Boolean, after: Long, limit: Long): Flow<List<UpdatesWithRelations>>
 }

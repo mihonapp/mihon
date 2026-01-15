@@ -27,6 +27,20 @@ FROM updatesView
 WHERE dateUpload > :after
 LIMIT :limit;
 
+getRecentUpdatesWithFilters:
+SELECT *
+FROM updatesView
+WHERE dateUpload > :after
+AND (read = :read OR :read IS NULL)
+-- Started means some progress but not finished, Read means finished chapter, thus:
+AND (
+    (:started = 1 AND last_page_read > 0 AND read = 0)
+    OR (:started = 0 AND last_page_read = 0 AND read = 0)
+    OR :started IS NULL
+)
+AND (bookmark = :bookmarked OR :bookmarked IS NULL)
+LIMIT :limit;
+
 getUpdatesByReadStatus:
 SELECT *
 FROM updatesView
