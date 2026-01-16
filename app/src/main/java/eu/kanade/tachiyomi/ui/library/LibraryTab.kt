@@ -151,7 +151,8 @@ data object LibraryTab : Tab {
                         .takeIf { state.selectedManga.fastAll { !it.isLocal() } },
                     onDeleteClicked = screenModel::openDeleteMangaDialog,
                     onMigrateClicked = {
-                        val selection = state.selection
+                        val selection = state.selectedManga
+                            .map { it.id }
                         screenModel.clearSelection()
                         navigator.push(MigrationConfigScreen(selection))
                     },
