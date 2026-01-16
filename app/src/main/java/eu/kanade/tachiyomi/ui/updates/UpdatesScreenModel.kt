@@ -100,7 +100,7 @@ class UpdatesScreenModel(
                 downloadManager.queueState,
                 // needed for Kotlin filters (downloaded)
                 getUpdatesItemPreferenceFlow().distinctUntilChanged { old, new ->
-                    old.filterDownloaded != new.filterDownloaded
+                    old.filterDownloaded == new.filterDownloaded
                 },
             ) { updates, _, _, itemPreferences ->
                 updates
