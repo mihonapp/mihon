@@ -283,13 +283,13 @@ fun SearchToolbar(
 
     LaunchedEffect(searchQuery) {
         val newText = searchQuery ?: ""
-        if (newText != textFieldState.text.toString()) {
+        if (newText != textFieldState.text) {
             textFieldState.setTextAndPlaceCursorAtEnd(newText)
         }
     }
 
     LaunchedEffect(textFieldState.text) {
-        if (searchQuery != null) {
+        if (searchQuery != null && searchQuery != textFieldState.text) {
             onChangeSearchQuery(textFieldState.text.toString())
         }
     }
