@@ -54,7 +54,7 @@ internal class MonetCompatColorScheme(seed: Color) : BaseColorScheme() {
                 seedColor = seed,
                 isDark = dark,
                 specVersion = ColorSpec.SpecVersion.SPEC_2025,
-                style = PaletteStyle.Expressive,
+                style = PaletteStyle.TonalSpot,
             )
                 .toColorScheme(isAmoled = false)
         }
