@@ -44,7 +44,7 @@ AND (
 )
 AND (:bookmarked IS NULL OR bookmark = :bookmarked)
 AND (
-    (:hideExcludedScanlators = 0 OR excludedScanlator IS NULL)
+    (excludedScanlator IS NULL OR :hideExcludedScanlators = 0)
 )
 LIMIT :limit;
 
