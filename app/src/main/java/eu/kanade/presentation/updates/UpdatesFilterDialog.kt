@@ -75,7 +75,7 @@ private fun ColumnScope.FilterSheet(
 
     val filterExcludedScanlators by screenModel.updatesPreferences.filterExcludedScanlators().collectAsState()
     CheckboxItem(
-        label = stringResource(MR.strings.action_hide_excluded_scanlators),
+        label = stringResource(MR.strings.action_filter_excluded_scanlators),
         checked = filterExcludedScanlators,
         onClick = { screenModel.updatesPreferences.filterExcludedScanlators().getAndSet { !it } },
     )
