@@ -10,6 +10,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Close
@@ -279,6 +280,13 @@ fun SearchToolbar(
 ) {
     val focusRequester = remember { FocusRequester() }
     val textFieldState = rememberTextFieldState(searchQuery ?: "")
+
+    LaunchedEffect(searchQuery) {
+        val newText = searchQuery ?: ""
+        if (newText != textFieldState.text.toString()) {
+            textFieldState.setTextAndPlaceCursorAtEnd(newText)
+        }
+    }
 
     LaunchedEffect(textFieldState.text) {
         if (searchQuery != null) {
