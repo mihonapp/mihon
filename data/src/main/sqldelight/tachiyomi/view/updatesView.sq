@@ -1,4 +1,23 @@
 CREATE VIEW updatesView AS
+WITH UpdatesFilteredChapters AS (
+    SELECT
+        C.*,
+        coalesce(SF.excluded, 0) AS filter_excluded,
+        ROW_NUMBER() OVER (
+            PARTITION BY C.manga_id, C.chapter_number
+            ORDER BY 
+                CASE WHEN coalesce(SF.excluded, 0) = 1 THEN 1 ELSE 0 END ASC,
+                coalesce(SF.priority, 10000000) ASC,
+                C._id ASC
+        ) AS rank,
+        CASE WHEN MWF.manga_id IS NOT NULL THEN 1 ELSE 0 END AS has_filter
+    FROM chapters C
+    LEFT JOIN scanlator_filter SF
+        ON C.manga_id = SF.manga_id
+        AND C.scanlator IS SF.scanlator
+    LEFT JOIN (SELECT DISTINCT manga_id FROM scanlator_filter) MWF
+        ON C.manga_id = MWF.manga_id
+)
 SELECT
     mangas._id AS mangaId,
     mangas.title AS mangaTitle,
@@ -15,10 +34,17 @@ SELECT
     mangas.cover_last_modified AS coverLastModified,
     chapters.date_upload AS dateUpload,
     chapters.date_fetch AS datefetch
-FROM mangas JOIN chapters
+FROM mangas JOIN UpdatesFilteredChapters AS chapters
 ON mangas._id = chapters.manga_id
 WHERE favorite = 1
 AND date_fetch > date_added
+AND (
+    has_filter = 0
+    OR (
+        filter_excluded = 0
+        AND rank = 1
+    )
+)
 ORDER BY date_fetch DESC;
 
 getRecentUpdates:

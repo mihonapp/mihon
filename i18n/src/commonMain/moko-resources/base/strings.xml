@@ -770,7 +770,8 @@
     <string name="set_chapter_settings_as_default">Set as default</string>
     <string name="no_chapters_error">No chapters found</string>
     <string name="are_you_sure">Are you sure?</string>
-    <string name="exclude_scanlators">Exclude scanlators</string>
+    <string name="filter_scanlators">Filter scanlators</string>
+    <string name="unknown_scanlator">Unknown scanlator</string>
     <string name="no_scanlators_found">No scanlators found</string>
     <string name="confirm_tracker_update">Update trackers to chapter %d?</string>
     <string name="trackers_updated_summary">Trackers updated to chapter %d</string>

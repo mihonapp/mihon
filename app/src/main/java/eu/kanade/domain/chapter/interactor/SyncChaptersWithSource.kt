@@ -2,8 +2,10 @@ package eu.kanade.domain.chapter.interactor
 
 import eu.kanade.domain.chapter.model.copyFromSChapter
 import eu.kanade.domain.chapter.model.toSChapter
-import eu.kanade.domain.manga.interactor.GetExcludedScanlators
+import eu.kanade.domain.manga.interactor.GetScanlatorFilter
+import eu.kanade.domain.manga.interactor.SetScanlatorFilter
 import eu.kanade.domain.manga.interactor.UpdateManga
+import eu.kanade.domain.manga.model.ScanlatorFilter
 import eu.kanade.domain.manga.model.toSManga
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
@@ -34,7 +36,8 @@ class SyncChaptersWithSource(
     private val updateManga: UpdateManga,
     private val updateChapter: UpdateChapter,
     private val getChaptersByMangaId: GetChaptersByMangaId,
-    private val getExcludedScanlators: GetExcludedScanlators,
+    private val getScanlatorFilter: GetScanlatorFilter,
+    private val setScanlatorFilter: SetScanlatorFilter,
     private val libraryPreferences: LibraryPreferences,
 ) {
 
@@ -221,8 +224,67 @@ class SyncChaptersWithSource(
         // Note that last_update actually represents last time the chapter list changed at all
         updateManga.awaitUpdateLastUpdate(manga.id)
 
-        val excludedScanlators = getExcludedScanlators.await(manga.id).toHashSet()
+        updatedToAdd = updatedToAdd.filterNot { it.url in changedOrDuplicateReadUrls }
 
-        return updatedToAdd.filterNot { it.url in changedOrDuplicateReadUrls || it.scanlator in excludedScanlators }
+        // Sync scanlator filters
+        val currentScanlators = chapterRepository.getScanlatorsByMangaId(manga.id).toSet()
+        val currentFilters = getScanlatorFilter.await(manga.id)
+
+        val updatedFilters = if (currentFilters.isNotEmpty()) {
+            val validFilters = currentFilters.filter { (it.scanlator ?: "") in currentScanlators }
+            val existingScanlators = validFilters.map { it.scanlator ?: "" }.toSet()
+
+            val allChapters = dbChapters + updatedToAdd
+            val scanlatorStats = allChapters.groupBy { it.scanlator }
+
+            val newScanlators = currentScanlators.minus(existingScanlators)
+                .sortedWith(
+                    compareByDescending<String> { scanlatorStats[it]?.size ?: 0 }
+                        .thenByDescending { scanlatorStats[it]?.maxOfOrNull { c -> c.dateUpload } ?: 0 },
+                )
+
+            if (validFilters.size != currentFilters.size || newScanlators.isNotEmpty()) {
+                // max means lowest priority in filter
+                val maxPriority = validFilters.maxOfOrNull { it.priority } ?: -1
+                val newFilters = newScanlators.mapIndexed { index, scanlator ->
+                    ScanlatorFilter(scanlator.ifEmpty { null }, maxPriority + 1 + index, false)
+                }
+                val combined = validFilters + newFilters
+                setScanlatorFilter.await(manga.id, combined)
+                combined
+            } else {
+                validFilters
+            }
+        } else {
+            emptyList()
+        }
+
+        if (updatedFilters.isEmpty()) {
+            return updatedToAdd
+        }
+
+        val excludedScanlators = updatedFilters
+            .filter { it.excluded }
+            .map { it.scanlator }
+            .toHashSet()
+
+        val priorityMap = updatedFilters
+            .filter { !it.excluded }
+            .associate { it.scanlator to it.priority }
+
+        fun getPriority(scanlator: String?): Int = priorityMap[scanlator] ?: Int.MAX_VALUE
+
+        val candidates = updatedToAdd.filterNot { it.scanlator in excludedScanlators }
+        val existingValid = dbChapters.filterNot { it.scanlator in excludedScanlators }
+        val allChaptersByNumber = (existingValid + candidates).groupBy { it.chapterNumber }
+
+        return candidates
+            .filter { candidate ->
+                val duplicateChapters = allChaptersByNumber[candidate.chapterNumber] ?: return@filter true
+                val candidatePriority = getPriority(candidate.scanlator)
+                duplicateChapters.none { other ->
+                    other.url != candidate.url && getPriority(other.scanlator) < candidatePriority
+                }
+            }
     }
 }

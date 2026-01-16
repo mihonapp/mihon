@@ -1,4 +1,23 @@
 CREATE VIEW libraryView AS
+WITH FilteredChapters AS (
+    SELECT
+        C.*,
+        coalesce(SF.excluded, 0) AS filter_excluded,
+        ROW_NUMBER() OVER (
+            PARTITION BY C.manga_id, C.chapter_number
+            ORDER BY 
+                CASE WHEN coalesce(SF.excluded, 0) = 1 THEN 1 ELSE 0 END ASC,
+                coalesce(SF.priority, 10000000) ASC,
+                C._id ASC
+        ) AS rank,
+        CASE WHEN MWF.manga_id IS NOT NULL THEN 1 ELSE 0 END AS has_filter
+    FROM chapters C
+    LEFT JOIN scanlator_filter SF
+        ON C.manga_id = SF.manga_id
+        AND C.scanlator IS SF.scanlator
+    LEFT JOIN (SELECT DISTINCT manga_id FROM scanlator_filter) MWF
+        ON C.manga_id = MWF.manga_id
+)
 SELECT
     M.*,
     coalesce(C.total, 0) AS totalCount,
@@ -11,21 +30,24 @@ SELECT
 FROM mangas M
 LEFT JOIN (
     SELECT
-        chapters.manga_id,
+        manga_id,
         count(*) AS total,
         sum(read) AS readCount,
-        coalesce(max(chapters.date_upload), 0) AS latestUpload,
+        coalesce(max(date_upload), 0) AS latestUpload,
         coalesce(max(history.last_read), 0) AS lastRead,
-        coalesce(max(chapters.date_fetch), 0) AS fetchedAt,
-        sum(chapters.bookmark) AS bookmarkCount
-    FROM chapters
-    LEFT JOIN excluded_scanlators
-    ON chapters.manga_id = excluded_scanlators.manga_id
-    AND chapters.scanlator = excluded_scanlators.scanlator
+        coalesce(max(date_fetch), 0) AS fetchedAt,
+        sum(bookmark) AS bookmarkCount
+    FROM FilteredChapters
     LEFT JOIN history
-    ON chapters._id = history.chapter_id
-    WHERE excluded_scanlators.scanlator IS NULL
-    GROUP BY chapters.manga_id
+    ON FilteredChapters._id = history.chapter_id
+    WHERE (
+        has_filter = 0
+        OR (
+            filter_excluded = 0
+            AND rank = 1
+        )
+    )
+    GROUP BY manga_id
 ) AS C
 ON M._id = C.manga_id
 LEFT JOIN (

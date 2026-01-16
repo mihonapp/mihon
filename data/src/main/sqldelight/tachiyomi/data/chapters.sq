@@ -54,21 +54,57 @@ FROM chapters
 WHERE _id = :id;
 
 getChaptersByMangaId:
-SELECT C.*
-FROM chapters C
-LEFT JOIN excluded_scanlators ES
-ON C.manga_id = ES.manga_id
-AND C.scanlator = ES.scanlator
-WHERE C.manga_id = :mangaId
-AND (
+WITH FilteredChapters AS (
+    SELECT
+        C.*,
+        coalesce(SF.excluded, 0) AS filter_excluded,
+        ROW_NUMBER() OVER (
+            PARTITION BY C.manga_id, C.chapter_number
+            ORDER BY 
+                CASE WHEN coalesce(SF.excluded, 0) = 1 THEN 1 ELSE 0 END ASC,
+                coalesce(SF.priority, 10000000) ASC,
+                C._id ASC
+        ) AS rank,
+        CASE WHEN MWF.manga_id IS NOT NULL THEN 1 ELSE 0 END AS has_filter
+    FROM chapters C
+    LEFT JOIN scanlator_filter SF
+        ON C.manga_id = SF.manga_id
+        AND C.scanlator IS SF.scanlator
+    LEFT JOIN (SELECT DISTINCT manga_id FROM scanlator_filter) MWF
+        ON C.manga_id = MWF.manga_id
+    WHERE C.manga_id = :mangaId
+)
+SELECT
+    _id,
+    manga_id,
+    url,
+    name,
+    scanlator,
+    read,
+    bookmark,
+    last_page_read,
+    chapter_number,
+    source_order,
+    date_fetch,
+    date_upload,
+    last_modified_at,
+    version,
+    is_syncing
+FROM FilteredChapters
+WHERE
     :applyScanlatorFilter = 0
-    OR ES.scanlator IS NULL
-);
+    OR has_filter = 0
+    OR (
+        filter_excluded = 0
+        AND rank = 1
+    );
 
 getScanlatorsByMangaId:
 SELECT scanlator
 FROM chapters
-WHERE manga_id = :mangaId;
+WHERE manga_id = :mangaId
+GROUP BY scanlator
+ORDER BY count(*) DESC, max(date_upload) DESC;
 
 getBookmarkedChaptersByMangaId:
 SELECT *
