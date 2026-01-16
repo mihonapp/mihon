@@ -40,7 +40,6 @@ class UpdatesRepositoryImpl(
                 limit = limit,
                 // invert because unread in Kotlin -> read column in SQL
                 read = unread?.let { !it },
-                // SQLDelight does not want to generate this as a Boolean
                 started = started?.toLong(),
                 bookmarked = bookmarked,
                 hideExcludedScanlators = hideExcludedScanlators.toLong(),

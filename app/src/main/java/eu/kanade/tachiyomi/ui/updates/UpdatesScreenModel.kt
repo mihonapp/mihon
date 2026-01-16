@@ -90,16 +90,18 @@ class UpdatesScreenModel(
                     .flatMapLatest {
                         getUpdates.subscribe(
                             limit,
-                            unread = it.filterUnread.toNullableBoolean(),
-                            started = it.filterStarted.toNullableBoolean(),
-                            bookmarked = it.filterBookmarked.toNullableBoolean(),
+                            unread = it.filterUnread.toBooleanOrNull(),
+                            started = it.filterStarted.toBooleanOrNull(),
+                            bookmarked = it.filterBookmarked.toBooleanOrNull(),
                             hideExcludedScanlators = it.filterExcludedScanlators,
                         ).distinctUntilChanged()
                     },
                 downloadCache.changes,
                 downloadManager.queueState,
                 // needed for Kotlin filters (downloaded)
-                getUpdatesItemPreferenceFlow().distinctUntilChanged(),
+                getUpdatesItemPreferenceFlow().distinctUntilChanged { old, new ->
+                    old.filterDownloaded != new.filterDownloaded
+                },
             ) { updates, _, _, itemPreferences ->
                 updates
                     .toUpdateItems()
@@ -484,7 +486,7 @@ class UpdatesScreenModel(
     }
 }
 
-private fun TriState.toNullableBoolean(): Boolean? {
+private fun TriState.toBooleanOrNull(): Boolean? {
     return when (this) {
         TriState.DISABLED -> null
         TriState.ENABLED_IS -> true

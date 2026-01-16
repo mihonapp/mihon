@@ -35,17 +35,16 @@ getRecentUpdatesWithFilters:
 SELECT *
 FROM updatesView
 WHERE dateUpload > :after
-AND (read = :read OR :read IS NULL)
+AND (:read IS NULL OR read = :read)
 -- Started means some progress but not finished, Read means finished chapter, thus:
 AND (
-    (:started = 1 AND last_page_read > 0 AND read = 0)
+    :started IS NULL
+    OR (:started = 1 AND last_page_read > 0 AND read = 0)
     OR (:started = 0 AND last_page_read = 0 AND read = 0)
-    OR :started IS NULL
 )
-AND (bookmark = :bookmarked OR :bookmarked IS NULL)
+AND (:bookmarked IS NULL OR bookmark = :bookmarked)
 AND (
-    (:hideExcludedScanlators = 1 AND excludedScanlator IS NULL)
-    OR :hideExcludedScanlators = 0
+    (:hideExcludedScanlators = 0 OR excludedScanlator IS NULL)
 )
 LIMIT :limit;
 
