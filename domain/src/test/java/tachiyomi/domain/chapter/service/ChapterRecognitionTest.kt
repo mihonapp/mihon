@@ -271,6 +271,15 @@ class ChapterRecognitionTest {
         assertChapter(mangaTitle, "The 4th Night", 4.0)
     }
 
+    @Test
+    fun `Chapters in format Volume x #xx`() {
+        val mangaTitle = "...I Live as an Elf Girl's Pet"
+
+        assertChapter(mangaTitle, "Volume 10 #60 : A Visitor from the Future?", 60.0)
+        assertChapter(mangaTitle, "Volume 10 Bonus Story : Aria's Mother", -1.0)
+        assertChapter(mangaTitle, "Volume 10 #61 : The Young Girl Sets Off!", 61.0)
+    }
+
     private fun assertChapter(mangaTitle: String, name: String, expected: Double) {
         ChapterRecognition.parseChapterNumber(mangaTitle, name) shouldBe expected
     }
