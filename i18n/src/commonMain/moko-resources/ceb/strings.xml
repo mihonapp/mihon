@@ -442,4 +442,5 @@
     <string name="action_not_now">Dili karon</string>
     <string name="information_webview_required">Gikinahanlan ang WebView alang sa Mihon</string>
     <string name="information_required_plain">*gikinahanlan</string>
+    <string name="selected">Napili</string>
 </resources>
