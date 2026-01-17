@@ -80,7 +80,7 @@ class PagerPageHolder(
 
     private fun applyCachedBackground() {
         if (viewer.config.automaticBackground) {
-            viewer.config.lastAutomaticBackground?.let { setBackgroundColor(it) }
+            viewer.lastAutomaticBackground?.let { setBackgroundColor(it) }
         }
     }
 
@@ -167,7 +167,7 @@ class PagerPageHolder(
                     null
                 }
                 if (background is ColorDrawable) {
-                    viewer.config.lastAutomaticBackground = background.color
+                    viewer.lastAutomaticBackground = background.color
                 }
                 Triple(source, isAnimated, background)
             }

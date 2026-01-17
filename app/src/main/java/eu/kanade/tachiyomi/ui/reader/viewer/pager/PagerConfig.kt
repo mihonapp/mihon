@@ -31,8 +31,6 @@ class PagerConfig(
     var automaticBackground = false
         private set
 
-    var lastAutomaticBackground: Int? = null
-
     var dualPageSplitChangedListener: ((Boolean) -> Unit)? = null
 
     var imageScaleType = 1
