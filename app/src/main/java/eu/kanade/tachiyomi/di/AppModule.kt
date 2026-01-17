@@ -14,6 +14,7 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
+import eu.kanade.tachiyomi.data.export.ExportToLocalImpl
 import eu.kanade.tachiyomi.data.saver.ImageSaver
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.extension.ExtensionManager
@@ -44,6 +45,10 @@ import uy.kohesive.injekt.api.InjektRegistrar
 import uy.kohesive.injekt.api.addSingleton
 import uy.kohesive.injekt.api.addSingletonFactory
 import uy.kohesive.injekt.api.get
+import tachiyomi.domain.export.service.ExportService
+import tachiyomi.domain.export.interactor.ExportMangaToLocal
+import tachiyomi.domain.export.interactor.GetExportItems
+import tachiyomi.domain.export.interactor.GetExportDestination
 
 class AppModule(val app: Application) : InjektModule {
 
@@ -133,6 +138,11 @@ class AppModule(val app: Application) : InjektModule {
         addSingletonFactory { LocalSourceFileSystem(get()) }
         addSingletonFactory { LocalCoverManager(app, get()) }
         addSingletonFactory { StorageManager(app, get()) }
+
+        addSingletonFactory<ExportService> { ExportToLocalImpl(app) }
+        addSingletonFactory { ExportMangaToLocal(get()) }
+        addSingletonFactory { GetExportItems(get()) }
+        addSingletonFactory { GetExportDestination(get()) }
 
         // Asynchronously init expensive components for a faster cold start
         ContextCompat.getMainExecutor(app).execute {
