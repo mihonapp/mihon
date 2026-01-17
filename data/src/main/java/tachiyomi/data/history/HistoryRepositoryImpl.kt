@@ -7,7 +7,9 @@ import tachiyomi.data.DatabaseHandler
 import tachiyomi.domain.history.model.History
 import tachiyomi.domain.history.model.HistoryUpdate
 import tachiyomi.domain.history.model.HistoryWithRelations
+import tachiyomi.domain.history.model.ReadDurationByManga
 import tachiyomi.domain.history.repository.HistoryRepository
+import tachiyomi.domain.manga.model.MangaCover
 
 class HistoryRepositoryImpl(
     private val handler: DatabaseHandler,
@@ -70,6 +72,32 @@ class HistoryRepositoryImpl(
             }
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, throwable = e)
+        }
+    }
+
+    override suspend fun getReadDurationByManga(): List<ReadDurationByManga> {
+        return handler.awaitList {
+            historyQueries.getReadDurationByManga {
+                    manga_id, title, total_time_read, source_id, is_favorite, thumbnail_url, cover_last_modified ->
+                ReadDurationByManga(
+                    mangaId = manga_id,
+                    title = title,
+                    totalTimeRead = total_time_read,
+                    cover = MangaCover(
+                        mangaId = manga_id,
+                        sourceId = source_id,
+                        isMangaFavorite = is_favorite,
+                        url = thumbnail_url,
+                        lastModified = cover_last_modified,
+                    )
+                )
+            }
+        }
+    }
+
+    override suspend fun getReadDurationForManga(mangaId: Long): Long {
+        return handler.awaitOne {
+            historyQueries.getReadDurationForManga(mangaId)
         }
     }
 }
