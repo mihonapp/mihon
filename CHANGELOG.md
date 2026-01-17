@@ -30,7 +30,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix reader not saving read duration when changing chapter ([@AntsyLich](https://github.com/AntsyLich), [@KotlinHero](https://github.com/KotlinHero)) ([#2784](https://github.com/mihonapp/mihon/pull/2784))
 - Fix pre-1970 upload date display in chapter list ([@MajorTanya](https://github.com/MajorTanya)) ([#2779](https://github.com/mihonapp/mihon/pull/2779))
 - Fix crash when trying to install/update extensions while shizuku is not running ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2837](https://github.com/mihonapp/mihon/pull/2837))
-- Fix Finish date is not populated when status changes to Completed ([@shrikantbadwaik](https://github.com/shrikantbadwaik)) ([#2727](https://github.com/mihonapp/mihon/pull/2727))
+- Fix tracker finish date not being populated when status is manually changed to Completed ([@shrikantbadwaik](https://github.com/shrikantbadwaik)) ([#2727](https://github.com/mihonapp/mihon/pull/2727))
 
 ### Other
 - Enable logcat logging on stable and debug builds without enabling verbose logging ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2836](https://github.com/mihonapp/mihon/pull/2836))
