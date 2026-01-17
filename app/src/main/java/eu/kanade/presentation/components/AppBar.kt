@@ -38,6 +38,7 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
@@ -53,6 +54,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.clearFocusOnSoftKeyboardHide
@@ -282,19 +286,25 @@ fun SearchToolbar(
     val textFieldState = rememberTextFieldState(searchQuery ?: "")
 
     LaunchedEffect(searchQuery) {
-        val newText = searchQuery ?: ""
-        if (newText != textFieldState.text) {
-            textFieldState.setTextAndPlaceCursorAtEnd(newText)
+        // Only allow set textField once initially
+        if (textFieldState.text.isEmpty() && !searchQuery.isNullOrEmpty()) {
+            textFieldState.setTextAndPlaceCursorAtEnd(searchQuery)
         }
     }
 
-    LaunchedEffect(textFieldState.text) {
-        if (searchQuery != null && searchQuery != textFieldState.text) {
-            onChangeSearchQuery(textFieldState.text.toString())
-        }
+    LaunchedEffect(textFieldState) {
+        snapshotFlow { textFieldState.text }
+            .distinctUntilChanged()
+            .debounce(SEARCH_DEBOUNCE_MILLIS)
+            .collectLatest { newText ->
+                val newSearchQuery = newText.toString()
+                if (searchQuery != null && searchQuery != newSearchQuery) {
+                    onChangeSearchQuery(newSearchQuery)
+                }
+            }
     }
 
-    val clickCloseSearch: () -> Unit = {
+    val internalOnClickCloseSearch: () -> Unit = {
         onClickCloseSearch()
         textFieldState.clearText()
     }
@@ -308,8 +318,9 @@ fun SearchToolbar(
             val focusManager = LocalFocusManager.current
 
             val searchAndClearFocus: () -> Unit = f@{
-                if (searchQuery.isBlank()) return@f
-                onSearch(searchQuery)
+                val currentQuery = textFieldState.text.toString()
+                if (currentQuery.isBlank()) return@f
+                onSearch(currentQuery)
                 focusManager.clearFocus()
                 keyboardController?.hide()
                 focusManager.moveFocus(FocusDirection.Next)
@@ -350,7 +361,7 @@ fun SearchToolbar(
                 },
             )
         },
-        navigateUp = if (searchQuery == null) navigateUp else clickCloseSearch,
+        navigateUp = if (searchQuery == null) navigateUp else internalOnClickCloseSearch,
         actions = {
             key("search") {
                 val onClick = {
