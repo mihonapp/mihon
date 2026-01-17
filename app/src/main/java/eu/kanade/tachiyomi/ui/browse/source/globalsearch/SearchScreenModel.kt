@@ -115,14 +115,14 @@ abstract class SearchScreenModel(
 
     fun setSourceFilter(filter: SourceFilter) {
         mutableState.update { it.copy(sourceFilter = filter) }
-        search(state.value.searchQuery)
+        search()
     }
 
     fun toggleFilterResults() {
         preferences.globalSearchFilterState().toggle()
     }
 
-    fun search(query: String?) {
+    fun search(query: String? = state.value.searchQuery) {
         val sourceFilter = state.value.sourceFilter
 
         if (query.isNullOrBlank()) return
