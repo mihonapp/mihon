@@ -61,10 +61,10 @@
         <item quantity="other">%d сервисов отслеживания</item>
     </plurals>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Отсутствует %d глава</item>
-        <item quantity="few">Отсутствуют %d главы</item>
-        <item quantity="many">Отсутствуют %d глав</item>
-        <item quantity="other">Отсутствуют %d глав</item>
+        <item quantity="one">Отсутствует %d глава в источнике или была отфильтрована</item>
+        <item quantity="few">Отсутствуют %d главы в источнике или были отфильтрованы</item>
+        <item quantity="many">Отсутствуют %d глав в источнике или были отфильтрованы</item>
+        <item quantity="other">Отсутствуют %d глав в источнике или были отфильтрованы</item>
     </plurals>
     <plurals name="relative_time">
         <item quantity="one">Вчера</item>
