@@ -133,6 +133,12 @@ class ReaderViewModel @JvmOverloads constructor(
             field = value
         }
 
+    private var chapterPageIndexSecond = savedState.get<Int>("page_index_second") ?: -1
+        set(value) {
+            savedState["page_index_second"] = value
+            field = value
+        }
+
     /**
      * The chapter loader for the loaded manga. It'll be null until [manga] is set.
      */
@@ -436,7 +442,7 @@ class ReaderViewModel @JvmOverloads constructor(
      * read, update tracking services, enqueue downloaded chapter deletion, and updating the active chapter if this
      * [page]'s chapter is different from the currently active.
      */
-    fun onPageSelected(page: ReaderPage) {
+    fun onPageSelected(page: ReaderPage, secondPage: ReaderPage? = null) {
         // InsertPage doesn't change page progress
         if (page is InsertPage) {
             return
@@ -446,8 +452,12 @@ class ReaderViewModel @JvmOverloads constructor(
         val pages = selectedChapter.pages ?: return
 
         // Save last page read and mark as read if needed
+        selectedChapter.requestedPage = page.index
+        selectedChapter.requestedPageSecond = secondPage?.index ?: -1
+        logcat { "onPageSelected: chapter=${selectedChapter.chapter.url}, index=${page.index}, second=${secondPage?.index}" }
+
         viewModelScope.launchNonCancellable {
-            updateChapterProgress(selectedChapter, page)
+            updateChapterProgress(selectedChapter, secondPage ?: page)
         }
 
         if (selectedChapter != getCurrentChapter()) {
@@ -537,8 +547,8 @@ class ReaderViewModel @JvmOverloads constructor(
         mutableState.update {
             it.copy(currentPage = pageIndex + 1)
         }
-        readerChapter.requestedPage = pageIndex
-        chapterPageIndex = pageIndex
+        chapterPageIndex = readerChapter.requestedPage
+        chapterPageIndexSecond = readerChapter.requestedPageSecond
 
         if (!incognitoMode && page.status !is Page.State.Error) {
             readerChapter.chapter.last_page_read = pageIndex

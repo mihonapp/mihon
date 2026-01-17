@@ -383,6 +383,9 @@
     <string name="pref_show_navigation_mode">Show tap zones overlay</string>
     <string name="pref_show_navigation_mode_summary">Briefly show when reader is opened</string>
     <string name="pref_dual_page_split">Split wide pages</string>
+    <string name="pref_dual_page_mode">Dual page mode</string>
+    <string name="pref_dual_page_first_page_cover">First page as cover</string>
+    <string name="pref_dual_page_foldable">Force dual-page on unfolded foldables</string>
     <string name="pref_dual_page_invert">Invert split page placement</string>
     <string name="pref_dual_page_invert_summary">If the placement of the split wide pages don\'t match reading direction</string>
     <string name="pref_page_rotate">Rotate wide pages to fit</string>
@@ -453,6 +456,8 @@
     <string name="nav_zone_right">Right</string>
     <string name="left_to_right_viewer">Paged (left to right)</string>
     <string name="right_to_left_viewer">Paged (right to left)</string>
+    <string name="dual_page_ltr_viewer">Landscape dual-page (LTR)</string>
+    <string name="dual_page_rtl_viewer">Landscape dual-page (RTL)</string>
     <string name="vertical_viewer">Paged (vertical)</string>
     <string name="webtoon_viewer">Long strip</string>
     <string name="vertical_plus_viewer">Long strip with gaps</string>

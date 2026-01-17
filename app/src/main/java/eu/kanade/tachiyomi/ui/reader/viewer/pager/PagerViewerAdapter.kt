@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.viewer.calculateChapterGap
 import eu.kanade.tachiyomi.util.system.createReaderThemeContext
+import eu.kanade.tachiyomi.ui.reader.model.DualPage
 import eu.kanade.tachiyomi.widget.ViewPagerAdapter
 import tachiyomi.core.common.util.system.logcat
 
@@ -113,12 +114,19 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         // Resets double-page splits, else insert pages get misplaced
         items.filterIsInstance<InsertPage>().also { items.removeAll(it) }
 
-        if (viewer is R2LPagerViewer) {
-            newItems.reverse()
+        val itemsToSet = if (viewer.config.dualPageMode) {
+            groupPages(newItems)
+        } else {
+            newItems
         }
 
+        if (viewer is R2LPagerViewer) {
+            itemsToSet.reverse()
+        }
+
+        logcat { "setChapters: chapter=${chapters.currChapter.chapter.url}, pages=${chapters.currChapter.pages?.size}, dualMode=${viewer.config.dualPageMode}" }
         preprocessed = mutableMapOf()
-        items = newItems
+        items = itemsToSet
         notifyDataSetChanged()
 
         // Will skip insert page otherwise
@@ -140,6 +148,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     override fun createView(container: ViewGroup, position: Int): View {
         return when (val item = items[position]) {
             is ReaderPage -> PagerPageHolder(readerThemedContext, viewer, item)
+            is DualPage -> PagerDualPageHolder(readerThemedContext, viewer, item)
             is ChapterTransition -> PagerTransitionHolder(readerThemedContext, viewer, item)
             else -> throw NotImplementedError("Holder for ${item.javaClass} not implemented")
         }
@@ -163,7 +172,10 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     fun onPageSplit(currentPage: Any?, newPage: InsertPage) {
         if (currentPage !is ReaderPage) return
 
-        val currentIndex = items.indexOf(currentPage)
+        val currentIndex = items.indexOfFirst {
+            it === currentPage || (it is DualPage && (it.first === currentPage || it.second === currentPage))
+        }
+        if (currentIndex == -1) return
 
         // Put aside preprocessed pages for next chapter so they don't get removed when changing chapter
         if (currentPage.chapter.chapter.id != currentChapter?.chapter?.id) {
@@ -184,22 +196,95 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         }
 
         // Same here it will enter a endless cycle of insert pages
-        if (items[placeAtIndex] is InsertPage) {
+        if (items.getOrNull(placeAtIndex) is InsertPage) {
             return
         }
 
         items.add(placeAtIndex, newPage)
 
-        notifyDataSetChanged()
+        if (viewer.config.dualPageMode) {
+            regroup()
+        } else {
+            notifyDataSetChanged()
+        }
     }
 
     fun cleanupPageSplit() {
-        val insertPages = items.filterIsInstance(InsertPage::class.java)
-        items.removeAll(insertPages)
+        // This is complex because InsertPage might be part of a DualPage.
+        // Easier to flatten, filter, and regroup if needed.
+        val rawItems = if (viewer.config.dualPageMode) {
+            items.flatMap { if (it is DualPage) listOfNotNull(it.first, it.second) else listOf(it) }
+        } else {
+            items
+        }.filterNot { it is InsertPage }
+        
+        items = if (viewer.config.dualPageMode) groupPages(rawItems) else rawItems.toMutableList()
+        notifyDataSetChanged()
+    }
+
+    private fun groupPages(rawItems: List<Any>): MutableList<Any> {
+        val grouped = mutableListOf<Any>()
+        var i = 0
+        while (i < rawItems.size) {
+            val item1 = rawItems[i]
+            if (item1 is ReaderPage) {
+                // Check if this page should be a cover (single page spread)
+                val isCover = item1.index == 0 && viewer.config.dualPageFirstPageCover
+                
+                if (isCover) {
+                    grouped.add(DualPage(item1))
+                    i += 1
+                } else {
+                    val item2 = rawItems.getOrNull(i + 1)
+                    if (item2 is ReaderPage && item2.chapter == item1.chapter) {
+                        grouped.add(DualPage(item1, item2))
+                        i += 2
+                    } else {
+                        grouped.add(DualPage(item1))
+                        i += 1
+                    }
+                }
+            } else {
+                grouped.add(item1)
+                i += 1
+            }
+        }
+        logcat { "groupPages: rawItems=${rawItems.size} -> grouped=${grouped.size}" }
+        return grouped
+    }
+
+    private fun regroup() {
+        val rawItems = items.flatMap {
+            if (it is DualPage) listOfNotNull(it.first, it.second) else listOf(it)
+        }.toMutableList()
+        if (viewer is R2LPagerViewer) {
+            rawItems.reverse()
+        }
+        val grouped = groupPages(rawItems)
+        if (viewer is R2LPagerViewer) {
+            grouped.reverse()
+        }
+        items = grouped
+        notifyDataSetChanged()
+    }
+
+    private fun flatten() {
+        val rawItems = items.flatMap {
+            if (it is DualPage) listOfNotNull(it.first, it.second) else listOf(it)
+        }.toMutableList()
+        // items are already in visual order. 
+        // If we flatten a reversed list G2[4,3], G1[2,1], we get [4,3,2,1] which is correct for RTL.
+        items = rawItems
         notifyDataSetChanged()
     }
 
     fun refresh() {
         readerThemedContext = viewer.activity.createReaderThemeContext()
+        val isCurrentlyGrouped = items.any { it is DualPage }
+        if (viewer.config.dualPageMode && !isCurrentlyGrouped) {
+            regroup()
+        } else if (!viewer.config.dualPageMode && isCurrentlyGrouped) {
+            flatten()
+        }
     }
 }
