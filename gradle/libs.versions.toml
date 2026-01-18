@@ -13,10 +13,12 @@ firebase-bom = "34.8.0"
 markdown = "0.39.1"
 junit = "6.0.2"
 materialKolor = "5.0.0-alpha05"
+kotlin = "2.2.0"
 
 [libraries]
 desugar = "com.android.tools:desugar_jdk_libs:2.1.5"
 android-shortcut-gradle = "com.github.zellius:android-shortcut-gradle-plugin:0.1.2"
+
 
 rxjava = "io.reactivex:rxjava:1.3.8"
 
@@ -111,6 +113,7 @@ materialKolor = { module = "com.materialkolor:material-kolor", version.ref = "ma
 
 [plugins]
 google-services = { id = "com.google.gms.google-services", version = "4.4.4" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "aboutlib_version" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 moko = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko" }
