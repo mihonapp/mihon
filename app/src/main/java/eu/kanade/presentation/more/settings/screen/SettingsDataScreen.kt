@@ -188,22 +188,30 @@ object SettingsDataScreen : SearchableSettings {
         val navigator = LocalNavigator.currentOrThrow
 
         val lastAutoBackup by backupPreferences.lastAutoBackupTimestamp().collectAsState()
-
         val chooseBackup = rememberLauncherForActivityResult(
-            object : ActivityResultContracts.GetContent() {
-                override fun createIntent(context: Context, input: String): Intent {
-                    val intent = super.createIntent(context, input)
-                    return Intent.createChooser(intent, context.stringResource(MR.strings.file_select_backup))
-                }
-            },
-        ) {
-            if (it == null) {
+            ActivityResultContracts.OpenDocument(), // 改用 OpenDocument
+        ) { uri ->
+            if (uri == null) {
                 context.toast(MR.strings.file_null_uri_error)
                 return@rememberLauncherForActivityResult
             }
-
-            navigator.push(RestoreBackupScreen(it.toString()))
+            navigator.push(RestoreBackupScreen(uri.toString()))
         }
+//        val chooseBackup = rememberLauncherForActivityResult(
+//            object : ActivityResultContracts.GetContent() {
+//                override fun createIntent(context: Context, input: String): Intent {
+//                    val intent = super.createIntent(context, input)
+//                    return Intent.createChooser(intent, context.stringResource(MR.strings.file_select_backup))
+//                }
+//            },
+//        ) {
+//            if (it == null) {
+//                context.toast(MR.strings.file_null_uri_error)
+//                return@rememberLauncherForActivityResult
+//            }
+//
+//            navigator.push(RestoreBackupScreen(it.toString()))
+//        }
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.label_backup),
@@ -238,7 +246,12 @@ object SettingsDataScreen : SearchableSettings {
                                             }
 
                                             // no need to catch because it's wrapped with a chooser
-                                            chooseBackup.launch("*/*")
+                                            try {
+                                                chooseBackup.launch(arrayOf("*/*"))
+                                            } catch (e: Exception) {
+                                                logcat(LogPriority.ERROR, e)
+                                                context.toast("无法启动文件选择器")
+                                            }
                                         } else {
                                             context.toast(MR.strings.restore_in_progress)
                                         }
