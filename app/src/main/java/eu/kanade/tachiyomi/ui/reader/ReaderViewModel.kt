@@ -161,20 +161,34 @@ class ReaderViewModel @JvmOverloads constructor(
         val selectedChapter = chapters.find { it.id == chapterId }
             ?: error("Requested chapter of id $chapterId not found in chapter list")
 
+        val skipRead = readerPreferences.skipRead().get()
+        val allowBackScrolling = readerPreferences.allowBackScrolling().get()
+        val skipFiltered = readerPreferences.skipFiltered().get()
+
+        val sortedChapters = chapters.sortedWith(getChapterSort(manga, sortDescending = false))
+        val selectedIndex = sortedChapters.indexOfFirst { it.id == chapterId }
+        // selectedIndex should never be -1 because selectedChapter exists, but be safe
+        val safeSelectedIndex = if (selectedIndex >= 0) selectedIndex else 0
+
         val chaptersForReader = when {
-            (readerPreferences.skipRead().get() || readerPreferences.skipFiltered().get()) -> {
-                val filteredChapters = chapters.filterNot {
-                    when {
-                        readerPreferences.skipRead().get() && it.read -> true
-                        readerPreferences.skipFiltered().get() -> {
-                            (manga.unreadFilterRaw == Manga.CHAPTER_SHOW_READ && !it.read) ||
-                                (manga.unreadFilterRaw == Manga.CHAPTER_SHOW_UNREAD && it.read) ||
+            (skipRead || skipFiltered) -> {
+                val filteredChapters = sortedChapters.filterIndexed { index, ch ->
+                    val filterBecauseRead =
+                        skipRead &&
+                            ch.read &&
+                            // If back-scrolling filter only read chapters after current
+                            (!allowBackScrolling || index > safeSelectedIndex)
+
+                    val filterBecauseMangaFilters =
+                        skipFiltered && (
+                            (manga.unreadFilterRaw == Manga.CHAPTER_SHOW_READ && !ch.read) ||
+                                (manga.unreadFilterRaw == Manga.CHAPTER_SHOW_UNREAD && ch.read) ||
                                 (
                                     manga.downloadedFilterRaw == Manga.CHAPTER_SHOW_DOWNLOADED &&
                                         !downloadManager.isChapterDownloaded(
-                                            it.name,
-                                            it.scanlator,
-                                            it.url,
+                                            ch.name,
+                                            ch.scanlator,
+                                            ch.url,
                                             manga.title,
                                             manga.source,
                                         )
@@ -182,18 +196,18 @@ class ReaderViewModel @JvmOverloads constructor(
                                 (
                                     manga.downloadedFilterRaw == Manga.CHAPTER_SHOW_NOT_DOWNLOADED &&
                                         downloadManager.isChapterDownloaded(
-                                            it.name,
-                                            it.scanlator,
-                                            it.url,
+                                            ch.name,
+                                            ch.scanlator,
+                                            ch.url,
                                             manga.title,
                                             manga.source,
                                         )
                                     ) ||
-                                (manga.bookmarkedFilterRaw == Manga.CHAPTER_SHOW_BOOKMARKED && !it.bookmark) ||
-                                (manga.bookmarkedFilterRaw == Manga.CHAPTER_SHOW_NOT_BOOKMARKED && it.bookmark)
-                        }
-                        else -> false
-                    }
+                                (manga.bookmarkedFilterRaw == Manga.CHAPTER_SHOW_BOOKMARKED && !ch.bookmark) ||
+                                (manga.bookmarkedFilterRaw == Manga.CHAPTER_SHOW_NOT_BOOKMARKED && ch.bookmark)
+                            )
+
+                    !(filterBecauseRead || filterBecauseMangaFilters)
                 }
 
                 if (filteredChapters.any { it.id == chapterId }) {
@@ -202,11 +216,12 @@ class ReaderViewModel @JvmOverloads constructor(
                     filteredChapters + listOf(selectedChapter)
                 }
             }
-            else -> chapters
+
+            else -> sortedChapters
         }
 
         chaptersForReader
-            .sortedWith(getChapterSort(manga, sortDescending = false))
+            // Already sorted - either filtered from sortedChapters or is sortedChapters
             .run {
                 if (readerPreferences.skipDupe().get()) {
                     removeDuplicates(selectedChapter)
