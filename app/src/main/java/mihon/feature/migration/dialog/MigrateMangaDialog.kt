@@ -150,6 +150,7 @@ private class MigrateDialogScreenModel(
                 target = target,
                 applicableFlags = applicableFlags,
                 selectedFlags = selectedFlags,
+                isMigrated = false,
             )
         }
     }
