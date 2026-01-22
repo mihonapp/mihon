@@ -94,7 +94,7 @@ fun MangaBottomActionMenu(
             var resetJob by remember { mutableStateOf<Job?>(null) }
             val onLongClickItem: (Int) -> Unit = { toConfirmIndex ->
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                (0..<7).forEach { i -> confirm[i] = i == toConfirmIndex }
+                confirm.indices.forEach { i -> confirm[i] = i == toConfirmIndex }
                 resetJob?.cancel()
                 resetJob = scope.launch {
                     delay(1.seconds)
@@ -255,7 +255,7 @@ fun LibraryBottomActionMenu(
             var resetJob by remember { mutableStateOf<Job?>(null) }
             val onLongClickItem: (Int) -> Unit = { toConfirmIndex ->
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                (0..5).forEach { i -> confirm[i] = i == toConfirmIndex }
+                confirm.indices.forEach { i -> confirm[i] = i == toConfirmIndex }
                 resetJob?.cancel()
                 resetJob = scope.launch {
                     delay(1.seconds)
