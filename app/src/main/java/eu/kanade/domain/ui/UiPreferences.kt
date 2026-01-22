@@ -1,6 +1,7 @@
 package eu.kanade.domain.ui
 
 import eu.kanade.domain.ui.model.AppTheme
+import eu.kanade.domain.ui.model.ExtensionsSortingMode
 import eu.kanade.domain.ui.model.TabletUiMode
 import eu.kanade.domain.ui.model.ThemeMode
 import eu.kanade.tachiyomi.util.system.DeviceUtil
@@ -35,6 +36,11 @@ class UiPreferences(
     fun tabletUiMode() = preferenceStore.getEnum("tablet_ui_mode", TabletUiMode.AUTOMATIC)
 
     fun imagesInDescription() = preferenceStore.getBoolean("pref_render_images_description", true)
+
+    fun extensionsSortingMode() = preferenceStore.getEnum(
+        "pref_extensions_sorting_mode_key",
+        ExtensionsSortingMode.ALPHABETICAL_ASC,
+    )
 
     companion object {
         fun dateFormat(format: String): DateTimeFormatter = when (format) {

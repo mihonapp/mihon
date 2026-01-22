@@ -29,6 +29,7 @@ sealed class Extension {
         val isObsolete: Boolean = false,
         val isShared: Boolean,
         val repoUrl: String? = null,
+        val installTime: Long,
     ) : Extension()
 
     data class Available(
@@ -70,5 +71,6 @@ sealed class Extension {
         val signatureHash: String,
         override val lang: String? = null,
         override val isNsfw: Boolean = false,
+        val installTime: Long,
     ) : Extension()
 }
