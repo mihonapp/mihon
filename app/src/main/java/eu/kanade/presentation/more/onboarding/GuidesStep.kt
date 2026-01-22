@@ -9,14 +9,22 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
+import eu.kanade.tachiyomi.util.system.toast
+import logcat.LogPriority
+import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.storage.service.StoragePreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 internal class GuidesStep(
     private val onRestoreBackup: () -> Unit,
@@ -26,7 +34,43 @@ internal class GuidesStep(
 
     @Composable
     override fun Content() {
+        val context = LocalContext.current
         val handler = LocalUriHandler.current
+
+        // Create storage directory when arriving on this page
+        LaunchedEffect(Unit) {
+            try {
+                val storagePref = Injekt.get<StoragePreferences>().baseStorageDirectory()
+                val storageUri = storagePref.get()
+
+                if (storageUri.isNotEmpty()) {
+                    // Safely parse URI
+                    val uri = try {
+                        java.net.URI(storageUri)
+                    } catch (e: java.net.URISyntaxException) {
+                        logcat(LogPriority.ERROR) { "Invalid storage URI: $storageUri" }
+                        return@LaunchedEffect
+                    }
+
+                    val storageFile = java.io.File(uri)
+                    val fullPath = storageFile.absolutePath
+
+                    if (!storageFile.exists()) {
+                        val created = storageFile.mkdirs()
+                        logcat(LogPriority.INFO) { "Storage directory created: $fullPath (success: $created)" }
+
+                        if (created && storageFile.exists()) {
+                            context.toast(MR.strings.folder_created_successfully)
+                        } else if (!storageFile.exists()) {
+                            context.toast(MR.strings.error_path_cannot_create)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR) { "Error creating storage directory: ${e.message}" }
+                context.toast(MR.strings.error_path_cannot_create)
+            }
+        }
 
         Column(
             modifier = Modifier.padding(16.dp),
