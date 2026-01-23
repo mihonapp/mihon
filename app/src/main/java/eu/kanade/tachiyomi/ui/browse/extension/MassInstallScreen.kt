@@ -123,11 +123,11 @@ class MassInstallScreen : Screen() {
                                 is Extension.Available -> {
                                     if (installStep.isCompleted()) {
                                         IconButton(onClick = { screenModel.installExtension(ext) }) {
-                                                Icon(
-                                                    imageVector = Icons.Outlined.GetApp,
-                                                    contentDescription = stringResource(MR.strings.ext_install),
-                                                )
-                                            }
+                                            Icon(
+                                                imageVector = Icons.Outlined.GetApp,
+                                                contentDescription = stringResource(MR.strings.ext_install),
+                                            )
+                                        }
                                     } else {
                                         IconButton(onClick = { /* noop while installing */ }) {
                                             CircularProgressIndicator(
