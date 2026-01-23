@@ -232,6 +232,7 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
     private fun initViews() {
         scrollView = object : NestedScrollView(activity) {
             private var isTextSelectionMode = false
+            private var selectionStartY = 0f
 
             override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
                 // Always pass touch events to gesture detector first
@@ -240,16 +241,23 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
             }
 
             override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
-                // If text selection is enabled and user is doing a long press or selection,
-                // don't intercept the touch event - let the TextView handle it
+                // If text selection is enabled, we need to be careful about intercepting
                 if (preferences.novelTextSelectable().get()) {
                     when (ev.action) {
                         MotionEvent.ACTION_DOWN -> {
                             isTextSelectionMode = false
+                            selectionStartY = ev.y
                         }
                         MotionEvent.ACTION_MOVE -> {
-                            // If there's an active text selection handle, don't intercept
+                            // If text selection mode is active, don't intercept
                             if (isTextSelectionMode) {
+                                return false
+                            }
+                            
+                            // Check for small movements (likely text selection vs scroll)
+                            val deltaY = kotlin.math.abs(ev.y - selectionStartY)
+                            if (deltaY < 20) {
+                                // Small vertical movement - might be selecting text, don't intercept
                                 return false
                             }
                         }
@@ -257,7 +265,7 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
 
                     // Check if any child TextView has an active text selection
                     loadedChapters.forEach { loaded ->
-                        if (loaded.textView.hasSelection()) {
+                        if (loaded.textView.hasSelection() || loaded.textView.isFocused) {
                             isTextSelectionMode = true
                             return false
                         }
@@ -1256,12 +1264,32 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
             val progress = savedProgress / 100f
             // Set lastSavedProgress BEFORE posting to prevent race condition with scroll listener
             lastSavedProgress = progress
-            scrollView.post {
-                isRestoringScroll = true
-                setScrollProgress(progress.coerceIn(0f, 1f))
-                logcat(LogPriority.DEBUG) { "NovelViewer: Scroll restored to ${(progress * 100).toInt()}%" }
-                isRestoringScroll = false
-            }
+            
+            // Wait for layout to complete before scrolling
+            scrollView.viewTreeObserver.addOnGlobalLayoutListener(object : android.view.ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    scrollView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    
+                    // Double-check the content is loaded
+                    val child = scrollView.getChildAt(0) ?: return
+                    val totalHeight = child.height - scrollView.height
+                    if (totalHeight <= 0) {
+                        // Content not ready yet, schedule a retry
+                        scrollView.postDelayed({
+                            isRestoringScroll = true
+                            setScrollProgress(progress.coerceIn(0f, 1f))
+                            logcat(LogPriority.DEBUG) { "NovelViewer: Scroll restored (delayed) to ${(progress * 100).toInt()}%" }
+                            isRestoringScroll = false
+                        }, 200)
+                        return
+                    }
+                    
+                    isRestoringScroll = true
+                    setScrollProgress(progress.coerceIn(0f, 1f))
+                    logcat(LogPriority.DEBUG) { "NovelViewer: Scroll restored to ${(progress * 100).toInt()}%" }
+                    isRestoringScroll = false
+                }
+            })
         } else {
             // Scroll to top for new chapters or already read chapters
             lastSavedProgress = 0f
@@ -1538,11 +1566,13 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
         currentChapters?.let { setChapters(it) }
     }
 
+    private var initialLoadingView: TextView? = null
+    
     private fun showLoadingIndicator() {
         // Use inline loading text instead of progress bar
         contentContainer.removeAllViews()
 
-        val loadingView = TextView(activity).apply {
+        initialLoadingView = TextView(activity).apply {
             text = "Loading..."
             textSize = 16f
             gravity = Gravity.CENTER
@@ -1550,12 +1580,16 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
             setTextColor(0xFF888888.toInt())
         }
 
-        contentContainer.addView(loadingView)
+        contentContainer.addView(initialLoadingView)
         applyBackgroundColor()
     }
 
     private fun hideLoadingIndicator() {
-        // Content will replace loading view
+        // Remove the initial loading view if still present
+        initialLoadingView?.let { view ->
+            contentContainer.removeView(view)
+        }
+        initialLoadingView = null
     }
 
     private fun displayError(error: Throwable) {

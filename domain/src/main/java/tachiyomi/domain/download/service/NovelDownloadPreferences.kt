@@ -51,6 +51,14 @@ class NovelDownloadPreferences(
     )
 
     /**
+     * Maximum parallel library updates for novel sources (per extension)
+     */
+    fun parallelNovelUpdates() = preferenceStore.getInt(
+        "novel_parallel_updates",
+        2, // Default to 2 concurrent novel sources
+    )
+
+    /**
      * Enable delay for mass import operations
      */
     fun enableMassImportThrottling() = preferenceStore.getBoolean(

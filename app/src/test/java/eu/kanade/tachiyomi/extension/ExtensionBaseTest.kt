@@ -167,7 +167,4 @@ private class MockCatalogueSource : CatalogueSource {
         page: Int,
         query: String,
         filters: eu.kanade.tachiyomi.source.model.FilterList,
-    ) = getPopularManga(page)
-
-    override fun getFilterList() = eu.kanade.tachiyomi.source.model.FilterList()
 }

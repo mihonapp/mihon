@@ -44,6 +44,7 @@ import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.NovelGlobalSearchScreen
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.home.HomeScreen
+import eu.kanade.tachiyomi.ui.library.duplicate.DuplicateDetectionScreen
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -151,6 +152,7 @@ data object NovelsTab : Tab {
                     scrollBehavior = scrollBehavior.takeIf { !state.showCategoryTabs },
                     onClickMassImport = screenModel::openMassImportDialog,
                     onClickImportEpub = screenModel::openImportEpubDialog,
+                    onClickFindDuplicates = { navigator.push(DuplicateDetectionScreen()) },
                 )
             },
             bottomBar = {
@@ -319,6 +321,11 @@ data object NovelsTab : Tab {
                         }
                     },
                 )
+            }
+            // DuplicateDetection now navigates to new screen, not a dialog
+            is LibraryScreenModel.Dialog.DuplicateDetection -> {
+                // Navigation handled by toolbar click, dismiss dialog
+                onDismissRequest()
             }
             null -> {}
         }

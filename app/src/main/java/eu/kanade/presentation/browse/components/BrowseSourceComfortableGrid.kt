@@ -63,6 +63,7 @@ fun BrowseSourceComfortableGrid(
                 onClick = { onMangaClick(manga) },
                 onLongClick = { onMangaLongClick(manga) },
                 isSelected = isSelected,
+                // Use titleMaxLines parameter instead of hardcoded 2
                 titleMaxLines = titleMaxLines,
             )
         }

@@ -159,12 +159,9 @@ class MassImportNovels(
 
         // Prefilter: build an in-memory index of library entries to avoid per-URL DB hits.
         // Key is (sourceId,urlPath) where urlPath matches the stored manga.url format.
+        // Use efficient query that only fetches source_id and url
         val libraryUrlIndex: Set<Pair<Long, String>> = try {
-            mangaRepository.getLibraryManga()
-                .asSequence()
-                .map(LibraryManga::manga)
-                .map { it.source to it.url }
-                .toSet()
+            mangaRepository.getFavoriteSourceAndUrl().toSet()
         } catch (e: Exception) {
             logcat(LogPriority.WARN, e) { "Failed to build library URL index for mass import" }
             emptySet()
@@ -300,9 +297,9 @@ class MassImportNovels(
                                 }
 
                                 it?.copy(
-                                    current = done.coerceAtMost(cleanUrls.size),
-                                    activeImports = activeImports.keys().toList(),
+                                    current = completedCount.get(),
                                     status = statusText,
+                                    activeImports = activeImports.keys().toList(),
                                 )
                             }
                         }
@@ -346,7 +343,7 @@ class MassImportNovels(
             return
         }
 
-        // Fast path: already in library
+        // Fast path: already in library (from prefiltered index)
         if (libraryUrlIndex.contains(source.id to path)) {
             synchronized(result) {
                 result.skipped.add(SkippedNovel(url, url, "Already in library"))
@@ -354,8 +351,8 @@ class MassImportNovels(
             return
         }
 
-        // Check if already in DB/library
-        val existingManga = getMangaByUrlAndSourceId.await(path, source.id)
+        // Check if already in DB but not yet in library (unfavorited)
+        val existingManga = mangaRepository.getLiteMangaByUrlAndSourceId(path, source.id)
         if (existingManga != null && existingManga.favorite) {
             synchronized(result) {
                 result.skipped.add(SkippedNovel(existingManga.title, url, "Already in library"))
@@ -565,14 +562,12 @@ class MassImportNovels(
     /**
      * Analyze URLs before import to give user feedback
      */
-    suspend fun analyzeUrls(text: String): UrlAnalysisResult {
+    suspend fun analyzeUrls(text: String): UrlAnalysisResult = kotlinx.coroutines.withContext(Dispatchers.IO) {
         val novelSources = getNovelSources()
+        
+        // Use efficient query that only fetches source_id and url
         val libraryUrlIndex: Set<Pair<Long, String>> = try {
-            mangaRepository.getLibraryManga()
-                .asSequence()
-                .map(LibraryManga::manga)
-                .map { it.source to it.url }
-                .toSet()
+            mangaRepository.getFavoriteSourceAndUrl().toSet()
         } catch (e: Exception) {
             emptySet()
         }
@@ -620,7 +615,7 @@ class MassImportNovels(
             validUrls.add(line)
         }
 
-        return UrlAnalysisResult(validUrls, invalidUrls, duplicateUrls, alreadyInLibrary)
+        UrlAnalysisResult(validUrls, invalidUrls, duplicateUrls, alreadyInLibrary)
     }
 }
 

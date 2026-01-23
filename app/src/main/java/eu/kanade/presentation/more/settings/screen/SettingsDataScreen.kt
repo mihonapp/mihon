@@ -400,6 +400,10 @@ object SettingsDataScreen : SearchableSettings {
         var titleSelected by remember { mutableStateOf(options.includeTitle) }
         var authorSelected by remember { mutableStateOf(options.includeAuthor) }
         var artistSelected by remember { mutableStateOf(options.includeArtist) }
+        var urlSelected by remember { mutableStateOf(options.includeUrl) }
+        var chapterCountSelected by remember { mutableStateOf(options.includeChapterCount) }
+        var categorySelected by remember { mutableStateOf(options.includeCategory) }
+        var isNovelSelected by remember { mutableStateOf(options.includeIsNovel) }
 
         AlertDialog(
             onDismissRequest = onDismissRequest,
@@ -440,6 +444,34 @@ object SettingsDataScreen : SearchableSettings {
                         Text(text = stringResource(MR.strings.artist))
                     }
                 }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = urlSelected,
+                        onCheckedChange = { urlSelected = it },
+                    )
+                    Text(text = "Full URL")
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = chapterCountSelected,
+                        onCheckedChange = { chapterCountSelected = it },
+                    )
+                    Text(text = "Chapter Count")
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = categorySelected,
+                        onCheckedChange = { categorySelected = it },
+                    )
+                    Text(text = "Categories")
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = isNovelSelected,
+                        onCheckedChange = { isNovelSelected = it },
+                    )
+                    Text(text = "Is Novel")
+                }
             },
             confirmButton = {
                 TextButton(
@@ -449,6 +481,10 @@ object SettingsDataScreen : SearchableSettings {
                                 includeTitle = titleSelected,
                                 includeAuthor = authorSelected,
                                 includeArtist = artistSelected,
+                                includeUrl = urlSelected,
+                                includeChapterCount = chapterCountSelected,
+                                includeCategory = categorySelected,
+                                includeIsNovel = isNovelSelected,
                             ),
                         )
                         onDismissRequest()

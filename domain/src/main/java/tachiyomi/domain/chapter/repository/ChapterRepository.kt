@@ -27,4 +27,10 @@ interface ChapterRepository {
     suspend fun getChapterByMangaIdAsFlow(mangaId: Long, applyScanlatorFilter: Boolean = false): Flow<List<Chapter>>
 
     suspend fun getChapterByUrlAndMangaId(url: String, mangaId: Long): Chapter?
+    
+    /**
+     * Find manga IDs where any chapter name contains the query.
+     * Used for extended library search.
+     */
+    suspend fun findMangaIdsWithChapterNameMatching(query: String): List<Long>
 }

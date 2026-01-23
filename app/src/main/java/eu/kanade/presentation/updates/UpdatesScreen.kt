@@ -145,9 +145,19 @@ fun UpdateScreen(
 
                         if (state.items.isEmpty()) {
                             item(key = "empty_state") {
-                                EmptyScreen(
-                                    stringRes = MR.strings.information_no_recent,
-                                )
+                                // Use Box without verticalScroll for LazyColumn compatibility
+                                androidx.compose.foundation.layout.Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 64.dp),
+                                    contentAlignment = androidx.compose.ui.Alignment.Center,
+                                ) {
+                                    Text(
+                                        text = stringResource(MR.strings.information_no_recent),
+                                        style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
+                                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                                    )
+                                }
                             }
                         } else {
                             updatesUiItems(

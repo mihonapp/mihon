@@ -37,6 +37,8 @@ class StorageManager(
                 baseDir?.let { parent ->
                     parent.createDirectory(AUTOMATIC_BACKUPS_PATH)
                     parent.createDirectory(LOCAL_SOURCE_PATH)
+                    parent.createDirectory(LOCAL_NOVEL_SOURCE_PATH)
+                    parent.createDirectory(LNREADER_PLUGINS_PATH)
                     parent.createDirectory(DOWNLOADS_PATH).also {
                         DiskUtil.createNoMediaFile(it, context)
                     }
@@ -66,9 +68,14 @@ class StorageManager(
     fun getLocalNovelSourceDirectory(): UniFile? {
         return baseDir?.createDirectory(LOCAL_NOVEL_SOURCE_PATH)
     }
+
+    fun getLNReaderPluginsDirectory(): UniFile? {
+        return baseDir?.createDirectory(LNREADER_PLUGINS_PATH)
+    }
 }
 
 private const val AUTOMATIC_BACKUPS_PATH = "autobackup"
 private const val DOWNLOADS_PATH = "downloads"
 private const val LOCAL_SOURCE_PATH = "local"
 private const val LOCAL_NOVEL_SOURCE_PATH = "localnovels"
+private const val LNREADER_PLUGINS_PATH = "lnreader_plugins"

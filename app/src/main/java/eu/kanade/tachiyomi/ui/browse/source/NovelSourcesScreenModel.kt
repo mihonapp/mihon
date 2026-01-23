@@ -45,6 +45,10 @@ class NovelSourcesScreenModel(
     }
 
     private fun collectLatestSources(sources: List<Source>) {
+        logcat(LogPriority.INFO) { "NovelSourcesScreenModel: collectLatestSources() - received ${sources.size} sources" }
+        sources.take(5).forEach { s ->
+            logcat(LogPriority.DEBUG) { "  Source: id=${s.id}, name=${s.name}, lang=${s.lang}" }
+        }
         mutableState.update { state ->
             val map = TreeMap<String, MutableList<Source>> { d1, d2 ->
                 // Sources without a lang defined will be placed at the end

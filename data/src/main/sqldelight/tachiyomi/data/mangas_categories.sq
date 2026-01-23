@@ -8,6 +8,9 @@ CREATE TABLE mangas_categories(
     ON DELETE CASCADE
 );
 
+-- Performance index for libraryView
+CREATE INDEX mangas_categories_manga_category_index ON mangas_categories(manga_id, category_id);
+
 CREATE TRIGGER insert_manga_category_update_version AFTER INSERT ON mangas_categories
 BEGIN
     UPDATE mangas

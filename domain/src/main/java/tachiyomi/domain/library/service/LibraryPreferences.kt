@@ -53,6 +53,8 @@ class LibraryPreferences(
         ),
     )
 
+    fun skipUpdateTime() = preferenceStore.getInt("pref_skip_update_time", SKIP_UPDATE_NONE)
+
     fun autoUpdateMetadata() = preferenceStore.getBoolean("auto_update_metadata", false)
 
     fun autoUpdateThrottle() = preferenceStore.getInt("pref_library_update_throttle_ms", 0)
@@ -102,6 +104,15 @@ class LibraryPreferences(
 
     // Stores extension IDs that are excluded (unchecked) from the library filter
     fun excludedExtensions() = preferenceStore.getStringSet("pref_excluded_library_extensions", emptySet())
+
+    // Tag filtering - included tags (TriState: DISABLED = show all, ENABLED_IS = include, ENABLED_NOT = exclude)
+    fun includedTags() = preferenceStore.getStringSet("pref_filter_library_included_tags", emptySet())
+    fun excludedTags() = preferenceStore.getStringSet("pref_filter_library_excluded_tags", emptySet())
+    fun filterNoTags() = preferenceStore.getEnum("pref_filter_library_no_tags", TriState.DISABLED)
+
+    // Search options - what to include in library search
+    fun searchChapterNames() = preferenceStore.getBoolean("pref_search_chapter_names", false)
+    fun searchChapterContent() = preferenceStore.getBoolean("pref_search_chapter_content", false)
 
     // endregion
 
@@ -221,6 +232,15 @@ class LibraryPreferences(
         const val MANGA_HAS_UNREAD = "manga_fully_read"
         const val MANGA_NON_READ = "manga_started"
         const val MANGA_OUTSIDE_RELEASE_PERIOD = "manga_outside_release_period"
+
+        const val SKIP_UPDATE_NONE = 0
+        const val SKIP_UPDATE_1_DAY = 1
+        const val SKIP_UPDATE_3_DAYS = 3
+        const val SKIP_UPDATE_7_DAYS = 7
+        const val SKIP_UPDATE_14_DAYS = 14
+        const val SKIP_UPDATE_30_DAYS = 30
+        const val SKIP_UPDATE_60_DAYS = 60
+        const val SKIP_UPDATE_90_DAYS = 90
 
         const val MARK_DUPLICATE_CHAPTER_READ_NEW = "new"
         const val MARK_DUPLICATE_CHAPTER_READ_EXISTING = "existing"

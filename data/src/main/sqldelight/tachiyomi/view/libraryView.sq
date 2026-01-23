@@ -39,3 +39,58 @@ WHERE M.favorite = 1;
 library:
 SELECT *
 FROM libraryView;
+
+libraryGrid:
+SELECT
+    _id,
+    source,
+    url,
+    NULL AS artist,
+    NULL AS author,
+    NULL AS description,
+    genre,
+    title,
+    NULL AS alternative_titles,
+    0 AS status,
+    thumbnail_url,
+    favorite,
+    last_update,
+    next_update,
+    0 AS initialized,
+    0 AS viewer,
+    0 AS chapter_flags,
+    cover_last_modified,
+    date_added,
+    0 AS update_strategy,
+    0 AS calculate_interval,
+    0 AS last_modified_at,
+    NULL AS favorite_modified_at,
+    0 AS version,
+    0 AS is_syncing,
+    '' AS notes,
+    totalCount,
+    readCount,
+    latestUpload,
+    chapterFetchedAt,
+    lastRead,
+    bookmarkCount,
+    categories
+FROM libraryView;
+
+-- Lightweight query for LibraryUpdateJob - only fields needed for filtering
+-- Avoids fetching heavy fields like description, genre, etc.
+libraryForUpdate:
+SELECT
+    _id,
+    source,
+    url,
+    title,
+    status,
+    favorite,
+    last_update,
+    next_update,
+    update_strategy,
+    totalCount,
+    readCount,
+    categories
+FROM libraryView;

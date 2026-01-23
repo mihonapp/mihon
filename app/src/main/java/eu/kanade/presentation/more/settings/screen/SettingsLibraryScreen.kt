@@ -203,6 +203,21 @@ object SettingsLibraryScreen : SearchableSettings {
                     ),
                     title = stringResource(MR.strings.pref_library_update_smart_update),
                 ),
+                Preference.PreferenceItem.ListPreference(
+                    preference = libraryPreferences.skipUpdateTime(),
+                    entries = persistentMapOf(
+                        LibraryPreferences.SKIP_UPDATE_NONE to "No restriction",
+                        LibraryPreferences.SKIP_UPDATE_1_DAY to "Skip if updated in last 1 day",
+                        LibraryPreferences.SKIP_UPDATE_3_DAYS to "Skip if updated in last 3 days",
+                        LibraryPreferences.SKIP_UPDATE_7_DAYS to "Skip if updated in last 7 days",
+                        LibraryPreferences.SKIP_UPDATE_14_DAYS to "Skip if updated in last 14 days",
+                        LibraryPreferences.SKIP_UPDATE_30_DAYS to "Skip if updated in last 30 days",
+                        LibraryPreferences.SKIP_UPDATE_60_DAYS to "Skip if updated in last 60 days",
+                        LibraryPreferences.SKIP_UPDATE_90_DAYS to "Skip if updated in last 90 days",
+                    ),
+                    title = "Skip recently updated manga",
+                    subtitle = "Skip manga that were recently updated during bulk updates",
+                ),
                 Preference.PreferenceItem.SwitchPreference(
                     preference = libraryPreferences.newShowUpdatesCount(),
                     title = stringResource(MR.strings.pref_library_update_show_tab_badge),

@@ -18,6 +18,7 @@ import eu.kanade.tachiyomi.util.system.notificationManager
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.runBlocking
+import java.util.concurrent.ConcurrentHashMap
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.chapter.interactor.GetChapter
@@ -72,6 +73,8 @@ class NotificationReceiver : BroadcastReceiver() {
             ACTION_CANCEL_RESTORE -> cancelRestore(context)
             // Cancel library update and dismiss notification
             ACTION_CANCEL_LIBRARY_UPDATE -> cancelLibraryUpdate(context)
+            // Cancel mass import
+            ACTION_CANCEL_MASS_IMPORT -> cancelMassImport(context)
             // Start downloading app update
             ACTION_START_APP_UPDATE -> startDownloadAppUpdate(context, intent)
             // Cancel downloading app update
@@ -90,7 +93,7 @@ class NotificationReceiver : BroadcastReceiver() {
                 if (notificationId > -1) {
                     dismissNotification(context, notificationId, intent.getIntExtra(EXTRA_GROUP_ID, 0))
                 }
-                val urls = intent.getStringArrayExtra(EXTRA_CHAPTER_URL) ?: return
+                val urls = resolveChapterUrls(intent) ?: return
                 val mangaId = intent.getLongExtra(EXTRA_MANGA_ID, -1)
                 if (mangaId > -1) {
                     markAsRead(urls, mangaId)
@@ -102,7 +105,7 @@ class NotificationReceiver : BroadcastReceiver() {
                 if (notificationId > -1) {
                     dismissNotification(context, notificationId, intent.getIntExtra(EXTRA_GROUP_ID, 0))
                 }
-                val urls = intent.getStringArrayExtra(EXTRA_CHAPTER_URL) ?: return
+                val urls = resolveChapterUrls(intent) ?: return
                 val mangaId = intent.getLongExtra(EXTRA_MANGA_ID, -1)
                 if (mangaId > -1) {
                     downloadChapters(urls, mangaId)
@@ -178,6 +181,15 @@ class NotificationReceiver : BroadcastReceiver() {
         LibraryUpdateJob.stop(context)
     }
 
+    /**
+     * Method called when user wants to stop a mass import job
+     *
+     * @param context context of application
+     */
+    private fun cancelMassImport(context: Context) {
+        eu.kanade.tachiyomi.data.massimport.MassImportJob.stop(context)
+    }
+
     private fun startDownloadAppUpdate(context: Context, intent: Intent) {
         val url = intent.getStringExtra(AppUpdateDownloadJob.EXTRA_DOWNLOAD_URL) ?: return
         AppUpdateDownloadJob.start(context, url)
@@ -241,6 +253,8 @@ class NotificationReceiver : BroadcastReceiver() {
 
         private const val ACTION_CANCEL_LIBRARY_UPDATE = "$ID.$NAME.CANCEL_LIBRARY_UPDATE"
 
+        private const val ACTION_CANCEL_MASS_IMPORT = "$ID.$NAME.CANCEL_MASS_IMPORT"
+
         private const val ACTION_START_APP_UPDATE = "$ID.$NAME.ACTION_START_APP_UPDATE"
         private const val ACTION_CANCEL_APP_UPDATE_DOWNLOAD = "$ID.$NAME.CANCEL_APP_UPDATE_DOWNLOAD"
 
@@ -262,6 +276,32 @@ class NotificationReceiver : BroadcastReceiver() {
         private const val EXTRA_MANGA_ID = "$ID.$NAME.EXTRA_MANGA_ID"
         private const val EXTRA_CHAPTER_ID = "$ID.$NAME.EXTRA_CHAPTER_ID"
         private const val EXTRA_CHAPTER_URL = "$ID.$NAME.EXTRA_CHAPTER_URL"
+        private const val EXTRA_CHAPTER_CACHE_KEY = "$ID.$NAME.EXTRA_CHAPTER_CACHE_KEY"
+
+        // Limit inline extras to avoid TransactionTooLarge exceptions on massive updates.
+        private const val MAX_INLINE_CHAPTER_URLS = 50
+        private const val MAX_INLINE_CHAPTER_BYTES = 4_000
+
+        private val chapterUrlCache = ConcurrentHashMap<String, Array<String>>()
+
+        private fun prepareChapterPayload(mangaId: Long, chapters: Array<Chapter>): Pair<Array<String>?, String?> {
+            val urls = chapters.map { it.url }.toTypedArray()
+            val inlineSize = urls.sumOf { it.length }
+
+            return if (urls.size > MAX_INLINE_CHAPTER_URLS || inlineSize > MAX_INLINE_CHAPTER_BYTES) {
+                val cacheKey = "chapters_${mangaId}_${System.currentTimeMillis()}"
+                chapterUrlCache[cacheKey] = urls
+                null to cacheKey
+            } else {
+                urls to null
+            }
+        }
+
+        private fun resolveChapterUrls(intent: Intent): Array<String>? {
+            intent.getStringArrayExtra(EXTRA_CHAPTER_URL)?.let { return it }
+            val cacheKey = intent.getStringExtra(EXTRA_CHAPTER_CACHE_KEY) ?: return null
+            return chapterUrlCache.remove(cacheKey)
+        }
 
         /**
          * Returns a [PendingIntent] that resumes the download of a chapter
@@ -444,9 +484,11 @@ class NotificationReceiver : BroadcastReceiver() {
             chapters: Array<Chapter>,
             groupId: Int,
         ): PendingIntent {
+            val (inlineUrls, cacheKey) = prepareChapterPayload(manga.id, chapters)
             val newIntent = Intent(context, NotificationReceiver::class.java).apply {
                 action = ACTION_MARK_AS_READ
-                putExtra(EXTRA_CHAPTER_URL, chapters.map { it.url }.toTypedArray())
+                inlineUrls?.let { putExtra(EXTRA_CHAPTER_URL, it) }
+                cacheKey?.let { putExtra(EXTRA_CHAPTER_CACHE_KEY, it) }
                 putExtra(EXTRA_MANGA_ID, manga.id)
                 putExtra(EXTRA_NOTIFICATION_ID, manga.id.hashCode())
                 putExtra(EXTRA_GROUP_ID, groupId)
@@ -471,9 +513,11 @@ class NotificationReceiver : BroadcastReceiver() {
             chapters: Array<Chapter>,
             groupId: Int,
         ): PendingIntent {
+            val (inlineUrls, cacheKey) = prepareChapterPayload(manga.id, chapters)
             val newIntent = Intent(context, NotificationReceiver::class.java).apply {
                 action = ACTION_DOWNLOAD_CHAPTER
-                putExtra(EXTRA_CHAPTER_URL, chapters.map { it.url }.toTypedArray())
+                inlineUrls?.let { putExtra(EXTRA_CHAPTER_URL, it) }
+                cacheKey?.let { putExtra(EXTRA_CHAPTER_CACHE_KEY, it) }
                 putExtra(EXTRA_MANGA_ID, manga.id)
                 putExtra(EXTRA_NOTIFICATION_ID, manga.id.hashCode())
                 putExtra(EXTRA_GROUP_ID, groupId)
@@ -524,8 +568,24 @@ class NotificationReceiver : BroadcastReceiver() {
             )
         }
 
-        /**
-         * Returns [PendingIntent] that starts the [AppUpdateDownloadJob] to download an app update.
+        /**         * Returns [PendingIntent] that stops the mass import
+         *
+         * @param context context of application
+         * @return [PendingIntent]
+         */
+        internal fun cancelMassImportPendingBroadcast(context: Context): PendingIntent {
+            val intent = Intent(context, NotificationReceiver::class.java).apply {
+                action = ACTION_CANCEL_MASS_IMPORT
+            }
+            return PendingIntent.getBroadcast(
+                context,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            )
+        }
+
+        /**         * Returns [PendingIntent] that starts the [AppUpdateDownloadJob] to download an app update.
          *
          * @param context context of application
          * @return [PendingIntent]

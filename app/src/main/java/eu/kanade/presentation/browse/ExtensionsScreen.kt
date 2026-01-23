@@ -37,7 +37,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -46,6 +48,7 @@ import dev.icerock.moko.resources.StringResource
 import eu.kanade.presentation.browse.components.BaseBrowseItem
 import eu.kanade.presentation.browse.components.ExtensionIcon
 import eu.kanade.presentation.components.WarningBanner
+import eu.kanade.tachiyomi.ui.webview.WebViewScreen
 import eu.kanade.presentation.manga.components.DotSeparatorNoSpaceText
 import eu.kanade.presentation.more.settings.screen.browse.ExtensionReposScreen
 import eu.kanade.presentation.util.animateItemFastScroll
@@ -78,11 +81,11 @@ fun ExtensionScreen(
     onLongClickItem: (Extension) -> Unit,
     onClickItemCancel: (Extension) -> Unit,
     onOpenWebView: (Extension.Available) -> Unit,
-    onInstallExtension: (Extension.Available) -> Unit,
+    onInstallExtension: (Extension) -> Unit,
     onUninstallExtension: (Extension) -> Unit,
-    onUpdateExtension: (Extension.Installed) -> Unit,
+    onUpdateExtension: (Extension) -> Unit,
     onTrustExtension: (Extension.Untrusted) -> Unit,
-    onOpenExtension: (Extension.Installed) -> Unit,
+    onOpenExtension: (Extension) -> Unit,
     onClickUpdateAll: () -> Unit,
     onRefresh: () -> Unit,
 ) {
@@ -139,14 +142,15 @@ private fun ExtensionContent(
     onLongClickItem: (Extension) -> Unit,
     onClickItemCancel: (Extension) -> Unit,
     onOpenWebView: (Extension.Available) -> Unit,
-    onInstallExtension: (Extension.Available) -> Unit,
+    onInstallExtension: (Extension) -> Unit,
     onUninstallExtension: (Extension) -> Unit,
-    onUpdateExtension: (Extension.Installed) -> Unit,
+    onUpdateExtension: (Extension) -> Unit,
     onTrustExtension: (Extension.Untrusted) -> Unit,
-    onOpenExtension: (Extension.Installed) -> Unit,
+    onOpenExtension: (Extension) -> Unit,
     onClickUpdateAll: () -> Unit,
 ) {
     val context = LocalContext.current
+    val navigator = LocalNavigator.currentOrThrow
     var trustState by remember { mutableStateOf<Extension.Untrusted?>(null) }
     val installGranted = rememberRequestPackageInstallsPermissionState(initialValue = true)
 
@@ -209,6 +213,7 @@ private fun ExtensionContent(
                         is Extension.Untrusted -> "extension-untrusted-${item.hashCode()}"
                         is Extension.Installed -> "extension-installed-${item.hashCode()}"
                         is Extension.Available -> "extension-available-${item.hashCode()}"
+                        is Extension.JsPlugin -> "extension-js-${item.hashCode()}"
                     }
                 },
             ) { item ->
@@ -222,6 +227,13 @@ private fun ExtensionContent(
                             is Extension.Untrusted -> {
                                 trustState = it
                             }
+                            is Extension.JsPlugin -> {
+                                if (it.isInstalled) {
+                                    // onOpenExtension(it) // Not supported yet for JS
+                                } else {
+                                    onInstallExtension(it)
+                                }
+                            }
                         }
                     },
                     onLongClickItem = onLongClickItem,
@@ -229,6 +241,18 @@ private fun ExtensionContent(
                         when (it) {
                             is Extension.Available -> onOpenWebView(it)
                             is Extension.Installed -> onOpenExtension(it)
+                            is Extension.JsPlugin -> {
+                                // Handle web view for JS plugins using sources
+                                it.sources.getOrNull(0)?.let { source ->
+                                    navigator.push(
+                                        WebViewScreen(
+                                            url = source.baseUrl,
+                                            initialTitle = source.name,
+                                            sourceId = source.id,
+                                        ),
+                                    )
+                                }
+                            }
                             else -> {}
                         }
                     },
@@ -245,6 +269,13 @@ private fun ExtensionContent(
                             }
                             is Extension.Untrusted -> {
                                 trustState = it
+                            }
+                            is Extension.JsPlugin -> {
+                                if (it.isInstalled && it.hasUpdate) {
+                                    onUpdateExtension(it)
+                                } else if (!it.isInstalled) {
+                                    onInstallExtension(it)
+                                }
                             }
                         }
                     },
@@ -392,6 +423,16 @@ private fun ExtensionItemContent(
                     )
                 }
 
+                if (extension is Extension.JsPlugin) {
+                    if (hasAlreadyShownAnElement) DotSeparatorNoSpaceText()
+                    hasAlreadyShownAnElement = true
+                    Text(
+                        text = "JS",
+                        color = Color.Yellow,
+                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold)
+                    )
+                }
+
                 if (!installStep.isCompleted()) {
                     DotSeparatorNoSpaceText()
                     Text(
@@ -484,6 +525,35 @@ private fun ExtensionItemActions(
                                 imageVector = Icons.Outlined.GetApp,
                                 contentDescription = stringResource(MR.strings.ext_install),
                             )
+                        }
+                    }
+                    is Extension.JsPlugin -> {
+                        if (extension.sources.isNotEmpty()) {
+                            IconButton(
+                                onClick = { onClickItemSecondaryAction(extension) },
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Public,
+                                    contentDescription = stringResource(MR.strings.action_open_in_web_view),
+                                )
+                            }
+                        }
+                        if (extension.isInstalled) {
+                            if (extension.hasUpdate) {
+                                IconButton(onClick = { onClickItemAction(extension) }) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.GetApp,
+                                        contentDescription = stringResource(MR.strings.ext_update),
+                                    )
+                                }
+                            }
+                        } else {
+                            IconButton(onClick = { onClickItemAction(extension) }) {
+                                Icon(
+                                    imageVector = Icons.Outlined.GetApp,
+                                    contentDescription = stringResource(MR.strings.ext_install),
+                                )
+                            }
                         }
                     }
                 }

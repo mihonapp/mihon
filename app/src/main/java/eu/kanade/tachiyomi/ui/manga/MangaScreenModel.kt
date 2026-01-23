@@ -81,6 +81,7 @@ import tachiyomi.domain.chapter.service.calculateChapterGap
 import tachiyomi.domain.chapter.service.getChapterSort
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
+import tachiyomi.domain.manga.interactor.FindDuplicateNovels
 import tachiyomi.domain.manga.interactor.GetMangaWithChapters
 import tachiyomi.domain.manga.interactor.SetMangaChapterFlags
 import tachiyomi.domain.manga.model.Manga
@@ -110,6 +111,7 @@ class MangaScreenModel(
     private val downloadCache: DownloadCache = Injekt.get(),
     private val getMangaAndChapters: GetMangaWithChapters = Injekt.get(),
     private val getDuplicateLibraryManga: GetDuplicateLibraryManga = Injekt.get(),
+    private val findDuplicateNovels: FindDuplicateNovels = Injekt.get(),
     private val getAvailableScanlators: GetAvailableScanlators = Injekt.get(),
     private val getExcludedScanlators: GetExcludedScanlators = Injekt.get(),
     private val setExcludedScanlators: SetExcludedScanlators = Injekt.get(),
@@ -265,6 +267,12 @@ class MangaScreenModel(
 
             // Initial loading finished
             updateSuccessState { it.copy(isRefreshingData = false) }
+
+            // Load categories if in library (similarNovels loaded on demand when dialog is shown)
+            if (manga.favorite) {
+                val categories = getCategories.await(manga.id)
+                updateSuccessState { it.copy(categories = categories) }
+            }
         }
     }
 
@@ -495,6 +503,19 @@ class MangaScreenModel(
     fun updateAlternativeTitles(alternativeTitles: List<String>) {
         screenModelScope.launchIO {
             updateManga.awaitUpdateAlternativeTitles(mangaId, alternativeTitles)
+        }
+    }
+
+    /**
+     * Update the tags (genre) of the manga.
+     */
+    fun updateTags(tags: List<String>) {
+        screenModelScope.launchIO {
+            val update = tachiyomi.domain.manga.model.MangaUpdate(
+                id = mangaId,
+                genre = tags,
+            )
+            updateManga.await(update)
         }
     }
 
@@ -1166,9 +1187,11 @@ class MangaScreenModel(
         data class DeleteChapters(val chapters: List<Chapter>) : Dialog
         data class RemoveChaptersFromDb(val chapters: List<Chapter>) : Dialog
         data class DuplicateManga(val manga: Manga, val duplicates: List<MangaWithChapterCount>) : Dialog
+        data class SimilarNovels(val similarNovels: List<MangaWithChapterCount>, val categories: List<Category>) : Dialog
         data class Migrate(val target: Manga, val current: Manga) : Dialog
         data class SetFetchInterval(val manga: Manga) : Dialog
         data class EditAlternativeTitles(val manga: Manga) : Dialog
+        data class EditTags(val manga: Manga) : Dialog
         data class TranslateMangaDetails(val manga: Manga) : Dialog
         data class ExportEpub(val manga: Manga, val chapters: List<Chapter>) : Dialog
         data object SettingsSheet : Dialog
@@ -1211,9 +1234,54 @@ class MangaScreenModel(
         updateSuccessState { it.copy(dialog = Dialog.Migrate(target = manga, current = duplicate)) }
     }
 
+    /**
+     * Show dialog to find duplicates for this specific manga in the library.
+     * This allows users to find potential duplicates even for manga already in the library.
+     */
+    fun showFindDuplicatesDialog() {
+        val manga = successState?.manga ?: return
+        screenModelScope.launchIO {
+            val duplicates = getDuplicateLibraryManga(manga)
+            withUIContext {
+                if (duplicates.isNotEmpty()) {
+                    updateSuccessState { it.copy(dialog = Dialog.DuplicateManga(manga, duplicates)) }
+                } else {
+                    // Show a snackbar or toast instead of dialog if no duplicates found
+                    snackbarHostState.showSnackbar("No duplicates found for this novel")
+                }
+            }
+        }
+    }
+
+    fun showSimilarNovelsDialog() {
+        val state = successState ?: return
+        screenModelScope.launchIO {
+            // Load similar novels on demand to avoid slow queries on page init
+            val similarNovels = if (state.similarNovels.isEmpty()) {
+                findDuplicateNovels.findSimilarTo(state.manga.id, state.manga.title)
+            } else {
+                state.similarNovels
+            }
+            val categories = getCategories.await()
+            withUIContext {
+                updateSuccessState { 
+                    it.copy(
+                        similarNovels = similarNovels,
+                        dialog = Dialog.SimilarNovels(similarNovels, categories)
+                    ) 
+                }
+            }
+        }
+    }
+
     fun showEditAlternativeTitlesDialog() {
         val manga = successState?.manga ?: return
         updateSuccessState { it.copy(dialog = Dialog.EditAlternativeTitles(manga)) }
+    }
+
+    fun showEditTagsDialog() {
+        val manga = successState?.manga ?: return
+        updateSuccessState { it.copy(dialog = Dialog.EditTags(manga)) }
     }
 
     fun showExportEpubDialog() {
@@ -1468,6 +1536,8 @@ class MangaScreenModel(
             val hasPromptedToAddBefore: Boolean = false,
             val hideMissingChapters: Boolean = false,
             val isNovel: Boolean = false,
+            val similarNovels: List<MangaWithChapterCount> = emptyList(),
+            val categories: List<Category> = emptyList(),
         ) : State {
             val processedChapters by lazy {
                 chapters.applyFilters(manga).toList()

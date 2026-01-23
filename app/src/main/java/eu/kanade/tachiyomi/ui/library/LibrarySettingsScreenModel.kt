@@ -3,18 +3,19 @@ package eu.kanade.tachiyomi.ui.library
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.domain.base.BasePreferences
+import eu.kanade.tachiyomi.data.cache.LibrarySettingsCache
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.source.isNovelSource
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
+import logcat.LogPriority
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.core.common.preference.getAndSet
 import tachiyomi.core.common.util.lang.launchIO
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.interactor.SetDisplayMode
 import tachiyomi.domain.category.interactor.SetSortModeForCategory
 import tachiyomi.domain.category.model.Category
@@ -25,6 +26,7 @@ import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.time.Duration.Companion.seconds
 
 class LibrarySettingsScreenModel(
@@ -36,6 +38,7 @@ class LibrarySettingsScreenModel(
     trackerManager: TrackerManager = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
     private val getLibraryManga: GetLibraryManga = Injekt.get(),
+    private val librarySettingsCache: LibrarySettingsCache = Injekt.get(),
 ) : ScreenModel {
 
     val trackersFlow = trackerManager.loggedInTrackersFlow()
@@ -45,31 +48,27 @@ class LibrarySettingsScreenModel(
             initialValue = trackerManager.loggedInTrackers(),
         )
 
-    val extensionsFlow = getLibraryManga.subscribe()
-        .map { libraryManga ->
-            libraryManga.map { it.manga.source }.distinct()
-        }
-        .distinctUntilChanged()
-        .map { sourceIds ->
-            sourceIds.mapNotNull { sourceId ->
-                val source = sourceManager.getOrStub(sourceId)
-                // Filter extensions based on library type
-                val isNovel = source.isNovelSource()
-                val shouldInclude = when (type) {
-                    LibraryScreenModel.LibraryType.All -> true
-                    LibraryScreenModel.LibraryType.Manga -> !isNovel
-                    LibraryScreenModel.LibraryType.Novel -> isNovel
-                }
-                if (shouldInclude) sourceId to source.name else null
-            }
-                .sortedBy { it.second }
-        }
-        .flowOn(Dispatchers.IO)
-        .stateIn(
-            scope = screenModelScope,
-            started = SharingStarted.WhileSubscribed(5.seconds.inWholeMilliseconds),
-            initialValue = emptyList<Pair<Long, String>>(),
-        )
+    // Cached extension list - NO automatic database subscription
+    // Data is loaded only when refreshExtensions() is called
+    private val _extensionsFlow = MutableStateFlow<List<Pair<Long, String>>>(emptyList())
+    val extensionsFlow = _extensionsFlow.asStateFlow()
+
+    // Cached tags with counts - NO automatic database subscription
+    // Data is loaded only when refreshTags() is called
+    private val _tagsFlow = MutableStateFlow<List<Pair<String, Int>>>(emptyList())
+    val tagsFlow = _tagsFlow.asStateFlow()
+
+    // Cached count of manga with no tags
+    private val _noTagsCountFlow = MutableStateFlow(0)
+    val noTagsCountFlow = _noTagsCountFlow.asStateFlow()
+
+    // Loading state
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+    
+    // Flags to track if we've attempted to load from disk cache
+    private val _extensionsLoaded = AtomicBoolean(false)
+    private val _tagsLoaded = AtomicBoolean(false)
 
     fun toggleFilter(preference: (LibraryPreferences) -> Preference<TriState>) {
         preference(libraryPreferences).getAndSet {
@@ -127,5 +126,147 @@ class LibrarySettingsScreenModel(
         val current = libraryPreferences.excludedExtensions().get()
         // Add all available extensions to excluded set
         libraryPreferences.excludedExtensions().set(current + availableSourceIds)
+    }
+
+    // Tag filtering methods
+    fun toggleTagIncluded(tag: String) {
+        val included = libraryPreferences.includedTags().get()
+        val excluded = libraryPreferences.excludedTags().get()
+        
+        when {
+            tag in included -> {
+                // Currently included -> move to excluded
+                libraryPreferences.includedTags().set(included - tag)
+                libraryPreferences.excludedTags().set(excluded + tag)
+            }
+            tag in excluded -> {
+                // Currently excluded -> remove filter
+                libraryPreferences.excludedTags().set(excluded - tag)
+            }
+            else -> {
+                // Not filtered -> include
+                libraryPreferences.includedTags().set(included + tag)
+            }
+        }
+    }
+
+    fun clearAllTagFilters() {
+        libraryPreferences.includedTags().set(emptySet())
+        libraryPreferences.excludedTags().set(emptySet())
+        libraryPreferences.filterNoTags().set(TriState.DISABLED)
+    }
+
+    fun toggleNoTagsFilter() {
+        toggleFilter { libraryPreferences.filterNoTags() }
+    }
+    
+    /**
+     * Refresh extensions list from database or cache.
+     * This is the ONLY way to load extension data - no auto-subscription.
+     */
+    fun refreshExtensions(forceRefresh: Boolean = false) {
+        if (_isLoading.value) return
+        screenModelScope.launchIO {
+            _isLoading.value = true
+            try {
+                // Try loading from disk cache first if not forced and not loaded yet
+                if (!forceRefresh && !_extensionsLoaded.get()) {
+                    val cached = librarySettingsCache.loadExtensions()
+                    if (cached != null && cached.isNotEmpty()) {
+                        _extensionsFlow.value = cached
+                        _extensionsLoaded.set(true)
+                        _isLoading.value = false
+                        return@launchIO
+                    }
+                }
+
+                // If no cache or forced refresh, load from DB using ultra-lightweight query
+                // This only fetches source IDs, avoiding the expensive libraryView JOIN
+                val sourceIds = getLibraryManga.awaitSourceIds()
+                val extensions = sourceIds.mapNotNull { sourceId ->
+                    val source = sourceManager.getOrStub(sourceId)
+                    val isNovel = source.isNovelSource()
+                    val shouldInclude = when (type) {
+                        LibraryScreenModel.LibraryType.All -> true
+                        LibraryScreenModel.LibraryType.Manga -> !isNovel
+                        LibraryScreenModel.LibraryType.Novel -> isNovel
+                    }
+                    if (shouldInclude) sourceId to source.name else null
+                }.sortedBy { it.second }
+                
+                _extensionsFlow.value = extensions
+                librarySettingsCache.saveExtensions(extensions)
+                _extensionsLoaded.set(true)
+            } catch (e: Exception) {
+                // Ignore error, keep empty list
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+    
+    /**
+     * Refresh tags list and counts from database or cache.
+     * This is the ONLY way to load tag data - no auto-subscription.
+     */
+    fun refreshTags(forceRefresh: Boolean = false) {
+        if (_isLoading.value) return
+        screenModelScope.launchIO {
+            _isLoading.value = true
+            try {
+                logcat(LogPriority.INFO) { "LibrarySettingsScreenModel: refreshTags(forceRefresh=$forceRefresh)" }
+                
+                // Try loading from disk cache first if not forced and not loaded yet
+                if (!forceRefresh && !_tagsLoaded.get()) {
+                    val cached = librarySettingsCache.loadTags()
+                    if (cached != null) {
+                        logcat(LogPriority.DEBUG) { "LibrarySettingsScreenModel: Loaded ${cached.first.size} tags from cache" }
+                        _tagsFlow.value = cached.first
+                        _noTagsCountFlow.value = cached.second
+                        _tagsLoaded.set(true)
+                        _isLoading.value = false
+                        return@launchIO
+                    }
+                }
+
+                // If no cache or forced refresh, load from DB using lightweight genres query
+                logcat(LogPriority.INFO) { "LibrarySettingsScreenModel: Loading tags from database (lightweight query)..." }
+                val genresList = getLibraryManga.awaitGenresOnly()
+                logcat(LogPriority.DEBUG) { "LibrarySettingsScreenModel: Got ${genresList.size} manga from library" }
+                
+                // Calculate tag counts
+                val tagCounts = mutableMapOf<String, Int>()
+                var noTagsCount = 0
+                genresList.forEach { (_, genres) ->
+                    if (genres.isNullOrEmpty()) {
+                        noTagsCount++
+                    } else {
+                        genres.forEach { tag ->
+                            val normalizedTag = tag.trim()
+                            if (normalizedTag.isNotBlank()) {
+                                tagCounts[normalizedTag] = (tagCounts[normalizedTag] ?: 0) + 1
+                            }
+                        }
+                    }
+                }
+                
+                logcat(LogPriority.INFO) { "LibrarySettingsScreenModel: Found ${tagCounts.size} unique tags, $noTagsCount manga without tags" }
+                
+                val tagsList = tagCounts.entries
+                    .sortedByDescending { it.value }
+                    .map { it.key to it.value }
+                
+                _tagsFlow.value = tagsList
+                _noTagsCountFlow.value = noTagsCount
+                
+                librarySettingsCache.saveTags(tagsList, noTagsCount)
+                _tagsLoaded.set(true)
+                logcat(LogPriority.INFO) { "LibrarySettingsScreenModel: refreshTags completed" }
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e) { "LibrarySettingsScreenModel: Error refreshing tags" }
+            } finally {
+                _isLoading.value = false
+            }
+        }
     }
 }

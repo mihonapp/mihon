@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.model.SManga
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.FetchInterval
+import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.repository.MangaRepository
@@ -18,6 +19,7 @@ import java.time.ZonedDateTime
 class UpdateManga(
     private val mangaRepository: MangaRepository,
     private val fetchInterval: FetchInterval,
+    private val getLibraryManga: GetLibraryManga = Injekt.get(),
 ) {
 
     suspend fun await(mangaUpdate: MangaUpdate): Boolean {
@@ -112,9 +114,14 @@ class UpdateManga(
             true -> Instant.now().toEpochMilli()
             false -> 0
         }
-        return mangaRepository.update(
+        val result = mangaRepository.update(
             MangaUpdate(id = mangaId, favorite = favorite, dateAdded = dateAdded),
         )
+        // Refresh library cache after favorite status changes
+        if (result) {
+            getLibraryManga.refresh()
+        }
+        return result
     }
 
     suspend fun awaitUpdateAlternativeTitles(mangaId: Long, alternativeTitles: List<String>): Boolean {

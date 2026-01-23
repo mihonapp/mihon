@@ -119,6 +119,7 @@ object SettingsNovelDownloadScreen : SearchableSettings {
     ): Preference.PreferenceGroup {
         val enabled = prefs.enableUpdateThrottling().collectAsState().value
         val updateDelay = prefs.updateDelay().collectAsState().value
+        val parallelUpdates = prefs.parallelNovelUpdates().collectAsState().value
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_category_library_update),
@@ -132,10 +133,18 @@ object SettingsNovelDownloadScreen : SearchableSettings {
                     value = updateDelay,
                     valueRange = 0..10000,
                     title = stringResource(MR.strings.pref_novel_update_delay),
-                    subtitle = stringResource(MR.strings.pref_novel_update_delay_summary),
+                    subtitle = "Delay between novels for the same extension",
                     valueString = "${updateDelay}ms",
                     onValueChanged = { prefs.updateDelay().set(it) },
                     enabled = enabled,
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = parallelUpdates,
+                    valueRange = 1..10,
+                    title = "Parallel novel updates",
+                    subtitle = "Number of different extensions updating simultaneously (not within same extension)",
+                    valueString = "$parallelUpdates",
+                    onValueChanged = { prefs.parallelNovelUpdates().set(it) },
                 ),
             ),
         )
@@ -154,13 +163,13 @@ object SettingsNovelDownloadScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = prefs.enableMassImportThrottling(),
                     title = stringResource(MR.strings.pref_novel_mass_import_throttling),
-                    subtitle = stringResource(MR.strings.pref_novel_mass_import_throttling_summary),
+                    subtitle = "Apply delays between novels from the same source only",
                 ),
                 Preference.PreferenceItem.SliderPreference(
                     value = massImportDelay,
                     valueRange = 0..10000,
                     title = stringResource(MR.strings.pref_novel_mass_import_delay),
-                    subtitle = stringResource(MR.strings.pref_novel_mass_import_delay_summary),
+                    subtitle = "Delay between imports from the same source (different sources run concurrently)",
                     valueString = "${massImportDelay}ms",
                     onValueChanged = { prefs.massImportDelay().set(it) },
                     enabled = enabled,
@@ -169,7 +178,7 @@ object SettingsNovelDownloadScreen : SearchableSettings {
                     value = prefs.parallelMassImport().collectAsState().value,
                     valueRange = 1..10,
                     title = "Concurrent Mass Imports",
-                    subtitle = "Number of novels to import simultaneously",
+                    subtitle = "Number of different sources importing simultaneously (throttle between same source is in delay setting)",
                     valueString = "${prefs.parallelMassImport().collectAsState().value}",
                     onValueChanged = { prefs.parallelMassImport().set(it) },
                 ),

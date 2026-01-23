@@ -179,6 +179,7 @@ object SettingsAdvancedScreen : SearchableSettings {
         val navigator = LocalNavigator.currentOrThrow
         val scope = rememberCoroutineScope()
         var showDeleteTranslationsDialog by remember { mutableStateOf(false) }
+        var showNormalizeUrlsDialog by remember { mutableStateOf(false) }
 
         if (showDeleteTranslationsDialog) {
             AlertDialog(
@@ -208,6 +209,34 @@ object SettingsAdvancedScreen : SearchableSettings {
             )
         }
 
+        if (showNormalizeUrlsDialog) {
+            AlertDialog(
+                onDismissRequest = { showNormalizeUrlsDialog = false },
+                title = { Text(text = "Normalize manga URLs") },
+                text = {
+                    Text(text = "This will remove trailing slashes and fragments from all manga URLs in your library. This fixes duplicate detection issues.")
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            scope.launch {
+                                val count = Injekt.get<tachiyomi.domain.manga.repository.MangaRepository>().normalizeAllUrls()
+                                context.toast("Normalized $count manga URLs")
+                                showNormalizeUrlsDialog = false
+                            }
+                        },
+                    ) {
+                        Text(text = "Normalize")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showNormalizeUrlsDialog = false }) {
+                        Text(text = stringResource(MR.strings.action_cancel))
+                    }
+                },
+            )
+        }
+
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.label_data),
             preferenceItems = persistentListOf(
@@ -223,6 +252,11 @@ object SettingsAdvancedScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_clear_database),
                     subtitle = stringResource(MR.strings.pref_clear_database_summary),
                     onClick = { navigator.push(ClearDatabaseScreen()) },
+                ),
+                Preference.PreferenceItem.TextPreference(
+                    title = "Normalize manga URLs",
+                    subtitle = "Removes trailing slashes from all manga URLs in database",
+                    onClick = { showNormalizeUrlsDialog = true },
                 ),
                 Preference.PreferenceItem.TextPreference(
                     title = "Delete all translations",

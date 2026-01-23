@@ -66,6 +66,7 @@ import tachiyomi.domain.chapter.interactor.GetChapter
 import tachiyomi.domain.chapter.interactor.GetChapterByUrlAndMangaId
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.RemoveChapters
+import tachiyomi.domain.chapter.interactor.SearchChapterNames
 import tachiyomi.domain.chapter.interactor.SetMangaDefaultChapterFlags
 import tachiyomi.domain.chapter.interactor.ShouldUpdateDbChapter
 import tachiyomi.domain.chapter.interactor.UpdateChapter
@@ -77,8 +78,10 @@ import tachiyomi.domain.history.interactor.RemoveHistory
 import tachiyomi.domain.history.interactor.UpsertHistory
 import tachiyomi.domain.history.repository.HistoryRepository
 import tachiyomi.domain.manga.interactor.FetchInterval
+import tachiyomi.domain.manga.interactor.FindDuplicateNovels
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetFavorites
+import tachiyomi.domain.manga.interactor.GetFavoritesEntry
 import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.interactor.GetMangaByUrlAndSourceId
@@ -124,8 +127,11 @@ class DomainModule : InjektModule {
 
         addSingletonFactory<MangaRepository> { MangaRepositoryImpl(get()) }
         addFactory { GetDuplicateLibraryManga(get()) }
+        addFactory { FindDuplicateNovels(get()) }
         addFactory { GetFavorites(get()) }
-        addFactory { GetLibraryManga(get()) }
+        addFactory { GetFavoritesEntry(get()) }
+        // Singleton so all screens share the same cached SharedFlow for library queries
+        addSingletonFactory { GetLibraryManga(get()) }
         addFactory { GetMangaWithChapters(get(), get()) }
         addFactory { GetMangaByUrlAndSourceId(get()) }
         addFactory { GetManga(get()) }
@@ -173,6 +179,7 @@ class DomainModule : InjektModule {
         addFactory { GetAvailableScanlators(get()) }
         addFactory { FilterChaptersForDownload(get(), get(), get()) }
         addFactory { RemoveChapters(get()) }
+        addFactory { SearchChapterNames(get()) }
 
         addSingletonFactory<HistoryRepository> { HistoryRepositoryImpl(get()) }
         addFactory { GetHistory(get()) }
@@ -184,7 +191,7 @@ class DomainModule : InjektModule {
 
         addFactory { GetExtensionsByType(get(), get()) }
         addFactory { GetExtensionSources(get()) }
-        addFactory { GetExtensionLanguages(get(), get()) }
+        addFactory { GetExtensionLanguages(get(), get(), get()) }
 
         addSingletonFactory<UpdatesRepository> { UpdatesRepositoryImpl(get()) }
         addFactory { GetUpdates(get()) }
@@ -205,7 +212,7 @@ class DomainModule : InjektModule {
         addFactory { ToggleLanguage(get()) }
         addFactory { ToggleSource(get()) }
         addFactory { ToggleSourcePin(get()) }
-        addFactory { TrustExtension(get(), get()) }
+        addSingletonFactory { TrustExtension(get(), get()) }  // Singleton to enable caching of trusted fingerprints
 
         addSingletonFactory<ExtensionRepoRepository> { ExtensionRepoRepositoryImpl(get()) }
         addFactory { ExtensionRepoService(get(), get()) }

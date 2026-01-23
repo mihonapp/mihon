@@ -19,9 +19,9 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,9 +44,9 @@ import eu.kanade.core.util.ifSourcesLoaded
 import eu.kanade.presentation.browse.BrowseSourceContent
 import eu.kanade.presentation.browse.MissingSourceScreen
 import eu.kanade.presentation.browse.components.BrowseSourceToolbar
+import eu.kanade.presentation.library.components.MassImportDialog
 import eu.kanade.presentation.browse.components.RemoveMangaDialog
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
-import eu.kanade.presentation.library.components.MassImportDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.Screen
@@ -114,6 +114,8 @@ data class BrowseSourceScreen(
         var showMassImportDialog by remember { mutableStateOf(false) }
         var lastImportResult by remember { mutableStateOf<Triple<Int, Int, Int>?>(null) }
 
+        val mangaList = screenModel.mangaPagerFlowFlow.collectAsLazyPagingItems()
+        
         // Show snackbar when import completes
         LaunchedEffect(lastImportResult) {
             lastImportResult?.let { (added, skipped, errored) ->
@@ -126,12 +128,30 @@ data class BrowseSourceScreen(
 
         val onHelpClick = { uriHandler.openUri(LocalSource.HELP_URL) }
         val onWebViewClick = f@{
-            val source = screenModel.source as? HttpSource ?: return@f
+            val source = screenModel.source
+            val url: String
+            val name: String
+            val id: Long
+            
+            when (source) {
+                is HttpSource -> {
+                    url = source.baseUrl
+                    name = source.name
+                    id = source.id
+                }
+                is eu.kanade.tachiyomi.jsplugin.source.JsSource -> {
+                    url = source.baseUrl
+                    name = source.name
+                    id = source.id
+                }
+                else -> return@f
+            }
+            
             navigator.push(
                 WebViewScreen(
-                    url = source.baseUrl,
-                    initialTitle = source.name,
-                    sourceId = source.id,
+                    url = url,
+                    initialTitle = name,
+                    sourceId = id,
                 ),
             )
         }
@@ -259,6 +279,18 @@ data class BrowseSourceScreen(
                                 )
                             },
                         )
+                        // Select All chip (only visible in selection mode)
+                        if (state.selectionMode) {
+                            FilterChip(
+                                selected = false,
+                                onClick = {
+                                    screenModel.selectAll(mangaList.itemSnapshotList.items.mapNotNull { it.value })
+                                },
+                                label = {
+                                    Text(text = "Select All")
+                                },
+                            )
+                        }
                         // Add to library button when in selection mode with items selected
                         if (state.selectionMode && state.selection.isNotEmpty()) {
                             FilterChip(
@@ -286,7 +318,7 @@ data class BrowseSourceScreen(
         ) { paddingValues ->
             BrowseSourceContent(
                 source = screenModel.source,
-                mangaList = screenModel.mangaPagerFlowFlow.collectAsLazyPagingItems(),
+                mangaList = mangaList,
                 columns = screenModel.getColumnsPreference(LocalConfiguration.current.orientation),
                 displayMode = screenModel.displayMode,
                 snackbarHostState = snackbarHostState,
@@ -306,6 +338,7 @@ data class BrowseSourceScreen(
                         navigator.push(MangaScreen(manga.id, true))
                     }
                 },
+                titleMaxLines = screenModel.titleMaxLines,
                 onMangaLongClick = { manga ->
                     if (state.selectionMode) {
                         screenModel.toggleSelection(manga)
@@ -401,6 +434,8 @@ data class BrowseSourceScreen(
                     onConfirm = { include, _ ->
                         screenModel.changeMangaFavorite(dialog.manga)
                         screenModel.moveMangaToCategories(dialog.manga, include)
+                        // Remember selected categories for next selection
+                        screenModel.rememberCategorySelection(include)
                     },
                 )
             }
@@ -411,7 +446,7 @@ data class BrowseSourceScreen(
         if (showMassImportDialog) {
             // Prefill dialog with selected novels' URLs (one per line)
             val selected = screenModel.state.value.selection
-            val initialText = selected.joinToString("\\n") { manga ->
+            val initialText = selected.joinToString("\n") { manga ->
                 val url = manga.url
                 if (url.startsWith("http")) url else ((screenModel.source as? HttpSource)?.baseUrl ?: "") + url
             }

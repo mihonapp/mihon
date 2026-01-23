@@ -126,6 +126,12 @@ class ChapterRepositoryImpl(
             )
         }
     }
+    
+    override suspend fun findMangaIdsWithChapterNameMatching(query: String): List<Long> {
+        return handler.awaitList {
+            chaptersQueries.findMangaIdsWithChapterNameMatching(query)
+        }
+    }
 
     private fun mapChapter(
         id: Long,

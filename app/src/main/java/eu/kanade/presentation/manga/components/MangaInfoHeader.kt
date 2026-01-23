@@ -29,6 +29,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Brush
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.HourglassEmpty
+import androidx.compose.material.icons.filled.Label
 import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.outlined.AttachMoney
@@ -94,6 +95,7 @@ import eu.kanade.tachiyomi.util.system.copyToClipboard
 import org.intellij.markdown.MarkdownElementTypes
 import org.intellij.markdown.MarkdownTokenTypes
 import org.intellij.markdown.ast.findChildOfType
+import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.DISABLED_ALPHA
@@ -116,6 +118,7 @@ fun MangaInfoBox(
     manga: Manga,
     sourceName: String,
     isStubSource: Boolean,
+    categories: List<Category>,
     onCoverClick: () -> Unit,
     doSearch: (query: String, global: Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -153,6 +156,7 @@ fun MangaInfoBox(
                     manga = manga,
                     sourceName = sourceName,
                     isStubSource = isStubSource,
+                    categories = categories,
                     onCoverClick = onCoverClick,
                     doSearch = doSearch,
                 )
@@ -162,6 +166,7 @@ fun MangaInfoBox(
                     manga = manga,
                     sourceName = sourceName,
                     isStubSource = isStubSource,
+                    categories = categories,
                     onCoverClick = onCoverClick,
                     doSearch = doSearch,
                 )
@@ -346,6 +351,7 @@ private fun MangaAndSourceTitlesLarge(
     manga: Manga,
     sourceName: String,
     isStubSource: Boolean,
+    categories: List<Category>,
     onCoverClick: () -> Unit,
     doSearch: (query: String, global: Boolean) -> Unit,
 ) {
@@ -373,6 +379,7 @@ private fun MangaAndSourceTitlesLarge(
             status = manga.status,
             sourceName = sourceName,
             isStubSource = isStubSource,
+            categories = categories,
             doSearch = doSearch,
             textAlign = TextAlign.Center,
         )
@@ -385,6 +392,7 @@ private fun MangaAndSourceTitlesSmall(
     manga: Manga,
     sourceName: String,
     isStubSource: Boolean,
+    categories: List<Category>,
     onCoverClick: () -> Unit,
     doSearch: (query: String, global: Boolean) -> Unit,
 ) {
@@ -417,6 +425,7 @@ private fun MangaAndSourceTitlesSmall(
                 status = manga.status,
                 sourceName = sourceName,
                 isStubSource = isStubSource,
+                categories = categories,
                 doSearch = doSearch,
             )
         }
@@ -432,6 +441,7 @@ private fun ColumnScope.MangaContentInfo(
     status: Long,
     sourceName: String,
     isStubSource: Boolean,
+    categories: List<Category>,
     doSearch: (query: String, global: Boolean) -> Unit,
     onEditAlternativeTitles: (() -> Unit)? = null,
     textAlign: TextAlign? = LocalTextStyle.current.textAlign,
@@ -606,6 +616,29 @@ private fun ColumnScope.MangaContentInfo(
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
+        }
+    }
+    
+    // Categories display
+    if (categories.isNotEmpty()) {
+        Row(
+            modifier = Modifier.secondaryItemAlpha(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Label,
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(end = 4.dp)
+                    .size(16.dp),
+            )
+            ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
+                Text(
+                    text = categories.joinToString(", ") { it.name },
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2,
+                )
+            }
         }
     }
 }

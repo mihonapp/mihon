@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.network
 
 import android.content.Context
-import app.cash.quickjs.QuickJs
+import com.dokar.quickjs.quickJs
 import tachiyomi.core.common.util.lang.withIOContext
 
 /**
@@ -19,8 +19,8 @@ class JavaScriptEngine(context: Context) {
      * @return Result of JavaScript code as a primitive type.
      */
     suspend fun <T> evaluate(script: String): T = withIOContext {
-        QuickJs.create().use {
-            it.evaluate(script) as T
+        quickJs {
+            evaluate<Any?>(script) as T
         }
     }
 }

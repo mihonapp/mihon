@@ -4,6 +4,7 @@ import android.content.Context
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.source.NovelSource
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import mihon.core.archive.archiveReader
@@ -105,6 +106,10 @@ class ChapterLoader(
                 }
             }
             source is LocalNovelSource -> LocalNovelPageLoader(chapter, source)
+            source is NovelSource -> {
+                // JS plugins and other novel sources that aren't HttpSource or LocalNovelSource
+                LocalNovelPageLoader(chapter, source)
+            }
             source is HttpSource -> HttpPageLoader(chapter, source)
             source is StubSource -> error(context.stringResource(MR.strings.source_not_installed, source.toString()))
             else -> error(context.stringResource(MR.strings.loader_not_implemented_error))

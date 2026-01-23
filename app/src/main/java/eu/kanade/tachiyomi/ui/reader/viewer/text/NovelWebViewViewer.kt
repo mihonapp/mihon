@@ -144,6 +144,20 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.On
                     return true
                 }
 
+                // Handle tap-to-scroll if enabled
+                if (preferences.novelTapToScroll().get()) {
+                    // Top zone - scroll up
+                    if (y < centerYStart) {
+                        webView.evaluateJavascript("window.scrollBy(0, -${(viewHeight * 0.8).toInt()});", null)
+                        return true
+                    }
+                    // Bottom zone - scroll down
+                    if (y > centerYEnd) {
+                        webView.evaluateJavascript("window.scrollBy(0, ${(viewHeight * 0.8).toInt()});", null)
+                        return true
+                    }
+                }
+
                 return false
             }
         },
@@ -577,18 +591,35 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.On
         currentPage?.let { page ->
             val savedProgress = page.chapter.chapter.last_page_read
             val isRead = page.chapter.chapter.read
+            
+            logcat(LogPriority.DEBUG) { 
+                "NovelWebViewViewer: Restoring progress, savedProgress=$savedProgress, isRead=$isRead for ${page.chapter.chapter.name}" 
+            }
 
             // If chapter is marked as read, start from top (0%) to avoid infinite scroll issues
             if (!isRead && savedProgress > 0 && savedProgress <= 100) {
                 val progress = savedProgress / 100f
-                val js = """
-                    (function() {
-                        var scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                        window.scrollTo(0, scrollHeight * $progress);
-                    })();
-                """
-                webView.evaluateJavascript(js, null)
                 lastSavedProgress = progress
+                
+                // Wait a bit for content to be fully rendered before scrolling
+                webView.postDelayed({
+                    val js = """
+                        (function() {
+                            var scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                            if (scrollHeight > 0) {
+                                window.scrollTo(0, scrollHeight * $progress);
+                                console.log('Restored scroll to ' + Math.round($progress * 100) + '% (' + Math.round(scrollHeight * $progress) + 'px)');
+                            } else {
+                                // Content not ready, retry in 200ms
+                                setTimeout(function() {
+                                    var newScrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                                    window.scrollTo(0, newScrollHeight * $progress);
+                                }, 200);
+                            }
+                        })();
+                    """
+                    webView.evaluateJavascript(js, null)
+                }, 100)
             } else {
                 // Ensure we are at top for read chapters
                 webView.scrollTo(0, 0)
@@ -1232,6 +1263,8 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.On
 
     override fun handleKeyEvent(event: KeyEvent): Boolean {
         val isUp = event.action == KeyEvent.ACTION_UP
+        // Use a smaller scroll amount (30% of viewport) for volume keys
+        val scrollAmount = (container.height * 0.30).toInt()
 
         when (event.keyCode) {
             KeyEvent.KEYCODE_MENU -> {
@@ -1240,14 +1273,14 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.On
             }
             KeyEvent.KEYCODE_VOLUME_DOWN -> {
                 if (preferences.novelVolumeKeysScroll().get()) {
-                    if (!isUp) webView.pageDown(false)
+                    if (!isUp) webView.evaluateJavascript("window.scrollBy(0, $scrollAmount);", null)
                     return true
                 }
                 return false
             }
             KeyEvent.KEYCODE_VOLUME_UP -> {
                 if (preferences.novelVolumeKeysScroll().get()) {
-                    if (!isUp) webView.pageUp(false)
+                    if (!isUp) webView.evaluateJavascript("window.scrollBy(0, -$scrollAmount);", null)
                     return true
                 }
                 return false

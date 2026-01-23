@@ -78,11 +78,11 @@ fun extensionsTab(
                         )
                     }
                 },
-                onInstallExtension = extensionsScreenModel::installExtension,
-                onOpenExtension = { navigator.push(ExtensionDetailsScreen(it.pkgName)) },
+                onInstallExtension = { if (it is Extension.Available) extensionsScreenModel.installExtension(it) },
+                onOpenExtension = { if (it is Extension.Installed) navigator.push(ExtensionDetailsScreen(it.pkgName)) },
                 onTrustExtension = { extensionsScreenModel.trustExtension(it) },
                 onUninstallExtension = { extensionsScreenModel.uninstallExtension(it) },
-                onUpdateExtension = extensionsScreenModel::updateExtension,
+                onUpdateExtension = { if (it is Extension.Installed) extensionsScreenModel.updateExtension(it) },
                 onRefresh = extensionsScreenModel::findAvailableExtensions,
             )
 

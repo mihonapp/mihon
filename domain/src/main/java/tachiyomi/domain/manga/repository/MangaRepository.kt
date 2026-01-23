@@ -2,9 +2,23 @@ package tachiyomi.domain.manga.repository
 
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.domain.library.model.LibraryManga
+import tachiyomi.domain.library.model.LibraryMangaForUpdate
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.model.MangaWithChapterCount
+
+data class DuplicateGroup(
+    val normalizedTitle: String,
+    val ids: List<Long>,
+    val count: Int,
+)
+
+data class DuplicatePair(
+    val idA: Long,
+    val titleA: String,
+    val idB: Long,
+    val titleB: String,
+)
 
 interface MangaRepository {
 
@@ -14,19 +28,53 @@ interface MangaRepository {
 
     suspend fun getMangaByUrlAndSourceId(url: String, sourceId: Long): Manga?
 
+    suspend fun getLiteMangaByUrlAndSourceId(url: String, sourceId: Long): Manga?
+
     fun getMangaByUrlAndSourceIdAsFlow(url: String, sourceId: Long): Flow<Manga?>
 
     suspend fun getFavorites(): List<Manga>
 
+    suspend fun getFavoritesEntry(): List<Manga>
+
+    fun getFavoritesEntryBySourceId(sourceId: Long): Flow<List<Manga>>
+
+    suspend fun getFavoriteSourceAndUrl(): List<Pair<Long, String>>
+
     suspend fun getReadMangaNotInLibrary(): List<Manga>
 
     suspend fun getLibraryManga(): List<LibraryManga>
+
+    suspend fun getLibraryMangaForUpdate(): List<LibraryMangaForUpdate>
 
     fun getLibraryMangaAsFlow(): Flow<List<LibraryManga>>
 
     fun getFavoritesBySourceId(sourceId: Long): Flow<List<Manga>>
 
     suspend fun getDuplicateLibraryManga(id: Long, title: String): List<MangaWithChapterCount>
+
+    suspend fun findDuplicatesExact(): List<DuplicateGroup>
+
+    suspend fun findDuplicatesContains(): List<DuplicatePair>
+
+    /**
+     * Get lightweight favorite genres for tag counting.
+     * Returns list of (mangaId, genreList) pairs - much faster than getLibraryManga().
+     */
+    suspend fun getFavoriteGenres(): List<Pair<Long, List<String>?>>
+
+    /**
+     * Get ultra-lightweight source + url pairs for duplicate checking.
+     * Much faster than getLibraryMangaForUpdate() - avoids libraryView JOIN entirely.
+     */
+    suspend fun getFavoriteSourceUrlPairs(): List<Pair<Long, String>>
+
+    /**
+     * Get just the distinct source IDs from favorites - ultra-lightweight for extension listing.
+     * Avoids expensive libraryView JOIN entirely.
+     */
+    suspend fun getFavoriteSourceIds(): List<Long>
+
+    suspend fun getMangaWithCounts(ids: List<Long>): List<MangaWithChapterCount>
 
     suspend fun getUpcomingManga(statuses: Set<Long>): Flow<List<Manga>>
 
@@ -45,4 +93,6 @@ interface MangaRepository {
     suspend fun updateAll(mangaUpdates: List<MangaUpdate>): Boolean
 
     suspend fun insertNetworkManga(manga: List<Manga>): List<Manga>
+
+    suspend fun normalizeAllUrls(): Int
 }

@@ -404,3 +404,164 @@ private fun TextMeasurer.measureHeight(
 
 private val MangaCardWidth = 150.dp
 private val MangaDetailsIconWidth = 16.dp
+
+@Composable
+fun SimilarNovelsDialog(
+    similarNovels: List<MangaWithChapterCount>,
+    categories: List<tachiyomi.domain.category.model.Category>,
+    onDismissRequest: () -> Unit,
+    onOpenManga: (manga: Manga) -> Unit,
+    onMigrate: (manga: Manga) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val sourceManager = remember { Injekt.get<SourceManager>() }
+    val minHeight = LocalPreferenceMinHeight.current
+    val horizontalPadding = PaddingValues(horizontal = TabbedDialogPaddings.Horizontal)
+    val horizontalPaddingModifier = Modifier.padding(horizontalPadding)
+
+    AdaptiveSheet(
+        modifier = modifier,
+        onDismissRequest = onDismissRequest,
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(vertical = TabbedDialogPaddings.Vertical)
+                .verticalScroll(rememberScrollState())
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
+        ) {
+            Text(
+                text = "Similar Novels",
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier
+                    .then(horizontalPaddingModifier)
+                    .padding(top = MaterialTheme.padding.small),
+            )
+
+            Text(
+                text = "These novels have similar titles and might be duplicates or related works.",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.then(horizontalPaddingModifier),
+            )
+
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+                modifier = Modifier.height(getMaximumMangaCardHeight(similarNovels)),
+                contentPadding = horizontalPadding,
+            ) {
+                items(
+                    items = similarNovels,
+                    key = { it.manga.id },
+                ) {
+                    SimilarNovelListItem(
+                        similar = it,
+                        novelCategories = categories,
+                        getSource = { sourceManager.getOrStub(it.manga.source) },
+                        onMigrate = { onMigrate(it.manga) },
+                        onDismissRequest = onDismissRequest,
+                        onOpenManga = { onOpenManga(it.manga) },
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SimilarNovelListItem(
+    similar: MangaWithChapterCount,
+    novelCategories: List<tachiyomi.domain.category.model.Category>,
+    getSource: () -> Source,
+    onMigrate: () -> Unit,
+    onDismissRequest: () -> Unit,
+    onOpenManga: () -> Unit,
+) {
+    val manga = similar.manga
+    val source = remember { getSource() }
+    val context = LocalContext.current
+
+    Column(
+        modifier = Modifier
+            .width(MangaCardWidth)
+            .combinedClickable(
+                onClick = {
+                    onDismissRequest()
+                    onOpenManga()
+                },
+            ),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
+    ) {
+        val coverData = remember(manga.id) {
+            ImageRequest.Builder(context)
+                .data(manga)
+                .crossfade(true)
+                .build()
+        }
+
+        MangaCover.Book(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(MaterialTheme.shapes.small),
+            data = coverData,
+        )
+
+        Text(
+            text = manga.title,
+            modifier = Modifier.fillMaxWidth(),
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 2,
+            style = MaterialTheme.typography.titleSmall,
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
+        ) {
+            Icon(
+                imageVector = Icons.Filled.PersonOutline,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(MangaDetailsIconWidth)
+                    .secondaryItemAlpha(),
+                tint = MaterialTheme.colorScheme.onSurface,
+            )
+            Text(
+                text = manga.author.orEmpty().ifBlank { stringResource(MR.strings.unknown_author) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .secondaryItemAlpha(),
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                style = MaterialTheme.typography.bodySmall,
+            )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
+        ) {
+            BadgeGroup {
+                Badge(
+                    text = pluralStringResource(MR.plurals.manga_num_chapters, similar.chapterCount.toInt(), similar.chapterCount.toInt()),
+                )
+                if (source is StubSource) {
+                    Badge(text = stringResource(MR.strings.not_installed))
+                } else {
+                    Badge(text = source.toString())
+                }
+            }
+        }
+
+        OutlinedButton(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                onDismissRequest()
+                onMigrate()
+            },
+        ) {
+            Text(text = stringResource(MR.strings.action_migrate))
+        }
+    }
+}

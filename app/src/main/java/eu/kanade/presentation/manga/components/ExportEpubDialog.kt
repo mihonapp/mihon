@@ -54,7 +54,7 @@ fun ExportEpubDialog(
                     .verticalScroll(rememberScrollState()),
             ) {
                 Text(
-                    text = "Export \"${manga.title}\" with ${chapters.size} chapters as EPUB.",
+                    text = "${chapters.size} chapter(s) will be exported.",
                     style = MaterialTheme.typography.bodyMedium,
                 )
 
@@ -73,7 +73,6 @@ fun ExportEpubDialog(
                 Text(
                     text = "Note: Downloaded chapters will be included. " +
                         "Chapters not yet downloaded will be fetched from the source.",
-                    style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }

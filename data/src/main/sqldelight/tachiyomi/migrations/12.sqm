@@ -1,0 +1,19 @@
+-- Migration 12: Add performance indexes for libraryView optimization
+-- These indexes dramatically speed up the complex VIEW query
+
+-- Composite index for chapters aggregation (used in libraryView subquery)
+-- Covers: manga_id for grouping, read/bookmark for sums, date_upload/date_fetch for max()
+CREATE INDEX IF NOT EXISTS chapters_library_aggregate_index ON chapters(manga_id, read, bookmark, date_upload, date_fetch);
+
+-- Index for JOIN with excluded_scanlators in libraryView
+CREATE INDEX IF NOT EXISTS chapters_manga_scanlator_index ON chapters(manga_id, scanlator);
+
+-- Composite index for history lookups in libraryView
+-- chapter_id for JOIN, last_read for max() aggregation
+CREATE INDEX IF NOT EXISTS history_chapter_last_read_index ON history(chapter_id, last_read);
+
+-- Index for mangas_categories grouping in libraryView
+CREATE INDEX IF NOT EXISTS mangas_categories_manga_category_index ON mangas_categories(manga_id, category_id);
+
+-- Covering index for excluded_scanlators lookup
+CREATE INDEX IF NOT EXISTS excluded_scanlators_manga_scanlator_index ON excluded_scanlators(manga_id, scanlator);

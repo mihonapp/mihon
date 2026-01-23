@@ -15,10 +15,14 @@ class CreateExtensionRepo(
     private val repoRegex = """^https://.*/index\.min\.json$""".toRegex()
 
     suspend fun await(indexUrl: String): Result {
-        val formattedIndexUrl = indexUrl.toHttpUrlOrNull()
-            ?.toString()
-            ?.takeIf { it.matches(repoRegex) }
-            ?: return Result.InvalidUrl
+        // Allow any URL, but try to append index.min.json if it looks like a base URL
+        val url = indexUrl.toHttpUrlOrNull()?.toString() ?: return Result.InvalidUrl
+        
+        val formattedIndexUrl = if (url.endsWith("/index.min.json")) {
+            url
+        } else {
+            "$url/index.min.json"
+        }
 
         val baseUrl = formattedIndexUrl.removeSuffix("/index.min.json")
         return service.fetchRepoDetails(baseUrl)?.let { insert(it) } ?: Result.InvalidUrl

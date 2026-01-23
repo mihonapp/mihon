@@ -45,7 +45,7 @@ fun novelExtensionsTab(
             ),
             AppBar.OverflowAction(
                 title = stringResource(MR.strings.label_extension_repos),
-                onClick = { navigator.push(ExtensionReposScreen()) },
+                onClick = { navigator.push(NovelExtensionReposScreen()) },
             ),
         ),
         content = { contentPadding, _ ->
@@ -56,6 +56,12 @@ fun novelExtensionsTab(
                 onLongClickItem = { extension ->
                     when (extension) {
                         is Extension.Available -> extensionsScreenModel.installExtension(extension)
+                        is Extension.JsPlugin -> {
+                            // Only show uninstall for JS plugins that are actually installed
+                            if (extension.isInstalled) {
+                                extensionsScreenModel.uninstallExtension(extension)
+                            }
+                        }
                         else -> {
                             if (context.isPackageInstalled(extension.pkgName)) {
                                 extensionsScreenModel.uninstallExtension(extension)
@@ -78,11 +84,23 @@ fun novelExtensionsTab(
                         )
                     }
                 },
-                onInstallExtension = extensionsScreenModel::installExtension,
-                onOpenExtension = { navigator.push(ExtensionDetailsScreen(it.pkgName)) },
+                onInstallExtension = {
+                    when (it) {
+                        is Extension.Available -> extensionsScreenModel.installExtension(it)
+                        is Extension.JsPlugin -> extensionsScreenModel.installJsPlugin(it)
+                        else -> {}
+                    }
+                },
+                onOpenExtension = { if (it is Extension.Installed) navigator.push(ExtensionDetailsScreen(it.pkgName)) },
                 onTrustExtension = { extensionsScreenModel.trustExtension(it) },
                 onUninstallExtension = { extensionsScreenModel.uninstallExtension(it) },
-                onUpdateExtension = extensionsScreenModel::updateExtension,
+                onUpdateExtension = {
+                    when (it) {
+                        is Extension.Installed -> extensionsScreenModel.updateExtension(it)
+                        is Extension.JsPlugin -> extensionsScreenModel.installJsPlugin(it)
+                        else -> {}
+                    }
+                },
                 onRefresh = extensionsScreenModel::findAvailableExtensions,
             )
 

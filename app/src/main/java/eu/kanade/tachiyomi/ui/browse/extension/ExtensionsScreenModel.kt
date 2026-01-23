@@ -78,6 +78,7 @@ class ExtensionsScreenModel(
                                 extension.name.contains(input, ignoreCase = true)
                         }
                         is Extension.Untrusted -> extension.name.contains(input, ignoreCase = true)
+                        is Extension.JsPlugin -> extension.name.contains(input, ignoreCase = true)
                     }
                 }
             }

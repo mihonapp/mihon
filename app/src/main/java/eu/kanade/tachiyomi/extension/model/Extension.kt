@@ -75,4 +75,20 @@ sealed class Extension {
         override val isNsfw: Boolean = false,
         override val isNovel: Boolean = false,
     ) : Extension()
+
+    data class JsPlugin(
+        override val name: String,
+        override val pkgName: String,
+        override val versionName: String,
+        override val versionCode: Long,
+        override val libVersion: Double,
+        override val lang: String,
+        override val isNsfw: Boolean,
+        override val isNovel: Boolean,
+        val sources: List<Available.Source>,
+        val iconUrl: String,
+        val repoUrl: String,
+        val isInstalled: Boolean,
+        val hasUpdate: Boolean,
+    ) : Extension()
 }

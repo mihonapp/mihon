@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -31,9 +32,13 @@ import eu.kanade.presentation.util.rememberResourceBitmapPainter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.util.ExtensionLoader
+import eu.kanade.tachiyomi.jsplugin.source.JsSource
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.domain.source.model.Source
+import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.source.local.isLocal
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 private val defaultModifier = Modifier
     .height(40.dp)
@@ -45,6 +50,11 @@ fun SourceIcon(
     modifier: Modifier = Modifier,
 ) {
     val icon = source.icon
+    
+    // Check if actual source is a JsSource
+    val actualSource = remember(source.id) {
+        Injekt.get<SourceManager>().get(source.id)
+    }
 
     when {
         source.isStub && icon == null -> {
@@ -67,6 +77,17 @@ fun SourceIcon(
                 painter = painterResource(R.mipmap.ic_local_source),
                 contentDescription = null,
                 modifier = modifier.then(defaultModifier),
+            )
+        }
+        // Handle JS Source icons
+        actualSource is JsSource -> {
+            AsyncImage(
+                model = actualSource.iconUrl,
+                contentDescription = null,
+                placeholder = ColorPainter(Color(0x1F888888)),
+                error = rememberResourceBitmapPainter(id = R.mipmap.ic_default_source),
+                modifier = modifier.then(defaultModifier)
+                    .clip(MaterialTheme.shapes.extraSmall),
             )
         }
         else -> {
@@ -118,6 +139,16 @@ fun ExtensionIcon(
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error),
             modifier = modifier.then(defaultModifier),
         )
+        is Extension.JsPlugin -> {
+            AsyncImage(
+                model = extension.iconUrl,
+                contentDescription = null,
+                placeholder = ColorPainter(Color(0x1F888888)),
+                error = rememberResourceBitmapPainter(id = R.drawable.cover_error),
+                modifier = modifier
+                    .clip(MaterialTheme.shapes.extraSmall),
+            )
+        }
     }
 }
 

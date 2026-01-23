@@ -118,7 +118,9 @@ private fun DialogContent(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onToggleAutoTranslate(!autoTranslateEnabled) }
+                .clickable {
+                    onToggleAutoTranslate(!autoTranslateEnabled)
+                }
                 .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -135,7 +137,9 @@ private fun DialogContent(
             }
             Switch(
                 checked = autoTranslateEnabled,
-                onCheckedChange = onToggleAutoTranslate,
+                onCheckedChange = { enabled ->
+                    onToggleAutoTranslate(enabled)
+                },
             )
         }
 

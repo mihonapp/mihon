@@ -54,6 +54,8 @@ import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.chapter.interactor.SetMangaDefaultChapterFlags
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
+import tachiyomi.domain.manga.interactor.GetFavorites
+import tachiyomi.domain.manga.interactor.GetFavoritesEntry
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
@@ -80,6 +82,8 @@ class BrowseSourceScreenModel(
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
     private val setMangaDefaultChapterFlags: SetMangaDefaultChapterFlags = Injekt.get(),
     private val getManga: GetManga = Injekt.get(),
+    private val getFavorites: GetFavorites = Injekt.get(),
+    private val getFavoritesEntry: GetFavoritesEntry = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
     private val addTracks: AddTracks = Injekt.get(),
     private val getIncognitoState: GetIncognitoState = Injekt.get(),
@@ -90,11 +94,19 @@ class BrowseSourceScreenModel(
 
     var displayMode by sourcePreferences.sourceDisplayMode().asState(screenModelScope)
 
+    val titleMaxLines by libraryPreferences.titleMaxLines().asState(screenModelScope)
+
     val source = sourceManager.getOrStub(sourceId)
 
     // Filter Preset Management - declared before init to avoid NPE
     private val _filterPresets = MutableStateFlow<List<FilterPreset>>(emptyList())
     val filterPresets: StateFlow<List<FilterPreset>> = _filterPresets.asStateFlow()
+
+    // Cached categories for fast access - loaded once and kept in memory
+    private val _cachedCategories = MutableStateFlow<List<Category>>(emptyList())
+    
+    // Remember last selected category IDs for re-use
+    private var lastSelectedCategoryIds: List<Long> = emptyList()
 
     // Auto-apply filter presets as a StateFlow that updates when preference changes
     val autoApplyFilterPresets: StateFlow<Boolean> = sourcePreferences.autoApplyFilterPresets()
@@ -104,6 +116,14 @@ class BrowseSourceScreenModel(
     init {
         // Load filter presets from storage
         refreshFilterPresets()
+        
+        // Preload categories in background for fast access when adding favorites
+        screenModelScope.launch {
+            _cachedCategories.value = getCategories.subscribe()
+                .firstOrNull()
+                ?.filterNot { it.isSystemCategory }
+                .orEmpty()
+        }
 
         if (source is CatalogueSource) {
             mutableState.update {
@@ -142,8 +162,21 @@ class BrowseSourceScreenModel(
      *
      * Note: We use hashCode for comparison because FilterList.equals() always returns false
      * to force recomposition, but we only want new Pagers when filters actually change.
+     * 
+     * Optimization: Instead of creating individual DB subscriptions per manga item,
+     * we maintain a single cached flow of library manga for this source and do
+     * in-memory lookups to update favorite status.
      */
     private val hideInLibraryItems = sourcePreferences.hideInLibraryItems().get()
+    private fun normalizeUrl(url: String): String = url.trimEnd('/').substringBefore('#')
+    
+    // Cached library manga for this source - single subscription instead of per-item
+    private val libraryMangaForSource: StateFlow<Map<String, Manga>> = getFavoritesEntry.subscribe(sourceId)
+        .map { favorites -> 
+            favorites.associateBy { normalizeUrl(it.url) }
+        }
+        .stateIn(ioCoroutineScope, SharingStarted.Eagerly, emptyMap())
+    
     val mangaPagerFlowFlow = state
         .map { Triple(it.listing.query, it.filters, it.filters.hashCode()) }
         .distinctUntilChanged { old, new -> old.first == new.first && old.third == new.third }
@@ -153,8 +186,19 @@ class BrowseSourceScreenModel(
                 getRemoteManga(sourceId, query ?: "", filters)
             }.flow.map { pagingData ->
                 pagingData.map { manga ->
-                    getManga.subscribe(manga.url, manga.source)
-                        .map { it ?: manga }
+                    // Normalize URL to prevent duplicates from trailing slashes/fragments
+                    val normalizedUrl = normalizeUrl(manga.url)
+                    val normalizedManga = if (normalizedUrl != manga.url) {
+                        manga.copy(url = normalizedUrl)
+                    } else {
+                        manga
+                    }
+                    // Use cached library lookup instead of individual DB subscription
+                    // This StateFlow combines remote manga with library status from cache
+                    libraryMangaForSource
+                        .map { libraryMap -> 
+                            libraryMap[normalizedUrl] ?: normalizedManga
+                        }
                         .stateIn(ioCoroutineScope)
                 }
                     .filter { !hideInLibraryItems || !it.value.favorite }
@@ -266,12 +310,14 @@ class BrowseSourceScreenModel(
      */
     fun changeMangaFavorite(manga: Manga) {
         screenModelScope.launch {
+            val normalizedUrl = normalizeUrl(manga.url)
             var new = manga.copy(
                 favorite = !manga.favorite,
                 dateAdded = when (manga.favorite) {
                     true -> 0
                     false -> Instant.now().toEpochMilli()
                 },
+                url = normalizedUrl,
             )
 
             if (!new.favorite) {
@@ -287,7 +333,8 @@ class BrowseSourceScreenModel(
 
     fun addFavorite(manga: Manga) {
         screenModelScope.launch {
-            val categories = getCategories()
+            // Use cached categories for instant response
+            val categories = _cachedCategories.value.ifEmpty { getCategories() }
             val defaultCategoryId = libraryPreferences.defaultCategory().get()
             val defaultCategory = categories.find { it.id == defaultCategoryId.toLong() }
 
@@ -308,7 +355,12 @@ class BrowseSourceScreenModel(
 
                 // Choose a category
                 else -> {
-                    val preselectedIds = getCategories.await(manga.id).map { it.id }
+                    // Use last selected categories if available, otherwise fetch from DB
+                    val preselectedIds = if (lastSelectedCategoryIds.isNotEmpty()) {
+                        lastSelectedCategoryIds
+                    } else {
+                        getCategories.await(manga.id).map { it.id }
+                    }
                     setDialog(
                         Dialog.ChangeMangaCategory(
                             manga,
@@ -321,15 +373,29 @@ class BrowseSourceScreenModel(
     }
 
     /**
+     * Save selected category IDs for re-use in subsequent category selections.
+     */
+    fun rememberCategorySelection(categoryIds: List<Long>) {
+        lastSelectedCategoryIds = categoryIds
+    }
+
+    /**
      * Get user categories.
      *
      * @return List of categories, not including the default category
      */
     suspend fun getCategories(): List<Category> {
-        return getCategories.subscribe()
-            .firstOrNull()
-            ?.filterNot { it.isSystemCategory }
-            .orEmpty()
+        // Use cached categories for fast access - they're preloaded in init
+        val cached = _cachedCategories.value
+        return if (cached.isNotEmpty()) {
+            cached
+        } else {
+            // Fallback to fresh query if cache not yet populated
+            getCategories.subscribe()
+                .firstOrNull()
+                ?.filterNot { it.isSystemCategory }
+                .orEmpty()
+        }
     }
 
     suspend fun getDuplicateLibraryManga(manga: Manga): List<MangaWithChapterCount> {

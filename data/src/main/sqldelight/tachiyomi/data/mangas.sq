@@ -75,10 +75,54 @@ WHERE url = :url
 AND source = :source
 LIMIT 1;
 
+getLiteMangaByUrlAndSource:
+SELECT
+    _id,
+    source,
+    url,
+    NULL AS artist,
+    NULL AS author,
+    NULL AS description,
+    NULL AS genre,
+    title,
+    NULL AS alternative_titles,
+    0 AS status,
+    thumbnail_url,
+    favorite,
+    last_update,
+    next_update,
+    0 AS initialized,
+    0 AS viewer,
+    0 AS chapter_flags,
+    cover_last_modified,
+    date_added,
+    0 AS update_strategy,
+    0 AS calculate_interval,
+    0 AS last_modified_at,
+    NULL AS favorite_modified_at,
+    0 AS version,
+    0 AS is_syncing,
+    '' AS notes
+FROM mangas
+WHERE url = :url
+AND source = :source
+LIMIT 1;
+
 getFavorites:
 SELECT *
 FROM mangas
 WHERE favorite = 1;
+
+getFavoritesEntry:
+SELECT _id, source, url, title, artist, author, thumbnail_url, cover_last_modified, favorite
+FROM mangas
+WHERE favorite = 1;
+
+getFavoritesEntryBySourceId:
+SELECT _id, source, url, title, artist, author, thumbnail_url, cover_last_modified, favorite
+FROM mangas
+WHERE favorite = 1
+AND source = :sourceId;
 
 getReadMangaNotInLibrary:
 SELECT *
@@ -97,6 +141,11 @@ getAllMangaSourceAndUrl:
 SELECT source, url
 FROM mangas;
 
+getFavoriteSourceAndUrl:
+SELECT source, url
+FROM mangas
+WHERE favorite = 1;
+
 getMangasWithFavoriteTimestamp:
 SELECT *
 FROM mangas
@@ -110,6 +159,25 @@ FROM mangas
 WHERE favorite = 1
 GROUP BY source;
 
+-- Get just unique source IDs from favorites - ultra-lightweight for extension listing
+getFavoriteSourceIds:
+SELECT DISTINCT source
+FROM mangas
+WHERE favorite = 1;
+
+-- Lightweight query to get only genres for tag counting (avoids expensive libraryView JOIN)
+getFavoriteGenres:
+SELECT _id, genre
+FROM mangas
+WHERE favorite = 1;
+
+-- Ultra-lightweight query for MassImport duplicate checking (only source + url)
+-- Avoids expensive libraryView JOIN entirely
+getFavoriteSourceAndUrlPairs:
+SELECT source, url
+FROM mangas
+WHERE favorite = 1;
+
 getFavoriteBySourceId:
 SELECT *
 FROM mangas
@@ -117,33 +185,52 @@ WHERE favorite = 1
 AND source = :sourceId;
 
 getDuplicateLibraryManga:
-WITH
-duplicates AS (
-    SELECT *
-    FROM mangas
-    WHERE favorite = 1
-    AND _id != :id
-    AND lower(title) LIKE '%' || lower(:title) || '%'
-),
-chapter_counts AS (
-    SELECT
-        M._id AS manga_id,
-        count(*) AS chapter_count
-    FROM duplicates M
-    JOIN chapters C
-    ON M._id = C.manga_id
-    LEFT JOIN excluded_scanlators ES
-    ON C.manga_id = ES.manga_id
-    AND C.scanlator = ES.scanlator
-    WHERE ES.scanlator IS NULL
-    GROUP BY M._id
-)
+SELECT M.*, 
+  (SELECT COUNT(*) FROM chapters WHERE manga_id = M._id) AS chapter_count
+FROM mangas M
+WHERE M.favorite = 1
+AND M._id != :id
+AND lower(trim(M.title)) = lower(trim(:title))
+LIMIT 10;
+
+-- Find all duplicate groups with exact match (case-insensitive, trimmed)
+findDuplicatesExact:
+SELECT
+    lower(trim(title)) AS normalized_title,
+    CAST(group_concat(_id) AS TEXT) AS ids,
+    count(*) AS duplicate_count
+FROM mangas
+WHERE favorite = 1
+GROUP BY lower(trim(title))
+HAVING count(*) > 1
+ORDER BY duplicate_count DESC;
+
+-- Find all duplicate groups with contains match (one title contains another)
+-- LIMIT added to prevent database pool exhaustion with large libraries
+findDuplicatesContains:
+SELECT
+    a._id AS id_a,
+    a.title AS title_a,
+    b._id AS id_b,
+    b.title AS title_b
+FROM mangas a
+JOIN mangas b
+    ON a._id < b._id
+   AND a.favorite = 1
+   AND b.favorite = 1
+   AND (lower(trim(b.title)) LIKE '%' || lower(trim(a.title)) || '%'
+        OR lower(trim(a.title)) LIKE '%' || lower(trim(b.title)) || '%')
+ORDER BY a.title
+LIMIT 20;
+
+-- Get manga with chapter count for duplicate detection
+getMangaWithCounts:
 SELECT
     M.*,
-    coalesce(CC.chapter_count, 0) AS chapter_count
-FROM duplicates M
-LEFT JOIN chapter_counts CC
-ON M._id = CC.manga_id;
+    (SELECT count(*) FROM chapters WHERE manga_id = M._id) AS totalCount
+FROM mangas M
+WHERE M._id IN :ids
+ORDER BY totalCount DESC;
 
 getUpcomingManga:
 SELECT *

@@ -10,6 +10,8 @@ CREATE TABLE history(
 );
 
 CREATE INDEX history_history_chapter_id_index ON history(chapter_id);
+-- Performance index for libraryView
+CREATE INDEX history_chapter_last_read_index ON history(chapter_id, last_read);
 
 getHistoryByMangaId:
 SELECT

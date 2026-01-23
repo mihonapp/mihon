@@ -2,6 +2,7 @@ package tachiyomi.data.manga
 
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
 import tachiyomi.domain.library.model.LibraryManga
+import tachiyomi.domain.library.model.LibraryMangaForUpdate
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
 
@@ -192,5 +193,33 @@ object MangaMapper {
             notes,
         ),
         chapterCount = totalCount,
+    )
+
+    fun mapLibraryMangaForUpdate(
+        id: Long,
+        source: Long,
+        url: String,
+        title: String,
+        status: Long,
+        favorite: Boolean,
+        lastUpdate: Long?,
+        nextUpdate: Long?,
+        updateStrategy: UpdateStrategy,
+        totalCount: Long,
+        readCount: Double,
+        categories: String,
+    ): LibraryMangaForUpdate = LibraryMangaForUpdate(
+        id = id,
+        source = source,
+        url = url,
+        title = title,
+        status = status,
+        favorite = favorite,
+        lastUpdate = lastUpdate ?: 0,
+        nextUpdate = nextUpdate ?: 0,
+        updateStrategy = updateStrategy,
+        totalChapters = totalCount,
+        readCount = readCount.toLong(),
+        categories = categories.split(",").map { it.toLong() },
     )
 }

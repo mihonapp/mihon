@@ -4,18 +4,27 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -56,6 +65,7 @@ fun LibrarySettingsDialog(
             stringResource(MR.strings.action_filter),
             stringResource(MR.strings.action_sort),
             stringResource(MR.strings.action_display),
+            "Tags",
             "Extensions",
         ),
     ) { page ->
@@ -75,7 +85,10 @@ fun LibrarySettingsDialog(
                 2 -> DisplayPage(
                     screenModel = screenModel,
                 )
-                3 -> ExtensionsPage(
+                3 -> TagsPage(
+                    screenModel = screenModel,
+                )
+                4 -> ExtensionsPage(
                     screenModel = screenModel,
                 )
             }
@@ -161,6 +174,17 @@ private fun ColumnScope.FilterPage(
             }
         }
     }
+
+    // Search options section
+    HeadingItem("Search Options")
+    CheckboxItem(
+        label = "Search chapter names",
+        pref = screenModel.libraryPreferences.searchChapterNames(),
+    )
+    CheckboxItem(
+        label = "Search novel descriptions and tags",
+        pref = screenModel.libraryPreferences.searchChapterContent(),
+    )
 }
 
 @Composable
@@ -317,21 +341,155 @@ private fun ColumnScope.DisplayPage(
     )
 }
 
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun ColumnScope.TagsPage(
+    screenModel: LibrarySettingsScreenModel,
+) {
+    val tags by screenModel.tagsFlow.collectAsState()
+    val includedTags by screenModel.libraryPreferences.includedTags().collectAsState()
+    val excludedTags by screenModel.libraryPreferences.excludedTags().collectAsState()
+    val filterNoTags by screenModel.libraryPreferences.filterNoTags().collectAsState()
+    val noTagsCount by screenModel.noTagsCountFlow.collectAsState()
+    val isLoading by screenModel.isLoading.collectAsState()
+
+    // Load data when first entering this page (only if empty)
+    LaunchedEffect(Unit) {
+        if (tags.isEmpty()) {
+            screenModel.refreshTags()
+        }
+    }
+
+
+    // Refresh button
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.End
+    ) {
+        TextButton(onClick = { screenModel.refreshTags(forceRefresh = true) }) {
+            Icon(Icons.Default.Refresh, contentDescription = "Refresh")
+            Spacer(Modifier.width(4.dp))
+            Text("Refresh")
+        }
+    }
+
+    // Clear All button
+    if (includedTags.isNotEmpty() || excludedTags.isNotEmpty() || filterNoTags != TriState.DISABLED) {
+        TextButton(
+            onClick = { screenModel.clearAllTagFilters() },
+            modifier = Modifier.padding(horizontal = TabbedDialogPaddings.Horizontal),
+        ) {
+            Text("Clear All Filters")
+        }
+    }
+
+    // No tags filter
+    TriStateItem(
+        label = "No tags ($noTagsCount)",
+        state = filterNoTags,
+        onClick = { screenModel.toggleNoTagsFilter() },
+    )
+
+    if (tags.isEmpty() && !isLoading) {
+        Text(
+            text = "No tags found in library",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(horizontal = TabbedDialogPaddings.Horizontal, vertical = 8.dp),
+        )
+    } else if (isLoading && tags.isEmpty()) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            CircularProgressIndicator(modifier = Modifier.size(24.dp))
+            Spacer(Modifier.width(8.dp))
+            Text("Loading tags...")
+        }
+    } else {
+        Text(
+            text = "Tap to include, tap again to exclude, tap again to clear",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(horizontal = TabbedDialogPaddings.Horizontal, vertical = 4.dp),
+        )
+
+        FlowRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = TabbedDialogPaddings.Horizontal, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            tags.forEach { (tag, count) ->
+                val isIncluded = tag in includedTags
+                val isExcluded = tag in excludedTags
+
+                FilterChip(
+                    selected = isIncluded || isExcluded,
+                    onClick = { screenModel.toggleTagIncluded(tag) },
+                    label = { Text("$tag ($count)") },
+                    colors = FilterChipDefaults.filterChipColors(
+                        selectedContainerColor = if (isExcluded) {
+                            MaterialTheme.colorScheme.errorContainer
+                        } else {
+                            MaterialTheme.colorScheme.primaryContainer
+                        },
+                        selectedLabelColor = if (isExcluded) {
+                            MaterialTheme.colorScheme.onErrorContainer
+                        } else {
+                            MaterialTheme.colorScheme.onPrimaryContainer
+                        },
+                    ),
+                )
+            }
+        }
+    }
+}
+
 @Composable
 private fun ColumnScope.ExtensionsPage(
     screenModel: LibrarySettingsScreenModel,
 ) {
     val excludedExtensions by screenModel.libraryPreferences.excludedExtensions().collectAsState()
     val availableExtensions by screenModel.extensionsFlow.collectAsState()
+    val isLoading by screenModel.isLoading.collectAsState()
+
+    // Load data when first entering this page (only if empty)
+    LaunchedEffect(Unit) {
+        if (availableExtensions.isEmpty()) {
+            screenModel.refreshExtensions()
+        }
+    }
 
     HeadingItem(MR.strings.label_extensions)
 
-    if (availableExtensions.isEmpty()) {
+    // Refresh button
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.End
+    ) {
+        TextButton(onClick = { screenModel.refreshExtensions(forceRefresh = true) }) {
+            Icon(Icons.Default.Refresh, contentDescription = "Refresh")
+            Spacer(Modifier.width(4.dp))
+            Text("Refresh List")
+        }
+    }
+
+    if (availableExtensions.isEmpty() && !isLoading) {
         Text(
             text = "No extensions with library entries",
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(horizontal = TabbedDialogPaddings.Horizontal),
         )
+    } else if (isLoading && availableExtensions.isEmpty()) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            CircularProgressIndicator(modifier = Modifier.size(24.dp))
+            Spacer(Modifier.width(8.dp))
+            Text("Loading extensions...")
+        }
     } else {
         // Check All / Uncheck All buttons
         Row(

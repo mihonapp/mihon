@@ -31,6 +31,7 @@ import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.components.NavigatorAdaptiveSheet
 import eu.kanade.presentation.manga.ChapterSettingsDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
+import eu.kanade.presentation.manga.SimilarNovelsDialog
 import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.presentation.manga.MangaScreen
 import eu.kanade.presentation.manga.components.DeleteChaptersDialog
@@ -44,6 +45,7 @@ import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.isLocalOrStub
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.jsplugin.source.JsSource
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
@@ -101,10 +103,10 @@ class MangaScreen(
         }
 
         val successState = state as MangaScreenModel.State.Success
-        val isHttpSource = remember { successState.source is HttpSource }
+        val hasWebViewSupport = remember { successState.source is HttpSource || successState.source is JsSource }
 
         LaunchedEffect(successState.manga, screenModel.source) {
-            if (isHttpSource) {
+            if (hasWebViewSupport) {
                 try {
                     withIOContext {
                         assistUrl = getMangaUrl(screenModel.manga, screenModel.source)
@@ -135,14 +137,14 @@ class MangaScreen(
                     screenModel.manga,
                     screenModel.source,
                 )
-            }.takeIf { isHttpSource },
+            }.takeIf { hasWebViewSupport },
             onWebViewLongClicked = {
                 copyMangaUrl(
                     context,
                     screenModel.manga,
                     screenModel.source,
                 )
-            }.takeIf { isHttpSource },
+            }.takeIf { hasWebViewSupport },
             onTrackingClicked = {
                 if (!successState.hasLoggedInTrackers) {
                     navigator.push(SettingsScreen(SettingsScreen.Destination.Tracking))
@@ -156,7 +158,7 @@ class MangaScreen(
             onContinueReading = { continueReading(context, screenModel.getNextUnreadChapter()) },
             onSearch = { query, global -> scope.launch { performSearch(navigator, query, global) } },
             onCoverClicked = screenModel::showCoverDialog,
-            onShareClicked = { shareManga(context, screenModel.manga, screenModel.source) }.takeIf { isHttpSource },
+            onShareClicked = { shareManga(context, screenModel.manga, screenModel.source) }.takeIf { hasWebViewSupport },
             onDownloadActionClicked = screenModel::runDownloadAction.takeIf { !successState.source.isLocalOrStub() },
             onEditCategoryClicked = screenModel::showChangeCategoryDialog.takeIf { successState.manga.favorite },
             onEditFetchIntervalClicked = screenModel::showSetFetchIntervalDialog.takeIf {
@@ -165,8 +167,15 @@ class MangaScreen(
             onMigrateClicked = {
                 navigator.push(MigrationConfigScreen(successState.manga.id))
             }.takeIf { successState.manga.favorite },
+            onSimilarNovelsClicked = screenModel::showSimilarNovelsDialog.takeIf { 
+                successState.manga.favorite && successState.similarNovels.isNotEmpty() 
+            },
+            onFindDuplicatesClicked = screenModel::showFindDuplicatesDialog.takeIf {
+                successState.manga.favorite
+            },
             onEditNotesClicked = { navigator.push(MangaNotesScreen(manga = successState.manga)) },
             onEditAlternativeTitlesClicked = screenModel::showEditAlternativeTitlesDialog,
+            onEditTagsClicked = screenModel::showEditTagsDialog,
             onTranslateClicked = screenModel::translateMangaDetails,
             onTranslateDownloadedClicked = screenModel::translateDownloadedChapters,
             onExportEpubClicked = screenModel::showExportEpubDialog.takeIf { successState.isNovel },
@@ -220,6 +229,16 @@ class MangaScreen(
                     duplicates = dialog.duplicates,
                     onDismissRequest = onDismissRequest,
                     onConfirm = { screenModel.toggleFavorite(onRemoved = {}, checkDuplicate = false) },
+                    onOpenManga = { navigator.push(MangaScreen(it.id)) },
+                    onMigrate = { screenModel.showMigrateDialog(it) },
+                )
+            }
+
+            is MangaScreenModel.Dialog.SimilarNovels -> {
+                SimilarNovelsDialog(
+                    similarNovels = dialog.similarNovels,
+                    categories = dialog.categories,
+                    onDismissRequest = onDismissRequest,
                     onOpenManga = { navigator.push(MangaScreen(it.id)) },
                     onMigrate = { screenModel.showMigrateDialog(it) },
                 )
@@ -300,6 +319,13 @@ class MangaScreen(
                     onConfirm = { titles -> screenModel.updateAlternativeTitles(titles) },
                 )
             }
+            is MangaScreenModel.Dialog.EditTags -> {
+                eu.kanade.presentation.manga.components.EditTagsDialog(
+                    currentTags = dialog.manga.genre ?: emptyList(),
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = { tags -> screenModel.updateTags(tags) },
+                )
+            }
             is MangaScreenModel.Dialog.TranslateMangaDetails -> {
                 eu.kanade.presentation.manga.components.TranslateMangaDetailsDialog(
                     manga = dialog.manga,
@@ -347,10 +373,23 @@ class MangaScreen(
 
     private fun getMangaUrl(manga_: Manga?, source_: Source?): String? {
         val manga = manga_ ?: return null
-        val source = source_ as? HttpSource ?: return null
+        val source = source_ ?: return null
 
         return try {
-            source.getMangaUrl(manga.toSManga())
+            when (source) {
+                is HttpSource -> source.getMangaUrl(manga.toSManga())
+                is JsSource -> {
+                    val path = manga.url
+                    if (path.startsWith("http://") || path.startsWith("https://")) {
+                        path // Already a full URL
+                    } else if (path.startsWith("/")) {
+                        source.baseUrl + path // baseUrl has no trailing slash, path has leading slash
+                    } else {
+                        source.baseUrl + "/" + path // Need to add slash between them
+                    }
+                }
+                else -> null
+            }
         } catch (e: Exception) {
             null
         }

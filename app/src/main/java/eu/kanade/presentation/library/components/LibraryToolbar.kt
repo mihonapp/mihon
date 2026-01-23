@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.FlipToBack
+import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +44,7 @@ fun LibraryToolbar(
     scrollBehavior: TopAppBarScrollBehavior?,
     onClickMassImport: (() -> Unit)? = null,
     onClickImportEpub: (() -> Unit)? = null,
+    onClickFindDuplicates: (() -> Unit)? = null,
 ) = when {
     selectedCount > 0 -> LibrarySelectionToolbar(
         selectedCount = selectedCount,
@@ -62,6 +64,7 @@ fun LibraryToolbar(
         scrollBehavior = scrollBehavior,
         onClickMassImport = onClickMassImport,
         onClickImportEpub = onClickImportEpub,
+        onClickFindDuplicates = onClickFindDuplicates,
     )
 }
 
@@ -78,6 +81,7 @@ private fun LibraryRegularToolbar(
     scrollBehavior: TopAppBarScrollBehavior?,
     onClickMassImport: (() -> Unit)? = null,
     onClickImportEpub: (() -> Unit)? = null,
+    onClickFindDuplicates: (() -> Unit)? = null,
 ) {
     val pillAlpha = if (isSystemInDarkTheme()) 0.12f else 0.08f
     SearchToolbar(
@@ -109,13 +113,14 @@ private fun LibraryRegularToolbar(
                     iconTint = filterTint,
                     onClick = onClickFilter,
                 ),
-                AppBar.OverflowAction(
-                    title = stringResource(MR.strings.action_update_library),
-                    onClick = onClickGlobalUpdate,
+                AppBar.Action(
+                    title = "Reload Library",
+                    icon = Icons.Outlined.FlipToBack,
+                    onClick = onClickRefresh, // now triggers local DB reload
                 ),
                 AppBar.OverflowAction(
-                    title = stringResource(MR.strings.action_update_category),
-                    onClick = onClickRefresh,
+                    title = stringResource(MR.strings.action_update_library),
+                    onClick = onClickGlobalUpdate, // still triggers full update (sources)
                 ),
                 AppBar.OverflowAction(
                     title = stringResource(MR.strings.action_open_random_manga),
@@ -137,6 +142,15 @@ private fun LibraryRegularToolbar(
                     AppBar.OverflowAction(
                         title = "Import EPUB",
                         onClick = onClickImportEpub,
+                    ),
+                )
+            }
+
+            if (onClickFindDuplicates != null) {
+                actions.add(
+                    AppBar.OverflowAction(
+                        title = "Find Duplicates",
+                        onClick = onClickFindDuplicates,
                     ),
                 )
             }

@@ -37,8 +37,11 @@ fun MangaToolbar(
     onClickEditCategory: (() -> Unit)?,
     onClickRefresh: () -> Unit,
     onClickMigrate: (() -> Unit)?,
+    onClickSimilarNovels: (() -> Unit)?,
+    onClickFindDuplicates: (() -> Unit)?,
     onClickEditNotes: () -> Unit,
     onClickEditAltTitles: (() -> Unit)?,
+    onClickEditTags: (() -> Unit)?,
     onClickTranslate: (() -> Unit)? = null,
     onClickTranslateDownloaded: (() -> Unit)? = null,
     onClickExportEpub: (() -> Unit)? = null,
@@ -137,6 +140,22 @@ fun MangaToolbar(
                             ),
                         )
                     }
+                    if (onClickSimilarNovels != null) {
+                        add(
+                            AppBar.OverflowAction(
+                                title = "Similar Novels",
+                                onClick = onClickSimilarNovels,
+                            ),
+                        )
+                    }
+                    if (onClickFindDuplicates != null) {
+                        add(
+                            AppBar.OverflowAction(
+                                title = "Find Duplicates",
+                                onClick = onClickFindDuplicates,
+                            ),
+                        )
+                    }
                     if (onClickShare != null) {
                         add(
                             AppBar.OverflowAction(
@@ -150,6 +169,14 @@ fun MangaToolbar(
                             AppBar.OverflowAction(
                                 title = stringResource(MR.strings.action_edit_alt_titles),
                                 onClick = onClickEditAltTitles,
+                            ),
+                        )
+                    }
+                    if (onClickEditTags != null) {
+                        add(
+                            AppBar.OverflowAction(
+                                title = "Edit Tags",
+                                onClick = onClickEditTags,
                             ),
                         )
                     }

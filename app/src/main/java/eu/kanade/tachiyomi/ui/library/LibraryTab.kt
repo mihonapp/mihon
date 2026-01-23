@@ -29,6 +29,7 @@ import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.library.DeleteLibraryMangaDialog
+import eu.kanade.presentation.library.DuplicateDetectionDialog
 import eu.kanade.presentation.library.LibrarySettingsDialog
 import eu.kanade.presentation.library.MarkReadConfirmationDialog
 import eu.kanade.presentation.library.components.LibraryContent
@@ -126,7 +127,7 @@ data object LibraryTab : Tab {
                     onClickSelectAll = screenModel::selectAll,
                     onClickInvertSelection = screenModel::invertSelection,
                     onClickFilter = screenModel::showSettingsDialog,
-                    onClickRefresh = { onClickRefresh(state.activeCategory) },
+                    onClickRefresh = { screenModel.reloadLibraryFromDB() },
                     onClickGlobalUpdate = { onClickRefresh(null) },
                     onClickOpenRandomManga = {
                         scope.launch {
@@ -144,6 +145,7 @@ data object LibraryTab : Tab {
                     onSearchQueryChange = screenModel::search,
                     // For scroll overlay when no tab
                     scrollBehavior = scrollBehavior.takeIf { !state.showCategoryTabs },
+                    onClickFindDuplicates = screenModel::openDuplicateDetectionDialog,
                 )
             },
             bottomBar = {
@@ -276,6 +278,14 @@ data object LibraryTab : Tab {
             }
             is LibraryScreenModel.Dialog.ImportEpub -> {
                 // Import EPUB is only used in NovelsTab, not here
+            }
+            is LibraryScreenModel.Dialog.DuplicateDetection -> {
+                DuplicateDetectionDialog(
+                    duplicates = dialog.duplicates,
+                    onDismissRequest = onDismissRequest,
+                    onSelectAllExceptFirst = { screenModel.selectDuplicatesExceptFirst(dialog.duplicates) },
+                    onSelectAll = { screenModel.selectAllDuplicates(dialog.duplicates) },
+                )
             }
             null -> {}
         }
