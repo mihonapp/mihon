@@ -63,7 +63,10 @@ class MassInstallScreen : Screen() {
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = { navigator.pop() }) {
-                        Icon(imageVector = Icons.Outlined.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            imageVector = Icons.Outlined.ArrowBack,
+                            contentDescription = stringResource(MR.strings.action_webview_back),
+                        )
                     }
                     Spacer(modifier = Modifier.size(8.dp))
                     Text(
@@ -81,7 +84,7 @@ class MassInstallScreen : Screen() {
                         }
                     }
                 }) {
-                    Text(text = "Install all")
+                    Text(text = stringResource(MR.strings.install_all))
                 }
             }
 
@@ -120,8 +123,11 @@ class MassInstallScreen : Screen() {
                                 is Extension.Available -> {
                                     if (installStep.isCompleted()) {
                                         IconButton(onClick = { screenModel.installExtension(ext) }) {
-                                            Icon(imageVector = Icons.Outlined.GetApp, contentDescription = "Install")
-                                        }
+                                                Icon(
+                                                    imageVector = Icons.Outlined.GetApp,
+                                                    contentDescription = stringResource(MR.strings.ext_install),
+                                                )
+                                            }
                                     } else {
                                         IconButton(onClick = { /* noop while installing */ }) {
                                             CircularProgressIndicator(
@@ -133,7 +139,10 @@ class MassInstallScreen : Screen() {
                                 }
                                 is Extension.Untrusted -> {
                                     IconButton(onClick = { trustDialogExt = ext }) {
-                                        Icon(imageVector = Icons.Outlined.VerifiedUser, contentDescription = "Trust")
+                                        Icon(
+                                            imageVector = Icons.Outlined.VerifiedUser,
+                                            contentDescription = stringResource(MR.strings.ext_trust),
+                                        )
                                     }
                                 }
                                 else -> {}
