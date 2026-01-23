@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.GetApp
@@ -28,6 +30,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -54,6 +57,7 @@ import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionUiModel
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionsScreenModel
+import eu.kanade.tachiyomi.ui.browse.extension.MassInstallScreen
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.util.system.launchRequestPackageInstallsPermission
 import kotlinx.collections.immutable.persistentListOf
@@ -147,12 +151,43 @@ private fun ExtensionContent(
     onClickUpdateAll: () -> Unit,
 ) {
     val context = LocalContext.current
+    val navigator = LocalNavigator.currentOrThrow
     var trustState by remember { mutableStateOf<Extension.Untrusted?>(null) }
     val installGranted = rememberRequestPackageInstallsPermissionState(initialValue = true)
 
     FastScrollLazyColumn(
         contentPadding = contentPadding + topSmallPaddingValues,
     ) {
+        if (state.missingLibraryExtensions.isNotEmpty() || state.potentialMissingCount > 0) {
+            item(key = "mass-install-banner") {
+                Surface(
+                    modifier = Modifier
+                        .padding(horizontal = MaterialTheme.padding.medium, vertical = 6.dp)
+                        .fillMaxWidth()
+                        .clickable {
+                            navigator.push(MassInstallScreen())
+                        },
+                    shape = RoundedCornerShape(12.dp),
+                    tonalElevation = 2.dp,
+                ) {
+                    Row(
+                        modifier = Modifier.padding(MaterialTheme.padding.medium),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        val count = if (state.missingLibraryExtensions.isNotEmpty()) {
+                            state.missingLibraryExtensions.size
+                        } else {
+                            state.potentialMissingCount
+                        }
+                        Text(
+                            text = "$count extensions missing for library",
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
+                }
+            }
+        }
         if (!installGranted && state.installer?.requiresSystemPermission == true) {
             item(key = "extension-permissions-warning") {
                 WarningBanner(
