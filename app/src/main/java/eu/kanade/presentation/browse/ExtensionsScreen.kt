@@ -66,6 +66,7 @@ import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.material.PullRefresh
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.components.material.topSmallPaddingValues
+import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.EmptyScreenAction
@@ -181,7 +182,7 @@ private fun ExtensionContent(
                             state.potentialMissingCount
                         }
                         Text(
-                            text = "$count extensions missing for library",
+                            text = pluralStringResource(MR.plurals.extensions_missing, count = count, count),
                             style = MaterialTheme.typography.bodyMedium,
                         )
                     }
