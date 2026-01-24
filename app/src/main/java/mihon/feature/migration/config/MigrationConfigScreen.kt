@@ -315,10 +315,9 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
         private val sourceManager: SourceManager = Injekt.get(),
     ) : StateScreenModel<ScreenModel.State>(State()) {
 
-        private val sourcesComparator = { includedSources: List<Long> ->
+        private val sourcesComparator = { includedSources: Map<Long, Int> ->
             compareBy<MigrationSource>(
-                { !it.isSelected },
-                { includedSources.indexOf(it.id) },
+                { includedSources[it.source.id] ?: Int.MAX_VALUE },
                 { with(it) { "$name ($shortLanguage)" } },
             )
         }
@@ -334,6 +333,7 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
             mutableState.update { state ->
                 val updatedSources = action(state.sources)
                 val includedSources = updatedSources.mapNotNull { if (!it.isSelected) null else it.id }
+                    .mapIndexed { index, id -> id to index }.toMap()
                 state.copy(sources = updatedSources.sortedWith(sourcesComparator(includedSources)))
             }
             if (save) saveSources()
@@ -343,12 +343,14 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
             val languages = sourcePreferences.enabledLanguages().get()
             val pinnedSources = sourcePreferences.pinnedSources().get().mapNotNull { it.toLongOrNull() }
             val includedSources = sourcePreferences.migrationSources().get()
+                .mapIndexed { index, id -> id to index }.toMap()
             val disabledSources = sourcePreferences.disabledSources().get()
                 .mapNotNull { it.toLongOrNull() }
             val sources = sourceManager.getCatalogueSources()
                 .asSequence()
                 .filterIsInstance<HttpSource>()
                 .filter { it.lang in languages }
+                .sortedWith(compareBy { includedSources[it.id] ?: Int.MAX_VALUE })
                 .map {
                     val source = Source(
                         id = it.id,
