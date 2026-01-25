@@ -23,12 +23,6 @@ object DeviceUtil {
      */
     private const val SECURE_FOLDER_MIN_USER_ID = 150
 
-    /**
-     * Regex pattern to detect isolated user ID in data directory path.
-     * Matches patterns like "/data/user/150/", "/data/user/151/", etc.
-     */
-    private val SECURE_FOLDER_DATA_PATH_PATTERN = Regex(".*/user/1[5-9]\\d+/.*")
-
     val isMiui: Boolean by lazy {
         getSystemProperty("ro.miui.ui.version.name")?.isNotEmpty() ?: false
     }
@@ -82,8 +76,13 @@ object DeviceUtil {
     }
 
     /**
-     * Get the base storage path for Secure Folder.
+     * Get the base storage path for secure environments.
      * Returns the root storage path (e.g., "/storage/emulated/150/")
+     *
+     * Uses multiple strategies to determine the base path:
+     * 1. External storage directory (preferred, accessible in most cases)
+     * 2. Extract from app-specific files directory (fallback for restricted environments)
+     * 3. Default to "/storage/emulated/0/" (last resort)
      *
      * @param context Application context
      * @return Base storage path with trailing slash

@@ -52,7 +52,19 @@ internal class GuidesStep(
                         return@LaunchedEffect
                     }
 
-                    val storageFile = java.io.File(uri)
+                    // Validate URI scheme (must be file://)
+                    if (uri.scheme != null && uri.scheme != "file") {
+                        logcat(LogPriority.WARN) { "Non-file URI scheme: ${uri.scheme}, skipping directory creation" }
+                        return@LaunchedEffect
+                    }
+
+                    val storageFile = try {
+                        java.io.File(uri)
+                    } catch (e: IllegalArgumentException) {
+                        logcat(LogPriority.ERROR) { "Cannot create File from URI: $uri" }
+                        return@LaunchedEffect
+                    }
+
                     val fullPath = storageFile.absolutePath
 
                     if (!storageFile.exists()) {

@@ -20,101 +20,55 @@ class AndroidStorageFolderProvider(
         // We need to use app-specific storage which respects the isolation.
         val isSecureFolder = DeviceUtil.isInSecureFolder(context)
 
-        logcat(LogPriority.INFO) {
-            "Storage initialization - Secure environment: $isSecureFolder, " +
-            "Package: ${context.packageName}, " +
-            "User: ${android.os.Process.myUserHandle().hashCode()}"
-        }
-
         if (isSecureFolder) {
-            logcat(LogPriority.INFO) { "Detected secure environment - using app-specific storage" }
-
             // Use app-specific external storage directory
             // This is accessible within Secure Folder and doesn't require storage permissions
             val appSpecificDir = context.getExternalFilesDir(null)
 
             if (appSpecificDir != null) {
-                logcat(LogPriority.DEBUG) {
-                    "App-specific directory available: ${appSpecificDir.absolutePath}, " +
-                    "Exists: ${appSpecificDir.exists()}, " +
-                    "CanRead: ${appSpecificDir.canRead()}, " +
-                    "CanWrite: ${appSpecificDir.canWrite()}"
-                }
-
                 val targetDir = File(appSpecificDir, context.stringResource(MR.strings.app_name))
 
                 // Create the directory if it doesn't exist
                 if (!targetDir.exists()) {
-                    logcat(LogPriority.INFO) { "Creating Secure Folder storage directory: ${targetDir.absolutePath}" }
                     val created = targetDir.mkdirs()
-
                     if (!created && !targetDir.exists()) {
                         logcat(LogPriority.ERROR) {
-                            "Failed to create Secure Folder storage directory. " +
-                            "Parent exists: ${targetDir.parentFile?.exists()}, " +
-                            "Parent writable: ${targetDir.parentFile?.canWrite()}"
+                            "Failed to create secure environment storage: ${targetDir.absolutePath}"
                         }
                         // Fall through to try default storage
                     } else {
-                        logcat(LogPriority.INFO) {
-                            "Directory created successfully: ${targetDir.absolutePath}, " +
-                            "CanWrite: ${targetDir.canWrite()}"
-                        }
+                        logcat(LogPriority.INFO) { "Using secure environment storage: ${targetDir.absolutePath}" }
                         return targetDir
                     }
                 } else {
                     // Directory already exists, verify it's usable
                     if (targetDir.isDirectory && targetDir.canWrite()) {
-                        logcat(LogPriority.INFO) { "Using existing Secure Folder storage: ${targetDir.absolutePath}" }
+                        logcat(LogPriority.INFO) { "Using secure environment storage: ${targetDir.absolutePath}" }
                         return targetDir
                     } else {
                         logcat(LogPriority.ERROR) {
-                            "Secure Folder storage exists but is not usable. " +
-                            "IsDirectory: ${targetDir.isDirectory}, " +
-                            "CanWrite: ${targetDir.canWrite()}"
+                            "Secure environment storage not writable: ${targetDir.absolutePath}"
                         }
                         // Fall through to try default storage
                     }
                 }
             } else {
-                logcat(LogPriority.ERROR) {
-                    "App-specific storage not available in Secure Folder! " +
-                    "Context.getExternalFilesDir(null) returned null"
-                }
+                logcat(LogPriority.ERROR) { "App-specific storage not available in secure environment" }
             }
         }
 
         // Default behavior for non-Secure Folder environments
         val externalStorageDir = Environment.getExternalStorageDirectory()
-
-        logcat(LogPriority.DEBUG) {
-            "External storage state: ${Environment.getExternalStorageState()}, " +
-            "Path: ${externalStorageDir.absolutePath}, " +
-            "Exists: ${externalStorageDir.exists()}, " +
-            "CanWrite: ${externalStorageDir.canWrite()}"
-        }
-
         val defaultDir = File(
             externalStorageDir.absolutePath + File.separator +
                 context.stringResource(MR.strings.app_name),
         )
 
-        logcat(LogPriority.INFO) { "Checking default storage: ${defaultDir.absolutePath}" }
-
         // Validate that the directory is accessible
         val isAccessible = isDirectoryAccessible(defaultDir)
-        logcat(LogPriority.DEBUG) {
-            "Default directory accessibility check: $isAccessible, " +
-            "Exists: ${defaultDir.exists()}, " +
-            "IsDirectory: ${defaultDir.isDirectory}, " +
-            "CanWrite: ${defaultDir.canWrite()}"
-        }
 
         if (!isAccessible) {
-            logcat(LogPriority.WARN) {
-                "Default storage directory not accessible: ${defaultDir.absolutePath}, " +
-                "Attempting fallback to app-specific storage"
-            }
+            logcat(LogPriority.WARN) { "Default storage not accessible, using app-specific fallback" }
 
             // Fallback to app-specific storage if default is not accessible
             val fallbackDir = context.getExternalFilesDir(null)
@@ -122,33 +76,21 @@ class AndroidStorageFolderProvider(
                 val targetDir = File(fallbackDir, context.stringResource(MR.strings.app_name))
 
                 if (!targetDir.exists()) {
-                    val created = targetDir.mkdirs()
-                    logcat(LogPriority.INFO) {
-                        "Creating fallback directory: ${targetDir.absolutePath}, " +
-                        "Success: $created"
-                    }
+                    targetDir.mkdirs()
                 }
 
                 if (targetDir.exists() && targetDir.canWrite()) {
-                    logcat(LogPriority.INFO) { "Using app-specific storage as fallback: ${targetDir.absolutePath}" }
+                    logcat(LogPriority.INFO) { "Using app-specific storage: ${targetDir.absolutePath}" }
                     return targetDir
                 } else {
-                    logcat(LogPriority.ERROR) {
-                        "Fallback directory not usable: ${targetDir.absolutePath}, " +
-                        "Exists: ${targetDir.exists()}, " +
-                        "CanWrite: ${targetDir.canWrite()}"
-                    }
+                    logcat(LogPriority.ERROR) { "Fallback storage not usable: ${targetDir.absolutePath}" }
                 }
             } else {
-                logcat(LogPriority.ERROR) { "Fallback app-specific storage also unavailable!" }
+                logcat(LogPriority.ERROR) { "Fallback storage unavailable" }
             }
         }
 
-        logcat(LogPriority.INFO) {
-            "Using default storage: ${defaultDir.absolutePath}, " +
-            "Exists: ${defaultDir.exists()}, " +
-            "CanWrite: ${defaultDir.canWrite()}"
-        }
+        logcat(LogPriority.INFO) { "Using default storage: ${defaultDir.absolutePath}" }
         return defaultDir
     }
 
@@ -174,65 +116,21 @@ class AndroidStorageFolderProvider(
             when {
                 // Case 1: Directory exists
                 directory.exists() -> {
-                    if (!directory.isDirectory) {
-                        logcat(LogPriority.ERROR) {
-                            "Path exists but is not a directory: ${directory.absolutePath}"
-                        }
-                        false
-                    } else {
-                        val canWrite = directory.canWrite()
-                        if (!canWrite) {
-                            logcat(LogPriority.WARN) {
-                                "Directory exists but is not writable: ${directory.absolutePath}"
-                            }
-                        }
-                        canWrite
-                    }
+                    directory.isDirectory && directory.canWrite()
                 }
                 // Case 2: Directory doesn't exist, try to create it
                 else -> {
-                    // Check parent directory accessibility first
-                    val parent = directory.parentFile
-                    if (parent != null && !parent.exists()) {
-                        logcat(LogPriority.DEBUG) {
-                            "Parent directory doesn't exist, will be created: ${parent.absolutePath}"
-                        }
-                    }
-
                     // Attempt to create the directory
                     val created = directory.mkdirs()
-
-                    if (!created && !directory.exists()) {
-                        logcat(LogPriority.WARN) {
-                            "Failed to create directory: ${directory.absolutePath}, " +
-                            "Parent exists: ${parent?.exists()}, " +
-                            "Parent writable: ${parent?.canWrite()}"
-                        }
-                        false
-                    } else {
-                        // Verify the directory is now accessible
-                        val accessible = directory.exists() && directory.isDirectory && directory.canWrite()
-                        if (!accessible) {
-                            logcat(LogPriority.WARN) {
-                                "Directory created but not fully accessible: ${directory.absolutePath}, " +
-                                "Exists: ${directory.exists()}, " +
-                                "IsDirectory: ${directory.isDirectory}, " +
-                                "CanWrite: ${directory.canWrite()}"
-                            }
-                        }
-                        accessible
-                    }
+                    // Verify the directory is now accessible
+                    created || (directory.exists() && directory.isDirectory && directory.canWrite())
                 }
             }
         } catch (e: SecurityException) {
-            logcat(LogPriority.ERROR, e) {
-                "SecurityException checking directory accessibility: ${directory.absolutePath}"
-            }
+            logcat(LogPriority.ERROR, e) { "SecurityException accessing: ${directory.absolutePath}" }
             false
         } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e) {
-                "Unexpected error checking directory accessibility: ${directory.absolutePath}"
-            }
+            logcat(LogPriority.ERROR, e) { "Error accessing: ${directory.absolutePath}" }
             false
         }
     }

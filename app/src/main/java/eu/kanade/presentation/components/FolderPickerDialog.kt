@@ -95,12 +95,17 @@ fun FolderPickerDialog(
     var fileListRefreshCounter by remember { mutableStateOf(0) }
     var pendingFolderName by remember { mutableStateOf<String?>(null) }
     var pendingFolderPath by remember { mutableStateOf<String?>(null) }
+    var isProcessing by remember { mutableStateOf(false) }
 
     /**
-     * Helper function to create a folder and select it, or show error message
+     * Helper function to create a folder and select it, or show error message.
+     * Thread-safe: prevents concurrent folder creation operations.
      */
     fun createFolderAndSelect(parentPath: String, folderName: String): Boolean {
-        return navigator.createFolder(parentPath, folderName)
+        if (isProcessing) return false
+        isProcessing = true
+
+        val result = navigator.createFolder(parentPath, folderName)
             .onSuccess { folder ->
                 onFolderSelected(folder.absolutePath)
                 onDismiss()
@@ -108,7 +113,9 @@ fun FolderPickerDialog(
             .onFailure { error ->
                 errorMessage = errorCreateFolder
             }
-            .isSuccess
+
+        isProcessing = false
+        return result.isSuccess
     }
 
     // Check permission (dynamically updated)
@@ -306,6 +313,10 @@ fun FolderPickerDialog(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clickable {
+                                        // Prevent concurrent operations (double-click protection)
+                                        if (isProcessing) return@clickable
+                                        isProcessing = true
+
                                         try {
                                             // Validate file still exists before using
                                             if (item.file.exists()) {
@@ -320,6 +331,8 @@ fun FolderPickerDialog(
                                             }
                                         } catch (e: SecurityException) {
                                             errorMessage = errorAccessDirectory
+                                        } finally {
+                                            isProcessing = false
                                         }
                                     }
                                     .padding(vertical = 12.dp, horizontal = 8.dp),
@@ -345,8 +358,7 @@ fun FolderPickerDialog(
                                         style = MaterialTheme.typography.bodyLarge,
                                     )
 
-                                    val context = androidx.compose.ui.platform.LocalContext.current
-                                    val detailText = remember(item.file, item.type) {
+                                        val detailText = remember(item.file, item.type) {
                                         try {
                                             if (item.type == PickerItemType.FILE) {
                                                 val timestamp = item.file.lastModified()

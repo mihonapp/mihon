@@ -52,27 +52,6 @@ class DeviceUtilTest {
     }
 
     @Test
-    fun `SECURE_FOLDER_DATA_PATH_PATTERN matches valid Secure Folder paths`() {
-        val pattern = Regex(".*/user/1[5-9]\\d+/.*")
-
-        // Test valid paths
-        pattern.matches("/data/user/150/app.mihon.dev") shouldBe true
-        pattern.matches("/data/user/151/app.mihon.dev") shouldBe true
-        pattern.matches("/data/user/159/app.mihon.dev") shouldBe true
-        pattern.matches("/data/user/190/app.mihon.dev") shouldBe true
-    }
-
-    @Test
-    fun `SECURE_FOLDER_DATA_PATH_PATTERN does not match normal user paths`() {
-        val pattern = Regex(".*/user/1[5-9]\\d+/.*")
-
-        // Test invalid paths
-        pattern.matches("/data/user/0/app.mihon.dev") shouldBe false
-        pattern.matches("/data/user/10/app.mihon.dev") shouldBe false
-        pattern.matches("/data/user/149/app.mihon.dev") shouldBe false
-    }
-
-    @Test
     fun `STORAGE_EMULATED_PATTERN extracts correct path`() {
         val pattern = Regex("""(/storage/emulated/\d+)/""")
 

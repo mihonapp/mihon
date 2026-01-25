@@ -670,6 +670,20 @@ private fun ManualPathInputDialog(
                     // Try to validate the path
                     try {
                         val file = java.io.File(trimmedPath)
+
+                        // Security: Validate path to prevent traversal attacks
+                        val canonicalPath = file.canonicalPath
+
+                        // Ensure path is within allowed directories (storage/emulated or app-specific)
+                        val isAllowedPath = canonicalPath.startsWith("/storage/emulated/") ||
+                                          canonicalPath.startsWith("/sdcard/") ||
+                                          canonicalPath.startsWith(context.getExternalFilesDir(null)?.canonicalPath ?: "")
+
+                        if (!isAllowedPath) {
+                            errorMessage = errorPathInvalid
+                            return@TextButton
+                        }
+
                         // Create directory if it doesn't exist
                         if (!file.exists()) {
                             val created = file.mkdirs()
@@ -682,6 +696,8 @@ private fun ManualPathInputDialog(
                         // Convert to URI
                         val uri = file.toUri().toString()
                         onConfirm(uri)
+                    } catch (e: SecurityException) {
+                        errorMessage = errorPathInvalid
                     } catch (e: Exception) {
                         errorMessage = errorPathInvalid
                     }

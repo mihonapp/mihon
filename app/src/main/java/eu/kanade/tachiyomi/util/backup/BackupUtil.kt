@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger
 object BackupUtil {
 
     private val copyCounter = AtomicInteger(0)
+    private val cleanupLock = Any()
 
     /**
      * Copies a backup file to app cache directory to avoid permission issues in Secure Folder.
@@ -102,31 +103,39 @@ object BackupUtil {
     /**
      * Cleans old temporary backup files from cache directory synchronously.
      * Used when we need to free up space before copying.
+     * Thread-safe: synchronized to prevent concurrent cleanup operations.
      *
      * @param context Application context
      * @return Number of files deleted
      */
     private fun cleanOldTempBackupsSync(context: Context): Int {
-        return try {
-            val cutoffTime = System.currentTimeMillis() - BackupConstants.TEMP_BACKUP_RETENTION_MS
-            val files = context.cacheDir.listFiles()
-                ?.filter { it.name.startsWith(BackupConstants.TEMP_BACKUP_PREFIX) && it.lastModified() < cutoffTime }
-                ?: emptyList()
+        return synchronized(cleanupLock) {
+            try {
+                val cutoffTime = System.currentTimeMillis() - BackupConstants.TEMP_BACKUP_RETENTION_MS
+                val files = context.cacheDir.listFiles()
+                    ?.filter { it.name.startsWith(BackupConstants.TEMP_BACKUP_PREFIX) && it.lastModified() < cutoffTime }
+                    ?: emptyList()
 
-            var deletedCount = 0
-            files.forEach { file ->
-                if (file.delete()) {
-                    deletedCount++
+                var deletedCount = 0
+                files.forEach { file ->
+                    try {
+                        // Double-check file still exists (another thread may have deleted it)
+                        if (file.exists() && file.delete()) {
+                            deletedCount++
+                        }
+                    } catch (e: SecurityException) {
+                        logcat(LogPriority.WARN) { "Cannot delete file: ${file.name}" }
+                    }
                 }
-            }
 
-            if (deletedCount > 0) {
-                logcat(LogPriority.INFO) { "Cleaned $deletedCount old temp backup files" }
+                if (deletedCount > 0) {
+                    logcat(LogPriority.INFO) { "Cleaned $deletedCount old temp backup files" }
+                }
+                deletedCount
+            } catch (e: Exception) {
+                logcat(LogPriority.WARN, e) { "Failed to clean old temp backups" }
+                0
             }
-            deletedCount
-        } catch (e: Exception) {
-            logcat(LogPriority.WARN, e) { "Failed to clean old temp backups" }
-            0
         }
     }
 
