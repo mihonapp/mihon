@@ -14,7 +14,7 @@ import java.io.File
  *
  * These extensions provide SecurityException-safe wrappers around standard
  * File operations, particularly useful in restricted environments like
- * Samsung Secure Folder where file access may throw SecurityException.
+ * secure folders where file access may throw SecurityException.
  */
 @Execution(ExecutionMode.CONCURRENT)
 @DisplayName("FileExtensions Tests")

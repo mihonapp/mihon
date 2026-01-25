@@ -51,9 +51,9 @@ import tachiyomi.presentation.core.components.material.TextButton
 import tachiyomi.presentation.core.i18n.stringResource
 
 /**
- * Custom folder/file picker dialog for Samsung Secure Folder compatibility.
+ * Custom folder/file picker dialog for secure environment compatibility.
  *
- * This dialog provides a file browser that works within Secure Folder restrictions
+ * This dialog provides a file browser that works within secure environment restrictions
  * where the Storage Access Framework (SAF) cannot access files. It supports both
  * folder selection and backup file selection modes.
  *

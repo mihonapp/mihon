@@ -116,7 +116,7 @@ object SettingsDataScreen : SearchableSettings {
             getStorageLocationPref(storagePreferences = storagePreferences),
         )
 
-        // Samsung Knox Secure Folder specific information
+        // Secure environment specific information
         if (DeviceUtil.isInSecureFolder(context)) {
             preferences.add(
                 Preference.PreferenceItem.InfoPreference(
@@ -150,7 +150,7 @@ object SettingsDataScreen : SearchableSettings {
             if (uri != null) {
                 val uriString = uri.toString()
 
-                // Samsung Secure Folder: Prevent selecting primary storage
+                // Secure environment: Prevent selecting primary storage
                 if (DeviceUtil.isInSecureFolder(context)) {
                     val isPointingToPrimaryStorage = uriString.contains("primary:", ignoreCase = true) ||
                                                     uriString.contains("0@", ignoreCase = false)
@@ -482,7 +482,7 @@ object SettingsDataScreen : SearchableSettings {
     }
 
     /**
-     * Custom file picker for restoring backups in Samsung Secure Folder.
+     * Custom file picker for restoring backups in secure environments.
      * Uses FolderPickerDialog to navigate and select .tachibk or .proto.gz files,
      * then copies them to cache before passing to RestoreBackupScreen.
      */

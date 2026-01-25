@@ -52,7 +52,7 @@ class StorageManager(
     private fun initializeBaseDir(): UniFile? {
         val currentUri = storagePreferences.baseStorageDirectory().get()
 
-        // Check if we're in Samsung Secure Folder
+        // Check if we're in a secure environment
         if (DeviceUtil.isInSecureFolder(context)) {
             logcat(LogPriority.INFO) { "StorageManager: Running in Secure Folder, current URI: $currentUri" }
 
@@ -93,13 +93,13 @@ class StorageManager(
     }
 
     /**
-     * Checks if a URI is invalid for use in Samsung Secure Folder.
+     * Checks if a URI is invalid for use in secure environments.
      *
      * URIs containing "primary:" or "0@" point to the main user profile's storage,
-     * which is not accessible from within Secure Folder's isolated environment.
+     * which is not accessible from within isolated secure environments.
      *
      * @param uri The URI string to check
-     * @return true if the URI is invalid for Secure Folder, false otherwise
+     * @return true if the URI is invalid for secure environments, false otherwise
      */
     internal fun isInvalidUriForSecureFolder(uri: String): Boolean {
         return uri.contains(PRIMARY_STORAGE_PREFIX, ignoreCase = true) ||

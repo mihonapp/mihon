@@ -18,13 +18,13 @@ object DeviceUtil {
     private val STORAGE_EMULATED_PATTERN = Regex("""(/storage/emulated/\d+)/""")
 
     /**
-     * Minimum user ID for Samsung Secure Folder.
-     * Secure Folder typically uses user IDs >= 150.
+     * Minimum user ID for isolated secure environments.
+     * Secure folders and work profiles typically use user IDs >= 150.
      */
     private const val SECURE_FOLDER_MIN_USER_ID = 150
 
     /**
-     * Regex pattern to detect Secure Folder user ID in data directory path.
+     * Regex pattern to detect isolated user ID in data directory path.
      * Matches patterns like "/data/user/150/", "/data/user/151/", etc.
      */
     private val SECURE_FOLDER_DATA_PATH_PATTERN = Regex(".*/user/1[5-9]\\d+/.*")
@@ -106,57 +106,49 @@ object DeviceUtil {
     }
 
     /**
-     * Detects if the app is running inside Samsung Knox Secure Folder.
+     * Detects if the app is running inside an isolated secure environment.
      *
-     * Secure Folder creates an isolated environment using Android's managed profile feature.
-     * This is important for storage access as the default external storage path may not
-     * be accessible from within the secure folder on S21+ devices.
+     * This includes:
+     * - Samsung Knox Secure Folder
+     * - Motorola Secure Folder
+     * - Android Work Profile
+     * - Other manufacturer-specific secure environments
+     *
+     * These environments use Android's managed profile feature or isolated user IDs,
+     * which prevents SAF (Storage Access Framework) from working correctly.
+     * Detection is necessary to use alternative storage access methods.
      */
     fun isInSecureFolder(context: Context): Boolean {
-        if (!isSamsung) {
-            logcat(LogPriority.DEBUG) { "Not a Samsung device" }
-            return false
-        }
-
         return try {
             val userManager = context.getSystemService<UserManager>()
 
-            // Check if we're running in a managed profile (Secure Folder uses this)
+            // Primary check: managed profile (covers most secure environments)
             val isManagedProfile = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 userManager?.isManagedProfile ?: false
             } else {
                 false
             }
 
-            // Additional check: Secure Folder typically uses user ID >= 150
+            // Secondary check: Isolated user ID >= 150 (common pattern across manufacturers)
             val userId = Process.myUserHandle().hashCode()
-            val isSecureFolderUserId = userId >= SECURE_FOLDER_MIN_USER_ID
+            val isIsolatedUserId = userId >= SECURE_FOLDER_MIN_USER_ID
 
-            // Knox Secure Folder detection via system properties
-            val knoxVersion = getSystemProperty("ro.build.characteristics")
-            val hasKnox = knoxVersion?.contains("knox", ignoreCase = true) == true
-
-            // Check if the data directory path contains "knox" or user ID pattern
-            val dataDir = context.dataDir?.absolutePath ?: ""
-            val hasKnoxInPath = dataDir.contains("knox", ignoreCase = true) ||
-                                dataDir.matches(SECURE_FOLDER_DATA_PATH_PATTERN)
-
-            val result = isManagedProfile || hasKnoxInPath || (isSamsung && isSecureFolderUserId && hasKnox)
+            // Result: true if either detection method succeeds
+            val result = isManagedProfile || isIsolatedUserId
 
             logcat(LogPriority.INFO) {
-                """Secure Folder detection:
+                """Isolated environment detection:
+                  - Manufacturer: ${Build.MANUFACTURER}
+                  - Model: ${Build.MODEL}
                   - Managed Profile: $isManagedProfile
-                  - User ID: $userId (Secure Folder range: $isSecureFolderUserId)
-                  - Knox in system: $hasKnox
-                  - Knox in path: $hasKnoxInPath
-                  - Data dir: $dataDir
+                  - User ID: $userId (Isolated range: >= $SECURE_FOLDER_MIN_USER_ID)
                   - Result: $result
                 """.trimIndent()
             }
 
             result
         } catch (e: Exception) {
-            logcat(LogPriority.WARN, e) { "Unable to detect Secure Folder" }
+            logcat(LogPriority.WARN, e) { "Unable to detect isolated environment" }
             false
         }
     }

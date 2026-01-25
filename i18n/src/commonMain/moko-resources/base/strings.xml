@@ -184,8 +184,8 @@
     <string name="onboarding_action_finish">Get started</string>
     <string name="onboarding_action_skip">Skip</string>
     <string name="onboarding_storage_info">Select a folder where %1$s will store chapter downloads, backups, and more.\n\nA dedicated folder is recommended.\n\nSelected folder: %2$s</string>
-    <string name="onboarding_storage_secure_folder">Samsung Secure Folder detected!\n\nFor compatibility, the app will automatically use app-specific storage for chapter downloads, backups, and local manga.\n\nThis is the only accessible location within Secure Folder and ensures all your data remains isolated and secure.</string>
-    <string name="onboarding_storage_secure_folder_custom">Samsung Secure Folder detected!\n\nEnter the folder name where you want to store your manga data. The folder will be created automatically if it doesn't exist.</string>
+    <string name="onboarding_storage_secure_folder">Secure environment detected!\n\nFor compatibility, the app will automatically use app-specific storage for chapter downloads, backups, and local manga.\n\nThis is the only accessible location within secure environments and ensures all your data remains isolated and secure.</string>
+    <string name="onboarding_storage_secure_folder_custom">Secure environment detected!\n\nEnter the folder name where you want to store your manga data. The folder will be created automatically if it doesn't exist.</string>
     <string name="storage_folder_name">Folder name</string>
     <string name="onboarding_storage_action_select">Select a folder</string>
     <string name="onboarding_storage_selection_required">A folder must be selected</string>
@@ -555,7 +555,7 @@
       <!-- Data and storage section -->
     <string name="pref_storage_location">Storage location</string>
     <string name="pref_storage_location_info">Used for automatic backups, chapter downloads, and local source.</string>
-    <string name="pref_storage_secure_folder_info">Samsung Secure Folder detected. App-specific storage is automatically used. Manual selection is disabled due to Secure Folder storage restrictions.</string>
+    <string name="pref_storage_secure_folder_info">Secure environment detected. App-specific storage is automatically used. Manual selection is disabled due to storage restrictions.</string>
     <string name="secure_folder_app_storage">Secure Folder: App Storage (Default)</string>
     <string name="secure_folder_manual_path_title">Enter Storage Path</string>
     <string name="secure_folder_manual_path_label">Storage path</string>
@@ -565,7 +565,7 @@
     <string name="error_path_invalid">Invalid path</string>
     <string name="error_path_cannot_create">Cannot create directory at this path</string>
     <string name="error_secure_folder_primary_storage">Cannot use primary storage in Secure Folder. Please select a folder within the Secure Folder\'s internal storage or use the default app-specific storage.</string>
-    <string name="error_secure_folder_manual_selection_disabled">Manual storage selection is disabled in Samsung Secure Folder. The app automatically uses app-specific storage which is the only accessible location within Secure Folder.</string>
+    <string name="error_secure_folder_manual_selection_disabled">Manual storage selection is disabled in secure environments. The app automatically uses app-specific storage which is the only accessible location.</string>
 
     <!-- Folder Picker Dialog -->
     <string name="folder_picker_title_folder">Select Folder</string>

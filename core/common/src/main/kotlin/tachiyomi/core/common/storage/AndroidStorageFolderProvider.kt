@@ -15,19 +15,19 @@ class AndroidStorageFolderProvider(
 ) : FolderProvider {
 
     override fun directory(): File {
-        // Samsung Knox Secure Folder compatibility (S21+ devices)
-        // In Secure Folder, the default external storage is not accessible.
+        // Secure environment compatibility (isolated user profiles, work profiles)
+        // In secure environments, the default external storage is not accessible.
         // We need to use app-specific storage which respects the isolation.
         val isSecureFolder = DeviceUtil.isInSecureFolder(context)
 
         logcat(LogPriority.INFO) {
-            "Storage initialization - Secure Folder: $isSecureFolder, " +
+            "Storage initialization - Secure environment: $isSecureFolder, " +
             "Package: ${context.packageName}, " +
             "User: ${android.os.Process.myUserHandle().hashCode()}"
         }
 
         if (isSecureFolder) {
-            logcat(LogPriority.INFO) { "Detected Samsung Secure Folder - using app-specific storage" }
+            logcat(LogPriority.INFO) { "Detected secure environment - using app-specific storage" }
 
             // Use app-specific external storage directory
             // This is accessible within Secure Folder and doesn't require storage permissions
