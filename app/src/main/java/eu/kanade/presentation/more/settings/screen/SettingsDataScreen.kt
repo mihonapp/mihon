@@ -675,9 +675,10 @@ private fun ManualPathInputDialog(
                         val canonicalPath = file.canonicalPath
 
                         // Ensure path is within allowed directories (storage/emulated or app-specific)
+                        val appFilesPath = context.getExternalFilesDir(null)?.canonicalPath ?: ""
                         val isAllowedPath = canonicalPath.startsWith("/storage/emulated/") ||
                                           canonicalPath.startsWith("/sdcard/") ||
-                                          canonicalPath.startsWith(context.getExternalFilesDir(null)?.canonicalPath ?: "")
+                                          canonicalPath.startsWith(appFilesPath)
 
                         if (!isAllowedPath) {
                             errorMessage = errorPathInvalid

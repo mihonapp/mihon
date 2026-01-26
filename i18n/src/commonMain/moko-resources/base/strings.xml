@@ -583,6 +583,8 @@
     <string name="folder_picker_error_create">Failed to create folder</string>
     <string name="folder_created_successfully">Folder created successfully</string>
     <string name="error_permission_denied">Permission denied. Cannot access file.</string>
+    <string name="folder_picker_item_count_single">1 item</string>
+    <string name="folder_picker_item_count_multiple">%d items</string>
 
     <string name="pref_create_backup">Create backup</string>
     <string name="pref_create_backup_summ">Can be used to restore current library</string>

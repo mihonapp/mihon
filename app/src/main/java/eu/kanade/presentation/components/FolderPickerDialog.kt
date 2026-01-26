@@ -31,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +44,8 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import eu.kanade.tachiyomi.util.backup.BackupConstants
 import java.io.File
+import logcat.LogPriority
+import tachiyomi.core.common.util.system.logcat
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -97,6 +100,11 @@ fun FolderPickerDialog(
     var pendingFolderPath by remember { mutableStateOf<String?>(null) }
     var isProcessing by remember { mutableStateOf(false) }
 
+    // Capture latest callbacks to avoid stale references
+    val currentOnFolderSelected by rememberUpdatedState(onFolderSelected)
+    val currentOnDismiss by rememberUpdatedState(onDismiss)
+    val currentOnFileSelected by rememberUpdatedState(onFileSelected)
+
     /**
      * Helper function to create a folder and select it, or show error message.
      * Thread-safe: prevents concurrent folder creation operations.
@@ -107,8 +115,8 @@ fun FolderPickerDialog(
 
         val result = navigator.createFolder(parentPath, folderName)
             .onSuccess { folder ->
-                onFolderSelected(folder.absolutePath)
-                onDismiss()
+                currentOnFolderSelected(folder.absolutePath)
+                currentOnDismiss()
             }
             .onFailure { error ->
                 errorMessage = errorCreateFolder
@@ -323,7 +331,7 @@ fun FolderPickerDialog(
                                                 if (item.type == PickerItemType.FOLDER) {
                                                     currentPath = item.file.absolutePath
                                                 } else {
-                                                    onFileSelected?.invoke(item.file.absolutePath)
+                                                    currentOnFileSelected?.invoke(item.file.absolutePath)
                                                 }
                                             } else {
                                                 errorMessage = errorAccessDirectory
@@ -372,9 +380,26 @@ fun FolderPickerDialog(
                                                 "$lastModified • $size"
                                             } else {
                                                 val itemCount = item.file.listFiles()?.size ?: 0
-                                                if (itemCount == 1) "1 item" else "$itemCount items"
+                                                if (itemCount == 1) {
+                                                    context.getString(
+                                                        MR.strings.folder_picker_item_count_single.resourceId,
+                                                    )
+                                                } else {
+                                                    context.getString(
+                                                        MR.strings.folder_picker_item_count_multiple.resourceId,
+                                                        itemCount,
+                                                    )
+                                                }
                                             }
+                                        } catch (e: SecurityException) {
+                                            logcat(LogPriority.WARN) {
+                                                "Cannot access file: ${item.file.name}"
+                                            }
+                                            null
                                         } catch (e: Exception) {
+                                            logcat(LogPriority.ERROR) {
+                                                "Unexpected error reading file info: ${e.message}"
+                                            }
                                             null
                                         }
                                     }
@@ -405,8 +430,8 @@ fun FolderPickerDialog(
                     Spacer(modifier = Modifier.width(8.dp))
                     TextButton(
                         onClick = {
-                            onFolderSelected(currentPath)
-                            onDismiss()
+                            currentOnFolderSelected(currentPath)
+                            currentOnDismiss()
                         },
                     ) {
                         Text(stringResource(MR.strings.folder_picker_select_this_folder))
@@ -415,7 +440,7 @@ fun FolderPickerDialog(
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
+            TextButton(onClick = { currentOnDismiss() }) {
                 Text(stringResource(MR.strings.action_cancel))
             }
         },

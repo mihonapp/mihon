@@ -3,13 +3,10 @@ package eu.kanade.presentation.more.onboarding
 import android.content.ActivityNotFoundException
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,8 +25,6 @@ import eu.kanade.presentation.more.settings.screen.SettingsDataScreen
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.collectLatest
-import logcat.LogPriority
-import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.storage.service.StoragePreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Button
@@ -37,6 +32,22 @@ import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+
+@Composable
+private fun StorageHelpSection(handler: androidx.compose.ui.platform.UriHandler) {
+    HorizontalDivider(
+        modifier = Modifier.padding(vertical = 8.dp),
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
+    )
+
+    Text(stringResource(MR.strings.onboarding_storage_help_info, stringResource(MR.strings.app_name)))
+    Button(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = { handler.openUri(SettingsDataScreen.HELP_URL) },
+    ) {
+        Text(stringResource(MR.strings.onboarding_storage_help_action))
+    }
+}
 
 internal class StorageStep : OnboardingStep {
 
@@ -101,18 +112,7 @@ internal class StorageStep : OnboardingStep {
                     )
                 }
 
-                HorizontalDivider(
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                )
-
-                Text(stringResource(MR.strings.onboarding_storage_help_info, stringResource(MR.strings.app_name)))
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = { handler.openUri(SettingsDataScreen.HELP_URL) },
-                ) {
-                    Text(stringResource(MR.strings.onboarding_storage_help_action))
-                }
+                StorageHelpSection(handler)
             } else {
                 // Normal flow: Allow manual selection
                 Text(
@@ -136,18 +136,7 @@ internal class StorageStep : OnboardingStep {
                     Text(stringResource(MR.strings.onboarding_storage_action_select))
                 }
 
-                HorizontalDivider(
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                )
-
-                Text(stringResource(MR.strings.onboarding_storage_help_info, stringResource(MR.strings.app_name)))
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = { handler.openUri(SettingsDataScreen.HELP_URL) },
-                ) {
-                    Text(stringResource(MR.strings.onboarding_storage_help_action))
-                }
+                StorageHelpSection(handler)
             }
         }
 

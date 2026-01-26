@@ -31,11 +31,20 @@ object BackupUtil {
             // Comprehensive validation using BackupConstants
             if (!BackupConstants.isValidBackupFile(sourceFile)) {
                 return when {
-                    !sourceFile.exists() -> Result.failure(java.io.FileNotFoundException("Source file does not exist"))
-                    !sourceFile.isFile -> Result.failure(IllegalArgumentException("Source must be a file"))
-                    !BackupConstants.isBackupFile(sourceFile.name) -> Result.failure(IllegalArgumentException("Invalid backup file format"))
+                    !sourceFile.exists() -> {
+                        Result.failure(java.io.FileNotFoundException("Source file does not exist"))
+                    }
+                    !sourceFile.isFile -> {
+                        Result.failure(IllegalArgumentException("Source must be a file"))
+                    }
+                    !BackupConstants.isBackupFile(sourceFile.name) -> {
+                        Result.failure(IllegalArgumentException("Invalid backup file format"))
+                    }
                     sourceFile.length() > BackupConstants.MAX_BACKUP_SIZE -> {
-                        Result.failure(IllegalArgumentException("Backup file too large (max ${BackupConstants.MAX_BACKUP_SIZE / 1024 / 1024}MB)"))
+                        val maxSizeMB = BackupConstants.MAX_BACKUP_SIZE / 1024 / 1024
+                        Result.failure(
+                            IllegalArgumentException("Backup file too large (max ${maxSizeMB}MB)"),
+                        )
                     }
                     else -> Result.failure(IllegalArgumentException("Invalid backup file"))
                 }
@@ -60,12 +69,12 @@ object BackupUtil {
                 }
             }
 
-            // Clean old temp backups every 10 copies (async optimization)
+            // Clean old temp backups every 10 copies
             if (copyCounter.incrementAndGet() % 10 == 0) {
                 cleanOldTempBackupsAsync(context)
             }
 
-            // Copy to cache directory with unique name using UUID instead of deprecated thread ID
+            // Copy to cache with unique name
             val cacheFile = File(
                 context.cacheDir,
                 "${BackupConstants.TEMP_BACKUP_PREFIX}${System.currentTimeMillis()}_${UUID.randomUUID()}.tachibk"
@@ -102,7 +111,6 @@ object BackupUtil {
 
     /**
      * Cleans old temporary backup files from cache directory synchronously.
-     * Used when we need to free up space before copying.
      * Thread-safe: synchronized to prevent concurrent cleanup operations.
      *
      * @param context Application context
@@ -113,7 +121,10 @@ object BackupUtil {
             try {
                 val cutoffTime = System.currentTimeMillis() - BackupConstants.TEMP_BACKUP_RETENTION_MS
                 val files = context.cacheDir.listFiles()
-                    ?.filter { it.name.startsWith(BackupConstants.TEMP_BACKUP_PREFIX) && it.lastModified() < cutoffTime }
+                    ?.filter {
+                        it.name.startsWith(BackupConstants.TEMP_BACKUP_PREFIX) &&
+                            it.lastModified() < cutoffTime
+                    }
                     ?: emptyList()
 
                 var deletedCount = 0
@@ -141,8 +152,7 @@ object BackupUtil {
 
     /**
      * Cleans old temporary backup files from cache directory asynchronously.
-     * Keeps files created in the last hour, removes older ones.
-     * Uses coroutines instead of raw threads for better resource management.
+     * Removes files older than the retention period.
      */
     @OptIn(DelicateCoroutinesApi::class)
     private fun cleanOldTempBackupsAsync(context: Context) {
