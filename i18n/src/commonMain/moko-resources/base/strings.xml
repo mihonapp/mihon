@@ -541,6 +541,7 @@
 
       <!-- Browse section -->
     <string name="pref_hide_in_library_items">Hide entries already in library</string>
+    <string name="pref_show_clipboard_search">Show Clipboard Search Button</string>
 
       <!-- Data and storage section -->
     <string name="pref_storage_location">Storage location</string>
