@@ -37,6 +37,9 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
 
     val flashPageState by screenModel.preferences.flashOnPageChange().collectAsState()
 
+    val pagePreloadPref = screenModel.preferences.pagePreloadAmount()
+    val pagePreload by pagePreloadPref.collectAsState()
+
     val flashMillisPref = screenModel.preferences.flashDurationMillis()
     val flashMillis by flashMillisPref.collectAsState()
 
@@ -92,6 +95,15 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
     CheckboxItem(
         label = stringResource(MR.strings.pref_page_transitions),
         pref = screenModel.preferences.pageTransitions(),
+    )
+
+    SliderItem(
+        value = pagePreload,
+        valueRange = ReaderPreferences.PAGE_PRELOAD_MIN..ReaderPreferences.PAGE_PRELOAD_MAX,
+        label = stringResource(MR.strings.pref_page_preload_amount),
+        valueString = pluralStringResource(MR.plurals.pref_pages, pagePreload, pagePreload),
+        onChange = { pagePreloadPref.set(it) },
+        pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
     )
 
     CheckboxItem(
