@@ -7,7 +7,7 @@ shizuku_version = "13.1.5"
 sqldelight = "2.2.1"
 sqlite = "2.6.2"
 voyager = "1.1.0-beta03"
-spotless = "8.1.0"
+spotless = "8.2.0"
 ktlint-core = "1.8.0"
 firebase-bom = "34.8.0"
 markdown = "0.39.1"
@@ -91,7 +91,7 @@ sqldelight-dialects-sql = { module = "app.cash.sqldelight:sqlite-3-38-dialect", 
 
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
-kotest-assertions = "io.kotest:kotest-assertions-core:6.0.7"
+kotest-assertions = "io.kotest:kotest-assertions-core:6.1.1"
 mockk = "io.mockk:mockk:1.14.7"
 
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
