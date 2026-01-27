@@ -37,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
@@ -284,6 +285,7 @@ fun SearchToolbar(
 ) {
     val focusRequester = remember { FocusRequester() }
     val textFieldState = rememberTextFieldState(searchQuery ?: "")
+    val latestSearchQuery by rememberUpdatedState(searchQuery)
 
     LaunchedEffect(searchQuery) {
         // Only allow set textField once initially
@@ -298,7 +300,7 @@ fun SearchToolbar(
             .debounce(SEARCH_DEBOUNCE_MILLIS)
             .collectLatest { newText ->
                 val newSearchQuery = newText.toString()
-                if (searchQuery != null && searchQuery != newSearchQuery) {
+                if (latestSearchQuery != null && latestSearchQuery != newSearchQuery) {
                     onChangeSearchQuery(newSearchQuery)
                 }
             }
