@@ -1,3 +1,6 @@
+-- Add excluded_scanlators to updatesView
+DROP VIEW IF EXISTS updatesView;
+
 CREATE VIEW updatesView AS
 SELECT
     mangas._id AS mangaId,
@@ -15,7 +18,7 @@ SELECT
     mangas.cover_last_modified AS coverLastModified,
     chapters.date_upload AS dateUpload,
     chapters.date_fetch AS datefetch,
-    excluded_scanlators.scanlator AS excludedScanlator
+    excluded_scanlators.scanlator as excludedScanlator
 FROM mangas JOIN chapters
 ON mangas._id = chapters.manga_id
 LEFT JOIN excluded_scanlators
@@ -24,33 +27,3 @@ AND chapters.scanlator = excluded_scanlators.scanlator
 WHERE favorite = 1
 AND date_fetch > date_added
 ORDER BY date_fetch DESC;
-
-getRecentUpdates:
-SELECT *
-FROM updatesView
-WHERE dateUpload > :after
-LIMIT :limit;
-
-getRecentUpdatesWithFilters:
-SELECT *
-FROM updatesView
-WHERE dateUpload > :after
-AND (:read IS NULL OR read = :read)
--- Started means some progress but not finished, Read means finished chapter, thus:
-AND (
-    :started IS NULL
-    OR (:started = 1 AND last_page_read > 0 AND read = 0)
-    OR (:started = 0 AND last_page_read = 0 AND read = 0)
-)
-AND (:bookmarked IS NULL OR bookmark = :bookmarked)
-AND (
-    (excludedScanlator IS NULL OR :hideExcludedScanlators = 0)
-)
-LIMIT :limit;
-
-getUpdatesByReadStatus:
-SELECT *
-FROM updatesView
-WHERE read = :read
-AND dateUpload > :after
-LIMIT :limit;

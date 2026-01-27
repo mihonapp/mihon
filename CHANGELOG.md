@@ -14,10 +14,12 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Added
 - Automatically remove downloads on Suwayomi after reading, configurable via extension settings ([@cpiber](https://github.com/cpiber)) ([#2673](https://github.com/mihonapp/mihon/pull/2673))
 - Display author & artist name in MAL search results ([@MajorTanya](https://github.com/MajorTanya)) ([#2833](https://github.com/mihonapp/mihon/pull/2833))
+- Add filter options to Updates tab ([@MajorTanya](https://github.com/MajorTanya)) ([#2851](https://github.com/mihonapp/mihon/pull/2851))
 
 ### Improved
 - Minimize memory usage by reducing in-memory cover cache size ([@Lolle2000la](https://github.com/Lolle2000la)) ([#2266](https://github.com/mihonapp/mihon/pull/2266))
 - Optimize MAL search queries ([@MajorTanya](https://github.com/MajorTanya)) ([#2832](https://github.com/mihonapp/mihon/pull/2832))
+- Reword download reindexing message to avoid confusion ([@MajorTanya](https://github.com/MajorTanya)) ([#2874](https://github.com/mihonapp/mihon/pull/2874))
 - Make search's textfield dragable ([@Cuong-Tran](https://github.com/cuong-tran)) ([#2847](https://github.com/mihonapp/mihon/pull/2847))
 
 ### Changed
@@ -31,6 +33,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix reader not saving read duration when changing chapter ([@AntsyLich](https://github.com/AntsyLich), [@KotlinHero](https://github.com/KotlinHero)) ([#2784](https://github.com/mihonapp/mihon/pull/2784))
 - Fix pre-1970 upload date display in chapter list ([@MajorTanya](https://github.com/MajorTanya)) ([#2779](https://github.com/mihonapp/mihon/pull/2779))
 - Fix crash when trying to install/update extensions while shizuku is not running ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2837](https://github.com/mihonapp/mihon/pull/2837))
+- Fix Add Repo input not taking up the full dialog width ([@cuong-tran](https://github.com/cuong-tran)) ([#2816](https://github.com/mihonapp/mihon/pull/2816))
 
 ### Other
 - Enable logcat logging on stable and debug builds without enabling verbose logging ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2836](https://github.com/mihonapp/mihon/pull/2836))
