@@ -95,7 +95,10 @@ android {
 
     splits {
         abi {
-            isEnable = true
+            // Check for gradle property to build only universal APK
+            val buildUniversalOnly = project.hasProperty("universalApkOnly") &&
+                                     project.property("universalApkOnly") == "true"
+            isEnable = !buildUniversalOnly
             isUniversalApk = true
             reset()
             include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
