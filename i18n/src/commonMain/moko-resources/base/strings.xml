@@ -61,6 +61,10 @@
     <!-- reserved for #4048 -->
     <string name="action_filter_empty">Remove filter</string>
     <string name="action_sort_alpha">Alphabetically</string>
+    <string name="action_sort_alpha_a_z">Alphabetically (A-Z)</string>
+    <string name="action_sort_alpha_z_a">Alphabetically (Z-A)</string>
+    <string name="action_sort_newest_installed">Newest Installed</string>
+    <string name="action_sort_oldest_installed">Oldest Installed</string>
     <string name="action_sort_count">Total entries</string>
     <string name="action_sort_total">Total chapters</string>
     <string name="action_sort_last_read">Last read</string>

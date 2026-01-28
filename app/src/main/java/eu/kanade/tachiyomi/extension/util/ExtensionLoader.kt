@@ -260,6 +260,7 @@ internal object ExtensionLoader {
                 versionCode,
                 libVersion,
                 signatures.last(),
+                installTime = pkgInfo.firstInstallTime,
             )
             logcat(LogPriority.WARN) { "Extension $pkgName isn't trusted" }
             return LoadResult.Untrusted(extension)
@@ -322,6 +323,7 @@ internal object ExtensionLoader {
             pkgFactory = appInfo.metaData.getString(METADATA_SOURCE_FACTORY),
             icon = appInfo.loadIcon(pkgManager),
             isShared = extensionInfo.isShared,
+            installTime = pkgInfo.firstInstallTime,
         )
         return LoadResult.Success(extension)
     }
