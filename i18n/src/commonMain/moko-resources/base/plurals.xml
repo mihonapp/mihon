@@ -109,4 +109,8 @@
         <item quantity="one">An entry was skipped</item>
         <item quantity="other">%1$d entries were skipped</item>
     </plurals>
+    <plurals name="extensions_missing">
+        <item quantity="one">%d extension missing for library</item>
+        <item quantity="other">%d extensions missing for library</item>
+    </plurals>
 </resources>
