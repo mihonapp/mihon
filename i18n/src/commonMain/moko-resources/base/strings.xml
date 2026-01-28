@@ -422,6 +422,7 @@
     <string name="filter_mode_darken">Burn / Darken</string>
     <string name="pref_keep_screen_on">Keep screen on</string>
     <string name="pref_skip_read_chapters">Skip chapters marked read</string>
+    <string name="pref_allow_back_scrolling">Allow back-scrolling into read chapters</string>
     <string name="pref_skip_filtered_chapters">Skip filtered chapters</string>
     <string name="pref_skip_dupe_chapters">Skip duplicate chapters</string>
     <string name="pref_reader_navigation">Navigation</string>

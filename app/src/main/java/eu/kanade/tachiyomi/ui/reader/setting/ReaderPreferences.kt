@@ -71,6 +71,8 @@ class ReaderPreferences(
 
     fun skipRead() = preferenceStore.getBoolean("skip_read", false)
 
+    fun allowBackScrolling() = preferenceStore.getBoolean("allow_back_scrolling", false)
+
     fun skipFiltered() = preferenceStore.getBoolean("skip_filtered", true)
 
     fun skipDupe() = preferenceStore.getBoolean("skip_dupe", false)

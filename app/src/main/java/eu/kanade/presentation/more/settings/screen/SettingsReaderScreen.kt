@@ -178,6 +178,10 @@ object SettingsReaderScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_skip_read_chapters),
                 ),
                 Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.allowBackScrolling(),
+                    title = stringResource(MR.strings.pref_allow_back_scrolling),
+                ),
+                Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.skipFiltered(),
                     title = stringResource(MR.strings.pref_skip_filtered_chapters),
                 ),
