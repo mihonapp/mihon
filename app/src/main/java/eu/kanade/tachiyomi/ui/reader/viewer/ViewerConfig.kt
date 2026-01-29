@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.reader.viewer
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import tachiyomi.core.common.preference.Preference
@@ -84,7 +85,13 @@ abstract class ViewerConfig(readerPreferences: ReaderPreferences, private val sc
         changes()
             .onEach { valueAssignment(it) }
             .distinctUntilChanged()
+            .launchIn(scope)
+
+        changes()
+            .distinctUntilChanged()
+            .drop(1)
             .onEach { onChanged(it) }
             .launchIn(scope)
     }
 }
+
