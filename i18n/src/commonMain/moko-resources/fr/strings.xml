@@ -221,12 +221,6 @@
     <string name="default_category_summary">Toujours demander</string>
     <string name="pref_read_with_volume_keys_inverted">Inverser les boutons de volume</string>
     <string name="pref_crop_borders">Rogner les bordures</string>
-    <string name="strip_filter">Supprimeur de bande/bordure</string>
-    <string name="strip_filter_color">Couleur de remplacement</string>
-    <string name="strip_filter_white_threshold">Seuil de détection du blanc</string>
-    <string name="strip_filter_gutter_width">Largeur d'espacement détectée</string>
-    <string name="strip_filter_tall_margin_height">Hauteur des marges détectée</string>
-    <string name="strip_filter_big_chunk_area">Détection des grands espaces blancs</string>
     <string name="action_global_search">Recherche globale</string>
     <string name="other_source">Autre</string>
     <string name="action_global_search_hint">Recherche globale…</string>
