@@ -122,6 +122,103 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
         label = stringResource(MR.strings.pref_inverted_colors),
         pref = screenModel.preferences.invertedColors(),
     )
+    CheckboxItem(
+        label = stringResource(MR.strings.strip_filter),
+        pref = screenModel.preferences.stripFilter(),
+    )
+    
+    val stripFilter by screenModel.preferences.stripFilter().collectAsState()
+    if (stripFilter) {
+        val stripFilterColor by screenModel.preferences.stripFilterColor().collectAsState()
+        SliderItem(
+            value = stripFilterColor.red,
+            valueRange = 0..255,
+            steps = 0,
+            label = stringResource(MR.strings.color_filter_r_value),
+            onChange = { newRValue ->
+                screenModel.preferences.stripFilterColor().getAndSet {
+                    getColorValue(it, newRValue, RED_MASK, 16)
+                }
+            },
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+        )
+        SliderItem(
+            value = stripFilterColor.green,
+            valueRange = 0..255,
+            steps = 0,
+            label = stringResource(MR.strings.color_filter_g_value),
+            onChange = { newGValue ->
+                screenModel.preferences.stripFilterColor().getAndSet {
+                    getColorValue(it, newGValue, GREEN_MASK, 8)
+                }
+            },
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+        )
+        SliderItem(
+            value = stripFilterColor.blue,
+            valueRange = 0..255,
+            steps = 0,
+            label = stringResource(MR.strings.color_filter_b_value),
+            onChange = { newBValue ->
+                screenModel.preferences.stripFilterColor().getAndSet {
+                    getColorValue(it, newBValue, BLUE_MASK, 0)
+                }
+            },
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+        )
+        SliderItem(
+            value = stripFilterColor.alpha,
+            valueRange = 0..255,
+            steps = 0,
+            label = stringResource(MR.strings.color_filter_a_value),
+            onChange = { newAValue ->
+                screenModel.preferences.stripFilterColor().getAndSet {
+                    getColorValue(it, newAValue, ALPHA_MASK, 24)
+                }
+            },
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+        )
+
+        val whiteThreshold by screenModel.preferences.stripFilterWhiteThreshold().collectAsState()
+        SliderItem(
+            value = whiteThreshold,
+            valueRange = 0..255,
+            steps = 0,
+            label = stringResource(MR.strings.strip_filter_white_threshold),
+            onChange = { screenModel.preferences.stripFilterWhiteThreshold().set(it) },
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+        )
+
+        val gutterWidth by screenModel.preferences.stripFilterGutterWidth().collectAsState()
+        SliderItem(
+            value = gutterWidth,
+            valueRange = 0..100,
+            steps = 0,
+            label = stringResource(MR.strings.strip_filter_gutter_width),
+            onChange = { screenModel.preferences.stripFilterGutterWidth().set(it) },
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+        )
+
+        val tallMarginHeight by screenModel.preferences.stripFilterTallMarginHeight().collectAsState()
+        SliderItem(
+            value = tallMarginHeight,
+            valueRange = 0..100,
+            steps = 0,
+            label = stringResource(MR.strings.strip_filter_tall_margin_height),
+            onChange = { screenModel.preferences.stripFilterTallMarginHeight().set(it) },
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+        )
+
+        val bigChunkArea by screenModel.preferences.stripFilterBigChunkArea().collectAsState()
+        SliderItem(
+            value = bigChunkArea,
+            valueRange = 0..100,
+            steps = 0,
+            label = stringResource(MR.strings.strip_filter_big_chunk_area),
+            onChange = { screenModel.preferences.stripFilterBigChunkArea().set(it) },
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+        )
+    }
 }
 
 private fun getColorValue(currentColor: Int, color: Int, mask: Long, bitShift: Int): Int {
