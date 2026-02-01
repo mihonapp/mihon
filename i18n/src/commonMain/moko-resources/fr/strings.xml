@@ -903,4 +903,10 @@
     <string name="migrationListScreen.progressDialog.cancelLabel">Annuler</string>
     <string name="label_donate">Donation</string>
     <string name="pref_display_images_description">Rendre les images dans les descriptions de mangas</string>
+    <string name="action_webview_close_tab">Fermer l\'onglet</string>
+    <string name="pref_disallow_non_ascii_filenames">Interdire les noms de fichiers non ASCII</string>
+    <string name="pref_disallow_non_ascii_filenames_details">Assure la compatibilité avec certains supports de stockage qui ne prennent pas en charge Unicode. Lorsque cette option est activée, vous devrez renommer manuellement les dossiers source et manga en remplaçant les caractères non ASCII par leur représentation hexadécimale UTF-8 en minuscules. Les fichiers de chapitre n\'ont pas besoin d\'être renommés.</string>
+    <string name="pref_download_concurrent_sources">Téléchargements simultanés de sources</string>
+    <string name="pref_download_concurrent_pages">Téléchargements simultanés de pages</string>
+    <string name="pref_download_concurrent_pages_summary">Pages téléchargées simultanément par source</string>
 </resources>

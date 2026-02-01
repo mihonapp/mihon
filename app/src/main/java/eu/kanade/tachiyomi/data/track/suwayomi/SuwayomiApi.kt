@@ -118,7 +118,7 @@ class SuwayomiApi(private val trackId: Long) {
                 .data
                 .entry
                 .nodes
-                .mapNotNull { n -> n.id.takeIf { n.chapterNumber <= track.last_chapter_read } }
+                .mapNotNull { n -> n.id.takeIf { n.chapterNumber <= track.last_chapter_read + 0.001 } }
         }
 
         val markQuery = if (deleteDownloadsOnServer) {
