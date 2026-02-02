@@ -7,6 +7,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
+import eu.kanade.domain.source.interactor.GetSourcesWithFavoriteCount
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.presentation.components.SEARCH_DEBOUNCE_MILLIS
 import eu.kanade.tachiyomi.extension.ExtensionManager
@@ -39,9 +40,12 @@ class ExtensionsScreenModel(
     basePreferences: BasePreferences = Injekt.get(),
     private val extensionManager: ExtensionManager = Injekt.get(),
     private val getExtensions: GetExtensionsByType = Injekt.get(),
+    private val getSourcesWithFavoriteCount: GetSourcesWithFavoriteCount = Injekt.get(),
 ) : StateScreenModel<ExtensionsScreenModel.State>(State()) {
 
     private val currentDownloads = MutableStateFlow<Map<String, InstallStep>>(hashMapOf())
+
+    fun installStepFlow(pkgName: String) = currentDownloads.map { it[pkgName] ?: InstallStep.Idle }
 
     init {
         val context = Injekt.get<Application>()
@@ -96,6 +100,32 @@ class ExtensionsScreenModel(
         }
 
         screenModelScope.launchIO { findAvailableExtensions() }
+
+        screenModelScope.launchIO {
+            combine(
+                getSourcesWithFavoriteCount.subscribe(),
+                extensionManager.installedExtensionsFlow,
+            ) { sourcesWithCount, installed ->
+                val librarySourceIds = sourcesWithCount
+                    .filter { it.second > 0 }
+                    .map { it.first.id }
+                    .toSet()
+
+                var missingCount = 0
+                for (sourceId in librarySourceIds) {
+                    val installedPkg = extensionManager.getExtensionPackage(sourceId)
+                    if (installedPkg == null) missingCount++
+                }
+                missingCount
+            }
+                .collectLatest { missingCount ->
+                    mutableState.update { state ->
+                        state.copy(
+                            potentialMissingCount = missingCount,
+                        )
+                    }
+                }
+        }
 
         preferences.extensionUpdatesCount().changes()
             .onEach { mutableState.update { state -> state.copy(updates = it) } }
@@ -200,6 +230,57 @@ class ExtensionsScreenModel(
         }
     }
 
+    init {
+        screenModelScope.launchIO {
+            combine(
+                getSourcesWithFavoriteCount.subscribe(),
+                extensionManager.availableExtensionsFlow,
+                extensionManager.untrustedExtensionsFlow,
+                extensionManager.installedExtensionsFlow,
+            ) { sourcesWithCount, available, untrusted, installed ->
+                val librarySourceIds = sourcesWithCount
+                    .filter { it.second > 0 }
+                    .map { it.first.id }
+                    .toSet()
+
+                val missing = mutableListOf<eu.kanade.tachiyomi.extension.model.Extension>()
+
+                for (sourceId in librarySourceIds) {
+                    val installedPkg = extensionManager.getExtensionPackage(sourceId)
+                    if (installedPkg != null) continue
+
+                    val avail = available.find { ext -> ext.sources.any { it.id == sourceId } }
+                    if (avail != null) {
+                        val untrustedMatch = untrusted.find { it.pkgName == avail.pkgName }
+                        if (untrustedMatch != null) {
+                            missing.add(untrustedMatch)
+                        } else {
+                            missing.add(avail)
+                        }
+                        continue
+                    }
+
+                    val un = untrusted.find { untrustedExt ->
+                        available.any { a ->
+                            a.pkgName == untrustedExt.pkgName &&
+                                a.sources.any { it.id == sourceId }
+                        }
+                    }
+                    if (un != null) missing.add(un)
+                }
+
+                missing.distinctBy { it.pkgName }
+            }
+                .collectLatest { missingExtensions ->
+                    mutableState.update { state ->
+                        state.copy(
+                            missingLibraryExtensions = missingExtensions,
+                        )
+                    }
+                }
+        }
+    }
+
     fun trustExtension(extension: Extension.Untrusted) {
         screenModelScope.launch {
             extensionManager.trust(extension)
@@ -211,6 +292,8 @@ class ExtensionsScreenModel(
         val isLoading: Boolean = true,
         val isRefreshing: Boolean = false,
         val items: ItemGroups = mutableMapOf(),
+        val missingLibraryExtensions: List<eu.kanade.tachiyomi.extension.model.Extension> = emptyList(),
+        val potentialMissingCount: Int = 0,
         val updates: Int = 0,
         val installer: BasePreferences.ExtensionInstaller? = null,
         val searchQuery: String? = null,
