@@ -68,20 +68,31 @@ class HistoryScreenModel(
 
     init {
         screenModelScope.launch {
-            state.map { it.searchQuery to it.filter }
+            state.map { Triple(it.searchQuery, it.filter, it.groupByNovel) }
                 .distinctUntilChanged()
-                .flatMapLatest { (query, filter) ->
+                .flatMapLatest { (query, filter, groupByNovel) ->
                     getHistory.subscribe(query ?: "")
                         .distinctUntilChanged()
                         .catch { error ->
                             logcat(LogPriority.ERROR, error)
                             _events.send(Event.InternalError)
                         }
-                        .map { histories -> histories.filterBy(filter).toHistoryUiModels() }
+                        .map { histories -> 
+                            val filtered = histories.filterBy(filter)
+                            val grouped = if (groupByNovel) filtered.groupByNovel() else filtered
+                            grouped.toHistoryUiModels()
+                        }
                         .flowOn(Dispatchers.IO)
                 }
                 .collect { newList -> mutableState.update { it.copy(list = newList) } }
         }
+    }
+    
+    private fun List<HistoryWithRelations>.groupByNovel(): List<HistoryWithRelations> {
+        // Group by manga and keep only the latest entry for each
+        return groupBy { it.mangaId }
+            .map { (_, histories) -> histories.maxByOrNull { it.readAt?.time ?: 0L }!! }
+            .sortedByDescending { it.readAt?.time }
     }
 
     private fun List<HistoryWithRelations>.filterBy(filter: HistoryFilter): List<HistoryWithRelations> {
@@ -149,6 +160,10 @@ class HistoryScreenModel(
 
     fun setFilter(filter: HistoryFilter) {
         mutableState.update { it.copy(filter = filter) }
+    }
+
+    fun setGroupByNovel(groupByNovel: Boolean) {
+        mutableState.update { it.copy(groupByNovel = groupByNovel) }
     }
 
     fun setDialog(dialog: Dialog?) {
@@ -260,6 +275,7 @@ class HistoryScreenModel(
         val searchQuery: String? = null,
         val list: List<HistoryUiModel>? = null,
         val filter: HistoryFilter = HistoryFilter.ALL,
+        val groupByNovel: Boolean = false,
         val dialog: Dialog? = null,
     )
 

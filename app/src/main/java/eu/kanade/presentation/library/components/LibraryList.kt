@@ -23,6 +23,7 @@ internal fun LibraryList(
     onClickContinueReading: ((LibraryManga) -> Unit)?,
     searchQuery: String?,
     onGlobalSearchClicked: () -> Unit,
+    showUrl: Boolean = false,
 ) {
     FastScrollLazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -68,6 +69,8 @@ internal fun LibraryList(
                 } else {
                     null
                 },
+                url = libraryItem.fullUrl,
+                showUrl = showUrl,
             )
         }
     }

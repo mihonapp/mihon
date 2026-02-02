@@ -6,7 +6,11 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
+import eu.kanade.tachiyomi.util.TextSplitter
 import tachiyomi.core.common.util.lang.withIOContext
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 /**
  * Loader used to load pages for a local novel source.
@@ -14,6 +18,7 @@ import tachiyomi.core.common.util.lang.withIOContext
 class LocalNovelPageLoader(
     private val chapter: ReaderChapter,
     private val source: Source,
+    private val readerPreferences: ReaderPreferences = Injekt.get(),
 ) : PageLoader() {
 
     override var isLocal: Boolean = true
@@ -33,7 +38,16 @@ class LocalNovelPageLoader(
         page.status = Page.State.LoadPage
         try {
             if (source is NovelSource) {
-                val text = source.fetchPageText(Page(page.index, page.url, page.imageUrl))
+                var text = source.fetchPageText(Page(page.index, page.url, page.imageUrl))
+                
+                // Apply auto-split if enabled
+                if (readerPreferences.novelAutoSplitText().get()) {
+                    val wordCount = readerPreferences.novelAutoSplitWordCount().get()
+                    if (wordCount > 0) {
+                        text = TextSplitter.splitText(text, wordCount)
+                    }
+                }
+                
                 page.text = text
                 page.status = Page.State.Ready
             } else {

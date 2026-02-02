@@ -80,6 +80,14 @@ class ChapterRepositoryImpl(
         }
     }
 
+    override suspend fun removeChaptersByMangaIds(mangaIds: List<Long>) {
+        try {
+            handler.await { chaptersQueries.removeChaptersByMangaIds(mangaIds) }
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+        }
+    }
+
     override suspend fun getChapterByMangaId(mangaId: Long, applyScanlatorFilter: Boolean): List<Chapter> {
         return handler.awaitList {
             chaptersQueries.getChaptersByMangaId(mangaId, applyScanlatorFilter.toLong(), ::mapChapter)
@@ -109,6 +117,11 @@ class ChapterRepositoryImpl(
 
     override suspend fun getChapterById(id: Long): Chapter? {
         return handler.awaitOneOrNull { chaptersQueries.getChapterById(id, ::mapChapter) }
+    }
+    
+    override suspend fun getChaptersByIds(ids: List<Long>): List<Chapter> {
+        if (ids.isEmpty()) return emptyList()
+        return handler.awaitList { chaptersQueries.getChaptersByIds(ids, ::mapChapter) }
     }
 
     override suspend fun getChapterByMangaIdAsFlow(mangaId: Long, applyScanlatorFilter: Boolean): Flow<List<Chapter>> {

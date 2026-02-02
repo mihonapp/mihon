@@ -31,10 +31,12 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -77,6 +79,8 @@ import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.shouldExpandFAB
 import tachiyomi.source.local.isLocal
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import java.time.Instant
 
 @Composable
@@ -117,6 +121,9 @@ fun MangaScreen(
     onEditNotesClicked: () -> Unit,
     onEditAlternativeTitlesClicked: (() -> Unit)? = null,
     onEditTagsClicked: (() -> Unit)? = null,
+    onEditTitleClicked: (() -> Unit)? = null,
+    onEditDescriptionClicked: (() -> Unit)? = null,
+    onEditUrlClicked: (() -> Unit)? = null,
     onTranslateClicked: (() -> Unit)? = null,
     onTranslateDownloadedClicked: (() -> Unit)? = null,
     onExportEpubClicked: (() -> Unit)? = null,
@@ -174,6 +181,9 @@ fun MangaScreen(
             onEditNotesClicked = onEditNotesClicked,
             onEditAltTitlesClicked = onEditAlternativeTitlesClicked,
             onEditTagsClicked = onEditTagsClicked,
+            onEditTitleClicked = onEditTitleClicked,
+            onEditDescriptionClicked = onEditDescriptionClicked,
+            onEditUrlClicked = onEditUrlClicked,
             onTranslateClicked = onTranslateClicked,
             onTranslateDownloadedClicked = onTranslateDownloadedClicked,
             onExportEpubClicked = onExportEpubClicked,
@@ -218,6 +228,9 @@ fun MangaScreen(
             onEditNotesClicked = onEditNotesClicked,
             onEditAltTitlesClicked = onEditAlternativeTitlesClicked,
             onEditTagsClicked = onEditTagsClicked,
+            onEditTitleClicked = onEditTitleClicked,
+            onEditDescriptionClicked = onEditDescriptionClicked,
+            onEditUrlClicked = onEditUrlClicked,
             onTranslateClicked = onTranslateClicked,
             onTranslateDownloadedClicked = onTranslateDownloadedClicked,
             onExportEpubClicked = onExportEpubClicked,
@@ -272,6 +285,9 @@ private fun MangaScreenSmallImpl(
     onEditNotesClicked: () -> Unit,
     onEditAltTitlesClicked: (() -> Unit)?,
     onEditTagsClicked: (() -> Unit)?,
+    onEditTitleClicked: (() -> Unit)?,
+    onEditDescriptionClicked: (() -> Unit)?,
+    onEditUrlClicked: (() -> Unit)?,
     onTranslateClicked: (() -> Unit)?,
     onTranslateDownloadedClicked: (() -> Unit)?,
     onExportEpubClicked: (() -> Unit)?,
@@ -339,6 +355,9 @@ private fun MangaScreenSmallImpl(
                 onClickEditNotes = onEditNotesClicked,
                 onClickEditAltTitles = onEditAltTitlesClicked,
                 onClickEditTags = onEditTagsClicked,
+                onClickEditTitle = onEditTitleClicked,
+                onClickEditDescription = onEditDescriptionClicked,
+                onClickEditUrl = onEditUrlClicked,
                 onClickTranslate = onTranslateClicked,
                 onClickTranslateDownloaded = onTranslateDownloadedClicked,
                 onClickExportEpub = onExportEpubClicked,
@@ -362,6 +381,7 @@ private fun MangaScreenSmallImpl(
                 onDownloadChapter = onDownloadChapter,
                 onMultiDeleteClicked = onMultiDeleteClicked,
                 onMultiRemoveFromDbClicked = onMultiRemoveFromDbClicked,
+                onDeleteRangeClicked = null, // TODO: Implement delete range dialog
                 fillFraction = 1f,
             )
         },
@@ -452,10 +472,19 @@ private fun MangaScreenSmallImpl(
                         key = MangaScreenItem.DESCRIPTION_WITH_TAG,
                         contentType = MangaScreenItem.DESCRIPTION_WITH_TAG,
                     ) {
+                        val libraryPreferences = remember { Injekt.get<LibraryPreferences>() }
+                        val sortMangaTags by libraryPreferences.sortMangaTags().changes().collectAsState(initial = false)
                         ExpandableMangaDescription(
                             defaultExpandState = state.isFromSource,
                             description = state.manga.description,
-                            tagsProvider = { state.manga.genre },
+                            tagsProvider = { 
+                                val tags = state.manga.genre
+                                if (sortMangaTags && tags != null) {
+                                    tags.sortedBy { it.lowercase() }
+                                } else {
+                                    tags
+                                }
+                            },
                             notes = state.manga.notes,
                             onTagSearch = onTagSearch,
                             onCopyTagToClipboard = onCopyTagToClipboard,
@@ -534,6 +563,9 @@ fun MangaScreenLargeImpl(
     onEditNotesClicked: () -> Unit,
     onEditAltTitlesClicked: (() -> Unit)?,
     onEditTagsClicked: (() -> Unit)?,
+    onEditTitleClicked: (() -> Unit)?,
+    onEditDescriptionClicked: (() -> Unit)?,
+    onEditUrlClicked: (() -> Unit)?,
     onTranslateClicked: (() -> Unit)?,
     onTranslateDownloadedClicked: (() -> Unit)?,
     onExportEpubClicked: (() -> Unit)?,
@@ -594,6 +626,9 @@ fun MangaScreenLargeImpl(
                 onClickEditNotes = onEditNotesClicked,
                 onClickEditAltTitles = onEditAltTitlesClicked,
                 onClickEditTags = onEditTagsClicked,
+                onClickEditTitle = onEditTitleClicked,
+                onClickEditDescription = onEditDescriptionClicked,
+                onClickEditUrl = onEditUrlClicked,
                 onClickTranslate = onTranslateClicked,
                 onClickTranslateDownloaded = onTranslateDownloadedClicked,
                 onClickExportEpub = onExportEpubClicked,
@@ -621,6 +656,7 @@ fun MangaScreenLargeImpl(
                     onDownloadChapter = onDownloadChapter,
                     onMultiDeleteClicked = onMultiDeleteClicked,
                     onMultiRemoveFromDbClicked = onMultiRemoveFromDbClicked,
+                    onDeleteRangeClicked = null, // TODO: Implement delete range dialog
                     fillFraction = 0.5f,
                 )
             }
@@ -696,10 +732,19 @@ fun MangaScreenLargeImpl(
                             onEditIntervalClicked = onEditIntervalClicked,
                             onEditCategory = onEditCategoryClicked,
                         )
+                        val libraryPreferences = remember { Injekt.get<LibraryPreferences>() }
+                        val sortMangaTags by libraryPreferences.sortMangaTags().changes().collectAsState(initial = false)
                         ExpandableMangaDescription(
                             defaultExpandState = true,
                             description = state.manga.description,
-                            tagsProvider = { state.manga.genre },
+                            tagsProvider = { 
+                                val tags = state.manga.genre
+                                if (sortMangaTags && tags != null) {
+                                    tags.sortedBy { it.lowercase() }
+                                } else {
+                                    tags
+                                }
+                            },
                             notes = state.manga.notes,
                             onTagSearch = onTagSearch,
                             onCopyTagToClipboard = onCopyTagToClipboard,
@@ -764,6 +809,7 @@ private fun SharedMangaBottomActionMenu(
     onDownloadChapter: ((List<ChapterList.Item>, ChapterDownloadAction) -> Unit)?,
     onMultiDeleteClicked: (List<Chapter>) -> Unit,
     onMultiRemoveFromDbClicked: (List<Chapter>) -> Unit,
+    onDeleteRangeClicked: (() -> Unit)?,
     fillFraction: Float,
     modifier: Modifier = Modifier,
 ) {
@@ -798,6 +844,7 @@ private fun SharedMangaBottomActionMenu(
         onRemoveFromDbClicked = {
             onMultiRemoveFromDbClicked(selected.fastMap { it.chapter })
         },
+        onDeleteRangeClicked = onDeleteRangeClicked,
     )
 }
 

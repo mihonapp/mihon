@@ -24,4 +24,12 @@ class RemoveChapters(
     suspend fun await(chapters: List<Chapter>) {
         awaitByIds(chapters.map { it.id })
     }
+
+    suspend fun awaitByMangaIds(mangaIds: List<Long>) {
+        try {
+            chapterRepository.removeChaptersByMangaIds(mangaIds)
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+        }
+    }
 }

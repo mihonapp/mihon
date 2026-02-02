@@ -41,6 +41,7 @@ import eu.kanade.presentation.util.animateItemFastScroll
 import eu.kanade.presentation.util.relativeTimeSpanString
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.updates.UpdatesItem
+import eu.kanade.tachiyomi.ui.updates.UpdatesNovelGroup
 import tachiyomi.domain.updates.model.UpdatesWithRelations
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ListGroupHeader
@@ -242,5 +243,77 @@ private fun UpdatesUiItem(
             downloadProgressProvider = downloadProgressProvider,
             onClick = { onDownloadChapter?.invoke(it) },
         )
+    }
+}
+
+/**
+ * Composable for showing updates grouped by novel.
+ * Shows novel title with count of new chapters.
+ */
+internal fun LazyListScope.updatesNovelGroups(
+    groups: List<UpdatesNovelGroup>,
+    onClickGroup: (Long) -> Unit,
+) {
+    items(
+        items = groups,
+        key = { "novel-group-${it.mangaId}" },
+    ) { group ->
+        UpdatesNovelGroupItem(
+            group = group,
+            onClick = { onClickGroup(group.mangaId) },
+        )
+    }
+}
+
+@Composable
+private fun UpdatesNovelGroupItem(
+    group: UpdatesNovelGroup,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .combinedClickable(onClick = onClick)
+            .height(56.dp)
+            .padding(horizontal = MaterialTheme.padding.medium),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        MangaCover.Square(
+            modifier = Modifier
+                .padding(vertical = 6.dp)
+                .fillMaxHeight(),
+            data = group.coverUrl,
+        )
+        Column(
+            modifier = Modifier
+                .padding(horizontal = MaterialTheme.padding.medium)
+                .weight(1f),
+        ) {
+            Text(
+                text = group.mangaTitle,
+                maxLines = 1,
+                style = MaterialTheme.typography.bodyMedium,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (group.hasUnreadChapters) {
+                    Icon(
+                        imageVector = Icons.Filled.Circle,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .height(8.dp)
+                            .padding(end = 4.dp),
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                }
+                Text(
+                    text = "${group.chapterCount} new chapter${if (group.chapterCount > 1) "s" else ""}",
+                    maxLines = 1,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = LocalContentColor.current.copy(alpha = if (group.hasUnreadChapters) 1f else DISABLED_ALPHA),
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+        }
     }
 }

@@ -1,7 +1,7 @@
 package eu.kanade.presentation.history
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -48,6 +48,7 @@ fun HistoryScreen(
     onClickFavorite: (mangaId: Long) -> Unit,
     onDialogChange: (HistoryScreenModel.Dialog?) -> Unit,
     onFilterSelected: (HistoryFilter) -> Unit,
+    onGroupByNovelChanged: (Boolean) -> Unit,
 ) {
     Scaffold(
         topBar = { scrollBehavior ->
@@ -73,30 +74,59 @@ fun HistoryScreen(
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
     ) { contentPadding ->
-        state.list.let {
-            if (it == null) {
-                LoadingScreen(Modifier.padding(contentPadding))
-            } else if (it.isEmpty()) {
-                val msg = if (!state.searchQuery.isNullOrEmpty()) {
-                    MR.strings.no_results_found
+        Column(
+            modifier = Modifier.padding(contentPadding),
+        ) {
+            // Always show filter chips
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                FilterChip(
+                    selected = state.filter == HistoryFilter.ALL,
+                    onClick = { onFilterSelected(HistoryFilter.ALL) },
+                    label = { Text(stringResource(MR.strings.all)) },
+                )
+                FilterChip(
+                    selected = state.filter == HistoryFilter.MANGA,
+                    onClick = { onFilterSelected(HistoryFilter.MANGA) },
+                    label = { Text(stringResource(MR.strings.label_manga)) },
+                )
+                FilterChip(
+                    selected = state.filter == HistoryFilter.NOVELS,
+                    onClick = { onFilterSelected(HistoryFilter.NOVELS) },
+                    label = { Text(stringResource(MR.strings.label_novels)) },
+                )
+                FilterChip(
+                    selected = state.groupByNovel,
+                    onClick = { onGroupByNovelChanged(!state.groupByNovel) },
+                    label = { Text("Last only") },
+                )
+            }
+            
+            state.list.let {
+                if (it == null) {
+                    LoadingScreen()
+                } else if (it.isEmpty()) {
+                    val msg = if (!state.searchQuery.isNullOrEmpty()) {
+                        MR.strings.no_results_found
+                    } else {
+                        MR.strings.information_no_recent_manga
+                    }
+                    EmptyScreen(
+                        stringRes = msg,
+                    )
                 } else {
-                    MR.strings.information_no_recent_manga
+                    HistoryScreenContent(
+                        history = it,
+                        onClickCover = { history -> onClickCover(history.mangaId) },
+                        onClickResume = { history -> onClickResume(history.mangaId, history.chapterId) },
+                        onClickDelete = { item -> onDialogChange(HistoryScreenModel.Dialog.Delete(item)) },
+                        onClickFavorite = { history -> onClickFavorite(history.mangaId) },
+                    )
                 }
-                EmptyScreen(
-                    stringRes = msg,
-                    modifier = Modifier.padding(contentPadding),
-                )
-            } else {
-                HistoryScreenContent(
-                    history = it,
-                    filter = state.filter,
-                    contentPadding = contentPadding,
-                    onClickCover = { history -> onClickCover(history.mangaId) },
-                    onClickResume = { history -> onClickResume(history.mangaId, history.chapterId) },
-                    onClickDelete = { item -> onDialogChange(HistoryScreenModel.Dialog.Delete(item)) },
-                    onClickFavorite = { history -> onClickFavorite(history.mangaId) },
-                    onFilterSelected = onFilterSelected,
-                )
             }
         }
     }
@@ -105,42 +135,12 @@ fun HistoryScreen(
 @Composable
 private fun HistoryScreenContent(
     history: List<HistoryUiModel>,
-    filter: HistoryFilter,
-    contentPadding: PaddingValues,
     onClickCover: (HistoryWithRelations) -> Unit,
     onClickResume: (HistoryWithRelations) -> Unit,
     onClickDelete: (HistoryWithRelations) -> Unit,
     onClickFavorite: (HistoryWithRelations) -> Unit,
-    onFilterSelected: (HistoryFilter) -> Unit,
 ) {
-    FastScrollLazyColumn(
-        contentPadding = contentPadding,
-    ) {
-        item(key = "history_filter_chips") {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                FilterChip(
-                    selected = filter == HistoryFilter.ALL,
-                    onClick = { onFilterSelected(HistoryFilter.ALL) },
-                    label = { Text(stringResource(MR.strings.all)) },
-                )
-                FilterChip(
-                    selected = filter == HistoryFilter.MANGA,
-                    onClick = { onFilterSelected(HistoryFilter.MANGA) },
-                    label = { Text(stringResource(MR.strings.label_manga)) },
-                )
-                FilterChip(
-                    selected = filter == HistoryFilter.NOVELS,
-                    onClick = { onFilterSelected(HistoryFilter.NOVELS) },
-                    label = { Text(stringResource(MR.strings.label_novels)) },
-                )
-            }
-        }
-
+    FastScrollLazyColumn {
         items(
             items = history,
             key = { "history-${it.hashCode()}" },
@@ -195,6 +195,7 @@ internal fun HistoryScreenPreviews(
             onDialogChange = {},
             onClickFavorite = {},
             onFilterSelected = {},
+            onGroupByNovelChanged = {},
         )
     }
 }

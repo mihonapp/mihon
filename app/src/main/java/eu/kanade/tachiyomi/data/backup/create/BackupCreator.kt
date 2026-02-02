@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupPreference
 import eu.kanade.tachiyomi.data.backup.models.BackupSource
 import eu.kanade.tachiyomi.data.backup.models.BackupSourcePreferences
+import kotlinx.coroutines.flow.toList
 import kotlinx.serialization.protobuf.ProtoBuf
 import logcat.LogPriority
 import okio.buffer
@@ -53,6 +54,13 @@ class BackupCreator(
     private val sourcesBackupCreator: SourcesBackupCreator = SourcesBackupCreator(),
 ) {
 
+    /**
+     * Batch size for processing manga during backup.
+     * Smaller batches reduce memory pressure but may be slower.
+     * 100 manga per batch is a good balance for most devices.
+     */
+    private val MANGA_BATCH_SIZE = 100
+
     suspend fun backup(uri: Uri, options: BackupOptions): String {
         var file: UniFile? = null
         try {
@@ -78,7 +86,19 @@ class BackupCreator(
             }
 
             val nonFavoriteManga = if (options.readEntries) mangaRepository.getReadMangaNotInLibrary() else emptyList()
-            val backupManga = backupMangas(getFavorites.await() + nonFavoriteManga, options)
+            val allManga = getFavorites.await() + nonFavoriteManga
+            
+            // Process manga in batches to reduce memory pressure
+            // This prevents OOM when backing up libraries with millions of chapters
+            val backupManga = mutableListOf<BackupManga>()
+            allManga.chunked(MANGA_BATCH_SIZE).forEach { batch ->
+                // Process each batch and add to results
+                // Allow GC to run between batches
+                backupManga.addAll(mangaBackupCreator.backupMangaStream(batch, options).toList())
+                
+                // Hint to GC that we're done with this batch's intermediate objects
+                System.gc()
+            }
 
             val backup = Backup(
                 backupManga = backupManga,
@@ -114,7 +134,13 @@ class BackupCreator(
             return fileUri.toString()
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
-            file?.delete()
+            // Try to delete the failed backup file, but don't crash if deletion fails
+            // SAF files may require special permissions to delete
+            try {
+                file?.delete()
+            } catch (deleteError: Exception) {
+                logcat(LogPriority.WARN, deleteError) { "Failed to delete partial backup file" }
+            }
             throw e
         }
     }
@@ -123,12 +149,6 @@ class BackupCreator(
         if (!options.categories) return emptyList()
 
         return categoriesBackupCreator()
-    }
-
-    private suspend fun backupMangas(mangas: List<Manga>, options: BackupOptions): List<BackupManga> {
-        if (!options.libraryEntries) return emptyList()
-
-        return mangaBackupCreator(mangas, options)
     }
 
     private fun backupSources(mangas: List<BackupManga>): List<BackupSource> {

@@ -1,5 +1,7 @@
 package eu.kanade.tachiyomi.ui.library
 
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastFilter
@@ -12,6 +14,7 @@ import eu.kanade.core.util.fastFilterNot
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
+import eu.kanade.domain.chapter.model.toSChapter
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.toSManga
 import eu.kanade.presentation.components.SEARCH_DEBOUNCE_MILLIS
@@ -20,6 +23,8 @@ import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.data.download.DownloadProvider
+import eu.kanade.tachiyomi.data.epub.EpubExportJob
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.translation.TranslationService
 import eu.kanade.tachiyomi.source.isNovelSource
@@ -52,6 +57,7 @@ import tachiyomi.core.common.util.lang.compareToWithCollator
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.core.common.util.lang.withIOContext
+import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.SetMangaCategories
@@ -73,6 +79,7 @@ import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracksPerManga
 import tachiyomi.domain.track.model.Track
+import tachiyomi.domain.translation.repository.TranslatedChapterRepository
 import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -97,8 +104,11 @@ class LibraryScreenModel(
     private val downloadManager: DownloadManager = Injekt.get(),
     private val downloadCache: DownloadCache = Injekt.get(),
     private val trackerManager: TrackerManager = Injekt.get(),
+    private val translatedChapterRepository: TranslatedChapterRepository = Injekt.get(),
     private val type: LibraryType = LibraryType.All,
 ) : StateScreenModel<LibraryScreenModel.State>(State()) {
+
+    val snackbarHostState: SnackbarHostState = SnackbarHostState()
 
     enum class LibraryType {
         All,
@@ -119,7 +129,8 @@ class LibraryScreenModel(
             }
 
             // Flow that emits manga IDs with matching chapter names when search is active
-            val searchQueryFlow = state.map { it.searchQuery }.distinctUntilChanged().debounce(SEARCH_DEBOUNCE_MILLIS)
+            // No debounce needed since search is committed on Enter key press
+            val searchQueryFlow = state.map { it.searchQuery }.distinctUntilChanged()
             
             val chapterMatchIdsFlow = combine(
                 searchQueryFlow,
@@ -146,8 +157,10 @@ class LibraryScreenModel(
             val searchWithChapterMatchesFlow = combine(
                 searchQueryFlow,
                 chapterMatchIdsFlow,
-            ) { query, chapterMatchIds ->
-                Pair(query, chapterMatchIds)
+                libraryPreferences.searchByUrl().changes(),
+                libraryPreferences.useRegexSearch().changes(),
+            ) { query, chapterMatchIds, searchByUrl, useRegex ->
+                SearchConfig(query, chapterMatchIds, searchByUrl, useRegex)
             }
 
             combine(
@@ -158,7 +171,7 @@ class LibraryScreenModel(
                 getLibraryItemPreferencesFlow(),
                 getLibraryManga.isLoading(),
             ) { flows: Array<*> ->
-                val (searchQuery, chapterMatchIds) = flows[0] as Pair<*, *>
+                val searchConfig = flows[0] as SearchConfig
                 @Suppress("UNCHECKED_CAST")
                 val categories = flows[1] as List<Category>
                 @Suppress("UNCHECKED_CAST")
@@ -171,7 +184,7 @@ class LibraryScreenModel(
                 @Suppress("UNCHECKED_CAST")
                 val filteredFavorites = favorites
                     .applyFilters(tracksMap as Map<Long, List<Track>>, trackingFilters as Map<Long, TriState>, itemPreferences as ItemPreferences)
-                    .let { if (searchQuery == null) it else it.filter { m -> m.matches(searchQuery as String, chapterMatchIds as Set<Long>) } }
+                    .let { if (searchConfig.query == null) it else it.filter { m -> m.matches(searchConfig.query, searchConfig.chapterMatchIds, searchConfig.searchByUrl, searchConfig.useRegex) } }
 
                 LibraryData(
                     isInitialized = !isLoading,
@@ -342,18 +355,38 @@ class LibraryScreenModel(
 
             val includedTags = preferences.includedTags
             val excludedTags = preferences.excludedTags
+            val caseSensitive = preferences.tagCaseSensitive
 
             // If no tag filters are set, pass through
             if (includedTags.isEmpty() && excludedTags.isEmpty()) return@tags true
 
-            // Check excluded tags first - if any excluded tag is present, filter out
-            if (excludedTags.isNotEmpty() && mangaTags.any { tag -> tag in excludedTags }) {
-                return@tags false
+            // Normalize tags for comparison if case insensitive
+            val normalizedMangaTags = if (caseSensitive) mangaTags else mangaTags.map { it.lowercase() }
+            val normalizedIncluded = if (caseSensitive) includedTags else includedTags.map { it.lowercase() }.toSet()
+            val normalizedExcluded = if (caseSensitive) excludedTags else excludedTags.map { it.lowercase() }.toSet()
+
+            // Check excluded tags
+            if (normalizedExcluded.isNotEmpty()) {
+                val hasExcludedTag = if (preferences.tagExcludeModeAnd) {
+                    // AND mode: all excluded tags must be present to exclude
+                    normalizedExcluded.all { excludedTag -> normalizedMangaTags.any { it == excludedTag } }
+                } else {
+                    // OR mode: any excluded tag present means exclude
+                    normalizedMangaTags.any { tag -> tag in normalizedExcluded }
+                }
+                if (hasExcludedTag) return@tags false
             }
 
-            // Check included tags - if any included tag is present, include the item
-            if (includedTags.isNotEmpty() && mangaTags.none { tag -> tag in includedTags }) {
-                return@tags false
+            // Check included tags
+            if (normalizedIncluded.isNotEmpty()) {
+                val hasIncludedTag = if (preferences.tagIncludeModeAnd) {
+                    // AND mode: all included tags must be present
+                    normalizedIncluded.all { includedTag -> normalizedMangaTags.any { it == includedTag } }
+                } else {
+                    // OR mode: any included tag present means include
+                    normalizedMangaTags.any { tag -> tag in normalizedIncluded }
+                }
+                if (!hasIncludedTag) return@tags false
             }
 
             true
@@ -432,6 +465,9 @@ class LibraryScreenModel(
                 LibrarySort.Type.TotalChapters -> {
                     manga1.libraryManga.totalChapters.compareTo(manga2.libraryManga.totalChapters)
                 }
+                LibrarySort.Type.DownloadedChapters -> {
+                    manga1.downloadCount.compareTo(manga2.downloadCount)
+                }
                 LibrarySort.Type.LatestChapter -> {
                     manga1.libraryManga.latestUpload.compareTo(manga2.libraryManga.latestUpload)
                 }
@@ -494,6 +530,9 @@ class LibraryScreenModel(
                 libraryPreferences.includedTags().changes(),
                 libraryPreferences.excludedTags().changes(),
                 libraryPreferences.filterNoTags().changes(),
+                libraryPreferences.tagIncludeMode().changes(),
+                libraryPreferences.tagExcludeMode().changes(),
+                libraryPreferences.tagCaseSensitive().changes(),
             ) { arr -> arr },
         ) { first, second, third ->
             ItemPreferences(
@@ -513,6 +552,9 @@ class LibraryScreenModel(
                 includedTags = @Suppress("UNCHECKED_CAST") (third[0] as Set<String>),
                 excludedTags = @Suppress("UNCHECKED_CAST") (third[1] as Set<String>),
                 filterNoTags = third[2] as TriState,
+                tagIncludeModeAnd = third[3] as Boolean,
+                tagExcludeModeAnd = third[4] as Boolean,
+                tagCaseSensitive = third[5] as Boolean,
             )
         }
     }
@@ -691,8 +733,14 @@ class LibraryScreenModel(
      * @param mangas the list of manga to delete.
      * @param deleteFromLibrary whether to delete manga from library.
      * @param deleteChapters whether to delete downloaded chapters.
+     * @param clearChaptersFromDb whether to delete chapter entries from database.
      */
-    fun removeMangas(mangas: List<Manga>, deleteFromLibrary: Boolean, deleteChapters: Boolean) {
+    fun removeMangas(
+        mangas: List<Manga>,
+        deleteFromLibrary: Boolean,
+        deleteChapters: Boolean,
+        clearChaptersFromDb: Boolean = false,
+    ) {
         screenModelScope.launchNonCancellable {
             if (deleteFromLibrary) {
                 val toDelete = mangas.map {
@@ -713,7 +761,80 @@ class LibraryScreenModel(
                     }
                 }
             }
+
+            if (clearChaptersFromDb) {
+                val mangaIds = mangas.map { it.id }
+                removeChapters.awaitByMangaIds(mangaIds)
+            }
         }
+    }
+
+    /**
+     * Clear covers for selected manga.
+     */
+    fun clearCoversForSelection() {
+        val mangas = state.value.selectedManga
+        if (mangas.isEmpty()) return
+        
+        screenModelScope.launchNonCancellable {
+            mangas.forEach { manga ->
+                if (!manga.isLocal()) {
+                    coverCache.deleteFromCache(manga, true)
+                }
+            }
+            val updates = mangas.map { 
+                MangaUpdate(id = it.id, coverLastModified = java.time.Instant.now().toEpochMilli())
+            }
+            updateManga.awaitAll(updates)
+            
+            snackbarHostState.showSnackbar(
+                message = "Cleared covers for ${mangas.size} entries",
+                duration = SnackbarDuration.Short,
+            )
+        }
+        clearSelection()
+    }
+
+    /**
+     * Clear descriptions for selected manga.
+     */
+    fun clearDescriptionsForSelection() {
+        val mangas = state.value.selectedManga
+        if (mangas.isEmpty()) return
+        
+        screenModelScope.launchNonCancellable {
+            val updates = mangas.map { 
+                MangaUpdate(id = it.id, description = "")
+            }
+            updateManga.awaitAll(updates)
+            
+            snackbarHostState.showSnackbar(
+                message = "Cleared descriptions for ${mangas.size} entries",
+                duration = SnackbarDuration.Short,
+            )
+        }
+        clearSelection()
+    }
+
+    /**
+     * Clear tags/genres for selected manga.
+     */
+    fun clearTagsForSelection() {
+        val mangas = state.value.selectedManga
+        if (mangas.isEmpty()) return
+        
+        screenModelScope.launchNonCancellable {
+            val updates = mangas.map { 
+                MangaUpdate(id = it.id, genre = emptyList())
+            }
+            updateManga.awaitAll(updates)
+            
+            snackbarHostState.showSnackbar(
+                message = "Cleared tags for ${mangas.size} entries",
+                duration = SnackbarDuration.Short,
+            )
+        }
+        clearSelection()
     }
 
     /**
@@ -726,12 +847,29 @@ class LibraryScreenModel(
     fun setMangaCategories(mangaList: List<Manga>, addCategories: List<Long>, removeCategories: List<Long>) {
         screenModelScope.launchNonCancellable {
             val mangaIds = mangaList.map { it.id }
+            val count = mangaIds.size
+            
+            // Show starting message
+            snackbarHostState.showSnackbar(
+                message = "Updating categories for $count novels...",
+                duration = SnackbarDuration.Short,
+            )
+            
+            // Use skipRefresh=true for batch operations to avoid multiple refreshes
             if (addCategories.isNotEmpty()) {
-                setMangaCategories.add(mangaIds, addCategories)
+                setMangaCategories.add(mangaIds, addCategories, skipRefresh = true)
             }
             if (removeCategories.isNotEmpty()) {
-                setMangaCategories.remove(mangaIds, removeCategories)
+                setMangaCategories.remove(mangaIds, removeCategories, skipRefresh = true)
             }
+            // Single refresh at the end of batch operation
+            setMangaCategories.refreshLibrary()
+            
+            // Show completion message
+            snackbarHostState.showSnackbar(
+                message = "Updated categories for $count novels",
+                duration = SnackbarDuration.Short,
+            )
         }
     }
 
@@ -876,7 +1014,18 @@ class LibraryScreenModel(
     }
 
     fun search(query: String?) {
-        mutableState.update { it.copy(searchQuery = query) }
+        // Update toolbar display, don't trigger filtering
+        mutableState.update { it.copy(toolbarQuery = query) }
+    }
+
+    fun commitSearch(query: String) {
+        // Commit the search, triggering filtering
+        mutableState.update { it.copy(searchQuery = query.ifBlank { null }) }
+    }
+
+    fun clearSearch() {
+        // Clear both toolbar and committed search
+        mutableState.update { it.copy(toolbarQuery = null, searchQuery = null) }
     }
 
     fun updateActiveCategoryIndex(index: Int) {
@@ -943,6 +1092,354 @@ class LibraryScreenModel(
         mutableState.update { it.copy(dialog = Dialog.ImportEpub) }
     }
 
+    fun openExportEpubDialog() {
+        val selectedNovels = state.value.selectedManga.filter { manga ->
+            sourceManager.get(manga.source)?.isNovelSource() == true
+        }
+        if (selectedNovels.isEmpty()) {
+            screenModelScope.launchIO {
+                withUIContext {
+                    snackbarHostState.showSnackbar("No novels selected for export")
+                }
+            }
+            return
+        }
+        mutableState.update { it.copy(dialog = Dialog.ExportEpub(selectedNovels)) }
+    }
+
+    fun exportNovelsAsEpub(
+        mangaList: List<Manga>, 
+        uri: android.net.Uri,
+        options: eu.kanade.presentation.library.components.EpubExportOptions = eu.kanade.presentation.library.components.EpubExportOptions(),
+    ) {
+        val context = Injekt.get<android.app.Application>()
+        
+        // Start the export job with notifications
+        EpubExportJob.start(
+            context = context,
+            mangaIds = mangaList.map { it.id },
+            outputUri = uri,
+            downloadedOnly = options.downloadedOnly,
+            preferTranslated = options.preferTranslated,
+            includeChapterCount = options.includeChapterCount,
+            includeChapterRange = options.includeChapterRange,
+            includeStatus = options.includeStatus,
+        )
+        
+        screenModelScope.launchIO {
+            withUIContext {
+                snackbarHostState.showSnackbar(
+                    "EPUB export started for ${mangaList.size} novels",
+                    duration = SnackbarDuration.Short,
+                )
+            }
+        }
+        clearSelection()
+    }
+    
+    // Legacy method kept for reference - now using EpubExportJob instead
+    @Suppress("unused")
+    private fun exportNovelsAsEpubLegacy(
+        mangaList: List<Manga>, 
+        uri: android.net.Uri,
+        options: eu.kanade.presentation.library.components.EpubExportOptions = eu.kanade.presentation.library.components.EpubExportOptions(),
+    ) {
+        screenModelScope.launchIO {
+            try {
+                val context = Injekt.get<android.app.Application>()
+                val downloadProvider = Injekt.get<DownloadProvider>()
+                val networkHelper = Injekt.get<eu.kanade.tachiyomi.network.NetworkHelper>()
+                
+                // Create a temp directory for the batch export
+                val tempDir = java.io.File(context.cacheDir, "epub_batch_export")
+                tempDir.mkdirs()
+                
+                val results = mutableListOf<String>()
+                var successCount = 0
+                var skippedCount = 0
+                
+                for ((index, manga) in mangaList.withIndex()) {
+                    withUIContext {
+                        snackbarHostState.showSnackbar(
+                            "Exporting ${index + 1}/${mangaList.size}: ${manga.title}",
+                            duration = SnackbarDuration.Short,
+                        )
+                    }
+                    
+                    try {
+                        val source = sourceManager.get(manga.source)
+                        if (source == null || !source.isNovelSource()) {
+                            results.add("${manga.title}: Not a novel source")
+                            continue
+                        }
+                        
+                        val chapters = getChaptersByMangaId.await(manga.id)
+                            .sortedBy { it.chapterNumber }
+                        
+                        if (chapters.isEmpty()) {
+                            results.add("${manga.title}: No chapters found")
+                            continue
+                        }
+                        
+                        val epubChapters = mutableListOf<mihon.core.archive.EpubWriter.Chapter>()
+                        var hasDownloads = false
+                        var firstChapterNum = Double.MAX_VALUE
+                        var lastChapterNum = Double.MIN_VALUE
+                        
+                        // Get translated chapter IDs for this manga if preferTranslated is enabled
+                        val translatedChapterIds = if (options.preferTranslated) {
+                            translatedChapterRepository.getTranslatedChapterIds(manga.id)
+                        } else {
+                            emptySet()
+                        }
+                        
+                        for ((chapterIndex, chapter) in chapters.withIndex()) {
+                            // Check if chapter is downloaded first
+                            val isDownloaded = downloadManager.isChapterDownloaded(
+                                chapter.name,
+                                chapter.scanlator,
+                                chapter.url,
+                                manga.title,
+                                manga.source,
+                            )
+                            
+                            // Check if chapter has translation
+                            val hasTranslation = chapter.id in translatedChapterIds
+                            
+                            if (isDownloaded) hasDownloads = true
+                            
+                            // Skip undownloaded chapters if downloadedOnly is true
+                            if (options.downloadedOnly && !isDownloaded && !hasTranslation) {
+                                continue
+                            }
+                            
+                            // Try to get translated content first if preferTranslated is enabled
+                            var content: String? = null
+                            if (options.preferTranslated && hasTranslation) {
+                                try {
+                                    val translations = translatedChapterRepository.getAllTranslationsForChapter(chapter.id)
+                                    content = translations.firstOrNull()?.translatedContent
+                                } catch (e: Exception) {
+                                    logcat(LogPriority.WARN, e) { "Failed to get translation for chapter: ${chapter.name}" }
+                                }
+                            }
+                            
+                            // Fall back to original content if no translation or not preferred
+                            if (content == null && isDownloaded) {
+                                // Get from disk
+                                try {
+                                    val chapterDir = downloadProvider.findChapterDir(
+                                        chapter.name,
+                                        chapter.scanlator,
+                                        chapter.url,
+                                        manga.title,
+                                        source,
+                                    )
+                                    
+                                    if (chapterDir != null) {
+                                        val htmlFiles = chapterDir.listFiles()?.filter {
+                                            it.isFile && it.name?.endsWith(".html") == true
+                                        }?.sortedBy { it.name } ?: emptyList()
+                                        
+                                        if (htmlFiles.isNotEmpty()) {
+                                            val sb = StringBuilder()
+                                            htmlFiles.forEachIndexed { i, file ->
+                                                val fileContent = context.contentResolver.openInputStream(file.uri)?.use {
+                                                    it.bufferedReader().readText()
+                                                } ?: ""
+                                                sb.append(fileContent)
+                                                if (i < htmlFiles.size - 1) {
+                                                    sb.append("\n\n")
+                                                }
+                                            }
+                                            content = sb.toString()
+                                        }
+                                    }
+                                } catch (e: Exception) {
+                                    logcat(LogPriority.ERROR, e) { "Failed to read downloaded chapter: ${chapter.name}" }
+                                }
+                            }
+                            
+                            // Fetch from source if still no content
+                            if (content == null && !options.downloadedOnly) {
+                                try {
+                                    if (source is eu.kanade.tachiyomi.source.online.HttpSource) {
+                                        val pages = source.getPageList(chapter.toSChapter())
+                                        if (pages.isNotEmpty()) {
+                                            val page = pages.first()
+                                            val pageText = if (page.text != null) {
+                                                page.text
+                                            } else if (page.imageUrl != null) {
+                                                // For text-based novels, imageUrl may contain the actual text
+                                                page.imageUrl
+                                            } else {
+                                                "<p>No content available</p>"
+                                            }
+                                            content = pageText ?: "<p>No content available</p>"
+                                        } else {
+                                            content = "<p>No pages found</p>"
+                                        }
+                                    }
+                                } catch (e: Exception) {
+                                    logcat(LogPriority.WARN, e) { "Failed to fetch chapter from source: ${chapter.name}" }
+                                }
+                            }
+                            
+                            if (content != null) {
+                                // Track chapter numbers for filename
+                                val chNum = chapter.chapterNumber
+                                if (chNum < firstChapterNum) firstChapterNum = chNum
+                                if (chNum > lastChapterNum) lastChapterNum = chNum
+                                
+                                epubChapters.add(
+                                    mihon.core.archive.EpubWriter.Chapter(
+                                        title = chapter.name,
+                                        content = content,
+                                        order = chapterIndex,
+                                    ),
+                                )
+                            }
+                        }
+                        
+                        // Skip novels without any exported chapters
+                        if (epubChapters.isEmpty()) {
+                            if (options.downloadedOnly) {
+                                results.add("${manga.title}: Skipped (no downloads)")
+                                skippedCount++
+                            } else {
+                                results.add("${manga.title}: No chapters could be exported")
+                            }
+                            continue
+                        }
+                        
+                        // Get cover image
+                        val coverImage = try {
+                            manga.thumbnailUrl?.let { url ->
+                                val request = okhttp3.Request.Builder().url(url).build()
+                                networkHelper.client.newCall(request).execute().body.bytes()
+                            }
+                        } catch (e: Exception) {
+                            null
+                        }
+                        
+                        // Create EPUB metadata
+                        val metadata = mihon.core.archive.EpubWriter.Metadata(
+                            title = manga.title,
+                            author = manga.author,
+                            description = manga.description,
+                            language = "en",
+                            genres = manga.genre ?: emptyList(),
+                            publisher = source.name,
+                        )
+                        
+                        // Build filename with options
+                        val filenameBuilder = StringBuilder(sanitizeFilename(manga.title))
+                        if (options.includeChapterCount) {
+                            filenameBuilder.append(" [${epubChapters.size}ch]")
+                        }
+                        if (options.includeChapterRange && firstChapterNum != Double.MAX_VALUE) {
+                            val firstCh = if (firstChapterNum == firstChapterNum.toLong().toDouble()) {
+                                firstChapterNum.toLong().toString()
+                            } else {
+                                firstChapterNum.toString()
+                            }
+                            val lastCh = if (lastChapterNum == lastChapterNum.toLong().toDouble()) {
+                                lastChapterNum.toLong().toString()
+                            } else {
+                                lastChapterNum.toString()
+                            }
+                            if (firstCh != lastCh) {
+                                filenameBuilder.append(" [ch$firstCh-$lastCh]")
+                            } else {
+                                filenameBuilder.append(" [ch$firstCh]")
+                            }
+                        }
+                        if (options.includeStatus) {
+                            val statusStr = when (manga.status) {
+                                SManga.ONGOING.toLong() -> "Ongoing"
+                                SManga.COMPLETED.toLong() -> "Completed"
+                                SManga.LICENSED.toLong() -> "Licensed"
+                                SManga.PUBLISHING_FINISHED.toLong() -> "Finished"
+                                SManga.CANCELLED.toLong() -> "Cancelled"
+                                SManga.ON_HIATUS.toLong() -> "Hiatus"
+                                else -> null
+                            }
+                            statusStr?.let { filenameBuilder.append(" [$it]") }
+                        }
+                        filenameBuilder.append(".epub")
+                        
+                        // Write to temp file
+                        val filename = filenameBuilder.toString()
+                        val tempFile = java.io.File(tempDir, filename)
+                        tempFile.outputStream().use { outputStream ->
+                            mihon.core.archive.EpubWriter().write(
+                                outputStream = outputStream,
+                                metadata = metadata,
+                                chapters = epubChapters,
+                                coverImage = coverImage,
+                            )
+                        }
+                        
+                        results.add("${manga.title}: Exported ${epubChapters.size} chapters")
+                        successCount++
+                        
+                    } catch (e: Exception) {
+                        logcat(LogPriority.ERROR, e) { "Failed to export ${manga.title}" }
+                        results.add("${manga.title}: Error - ${e.message}")
+                    }
+                }
+                
+                // Create a ZIP of all EPUBs if multiple
+                if (mangaList.size > 1) {
+                    context.contentResolver.openOutputStream(uri)?.use { outputStream ->
+                        java.util.zip.ZipOutputStream(outputStream).use { zipOut ->
+                            tempDir.listFiles()?.forEach { file ->
+                                if (file.isFile && file.name.endsWith(".epub")) {
+                                    val entry = java.util.zip.ZipEntry(file.name)
+                                    zipOut.putNextEntry(entry)
+                                    file.inputStream().use { input ->
+                                        input.copyTo(zipOut)
+                                    }
+                                    zipOut.closeEntry()
+                                }
+                            }
+                        }
+                    }
+                } else if (tempDir.listFiles()?.isNotEmpty() == true) {
+                    // Single file, just copy
+                    val singleFile = tempDir.listFiles()!!.first()
+                    context.contentResolver.openOutputStream(uri)?.use { outputStream ->
+                        singleFile.inputStream().use { input ->
+                            input.copyTo(outputStream)
+                        }
+                    }
+                }
+                
+                // Cleanup temp dir
+                tempDir.deleteRecursively()
+                
+                withUIContext {
+                    val message = buildString {
+                        append("Exported $successCount/${mangaList.size} novels")
+                        if (skippedCount > 0) append(" ($skippedCount skipped)")
+                    }
+                    snackbarHostState.showSnackbar(message)
+                }
+                
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e) { "Batch EPUB export failed" }
+                withUIContext {
+                    snackbarHostState.showSnackbar("Export failed: ${e.message}")
+                }
+            }
+        }
+        clearSelection()
+    }
+    
+    private fun sanitizeFilename(name: String): String {
+        return name.replace(Regex("[\\\\/:*?\"<>|]"), "_").take(200)
+    }
+
     fun reloadLibraryFromDB() {
         // Force a complete refresh of the library from database
         // This clears the aggressive cache in GetLibraryManga and reloads all data
@@ -968,18 +1465,18 @@ class LibraryScreenModel(
         for (i in favorites.indices) {
             if (favorites[i].id in processed) continue
 
-            val currentManga = favorites[i]
-            val currentTitle = normalizeTitle(currentManga.libraryManga.manga.title)
-            val group = mutableListOf(currentManga.libraryManga.manga)
+            val currentItem = favorites[i]
+            val currentTitle = normalizeTitle(currentItem.libraryManga.manga.title)
+            val group = mutableListOf(currentItem)
 
             for (j in i + 1 until favorites.size) {
                 if (favorites[j].id in processed) continue
 
-                val otherManga = favorites[j]
-                val otherTitle = normalizeTitle(otherManga.libraryManga.manga.title)
+                val otherItem = favorites[j]
+                val otherTitle = normalizeTitle(otherItem.libraryManga.manga.title)
 
                 if (isSimilar(currentTitle, otherTitle)) {
-                    group.add(otherManga.libraryManga.manga)
+                    group.add(otherItem)
                     processed.add(favorites[j].id)
                 }
             }
@@ -1039,7 +1536,7 @@ class LibraryScreenModel(
     }
 
     fun selectDuplicatesExceptFirst(groups: List<DuplicateGroup>) {
-        val toSelect = groups.flatMap { it.manga.drop(1) }.map { it.id }.toSet()
+        val toSelect = groups.flatMap { it.items.drop(1) }.map { it.id }.toSet()
         mutableState.update { state ->
             state.copy(selection = state.selection + toSelect)
         }
@@ -1047,19 +1544,20 @@ class LibraryScreenModel(
     }
 
     fun selectAllDuplicates(groups: List<DuplicateGroup>) {
-        val toSelect = groups.flatMap { it.manga }.map { it.id }.toSet()
+        val toSelect = groups.flatMap { it.items }.map { it.id }.toSet()
         mutableState.update { state ->
             state.copy(selection = state.selection + toSelect)
         }
         closeDialog()
     }
 
-    data class DuplicateGroup(val manga: List<Manga>)
+    data class DuplicateGroup(val items: List<LibraryItem>)
 
     sealed interface Dialog {
         data object SettingsSheet : Dialog
         data object MassImport : Dialog
         data object ImportEpub : Dialog
+        data class ExportEpub(val manga: List<Manga>) : Dialog
         data class DuplicateDetection(val duplicates: List<DuplicateGroup>) : Dialog
         data class ChangeCategory(
             val manga: List<Manga>,
@@ -1089,6 +1587,19 @@ class LibraryScreenModel(
         val includedTags: Set<String>,
         val excludedTags: Set<String>,
         val filterNoTags: TriState,
+        val tagIncludeModeAnd: Boolean,
+        val tagExcludeModeAnd: Boolean,
+        val tagCaseSensitive: Boolean,
+    )
+
+    /**
+     * Configuration for library search.
+     */
+    private data class SearchConfig(
+        val query: String?,
+        val chapterMatchIds: Set<Long>,
+        val searchByUrl: Boolean,
+        val useRegex: Boolean,
     )
 
     @Immutable
@@ -1107,7 +1618,8 @@ class LibraryScreenModel(
     data class State(
         val isInitialized: Boolean = false,
         val isLoading: Boolean = true,
-        val searchQuery: String? = null,
+        val toolbarQuery: String? = null, // What's shown in the search box
+        val searchQuery: String? = null, // Committed search (triggers filtering)
         val selection: Set</* Manga */ Long> = setOf(),
         val hasActiveFilters: Boolean = false,
         val showCategoryTabs: Boolean = false,

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,8 +20,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MultiChoiceSegmentedButtonRow
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -38,6 +42,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -331,6 +337,8 @@ object SettingsDataScreen : SearchableSettings {
     @Composable
     private fun getExportGroup(): Preference.PreferenceGroup {
         var showDialog by remember { mutableStateOf(false) }
+        var showProgressDialog by remember { mutableStateOf(false) }
+        var exportProgress by remember { mutableStateOf(LibraryExporter.ExportProgress(0, 0)) }
         var exportOptions by remember {
             mutableStateOf(
                 ExportOptions(
@@ -353,20 +361,32 @@ object SettingsDataScreen : SearchableSettings {
             contract = ActivityResultContracts.CreateDocument("text/csv"),
         ) { uri ->
             uri?.let {
+                showProgressDialog = true
                 scope.launch {
                     LibraryExporter.exportToCsv(
                         context = context,
                         uri = it,
                         favorites = favorites,
                         options = exportOptions,
+                        onProgress = { progress ->
+                            exportProgress = progress
+                        },
                         onExportComplete = {
                             scope.launch(Dispatchers.Main) {
+                                showProgressDialog = false
                                 context.toast(MR.strings.library_exported)
                             }
                         },
                     )
                 }
             }
+        }
+
+        if (showProgressDialog) {
+            ExportProgressDialog(
+                progress = exportProgress,
+                onDismissRequest = { /* Can't dismiss while exporting */ },
+            )
         }
 
         if (showDialog) {
@@ -443,34 +463,38 @@ object SettingsDataScreen : SearchableSettings {
                         )
                         Text(text = stringResource(MR.strings.artist))
                     }
-                }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(
-                        checked = urlSelected,
-                        onCheckedChange = { urlSelected = it },
-                    )
-                    Text(text = "Full URL")
-                }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(
-                        checked = chapterCountSelected,
-                        onCheckedChange = { chapterCountSelected = it },
-                    )
-                    Text(text = "Chapter Count")
-                }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(
-                        checked = categorySelected,
-                        onCheckedChange = { categorySelected = it },
-                    )
-                    Text(text = "Categories")
-                }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(
-                        checked = isNovelSelected,
-                        onCheckedChange = { isNovelSelected = it },
-                    )
-                    Text(text = "Is Novel")
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(
+                            checked = urlSelected,
+                            onCheckedChange = { urlSelected = it },
+                        )
+                        Text(text = "Full URL")
+                    }
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(
+                            checked = chapterCountSelected,
+                            onCheckedChange = { chapterCountSelected = it },
+                        )
+                        Text(text = "Chapter Count")
+                    }
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(
+                            checked = categorySelected,
+                            onCheckedChange = { categorySelected = it },
+                        )
+                        Text(text = "Categories")
+                    }
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(
+                            checked = isNovelSelected,
+                            onCheckedChange = { isNovelSelected = it },
+                        )
+                        Text(text = "Is Novel")
+                    }
                 }
             },
             confirmButton = {
@@ -498,6 +522,49 @@ object SettingsDataScreen : SearchableSettings {
                     Text(text = stringResource(MR.strings.action_cancel))
                 }
             },
+        )
+    }
+
+    @Composable
+    private fun ExportProgressDialog(
+        progress: LibraryExporter.ExportProgress,
+        onDismissRequest: () -> Unit,
+    ) {
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            title = {
+                Text(text = "Exporting Library")
+            },
+            text = {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    if (progress.total > 0) {
+                        Text(
+                            text = "${progress.current} / ${progress.total}",
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        LinearProgressIndicator(
+                            progress = { progress.current.toFloat() / progress.total.toFloat() },
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = progress.currentTitle,
+                            style = MaterialTheme.typography.bodySmall,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    } else {
+                        CircularProgressIndicator()
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = "Preparing...")
+                    }
+                }
+            },
+            confirmButton = {},
         )
     }
 }

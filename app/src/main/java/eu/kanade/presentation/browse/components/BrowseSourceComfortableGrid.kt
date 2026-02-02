@@ -31,6 +31,7 @@ fun BrowseSourceComfortableGrid(
     translatedTitles: Map<Long, String> = emptyMap(),
     onMangaVisible: (Manga) -> Unit = {},
     titleMaxLines: Int = 2,
+    skipCoverLoading: Boolean = false,
 ) {
     LazyVerticalGrid(
         columns = columns,
@@ -65,6 +66,7 @@ fun BrowseSourceComfortableGrid(
                 isSelected = isSelected,
                 // Use titleMaxLines parameter instead of hardcoded 2
                 titleMaxLines = titleMaxLines,
+                skipCoverLoading = skipCoverLoading,
             )
         }
 
@@ -84,6 +86,7 @@ private fun BrowseSourceComfortableGridItem(
     onLongClick: () -> Unit = onClick,
     isSelected: Boolean = false,
     titleMaxLines: Int = 2,
+    skipCoverLoading: Boolean = false,
 ) {
     MangaComfortableGridItem(
         isSelected = isSelected,
@@ -93,7 +96,7 @@ private fun BrowseSourceComfortableGridItem(
             mangaId = manga.id,
             sourceId = manga.source,
             isMangaFavorite = manga.favorite,
-            url = manga.thumbnailUrl,
+            url = if (skipCoverLoading) "" else manga.thumbnailUrl,
             lastModified = manga.coverLastModified,
         ),
         coverAlpha = if (manga.favorite) CommonMangaItemDefaults.BrowseFavoriteCoverAlpha else 1f,

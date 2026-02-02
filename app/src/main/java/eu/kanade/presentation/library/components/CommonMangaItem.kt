@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -343,11 +344,20 @@ fun MangaListItem(
     coverAlpha: Float = 1f,
     onClickContinueReading: (() -> Unit)? = null,
     titleMaxLines: Int = 2,
+    url: String? = null,
+    showUrl: Boolean = false,
+    urlMaxLines: Int = 3,
 ) {
+    // Fixed height for list items
+    val height = if (showUrl && !url.isNullOrEmpty()) {
+        (56 + (urlMaxLines * 14)).dp // ~14dp per line of URL text
+    } else {
+        56.dp
+    }
     Row(
         modifier = Modifier
             .selectedBackground(isSelected)
-            .height(56.dp)
+            .height(height)
             .combinedClickable(
                 onClick = onClick,
                 onLongClick = onLongClick,
@@ -357,19 +367,31 @@ fun MangaListItem(
     ) {
         MangaCover.Square(
             modifier = Modifier
-                .fillMaxHeight()
+                .height(40.dp)
                 .alpha(coverAlpha),
             data = coverData,
         )
-        Text(
-            text = title,
+        Column(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .weight(1f),
-            maxLines = titleMaxLines,
-            overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.bodyMedium,
-        )
+        ) {
+            Text(
+                text = title,
+                maxLines = if (showUrl && !url.isNullOrEmpty()) 1 else titleMaxLines,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            if (showUrl && !url.isNullOrEmpty()) {
+                Text(
+                    text = url,
+                    maxLines = urlMaxLines,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
         BadgeGroup(content = badge)
         if (onClickContinueReading != null) {
             ContinueReadingButton(

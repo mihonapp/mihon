@@ -275,6 +275,11 @@ object SettingsLibraryScreen : SearchableSettings {
                     preference = libraryPreferences.hideMissingChapters(),
                     title = stringResource(MR.strings.pref_hide_missing_chapter_indicators),
                 ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = libraryPreferences.sortMangaTags(),
+                    title = "Sort novel tags alphabetically",
+                    subtitle = "Sort tags on novel detail page by name instead of source order",
+                ),
             ),
         )
     }

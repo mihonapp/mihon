@@ -9,18 +9,26 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -28,6 +36,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
@@ -185,6 +194,14 @@ private fun ColumnScope.FilterPage(
         label = "Search novel descriptions and tags",
         pref = screenModel.libraryPreferences.searchChapterContent(),
     )
+    CheckboxItem(
+        label = "Search by URL",
+        pref = screenModel.libraryPreferences.searchByUrl(),
+    )
+    CheckboxItem(
+        label = "Use regex search",
+        pref = screenModel.libraryPreferences.useRegexSearch(),
+    )
 }
 
 @Composable
@@ -205,6 +222,7 @@ private fun ColumnScope.SortPage(
         listOfNotNull(
             MR.strings.action_sort_alpha to LibrarySort.Type.Alphabetical,
             MR.strings.action_sort_total to LibrarySort.Type.TotalChapters,
+            MR.strings.action_sort_downloaded to LibrarySort.Type.DownloadedChapters,
             MR.strings.action_sort_last_read to LibrarySort.Type.LastRead,
             MR.strings.action_sort_last_manga_update to LibrarySort.Type.LastUpdate,
             MR.strings.action_sort_unread_count to LibrarySort.Type.UnreadCount,
@@ -319,11 +337,15 @@ private fun ColumnScope.DisplayPage(
         label = stringResource(MR.strings.action_display_show_continue_reading_button),
         pref = screenModel.libraryPreferences.showContinueReadingButton(),
     )
+    CheckboxItem(
+        label = "Show URL in list view",
+        pref = screenModel.libraryPreferences.showUrlInList(),
+    )
 
     val titleMaxLines by screenModel.libraryPreferences.titleMaxLines().collectAsState()
     SliderItem(
         value = titleMaxLines,
-        valueRange = 1..5,
+        valueRange = 1..10,
         label = "Title Max Lines",
         valueString = titleMaxLines.toString(),
         onChange = screenModel.libraryPreferences.titleMaxLines()::set,
@@ -352,6 +374,19 @@ private fun ColumnScope.TagsPage(
     val filterNoTags by screenModel.libraryPreferences.filterNoTags().collectAsState()
     val noTagsCount by screenModel.noTagsCountFlow.collectAsState()
     val isLoading by screenModel.isLoading.collectAsState()
+    
+    // Tag options
+    val tagIncludeModeAnd by screenModel.libraryPreferences.tagIncludeMode().collectAsState()
+    val tagExcludeModeAnd by screenModel.libraryPreferences.tagExcludeMode().collectAsState()
+    val tagSortByName by screenModel.libraryPreferences.tagSortByName().collectAsState()
+    val tagSortAscending by screenModel.libraryPreferences.tagSortAscending().collectAsState()
+    val tagCaseSensitive by screenModel.libraryPreferences.tagCaseSensitive().collectAsState()
+    
+    // Tag search state
+    val tagSearchQuery by screenModel.tagSearchQuery.collectAsState()
+    
+    // Options expanded state
+    val optionsExpanded by screenModel.tagOptionsExpanded.collectAsState()
 
     // Load data when first entering this page (only if empty)
     LaunchedEffect(Unit) {
@@ -360,16 +395,135 @@ private fun ColumnScope.TagsPage(
         }
     }
 
-
-    // Refresh button
+    // Header row with refresh and options toggle
     Row(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.End
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
+        TextButton(onClick = { screenModel.toggleTagOptions() }) {
+            Icon(
+                imageVector = if (optionsExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                contentDescription = if (optionsExpanded) "Collapse options" else "Expand options",
+            )
+            Spacer(Modifier.width(4.dp))
+            Text("Options")
+        }
         TextButton(onClick = { screenModel.refreshTags(forceRefresh = true) }) {
             Icon(Icons.Default.Refresh, contentDescription = "Refresh")
             Spacer(Modifier.width(4.dp))
             Text("Refresh")
+        }
+    }
+    
+    // Collapsible options section
+    if (optionsExpanded) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = TabbedDialogPaddings.Horizontal, vertical = 4.dp),
+        ) {
+            // Include mode toggle
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text("Include tags mode:", style = MaterialTheme.typography.bodyMedium)
+                Row {
+                    FilterChip(
+                        selected = !tagIncludeModeAnd,
+                        onClick = { screenModel.libraryPreferences.tagIncludeMode().set(false) },
+                        label = { Text("OR") },
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    FilterChip(
+                        selected = tagIncludeModeAnd,
+                        onClick = { screenModel.libraryPreferences.tagIncludeMode().set(true) },
+                        label = { Text("AND") },
+                    )
+                }
+            }
+            
+            Spacer(Modifier.height(8.dp))
+            
+            // Exclude mode toggle
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text("Exclude tags mode:", style = MaterialTheme.typography.bodyMedium)
+                Row {
+                    FilterChip(
+                        selected = !tagExcludeModeAnd,
+                        onClick = { screenModel.libraryPreferences.tagExcludeMode().set(false) },
+                        label = { Text("OR") },
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    FilterChip(
+                        selected = tagExcludeModeAnd,
+                        onClick = { screenModel.libraryPreferences.tagExcludeMode().set(true) },
+                        label = { Text("AND") },
+                    )
+                }
+            }
+            
+            Spacer(Modifier.height(8.dp))
+            
+            // Sort options
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text("Sort by:", style = MaterialTheme.typography.bodyMedium)
+                Row {
+                    FilterChip(
+                        selected = !tagSortByName,
+                        onClick = { screenModel.libraryPreferences.tagSortByName().set(false) },
+                        label = { Text("Count") },
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    FilterChip(
+                        selected = tagSortByName,
+                        onClick = { screenModel.libraryPreferences.tagSortByName().set(true) },
+                        label = { Text("Name") },
+                    )
+                }
+            }
+            
+            Spacer(Modifier.height(8.dp))
+            
+            // Sort direction
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text("Sort order:", style = MaterialTheme.typography.bodyMedium)
+                Row {
+                    FilterChip(
+                        selected = !tagSortAscending,
+                        onClick = { screenModel.libraryPreferences.tagSortAscending().set(false) },
+                        label = { Text("Desc") },
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    FilterChip(
+                        selected = tagSortAscending,
+                        onClick = { screenModel.libraryPreferences.tagSortAscending().set(true) },
+                        label = { Text("Asc") },
+                    )
+                }
+            }
+            
+            Spacer(Modifier.height(8.dp))
+            
+            // Case sensitivity toggle
+            CheckboxItem(
+                label = "Case sensitive matching",
+                pref = screenModel.libraryPreferences.tagCaseSensitive(),
+            )
         }
     }
 
@@ -379,6 +533,8 @@ private fun ColumnScope.TagsPage(
             onClick = { screenModel.clearAllTagFilters() },
             modifier = Modifier.padding(horizontal = TabbedDialogPaddings.Horizontal),
         ) {
+            Icon(Icons.Default.Clear, contentDescription = "Clear all")
+            Spacer(Modifier.width(4.dp))
             Text("Clear All Filters")
         }
     }
@@ -388,6 +544,25 @@ private fun ColumnScope.TagsPage(
         label = "No tags ($noTagsCount)",
         state = filterNoTags,
         onClick = { screenModel.toggleNoTagsFilter() },
+    )
+    
+    // Tag search input
+    OutlinedTextField(
+        value = tagSearchQuery,
+        onValueChange = { screenModel.setTagSearchQuery(it) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = TabbedDialogPaddings.Horizontal, vertical = 8.dp),
+        placeholder = { Text("Search tags...") },
+        leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+        trailingIcon = if (tagSearchQuery.isNotEmpty()) {
+            {
+                IconButton(onClick = { screenModel.setTagSearchQuery("") }) {
+                    Icon(Icons.Default.Clear, contentDescription = "Clear search")
+                }
+            }
+        } else null,
+        singleLine = true,
     )
 
     if (tags.isEmpty() && !isLoading) {
@@ -412,6 +587,40 @@ private fun ColumnScope.TagsPage(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(horizontal = TabbedDialogPaddings.Horizontal, vertical = 4.dp),
         )
+        
+        // Sort and filter tags
+        val sortedTags = remember(tags, tagSortByName, tagSortAscending, tagSearchQuery, includedTags, excludedTags, tagCaseSensitive) {
+            val filtered = if (tagSearchQuery.isBlank()) {
+                tags
+            } else {
+                val query = if (tagCaseSensitive) tagSearchQuery else tagSearchQuery.lowercase()
+                tags.filter { (tag, _) ->
+                    val tagToMatch = if (tagCaseSensitive) tag else tag.lowercase()
+                    tagToMatch.contains(query)
+                }
+            }
+            
+            // Sort with active tags prioritized
+            val (activeTags, inactiveTags) = filtered.partition { (tag, _) ->
+                tag in includedTags || tag in excludedTags
+            }
+            
+            val sortComparator: Comparator<Pair<String, Int>> = if (tagSortByName) {
+                if (tagSortAscending) {
+                    compareBy { it.first.lowercase() }
+                } else {
+                    compareByDescending { it.first.lowercase() }
+                }
+            } else {
+                if (tagSortAscending) {
+                    compareBy { it.second }
+                } else {
+                    compareByDescending { it.second }
+                }
+            }
+            
+            activeTags.sortedWith(sortComparator) + inactiveTags.sortedWith(sortComparator)
+        }
 
         FlowRow(
             modifier = Modifier
@@ -420,7 +629,7 @@ private fun ColumnScope.TagsPage(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            tags.forEach { (tag, count) ->
+            sortedTags.forEach { (tag, count) ->
                 val isIncluded = tag in includedTags
                 val isExcluded = tag in excludedTags
 
@@ -512,16 +721,55 @@ private fun ColumnScope.ExtensionsPage(
             }
         }
 
-        availableExtensions.forEach { (sourceId, sourceName) ->
+        // Show count of missing sources
+        val stubCount = availableExtensions.count { it.isStub }
+        if (stubCount > 0) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = TabbedDialogPaddings.Horizontal, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Warning,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp),
+                    tint = MaterialTheme.colorScheme.error,
+                )
+                Spacer(Modifier.width(4.dp))
+                Text(
+                    text = "$stubCount source(s) with missing extensions",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                )
+            }
+        }
+
+        availableExtensions.forEach { extensionInfo ->
             // Extension is checked if it's NOT in the excluded set
-            val isChecked = sourceId.toString() !in excludedExtensions
-            CheckboxItem(
-                label = sourceName,
-                checked = isChecked,
-                onClick = {
-                    screenModel.toggleExtensionFilter(sourceId.toString(), !isChecked)
-                },
-            )
+            val isChecked = extensionInfo.sourceId.toString() !in excludedExtensions
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                if (extensionInfo.isStub) {
+                    Icon(
+                        imageVector = Icons.Filled.Warning,
+                        contentDescription = "Missing source",
+                        modifier = Modifier
+                            .padding(start = TabbedDialogPaddings.Horizontal)
+                            .size(16.dp),
+                        tint = MaterialTheme.colorScheme.error,
+                    )
+                }
+                CheckboxItem(
+                    label = if (extensionInfo.isStub) "${extensionInfo.sourceName} (Missing)" else extensionInfo.sourceName,
+                    checked = isChecked,
+                    onClick = {
+                        screenModel.toggleExtensionFilter(extensionInfo.sourceId.toString(), !isChecked)
+                    },
+                )
+            }
         }
     }
 }

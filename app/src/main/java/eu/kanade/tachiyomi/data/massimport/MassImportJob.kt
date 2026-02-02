@@ -16,7 +16,9 @@ import eu.kanade.domain.manga.model.toSManga
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.source.isNovelSource
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.cancelNotification
+import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import eu.kanade.tachiyomi.util.system.isRunning
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notify
@@ -34,7 +36,9 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.sync.withPermit
 import logcat.LogPriority
 import mihon.domain.manga.model.toDomainManga
@@ -50,6 +54,7 @@ import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.domain.library.interactor.RefreshLibraryCache
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -69,6 +74,7 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
     private val mangaRepository: MangaRepository = Injekt.get()
     private val setMangaCategories: SetMangaCategories = Injekt.get()
     private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get()
+    private val refreshLibraryCache: RefreshLibraryCache = Injekt.get()
 
     private val notificationBuilder = context.notificationBuilder(Notifications.CHANNEL_MASS_IMPORT) {
         setSmallIcon(android.R.drawable.stat_sys_download)
@@ -177,6 +183,7 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
         
         val skippedUrls = java.util.Collections.synchronizedList(mutableListOf<String>())
         val erroredUrls = java.util.Collections.synchronizedList(mutableListOf<String>())
+        val errorMessages = ConcurrentHashMap<String, String>() // URL -> error message
         
         // Add initially skipped URLs (duplicates/invalid)
         // We don't have the list of invalid/duplicate URLs here easily as we just filtered them out.
@@ -185,15 +192,53 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
 
         updateNotification(0, validUrls.size, "Starting import...")
 
-        // Use Flow with flatMapMerge to control concurrency instead of launching all at once
-        validUrls.asFlow()
-            .flatMapMerge(concurrency) { url ->
+        // Track last request time per source for throttling
+        val lastRequestTimeBySource = ConcurrentHashMap<Long, Long>()
+        // Mutex per source to ensure atomic check-and-wait for throttling
+        val sourceMutexes = ConcurrentHashMap<Long, Mutex>()
+        val throttlingEnabled = novelDownloadPreferences.enableMassImportThrottling().get()
+        val baseDelay = novelDownloadPreferences.massImportDelay().get().toLong() * 1000L // Convert to ms
+        val randomRange = novelDownloadPreferences.randomDelayRange().get() * 1000L // Convert to ms
+
+        // Group URLs by source for smarter scheduling
+        val urlsWithSource = validUrls.mapNotNull { url ->
+            val source = findMatchingSource(url, novelSources) ?: return@mapNotNull null
+            url to source
+        }
+
+        // Use Flow with flatMapMerge to control concurrency
+        urlsWithSource.asFlow()
+            .flatMapMerge(concurrency) { (url, source) ->
                 flow {
+                    // Apply per-source throttling before processing
+                    if (throttlingEnabled) {
+                        val sourceId = source.id
+                        // Get or create mutex for this source
+                        val mutex = sourceMutexes.getOrPut(sourceId) { Mutex() }
+                        
+                        // Use mutex ONLY for delay check - don't hold during entire processing
+                        mutex.withLock {
+                            val now = System.currentTimeMillis()
+                            val lastRequest = lastRequestTimeBySource[sourceId] ?: 0L
+                            val elapsed = now - lastRequest
+                            val requiredDelay = baseDelay + if (randomRange > 0) Random.nextLong(0, randomRange) else 0L
+                            
+                            if (elapsed < requiredDelay && lastRequest > 0) {
+                                val waitTime = requiredDelay - elapsed
+                                logcat(LogPriority.DEBUG) { "Throttling source $sourceId: waiting ${waitTime}ms" }
+                                delay(waitTime)
+                            }
+                            // Update timestamp immediately after delay, then release mutex
+                            lastRequestTimeBySource[sourceId] = System.currentTimeMillis()
+                        }
+                        // Mutex is now released - other coroutines can start their delay check
+                    }
+
                     activeImports[url] = true
                     updateNotification(completedCount.get(), validUrls.size, "Processing: ${activeImports.size} active")
 
                     try {
-                        val success = processUrl(url, novelSources, addToLibrary, categoryId, fetchChapters)
+                        val success = processUrlWithSource(url, source, addToLibrary, categoryId, fetchChapters)
                         if (success) {
                             addedCount.incrementAndGet()
                         } else {
@@ -204,6 +249,7 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
                         logcat(LogPriority.ERROR, e) { "Error importing $url" }
                         erroredCount.incrementAndGet()
                         erroredUrls.add(url)
+                        errorMessages[url] = e.message ?: "Unknown error"
                     } finally {
                         activeImports.remove(url)
                         val done = completedCount.incrementAndGet()
@@ -218,6 +264,7 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
                             erroredCount.get(),
                             erroredUrls.toList(),
                             skippedUrls.toList(),
+                            errorMessages.toMap(),
                         )
                     }
                     emit(Unit)
@@ -239,6 +286,9 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
         updateBatchStatus(batchId, BatchStatus.Completed)
 
         showCompletionNotification(addedCount.get(), skippedCount.get(), erroredCount.get(), null)
+        
+        // Note: Library cache is now refreshed per-manga during processUrlWithSource
+        // to avoid blocking the database with a massive full refresh query
     }
     
     private fun updateBatchStatus(batchId: String, status: BatchStatus) {
@@ -257,6 +307,7 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
         errored: Int,
         erroredUrls: List<String> = emptyList(),
         skippedUrls: List<String> = emptyList(),
+        errorMessages: Map<String, String> = emptyMap(),
     ) {
         if (batchId.isEmpty()) return
         _sharedQueue.update { list ->
@@ -270,6 +321,7 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
                         errored = errored,
                         erroredUrls = erroredUrls,
                         skippedUrls = skippedUrls,
+                        errorMessages = errorMessages,
                     ) 
                 } else it 
             }
@@ -284,6 +336,16 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
         fetchChapters: Boolean,
     ): Boolean {
         val source = findMatchingSource(url, novelSources) ?: return false
+        return processUrlWithSource(url, source, addToLibrary, categoryId, fetchChapters)
+    }
+
+    private suspend fun processUrlWithSource(
+        url: String,
+        source: HttpSource,
+        addToLibrary: Boolean,
+        categoryId: Long,
+        fetchChapters: Boolean,
+    ): Boolean {
         val rawPath = extractPathFromUrl(url, source.baseUrl)
         if (rawPath.isEmpty()) return false
         
@@ -328,6 +390,14 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
                     logcat(LogPriority.WARN, e) { "Failed to sync chapters for $url" }
                 }
             }
+            
+            // Refresh library cache for this specific manga to update UI immediately
+            // without blocking the database with a massive full refresh
+            try {
+                refreshLibraryCache.awaitForManga(manga.id)
+            } catch (e: Exception) {
+                logcat(LogPriority.WARN, e) { "Failed to refresh cache for manga ${manga.id}" }
+            }
         }
 
         return true
@@ -357,15 +427,76 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
 
     private fun showCompletionNotification(added: Int, skipped: Int, errored: Int, message: String?) {
         val text = message ?: "Added: $added, Skipped: $skipped, Errors: $errored"
-        context.notify(
-            Notifications.ID_MASS_IMPORT_COMPLETE,
-            context.notificationBuilder(Notifications.CHANNEL_MASS_IMPORT) {
-                setSmallIcon(android.R.drawable.stat_sys_download_done)
-                setContentTitle(context.stringResource(MR.strings.mass_import_complete_title))
-                setContentText(text)
-                setAutoCancel(true)
-            }.build(),
-        )
+        
+        // Write results to file for persistence (like LibraryUpdateJob does for errors)
+        val resultFile = writeResultFile(added, skipped, errored)
+        
+        val notificationBuilder = context.notificationBuilder(Notifications.CHANNEL_MASS_IMPORT) {
+            setSmallIcon(android.R.drawable.stat_sys_download_done)
+            setContentTitle(context.stringResource(MR.strings.mass_import_complete_title))
+            setContentText(text)
+            setAutoCancel(true)
+            
+            // Add content intent to open the result file if it exists
+            if (resultFile.exists()) {
+                setContentIntent(
+                    eu.kanade.tachiyomi.data.notification.NotificationReceiver.openErrorLogPendingActivity(
+                        context,
+                        resultFile.getUriCompat(context),
+                    )
+                )
+            }
+        }
+        
+        context.notify(Notifications.ID_MASS_IMPORT_COMPLETE, notificationBuilder.build())
+    }
+
+    /**
+     * Writes import results to a file for persistence.
+     * This allows users to see results even if the app is killed.
+     */
+    private fun writeResultFile(added: Int, skipped: Int, errored: Int): File {
+        try {
+            val file = context.createFileInCacheDir("mihon_mass_import_results.txt")
+            file.bufferedWriter().use { out ->
+                out.write("=== Mass Import Results ===\n")
+                out.write("Time: ${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())}\n\n")
+                out.write("Summary:\n")
+                out.write("  Added: $added\n")
+                out.write("  Skipped: $skipped\n")
+                out.write("  Errors: $errored\n\n")
+                
+                // Get current batch info from shared queue
+                val currentBatch = _sharedQueue.value.lastOrNull { it.status == BatchStatus.Completed || it.status == BatchStatus.Running }
+                
+                if (currentBatch != null) {
+                    if (currentBatch.erroredUrls.isNotEmpty()) {
+                        out.write("=== Failed URLs (${currentBatch.erroredUrls.size}) ===\n")
+                        currentBatch.erroredUrls.forEach { url ->
+                            out.write("$url\n")
+                        }
+                        out.write("\n")
+                    }
+                    
+                    if (currentBatch.skippedUrls.isNotEmpty()) {
+                        out.write("=== Skipped URLs (${currentBatch.skippedUrls.size}) ===\n")
+                        currentBatch.skippedUrls.forEach { url ->
+                            out.write("$url\n")
+                        }
+                        out.write("\n")
+                    }
+                    
+                    out.write("=== All Input URLs (${currentBatch.urls.size}) ===\n")
+                    currentBatch.urls.forEach { url ->
+                        out.write("$url\n")
+                    }
+                }
+            }
+            return file
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Failed to write mass import result file" }
+            return File("")
+        }
     }
 
     private fun getNovelSources(): List<HttpSource> {
@@ -374,9 +505,15 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
             .filter { it.isNovelSource() }
     }
 
+    /**
+     * Find source that matches the given URL.
+     * Prioritizes Kotlin extensions over JS plugins when multiple sources match the same URL.
+     */
     private fun findMatchingSource(url: String, sources: List<HttpSource>): HttpSource? {
         val normalizedUrl = stripScheme(url).removeSuffix("/")
-        return sources.find { source ->
+        
+        // Find all matching sources
+        val matchingSources = sources.filter { source ->
             try {
                 val baseUrl = stripScheme(source.baseUrl).removeSuffix("/")
                 normalizedUrl.startsWith(baseUrl)
@@ -384,6 +521,17 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
                 false
             }
         }
+        
+        if (matchingSources.isEmpty()) return null
+        if (matchingSources.size == 1) return matchingSources.first()
+        
+        // Prioritize Kotlin extensions over JS plugins
+        // JS plugins are from JsSource class, Kotlin extensions are other HttpSource implementations
+        val kotlinSources = matchingSources.filter { 
+            it::class.java.name != "eu.kanade.tachiyomi.jsplugin.source.JsSource" 
+        }
+        
+        return kotlinSources.firstOrNull() ?: matchingSources.first()
     }
 
     private fun stripScheme(url: String): String {
@@ -391,11 +539,13 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
     }
 
     /**
-     * Normalize URL by removing trailing slashes and fragment identifiers.
+     * Normalize URL by removing trailing slashes, fragment identifiers, and double slashes.
      * This ensures consistent URL comparison across the app.
      */
     private fun normalizeUrl(url: String): String {
-        return url.trimEnd('/').substringBefore('#')
+        return url.trimEnd('/')
+            .substringBefore('#')
+            .replace(Regex("(?<!:)//+"), "/") // Remove double slashes except in protocol
     }
 
     private fun extractPathFromUrl(url: String, baseUrl: String): String {
@@ -458,6 +608,7 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
         val errored: Int = 0,
         val erroredUrls: List<String> = emptyList(),
         val skippedUrls: List<String> = emptyList(),
+        val errorMessages: Map<String, String> = emptyMap(), // URL -> error message mapping
     )
 
     enum class BatchStatus {
@@ -572,6 +723,116 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
         fun clearCompleted() {
             _sharedQueue.update { list ->
                 list.filter { it.status != BatchStatus.Completed && it.status != BatchStatus.Cancelled }
+            }
+        }
+        
+        /**
+         * Reinsert errored URLs from a batch back into the queue as a new batch.
+         */
+        fun reinsertErrored(context: Context, batch: Batch) {
+            if (batch.erroredUrls.isEmpty()) return
+            start(
+                context = context,
+                urls = batch.erroredUrls,
+                categoryId = batch.categoryId,
+                addToLibrary = batch.addToLibrary,
+                fetchChapters = batch.fetchChapters,
+            )
+        }
+        
+        /**
+         * Requeue a cancelled batch - processes remaining unprocessed URLs.
+         * Only works for cancelled batches where progress < total.
+         */
+        fun requeueCancelled(context: Context, batch: Batch) {
+            if (batch.status != BatchStatus.Cancelled) return
+            if (batch.progress >= batch.total) return
+            
+            // Get URLs that weren't processed (from progress onwards)
+            val processedCount = batch.progress
+            val remainingUrls = if (processedCount < batch.urls.size) {
+                batch.urls.drop(processedCount)
+            } else {
+                // All URLs were attempted, requeue errored ones
+                batch.erroredUrls
+            }
+            
+            if (remainingUrls.isEmpty()) return
+            
+            start(
+                context = context,
+                urls = remainingUrls,
+                categoryId = batch.categoryId,
+                addToLibrary = batch.addToLibrary,
+                fetchChapters = batch.fetchChapters,
+            )
+        }
+        
+        /**
+         * Export all URLs from a batch to a string (for file saving).
+         */
+        fun exportBatchUrls(batch: Batch): String {
+            return batch.urls.joinToString("\n")
+        }
+        
+        /**
+         * Generate a detailed text report for a batch import.
+         * Useful for debugging and sharing import results.
+         */
+        fun generateReport(batch: Batch): String {
+            return buildString {
+                appendLine("=== Mass Import Report ===")
+                appendLine("Batch ID: ${batch.id}")
+                appendLine("Status: ${batch.status}")
+                appendLine()
+                appendLine("=== Summary ===")
+                appendLine("Total URLs: ${batch.urls.size}")
+                appendLine("Successfully Added: ${batch.added}")
+                appendLine("Skipped (already in library): ${batch.skipped}")
+                appendLine("Errors: ${batch.errored}")
+                appendLine()
+                
+                if (batch.erroredUrls.isNotEmpty()) {
+                    appendLine("=== Failed URLs (${batch.erroredUrls.size}) ===")
+                    batch.erroredUrls.forEach { url ->
+                        val errorMsg = batch.errorMessages[url]
+                        if (errorMsg != null) {
+                            appendLine("$url")
+                            appendLine("  Error: $errorMsg")
+                        } else {
+                            appendLine(url)
+                        }
+                    }
+                    appendLine()
+                }
+                
+                if (batch.skippedUrls.isNotEmpty()) {
+                    appendLine("=== Skipped URLs (${batch.skippedUrls.size}) ===")
+                    batch.skippedUrls.forEach { url ->
+                        appendLine(url)
+                    }
+                    appendLine()
+                }
+                
+                appendLine("=== All Input URLs (${batch.urls.size}) ===")
+                batch.urls.forEach { url ->
+                    appendLine(url)
+                }
+            }
+        }
+        
+        /**
+         * Generate errors with messages for clipboard copy.
+         */
+        fun generateErrorsWithMessages(batch: Batch): String {
+            return buildString {
+                batch.erroredUrls.forEach { url ->
+                    appendLine(url)
+                    val errorMsg = batch.errorMessages[url]
+                    if (errorMsg != null) {
+                        appendLine("  → $errorMsg")
+                    }
+                }
             }
         }
     }

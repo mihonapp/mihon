@@ -229,6 +229,10 @@ class ReaderPreferences(
     // Force lowercase for all chapter content
     fun novelForceTextLowercase() = preferenceStore.getBoolean("pref_novel_force_lowercase", false)
 
+    // Auto-split text after X words until punctuation mark (0 = disabled)
+    fun novelAutoSplitText() = preferenceStore.getBoolean("pref_novel_auto_split_text", false)
+    fun novelAutoSplitWordCount() = preferenceStore.getInt("pref_novel_auto_split_word_count", 50)
+
     // Use source's original fonts (don't force a specific font family)
     fun novelUseOriginalFonts() = preferenceStore.getBoolean("pref_novel_use_original_fonts", false)
 

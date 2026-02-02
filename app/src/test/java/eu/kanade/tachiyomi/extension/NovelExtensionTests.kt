@@ -74,12 +74,15 @@ class NovelExtensionTests {
         "hireaththranslation",
         "mtlreader",
         "novelhub",
-        // Additional novel extensions for comprehensive testing
-        "novelbuddy",
-        "novelupdates",
+        // ReadNovelFull multisrc extensions - all use same base parsing logic
+        // ported from TypeScript/htmlparser2 to Kotlin/Jsoup
         "freewebnovel",
         "allnovel",
         "allnovelfull",
+        "readnovelfull",
+        "novelbin",
+        "novelbuddy",
+        "novelupdates",
     )
 
     @Serializable

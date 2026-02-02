@@ -40,6 +40,7 @@ import tachiyomi.data.Database
 import tachiyomi.data.DatabaseHandler
 import tachiyomi.data.DateColumnAdapter
 import tachiyomi.data.History
+import tachiyomi.data.History_cache
 import tachiyomi.data.Mangas
 import tachiyomi.data.StringListColumnAdapter
 import tachiyomi.data.UpdateStrategyColumnAdapter
@@ -96,6 +97,9 @@ class AppModule(val app: Application) : InjektModule {
             Database(
                 driver = get(),
                 historyAdapter = History.Adapter(
+                    last_readAdapter = DateColumnAdapter,
+                ),
+                history_cacheAdapter = History_cache.Adapter(
                     last_readAdapter = DateColumnAdapter,
                 ),
                 mangasAdapter = Mangas.Adapter(
@@ -163,6 +167,9 @@ class AppModule(val app: Application) : InjektModule {
         addSingletonFactory { LocalNovelSourceFileSystem(get()) }
         addSingletonFactory { LocalCoverManager(app, get()) }
         addSingletonFactory { StorageManager(app, get()) }
+
+        // Font management
+        addSingletonFactory { eu.kanade.tachiyomi.data.font.FontManager(app, get(), get()) }
 
         // Asynchronously init expensive components for a faster cold start
         ContextCompat.getMainExecutor(app).execute {

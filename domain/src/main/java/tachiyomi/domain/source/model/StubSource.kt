@@ -28,6 +28,13 @@ class StubSource(
         fun from(source: Source): StubSource {
             return StubSource(id = source.id, lang = source.lang, name = source.name)
         }
+        
+        /**
+         * Create a StubSource that preserves the full display name (including markers like "(JS)")
+         */
+        fun fromWithDisplayName(source: Source, displayName: String): StubSource {
+            return StubSource(id = source.id, lang = source.lang, name = displayName)
+        }
     }
 }
 

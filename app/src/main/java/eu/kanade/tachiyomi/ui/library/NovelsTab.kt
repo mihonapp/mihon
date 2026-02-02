@@ -101,10 +101,22 @@ data object NovelsTab : Tab {
         val titleMaxLines by settingsScreenModel.libraryPreferences.titleMaxLines().changes().collectAsState(
             settingsScreenModel.libraryPreferences.titleMaxLines().get(),
         )
+        val showUrlInList by settingsScreenModel.libraryPreferences.showUrlInList().changes().collectAsState(
+            settingsScreenModel.libraryPreferences.showUrlInList().get(),
+        )
 
         val snackbarHostState = remember { SnackbarHostState() }
 
-        val onClickRefresh: (Category?) -> Boolean = { category ->
+        // Local reload from database - doesn't fetch from sources
+        val onLocalRefresh: () -> Unit = {
+            screenModel.reloadLibraryFromDB()
+            scope.launch {
+                snackbarHostState.showSnackbar("Reloading library from database...")
+            }
+        }
+
+        // Global update - fetches from sources
+        val onGlobalUpdate: (Category?) -> Boolean = { category ->
             val started = LibraryUpdateJob.startNow(context, category)
             scope.launch {
                 val msgRes = when {
@@ -132,8 +144,8 @@ data object NovelsTab : Tab {
                     onClickSelectAll = screenModel::selectAll,
                     onClickInvertSelection = screenModel::invertSelection,
                     onClickFilter = screenModel::showSettingsDialog,
-                    onClickRefresh = { onClickRefresh(state.activeCategory) },
-                    onClickGlobalUpdate = { onClickRefresh(null) },
+                    onClickRefresh = onLocalRefresh,
+                    onClickGlobalUpdate = { onGlobalUpdate(null) },
                     onClickOpenRandomManga = {
                         scope.launch {
                             val randomItem = screenModel.getRandomLibraryItemForCurrentCategory()
@@ -146,8 +158,10 @@ data object NovelsTab : Tab {
                             }
                         }
                     },
-                    searchQuery = state.searchQuery,
+                    searchQuery = state.toolbarQuery,
                     onSearchQueryChange = screenModel::search,
+                    onSearch = screenModel::commitSearch,
+                    onSearchClear = screenModel::clearSearch,
                     // For scroll overlay when no tab
                     scrollBehavior = scrollBehavior.takeIf { !state.showCategoryTabs },
                     onClickMassImport = screenModel::openMassImportDialog,
@@ -183,6 +197,10 @@ data object NovelsTab : Tab {
                         screenModel.translateSelectedNovels()
                     },
                     onRemoveChaptersClicked = screenModel::openRemoveChaptersDialog,
+                    onExportEpubClicked = screenModel::openExportEpubDialog,
+                    onClearCoversClicked = screenModel::clearCoversForSelection,
+                    onClearDescriptionsClicked = screenModel::clearDescriptionsForSelection,
+                    onClearTagsClicked = screenModel::clearTagsForSelection,
                 )
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -234,7 +252,7 @@ data object NovelsTab : Tab {
                             screenModel.toggleRangeSelection(category, manga)
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         },
-                        onRefresh = { onClickRefresh(state.activeCategory) },
+                        onRefresh = { onGlobalUpdate(state.activeCategory) },
                         onGlobalSearchClicked = {
                             navigator.push(NovelGlobalSearchScreen(screenModel.state.value.searchQuery ?: ""))
                         },
@@ -243,6 +261,7 @@ data object NovelsTab : Tab {
                         getColumnsForOrientation = { screenModel.getColumnsForOrientation(it) },
                         getItemsForCategory = { state.getItemsForCategory(it) },
                         titleMaxLines = titleMaxLines,
+                        showUrlInList = showUrlInList,
                     )
                 }
             }
@@ -275,8 +294,8 @@ data object NovelsTab : Tab {
                 DeleteLibraryMangaDialog(
                     containsLocalManga = dialog.manga.any(Manga::isLocal),
                     onDismissRequest = onDismissRequest,
-                    onConfirm = { deleteManga, deleteChapter ->
-                        screenModel.removeMangas(dialog.manga, deleteManga, deleteChapter)
+                    onConfirm = { deleteManga, deleteChapter, clearChaptersFromDb ->
+                        screenModel.removeMangas(dialog.manga, deleteManga, deleteChapter, clearChaptersFromDb)
                         screenModel.clearSelection()
                     },
                 )
@@ -322,6 +341,15 @@ data object NovelsTab : Tab {
                     },
                 )
             }
+            is LibraryScreenModel.Dialog.ExportEpub -> {
+                eu.kanade.presentation.library.components.BatchExportEpubDialog(
+                    mangaList = dialog.manga,
+                    onDismissRequest = onDismissRequest,
+                    onExport = { uri, options ->
+                        screenModel.exportNovelsAsEpub(dialog.manga, uri, options)
+                    },
+                )
+            }
             // DuplicateDetection now navigates to new screen, not a dialog
             is LibraryScreenModel.Dialog.DuplicateDetection -> {
                 // Navigation handled by toolbar click, dismiss dialog
@@ -330,10 +358,10 @@ data object NovelsTab : Tab {
             null -> {}
         }
 
-        BackHandler(enabled = state.selectionMode || state.searchQuery != null) {
+        BackHandler(enabled = state.selectionMode || state.toolbarQuery != null) {
             when {
                 state.selectionMode -> screenModel.clearSelection()
-                state.searchQuery != null -> screenModel.search(null)
+                state.toolbarQuery != null -> screenModel.clearSearch()
             }
         }
 

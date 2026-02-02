@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.cache
 
 import android.content.Context
+import eu.kanade.tachiyomi.ui.library.ExtensionInfo
 import tachiyomi.core.common.util.system.logcat
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
@@ -23,21 +24,21 @@ class LibrarySettingsCache(private val context: Context) {
 
     private val json = Json { ignoreUnknownKeys = true }
 
-    fun saveExtensions(extensions: List<Pair<Long, String>>) {
+    fun saveExtensions(extensions: List<ExtensionInfo>) {
         try {
-            val data = extensions.map { ExtensionData(it.first, it.second) }
+            val data = extensions.map { ExtensionData(it.sourceId, it.sourceName, it.isStub) }
             extensionsFile.writeText(json.encodeToString(data))
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e) { "Failed to save extensions cache" }
         }
     }
 
-    fun loadExtensions(): List<Pair<Long, String>>? {
+    fun loadExtensions(): List<ExtensionInfo>? {
         return try {
             if (!extensionsFile.exists()) return null
             val text = extensionsFile.readText()
             val data = json.decodeFromString<List<ExtensionData>>(text)
-            data.map { it.id to it.name }
+            data.map { ExtensionInfo(it.id, it.name, it.isStub) }
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e) { "Failed to load extensions cache" }
             null
@@ -71,7 +72,8 @@ class LibrarySettingsCache(private val context: Context) {
     @Serializable
     private data class ExtensionData(
         val id: Long,
-        val name: String
+        val name: String,
+        val isStub: Boolean = false
     )
 
     @Serializable

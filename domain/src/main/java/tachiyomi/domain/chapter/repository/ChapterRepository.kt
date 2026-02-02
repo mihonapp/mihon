@@ -14,6 +14,8 @@ interface ChapterRepository {
 
     suspend fun removeChaptersWithIds(chapterIds: List<Long>)
 
+    suspend fun removeChaptersByMangaIds(mangaIds: List<Long>)
+
     suspend fun getChapterByMangaId(mangaId: Long, applyScanlatorFilter: Boolean = false): List<Chapter>
 
     suspend fun getScanlatorsByMangaId(mangaId: Long): List<String>
@@ -23,6 +25,8 @@ interface ChapterRepository {
     suspend fun getBookmarkedChaptersByMangaId(mangaId: Long): List<Chapter>
 
     suspend fun getChapterById(id: Long): Chapter?
+    
+    suspend fun getChaptersByIds(ids: List<Long>): List<Chapter>
 
     suspend fun getChapterByMangaIdAsFlow(mangaId: Long, applyScanlatorFilter: Boolean = false): Flow<List<Chapter>>
 

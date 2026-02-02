@@ -96,6 +96,9 @@ data object LibraryTab : Tab {
         val titleMaxLines by settingsScreenModel.libraryPreferences.titleMaxLines().changes().collectAsState(
             settingsScreenModel.libraryPreferences.titleMaxLines().get(),
         )
+        val showUrlInList by settingsScreenModel.libraryPreferences.showUrlInList().changes().collectAsState(
+            settingsScreenModel.libraryPreferences.showUrlInList().get(),
+        )
 
         val snackbarHostState = remember { SnackbarHostState() }
 
@@ -141,8 +144,10 @@ data object LibraryTab : Tab {
                             }
                         }
                     },
-                    searchQuery = state.searchQuery,
+                    searchQuery = state.toolbarQuery,
                     onSearchQueryChange = screenModel::search,
+                    onSearch = screenModel::commitSearch,
+                    onSearchClear = screenModel::clearSearch,
                     // For scroll overlay when no tab
                     scrollBehavior = scrollBehavior.takeIf { !state.showCategoryTabs },
                     onClickFindDuplicates = screenModel::openDuplicateDetectionDialog,
@@ -163,6 +168,9 @@ data object LibraryTab : Tab {
                         navigator.push(MigrationConfigScreen(selection))
                     },
                     onTranslateClicked = screenModel::translateSelectedNovels,
+                    onClearCoversClicked = screenModel::clearCoversForSelection,
+                    onClearDescriptionsClicked = screenModel::clearDescriptionsForSelection,
+                    onClearTagsClicked = screenModel::clearTagsForSelection,
                 )
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -223,6 +231,7 @@ data object LibraryTab : Tab {
                         getColumnsForOrientation = { screenModel.getColumnsForOrientation(it) },
                         getItemsForCategory = { state.getItemsForCategory(it) },
                         titleMaxLines = titleMaxLines,
+                        showUrlInList = showUrlInList,
                     )
                 }
             }
@@ -255,8 +264,8 @@ data object LibraryTab : Tab {
                 DeleteLibraryMangaDialog(
                     containsLocalManga = dialog.manga.any(Manga::isLocal),
                     onDismissRequest = onDismissRequest,
-                    onConfirm = { deleteManga, deleteChapter ->
-                        screenModel.removeMangas(dialog.manga, deleteManga, deleteChapter)
+                    onConfirm = { deleteManga, deleteChapter, clearChaptersFromDb ->
+                        screenModel.removeMangas(dialog.manga, deleteManga, deleteChapter, clearChaptersFromDb)
                         screenModel.clearSelection()
                     },
                 )
@@ -279,6 +288,9 @@ data object LibraryTab : Tab {
             is LibraryScreenModel.Dialog.ImportEpub -> {
                 // Import EPUB is only used in NovelsTab, not here
             }
+            is LibraryScreenModel.Dialog.ExportEpub -> {
+                // Export EPUB is only used in NovelsTab, not here
+            }
             is LibraryScreenModel.Dialog.DuplicateDetection -> {
                 DuplicateDetectionDialog(
                     duplicates = dialog.duplicates,
@@ -290,10 +302,10 @@ data object LibraryTab : Tab {
             null -> {}
         }
 
-        BackHandler(enabled = state.selectionMode || state.searchQuery != null) {
+        BackHandler(enabled = state.selectionMode || state.toolbarQuery != null) {
             when {
                 state.selectionMode -> screenModel.clearSelection()
-                state.searchQuery != null -> screenModel.search(null)
+                state.toolbarQuery != null -> screenModel.clearSearch()
             }
         }
 

@@ -37,10 +37,12 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.core.util.ifSourcesLoaded
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.presentation.browse.BrowseSourceContent
 import eu.kanade.presentation.browse.MissingSourceScreen
 import eu.kanade.presentation.browse.components.BrowseSourceToolbar
@@ -71,6 +73,8 @@ import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.source.local.LocalSource
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 data class BrowseSourceScreen(
     val sourceId: Long,
@@ -92,9 +96,22 @@ data class BrowseSourceScreen(
         val state by screenModel.state.collectAsState()
 
         val navigator = LocalNavigator.currentOrThrow
+        
+        // Back confirmation state
+        val sourcePreferences = remember { Injekt.get<SourcePreferences>() }
+        val confirmBackAfterPages by sourcePreferences.confirmBackAfterPages().changes().collectAsState(initial = 0)
+        val showPageNumber by sourcePreferences.showPageNumber().changes().collectAsState(initial = false)
+        val skipCoverLoading by sourcePreferences.skipCoverLoading().changes().collectAsState(initial = false)
+        val currentPage by screenModel.currentPage.collectAsState()
+        var showBackConfirmDialog by remember { mutableStateOf(false) }
+        
         val navigateUp: () -> Unit = {
             when {
                 !state.isUserQuery && state.toolbarQuery != null -> screenModel.setToolbarQuery(null)
+                // Check if we should show confirmation before going back
+                confirmBackAfterPages > 0 && currentPage > confirmBackAfterPages -> {
+                    showBackConfirmDialog = true
+                }
                 else -> navigator.pop()
             }
         }
@@ -115,6 +132,31 @@ data class BrowseSourceScreen(
         var lastImportResult by remember { mutableStateOf<Triple<Int, Int, Int>?>(null) }
 
         val mangaList = screenModel.mangaPagerFlowFlow.collectAsLazyPagingItems()
+        
+        // Auto-load pages when page range loading is active
+        val targetEndPage by screenModel.targetEndPage.collectAsState()
+        LaunchedEffect(currentPage, targetEndPage, mangaList.loadState.append) {
+            val endPage = targetEndPage
+            if (endPage != null && currentPage < endPage) {
+                // Wait for current page to finish loading
+                if (mangaList.loadState.append is androidx.paging.LoadState.NotLoading) {
+                    // Small delay between page loads to avoid overwhelming the source
+                    kotlinx.coroutines.delay(500)
+                    // Trigger next page load by accessing beyond current items
+                    if (mangaList.itemCount > 0) {
+                        // Access the last item to trigger append
+                        mangaList[mangaList.itemCount - 1]
+                    }
+                }
+            } else if (endPage != null && currentPage >= endPage) {
+                // Range loading complete
+                screenModel.clearTargetEndPage()
+                snackbarHostState.showSnackbar(
+                    message = "Finished loading pages up to $endPage",
+                    duration = SnackbarDuration.Short,
+                )
+            }
+        }
         
         // Show snackbar when import completes
         LaunchedEffect(lastImportResult) {
@@ -175,6 +217,26 @@ data class BrowseSourceScreen(
                         onDisplayModeChange = { screenModel.displayMode = it },
                         navigateUp = navigateUp,
                         onWebViewClick = onWebViewClick,
+                        showPageNumber = showPageNumber,
+                        currentPage = currentPage,
+                        onPageJump = { targetPage ->
+                            screenModel.jumpToPage(targetPage)
+                            scope.launchIO {
+                                snackbarHostState.showSnackbar(
+                                    message = "Jumping to page $targetPage...",
+                                    duration = SnackbarDuration.Short,
+                                )
+                            }
+                        },
+                        onPageRangeLoad = { startPage, endPage ->
+                            screenModel.loadPageRange(startPage, endPage)
+                            scope.launchIO {
+                                snackbarHostState.showSnackbar(
+                                    message = "Loading pages $startPage to $endPage...",
+                                    duration = SnackbarDuration.Short,
+                                )
+                            }
+                        },
                         onHelpClick = onHelpClick,
                         onSettingsClick = { navigator.push(SourcePreferencesScreen(sourceId)) },
                         onSearch = screenModel::search,
@@ -339,6 +401,7 @@ data class BrowseSourceScreen(
                     }
                 },
                 titleMaxLines = screenModel.titleMaxLines,
+                skipCoverLoading = skipCoverLoading,
                 onMangaLongClick = { manga ->
                     if (state.selectionMode) {
                         screenModel.toggleSelection(manga)
@@ -367,9 +430,9 @@ data class BrowseSourceScreen(
                 val presets by screenModel.filterPresets.collectAsState()
                 SourceFilterDialog(
                     onDismissRequest = onDismissRequest,
-                    filters = state.filters,
+                    filters = state.pendingFilters, // Use pendingFilters for editing
                     onReset = screenModel::resetFilters,
-                    onFilter = { screenModel.search(filters = state.filters) },
+                    onFilter = { screenModel.search(filters = state.pendingFilters) }, // Apply pendingFilters on search
                     onUpdate = screenModel::setFilters,
                     onOpenPresets = screenModel::openPresetSheet,
                     presets = presets,
@@ -391,7 +454,7 @@ data class BrowseSourceScreen(
                     },
                     onLoadPreset = { presetId ->
                         screenModel.loadFilterPreset(presetId)
-                        screenModel.setDialog(BrowseSourceScreenModel.Dialog.Filter)
+                        // loadFilterPreset now opens the filter dialog automatically
                     },
                     onDeletePreset = screenModel::deleteFilterPreset,
                     onSetDefaultPreset = screenModel::setDefaultFilterPreset,
@@ -460,6 +523,32 @@ data class BrowseSourceScreen(
                     lastImportResult = Triple(added, skipped, errored)
                 },
                 initialText = initialText,
+            )
+        }
+
+        // Back confirmation dialog when many pages loaded
+        if (showBackConfirmDialog) {
+            androidx.compose.material3.AlertDialog(
+                onDismissRequest = { showBackConfirmDialog = false },
+                title = { Text(text = "Leave browse?") },
+                text = { Text(text = "You have loaded $currentPage pages. Are you sure you want to go back?") },
+                confirmButton = {
+                    androidx.compose.material3.TextButton(
+                        onClick = {
+                            showBackConfirmDialog = false
+                            navigator.pop()
+                        },
+                    ) {
+                        Text(text = stringResource(MR.strings.action_ok))
+                    }
+                },
+                dismissButton = {
+                    androidx.compose.material3.TextButton(
+                        onClick = { showBackConfirmDialog = false },
+                    ) {
+                        Text(text = stringResource(MR.strings.action_cancel))
+                    }
+                },
             )
         }
 

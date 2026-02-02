@@ -105,14 +105,33 @@ class LibraryPreferences(
     // Stores extension IDs that are excluded (unchecked) from the library filter
     fun excludedExtensions() = preferenceStore.getStringSet("pref_excluded_library_extensions", emptySet())
 
+    // Stores source IDs that should have their chapter list reversed
+    fun reversedChapterSources() = preferenceStore.getStringSet("pref_reversed_chapter_sources", emptySet())
+
     // Tag filtering - included tags (TriState: DISABLED = show all, ENABLED_IS = include, ENABLED_NOT = exclude)
     fun includedTags() = preferenceStore.getStringSet("pref_filter_library_included_tags", emptySet())
     fun excludedTags() = preferenceStore.getStringSet("pref_filter_library_excluded_tags", emptySet())
     fun filterNoTags() = preferenceStore.getEnum("pref_filter_library_no_tags", TriState.DISABLED)
+    
+    // Tag filter logic modes (true = AND, false = OR)
+    fun tagIncludeMode() = preferenceStore.getBoolean("pref_tag_include_mode_and", false) // Default OR
+    fun tagExcludeMode() = preferenceStore.getBoolean("pref_tag_exclude_mode_and", false) // Default OR
+    
+    // Tag sort preferences
+    fun tagSortByName() = preferenceStore.getBoolean("pref_tag_sort_by_name", false) // Default sort by count
+    fun tagSortAscending() = preferenceStore.getBoolean("pref_tag_sort_ascending", false) // Default descending
+    
+    // Tag case sensitivity (default insensitive)
+    fun tagCaseSensitive() = preferenceStore.getBoolean("pref_tag_case_sensitive", false)
+
+    // Manga detail page tag sorting (true = alphabetical, false = source order)
+    fun sortMangaTags() = preferenceStore.getBoolean("pref_sort_manga_tags", false)
 
     // Search options - what to include in library search
     fun searchChapterNames() = preferenceStore.getBoolean("pref_search_chapter_names", false)
     fun searchChapterContent() = preferenceStore.getBoolean("pref_search_chapter_content", false)
+    fun searchByUrl() = preferenceStore.getBoolean("pref_search_by_url", false)
+    fun useRegexSearch() = preferenceStore.getBoolean("pref_use_regex_search", false)
 
     // endregion
 
@@ -125,6 +144,8 @@ class LibraryPreferences(
     fun localBadge() = preferenceStore.getBoolean("display_local_badge", true)
 
     fun languageBadge() = preferenceStore.getBoolean("display_language_badge", false)
+
+    fun showUrlInList() = preferenceStore.getBoolean("display_url_in_list", false)
 
     fun newShowUpdatesCount() = preferenceStore.getBoolean("library_show_updates_count", true)
     fun newUpdatesCount() = preferenceStore.getInt(Preference.appStateKey("library_unseen_updates_count"), 0)
@@ -196,6 +217,18 @@ class LibraryPreferences(
     fun autoClearChapterCache() = preferenceStore.getBoolean("auto_clear_chapter_cache", false)
 
     fun hideMissingChapters() = preferenceStore.getBoolean("pref_hide_missing_chapter_indicators", false)
+
+    /**
+     * Whether the library should auto-refresh when database changes occur.
+     * Disabling this improves performance on large libraries by requiring manual refresh.
+     */
+    fun autoRefreshLibrary() = preferenceStore.getBoolean("pref_auto_refresh_library", true)
+    
+    /**
+     * Whether to verify library cache integrity on app startup.
+     * Disabling this speeds up startup but may result in stale cache data.
+     */
+    fun verifyCacheOnStartup() = preferenceStore.getBoolean("pref_verify_cache_on_startup", true)
     // endregion
 
     // region Swipe Actions

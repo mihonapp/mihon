@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.text
 
+import android.annotation.SuppressLint
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.speech.tts.TextToSpeech
@@ -219,12 +220,16 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
                 return false
             }
         },
-    )
+    ).apply {
+        // Disable long press handling so TextView can handle text selection
+        setIsLongpressEnabled(false)
+    }
 
     init {
         initViews()
         container.addView(scrollView, FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
-        tts = TextToSpeech(activity, this)
+        // Defer TTS initialization until actually needed to avoid "not bound" errors
+        // TTS will be initialized lazily when startTts() is called
         observePreferences()
         setupScrollListener()
     }
@@ -232,12 +237,32 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
     private fun initViews() {
         scrollView = object : NestedScrollView(activity) {
             private var isTextSelectionMode = false
+            private var selectionStartX = 0f
             private var selectionStartY = 0f
+            private var touchedTextView: TextView? = null
 
             override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
                 // Always pass touch events to gesture detector first
                 gestureDetector.onTouchEvent(ev)
                 return super.dispatchTouchEvent(ev)
+            }
+
+            private fun findTextViewAt(x: Float, y: Float): TextView? {
+                loadedChapters.forEach { loaded ->
+                    val textView = loaded.textView
+                    val location = IntArray(2)
+                    textView.getLocationOnScreen(location)
+                    val scrollViewLocation = IntArray(2)
+                    this.getLocationOnScreen(scrollViewLocation)
+                    
+                    val relativeTop = location[1] - scrollViewLocation[1]
+                    val relativeBottom = relativeTop + textView.height
+                    
+                    if (y >= relativeTop && y <= relativeBottom) {
+                        return textView
+                    }
+                }
+                return null
             }
 
             override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
@@ -246,7 +271,9 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
                     when (ev.action) {
                         MotionEvent.ACTION_DOWN -> {
                             isTextSelectionMode = false
+                            selectionStartX = ev.x
                             selectionStartY = ev.y
+                            touchedTextView = findTextViewAt(ev.x, ev.y)
                         }
                         MotionEvent.ACTION_MOVE -> {
                             // If text selection mode is active, don't intercept
@@ -254,16 +281,27 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
                                 return false
                             }
                             
-                            // Check for small movements (likely text selection vs scroll)
+                            val deltaX = kotlin.math.abs(ev.x - selectionStartX)
                             val deltaY = kotlin.math.abs(ev.y - selectionStartY)
-                            if (deltaY < 20) {
-                                // Small vertical movement - might be selecting text, don't intercept
+                            
+                            // If horizontal movement is greater than vertical, likely text selection
+                            if (deltaX > deltaY && deltaX > 10) {
+                                isTextSelectionMode = true
+                                return false
+                            }
+                            
+                            // Check for small movements (likely text selection vs scroll)
+                            if (deltaY < 20 && deltaX < 20) {
+                                // Very small movement - might be selecting text, don't intercept
                                 return false
                             }
                         }
+                        MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                            touchedTextView = null
+                        }
                     }
 
-                    // Check if any child TextView has an active text selection
+                    // Check if any child TextView has an active text selection or focus
                     loadedChapters.forEach { loaded ->
                         if (loaded.textView.hasSelection() || loaded.textView.isFocused) {
                             isTextSelectionMode = true
@@ -652,10 +690,7 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
             isVisible = false
         }
 
-        val textView = TextView(activity).apply {
-            setTextIsSelectable(preferences.novelTextSelectable().get())
-            movementMethod = android.text.method.LinkMovementMethod.getInstance()
-        }
+        val textView = createSelectableTextView()
         applyTextViewStyles(textView)
 
         val loadedChapter = LoadedChapter(
@@ -788,12 +823,100 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
         scope.launch {
             preferences.novelTextSelectable().changes()
                 .drop(1) // Drop initial value
-                .collectLatest { _ ->
-                    // Reload all chapters to recreate TextViews with correct selection state
+                .collectLatest { selectable ->
+                    // Force reload all chapters by clearing loaded chapters first
+                    // This ensures the text selection property is properly applied
                     activity.runOnUiThread {
-                        currentChapters?.let { setChapters(it) }
+                        // Update text selection on existing loaded chapters immediately
+                        loadedChapters.forEach { loaded ->
+                            loaded.textView.setTextIsSelectable(selectable)
+                            loaded.textView.isFocusable = selectable
+                            loaded.textView.isFocusableInTouchMode = selectable
+                            loaded.textView.isLongClickable = selectable
+                            // Update movement method based on selection mode
+                            loaded.textView.movementMethod = if (selectable) {
+                                android.text.method.ArrowKeyMovementMethod.getInstance()
+                            } else {
+                                android.text.method.LinkMovementMethod.getInstance()
+                            }
+                        }
+                        // Also reload to ensure consistent state
+                        currentChapters?.let { 
+                            contentContainer.removeAllViews()
+                            loadedChapters.clear()
+                            currentChapterIndex = 0
+                            setChapters(it) 
+                        }
                     }
                 }
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun createSelectableTextView(): TextView {
+        return TextView(activity).apply {
+            val isSelectable = preferences.novelTextSelectable().get()
+            
+            // Set explicit layout params with MATCH_PARENT width for text selection to work
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+            )
+            
+            // setTextIsSelectable MUST be called and we should NOT override movementMethod
+            // Android internally sets up the correct movement method for selection when this is true
+            setTextIsSelectable(isSelectable)
+            
+            // For text selection to work, we need to ensure the textview can receive focus
+            if (isSelectable) {
+                isFocusable = true
+                isFocusableInTouchMode = true
+                // DO NOT set movementMethod here - setTextIsSelectable already sets up the correct one
+                // Setting ArrowKeyMovementMethod was breaking touch-based selection
+                // Enable long click for selection
+                isLongClickable = true
+            } else {
+                // When not selectable, use LinkMovementMethod for clicking links
+                movementMethod = android.text.method.LinkMovementMethod.getInstance()
+            }
+            
+            // Request parent not intercept when trying to select text
+            setOnTouchListener { v, event ->
+                val textView = v as TextView
+                if (preferences.novelTextSelectable().get()) {
+                    when (event.action) {
+                        MotionEvent.ACTION_DOWN -> {
+                            // Request parent (scroll view) to not intercept touch events
+                            v.parent?.requestDisallowInterceptTouchEvent(true)
+                            // Request focus to enable selection
+                            if (!textView.isFocused) {
+                                textView.requestFocus()
+                            }
+                        }
+                        MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                            // Re-enable parent intercept after touch ends if no selection
+                            if (!textView.hasSelection()) {
+                                v.parent?.requestDisallowInterceptTouchEvent(false)
+                            }
+                        }
+                        MotionEvent.ACTION_MOVE -> {
+                            // Keep disallowing intercept during move if we might be selecting
+                            v.parent?.requestDisallowInterceptTouchEvent(true)
+                        }
+                    }
+                }
+                false // Let the TextView handle the event
+            }
+            
+            // Set up long click listener for text selection
+            if (isSelectable) {
+                setOnLongClickListener {
+                    // Request focus and start selection mode
+                    requestFocus()
+                    parent?.requestDisallowInterceptTouchEvent(true)
+                    false // Let default behavior handle selection
+                }
+            }
         }
     }
 
@@ -955,7 +1078,46 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
         return chunks
     }
 
+    private fun ensureTtsInitialized() {
+        if (tts == null) {
+            // Check if TTS data is available first
+            val intent = android.content.Intent(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA)
+            try {
+                tts = TextToSpeech(activity, this)
+                logcat(LogPriority.DEBUG) { "TTS: Initialization started" }
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR) { "TTS: Failed to create TextToSpeech instance: ${e.message}" }
+                activity.runOnUiThread {
+                    logcat(LogPriority.DEBUG) { "TTS engine not available. Please install a TTS engine from Google Play." }
+                }
+            }
+        }
+    }
+
     fun startTts() {
+        ensureTtsInitialized()
+        
+        if (!ttsInitialized) {
+            logcat(LogPriority.WARN) { "TTS: Not initialized yet, waiting..." }
+            // Queue the speech to start when TTS becomes available
+            scope.launch {
+                // Wait up to 2 seconds for initialization
+                var waited = 0
+                while (!ttsInitialized && waited < 2000) {
+                    delay(100)
+                    waited += 100
+                }
+                if (ttsInitialized) {
+                    startTts() // Retry now that it's initialized
+                } else {
+                    activity.runOnUiThread {
+                       logcat(LogPriority.DEBUG) {"TTS not available. Please check your TTS settings."}
+                    }
+                }
+            }
+            return
+        }
+        
         isTtsAutoPlay = true // Enable auto-continue
         val text = loadedChapters.getOrNull(currentChapterIndex)?.textView?.text?.toString()
             ?: loadedChapters.firstOrNull()?.textView?.text?.toString()
@@ -973,7 +1135,9 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
 
     fun stopTts() {
         isTtsAutoPlay = false // Disable auto-continue when manually stopped
-        tts?.stop()
+        if (ttsInitialized) {
+            tts?.stop()
+        }
     }
 
     fun isTtsSpeaking(): Boolean = ttsInitialized && tts?.isSpeaking == true
@@ -1003,7 +1167,13 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
             saveProgress(progress)
         }
 
-        tts?.shutdown()
+        // Cleanup TTS - only if initialized
+        if (ttsInitialized) {
+            tts?.stop()
+            tts?.shutdown()
+        }
+        tts = null
+
         scope.cancel()
         loadJob?.cancel()
         loadedChapters.clear()
@@ -1179,10 +1349,7 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
         }
 
         // Create text view for content
-        val textView = TextView(activity).apply {
-            setTextIsSelectable(preferences.novelTextSelectable().get())
-            movementMethod = android.text.method.LinkMovementMethod.getInstance()
-        }
+        val textView = createSelectableTextView()
 
         applyTextViewStyles(textView)
 
@@ -1324,9 +1491,30 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
         textView.setLineSpacing(0f, lineHeight)
 
         // Apply font family
-        // Note: Android native TextView can only use system fonts (Serif, Sans-serif, Monospace)
-        // Specific fonts like Georgia, Times New Roman, Arial are CSS values that only work in WebView
+        // For custom fonts (file:// or content:// URIs), load the Typeface from file
         textView.typeface = when {
+            fontFamily.startsWith("file://") || fontFamily.startsWith("content://") -> {
+                try {
+                    val fontUri = android.net.Uri.parse(fontFamily)
+                    // For content:// URIs, copy to cache first
+                    val fontFile = if (fontFamily.startsWith("content://")) {
+                        val tempFile = java.io.File(activity.cacheDir, "custom_font.ttf")
+                        activity.contentResolver.openInputStream(fontUri)?.use { input ->
+                            tempFile.outputStream().use { output ->
+                                input.copyTo(output)
+                            }
+                        }
+                        tempFile
+                    } else {
+                        // file:// URI - extract path
+                        java.io.File(fontUri.path ?: fontFamily.removePrefix("file://"))
+                    }
+                    android.graphics.Typeface.createFromFile(fontFile)
+                } catch (e: Exception) {
+                    logcat(LogPriority.ERROR) { "Failed to load custom font: ${e.message}" }
+                    android.graphics.Typeface.SANS_SERIF
+                }
+            }
             fontFamily.contains("serif", ignoreCase = true) && !fontFamily.contains("sans", ignoreCase = true) ->
                 android.graphics.Typeface.SERIF
             fontFamily.contains("monospace", ignoreCase = true) ->

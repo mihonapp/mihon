@@ -71,12 +71,15 @@ class MangaCoverFetcher(
         }
 
         // diskCacheKey is thumbnail_url
-        if (url == null) error("No cover specified")
+        // Return error silently for null/empty URLs - Coil will use the error placeholder
+        if (url.isNullOrEmpty()) {
+            throw IOException("No cover URL available")
+        }
         return when (getResourceType(url)) {
             Type.File -> fileLoader(File(url.substringAfter("file://")))
             Type.URI -> fileUriLoader(url)
             Type.URL -> httpLoader()
-            null -> error("Invalid image")
+            null -> throw IOException("Invalid cover URL format")
         }
     }
 

@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.FlipToBack
+import androidx.compose.material.icons.outlined.GridView
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.SelectAll
+import androidx.compose.material.icons.outlined.ViewList
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -63,6 +65,9 @@ fun UpdateScreen(
     onUpdateSelected: (UpdatesItem, Boolean, Boolean, Boolean) -> Unit,
     onOpenChapter: (UpdatesItem) -> Unit,
     onFilterSelected: (UpdatesFilter) -> Unit = {},
+    onToggleGroupByNovel: () -> Unit = {},
+    onClickNovelGroup: (Long) -> Unit = {}, // Navigate to manga screen
+    onClearUpdatesCacheClicked: () -> Unit = {},
 ) {
     BackHandler(enabled = state.selectionMode) {
         onSelectAll(false)
@@ -73,6 +78,9 @@ fun UpdateScreen(
             UpdatesAppBar(
                 onCalendarClicked = { onCalendarClicked() },
                 onUpdateLibrary = { onUpdateLibrary() },
+                onToggleGroupByNovel = onToggleGroupByNovel,
+                onClearUpdatesCacheClicked = onClearUpdatesCacheClicked,
+                groupByNovel = state.groupByNovel,
                 actionModeCounter = state.selected.size,
                 onSelectAll = { onSelectAll(true) },
                 onInvertSelection = { onInvertSelection() },
@@ -159,7 +167,14 @@ fun UpdateScreen(
                                     )
                                 }
                             }
+                        } else if (state.groupByNovel) {
+                            // Show updates grouped by novel
+                            updatesNovelGroups(
+                                groups = state.getNovelGroups(),
+                                onClickGroup = onClickNovelGroup,
+                            )
                         } else {
+                            // Show individual chapter updates
                             updatesUiItems(
                                 uiModels = state.getUiModel(),
                                 selectionMode = state.selectionMode,
@@ -180,6 +195,9 @@ fun UpdateScreen(
 private fun UpdatesAppBar(
     onCalendarClicked: () -> Unit,
     onUpdateLibrary: () -> Unit,
+    onToggleGroupByNovel: () -> Unit,
+    onClearUpdatesCacheClicked: () -> Unit,
+    groupByNovel: Boolean,
     // For action mode
     actionModeCounter: Int,
     onSelectAll: () -> Unit,
@@ -195,6 +213,11 @@ private fun UpdatesAppBar(
             AppBarActions(
                 persistentListOf(
                     AppBar.Action(
+                        title = if (groupByNovel) "List View" else "Group by Novel",
+                        icon = if (groupByNovel) Icons.Outlined.ViewList else Icons.Outlined.GridView,
+                        onClick = onToggleGroupByNovel,
+                    ),
+                    AppBar.Action(
                         title = stringResource(MR.strings.action_view_upcoming),
                         icon = Icons.Outlined.CalendarMonth,
                         onClick = onCalendarClicked,
@@ -203,6 +226,10 @@ private fun UpdatesAppBar(
                         title = stringResource(MR.strings.action_update_library),
                         icon = Icons.Outlined.Refresh,
                         onClick = onUpdateLibrary,
+                    ),
+                    AppBar.OverflowAction(
+                        title = "Clear Updates Cache",
+                        onClick = onClearUpdatesCacheClicked,
                     ),
                 ),
             )

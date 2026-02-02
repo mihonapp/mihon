@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.LoadResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
@@ -60,10 +61,31 @@ internal class ExtensionInstallReceiver(private val listener: Listener) : Broadc
             }
             Intent.ACTION_PACKAGE_REPLACED, ACTION_EXTENSION_REPLACED -> {
                 scope.launch {
-                    when (val result = getExtensionFromIntent(context, intent)) {
-                        is LoadResult.Success -> listener.onExtensionUpdated(result.extension)
-                        is LoadResult.Untrusted -> listener.onExtensionUntrusted(result.extension)
-                        else -> {}
+                    val pkgName = getPackageNameFromIntent(intent)
+                    logcat(LogPriority.INFO) { "Extension REPLACED event received for: $pkgName" }
+                    
+                    // Add retry mechanism for replaced packages
+                    // Sometimes the package manager reports REPLACED before the new info is available
+                    // This is particularly common with mihonnovel extensions
+                    var result = getExtensionFromIntent(context, intent)
+                    var retries = 0
+                    val maxRetries = 15
+                    while (result is LoadResult.Error && retries < maxRetries) {
+                        retries++
+                        logcat(LogPriority.WARN) { "Extension load failed for $pkgName after REPLACED, retrying ($retries/$maxRetries)..." }
+                        delay(2000L) // Wait 2 seconds between retries
+                        result = getExtensionFromIntent(context, intent)
+                    }
+                    when (result) {
+                        is LoadResult.Success -> {
+                            logcat(LogPriority.INFO) { "Extension $pkgName loaded successfully after $retries retries" }
+                            listener.onExtensionUpdated(result.extension)
+                        }
+                        is LoadResult.Untrusted -> {
+                            logcat(LogPriority.WARN) { "Extension $pkgName is untrusted" }
+                            listener.onExtensionUntrusted(result.extension)
+                        }
+                        else -> logcat(LogPriority.ERROR) { "Failed to load extension $pkgName after REPLACED event (after $maxRetries retries)" }
                     }
                 }
             }

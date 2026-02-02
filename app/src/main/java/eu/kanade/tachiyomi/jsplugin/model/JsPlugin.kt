@@ -20,10 +20,20 @@ data class JsPlugin(
     val customJS: String? = null,
     var repositoryUrl: String? = null,
 ) {
+    companion object {
+        /** Package name prefix for novel JS plugins - unique to mihonnovel fork */
+        const val PKG_PREFIX = "app.mihonnovel.jsplugin."
+    }
+    
     /**
      * Unique identifier combining plugin ID and repository URL for disambiguation
      */
     fun uniqueId(): String = "js:$id"
+    
+    /**
+     * Unique package name for this plugin - prevents conflicts with other forks
+     */
+    fun pkgName(): String = "${PKG_PREFIX}$id"
     
     /**
      * Generate a stable Long ID for Source compatibility

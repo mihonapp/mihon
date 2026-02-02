@@ -10,6 +10,7 @@ import eu.kanade.presentation.components.SEARCH_DEBOUNCE_MILLIS
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.jsplugin.JsPluginManager
+import eu.kanade.tachiyomi.jsplugin.model.JsPlugin
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.system.LocaleHelper
@@ -108,7 +109,7 @@ class NovelExtensionsScreenModel(
                     val instVerCode = installed?.plugin?.version?.replace(".", "")?.toLongOrNull() ?: 0L
                     Extension.JsPlugin(
                         name = plugin.name,
-                        pkgName = plugin.id,
+                        pkgName = plugin.pkgName(),
                         versionName = plugin.version,
                         versionCode = verCode,
                         libVersion = 0.0,
@@ -139,7 +140,7 @@ class NovelExtensionsScreenModel(
                         val verCode = plugin.version.replace(".", "").toLongOrNull() ?: 0L
                         Extension.JsPlugin(
                             name = plugin.name,
-                            pkgName = plugin.id,
+                            pkgName = plugin.pkgName(),
                             versionName = plugin.version,
                             versionCode = verCode,
                             libVersion = 0.0,
@@ -243,9 +244,11 @@ class NovelExtensionsScreenModel(
 
     fun installJsPlugin(extension: Extension.JsPlugin) {
         screenModelScope.launchIO {
-            val plugin = jsPluginManager.availablePlugins.value.find { it.id == extension.pkgName }
+            // Extract the original plugin ID from pkgName (remove prefix)
+            val pluginId = extension.pkgName.removePrefix(JsPlugin.PKG_PREFIX)
+            val plugin = jsPluginManager.availablePlugins.value.find { it.id == pluginId }
             if (plugin == null) {
-                logcat(LogPriority.ERROR) { "Plugin not found in available plugins: ${extension.pkgName}" }
+                logcat(LogPriority.ERROR) { "Plugin not found in available plugins: $pluginId (pkgName: ${extension.pkgName})" }
                 return@launchIO
             }
             if (extension.repoUrl.isEmpty()) {
@@ -273,7 +276,9 @@ class NovelExtensionsScreenModel(
         when (extension) {
             is Extension.JsPlugin -> {
                 screenModelScope.launchIO {
-                    jsPluginManager.uninstallPlugin(extension.pkgName)
+                    // Extract the original plugin ID from pkgName (remove prefix)
+                    val pluginId = extension.pkgName.removePrefix(JsPlugin.PKG_PREFIX)
+                    jsPluginManager.uninstallPlugin(pluginId)
                 }
             }
             else -> extensionManager.uninstallExtension(extension)

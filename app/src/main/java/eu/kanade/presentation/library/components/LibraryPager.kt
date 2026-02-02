@@ -43,6 +43,7 @@ fun LibraryPager(
     onLongClickManga: (Category, LibraryManga) -> Unit,
     onClickContinueReading: ((LibraryManga) -> Unit)?,
     titleMaxLines: Int = 2,
+    showUrlInList: Boolean = false,
 ) {
     HorizontalPager(
         modifier = Modifier.fillMaxSize(),
@@ -90,6 +91,7 @@ fun LibraryPager(
                     onClickContinueReading = onClickContinueReading,
                     searchQuery = searchQuery,
                     onGlobalSearchClicked = onGlobalSearchClicked,
+                    showUrl = showUrlInList,
                 )
             }
             LibraryDisplayMode.CompactGrid, LibraryDisplayMode.CoverOnlyGrid -> {

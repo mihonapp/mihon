@@ -49,6 +49,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -59,6 +60,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import eu.kanade.tachiyomi.data.font.FontManager
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -90,7 +92,8 @@ private val novelThemes = listOf(
     "Custom" to "custom",
 )
 
-private val novelFonts = listOf(
+// System fonts - always available
+private val systemFonts = listOf(
     "Sans Serif" to "sans-serif",
     "Serif" to "serif",
     "Monospace" to "monospace",
@@ -180,6 +183,7 @@ internal fun ColumnScope.NovelPage(screenModel: ReaderSettingsScreenModel) {
 
 @Composable
 internal fun ColumnScope.NovelReadingTab(screenModel: ReaderSettingsScreenModel, renderingMode: String) {
+    val context = LocalContext.current
     val fontSize by screenModel.preferences.novelFontSize().collectAsState()
     val lineHeight by screenModel.preferences.novelLineHeight().collectAsState()
     val paragraphIndent by screenModel.preferences.novelParagraphIndent().collectAsState()
@@ -190,6 +194,17 @@ internal fun ColumnScope.NovelReadingTab(screenModel: ReaderSettingsScreenModel,
     val marginBottom by screenModel.preferences.novelMarginBottom().collectAsState()
     val fontFamily by screenModel.preferences.novelFontFamily().collectAsState()
     val textAlign by screenModel.preferences.novelTextAlign().collectAsState()
+    val autoSplitEnabled by screenModel.preferences.novelAutoSplitText().collectAsState()
+    val autoSplitWordCount by screenModel.preferences.novelAutoSplitWordCount().collectAsState()
+
+    // Load custom fonts from FontManager
+    val fontManager = remember { FontManager(context) }
+    val allFonts by produceState(initialValue = systemFonts) {
+        val customFonts = fontManager.getInstalledFonts().map { font ->
+            font.name to font.path
+        }
+        value = systemFonts + customFonts
+    }
 
     // Rendering Mode
     SettingsChipRow(MR.strings.pref_novel_rendering_mode) {
@@ -262,7 +277,7 @@ internal fun ColumnScope.NovelReadingTab(screenModel: ReaderSettingsScreenModel,
 
     // Font Family
     SettingsChipRow(MR.strings.pref_font_family) {
-        novelFonts.map { (label, value) ->
+        allFonts.map { (label, value) ->
             FilterChip(
                 selected = fontFamily == value,
                 onClick = { screenModel.preferences.novelFontFamily().set(value) },
@@ -285,6 +300,28 @@ internal fun ColumnScope.NovelReadingTab(screenModel: ReaderSettingsScreenModel,
             FilterChip(
                 selected = textAlign == value,
                 onClick = { screenModel.preferences.novelTextAlign().set(value) },
+                label = { Text(label) },
+            )
+        }
+    }
+
+    HorizontalDivider()
+
+    // Auto-split paragraphs
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_novel_auto_split_paragraphs),
+        pref = screenModel.preferences.novelAutoSplitText(),
+    )
+
+    // Word count threshold (only shown when enabled)
+    if (autoSplitEnabled) {
+        SliderItem(
+            label = stringResource(MR.strings.pref_novel_auto_split_word_count),
+            value = autoSplitWordCount / 100,
+            valueRange = 1..20,
+            onChange = { screenModel.preferences.novelAutoSplitWordCount().set(it * 100) },
+        )
+    }
                 label = { Text(label) },
             )
         }

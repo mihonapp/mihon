@@ -31,6 +31,7 @@ fun BrowseSourceCompactGrid(
     translatedTitles: Map<Long, String> = emptyMap(),
     onMangaVisible: (Manga) -> Unit = {},
     titleMaxLines: Int = 2,
+    skipCoverLoading: Boolean = false,
 ) {
     LazyVerticalGrid(
         columns = columns,
@@ -64,6 +65,7 @@ fun BrowseSourceCompactGrid(
                 onLongClick = { onMangaLongClick(manga) },
                 isSelected = isSelected,
                 titleMaxLines = titleMaxLines,
+                skipCoverLoading = skipCoverLoading,
             )
         }
 
@@ -83,6 +85,7 @@ private fun BrowseSourceCompactGridItem(
     onLongClick: () -> Unit = onClick,
     isSelected: Boolean = false,
     titleMaxLines: Int = 2,
+    skipCoverLoading: Boolean = false,
 ) {
     MangaCompactGridItem(
         isSelected = isSelected,
@@ -92,7 +95,7 @@ private fun BrowseSourceCompactGridItem(
             mangaId = manga.id,
             sourceId = manga.source,
             isMangaFavorite = manga.favorite,
-            url = manga.thumbnailUrl,
+            url = if (skipCoverLoading) "" else manga.thumbnailUrl,
             lastModified = manga.coverLastModified,
         ),
         coverAlpha = if (manga.favorite) CommonMangaItemDefaults.BrowseFavoriteCoverAlpha else 1f,

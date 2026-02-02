@@ -42,6 +42,9 @@ fun MangaToolbar(
     onClickEditNotes: () -> Unit,
     onClickEditAltTitles: (() -> Unit)?,
     onClickEditTags: (() -> Unit)?,
+    onClickEditTitle: (() -> Unit)? = null,
+    onClickEditDescription: (() -> Unit)? = null,
+    onClickEditUrl: (() -> Unit)? = null,
     onClickTranslate: (() -> Unit)? = null,
     onClickTranslateDownloaded: (() -> Unit)? = null,
     onClickExportEpub: (() -> Unit)? = null,
@@ -177,6 +180,30 @@ fun MangaToolbar(
                             AppBar.OverflowAction(
                                 title = "Edit Tags",
                                 onClick = onClickEditTags,
+                            ),
+                        )
+                    }
+                    if (onClickEditTitle != null) {
+                        add(
+                            AppBar.OverflowAction(
+                                title = "Edit Title",
+                                onClick = onClickEditTitle,
+                            ),
+                        )
+                    }
+                    if (onClickEditDescription != null) {
+                        add(
+                            AppBar.OverflowAction(
+                                title = "Edit Description",
+                                onClick = onClickEditDescription,
+                            ),
+                        )
+                    }
+                    if (onClickEditUrl != null) {
+                        add(
+                            AppBar.OverflowAction(
+                                title = "Edit URL",
+                                onClick = onClickEditUrl,
                             ),
                         )
                     }

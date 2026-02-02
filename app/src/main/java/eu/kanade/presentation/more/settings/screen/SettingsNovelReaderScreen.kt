@@ -3,6 +3,8 @@ package eu.kanade.presentation.more.settings.screen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import kotlinx.collections.immutable.persistentListOf
@@ -22,10 +24,11 @@ object SettingsNovelReaderScreen : SearchableSettings {
     @Composable
     override fun getPreferences(): List<Preference> {
         val readerPref = remember { Injekt.get<ReaderPreferences>() }
+        val navigator = LocalNavigator.currentOrThrow
 
         return listOf(
             getDisplayGroup(readerPref),
-            getTextGroup(readerPref),
+            getTextGroup(readerPref, navigator),
             getNavigationGroup(readerPref),
             getAutoScrollGroup(readerPref),
         )
@@ -59,7 +62,7 @@ object SettingsNovelReaderScreen : SearchableSettings {
     }
 
     @Composable
-    private fun getTextGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup {
+    private fun getTextGroup(readerPreferences: ReaderPreferences, navigator: cafe.adriel.voyager.navigator.Navigator): Preference.PreferenceGroup {
         val fontSize = readerPreferences.novelFontSize().collectAsState().value
         val lineHeight = readerPreferences.novelLineHeight().collectAsState().value
 
@@ -86,6 +89,11 @@ object SettingsNovelReaderScreen : SearchableSettings {
                         "Arial, sans-serif" to "Arial",
                     ).toImmutableMap(),
                     title = stringResource(MR.strings.pref_font_family),
+                ),
+                Preference.PreferenceItem.TextPreference(
+                    title = "Font Manager",
+                    subtitle = "Download or import custom fonts",
+                    onClick = { navigator.push(FontManagerScreen()) },
                 ),
                 Preference.PreferenceItem.SliderPreference(
                     value = (lineHeight * 10).toInt(),

@@ -577,6 +577,60 @@ class JSLibraryProvider(
             debug: function() { __log('DEBUG', Array.prototype.slice.call(arguments).join(' ')); }
         };
         
+        // TextDecoder polyfill for encoding support
+        function TextDecoder(encoding) {
+            this.encoding = (encoding || 'utf-8').toLowerCase();
+        }
+        TextDecoder.prototype.decode = function(buffer) {
+            // For ArrayBuffer or Uint8Array
+            var bytes = buffer instanceof ArrayBuffer ? new Uint8Array(buffer) : buffer;
+            if (!bytes || !bytes.length) return '';
+            // Simple UTF-8 decoding
+            var result = '';
+            for (var i = 0; i < bytes.length; i++) {
+                result += String.fromCharCode(bytes[i]);
+            }
+            return result;
+        };
+        globalThis.TextDecoder = TextDecoder;
+        
+        // TextEncoder polyfill
+        function TextEncoder() {
+            this.encoding = 'utf-8';
+        }
+        TextEncoder.prototype.encode = function(str) {
+            var arr = [];
+            for (var i = 0; i < str.length; i++) {
+                arr.push(str.charCodeAt(i) & 0xff);
+            }
+            return new Uint8Array(arr);
+        };
+        globalThis.TextEncoder = TextEncoder;
+        
+        // Buffer polyfill for Node.js compatibility
+        var Buffer = {
+            from: function(data, encoding) {
+                if (typeof data === 'string') {
+                    if (encoding === 'base64') {
+                        return { toString: function() { return atob(data); }, data: atob(data) };
+                    }
+                    return { toString: function() { return data; }, data: data };
+                }
+                if (data instanceof ArrayBuffer || ArrayBuffer.isView(data)) {
+                    var bytes = data instanceof ArrayBuffer ? new Uint8Array(data) : data;
+                    var str = '';
+                    for (var i = 0; i < bytes.length; i++) str += String.fromCharCode(bytes[i]);
+                    return {
+                        toString: function(enc) { return enc === 'base64' ? btoa(str) : str; },
+                        data: str
+                    };
+                }
+                return { toString: function() { return ''; }, data: '' };
+            },
+            isBuffer: function(obj) { return false; }
+        };
+        globalThis.Buffer = Buffer;
+        
         // Fetch API wrapper
         async function fetch(url, init) {
             console.log('[FETCH] Calling URL: ' + url);
@@ -588,11 +642,70 @@ class JSLibraryProvider(
                 status: r.status || 0,
                 statusText: r.statusText || '',
                 url: r.url || url,
-                headers: { get: function(n) { return (r.headers || {})[n] || (r.headers || {})[n.toLowerCase()] || null; } },
+                headers: new Headers(r.headers || {}),
                 text: async function() { return r.text || ''; },
-                json: async function() { return JSON.parse(r.text || '{}'); }
+                json: async function() { return JSON.parse(r.text || '{}'); },
+                arrayBuffer: async function() {
+                    var text = r.text || '';
+                    var buf = new ArrayBuffer(text.length);
+                    var view = new Uint8Array(buf);
+                    for (var i = 0; i < text.length; i++) view[i] = text.charCodeAt(i);
+                    return buf;
+                },
+                blob: async function() { return new Blob([r.text || '']); },
+                clone: function() { return this; }
             };
         }
+        
+        // Headers polyfill
+        function Headers(init) {
+            this._headers = {};
+            if (init) {
+                for (var k in init) {
+                    if (init.hasOwnProperty(k)) {
+                        this._headers[k.toLowerCase()] = init[k];
+                    }
+                }
+            }
+        }
+        Headers.prototype.get = function(name) { return this._headers[name.toLowerCase()] || null; };
+        Headers.prototype.set = function(name, value) { this._headers[name.toLowerCase()] = value; };
+        Headers.prototype.has = function(name) { return name.toLowerCase() in this._headers; };
+        Headers.prototype.append = function(name, value) { 
+            var key = name.toLowerCase();
+            this._headers[key] = this._headers[key] ? this._headers[key] + ', ' + value : value;
+        };
+        Headers.prototype.delete = function(name) { delete this._headers[name.toLowerCase()]; };
+        Headers.prototype.forEach = function(callback, thisArg) {
+            for (var k in this._headers) {
+                if (this._headers.hasOwnProperty(k)) {
+                    callback.call(thisArg, this._headers[k], k, this);
+                }
+            }
+        };
+        Headers.prototype.entries = function() {
+            var arr = [];
+            for (var k in this._headers) {
+                if (this._headers.hasOwnProperty(k)) arr.push([k, this._headers[k]]);
+            }
+            return arr[Symbol.iterator]();
+        };
+        globalThis.Headers = Headers;
+        
+        // Blob polyfill
+        function Blob(parts, options) {
+            this._data = parts ? parts.join('') : '';
+            this.type = options && options.type || '';
+            this.size = this._data.length;
+        }
+        Blob.prototype.text = async function() { return this._data; };
+        Blob.prototype.arrayBuffer = async function() {
+            var buf = new ArrayBuffer(this._data.length);
+            var view = new Uint8Array(buf);
+            for (var i = 0; i < this._data.length; i++) view[i] = this._data.charCodeAt(i);
+            return buf;
+        };
+        globalThis.Blob = Blob;
         
         // Cheerio wrapper - minimal JS, logic in Kotlin
         function __wrapHandle(h) {
@@ -609,12 +722,40 @@ class JSLibraryProvider(
                 first: function() { return __wrapHandle(__cheerioFirst(h)); },
                 last: function() { return __wrapHandle(__cheerioLast(h)); },
                 parent: function() { return __wrapHandle(__cheerioParent(h)); },
+                parents: function(s) { return __wrapHandle(__cheerioParent(h)); }, // Simplified
                 children: function(s) { return __wrapHandle(__cheerioChildren(h, s || '')); },
                 next: function() { return __wrapHandle(__cheerioNext(h)); },
+                nextAll: function() { return __wrapHandle(__cheerioNext(h)); }, // Simplified
                 prev: function() { return __wrapHandle(__cheerioPrev(h)); },
+                prevAll: function() { return __wrapHandle(__cheerioPrev(h)); }, // Simplified
                 hasClass: function(c) { return __cheerioHasClass(h, c); },
                 is: function(s) { return __cheerioIs(h, s); },
-                filter: function(s) { return __wrapHandle(__cheerioFilter(h, s)); },
+                filter: function(s) { 
+                    if (typeof s === 'function') {
+                        // Function filter - iterate and apply
+                        var results = [];
+                        var len = __cheerioLength(h);
+                        for (var i = 0; i < len; i++) {
+                            var el = __wrapHandle(__cheerioEq(h, i));
+                            if (s.call(el, i, el)) results.push(el);
+                        }
+                        return __arrayToCheerio(results);
+                    }
+                    return __wrapHandle(__cheerioFilter(h, s)); 
+                },
+                not: function(s) {
+                    var results = [];
+                    var len = __cheerioLength(h);
+                    for (var i = 0; i < len; i++) {
+                        var el = __wrapHandle(__cheerioEq(h, i));
+                        if (typeof s === 'function') {
+                            if (!s.call(el, i, el)) results.push(el);
+                        } else if (!el.is(s)) {
+                            results.push(el);
+                        }
+                    }
+                    return __arrayToCheerio(results);
+                },
                 each: function(cb) {
                     var len = __cheerioLength(h);
                     for (var i = 0; i < len; i++) { var el = __wrapHandle(__cheerioEq(h, i)); cb.call(el, i, el); }
@@ -625,13 +766,14 @@ class JSLibraryProvider(
                     for (var i = 0; i < len; i++) { 
                         var el = __wrapHandle(__cheerioEq(h, i)); 
                         var result = cb.call(el, i, el);
-                        results.push(result); 
+                        if (result != null) results.push(result); 
                     }
                     // Return array-like object with common array methods + cheerio methods
                     results.get = function(idx) { return typeof idx === 'undefined' ? results : results[idx]; };
                     results.toArray = function() { return results.slice(); };
                     results.join = function(sep) { return results.slice().join(sep); };
                     results.text = function() { return results.join(''); };
+                    results.filter = function(fn) { return results.slice().filter(fn); };
                     return results;
                 },
                 toArray: function() {
@@ -644,15 +786,64 @@ class JSLibraryProvider(
                 val: function() { var v = __cheerioAttr(h, 'value'); return v === null ? undefined : v; },
                 trim: function() { return (__cheerioText(h) || '').trim(); },
                 contents: function() { return this.children(''); },
-                siblings: function() { return this; },
-                closest: function() { return this; },
+                siblings: function(s) { 
+                    var p = this.parent();
+                    return s ? p.children(s).not(this) : p.children().not(this);
+                },
+                closest: function(s) {
+                    var el = this;
+                    while (el && el.length > 0) {
+                        if (el.is(s)) return el;
+                        el = el.parent();
+                    }
+                    return __emptySelection();
+                },
                 remove: function() { return this; },
                 clone: function() { return this; },
                 addClass: function() { return this; },
                 removeClass: function() { return this; },
                 replaceWith: function() { return this; },
-                addBack: function() { return this; }
+                addBack: function() { return this; },
+                end: function() { return this; },
+                slice: function(start, end) {
+                    var arr = this.toArray();
+                    return __arrayToCheerio(arr.slice(start, end));
+                },
+                index: function() {
+                    var siblings = this.parent().children().toArray();
+                    for (var i = 0; i < siblings.length; i++) {
+                        if (siblings[i]._h === h) return i;
+                    }
+                    return -1;
+                }
             };
+        }
+        
+        // Helper to convert array of cheerio objects back to cheerio-like object
+        function __arrayToCheerio(arr) {
+            if (!arr || arr.length === 0) return __emptySelection();
+            var obj = {
+                _arr: arr,
+                get length() { return arr.length; },
+                eq: function(i) { return arr[i] || __emptySelection(); },
+                first: function() { return arr[0] || __emptySelection(); },
+                last: function() { return arr[arr.length - 1] || __emptySelection(); },
+                each: function(cb) { arr.forEach(function(el, i) { cb.call(el, i, el); }); return this; },
+                map: function(cb) { return arr.map(function(el, i) { return cb.call(el, i, el); }); },
+                toArray: function() { return arr.slice(); },
+                get: function(i) { return typeof i === 'undefined' ? arr.slice() : arr[i]; },
+                find: function(s) { 
+                    var results = [];
+                    arr.forEach(function(el) { results = results.concat(el.find(s).toArray()); });
+                    return __arrayToCheerio(results);
+                },
+                text: function() { return arr.map(function(el) { return el.text(); }).join(''); },
+                html: function() { return arr.length > 0 ? arr[0].html() : ''; },
+                attr: function(n) { return arr.length > 0 ? arr[0].attr(n) : undefined; },
+                filter: function(s) { return __arrayToCheerio(arr.filter(function(el) { return el.is(s); })); },
+                not: function(s) { return __arrayToCheerio(arr.filter(function(el) { return !el.is(s); })); }
+            };
+            return obj;
         }
         
         function __emptySelection() {
@@ -661,17 +852,21 @@ class JSLibraryProvider(
                 find: function() { return this; }, text: function() { return ''; }, html: function() { return ''; },
                 attr: function() { return undefined; }, data: function() { return undefined; }, length: 0,
                 eq: function() { return this; }, first: function() { return this; }, last: function() { return this; },
-                parent: function() { return this; }, children: function() { return this; },
-                next: function() { return this; }, prev: function() { return this; },
+                parent: function() { return this; }, parents: function() { return this; },
+                children: function() { return this; },
+                next: function() { return this; }, nextAll: function() { return this; },
+                prev: function() { return this; }, prevAll: function() { return this; },
                 hasClass: function() { return false; }, is: function() { return false; }, filter: function() { return this; },
+                not: function() { return this; },
                 each: function() { return this; }, 
-                map: function() { var r = []; r.get = function() { return r; }; r.toArray = function() { return r; }; r.join = function() { return ''; }; r.text = function() { return ''; }; return r; },
+                map: function() { var r = []; r.get = function() { return r; }; r.toArray = function() { return r; }; r.join = function() { return ''; }; r.text = function() { return ''; }; r.filter = function() { return r; }; return r; },
                 toArray: function() { return []; }, get: function() { return []; },
                 prop: function() { return undefined; }, val: function() { return undefined; }, trim: function() { return ''; },
                 contents: function() { return this; }, siblings: function() { return this; }, closest: function() { return this; },
                 remove: function() { return this; }, clone: function() { return this; },
                 addClass: function() { return this; }, removeClass: function() { return this; },
-                replaceWith: function() { return this; }, addBack: function() { return this; }
+                replaceWith: function() { return this; }, addBack: function() { return this; },
+                end: function() { return this; }, slice: function() { return this; }, index: function() { return -1; }
             };
         }
         
@@ -683,11 +878,13 @@ class JSLibraryProvider(
                         load: function(html) {
                             var docId = __cheerioLoad(html);
                             var $ = function(arg1, arg2) {
-                                if (arg1 && arg1._h) return arg1; // $(wrapper)
-                                if (arg2 && arg2._h) return arg2.find(arg1); // $(selector, wrapper)
+                                if (arg1 && arg1._h !== undefined) return arg1; // $(wrapper)
+                                if (arg2 && arg2._h !== undefined) return arg2.find(arg1); // $(selector, wrapper)
                                 return arg1 ? __wrapHandle(__cheerioSelect(docId, arg1)) : __wrapHandle(docId); // $(selector)
                             };
                             $.html = function() { return __cheerioHtml(docId); };
+                            $.text = function() { return __cheerioText(docId); };
+                            $.root = function() { return __wrapHandle(docId); };
                             return $;
                         }
                     };
@@ -780,7 +977,33 @@ class JSLibraryProvider(
                     };
                     return { Parser: HtmlParser };
                 case '@libs/fetch':
-                    return { fetchApi: fetch, fetchText: async function(u, i) { var r = await fetch(u, i); return r.text(); } };
+                    return { 
+                        fetchApi: fetch, 
+                        fetchText: async function(u, i, enc) { 
+                            var r = await fetch(u, i); 
+                            var text = await r.text();
+                            // Handle encoding if specified
+                            if (enc && enc.toLowerCase() !== 'utf-8') {
+                                // For non-UTF-8 encodings, the text is already decoded by the server
+                                // This is a simplified approach
+                            }
+                            return text;
+                        },
+                        fetchFile: async function(u, i) {
+                            try {
+                                var r = await fetch(u, i);
+                                if (!r.ok) return '';
+                                var text = await r.text();
+                                return btoa(text);
+                            } catch (e) {
+                                return '';
+                            }
+                        },
+                        fetchProto: async function(u, i) {
+                            var r = await fetch(u, i);
+                            return r.arrayBuffer();
+                        }
+                    };
                 case '@libs/novelStatus':
                     return { NovelStatus: { Unknown: 'Unknown', Ongoing: 'Ongoing', Completed: 'Completed', Licensed: 'Licensed', PublishingFinished: 'Publishing Finished', Cancelled: 'Cancelled', OnHiatus: 'On Hiatus' } };
                 case '@libs/filterInputs':
@@ -798,12 +1021,53 @@ class JSLibraryProvider(
                 case 'dayjs':
                     var dayjs = function(d) {
                         var dt = d ? new Date(d) : new Date();
-                        return { format: function(f) { return f ? dt.toISOString().split('T')[0] : dt.toISOString(); }, toISOString: function() { return dt.toISOString(); }, valueOf: function() { return dt.getTime(); } };
+                        return { 
+                            format: function(f) { 
+                                if (!f) return dt.toISOString();
+                                // Basic format support
+                                return f.replace('YYYY', dt.getFullYear())
+                                    .replace('MM', String(dt.getMonth() + 1).padStart(2, '0'))
+                                    .replace('DD', String(dt.getDate()).padStart(2, '0'))
+                                    .replace('HH', String(dt.getHours()).padStart(2, '0'))
+                                    .replace('mm', String(dt.getMinutes()).padStart(2, '0'))
+                                    .replace('ss', String(dt.getSeconds()).padStart(2, '0'));
+                            }, 
+                            toISOString: function() { return dt.toISOString(); }, 
+                            valueOf: function() { return dt.getTime(); },
+                            unix: function() { return Math.floor(dt.getTime() / 1000); },
+                            add: function(n, unit) { 
+                                var newDt = new Date(dt);
+                                if (unit === 'day' || unit === 'd') newDt.setDate(newDt.getDate() + n);
+                                else if (unit === 'month' || unit === 'M') newDt.setMonth(newDt.getMonth() + n);
+                                else if (unit === 'year' || unit === 'y') newDt.setFullYear(newDt.getFullYear() + n);
+                                else if (unit === 'hour' || unit === 'h') newDt.setHours(newDt.getHours() + n);
+                                else if (unit === 'minute' || unit === 'm') newDt.setMinutes(newDt.getMinutes() + n);
+                                return dayjs(newDt);
+                            },
+                            subtract: function(n, unit) { return this.add(-n, unit); },
+                            isBefore: function(d) { return dt < new Date(d); },
+                            isAfter: function(d) { return dt > new Date(d); },
+                            diff: function(d, unit) {
+                                var diff = dt.getTime() - new Date(d).getTime();
+                                if (unit === 'day' || unit === 'd') return Math.floor(diff / 86400000);
+                                if (unit === 'hour' || unit === 'h') return Math.floor(diff / 3600000);
+                                if (unit === 'minute' || unit === 'm') return Math.floor(diff / 60000);
+                                if (unit === 'second' || unit === 's') return Math.floor(diff / 1000);
+                                return diff;
+                            }
+                        };
                     };
                     dayjs.extend = function() { return dayjs; };
+                    dayjs.unix = function(t) { return dayjs(new Date(t * 1000)); };
                     return dayjs;
                 case 'urlencode':
                     return { encode: encodeURIComponent, decode: decodeURIComponent };
+                case 'protobufjs':
+                    // Stub for protobufjs - most plugins don't need full support
+                    return {
+                        parse: function() { return { root: {} }; },
+                        Root: { fromJSON: function() { return {}; } }
+                    };
                 default:
                     console.warn('Unknown module: ' + name);
                     return {};
@@ -948,6 +1212,61 @@ class JSLibraryProvider(
             }.bind(this));
             return parts.join('&');
         };
+        
+        // String.prototype polyfills
+        if (!String.prototype.padStart) {
+            String.prototype.padStart = function(len, str) {
+                str = str || ' ';
+                var s = this;
+                while (s.length < len) s = str + s;
+                return s.slice(-len);
+            };
+        }
+        if (!String.prototype.padEnd) {
+            String.prototype.padEnd = function(len, str) {
+                str = str || ' ';
+                var s = this;
+                while (s.length < len) s = s + str;
+                return s.slice(0, len);
+            };
+        }
+        if (!String.prototype.replaceAll) {
+            String.prototype.replaceAll = function(search, replace) {
+                return this.split(search).join(replace);
+            };
+        }
+        
+        // Array.prototype polyfills
+        if (!Array.prototype.flat) {
+            Array.prototype.flat = function(depth) {
+                depth = depth === undefined ? 1 : depth;
+                var result = [];
+                function flatten(arr, d) {
+                    arr.forEach(function(item) {
+                        if (Array.isArray(item) && d > 0) flatten(item, d - 1);
+                        else result.push(item);
+                    });
+                }
+                flatten(this, depth);
+                return result;
+            };
+        }
+        if (!Array.prototype.flatMap) {
+            Array.prototype.flatMap = function(fn) {
+                return this.map(fn).flat();
+            };
+        }
+        
+        // Object.fromEntries polyfill
+        if (!Object.fromEntries) {
+            Object.fromEntries = function(entries) {
+                var obj = {};
+                entries.forEach(function(entry) {
+                    obj[entry[0]] = entry[1];
+                });
+                return obj;
+            };
+        }
         
         // Global assignments
         globalThis.fetch = fetch;

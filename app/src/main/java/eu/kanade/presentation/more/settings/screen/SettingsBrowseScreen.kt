@@ -14,6 +14,7 @@ import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.browse.ExtensionReposScreen
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableMap
 import mihon.domain.extensionrepo.interactor.GetExtensionRepoCount
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
@@ -45,6 +46,34 @@ object SettingsBrowseScreen : SearchableSettings {
                     Preference.PreferenceItem.SwitchPreference(
                         preference = sourcePreferences.hideInLibraryItems(),
                         title = stringResource(MR.strings.pref_hide_in_library_items),
+                    ),
+                    Preference.PreferenceItem.ListPreference(
+                        preference = sourcePreferences.pageLoadDelay(),
+                        title = "Page load delay",
+                        subtitle = "Delay between loading pages (helps with rate limits)",
+                        entries = (0..10).associate { it to "${it}s" }.toImmutableMap(),
+                    ),
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = sourcePreferences.showPageNumber(),
+                        title = "Show page number",
+                        subtitle = "Display current page number with jump navigation",
+                    ),
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = sourcePreferences.skipCoverLoading(),
+                        title = "Skip cover loading",
+                        subtitle = "Don't load cover images in browse to save bandwidth",
+                    ),
+                    Preference.PreferenceItem.ListPreference(
+                        preference = sourcePreferences.confirmBackAfterPages(),
+                        title = "Confirm back after pages",
+                        subtitle = "Show confirmation dialog when going back after loading many pages",
+                        entries = mapOf(
+                            0 to "Disabled",
+                            3 to "3 pages",
+                            5 to "5 pages",
+                            10 to "10 pages",
+                            20 to "20 pages",
+                        ).toImmutableMap(),
                     ),
                     Preference.PreferenceItem.TextPreference(
                         title = stringResource(MR.strings.label_extension_repos),

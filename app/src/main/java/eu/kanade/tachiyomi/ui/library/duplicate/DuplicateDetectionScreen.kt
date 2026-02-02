@@ -15,17 +15,23 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DriveFileMove
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.PushPin
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material.icons.outlined.CheckBox
 import androidx.compose.material.icons.outlined.CheckBoxOutlineBlank
 import androidx.compose.material.icons.outlined.ExpandLess
 import androidx.compose.material.icons.outlined.ExpandMore
+import androidx.compose.material.icons.outlined.PushPin
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -53,6 +59,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,7 +73,10 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import eu.kanade.domain.manga.model.toSManga
+import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.getNameForMangaInfo
+import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import kotlinx.coroutines.launch
 import tachiyomi.domain.category.model.Category
@@ -93,10 +103,9 @@ class DuplicateDetectionScreen : Screen {
 
         val screenModel = rememberScreenModel { DuplicateDetectionScreenModel() }
         val state by screenModel.state.collectAsState()
-
-        LaunchedEffect(Unit) {
-            screenModel.loadDuplicates()
-        }
+        
+        // Preserve scroll position across navigation
+        val listState = rememberLazyListState()
 
         Scaffold(
             topBar = {
@@ -188,6 +197,50 @@ class DuplicateDetectionScreen : Screen {
                                     showMenu = false
                                 },
                             )
+                            DropdownMenuItem(
+                                text = { Text("Select With Highest Downloads") },
+                                onClick = {
+                                    screenModel.selectHighestDownloadCount()
+                                    showMenu = false
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Select With Lowest Downloads") },
+                                onClick = {
+                                    screenModel.selectLowestDownloadCount()
+                                    showMenu = false
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Select With Highest Read Count") },
+                                onClick = {
+                                    screenModel.selectHighestReadCount()
+                                    showMenu = false
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Select With Lowest Read Count") },
+                                onClick = {
+                                    screenModel.selectLowestReadCount()
+                                    showMenu = false
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Select Pinned Sources") },
+                                leadingIcon = { Icon(Icons.Filled.PushPin, contentDescription = null) },
+                                onClick = {
+                                    screenModel.selectPinnedInGroups()
+                                    showMenu = false
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Select Non-Pinned Sources") },
+                                leadingIcon = { Icon(Icons.Outlined.PushPin, contentDescription = null) },
+                                onClick = {
+                                    screenModel.selectNonPinnedInGroups()
+                                    showMenu = false
+                                },
+                            )
                             HorizontalDivider()
                             DropdownMenuItem(
                                 text = { Text("Clear Selection") },
@@ -223,7 +276,7 @@ class DuplicateDetectionScreen : Screen {
                     FilterChip(
                         selected = state.matchMode == DuplicateMatchMode.EXACT,
                         onClick = { screenModel.setMatchMode(DuplicateMatchMode.EXACT) },
-                        label = { Text("Exact Match") },
+                        label = { Text("Exact") },
                         leadingIcon = if (state.matchMode == DuplicateMatchMode.EXACT) {
                             { Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(18.dp)) }
                         } else null,
@@ -231,13 +284,39 @@ class DuplicateDetectionScreen : Screen {
                     FilterChip(
                         selected = state.matchMode == DuplicateMatchMode.CONTAINS,
                         onClick = { screenModel.setMatchMode(DuplicateMatchMode.CONTAINS) },
-                        label = { Text("Contains Match") },
+                        label = { Text("Contains") },
                         leadingIcon = if (state.matchMode == DuplicateMatchMode.CONTAINS) {
+                            { Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(18.dp)) }
+                        } else null,
+                    )
+                    FilterChip(
+                        selected = state.matchMode == DuplicateMatchMode.URL,
+                        onClick = { screenModel.setMatchMode(DuplicateMatchMode.URL) },
+                        label = { Text("Same URL") },
+                        leadingIcon = if (state.matchMode == DuplicateMatchMode.URL) {
                             { Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(18.dp)) }
                         } else null,
                     )
                 }
 
+                // Show URLs toggle
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { screenModel.toggleShowFullUrls() }
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Checkbox(
+                        checked = state.showFullUrls,
+                        onCheckedChange = { screenModel.toggleShowFullUrls() },
+                    )
+                    Text(
+                        "Show full URLs",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(start = 8.dp),
+                    )
+                }
                 // Sort mode selector
                 Row(
                     modifier = Modifier
@@ -261,8 +340,46 @@ class DuplicateDetectionScreen : Screen {
                     FilterChip(
                         selected = state.sortMode == DuplicateDetectionScreenModel.SortMode.LATEST_ADDED,
                         onClick = { screenModel.setSortMode(DuplicateDetectionScreenModel.SortMode.LATEST_ADDED) },
-                        label = { Text("Latest Added") },
+                        label = { Text("Latest") },
                         leadingIcon = if (state.sortMode == DuplicateDetectionScreenModel.SortMode.LATEST_ADDED) {
+                            { Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(18.dp)) }
+                        } else null,
+                    )
+                    FilterChip(
+                        selected = state.sortMode == DuplicateDetectionScreenModel.SortMode.CHAPTER_COUNT_DESC,
+                        onClick = { screenModel.setSortMode(DuplicateDetectionScreenModel.SortMode.CHAPTER_COUNT_DESC) },
+                        label = { Text("Ch↓") },
+                        leadingIcon = if (state.sortMode == DuplicateDetectionScreenModel.SortMode.CHAPTER_COUNT_DESC) {
+                            { Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(18.dp)) }
+                        } else null,
+                    )
+                    FilterChip(
+                        selected = state.sortMode == DuplicateDetectionScreenModel.SortMode.DOWNLOAD_COUNT_DESC,
+                        onClick = { screenModel.setSortMode(DuplicateDetectionScreenModel.SortMode.DOWNLOAD_COUNT_DESC) },
+                        label = { Text("DL↓") },
+                        leadingIcon = if (state.sortMode == DuplicateDetectionScreenModel.SortMode.DOWNLOAD_COUNT_DESC) {
+                            { Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(18.dp)) }
+                        } else null,
+                    )
+                    FilterChip(
+                        selected = state.sortMode == DuplicateDetectionScreenModel.SortMode.READ_COUNT_DESC,
+                        onClick = { screenModel.setSortMode(DuplicateDetectionScreenModel.SortMode.READ_COUNT_DESC) },
+                        label = { Text("Read↓") },
+                        leadingIcon = if (state.sortMode == DuplicateDetectionScreenModel.SortMode.READ_COUNT_DESC) {
+                            { Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(18.dp)) }
+                        } else null,
+                    )
+                    FilterChip(
+                        selected = state.sortMode == DuplicateDetectionScreenModel.SortMode.PINNED_SOURCE,
+                        onClick = { screenModel.setSortMode(DuplicateDetectionScreenModel.SortMode.PINNED_SOURCE) },
+                        label = { 
+                            Icon(
+                                imageVector = Icons.Filled.PushPin,
+                                contentDescription = "Pinned",
+                                modifier = Modifier.size(18.dp),
+                            )
+                        },
+                        leadingIcon = if (state.sortMode == DuplicateDetectionScreenModel.SortMode.PINNED_SOURCE) {
                             { Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(18.dp)) }
                         } else null,
                     )
@@ -302,6 +419,46 @@ class DuplicateDetectionScreen : Screen {
                 }
 
                 when {
+                    !state.hasStartedAnalysis -> {
+                        // Initial state - show start analysis button
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(16.dp),
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Search,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(64.dp),
+                                    tint = MaterialTheme.colorScheme.primary,
+                                )
+                                Text(
+                                    text = "Find Duplicate Novels",
+                                    style = MaterialTheme.typography.headlineSmall,
+                                )
+                                Text(
+                                    text = "Analyze your library to find duplicate entries.\nSelect a match mode above and click Start.",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                                Button(
+                                    onClick = { screenModel.loadDuplicates() },
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.PlayArrow,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(20.dp),
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text("Start Analysis")
+                                }
+                            }
+                        }
+                    }
                     state.isLoading -> {
                         LoadingScreen()
                     }
@@ -318,6 +475,7 @@ class DuplicateDetectionScreen : Screen {
                         )
                         
                         LazyColumn(
+                            state = listState,
                             modifier = Modifier.fillMaxSize(),
                             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -328,6 +486,7 @@ class DuplicateDetectionScreen : Screen {
                                     mangaList = mangaList,
                                     selection = state.selection,
                                     mangaCategories = state.mangaCategories,
+                                    showFullUrls = state.showFullUrls,
                                     onToggleSelection = { screenModel.toggleSelection(it) },
                                     onSelectGroup = { screenModel.selectGroup(title) },
                                     onClickManga = { navigator.push(MangaScreen(it)) },
@@ -375,6 +534,7 @@ private fun DuplicateGroupCard(
     mangaList: List<MangaWithChapterCount>,
     selection: Set<Long>,
     mangaCategories: Map<Long, List<Category>>,
+    showFullUrls: Boolean,
     onToggleSelection: (Long) -> Unit,
     onSelectGroup: () -> Unit,
     onClickManga: (Long) -> Unit,
@@ -432,6 +592,7 @@ private fun DuplicateGroupCard(
                         categories = mangaCategories[mangaWithCount.manga.id] ?: emptyList(),
                         isSelected = mangaWithCount.manga.id in selection,
                         isFirst = index == 0,
+                        showFullUrl = showFullUrls,
                         onToggleSelection = { onToggleSelection(mangaWithCount.manga.id) },
                         onClick = { onClickManga(mangaWithCount.manga.id) },
                     )
@@ -450,12 +611,17 @@ private fun DuplicateItem(
     categories: List<Category>,
     isSelected: Boolean,
     isFirst: Boolean,
+    showFullUrl: Boolean,
     onToggleSelection: () -> Unit,
     onClick: () -> Unit,
 ) {
     val sourceManager: SourceManager = remember { Injekt.get() }
+    val downloadManager: DownloadManager = remember { Injekt.get() }
     val sourceName = remember(manga.manga.source) {
         sourceManager.getOrStub(manga.manga.source).getNameForMangaInfo()
+    }
+    val downloadedCount = remember(manga.manga.id) {
+        downloadManager.getDownloadCount(manga.manga)
     }
     
     Row(
@@ -498,10 +664,24 @@ private fun DuplicateItem(
             // First row: chapters and source
             Row {
                 Text(
-                    text = "${manga.chapterCount} chapters",
+                    text = "${manga.chapterCount} ch",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
+                if (downloadedCount > 0) {
+                    Text(
+                        text = " • $downloadedCount dl",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.tertiary,
+                    )
+                }
+                if (manga.readCount > 0) {
+                    Text(
+                        text = " • ${manga.readCount} read",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                }
                 // Show source/plugin name
                 Text(
                     text = " • $sourceName",
@@ -534,6 +714,32 @@ private fun DuplicateItem(
                         overflow = TextOverflow.Ellipsis,
                     )
                 }
+            }
+            
+            // Third row: full URL (when enabled)
+            if (showFullUrl) {
+                Spacer(modifier = Modifier.height(2.dp))
+                val source = remember(manga.manga.source) { sourceManager.getOrStub(manga.manga.source) }
+                val fullUrl = remember(manga.manga.url, source) {
+                    if (manga.manga.url.startsWith("http://") || manga.manga.url.startsWith("https://")) {
+                        manga.manga.url
+                    } else if (source is eu.kanade.tachiyomi.source.online.HttpSource) {
+                        try {
+                            source.getMangaUrl(manga.manga.toSManga())
+                        } catch (_: Exception) {
+                            source.baseUrl + manga.manga.url
+                        }
+                    } else {
+                        manga.manga.url
+                    }
+                }
+                Text(
+                    text = fullUrl,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
             }
         }
     }

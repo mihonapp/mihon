@@ -373,7 +373,7 @@ private fun ExtensionItemContent(
         modifier = modifier.padding(start = MaterialTheme.padding.medium),
     ) {
         Text(
-            text = extension.name,
+            text = if (extension is Extension.JsPlugin) "${extension.name} (JS)" else extension.name,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.bodyMedium,

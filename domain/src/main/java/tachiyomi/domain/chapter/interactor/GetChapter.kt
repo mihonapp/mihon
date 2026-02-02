@@ -17,6 +17,15 @@ class GetChapter(
             null
         }
     }
+    
+    suspend fun awaitAll(ids: List<Long>): List<Chapter> {
+        return try {
+            chapterRepository.getChaptersByIds(ids)
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+            emptyList()
+        }
+    }
 
     suspend fun await(url: String, mangaId: Long): Chapter? {
         return try {

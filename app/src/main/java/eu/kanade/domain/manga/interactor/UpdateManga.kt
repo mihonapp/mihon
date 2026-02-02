@@ -117,9 +117,10 @@ class UpdateManga(
         val result = mangaRepository.update(
             MangaUpdate(id = mangaId, favorite = favorite, dateAdded = dateAdded),
         )
-        // Refresh library cache after favorite status changes
+        // Refresh library cache after favorite status changes - use forced refresh
+        // to ensure the change is immediately visible in the library
         if (result) {
-            getLibraryManga.refresh()
+            getLibraryManga.refreshForced()
         }
         return result
     }
@@ -139,6 +140,29 @@ class UpdateManga(
     suspend fun awaitUpdateGenre(mangaId: Long, genre: List<String>): Boolean {
         return mangaRepository.update(
             MangaUpdate(id = mangaId, genre = genre),
+        )
+    }
+
+    suspend fun awaitUpdateTitle(mangaId: Long, title: String): Boolean {
+        val result = mangaRepository.update(
+            MangaUpdate(id = mangaId, title = title),
+        )
+        // Refresh library cache after title changes
+        if (result) {
+            getLibraryManga.refresh()
+        }
+        return result
+    }
+
+    suspend fun awaitUpdateDescription(mangaId: Long, description: String): Boolean {
+        return mangaRepository.update(
+            MangaUpdate(id = mangaId, description = description),
+        )
+    }
+
+    suspend fun awaitUpdateUrl(mangaId: Long, url: String): Boolean {
+        return mangaRepository.update(
+            MangaUpdate(id = mangaId, url = url),
         )
     }
 }

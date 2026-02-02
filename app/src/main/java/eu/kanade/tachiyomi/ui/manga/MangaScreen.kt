@@ -176,6 +176,9 @@ class MangaScreen(
             onEditNotesClicked = { navigator.push(MangaNotesScreen(manga = successState.manga)) },
             onEditAlternativeTitlesClicked = screenModel::showEditAlternativeTitlesDialog,
             onEditTagsClicked = screenModel::showEditTagsDialog,
+            onEditTitleClicked = screenModel::showEditTitleDialog,
+            onEditDescriptionClicked = screenModel::showEditDescriptionDialog,
+            onEditUrlClicked = screenModel::showEditUrlDialog,
             onTranslateClicked = screenModel::translateMangaDetails,
             onTranslateDownloadedClicked = screenModel::translateDownloadedChapters,
             onExportEpubClicked = screenModel::showExportEpubDialog.takeIf { successState.isNovel },
@@ -324,6 +327,27 @@ class MangaScreen(
                     currentTags = dialog.manga.genre ?: emptyList(),
                     onDismissRequest = onDismissRequest,
                     onConfirm = { tags -> screenModel.updateTags(tags) },
+                )
+            }
+            is MangaScreenModel.Dialog.EditTitle -> {
+                eu.kanade.presentation.manga.components.EditTitleDialog(
+                    currentTitle = dialog.manga.title,
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = { title -> screenModel.updateTitle(title) },
+                )
+            }
+            is MangaScreenModel.Dialog.EditDescription -> {
+                eu.kanade.presentation.manga.components.EditDescriptionDialog(
+                    currentDescription = dialog.manga.description,
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = { description -> screenModel.updateDescription(description) },
+                )
+            }
+            is MangaScreenModel.Dialog.EditUrl -> {
+                eu.kanade.presentation.manga.components.EditUrlDialog(
+                    currentUrl = dialog.manga.url,
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = { url -> screenModel.updateUrl(url) },
                 )
             }
             is MangaScreenModel.Dialog.TranslateMangaDetails -> {

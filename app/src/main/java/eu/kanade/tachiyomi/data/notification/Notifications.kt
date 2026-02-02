@@ -83,6 +83,13 @@ object Notifications {
     const val ID_MASS_IMPORT_PROGRESS = -601
     const val ID_MASS_IMPORT_COMPLETE = -602
 
+    /**
+     * Notification channel and ids used by EPUB export.
+     */
+    const val CHANNEL_EPUB_EXPORT = "epub_export_channel"
+    const val ID_EPUB_EXPORT_PROGRESS = -701
+    const val ID_EPUB_EXPORT_COMPLETE = -702
+
     private val deprecatedChannels = listOf(
         "downloader_channel",
         "downloader_complete_channel",
@@ -176,6 +183,10 @@ object Notifications {
                 },
                 buildNotificationChannel(CHANNEL_MASS_IMPORT, IMPORTANCE_LOW) {
                     setName(context.stringResource(MR.strings.channel_mass_import))
+                    setShowBadge(false)
+                },
+                buildNotificationChannel(CHANNEL_EPUB_EXPORT, IMPORTANCE_LOW) {
+                    setName("EPUB Export")
                     setShowBadge(false)
                 },
             ),

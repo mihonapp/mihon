@@ -81,6 +81,7 @@ fun MangaBottomActionMenu(
     onDownloadClicked: (() -> Unit)? = null,
     onDeleteClicked: (() -> Unit)? = null,
     onRemoveFromDbClicked: (() -> Unit)? = null,
+    onDeleteRangeClicked: (() -> Unit)? = null,
 ) {
     AnimatedVisibility(
         visible = visible,
@@ -94,11 +95,11 @@ fun MangaBottomActionMenu(
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
         ) {
             val haptic = LocalHapticFeedback.current
-            val confirm = remember { mutableStateListOf(false, false, false, false, false, false, false, false) }
+            val confirm = remember { mutableStateListOf(false, false, false, false, false, false, false, false, false) }
             var resetJob: Job? = remember { null }
             val onLongClickItem: (Int) -> Unit = { toConfirmIndex ->
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                (0..<8).forEach { i -> confirm[i] = i == toConfirmIndex }
+                (0..<9).forEach { i -> confirm[i] = i == toConfirmIndex }
                 resetJob?.cancel()
                 resetJob = scope.launch {
                     delay(1.seconds)
@@ -186,6 +187,31 @@ fun MangaBottomActionMenu(
                         onClick = onRemoveFromDbClicked,
                     )
                 }
+                // Overflow menu with additional actions
+                if (onDeleteRangeClicked != null) {
+                    var overflowMenuOpen by remember { mutableStateOf(false) }
+                    Button(
+                        title = stringResource(MR.strings.label_more),
+                        icon = Icons.Outlined.MoreVert,
+                        toConfirm = false,
+                        onLongClick = {},
+                        onClick = { overflowMenuOpen = true },
+                    ) {
+                        DropdownMenu(
+                            expanded = overflowMenuOpen,
+                            onDismissRequest = { overflowMenuOpen = false },
+                            offset = DpOffset(0.dp, 0.dp),
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(MR.strings.action_delete_range)) },
+                                onClick = {
+                                    overflowMenuOpen = false
+                                    onDeleteRangeClicked()
+                                },
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -255,6 +281,10 @@ fun LibraryBottomActionMenu(
     onUpdateClicked: (() -> Unit)? = null,
     onTranslateClicked: (() -> Unit)? = null,
     onRemoveChaptersClicked: (() -> Unit)? = null,
+    onExportEpubClicked: (() -> Unit)? = null,
+    onClearCoversClicked: (() -> Unit)? = null,
+    onClearDescriptionsClicked: (() -> Unit)? = null,
+    onClearTagsClicked: (() -> Unit)? = null,
 ) {
     AnimatedVisibility(
         visible = visible,
@@ -396,6 +426,42 @@ fun LibraryBottomActionMenu(
                                     onClick = {
                                         overflowMenuOpen = false
                                         onRemoveChaptersClicked()
+                                    },
+                                )
+                            }
+                            if (onExportEpubClicked != null) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(MR.strings.action_export_epub)) },
+                                    onClick = {
+                                        overflowMenuOpen = false
+                                        onExportEpubClicked()
+                                    },
+                                )
+                            }
+                            if (onClearCoversClicked != null) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(MR.strings.action_clear_covers)) },
+                                    onClick = {
+                                        overflowMenuOpen = false
+                                        onClearCoversClicked()
+                                    },
+                                )
+                            }
+                            if (onClearDescriptionsClicked != null) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(MR.strings.action_clear_descriptions)) },
+                                    onClick = {
+                                        overflowMenuOpen = false
+                                        onClearDescriptionsClicked()
+                                    },
+                                )
+                            }
+                            if (onClearTagsClicked != null) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(MR.strings.action_clear_tags)) },
+                                    onClick = {
+                                        overflowMenuOpen = false
+                                        onClearTagsClicked()
                                     },
                                 )
                             }

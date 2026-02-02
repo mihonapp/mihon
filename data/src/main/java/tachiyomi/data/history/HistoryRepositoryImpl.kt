@@ -15,13 +15,15 @@ class HistoryRepositoryImpl(
 
     override fun getHistory(query: String): Flow<List<HistoryWithRelations>> {
         return handler.subscribeToList {
-            historyViewQueries.history(query, HistoryMapper::mapHistoryWithRelations)
+            // Use history_cache table for faster queries
+            history_cacheQueries.getHistoryWithSearch(query, HistoryMapper::mapHistoryWithRelations)
         }
     }
 
     override suspend fun getLastHistory(): HistoryWithRelations? {
         return handler.awaitOneOrNull {
-            historyViewQueries.getLatestHistory(HistoryMapper::mapHistoryWithRelations)
+            // Use history_cache table for faster queries
+            history_cacheQueries.getLatestHistoryCache(HistoryMapper::mapHistoryWithRelations)
         }
     }
 
@@ -35,7 +37,11 @@ class HistoryRepositoryImpl(
 
     override suspend fun resetHistory(historyId: Long) {
         try {
-            handler.await { historyQueries.resetHistoryById(historyId) }
+            handler.await {
+                historyQueries.resetHistoryById(historyId)
+                // Touch history_cache to notify SQLDelight listeners
+                history_cacheQueries.touchCache()
+            }
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, throwable = e)
         }
@@ -43,7 +49,11 @@ class HistoryRepositoryImpl(
 
     override suspend fun resetHistoryByMangaId(mangaId: Long) {
         try {
-            handler.await { historyQueries.resetHistoryByMangaId(mangaId) }
+            handler.await {
+                historyQueries.resetHistoryByMangaId(mangaId)
+                // Touch history_cache to notify SQLDelight listeners
+                history_cacheQueries.touchCache()
+            }
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, throwable = e)
         }
@@ -67,6 +77,10 @@ class HistoryRepositoryImpl(
                     historyUpdate.readAt,
                     historyUpdate.sessionReadDuration,
                 )
+                // Touch history_cache to notify SQLDelight listeners
+                // This is needed because the trigger that updates history_cache
+                // runs in SQLite and doesn't notify SQLDelight's query listeners
+                history_cacheQueries.touchCache()
             }
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, throwable = e)

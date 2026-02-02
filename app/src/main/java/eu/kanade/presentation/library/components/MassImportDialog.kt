@@ -20,6 +20,9 @@ import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material.icons.outlined.ExpandLess
 import androidx.compose.material.icons.outlined.FileOpen
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -34,6 +37,9 @@ import eu.kanade.tachiyomi.data.massimport.MassImportJob
 import eu.kanade.presentation.category.visualName
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
 import tachiyomi.i18n.MR
@@ -49,6 +55,7 @@ fun MassImportDialog(
 ) {
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
+    val dialogScope = rememberCoroutineScope()
 
     // Accumulate URLs from initial text and any new additions
     var pendingUrls by remember { mutableStateOf(initialText) }
@@ -72,6 +79,60 @@ fun MassImportDialog(
                     context.toast("Added ${content.lines().filter { it.isNotBlank() }.size} URLs from file")
                 } catch (e: Exception) {
                     context.toast("Error reading file: ${e.message}")
+                }
+            }
+        }
+    )
+
+    // State to track which batch report to save
+    var batchToSave by remember { mutableStateOf<MassImportJob.Batch?>(null) }
+    
+    // State to track which batch to export URLs from
+    var batchToExport by remember { mutableStateOf<MassImportJob.Batch?>(null) }
+    
+    // File save launcher for saving reports
+    val saveReportLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CreateDocument("text/plain"),
+        onResult = { uri ->
+            uri?.let { outputUri ->
+                batchToSave?.let { batch ->
+                    try {
+                        val report = MassImportJob.generateReport(batch)
+                        context.contentResolver.openOutputStream(outputUri)?.use { outputStream ->
+                            outputStream.bufferedWriter().use { writer ->
+                                writer.write(report)
+                            }
+                        }
+                        context.toast("Report saved successfully")
+                    } catch (e: Exception) {
+                        context.toast("Error saving report: ${e.message}")
+                    } finally {
+                        batchToSave = null
+                    }
+                }
+            }
+        }
+    )
+    
+    // File save launcher for exporting URLs
+    val exportUrlsLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CreateDocument("text/plain"),
+        onResult = { uri ->
+            uri?.let { outputUri ->
+                batchToExport?.let { batch ->
+                    try {
+                        val urls = MassImportJob.exportBatchUrls(batch)
+                        context.contentResolver.openOutputStream(outputUri)?.use { outputStream ->
+                            outputStream.bufferedWriter().use { writer ->
+                                writer.write(urls)
+                            }
+                        }
+                        context.toast("Exported ${batch.urls.size} URLs")
+                    } catch (e: Exception) {
+                        context.toast("Error exporting URLs: ${e.message}")
+                    } finally {
+                        batchToExport = null
+                    }
                 }
             }
         }
@@ -102,11 +163,17 @@ fun MassImportDialog(
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        modifier = Modifier.widthIn(max = 900.dp),
+        modifier = Modifier
+            .fillMaxWidth(0.98f)
+            .wrapContentHeight()
+            .heightIn(max = 700.dp),
         title = { Text("Mass Import Novels") },
         text = {
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .verticalScroll(rememberScrollState()),
             ) {
                 // Queue Section
                 if (queue.isNotEmpty()) {
@@ -147,7 +214,12 @@ fun MassImportDialog(
                             .padding(bottom = 16.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        items(queue.reversed()) { batch ->
+                        // Use distinct batch IDs to prevent duplicates
+                        val distinctBatches = queue.distinctBy { it.id }.reversed()
+                        items(
+                            items = distinctBatches,
+                            key = { it.id }
+                        ) { batch ->
                             BatchItem(
                                 batch = batch,
                                 onCancel = { MassImportJob.cancelBatch(context, batch.id) },
@@ -156,13 +228,37 @@ fun MassImportDialog(
                                     context.toast("Copied ${batch.urls.size} URLs")
                                 },
                                 onCopyErrors = {
-                                    val errors = batch.erroredUrls.joinToString("\n")
+                                    // Include error messages with URLs
+                                    val errors = MassImportJob.generateErrorsWithMessages(batch)
                                     if (errors.isNotBlank()) {
                                         context.copyToClipboard("Errors", errors)
-                                        context.toast("Copied ${batch.erroredUrls.size} error URLs")
+                                        context.toast("Copied ${batch.erroredUrls.size} errors with messages")
                                     }
                                 },
+                                onCopyReport = {
+                                    val report = MassImportJob.generateReport(batch)
+                                    context.copyToClipboard("Import Report", report)
+                                    context.toast("Report copied to clipboard")
+                                },
+                                onSaveReport = {
+                                    batchToSave = batch
+                                    val timestamp = java.text.SimpleDateFormat("yyyyMMdd_HHmmss", java.util.Locale.getDefault()).format(java.util.Date())
+                                    saveReportLauncher.launch("mass_import_report_$timestamp.txt")
+                                },
                                 onRemove = { MassImportJob.removeBatch(batch.id) },
+                                onReinsertErrors = {
+                                    MassImportJob.reinsertErrored(context, batch)
+                                    context.toast("Re-queued ${batch.erroredUrls.size} URLs")
+                                },
+                                onExportUrls = {
+                                    batchToExport = batch
+                                    val timestamp = java.text.SimpleDateFormat("yyyyMMdd_HHmmss", java.util.Locale.getDefault()).format(java.util.Date())
+                                    exportUrlsLauncher.launch("mass_import_urls_$timestamp.txt")
+                                },
+                                onRequeue = {
+                                    MassImportJob.requeueCancelled(context, batch)
+                                    context.toast("Re-queued remaining URLs")
+                                },
                             )
                         }
                     }
@@ -243,34 +339,52 @@ fun MassImportDialog(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
+                // Sync chapter list checkbox with description
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalAlignment = Alignment.Top,
                 ) {
                     Checkbox(
                         checked = syncChapterList,
                         onCheckedChange = { syncChapterList = it },
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Sync chapter list",
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
+                    Column {
+                        Text(
+                            text = "Sync chapter list",
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                        Text(
+                            text = "Fetch and sync chapter list immediately (slower but chapters appear right away)",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                 }
 
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Fetch metadata checkbox with description
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalAlignment = Alignment.Top,
                 ) {
                     Checkbox(
                         checked = fetchDetails,
                         onCheckedChange = { fetchDetails = it },
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Fetch metadata",
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
+                    Column {
+                        Text(
+                            text = "Fetch metadata",
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                        Text(
+                            text = "Fetch title, description, author, and cover from source",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -414,18 +528,23 @@ fun MassImportDialog(
             
             TextButton(
                 onClick = {
-                    val urls = massImportNovels.parseUrls(allUrlsText)
-                    // Deduplicate URLs before adding to queue
-                    val uniqueUrls = urls.toSet().toList()
-                    MassImportJob.start(
-                        context = context,
-                        urls = uniqueUrls,
-                        addToLibrary = true,
-                        categoryId = selectedCategoryId ?: 0L,
-                        fetchChapters = syncChapterList,
-                    )
-                    urlText = ""
-                    pendingUrls = ""
+                    // Run URL parsing and job enqueue off main thread
+                    dialogScope.launch(Dispatchers.Default) {
+                        val urls = massImportNovels.parseUrls(allUrlsText)
+                        // Deduplicate URLs before adding to queue
+                        val uniqueUrls = urls.toSet().toList()
+                        withContext(Dispatchers.Main) {
+                            MassImportJob.start(
+                                context = context,
+                                urls = uniqueUrls,
+                                addToLibrary = true,
+                                categoryId = selectedCategoryId ?: 0L,
+                                fetchChapters = syncChapterList,
+                            )
+                            urlText = ""
+                            pendingUrls = ""
+                        }
+                    }
                 },
                 enabled = hasUrls,
             ) {
@@ -446,7 +565,12 @@ private fun BatchItem(
     onCancel: () -> Unit,
     onCopyUrls: () -> Unit,
     onCopyErrors: () -> Unit,
+    onCopyReport: () -> Unit,
+    onSaveReport: () -> Unit,
     onRemove: () -> Unit,
+    onReinsertErrors: () -> Unit,
+    onExportUrls: () -> Unit,
+    onRequeue: () -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
     
@@ -517,6 +641,20 @@ private fun BatchItem(
                     
                     // Remove button (only for completed/cancelled)
                     if (batch.status == MassImportJob.BatchStatus.Completed || batch.status == MassImportJob.BatchStatus.Cancelled) {
+                        // Requeue button (for cancelled batches with remaining URLs)
+                        if (batch.status == MassImportJob.BatchStatus.Cancelled && batch.progress < batch.total) {
+                            IconButton(
+                                onClick = onRequeue,
+                                modifier = Modifier.size(24.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Refresh,
+                                    contentDescription = "Requeue",
+                                    modifier = Modifier.size(16.dp),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
                         IconButton(
                             onClick = onRemove,
                             modifier = Modifier.size(24.dp)
@@ -573,41 +711,70 @@ private fun BatchItem(
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(8.dp))
                 
-                // Actions row
+                // Actions row - icon buttons only for compactness
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    AssistChip(
-                        onClick = onCopyUrls,
-                        label = { Text("Copy All URLs", style = MaterialTheme.typography.labelSmall) },
-                        leadingIcon = {
+                    // Copy URLs
+                    IconButton(onClick = onCopyUrls, modifier = Modifier.size(32.dp)) {
+                        Icon(
+                            Icons.Outlined.ContentCopy,
+                            contentDescription = "Copy URLs",
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                    
+                    // Export URLs
+                    IconButton(onClick = onExportUrls, modifier = Modifier.size(32.dp)) {
+                        Icon(
+                            Icons.Outlined.Save,
+                            contentDescription = "Export URLs",
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                    
+                    // Copy Errors (if any)
+                    if (batch.errored > 0) {
+                        IconButton(onClick = onCopyErrors, modifier = Modifier.size(32.dp)) {
                             Icon(
                                 Icons.Outlined.ContentCopy,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp)
+                                contentDescription = "Copy Errors",
+                                modifier = Modifier.size(18.dp),
+                                tint = MaterialTheme.colorScheme.error
                             )
-                        },
-                        modifier = Modifier.height(28.dp)
-                    )
+                        }
+                    }
                     
-                    if (batch.errored > 0) {
-                        AssistChip(
-                            onClick = onCopyErrors,
-                            label = { Text("Copy Errors", style = MaterialTheme.typography.labelSmall) },
-                            leadingIcon = {
+                    // For completed batches: Copy Report, Save Report, Retry Errors
+                    if (batch.status == MassImportJob.BatchStatus.Completed || batch.status == MassImportJob.BatchStatus.Cancelled) {
+                        IconButton(onClick = onCopyReport, modifier = Modifier.size(32.dp)) {
+                            Icon(
+                                Icons.Outlined.Description,
+                                contentDescription = "Copy Report",
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+                        
+                        IconButton(onClick = onSaveReport, modifier = Modifier.size(32.dp)) {
+                            Icon(
+                                Icons.Outlined.Save,
+                                contentDescription = "Save Report",
+                                modifier = Modifier.size(18.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                        
+                        if (batch.errored > 0) {
+                            IconButton(onClick = onReinsertErrors, modifier = Modifier.size(32.dp)) {
                                 Icon(
-                                    Icons.Outlined.ContentCopy,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(16.dp)
+                                    Icons.Outlined.Refresh,
+                                    contentDescription = "Retry Errors",
+                                    modifier = Modifier.size(18.dp),
+                                    tint = MaterialTheme.colorScheme.primary
                                 )
-                            },
-                            colors = AssistChipDefaults.assistChipColors(
-                                labelColor = MaterialTheme.colorScheme.error,
-                                leadingIconContentColor = MaterialTheme.colorScheme.error
-                            ),
-                            modifier = Modifier.height(28.dp)
-                        )
+                            }
+                        }
                     }
                 }
                 

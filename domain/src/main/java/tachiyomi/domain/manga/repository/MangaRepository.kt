@@ -57,6 +57,12 @@ interface MangaRepository {
     suspend fun findDuplicatesContains(): List<DuplicatePair>
 
     /**
+     * Find duplicates by URL within the same source.
+     * Returns groups where multiple manga have the same URL from the same source.
+     */
+    suspend fun findDuplicatesByUrl(): List<DuplicateGroup>
+
+    /**
      * Get lightweight favorite genres for tag counting.
      * Returns list of (mangaId, genreList) pairs - much faster than getLibraryManga().
      */
@@ -95,4 +101,38 @@ interface MangaRepository {
     suspend fun insertNetworkManga(manga: List<Manga>): List<Manga>
 
     suspend fun normalizeAllUrls(): Int
+    
+    /**
+     * Normalize URLs with advanced options.
+     * @param removeDoubleSlashes whether to also remove double slashes from URLs
+     * @return Pair of (count of normalized URLs, list of skipped duplicates with Triple(title, oldUrl, normalizedUrl))
+     */
+    suspend fun normalizeAllUrlsAdvanced(removeDoubleSlashes: Boolean): Pair<Int, List<Triple<String, String, String>>>
+
+    /**
+     * Refresh the library cache table.
+     * Call this after bulk operations or on app startup to ensure cache integrity.
+     */
+    suspend fun refreshLibraryCache()
+
+    /**
+     * Refresh the library cache for a specific manga.
+     * Useful after individual manga operations.
+     */
+    suspend fun refreshLibraryCacheForManga(mangaId: Long)
+
+    /**
+     * Normalize all tags/genres in the library.
+     * - Trims whitespace
+     * - Removes duplicates (case-insensitive)
+     * - Removes empty tags
+     * @return count of manga with normalized tags
+     */
+    suspend fun normalizeAllTags(): Int
+
+    /**
+     * Check library cache integrity.
+     * @return Pair of (favoriteCount, cacheCount) - should be equal if cache is valid
+     */
+    suspend fun checkLibraryCacheIntegrity(): Pair<Long, Long>
 }

@@ -161,12 +161,16 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.On
                 return false
             }
         },
-    )
+    ).apply {
+        // Disable long press handling so WebView can handle text selection
+        setIsLongpressEnabled(false)
+    }
 
     init {
         initWebView()
         observePreferences()
-        tts = TextToSpeech(activity, this)
+        // Defer TTS initialization until actually needed to avoid "not bound" errors
+        // TTS will be initialized lazily when startTts() is called
     }
 
     override fun onInit(status: Int) {
@@ -284,6 +288,9 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.On
             // Add JavaScript interface for progress saving
             addJavascriptInterface(WebViewInterface(), "Android")
 
+            // Enable text selection via long press
+            isLongClickable = true
+
             setOnTouchListener { _, event ->
                 gestureDetector.onTouchEvent(event)
                 false
@@ -382,10 +389,44 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.On
             ""
         }
 
+        // Generate font-face declaration for custom fonts
+        // For custom fonts (URIs), copy to cache and use file:// URL
+        val (fontFaceDeclaration, effectiveFontFamily) = if (!useOriginalFonts && (fontFamily.startsWith("file://") || fontFamily.startsWith("content://"))) {
+            try {
+                // Copy font to cache directory for WebView access
+                val fontUri = android.net.Uri.parse(fontFamily)
+                val inputStream = activity.contentResolver.openInputStream(fontUri)
+                val fontFile = java.io.File(activity.cacheDir, "custom_font.ttf")
+                inputStream?.use { input ->
+                    fontFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                val fontUrl = "file://" + fontFile.absolutePath
+                val declaration = """
+                @font-face {
+                    font-family: 'CustomFont';
+                    src: url('$fontUrl');
+                }
+                """.trimIndent()
+                declaration to "'CustomFont', sans-serif"
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR) { "Failed to load custom font: ${e.message}" }
+                "" to fontFamily
+            }
+        } else {
+            "" to fontFamily
+        }
+
         // Only include font-family if not using original fonts
-        val fontFamilyCss = if (useOriginalFonts) "" else "font-family: $fontFamily;"
+        val fontFamilyCss = if (useOriginalFonts) {
+            ""
+        } else {
+            "font-family: $effectiveFontFamily;"
+        }
 
         val css = """
+            $fontFaceDeclaration
             body {
                 font-size: ${fontSize}px;
                 $fontFamilyCss
@@ -650,9 +691,11 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.On
         // Save progress before destroying
         saveProgress()
 
-        // Cleanup TTS
-        tts?.stop()
-        tts?.shutdown()
+        // Cleanup TTS - only if initialized
+        if (ttsInitialized) {
+            tts?.stop()
+            tts?.shutdown()
+        }
         tts = null
 
         // Mark destroyed first so coroutine finally-blocks won't touch WebView.
@@ -1667,7 +1710,46 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.On
 
     // TTS Methods
 
+    private fun ensureTtsInitialized() {
+        if (tts == null) {
+            // Check if TTS data is available first
+            val intent = android.content.Intent(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA)
+            try {
+                tts = TextToSpeech(activity, this)
+                logcat(LogPriority.DEBUG) { "TTS (WebView): Initialization started" }
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR) { "TTS (WebView): Failed to create TextToSpeech instance: ${e.message}" }
+                activity.runOnUiThread {
+                    logcat(LogPriority.DEBUG) {"TTS engine not available. Please install a TTS engine from Google Play."}
+                }
+            }
+        }
+    }
+
     fun startTts() {
+        ensureTtsInitialized()
+        
+        if (!ttsInitialized) {
+            logcat(LogPriority.WARN) { "TTS (WebView): Not initialized yet, waiting..." }
+            // Queue the speech to start when TTS becomes available
+            scope.launch {
+                // Wait up to 2 seconds for initialization
+                var waited = 0
+                while (!ttsInitialized && waited < 2000) {
+                    delay(100)
+                    waited += 100
+                }
+                if (ttsInitialized) {
+                    startTts() // Retry now that it's initialized
+                } else {
+                    activity.runOnUiThread {
+                        logcat(LogPriority.WARN) {"TTS not available. Please check your TTS settings."}
+                    }
+                }
+            }
+            return
+        }
+        
         isTtsAutoPlay = true // Enable auto-continue
         // Extract text from WebView using JavaScript
         evaluateJavascriptSafe(
@@ -1702,7 +1784,9 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.On
 
     fun stopTts() {
         isTtsAutoPlay = false // Disable auto-continue when manually stopped
-        tts?.stop()
+        if (ttsInitialized) {
+            tts?.stop()
+        }
     }
 
     fun isTtsSpeaking(): Boolean = ttsInitialized && tts?.isSpeaking == true

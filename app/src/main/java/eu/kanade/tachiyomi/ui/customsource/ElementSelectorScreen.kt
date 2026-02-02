@@ -253,7 +253,15 @@ fun ElementSelectorScreen(
     var lastSelectedElement by remember { mutableStateOf<SelectedElement?>(null) }
     var showSelectorDialog by remember { mutableStateOf(false) }
     var showSourceNameDialog by remember { mutableStateOf(false) }
+    var showPatternLibrary by remember { mutableStateOf(false) }
     var currentUrl by remember { mutableStateOf(initialUrl) }
+
+    // Site framework detection
+    var detectedFramework by remember { mutableStateOf(SitePatternLibrary.SiteFramework.CUSTOM) }
+    var pageHtml by remember { mutableStateOf("") }
+
+    // Test selector state
+    var testSelectorResult by remember { mutableStateOf<String?>(null) }
 
     // WebView state
     val webViewState = rememberWebViewState(url = initialUrl)
@@ -317,6 +325,25 @@ fun ElementSelectorScreen(
         webView?.evaluateJavascript("window.clearHighlights();", null)
     }
 
+    // Test a selector and get count of matching elements
+    fun testSelector(selector: String, callback: (Int) -> Unit) {
+        val escapedSelector = selector.replace("'", "\\'")
+        webView?.evaluateJavascript(
+            "window.testSelector('$escapedSelector');",
+        ) { result ->
+            val count = result?.toIntOrNull() ?: 0
+            callback(count)
+        }
+    }
+
+    // Get page HTML for framework detection
+    fun getPageHtml(callback: (String) -> Unit) {
+        webView?.evaluateJavascript("document.documentElement.outerHTML.substring(0, 5000);") { result ->
+            val html = result?.trim('"')?.replace("\\n", "\n")?.replace("\\\"", "\"") ?: ""
+            callback(html)
+        }
+    }
+
     val webClient = remember {
         object : AccompanistWebViewClient() {
             override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
@@ -328,6 +355,12 @@ fun ElementSelectorScreen(
                 super.onPageFinished(view, url)
                 url?.let { newUrl ->
                     currentUrl = newUrl
+
+                    // Detect site framework
+                    getPageHtml { html ->
+                        pageHtml = html
+                        detectedFramework = SitePatternLibrary.SiteFramework.detect(html)
+                    }
 
                     // Auto-detect search URL when on SEARCH step
                     if (currentStep == SelectorWizardStep.SEARCH ||
@@ -442,10 +475,12 @@ fun ElementSelectorScreen(
             StepInstructionCard(
                 step = currentStep,
                 selectedCount = selectedElements.size,
+                detectedFramework = detectedFramework,
                 onClearSelections = {
                     selectedElements.clear()
                     clearHighlights()
                 },
+                onShowPatternLibrary = { showPatternLibrary = true },
                 onSkipStep = if (currentStep == SelectorWizardStep.SEARCH ||
                     currentStep == SelectorWizardStep.SEARCH_URL_PATTERN ||
                     currentStep == SelectorWizardStep.PAGINATION
@@ -593,6 +628,35 @@ fun ElementSelectorScreen(
             onDismiss = { showSourceNameDialog = false },
         )
     }
+
+    // Pattern Library dialog
+    if (showPatternLibrary) {
+        PatternLibraryDialog(
+            framework = detectedFramework,
+            currentStep = currentStep,
+            onSelectPattern = { selector ->
+                // Test the selector and highlight matches
+                testSelector(selector) { count ->
+                    testSelectorResult = "$count matches for: $selector"
+                }
+                highlightSelector(selector)
+            },
+            onApplySelector = { selector ->
+                // Add as selected element
+                selectedElements.add(
+                    SelectedElement(
+                        selector = selector,
+                        outerHtml = "",
+                        textContent = "(Pattern suggestion)",
+                        parentSelectors = emptyMap(),
+                    ),
+                )
+                showPatternLibrary = false
+            },
+            onDismiss = { showPatternLibrary = false },
+            testResult = testSelectorResult,
+        )
+    }
 }
 
 @Composable
@@ -633,7 +697,9 @@ private fun StepIndicatorBar(
 private fun StepInstructionCard(
     step: SelectorWizardStep,
     selectedCount: Int,
+    detectedFramework: SitePatternLibrary.SiteFramework = SitePatternLibrary.SiteFramework.CUSTOM,
     onClearSelections: () -> Unit,
+    onShowPatternLibrary: () -> Unit,
     onSkipStep: (() -> Unit)? = null,
 ) {
     Card(
@@ -687,6 +753,42 @@ private fun StepInstructionCard(
                         IconButton(onClick = onClearSelections) {
                             Icon(Icons.Filled.Delete, "Clear selections")
                         }
+                    }
+                }
+            }
+
+            // Detected framework info
+            if (detectedFramework != SitePatternLibrary.SiteFramework.CUSTOM) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Divider()
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            Icons.Filled.CheckCircle,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "Detected: ${detectedFramework.displayName}",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+                    TextButton(onClick = onShowPatternLibrary) {
+                        Icon(
+                            Icons.Filled.Code,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Suggestions")
                     }
                 }
             }
@@ -1167,6 +1269,155 @@ private fun findCommonSelector(elements: List<SelectedElement>): String {
 }
 
 /**
+ * Pattern Library Dialog - shows selector suggestions based on detected site framework
+ */
+@Composable
+private fun PatternLibraryDialog(
+    framework: SitePatternLibrary.SiteFramework,
+    currentStep: SelectorWizardStep,
+    onSelectPattern: (String) -> Unit,
+    onApplySelector: (String) -> Unit,
+    onDismiss: () -> Unit,
+    testResult: String? = null,
+) {
+    val suggestions = SitePatternLibrary.getSuggestedSelectors(framework, currentStep)
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Column {
+                Text("Pattern Library")
+                Text(
+                    text = framework.displayName,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
+            ) {
+                if (suggestions.isEmpty()) {
+                    Text(
+                        text = "No specific patterns available for this step and framework.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                } else {
+                    Text(
+                        text = "Suggested selectors for ${currentStep.title}:",
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Show test result if available
+                    testResult?.let { result ->
+                        Card(
+                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
+                            ),
+                        ) {
+                            Text(
+                                text = result,
+                                modifier = Modifier.padding(8.dp),
+                                style = MaterialTheme.typography.bodySmall,
+                                fontFamily = FontFamily.Monospace,
+                            )
+                        }
+                    }
+
+                    suggestions
+                        .sortedByDescending { it.priority }
+                        .forEach { preset ->
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 4.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                ),
+                            ) {
+                                Column(
+                                    modifier = Modifier.padding(12.dp),
+                                ) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically,
+                                    ) {
+                                        Text(
+                                            text = preset.name,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = FontWeight.Medium,
+                                        )
+                                        Row {
+                                            TextButton(
+                                                onClick = { onSelectPattern(preset.selector) },
+                                            ) {
+                                                Text("Test")
+                                            }
+                                            TextButton(
+                                                onClick = { onApplySelector(preset.selector) },
+                                            ) {
+                                                Text("Use")
+                                            }
+                                        }
+                                    }
+                                    Text(
+                                        text = preset.selector,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        fontFamily = FontFamily.Monospace,
+                                        color = MaterialTheme.colorScheme.primary,
+                                    )
+                                    Text(
+                                        text = preset.description,
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                }
+                            }
+                        }
+                }
+
+                // Show all frameworks option
+                Spacer(modifier = Modifier.height(16.dp))
+                Divider()
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Available Frameworks:",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+
+                SitePatternLibrary.getAvailableFrameworks().forEach { fw ->
+                    Text(
+                        text = "• ${fw.displayName}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (fw == framework) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        },
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Close")
+            }
+        },
+    )
+}
+
+/**
  * JavaScript code for element selection
  */
 private val ELEMENT_SELECTOR_JS = """
@@ -1298,6 +1549,22 @@ private val ELEMENT_SELECTOR_JS = """
             el.classList.remove('element-selector-highlight');
         });
         highlightedElements = [];
+    };
+
+    // Test a selector and return count of matching elements
+    window.testSelector = function(selector) {
+        try {
+            const elements = document.querySelectorAll(selector);
+            // Also highlight found elements
+            elements.forEach(el => {
+                el.classList.add('element-selector-highlight');
+                highlightedElements.push(el);
+            });
+            return elements.length;
+        } catch (e) {
+            console.error('Invalid selector:', selector);
+            return 0;
+        }
     };
 
 })();

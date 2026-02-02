@@ -163,6 +163,7 @@ object MangaMapper {
         isSyncing: Long,
         notes: String,
         totalCount: Long,
+        readCount: Long,
     ): MangaWithChapterCount = MangaWithChapterCount(
         manga = mapManga(
             id,
@@ -193,6 +194,7 @@ object MangaMapper {
             notes,
         ),
         chapterCount = totalCount,
+        readCount = readCount,
     )
 
     fun mapLibraryMangaForUpdate(

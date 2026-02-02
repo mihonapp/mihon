@@ -91,7 +91,8 @@ class AndroidSourceManager(
                 // Add JS plugin sources
                 jsSources.forEach { jsSource ->
                     mutableMap[jsSource.id] = jsSource
-                    registerStubSource(StubSource.from(jsSource))
+                    // Store the full display name with "(JS)" marker for proper identification
+                    registerStubSource(StubSource.fromWithDisplayName(jsSource, "${jsSource.name} (JS)"))
                     logcat(LogPriority.DEBUG) { "AndroidSourceManager: Added JsSource id=${jsSource.id}, name=${jsSource.name}" }
                 }
                 logcat(LogPriority.INFO) { "AndroidSourceManager: combine() returning map with ${mutableMap.size} sources" }

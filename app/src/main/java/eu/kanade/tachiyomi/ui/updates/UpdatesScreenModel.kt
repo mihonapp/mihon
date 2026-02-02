@@ -42,6 +42,7 @@ import tachiyomi.domain.chapter.model.ChapterUpdate
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.domain.updates.interactor.ClearUpdatesCache
 import tachiyomi.domain.updates.interactor.GetUpdates
 import tachiyomi.domain.updates.model.UpdatesWithRelations
 import uy.kohesive.injekt.Injekt
@@ -54,6 +55,25 @@ enum class UpdatesFilter {
     NOVELS,
 }
 
+/**
+ * Represents a group of updates for a single novel.
+ * Used when "group by novel" is enabled.
+ */
+@Immutable
+data class UpdatesNovelGroup(
+    val mangaId: Long,
+    val mangaTitle: String,
+    val coverUrl: String?,
+    val sourceId: Long,
+    val latestChapterDate: Long,
+    val chapters: List<UpdatesItem>,
+    val isNovel: Boolean = false,
+) {
+    val chapterCount: Int get() = chapters.size
+    val hasUnreadChapters: Boolean get() = chapters.any { !it.update.read }
+    val hasDownloaded: Boolean get() = chapters.any { it.downloadStateProvider() == Download.State.DOWNLOADED }
+}
+
 class UpdatesScreenModel(
     private val sourceManager: SourceManager = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
@@ -61,6 +81,7 @@ class UpdatesScreenModel(
     private val updateChapter: UpdateChapter = Injekt.get(),
     private val setReadStatus: SetReadStatus = Injekt.get(),
     private val getUpdates: GetUpdates = Injekt.get(),
+    private val clearUpdatesCache: ClearUpdatesCache = Injekt.get(),
     private val getManga: GetManga = Injekt.get(),
     private val getChapter: GetChapter = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
@@ -225,11 +246,11 @@ class UpdatesScreenModel(
      */
     fun markUpdatesRead(updates: List<UpdatesItem>, read: Boolean) {
         screenModelScope.launchIO {
+            val chapterIds = updates.map { it.update.chapterId }
+            val chapters = getChapter.awaitAll(chapterIds)
             setReadStatus.await(
                 read = read,
-                chapters = updates
-                    .mapNotNull { getChapter.await(it.update.chapterId) }
-                    .toTypedArray(),
+                chapters = chapters.toTypedArray(),
             )
         }
         toggleAllSelection(false)
@@ -261,7 +282,8 @@ class UpdatesScreenModel(
                 val manga = getManga.await(mangaId) ?: continue
                 // Don't download if source isn't available
                 sourceManager.get(manga.source) ?: continue
-                val chapters = updates.mapNotNull { getChapter.await(it.update.chapterId) }
+                val chapterIds = updates.map { it.update.chapterId }
+                val chapters = getChapter.awaitAll(chapterIds)
                 downloadManager.downloadChapters(manga, chapters)
             }
         }
@@ -280,7 +302,8 @@ class UpdatesScreenModel(
                 .forEach { (mangaId, updates) ->
                     val manga = getManga.await(mangaId) ?: return@forEach
                     val source = sourceManager.get(manga.source) ?: return@forEach
-                    val chapters = updates.mapNotNull { getChapter.await(it.update.chapterId) }
+                    val chapterIds = updates.map { it.update.chapterId }
+                    val chapters = getChapter.awaitAll(chapterIds)
                     downloadManager.deleteChapters(chapters, manga, source)
                 }
         }
@@ -388,15 +411,49 @@ class UpdatesScreenModel(
         libraryPreferences.newUpdatesCount().set(0)
     }
 
+    fun toggleGroupByNovel() {
+        mutableState.update { it.copy(groupByNovel = !it.groupByNovel) }
+    }
+    
+    fun clearUpdatesCacheAll() {
+        screenModelScope.launchIO {
+            clearUpdatesCache.clearAll()
+            snackbarHostState.showSnackbar("Updates cache cleared")
+        }
+    }
+
     @Immutable
     data class State(
         val isLoading: Boolean = true,
         val items: PersistentList<UpdatesItem> = persistentListOf(),
         val dialog: Dialog? = null,
         val filter: UpdatesFilter = UpdatesFilter.ALL,
+        val groupByNovel: Boolean = false,
     ) {
         val selected = items.filter { it.selected }
         val selectionMode = selected.isNotEmpty()
+
+        /**
+         * Groups updates by novel when groupByNovel is enabled.
+         * Each group shows the novel with count of new chapters.
+         */
+        fun getNovelGroups(): List<UpdatesNovelGroup> {
+            return items
+                .groupBy { it.update.mangaId }
+                .map { (mangaId, chapters) ->
+                    val firstChapter = chapters.first()
+                    UpdatesNovelGroup(
+                        mangaId = mangaId,
+                        mangaTitle = firstChapter.update.mangaTitle,
+                        coverUrl = firstChapter.update.coverData.url,
+                        sourceId = firstChapter.update.sourceId,
+                        latestChapterDate = chapters.maxOf { it.update.dateFetch },
+                        chapters = chapters,
+                        isNovel = firstChapter.isNovel,
+                    )
+                }
+                .sortedByDescending { it.latestChapterDate }
+        }
 
         fun getUiModel(): List<UpdatesUiModel> {
             return items

@@ -50,6 +50,9 @@
     <string name="export_epub_success">EPUB exported successfully</string>
     <string name="export_epub_error">Failed to export EPUB: %s</string>
     <string name="action_remove_chapters">Remove chapters</string>
+    <string name="action_clear_covers">Clear covers</string>
+    <string name="action_clear_descriptions">Clear descriptions</string>
+    <string name="action_clear_tags">Clear tags</string>
     <string name="action_start_auto_scroll">Start auto-scroll</string>
     <string name="action_stop_auto_scroll">Stop auto-scroll</string>
     <string name="action_copy_links">Copy links</string>
@@ -157,6 +160,7 @@
     <string name="action_sort_alpha">Alphabetically</string>
     <string name="action_sort_count">Total entries</string>
     <string name="action_sort_total">Total chapters</string>
+    <string name="action_sort_downloaded">Downloaded chapters</string>
     <string name="action_sort_last_read">Last read</string>
     <string name="action_sort_last_manga_update">Last update check</string>
     <string name="action_sort_unread_count">Unread count</string>
@@ -179,6 +183,7 @@
     <string name="action_bookmark">Bookmark chapter</string>
     <string name="action_remove_bookmark">Unbookmark chapter</string>
     <string name="action_delete">Delete</string>
+    <string name="action_delete_range">Delete range</string>
     <string name="action_remove_from_db">Remove from database</string>
     <string name="action_update_library">Update library</string>
     <string name="action_enable_all">Enable all</string>
@@ -853,6 +858,7 @@
     <string name="updating_category">Updating category</string>
     <string name="manga_from_library">From library</string>
     <string name="downloaded_chapters">Downloaded chapters</string>
+    <string name="chapters_from_database">Chapter entries from database</string>
     <string name="intervals_header">Intervals</string>
     <!-- For badges/buttons on library covers. -->
     <string name="overlay_header">Overlay</string>

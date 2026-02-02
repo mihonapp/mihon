@@ -8,6 +8,7 @@ import tachiyomi.domain.manga.repository.MangaRepository
 enum class DuplicateMatchMode {
     EXACT,      // Exact title match (case-insensitive, trimmed)
     CONTAINS,   // One title contains another
+    URL,        // Same URL within the same extension/source
 }
 
 /**
@@ -68,6 +69,14 @@ class FindDuplicateNovels(
     }
 
     /**
+     * Find duplicates by URL within the same extension.
+     * Returns groups where multiple manga have the same URL from the same source.
+     */
+    suspend fun findUrlDuplicates(): List<DuplicateGroup> {
+        return mangaRepository.findDuplicatesByUrl()
+    }
+
+    /**
      * Find duplicates and return full manga info with chapter counts.
      * Groups results by normalized title.
      */
@@ -110,6 +119,22 @@ class FindDuplicateNovels(
                     val mangaList = ids.mapNotNull { mangaMap[it] }
                     if (mangaList.size > 1) {
                         title to mangaList.sortedByDescending { it.chapterCount }
+                    } else {
+                        null
+                    }
+                }.toMap()
+            }
+            DuplicateMatchMode.URL -> {
+                // Find duplicates by URL within the same source/extension
+                val groups = findUrlDuplicates()
+                val allIds = groups.flatMap { it.ids }
+                val mangaMap = getMangaWithCounts(allIds).associateBy { it.manga.id }
+                
+                groups.mapNotNull { group ->
+                    val mangaList = group.ids.mapNotNull { mangaMap[it] }
+                    if (mangaList.size > 1) {
+                        // Use URL as the group key for URL mode
+                        group.normalizedTitle to mangaList.sortedByDescending { it.chapterCount }
                     } else {
                         null
                     }

@@ -57,6 +57,7 @@ fun BrowseSourceContent(
     translatedTitles: Map<Long, String> = emptyMap(),
     onTranslateManga: (Manga) -> Unit = {},
     titleMaxLines: Int = 2,
+    skipCoverLoading: Boolean = false,
 ) {
     val context = LocalContext.current
     val errorState = mangaList.loadState.refresh.takeIf { it is LoadState.Error }
@@ -141,6 +142,7 @@ fun BrowseSourceContent(
                 translatedTitles = translatedTitles,
                 onMangaVisible = onTranslateManga,
                 titleMaxLines = titleMaxLines,
+                skipCoverLoading = skipCoverLoading,
             )
         }
         LibraryDisplayMode.List -> {
@@ -155,6 +157,7 @@ fun BrowseSourceContent(
                 translatedTitles = translatedTitles,
                 onMangaVisible = onTranslateManga,
                 titleMaxLines = titleMaxLines,
+                skipCoverLoading = skipCoverLoading,
             )
         }
         LibraryDisplayMode.CompactGrid, LibraryDisplayMode.CoverOnlyGrid -> {
@@ -170,6 +173,7 @@ fun BrowseSourceContent(
                 translatedTitles = translatedTitles,
                 onMangaVisible = onTranslateManga,
                 titleMaxLines = titleMaxLines,
+                skipCoverLoading = skipCoverLoading,
             )
         }
     }

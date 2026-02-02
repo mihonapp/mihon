@@ -124,11 +124,24 @@ internal object ExtensionLoader {
         } else {
             pkgManager.getInstalledPackages(PACKAGE_FLAGS)
         }
+        
+        android.util.Log.d("ExtensionLoader", "Found ${installedPkgs.size} installed packages")
+
+        // Log packages that might be extensions (for debugging)
+        val potentialExts = installedPkgs.filter { pkg ->
+            pkg.packageName.contains("extension", ignoreCase = true) ||
+            pkg.packageName.contains("tachiyomi", ignoreCase = true) ||
+            pkg.packageName.contains("mihon", ignoreCase = true)
+        }
+        android.util.Log.d("ExtensionLoader", "${potentialExts.size} potential extension packages: ${potentialExts.map { it.packageName }}")
 
         val sharedExtPkgs = installedPkgs
             .asSequence()
             .filter { isPackageAnExtension(it) }
             .map { ExtensionInfo(packageInfo = it, isShared = true) }
+        
+        val sharedExtList = sharedExtPkgs.toList()
+        android.util.Log.d("ExtensionLoader", "${sharedExtList.size} shared extensions found: ${sharedExtList.map { it.packageInfo.packageName }}")
 
         val privateExtPkgs = getPrivateExtensionDir(context)
             .listFiles()
@@ -147,17 +160,22 @@ internal object ExtensionLoader {
             ?.filter { isPackageAnExtension(it) }
             ?.map { ExtensionInfo(packageInfo = it, isShared = false) }
             ?: emptySequence()
+        
+        val privateExtList = privateExtPkgs.toList()
+        android.util.Log.d("ExtensionLoader", "${privateExtList.size} private extensions found")
 
-        val extPkgs = (sharedExtPkgs + privateExtPkgs)
+        val extPkgs = (sharedExtList.asSequence() + privateExtList.asSequence())
             // Remove duplicates. Shared takes priority than private by default
             .distinctBy { it.packageInfo.packageName }
             // Compare version number
             .mapNotNull { sharedPkg ->
-                val privatePkg = privateExtPkgs
+                val privatePkg = privateExtList
                     .singleOrNull { it.packageInfo.packageName == sharedPkg.packageInfo.packageName }
                 selectExtensionPackage(sharedPkg, privatePkg)
             }
             .toList()
+        
+        android.util.Log.d("ExtensionLoader", "${extPkgs.size} total extensions to load")
 
         if (extPkgs.isEmpty()) return emptyList()
 
@@ -217,6 +235,7 @@ internal object ExtensionLoader {
                     )
                 }
         } catch (error: PackageManager.NameNotFoundException) {
+            logcat(LogPriority.DEBUG) { "Package not found in package manager: $pkgName (may still be installing)" }
             null
         }
 
@@ -235,7 +254,13 @@ internal object ExtensionLoader {
         val appInfo = pkgInfo.applicationInfo!!
         val pkgName = pkgInfo.packageName
 
-        val extName = pkgManager.getApplicationLabel(appInfo).toString().substringAfter("Tachiyomi: ")
+        // Support both old "Tachiyomi: " and new "MihonNovel: " prefixes
+        val appLabel = pkgManager.getApplicationLabel(appInfo).toString()
+        val extName = when {
+            appLabel.startsWith("MihonNovel: ") -> appLabel.substringAfter("MihonNovel: ")
+            appLabel.startsWith("Tachiyomi: ") -> appLabel.substringAfter("Tachiyomi: ")
+            else -> appLabel
+        }
         val versionName = pkgInfo.versionName
         val versionCode = PackageInfoCompat.getLongVersionCode(pkgInfo)
 
@@ -296,17 +321,38 @@ internal object ExtensionLoader {
                     sourceClass
                 }
             }
-            .flatMap {
-                try {
-                    when (val obj = Class.forName(it, false, classLoader).getDeclaredConstructor().newInstance()) {
-                        is Source -> listOf(obj)
-                        is SourceFactory -> obj.createSources()
-                        else -> throw Exception("Unknown source class type: ${obj.javaClass}")
-                    }
-                } catch (e: Throwable) {
-                    logcat(LogPriority.ERROR, e) { "Extension load error: $extName ($it)" }
-                    return LoadResult.Error
+            .flatMap { className ->
+                // Try the class name as-is first
+                val classesToTry = mutableListOf(className)
+                
+                // If the package uses app.mihonnovel namespace, also try eu.kanade.tachiyomi namespace
+                // This handles extensions that were migrated to new package names but still have
+                // classes in the old namespace
+                if (className.startsWith("app.mihonnovel.extension.")) {
+                    val fallbackClass = className.replace("app.mihonnovel.extension.", "eu.kanade.tachiyomi.extension.")
+                    classesToTry.add(fallbackClass)
                 }
+                
+                var lastError: Throwable? = null
+                for (classToTry in classesToTry) {
+                    try {
+                        val obj = Class.forName(classToTry, false, classLoader).getDeclaredConstructor().newInstance()
+                        return@flatMap when (obj) {
+                            is Source -> listOf(obj)
+                            is SourceFactory -> obj.createSources()
+                            else -> throw Exception("Unknown source class type: ${obj.javaClass}")
+                        }
+                    } catch (e: ClassNotFoundException) {
+                        lastError = e
+                        // Try next class name
+                    } catch (e: Throwable) {
+                        logcat(LogPriority.ERROR, e) { "Extension load error: $extName ($classToTry)" }
+                        return LoadResult.Error
+                    }
+                }
+                
+                logcat(LogPriority.ERROR, lastError) { "Extension load error: $extName - class not found in any namespace: $classesToTry" }
+                return LoadResult.Error
             }
 
         val langs = sources.filterIsInstance<CatalogueSource>()
@@ -363,7 +409,14 @@ internal object ExtensionLoader {
      * @param pkgInfo The package info of the application.
      */
     private fun isPackageAnExtension(pkgInfo: PackageInfo): Boolean {
-        return pkgInfo.reqFeatures.orEmpty().any { it.name == EXTENSION_FEATURE }
+        val hasFeature = pkgInfo.reqFeatures.orEmpty().any { it.name == EXTENSION_FEATURE }
+        if (pkgInfo.packageName.contains("extension", ignoreCase = true) ||
+            pkgInfo.packageName.contains("mihon", ignoreCase = true)) {
+            android.util.Log.d("ExtensionLoader", 
+                "isPackageAnExtension: ${pkgInfo.packageName} - features: ${pkgInfo.reqFeatures?.map { it.name }}, hasFeature=$hasFeature" 
+            )
+        }
+        return hasFeature
     }
 
     /**

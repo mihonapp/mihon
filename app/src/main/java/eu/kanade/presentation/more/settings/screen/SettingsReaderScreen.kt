@@ -170,6 +170,10 @@ object SettingsReaderScreen : SearchableSettings {
 
     @Composable
     private fun getReadingGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup {
+        val autoSplitEnabled by readerPreferences.novelAutoSplitText().collectAsState()
+        val autoSplitWordCountPref = readerPreferences.novelAutoSplitWordCount()
+        val autoSplitWordCount by autoSplitWordCountPref.collectAsState()
+        
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_category_reading),
             preferenceItems = persistentListOf(
@@ -188,6 +192,22 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.alwaysShowChapterTransition(),
                     title = stringResource(MR.strings.pref_always_show_chapter_transition),
+                ),
+                Preference.PreferenceItem.InfoPreference(
+                    title = "Novel Reader Settings",
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.novelAutoSplitText(),
+                    title = "Auto-split long chapters",
+                    subtitle = "Split long novel chapters into multiple pages based on word count",
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = autoSplitWordCount,
+                    valueRange = 10..200,
+                    title = "Split word count (x100)",
+                    subtitle = "Pages will be split every ${autoSplitWordCount * 100} words",
+                    enabled = autoSplitEnabled,
+                    onValueChanged = { autoSplitWordCountPref.set(it) },
                 ),
             ),
         )

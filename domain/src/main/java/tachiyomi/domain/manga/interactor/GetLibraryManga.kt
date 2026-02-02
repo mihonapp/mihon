@@ -69,19 +69,34 @@ class GetLibraryManga(
      * Force a refresh of the library cache.
      * This is the ONLY way to trigger a new database query.
      * Use sparingly - only when user explicitly requests refresh or after bulk operations.
+     * 
+     * Note: This launches the refresh in an isolated scope so it won't be cancelled
+     * if the calling scope is cancelled (e.g., when navigating away from a screen).
      */
-    suspend fun refresh() {
-        refreshInternal(force = false)
+    fun refresh() {
+        scope.launch {
+            refreshInternal(force = false)
+        }
     }
 
     /**
      * Force a refresh and bypass the minimum refresh interval.
      * Use when user explicitly requests a reload (e.g., after backup restore).
      * Returns the updated library list.
+     * 
+     * This is a suspend function that waits for the refresh to complete.
      */
     suspend fun refreshForced(): List<LibraryManga> {
         refreshInternal(force = true)
         return _libraryState.value
+    }
+
+    /**
+     * Await refresh - waits for the current refresh to complete.
+     * Use this when you need to ensure the library is up-to-date before proceeding.
+     */
+    suspend fun awaitRefresh() {
+        refreshInternal(force = false)
     }
     
     private suspend fun refreshInternal(force: Boolean) {

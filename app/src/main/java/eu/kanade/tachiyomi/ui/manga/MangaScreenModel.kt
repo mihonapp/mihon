@@ -362,7 +362,14 @@ class MangaScreenModel(
                 }
 
                 // Now check if user previously set categories, when available
-                val categories = getCategories()
+                // Filter categories based on content type (manga vs novel)
+                val isNovel = state.source.isNovelSource()
+                val contentType = if (isNovel) Category.CONTENT_TYPE_NOVEL else Category.CONTENT_TYPE_MANGA
+                val allCategories = getCategories()
+                // Show content-type specific + universal (CONTENT_TYPE_ALL) categories
+                val categories = allCategories.filter { 
+                    it.contentType == contentType || it.contentType == Category.CONTENT_TYPE_ALL 
+                }
                 val defaultCategoryId = libraryPreferences.defaultCategory().get().toLong()
                 val defaultCategory = categories.find { it.id == defaultCategoryId }
                 when {
@@ -392,8 +399,15 @@ class MangaScreenModel(
 
     fun showChangeCategoryDialog() {
         val manga = successState?.manga ?: return
+        val source = successState?.source ?: return
         screenModelScope.launch {
-            val categories = getCategories()
+            // Filter categories based on content type (manga vs novel)
+            val isNovel = source.isNovelSource()
+            val contentType = if (isNovel) Category.CONTENT_TYPE_NOVEL else Category.CONTENT_TYPE_MANGA
+            val allCategories = getCategories()
+            val categories = allCategories.filter { 
+                it.contentType == contentType || it.contentType == Category.CONTENT_TYPE_ALL 
+            }
             val selection = getMangaCategoryIds(manga)
             updateSuccessState { successState ->
                 successState.copy(
@@ -1192,6 +1206,9 @@ class MangaScreenModel(
         data class SetFetchInterval(val manga: Manga) : Dialog
         data class EditAlternativeTitles(val manga: Manga) : Dialog
         data class EditTags(val manga: Manga) : Dialog
+        data class EditTitle(val manga: Manga) : Dialog
+        data class EditDescription(val manga: Manga) : Dialog
+        data class EditUrl(val manga: Manga) : Dialog
         data class TranslateMangaDetails(val manga: Manga) : Dialog
         data class ExportEpub(val manga: Manga, val chapters: List<Chapter>) : Dialog
         data object SettingsSheet : Dialog
@@ -1282,6 +1299,48 @@ class MangaScreenModel(
     fun showEditTagsDialog() {
         val manga = successState?.manga ?: return
         updateSuccessState { it.copy(dialog = Dialog.EditTags(manga)) }
+    }
+
+    fun showEditTitleDialog() {
+        val manga = successState?.manga ?: return
+        updateSuccessState { it.copy(dialog = Dialog.EditTitle(manga)) }
+    }
+
+    fun showEditDescriptionDialog() {
+        val manga = successState?.manga ?: return
+        updateSuccessState { it.copy(dialog = Dialog.EditDescription(manga)) }
+    }
+
+    fun showEditUrlDialog() {
+        val manga = successState?.manga ?: return
+        updateSuccessState { it.copy(dialog = Dialog.EditUrl(manga)) }
+    }
+
+    /**
+     * Update the title of the manga.
+     */
+    fun updateTitle(title: String) {
+        screenModelScope.launchIO {
+            updateManga.awaitUpdateTitle(mangaId, title)
+        }
+    }
+
+    /**
+     * Update the description of the manga.
+     */
+    fun updateDescription(description: String) {
+        screenModelScope.launchIO {
+            updateManga.awaitUpdateDescription(mangaId, description)
+        }
+    }
+
+    /**
+     * Update the URL of the manga.
+     */
+    fun updateUrl(url: String) {
+        screenModelScope.launchIO {
+            updateManga.awaitUpdateUrl(mangaId, url)
+        }
     }
 
     fun showExportEpubDialog() {

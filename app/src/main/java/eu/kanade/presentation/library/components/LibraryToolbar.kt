@@ -41,6 +41,8 @@ fun LibraryToolbar(
     onClickOpenRandomManga: () -> Unit,
     searchQuery: String?,
     onSearchQueryChange: (String?) -> Unit,
+    onSearch: (String) -> Unit,
+    onSearchClear: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior?,
     onClickMassImport: (() -> Unit)? = null,
     onClickImportEpub: (() -> Unit)? = null,
@@ -57,6 +59,8 @@ fun LibraryToolbar(
         hasFilters = hasActiveFilters,
         searchQuery = searchQuery,
         onSearchQueryChange = onSearchQueryChange,
+        onSearch = onSearch,
+        onSearchClear = onSearchClear,
         onClickFilter = onClickFilter,
         onClickRefresh = onClickRefresh,
         onClickGlobalUpdate = onClickGlobalUpdate,
@@ -74,6 +78,8 @@ private fun LibraryRegularToolbar(
     hasFilters: Boolean,
     searchQuery: String?,
     onSearchQueryChange: (String?) -> Unit,
+    onSearch: (String) -> Unit,
+    onSearchClear: () -> Unit,
     onClickFilter: () -> Unit,
     onClickRefresh: () -> Unit,
     onClickGlobalUpdate: () -> Unit,
@@ -104,6 +110,8 @@ private fun LibraryRegularToolbar(
         },
         searchQuery = searchQuery,
         onChangeSearchQuery = onSearchQueryChange,
+        onSearch = onSearch,
+        onClickCloseSearch = onSearchClear,
         actions = {
             val filterTint = if (hasFilters) MaterialTheme.colorScheme.active else LocalContentColor.current
             val actions = mutableListOf(
@@ -113,14 +121,13 @@ private fun LibraryRegularToolbar(
                     iconTint = filterTint,
                     onClick = onClickFilter,
                 ),
-                AppBar.Action(
-                    title = "Reload Library",
-                    icon = Icons.Outlined.FlipToBack,
-                    onClick = onClickRefresh, // now triggers local DB reload
-                ),
                 AppBar.OverflowAction(
                     title = stringResource(MR.strings.action_update_library),
                     onClick = onClickGlobalUpdate, // still triggers full update (sources)
+                ),
+                AppBar.OverflowAction(
+                    title = "Reload Library",
+                    onClick = onClickRefresh, // now triggers local DB reload
                 ),
                 AppBar.OverflowAction(
                     title = stringResource(MR.strings.action_open_random_manga),

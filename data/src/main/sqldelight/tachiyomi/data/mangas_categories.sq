@@ -22,6 +22,11 @@ insert:
 INSERT INTO mangas_categories(manga_id, category_id)
 VALUES (:mangaId, :categoryId);
 
+-- Bulk insert for performance - inserts manga_id with single category
+insertBulkMangaCategory:
+INSERT OR IGNORE INTO mangas_categories(manga_id, category_id)
+VALUES (?, ?);
+
 deleteMangaCategoryByMangaId:
 DELETE FROM mangas_categories
 WHERE manga_id = :mangaId;
@@ -29,3 +34,8 @@ WHERE manga_id = :mangaId;
 deleteMangaCategory:
 DELETE FROM mangas_categories
 WHERE manga_id = :mangaId AND category_id = :categoryId;
+
+-- Bulk delete: Delete specific categories for multiple mangas
+deleteBulkMangaCategories:
+DELETE FROM mangas_categories
+WHERE manga_id IN :mangaIds AND category_id IN :categoryIds;

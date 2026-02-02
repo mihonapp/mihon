@@ -26,6 +26,7 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.source.NovelSource
 import eu.kanade.tachiyomi.source.model.SManga
+import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
@@ -65,6 +66,7 @@ import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.download.service.NovelDownloadPreferences
+import tachiyomi.domain.updates.repository.UpdatesRepository
 import tachiyomi.domain.source.model.SourceNotInstalledException
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
@@ -96,6 +98,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     private val fetchInterval: FetchInterval = Injekt.get()
     private val filterChaptersForDownload: FilterChaptersForDownload = Injekt.get()
     private val novelDownloadPreferences: NovelDownloadPreferences = Injekt.get()
+    private val updatesRepository: UpdatesRepository = Injekt.get()
 
     private val notifier = LibraryUpdateNotifier(context)
 
@@ -127,6 +130,12 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         return withIOContext {
             try {
                 updateChapterList()
+                // Auto-trim updates cache to prevent bloat (keep only latest 2000 entries)
+                try {
+                    updatesRepository.clearUpdatesKeepLatest(2000L)
+                } catch (e: Exception) {
+                    logcat(LogPriority.WARN, e) { "Failed to trim updates cache" }
+                }
                 Result.success()
             } catch (e: Exception) {
                 if (e is CancellationException) {
@@ -425,6 +434,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
 
     /**
      * Writes basic file of update errors to cache dir.
+     * Includes full URLs for easy re-import or debugging.
      */
     private fun writeErrorFile(errors: List<Pair<Manga, String?>>): File {
         try {
@@ -432,19 +442,46 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                 val file = context.createFileInCacheDir("mihon_update_errors.txt")
                 file.bufferedWriter().use { out ->
                     out.write(context.stringResource(MR.strings.library_errors_help, ERROR_LOG_HELP_URL) + "\n\n")
+                    
                     // Error file format:
                     // ! Error
                     //   # Source
-                    //     - Manga
+                    //     - Manga Title
+                    //       URL: https://full.url/to/manga
                     errors.groupBy({ it.second }, { it.first }).forEach { (error, mangas) ->
                         out.write("\n! ${error}\n")
                         mangas.groupBy { it.source }.forEach { (srcId, mangas) ->
                             val source = sourceManager.getOrStub(srcId)
                             out.write("  # $source\n")
-                            mangas.forEach {
-                                out.write("    - ${it.title}\n")
+                            mangas.forEach { manga ->
+                                out.write("    - ${manga.title}\n")
+                                // Get full URL if possible
+                                val fullUrl = try {
+                                    when (source) {
+                                        is HttpSource -> source.getMangaUrl(manga.toSManga())
+                                        else -> manga.url
+                                    }
+                                } catch (_: Exception) {
+                                    manga.url
+                                }
+                                out.write("      URL: $fullUrl\n")
                             }
                         }
+                    }
+                    
+                    // Add a summary section with just URLs for easy copy-paste/re-import
+                    out.write("\n\n=== Failed URLs (for re-import) ===\n")
+                    errors.forEach { (manga, _) ->
+                        val source = sourceManager.getOrStub(manga.source)
+                        val fullUrl = try {
+                            when (source) {
+                                is HttpSource -> source.getMangaUrl(manga.toSManga())
+                                else -> manga.url
+                            }
+                        } catch (_: Exception) {
+                            manga.url
+                        }
+                        out.write("$fullUrl\n")
                     }
                 }
                 return file

@@ -272,6 +272,7 @@ class ReaderActivity : BaseActivity() {
     private fun ReaderActivityBinding.setComposeOverlay(): Unit = composeOverlay.setComposeContent {
         val state by viewModel.state.collectAsState()
         val showPageNumber by readerPreferences.showPageNumber().collectAsState()
+        val autoTranslateEnabled by readerPreferences.autoTranslate().collectAsState()
         val settingsScreenModel = remember {
             ReaderSettingsScreenModel(
                 readerState = viewModel.state,
@@ -349,7 +350,7 @@ class ReaderActivity : BaseActivity() {
                 TranslationLanguageSelectDialog(
                     onDismissRequest = onDismissRequest,
                     currentLanguage = viewModel.getTargetTranslationLanguage(),
-                    autoTranslateEnabled = readerPreferences.autoTranslate().get(),
+                    autoTranslateEnabled = autoTranslateEnabled,
                     onToggleAutoTranslate = { enabled ->
                         readerPreferences.autoTranslate().set(enabled)
                     },

@@ -56,6 +56,11 @@ SELECT *
 FROM chapters
 WHERE _id = :id;
 
+getChaptersByIds:
+SELECT *
+FROM chapters
+WHERE _id IN :ids;
+
 getChaptersByMangaId:
 SELECT C.*
 FROM chapters C
@@ -93,6 +98,10 @@ AND manga_id = :mangaId;
 removeChaptersWithIds:
 DELETE FROM chapters
 WHERE _id IN :chapterIds;
+
+removeChaptersByMangaIds:
+DELETE FROM chapters
+WHERE manga_id IN :mangaIds;
 
 resetIsSyncing:
 UPDATE chapters

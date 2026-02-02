@@ -25,16 +25,23 @@ object LibraryExporter {
         val includeIsNovel: Boolean = false,
     )
 
+    data class ExportProgress(
+        val current: Int,
+        val total: Int,
+        val currentTitle: String = "",
+    )
+
     suspend fun exportToCsv(
         context: Context,
         uri: Uri,
         favorites: List<Manga>,
         options: ExportOptions,
+        onProgress: (ExportProgress) -> Unit = {},
         onExportComplete: () -> Unit,
     ) {
         withContext(Dispatchers.IO) {
             context.contentResolver.openOutputStream(uri)?.use { outputStream ->
-                val csvData = generateCsvData(favorites, options)
+                val csvData = generateCsvData(favorites, options, onProgress)
                 outputStream.write(csvData.toByteArray())
             }
             onExportComplete()
@@ -43,7 +50,11 @@ object LibraryExporter {
 
     private val escapeRequired = listOf("\r", "\n", "\"", ",")
 
-    private suspend fun generateCsvData(favorites: List<Manga>, options: ExportOptions): String {
+    private suspend fun generateCsvData(
+        favorites: List<Manga>,
+        options: ExportOptions,
+        onProgress: (ExportProgress) -> Unit = {},
+    ): String {
         val sourceManager = Injekt.get<SourceManager>()
         val mangaRepo = Injekt.get<MangaRepository>()
         val getCategories = Injekt.get<tachiyomi.domain.category.interactor.GetCategories>()
@@ -73,7 +84,11 @@ object LibraryExporter {
         val rows = mutableListOf<List<String?>>()
         rows.add(columns)
 
-        favorites.forEach { manga ->
+        val total = favorites.size
+        favorites.forEachIndexed { index, manga ->
+            // Report progress
+            onProgress(ExportProgress(index + 1, total, manga.title))
+
             val row = mutableListOf<String?>()
             if (options.includeTitle) row.add(manga.title)
             if (options.includeAuthor) row.add(manga.author)

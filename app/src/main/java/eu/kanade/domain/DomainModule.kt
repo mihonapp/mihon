@@ -77,6 +77,7 @@ import tachiyomi.domain.history.interactor.GetTotalReadDuration
 import tachiyomi.domain.history.interactor.RemoveHistory
 import tachiyomi.domain.history.interactor.UpsertHistory
 import tachiyomi.domain.history.repository.HistoryRepository
+import tachiyomi.domain.library.interactor.RefreshLibraryCache
 import tachiyomi.domain.manga.interactor.FetchInterval
 import tachiyomi.domain.manga.interactor.FindDuplicateNovels
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
@@ -103,6 +104,7 @@ import tachiyomi.domain.track.interactor.GetTracksPerManga
 import tachiyomi.domain.track.interactor.InsertTrack
 import tachiyomi.domain.track.repository.TrackRepository
 import tachiyomi.domain.translation.repository.TranslatedChapterRepository
+import tachiyomi.domain.updates.interactor.ClearUpdatesCache
 import tachiyomi.domain.updates.interactor.GetUpdates
 import tachiyomi.domain.updates.repository.UpdatesRepository
 import uy.kohesive.injekt.api.InjektModule
@@ -132,6 +134,8 @@ class DomainModule : InjektModule {
         addFactory { GetFavoritesEntry(get()) }
         // Singleton so all screens share the same cached SharedFlow for library queries
         addSingletonFactory { GetLibraryManga(get()) }
+        // Singleton for library cache management
+        addSingletonFactory { RefreshLibraryCache(get()) }
         addFactory { GetMangaWithChapters(get(), get()) }
         addFactory { GetMangaByUrlAndSourceId(get()) }
         addFactory { GetManga(get()) }
@@ -145,7 +149,7 @@ class DomainModule : InjektModule {
         addFactory { NetworkToLocalManga(get()) }
         addFactory { UpdateManga(get(), get()) }
         addFactory { UpdateMangaNotes(get()) }
-        addFactory { SetMangaCategories(get()) }
+        addFactory { SetMangaCategories(get(), get()) }
         addFactory { GetExcludedScanlators(get()) }
         addFactory { SetExcludedScanlators(get()) }
         addSingletonFactory { MassImportNovels(get(), get(), get(), get(), get()) }
@@ -195,6 +199,7 @@ class DomainModule : InjektModule {
 
         addSingletonFactory<UpdatesRepository> { UpdatesRepositoryImpl(get()) }
         addFactory { GetUpdates(get()) }
+        addFactory { ClearUpdatesCache(get()) }
 
         // Translation
         addSingletonFactory<TranslatedChapterRepository> { TranslatedChapterRepositoryImpl(get(), get()) }

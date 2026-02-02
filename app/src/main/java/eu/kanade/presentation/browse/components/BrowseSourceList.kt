@@ -27,6 +27,7 @@ fun BrowseSourceList(
     translatedTitles: Map<Long, String> = emptyMap(),
     onMangaVisible: (Manga) -> Unit = {},
     titleMaxLines: Int = 2,
+    skipCoverLoading: Boolean = false,
 ) {
     LazyColumn(
         contentPadding = contentPadding + PaddingValues(vertical = 8.dp),
@@ -57,6 +58,7 @@ fun BrowseSourceList(
                 onLongClick = { onMangaLongClick(manga) },
                 isSelected = isSelected,
                 titleMaxLines = titleMaxLines,
+                skipCoverLoading = skipCoverLoading,
             )
         }
 
@@ -76,6 +78,7 @@ private fun BrowseSourceListItem(
     onLongClick: () -> Unit = onClick,
     isSelected: Boolean = false,
     titleMaxLines: Int = 2,
+    skipCoverLoading: Boolean = false,
 ) {
     MangaListItem(
         isSelected = isSelected,
@@ -85,7 +88,7 @@ private fun BrowseSourceListItem(
             mangaId = manga.id,
             sourceId = manga.source,
             isMangaFavorite = manga.favorite,
-            url = manga.thumbnailUrl,
+            url = if (skipCoverLoading) "" else manga.thumbnailUrl,
             lastModified = manga.coverLastModified,
         ),
         coverAlpha = if (manga.favorite) CommonMangaItemDefaults.BrowseFavoriteCoverAlpha else 1f,

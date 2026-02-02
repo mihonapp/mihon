@@ -186,7 +186,8 @@ AND source = :sourceId;
 
 getDuplicateLibraryManga:
 SELECT M.*, 
-  (SELECT COUNT(*) FROM chapters WHERE manga_id = M._id) AS chapter_count
+  (SELECT COUNT(*) FROM chapters WHERE manga_id = M._id) AS chapter_count,
+  (SELECT COUNT(*) FROM chapters WHERE manga_id = M._id AND read = 1) AS read_count
 FROM mangas M
 WHERE M.favorite = 1
 AND M._id != :id
@@ -223,12 +224,33 @@ JOIN mangas b
 ORDER BY a.title
 LIMIT 20;
 
--- Get manga with chapter count for duplicate detection
+-- Find duplicates by URL within the same source/extension
+findDuplicatesByUrl:
+SELECT
+    url,
+    source,
+    CAST(group_concat(_id) AS TEXT) AS ids,
+    count(*) AS duplicate_count
+FROM mangas
+WHERE favorite = 1
+GROUP BY url, source
+HAVING count(*) > 1
+ORDER BY duplicate_count DESC;
+
+-- Get manga with chapter count for duplicate detection (optimized with JOIN)
 getMangaWithCounts:
 SELECT
-    M.*,
-    (SELECT count(*) FROM chapters WHERE manga_id = M._id) AS totalCount
+    M._id, M.source, M.url, M.artist, M.author, M.description, M.genre, M.title, M.alternative_titles, M.status, M.thumbnail_url, M.favorite, M.last_update, M.next_update, M.initialized, M.viewer, M.chapter_flags, M.cover_last_modified, M.date_added, M.update_strategy, M.calculate_interval, M.last_modified_at, M.favorite_modified_at, M.version, M.is_syncing, M.notes,
+    COALESCE(CC.totalCount, 0) AS totalCount,
+    COALESCE(CC.readCount, 0) AS readCount
 FROM mangas M
+LEFT JOIN (
+    SELECT manga_id,
+           COUNT(*) AS totalCount,
+           SUM(CASE WHEN read = 1 THEN 1 ELSE 0 END) AS readCount
+    FROM chapters
+    GROUP BY manga_id
+) CC ON CC.manga_id = M._id
 WHERE M._id IN :ids
 ORDER BY totalCount DESC;
 
@@ -302,6 +324,71 @@ WHERE _id = :mangaId;
 
 selectLastInsertedRowId:
 SELECT last_insert_rowid();
+
+-- Batch normalize URLs: remove trailing slashes and fragments
+-- Returns count of updated rows
+normalizeUrls:
+UPDATE mangas
+SET url = 
+    CASE 
+        WHEN instr(url, '#') > 0 THEN 
+            rtrim(substr(url, 1, instr(url, '#') - 1), '/')
+        ELSE 
+            rtrim(url, '/')
+    END
+WHERE url LIKE '%/' OR url LIKE '%#%';
+
+-- Batch normalize URLs with double slash removal
+-- First removes trailing slashes and fragments, then removes double slashes (preserving protocol ://)
+normalizeUrlsAdvanced:
+UPDATE mangas
+SET url = 
+    replace(
+        replace(
+            CASE 
+                WHEN instr(url, '#') > 0 THEN 
+                    rtrim(substr(url, 1, instr(url, '#') - 1), '/')
+                ELSE 
+                    rtrim(url, '/')
+            END,
+            '://', '###PROTOCOL###'
+        ),
+        '//', '/'
+    )
+WHERE url LIKE '%/' OR url LIKE '%#%' OR url LIKE '%//%';
+
+-- Fix protocol placeholder after normalizeUrlsAdvanced
+fixProtocolPlaceholder:
+UPDATE mangas
+SET url = replace(url, '###PROTOCOL###', '://')
+WHERE url LIKE '%###PROTOCOL###%';
+
+-- Get potential duplicates after normalization (source, normalized_url pairs that would conflict)
+getPotentialNormalizationDuplicates:
+SELECT 
+    m1._id AS id1, 
+    m1.title AS title1, 
+    m1.url AS url1,
+    m2._id AS id2, 
+    m2.title AS title2, 
+    m2.url AS url2,
+    m1.source
+FROM mangas m1
+INNER JOIN mangas m2 ON m1.source = m2.source AND m1._id < m2._id
+WHERE 
+    rtrim(
+        CASE 
+            WHEN instr(m1.url, '#') > 0 THEN substr(m1.url, 1, instr(m1.url, '#') - 1)
+            ELSE m1.url
+        END, 
+        '/'
+    ) = rtrim(
+        CASE 
+            WHEN instr(m2.url, '#') > 0 THEN substr(m2.url, 1, instr(m2.url, '#') - 1)
+            ELSE m2.url
+        END, 
+        '/'
+    );
 
 insertNetworkManga {
     -- Insert the manga if it doesn't exist already

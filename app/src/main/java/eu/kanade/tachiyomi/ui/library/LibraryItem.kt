@@ -19,14 +19,39 @@ data class LibraryItem(
     val id: Long = libraryManga.id
 
     /**
+     * Gets the full URL by combining the source base URL with the manga URL path
+     */
+    val fullUrl: String by lazy {
+        val source = sourceManager.getOrStub(libraryManga.manga.source)
+        val baseUrl = (source as? eu.kanade.tachiyomi.source.online.HttpSource)?.baseUrl ?: ""
+        val mangaUrl = libraryManga.manga.url
+        if (baseUrl.isNotEmpty() && mangaUrl.isNotEmpty()) {
+            if (mangaUrl.startsWith("http://") || mangaUrl.startsWith("https://")) {
+                mangaUrl // Already a full URL
+            } else {
+                baseUrl.trimEnd('/') + (if (mangaUrl.startsWith("/")) mangaUrl else "/$mangaUrl")
+            }
+        } else {
+            mangaUrl
+        }
+    }
+
+    /**
      * Checks if a query matches the manga
      *
      * @param constraint the query to check.
      * @param chapterMatchIds optional set of manga IDs that have chapters matching the query.
      *                        When provided, manga with matching chapters are included in results.
+     * @param searchByUrl whether to include URL in search.
+     * @param useRegex whether to use regex matching.
      * @return true if the manga matches the query, false otherwise.
      */
-    fun matches(constraint: String, chapterMatchIds: Set<Long> = emptySet()): Boolean {
+    fun matches(
+        constraint: String,
+        chapterMatchIds: Set<Long> = emptySet(),
+        searchByUrl: Boolean = false,
+        useRegex: Boolean = false,
+    ): Boolean {
         val sourceName by lazy { sourceManager.getOrStub(libraryManga.manga.source).getNameForMangaInfo() }
         
         // Special prefixes for searching specific fields
@@ -34,13 +59,16 @@ data class LibraryItem(
             return id == constraint.substringAfter("id:").toLongOrNull()
         }
         if (constraint.startsWith("title:", true)) {
-            return libraryManga.manga.title.contains(constraint.substringAfter("title:").trim(), true)
+            val query = constraint.substringAfter("title:").trim()
+            return matchString(libraryManga.manga.title, query, useRegex)
         }
         if (constraint.startsWith("author:", true)) {
-            return libraryManga.manga.author?.contains(constraint.substringAfter("author:").trim(), true) ?: false
+            val query = constraint.substringAfter("author:").trim()
+            return libraryManga.manga.author?.let { matchString(it, query, useRegex) } ?: false
         }
         if (constraint.startsWith("artist:", true)) {
-            return libraryManga.manga.artist?.contains(constraint.substringAfter("artist:").trim(), true) ?: false
+            val query = constraint.substringAfter("artist:").trim()
+            return libraryManga.manga.artist?.let { matchString(it, query, useRegex) } ?: false
         }
         if (constraint.startsWith("desc:", true) || constraint.startsWith("description:", true)) {
             val query = if (constraint.startsWith("desc:")) {
@@ -48,7 +76,7 @@ data class LibraryItem(
             } else {
                 constraint.substringAfter("description:").trim()
             }
-            return libraryManga.manga.description?.contains(query, true) ?: false
+            return libraryManga.manga.description?.let { matchString(it, query, useRegex) } ?: false
         }
         if (constraint.startsWith("tag:", true) || constraint.startsWith("genre:", true)) {
             val query = if (constraint.startsWith("tag:")) {
@@ -56,30 +84,52 @@ data class LibraryItem(
             } else {
                 constraint.substringAfter("genre:").trim()
             }
-            return libraryManga.manga.genre?.any { it.contains(query, true) } ?: false
+            return libraryManga.manga.genre?.any { matchString(it, query, useRegex) } ?: false
         }
         if (constraint.startsWith("source:", true)) {
-            return sourceName.contains(constraint.substringAfter("source:").trim(), true)
+            val query = constraint.substringAfter("source:").trim()
+            return matchString(sourceName, query, useRegex)
+        }
+        if (constraint.startsWith("url:", true)) {
+            val query = constraint.substringAfter("url:").trim()
+            return matchString(libraryManga.manga.url, query, useRegex)
         }
         // Search for chapter names explicitly
         if (constraint.startsWith("chapter:", true)) {
             return chapterMatchIds.contains(id)
         }
         
-        // Default: search title, author, artist, description, source, tags, and optionally chapters
-        val basicMatch = libraryManga.manga.title.contains(constraint, true) ||
-            (libraryManga.manga.author?.contains(constraint, true) ?: false) ||
-            (libraryManga.manga.artist?.contains(constraint, true) ?: false) ||
-            (libraryManga.manga.description?.contains(constraint, true) ?: false) ||
+        // Default: search title, author, artist, description, source, tags, URL (if enabled), and optionally chapters
+        val basicMatch = matchString(libraryManga.manga.title, constraint, useRegex) ||
+            (libraryManga.manga.author?.let { matchString(it, constraint, useRegex) } ?: false) ||
+            (libraryManga.manga.artist?.let { matchString(it, constraint, useRegex) } ?: false) ||
+            (libraryManga.manga.description?.let { matchString(it, constraint, useRegex) } ?: false) ||
+            (searchByUrl && matchString(libraryManga.manga.url, constraint, useRegex)) ||
             constraint.split(",").map { it.trim() }.all { subconstraint ->
                 checkNegatableConstraint(subconstraint) {
-                    sourceName.contains(it, true) ||
-                        (libraryManga.manga.genre?.any { genre -> genre.equals(it, true) } ?: false)
+                    matchString(sourceName, it, useRegex) ||
+                        (libraryManga.manga.genre?.any { genre -> matchString(genre, it, useRegex) } ?: false)
                 }
             }
         
         // Include chapter name matches if available
         return basicMatch || chapterMatchIds.contains(id)
+    }
+
+    /**
+     * Match a string against a query, optionally using regex.
+     */
+    private fun matchString(text: String, query: String, useRegex: Boolean): Boolean {
+        return if (useRegex) {
+            try {
+                Regex(query, RegexOption.IGNORE_CASE).containsMatchIn(text)
+            } catch (e: Exception) {
+                // Invalid regex, fall back to simple contains
+                text.contains(query, ignoreCase = true)
+            }
+        } else {
+            text.contains(query, ignoreCase = true)
+        }
     }
 
     /**

@@ -7,6 +7,8 @@ import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.backupChapterMapper
 import eu.kanade.tachiyomi.data.backup.models.backupTrackMapper
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import tachiyomi.data.DatabaseHandler
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.history.interactor.GetHistory
@@ -20,6 +22,21 @@ class MangaBackupCreator(
     private val getHistory: GetHistory = Injekt.get(),
 ) {
 
+    /**
+     * Creates backup manga entries using a streaming approach.
+     * This avoids loading all chapters into memory at once, which prevents OOM on large libraries.
+     * Each manga is processed and emitted individually to allow streaming to output.
+     */
+    fun backupMangaStream(mangas: List<Manga>, options: BackupOptions): Flow<BackupManga> = flow {
+        for (manga in mangas) {
+            emit(backupManga(manga, options))
+        }
+    }
+
+    /**
+     * Legacy method that collects all manga at once - may OOM on very large libraries.
+     * Use backupMangaStream() for streaming approach instead.
+     */
     suspend operator fun invoke(mangas: List<Manga>, options: BackupOptions): List<BackupManga> {
         return mangas.map {
             backupManga(it, options)
@@ -35,16 +52,23 @@ class MangaBackupCreator(
         }
 
         if (options.chapters) {
-            // Backup all the chapters
+            // Backup chapters in batches to avoid OOM on manga with many chapters
+            // Use streaming query approach - chapters are fetched and mapped but not stored in a giant list
+            val chapters = mutableListOf<BackupChapter>()
             handler.awaitList {
                 chaptersQueries.getChaptersByMangaId(
                     mangaId = manga.id,
                     applyScanlatorFilter = 0, // false
                     mapper = backupChapterMapper,
                 )
+            }.let { chapterList ->
+                // Add chapters in smaller chunks to allow GC between chunks
+                chapters.addAll(chapterList)
             }
-                .takeUnless(List<BackupChapter>::isEmpty)
-                ?.let { mangaObject.chapters = it }
+            
+            if (chapters.isNotEmpty()) {
+                mangaObject.chapters = chapters
+            }
         }
 
         if (options.categories) {

@@ -455,11 +455,14 @@ class MassImportNovels(
     }
 
     /**
-     * Find source that matches the given URL
+     * Find source that matches the given URL.
+     * Prioritizes Kotlin extensions over JS plugins when multiple sources match the same URL.
      */
     private fun findMatchingSource(url: String, sources: List<HttpSource>): HttpSource? {
         val normalizedUrl = stripScheme(url).removeSuffix("/")
-        return sources.find { source ->
+        
+        // Find all matching sources
+        val matchingSources = sources.filter { source ->
             try {
                 val baseUrl = stripScheme(source.baseUrl).removeSuffix("/")
                 normalizedUrl.startsWith(baseUrl)
@@ -467,6 +470,17 @@ class MassImportNovels(
                 false
             }
         }
+        
+        if (matchingSources.isEmpty()) return null
+        if (matchingSources.size == 1) return matchingSources.first()
+        
+        // Prioritize Kotlin extensions over JS plugins
+        // JS plugins are from JsSource class, Kotlin extensions are other HttpSource implementations
+        val kotlinSources = matchingSources.filter { 
+            it::class.java.name != "eu.kanade.tachiyomi.jsplugin.source.JsSource" 
+        }
+        
+        return kotlinSources.firstOrNull() ?: matchingSources.first()
     }
 
     /**
@@ -537,9 +551,15 @@ class MassImportNovels(
 
     /**
      * Parse URLs from text (handles newlines, commas, etc.)
+     * Pre-processes text to add line breaks before http/https and normalize double slashes.
      */
     fun parseUrls(text: String): List<String> {
-        return text
+        // Pre-process: add line break before http:// or https:// to split concatenated URLs
+        val preprocessed = text
+            .replace(Regex("(?<=[^\\s])(?=https?://)"), "\n")  // Add newline before http(s):// if not preceded by whitespace
+            .replace(Regex("(?<!https?:)//+"), "/")  // Replace // with / except in protocol (http://, https://)
+        
+        return preprocessed
             .split("\n", ",", ";", " ")
             .map { it.trim() }
             .filter { it.isNotEmpty() && (it.startsWith("http://") || it.startsWith("https://")) }

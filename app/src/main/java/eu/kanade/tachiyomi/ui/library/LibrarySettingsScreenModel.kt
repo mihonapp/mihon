@@ -5,6 +5,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.data.cache.LibrarySettingsCache
 import eu.kanade.tachiyomi.data.track.TrackerManager
+import eu.kanade.tachiyomi.jsplugin.source.JsSource
 import eu.kanade.tachiyomi.source.isNovelSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,11 +24,21 @@ import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibrarySort
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetLibraryManga
+import tachiyomi.domain.source.model.StubSource
 import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.time.Duration.Companion.seconds
+
+/**
+ * Data class representing extension info in the library settings
+ */
+data class ExtensionInfo(
+    val sourceId: Long,
+    val sourceName: String,
+    val isStub: Boolean = false,
+)
 
 class LibrarySettingsScreenModel(
     val type: LibraryScreenModel.LibraryType = LibraryScreenModel.LibraryType.Manga,
@@ -50,7 +61,7 @@ class LibrarySettingsScreenModel(
 
     // Cached extension list - NO automatic database subscription
     // Data is loaded only when refreshExtensions() is called
-    private val _extensionsFlow = MutableStateFlow<List<Pair<Long, String>>>(emptyList())
+    private val _extensionsFlow = MutableStateFlow<List<ExtensionInfo>>(emptyList())
     val extensionsFlow = _extensionsFlow.asStateFlow()
 
     // Cached tags with counts - NO automatic database subscription
@@ -65,6 +76,14 @@ class LibrarySettingsScreenModel(
     // Loading state
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
+    
+    // Tag search query state
+    private val _tagSearchQuery = MutableStateFlow("")
+    val tagSearchQuery = _tagSearchQuery.asStateFlow()
+    
+    // Tag options expanded state
+    private val _tagOptionsExpanded = MutableStateFlow(false)
+    val tagOptionsExpanded = _tagOptionsExpanded.asStateFlow()
     
     // Flags to track if we've attempted to load from disk cache
     private val _extensionsLoaded = AtomicBoolean(false)
@@ -112,7 +131,7 @@ class LibrarySettingsScreenModel(
      * Check all extensions (include all - clear the excluded set for available extensions)
      */
     fun checkAllExtensions() {
-        val availableSourceIds = extensionsFlow.value.map { it.first.toString() }.toSet()
+        val availableSourceIds = extensionsFlow.value.map { it.sourceId.toString() }.toSet()
         val current = libraryPreferences.excludedExtensions().get()
         // Remove all available extensions from excluded set
         libraryPreferences.excludedExtensions().set(current - availableSourceIds)
@@ -122,7 +141,7 @@ class LibrarySettingsScreenModel(
      * Uncheck all extensions (exclude all - add all available extensions to excluded set)
      */
     fun uncheckAllExtensions() {
-        val availableSourceIds = extensionsFlow.value.map { it.first.toString() }.toSet()
+        val availableSourceIds = extensionsFlow.value.map { it.sourceId.toString() }.toSet()
         val current = libraryPreferences.excludedExtensions().get()
         // Add all available extensions to excluded set
         libraryPreferences.excludedExtensions().set(current + availableSourceIds)
@@ -160,6 +179,14 @@ class LibrarySettingsScreenModel(
         toggleFilter { libraryPreferences.filterNoTags() }
     }
     
+    fun setTagSearchQuery(query: String) {
+        _tagSearchQuery.value = query
+    }
+    
+    fun toggleTagOptions() {
+        _tagOptionsExpanded.value = !_tagOptionsExpanded.value
+    }
+    
     /**
      * Refresh extensions list from database or cache.
      * This is the ONLY way to load extension data - no auto-subscription.
@@ -186,13 +213,18 @@ class LibrarySettingsScreenModel(
                 val extensions = sourceIds.mapNotNull { sourceId ->
                     val source = sourceManager.getOrStub(sourceId)
                     val isNovel = source.isNovelSource()
+                    val isStub = source is StubSource
                     val shouldInclude = when (type) {
                         LibraryScreenModel.LibraryType.All -> true
                         LibraryScreenModel.LibraryType.Manga -> !isNovel
                         LibraryScreenModel.LibraryType.Novel -> isNovel
                     }
-                    if (shouldInclude) sourceId to source.name else null
-                }.sortedBy { it.second }
+                    if (shouldInclude) {
+                        // Add (JS) suffix for JS plugin sources
+                        val displayName = if (source is JsSource) "${source.name} (JS)" else source.name
+                        ExtensionInfo(sourceId, displayName, isStub)
+                    } else null
+                }.sortedWith(compareBy({ !it.isStub }, { it.sourceName })) // Stub sources first, then alphabetically
                 
                 _extensionsFlow.value = extensions
                 librarySettingsCache.saveExtensions(extensions)

@@ -212,7 +212,7 @@ class MangaRepositoryImpl(
         logcat(LogPriority.WARN) { "MangaRepositoryImpl.getLibraryManga: Executing DB query (cache invalid/expired)\\nFull call stack:\\n  $caller" }
         val queryStart = System.currentTimeMillis()
         val result = handler.awaitList {
-            libraryViewQueries.libraryGrid { id, source, url, _, _, _, genre, title, _, status, thumbnailUrl, favorite, lastUpdate, nextUpdate, _, _, _, coverLastModified, dateAdded, _, _, _, _, _, _, notes, totalCount, readCount, latestUpload, chapterFetchedAt, lastRead, bookmarkCount, categories ->
+            library_cacheQueries.libraryGrid { id, source, url, _, _, _, genre, title, _, status, thumbnailUrl, favorite, lastUpdate, nextUpdate, _, _, _, coverLastModified, dateAdded, _, _, _, _, _, _, notes, totalCount, readCount, latestUpload, chapterFetchedAt, lastRead, bookmarkCount, categories ->
                 MangaMapper.mapLibraryManga(
                     id = id,
                     source = source,
@@ -264,7 +264,7 @@ class MangaRepositoryImpl(
         logcat(LogPriority.INFO) { "MangaRepositoryImpl.getLibraryMangaForUpdate: Executing lightweight query" }
         val queryStart = System.currentTimeMillis()
         val result = handler.awaitList {
-            libraryViewQueries.libraryForUpdate { id, source, url, title, status, favorite, lastUpdate, nextUpdate, updateStrategy, totalCount, readCount, categories ->
+            library_cacheQueries.libraryForUpdate { id, source, url, title, status, favorite, lastUpdate, nextUpdate, updateStrategy, totalCount, readCount, categories ->
                 MangaMapper.mapLibraryMangaForUpdate(
                     id = id,
                     source = source,
@@ -290,7 +290,7 @@ class MangaRepositoryImpl(
         logcat(LogPriority.INFO) { "MangaRepositoryImpl.getLibraryMangaAsFlow: Creating new Flow subscription" }
         return handler.subscribeToList {
             logcat(LogPriority.INFO) { "MangaRepositoryImpl.getLibraryMangaAsFlow: Executing libraryGrid query" }
-            libraryViewQueries.libraryGrid { id, source, url, _, _, _, genre, title, _, status, thumbnailUrl, favorite, lastUpdate, nextUpdate, _, _, _, coverLastModified, dateAdded, _, _, _, _, _, _, notes, totalCount, readCount, latestUpload, chapterFetchedAt, lastRead, bookmarkCount, categories ->
+            library_cacheQueries.libraryGrid { id, source, url, _, _, _, genre, title, _, status, thumbnailUrl, favorite, lastUpdate, nextUpdate, _, _, _, coverLastModified, dateAdded, _, _, _, _, _, _, notes, totalCount, readCount, latestUpload, chapterFetchedAt, lastRead, bookmarkCount, categories ->
                 MangaMapper.mapLibraryManga(
                     id = id,
                     source = source,
@@ -375,6 +375,18 @@ class MangaRepositoryImpl(
         }
     }
 
+    override suspend fun findDuplicatesByUrl(): List<DuplicateGroup> {
+        return handler.awaitList {
+            mangasQueries.findDuplicatesByUrl { url, source, ids, count ->
+                DuplicateGroup(
+                    normalizedTitle = url, // Using URL as the group key
+                    ids = ids?.let { idString -> idString.split(",").mapNotNull { id -> id.toLongOrNull() } } ?: emptyList(),
+                    count = count.toInt(),
+                )
+            }
+        }
+    }
+
     override suspend fun getFavoriteGenres(): List<Pair<Long, List<String>?>> {
         logcat(LogPriority.INFO) { "MangaRepositoryImpl.getFavoriteGenres: Executing lightweight genres query" }
         val queryStart = System.currentTimeMillis()
@@ -449,10 +461,14 @@ class MangaRepositoryImpl(
 
     override suspend fun setMangasCategories(mangaIds: List<Long>, categoryIds: List<Long>) {
         handler.await(inTransaction = true) {
+            // Delete all existing categories for the mangas first
             mangaIds.forEach { mangaId ->
                 mangas_categoriesQueries.deleteMangaCategoryByMangaId(mangaId)
+            }
+            // Bulk insert all new manga-category pairs
+            mangaIds.forEach { mangaId ->
                 categoryIds.forEach { categoryId ->
-                    mangas_categoriesQueries.insert(mangaId, categoryId)
+                    mangas_categoriesQueries.insertBulkMangaCategory(mangaId, categoryId)
                 }
             }
         }
@@ -460,25 +476,20 @@ class MangaRepositoryImpl(
 
     override suspend fun addMangasCategories(mangaIds: List<Long>, categoryIds: List<Long>) {
         handler.await(inTransaction = true) {
+            // Use INSERT OR IGNORE to handle duplicates efficiently
             mangaIds.forEach { mangaId ->
                 categoryIds.forEach { categoryId ->
-                    try {
-                        mangas_categoriesQueries.insert(mangaId, categoryId)
-                    } catch (e: Exception) {
-                        // Ignore duplicates
-                    }
+                    mangas_categoriesQueries.insertBulkMangaCategory(mangaId, categoryId)
                 }
             }
         }
     }
 
     override suspend fun removeMangasCategories(mangaIds: List<Long>, categoryIds: List<Long>) {
+        if (mangaIds.isEmpty() || categoryIds.isEmpty()) return
         handler.await(inTransaction = true) {
-            mangaIds.forEach { mangaId ->
-                categoryIds.forEach { categoryId ->
-                    mangas_categoriesQueries.deleteMangaCategory(mangaId, categoryId)
-                }
-            }
+            // Use bulk delete for better performance
+            mangas_categoriesQueries.deleteBulkMangaCategories(mangaIds, categoryIds)
         }
     }
 
@@ -577,15 +588,59 @@ class MangaRepositoryImpl(
 
     override suspend fun normalizeAllUrls(): Int {
         return try {
+            // First check for potential duplicates
+            val duplicates = handler.awaitList { 
+                mangasQueries.getPotentialNormalizationDuplicates() 
+            }
+            
+            if (duplicates.isNotEmpty()) {
+                logcat(LogPriority.WARN) { 
+                    "Found ${duplicates.size} potential duplicate URL conflicts - skipping normalization" 
+                }
+                return 0
+            }
+            
+            // Use batch SQL update for better performance
+            handler.await(inTransaction = true) {
+                mangasQueries.normalizeUrls()
+            }
+            
+            // Return approximate count (we don't have exact count from UPDATE)
+            // Could query before/after but that's additional overhead
+            logcat(LogPriority.INFO) { "URL normalization completed" }
+            1 // Return 1 to indicate success
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Failed to normalize URLs" }
+            0
+        }
+    }
+
+    override suspend fun normalizeAllUrlsAdvanced(removeDoubleSlashes: Boolean): Pair<Int, List<Triple<String, String, String>>> {
+        return try {
             var count = 0
+            val duplicates = mutableListOf<Triple<String, String, String>>()
             val seen = mutableSetOf<Pair<Long, String>>()
             handler.await(inTransaction = true) {
                 val allManga = mangasQueries.getAllManga(MangaMapper::mapManga).executeAsList()
                 allManga.forEach { manga ->
-                    val normalizedUrl = manga.url.trimEnd('/').substringBefore('#')
+                    var normalizedUrl = manga.url.trimEnd('/').substringBefore('#')
+                    
+                    // Remove double slashes if enabled (but preserve protocol ://)
+                    if (removeDoubleSlashes) {
+                        // First, temporarily replace :// with a placeholder
+                        val placeholder = "###PROTOCOL###"
+                        normalizedUrl = normalizedUrl.replace("://", placeholder)
+                        // Then remove double slashes
+                        normalizedUrl = normalizedUrl.replace("//", "/")
+                        // Restore protocol
+                        normalizedUrl = normalizedUrl.replace(placeholder, "://")
+                    }
+                    
                     if (normalizedUrl != manga.url) {
                         val key = manga.source to normalizedUrl
                         if (key in seen) {
+                            // This would create a duplicate
+                            duplicates.add(Triple(manga.title, manga.url, normalizedUrl))
                             logcat(LogPriority.WARN) { "Skipping duplicate: ${manga.title} (${manga.url}) would conflict with existing normalized URL" }
                         } else {
                             mangasQueries.update(
@@ -622,10 +677,104 @@ class MangaRepositoryImpl(
                     }
                 }
             }
-            count
+            Pair(count, duplicates)
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e) { "Failed to normalize URLs" }
+            Pair(0, emptyList())
+        }
+    }
+
+    override suspend fun refreshLibraryCache() {
+        logcat(LogPriority.INFO) { "MangaRepositoryImpl.refreshLibraryCache: Refreshing entire library cache" }
+        val queryStart = System.currentTimeMillis()
+        handler.await(inTransaction = true) {
+            library_cacheQueries.refreshAllCache()
+        }
+        val queryDuration = System.currentTimeMillis() - queryStart
+        logcat(LogPriority.INFO) { "MangaRepositoryImpl.refreshLibraryCache: Cache refresh completed in ${queryDuration}ms" }
+        // Invalidate in-memory cache as well
+        invalidateLibraryCache()
+    }
+
+    override suspend fun refreshLibraryCacheForManga(mangaId: Long) {
+        logcat(LogPriority.DEBUG) { "MangaRepositoryImpl.refreshLibraryCacheForManga: Refreshing cache for manga $mangaId" }
+        handler.await(inTransaction = true) {
+            library_cacheQueries.refreshCacheForManga(mangaId)
+        }
+        // Invalidate in-memory cache
+        invalidateLibraryCache()
+    }
+
+    override suspend fun normalizeAllTags(): Int {
+        logcat(LogPriority.INFO) { "MangaRepositoryImpl.normalizeAllTags: Starting tag normalization" }
+        return try {
+            val favorites = getFavorites()
+            var count = 0
+            handler.await(inTransaction = true) {
+                favorites.forEach { manga ->
+                    val genres = manga.genre
+                    if (!genres.isNullOrEmpty()) {
+                        // Normalize: trim, lowercase, remove duplicates (keeping first occurrence with original case)
+                        val seen = mutableSetOf<String>()
+                        val normalized = genres
+                            .map { it.trim() }
+                            .filter { it.isNotBlank() }
+                            .filter { tag -> 
+                                val lowercased = tag.lowercase()
+                                if (lowercased in seen) {
+                                    false
+                                } else {
+                                    seen.add(lowercased)
+                                    true
+                                }
+                            }
+                        
+                        // Only update if there's a difference
+                        if (normalized != genres) {
+                            mangasQueries.update(
+                                source = null,
+                                url = null,
+                                artist = null,
+                                author = null,
+                                description = null,
+                                genre = normalized.ifEmpty { null }?.let(StringListColumnAdapter::encode),
+                                title = null,
+                                alternativeTitles = null,
+                                status = null,
+                                thumbnailUrl = null,
+                                favorite = null,
+                                lastUpdate = null,
+                                nextUpdate = null,
+                                initialized = null,
+                                viewer = null,
+                                chapterFlags = null,
+                                coverLastModified = null,
+                                dateAdded = null,
+                                updateStrategy = null,
+                                calculateInterval = null,
+                                version = null,
+                                isSyncing = null,
+                                notes = null,
+                                mangaId = manga.id,
+                            )
+                            count++
+                        }
+                    }
+                }
+            }
+            logcat(LogPriority.INFO) { "MangaRepositoryImpl.normalizeAllTags: Normalized tags for $count manga" }
+            count
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Failed to normalize tags" }
             0
+        }
+    }
+
+    override suspend fun checkLibraryCacheIntegrity(): Pair<Long, Long> {
+        return handler.awaitOne {
+            library_cacheQueries.checkCacheIntegrity { favoriteCount, cacheCount ->
+                (favoriteCount ?: 0L) to (cacheCount ?: 0L)
+            }
         }
     }
 }

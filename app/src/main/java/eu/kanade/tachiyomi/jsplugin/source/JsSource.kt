@@ -84,6 +84,9 @@ class JsSource(
     // Novel source marker
     override val isNovelSource: Boolean = true
 
+    // Visible name of the source with language and JS marker
+    override fun toString(): String = "$name (${lang.uppercase()}) (JS)"
+
     val baseUrl: String = plugin.site?.takeIf { it.isNotBlank() }?.trimEnd('/') ?: "https://example.com"
     val iconUrl: String = plugin.iconUrl
     val version: String = plugin.version
@@ -233,14 +236,23 @@ class JsSource(
                 """.trimIndent()
             )
             
-            // Poll for completion - QuickJS processes microtasks during evaluate
+            // Poll for completion with proper async waiting
+            // QuickJS asyncFunction needs actual time to execute Kotlin coroutines
             var attempts = 0
-            while (attempts < 100) {
+            val maxAttempts = 600 // 30 seconds max (600 * 50ms)
+            while (attempts < maxAttempts) {
                 val done = instance.execute("globalThis.__mihon_done_$token") as? Boolean ?: false
                 if (done) break
                 attempts++
-                // Small evaluate to process more microtasks
+                // Give async functions time to execute their Kotlin coroutines
+                // This is necessary because asyncFunction runs actual network requests
+                kotlinx.coroutines.delay(50)
+                // Also process JS microtasks
                 instance.execute("null")
+            }
+            
+            if (attempts >= maxAttempts) {
+                logcat(LogPriority.WARN) { "JsSource[$pluginId]: Execution timed out after ${maxAttempts * 50}ms" }
             }
             
             // Read results FIRST before cleanup

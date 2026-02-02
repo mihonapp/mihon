@@ -56,6 +56,7 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.manga.interactor.GetFavoritesEntry
+import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
@@ -67,6 +68,7 @@ import tachiyomi.domain.translation.service.TranslationPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.Instant
+import eu.kanade.tachiyomi.source.isNovelSource
 import eu.kanade.tachiyomi.source.model.Filter as SourceModelFilter
 
 class BrowseSourceScreenModel(
@@ -84,6 +86,7 @@ class BrowseSourceScreenModel(
     private val getManga: GetManga = Injekt.get(),
     private val getFavorites: GetFavorites = Injekt.get(),
     private val getFavoritesEntry: GetFavoritesEntry = Injekt.get(),
+    private val getLibraryManga: GetLibraryManga = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
     private val addTracks: AddTracks = Injekt.get(),
     private val getIncognitoState: GetIncognitoState = Injekt.get(),
@@ -97,6 +100,46 @@ class BrowseSourceScreenModel(
     val titleMaxLines by libraryPreferences.titleMaxLines().asState(screenModelScope)
 
     val source = sourceManager.getOrStub(sourceId)
+    
+    // Current page number from paging source
+    val currentPage: StateFlow<Int> = tachiyomi.data.source.BaseSourcePagingSource.currentPage
+    
+    // Initial page for jump-to-page feature - triggers pager recreation when changed
+    private val _initialPage = MutableStateFlow(1L)
+    val initialPage: StateFlow<Long> = _initialPage.asStateFlow()
+    
+    // Target end page for page range loading - when set, pages will auto-load until this page is reached
+    private val _targetEndPage = MutableStateFlow<Int?>(null)
+    val targetEndPage: StateFlow<Int?> = _targetEndPage.asStateFlow()
+    
+    /**
+     * Jump to a specific page. This recreates the pager starting from that page.
+     * Note: Previous pages won't be loaded, so scrolling up will stop at the jump point.
+     */
+    fun jumpToPage(page: Int) {
+        if (page > 0) {
+            tachiyomi.data.source.BaseSourcePagingSource.setInitialPage(page)
+            _initialPage.value = page.toLong()
+        }
+    }
+    
+    /**
+     * Load a range of pages from startPage to endPage.
+     * This sets the initial page and a target end page which signals the UI to continue loading.
+     */
+    fun loadPageRange(startPage: Int, endPage: Int) {
+        if (startPage > 0 && endPage >= startPage) {
+            _targetEndPage.value = endPage
+            jumpToPage(startPage)
+        }
+    }
+    
+    /**
+     * Clear the target end page (called when range loading is complete or cancelled).
+     */
+    fun clearTargetEndPage() {
+        _targetEndPage.value = null
+    }
 
     // Filter Preset Management - declared before init to avoid NPE
     private val _filterPresets = MutableStateFlow<List<FilterPreset>>(emptyList())
@@ -125,26 +168,41 @@ class BrowseSourceScreenModel(
                 .orEmpty()
         }
 
+        // Sync page load delay preference with paging source
+        screenModelScope.launch {
+            sourcePreferences.pageLoadDelay().changes().collect { delaySeconds ->
+                tachiyomi.data.source.BaseSourcePagingSource.pageLoadDelayMs = delaySeconds * 1000L
+            }
+        }
+
         if (source is CatalogueSource) {
+            // Get initial filters from source
+            var initialFilters = source.getFilterList()
+            
+            // Apply default preset synchronously if enabled
+            if (manageFilterPresets.getAutoApplyEnabled()) {
+                val presetState = manageFilterPresets.getDefaultPresetState(sourceId)
+                if (presetState != null) {
+                    ManageFilterPresets.applyPresetState(initialFilters, presetState)
+                    logcat(LogPriority.INFO) { "BrowseSource: Default preset applied on init" }
+                }
+            }
+            
             mutableState.update {
                 var query: String? = null
                 var listing = it.listing
 
                 if (listing is Listing.Search) {
                     query = listing.query
-                    listing = Listing.Search(query, source.getFilterList())
+                    listing = Listing.Search(query, initialFilters)
                 }
 
                 it.copy(
                     listing = listing,
-                    filters = source.getFilterList(),
+                    filters = initialFilters,
+                    pendingFilters = initialFilters, // Initialize pending with same filters
                     toolbarQuery = query,
                 )
-            }
-
-            // Apply default preset if auto-apply is enabled (async)
-            screenModelScope.launch {
-                applyDefaultPresetIfEnabled()
             }
         }
 
@@ -177,15 +235,21 @@ class BrowseSourceScreenModel(
         }
         .stateIn(ioCoroutineScope, SharingStarted.Eagerly, emptyMap())
     
-    val mangaPagerFlowFlow = state
-        .map { Triple(it.listing.query, it.filters, it.filters.hashCode()) }
-        .distinctUntilChanged { old, new -> old.first == new.first && old.third == new.third }
-        .map { (query, filters, _) ->
-            logcat(LogPriority.DEBUG) { "Creating new Pager for query='$query', filters=${filters.hashCode()}" }
-            Pager(PagingConfig(pageSize = 25)) {
-                getRemoteManga(sourceId, query ?: "", filters)
-            }.flow.map { pagingData ->
-                pagingData.map { manga ->
+    val mangaPagerFlowFlow = kotlinx.coroutines.flow.combine(
+        state.map { Triple(it.listing.query, it.filters, it.filters.hashCode()) }
+            .distinctUntilChanged { old, new -> old.first == new.first && old.third == new.third },
+        _initialPage
+    ) { (query, filters, _), startPage ->
+        logcat(LogPriority.DEBUG) { "Creating new Pager for query='$query', filters=${filters.hashCode()}, startPage=$startPage" }
+        // Reset page counter when creating a new pager
+        tachiyomi.data.source.BaseSourcePagingSource.resetPageCounter()
+        Pager(
+            PagingConfig(pageSize = 25),
+            initialKey = startPage
+        ) {
+            getRemoteManga(sourceId, query ?: "", filters)
+        }.flow.map { pagingData ->
+            pagingData.map { manga ->
                     // Normalize URL to prevent duplicates from trailing slashes/fragments
                     val normalizedUrl = normalizeUrl(manga.url)
                     val normalizedManga = if (normalizedUrl != manga.url) {
@@ -220,21 +284,99 @@ class BrowseSourceScreenModel(
     fun resetFilters() {
         if (source !is CatalogueSource) return
 
-        mutableState.update { it.copy(filters = source.getFilterList()) }
+        // Get fresh filter list from source
+        val freshFilters = source.getFilterList()
+        
+        // Apply default preset if auto-apply is enabled
+        if (manageFilterPresets.getAutoApplyEnabled()) {
+            val presetState = manageFilterPresets.getDefaultPresetState(sourceId)
+            if (presetState != null) {
+                ManageFilterPresets.applyPresetState(freshFilters, presetState)
+                logcat(LogPriority.INFO) { "resetFilters: Applied default preset" }
+            }
+        }
+        
+        // Reset pendingFilters to the potentially preset-applied filters
+        mutableState.update { it.copy(pendingFilters = freshFilters) }
     }
 
     fun setListing(listing: Listing) {
+        // Reset initial page to 1 when listing changes (e.g., switching between Popular, Latest, Search)
+        _initialPage.value = 1L
         mutableState.update { it.copy(listing = listing, toolbarQuery = null) }
     }
 
     fun setFilters(filters: FilterList) {
         if (source !is CatalogueSource) return
-        logcat(LogPriority.DEBUG) { "setFilters called, filters hashCode: ${filters.hashCode()}" }
+        logcat(LogPriority.DEBUG) { "setFilters called (updating pendingFilters), filters hashCode: ${filters.hashCode()}" }
 
+        // Update only pendingFilters - this doesn't trigger search
+        mutableState.update {
+            it.copy(pendingFilters = filters)
+        }
+    }
+    
+    /**
+     * Open the filter dialog and copy current applied filters to pendingFilters for editing.
+     * Creates a fresh FilterList with copied state to avoid reference sharing issues.
+     */
+    fun openFilterDialog() {
+        if (source !is CatalogueSource) return
+        // Get fresh filters to avoid reference sharing
+        val freshFilters = source.getFilterList()
+        // Copy state from current filters to fresh filters
+        copyFilterState(state.value.filters, freshFilters)
+        
         mutableState.update {
             it.copy(
-                filters = filters,
+                pendingFilters = freshFilters, // Use fresh filters with copied state
+                dialog = Dialog.Filter,
             )
+        }
+    }
+    
+    /**
+     * Copy filter states from source filters to destination filters.
+     * This avoids reference sharing issues where modifying one FilterList affects another.
+     */
+    private fun copyFilterState(source: FilterList, destination: FilterList) {
+        if (source.size != destination.size) return
+        
+        source.forEachIndexed { index, srcFilter ->
+            val dstFilter = destination[index]
+            
+            when {
+                srcFilter is SourceModelFilter.CheckBox && dstFilter is SourceModelFilter.CheckBox -> {
+                    dstFilter.state = srcFilter.state
+                }
+                srcFilter is SourceModelFilter.TriState && dstFilter is SourceModelFilter.TriState -> {
+                    dstFilter.state = srcFilter.state
+                }
+                srcFilter is SourceModelFilter.Text && dstFilter is SourceModelFilter.Text -> {
+                    dstFilter.state = srcFilter.state
+                }
+                srcFilter is SourceModelFilter.Select<*> && dstFilter is SourceModelFilter.Select<*> -> {
+                    dstFilter.state = srcFilter.state
+                }
+                srcFilter is SourceModelFilter.Sort && dstFilter is SourceModelFilter.Sort -> {
+                    dstFilter.state = srcFilter.state
+                }
+                srcFilter is SourceModelFilter.Group<*> && dstFilter is SourceModelFilter.Group<*> -> {
+                    srcFilter.state.forEachIndexed { groupIndex, srcGroupFilter ->
+                        if (groupIndex < dstFilter.state.size) {
+                            val dstGroupFilter = dstFilter.state[groupIndex]
+                            when {
+                                srcGroupFilter is SourceModelFilter.CheckBox && dstGroupFilter is SourceModelFilter.CheckBox -> {
+                                    dstGroupFilter.state = srcGroupFilter.state
+                                }
+                                srcGroupFilter is SourceModelFilter.TriState && dstGroupFilter is SourceModelFilter.TriState -> {
+                                    dstGroupFilter.state = srcGroupFilter.state
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -246,6 +388,10 @@ class BrowseSourceScreenModel(
             ?: Listing.Search(query = null, filters = source.getFilterList())
 
         val newFilters = filters ?: input.filters
+        
+        // Reset initial page to 1 when search/filters change
+        _initialPage.value = 1L
+        
         mutableState.update {
             it.copy(
                 listing = input.copy(
@@ -289,6 +435,9 @@ class BrowseSourceScreenModel(
             }
         }
 
+        // Reset initial page to 1 when genre search changes
+        _initialPage.value = 1L
+        
         mutableState.update {
             val listing = if (genreExists) {
                 Listing.Search(query = null, filters = defaultFilters)
@@ -328,32 +477,44 @@ class BrowseSourceScreenModel(
             }
 
             updateManga.await(new.toMangaUpdate())
+
+            // Refresh library cache so LibraryScreen picks up the change
+            getLibraryManga.refresh()
         }
     }
 
     fun addFavorite(manga: Manga) {
         screenModelScope.launch {
-            // Use cached categories for instant response
-            val categories = _cachedCategories.value.ifEmpty { getCategories() }
+            // Determine the appropriate content type based on source
+            val isNovel = source.isNovelSource()
+            val contentType = if (isNovel) Category.CONTENT_TYPE_NOVEL else Category.CONTENT_TYPE_MANGA
+            
+            // Use cached categories for instant response, filtered by content type
+            val allCategories = _cachedCategories.value.ifEmpty { getCategories() }
+            // Filter categories: show content-type specific + universal (CONTENT_TYPE_ALL) categories
+            val categories = allCategories.filter { 
+                it.contentType == contentType || it.contentType == Category.CONTENT_TYPE_ALL 
+            }
+            
             val defaultCategoryId = libraryPreferences.defaultCategory().get()
             val defaultCategory = categories.find { it.id == defaultCategoryId.toLong() }
 
             when {
-                // Default category set
+                // Default category set and matches content type
                 defaultCategory != null -> {
                     moveMangaToCategories(manga, defaultCategory)
 
                     changeMangaFavorite(manga)
                 }
 
-                // Automatic 'Default' or no categories
+                // Automatic 'Default' or no matching categories
                 defaultCategoryId == 0 || categories.isEmpty() -> {
                     moveMangaToCategories(manga)
 
                     changeMangaFavorite(manga)
                 }
 
-                // Choose a category
+                // Choose a category - show only matching content type categories
                 else -> {
                     // Use last selected categories if available, otherwise fetch from DB
                     val preselectedIds = if (lastSelectedCategoryIds.isNotEmpty()) {
@@ -416,7 +577,7 @@ class BrowseSourceScreenModel(
     }
 
     fun openFilterSheet() {
-        setDialog(Dialog.Filter)
+        openFilterDialog()
     }
 
     fun openPresetSheet() {
@@ -438,7 +599,7 @@ class BrowseSourceScreenModel(
         manageFilterPresets.savePreset(
             sourceId = sourceId,
             name = name,
-            filters = state.value.filters,
+            filters = state.value.pendingFilters, // Save pendingFilters (what user is editing)
             setAsDefault = setAsDefault,
         )
         // Immediately refresh the presets list
@@ -455,7 +616,13 @@ class BrowseSourceScreenModel(
             logcat(LogPriority.DEBUG) { "BrowseSource: Loaded preset state, applying..." }
             val filters = source.getFilterList()
             ManageFilterPresets.applyPresetState(filters, presetState)
-            setFilters(filters)
+            // Update pendingFilters directly and open filter dialog
+            mutableState.update {
+                it.copy(
+                    pendingFilters = filters,
+                    dialog = Dialog.Filter,
+                )
+            }
             logcat(LogPriority.INFO) { "BrowseSource: Preset applied successfully" }
         } else {
             logcat(LogPriority.WARN) { "BrowseSource: Preset state is null for presetId=$presetId" }
@@ -743,6 +910,7 @@ class BrowseSourceScreenModel(
     data class State(
         val listing: Listing,
         val filters: FilterList = FilterList(),
+        val pendingFilters: FilterList = FilterList(), // Filters being edited in dialog
         val toolbarQuery: String? = null,
         val dialog: Dialog? = null,
         val selectionMode: Boolean = false,
