@@ -109,6 +109,22 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
         pref = screenModel.preferences.navigateToPan(),
     )
 
+    val manga by screenModel.mangaFlow.collectAsState()
+    val readingMode = remember(manga) { ReadingMode.fromPreference(manga?.readingMode?.toInt()) }
+
+    if (screenModel.preferences.dualPageMode().get() || 
+        readingMode == ReadingMode.DUAL_PAGE_LTR || 
+        readingMode == ReadingMode.DUAL_PAGE_RTL) {
+        CheckboxItem(
+            label = stringResource(MR.strings.pref_dual_page_first_page_cover),
+            pref = screenModel.preferences.dualPageFirstPageCover(),
+        )
+        CheckboxItem(
+            label = stringResource(MR.strings.pref_dual_page_foldable),
+            pref = screenModel.preferences.dualPageFoldable(),
+        )
+    }
+ 
     val dualPageSplitPaged by screenModel.preferences.dualPageSplitPaged().collectAsState()
     CheckboxItem(
         label = stringResource(MR.strings.pref_dual_page_split),
