@@ -166,6 +166,7 @@ kotlin {
             "-opt-in=kotlinx.coroutines.FlowPreview",
             "-opt-in=kotlinx.coroutines.InternalCoroutinesApi",
             "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
+            "-Xannotation-default-target=param-property",
         )
     }
 }
