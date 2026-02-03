@@ -87,7 +87,7 @@ class CloudflareInterceptor(
         executor.execute {
             webview = createWebView(originalRequest)
 
-            webview?.webViewClient = object : WebViewClient() {
+            webview.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, url: String) {
                     fun isCloudFlareBypassed(): Boolean {
                         return cookieManager.get(origRequestUrl.toHttpUrl())
@@ -123,7 +123,7 @@ class CloudflareInterceptor(
                 }
             }
 
-            webview?.loadUrl(origRequestUrl, headers)
+            webview.loadUrl(origRequestUrl, headers)
         }
 
         latch.awaitFor30Seconds()
