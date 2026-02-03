@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.library
 import eu.kanade.tachiyomi.source.getNameForMangaInfo
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.source.local.LocalSource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -28,6 +29,9 @@ data class LibraryItem(
         if (constraint.startsWith("id:", true)) {
             return id == constraint.substringAfter("id:").toLongOrNull()
         } else if (constraint.startsWith("src:", true)) {
+            if (constraint.substringAfter("src:").compareTo("local", ignoreCase = true) == 0) {
+                return source.id == LocalSource.ID
+            }
             return source.id == constraint.substringAfter("src:").toLongOrNull()
         }
         return libraryManga.manga.title.contains(constraint, true) ||
