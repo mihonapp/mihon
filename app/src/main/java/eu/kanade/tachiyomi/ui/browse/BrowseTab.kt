@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.browse
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
@@ -77,6 +78,11 @@ data object BrowseTab : Tab {
             searchQuery = extensionsState.searchQuery,
             onChangeSearchQuery = extensionsScreenModel::search,
         )
+
+        BackHandler(enabled = extensionsState.searchQuery != null && state.currentPage == 1) {
+            extensionsScreenModel.search(null)
+        }
+
         LaunchedEffect(Unit) {
             switchToExtensionTabChannel.receiveAsFlow()
                 .collectLatest { state.scrollToPage(1) }
