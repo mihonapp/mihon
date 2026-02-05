@@ -7,6 +7,8 @@ import tachiyomi.source.local.LocalSource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
+private const val LOCAL_SOURCE_ID_ALIAS = "local"
+
 data class LibraryItem(
     val libraryManga: LibraryManga,
     val downloadCount: Long = -1,
@@ -29,10 +31,12 @@ data class LibraryItem(
         if (constraint.startsWith("id:", true)) {
             return id == constraint.substringAfter("id:").toLongOrNull()
         } else if (constraint.startsWith("src:", true)) {
-            if (constraint.substringAfter("src:").compareTo("local", ignoreCase = true) == 0) {
-                return source.id == LocalSource.ID
+            val querySource = constraint.substringAfter("src:")
+            return if (querySource.equals(LOCAL_SOURCE_ID_ALIAS, ignoreCase = true)) {
+                source.id == LocalSource.ID
+            } else {
+                source.id == querySource.toLongOrNull()
             }
-            return source.id == constraint.substringAfter("src:").toLongOrNull()
         }
         return libraryManga.manga.title.contains(constraint, true) ||
             (libraryManga.manga.author?.contains(constraint, true) ?: false) ||
