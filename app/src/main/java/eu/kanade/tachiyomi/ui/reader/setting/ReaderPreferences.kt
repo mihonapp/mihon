@@ -31,7 +31,7 @@ class ReaderPreferences(
 
     fun fullscreen() = preferenceStore.getBoolean("fullscreen", true)
 
-    fun cutoutShort() = preferenceStore.getBoolean("cutout_short", true)
+    fun drawUnderCutout() = preferenceStore.getBoolean("cutout_short", true)
 
     fun keepScreenOn() = preferenceStore.getBoolean("pref_keep_screen_on_key", false)
 

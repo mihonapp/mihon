@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SmallExtendedFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -61,7 +62,6 @@ import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.Pill
-import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
@@ -70,7 +70,7 @@ import tachiyomi.presentation.core.util.shouldExpandFAB
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class MigrationConfigScreen(private val mangaIds: List<Long>) : Screen() {
+class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
 
     constructor(mangaId: Long) : this(listOf(mangaId))
 
@@ -143,7 +143,7 @@ class MigrationConfigScreen(private val mangaIds: List<Long>) : Screen() {
                 )
             },
             floatingActionButton = {
-                ExtendedFloatingActionButton(
+                SmallExtendedFloatingActionButton(
                     text = { Text(text = stringResource(MR.strings.migrationConfigScreen_continueButtonText)) },
                     icon = { Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowForward, contentDescription = null) },
                     onClick = {
@@ -315,19 +315,19 @@ class MigrationConfigScreen(private val mangaIds: List<Long>) : Screen() {
         private val sourceManager: SourceManager = Injekt.get(),
     ) : StateScreenModel<ScreenModel.State>(State()) {
 
-        init {
-            screenModelScope.launchIO {
-                initSources()
-                mutableState.update { it.copy(isLoading = false) }
-            }
-        }
-
         private val sourcesComparator = { includedSources: List<Long> ->
             compareBy<MigrationSource>(
                 { !it.isSelected },
                 { includedSources.indexOf(it.id) },
                 { with(it) { "$name ($shortLanguage)" } },
             )
+        }
+
+        init {
+            screenModelScope.launchIO {
+                initSources()
+                mutableState.update { it.copy(isLoading = false) }
+            }
         }
 
         private fun updateSources(save: Boolean = true, action: (List<MigrationSource>) -> List<MigrationSource>) {

@@ -11,7 +11,6 @@
     <string name="unlock_app_title">%s আনলক কৰক</string>
     <string name="action_webview_forward">সামনে</string>
     <string name="action_webview_refresh">পুনৰপ্ৰাপ্তি কৰক</string>
-    <string name="action_migrate_duplicate">বিদ্যমান প্ৰৱিষ্টি স্থানান্তৰ কৰক</string>
     <string name="onboarding_action_next">পৰৱৰ্তী</string>
     <string name="pref_category_general">সাধাৰণ</string>
     <string name="pref_category_appearance">দেখাত</string>
@@ -329,7 +328,7 @@
     <string name="ext_installer_shizuku_unavailable_dialog">Shizuku ইন্সটল কৰক আৰু আৰম্ভ কৰক Shizuku এক্সটেনচন ইন্সটলাৰ হিচাপে ব্যৱহাৰ কৰিবলৈ।</string>
     <string name="action_add_repo">ৰেপো যোগ কৰক</string>
     <string name="label_add_repo_input">ৰেপো URL</string>
-    <string name="action_add_repo_message">Mihon-ত অতিৰিক্ত ৰেপো যোগ কৰক। এইটো এনেকুৱা এটা URL হ\'ব লাগিব যাৰ শেষত index.min.json থাকে।</string>
+    <string name="action_add_repo_message">%s-ত অতিৰিক্ত ৰেপো যোগ কৰক। এইটো এনেকুৱা এটা URL হ\'ব লাগিব যাৰ শেষত index.min.json থাকে।</string>
     <string name="action_delete_repo">ৰেপো মচক</string>
     <string name="invalid_repo_name">অবৈধ ৰেপো URL</string>
     <string name="delete_repo_confirmation">আপুনি কি ৰেপো %s মচিব বিচাৰে?</string>
@@ -524,7 +523,6 @@
     <string name="pref_clear_database">ডাটাবেচ মচা</string>
     <string name="pref_clear_database_summary">আপোনাৰ লাইব্ৰেৰিত সংৰক্ষণ কৰা হোৱা নথিৰ ইতিহাস মচা</string>
     <string name="clear_database_source_item_count">ডাটাবেচত %1$d লাইব্ৰেৰিত নথিৰ সংখ্যা</string>
-    <string name="clear_database_confirmation">আপোনি নিশ্চিত? লাইব্ৰেৰিত নথিৰ অধ্যায় আৰু অগ্ৰগতি হেৰুৱাব</string>
     <string name="clear_database_completed">নথি মচা হৈছে</string>
     <string name="database_clean">মচাৰ বাবে কিবা নাই</string>
     <string name="pref_clear_webview_data">WebView ডাটা মচা</string>
@@ -609,9 +607,6 @@
     <string name="remove_from_library">লাইব্ৰেৰী পৰা মচি দিয়ক</string>
     <string name="manga_removed_library">লাইব্ৰেৰী পৰা মচি দিয়া হৈছে</string>
     <string name="unknown_title">অজানা শিৰোনাম</string>
-    <string name="confirm_add_duplicate_manga">আপোনাৰ লাইব্ৰেৰীত এই নামৰ এটা প্ৰৱিষ্ট আছে।
-\n
-\nআপুনি এতিয়াও আগবঢ়াব খুজিছে নেকি?</string>
     <string name="manga_info_expand">অধিক</string>
     <string name="manga_info_collapse">সৰু</string>
     <string name="delete_downloads_for_manga">ডাউনলোড কৰা অধ্যায়সমূহ মচি দিব নেকি?</string>
@@ -753,7 +748,7 @@
     <string name="seconds_short">%ds</string>
     <string name="download_queue_error">অধ্যায়সমূহ ডাউনলোড কৰিবলৈ সক্ষম নহ\'ল। আপুনি ডাউনলোডৰ অংশত পুনৰ চেষ্টা কৰিব পাৰে</string>
     <string name="download_insufficient_space">পৰ্যাপ্ত স্থান নাথাকাৰ বাবে অধ্যায়সমূহ ডাউনলোড কৰিবলৈ সক্ষম নহ\'ল</string>
-    <string name="download_queue_size_warning">সতৰ্কতা: ডাঙৰ বাল্ক ডাউনলোডে মূলে ধীৰগতিত পৰিণত কৰিব পাৰে আৰু/অথবা Mihon ব্লক কৰিব পাৰে। অধিক জানিবলৈ টেপ কৰক।</string>
+    <string name="download_queue_size_warning">সতৰ্কতা: ডাঙৰ বাল্ক ডাউনলোডে মূলে ধীৰগতিত পৰিণত কৰিব পাৰে আৰু/অথবা %s ব্লক কৰিব পাৰে। অধিক জানিবলৈ টেপ কৰক।</string>
     <string name="notification_updating_progress">লাইব্রেৰী আপডেট হৈ আছে… (%s)</string>
     <string name="notification_size_warning">ডাঙৰ আপডেটসমূহে মূলে ক্ষতি কৰে আৰু ধীৰ গতিত আপডেট হব পাৰে আৰু বেটাৰী ব্যৱহাৰ বৃদ্ধি পাব পাৰে। অধিক জানিবলৈ টেপ কৰক।</string>
     <string name="notification_new_chapters">নতুন অধ্যায় পোৱা গৈছে</string>
@@ -839,4 +834,7 @@
     <string name="pref_incognito_mode_extension_summary">সম্প্ৰসাৰণৰ বাবে ইতিহাস পঢ়া বন্ধ কৰক</string>
     <string name="label_auto">অটো</string>
     <string name="theme_monochrome">একবৰ্ণী</string>
+    <string name="clear_db_exclude_read">পঢ়া অধ্যায়সহ এন্ট্ৰিসমূহ ৰক্ষা কৰক</string>
+    <string name="author">লেখক</string>
+    <string name="artist">কলা</string>
 </resources>

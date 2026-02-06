@@ -41,8 +41,8 @@ abstract class BaseSmartSearchEngine<T>(
         val eligibleManga = supervisorScope {
             queries.map { query ->
                 async(Dispatchers.Default) {
-                    val builtQuery = if (extraSearchParams != null) {
-                        "$query ${extraSearchParams.trim()}"
+                    val builtQuery = if (!extraSearchParams.isNullOrBlank()) {
+                        "$query $extraSearchParams"
                     } else {
                         query
                     }
@@ -95,8 +95,8 @@ abstract class BaseSmartSearchEngine<T>(
     }
 
     private fun removeTextInBrackets(text: String, readForward: Boolean): String {
-        val openingChars = if (readForward) "([<{ " else ")]}>"
-        val closingChars = if (readForward) ")]}>" else "([<{ "
+        val openingChars = if (readForward) "([<{" else ")]}>"
+        val closingChars = if (readForward) ")]}>" else "([<{"
         var depth = 0
 
         return buildString {

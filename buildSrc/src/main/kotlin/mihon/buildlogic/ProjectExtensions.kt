@@ -14,7 +14,6 @@ import org.gradle.kotlin.dsl.provideDelegate
 import org.gradle.kotlin.dsl.the
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
-import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
 
@@ -26,13 +25,9 @@ val Project.libs get() = the<LibrariesForLibs>()
 internal fun Project.configureAndroid(commonExtension: CommonExtension<*, *, *, *, *, *>) {
     commonExtension.apply {
         compileSdk = AndroidConfig.COMPILE_SDK
-        buildToolsVersion = AndroidConfig.BUILD_TOOLS
 
         defaultConfig {
             minSdk = AndroidConfig.MIN_SDK
-            ndk {
-                version = AndroidConfig.NDK
-            }
         }
 
         compileOptions {
@@ -46,7 +41,7 @@ internal fun Project.configureAndroid(commonExtension: CommonExtension<*, *, *, 
         compilerOptions {
             jvmTarget.set(AndroidConfig.JvmTarget)
             freeCompilerArgs.addAll(
-                "-Xcontext-receivers",
+                "-Xcontext-parameters",
                 "-opt-in=kotlin.RequiresOptIn",
             )
 
@@ -77,8 +72,6 @@ internal fun Project.configureCompose(commonExtension: CommonExtension<*, *, *, 
     }
 
     extensions.configure<ComposeCompilerGradlePluginExtension> {
-        featureFlags.set(setOf(ComposeFeatureFlag.OptimizeNonSkippingGroups))
-
         val enableMetrics = project.providers.gradleProperty("enableComposeCompilerMetrics").orNull.toBoolean()
         val enableReports = project.providers.gradleProperty("enableComposeCompilerReports").orNull.toBoolean()
 

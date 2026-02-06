@@ -26,8 +26,8 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 11
-        versionName = "0.18.0"
+        versionCode = 16
+        versionName = "0.19.3"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
         buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
@@ -138,9 +138,9 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        aidl = true
 
         // Disable some unused things
-        aidl = false
         renderScript = false
         shaders = false
     }
@@ -159,12 +159,14 @@ kotlin {
             "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
             "-opt-in=androidx.compose.foundation.layout.ExperimentalLayoutApi",
             "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3ExpressiveApi",
             "-opt-in=androidx.compose.ui.ExperimentalComposeUiApi",
             "-opt-in=coil3.annotation.ExperimentalCoilApi",
             "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
             "-opt-in=kotlinx.coroutines.FlowPreview",
             "-opt-in=kotlinx.coroutines.InternalCoroutinesApi",
             "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
+            "-Xannotation-default-target=param-property",
         )
     }
 }
@@ -261,7 +263,6 @@ dependencies {
     implementation(libs.directionalviewpager) {
         exclude(group = "androidx.viewpager", module = "viewpager")
     }
-    implementation(libs.insetter)
     implementation(libs.richeditor.compose)
     implementation(libs.aboutLibraries.compose)
     implementation(libs.bundles.voyager)
@@ -271,6 +272,7 @@ dependencies {
     implementation(libs.compose.grid)
     implementation(libs.reorderable)
     implementation(libs.bundles.markdown)
+    implementation(libs.materialKolor)
 
     // Logging
     implementation(libs.logcat)

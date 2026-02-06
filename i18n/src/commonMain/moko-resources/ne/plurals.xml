@@ -72,4 +72,20 @@
         <item quantity="one">भोलि</item>
         <item quantity="other">%1$d दिनमा</item>
     </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">१ पाना</item>
+        <item quantity="other">%1$s पाना</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">%1$d प्रविष्टि सार्ने हो?</item>
+        <item quantity="other">%1$d प्रविष्टिहरू सार्ने हो?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">%1$d प्रविष्टि प्रतिलिपि गर्ने हो?</item>
+        <item quantity="other">%1$d प्रविष्टिहरू प्रतिलिपि गर्ने हो?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">एउटा प्रविष्टि छलेको थियो</item>
+        <item quantity="other">%1$d वटा प्रविष्टिहरू छलेका थिए</item>
+    </plurals>
 </resources>

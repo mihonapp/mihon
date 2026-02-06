@@ -1,5 +1,6 @@
 package eu.kanade.presentation.reader.settings
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
@@ -8,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
+import eu.kanade.tachiyomi.util.system.hasDisplayCutout
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.SettingsChipRow
@@ -64,10 +66,11 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
         pref = screenModel.preferences.fullscreen(),
     )
 
-    if (screenModel.hasDisplayCutout && screenModel.preferences.fullscreen().get()) {
+    val isFullscreen by screenModel.preferences.fullscreen().collectAsState()
+    if (LocalActivity.current?.hasDisplayCutout() == true && isFullscreen) {
         CheckboxItem(
             label = stringResource(MR.strings.pref_cutout_short),
-            pref = screenModel.preferences.cutoutShort(),
+            pref = screenModel.preferences.drawUnderCutout(),
         )
     }
 
@@ -100,7 +103,7 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
             value = flashMillis / ReaderPreferences.MILLI_CONVERSION,
             valueRange = 1..15,
             label = stringResource(MR.strings.pref_flash_duration),
-            valueText = stringResource(MR.strings.pref_flash_duration_summary, flashMillis),
+            valueString = stringResource(MR.strings.pref_flash_duration_summary, flashMillis),
             onChange = { flashMillisPref.set(it * ReaderPreferences.MILLI_CONVERSION) },
             pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         )
@@ -108,7 +111,7 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
             value = flashInterval,
             valueRange = 1..10,
             label = stringResource(MR.strings.pref_flash_page_interval),
-            valueText = pluralStringResource(MR.plurals.pref_pages, flashInterval, flashInterval),
+            valueString = pluralStringResource(MR.plurals.pref_pages, flashInterval, flashInterval),
             onChange = {
                 flashIntervalPref.set(it)
             },

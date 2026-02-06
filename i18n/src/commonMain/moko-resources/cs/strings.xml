@@ -217,7 +217,6 @@
     <string name="cookies_cleared">Cookies vymazány</string>
     <string name="pref_clear_database">Vyčistit databázi</string>
     <string name="pref_clear_database_summary">Smazat historii položek, které nejsou uloženy ve vaší knihovně</string>
-    <string name="clear_database_confirmation">Jste si jistí? Přečtené kapitoly a postup v položkách mimo knihovnu bude ztracen</string>
     <string name="clear_database_completed">Položky byly smazány</string>
     <string name="version">Verze</string>
     <string name="pref_enable_acra">Odesílat hlášení o pádu</string>
@@ -541,7 +540,7 @@
     <string name="update_72hour">Každé 3 dny</string>
     <string name="connected_to_wifi">Jen na Wi-Fi</string>
     <string name="pref_verbose_logging">Podrobné protokolování</string>
-    <string name="download_queue_size_warning">Varování: hromadné stahování může vést k tomu, že zdroje zpomalí a/nebo zablokují Mihon. Klepnutím se dozvíte více.</string>
+    <string name="download_queue_size_warning">Varování: hromadné stahování může vést k tomu, že zdroje zpomalí a/nebo zablokují %s. Klepnutím se dozvíte více.</string>
     <string name="ext_update_all">Aktualizovat vše</string>
     <string name="pref_verbose_logging_summary">Vypisovat podrobné informace do systémového protokolu (sníží výkon aplikace)</string>
     <string name="channel_app_updates">Aktualizace aplikace</string>
@@ -678,9 +677,6 @@
     <string name="copied_to_clipboard_plain">Zkopírováno do schránky</string>
     <string name="enhanced_services_not_installed">K dispozici, ale zdroj není nainstalován: %s</string>
     <string name="pref_skip_dupe_chapters">Přeskakovat duplicitní kapitoly</string>
-    <string name="confirm_add_duplicate_manga">Ve své knihovně máte položku se stejným názvem.
-\n
-\nStále si přejete pokračovat?</string>
     <string name="track_error">%1$s chyba: %2$s</string>
     <string name="information_required_plain">*vyžadováno</string>
     <string name="pref_hide_in_library_items">Skrýt položky, které jsou již v knihovně</string>
@@ -691,8 +687,8 @@
     <string name="pref_page_rotate_invert">Překlopení orientace otočených širokých stránek</string>
     <string name="pref_page_rotate">Otočení širokých stránek tak, aby se vešly</string>
     <string name="pref_debug_info">Ladící informace</string>
-    <string name="pref_chapter_swipe_end">Přejetí prstem doprava</string>
-    <string name="pref_chapter_swipe_start">Přejetí prstem doleva</string>
+    <string name="pref_chapter_swipe_end">Kapitola po přejetí doprava</string>
+    <string name="pref_chapter_swipe_start">Kapitola po přejetí doleva</string>
     <string name="pref_double_tap_zoom">Přiblížení dvojitým klepnutím</string>
     <string name="action_filter_interval_custom">Přizpůsobený interval aktualizace</string>
     <string name="action_sort_next_updated">Další očekávaná aktualizace</string>
@@ -772,7 +768,7 @@
 \nVybraná složka: %2$s</string>
     <string name="invalid_backup_file_error">Úplná chyba:</string>
     <string name="pref_library_update_smart_update">Chytrá aktualizace</string>
-    <string name="action_add_repo_message">Přidat další repozitáře do Mihon. Měli by to být URL končící \"index.min.json\".</string>
+    <string name="action_add_repo_message">Přidat další repozitáře do %s. Měli by to být URL končící \"index.min.json\".</string>
     <string name="error_repo_exists">Tento repozitář již existuje!</string>
     <string name="action_delete_repo">Odstranit repozitář</string>
     <string name="invalid_repo_name">Neplatná URL repozitáře</string>
@@ -790,7 +786,6 @@
     <string name="manga_interval_expected_update_soon">Brzy</string>
     <string name="onboarding_storage_help_info">Aktualizujete ze starší verze a nevíte, co vybrat? Další informace naleznete v průvodci úložištěm.</string>
     <string name="action_add_anyway">Přesto přidat</string>
-    <string name="action_migrate_duplicate">Přesunout existující záznam</string>
     <string name="pref_webtoon_disable_zoom_out">Zakázat oddálení</string>
     <string name="action_replace_repo">Nahradit</string>
     <string name="action_replace_repo_title">Otisk podepisovacího klíče již existuje</string>
@@ -838,7 +833,7 @@
     <string name="upcoming_calendar_next">Následující měsíc</string>
     <string name="upcoming_guide">Návod k nadcházejícím kapitolám</string>
     <string name="label_auto">Automaticky</string>
-    <string name="pref_mark_duplicate_read_chapter_read">Označit duplicitní přečtené kapitoly jako přečtené</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Označit duplicitní přečtenou kapitolu jako přečtenou</string>
     <string name="theme_monochrome">Černobílý</string>
     <string name="author">Autor</string>
     <string name="artist">Umělec</string>
@@ -848,4 +843,28 @@
     <string name="library_exported">Knihovna byla exportována</string>
     <string name="action_toggle_private_on">Sledovat soukromě</string>
     <string name="action_toggle_private_off">Sledovat veřejně</string>
+    <string name="pref_behavior">Chování</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">Po přečtení kapitoly</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">Po získání nové kapitoly</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">Použít zastaralý dekodér pro dlouhý pruh</string>
+    <string name="pref_update_library_manga_titles">Aktualizovat názvy mangy z knihovny, aby odpovídaly zdroji</string>
+    <string name="logging_in">Přihlašování…</string>
+    <string name="notes_placeholder">Užil jsem si tu část kde…</string>
+    <string name="action_notes">Poznámky</string>
+    <string name="action_edit_notes">Upravit poznámky</string>
+    <string name="pref_update_library_manga_titles_summary">Varování: pokud se manga přejmenuje, vymaže se z fronty stahování (pokud existuje).</string>
+    <string name="action_display_unread_badge">Nepřečtené kapitoly</string>
+    <string name="possible_duplicates_title">Možné duplikáty</string>
+    <string name="possible_duplicates_summary">Existují položky ve knihovně s podobným jménem.\n\nVyber položku pro migraci nebo přesto přidat.</string>
+    <string name="storage_failed_to_create_download_directory">Nepodařilo se vytvořit adresář pro stahování</string>
+    <string name="storage_failed_to_create_directory">Nepodařilo se vytvořit adresář: %s</string>
+    <string name="clear_database_text">Chystáte se odstranit položky z databáze</string>
+    <string name="clear_db_exclude_read">Ponechat položky s přečtenými kapitolami</string>
+    <string name="label_donate">Přispěj</string>
+    <string name="theme_catppuccin">Catppuccin</string>
+    <string name="pref_hide_missing_chapter_indicators">Skrýt indikátory chybějících kapitol</string>
+    <string name="pref_disallow_non_ascii_filenames">Nepovolovat soubory s non-ASCII znaky</string>
+    <string name="pref_disallow_non_ascii_filenames_details">Zajišťuje kompatibilitu s určitými úložnými médii, která nepodporují Unicode. Pokud je tato funkce povolena, budete muset ručně přejmenovat názvy složkek source a manga tak, že nahradíte non-ASCII znaky jejich malými hexadecimálními znaky v UTF-8. Názvy souborů kapitol není nutné přejmenovávat.</string>
+    <string name="pref_download_concurrent_sources">Souběžné stahování zdrojů</string>
+    <string name="pref_download_concurrent_pages">Souběžné stahování stránek</string>
 </resources>

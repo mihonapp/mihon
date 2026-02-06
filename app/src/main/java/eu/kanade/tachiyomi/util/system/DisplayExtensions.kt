@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
+import android.view.View
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.ui.model.TabletUiMode
 import uy.kohesive.injekt.Injekt
@@ -57,11 +58,19 @@ fun Context.isNightMode(): Boolean {
 /**
  * Checks whether if the device has a display cutout (i.e. notch, camera cutout, etc.).
  *
- * Only works in Android 9+.
+ * Only works on Android 9+.
  */
 fun Activity.hasDisplayCutout(): Boolean {
-    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.P &&
-        window.decorView.rootWindowInsets?.displayCutout != null
+    return window.decorView.hasDisplayCutout()
+}
+
+/**
+ * Checks whether if the device has a display cutout (i.e. notch, camera cutout, etc.).
+ *
+ * Only works on Android 9+.
+ */
+fun View.hasDisplayCutout(): Boolean {
+    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && rootWindowInsets?.displayCutout != null
 }
 
 /**

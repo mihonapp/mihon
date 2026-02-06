@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.track.kavita
 
-import android.graphics.Color
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
@@ -34,9 +33,7 @@ class Kavita(id: Long) : BaseTracker(id, "Kavita"), EnhancedTracker {
 
     private val sourceManager: SourceManager by injectLazy()
 
-    override fun getLogo(): Int = R.drawable.ic_tracker_kavita
-
-    override fun getLogoColor() = Color.rgb(74, 198, 148)
+    override fun getLogo(): Int = R.drawable.brand_kavita
 
     override fun getStatusList(): List<Long> = listOf(UNREAD, READING, COMPLETED)
 
@@ -140,7 +137,7 @@ class Kavita(id: Long) : BaseTracker(id, "Kavita"), EnhancedTracker {
             }
 
             authentication.apiUrl = prefApiUrl
-            authentication.jwtToken = token.toString()
+            authentication.jwtToken = token
         }
         authentications = oauth
     }

@@ -28,7 +28,7 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
         pref = screenModel.preferences.customBrightness(),
     )
 
-    /**
+    /*
      * Sets the brightness of the screen. Range is [-75, 100].
      * From -75 to -1 a semi-transparent black view is shown at the top with the minimum brightness.
      * From 1 to 100 it sets that value as brightness.

@@ -38,7 +38,6 @@ import eu.kanade.tachiyomi.util.chapter.filterDownloaded
 import eu.kanade.tachiyomi.util.chapter.removeDuplicates
 import eu.kanade.tachiyomi.util.editCover
 import eu.kanade.tachiyomi.util.lang.byteSize
-import eu.kanade.tachiyomi.util.lang.takeBytes
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.cacheImageDir
 import kotlinx.coroutines.CancellationException
@@ -175,6 +174,7 @@ class ReaderViewModel @JvmOverloads constructor(
                                         !downloadManager.isChapterDownloaded(
                                             it.name,
                                             it.scanlator,
+                                            it.url,
                                             manga.title,
                                             manga.source,
                                         )
@@ -184,6 +184,7 @@ class ReaderViewModel @JvmOverloads constructor(
                                         downloadManager.isChapterDownloaded(
                                             it.name,
                                             it.scanlator,
+                                            it.url,
                                             manga.title,
                                             manga.source,
                                         )
@@ -345,7 +346,7 @@ class ReaderViewModel @JvmOverloads constructor(
         viewModelScope.launchIO {
             logcat { "Loading ${chapter.chapter.url}" }
 
-            flushReadTimer()
+            updateHistory()
             restartReadTimer()
 
             try {
@@ -397,6 +398,7 @@ class ReaderViewModel @JvmOverloads constructor(
             val isDownloaded = downloadManager.isChapterDownloaded(
                 dbChapter.name,
                 dbChapter.scanlator,
+                dbChapter.url,
                 manga.title,
                 manga.source,
                 skipCache = true,
@@ -473,6 +475,7 @@ class ReaderViewModel @JvmOverloads constructor(
             val isNextChapterDownloaded = downloadManager.isChapterDownloaded(
                 nextChapter.name,
                 nextChapter.scanlator,
+                nextChapter.url,
                 manga.title,
                 manga.source,
             )
@@ -498,7 +501,7 @@ class ReaderViewModel @JvmOverloads constructor(
      * if setting is enabled and [currentChapter] is queued for download
      */
     private fun cancelQueuedDownloads(currentChapter: ReaderChapter): Download? {
-        return downloadManager.getQueuedDownloadOrNull(currentChapter.chapter.id!!.toLong())?.also {
+        return downloadManager.getQueuedDownloadOrNull(currentChapter.chapter.id!!)?.also {
             downloadManager.cancelQueuedDownloads(listOf(it))
         }
     }
@@ -603,26 +606,20 @@ class ReaderViewModel @JvmOverloads constructor(
         chapterReadStartTime = Instant.now().toEpochMilli()
     }
 
-    fun flushReadTimer() {
-        getCurrentChapter()?.let {
-            viewModelScope.launchNonCancellable {
-                updateHistory(it)
-            }
-        }
-    }
-
     /**
      * Saves the chapter last read history if incognito mode isn't on.
      */
-    private suspend fun updateHistory(readerChapter: ReaderChapter) {
-        if (incognitoMode) return
+    suspend fun updateHistory() {
+        getCurrentChapter()?.let { readerChapter ->
+            if (incognitoMode) return@let
 
-        val chapterId = readerChapter.chapter.id!!
-        val endTime = Date()
-        val sessionReadDuration = chapterReadStartTime?.let { endTime.time - it } ?: 0
+            val chapterId = readerChapter.chapter.id!!
+            val endTime = Date()
+            val sessionReadDuration = chapterReadStartTime?.let { endTime.time - it } ?: 0
 
-        upsertHistory.await(HistoryUpdate(chapterId, endTime, sessionReadDuration))
-        chapterReadStartTime = null
+            upsertHistory.await(HistoryUpdate(chapterId, endTime, sessionReadDuration))
+            chapterReadStartTime = null
+        }
     }
 
     /**
@@ -673,7 +670,7 @@ class ReaderViewModel @JvmOverloads constructor(
         viewModelScope.launchNonCancellable {
             updateChapter.await(
                 ChapterUpdate(
-                    id = chapter.id!!.toLong(),
+                    id = chapter.id!!,
                     bookmark = bookmarked,
                 ),
             )
@@ -778,7 +775,8 @@ class ReaderViewModel @JvmOverloads constructor(
         val chapter = page.chapter.chapter
         val filenameSuffix = " - ${page.number}"
         return DiskUtil.buildValidFilename(
-            "${manga.title} - ${chapter.name}".takeBytes(DiskUtil.MAX_FILE_NAME_BYTES - filenameSuffix.byteSize()),
+            "${manga.title} - ${chapter.name}",
+            DiskUtil.MAX_FILE_NAME_BYTES - filenameSuffix.byteSize(),
         ) + filenameSuffix
     }
 

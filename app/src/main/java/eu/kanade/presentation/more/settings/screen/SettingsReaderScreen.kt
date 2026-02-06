@@ -1,6 +1,5 @@
 package eu.kanade.presentation.more.settings.screen
 
-import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
@@ -10,6 +9,7 @@ import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import eu.kanade.tachiyomi.util.system.hasDisplayCutout
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableMap
@@ -101,11 +101,9 @@ object SettingsReaderScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_fullscreen),
                 ),
                 Preference.PreferenceItem.SwitchPreference(
-                    preference = readerPreferences.cutoutShort(),
+                    preference = readerPreferences.drawUnderCutout(),
                     title = stringResource(MR.strings.pref_cutout_short),
-                    enabled = fullscreen &&
-                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.P &&
-                        LocalView.current.rootWindowInsets?.displayCutout != null, // has cutout
+                    enabled = LocalView.current.hasDisplayCutout() && fullscreen,
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.keepScreenOn(),
@@ -143,23 +141,17 @@ object SettingsReaderScreen : SearchableSettings {
                     value = flashMillis / ReaderPreferences.MILLI_CONVERSION,
                     valueRange = 1..15,
                     title = stringResource(MR.strings.pref_flash_duration),
-                    subtitle = stringResource(MR.strings.pref_flash_duration_summary, flashMillis),
+                    valueString = stringResource(MR.strings.pref_flash_duration_summary, flashMillis),
                     enabled = flashPageState,
-                    onValueChanged = {
-                        flashMillisPref.set(it * ReaderPreferences.MILLI_CONVERSION)
-                        true
-                    },
+                    onValueChanged = { flashMillisPref.set(it * ReaderPreferences.MILLI_CONVERSION) },
                 ),
                 Preference.PreferenceItem.SliderPreference(
                     value = flashInterval,
                     valueRange = 1..10,
                     title = stringResource(MR.strings.pref_flash_page_interval),
-                    subtitle = pluralStringResource(MR.plurals.pref_pages, flashInterval, flashInterval),
+                    valueString = pluralStringResource(MR.plurals.pref_pages, flashInterval, flashInterval),
                     enabled = flashPageState,
-                    onValueChanged = {
-                        flashIntervalPref.set(it)
-                        true
-                    },
+                    onValueChanged = { flashIntervalPref.set(it) },
                 ),
                 Preference.PreferenceItem.ListPreference(
                     preference = flashColorPref,
@@ -342,11 +334,8 @@ object SettingsReaderScreen : SearchableSettings {
                         it.WEBTOON_PADDING_MIN..it.WEBTOON_PADDING_MAX
                     },
                     title = stringResource(MR.strings.pref_webtoon_side_padding),
-                    subtitle = numberFormat.format(webtoonSidePadding / 100f),
-                    onValueChanged = {
-                        webtoonSidePaddingPref.set(it)
-                        true
-                    },
+                    valueString = numberFormat.format(webtoonSidePadding / 100f),
+                    onValueChanged = { webtoonSidePaddingPref.set(it) },
                 ),
                 Preference.PreferenceItem.ListPreference(
                     preference = readerPreferences.readerHideThreshold(),

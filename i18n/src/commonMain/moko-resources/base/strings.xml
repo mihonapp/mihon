@@ -36,6 +36,7 @@
     <string name="label_extensions">Extensions</string>
     <string name="label_extension_info">Extension info</string>
     <string name="label_help">Help</string>
+    <string name="label_donate">Donate</string>
     <string name="label_default">Default</string>
     <string name="label_warning">Warning</string>
     <string name="label_auto">Auto</string>
@@ -163,6 +164,7 @@
     <string name="action_webview_back">Back</string>
     <string name="action_webview_forward">Forward</string>
     <string name="action_webview_refresh">Refresh</string>
+    <string name="action_webview_close_tab">Close tab</string>
     <string name="action_start_downloading_now">Start downloading now</string>
     <string name="action_not_now">Not now</string>
     <string name="action_add_anyway">Add anyway</string>
@@ -245,6 +247,7 @@
     <!-- "Today" instead of "2023-12-31" -->
     <string name="pref_relative_format_summary">\"%1$s\" instead of \"%2$s\"</string>
     <string name="pref_date_format">Date format</string>
+    <string name="pref_display_images_description">Render images in manga descriptions</string>
 
     <string name="pref_manage_notifications">Manage notifications</string>
     <string name="pref_app_language">App language</string>
@@ -318,6 +321,8 @@
     <string name="pref_mark_duplicate_read_chapter_read_new">After fetching new chapter</string>
 
     <string name="pref_hide_missing_chapter_indicators">Hide missing chapter indicators</string>
+    <string name="pref_disallow_non_ascii_filenames">Disallow non-ASCII filenames</string>
+    <string name="pref_disallow_non_ascii_filenames_details">Ensures compatibility with certain storage media that don't support Unicode. When this is enabled, you'll need to manually rename source and manga folders by replacing non-ASCII characters with their lowercase UTF-8 hexadecimal representations. Chapter files don't need to be renamed.</string>
 
       <!-- Extension section -->
     <string name="multi_lang">Multi</string>
@@ -362,7 +367,7 @@
     <string name="information_empty_repos">You have no repos set.</string>
     <string name="action_add_repo">Add repo</string>
     <string name="label_add_repo_input">Repo URL</string>
-    <string name="action_add_repo_message">Add additional repos to Mihon. This should be a URL that ends with \"index.min.json\".</string>
+    <string name="action_add_repo_message">Add additional repos to %s. This should be a URL that ends with \"index.min.json\".</string>
     <string name="error_repo_exists">This repo already exists!</string>
     <string name="action_delete_repo">Delete repo</string>
     <string name="invalid_repo_name">Invalid repo URL</string>
@@ -521,6 +526,9 @@
     <string name="save_chapter_as_cbz">Save as CBZ archive</string>
     <string name="split_tall_images">Split tall images</string>
     <string name="split_tall_images_summary">Improves reader performance</string>
+    <string name="pref_download_concurrent_sources">Concurrent source downloads</string>
+    <string name="pref_download_concurrent_pages">Concurrent page downloads</string>
+    <string name="pref_download_concurrent_pages_summary">Pages downloaded simultaneously per source</string>
 
     <!-- Tracking section -->
     <string name="tracking_guide">Tracking guide</string>
@@ -603,7 +611,7 @@
     <string name="cookies_cleared">Cookies cleared</string>
     <string name="pref_invalidate_download_cache">Reindex downloads</string>
     <string name="pref_invalidate_download_cache_summary">Force app to recheck downloaded chapters</string>
-    <string name="download_cache_invalidated">Downloads index invalidated</string>
+    <string name="download_cache_invalidated">Recreating download index</string>
     <string name="pref_clear_database">Clear database</string>
     <string name="pref_clear_database_summary">Delete history for entries that are not saved in your library</string>
     <string name="clear_database_source_item_count">%1$d non-library entries in database</string>
@@ -850,6 +858,7 @@
     <string name="updates_last_update_info_just_now">Just now</string>
     <string name="relative_time_span_never">Never</string>
     <string name="action_view_upcoming">View Upcoming Updates</string>
+    <string name="action_filter_excluded_scanlators">Filter excluded scanlators</string>
 
     <!-- Upcoming -->
     <string name="upcoming_guide">Upcoming Guide</string>
@@ -904,7 +913,7 @@
     <!-- Downloads activity and service -->
     <string name="download_queue_error">Couldn\'t download chapters. You can try again in the downloads section</string>
     <string name="download_insufficient_space">Couldn\'t download chapters due to low storage space</string>
-    <string name="download_queue_size_warning">Warning: large bulk downloads may lead to sources becoming slower and/or blocking Mihon. Tap to learn more.</string>
+    <string name="download_queue_size_warning">Warning: large bulk downloads may lead to sources becoming slower and/or blocking %s. Tap to learn more.</string>
 
     <!-- Library update service notifications -->
     <string name="notification_updating_progress">Updating library… (%s)</string>
