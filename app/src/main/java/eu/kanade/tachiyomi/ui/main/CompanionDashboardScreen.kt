@@ -183,7 +183,7 @@ object CompanionDashboardScreen : Screen {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { DualScreenState.openOnMainScreen(eu.kanade.tachiyomi.ui.download.DownloadQueueScreen) },
+                .clickable { DualScreenState.openScreen(eu.kanade.tachiyomi.ui.download.DownloadQueueScreen) },
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)
             )
