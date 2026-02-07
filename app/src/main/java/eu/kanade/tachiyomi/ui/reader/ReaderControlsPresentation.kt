@@ -79,7 +79,7 @@ class ReaderControlsPresentation(
     outerContext: Context,
     display: Display,
     private val activity: ReaderActivity,
-) : Presentation(outerContext, display), LifecycleOwner, SavedStateRegistryOwner, ViewModelStoreOwner, OnBackPressedDispatcherOwner {
+) : Presentation(outerContext, display, R.style.Theme_Tachiyomi), LifecycleOwner, SavedStateRegistryOwner, ViewModelStoreOwner, OnBackPressedDispatcherOwner {
 
     private val lifecycleRegistry = LifecycleRegistry(this)
     private val savedStateRegistryController = SavedStateRegistryController.create(this)
