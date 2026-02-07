@@ -8,6 +8,10 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
+import eu.kanade.domain.base.BasePreferences
+import mihon.core.dualscreen.DualScreenState
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 class UpcomingScreen : Screen() {
 
@@ -21,7 +25,14 @@ class UpcomingScreen : Screen() {
         UpcomingScreenContent(
             state = state,
             setSelectedYearMonth = screenModel::setSelectedYearMonth,
-            onClickUpcoming = { navigator.push(MangaScreen(it.id)) },
+            onClickUpcoming = {
+                val preferences = Injekt.get<BasePreferences>()
+                if (preferences.enableDualScreenMode().get()) {
+                    DualScreenState.openScreen(MangaScreen(it.id))
+                } else {
+                    navigator.push(MangaScreen(it.id))
+                }
+            },
         )
     }
 }

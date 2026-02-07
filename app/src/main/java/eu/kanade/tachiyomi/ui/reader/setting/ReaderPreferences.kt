@@ -99,6 +99,12 @@ class ReaderPreferences(
 
     // endregion
 
+    // region Book mode (dual-screen)
+
+    fun bookModeEnabled() = preferenceStore.getBoolean("book_mode_enabled", false)
+
+    // endregion
+
     // region Color filter
 
     fun customBrightness() = preferenceStore.getBoolean("pref_custom_brightness_key", false)

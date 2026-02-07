@@ -105,6 +105,15 @@
         </activity>
 
         <activity
+            android:name=".ui.main.DualScreenActivity"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:taskAffinity="mihon.dualscreen"
+            android:excludeFromRecents="true"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
+            android:theme="@style/Theme.Tachiyomi" />
+
+        <activity
             android:name=".crash.CrashActivity"
             android:exported="false"
             android:process=":error_handler" />

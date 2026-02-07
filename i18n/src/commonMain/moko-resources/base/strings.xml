@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Mihon</string>
+    <string name="app_name" translatable="false">Mihon DS</string>
 
     <!-- Generic strings -->
     <string name="on">On</string>
@@ -188,6 +188,8 @@
     <string name="onboarding_storage_selection_required">A folder must be selected</string>
     <string name="onboarding_storage_help_info">Updating from an older version and not sure what to select? Refer to the storage guide for more information.</string>
     <string name="onboarding_storage_help_action">Storage guide</string>
+    <string name="onboarding_dual_screen_info">If you have a dual-screen device, you can enable dual-screen mode to show reader controls on the secondary display.</string>
+    <string name="onboarding_dual_screen_note">This can also be toggled later in Settings > More.</string>
     <string name="onboarding_permission_install_apps">Install apps permission</string>
     <string name="onboarding_permission_install_apps_description">To install source extensions.</string>
     <string name="onboarding_permission_notifications">Notification permission</string>
@@ -663,6 +665,16 @@
     <string name="pref_incognito_mode_extension_summary">Pause reading history for extension</string>
     <string name="notification_incognito_text">Disable incognito mode</string>
     <string name="downloaded_only_summary">Filters all entries in your library</string>
+    <string name="pref_dual_screen_mode">Enable dual-screen mode</string>
+    <string name="pref_dual_screen_mode_summary">Show reader controls on secondary display when available</string>
+    <string name="pref_dual_screen_settings">Dual-screen settings</string>
+    <string name="pref_dual_screen_summary">Hardware overrides, display selection</string>
+    <string name="pref_book_mode">Book mode</string>
+    <string name="pref_book_mode_summary">Display two pages side by side like a book on dual-screen devices</string>
+    <string name="pref_swap_presentation_rotation">Swap presentation rotation</string>
+    <string name="pref_swap_presentation_rotation_summary">Rotates the secondary display by 180 degrees</string>
+    <string name="pref_secondary_display_id">Secondary display ID</string>
+    <string name="pref_secondary_display_id_summary">Manually specify the ID of the second screen (-1 for auto-detect)</string>
 
 
     <!-- Login dialog -->

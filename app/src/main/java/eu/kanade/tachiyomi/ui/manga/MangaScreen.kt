@@ -59,6 +59,10 @@ import kotlinx.coroutines.launch
 import logcat.LogPriority
 import mihon.feature.migration.config.MigrationConfigScreen
 import mihon.feature.migration.dialog.MigrateMangaDialog
+import mihon.core.dualscreen.DualScreenState
+import eu.kanade.domain.base.BasePreferences
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
@@ -68,7 +72,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 class MangaScreen(
-    private val mangaId: Long,
+    val mangaId: Long,
     val fromSource: Boolean = false,
 ) : Screen(), AssistContentScreen {
 
@@ -114,6 +118,8 @@ class MangaScreen(
             }
         }
 
+        val navigateUp = DualScreenState.navigateUpOr { navigator.pop() }
+
         MangaScreen(
             state = successState,
             snackbarHostState = screenModel.snackbarHostState,
@@ -121,7 +127,7 @@ class MangaScreen(
             isTabletUi = isTabletUi(),
             chapterSwipeStartAction = screenModel.chapterSwipeStartAction,
             chapterSwipeEndAction = screenModel.chapterSwipeEndAction,
-            navigateUp = navigator::pop,
+            navigateUp = navigateUp,
             onChapterClicked = { openChapter(context, it) },
             onDownloadChapter = screenModel::runChapterDownloadActions.takeIf { !successState.source.isLocalOrStub() },
             onAddToLibraryClicked = {
@@ -205,7 +211,14 @@ class MangaScreen(
                     duplicates = dialog.duplicates,
                     onDismissRequest = onDismissRequest,
                     onConfirm = { screenModel.toggleFavorite(onRemoved = {}, checkDuplicate = false) },
-                    onOpenManga = { navigator.push(MangaScreen(it.id)) },
+                    onOpenManga = {
+                        val preferences = Injekt.get<BasePreferences>()
+                        if (preferences.enableDualScreenMode().get()) {
+                            DualScreenState.openScreen(MangaScreen(it.id))
+                        } else {
+                            navigator.push(MangaScreen(it.id))
+                        }
+                    },
                     onMigrate = { screenModel.showMigrateDialog(it) },
                 )
             }
@@ -214,8 +227,14 @@ class MangaScreen(
                 MigrateMangaDialog(
                     current = dialog.current,
                     target = dialog.target,
-                    // Initiated from the context of [dialog.target] so we show [dialog.current].
-                    onClickTitle = { navigator.push(MangaScreen(dialog.current.id)) },
+                    onClickTitle = {
+                        val preferences = Injekt.get<BasePreferences>()
+                        if (preferences.enableDualScreenMode().get()) {
+                            DualScreenState.openScreen(MangaScreen(dialog.current.id))
+                        } else {
+                            navigator.push(MangaScreen(dialog.current.id))
+                        }
+                    },
                     onDismissRequest = onDismissRequest,
                 )
             }
@@ -295,7 +314,17 @@ class MangaScreen(
     }
 
     private fun openChapter(context: Context, chapter: Chapter) {
-        context.startActivity(ReaderActivity.newIntent(context, chapter.mangaId, chapter.id))
+        val intent = ReaderActivity.newIntent(context, chapter.mangaId, chapter.id)
+        val preferences = Injekt.get<BasePreferences>()
+        if (preferences.enableDualScreenMode().get()) {
+            val options = android.app.ActivityOptions.makeBasic()
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                options.setLaunchDisplayId(0)
+            }
+            context.startActivity(intent, options.toBundle())
+        } else {
+            context.startActivity(intent)
+        }
     }
 
     private fun getMangaUrl(manga_: Manga?, source_: Source?): String? {
@@ -329,7 +358,9 @@ class MangaScreen(
                     Intent.createChooser(
                         intent,
                         context.stringResource(MR.strings.action_share),
-                    ),
+                    ).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    },
                 )
             }
         } catch (e: Exception) {

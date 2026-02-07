@@ -54,6 +54,8 @@ import eu.kanade.tachiyomi.ui.webview.WebViewScreen
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
+import eu.kanade.tachiyomi.ui.main.FilterCompanionScreen
+import mihon.core.dualscreen.DualScreenState
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.presentation.core.util.collectAsLazyPagingItems
 import tachiyomi.core.common.Constants
@@ -65,6 +67,9 @@ import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.source.local.LocalSource
+import eu.kanade.domain.base.BasePreferences
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 data class BrowseSourceScreen(
     val sourceId: Long,
@@ -86,10 +91,17 @@ data class BrowseSourceScreen(
         val state by screenModel.state.collectAsState()
 
         val navigator = LocalNavigator.currentOrThrow
-        val navigateUp: () -> Unit = {
-            when {
-                !state.isUserQuery && state.toolbarQuery != null -> screenModel.setToolbarQuery(null)
-                else -> navigator.pop()
+        val navigateUp: () -> Unit = DualScreenState.navigateUpOr {
+            if (navigator.canPop) {
+                when {
+                    !state.isUserQuery && state.toolbarQuery != null -> screenModel.setToolbarQuery(null)
+                    else -> navigator.pop()
+                }
+            } else {
+                // If it's the root of the second screen and it's a search, clear it first
+                if (!state.isUserQuery && state.toolbarQuery != null) {
+                    screenModel.setToolbarQuery(null)
+                }
             }
         }
 
@@ -189,7 +201,22 @@ data class BrowseSourceScreen(
                         if (state.filters.isNotEmpty()) {
                             FilterChip(
                                 selected = state.listing is Listing.Search,
-                                onClick = screenModel::openFilterSheet,
+                                onClick = {
+                                    val preferences = Injekt.get<BasePreferences>()
+                                    if (preferences.enableDualScreenMode().get()) {
+                                        DualScreenState.openScreen(
+                                            FilterCompanionScreen.Source(
+                                                sourceId = sourceId,
+                                                filters = state.filters,
+                                                onReset = screenModel::resetFilters,
+                                                onFilter = { screenModel.search(filters = state.filters) },
+                                                onUpdate = screenModel::setFilters,
+                                            )
+                                        )
+                                    } else {
+                                        screenModel.openFilterSheet()
+                                    }
+                                },
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Outlined.FilterList,
@@ -218,9 +245,16 @@ data class BrowseSourceScreen(
                 snackbarHostState = snackbarHostState,
                 contentPadding = paddingValues,
                 onWebViewClick = onWebViewClick,
-                onHelpClick = { uriHandler.openUri(Constants.URL_HELP) },
+                onHelpClick = { uriHandler.openUri(LocalSource.HELP_URL) },
                 onLocalSourceHelpClick = onHelpClick,
-                onMangaClick = { navigator.push((MangaScreen(it.id, true))) },
+                onMangaClick = {
+                    val preferences = Injekt.get<BasePreferences>()
+                    if (preferences.enableDualScreenMode().get()) {
+                        DualScreenState.openScreen(MangaScreen(it.id, true))
+                    } else {
+                        navigator.push((MangaScreen(it.id, true)))
+                    }
+                },
                 onMangaLongClick = { manga ->
                     scope.launchIO {
                         val duplicates = screenModel.getDuplicateLibraryManga(manga)
@@ -253,7 +287,14 @@ data class BrowseSourceScreen(
                     duplicates = dialog.duplicates,
                     onDismissRequest = onDismissRequest,
                     onConfirm = { screenModel.addFavorite(dialog.manga) },
-                    onOpenManga = { navigator.push(MangaScreen(it.id)) },
+                    onOpenManga = {
+                        val preferences = Injekt.get<BasePreferences>()
+                        if (preferences.enableDualScreenMode().get()) {
+                            DualScreenState.openScreen(MangaScreen(it.id))
+                        } else {
+                            navigator.push(MangaScreen(it.id))
+                        }
+                    },
                     onMigrate = { screenModel.setDialog(BrowseSourceScreenModel.Dialog.Migrate(dialog.manga, it)) },
                 )
             }
@@ -263,7 +304,14 @@ data class BrowseSourceScreen(
                     current = dialog.current,
                     target = dialog.target,
                     // Initiated from the context of [dialog.target] so we show [dialog.current].
-                    onClickTitle = { navigator.push(MangaScreen(dialog.current.id)) },
+                    onClickTitle = {
+                        val preferences = Injekt.get<BasePreferences>()
+                        if (preferences.enableDualScreenMode().get()) {
+                            DualScreenState.openScreen(MangaScreen(dialog.current.id))
+                        } else {
+                            navigator.push(MangaScreen(dialog.current.id))
+                        }
+                    },
                     onDismissRequest = onDismissRequest,
                 )
             }

@@ -5,7 +5,7 @@ import tachiyomi.core.common.preference.PreferenceStore
 class PrivacyPreferences(
     private val preferenceStore: PreferenceStore,
 ) {
-    fun crashlytics() = preferenceStore.getBoolean("crashlytics", true)
+    fun crashlytics() = preferenceStore.getBoolean("crashlytics", false)
 
-    fun analytics() = preferenceStore.getBoolean("analytics", true)
+    fun analytics() = preferenceStore.getBoolean("analytics", false)
 }

@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ChromeReaderMode
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.CollectionsBookmark
+import androidx.compose.material.icons.outlined.DisplaySettings
 import androidx.compose.material.icons.outlined.Explore
 import androidx.compose.material.icons.outlined.GetApp
 import androidx.compose.material.icons.outlined.Info
@@ -44,6 +45,7 @@ import eu.kanade.presentation.more.settings.screen.about.AboutScreen
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.presentation.util.LocalBackPress
 import eu.kanade.presentation.util.Screen
+import eu.kanade.presentation.more.settings.screen.SettingsDualScreenScreen
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -213,6 +215,12 @@ object SettingsMainScreen : Screen() {
             subtitleRes = MR.strings.pref_backup_summary,
             icon = Icons.Outlined.Storage,
             screen = SettingsDataScreen,
+        ),
+        Item(
+            titleRes = MR.strings.pref_dual_screen_settings,
+            subtitleRes = MR.strings.pref_dual_screen_summary,
+            icon = Icons.Outlined.DisplaySettings,
+            screen = SettingsDualScreenScreen,
         ),
         Item(
             titleRes = MR.strings.pref_category_security,

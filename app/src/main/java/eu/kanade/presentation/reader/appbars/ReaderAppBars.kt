@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -64,8 +65,12 @@ fun ReaderAppBars(
     cropEnabled: Boolean,
     onClickCropBorder: () -> Unit,
     onClickSettings: () -> Unit,
+    bookModeEnabled: Boolean = false,
+    onClickBookMode: (() -> Unit)? = null,
 ) {
-    val isRtl = viewer is R2LPagerViewer
+    val isRtl = remember(viewer, readingMode) {
+        viewer is R2LPagerViewer || (viewer == null && readingMode == ReadingMode.RIGHT_TO_LEFT)
+    }
     val backgroundColor = MaterialTheme.colorScheme
         .surfaceColorAtElevation(3.dp)
         .copy(alpha = if (isSystemInDarkTheme()) 0.9f else 0.95f)
@@ -126,6 +131,8 @@ fun ReaderAppBars(
                     cropEnabled = cropEnabled,
                     onClickCropBorder = onClickCropBorder,
                     onClickSettings = onClickSettings,
+                    bookModeEnabled = bookModeEnabled,
+                    onClickBookMode = onClickBookMode,
                 )
             }
         }

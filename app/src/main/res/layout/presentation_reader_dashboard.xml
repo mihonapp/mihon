@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dashboard_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#101419">
+
+    <View
+        android:id="@+id/touchpad_area"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent" />
+
+    <!-- Top Control Area (Modern & Compact) -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1A1F26"
+        android:elevation="4dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <SeekBar
+            android:id="@+id/page_seeker"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginHorizontal="12dp"
+            android:paddingVertical="16dp"
+            android:progressTint="#2196F3"
+            android:thumbTint="#2196F3"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_current_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:textColor="#2196F3"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/page_seeker"
+            tools:text="12 / 45" />
+
+        <TextView
+            android:id="@+id/text_current_chapter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="16dp"
+            android:gravity="end"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="#BDBDBD"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/text_current_page"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/text_current_page"
+            app:layout_constraintTop_toTopOf="@id/text_current_page"
+            tools:text="Ch. 105 - The Long Title" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Middle Content Container -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/middle_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_bar">
+
+        <ImageView
+            android:id="@+id/iv_touchpad_indicator"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:src="@drawable/ic_touchpad_scroll_24dp"
+            android:tint="#FFFFFF"
+            android:alpha="1.0"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#FFFFFF"
+            tools:visibility="visible" />
+
+        <ImageButton
+            android:id="@+id/btn_prev_page"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:padding="32dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_chevron_left_24dp"
+            android:tint="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_next_page"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#FFFFFF" />
+
+        <ImageButton
+            android:id="@+id/btn_next_page"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:padding="32dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_chevron_right_24dp"
+            android:tint="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_prev_page"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#FFFFFF" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Thumbnail Strip (Overlays Middle Content) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_page_previews"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/bottom_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_bar" />
+
+    <!-- Bottom Navigation Bar -->
+    <LinearLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1A1F26"
+        android:elevation="8dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingVertical="12dp"
+        android:paddingHorizontal="4dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageButton
+            android:id="@+id/btn_prev_chapter"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Previous Chapter"
+            android:src="@drawable/ic_skip_previous_24dp"
+            android:tint="@android:color/white"
+            app:tint="@android:color/white" />
+
+        <ImageButton
+            android:id="@+id/btn_reader_settings"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Settings"
+            android:src="@drawable/ic_settings_24dp"
+            android:tint="@android:color/white"
+            app:tint="@android:color/white" />
+
+        <ImageButton
+            android:id="@+id/btn_view_mode"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="View Mode"
+            android:src="@drawable/ic_view_module_24dp"
+            android:tint="@android:color/white"
+            app:tint="@android:color/white" />
+
+        <ImageButton
+            android:id="@+id/btn_book_mode"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Book Mode"
+            android:src="@drawable/ic_book_open_24dp"
+            android:tint="@android:color/white"
+            app:tint="@android:color/white" />
+
+        <ImageButton
+            android:id="@+id/btn_display_mode"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Display Mode"
+            android:src="@drawable/ic_reader_default_24dp"
+            android:tint="@android:color/white"
+            app:tint="@android:color/white" />
+
+        <ImageButton
+            android:id="@+id/btn_chapters"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Chapters"
+            android:src="@drawable/ic_list_24dp"
+            android:tint="@android:color/white"
+            app:tint="@android:color/white" />
+
+        <ImageButton
+            android:id="@+id/btn_next_chapter"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Next Chapter"
+            android:src="@drawable/ic_skip_next_24dp"
+            android:tint="@android:color/white"
+            app:tint="@android:color/white" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

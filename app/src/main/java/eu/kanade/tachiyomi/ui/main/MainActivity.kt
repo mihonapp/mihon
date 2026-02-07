@@ -6,8 +6,10 @@ import android.app.assist.AssistContent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.hardware.display.DisplayManager
 import android.os.Build
 import android.os.Bundle
+import android.view.Display
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -92,6 +94,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.LogPriority
+import mihon.core.dualscreen.DualScreenState
 import mihon.core.migration.Migrator
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.util.lang.launchIO
@@ -119,8 +122,30 @@ class MainActivity : BaseActivity() {
 
     private var navigator: Navigator? = null
 
+    private val displayListener = object : DisplayManager.DisplayListener {
+        override fun onDisplayAdded(displayId: Int) = checkAndStartDualScreenActivity()
+        override fun onDisplayRemoved(displayId: Int) {}
+        override fun onDisplayChanged(displayId: Int) {}
+    }
+
     init {
         registerSecureActivity(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkAndStartDualScreenActivity()
+    }
+
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        DualScreenState.triggerRotationUpdate()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+        displayManager.unregisterDisplayListener(displayListener)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -138,6 +163,26 @@ class MainActivity : BaseActivity() {
             finish()
             return
         }
+
+        val displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+        displayManager.registerDisplayListener(displayListener, null)
+
+        preferences.enableDualScreenMode().changes()
+            .onEach { enabled ->
+                if (enabled) {
+                    checkAndStartDualScreenActivity()
+                } else {
+                    DualScreenState.close()
+                    val intent = Intent(this, DualScreenActivity::class.java)
+                    intent.action = DualScreenActivity.ACTION_FINISH
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                    try {
+                        startActivity(intent)
+                    } catch (e: Exception) {
+                    }
+                }
+            }
+            .launchIn(lifecycleScope)
 
         setComposeContent {
             val context = LocalContext.current
@@ -176,6 +221,16 @@ class MainActivity : BaseActivity() {
 
                         // Reset Incognito Mode on relaunch
                         preferences.incognitoMode().set(false)
+                    }
+
+                    launch {
+                        mihon.core.dualscreen.DualScreenState.mainScreenEvents.collectLatest { event ->
+                            when (event) {
+                                is mihon.core.dualscreen.DualScreenState.MainScreenEvent.OpenScreen -> {
+                                    navigator.push(event.screen)
+                                }
+                            }
+                        }
                     }
                 }
                 LaunchedEffect(navigator.lastItem) {
@@ -271,6 +326,41 @@ class MainActivity : BaseActivity() {
         if (isLaunch && libraryPreferences.autoClearChapterCache().get()) {
             lifecycleScope.launchIO {
                 chapterCache.clear()
+            }
+        }
+    }
+
+    private fun checkAndStartDualScreenActivity() {
+        val displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+        val targetId = preferences.secondaryDisplayId().get()
+        
+        // Try to find the user's preferred display, otherwise fallback to the first external one
+        var presentationDisplay = if (targetId != -1 && targetId != Display.DEFAULT_DISPLAY) {
+            displayManager.getDisplay(targetId)
+        } else {
+            null
+        }
+
+        if (presentationDisplay == null) {
+            presentationDisplay = displayManager.displays.find { 
+                it.displayId != Display.DEFAULT_DISPLAY && 
+                it.state != Display.STATE_OFF 
+            }
+        }
+
+        val dualScreenEnabled = preferences.enableDualScreenMode().get()
+
+        if (presentationDisplay != null && dualScreenEnabled) {
+            val options = android.app.ActivityOptions.makeBasic()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                options.setLaunchDisplayId(presentationDisplay.displayId)
+            }
+            val intent = Intent(this, DualScreenActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            try {
+                startActivity(intent, options.toBundle())
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR) { "Failed to start DualScreenActivity: ${e.message}" }
             }
         }
     }

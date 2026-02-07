@@ -428,6 +428,31 @@ open class ReaderPageImageView @JvmOverloads constructor(
         CENTER,
         RIGHT,
     }
+
+    /**
+     * Check if the image is zoomed in
+     */
+    fun isZoomed(): Boolean {
+        return (pageView as? SubsamplingScaleImageView)?.let { it.scale > 1f } == true
+    }
+
+    /**
+     * Pan the image by the specified delta
+     */
+    fun panBy(dx: Float, dy: Float) {
+        (pageView as? SubsamplingScaleImageView)?.scrollBy(dx.toInt(), dy.toInt())
+    }
+
+    /**
+     * Reset zoom to fit screen
+     */
+    fun resetZoom() {
+        (pageView as? SubsamplingScaleImageView)?.let {
+            if (it.isReady) {
+                it.setScaleAndCenter(it.minScale, PointF(it.sWidth / 2f, it.sHeight / 2f))
+            }
+        }
+    }
 }
 
 private const val MAX_ZOOM_SCALE = 5F

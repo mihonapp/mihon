@@ -13,11 +13,6 @@ class AppUpdateChecker {
     private val getApplicationRelease: GetApplicationRelease by injectLazy()
 
     suspend fun checkForUpdate(context: Context, forceCheck: Boolean = false): GetApplicationRelease.Result {
-        // Disable app update checks for older Android versions that we're going to drop support for
-        // if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-        //     return GetApplicationRelease.Result.OsTooOld
-        // }
-
         return withIOContext {
             val result = getApplicationRelease.await(
                 GetApplicationRelease.Arguments(
@@ -38,22 +33,17 @@ class AppUpdateChecker {
             result
         }
     }
-}
 
-val GITHUB_REPO: String by lazy {
-    if (isPreviewBuildType) {
-        "mihonapp/mihon-preview"
-    } else {
-        "mihonapp/mihon"
+    companion object {
+        // Source repository for Mihon DS updates.
+        const val GITHUB_REPO = "mis0suppe/mihon-ds"
     }
 }
+
+val GITHUB_REPO: String = AppUpdateChecker.GITHUB_REPO
 
 val RELEASE_TAG: String by lazy {
-    if (isPreviewBuildType) {
-        "r${BuildConfig.COMMIT_COUNT}"
-    } else {
-        "v${BuildConfig.VERSION_NAME}"
-    }
+    "v${BuildConfig.VERSION_NAME}"
 }
 
 val RELEASE_URL = "https://github.com/$GITHUB_REPO/releases/tag/$RELEASE_TAG"

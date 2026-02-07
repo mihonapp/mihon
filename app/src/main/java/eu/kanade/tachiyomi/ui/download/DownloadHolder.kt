@@ -61,7 +61,7 @@ class DownloadHolder(private val view: View, val adapter: DownloadAdapter) :
         if (binding.downloadProgress.max == 1) {
             binding.downloadProgress.max = pages.size * 100
         }
-        binding.downloadProgress.setProgressCompat(download.totalProgress, true)
+        binding.downloadProgress.setProgress(download.totalProgress, true)
     }
 
     /**
@@ -75,13 +75,12 @@ class DownloadHolder(private val view: View, val adapter: DownloadAdapter) :
     override fun onItemReleased(position: Int) {
         super.onItemReleased(position)
         adapter.downloadItemListener.onItemReleased(position)
-        binding.container.isDragged = false
     }
 
     override fun onActionStateChanged(position: Int, actionState: Int) {
         super.onActionStateChanged(position, actionState)
         if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
-            binding.container.isDragged = true
+            // Nothing needed here for standard CardView
         }
     }
 

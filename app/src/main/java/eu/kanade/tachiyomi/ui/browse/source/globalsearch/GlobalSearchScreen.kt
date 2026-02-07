@@ -16,6 +16,10 @@ import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
+import eu.kanade.domain.base.BasePreferences
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
+import mihon.core.dualscreen.DualScreenState
 
 class GlobalSearchScreen(
     val searchQuery: String = "",
@@ -63,7 +67,7 @@ class GlobalSearchScreen(
         } else {
             GlobalSearchScreen(
                 state = state,
-                navigateUp = navigator::pop,
+                navigateUp = DualScreenState.navigateUpOr { navigator.pop() },
                 onChangeSearchQuery = screenModel::updateSearchQuery,
                 onSearch = { screenModel.search() },
                 getManga = { screenModel.getManga(it) },
@@ -72,8 +76,22 @@ class GlobalSearchScreen(
                 onClickSource = {
                     navigator.push(BrowseSourceScreen(it.id, state.searchQuery))
                 },
-                onClickItem = { navigator.push(MangaScreen(it.id, true)) },
-                onLongClickItem = { navigator.push(MangaScreen(it.id, true)) },
+                onClickItem = {
+                    val preferences = Injekt.get<BasePreferences>()
+                    if (preferences.enableDualScreenMode().get()) {
+                        DualScreenState.openScreen(MangaScreen(it.id, true))
+                    } else {
+                        navigator.push(MangaScreen(it.id, true))
+                    }
+                },
+                onLongClickItem = {
+                    val preferences = Injekt.get<BasePreferences>()
+                    if (preferences.enableDualScreenMode().get()) {
+                        DualScreenState.openScreen(MangaScreen(it.id, true))
+                    } else {
+                        navigator.push(MangaScreen(it.id, true))
+                    }
+                },
             )
         }
     }

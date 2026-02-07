@@ -26,6 +26,8 @@ fun ReaderBottomBar(
     cropEnabled: Boolean,
     onClickCropBorder: () -> Unit,
     onClickSettings: () -> Unit,
+    bookModeEnabled: Boolean = false,
+    onClickBookMode: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -53,6 +55,15 @@ fun ReaderBottomBar(
                 painter = painterResource(if (cropEnabled) R.drawable.ic_crop_24dp else R.drawable.ic_crop_off_24dp),
                 contentDescription = stringResource(MR.strings.pref_crop_borders),
             )
+        }
+
+        if (onClickBookMode != null) {
+            IconButton(onClick = onClickBookMode) {
+                Icon(
+                    painter = painterResource(if (bookModeEnabled) R.drawable.ic_book_open_24dp else R.drawable.ic_book_open_24dp),
+                    contentDescription = stringResource(MR.strings.viewer),
+                )
+            }
         }
 
         IconButton(onClick = onClickSettings) {

@@ -11,6 +11,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.manga.MangaNotesScreen
 import eu.kanade.presentation.util.Screen
+import mihon.core.dualscreen.DualScreenState
 import kotlinx.coroutines.flow.update
 import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.domain.manga.interactor.UpdateMangaNotes
@@ -24,13 +25,18 @@ class MangaNotesScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        val navigateUp: () -> Unit = DualScreenState.navigateUpOr {
+            if (navigator.canPop) {
+                navigator.pop()
+            }
+        }
 
         val screenModel = rememberScreenModel { Model(manga) }
         val state by screenModel.state.collectAsState()
 
         MangaNotesScreen(
             state = state,
-            navigateUp = navigator::pop,
+            navigateUp = navigateUp,
             onUpdate = screenModel::updateNotes,
         )
     }

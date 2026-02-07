@@ -193,7 +193,11 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             }
             currentPage = page
             when (page) {
-                is ReaderPage -> onReaderPageSelected(page, allowPreload, forward)
+                is ReaderPage -> {
+                    onReaderPageSelected(page, allowPreload, forward)
+                    // Notify callback for dual-screen sync
+                    onPageChangedCallback?.invoke(page.index)
+                }
                 is ChapterTransition -> onTransitionSelected(page)
             }
         }
@@ -451,5 +455,34 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
 
     private fun cleanupPageSplit() {
         adapter.cleanupPageSplit()
+    }
+
+    /**
+     * Checks if the current page is zoomed in
+     */
+    fun isCurrentPageZoomed(): Boolean {
+        val holder = (currentPage as? ReaderPage)?.let(::getPageHolder)
+        return holder?.isZoomed() == true
+    }
+
+    /**
+     * Callback invoked when the page changes. Used for dual-screen synchronization.
+     */
+    var onPageChangedCallback: ((Int) -> Unit)? = null
+
+    /**
+     * Called when an external pan event is received (e.g. from a dual-screen touchpad)
+     */
+    override fun handleExternalPan(dx: Float, dy: Float) {
+        val holder = (currentPage as? ReaderPage)?.let(::getPageHolder)
+        holder?.panBy(dx, dy)
+    }
+
+    /**
+     * Called when zoom should be reset to default (e.g. double-tap on touchpad)
+     */
+    override fun handleExternalZoomReset() {
+        val holder = (currentPage as? ReaderPage)?.let(::getPageHolder)
+        holder?.resetZoom()
     }
 }

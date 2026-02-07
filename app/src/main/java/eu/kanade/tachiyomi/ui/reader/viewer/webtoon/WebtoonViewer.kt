@@ -65,7 +65,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
     /**
      * Adapter of the recycler view.
      */
-    private val adapter = WebtoonAdapter(this)
+    val adapter = WebtoonAdapter(this)
 
     /**
      * Currently active item. It can be a chapter page or a chapter transition.
@@ -345,6 +345,26 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      */
     override fun handleGenericMotionEvent(event: MotionEvent): Boolean {
         return false
+    }
+
+    override fun handleExternalScroll(dy: Float) {
+        recycler.scrollBy(0, dy.toInt())
+    }
+
+    override fun handleExternalFling(velocityY: Float) {
+        recycler.fling(0, -velocityY.toInt())
+    }
+
+    override fun handleExternalScale(scaleFactor: Float) {
+        recycler.onScale(scaleFactor)
+    }
+
+    override fun handleExternalPan(dx: Float, dy: Float) {
+        recycler.panTo(dx, dy)
+    }
+
+    override fun handleExternalZoomReset() {
+        recycler.resetZoom()
     }
 
     /**

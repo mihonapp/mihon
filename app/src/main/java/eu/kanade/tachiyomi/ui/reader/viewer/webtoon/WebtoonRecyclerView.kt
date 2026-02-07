@@ -33,7 +33,10 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     private var heightSet = false
     private var firstVisibleItemPosition = 0
     private var lastVisibleItemPosition = 0
-    private var currentScale = DEFAULT_RATE
+
+    var currentScale = DEFAULT_RATE
+        private set
+
     var zoomOutDisabled = false
         set(value) {
             field = value
@@ -51,6 +54,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
 
     var tapListener: ((MotionEvent) -> Unit)? = null
     var longTapListener: ((MotionEvent) -> Boolean)? = null
+    var onViewportChangedListener: ((ViewportInfo) -> Unit)? = null
 
     private var isManuallyScrolling = false
     private var tapDuringManualScroll = false
@@ -209,6 +213,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
         }
 
         requestLayout()
+        notifyViewportChanged()
     }
 
     fun onScaleBegin() {
@@ -220,6 +225,15 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     fun onScaleEnd() {
         if (scaleX < minRate) {
             zoom(currentScale, minRate, x, 0f, y, 0f)
+        }
+    }
+
+    fun resetZoom() {
+        if (currentScale != DEFAULT_RATE) {
+            zoom(currentScale, DEFAULT_RATE, x, 0f, y, 0f)
+            layoutParams.height = originalHeight
+            halfHeight = layoutParams.height / 2
+            requestLayout()
         }
     }
 
@@ -350,6 +364,61 @@ class WebtoonRecyclerView @JvmOverloads constructor(
             return super.onTouchEvent(ev)
         }
     }
+
+    /**
+     * Get the current viewport information for the mini-map.
+     */
+    fun getCurrentViewport(): ViewportInfo {
+        return ViewportInfo(
+            scale = currentScale,
+            offsetX = x,
+            offsetY = y,
+            screenWidth = halfWidth * 2,
+            screenHeight = halfHeight * 2,
+        )
+    }
+
+    /**
+     * Notify viewport change listeners when zoom/pan state changes.
+     */
+    private fun notifyViewportChanged() {
+        onViewportChangedListener?.invoke(getCurrentViewport())
+    }
+
+    /**
+     * Pan to a specific position (for mini-map dragging).
+     */
+    fun panTo(dx: Float, dy: Float) {
+        if (currentScale > 1f) {
+            x = getPositionX(x + dx)
+            y = getPositionY(y + dy)
+            notifyViewportChanged()
+        }
+    }
+
+    /**
+     * Scroll to a specific position relative to the current position.
+     */
+    fun scrollToRelative(dx: Int, dy: Int) {
+        if (dx != 0) {
+            x = getPositionX(x + dx)
+        }
+        if (dy != 0) {
+            y = getPositionY(y + dy)
+        }
+        notifyViewportChanged()
+    }
+
+    /**
+     * Viewport information for mini-map display.
+     */
+    data class ViewportInfo(
+        val scale: Float,
+        val offsetX: Float,
+        val offsetY: Float,
+        val screenWidth: Int,
+        val screenHeight: Int,
+    )
 }
 
 private const val ANIMATOR_DURATION_TIME = 200

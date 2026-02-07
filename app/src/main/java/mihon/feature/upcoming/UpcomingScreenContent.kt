@@ -25,6 +25,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.relativeDateText
 import eu.kanade.presentation.util.isTabletUi
+import mihon.core.dualscreen.DualScreenState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.coroutines.launch
@@ -90,11 +91,16 @@ fun UpcomingScreenContent(
 @Composable
 private fun UpcomingToolbar() {
     val navigator = LocalNavigator.currentOrThrow
+    val navigateUp: () -> Unit = DualScreenState.navigateUpOr {
+        if (navigator.canPop) {
+            navigator.pop()
+        }
+    }
     val uriHandler = LocalUriHandler.current
 
     AppBar(
         title = stringResource(MR.strings.label_upcoming),
-        navigateUp = navigator::pop,
+        navigateUp = navigateUp,
         actions = {
             IconButton(onClick = { uriHandler.openUri(Constants.URL_HELP_UPCOMING) }) {
                 Icon(

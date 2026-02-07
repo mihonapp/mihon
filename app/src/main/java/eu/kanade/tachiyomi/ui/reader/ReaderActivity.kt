@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi.ui.reader
 
 import android.annotation.SuppressLint
+import android.hardware.display.DisplayManager
+import android.view.Display
 import android.app.assist.AssistContent
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -111,13 +113,13 @@ class ReaderActivity : BaseActivity() {
             return Intent(context, ReaderActivity::class.java).apply {
                 putExtra("manga", mangaId)
                 putExtra("chapter", chapterId)
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             }
         }
     }
 
-    private val readerPreferences = Injekt.get<ReaderPreferences>()
-    private val preferences = Injekt.get<BasePreferences>()
+    val readerPreferences = Injekt.get<ReaderPreferences>()
+    val preferences = Injekt.get<BasePreferences>()
 
     lateinit var binding: ReaderActivityBinding
 
@@ -136,6 +138,63 @@ class ReaderActivity : BaseActivity() {
     private val windowInsetsController by lazy { WindowInsetsControllerCompat(window, window.decorView) }
 
     private var loadingIndicator: ReaderProgressIndicator? = null
+    private var controlsPresentation: ReaderControlsPresentation? = null
+    private var readerPresentation: ReaderPresentation? = null
+
+    // Book mode state
+    private var bookModeEnabled = false
+
+    fun isBookModeEnabled(): Boolean = bookModeEnabled
+
+    fun setBookMode(enabled: Boolean) {
+        bookModeEnabled = enabled
+        readerPreferences.bookModeEnabled().set(enabled)
+        // Recreate presentation when toggling book mode
+        recreatePresentation()
+    }
+
+    private fun recreatePresentation() {
+        controlsPresentation?.dismiss()
+        controlsPresentation = null
+        readerPresentation?.dismiss()
+        readerPresentation = null
+
+        try {
+            val intent = Intent(this, eu.kanade.tachiyomi.ui.main.DualScreenActivity::class.java)
+            intent.action = eu.kanade.tachiyomi.ui.main.DualScreenActivity.ACTION_FINISH
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            startActivity(intent)
+        } catch (e: Exception) {
+            // Ignored: If DualScreenActivity is not found or fails to start, we simply don't show the secondary screen content.
+        }
+
+        val displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+        val secondaryId = preferences.secondaryDisplayId().get()
+        
+        // Try to get the manually selected display if it's not the default one
+        var presentationDisplay = if (secondaryId != -1 && secondaryId != Display.DEFAULT_DISPLAY) {
+            displayManager.getDisplay(secondaryId)
+        } else {
+            null
+        }
+
+        // If manual selection failed, was invalid, or wasn't set, try auto-detect
+        if (presentationDisplay == null) {
+            presentationDisplay = displayManager.displays.find { it.displayId != Display.DEFAULT_DISPLAY }
+        }
+
+        val dualScreenEnabled = preferences.enableDualScreenMode().get()
+
+        if (presentationDisplay != null && dualScreenEnabled) {
+            if (bookModeEnabled) {
+                readerPresentation = ReaderPresentation(this, presentationDisplay, this)
+                readerPresentation?.show()
+            } else {
+                controlsPresentation = ReaderControlsPresentation(this, presentationDisplay, this)
+                controlsPresentation?.show()
+            }
+        }
+    }
 
     var isScrollingThroughPages = false
         private set
@@ -167,6 +226,10 @@ class ReaderActivity : BaseActivity() {
         binding = ReaderActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.setComposeOverlay()
+
+        // Check if book mode is enabled and create appropriate presentation
+        bookModeEnabled = readerPreferences.bookModeEnabled().get()
+        recreatePresentation()
 
         if (viewModel.needsInit()) {
             val manga = intent.extras?.getLong("manga", -1) ?: -1L
@@ -215,6 +278,13 @@ class ReaderActivity : BaseActivity() {
             .distinctUntilChanged()
             .filterNotNull()
             .onEach(::setChapters)
+            .launchIn(lifecycleScope)
+
+        preferences.swapPresentationRotation().changes()
+            .onEach {
+                controlsPresentation?.setupRotation()
+                readerPresentation?.setupRotation()
+            }
             .launchIn(lifecycleScope)
 
         viewModel.eventFlow
@@ -270,7 +340,9 @@ class ReaderActivity : BaseActivity() {
 
             ContentOverlay(state = state)
 
-            AppBars(state = state)
+            if (controlsPresentation == null) {
+                AppBars(state = state)
+            }
         }
 
         val onDismissRequest = viewModel::closeDialog
@@ -336,6 +408,10 @@ class ReaderActivity : BaseActivity() {
      * Called when the activity is destroyed. Cleans up the viewer, configuration and any view.
      */
     override fun onDestroy() {
+        controlsPresentation?.dismiss()
+        controlsPresentation = null
+        readerPresentation?.dismiss()
+        readerPresentation = null
         super.onDestroy()
         viewModel.state.value.viewer?.destroy()
         config = null
@@ -356,6 +432,12 @@ class ReaderActivity : BaseActivity() {
      */
     override fun onResume() {
         super.onResume()
+        // If a presentation exists but is not showing (e.g. was dismissed), recreate it
+        if ((controlsPresentation != null && !controlsPresentation!!.isShowing) || 
+            (readerPresentation != null && !readerPresentation!!.isShowing)) {
+            recreatePresentation()
+        }
+        
         viewModel.restartReadTimer()
         setMenuVisibility(viewModel.state.value.menuVisible)
     }
@@ -368,6 +450,11 @@ class ReaderActivity : BaseActivity() {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
             setMenuVisibility(viewModel.state.value.menuVisible)
+        } else {
+            // Prevent the reader from pausing/stopping logic if focus is lost to our own second screen
+            if (controlsPresentation?.isShowing == true || readerPresentation?.isShowing == true) {
+                viewModel.restartReadTimer()
+            }
         }
     }
 
@@ -382,6 +469,35 @@ class ReaderActivity : BaseActivity() {
      */
     override fun finish() {
         viewModel.onActivityFinish()
+        
+        val displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+        val secondaryId = preferences.secondaryDisplayId().get()
+        
+        // Try to get the manually selected display if it's not the default one
+        var presentationDisplay = if (secondaryId != -1 && secondaryId != Display.DEFAULT_DISPLAY) {
+            displayManager.getDisplay(secondaryId)
+        } else {
+            null
+        }
+
+        // Fallback to auto-detect if manual selection is invalid
+        if (presentationDisplay == null) {
+            presentationDisplay = displayManager.displays.find { it.displayId != Display.DEFAULT_DISPLAY }
+        }
+
+        if (presentationDisplay != null && preferences.enableDualScreenMode().get()) {
+            val intent = Intent(this, eu.kanade.tachiyomi.ui.main.DualScreenActivity::class.java)
+            val options = android.app.ActivityOptions.makeBasic()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                options.setLaunchDisplayId(presentationDisplay.displayId)
+            }
+            try {
+                startActivity(intent, options.toBundle())
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR) { "Failed to restart DualScreenActivity: ${e.message}" }
+            }
+        }
+
         super.finish()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             overrideActivityTransition(
@@ -498,6 +614,10 @@ class ReaderActivity : BaseActivity() {
                 menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
             },
             onClickSettings = viewModel::openSettingsDialog,
+            bookModeEnabled = bookModeEnabled,
+            onClickBookMode = {
+                setBookMode(!bookModeEnabled)
+            },
         )
     }
 
@@ -507,6 +627,7 @@ class ReaderActivity : BaseActivity() {
     private fun setMenuVisibility(visible: Boolean) {
         viewModel.showMenus(visible)
         if (visible) {
+            readerPresentation?.hideLocalMenu()
             windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
         } else if (readerPreferences.fullscreen().get()) {
             windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
@@ -548,19 +669,24 @@ class ReaderActivity : BaseActivity() {
         startPostponedEnterTransition()
     }
 
-    private fun openMangaScreen() {
+    fun openMangaScreen() {
         viewModel.manga?.id?.let { id ->
-            startActivity(
-                Intent(this, MainActivity::class.java).apply {
-                    action = Constants.SHORTCUT_MANGA
-                    putExtra(Constants.MANGA_EXTRA, id)
-                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                },
-            )
+            if (preferences.enableDualScreenMode().get()) {
+                mihon.core.dualscreen.DualScreenState.openScreen(eu.kanade.tachiyomi.ui.manga.MangaScreen(id))
+                finish()
+            } else {
+                startActivity(
+                    Intent(this, MainActivity::class.java).apply {
+                        action = Constants.SHORTCUT_MANGA
+                        putExtra(Constants.MANGA_EXTRA, id)
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    },
+                )
+            }
         }
     }
 
-    private fun openChapterInWebView() {
+    fun openChapterInWebView() {
         val manga = viewModel.manga ?: return
         val source = viewModel.getSource() ?: return
         assistUrl?.let {
@@ -569,13 +695,13 @@ class ReaderActivity : BaseActivity() {
         }
     }
 
-    private fun openChapterInBrowser() {
+    fun openChapterInBrowser() {
         assistUrl?.let {
             openInBrowser(it.toUri(), forceDefaultBrowser = false)
         }
     }
 
-    private fun shareChapter() {
+    fun shareChapter() {
         assistUrl?.let {
             val intent = it.toUri().toShareIntent(this, type = "text/plain")
             startActivity(Intent.createChooser(intent, stringResource(MR.strings.action_share)))
@@ -636,7 +762,7 @@ class ReaderActivity : BaseActivity() {
      * Moves the viewer to the given page [index]. It does nothing if the viewer is null or the
      * page is not found.
      */
-    private fun moveToPageIndex(index: Int) {
+    fun moveToPageIndex(index: Int) {
         val viewer = viewModel.state.value.viewer ?: return
         val currentChapter = viewModel.state.value.currentChapter ?: return
         val page = currentChapter.pages?.getOrNull(index) ?: return
@@ -647,7 +773,7 @@ class ReaderActivity : BaseActivity() {
      * Tells the presenter to load the next chapter and mark it as active. The progress dialog
      * should be automatically shown.
      */
-    private fun loadNextChapter() {
+    fun loadNextChapter() {
         lifecycleScope.launch {
             viewModel.loadNextChapter()
             moveToPageIndex(0)
@@ -658,10 +784,68 @@ class ReaderActivity : BaseActivity() {
      * Tells the presenter to load the previous chapter and mark it as active. The progress dialog
      * should be automatically shown.
      */
-    private fun loadPreviousChapter() {
+    fun loadPreviousChapter() {
         lifecycleScope.launch {
             viewModel.loadPreviousChapter()
             moveToPageIndex(0)
+        }
+    }
+
+    /**
+     * Loads the next page. If at the end of the chapter, loads the next chapter.
+     */
+    fun loadNextPage() {
+        val current = viewModel.state.value.currentPage
+        val total = viewModel.state.value.totalPages
+        if (current < total) {
+            moveToPageIndex(current)
+        } else {
+            loadNextChapter()
+        }
+    }
+
+    /**
+     * Loads the previous page. If at the start of the chapter, loads the previous chapter.
+     */
+    fun loadPreviousPage() {
+        val current = viewModel.state.value.currentPage
+        if (current > 1) {
+            moveToPageIndex(current - 2)
+        } else {
+            loadPreviousChapter()
+        }
+    }
+
+    fun handleExternalScroll(dy: Float) {
+        viewModel.state.value.viewer?.handleExternalScroll(dy)
+    }
+
+    fun handleExternalFling(vy: Float) {
+        viewModel.state.value.viewer?.handleExternalFling(vy)
+    }
+
+    fun handleExternalScale(scaleFactor: Float) {
+        viewModel.state.value.viewer?.handleExternalScale(scaleFactor)
+    }
+
+    fun handleExternalPan(dx: Float, dy: Float) {
+        viewModel.state.value.viewer?.handleExternalPan(dx, dy)
+    }
+
+    fun handleExternalZoomReset() {
+        viewModel.state.value.viewer?.handleExternalZoomReset()
+    }
+
+    fun isZoomed(): Boolean {
+        val viewer = viewModel.state.value.viewer
+        return when (viewer) {
+            is eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer -> {
+                viewer.recycler.currentScale > 1f
+            }
+            is eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer -> {
+                viewer.isCurrentPageZoomed()
+            }
+            else -> false
         }
     }
 
@@ -692,9 +876,42 @@ class ReaderActivity : BaseActivity() {
     /**
      * Called from the viewer to toggle the visibility of the menu. It's implemented on the
      * viewer because each one implements its own touch and key events.
+     * @param fromSecondaryScreen If true, toggle menu on the secondary screen only
      */
-    fun toggleMenu() {
-        setMenuVisibility(!viewModel.state.value.menuVisible)
+    fun toggleMenu(fromSecondaryScreen: Boolean = false) {
+        if (fromSecondaryScreen) {
+            readerPresentation?.toggleMenu()
+        } else {
+            setMenuVisibility(!viewModel.state.value.menuVisible)
+        }
+    }
+
+    /**
+     * Called from the viewer to show the menu.
+     * @param onSecondaryScreen If true, show menu on the secondary screen
+     */
+    fun showMenu(onSecondaryScreen: Boolean = false) {
+        if (onSecondaryScreen) {
+            readerPresentation?.showMenu()
+        } else {
+            if (!viewModel.state.value.menuVisible) {
+                setMenuVisibility(true)
+            }
+        }
+    }
+
+    /**
+     * Called from the viewer to hide the menu.
+     * @param onSecondaryScreen If true, hide menu on the secondary screen
+     */
+    fun hideMenu(onSecondaryScreen: Boolean = false) {
+        if (onSecondaryScreen) {
+            readerPresentation?.hideMenu()
+        } else {
+            if (viewModel.state.value.menuVisible) {
+                setMenuVisibility(false)
+            }
+        }
     }
 
     /**

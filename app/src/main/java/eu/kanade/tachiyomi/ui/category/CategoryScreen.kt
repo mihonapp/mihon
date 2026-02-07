@@ -17,6 +17,7 @@ import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.collectLatest
+import mihon.core.dualscreen.DualScreenState
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 class CategoryScreen : Screen() {
@@ -42,7 +43,7 @@ class CategoryScreen : Screen() {
             onClickRename = { screenModel.showDialog(CategoryDialog.Rename(it)) },
             onClickDelete = { screenModel.showDialog(CategoryDialog.Delete(it)) },
             onChangeOrder = screenModel::changeOrder,
-            navigateUp = navigator::pop,
+            navigateUp = DualScreenState.navigateUpOr(navigator::pop),
         )
 
         when (val dialog = successState.dialog) {

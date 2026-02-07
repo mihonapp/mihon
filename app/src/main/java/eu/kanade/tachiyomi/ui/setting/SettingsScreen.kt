@@ -21,7 +21,11 @@ import eu.kanade.presentation.util.DefaultNavigatorScreenTransition
 import eu.kanade.presentation.util.LocalBackPress
 import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.util.isTabletUi
+import eu.kanade.domain.base.BasePreferences
+import mihon.core.dualscreen.DualScreenState
 import tachiyomi.presentation.core.components.TwoPanelBox
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 class SettingsScreen(
     private val destination: Int? = null,
@@ -42,11 +46,12 @@ class SettingsScreen(
                 },
                 onBackPressed = null,
             ) {
+                val navigateUp = DualScreenState.navigateUpOr { parentNavigator.pop() }
                 val pop: () -> Unit = {
                     if (it.canPop) {
                         it.pop()
                     } else {
-                        parentNavigator.pop()
+                        navigateUp()
                     }
                 }
                 CompositionLocalProvider(LocalBackPress provides pop) {
@@ -64,12 +69,13 @@ class SettingsScreen(
                 onBackPressed = null,
             ) {
                 val insets = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal)
+                val navigateUp = DualScreenState.navigateUpOr { parentNavigator.pop() }
                 TwoPanelBox(
                     modifier = Modifier
                         .windowInsetsPadding(insets)
                         .consumeWindowInsets(insets),
                     startContent = {
-                        CompositionLocalProvider(LocalBackPress provides parentNavigator::pop) {
+                        CompositionLocalProvider(LocalBackPress provides navigateUp) {
                             SettingsMainScreen.Content(twoPane = true)
                         }
                     },

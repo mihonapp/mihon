@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/book_dashboard_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <!-- Page Container - Takes entire secondary screen -->
+    <FrameLayout
+        android:id="@+id/book_page_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#000000"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/book_top_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Page Number Indicator -->
+    <TextView
+        android:id="@+id/text_book_page_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:textColor="#80FFFFFF"
+        android:textSize="14sp"
+        android:background="#80000000"
+        android:padding="6dp"
+        android:textStyle="bold"
+        tools:text="13 / 45"
+        app:layout_constraintBottom_toTopOf="@id/book_top_bar"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Chapter Name -->
+    <TextView
+        android:id="@+id/text_book_chapter"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:textColor="#80FFFFFF"
+        android:textSize="12sp"
+        android:background="#80000000"
+        android:padding="4dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        tools:text="Ch. 105"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Top Control Bar -->
+    <LinearLayout
+        android:id="@+id/book_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="12dp"
+        android:background="#E0202125"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageButton
+            android:id="@+id/btn_book_prev_chapter"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_skip_previous_24dp"
+            android:contentDescription="Previous Chapter"
+            android:tint="@android:color/white"
+            app:tint="@android:color/white"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/btn_book_settings"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_settings_24dp"
+            android:contentDescription="Settings"
+            android:tint="@android:color/white"
+            app:tint="@android:color/white"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/btn_book_exit"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_close_24dp"
+            android:contentDescription="Exit Book Mode"
+            android:tint="@android:color/white"
+            app:tint="@android:color/white"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/btn_book_display_mode"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_reader_default_24dp"
+            android:contentDescription="Display Mode"
+            android:tint="@android:color/white"
+            app:tint="@android:color/white"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/btn_book_next_chapter"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_skip_next_24dp"
+            android:contentDescription="Next Chapter"
+            android:tint="@android:color/white"
+            app:tint="@android:color/white"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

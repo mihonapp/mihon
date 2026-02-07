@@ -20,14 +20,12 @@ class DownloadHeaderHolder(view: View, adapter: FlexibleAdapter<*>) : Expandable
     override fun onActionStateChanged(position: Int, actionState: Int) {
         super.onActionStateChanged(position, actionState)
         if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
-            binding.container.isDragged = true
             mAdapter.collapseAll()
         }
     }
 
     override fun onItemReleased(position: Int) {
         super.onItemReleased(position)
-        binding.container.isDragged = false
         mAdapter.expandAll()
         (mAdapter as DownloadAdapter).downloadItemListener.onItemReleased(position)
     }

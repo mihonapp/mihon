@@ -27,10 +27,14 @@ import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.updates.UpdatesScreenModel.Event
 import kotlinx.coroutines.flow.collectLatest
+import mihon.core.dualscreen.DualScreenState
 import mihon.feature.upcoming.UpcomingScreen
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
+import eu.kanade.domain.base.BasePreferences
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 data object UpdatesTab : Tab {
 
@@ -62,7 +66,14 @@ data object UpdatesTab : Tab {
             state = state,
             snackbarHostState = screenModel.snackbarHostState,
             lastUpdated = screenModel.lastUpdated,
-            onClickCover = { item -> navigator.push(MangaScreen(item.update.mangaId)) },
+            onClickCover = { item ->
+                val preferences = Injekt.get<BasePreferences>()
+                if (preferences.enableDualScreenMode().get()) {
+                    DualScreenState.openScreen(MangaScreen(item.update.mangaId))
+                } else {
+                    navigator.push(MangaScreen(item.update.mangaId))
+                }
+            },
             onSelectAll = screenModel::toggleAllSelection,
             onInvertSelection = screenModel::invertSelection,
             onUpdateLibrary = screenModel::updateLibrary,
@@ -72,8 +83,13 @@ data object UpdatesTab : Tab {
             onMultiDeleteClicked = screenModel::showConfirmDeleteChapters,
             onUpdateSelected = screenModel::toggleSelection,
             onOpenChapter = {
-                val intent = ReaderActivity.newIntent(context, it.update.mangaId, it.update.chapterId)
-                context.startActivity(intent)
+                val preferences = Injekt.get<BasePreferences>()
+                if (preferences.enableDualScreenMode().get()) {
+                    DualScreenState.openScreen(MangaScreen(it.update.mangaId))
+                } else {
+                    val intent = ReaderActivity.newIntent(context, it.update.mangaId, it.update.chapterId)
+                    context.startActivity(intent)
+                }
             },
             onCalendarClicked = { navigator.push(UpcomingScreen()) },
             onFilterClicked = screenModel::showFilterDialog,

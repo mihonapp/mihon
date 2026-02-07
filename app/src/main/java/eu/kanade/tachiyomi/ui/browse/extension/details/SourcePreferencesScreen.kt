@@ -39,6 +39,7 @@ import eu.kanade.tachiyomi.data.preference.SharedPreferencesDataStore
 import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.sourcePreferences
 import eu.kanade.tachiyomi.widget.TachiyomiTextInputEditText.Companion.setIncognito
+import mihon.core.dualscreen.DualScreenState
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.screens.LoadingScreen
@@ -61,7 +62,7 @@ class SourcePreferencesScreen(val sourceId: Long) : Screen() {
             topBar = {
                 AppBar(
                     title = Injekt.get<SourceManager>().getOrStub(sourceId).toString(),
-                    navigateUp = navigator::pop,
+                    navigateUp = DualScreenState.navigateUpOr { navigator.pop() },
                     scrollBehavior = it,
                 )
             },

@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.PreferenceScaffold
@@ -25,9 +27,10 @@ interface SearchableSettings : Screen {
     @Composable
     override fun Content() {
         val handleBack = LocalBackPress.current
+        val navigator = LocalNavigator.currentOrThrow
         PreferenceScaffold(
             titleRes = getTitleRes(),
-            onBackPressed = if (handleBack != null) handleBack::invoke else null,
+            onBackPressed = if (handleBack != null) handleBack::invoke else { { navigator.pop(); Unit } },
             actions = { AppBarAction() },
             itemsProvider = { getPreferences() },
         )

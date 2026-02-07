@@ -48,6 +48,10 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import eu.kanade.domain.base.BasePreferences
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
+import mihon.core.dualscreen.DualScreenState
 import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
 import tachiyomi.domain.library.service.LibraryPreferences
@@ -166,7 +170,12 @@ object HomeScreen : Screen() {
                         }
 
                         if (it is Tab.Library && it.mangaIdToOpen != null) {
-                            navigator.push(MangaScreen(it.mangaIdToOpen))
+                            val preferences = Injekt.get<BasePreferences>()
+                            if (preferences.enableDualScreenMode().get()) {
+                                DualScreenState.openScreen(MangaScreen(it.mangaIdToOpen))
+                            } else {
+                                navigator.push(MangaScreen(it.mangaIdToOpen))
+                            }
                         }
                         if (it is Tab.More && it.toDownloads) {
                             navigator.push(DownloadQueueScreen)

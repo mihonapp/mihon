@@ -30,11 +30,15 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
+import mihon.core.dualscreen.DualScreenState
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
+import eu.kanade.domain.base.BasePreferences
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 data object HistoryTab : Tab {
 
@@ -69,7 +73,14 @@ data object HistoryTab : Tab {
             state = state,
             snackbarHostState = snackbarHostState,
             onSearchQueryChange = screenModel::updateSearchQuery,
-            onClickCover = { navigator.push(MangaScreen(it)) },
+            onClickCover = {
+                val preferences = Injekt.get<BasePreferences>()
+                if (preferences.enableDualScreenMode().get()) {
+                    DualScreenState.openScreen(MangaScreen(it))
+                } else {
+                    navigator.push(MangaScreen(it))
+                }
+            },
             onClickResume = screenModel::getNextChapterForManga,
             onDialogChange = screenModel::setDialog,
             onClickFavorite = screenModel::addFavorite,
@@ -100,7 +111,14 @@ data object HistoryTab : Tab {
                     duplicates = dialog.duplicates,
                     onDismissRequest = onDismissRequest,
                     onConfirm = { screenModel.addFavorite(dialog.manga) },
-                    onOpenManga = { navigator.push(MangaScreen(it.id)) },
+                    onOpenManga = {
+                        val preferences = Injekt.get<BasePreferences>()
+                        if (preferences.enableDualScreenMode().get()) {
+                            DualScreenState.openScreen(MangaScreen(it.id))
+                        } else {
+                            navigator.push(MangaScreen(it.id))
+                        }
+                    },
                     onMigrate = { screenModel.showMigrateDialog(dialog.manga, it) },
                 )
             }
@@ -119,7 +137,14 @@ data object HistoryTab : Tab {
                     current = dialog.current,
                     target = dialog.target,
                     // Initiated from the context of [dialog.target] so we show [dialog.current].
-                    onClickTitle = { navigator.push(MangaScreen(dialog.current.id)) },
+                    onClickTitle = {
+                        val preferences = Injekt.get<BasePreferences>()
+                        if (preferences.enableDualScreenMode().get()) {
+                            DualScreenState.openScreen(MangaScreen(dialog.current.id))
+                        } else {
+                            navigator.push(MangaScreen(dialog.current.id))
+                        }
+                    },
                     onDismissRequest = onDismissRequest,
                 )
             }

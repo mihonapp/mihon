@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi.ui.download
 
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
+import eu.kanade.tachiyomi.R
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -52,6 +54,7 @@ import eu.kanade.presentation.components.NestedMenuItem
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.databinding.DownloadListBinding
 import kotlinx.collections.immutable.persistentListOf
+import mihon.core.dualscreen.DualScreenState
 import tachiyomi.core.common.util.lang.launchUI
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.Pill
@@ -65,6 +68,11 @@ object DownloadQueueScreen : Screen() {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        val navigateUp: () -> Unit = DualScreenState.navigateUpOr {
+            if (navigator.canPop) {
+                navigator.pop()
+            }
+        }
         val scope = rememberCoroutineScope()
         val screenModel = rememberScreenModel { DownloadQueueScreenModel() }
         val downloadList by screenModel.state.collectAsState()
@@ -119,7 +127,7 @@ object DownloadQueueScreen : Screen() {
                             }
                         }
                     },
-                    navigateUp = navigator::pop,
+                    navigateUp = navigateUp,
                     actions = {
                         if (downloadList.isNotEmpty()) {
                             var sortExpanded by remember { mutableStateOf(false) }
@@ -251,7 +259,12 @@ object DownloadQueueScreen : Screen() {
                 AndroidView(
                     modifier = Modifier.fillMaxWidth(),
                     factory = { context ->
-                        screenModel.controllerBinding = DownloadListBinding.inflate(LayoutInflater.from(context))
+                        // Use application context wrapped with proper theme for Presentation contexts
+                        val themedContext = ContextThemeWrapper(
+                            context.applicationContext,
+                            R.style.Theme_Tachiyomi,
+                        )
+                        screenModel.controllerBinding = DownloadListBinding.inflate(LayoutInflater.from(themedContext))
                         screenModel.adapter = DownloadAdapter(screenModel.listener)
                         screenModel.controllerBinding.root.adapter = screenModel.adapter
                         screenModel.adapter?.isHandleDragEnabled = true

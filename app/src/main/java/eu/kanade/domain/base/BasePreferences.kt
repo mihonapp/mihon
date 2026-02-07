@@ -19,6 +19,12 @@ class BasePreferences(
 
     fun incognitoMode() = preferenceStore.getBoolean(Preference.appStateKey("incognito_mode"), false)
 
+    fun enableDualScreenMode() = preferenceStore.getBoolean(Preference.appStateKey("enable_dual_screen_mode"), false)
+
+    fun secondaryDisplayId() = preferenceStore.getInt(Preference.appStateKey("secondary_display_id"), -1)
+
+    fun swapPresentationRotation() = preferenceStore.getBoolean(Preference.appStateKey("swap_presentation_rotation"), false)
+
     fun extensionInstaller() = ExtensionInstallerPreference(context, preferenceStore)
 
     fun shownOnboardingFlow() = preferenceStore.getBoolean(Preference.appStateKey("onboarding_complete"), false)

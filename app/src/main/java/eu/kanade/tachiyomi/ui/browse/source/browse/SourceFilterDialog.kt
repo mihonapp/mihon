@@ -77,7 +77,7 @@ fun SourceFilterDialog(
 }
 
 @Composable
-private fun FilterItem(filter: Filter<*>, onUpdate: () -> Unit) {
+internal fun FilterItem(filter: Filter<*>, onUpdate: () -> Unit) {
     when (filter) {
         is Filter.Header -> {
             HeadingItem(filter.name)

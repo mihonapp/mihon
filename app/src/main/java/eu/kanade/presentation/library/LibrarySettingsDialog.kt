@@ -75,7 +75,7 @@ fun LibrarySettingsDialog(
 }
 
 @Composable
-private fun ColumnScope.FilterPage(
+internal fun ColumnScope.FilterPage(
     screenModel: LibrarySettingsScreenModel,
 ) {
     val filterDownloaded by screenModel.libraryPreferences.filterDownloaded().collectAsState()
@@ -155,7 +155,7 @@ private fun ColumnScope.FilterPage(
 }
 
 @Composable
-private fun ColumnScope.SortPage(
+internal fun ColumnScope.SortPage(
     category: Category?,
     screenModel: LibrarySettingsScreenModel,
 ) {
@@ -226,7 +226,7 @@ private val displayModes = listOf(
 )
 
 @Composable
-private fun ColumnScope.DisplayPage(
+internal fun ColumnScope.DisplayPage(
     screenModel: LibrarySettingsScreenModel,
 ) {
     val displayMode by screenModel.libraryPreferences.displayMode().collectAsState()
