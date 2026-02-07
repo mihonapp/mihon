@@ -57,6 +57,8 @@ class OllamaTranslateEngine(
     @Serializable
     private data class GenerateResponse(
         val response: String? = null,
+        val done: Boolean? = null,
+        val created_at: String? = null,
         val error: String? = null,
     )
 
@@ -114,7 +116,15 @@ class OllamaTranslateEngine(
         val sourceLangName = LanguageCodes.getDisplayName(sourceLanguage)
         val targetLangName = LanguageCodes.getDisplayName(targetLanguage)
 
-        val prompt = """You are a professional translator specializing in novel/fiction translation.
+        // Use custom prompt if configured
+        val customPrompt = preferences.ollamaPrompt().get()
+        val prompt = if (customPrompt.isNotBlank()) {
+            customPrompt
+                .replace("{SOURCE_LANG}", sourceLangName)
+                .replace("{TARGET_LANG}", targetLangName)
+                .replace("{TEXT}", text)
+        } else {
+            """You are a professional translator specializing in novel/fiction translation.
 Translate the following text from $sourceLangName to $targetLangName.
 Rules:
 - Only output the translation, nothing else
@@ -127,10 +137,12 @@ Text to translate:
 $text
 
 Translation:"""
+        }
 
         val request = GenerateRequest(
             model = model,
             prompt = prompt,
+            stream = false,
         )
 
         val requestBody = json.encodeToString(GenerateRequest.serializer(), request)
@@ -153,17 +165,51 @@ Translation:"""
             throw TranslationException("Ollama error: HTTP ${response.code}", errorCode)
         }
 
-        val generateResponse = json.decodeFromString(GenerateResponse.serializer(), responseBody)
+        // Ollama sometimes returns multiple JSON objects even with stream:false
+        // Parse them and combine the responses
+        val fullResponse = parseOllamaResponse(responseBody)
 
-        if (generateResponse.error != null) {
-            throw TranslationException(
-                "Ollama error: ${generateResponse.error}",
-                TranslationResult.ErrorCode.UNKNOWN,
-            )
+        return fullResponse.trim().ifEmpty {
+            throw TranslationException("Empty response from Ollama", TranslationResult.ErrorCode.UNKNOWN)
+        }
+    }
+
+    private fun parseOllamaResponse(responseBody: String): String {
+        val responses = mutableListOf<GenerateResponse>()
+        
+        // Try parsing as single JSON object first
+        try {
+            val singleResponse = json.decodeFromString(GenerateResponse.serializer(), responseBody)
+            if (singleResponse.error != null) {
+                throw TranslationException(
+                    "Ollama error: ${singleResponse.error}",
+                    TranslationResult.ErrorCode.UNKNOWN,
+                )
+            }
+            return singleResponse.response ?: ""
+        } catch (e: Exception) {
+            // If single parse fails, try parsing multiple newline-delimited JSON objects
         }
 
-        return generateResponse.response?.trim()
-            ?: throw TranslationException("Empty response from Ollama", TranslationResult.ErrorCode.UNKNOWN)
+        // Parse multiple JSON objects separated by newlines
+        responseBody.lines().forEach { line ->
+            if (line.isBlank()) return@forEach
+            try {
+                val partialResponse = json.decodeFromString(GenerateResponse.serializer(), line.trim())
+                if (partialResponse.error != null) {
+                    throw TranslationException(
+                        "Ollama error: ${partialResponse.error}",
+                        TranslationResult.ErrorCode.UNKNOWN,
+                    )
+                }
+                responses.add(partialResponse)
+            } catch (e: Exception) {
+                // Skip invalid JSON lines
+            }
+        }
+
+        // Combine all response parts
+        return responses.mapNotNull { it.response }.joinToString("")
     }
 
     private class TranslationException(

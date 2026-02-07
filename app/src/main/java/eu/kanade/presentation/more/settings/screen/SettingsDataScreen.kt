@@ -424,6 +424,8 @@ object SettingsDataScreen : SearchableSettings {
         var chapterCountSelected by remember { mutableStateOf(options.includeChapterCount) }
         var categorySelected by remember { mutableStateOf(options.includeCategory) }
         var isNovelSelected by remember { mutableStateOf(options.includeIsNovel) }
+        var descriptionSelected by remember { mutableStateOf(options.includeDescription) }
+        var tagsSelected by remember { mutableStateOf(options.includeTags) }
 
         AlertDialog(
             onDismissRequest = onDismissRequest,
@@ -495,6 +497,22 @@ object SettingsDataScreen : SearchableSettings {
                         )
                         Text(text = "Is Novel")
                     }
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(
+                            checked = descriptionSelected,
+                            onCheckedChange = { descriptionSelected = it },
+                        )
+                        Text(text = "Description")
+                    }
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(
+                            checked = tagsSelected,
+                            onCheckedChange = { tagsSelected = it },
+                        )
+                        Text(text = "Tags (comma-separated)")
+                    }
                 }
             },
             confirmButton = {
@@ -509,6 +527,8 @@ object SettingsDataScreen : SearchableSettings {
                                 includeChapterCount = chapterCountSelected,
                                 includeCategory = categorySelected,
                                 includeIsNovel = isNovelSelected,
+                                includeDescription = descriptionSelected,
+                                includeTags = tagsSelected,
                             ),
                         )
                         onDismissRequest()

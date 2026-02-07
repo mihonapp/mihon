@@ -11,7 +11,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import eu.kanade.domain.manga.interactor.MassImportNovels
+import eu.kanade.domain.manga.interactor.MassImport
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.notificationBuilder
@@ -37,7 +37,7 @@ import uy.kohesive.injekt.api.get
 )
 class MassImportJob(context: Context, workerParams: WorkerParameters) : CoroutineWorker(context, workerParams) {
 
-    private val massImportNovels: MassImportNovels = Injekt.get()
+    private val massImportNovels: MassImport = Injekt.get()
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
         val notification = applicationContext.notificationBuilder(Notifications.CHANNEL_MASS_IMPORT) {
@@ -105,7 +105,7 @@ class MassImportJob(context: Context, workerParams: WorkerParameters) : Coroutin
         }
     }
 
-    private fun showCompletionNotification(result: MassImportNovels.ImportResult) {
+    private fun showCompletionNotification(result: MassImport.ImportResult) {
         val message = "Imported: ${result.added.size}, Errors: ${result.errored.size}"
 
         val notification = applicationContext.notificationBuilder(Notifications.CHANNEL_MASS_IMPORT) {

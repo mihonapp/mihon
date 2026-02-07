@@ -529,9 +529,16 @@ class ReaderActivity : BaseActivity() {
             val novelProgressFromState = state.novelProgressPercent
 
             var isTtsActive by remember { mutableStateOf(false) }
+            var isTtsPaused by remember { mutableStateOf(false) }
             LaunchedEffect(state.menuVisible) {
                 if (state.menuVisible) {
-                    isTtsActive = (state.viewer as? NovelViewer)?.isTtsSpeaking() == true
+                    val viewer = state.viewer
+                    isTtsActive = when (viewer) {
+                        is NovelViewer -> viewer.isTtsSpeaking() || viewer.isTtsPaused()
+                        is NovelWebViewViewer -> viewer.isTtsSpeaking()
+                        else -> false
+                    }
+                    isTtsPaused = (viewer as? NovelViewer)?.isTtsPaused() == true
                 }
             }
 
@@ -655,16 +662,21 @@ class ReaderActivity : BaseActivity() {
                 onToggleTranslation = viewModel::toggleTranslation,
                 onLongPressTranslation = viewModel::openTranslationLanguageDialog,
                 isTtsActive = isTtsActive,
+                isTtsPaused = isTtsPaused,
                 onToggleTts = {
                     val viewer = state.viewer
                     when (viewer) {
                         is NovelViewer -> {
                             if (viewer.isTtsSpeaking()) {
-                                viewer.stopTts()
-                                isTtsActive = false
+                                viewer.pauseTts()
+                                isTtsPaused = true
+                            } else if (viewer.isTtsPaused()) {
+                                viewer.resumeTts()
+                                isTtsPaused = false
                             } else {
                                 viewer.startTts()
                                 isTtsActive = true
+                                isTtsPaused = false
                             }
                         }
                         is NovelWebViewViewer -> {
@@ -676,6 +688,21 @@ class ReaderActivity : BaseActivity() {
                                 isTtsActive = true
                             }
                         }
+                    }
+                },
+                onLongPressTts = {
+                    val viewer = state.viewer
+                    when (viewer) {
+                        is NovelViewer -> {
+                            viewer.stopTts()
+                            isTtsActive = false
+                            isTtsPaused = false
+                        }
+                        is NovelWebViewViewer -> {
+                            viewer.stopTts()
+                            isTtsActive = false
+                        }
+                        else -> {}
                     }
                 },
             )

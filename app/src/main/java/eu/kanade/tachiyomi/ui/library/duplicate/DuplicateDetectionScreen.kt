@@ -299,6 +299,44 @@ class DuplicateDetectionScreen : Screen {
                     )
                 }
 
+                // Content type selector (Manga/Novel/Both)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Text(
+                        "Type:",
+                        style = MaterialTheme.typography.labelMedium,
+                        modifier = Modifier.align(Alignment.CenterVertically),
+                    )
+                    FilterChip(
+                        selected = state.contentType == DuplicateDetectionScreenModel.ContentType.ALL,
+                        onClick = { screenModel.setContentType(DuplicateDetectionScreenModel.ContentType.ALL) },
+                        label = { Text("All") },
+                        leadingIcon = if (state.contentType == DuplicateDetectionScreenModel.ContentType.ALL) {
+                            { Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(18.dp)) }
+                        } else null,
+                    )
+                    FilterChip(
+                        selected = state.contentType == DuplicateDetectionScreenModel.ContentType.MANGA,
+                        onClick = { screenModel.setContentType(DuplicateDetectionScreenModel.ContentType.MANGA) },
+                        label = { Text("Manga") },
+                        leadingIcon = if (state.contentType == DuplicateDetectionScreenModel.ContentType.MANGA) {
+                            { Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(18.dp)) }
+                        } else null,
+                    )
+                    FilterChip(
+                        selected = state.contentType == DuplicateDetectionScreenModel.ContentType.NOVEL,
+                        onClick = { screenModel.setContentType(DuplicateDetectionScreenModel.ContentType.NOVEL) },
+                        label = { Text("Novel") },
+                        leadingIcon = if (state.contentType == DuplicateDetectionScreenModel.ContentType.NOVEL) {
+                            { Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(18.dp)) }
+                        } else null,
+                    )
+                }
+
                 // Show URLs toggle
                 Row(
                     modifier = Modifier

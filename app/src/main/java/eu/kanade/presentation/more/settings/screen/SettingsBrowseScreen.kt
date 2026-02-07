@@ -51,7 +51,7 @@ object SettingsBrowseScreen : SearchableSettings {
                         preference = sourcePreferences.pageLoadDelay(),
                         title = "Page load delay",
                         subtitle = "Delay between loading pages (helps with rate limits)",
-                        entries = (0..10).associate { it to "${it}s" }.toImmutableMap(),
+                        entries = (0..15).associate { it to "${it}s" }.toImmutableMap(),
                     ),
                     Preference.PreferenceItem.SwitchPreference(
                         preference = sourcePreferences.showPageNumber(),

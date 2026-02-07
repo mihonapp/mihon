@@ -145,6 +145,14 @@ class GetLibraryManga(
     }
 
     /**
+     * Get genres with source ID for tag counting filtered by content type.
+     * This avoids the expensive libraryView JOIN and only fetches _id + source + genre from mangas table.
+     */
+    suspend fun awaitGenresWithSource(): List<Triple<Long, Long, List<String>?>> {
+        return mangaRepository.getFavoriteGenresWithSource()
+    }
+
+    /**
      * Get just the distinct source IDs from favorites - ultra-lightweight for extension listing.
      * This avoids the expensive libraryView JOIN and only fetches source IDs.
      */

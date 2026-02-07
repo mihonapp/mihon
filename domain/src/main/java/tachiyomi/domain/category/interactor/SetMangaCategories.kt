@@ -78,8 +78,10 @@ class SetMangaCategories(
 
     /**
      * Force a library refresh. Call this after batch operations with skipRefresh=true.
+     * Uses forced refresh to bypass the minimum refresh interval since user explicitly
+     * made changes that need to be reflected immediately.
      */
-    fun refreshLibrary() {
-        getLibraryManga.refresh()
+    suspend fun refreshLibrary() {
+        getLibraryManga.refreshForced()
     }
 }

@@ -1,4 +1,4 @@
-package eu.kanade.presentation.reader.settings
+﻿package eu.kanade.presentation.reader.settings
 
 import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.background
@@ -33,6 +33,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -305,26 +306,22 @@ internal fun ColumnScope.NovelReadingTab(screenModel: ReaderSettingsScreenModel,
         }
     }
 
-    HorizontalDivider()
+    androidx.compose.material3.HorizontalDivider()
 
     // Auto-split paragraphs
     CheckboxItem(
-        label = stringResource(MR.strings.pref_novel_auto_split_paragraphs),
+        label = "Auto-split long chapters",
         pref = screenModel.preferences.novelAutoSplitText(),
     )
 
     // Word count threshold (only shown when enabled)
     if (autoSplitEnabled) {
         SliderItem(
-            label = stringResource(MR.strings.pref_novel_auto_split_word_count),
+            label = "Split word count (x100)",
             value = autoSplitWordCount / 100,
             valueRange = 1..20,
             onChange = { screenModel.preferences.novelAutoSplitWordCount().set(it * 100) },
         )
-    }
-                label = { Text(label) },
-            )
-        }
     }
 }
 

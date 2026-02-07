@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.translation
 
 import android.content.Context
+import eu.kanade.tachiyomi.data.translation.engine.CustomHttpTranslateEngine
 import eu.kanade.tachiyomi.data.translation.engine.DeepLTranslateEngine
 import eu.kanade.tachiyomi.data.translation.engine.DeepSeekTranslateEngine
 import eu.kanade.tachiyomi.data.translation.engine.GoogleTranslateEngine
@@ -37,6 +38,7 @@ class TranslationEngineManager(
             DeepLTranslateEngine(), // Paid, high quality
             GoogleTranslateEngine(), // Paid, comprehensive
             GoogleTranslateScraperEngine(), // Free, scraper
+            CustomHttpTranslateEngine(), // Custom HTTP endpoint
         )
     }
 

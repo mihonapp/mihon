@@ -23,6 +23,8 @@ object LibraryExporter {
         val includeChapterCount: Boolean = false,
         val includeCategory: Boolean = false,
         val includeIsNovel: Boolean = false,
+        val includeDescription: Boolean = false,
+        val includeTags: Boolean = false,
     )
 
     data class ExportProgress(
@@ -78,6 +80,8 @@ object LibraryExporter {
         if (options.includeArtist) columns.add("Artist")
         if (options.includeCategory) columns.add("Categories")
         if (options.includeIsNovel) columns.add("Is Novel")
+        if (options.includeDescription) columns.add("Description")
+        if (options.includeTags) columns.add("Tags")
         if (options.includeUrl) columns.add("URL")
         if (options.includeChapterCount) columns.add("Chapter Count")
 
@@ -107,6 +111,16 @@ object LibraryExporter {
                     false
                 }
                 row.add(if (isNovel) "Yes" else "No")
+            }
+
+            if (options.includeDescription) {
+                row.add(manga.description?.take(5000) ?: "")
+            }
+
+            if (options.includeTags) {
+                // Tags are comma-separated within quotes
+                val tags = manga.genre?.joinToString(", ") ?: ""
+                row.add(tags)
             }
 
             if (options.includeUrl) {

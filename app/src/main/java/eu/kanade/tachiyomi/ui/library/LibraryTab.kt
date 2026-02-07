@@ -29,10 +29,10 @@ import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.library.DeleteLibraryMangaDialog
-import eu.kanade.presentation.library.DuplicateDetectionDialog
 import eu.kanade.presentation.library.LibrarySettingsDialog
 import eu.kanade.presentation.library.MarkReadConfirmationDialog
 import eu.kanade.presentation.library.components.LibraryContent
+import eu.kanade.presentation.library.components.MassImportDialog
 import eu.kanade.presentation.library.components.LibraryToolbar
 import eu.kanade.presentation.manga.components.LibraryBottomActionMenu
 import eu.kanade.presentation.more.onboarding.GETTING_STARTED_URL
@@ -42,9 +42,11 @@ import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.home.HomeScreen
+import eu.kanade.tachiyomi.ui.library.duplicate.DuplicateDetectionScreen
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
+import eu.kanade.tachiyomi.util.system.copyToClipboard
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
@@ -150,7 +152,8 @@ data object LibraryTab : Tab {
                     onSearchClear = screenModel::clearSearch,
                     // For scroll overlay when no tab
                     scrollBehavior = scrollBehavior.takeIf { !state.showCategoryTabs },
-                    onClickFindDuplicates = screenModel::openDuplicateDetectionDialog,
+                    onClickMassImport = screenModel::openMassImportDialog,
+                    onClickFindDuplicates = { navigator.push(DuplicateDetectionScreen()) },
                 )
             },
             bottomBar = {
@@ -166,6 +169,13 @@ data object LibraryTab : Tab {
                         val selection = state.selection
                         screenModel.clearSelection()
                         navigator.push(MigrationConfigScreen(selection))
+                    },
+                    onCopyLinksClicked = {
+                        val urls = screenModel.getSelectedMangaUrls()
+                        if (urls.isNotEmpty()) {
+                            context.copyToClipboard("Manga Links", urls.joinToString("\n"))
+                        }
+                        screenModel.clearSelection()
                     },
                     onTranslateClicked = screenModel::translateSelectedNovels,
                     onClearCoversClicked = screenModel::clearCoversForSelection,
@@ -280,7 +290,17 @@ data object LibraryTab : Tab {
                 )
             }
             is LibraryScreenModel.Dialog.MassImport -> {
-                // Mass import is only used in NovelsTab, not here
+                MassImportDialog(
+                    onDismissRequest = onDismissRequest,
+                    onImportComplete = { added, skipped, errored ->
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                "Imported: $added added, $skipped skipped, $errored errors",
+                            )
+                        }
+                    },
+                    isNovelMode = false, // Manga mode for LibraryTab
+                )
             }
             is LibraryScreenModel.Dialog.RemoveChapters -> {
                 // Remove chapters dialog - handled in NovelsTab
@@ -292,12 +312,8 @@ data object LibraryTab : Tab {
                 // Export EPUB is only used in NovelsTab, not here
             }
             is LibraryScreenModel.Dialog.DuplicateDetection -> {
-                DuplicateDetectionDialog(
-                    duplicates = dialog.duplicates,
-                    onDismissRequest = onDismissRequest,
-                    onSelectAllExceptFirst = { screenModel.selectDuplicatesExceptFirst(dialog.duplicates) },
-                    onSelectAll = { screenModel.selectAllDuplicates(dialog.duplicates) },
-                )
+                // Navigate to DuplicateDetectionScreen instead of showing dialog
+                onDismissRequest()
             }
             null -> {}
         }

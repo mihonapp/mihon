@@ -36,9 +36,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.Semaphore
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.sync.withPermit
 import logcat.LogPriority
 import mihon.domain.manga.model.toDomainManga
@@ -92,6 +90,7 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
             ?: return Result.failure()
         val categoryId = inputData.getLong(KEY_CATEGORY_ID, 0L)
         val addToLibrary = inputData.getBoolean(KEY_ADD_TO_LIBRARY, true)
+        val fetchDetails = inputData.getBoolean(KEY_FETCH_DETAILS, true)
         val fetchChapters = inputData.getBoolean(KEY_FETCH_CHAPTERS, false)
         val batchId = inputData.getString(KEY_BATCH_ID) ?: ""
 
@@ -99,7 +98,7 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
 
         return withIOContext {
             try {
-                performImport(urls, categoryId, addToLibrary, fetchChapters, batchId)
+                performImport(urls, categoryId, addToLibrary, fetchDetails, fetchChapters, batchId)
                 Result.success()
             } catch (e: Exception) {
                 if (e is CancellationException) {
@@ -131,6 +130,7 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
         urls: List<String>,
         categoryId: Long,
         addToLibrary: Boolean,
+        fetchDetails: Boolean,
         fetchChapters: Boolean,
         batchId: String,
     ) {
@@ -192,13 +192,22 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
 
         updateNotification(0, validUrls.size, "Starting import...")
 
-        // Track last request time per source for throttling
-        val lastRequestTimeBySource = ConcurrentHashMap<Long, Long>()
-        // Mutex per source to ensure atomic check-and-wait for throttling
-        val sourceMutexes = ConcurrentHashMap<Long, Mutex>()
         val throttlingEnabled = novelDownloadPreferences.enableMassImportThrottling().get()
-        val baseDelay = novelDownloadPreferences.massImportDelay().get().toLong() * 1000L // Convert to ms
-        val randomRange = novelDownloadPreferences.randomDelayRange().get() * 1000L // Convert to ms
+        // Skip throttling if neither fetch details nor fetch chapters is enabled (dummy entries only)
+        val shouldThrottle = throttlingEnabled && (fetchDetails || fetchChapters)
+        val globalBaseDelay = novelDownloadPreferences.massImportDelay().get().toLong() // Already in ms
+        val globalRandomRange = novelDownloadPreferences.randomDelayRange().get().toLong() // Already in ms
+
+        // Helper function to get delay for a source
+        fun getDelayForSource(sourceId: Long): Pair<Long, Long> {
+            val override = novelDownloadPreferences.getSourceOverride(sourceId)
+            if (override != null && override.enabled) {
+                val baseDelay = override.massImportDelay?.toLong() ?: globalBaseDelay
+                val randomRange = override.randomDelayRange?.toLong() ?: globalRandomRange
+                return Pair(baseDelay, randomRange)
+            }
+            return Pair(globalBaseDelay, globalRandomRange)
+        }
 
         // Group URLs by source for smarter scheduling
         val urlsWithSource = validUrls.mapNotNull { url ->
@@ -206,66 +215,100 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
             url to source
         }
 
+        // Per-source semaphores to serialize requests to the same source
+        // This ensures only one request per source at a time when throttling is enabled
+        val sourceSemaphores = ConcurrentHashMap<Long, Semaphore>()
+
         // Use Flow with flatMapMerge to control concurrency
         urlsWithSource.asFlow()
             .flatMapMerge(concurrency) { (url, source) ->
                 flow {
                     // Apply per-source throttling before processing
-                    if (throttlingEnabled) {
+                    if (shouldThrottle) {
                         val sourceId = source.id
-                        // Get or create mutex for this source
-                        val mutex = sourceMutexes.getOrPut(sourceId) { Mutex() }
+                        // Get or create semaphore for this source (permits = 1 for serial access)
+                        val sourceSemaphore = sourceSemaphores.getOrPut(sourceId) { Semaphore(1) }
                         
-                        // Use mutex ONLY for delay check - don't hold during entire processing
-                        mutex.withLock {
-                            val now = System.currentTimeMillis()
-                            val lastRequest = lastRequestTimeBySource[sourceId] ?: 0L
-                            val elapsed = now - lastRequest
-                            val requiredDelay = baseDelay + if (randomRange > 0) Random.nextLong(0, randomRange) else 0L
-                            
-                            if (elapsed < requiredDelay && lastRequest > 0) {
-                                val waitTime = requiredDelay - elapsed
-                                logcat(LogPriority.DEBUG) { "Throttling source $sourceId: waiting ${waitTime}ms" }
-                                delay(waitTime)
+                        // Acquire permit - this ensures only one request per source processes at a time
+                        sourceSemaphore.withPermit {
+                            // Process the request while holding the permit
+                            activeImports[url] = true
+                            updateNotification(completedCount.get(), validUrls.size, "Processing: ${activeImports.size} active")
+
+                            try {
+                                val success = processUrlWithSource(url, source, addToLibrary, fetchDetails, categoryId, fetchChapters)
+                                if (success) {
+                                    addedCount.incrementAndGet()
+                                } else {
+                                    skippedCount.incrementAndGet()
+                                    skippedUrls.add(url)
+                                }
+                            } catch (e: Exception) {
+                                logcat(LogPriority.ERROR, e) { "Error importing $url" }
+                                erroredCount.incrementAndGet()
+                                erroredUrls.add(url)
+                                errorMessages[url] = e.message ?: "Unknown error"
+                            } finally {
+                                activeImports.remove(url)
+                                val done = completedCount.incrementAndGet()
+                                updateNotification(done, validUrls.size, "Processed $done/${validUrls.size}")
+                                
+                                updateBatchProgress(
+                                    batchId, 
+                                    done, 
+                                    validUrls.size, 
+                                    addedCount.get(), 
+                                    skippedCount.get(), 
+                                    erroredCount.get(),
+                                    erroredUrls.toList(),
+                                    skippedUrls.toList(),
+                                    errorMessages.toMap(),
+                                )
                             }
-                            // Update timestamp immediately after delay, then release mutex
-                            lastRequestTimeBySource[sourceId] = System.currentTimeMillis()
+                            
+                            // Delay AFTER processing (before releasing permit) to throttle next request
+                            val (baseDelay, randomRange) = getDelayForSource(sourceId)
+                            val delayMs = baseDelay + if (randomRange > 0) Random.nextLong(0, randomRange) else 0L
+                            if (delayMs > 0) {
+                                logcat(LogPriority.DEBUG) { "Throttling source $sourceId: delaying ${delayMs}ms before next request" }
+                                delay(delayMs)
+                            }
                         }
-                        // Mutex is now released - other coroutines can start their delay check
-                    }
+                    } else {
+                        // No throttling - process normally
+                        activeImports[url] = true
+                        updateNotification(completedCount.get(), validUrls.size, "Processing: ${activeImports.size} active")
 
-                    activeImports[url] = true
-                    updateNotification(completedCount.get(), validUrls.size, "Processing: ${activeImports.size} active")
-
-                    try {
-                        val success = processUrlWithSource(url, source, addToLibrary, categoryId, fetchChapters)
-                        if (success) {
-                            addedCount.incrementAndGet()
-                        } else {
-                            skippedCount.incrementAndGet()
-                            skippedUrls.add(url)
+                        try {
+                            val success = processUrlWithSource(url, source, addToLibrary, fetchDetails, categoryId, fetchChapters)
+                            if (success) {
+                                addedCount.incrementAndGet()
+                            } else {
+                                skippedCount.incrementAndGet()
+                                skippedUrls.add(url)
+                            }
+                        } catch (e: Exception) {
+                            logcat(LogPriority.ERROR, e) { "Error importing $url" }
+                            erroredCount.incrementAndGet()
+                            erroredUrls.add(url)
+                            errorMessages[url] = e.message ?: "Unknown error"
+                        } finally {
+                            activeImports.remove(url)
+                            val done = completedCount.incrementAndGet()
+                            updateNotification(done, validUrls.size, "Processed $done/${validUrls.size}")
+                            
+                            updateBatchProgress(
+                                batchId, 
+                                done, 
+                                validUrls.size, 
+                                addedCount.get(), 
+                                skippedCount.get(), 
+                                erroredCount.get(),
+                                erroredUrls.toList(),
+                                skippedUrls.toList(),
+                                errorMessages.toMap(),
+                            )
                         }
-                    } catch (e: Exception) {
-                        logcat(LogPriority.ERROR, e) { "Error importing $url" }
-                        erroredCount.incrementAndGet()
-                        erroredUrls.add(url)
-                        errorMessages[url] = e.message ?: "Unknown error"
-                    } finally {
-                        activeImports.remove(url)
-                        val done = completedCount.incrementAndGet()
-                        updateNotification(done, validUrls.size, "Processed $done/${validUrls.size}")
-                        
-                        updateBatchProgress(
-                            batchId, 
-                            done, 
-                            validUrls.size, 
-                            addedCount.get(), 
-                            skippedCount.get(), 
-                            erroredCount.get(),
-                            erroredUrls.toList(),
-                            skippedUrls.toList(),
-                            errorMessages.toMap(),
-                        )
                     }
                     emit(Unit)
                 }
@@ -332,17 +375,19 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
         url: String,
         novelSources: List<HttpSource>,
         addToLibrary: Boolean,
+        fetchDetails: Boolean,
         categoryId: Long,
         fetchChapters: Boolean,
     ): Boolean {
         val source = findMatchingSource(url, novelSources) ?: return false
-        return processUrlWithSource(url, source, addToLibrary, categoryId, fetchChapters)
+        return processUrlWithSource(url, source, addToLibrary, fetchDetails, categoryId, fetchChapters)
     }
 
     private suspend fun processUrlWithSource(
         url: String,
         source: HttpSource,
         addToLibrary: Boolean,
+        fetchDetails: Boolean,
         categoryId: Long,
         fetchChapters: Boolean,
     ): Boolean {
@@ -356,6 +401,45 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
         val existingManga = getMangaByUrlAndSourceId.await(normalizedPath, source.id)
         if (existingManga != null && existingManga.favorite) {
             return false
+        }
+
+        // If neither fetch details nor fetch chapters is selected,
+        // create a minimal dummy entry without any network requests
+        if (!fetchDetails && !fetchChapters) {
+            if (existingManga == null) {
+                val placeholderManga = eu.kanade.tachiyomi.source.model.SManga.create().apply {
+                    this.url = normalizedPath
+                    this.title = normalizedPath.substringAfterLast('/').replace("-", " ")
+                        .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+                    this.initialized = false
+                }
+                val manga = networkToLocalManga(placeholderManga.toDomainManga(source.id))
+                // Still add to library if requested
+                if (addToLibrary) {
+                    mangaRepository.update(
+                        MangaUpdate(
+                            id = manga.id,
+                            favorite = true,
+                            dateAdded = System.currentTimeMillis(),
+                        ),
+                    )
+                    if (categoryId > 0L) {
+                        setMangaCategories.await(manga.id, listOf(categoryId))
+                    }
+                }
+            } else if (addToLibrary && !existingManga.favorite) {
+                mangaRepository.update(
+                    MangaUpdate(
+                        id = existingManga.id,
+                        favorite = true,
+                        dateAdded = System.currentTimeMillis(),
+                    ),
+                )
+                if (categoryId > 0L) {
+                    setMangaCategories.await(existingManga.id, listOf(categoryId))
+                }
+            }
+            return true
         }
 
         // Fetch novel details with normalized URL
@@ -624,6 +708,7 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
         const val KEY_URLS_FILE = "urlsFile"
         const val KEY_CATEGORY_ID = "categoryId"
         const val KEY_ADD_TO_LIBRARY = "addToLibrary"
+        const val KEY_FETCH_DETAILS = "fetchDetails"
         const val KEY_FETCH_CHAPTERS = "fetchChapters"
         const val KEY_BATCH_ID = "batchId"
 
@@ -652,6 +737,7 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
             urls: List<String>,
             categoryId: Long = 0L,
             addToLibrary: Boolean = true,
+            fetchDetails: Boolean = true,
             fetchChapters: Boolean = false,
         ) {
             val batchId = java.util.UUID.randomUUID().toString()
@@ -672,6 +758,7 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
             val payload = mutableListOf<Pair<String, Any?>>( 
                 KEY_CATEGORY_ID to categoryId,
                 KEY_ADD_TO_LIBRARY to addToLibrary,
+                KEY_FETCH_DETAILS to fetchDetails,
                 KEY_FETCH_CHAPTERS to fetchChapters,
                 KEY_BATCH_ID to batchId,
             )

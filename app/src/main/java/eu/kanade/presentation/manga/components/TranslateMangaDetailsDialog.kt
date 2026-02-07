@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.data.translation.TranslationEngineManager
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.translation.model.TranslationResult
 import uy.kohesive.injekt.Injekt
@@ -39,6 +40,7 @@ data class TranslatedMangaDetails(
     val translatedGenres: List<String>? = null,
     val addToAltTitles: Boolean = true,
     val saveTagsToNotes: Boolean = false,
+    val mergeGenres: Boolean = true, // Merge translated genres with existing ones (not replace)
 )
 
 @Composable
@@ -57,6 +59,7 @@ fun TranslateMangaDetailsDialog(
     var addToAltTitles by remember { mutableStateOf(true) }
     var saveTagsToNotes by remember { mutableStateOf(false) }
     var translateGenres by remember { mutableStateOf(true) }
+    var mergeGenres by remember { mutableStateOf(true) } // Default to merge (add to existing)
 
     // Start translation on dialog open
     LaunchedEffect(Unit) {
@@ -79,6 +82,7 @@ fun TranslateMangaDetailsDialog(
                 }
                 is TranslationResult.Error -> {
                     error = "Failed to translate title: ${titleResult.message}"
+                    logcat { "Title translation error: ${titleResult.message}" }
                 }
             }
 
@@ -280,6 +284,25 @@ fun TranslateMangaDetailsDialog(
                                     style = MaterialTheme.typography.bodySmall,
                                 )
                             }
+
+                            // Checkbox to merge genres (add to existing) or replace
+                            if (translateGenres) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 4.dp, start = 24.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Checkbox(
+                                        checked = mergeGenres,
+                                        onCheckedChange = { mergeGenres = it },
+                                    )
+                                    Text(
+                                        text = "Add to existing genres (don't replace)",
+                                        style = MaterialTheme.typography.bodySmall,
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -295,6 +318,7 @@ fun TranslateMangaDetailsDialog(
                             translatedGenres = if (translateGenres) translatedGenres else null,
                             addToAltTitles = addToAltTitles,
                             saveTagsToNotes = saveTagsToNotes,
+                            mergeGenres = mergeGenres,
                         ),
                     )
                 },

@@ -147,6 +147,12 @@ private fun ColumnScope.FilterPage(
         state = filterCompleted,
         onClick = { screenModel.toggleFilter(LibraryPreferences::filterCompleted) },
     )
+    val filterNovel by screenModel.libraryPreferences.filterNovel().collectAsState()
+    TriStateItem(
+        label = "Novel",
+        state = filterNovel,
+        onClick = { screenModel.toggleFilter(LibraryPreferences::filterNovel) },
+    )
     // TODO: re-enable when custom intervals are ready for stable
     if ((!isReleaseBuildType) && LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in autoUpdateMangaRestrictions) {
         val filterIntervalCustom by screenModel.libraryPreferences.filterIntervalCustom().collectAsState()
@@ -304,7 +310,7 @@ private fun ColumnScope.DisplayPage(
         val columns by columnPreference.collectAsState()
         SliderItem(
             value = columns,
-            valueRange = 0..10,
+            valueRange = 0..15,
             label = stringResource(MR.strings.pref_library_columns),
             valueString = if (columns > 0) {
                 columns.toString()
@@ -345,7 +351,7 @@ private fun ColumnScope.DisplayPage(
     val titleMaxLines by screenModel.libraryPreferences.titleMaxLines().collectAsState()
     SliderItem(
         value = titleMaxLines,
-        valueRange = 1..10,
+        valueRange = 1..15,
         label = "Title Max Lines",
         valueString = titleMaxLines.toString(),
         onChange = screenModel.libraryPreferences.titleMaxLines()::set,

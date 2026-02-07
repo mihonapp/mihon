@@ -8,11 +8,15 @@ import android.webkit.WebStorage
 import android.webkit.WebView
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -20,8 +24,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DriveFileMove
+import androidx.compose.material.icons.outlined.Clear
+import androidx.compose.material.icons.outlined.ContentPaste
+import androidx.compose.material.icons.outlined.FileOpen
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -207,12 +215,14 @@ object SettingsAdvancedScreen : SearchableSettings {
         val scope = rememberCoroutineScope()
         var showDeleteTranslationsDialog by remember { mutableStateOf(false) }
         var showNormalizeUrlsDialog by remember { mutableStateOf(false) }
+        var showRemoveDuplicatesDialog by remember { mutableStateOf(false) }
         var removeDoubleSlashes by remember { mutableStateOf(true) }
-        var duplicateUrls by remember { mutableStateOf<List<Triple<String, String, String>>>(emptyList()) }
+        var duplicateUrls by remember { mutableStateOf<List<MangaRepository.DuplicateUrlInfo>>(emptyList()) }
         var showDuplicatesDialog by remember { mutableStateOf(false) }
         var showMoveToCategoryDialog by remember { mutableStateOf(false) }
         var categories by remember { mutableStateOf<List<Category>>(emptyList()) }
         var isDeleting by remember { mutableStateOf(false) }
+        var showBulkRemovalDialog by remember { mutableStateOf(false) }
 
         // Load categories when dialog is shown
         if (showMoveToCategoryDialog && categories.isEmpty()) {
@@ -262,17 +272,10 @@ object SettingsAdvancedScreen : SearchableSettings {
                             TextButton(
                                 onClick = {
                                     scope.launch {
-                                        val mangaRepo = Injekt.get<MangaRepository>()
                                         val setCategories = Injekt.get<SetMangaCategories>()
                                         
-                                        // Get all favorites once to avoid n+1 queries
-                                        val favorites = mangaRepo.getFavorites()
-                                        val urlToManga = favorites.associateBy { it.url }
-                                        
-                                        // Collect all manga IDs to move
-                                        val mangaIds = duplicateUrls.mapNotNull { (_, oldUrl, _) ->
-                                            urlToManga[oldUrl]?.id
-                                        }
+                                        // Use manga IDs directly from duplicate info
+                                        val mangaIds = duplicateUrls.map { it.mangaId }
                                         
                                         // Batch set categories (if supported) or do sequentially
                                         mangaIds.forEach { mangaId ->
@@ -298,7 +301,6 @@ object SettingsAdvancedScreen : SearchableSettings {
                 },
             )
         }
-
         if (showDuplicatesDialog && duplicateUrls.isNotEmpty()) {
             AlertDialog(
                 onDismissRequest = { showDuplicatesDialog = false },
@@ -313,15 +315,10 @@ object SettingsAdvancedScreen : SearchableSettings {
                                     scope.launch {
                                         isDeleting = true
                                         val mangaRepo = Injekt.get<MangaRepository>()
-                                        // Get all favorites once to avoid n+1 queries
-                                        val favorites = mangaRepo.getFavorites()
-                                        val urlToManga = favorites.associateBy { it.url }
                                         
-                                        // Collect all updates first
-                                        val updates = duplicateUrls.mapNotNull { (_, oldUrl, _) ->
-                                            urlToManga[oldUrl]?.let { manga ->
-                                                MangaUpdate(id = manga.id, favorite = false)
-                                            }
+                                        // Use manga IDs directly for deletion (unfavorite)
+                                        val updates = duplicateUrls.map { info ->
+                                            MangaUpdate(id = info.mangaId, favorite = false)
                                         }
                                         
                                         // Batch update all at once
@@ -349,9 +346,9 @@ object SettingsAdvancedScreen : SearchableSettings {
                             }
                         }
                         Spacer(modifier = Modifier.height(8.dp))
-                        duplicateUrls.take(20).forEach { (title, oldUrl, newUrl) ->
+                        duplicateUrls.take(20).forEach { info ->
                             Text(
-                                text = "• $title\n  $oldUrl → $newUrl",
+                                text = "• ${info.title}\n  ${info.oldUrl} → ${info.normalizedUrl}",
                                 style = MaterialTheme.typography.bodySmall,
                             )
                         }
@@ -409,6 +406,349 @@ object SettingsAdvancedScreen : SearchableSettings {
                 },
                 dismissButton = {
                     TextButton(onClick = { showNormalizeUrlsDialog = false }) {
+                        Text(text = stringResource(MR.strings.action_cancel))
+                    }
+                },
+            )
+        }
+
+        if (showRemoveDuplicatesDialog) {
+            var removeDupDoubleSlashes by remember { mutableStateOf(true) }
+            var isRemoving by remember { mutableStateOf(false) }
+            var removedDuplicates by remember { mutableStateOf<List<Triple<String, String, String>>>(emptyList()) }
+            var showRemovedList by remember { mutableStateOf(false) }
+            
+            if (showRemovedList && removedDuplicates.isNotEmpty()) {
+                AlertDialog(
+                    onDismissRequest = { 
+                        showRemovedList = false
+                        removedDuplicates = emptyList()
+                    },
+                    title = { Text(text = "Removed ${removedDuplicates.size} duplicates") },
+                    text = {
+                        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                            Text(text = "The following novels were unfavorited:")
+                            Spacer(modifier = Modifier.height(8.dp))
+                            removedDuplicates.take(50).forEach { (title, oldUrl, normalizedUrl) ->
+                                Text(
+                                    text = "• $title\n  $oldUrl",
+                                    style = MaterialTheme.typography.bodySmall,
+                                )
+                            }
+                            if (removedDuplicates.size > 50) {
+                                Text(text = "... and ${removedDuplicates.size - 50} more")
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = { 
+                            showRemovedList = false
+                            removedDuplicates = emptyList()
+                            showRemoveDuplicatesDialog = false
+                        }) {
+                            Text(text = "OK")
+                        }
+                    },
+                )
+            } else {
+                AlertDialog(
+                    onDismissRequest = { if (!isRemoving) showRemoveDuplicatesDialog = false },
+                    title = { Text(text = "Remove duplicate URL entries") },
+                    text = {
+                        Column {
+                            Text(text = "This will unfavorite manga entries that would have duplicate URLs after normalization.")
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(text = "For each group of duplicates, only the first entry will be kept.")
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Checkbox(
+                                    checked = removeDupDoubleSlashes,
+                                    onCheckedChange = { removeDupDoubleSlashes = it },
+                                    enabled = !isRemoving,
+                                )
+                                Text(text = "Also check for double slashes (//)")
+                            }
+                            if (isRemoving) {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                ) {
+                                    CircularProgressIndicator(modifier = Modifier.size(16.dp))
+                                    Text(text = "Removing duplicates...")
+                                }
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                scope.launch {
+                                    isRemoving = true
+                                    val result = Injekt.get<MangaRepository>()
+                                        .removePotentialDuplicates(removeDupDoubleSlashes)
+                                    isRemoving = false
+                                    if (result.first > 0) {
+                                        removedDuplicates = result.second
+                                        showRemovedList = true
+                                        context.toast("Removed ${result.first} duplicate entries")
+                                    } else {
+                                        context.toast("No duplicates found")
+                                        showRemoveDuplicatesDialog = false
+                                    }
+                                }
+                            },
+                            enabled = !isRemoving,
+                        ) {
+                            Text(text = "Remove Duplicates")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = { showRemoveDuplicatesDialog = false },
+                            enabled = !isRemoving,
+                        ) {
+                            Text(text = stringResource(MR.strings.action_cancel))
+                        }
+                    },
+                )
+            }
+        }
+
+        // Bulk removal dialog
+        if (showBulkRemovalDialog) {
+            // Queue-based approach to handle large files without memory issues
+            var pendingUrls by remember { mutableStateOf("") }
+            var urlText by remember { mutableStateOf("") }
+            var isRemoving by remember { mutableStateOf(false) }
+            var removedCount by remember { mutableStateOf(0) }
+            var errorCount by remember { mutableStateOf(0) }
+            
+            val pendingUrlCount = remember(pendingUrls) {
+                if (pendingUrls.isBlank()) 0 else pendingUrls.lines().filter { it.isNotBlank() }.size
+            }
+            
+            // File picker for URL list
+            val filePickerLauncher = rememberLauncherForActivityResult(
+                contract = androidx.activity.result.contract.ActivityResultContracts.OpenDocument(),
+                onResult = { uri ->
+                    uri?.let {
+                        try {
+                            val inputStream = context.contentResolver.openInputStream(uri)
+                            val content = inputStream?.bufferedReader()?.use { it.readText() } ?: return@let
+                            
+                            // Add to pending queue instead of text field
+                            pendingUrls = if (pendingUrls.isBlank()) content else "$pendingUrls\n$content"
+                            
+                            val newCount = content.lines().filter { it.isNotBlank() }.size
+                            context.toast("Added $newCount URLs to queue (Total: $pendingUrlCount)")
+                        } catch (e: Exception) {
+                            context.toast("Error reading file: ${e.message}")
+                        }
+                    }
+                },
+            )
+            
+            AlertDialog(
+                onDismissRequest = { if (!isRemoving) showBulkRemovalDialog = false },
+                title = { Text(text = "Bulk Remove by URL") },
+                text = {
+                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                        Text(text = "Enter URLs to remove from library:")
+                        Spacer(modifier = Modifier.height(8.dp))
+                        
+                        // Text field for manual entry
+                        androidx.compose.material3.OutlinedTextField(
+                            value = urlText,
+                            onValueChange = { urlText = it },
+                            modifier = Modifier.fillMaxWidth().height(120.dp),
+                            placeholder = { Text("https://example.com/novel/123\nhttps://example.com/novel/456") },
+                            enabled = !isRemoving,
+                        )
+                        
+                        Spacer(modifier = Modifier.height(8.dp))
+                        
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            // Add to queue button
+                            TextButton(
+                                onClick = {
+                                    if (urlText.isNotBlank()) {
+                                        pendingUrls = if (pendingUrls.isBlank()) urlText else "$pendingUrls\n$urlText"
+                                        urlText = ""
+                                        context.toast("Added URLs to queue (Total: $pendingUrlCount)")
+                                    }
+                                },
+                                enabled = !isRemoving && urlText.isNotBlank(),
+                            ) {
+                                Icon(Icons.Outlined.ContentPaste, contentDescription = null, modifier = Modifier.size(18.dp))
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text("Add to Queue")
+                            }
+                            
+                            // Load from file button
+                            TextButton(
+                                onClick = { filePickerLauncher.launch(arrayOf("text/*", "*/*")) },
+                                enabled = !isRemoving,
+                            ) {
+                                Icon(Icons.Outlined.FileOpen, contentDescription = null, modifier = Modifier.size(18.dp))
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text("Load File")
+                            }
+                        }
+                        
+                        // Queue status
+                        if (pendingUrlCount > 0) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            androidx.compose.material3.Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = androidx.compose.material3.CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                ),
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(12.dp).fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Text(
+                                        text = "Queue: $pendingUrlCount URLs",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                    )
+                                    IconButton(
+                                        onClick = { 
+                                            pendingUrls = ""
+                                            removedCount = 0
+                                            errorCount = 0
+                                        },
+                                        enabled = !isRemoving,
+                                    ) {
+                                        Icon(
+                                            Icons.Outlined.Clear,
+                                            contentDescription = "Clear queue",
+                                            tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Results
+                        if (removedCount > 0 || errorCount > 0) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = buildString {
+                                    append("Removed: $removedCount")
+                                    if (errorCount > 0) append(" | Errors: $errorCount")
+                                },
+                                color = MaterialTheme.colorScheme.primary,
+                            )
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            scope.launch {
+                                isRemoving = true
+                                removedCount = 0
+                                errorCount = 0
+                                try {
+                                    val urls = pendingUrls.split("\n", ",", ";")
+                                        .map { it.trim() }
+                                        .filter { it.startsWith("http://") || it.startsWith("https://") }
+                                    
+                                    if (urls.isEmpty()) {
+                                        context.toast("No valid URLs to process")
+                                        isRemoving = false
+                                        return@launch
+                                    }
+                                    
+                                    val mangaRepo = Injekt.get<MangaRepository>()
+                                    
+                                    // Process in chunks to avoid loading all favorites repeatedly
+                                    val chunkSize = 50
+                                    for (urlChunk in urls.chunked(chunkSize)) {
+                                        try {
+                                            val favorites = mangaRepo.getFavorites()
+                                            val toUnfavorite = mutableSetOf<Long>()
+                                            
+                                            for (url in urlChunk) {
+                                                try {
+                                                    // Extract path from URL
+                                                    val uri = java.net.URI(url)
+                                                    val path = uri.path?.removePrefix("/")?.removeSuffix("/") ?: continue
+                                                    
+                                                    // Find all favorite manga matching this URL pattern
+                                                    val matchingManga = favorites.filter { manga ->
+                                                        val mangaPath = try {
+                                                            val mangaUri = java.net.URI(manga.url)
+                                                            mangaUri.path?.removePrefix("/")?.removeSuffix("/")
+                                                        } catch (e: Exception) {
+                                                            manga.url.removePrefix("/").removeSuffix("/")
+                                                        }
+                                                        
+                                                        // Match if paths are similar (contains or equals)
+                                                        mangaPath != null && (mangaPath == path || mangaPath.contains(path) || path.contains(mangaPath))
+                                                    }
+                                                    
+                                                    toUnfavorite.addAll(matchingManga.map { it.id })
+                                                } catch (e: Exception) {
+                                                    logcat(LogPriority.ERROR, e) { "Error processing URL: $url" }
+                                                    errorCount++
+                                                }
+                                            }
+                                            
+                                            // Unfavorite in batch
+                                            if (toUnfavorite.isNotEmpty()) {
+                                                val updates = toUnfavorite.map { MangaUpdate(id = it, favorite = false) }
+                                                mangaRepo.updateAll(updates)
+                                                removedCount += toUnfavorite.size
+                                            }
+                                        } catch (e: Exception) {
+                                            logcat(LogPriority.ERROR, e) { "Error processing chunk" }
+                                            errorCount += urlChunk.size
+                                        }
+                                    }
+                                    
+                                    withUIContext {
+                                        context.toast(buildString {
+                                            append("Removed $removedCount entries")
+                                            if (errorCount > 0) append(" ($errorCount errors)")
+                                        })
+                                    }
+                                    
+                                    // Clear queue after successful processing
+                                    pendingUrls = ""
+                                } catch (e: Exception) {
+                                    logcat(LogPriority.ERROR, e) { "Bulk removal failed" }
+                                    withUIContext {
+                                        context.toast("Error: ${e.message}")
+                                    }
+                                } finally {
+                                    isRemoving = false
+                                }
+                            }
+                        },
+                        enabled = !isRemoving && pendingUrlCount > 0,
+                    ) {
+                        if (isRemoving) {
+                            CircularProgressIndicator(modifier = Modifier.size(16.dp))
+                        } else {
+                            Text(text = "Remove ($pendingUrlCount)")
+                        }
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = { showBulkRemovalDialog = false },
+                        enabled = !isRemoving,
+                    ) {
                         Text(text = stringResource(MR.strings.action_cancel))
                     }
                 },
@@ -579,6 +919,11 @@ object SettingsAdvancedScreen : SearchableSettings {
                     onClick = { showNormalizeUrlsDialog = true },
                 ),
                 Preference.PreferenceItem.TextPreference(
+                    title = "Remove duplicate URL entries",
+                    subtitle = "Unfavorite manga that would conflict after URL normalization",
+                    onClick = { showRemoveDuplicatesDialog = true },
+                ),
+                Preference.PreferenceItem.TextPreference(
                     title = "Delete all translations",
                     subtitle = "Deletes all downloaded translations",
                     onClick = { showDeleteTranslationsDialog = true },
@@ -637,6 +982,11 @@ object SettingsAdvancedScreen : SearchableSettings {
                             }
                         }
                     },
+                ),
+                Preference.PreferenceItem.TextPreference(
+                    title = "Bulk remove by URL",
+                    subtitle = "Remove multiple entries from library by URL list",
+                    onClick = { showBulkRemovalDialog = true },
                 ),
                 Preference.PreferenceItem.TextPreference(
                     title = "Normalize tags",

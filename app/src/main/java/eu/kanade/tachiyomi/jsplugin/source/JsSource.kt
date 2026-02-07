@@ -341,53 +341,66 @@ class JsSource(
     }
     
     /**
-     * Convert Mihon FilterList back to JS filter object format for plugin
+     * Convert Mihon FilterList back to JS filter object format for plugin.
+     * Uses JsonObject builder to avoid kotlinx.serialization issues with Map<String, Any>.
      */
     private fun convertFiltersToJs(filters: FilterList): String {
-        val filterMap = mutableMapOf<String, Any>()
-        
+        val filterEntries = mutableMapOf<String, JsonElement>()
+
         filters.forEach { filter ->
             when (filter) {
                 is JsSelectFilter -> {
-                    filterMap[filter.name] = mapOf(
-                        "type" to "Picker",
-                        "value" to filter.selectedValue(),
+                    filterEntries[filter.name] = JsonObject(
+                        mapOf(
+                            "type" to JsonPrimitive("Picker"),
+                            "value" to JsonPrimitive(filter.selectedValue()),
+                        ),
                     )
                 }
                 is JsCheckboxGroup -> {
-                    filterMap[filter.name] = mapOf(
-                        "type" to "Checkbox",
-                        "value" to filter.selectedValues(),
+                    filterEntries[filter.name] = JsonObject(
+                        mapOf(
+                            "type" to JsonPrimitive("Checkbox"),
+                            "value" to JsonArray(filter.selectedValues().map { JsonPrimitive(it) }),
+                        ),
                     )
                 }
                 is JsTriStateGroup -> {
-                    filterMap[filter.name] = mapOf(
-                        "type" to "XCheckbox",
-                        "value" to mapOf(
-                            "include" to filter.includedValues(),
-                            "exclude" to filter.excludedValues(),
+                    filterEntries[filter.name] = JsonObject(
+                        mapOf(
+                            "type" to JsonPrimitive("XCheckbox"),
+                            "value" to JsonObject(
+                                mapOf(
+                                    "include" to JsonArray(filter.includedValues().map { JsonPrimitive(it) }),
+                                    "exclude" to JsonArray(filter.excludedValues().map { JsonPrimitive(it) }),
+                                ),
+                            ),
                         ),
                     )
                 }
                 is Filter.CheckBox -> {
-                    filterMap[filter.name] = mapOf(
-                        "type" to "Switch",
-                        "value" to filter.state,
+                    filterEntries[filter.name] = JsonObject(
+                        mapOf(
+                            "type" to JsonPrimitive("Switch"),
+                            "value" to JsonPrimitive(filter.state),
+                        ),
                     )
                 }
                 is Filter.Text -> {
-                    filterMap[filter.name] = mapOf(
-                        "type" to "Text",
-                        "value" to filter.state,
+                    filterEntries[filter.name] = JsonObject(
+                        mapOf(
+                            "type" to JsonPrimitive("Text"),
+                            "value" to JsonPrimitive(filter.state),
+                        ),
                     )
                 }
                 else -> {
-                    // Ignore other filter types
+                    // Ignore other filter types (headers, separators)
                 }
             }
         }
-        
-        return json.encodeToString(filterMap)
+
+        return JsonObject(filterEntries).toString()
     }
 
     override suspend fun getMangaDetails(manga: SManga): SManga = withContext(Dispatchers.IO) {
@@ -444,7 +457,8 @@ class JsSource(
             val path = chapter.url.replace("'", "\\'").replace("\"", "\\\"")
             val result = executePluginMethod("plugin.parseChapter('$path')")
             // For novels, the result is HTML content - return as a single text page
-            listOf(Page(0, "", "", text = decodeJsonStringIfQuoted(result)))
+            // Store the chapter URL in the page so fetchPageText can re-fetch if needed
+            listOf(Page(0, chapter.url, "", text = decodeJsonStringIfQuoted(result)))
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e) { "Error in getPageList for ${plugin.name}" }
             emptyList()
@@ -795,7 +809,18 @@ class JsSource(
     // NovelSource implementation
     override suspend fun fetchPageText(page: Page): String = withContext(Dispatchers.IO) {
         try {
+            // If the page already has text content (set by getPageList), return it directly
+            if (!page.text.isNullOrBlank()) {
+                return@withContext page.text!!
+            }
+
+            // Validate URL before calling plugin - avoid fetching base URL with empty path
             val chapterUrl = page.url.replace("'", "\\'").replace("\"", "\\\"")
+            if (chapterUrl.isBlank()) {
+                logcat(LogPriority.WARN) { "[$id] fetchPageText: page.url is blank, cannot parse chapter" }
+                return@withContext "Chapter content unavailable (empty URL)"
+            }
+
             val result = executePluginMethod("plugin.parseChapter('$chapterUrl')")
 
             // Parse result which might be a string or JSON object

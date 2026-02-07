@@ -9,7 +9,7 @@ import eu.kanade.domain.extension.interactor.GetExtensionSources
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
 import eu.kanade.domain.extension.interactor.TrustExtension
 import eu.kanade.domain.manga.interactor.GetExcludedScanlators
-import eu.kanade.domain.manga.interactor.MassImportNovels
+import eu.kanade.domain.manga.interactor.MassImport
 import eu.kanade.domain.manga.interactor.SetExcludedScanlators
 import eu.kanade.domain.manga.interactor.SetMangaViewerFlags
 import eu.kanade.domain.manga.interactor.UpdateManga
@@ -152,7 +152,7 @@ class DomainModule : InjektModule {
         addFactory { SetMangaCategories(get(), get()) }
         addFactory { GetExcludedScanlators(get()) }
         addFactory { SetExcludedScanlators(get()) }
-        addSingletonFactory { MassImportNovels(get(), get(), get(), get(), get()) }
+        addSingletonFactory { MassImport(get(), get(), get(), get(), get(), get(), get()) }
         addFactory {
             MigrateMangaUseCase(
                 get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(),

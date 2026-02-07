@@ -833,11 +833,10 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
                             loaded.textView.isFocusable = selectable
                             loaded.textView.isFocusableInTouchMode = selectable
                             loaded.textView.isLongClickable = selectable
-                            // Update movement method based on selection mode
-                            loaded.textView.movementMethod = if (selectable) {
-                                android.text.method.ArrowKeyMovementMethod.getInstance()
-                            } else {
-                                android.text.method.LinkMovementMethod.getInstance()
+                            // Only set LinkMovementMethod when NOT selectable
+                            // When selectable, setTextIsSelectable sets up the correct movement method
+                            if (!selectable) {
+                                loaded.textView.movementMethod = android.text.method.LinkMovementMethod.getInstance()
                             }
                         }
                         // Also reload to ensure consistent state
@@ -846,6 +845,38 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
                             loadedChapters.clear()
                             currentChapterIndex = 0
                             setChapters(it) 
+                        }
+                    }
+                }
+        }
+
+        // Observe force lowercase preference - reload content to reapply transformation
+        scope.launch {
+            preferences.novelForceTextLowercase().changes()
+                .drop(1)
+                .collectLatest {
+                    activity.runOnUiThread {
+                        currentChapters?.let {
+                            contentContainer.removeAllViews()
+                            loadedChapters.clear()
+                            currentChapterIndex = 0
+                            setChapters(it)
+                        }
+                    }
+                }
+        }
+
+        // Observe hide chapter title preference - reload content
+        scope.launch {
+            preferences.novelHideChapterTitle().changes()
+                .drop(1)
+                .collectLatest {
+                    activity.runOnUiThread {
+                        currentChapters?.let {
+                            contentContainer.removeAllViews()
+                            loadedChapters.clear()
+                            currentChapterIndex = 0
+                            setChapters(it)
                         }
                     }
                 }
@@ -886,22 +917,22 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
                 if (preferences.novelTextSelectable().get()) {
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
-                            // Request parent (scroll view) to not intercept touch events
-                            v.parent?.requestDisallowInterceptTouchEvent(true)
-                            // Request focus to enable selection
+                            // DON'T disallow intercept on down - let scroll view decide
+                            // Only request focus if not already focused
                             if (!textView.isFocused) {
                                 textView.requestFocus()
                             }
                         }
                         MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                            // Re-enable parent intercept after touch ends if no selection
-                            if (!textView.hasSelection()) {
-                                v.parent?.requestDisallowInterceptTouchEvent(false)
-                            }
+                            // Re-enable parent intercept after touch ends
+                            v.parent?.requestDisallowInterceptTouchEvent(false)
                         }
                         MotionEvent.ACTION_MOVE -> {
-                            // Keep disallowing intercept during move if we might be selecting
-                            v.parent?.requestDisallowInterceptTouchEvent(true)
+                            // Only disallow intercept if text is actively selected
+                            // This allows vertical scrolling to work normally
+                            if (textView.hasSelection()) {
+                                v.parent?.requestDisallowInterceptTouchEvent(true)
+                            }
                         }
                     }
                 }
@@ -931,6 +962,9 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
 
     private var ttsInitialized = false
     private var isTtsAutoPlay = false // Track if TTS should auto-continue to next chapter
+    private var ttsPaused = false
+    private var ttsChunks: List<String> = emptyList()
+    private var ttsCurrentChunkIndex = 0
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
@@ -947,11 +981,20 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
 
     private fun setupTtsListener() {
         tts?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
-            override fun onStart(utteranceId: String?) {}
+            override fun onStart(utteranceId: String?) {
+                // Track which chunk is currently speaking
+                utteranceId?.removePrefix("tts_utterance_")?.toIntOrNull()?.let {
+                    ttsCurrentChunkIndex = it
+                }
+            }
 
             override fun onDone(utteranceId: String?) {
+                // Advance chunk index
+                val finishedIndex = utteranceId?.removePrefix("tts_utterance_")?.toIntOrNull() ?: -1
+                val isLastChunk = finishedIndex >= ttsChunks.size - 1
+
                 // Check if this was the last chunk and auto-play is enabled
-                if (isTtsAutoPlay && preferences.novelTtsAutoNextChapter().get()) {
+                if (isLastChunk && isTtsAutoPlay && preferences.novelTtsAutoNextChapter().get()) {
                     // Check if we've finished all chunks for current chapter
                     activity.runOnUiThread {
                         // Small delay to ensure speech is fully done
@@ -1031,19 +1074,19 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
         // Re-apply settings before speaking in case they changed
         applyTtsSettings()
 
+        ttsPaused = false
+
         // Android TTS has a max length limit (~4000 chars), chunk long text
         val maxLength = TextToSpeech.getMaxSpeechInputLength()
 
-        if (text.length <= maxLength) {
-            tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "tts_utterance_0")
+        ttsChunks = if (text.length <= maxLength) {
+            listOf(text)
         } else {
-            // Split by sentences/paragraphs while respecting max length
-            val chunks = splitTextForTts(text, maxLength)
-            chunks.forEachIndexed { index, chunk ->
-                val queueMode = if (index == 0) TextToSpeech.QUEUE_FLUSH else TextToSpeech.QUEUE_ADD
-                tts?.speak(chunk, queueMode, null, "tts_utterance_$index")
-            }
+            splitTextForTts(text, maxLength)
         }
+        ttsCurrentChunkIndex = 0
+
+        speakChunksFrom(0)
     }
 
     private fun splitTextForTts(text: String, maxLength: Int): List<String> {
@@ -1135,12 +1178,41 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
 
     fun stopTts() {
         isTtsAutoPlay = false // Disable auto-continue when manually stopped
+        ttsPaused = false
+        ttsChunks = emptyList()
+        ttsCurrentChunkIndex = 0
         if (ttsInitialized) {
             tts?.stop()
         }
     }
 
+    fun pauseTts() {
+        if (ttsInitialized && tts?.isSpeaking == true) {
+            ttsPaused = true
+            tts?.stop() // TTS doesn't have native pause, so stop and track position
+        }
+    }
+
+    fun resumeTts() {
+        if (ttsPaused && ttsChunks.isNotEmpty()) {
+            ttsPaused = false
+            // Resume from the chunk that was interrupted
+            speakChunksFrom(ttsCurrentChunkIndex)
+        }
+    }
+
+    fun isTtsPaused(): Boolean = ttsPaused
+
     fun isTtsSpeaking(): Boolean = ttsInitialized && tts?.isSpeaking == true
+
+    private fun speakChunksFrom(startIndex: Int) {
+        if (ttsChunks.isEmpty() || startIndex >= ttsChunks.size) return
+        ttsChunks.drop(startIndex).forEachIndexed { i, chunk ->
+            val actualIndex = startIndex + i
+            val queueMode = if (i == 0) TextToSpeech.QUEUE_FLUSH else TextToSpeech.QUEUE_ADD
+            tts?.speak(chunk, queueMode, null, "tts_utterance_$actualIndex")
+        }
+    }
 
     /**
      * Get list of available TTS voices for the settings UI

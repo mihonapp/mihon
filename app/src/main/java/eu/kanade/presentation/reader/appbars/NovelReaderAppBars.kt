@@ -31,6 +31,7 @@ import androidx.compose.material.icons.automirrored.outlined.NavigateBefore
 import androidx.compose.material.icons.automirrored.outlined.NavigateNext
 import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.BookmarkBorder
+import androidx.compose.material.icons.outlined.Pause
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.RecordVoiceOver
 import androidx.compose.material.icons.outlined.Refresh
@@ -110,7 +111,9 @@ fun NovelReaderAppBars(
     onToggleTranslation: () -> Unit,
     onLongPressTranslation: () -> Unit,
     isTtsActive: Boolean,
+    isTtsPaused: Boolean,
     onToggleTts: () -> Unit,
+    onLongPressTts: () -> Unit,
 ) {
     val backgroundColor = MaterialTheme.colorScheme
         .surfaceColorAtElevation(3.dp)
@@ -186,7 +189,9 @@ fun NovelReaderAppBars(
                     onToggleTranslation = onToggleTranslation,
                     onLongPressTranslation = onLongPressTranslation,
                     isTtsActive = isTtsActive,
+                    isTtsPaused = isTtsPaused,
                     onToggleTts = onToggleTts,
+                    onLongPressTts = onLongPressTts,
                 )
             }
         }
@@ -294,7 +299,9 @@ private fun NovelReaderBottomBar(
     onToggleTranslation: () -> Unit,
     onLongPressTranslation: () -> Unit,
     isTtsActive: Boolean,
+    isTtsPaused: Boolean,
     onToggleTts: () -> Unit,
+    onLongPressTts: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -349,10 +356,22 @@ private fun NovelReaderBottomBar(
             )
         }
 
-        // TTS toggle
-        IconButton(onClick = onToggleTts) {
+        // TTS toggle - tap to play/pause, long press to stop
+        Box(
+            modifier = Modifier
+                .size(48.dp)
+                .combinedClickable(
+                    onClick = onToggleTts,
+                    onLongClick = onLongPressTts,
+                ),
+            contentAlignment = Alignment.Center,
+        ) {
             Icon(
-                imageVector = if (isTtsActive) Icons.Outlined.Stop else Icons.Outlined.RecordVoiceOver,
+                imageVector = when {
+                    isTtsActive && !isTtsPaused -> Icons.Outlined.Pause
+                    isTtsActive && isTtsPaused -> Icons.Outlined.PlayArrow
+                    else -> Icons.Outlined.RecordVoiceOver
+                },
                 contentDescription = stringResource(MR.strings.pref_novel_tts),
                 tint = if (isTtsActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
             )

@@ -303,6 +303,16 @@ class Downloader(
             return 0L
         }
 
+        // Check for source-specific override
+        val override = novelDownloadPreferences.getSourceOverride(sourceId)
+        if (override != null && override.enabled) {
+            val baseDelay = override.downloadDelay?.toLong() ?: novelDownloadPreferences.downloadDelay().get().toLong()
+            val randomRange = override.randomDelayRange ?: novelDownloadPreferences.randomDelayRange().get()
+            val randomDelay = if (randomRange > 0) Random.nextLong(0, randomRange.toLong()) else 0L
+            return baseDelay + randomDelay
+        }
+
+        // Use default settings
         val baseDelay = novelDownloadPreferences.downloadDelay().get().toLong()
         val randomRange = novelDownloadPreferences.randomDelayRange().get()
         val randomDelay = if (randomRange > 0) Random.nextLong(0, randomRange.toLong()) else 0L

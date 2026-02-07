@@ -25,6 +25,8 @@ CREATE INDEX chapters_unread_by_manga_index ON chapters(manga_id, read) WHERE re
 -- Performance indexes for libraryView
 CREATE INDEX chapters_library_aggregate_index ON chapters(manga_id, read, bookmark, date_upload, date_fetch);
 CREATE INDEX chapters_manga_scanlator_index ON chapters(manga_id, scanlator);
+-- Index to speed up getReadMangaNotInLibrary query which scans for read chapters
+CREATE INDEX chapters_read_progress_index ON chapters(manga_id, read, last_page_read) WHERE read = 1 OR last_page_read != 0;
 
 CREATE TRIGGER update_last_modified_at_chapters
 AFTER UPDATE ON chapters

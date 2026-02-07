@@ -317,9 +317,11 @@ class MangaScreen(
             }
             is MangaScreenModel.Dialog.EditAlternativeTitles -> {
                 eu.kanade.presentation.manga.components.EditAlternativeTitlesDialog(
+                    mainTitle = dialog.manga.title,
                     currentTitles = dialog.manga.alternativeTitles,
                     onDismissRequest = onDismissRequest,
                     onConfirm = { titles -> screenModel.updateAlternativeTitles(titles) },
+                    onSwapMainTitle = { newMain, updatedAlts -> screenModel.swapMainTitle(newMain, updatedAlts) },
                 )
             }
             is MangaScreenModel.Dialog.EditTags -> {

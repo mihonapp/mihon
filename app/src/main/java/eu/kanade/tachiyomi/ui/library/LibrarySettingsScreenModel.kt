@@ -240,16 +240,18 @@ class LibrarySettingsScreenModel(
     /**
      * Refresh tags list and counts from database or cache.
      * This is the ONLY way to load tag data - no auto-subscription.
+     * Tags are filtered by content type (manga/novel) based on the library type.
      */
     fun refreshTags(forceRefresh: Boolean = false) {
         if (_isLoading.value) return
         screenModelScope.launchIO {
             _isLoading.value = true
             try {
-                logcat(LogPriority.INFO) { "LibrarySettingsScreenModel: refreshTags(forceRefresh=$forceRefresh)" }
+                logcat(LogPriority.INFO) { "LibrarySettingsScreenModel: refreshTags(forceRefresh=$forceRefresh, type=$type)" }
                 
-                // Try loading from disk cache first if not forced and not loaded yet
-                if (!forceRefresh && !_tagsLoaded.get()) {
+                // Skip cache when filtering by type - we need fresh filtered data
+                // Cache is only useful for All type
+                if (!forceRefresh && !_tagsLoaded.get() && type == LibraryScreenModel.LibraryType.All) {
                     val cached = librarySettingsCache.loadTags()
                     if (cached != null) {
                         logcat(LogPriority.DEBUG) { "LibrarySettingsScreenModel: Loaded ${cached.first.size} tags from cache" }
@@ -261,28 +263,39 @@ class LibrarySettingsScreenModel(
                     }
                 }
 
-                // If no cache or forced refresh, load from DB using lightweight genres query
-                logcat(LogPriority.INFO) { "LibrarySettingsScreenModel: Loading tags from database (lightweight query)..." }
-                val genresList = getLibraryManga.awaitGenresOnly()
+                // Load from DB with source IDs for filtering by content type
+                logcat(LogPriority.INFO) { "LibrarySettingsScreenModel: Loading tags from database (lightweight query with source filtering)..." }
+                val genresList = getLibraryManga.awaitGenresWithSource()
                 logcat(LogPriority.DEBUG) { "LibrarySettingsScreenModel: Got ${genresList.size} manga from library" }
                 
-                // Calculate tag counts
+                // Calculate tag counts, filtering by type
                 val tagCounts = mutableMapOf<String, Int>()
                 var noTagsCount = 0
-                genresList.forEach { (_, genres) ->
-                    if (genres.isNullOrEmpty()) {
-                        noTagsCount++
-                    } else {
-                        genres.forEach { tag ->
-                            val normalizedTag = tag.trim()
-                            if (normalizedTag.isNotBlank()) {
-                                tagCounts[normalizedTag] = (tagCounts[normalizedTag] ?: 0) + 1
+                genresList.forEach { (_, sourceId, genres) ->
+                    // Filter by content type
+                    val source = sourceManager.getOrStub(sourceId)
+                    val isNovel = source.isNovelSource()
+                    val shouldInclude = when (type) {
+                        LibraryScreenModel.LibraryType.All -> true
+                        LibraryScreenModel.LibraryType.Manga -> !isNovel
+                        LibraryScreenModel.LibraryType.Novel -> isNovel
+                    }
+                    
+                    if (shouldInclude) {
+                        if (genres.isNullOrEmpty()) {
+                            noTagsCount++
+                        } else {
+                            genres.forEach { tag ->
+                                val normalizedTag = tag.trim()
+                                if (normalizedTag.isNotBlank()) {
+                                    tagCounts[normalizedTag] = (tagCounts[normalizedTag] ?: 0) + 1
+                                }
                             }
                         }
                     }
                 }
                 
-                logcat(LogPriority.INFO) { "LibrarySettingsScreenModel: Found ${tagCounts.size} unique tags, $noTagsCount manga without tags" }
+                logcat(LogPriority.INFO) { "LibrarySettingsScreenModel: Found ${tagCounts.size} unique tags, $noTagsCount items without tags (type=$type)" }
                 
                 val tagsList = tagCounts.entries
                     .sortedByDescending { it.value }
@@ -291,7 +304,10 @@ class LibrarySettingsScreenModel(
                 _tagsFlow.value = tagsList
                 _noTagsCountFlow.value = noTagsCount
                 
-                librarySettingsCache.saveTags(tagsList, noTagsCount)
+                // Only cache for All type
+                if (type == LibraryScreenModel.LibraryType.All) {
+                    librarySettingsCache.saveTags(tagsList, noTagsCount)
+                }
                 _tagsLoaded.set(true)
                 logcat(LogPriority.INFO) { "LibrarySettingsScreenModel: refreshTags completed" }
             } catch (e: Exception) {

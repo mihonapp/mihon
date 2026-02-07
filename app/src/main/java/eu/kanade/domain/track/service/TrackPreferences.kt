@@ -48,8 +48,28 @@ class TrackPreferences(
 
     fun novelUpdatesSyncReadingList() = preferenceStore.getBoolean("novelupdates_sync_reading_list", true)
 
+    // NovelUpdates Custom List Mapping
+    fun novelUpdatesUseCustomListMapping() = preferenceStore.getBoolean("novelupdates_use_custom_list_mapping", false)
+
+    fun novelUpdatesCustomListMapping() = preferenceStore.getString(
+        "novelupdates_custom_list_mapping",
+        "{}",
+    )
+
+    fun novelUpdatesCachedLists() = preferenceStore.getString(
+        "novelupdates_cached_lists",
+        "[]",
+    )
+
+    fun novelUpdatesLastListRefresh() = preferenceStore.getLong("novelupdates_last_list_refresh", 0L)
+
     // NovelList Settings
     fun novelListMarkChaptersAsRead() = preferenceStore.getBoolean("novellist_mark_chapters_read", true)
 
     fun novelListSyncReadingList() = preferenceStore.getBoolean("novellist_sync_reading_list", true)
+
+    // Minimum chapters before tracking
+    fun minChaptersBeforeTrackingManga() = preferenceStore.getString("min_chapters_before_tracking_manga", "0")
+
+    fun minChaptersBeforeTrackingNovel() = preferenceStore.getString("min_chapters_before_tracking_novel", "0")
 }

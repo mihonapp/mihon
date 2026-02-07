@@ -521,6 +521,17 @@ class MangaScreenModel(
     }
 
     /**
+     * Swap an alternative title to become the main title.
+     * The current main title is added to the alt titles list.
+     */
+    fun swapMainTitle(newMainTitle: String, updatedAltTitles: List<String>) {
+        screenModelScope.launchIO {
+            updateManga.awaitUpdateTitle(mangaId, newMainTitle)
+            updateManga.awaitUpdateAlternativeTitles(mangaId, updatedAltTitles)
+        }
+    }
+
+    /**
      * Update the tags (genre) of the manga.
      */
     fun updateTags(tags: List<String>) {
@@ -1360,11 +1371,21 @@ class MangaScreenModel(
     fun applyTranslatedDetails(details: eu.kanade.presentation.manga.components.TranslatedMangaDetails) {
         val manga = successState?.manga ?: return
         screenModelScope.launchIO {
+            // Handle genres - merge or replace based on user preference
+            val finalGenres = if (details.translatedGenres != null && details.mergeGenres) {
+                // Merge: combine existing genres with translated ones, removing duplicates
+                val existingGenres = manga.genre ?: emptyList()
+                val combinedGenres = (existingGenres + details.translatedGenres).distinct()
+                combinedGenres
+            } else {
+                details.translatedGenres
+            }
+
             val update = tachiyomi.domain.manga.model.MangaUpdate(
                 id = manga.id,
                 title = details.translatedTitle,
                 description = details.translatedDescription,
-                genre = details.translatedGenres,
+                genre = finalGenres,
             )
 
             // Update manga

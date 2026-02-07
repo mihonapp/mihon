@@ -4,6 +4,7 @@ import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.source.isNovelSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.update
@@ -18,6 +19,7 @@ import tachiyomi.domain.manga.interactor.FindDuplicateNovels
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.manga.repository.MangaRepository
+import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -28,6 +30,7 @@ class DuplicateDetectionScreenModel(
     private val getChaptersByMangaId: GetChaptersByMangaId = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
     private val sourcePreferences: SourcePreferences = Injekt.get(),
+    private val sourceManager: SourceManager = Injekt.get(),
 ) : StateScreenModel<DuplicateDetectionScreenModel.State>(State()) {
 
     private val pinnedSourceIds: Set<Long> by lazy {
@@ -40,10 +43,17 @@ class DuplicateDetectionScreenModel(
         screenModelScope.coroutineContext.cancelChildren()
     }
 
+    enum class ContentType {
+        ALL,
+        MANGA,
+        NOVEL,
+    }
+
     data class State(
         val isLoading: Boolean = false,
         val hasStartedAnalysis: Boolean = false,
         val matchMode: DuplicateMatchMode = DuplicateMatchMode.EXACT,
+        val contentType: ContentType = ContentType.ALL,
         val duplicateGroups: Map<String, List<MangaWithChapterCount>> = emptyMap(),
         val selection: Set<Long> = emptySet(),
         val showDeleteDialog: Boolean = false,
@@ -56,16 +66,29 @@ class DuplicateDetectionScreenModel(
         val mangaDownloadCounts: Map<Long, Int> = emptyMap(), // Manga ID -> Download count
         val mangaReadCounts: Map<Long, Int> = emptyMap(), // Manga ID -> Read chapter count
         val pinnedSourceIds: Set<Long> = emptySet(), // Pinned source IDs
+        val novelSourceIds: Set<Long> = emptySet(), // Source IDs that are novel sources
     ) {
         val totalDuplicates: Int
             get() = duplicateGroups.values.sumOf { it.size }
             
         val filteredDuplicateGroups: Map<String, List<MangaWithChapterCount>>
             get() {
+                // First filter by content type (manga/novel/all)
+                val contentFiltered = when (contentType) {
+                    ContentType.ALL -> duplicateGroups
+                    ContentType.MANGA -> duplicateGroups.mapValues { (_, items) ->
+                        items.filter { it.manga.source !in novelSourceIds }
+                    }.filter { it.value.size > 1 }
+                    ContentType.NOVEL -> duplicateGroups.mapValues { (_, items) ->
+                        items.filter { it.manga.source in novelSourceIds }
+                    }.filter { it.value.size > 1 }
+                }
+                
+                // Then filter by category
                 val filtered = if (selectedCategoryFilters.isEmpty()) {
-                    duplicateGroups
+                    contentFiltered
                 } else {
-                    duplicateGroups.mapValues { (_, novels) ->
+                    contentFiltered.mapValues { (_, novels) ->
                         novels.filter { novel ->
                             val novelCategories = mangaCategories[novel.manga.id] ?: emptyList()
                             novelCategories.any { it.id in selectedCategoryFilters }
@@ -158,6 +181,12 @@ class DuplicateDetectionScreenModel(
                     getCategories.await(mangaId)
                 }
                 
+                // Build set of novel source IDs for content type filtering
+                val allSourceIds = groups.values.flatten().map { it.manga.source }.distinct()
+                val novelSourceIds = allSourceIds.filter { sourceId ->
+                    sourceManager.getOrStub(sourceId).isNovelSource()
+                }.toSet()
+                
                 // Load download counts for all manga
                 val downloadCounts = mutableMapOf<Long, Int>()
                 val readCounts = mutableMapOf<Long, Int>()
@@ -175,6 +204,7 @@ class DuplicateDetectionScreenModel(
                 mutableState.update { it.copy(
                     duplicateGroups = groups, 
                     mangaCategories = mangaCategoriesMap,
+                    novelSourceIds = novelSourceIds,
                     mangaDownloadCounts = downloadCounts,
                     mangaReadCounts = readCounts,
                     pinnedSourceIds = pinnedSourceIds,
@@ -191,6 +221,10 @@ class DuplicateDetectionScreenModel(
             mutableState.update { it.copy(matchMode = mode, selection = emptySet()) }
             loadDuplicates()
         }
+    }
+
+    fun setContentType(contentType: ContentType) {
+        mutableState.update { it.copy(contentType = contentType, selection = emptySet()) }
     }
 
     fun toggleCategoryFilter(categoryId: Long) {

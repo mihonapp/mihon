@@ -164,7 +164,7 @@ fun BrowseSourceToolbar(
         var showRangeMode by remember { mutableStateOf(false) }
         
         // Get current delay from preferences
-        val sourcePreferences = remember { Injekt.get<eu.kanade.domain.source.service.SourcePreferences>() }
+        val sourcePreferences: eu.kanade.domain.source.service.SourcePreferences = remember { Injekt.get() }
         var currentDelay by remember { mutableIntStateOf(sourcePreferences.pageLoadDelay().get()) }
         
         AlertDialog(
@@ -232,7 +232,7 @@ fun BrowseSourceToolbar(
                         androidx.compose.material3.Slider(
                             value = currentDelay.toFloat(),
                             onValueChange = { currentDelay = it.toInt() },
-                            valueRange = 0f..10f,
+                            valueRange = 0f..20f,
                             steps = 9,
                             modifier = Modifier.padding(horizontal = 8.dp),
                         )

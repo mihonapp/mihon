@@ -401,6 +401,19 @@ class MangaRepositoryImpl(
         return result
     }
 
+    override suspend fun getFavoriteGenresWithSource(): List<Triple<Long, Long, List<String>?>> {
+        logcat(LogPriority.INFO) { "MangaRepositoryImpl.getFavoriteGenresWithSource: Executing lightweight genres with source query" }
+        val queryStart = System.currentTimeMillis()
+        val result = handler.awaitList {
+            mangasQueries.getFavoriteGenresWithSource { id, source, genre ->
+                Triple(id, source, genre)
+            }
+        }
+        val queryDuration = System.currentTimeMillis() - queryStart
+        logcat(LogPriority.INFO) { "MangaRepositoryImpl.getFavoriteGenresWithSource: Query completed in ${queryDuration}ms, returned ${result.size} items" }
+        return result
+    }
+
     override suspend fun getFavoriteSourceUrlPairs(): List<Pair<Long, String>> {
         logcat(LogPriority.INFO) { "MangaRepositoryImpl.getFavoriteSourceUrlPairs: Executing ultra-lightweight source+url query" }
         val queryStart = System.currentTimeMillis()
@@ -472,6 +485,7 @@ class MangaRepositoryImpl(
                 }
             }
         }
+        invalidateLibraryCache()
     }
 
     override suspend fun addMangasCategories(mangaIds: List<Long>, categoryIds: List<Long>) {
@@ -483,6 +497,7 @@ class MangaRepositoryImpl(
                 }
             }
         }
+        invalidateLibraryCache()
     }
 
     override suspend fun removeMangasCategories(mangaIds: List<Long>, categoryIds: List<Long>) {
@@ -491,6 +506,7 @@ class MangaRepositoryImpl(
             // Use bulk delete for better performance
             mangas_categoriesQueries.deleteBulkMangaCategories(mangaIds, categoryIds)
         }
+        invalidateLibraryCache()
     }
 
     override suspend fun update(update: MangaUpdate): Boolean {
@@ -615,10 +631,10 @@ class MangaRepositoryImpl(
         }
     }
 
-    override suspend fun normalizeAllUrlsAdvanced(removeDoubleSlashes: Boolean): Pair<Int, List<Triple<String, String, String>>> {
+    override suspend fun normalizeAllUrlsAdvanced(removeDoubleSlashes: Boolean): Pair<Int, List<MangaRepository.DuplicateUrlInfo>> {
         return try {
             var count = 0
-            val duplicates = mutableListOf<Triple<String, String, String>>()
+            val duplicates = mutableListOf<MangaRepository.DuplicateUrlInfo>()
             val seen = mutableSetOf<Pair<Long, String>>()
             handler.await(inTransaction = true) {
                 val allManga = mangasQueries.getAllManga(MangaMapper::mapManga).executeAsList()
@@ -639,8 +655,8 @@ class MangaRepositoryImpl(
                     if (normalizedUrl != manga.url) {
                         val key = manga.source to normalizedUrl
                         if (key in seen) {
-                            // This would create a duplicate
-                            duplicates.add(Triple(manga.title, manga.url, normalizedUrl))
+                            // This would create a duplicate - include manga ID for direct deletion
+                            duplicates.add(MangaRepository.DuplicateUrlInfo(manga.id, manga.title, manga.url, normalizedUrl))
                             logcat(LogPriority.WARN) { "Skipping duplicate: ${manga.title} (${manga.url}) would conflict with existing normalized URL" }
                         } else {
                             mangasQueries.update(
@@ -684,6 +700,74 @@ class MangaRepositoryImpl(
         }
     }
 
+    override suspend fun removePotentialDuplicates(removeDoubleSlashes: Boolean): Pair<Int, List<Triple<String, String, String>>> {
+        return try {
+            var removedCount = 0
+            val removedItems = mutableListOf<Triple<String, String, String>>()
+            // Map of (source, normalizedUrl) -> first manga that has this normalized URL
+            val seenNormalizedUrls = mutableMapOf<Pair<Long, String>, Long>()
+            val idsToDelete = mutableListOf<Long>()
+            
+            handler.await(inTransaction = true) {
+                val allManga = mangasQueries.getAllManga(MangaMapper::mapManga).executeAsList()
+                
+                // First pass: identify which manga would be kept (first occurrence of each normalized URL)
+                allManga.forEach { manga ->
+                    var normalizedUrl = manga.url.trimEnd('/').substringBefore('#')
+                    
+                    if (removeDoubleSlashes) {
+                        val placeholder = "###PROTOCOL###"
+                        normalizedUrl = normalizedUrl.replace("://", placeholder)
+                        normalizedUrl = normalizedUrl.replace("//", "/")
+                        normalizedUrl = normalizedUrl.replace(placeholder, "://")
+                    }
+                    
+                    val key = manga.source to normalizedUrl
+                    if (key !in seenNormalizedUrls) {
+                        seenNormalizedUrls[key] = manga.id
+                    }
+                }
+                
+                // Second pass: collect manga IDs that are duplicates (not the first occurrence)
+                allManga.forEach { manga ->
+                    if (!manga.favorite) return@forEach // Skip non-favorites
+                    
+                    var normalizedUrl = manga.url.trimEnd('/').substringBefore('#')
+                    
+                    if (removeDoubleSlashes) {
+                        val placeholder = "###PROTOCOL###"
+                        normalizedUrl = normalizedUrl.replace("://", placeholder)
+                        normalizedUrl = normalizedUrl.replace("//", "/")
+                        normalizedUrl = normalizedUrl.replace(placeholder, "://")
+                    }
+                    
+                    val key = manga.source to normalizedUrl
+                    val firstOccurrenceId = seenNormalizedUrls[key]
+                    
+                    // If this manga is not the first occurrence of this normalized URL, mark for deletion
+                    if (firstOccurrenceId != null && firstOccurrenceId != manga.id) {
+                        idsToDelete.add(manga.id)
+                        removedItems.add(Triple(manga.title, manga.url, normalizedUrl))
+                        removedCount++
+                        logcat(LogPriority.INFO) { "Marked for deletion: ${manga.title} (${manga.url}) - conflicts with normalized URL" }
+                    }
+                }
+                
+                // Delete all duplicate manga in one batch
+                // Chapters and categories are automatically deleted via ON DELETE CASCADE
+                if (idsToDelete.isNotEmpty()) {
+                    mangasQueries.deleteByIds(idsToDelete)
+                }
+            }
+            
+            logcat(LogPriority.INFO) { "Deleted $removedCount duplicate manga entries" }
+            Pair(removedCount, removedItems)
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Failed to remove potential duplicates" }
+            Pair(0, emptyList())
+        }
+    }
+
     override suspend fun refreshLibraryCache() {
         logcat(LogPriority.INFO) { "MangaRepositoryImpl.refreshLibraryCache: Refreshing entire library cache" }
         val queryStart = System.currentTimeMillis()
@@ -714,10 +798,17 @@ class MangaRepositoryImpl(
                 favorites.forEach { manga ->
                     val genres = manga.genre
                     if (!genres.isNullOrEmpty()) {
-                        // Normalize: trim, lowercase, remove duplicates (keeping first occurrence with original case)
+                        // Normalize: trim, title-case, remove duplicates (keeping first occurrence)
                         val seen = mutableSetOf<String>()
                         val normalized = genres
-                            .map { it.trim() }
+                            .map { tag -> 
+                                // Trim whitespace and title-case each word
+                                tag.trim()
+                                    .split(" ")
+                                    .joinToString(" ") { word ->
+                                        word.lowercase().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+                                    }
+                            }
                             .filter { it.isNotBlank() }
                             .filter { tag -> 
                                 val lowercased = tag.lowercase()

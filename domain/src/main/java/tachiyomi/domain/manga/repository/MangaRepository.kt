@@ -69,6 +69,12 @@ interface MangaRepository {
     suspend fun getFavoriteGenres(): List<Pair<Long, List<String>?>>
 
     /**
+     * Get lightweight favorite genres with source ID for tag counting filtered by content type.
+     * Returns list of (mangaId, sourceId, genreList) triples.
+     */
+    suspend fun getFavoriteGenresWithSource(): List<Triple<Long, Long, List<String>?>>
+
+    /**
      * Get ultra-lightweight source + url pairs for duplicate checking.
      * Much faster than getLibraryMangaForUpdate() - avoids libraryView JOIN entirely.
      */
@@ -103,11 +109,29 @@ interface MangaRepository {
     suspend fun normalizeAllUrls(): Int
     
     /**
+     * Data class to hold information about a duplicate URL entry.
+     */
+    data class DuplicateUrlInfo(
+        val mangaId: Long,
+        val title: String,
+        val oldUrl: String,
+        val normalizedUrl: String,
+    )
+    
+    /**
      * Normalize URLs with advanced options.
      * @param removeDoubleSlashes whether to also remove double slashes from URLs
-     * @return Pair of (count of normalized URLs, list of skipped duplicates with Triple(title, oldUrl, normalizedUrl))
+     * @return Pair of (count of normalized URLs, list of skipped duplicates)
      */
-    suspend fun normalizeAllUrlsAdvanced(removeDoubleSlashes: Boolean): Pair<Int, List<Triple<String, String, String>>>
+    suspend fun normalizeAllUrlsAdvanced(removeDoubleSlashes: Boolean): Pair<Int, List<DuplicateUrlInfo>>
+
+    /**
+     * Remove (unfavorite) manga that would become duplicates after URL normalization.
+     * This allows the user to clean up duplicates before running normalization.
+     * @param removeDoubleSlashes whether to also consider double slashes when detecting duplicates
+     * @return Pair of (count of removed duplicates, list of removed items with Triple(title, url, normalizedUrl))
+     */
+    suspend fun removePotentialDuplicates(removeDoubleSlashes: Boolean): Pair<Int, List<Triple<String, String, String>>>
 
     /**
      * Refresh the library cache table.

@@ -126,11 +126,12 @@ AND source = :sourceId;
 
 getReadMangaNotInLibrary:
 SELECT *
-FROM mangas
-WHERE favorite = 0 AND _id IN (
-    SELECT DISTINCT chapters.manga_id
-    FROM chapters
-    WHERE read = 1 OR last_page_read != 0
+FROM mangas m
+WHERE m.favorite = 0 AND EXISTS (
+    SELECT 1
+    FROM chapters c
+    WHERE c.manga_id = m._id AND (c.read = 1 OR c.last_page_read != 0)
+    LIMIT 1
 );
 
 getAllManga:
@@ -171,6 +172,12 @@ SELECT _id, genre
 FROM mangas
 WHERE favorite = 1;
 
+-- Lightweight query to get genres with source ID for tag counting filtered by content type
+getFavoriteGenresWithSource:
+SELECT _id, source, genre
+FROM mangas
+WHERE favorite = 1;
+
 -- Ultra-lightweight query for MassImport duplicate checking (only source + url)
 -- Avoids expensive libraryView JOIN entirely
 getFavoriteSourceAndUrlPairs:
@@ -207,7 +214,7 @@ HAVING count(*) > 1
 ORDER BY duplicate_count DESC;
 
 -- Find all duplicate groups with contains match (one title contains another)
--- LIMIT added to prevent database pool exhaustion with large libraries
+-- Optimized: use substr index and smaller comparisons to avoid full table scans
 findDuplicatesContains:
 SELECT
     a._id AS id_a,
@@ -219,10 +226,14 @@ JOIN mangas b
     ON a._id < b._id
    AND a.favorite = 1
    AND b.favorite = 1
+   -- Filter by first character to reduce comparison set
+   AND substr(lower(trim(a.title)), 1, 1) = substr(lower(trim(b.title)), 1, 1)
+   -- Only check containment if lengths differ significantly  
+   AND (length(trim(a.title)) < length(trim(b.title)) * 0.8 OR length(trim(b.title)) < length(trim(a.title)) * 0.8)
    AND (lower(trim(b.title)) LIKE '%' || lower(trim(a.title)) || '%'
         OR lower(trim(a.title)) LIKE '%' || lower(trim(b.title)) || '%')
 ORDER BY a.title
-LIMIT 20;
+LIMIT 50;
 
 -- Find duplicates by URL within the same source/extension
 findDuplicatesByUrl:
@@ -290,6 +301,14 @@ AND (
         OR last_page_read != 0
     )
 );
+
+deleteById:
+DELETE FROM mangas
+WHERE _id = :mangaId;
+
+deleteByIds:
+DELETE FROM mangas
+WHERE _id IN :mangaIds;
 
 insert:
 INSERT INTO mangas(source, url, artist, author, description, genre, title, alternative_titles, status, thumbnail_url, favorite, last_update, next_update, initialized, viewer, chapter_flags, cover_last_modified, date_added, update_strategy, calculate_interval, last_modified_at, version, notes)

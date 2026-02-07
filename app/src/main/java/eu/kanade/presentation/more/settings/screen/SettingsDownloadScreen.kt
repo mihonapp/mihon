@@ -55,7 +55,7 @@ object SettingsDownloadScreen : SearchableSettings {
             ),
             Preference.PreferenceItem.SliderPreference(
                 value = parallelSourceLimit,
-                valueRange = 1..10,
+                valueRange = 1..15,
                 title = stringResource(MR.strings.pref_download_concurrent_sources),
                 onValueChanged = { downloadPreferences.parallelSourceLimit().set(it) },
             ),

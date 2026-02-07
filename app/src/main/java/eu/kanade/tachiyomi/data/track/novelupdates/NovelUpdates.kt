@@ -19,6 +19,7 @@ import okhttp3.Headers
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
+import eu.kanade.domain.track.service.TrackPreferences
 import tachiyomi.domain.track.model.Track as DomainTrack
 
 /**
@@ -267,8 +268,21 @@ class NovelUpdates(id: Long) : BaseTracker(id, "NovelUpdates") {
 
     /**
      * Convert our status to NovelUpdates list ID.
+     * Uses custom mapping from preferences if enabled.
      */
     private fun statusToListId(status: Long): Long {
+        // Check custom mapping first
+        try {
+            if (trackPreferences.novelUpdatesUseCustomListMapping().get()) {
+                val json = trackPreferences.novelUpdatesCustomListMapping().get()
+                if (json.isNotEmpty() && json != "{}") {
+                    val mappings = Json.decodeFromString<Map<String, String>>(json)
+                    val listId = mappings[status.toString()]
+                    if (listId != null) return listId.toLong()
+                }
+            }
+        } catch (_: Exception) {}
+
         return when (status) {
             READING -> 0L
             COMPLETED -> 1L
@@ -391,6 +405,52 @@ class NovelUpdates(id: Long) : BaseTracker(id, "NovelUpdates") {
         }
 
         return track
+    }
+
+    /**
+     * Get all available custom reading lists for the user.
+     * Scrapes the reading list page to find all lists.
+     */
+    suspend fun getAvailableReadingLists(): List<Pair<String, String>> {
+        return try {
+            val response = client.newCall(
+                GET("$baseUrl/reading-list/", getAuthHeaders()),
+            ).awaitSuccess()
+            val document = response.asJsoup()
+            
+            val lists = mutableListOf<Pair<String, String>>()
+            
+            // Try menu lists first
+            document.select("div#cssmenu li a").forEach { link ->
+                val href = link.attr("href")
+                val text = link.text().trim()
+                
+                if (href.contains("reading-list/?list=")) {
+                    val listMatch = Regex("list=(\\d+)").find(href)
+                    val listId = listMatch?.groupValues?.get(1)
+                    if (listId != null && text.isNotEmpty()) {
+                        lists.add(Pair(listId, text))
+                    }
+                }
+            }
+            
+            // If no menu lists, try select dropdown
+            if (lists.isEmpty()) {
+                document.select("div.sticon select.stmove option").forEach { option ->
+                    val value = option.attr("value")
+                    val text = option.text().trim()
+                    
+                    if (value.isNotEmpty() && value != "---" && value != "Select..." && text.isNotEmpty()) {
+                        lists.add(Pair(value, text))
+                    }
+                }
+            }
+            
+            lists
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Failed to get available reading lists" }
+            emptyList()
+        }
     }
 
     override suspend fun login(username: String, password: String) {

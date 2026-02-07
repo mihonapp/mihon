@@ -6,6 +6,8 @@ import tachiyomi.i18n.MR
 
 data class BackupOptions(
     val libraryEntries: Boolean = true,
+    val includeManga: Boolean = true,
+    val includeNovels: Boolean = true,
     val categories: Boolean = true,
     val chapters: Boolean = true,
     val tracking: Boolean = true,
@@ -19,6 +21,8 @@ data class BackupOptions(
 
     fun asBooleanArray() = booleanArrayOf(
         libraryEntries,
+        includeManga,
+        includeNovels,
         categories,
         chapters,
         tracking,
@@ -38,6 +42,18 @@ data class BackupOptions(
                 label = MR.strings.manga,
                 getter = BackupOptions::libraryEntries,
                 setter = { options, enabled -> options.copy(libraryEntries = enabled) },
+            ),
+            Entry(
+                label = MR.strings.label_manga,
+                getter = BackupOptions::includeManga,
+                setter = { options, enabled -> options.copy(includeManga = enabled) },
+                enabled = { it.libraryEntries },
+            ),
+            Entry(
+                label = MR.strings.label_novels,
+                getter = BackupOptions::includeNovels,
+                setter = { options, enabled -> options.copy(includeNovels = enabled) },
+                enabled = { it.libraryEntries },
             ),
             Entry(
                 label = MR.strings.chapters,
@@ -96,15 +112,17 @@ data class BackupOptions(
 
         fun fromBooleanArray(array: BooleanArray) = BackupOptions(
             libraryEntries = array[0],
-            categories = array[1],
-            chapters = array[2],
-            tracking = array[3],
-            history = array[4],
-            readEntries = array[5],
-            appSettings = array[6],
-            extensionRepoSettings = array[7],
-            sourceSettings = array[8],
-            privateSettings = array[9],
+            includeManga = array[1],
+            includeNovels = array[2],
+            categories = array[3],
+            chapters = array[4],
+            tracking = array[5],
+            history = array[6],
+            readEntries = array[7],
+            appSettings = array[8],
+            extensionRepoSettings = array[9],
+            sourceSettings = array[10],
+            privateSettings = array[11],
         )
     }
 

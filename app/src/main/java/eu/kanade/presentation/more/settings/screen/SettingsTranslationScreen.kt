@@ -98,6 +98,24 @@ object SettingsTranslationScreen : SearchableSettings {
                     subtitle = stringResource(MR.strings.pref_translation_auto_translate_summary),
                     enabled = enabled,
                 ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = prefs.replaceTitle(),
+                    title = "Replace title with translation",
+                    subtitle = "When translating, replace the manga/novel title with the translated version. Original title is saved to alternative titles.",
+                    enabled = enabled,
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = prefs.saveTranslatedTitleAsAlternative(),
+                    title = "Save translated titles as alternative",
+                    subtitle = "Store translated titles in alternative_titles for reference",
+                    enabled = enabled,
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = prefs.translateTags(),
+                    title = "Translate tags",
+                    subtitle = "Translate genre tags and merge with original tags",
+                    enabled = enabled,
+                ),
             ),
         )
     }
@@ -168,6 +186,10 @@ object SettingsTranslationScreen : SearchableSettings {
         val systranKey by prefs.systranApiKey().collectAsState()
         val deepLKey by prefs.deepLApiKey().collectAsState()
         val googleKey by prefs.googleApiKey().collectAsState()
+        val customHttpUrl by prefs.customHttpUrl().collectAsState()
+        val customHttpApiKey by prefs.customHttpApiKey().collectAsState()
+        val customHttpRequestTemplate by prefs.customHttpRequestTemplate().collectAsState()
+        val customHttpResponsePath by prefs.customHttpResponsePath().collectAsState()
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_translation_api_keys),
@@ -216,6 +238,42 @@ object SettingsTranslationScreen : SearchableSettings {
                     preference = prefs.ollamaModel(),
                     title = stringResource(MR.strings.pref_translation_ollama_model),
                     subtitle = ollamaModel,
+                ),
+                Preference.PreferenceItem.EditTextPreference(
+                    preference = prefs.ollamaPrompt(),
+                    title = "Ollama Custom Prompt",
+                    subtitle = "Use {SOURCE_LANG}, {TARGET_LANG}, {TEXT} as placeholders. Leave empty for default.",
+                ),
+                Preference.PreferenceItem.EditTextPreference(
+                    preference = prefs.openAiSystemPrompt(),
+                    title = "OpenAI System Prompt",
+                    subtitle = "Custom system prompt for GPT models. Leave empty for default.",
+                ),
+                Preference.PreferenceItem.EditTextPreference(
+                    preference = prefs.openAiUserPrompt(),
+                    title = "OpenAI User Prompt Template",
+                    subtitle = "Use {SOURCE_LANG}, {TARGET_LANG}, {TEXT} as placeholders. Leave empty for default.",
+                ),
+                // Custom HTTP settings
+                Preference.PreferenceItem.EditTextPreference(
+                    preference = prefs.customHttpUrl(),
+                    title = "Custom HTTP API URL",
+                    subtitle = if (customHttpUrl.isNotBlank()) customHttpUrl else stringResource(MR.strings.not_set),
+                ),
+                Preference.PreferenceItem.EditTextPreference(
+                    preference = prefs.customHttpApiKey(),
+                    title = "Custom HTTP API Key",
+                    subtitle = if (customHttpApiKey.isNotBlank()) "••••••••" else stringResource(MR.strings.not_set),
+                ),
+                Preference.PreferenceItem.EditTextPreference(
+                    preference = prefs.customHttpRequestTemplate(),
+                    title = "Custom HTTP Request Template",
+                    subtitle = "Use {texts}, {text}, {source}, {target}",
+                ),
+                Preference.PreferenceItem.EditTextPreference(
+                    preference = prefs.customHttpResponsePath(),
+                    title = "Custom HTTP Response Path",
+                    subtitle = customHttpResponsePath.ifBlank { "translatedText" },
                 ),
             ),
         )

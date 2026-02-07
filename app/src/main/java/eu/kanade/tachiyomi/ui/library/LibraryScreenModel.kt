@@ -336,6 +336,12 @@ class LibraryScreenModel(
             item.libraryManga.manga.source.toString() !in preferences.excludedExtensions
         }
 
+        val filterFnNovel: (LibraryItem) -> Boolean = { item ->
+            val source = sourceManager.get(item.libraryManga.manga.source)
+            val isNovel = source?.isNovelSource() == true
+            applyFilter(preferences.filterNovel) { isNovel }
+        }
+
         val filterFnTags: (LibraryItem) -> Boolean = tags@{ item ->
             val mangaTags = item.libraryManga.manga.genre
                 ?.map { it.trim() }
@@ -401,6 +407,7 @@ class LibraryScreenModel(
                 filterFnIntervalCustom(it) &&
                 filterFnTracking(it) &&
                 filterFnExtensions(it) &&
+                filterFnNovel(it) &&
                 filterFnTags(it)
         }
     }
@@ -525,6 +532,7 @@ class LibraryScreenModel(
                 libraryPreferences.filterCompleted().changes(),
                 libraryPreferences.filterIntervalCustom().changes(),
                 libraryPreferences.excludedExtensions().changes(),
+                libraryPreferences.filterNovel().changes(),
             ) { arr -> arr },
             combine(
                 libraryPreferences.includedTags().changes(),
@@ -549,6 +557,7 @@ class LibraryScreenModel(
                 filterCompleted = second[4] as TriState,
                 filterIntervalCustom = second[5] as TriState,
                 excludedExtensions = @Suppress("UNCHECKED_CAST") (second[6] as Set<String>),
+                filterNovel = second[7] as TriState,
                 includedTags = @Suppress("UNCHECKED_CAST") (third[0] as Set<String>),
                 excludedTags = @Suppress("UNCHECKED_CAST") (third[1] as Set<String>),
                 filterNoTags = third[2] as TriState,
@@ -864,6 +873,9 @@ class LibraryScreenModel(
             }
             // Single refresh at the end of batch operation
             setMangaCategories.refreshLibrary()
+            
+            // Clear selection so UI reflects the change
+            clearSelection()
             
             // Show completion message
             snackbarHostState.showSnackbar(
@@ -1584,6 +1596,7 @@ class LibraryScreenModel(
         val filterCompleted: TriState,
         val filterIntervalCustom: TriState,
         val excludedExtensions: Set<String>,
+        val filterNovel: TriState,
         val includedTags: Set<String>,
         val excludedTags: Set<String>,
         val filterNoTags: TriState,

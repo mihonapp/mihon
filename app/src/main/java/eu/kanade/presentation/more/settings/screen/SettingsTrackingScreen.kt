@@ -2,11 +2,13 @@ package eu.kanade.presentation.more.settings.screen
 
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
@@ -17,6 +19,9 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +48,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.domain.track.model.AutoTrackState
@@ -118,6 +124,13 @@ object SettingsTrackingScreen : SearchableSettings {
                         onDismissRequest = { dialog = null },
                     )
                 }
+                is NovelUpdatesListMappingDialog -> {
+                    NovelUpdatesListMappingDialogContent(
+                        trackerManager = trackerManager,
+                        trackPreferences = trackPreferences,
+                        onDismissRequest = { dialog = null },
+                    )
+                }
             }
         }
 
@@ -147,6 +160,16 @@ object SettingsTrackingScreen : SearchableSettings {
                     .associateWith { stringResource(it.titleRes) }
                     .toPersistentMap(),
                 title = stringResource(MR.strings.pref_auto_update_manga_on_mark_read),
+            ),
+            Preference.PreferenceItem.EditTextPreference(
+                preference = trackPreferences.minChaptersBeforeTrackingManga(),
+                title = "Minimum chapters before tracking (Manga)",
+                subtitle = "Number of chapters that must be read before auto-tracking starts for manga (0 = always track)",
+            ),
+            Preference.PreferenceItem.EditTextPreference(
+                preference = trackPreferences.minChaptersBeforeTrackingNovel(),
+                title = "Minimum chapters before tracking (Novels)",
+                subtitle = "Number of chapters that must be read before auto-tracking starts for novels (0 = always track)",
             ),
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.services),
@@ -210,6 +233,16 @@ object SettingsTrackingScreen : SearchableSettings {
                         preference = trackPreferences.novelUpdatesSyncReadingList(),
                         title = "Sync reading list",
                         subtitle = "Keep reading list status in sync with NovelUpdates",
+                    ),
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = trackPreferences.novelUpdatesUseCustomListMapping(),
+                        title = "Custom list mapping",
+                        subtitle = "Map statuses to custom NovelUpdates lists",
+                    ),
+                    Preference.PreferenceItem.TextPreference(
+                        title = "Configure list mapping",
+                        subtitle = "Choose which list each status maps to",
+                        onClick = { dialog = NovelUpdatesListMappingDialog },
                     ),
                     Preference.PreferenceItem.TrackerPreference(
                         tracker = trackerManager.novelList,
@@ -545,6 +578,180 @@ object SettingsTrackingScreen : SearchableSettings {
             },
         )
     }
+
+    @Composable
+    private fun NovelUpdatesListMappingDialogContent(
+        trackerManager: TrackerManager,
+        trackPreferences: TrackPreferences,
+        onDismissRequest: () -> Unit,
+    ) {
+        val scope = rememberCoroutineScope()
+        val context = LocalContext.current
+
+        // Load cached lists
+        var availableLists by remember {
+            val cached = trackPreferences.novelUpdatesCachedLists().get()
+            val lists = try {
+                if (cached.isNotEmpty() && cached != "[]") {
+                    kotlinx.serialization.json.Json.decodeFromString<List<List<String>>>(cached)
+                        .map { Pair(it[0], it[1]) }
+                } else {
+                    emptyList()
+                }
+            } catch (_: Exception) { emptyList() }
+            val defaultLists = listOf(
+                Pair("0", "Reading List"),
+                Pair("1", "Completed"),
+                Pair("2", "Plan to Read"),
+                Pair("3", "On Hold"),
+                Pair("4", "Dropped"),
+            )
+            mutableStateOf(if (lists.isEmpty()) defaultLists else lists)
+        }
+
+        // Current mappings (status ID -> list ID)
+        var mappings by remember {
+            val json = trackPreferences.novelUpdatesCustomListMapping().get()
+            val map = try {
+                if (json.isNotEmpty() && json != "{}") {
+                    kotlinx.serialization.json.Json.decodeFromString<Map<String, String>>(json)
+                } else {
+                    mapOf("1" to "0", "2" to "1", "3" to "3", "4" to "4", "5" to "2")
+                }
+            } catch (_: Exception) {
+                mapOf("1" to "0", "2" to "1", "3" to "3", "4" to "4", "5" to "2")
+            }
+            mutableStateOf(map)
+        }
+
+        var isLoading by remember { mutableStateOf(false) }
+
+        val statuses = listOf(
+            "1" to "Reading",
+            "2" to "Completed",
+            "3" to "On Hold",
+            "4" to "Dropped",
+            "5" to "Plan to Read",
+        )
+
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            title = { Text("List Mapping") },
+            text = {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    // Refresh button
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            "${availableLists.size} lists loaded",
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                        OutlinedButton(
+                            onClick = {
+                                scope.launchIO {
+                                    isLoading = true
+                                    val lists = trackerManager.novelUpdates.getAvailableReadingLists()
+                                    if (lists.isNotEmpty()) {
+                                        availableLists = lists
+                                        val cached = kotlinx.serialization.json.Json.encodeToString(
+                                            lists.map { listOf(it.first, it.second) },
+                                        )
+                                        trackPreferences.novelUpdatesCachedLists().set(cached)
+                                        trackPreferences.novelUpdatesLastListRefresh()
+                                            .set(System.currentTimeMillis())
+                                    }
+                                    withUIContext {
+                                        isLoading = false
+                                        if (lists.isEmpty()) context.toast("Failed to fetch lists")
+                                    }
+                                }
+                            },
+                            enabled = !isLoading,
+                        ) {
+                            if (isLoading) {
+                                CircularProgressIndicator(modifier = Modifier.height(16.dp))
+                            } else {
+                                Text("Refresh")
+                            }
+                        }
+                    }
+
+                    HorizontalDivider()
+
+                    // Status mappings
+                    statuses.forEach { (statusId, statusName) ->
+                        var expanded by remember { mutableStateOf(false) }
+                        val selectedListId = mappings[statusId] ?: "0"
+                        val selectedName = availableLists.find { it.first == selectedListId }?.second
+                            ?: "List #$selectedListId"
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                        ) {
+                            Text(
+                                text = statusName,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.weight(0.4f),
+                            )
+                            Box(modifier = Modifier.weight(0.6f)) {
+                                OutlinedButton(
+                                    onClick = { expanded = true },
+                                    modifier = Modifier.fillMaxWidth(),
+                                ) {
+                                    Text(
+                                        selectedName,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
+                                DropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = false },
+                                ) {
+                                    availableLists.forEach { (listId, listName) ->
+                                        DropdownMenuItem(
+                                            text = { Text(listName) },
+                                            onClick = {
+                                                mappings = mappings.toMutableMap().apply {
+                                                    put(statusId, listId)
+                                                }
+                                                expanded = false
+                                            },
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        trackPreferences.novelUpdatesCustomListMapping().set(
+                            kotlinx.serialization.json.Json.encodeToString(mappings),
+                        )
+                        onDismissRequest()
+                    },
+                ) {
+                    Text(stringResource(MR.strings.action_save))
+                }
+            },
+            dismissButton = {
+                OutlinedButton(onClick = onDismissRequest) {
+                    Text(stringResource(MR.strings.action_cancel))
+                }
+            },
+        )
+    }
 }
 
 private data class LoginDialog(
@@ -560,3 +767,5 @@ private data class NovelTrackerLoginDialog(
     val tracker: Tracker,
     val trackerName: String,
 )
+
+private data object NovelUpdatesListMappingDialog

@@ -292,8 +292,16 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                     async {
                         val source = sourceManager.get(mangaInSource.first().manga.source)
                         val semaphore = if (source is NovelSource) novelSemaphore else defaultSemaphore
+                        
+                        // Determine update throttling based on source type and overrides
                         val updateThrottlingMs = if (source is NovelSource && novelThrottleEnabled) {
-                            novelUpdateThrottlingMs
+                            val sourceId = source.id
+                            val override = novelDownloadPreferences.getSourceOverride(sourceId)
+                            if (override != null && override.enabled) {
+                                override.updateDelay?.toLong() ?: novelUpdateThrottlingMs
+                            } else {
+                                novelUpdateThrottlingMs
+                            }
                         } else {
                             globalUpdateThrottlingMs
                         }

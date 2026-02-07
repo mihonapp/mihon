@@ -123,10 +123,83 @@ class NovelDownloadPreferences(
         80,
     )
 
+    /**
+     * Get source override for a specific source ID
+     */
+    fun getSourceOverride(sourceId: Long): SourceOverride? {
+        return try {
+            val json = sourceOverrides().get()
+            if (json.isEmpty() || json == "{}") return null
+            
+            val overrides = kotlinx.serialization.json.Json.decodeFromString<Map<String, SourceOverride>>(json)
+            overrides[sourceId.toString()]
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    /**
+     * Set source override for a specific source
+     */
+    fun setSourceOverride(override: SourceOverride) {
+        try {
+            val currentJson = sourceOverrides().get()
+            val overrides = if (currentJson.isEmpty() || currentJson == "{}") {
+                mutableMapOf()
+            } else {
+                kotlinx.serialization.json.Json.decodeFromString<MutableMap<String, SourceOverride>>(currentJson)
+            }
+            
+            overrides[override.sourceId.toString()] = override
+            val newJson = kotlinx.serialization.json.Json.encodeToString(overrides)
+            sourceOverrides().set(newJson)
+        } catch (e: Exception) {
+            // Log error
+        }
+    }
+
+    /**
+     * Remove source override
+     */
+    fun removeSourceOverride(sourceId: Long) {
+        try {
+            val currentJson = sourceOverrides().get()
+            if (currentJson.isEmpty() || currentJson == "{}") return
+            
+            val overrides = kotlinx.serialization.json.Json.decodeFromString<MutableMap<String, SourceOverride>>(currentJson)
+            overrides.remove(sourceId.toString())
+            
+            val newJson = if (overrides.isEmpty()) {
+                "{}"
+            } else {
+                kotlinx.serialization.json.Json.encodeToString(overrides)
+            }
+            sourceOverrides().set(newJson)
+        } catch (e: Exception) {
+            // Log error
+        }
+    }
+
+    /**
+     * Get all source overrides
+     */
+    fun getAllSourceOverrides(): List<SourceOverride> {
+        return try {
+            val json = sourceOverrides().get()
+            if (json.isEmpty() || json == "{}") return emptyList()
+            
+            val overrides = kotlinx.serialization.json.Json.decodeFromString<Map<String, SourceOverride>>(json)
+            overrides.values.toList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
     companion object {
         /**
          * Represents a source-specific override for throttling settings
          */
+        @kotlinx.serialization.Serializable
         data class SourceOverride(
             val sourceId: Long,
             val downloadDelay: Int? = null,

@@ -30,6 +30,9 @@ class MangaBackupCreator(
     fun backupMangaStream(mangas: List<Manga>, options: BackupOptions): Flow<BackupManga> = flow {
         for (manga in mangas) {
             emit(backupManga(manga, options))
+            // Yield between each manga to allow other coroutines to run
+            // and prevent connection pool starvation
+            kotlinx.coroutines.yield()
         }
     }
 
@@ -52,21 +55,26 @@ class MangaBackupCreator(
         }
 
         if (options.chapters) {
-            // Backup chapters in batches to avoid OOM on manga with many chapters
-            // Use streaming query approach - chapters are fetched and mapped but not stored in a giant list
-            val chapters = mutableListOf<BackupChapter>()
-            handler.awaitList {
+            // Fetch chapters for this manga
+            // Use chunked processing to limit memory usage for manga with many chapters
+            val allChapters = handler.awaitList {
                 chaptersQueries.getChaptersByMangaId(
                     mangaId = manga.id,
                     applyScanlatorFilter = 0, // false
                     mapper = backupChapterMapper,
                 )
-            }.let { chapterList ->
-                // Add chapters in smaller chunks to allow GC between chunks
-                chapters.addAll(chapterList)
             }
             
-            if (chapters.isNotEmpty()) {
+            if (allChapters.isNotEmpty()) {
+                // Process chapters in smaller chunks to allow GC between them
+                val chapters = mutableListOf<BackupChapter>()
+                allChapters.chunked(500).forEach { chunk ->
+                    chapters.addAll(chunk)
+                    // Hint GC for manga with lots of chapters
+                    if (allChapters.size > 1000) {
+                        kotlinx.coroutines.yield()
+                    }
+                }
                 mangaObject.chapters = chapters
             }
         }

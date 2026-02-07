@@ -164,6 +164,32 @@ class TranslationPreferences(
     )
 
     /**
+     * Custom prompt template for Ollama.
+     * Supports {SOURCE_LANG}, {TARGET_LANG}, and {TEXT} placeholders.
+     */
+    fun ollamaPrompt() = preferenceStore.getString(
+        "translation_ollama_prompt",
+        "",
+    )
+
+    /**
+     * Custom system prompt for OpenAI/GPT models.
+     */
+    fun openAiSystemPrompt() = preferenceStore.getString(
+        "translation_openai_system_prompt",
+        "",
+    )
+
+    /**
+     * Custom user prompt template for OpenAI/GPT models.
+     * Supports {SOURCE_LANG}, {TARGET_LANG}, and {TEXT} placeholders.
+     */
+    fun openAiUserPrompt() = preferenceStore.getString(
+        "translation_openai_user_prompt",
+        "",
+    )
+
+    /**
      * Whether to enable real-time translation while reading.
      */
     fun realTimeTranslation() = preferenceStore.getBoolean(
@@ -186,5 +212,96 @@ class TranslationPreferences(
     fun translationTimeoutMs() = preferenceStore.getLong(
         "translation_timeout_ms",
         120000L, // 2 minutes default
+    )
+
+    /**
+     * Whether to replace the manga title with the translated title.
+     * When enabled, the original title is saved to alternative_titles.
+     */
+    fun replaceTitle() = preferenceStore.getBoolean(
+        "translation_replace_title",
+        false,
+    )
+
+    /**
+     * Whether to translate tags and merge with original tags.
+     */
+    fun translateTags() = preferenceStore.getBoolean(
+        "translation_translate_tags",
+        false,
+    )
+
+    /**
+     * Whether to replace original tags with translated tags instead of merging.
+     * When false, translated tags are added to original tags.
+     * When true, translated tags replace original tags.
+     */
+    fun replaceTagsInsteadOfMerge() = preferenceStore.getBoolean(
+        "translation_replace_tags",
+        false,
+    )
+
+    /**
+     * Whether to save translated titles to alternative_titles.
+     * Useful for keeping track of both original and translated titles.
+     */
+    fun saveTranslatedTitleAsAlternative() = preferenceStore.getBoolean(
+        "translation_save_title_as_alternative",
+        true,
+    )
+
+    // Custom HTTP Translation Engine Settings
+
+    /**
+     * Custom HTTP translation API URL.
+     * Should accept POST requests with JSON body.
+     */
+    fun customHttpUrl() = preferenceStore.getString(
+        "translation_custom_http_url",
+        "",
+    )
+
+    /**
+     * Custom HTTP API key (sent in Authorization header).
+     */
+    fun customHttpApiKey() = preferenceStore.getString(
+        "translation_custom_http_api_key",
+        "",
+    )
+
+    /**
+     * Custom HTTP request template.
+     * Use placeholders: {text}, {texts}, {source}, {target}
+     * Example: {"q": "{text}", "source": "{source}", "target": "{target}"}
+     */
+    fun customHttpRequestTemplate() = preferenceStore.getString(
+        "translation_custom_http_request_template",
+        """{"q": {texts}, "source": "{source}", "target": "{target}"}""",
+    )
+
+    /**
+     * Custom HTTP response JSON path for extracting translated text.
+     * Use dot notation: translatedText or result.translations[0].text
+     */
+    fun customHttpResponsePath() = preferenceStore.getString(
+        "translation_custom_http_response_path",
+        "translatedText",
+    )
+
+    /**
+     * Translation chunk mode: "paragraphs", "characters", or "words"
+     */
+    fun translationChunkMode() = preferenceStore.getString(
+        "translation_chunk_mode",
+        "paragraphs",
+    )
+
+    /**
+     * Maximum chunk size per translation batch.
+     * Meaning depends on chunkMode: paragraphs count, character count, or word count.
+     */
+    fun translationChunkSize() = preferenceStore.getInt(
+        "translation_chunk_size",
+        50,
     )
 }

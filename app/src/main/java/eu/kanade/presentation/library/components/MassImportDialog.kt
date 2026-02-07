@@ -32,7 +32,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import eu.kanade.domain.manga.interactor.MassImportNovels
+import eu.kanade.domain.manga.interactor.MassImport
 import eu.kanade.tachiyomi.data.massimport.MassImportJob
 import eu.kanade.presentation.category.visualName
 import eu.kanade.tachiyomi.util.system.copyToClipboard
@@ -52,6 +52,7 @@ fun MassImportDialog(
     onDismissRequest: () -> Unit,
     onImportComplete: (added: Int, skipped: Int, errored: Int) -> Unit,
     initialText: String = "",
+    isNovelMode: Boolean = true, // Default to novel mode for backward compatibility
 ) {
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
@@ -154,12 +155,14 @@ fun MassImportDialog(
     var fetchDetails by remember { mutableStateOf(true) }
     var syncChapterList by remember { mutableStateOf(false) }
 
-    val massImportNovels = remember { Injekt.get<MassImportNovels>() }
+    val massImportNovels = remember { Injekt.get<MassImport>() }
     
     val queue by MassImportJob.sharedQueue.collectAsState()
     
     val getCategories = remember { Injekt.get<GetCategories>() }
-    val categories by getCategories.subscribe().collectAsState(initial = emptyList())
+    // Filter categories by content type (manga vs novel)
+    val contentType = if (isNovelMode) Category.CONTENT_TYPE_NOVEL else Category.CONTENT_TYPE_MANGA
+    val categories by getCategories.subscribeByContentType(contentType).collectAsState(initial = emptyList())
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -471,7 +474,7 @@ fun MassImportDialog(
 
                 // Analysis
                 val scope = rememberCoroutineScope()
-                var analysisResult by remember { mutableStateOf<MassImportNovels.UrlAnalysisResult?>(null) }
+                var analysisResult by remember { mutableStateOf<MassImport.UrlAnalysisResult?>(null) }
                 var isAnalyzing by remember { mutableStateOf(false) }
 
                 LaunchedEffect(urlText) {
@@ -538,6 +541,7 @@ fun MassImportDialog(
                                 context = context,
                                 urls = uniqueUrls,
                                 addToLibrary = true,
+                                fetchDetails = fetchDetails,
                                 categoryId = selectedCategoryId ?: 0L,
                                 fetchChapters = syncChapterList,
                             )

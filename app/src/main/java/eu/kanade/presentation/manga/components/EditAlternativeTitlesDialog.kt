@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -34,9 +35,11 @@ import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun EditAlternativeTitlesDialog(
+    mainTitle: String = "",
     currentTitles: List<String>,
     onDismissRequest: () -> Unit,
     onConfirm: (List<String>) -> Unit,
+    onSwapMainTitle: ((newMainTitle: String, updatedAltTitles: List<String>) -> Unit)? = null,
 ) {
     var titles by remember { mutableStateOf(currentTitles) }
     var newTitle by remember { mutableStateOf("") }
@@ -108,6 +111,24 @@ fun EditAlternativeTitlesDialog(
                                     modifier = Modifier.weight(1f),
                                     style = MaterialTheme.typography.bodyMedium,
                                 )
+                                if (onSwapMainTitle != null && mainTitle.isNotEmpty()) {
+                                    IconButton(
+                                        onClick = {
+                                            val updatedTitles = titles.toMutableList().apply {
+                                                removeAt(index)
+                                                add(0, mainTitle)
+                                            }
+                                            onSwapMainTitle(title, updatedTitles)
+                                            onDismissRequest()
+                                        },
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Star,
+                                            contentDescription = "Make main title",
+                                            tint = MaterialTheme.colorScheme.primary,
+                                        )
+                                    }
+                                }
                                 IconButton(
                                     onClick = {
                                         titles = titles.toMutableList().apply { removeAt(index) }
