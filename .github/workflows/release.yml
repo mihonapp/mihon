@@ -127,10 +127,17 @@ jobs:
       contents: write
 
     steps:
-      - name: Download all artifacts
+      - name: Download Standard APKs
         uses: actions/download-artifact@v4
         with:
-          merge-multiple: true
+          name: mihon-ds
+          path: .
+
+      - name: Download FOSS APKs
+        uses: actions/download-artifact@v4
+        with:
+          name: mihon-ds-foss
+          path: .
 
       - name: Delete all artifacts
         uses: geekyeggo/delete-artifact@v5
