@@ -169,7 +169,7 @@ class MainActivity : BaseActivity() {
 
         preferences.enableDualScreenMode().changes()
             .onEach { enabled ->
-                if (enabled) {
+                if (enabled || preferences.enableDualScreenMode().get()) {
                     checkAndStartDualScreenActivity()
                 } else {
                     DualScreenState.close()
