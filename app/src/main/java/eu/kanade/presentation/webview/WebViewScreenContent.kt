@@ -259,7 +259,7 @@ fun WebViewScreenContent(
                                     .clip(MaterialTheme.shapes.small)
                                     .clickable {
                                         uriHandler.openUri(
-                                            "https://mihon.app/docs/guides/troubleshooting/#cloudflare",
+                                            "https://github.com/mis0suppe/mihon-ds/issues",
                                         )
                                     },
                             )
