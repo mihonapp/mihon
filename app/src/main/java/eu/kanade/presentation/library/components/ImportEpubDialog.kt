@@ -93,16 +93,12 @@ fun ImportEpubDialog(
 
     var selectedFiles = remember { mutableStateListOf<EpubFileInfo>() }
     var customTitle by remember { mutableStateOf("") }
-    var selectedCategoryId by remember { mutableStateOf<Long?>(null) }
-    var categoryDropdownExpanded by remember { mutableStateOf(false) }
     var combineAsOneNovel by remember { mutableStateOf(false) }
 
     var importProgress by remember { mutableStateOf<ImportProgress?>(null) }
     var importResult by remember { mutableStateOf<ImportResult?>(null) }
     var isLoadingFiles by remember { mutableStateOf(false) }
 
-    val getCategories = remember { Injekt.get<GetCategories>() }
-    val categories by getCategories.subscribe().collectAsState(initial = emptyList())
     val storageManager = remember { Injekt.get<StorageManager>() }
 
     // File picker for multiple EPUB files
@@ -141,15 +137,29 @@ fun ImportEpubDialog(
                             var coverUri: Uri? = null
                             try {
                                 val coverHref = manga.thumbnail_url
-                                if (!coverHref.isNullOrBlank()) {
-                                    val coverStream = epubReader.getInputStream(coverHref)
-                                    if (coverStream != null) {
-                                        val coverFile = File.createTempFile("epub_cover_", ".png", context.cacheDir)
-                                        coverFile.outputStream().use { out ->
-                                            coverStream.copyTo(out)
-                                        }
-                                        coverUri = UniFile.fromFile(coverFile)?.uri
+                                val coverStream = if (!coverHref.isNullOrBlank()) {
+                                    epubReader.getInputStream(coverHref)
+                                } else {
+                                    // Fallback: try common cover filenames
+                                    val commonNames = listOf(
+                                        "cover.jpg", "cover.jpeg", "cover.png",
+                                        "OEBPS/cover.jpg", "OEBPS/cover.jpeg", "OEBPS/cover.png",
+                                        "Images/cover.jpg", "Images/cover.jpeg", "Images/cover.png"
+                                    )
+                                    var stream: java.io.InputStream? = null
+                                    for (name in commonNames) {
+                                        stream = epubReader.getInputStream(name)
+                                        if (stream != null) break
                                     }
+                                    stream
+                                }
+
+                                if (coverStream != null) {
+                                    val coverFile = File.createTempFile("epub_cover_", ".png", context.cacheDir)
+                                    coverFile.outputStream().use { out ->
+                                        coverStream.copyTo(out)
+                                    }
+                                    coverUri = UniFile.fromFile(coverFile)?.uri
                                 }
                             } catch (e: Exception) {
                                 logcat(LogPriority.DEBUG, e) { "Could not extract cover from EPUB" }
@@ -198,12 +208,10 @@ fun ImportEpubDialog(
             ) {
                 when {
                     importResult != null -> {
-                        // Show results
-                        Text("Import complete!")
+                        ImportResultView(importResult!!)
                     }
                     importProgress != null -> {
-                        // Show progress
-                        Text("Importing...")
+                        ImportProgressView(importProgress!!)
                     }
                     else -> {
                         // Selection UI
@@ -262,61 +270,6 @@ fun ImportEpubDialog(
                                 }
                                 Spacer(Modifier.height(8.dp))
                             }
-
-                            // Category selection
-                            val userCategories = remember(categories) {
-                                categories
-                                    .asSequence()
-                                    .filterNot(Category::isSystemCategory)
-                                    .filter { it.contentType != Category.CONTENT_TYPE_MANGA }
-                                    .toList()
-                            }
-                            val defaultCategoryName = stringResource(MR.strings.default_category)
-                            val selectedCategoryName = if (selectedCategoryId == null) {
-                                defaultCategoryName
-                            } else {
-                                userCategories.firstOrNull { it.id == selectedCategoryId }?.visualName
-                                    ?: defaultCategoryName
-                            }
-
-                            Text(
-                                text = "Category:",
-                                style = MaterialTheme.typography.labelMedium,
-                            )
-                            Spacer(Modifier.height(4.dp))
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { categoryDropdownExpanded = true }
-                                    .padding(8.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Text(selectedCategoryName)
-                                Icon(Icons.Outlined.ArrowDropDown, contentDescription = null)
-
-                                DropdownMenu(
-                                    expanded = categoryDropdownExpanded,
-                                    onDismissRequest = { categoryDropdownExpanded = false },
-                                ) {
-                                    DropdownMenuItem(
-                                        text = { Text(defaultCategoryName) },
-                                        onClick = {
-                                            selectedCategoryId = null
-                                            categoryDropdownExpanded = false
-                                        },
-                                    )
-                                    userCategories.forEach { category ->
-                                        DropdownMenuItem(
-                                            text = { Text(category.visualName) },
-                                            onClick = {
-                                                selectedCategoryId = category.id
-                                                categoryDropdownExpanded = false
-                                            },
-                                        )
-                                    }
-                                }
-                            }
                         }
                     }
                 }
@@ -336,7 +289,23 @@ fun ImportEpubDialog(
                     TextButton(
                         onClick = {
                             if (selectedFiles.isNotEmpty()) {
-                                // Handle import action
+                                scope.launch {
+                                    importProgress = ImportProgress(0, selectedFiles.size, "", true)
+                                    val result = importEpubFiles(
+                                        context = context,
+                                        files = selectedFiles.toList(),
+                                        customTitle = customTitle.ifBlank { null },
+                                        combineAsOne = combineAsOneNovel,
+                                        categoryId = null,
+                                        storageManager = storageManager,
+                                        onProgress = { current, total, fileName ->
+                                            importProgress = ImportProgress(current, total, fileName, true)
+                                        },
+                                    )
+                                    importProgress = null
+                                    importResult = result
+                                    onImportComplete(result.successCount, result.errorCount)
+                                }
                             }
                         },
                         enabled = selectedFiles.isNotEmpty(),

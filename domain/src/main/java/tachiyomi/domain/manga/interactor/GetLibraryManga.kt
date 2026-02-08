@@ -32,7 +32,7 @@ class GetLibraryManga(
     
     // Cached library data - ONLY updated via refresh()
     private val _libraryState = MutableStateFlow<List<LibraryManga>>(emptyList())
-    private val _isLoading = MutableStateFlow(false)
+    private val _isLoading = MutableStateFlow(true)
     private var isInitialized = false
     private var lastRefreshTime = 0L
     
@@ -106,6 +106,9 @@ class GetLibraryManga(
                 logcat(LogPriority.DEBUG) { "GetLibraryManga: Skipping refresh (too soon, ${now - lastRefreshTime}ms since last)" }
                 return
             }
+            
+            // Always invalidate the repository's in-memory cache so refresh returns fresh data
+            mangaRepository.invalidateLibraryCache()
             
             _isLoading.value = true
             val caller = Thread.currentThread().stackTrace.getOrNull(3)?.let { "${it.className}.${it.methodName}" } ?: "unknown"

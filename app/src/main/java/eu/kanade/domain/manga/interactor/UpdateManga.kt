@@ -32,7 +32,12 @@ class UpdateManga(
     }
 
     suspend fun awaitAll(mangaUpdates: List<MangaUpdate>): Boolean {
-        return mangaRepository.updateAll(mangaUpdates)
+        val result = mangaRepository.updateAll(mangaUpdates)
+        // Refresh library if any favorite status changed
+        if (result && mangaUpdates.any { it.favorite != null }) {
+            getLibraryManga.refreshForced()
+        }
+        return result
     }
 
     suspend fun awaitUpdateFromSource(
@@ -92,6 +97,10 @@ class UpdateManga(
         )
         if (success && title != null) {
             downloadManager.renameManga(localManga, title)
+        }
+        // Refresh library cache if this is a favorite manga (metadata may have changed)
+        if (success && localManga.favorite) {
+            getLibraryManga.refresh()
         }
         return success
     }

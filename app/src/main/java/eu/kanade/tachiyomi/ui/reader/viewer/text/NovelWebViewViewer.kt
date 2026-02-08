@@ -94,7 +94,7 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.On
             // Require horizontal swipe to be significantly more horizontal than vertical
             private val DIRECTION_RATIO = 1.5f
 
-            override fun onDown(e: MotionEvent): Boolean = true
+            override fun onDown(e: MotionEvent): Boolean = false
 
             override fun onFling(
                 e1: MotionEvent?,
@@ -271,8 +271,10 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.On
                 displayZoomControls = false
                 cacheMode = WebSettings.LOAD_DEFAULT
                 // Block images/videos if preference is set
-                blockNetworkImage = preferences.novelBlockMedia().get()
-                loadsImagesAutomatically = !preferences.novelBlockMedia().get()
+                // Note: using explicit get() to match ReaderPreferences signature
+                val shouldBlock = preferences.novelBlockMedia().get()
+                blockNetworkImage = shouldBlock
+                loadsImagesAutomatically = !shouldBlock
             }
 
             webViewClient = object : WebViewClient() {
@@ -1020,7 +1022,16 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.On
      * Prepend content to the existing WebView for infinite scroll (loading previous chapter)
      */
     private fun prependHtmlContent(content: String, chapterId: Long, chapterName: String) {
-        val escapedContent = content.replace("\\", "\\\\")
+        // Strip script/style/noscript tags from content
+        var cleanContent = content
+            .replace(Regex("<script[^>]*>[\\s\\S]*?</script>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("<script[^>]*/>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("<style[^>]*>[\\s\\S]*?</style>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("<noscript[^>]*>[\\s\\S]*?</noscript>", RegexOption.IGNORE_CASE), "")
+        if (preferences.novelBlockMedia().get()) {
+            cleanContent = stripMediaTags(cleanContent)
+        }
+        val escapedContent = cleanContent.replace("\\", "\\\\")
             .replace("`", "\\`")
             .replace("\$", "\\\$")
             .replace("\n", "\\n")
@@ -1072,7 +1083,16 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.On
      * Append content to the existing WebView for infinite scroll
      */
     private fun appendHtmlContent(content: String, chapterId: Long, chapterName: String) {
-        val escapedContent = content.replace("\\", "\\\\")
+        // Strip script/style/noscript tags from content
+        var cleanContent = content
+            .replace(Regex("<script[^>]*>[\\s\\S]*?</script>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("<script[^>]*/>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("<style[^>]*>[\\s\\S]*?</style>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("<noscript[^>]*>[\\s\\S]*?</noscript>", RegexOption.IGNORE_CASE), "")
+        if (preferences.novelBlockMedia().get()) {
+            cleanContent = stripMediaTags(cleanContent)
+        }
+        val escapedContent = cleanContent.replace("\\", "\\\\")
             .replace("`", "\\`")
             .replace("\$", "\\\$")
             .replace("\n", "\\n")
@@ -1106,6 +1126,18 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.On
     }
 
     private fun loadHtmlContent(content: String, chapterId: Long? = null, chapterName: String? = null) {
+        // Strip script tags from content to prevent unwanted JS execution
+        var cleanContent = content
+            .replace(Regex("<script[^>]*>[\\s\\S]*?</script>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("<script[^>]*/>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("<style[^>]*>[\\s\\S]*?</style>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("<noscript[^>]*>[\\s\\S]*?</noscript>", RegexOption.IGNORE_CASE), "")
+
+        val blockMedia = preferences.novelBlockMedia().get()
+        if (blockMedia) {
+            cleanContent = stripMediaTags(cleanContent)
+        }
+
         val theme = preferences.novelTheme().get()
         val (themeBgColor, themeTextColor) = getThemeColors(theme)
         val bgColorHex = String.format("#%06X", 0xFFFFFF and themeBgColor)
@@ -1125,6 +1157,12 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.On
         }
         val chapterDividerEnd = if (chapterId != null && preferences.novelInfiniteScroll().get()) "</div>" else ""
 
+        val mediaBlockCss = if (blockMedia) {
+            "img, video, audio, source, svg, image { display: none !important; }"
+        } else {
+            ""
+        }
+
         val html = """
             <!DOCTYPE html>
             <html>
@@ -1137,6 +1175,8 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.On
                         padding: 16px;
                         background-color: $bgColorHex;
                         color: $textColorHex;
+                        -webkit-user-select: text;
+                        user-select: text;
                     }
                     .chapter-divider {
                         height: 1px;
@@ -1145,17 +1185,39 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.On
                         background-color: $textColorHex;
                         opacity: 0.2;
                     }
+                    img {
+                        max-width: 100%;
+                        height: auto;
+                        display: block;
+                        margin: 8px auto;
+                    }
+                    video {
+                        max-width: 100%;
+                        height: auto;
+                    }
+                    $mediaBlockCss
                 </style>
             </head>
             <body>
                 $chapterDivider
-                $content
+                $cleanContent
                 $chapterDividerEnd
             </body>
             </html>
         """.trimIndent()
 
         webView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
+    }
+
+    private fun stripMediaTags(content: String): String {
+        return content
+            .replace(Regex("<img[^>]*>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("<image[^>]*>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("</image>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("<svg[^>]*>[\\s\\S]*?</svg>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("<video[^>]*>[\\s\\S]*?</video>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("<audio[^>]*>[\\s\\S]*?</audio>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("<source[^>]*>", RegexOption.IGNORE_CASE), "")
     }
 
     /**

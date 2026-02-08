@@ -210,6 +210,20 @@ actual class LocalNovelSource(
                 if (chapterFile.extension.equals("epub", true)) {
                     try {
                         chapterFile.epubReader(context).use { epub ->
+                            // Try to find and set the cover image if not set yet
+                            if (coverManager.find(manga.url) == null) {
+                                try {
+                                    val cover = epub.getCoverImage()
+                                    if (cover != null) {
+                                        epub.getInputStream(cover)?.use { stream ->
+                                            coverManager.update(manga, stream)
+                                        }
+                                    }
+                                } catch (e: Exception) {
+                                    logcat(LogPriority.ERROR, e) { "Error extracting cover from ${chapterFile.name}" }
+                                }
+                            }
+
                             val tocChapters = epub.getTableOfContents()
 
                             // If EPUB has multiple TOC entries, create separate chapters

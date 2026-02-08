@@ -1,0 +1,5 @@
+-- Migration 15: Remove unused views (libraryView and updatesView)
+-- These views were replaced by the library_cache and updates_cache tables
+
+DROP VIEW IF EXISTS libraryView;
+DROP VIEW IF EXISTS updatesView;

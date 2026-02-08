@@ -1,0 +1,455 @@
+-- Migration 13: Create library_cache table for performance optimization
+-- This replaces expensive VIEW joins with a pre-computed cache table
+-- Updated via triggers when underlying data changes
+
+-- Create the library_cache table to store pre-computed library aggregates
+CREATE TABLE IF NOT EXISTS library_cache (
+    manga_id INTEGER NOT NULL PRIMARY KEY,
+    total_count INTEGER NOT NULL DEFAULT 0,
+    read_count INTEGER NOT NULL DEFAULT 0,
+    latest_upload INTEGER NOT NULL DEFAULT 0,
+    chapter_fetched_at INTEGER NOT NULL DEFAULT 0,
+    last_read INTEGER NOT NULL DEFAULT 0,
+    bookmark_count INTEGER NOT NULL DEFAULT 0,
+    category_ids TEXT NOT NULL DEFAULT '0',
+    FOREIGN KEY (manga_id) REFERENCES mangas(_id) ON DELETE CASCADE
+);
+
+-- Create indexes for efficient lookups
+CREATE INDEX library_cache_manga_id_idx ON library_cache(manga_id);
+
+-- Populate initial cache data from existing libraryView calculation
+INSERT OR REPLACE INTO library_cache (
+    manga_id,
+    total_count,
+    read_count,
+    latest_upload,
+    chapter_fetched_at,
+    last_read,
+    bookmark_count,
+    category_ids
+)
+SELECT
+    M._id,
+    coalesce(C.total, 0),
+    coalesce(C.readCount, 0),
+    coalesce(C.latestUpload, 0),
+    coalesce(C.fetchedAt, 0),
+    coalesce(C.lastRead, 0),
+    coalesce(C.bookmarkCount, 0),
+    coalesce(MC.categories, '0')
+FROM mangas M
+LEFT JOIN (
+    SELECT
+        chapters.manga_id,
+        count(*) AS total,
+        sum(read) AS readCount,
+        coalesce(max(chapters.date_upload), 0) AS latestUpload,
+        coalesce(max(history.last_read), 0) AS lastRead,
+        coalesce(max(chapters.date_fetch), 0) AS fetchedAt,
+        sum(chapters.bookmark) AS bookmarkCount
+    FROM chapters
+    LEFT JOIN excluded_scanlators
+    ON chapters.manga_id = excluded_scanlators.manga_id
+    AND chapters.scanlator = excluded_scanlators.scanlator
+    LEFT JOIN history
+    ON chapters._id = history.chapter_id
+    WHERE excluded_scanlators.scanlator IS NULL
+    GROUP BY chapters.manga_id
+) AS C
+ON M._id = C.manga_id
+LEFT JOIN (
+    SELECT manga_id, group_concat(category_id) AS categories
+    FROM mangas_categories
+    GROUP BY manga_id
+) AS MC
+ON MC.manga_id = M._id
+WHERE M.favorite = 1;
+
+-- Trigger: Update cache when a chapter is inserted
+CREATE TRIGGER library_cache_chapter_insert
+AFTER INSERT ON chapters
+WHEN (SELECT favorite FROM mangas WHERE _id = NEW.manga_id) = 1
+BEGIN
+    INSERT OR REPLACE INTO library_cache (
+        manga_id, total_count, read_count, latest_upload, chapter_fetched_at, last_read, bookmark_count, category_ids
+    )
+    SELECT
+        M._id,
+        coalesce(C.total, 0),
+        coalesce(C.readCount, 0),
+        coalesce(C.latestUpload, 0),
+        coalesce(C.fetchedAt, 0),
+        coalesce(C.lastRead, 0),
+        coalesce(C.bookmarkCount, 0),
+        coalesce((SELECT group_concat(category_id) FROM mangas_categories WHERE manga_id = M._id), '0')
+    FROM mangas M
+    LEFT JOIN (
+        SELECT
+            chapters.manga_id,
+            count(*) AS total,
+            sum(read) AS readCount,
+            coalesce(max(chapters.date_upload), 0) AS latestUpload,
+            coalesce(max(history.last_read), 0) AS lastRead,
+            coalesce(max(chapters.date_fetch), 0) AS fetchedAt,
+            sum(chapters.bookmark) AS bookmarkCount
+        FROM chapters
+        LEFT JOIN excluded_scanlators
+        ON chapters.manga_id = excluded_scanlators.manga_id
+        AND chapters.scanlator = excluded_scanlators.scanlator
+        LEFT JOIN history
+        ON chapters._id = history.chapter_id
+        WHERE excluded_scanlators.scanlator IS NULL
+        AND chapters.manga_id = NEW.manga_id
+        GROUP BY chapters.manga_id
+    ) AS C ON M._id = C.manga_id
+    WHERE M._id = NEW.manga_id;
+END;
+
+-- Trigger: Update cache when a chapter is updated (read status, bookmark, etc.)
+CREATE TRIGGER library_cache_chapter_update
+AFTER UPDATE ON chapters
+WHEN (SELECT favorite FROM mangas WHERE _id = NEW.manga_id) = 1
+BEGIN
+    INSERT OR REPLACE INTO library_cache (
+        manga_id, total_count, read_count, latest_upload, chapter_fetched_at, last_read, bookmark_count, category_ids
+    )
+    SELECT
+        M._id,
+        coalesce(C.total, 0),
+        coalesce(C.readCount, 0),
+        coalesce(C.latestUpload, 0),
+        coalesce(C.fetchedAt, 0),
+        coalesce(C.lastRead, 0),
+        coalesce(C.bookmarkCount, 0),
+        coalesce((SELECT group_concat(category_id) FROM mangas_categories WHERE manga_id = M._id), '0')
+    FROM mangas M
+    LEFT JOIN (
+        SELECT
+            chapters.manga_id,
+            count(*) AS total,
+            sum(read) AS readCount,
+            coalesce(max(chapters.date_upload), 0) AS latestUpload,
+            coalesce(max(history.last_read), 0) AS lastRead,
+            coalesce(max(chapters.date_fetch), 0) AS fetchedAt,
+            sum(chapters.bookmark) AS bookmarkCount
+        FROM chapters
+        LEFT JOIN excluded_scanlators
+        ON chapters.manga_id = excluded_scanlators.manga_id
+        AND chapters.scanlator = excluded_scanlators.scanlator
+        LEFT JOIN history
+        ON chapters._id = history.chapter_id
+        WHERE excluded_scanlators.scanlator IS NULL
+        AND chapters.manga_id = NEW.manga_id
+        GROUP BY chapters.manga_id
+    ) AS C ON M._id = C.manga_id
+    WHERE M._id = NEW.manga_id;
+END;
+
+-- Trigger: Update cache when a chapter is deleted
+CREATE TRIGGER library_cache_chapter_delete
+AFTER DELETE ON chapters
+WHEN (SELECT favorite FROM mangas WHERE _id = OLD.manga_id) = 1
+BEGIN
+    INSERT OR REPLACE INTO library_cache (
+        manga_id, total_count, read_count, latest_upload, chapter_fetched_at, last_read, bookmark_count, category_ids
+    )
+    SELECT
+        M._id,
+        coalesce(C.total, 0),
+        coalesce(C.readCount, 0),
+        coalesce(C.latestUpload, 0),
+        coalesce(C.fetchedAt, 0),
+        coalesce(C.lastRead, 0),
+        coalesce(C.bookmarkCount, 0),
+        coalesce((SELECT group_concat(category_id) FROM mangas_categories WHERE manga_id = M._id), '0')
+    FROM mangas M
+    LEFT JOIN (
+        SELECT
+            chapters.manga_id,
+            count(*) AS total,
+            sum(read) AS readCount,
+            coalesce(max(chapters.date_upload), 0) AS latestUpload,
+            coalesce(max(history.last_read), 0) AS lastRead,
+            coalesce(max(chapters.date_fetch), 0) AS fetchedAt,
+            sum(chapters.bookmark) AS bookmarkCount
+        FROM chapters
+        LEFT JOIN excluded_scanlators
+        ON chapters.manga_id = excluded_scanlators.manga_id
+        AND chapters.scanlator = excluded_scanlators.scanlator
+        LEFT JOIN history
+        ON chapters._id = history.chapter_id
+        WHERE excluded_scanlators.scanlator IS NULL
+        AND chapters.manga_id = OLD.manga_id
+        GROUP BY chapters.manga_id
+    ) AS C ON M._id = C.manga_id
+    WHERE M._id = OLD.manga_id;
+END;
+
+-- Trigger: Update cache when history is updated (last_read timestamp)
+CREATE TRIGGER library_cache_history_update
+AFTER UPDATE ON history
+BEGIN
+    -- Use INSERT OR IGNORE + UPDATE to avoid UNIQUE constraint errors with complex SELECT
+    INSERT OR IGNORE INTO library_cache (manga_id, total_count, read_count, latest_upload, chapter_fetched_at, last_read, bookmark_count, category_ids)
+    SELECT
+        (SELECT manga_id FROM chapters WHERE _id = NEW.chapter_id),
+        0, 0, 0, 0, 0, 0, '0'
+    WHERE (SELECT favorite FROM mangas WHERE _id = (SELECT manga_id FROM chapters WHERE _id = NEW.chapter_id)) = 1;
+
+    UPDATE library_cache
+    SET
+        total_count = (
+            SELECT count(*)
+            FROM chapters
+            LEFT JOIN excluded_scanlators
+            ON chapters.manga_id = excluded_scanlators.manga_id AND chapters.scanlator = excluded_scanlators.scanlator
+            WHERE excluded_scanlators.scanlator IS NULL AND chapters.manga_id = library_cache.manga_id
+        ),
+        read_count = (
+            SELECT sum(read)
+            FROM chapters
+            LEFT JOIN excluded_scanlators
+            ON chapters.manga_id = excluded_scanlators.manga_id AND chapters.scanlator = excluded_scanlators.scanlator
+            WHERE excluded_scanlators.scanlator IS NULL AND chapters.manga_id = library_cache.manga_id
+        ),
+        latest_upload = (
+            SELECT coalesce(max(date_upload), 0)
+            FROM chapters
+            LEFT JOIN excluded_scanlators
+            ON chapters.manga_id = excluded_scanlators.manga_id AND chapters.scanlator = excluded_scanlators.scanlator
+            WHERE excluded_scanlators.scanlator IS NULL AND chapters.manga_id = library_cache.manga_id
+        ),
+        last_read = (
+            SELECT coalesce(max(history.last_read), 0)
+            FROM chapters
+            LEFT JOIN history ON chapters._id = history.chapter_id
+            WHERE chapters.manga_id = library_cache.manga_id
+        ),
+        chapter_fetched_at = (
+            SELECT coalesce(max(date_fetch), 0)
+            FROM chapters
+            LEFT JOIN excluded_scanlators
+            ON chapters.manga_id = excluded_scanlators.manga_id AND chapters.scanlator = excluded_scanlators.scanlator
+            WHERE excluded_scanlators.scanlator IS NULL AND chapters.manga_id = library_cache.manga_id
+        ),
+        bookmark_count = (
+            SELECT sum(bookmark)
+            FROM chapters
+            LEFT JOIN excluded_scanlators
+            ON chapters.manga_id = excluded_scanlators.manga_id AND chapters.scanlator = excluded_scanlators.scanlator
+            WHERE excluded_scanlators.scanlator IS NULL AND chapters.manga_id = library_cache.manga_id
+        ),
+        category_ids = coalesce((SELECT group_concat(category_id) FROM mangas_categories WHERE manga_id = library_cache.manga_id), '0')
+    WHERE manga_id = (SELECT manga_id FROM chapters WHERE _id = NEW.chapter_id);
+END;
+
+-- Trigger: Update cache when history is inserted
+CREATE TRIGGER library_cache_history_insert
+AFTER INSERT ON history
+BEGIN
+    -- Use INSERT OR IGNORE + UPDATE to avoid UNIQUE constraint errors with complex SELECT
+    INSERT OR IGNORE INTO library_cache (manga_id, total_count, read_count, latest_upload, chapter_fetched_at, last_read, bookmark_count, category_ids)
+    SELECT
+        (SELECT manga_id FROM chapters WHERE _id = NEW.chapter_id),
+        0, 0, 0, 0, 0, 0, '0'
+    WHERE (SELECT favorite FROM mangas WHERE _id = (SELECT manga_id FROM chapters WHERE _id = NEW.chapter_id)) = 1;
+
+    UPDATE library_cache
+    SET
+        total_count = (
+            SELECT count(*)
+            FROM chapters
+            LEFT JOIN excluded_scanlators
+            ON chapters.manga_id = excluded_scanlators.manga_id AND chapters.scanlator = excluded_scanlators.scanlator
+            WHERE excluded_scanlators.scanlator IS NULL AND chapters.manga_id = library_cache.manga_id
+        ),
+        read_count = (
+            SELECT sum(read)
+            FROM chapters
+            LEFT JOIN excluded_scanlators
+            ON chapters.manga_id = excluded_scanlators.manga_id AND chapters.scanlator = excluded_scanlators.scanlator
+            WHERE excluded_scanlators.scanlator IS NULL AND chapters.manga_id = library_cache.manga_id
+        ),
+        latest_upload = (
+            SELECT coalesce(max(date_upload), 0)
+            FROM chapters
+            LEFT JOIN excluded_scanlators
+            ON chapters.manga_id = excluded_scanlators.manga_id AND chapters.scanlator = excluded_scanlators.scanlator
+            WHERE excluded_scanlators.scanlator IS NULL AND chapters.manga_id = library_cache.manga_id
+        ),
+        last_read = (
+            SELECT coalesce(max(history.last_read), 0)
+            FROM chapters
+            LEFT JOIN history ON chapters._id = history.chapter_id
+            WHERE chapters.manga_id = library_cache.manga_id
+        ),
+        chapter_fetched_at = (
+            SELECT coalesce(max(date_fetch), 0)
+            FROM chapters
+            LEFT JOIN excluded_scanlators
+            ON chapters.manga_id = excluded_scanlators.manga_id AND chapters.scanlator = excluded_scanlators.scanlator
+            WHERE excluded_scanlators.scanlator IS NULL AND chapters.manga_id = library_cache.manga_id
+        ),
+        bookmark_count = (
+            SELECT sum(bookmark)
+            FROM chapters
+            LEFT JOIN excluded_scanlators
+            ON chapters.manga_id = excluded_scanlators.manga_id AND chapters.scanlator = excluded_scanlators.scanlator
+            WHERE excluded_scanlators.scanlator IS NULL AND chapters.manga_id = library_cache.manga_id
+        ),
+        category_ids = coalesce((SELECT group_concat(category_id) FROM mangas_categories WHERE manga_id = library_cache.manga_id), '0')
+    WHERE manga_id = (SELECT manga_id FROM chapters WHERE _id = NEW.chapter_id);
+END;
+
+-- Trigger: Update cache when category assignment changes
+CREATE TRIGGER library_cache_category_insert
+AFTER INSERT ON mangas_categories
+BEGIN
+    UPDATE library_cache
+    SET category_ids = coalesce((SELECT group_concat(category_id) FROM mangas_categories WHERE manga_id = NEW.manga_id), '0')
+    WHERE manga_id = NEW.manga_id;
+END;
+
+CREATE TRIGGER library_cache_category_delete
+AFTER DELETE ON mangas_categories
+BEGIN
+    UPDATE library_cache
+    SET category_ids = coalesce((SELECT group_concat(category_id) FROM mangas_categories WHERE manga_id = OLD.manga_id), '0')
+    WHERE manga_id = OLD.manga_id;
+END;
+
+-- Trigger: Add to cache when manga becomes favorite
+CREATE TRIGGER library_cache_manga_favorite
+AFTER UPDATE OF favorite ON mangas
+WHEN NEW.favorite = 1 AND OLD.favorite = 0
+BEGIN
+    INSERT OR REPLACE INTO library_cache (
+        manga_id, total_count, read_count, latest_upload, chapter_fetched_at, last_read, bookmark_count, category_ids
+    )
+    SELECT
+        M._id,
+        coalesce(C.total, 0),
+        coalesce(C.readCount, 0),
+        coalesce(C.latestUpload, 0),
+        coalesce(C.fetchedAt, 0),
+        coalesce(C.lastRead, 0),
+        coalesce(C.bookmarkCount, 0),
+        coalesce((SELECT group_concat(category_id) FROM mangas_categories WHERE manga_id = M._id), '0')
+    FROM mangas M
+    LEFT JOIN (
+        SELECT
+            chapters.manga_id,
+            count(*) AS total,
+            sum(read) AS readCount,
+            coalesce(max(chapters.date_upload), 0) AS latestUpload,
+            coalesce(max(history.last_read), 0) AS lastRead,
+            coalesce(max(chapters.date_fetch), 0) AS fetchedAt,
+            sum(chapters.bookmark) AS bookmarkCount
+        FROM chapters
+        LEFT JOIN excluded_scanlators
+        ON chapters.manga_id = excluded_scanlators.manga_id
+        AND chapters.scanlator = excluded_scanlators.scanlator
+        LEFT JOIN history
+        ON chapters._id = history.chapter_id
+        WHERE excluded_scanlators.scanlator IS NULL
+        AND chapters.manga_id = NEW._id
+        GROUP BY chapters.manga_id
+    ) AS C ON M._id = C.manga_id
+    WHERE M._id = NEW._id;
+END;
+
+-- Trigger: Remove from cache when manga is unfavorited
+CREATE TRIGGER library_cache_manga_unfavorite
+AFTER UPDATE OF favorite ON mangas
+WHEN NEW.favorite = 0 AND OLD.favorite = 1
+BEGIN
+    DELETE FROM library_cache WHERE manga_id = OLD._id;
+END;
+
+-- Trigger: Remove from cache when manga is deleted
+CREATE TRIGGER library_cache_manga_delete
+AFTER DELETE ON mangas
+BEGIN
+    DELETE FROM library_cache WHERE manga_id = OLD._id;
+END;
+
+-- Trigger: Update cache when excluded scanlator is added
+CREATE TRIGGER library_cache_scanlator_insert
+AFTER INSERT ON excluded_scanlators
+BEGIN
+    INSERT OR REPLACE INTO library_cache (
+        manga_id, total_count, read_count, latest_upload, chapter_fetched_at, last_read, bookmark_count, category_ids
+    )
+    SELECT
+        M._id,
+        coalesce(C.total, 0),
+        coalesce(C.readCount, 0),
+        coalesce(C.latestUpload, 0),
+        coalesce(C.fetchedAt, 0),
+        coalesce(C.lastRead, 0),
+        coalesce(C.bookmarkCount, 0),
+        coalesce((SELECT group_concat(category_id) FROM mangas_categories WHERE manga_id = M._id), '0')
+    FROM mangas M
+    LEFT JOIN (
+        SELECT
+            chapters.manga_id,
+            count(*) AS total,
+            sum(read) AS readCount,
+            coalesce(max(chapters.date_upload), 0) AS latestUpload,
+            coalesce(max(history.last_read), 0) AS lastRead,
+            coalesce(max(chapters.date_fetch), 0) AS fetchedAt,
+            sum(chapters.bookmark) AS bookmarkCount
+        FROM chapters
+        LEFT JOIN excluded_scanlators
+        ON chapters.manga_id = excluded_scanlators.manga_id
+        AND chapters.scanlator = excluded_scanlators.scanlator
+        LEFT JOIN history
+        ON chapters._id = history.chapter_id
+        WHERE excluded_scanlators.scanlator IS NULL
+        AND chapters.manga_id = NEW.manga_id
+        GROUP BY chapters.manga_id
+    ) AS C ON M._id = C.manga_id
+    WHERE M._id = NEW.manga_id
+    AND M.favorite = 1;
+END;
+
+-- Trigger: Update cache when excluded scanlator is removed
+CREATE TRIGGER library_cache_scanlator_delete
+AFTER DELETE ON excluded_scanlators
+BEGIN
+    INSERT OR REPLACE INTO library_cache (
+        manga_id, total_count, read_count, latest_upload, chapter_fetched_at, last_read, bookmark_count, category_ids
+    )
+    SELECT
+        M._id,
+        coalesce(C.total, 0),
+        coalesce(C.readCount, 0),
+        coalesce(C.latestUpload, 0),
+        coalesce(C.fetchedAt, 0),
+        coalesce(C.lastRead, 0),
+        coalesce(C.bookmarkCount, 0),
+        coalesce((SELECT group_concat(category_id) FROM mangas_categories WHERE manga_id = M._id), '0')
+    FROM mangas M
+    LEFT JOIN (
+        SELECT
+            chapters.manga_id,
+            count(*) AS total,
+            sum(read) AS readCount,
+            coalesce(max(chapters.date_upload), 0) AS latestUpload,
+            coalesce(max(history.last_read), 0) AS lastRead,
+            coalesce(max(chapters.date_fetch), 0) AS fetchedAt,
+            sum(chapters.bookmark) AS bookmarkCount
+        FROM chapters
+        LEFT JOIN excluded_scanlators
+        ON chapters.manga_id = excluded_scanlators.manga_id
+        AND chapters.scanlator = excluded_scanlators.scanlator
+        LEFT JOIN history
+        ON chapters._id = history.chapter_id
+        WHERE excluded_scanlators.scanlator IS NULL
+        AND chapters.manga_id = OLD.manga_id
+        GROUP BY chapters.manga_id
+    ) AS C ON M._id = C.manga_id
+    WHERE M._id = OLD.manga_id
+    AND M.favorite = 1;
+END;

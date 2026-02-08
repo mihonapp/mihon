@@ -8,7 +8,6 @@ import eu.kanade.tachiyomi.data.translation.engine.LibreTranslateEngine
 import eu.kanade.tachiyomi.source.fetchNovelPageText
 import eu.kanade.tachiyomi.source.isNovelSource
 import eu.kanade.tachiyomi.source.model.Page
-import eu.kanade.tachiyomi.source.online.HttpSource
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -397,11 +396,11 @@ class TranslationService(
         // Fall back to fetching from source
         logcat(LogPriority.DEBUG) { "Fetching content from source for chapter: ${chapter.name}" }
 
-        val httpSource = sourceManager.get(manga.source) as? HttpSource
-            ?: throw IllegalStateException("Source is not an HttpSource")
+        val source = sourceManager.get(manga.source)
+            ?: throw IllegalStateException("Source not found for id=${manga.source}")
 
-        if (!httpSource.isNovelSource()) {
-            throw IllegalStateException("Source ${httpSource.name} is not a novel source")
+        if (!source.isNovelSource()) {
+            throw IllegalStateException("Source ${source.name} is not a novel source")
         }
 
         // Create page object for the chapter
@@ -413,7 +412,7 @@ class TranslationService(
         }
 
         // Fetch content from source
-        val content = httpSource.fetchNovelPageText(page)
+        val content = source.fetchNovelPageText(page)
 
         // Update progress
         _progressState.update { current ->

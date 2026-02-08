@@ -2,7 +2,10 @@ package eu.kanade.tachiyomi.ui.reader.viewer.text
 
 import android.annotation.SuppressLint
 import android.graphics.Canvas
+import android.graphics.ColorFilter
 import android.graphics.Paint
+import android.graphics.PixelFormat
+import android.graphics.drawable.Drawable
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.text.Editable
@@ -23,6 +26,9 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
+import coil3.asDrawable
+import coil3.imageLoader
+import coil3.request.ImageRequest
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
@@ -96,6 +102,118 @@ private class ParagraphIndentSpan(private val indentPx: Int) : LeadingMarginSpan
         layout: Layout,
     ) {
         // No custom drawing needed
+    }
+}
+
+/**
+ * Drawable wrapper that delegates drawing to an inner drawable.
+ * Used as a placeholder that can be updated asynchronously when images load.
+ */
+private class DrawableWrapper : Drawable() {
+    var innerDrawable: Drawable? = null
+
+    override fun draw(canvas: Canvas) {
+        innerDrawable?.draw(canvas)
+    }
+
+    override fun setAlpha(alpha: Int) {
+        innerDrawable?.alpha = alpha
+    }
+
+    override fun setColorFilter(colorFilter: ColorFilter?) {
+        innerDrawable?.colorFilter = colorFilter
+    }
+
+    @Deprecated("Deprecated in Java", ReplaceWith("PixelFormat.TRANSPARENT", "android.graphics.PixelFormat"))
+    override fun getOpacity(): Int = innerDrawable?.opacity ?: PixelFormat.TRANSPARENT
+}
+
+/**
+ * Html.ImageGetter implementation that loads images asynchronously using Coil 3.
+ * Images are scaled to fit within the TextView width while maintaining aspect ratio.
+ */
+private class CoilImageGetter(
+    private val textView: TextView,
+    private val activity: ReaderActivity,
+) : Html.ImageGetter {
+
+    override fun getDrawable(source: String?): Drawable {
+        val wrapper = DrawableWrapper()
+        if (source.isNullOrBlank()) return wrapper
+
+        // Handle base64 data URIs inline (EPUB downloads encode media as base64)
+        if (source.startsWith("data:")) {
+            try {
+                val commaIndex = source.indexOf(',')
+                if (commaIndex > 0) {
+                    val base64Data = source.substring(commaIndex + 1)
+                    val bytes = android.util.Base64.decode(base64Data, android.util.Base64.DEFAULT)
+                    val bitmap = android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                    if (bitmap != null) {
+                        val drawable = android.graphics.drawable.BitmapDrawable(activity.resources, bitmap)
+                        val maxWidth = textView.width - textView.paddingLeft - textView.paddingRight
+                        val imgWidth = drawable.intrinsicWidth
+                        val imgHeight = drawable.intrinsicHeight
+                        if (imgWidth > 0 && imgHeight > 0) {
+                            val width = if (maxWidth > 0 && imgWidth > maxWidth) maxWidth else imgWidth
+                            val ratio = width.toFloat() / imgWidth.toFloat()
+                            val height = (imgHeight * ratio).toInt()
+                            drawable.setBounds(0, 0, width, height)
+                            wrapper.innerDrawable = drawable
+                            wrapper.setBounds(0, 0, width, height)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                logcat(LogPriority.DEBUG) { "Failed to decode base64 image: ${e.message}" }
+            }
+            return wrapper
+        }
+
+        // Skip EPUB-internal relative paths (they reference files inside the archive)
+        if (!source.startsWith("http://") && !source.startsWith("https://") && !source.startsWith("//")) {
+            logcat(LogPriority.DEBUG) { "Skipping non-URL image source: $source" }
+            return wrapper
+        }
+
+        // Resolve protocol-relative URLs
+        val imageUrl = if (source.startsWith("//")) "https:$source" else source
+
+        val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+        scope.launch {
+            try {
+                val request = ImageRequest.Builder(activity)
+                    .data(imageUrl)
+                    .build()
+                val result = activity.imageLoader.execute(request)
+                val drawable = result.image?.asDrawable(activity.resources) ?: return@launch
+
+                // Scale to fit TextView width
+                val maxWidth = textView.width - textView.paddingLeft - textView.paddingRight
+                val imgWidth = drawable.intrinsicWidth
+                val imgHeight = drawable.intrinsicHeight
+
+                if (imgWidth <= 0 || imgHeight <= 0) return@launch
+
+                val width = if (maxWidth > 0 && imgWidth > maxWidth) maxWidth else imgWidth
+                val ratio = width.toFloat() / imgWidth.toFloat()
+                val height = (imgHeight * ratio).toInt()
+
+                drawable.setBounds(0, 0, width, height)
+                wrapper.innerDrawable = drawable
+                wrapper.setBounds(0, 0, width, height)
+
+                // Force TextView to re-layout with the loaded image
+                // Use invalidate() + requestLayout() instead of re-assigning text
+                // to avoid breaking text selection state
+                textView.invalidate()
+                textView.requestLayout()
+            } catch (e: Exception) {
+                logcat(LogPriority.DEBUG) { "Failed to load image in novel reader: $imageUrl - ${e.message}" }
+            }
+        }
+
+        return wrapper
     }
 }
 
@@ -1654,6 +1772,26 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
 
         // Process content to ensure paragraph tags exist for styling
         var processedContent = content
+        
+        // Strip script tags and their content — they would render as visible text
+        processedContent = processedContent.replace(Regex("<script[^>]*>[\\s\\S]*?</script>", RegexOption.IGNORE_CASE), "")
+        processedContent = processedContent.replace(Regex("<script[^>]*/>", RegexOption.IGNORE_CASE), "")
+        // Strip style tags too — their CSS rules show up as text in TextView
+        processedContent = processedContent.replace(Regex("<style[^>]*>[\\s\\S]*?</style>", RegexOption.IGNORE_CASE), "")
+        processedContent = processedContent.replace(Regex("<style[^>]*/>", RegexOption.IGNORE_CASE), "")
+        // Strip noscript tags
+        processedContent = processedContent.replace(Regex("<noscript[^>]*>[\\s\\S]*?</noscript>", RegexOption.IGNORE_CASE), "")
+
+        // Optionally strip media tags entirely when blocking media
+        if (preferences.novelBlockMedia().get()) {
+            processedContent = processedContent
+                .replace(Regex("<img[^>]*>", RegexOption.IGNORE_CASE), "")
+                .replace(Regex("<image[^>]*>", RegexOption.IGNORE_CASE), "")
+                .replace(Regex("</image>", RegexOption.IGNORE_CASE), "")
+                .replace(Regex("<video[^>]*>[\\s\\S]*?</video>", RegexOption.IGNORE_CASE), "")
+                .replace(Regex("<audio[^>]*>[\\s\\S]*?</audio>", RegexOption.IGNORE_CASE), "")
+                .replace(Regex("<source[^>]*>", RegexOption.IGNORE_CASE), "")
+        }
 
         // First, strip any existing leading non-breaking spaces from paragraphs
         // This prevents double-spacing when indent is applied
@@ -1677,8 +1815,16 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
         val density = activity.resources.displayMetrics.density
 
         scope.launch {
+            // Create image getter if media is not blocked
+            val blockMedia = preferences.novelBlockMedia().get()
+            val imageGetter = if (!blockMedia) {
+                CoilImageGetter(textView, activity)
+            } else {
+                null
+            }
+
             val spanned = withContext(Dispatchers.Default) {
-                Html.fromHtml(processedContent, Html.FROM_HTML_MODE_LEGACY)
+                Html.fromHtml(processedContent, Html.FROM_HTML_MODE_LEGACY, imageGetter, null)
             }
 
             // Apply custom paragraph spacing and indent using spans
@@ -1723,7 +1869,22 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
             }
 
             withContext(Dispatchers.Main) {
-                textView.text = spannable
+                textView.setText(spannable, TextView.BufferType.SPANNABLE)
+                // Re-apply text selection after setting text — Android can lose
+                // the internal Editor state when text changes.
+                // Toggle false→true to force full re-initialization (calling with
+                // the same value is a no-op in the Android framework).
+                if (preferences.novelTextSelectable().get()) {
+                    textView.setTextIsSelectable(false)
+                    textView.setTextIsSelectable(true)
+                    textView.isFocusable = true
+                    textView.isFocusableInTouchMode = true
+                    textView.isLongClickable = true
+                    // Post requestFocus to ensure layout is complete
+                    textView.post {
+                        textView.requestFocus()
+                    }
+                }
             }
         }
     }

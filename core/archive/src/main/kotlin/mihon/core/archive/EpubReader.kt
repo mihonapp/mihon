@@ -18,6 +18,54 @@ class EpubReader(private val reader: ArchiveReader) : Closeable by reader {
     private val pathSeparator = getPathSeparator()
 
     /**
+     * Returns the path of the cover image.
+     */
+    fun getCoverImage(): String? {
+        val ref = getPackageHref()
+        val doc = getPackageDocument(ref)
+        val basePath = getParentDirectory(ref)
+
+        // EPUB 3
+        val coverItem = doc.select("manifest > item[properties~=cover-image]").first()
+        if (coverItem != null) {
+            return resolveZipPath(basePath, coverItem.attr("href"))
+        }
+
+        // EPUB 2
+        val coverMeta = doc.select("metadata > meta[name=cover]").first()
+        if (coverMeta != null) {
+            val coverId = coverMeta.attr("content")
+            val item = doc.select("manifest > item[id=$coverId]").first()
+            if (item != null) {
+                return resolveZipPath(basePath, item.attr("href"))
+            }
+        }
+
+        // Fallback: Check for cover.xhtml / titlepage.xhtml / cover.html in manifest
+        // Some EPUBs wrap the cover image in an XHTML page
+        val coverPageItem = doc.select("manifest > item[href~=(?i)cover\\.(x)html|(?i)titlepage\\.(x)html]").first()
+        if (coverPageItem != null) {
+            val pagePath = resolveZipPath(basePath, coverPageItem.attr("href"))
+            try {
+                getInputStream(pagePath)?.use { stream ->
+                    val pageDoc = Jsoup.parse(stream, null, "")
+                    // Find first image in the cover page
+                    val img = pageDoc.select("img, image").first()
+                    val src = img?.attr("src")?.takeIf { it.isNotEmpty() } ?: img?.attr("xlink:href")
+                    if (!src.isNullOrEmpty()) {
+                        val pageBasePath = getParentDirectory(pagePath)
+                        return resolveZipPath(pageBasePath, src)
+                    }
+                }
+            } catch (e: Exception) {
+                // Ignore parsing errors
+            }
+        }
+
+        return null
+    }
+
+    /**
      * Returns an input stream for reading the contents of the specified zip file entry.
      */
     fun getInputStream(entryName: String): InputStream? {
@@ -148,6 +196,37 @@ class EpubReader(private val reader: ArchiveReader) : Closeable by reader {
             val entryPath = resolveZipPath(basePath, page)
             getInputStream(entryPath)?.use { inputStream ->
                 val document = Jsoup.parse(inputStream, null, "")
+                
+                // Inline images as Base64 to support NovelViewer
+                val imageBasePath = getParentDirectory(entryPath)
+                document.select("img[src], image[xlink:href]").forEach { img ->
+                    val src = if (img.hasAttr("src")) img.attr("src") else img.attr("xlink:href")
+                    if (!src.startsWith("http") && !src.startsWith("data:")) {
+                        val imagePath = resolveZipPath(imageBasePath, src)
+                        try {
+                            getInputStream(imagePath)?.use { imgStream ->
+                                val bytes = imgStream.readBytes()
+                                val base64 = java.util.Base64.getEncoder().encodeToString(bytes)
+                                val mimeType = when (imagePath.substringAfterLast('.', "").lowercase()) {
+                                    "png" -> "image/png"
+                                    "jpg", "jpeg" -> "image/jpeg"
+                                    "gif" -> "image/gif"
+                                    "svg" -> "image/svg+xml"
+                                    "webp" -> "image/webp"
+                                    else -> "image/jpeg"
+                                }
+                                if (img.hasAttr("src")) {
+                                    img.attr("src", "data:$mimeType;base64,$base64")
+                                } else {
+                                    img.attr("xlink:href", "data:$mimeType;base64,$base64")
+                                }
+                            }
+                        } catch (e: Exception) {
+                            // Ignore missing images
+                        }
+                    }
+                }
+
                 // Get body content, preserving HTML structure for proper rendering
                 document.body()?.let { body ->
                     content.append(body.html())
@@ -251,6 +330,37 @@ class EpubReader(private val reader: ArchiveReader) : Closeable by reader {
 
         return getInputStream(entryPath)?.use { inputStream ->
             val document = Jsoup.parse(inputStream, null, "")
+            
+            // Inline images as Base64 to support NovelViewer
+            val imageBasePath = getParentDirectory(entryPath)
+            document.select("img[src], image[xlink:href]").forEach { img ->
+                val src = if (img.hasAttr("src")) img.attr("src") else img.attr("xlink:href")
+                if (!src.startsWith("http") && !src.startsWith("data:")) {
+                    val imagePath = resolveZipPath(imageBasePath, src)
+                    try {
+                        getInputStream(imagePath)?.use { imgStream ->
+                            val bytes = imgStream.readBytes()
+                            val base64 = java.util.Base64.getEncoder().encodeToString(bytes)
+                            val mimeType = when (imagePath.substringAfterLast('.', "").lowercase()) {
+                                "png" -> "image/png"
+                                "jpg", "jpeg" -> "image/jpeg"
+                                "gif" -> "image/gif"
+                                "svg" -> "image/svg+xml"
+                                "webp" -> "image/webp"
+                                else -> "image/jpeg"
+                            }
+                            if (img.hasAttr("src")) {
+                                img.attr("src", "data:$mimeType;base64,$base64")
+                            } else {
+                                img.attr("xlink:href", "data:$mimeType;base64,$base64")
+                            }
+                        }
+                    } catch (e: Exception) {
+                        // Ignore missing images
+                    }
+                }
+            }
+
             document.body()?.html() ?: ""
         } ?: ""
     }

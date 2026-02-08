@@ -182,18 +182,26 @@ class MangaRepositoryImpl(
 
     // Cache library manga to avoid repeated expensive queries
     // Cache NEVER expires - only GetLibraryManga.refresh() should trigger new queries
+    @Volatile
     private var cachedLibraryManga: List<LibraryManga>? = null
+    @Volatile
     private var cacheTimestamp: Long = 0
     private val CACHE_VALIDITY_MS = Long.MAX_VALUE // Never expire - only refresh() triggers query
     
     // Cache favorite source/URL pairs for mass import performance
+    @Volatile
     private var cachedFavoriteSourceUrl: List<Pair<Long, String>>? = null
+    @Volatile
     private var favoriteSourceUrlCacheTimestamp: Long = 0
     private val FAVORITE_URL_CACHE_VALIDITY_MS = 10000L // 10 seconds
     
-    private fun invalidateLibraryCache() {
+    private fun invalidateLibraryCacheInternal() {
         cachedLibraryManga = null
         cacheTimestamp = 0
+    }
+    
+    override fun invalidateLibraryCache() {
+        invalidateLibraryCacheInternal()
     }
     
     private fun invalidateFavoriteUrlCache() {
@@ -469,7 +477,8 @@ class MangaRepositoryImpl(
                 mangas_categoriesQueries.insert(mangaId, categoryId)
             }
         }
-        invalidateLibraryCache()
+        // Refresh the library_cache DB table for this manga (categories column is precomputed)
+        refreshLibraryCacheForManga(mangaId)
     }
 
     override suspend fun setMangasCategories(mangaIds: List<Long>, categoryIds: List<Long>) {
@@ -485,7 +494,8 @@ class MangaRepositoryImpl(
                 }
             }
         }
-        invalidateLibraryCache()
+        // Full cache refresh for bulk operation (categories column is precomputed)
+        refreshLibraryCache()
     }
 
     override suspend fun addMangasCategories(mangaIds: List<Long>, categoryIds: List<Long>) {
@@ -497,7 +507,8 @@ class MangaRepositoryImpl(
                 }
             }
         }
-        invalidateLibraryCache()
+        // Full cache refresh for bulk operation (categories column is precomputed)
+        refreshLibraryCache()
     }
 
     override suspend fun removeMangasCategories(mangaIds: List<Long>, categoryIds: List<Long>) {
@@ -506,7 +517,8 @@ class MangaRepositoryImpl(
             // Use bulk delete for better performance
             mangas_categoriesQueries.deleteBulkMangaCategories(mangaIds, categoryIds)
         }
-        invalidateLibraryCache()
+        // Full cache refresh for bulk operation (categories column is precomputed)
+        refreshLibraryCache()
     }
 
     override suspend fun update(update: MangaUpdate): Boolean {
@@ -593,11 +605,13 @@ class MangaRepositoryImpl(
                     isSyncing = 0,
                     notes = value.notes,
                 )
+                library_cacheQueries.refreshCacheForManga(value.id)
             }
         }
-        // Invalidate if favorite status or other library-relevant fields changed
+        // Always invalidate library cache since libraryGrid reads title, genre, cover,
+        // status, etc. directly from mangas table - any field change may affect library display
+        invalidateLibraryCacheInternal()
         if (mangaUpdates.any { it.favorite != null }) {
-            invalidateLibraryCache()
             invalidateFavoriteUrlCache()
         }
     }
@@ -777,7 +791,7 @@ class MangaRepositoryImpl(
         val queryDuration = System.currentTimeMillis() - queryStart
         logcat(LogPriority.INFO) { "MangaRepositoryImpl.refreshLibraryCache: Cache refresh completed in ${queryDuration}ms" }
         // Invalidate in-memory cache as well
-        invalidateLibraryCache()
+        invalidateLibraryCacheInternal()
     }
 
     override suspend fun refreshLibraryCacheForManga(mangaId: Long) {
@@ -786,7 +800,7 @@ class MangaRepositoryImpl(
             library_cacheQueries.refreshCacheForManga(mangaId)
         }
         // Invalidate in-memory cache
-        invalidateLibraryCache()
+        invalidateLibraryCacheInternal()
     }
 
     override suspend fun normalizeAllTags(): Int {

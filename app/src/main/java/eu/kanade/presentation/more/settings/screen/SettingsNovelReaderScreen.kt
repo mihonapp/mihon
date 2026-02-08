@@ -138,11 +138,6 @@ object SettingsNovelReaderScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_novel_text_align),
                 ),
                 Preference.PreferenceItem.SwitchPreference(
-                    preference = readerPreferences.novelTextSelectable(),
-                    title = "Text selectable",
-                    subtitle = "Allow selecting and copying text",
-                ),
-                Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.novelForceTextLowercase(),
                     title = "Force lowercase",
                     subtitle = "Convert all text to lowercase",
@@ -283,7 +278,12 @@ object SettingsNovelReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.novelBlockMedia(),
                     title = "Block media",
-                    subtitle = "Block images and media loading (WebView only)",
+                    subtitle = "Block images and media loading in both readers",
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.novelTextSelectable(),
+                    title = "Text selectable",
+                    subtitle = "Allow selecting and copying text",
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.novelShowRawHtml(),

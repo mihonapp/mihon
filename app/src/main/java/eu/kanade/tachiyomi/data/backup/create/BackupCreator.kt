@@ -32,7 +32,6 @@ import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream
 import java.io.OutputStream
 import java.text.SimpleDateFormat
@@ -60,17 +59,9 @@ class BackupCreator(
 
     /**
      * Batch size for processing manga during backup.
-     * Smaller batches reduce memory pressure but may be slower.
-     * Reduced to 5 manga per batch to prevent OOM on very large libraries (100k+ entries).
+     * Slightly larger batches improve throughput without large memory spikes.
      */
-    private val MANGA_BATCH_SIZE = 5
-
-    /**
-     * Number of batches after which to suggest GC.
-     * Every N batches, we hint to the GC that it can collect garbage.
-     * More frequent GC (every 1 batch = 5 manga) to handle large libraries.
-     */
-    private val GC_HINT_INTERVAL = 1
+    private val MANGA_BATCH_SIZE = 20
 
     /**
      * Maximum number of manga to hold in memory at once before flushing.
@@ -78,7 +69,7 @@ class BackupCreator(
      */
     private val MAX_MANGA_IN_MEMORY = 200
 
-    suspend fun backup(uri: Uri, options: BackupOptions): String {
+    suspend fun backup(uri: Uri, options: BackupOptions, onProgress: ((Int, Int) -> Unit)? = null): String {
         var file: UniFile? = null
         try {
             file = if (isAutoBackup) {
@@ -103,7 +94,11 @@ class BackupCreator(
             }
 
             val nonFavoriteManga = if (options.readEntries) mangaRepository.getReadMangaNotInLibrary() else emptyList()
-            val allManga = getFavorites.await() + nonFavoriteManga
+            
+            // Use getFavoritesEntry to get lightweight objects (IDs/Metadata) avoiding OOM
+            // Description and other heavy fields are null here, we'll fetch them on-demand in batches
+            val favorites = mangaRepository.getFavoritesEntry()
+            val allManga = favorites + nonFavoriteManga
             
             // Log library size for debugging OOM issues
             logcat(LogPriority.INFO) { "Backup: Processing ${allManga.size} manga entries" }
@@ -130,42 +125,72 @@ class BackupCreator(
             val backupExtensionRepos = backupExtensionRepos(options)
             val backupSourcePrefs = backupSourcePreferences(options)
             
-            // Collect manga in batches, tracking sources as we go
-            val allBackupManga = mutableListOf<BackupManga>()
-            var batchCount = 0
-            val totalBatches = (filteredManga.size + MANGA_BATCH_SIZE - 1) / MANGA_BATCH_SIZE
-            
-            filteredManga.chunked(MANGA_BATCH_SIZE).forEach { batch ->
-                allBackupManga.addAll(mangaBackupCreator.backupMangaStream(batch, options).toList())
-                kotlinx.coroutines.yield()
-                batchCount++
-                if (batchCount % GC_HINT_INTERVAL == 0) {
-                    if (batchCount % 50 == 0) {
-                        logcat(LogPriority.DEBUG) { "Backup: Processed $batchCount/$totalBatches batches (${allBackupManga.size} manga)" }
-                    }
-                    System.gc()
-                }
-            }
-            
-            val backupSources = backupSources(allBackupManga)
-            
-            logcat(LogPriority.INFO) { "Backup: All manga processed (${allBackupManga.size} entries), streaming to file..." }
-            System.gc()
-
-            // Stream-write protobuf directly to gzipped output to avoid holding full byte array
+            // Stream-write protobuf directly to gzipped output to avoid holding full backup in memory
             val outputStream = file.openOutputStream()
             (outputStream as? FileOutputStream)?.channel?.truncate(0)
             val gzipOut = outputStream.sink().gzip().buffer()
+            
+            // Track source IDs as we process manga for backupSources field
+            val sourceIds = mutableSetOf<Long>()
+            var batchCount = 0
+            val totalBatches = (filteredManga.size + MANGA_BATCH_SIZE - 1) / MANGA_BATCH_SIZE
+            
             try {
-                streamWriteBackup(
-                    gzipOut.outputStream(),
-                    allBackupManga,
-                    backupCategories,
-                    backupSources,
-                    backupAppPrefs,
-                    backupSourcePrefs,
-                    backupExtensionRepos,
-                )
+                // Field 1: backupManga (repeated) - stream each batch directly to output
+                filteredManga.chunked(MANGA_BATCH_SIZE).forEach { batch ->
+                    // Fetch full details for incomplete objects (favorites from getFavoritesEntry)
+                    val fullBatch = batch.map { manga -> 
+                         if (manga.favorite && manga.description == null) { 
+                             mangaRepository.getMangaById(manga.id) 
+                         } else { 
+                             manga 
+                         } 
+                    }
+
+                    val backupBatch = mangaBackupCreator.backupMangaStream(fullBatch, options).toList()
+                    backupBatch.forEach { m ->
+                        sourceIds.add(m.source)
+                        val bytes = parser.encodeToByteArray(BackupManga.serializer(), m)
+                        writeProtoField(gzipOut.outputStream(), 1, bytes)
+                    }
+                    kotlinx.coroutines.yield()
+                    batchCount++
+                    onProgress?.invoke(batchCount, totalBatches)
+                    if (batchCount % 50 == 0) {
+                        logcat(LogPriority.DEBUG) { "Backup: Processed $batchCount/$totalBatches batches" }
+                    }
+                }
+                
+                logcat(LogPriority.INFO) { "Backup: All manga streamed ($batchCount batches), writing metadata..." }
+                
+                val backupSources = sourcesBackupCreator.forSourceIds(sourceIds)
+                
+                // Field 2: backupCategories (repeated)
+                backupCategories.forEach { c ->
+                    val bytes = parser.encodeToByteArray(BackupCategory.serializer(), c)
+                    writeProtoField(gzipOut.outputStream(), 2, bytes)
+                }
+                // Field 101: backupSources (repeated)
+                backupSources.forEach { s ->
+                    val bytes = parser.encodeToByteArray(BackupSource.serializer(), s)
+                    writeProtoField(gzipOut.outputStream(), 101, bytes)
+                }
+                // Field 104: backupPreferences (repeated)
+                backupAppPrefs.forEach { p ->
+                    val bytes = parser.encodeToByteArray(BackupPreference.serializer(), p)
+                    writeProtoField(gzipOut.outputStream(), 104, bytes)
+                }
+                // Field 105: backupSourcePreferences (repeated)
+                backupSourcePrefs.forEach { sp ->
+                    val bytes = parser.encodeToByteArray(BackupSourcePreferences.serializer(), sp)
+                    writeProtoField(gzipOut.outputStream(), 105, bytes)
+                }
+                // Field 106: backupExtensionRepo (repeated)
+                backupExtensionRepos.forEach { er ->
+                    val bytes = parser.encodeToByteArray(BackupExtensionRepos.serializer(), er)
+                    writeProtoField(gzipOut.outputStream(), 106, bytes)
+                }
+                
                 gzipOut.flush()
             } finally {
                 gzipOut.close()
@@ -193,55 +218,6 @@ class BackupCreator(
         }
     }
 
-    /**
-     * Stream-write a Backup as protobuf directly to an OutputStream.
-     * This avoids creating one massive byte array for the entire backup.
-     * 
-     * Protobuf wire format: each field is (field_number << 3 | wire_type).
-     * For length-delimited fields (strings, bytes, embedded messages): wire_type = 2.
-     * Repeated fields are written as separate field entries.
-     */
-    private fun streamWriteBackup(
-        out: OutputStream,
-        manga: List<BackupManga>,
-        categories: List<BackupCategory>,
-        sources: List<BackupSource>,
-        preferences: List<BackupPreference>,
-        sourcePreferences: List<BackupSourcePreferences>,
-        extensionRepos: List<BackupExtensionRepos>,
-    ) {
-        // Field 1: backupManga (repeated)
-        manga.forEach { m ->
-            val bytes = parser.encodeToByteArray(BackupManga.serializer(), m)
-            writeProtoField(out, 1, bytes)
-        }
-        // Field 2: backupCategories (repeated)
-        categories.forEach { c ->
-            val bytes = parser.encodeToByteArray(BackupCategory.serializer(), c)
-            writeProtoField(out, 2, bytes)
-        }
-        // Field 101: backupSources (repeated)
-        sources.forEach { s ->
-            val bytes = parser.encodeToByteArray(BackupSource.serializer(), s)
-            writeProtoField(out, 101, bytes)
-        }
-        // Field 104: backupPreferences (repeated)
-        preferences.forEach { p ->
-            val bytes = parser.encodeToByteArray(BackupPreference.serializer(), p)
-            writeProtoField(out, 104, bytes)
-        }
-        // Field 105: backupSourcePreferences (repeated)
-        sourcePreferences.forEach { sp ->
-            val bytes = parser.encodeToByteArray(BackupSourcePreferences.serializer(), sp)
-            writeProtoField(out, 105, bytes)
-        }
-        // Field 106: backupExtensionRepo (repeated)
-        extensionRepos.forEach { er ->
-            val bytes = parser.encodeToByteArray(BackupExtensionRepos.serializer(), er)
-            writeProtoField(out, 106, bytes)
-        }
-    }
-
     /** Write a single protobuf length-delimited field (wire type 2) to the stream. */
     private fun writeProtoField(out: OutputStream, fieldNumber: Int, data: ByteArray) {
         // Tag = (fieldNumber << 3) | 2 (length-delimited)
@@ -264,10 +240,6 @@ class BackupCreator(
         if (!options.categories) return emptyList()
 
         return categoriesBackupCreator()
-    }
-
-    private fun backupSources(mangas: List<BackupManga>): List<BackupSource> {
-        return sourcesBackupCreator(mangas)
     }
 
     private fun backupAppPreferences(options: BackupOptions): List<BackupPreference> {

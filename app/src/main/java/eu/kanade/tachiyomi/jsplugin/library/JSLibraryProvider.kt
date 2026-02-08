@@ -1,5 +1,7 @@
 package eu.kanade.tachiyomi.jsplugin.library
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.dokar.quickjs.QuickJs
 import com.dokar.quickjs.binding.asyncFunction
 import com.dokar.quickjs.binding.function
@@ -15,6 +17,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import org.jsoup.nodes.TextNode
 import org.jsoup.select.Elements
 import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.Injekt
@@ -37,8 +40,13 @@ class JSLibraryProvider(
 ) {
     private val networkHelper: NetworkHelper = Injekt.get()
     private val client = networkHelper.client
+    private val context: Context = Injekt.get()
     
-    // Storage per plugin
+    // Persistent storage per plugin via SharedPreferences
+    private val prefs: SharedPreferences by lazy {
+        context.getSharedPreferences("jsplugin_storage_$pluginId", Context.MODE_PRIVATE)
+    }
+    // In-memory cache backed by SharedPreferences
     private val storage = ConcurrentHashMap<String, String>()
     
     // Element cache for cheerio bridge
@@ -331,6 +339,12 @@ class JSLibraryProvider(
             val selector = args.getOrNull(1)?.toString() ?: ""
             cheerioIs(handle, selector)
         }
+        
+        // Get DOM tree as JSON for toArray() support
+        runtime.function("__cheerioDomTree") { args ->
+            val handle = args.getOrNull(0)?.toString()?.toIntOrNull() ?: -1
+            cheerioDomTree(handle)
+        }
     }
     
     private fun cheerioLoad(html: String): Int {
@@ -357,11 +371,28 @@ class JSLibraryProvider(
         return handle
     }
     
-    private fun cheerioText(handle: Int): String = when (val el = elementCache[handle]) {
-        is Document -> el.text()
-        is Element -> el.text()
-        is Elements -> el.text()
-        else -> ""
+    private fun cheerioText(handle: Int): String {
+        fun elementText(el: Element): String {
+            val tagName = el.tagName().lowercase()
+            return if (tagName == "script" || tagName == "style") {
+                el.data()
+            } else {
+                el.text()
+            }
+        }
+        return when (val el = elementCache[handle]) {
+            is Document -> el.text()
+            is Element -> elementText(el)
+            is Elements -> {
+                if (el.size == 1) {
+                    elementText(el.first()!!)
+                } else {
+                    // For multi-element sets, concatenate text with spaces (Cheerio behavior)
+                    el.joinToString(" ") { elementText(it) }
+                }
+            }
+            else -> ""
+        }
     }
     
     private fun cheerioHtml(handle: Int): String {
@@ -396,6 +427,95 @@ class JSLibraryProvider(
         }
         // logcat(LogPriority.DEBUG) { "[$pluginId] cheerioHtml(handle=$handle): ${result.take(200)}..." }
         return result
+    }
+    
+    /**
+     * Convert a Jsoup element to a DOM-like JSON tree (htmlparser2/domhandler format)
+     * for use with toArray(). Returns JSON string representing array of DOM nodes.
+     * Each node has: type, name, children, data, attribs
+     */
+    private fun cheerioDomTree(handle: Int): String {
+        val el = elementCache[handle] ?: return "[]"
+        val elements = when (el) {
+            is Document -> listOf(el)
+            is Element -> listOf(el)
+            is Elements -> el.toList()
+            else -> emptyList()
+        }
+        val sb = StringBuilder()
+        sb.append('[')
+        elements.forEachIndexed { idx, elem ->
+            if (idx > 0) sb.append(',')
+            appendDomNode(sb, elem)
+        }
+        sb.append(']')
+        return sb.toString()
+    }
+    
+    private fun appendDomNode(sb: StringBuilder, element: Element) {
+        sb.append("{\"type\":\"tag\",\"name\":")
+        sb.append('"').append(escapeJsonString(element.tagName().lowercase())).append('"')
+        sb.append(",\"attribs\":{")
+        element.attributes().forEachIndexed { i, attr ->
+            if (i > 0) sb.append(',')
+            sb.append('"').append(escapeJsonString(attr.key)).append("\":\"")
+            sb.append(escapeJsonString(attr.value)).append('"')
+        }
+        sb.append("},\"children\":[")
+        // Include both text nodes and element nodes as children
+        var childIdx = 0
+        for (node in element.childNodes()) {
+            if (childIdx > 0) sb.append(',')
+            when (node) {
+                is TextNode -> {
+                    val text = node.wholeText
+                    if (text.isNotEmpty()) {
+                        sb.append("{\"type\":\"text\",\"data\":\"")
+                        sb.append(escapeJsonString(text))
+                        sb.append("\",\"children\":[]}")
+                        childIdx++
+                    }
+                }
+                is Element -> {
+                    appendDomNode(sb, node)
+                    childIdx++
+                }
+                is org.jsoup.nodes.DataNode -> {
+                    // For script/style content
+                    val data = node.wholeData
+                    if (data.isNotEmpty()) {
+                        sb.append("{\"type\":\"text\",\"data\":\"")
+                        sb.append(escapeJsonString(data))
+                        sb.append("\",\"children\":[]}")
+                        childIdx++
+                    }
+                }
+            }
+        }
+        sb.append("]}")
+    }
+    
+    private fun escapeJsonString(s: String): String {
+        val sb = StringBuilder(s.length)
+        for (c in s) {
+            when (c) {
+                '"' -> sb.append("\\\"")
+                '\\' -> sb.append("\\\\")
+                '\n' -> sb.append("\\n")
+                '\r' -> sb.append("\\r")
+                '\t' -> sb.append("\\t")
+                '\b' -> sb.append("\\b")
+                '\u000C' -> sb.append("\\f")
+                else -> {
+                    if (c.code < 0x20) {
+                        sb.append("\\u%04x".format(c.code))
+                    } else {
+                        sb.append(c)
+                    }
+                }
+            }
+        }
+        return sb.toString()
     }
     
     private fun cheerioAttr(handle: Int, name: String): String? = when (val el = elementCache[handle]) {
@@ -518,7 +638,17 @@ class JSLibraryProvider(
     
     // ============ Storage API ============
     
+    private fun loadStorageFromPrefs() {
+        // Load all stored values into memory cache
+        prefs.all.forEach { (key, value) ->
+            if (value is String) storage[key] = value
+        }
+    }
+    
     private suspend fun setupStorage(runtime: QuickJs) {
+        // Hydrate in-memory cache from persistent storage
+        loadStorageFromPrefs()
+        
         runtime.function("__storageGet") { args ->
             val key = args.getOrNull(0)?.toString() ?: ""
             storage[key]
@@ -528,11 +658,23 @@ class JSLibraryProvider(
             val key = args.getOrNull(0)?.toString() ?: ""
             val value = args.getOrNull(1)?.toString() ?: ""
             storage[key] = value
+            prefs.edit().putString(key, value).apply()
         }
         
         runtime.function("__storageDelete") { args ->
             val key = args.getOrNull(0)?.toString() ?: ""
             storage.remove(key)
+            prefs.edit().remove(key).apply()
+        }
+        
+        runtime.function("__storageGetAllKeys") { _ ->
+            storage.keys.joinToString(",")
+        }
+        
+        runtime.function("__storageClearAll") { _ ->
+            storage.clear()
+            prefs.edit().clear().apply()
+            true
         }
     }
     
@@ -777,9 +919,15 @@ class JSLibraryProvider(
                     return results;
                 },
                 toArray: function() {
-                    var arr = [], len = __cheerioLength(h);
-                    for (var i = 0; i < len; i++) arr.push(__wrapHandle(__cheerioEq(h, i)));
-                    return arr;
+                    try {
+                        var json = __cheerioDomTree(h);
+                        return JSON.parse(json);
+                    } catch(e) {
+                        // Fallback to wrapped handles if DOM tree fails
+                        var arr = [], len = __cheerioLength(h);
+                        for (var i = 0; i < len; i++) arr.push(__wrapHandle(__cheerioEq(h, i)));
+                        return arr;
+                    }
                 },
                 get: function(i) { return typeof i === 'undefined' ? this.toArray() : __wrapHandle(__cheerioEq(h, i)); },
                 prop: function(n) { var v = __cheerioAttr(h, n); return v === null ? undefined : v; },
@@ -1014,7 +1162,25 @@ class JSLibraryProvider(
                     return { isUrlAbsolute: function(u) { return u && (u.startsWith('http://') || u.startsWith('https://')); } };
                 case '@libs/storage':
                     return {
-                        storage: { get: function(k) { return __storageGet(k); }, set: function(k, v) { __storageSet(k, v); }, delete: function(k) { __storageDelete(k); } },
+                        storage: {
+                            get: function(k, raw) {
+                                var v = __storageGet(k);
+                                if (v === null || v === undefined) return undefined;
+                                if (raw) return { created: new Date(), value: v };
+                                return v;
+                            },
+                            set: function(k, v) {
+                                if (v === undefined || v === null) { __storageDelete(k); return; }
+                                if (typeof v === 'object') v = JSON.stringify(v);
+                                __storageSet(k, String(v));
+                            },
+                            delete: function(k) { __storageDelete(k); },
+                            getAllKeys: function() {
+                                var keys = __storageGetAllKeys();
+                                return keys ? keys.split(',').filter(function(k) { return k.length > 0; }) : [];
+                            },
+                            clearAll: function() { __storageClearAll(); }
+                        },
                         localStorage: { get: function() { return {}; } },
                         sessionStorage: { get: function() { return {}; } }
                     };
@@ -1106,6 +1272,25 @@ class JSLibraryProvider(
                         this.params[k].push(v);
                     }
                 }.bind(this));
+            } else if (q && typeof q === 'object') {
+                // Handle object input: new URLSearchParams({ key: 'value', ... })
+                if (Array.isArray(q)) {
+                    // Handle array of [key, value] pairs
+                    q.forEach(function(pair) {
+                        if (Array.isArray(pair) && pair.length >= 2) {
+                            var k = String(pair[0]), v = String(pair[1]);
+                            if (!this.params[k]) this.params[k] = [];
+                            this.params[k].push(v);
+                        }
+                    }.bind(this));
+                } else {
+                    // Handle plain object
+                    var keys = Object.keys(q);
+                    for (var i = 0; i < keys.length; i++) {
+                        var k = keys[i];
+                        this.params[k] = [String(q[k])];
+                    }
+                }
             }
         }
         URLSearchParams.prototype.get = function(k) { return this.params[k] ? this.params[k][0] : null; };

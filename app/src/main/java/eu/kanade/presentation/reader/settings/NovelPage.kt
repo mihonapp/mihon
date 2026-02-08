@@ -295,6 +295,16 @@ internal fun ColumnScope.NovelReadingTab(screenModel: ReaderSettingsScreenModel,
         )
     }
 
+    CheckboxItem(
+        label = "Block images", // TODO: Add string resource
+        pref = screenModel.preferences.novelBlockMedia(),
+    )
+
+    CheckboxItem(
+        label = "Enable text selection", // TODO: Add string resource
+        pref = screenModel.preferences.novelTextSelectable(),
+    )
+
     // Text Alignment
     SettingsChipRow(MR.strings.pref_novel_text_align) {
         textAlignments.map { (label, value) ->

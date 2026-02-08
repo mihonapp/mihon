@@ -1,0 +1,208 @@
+-- Library cache queries
+-- This file provides efficient queries against the pre-computed library_cache table
+
+CREATE TABLE IF NOT EXISTS library_cache (
+    manga_id INTEGER NOT NULL PRIMARY KEY,
+    total_count INTEGER NOT NULL DEFAULT 0,
+    read_count INTEGER NOT NULL DEFAULT 0,
+    latest_upload INTEGER NOT NULL DEFAULT 0,
+    chapter_fetched_at INTEGER NOT NULL DEFAULT 0,
+    last_read INTEGER NOT NULL DEFAULT 0,
+    bookmark_count INTEGER NOT NULL DEFAULT 0,
+    category_ids TEXT NOT NULL DEFAULT '0',
+    download_count INTEGER NOT NULL DEFAULT 0,
+    FOREIGN KEY (manga_id) REFERENCES mangas(_id) ON DELETE CASCADE
+);
+
+-- Get all library items with manga data joined to cache
+library:
+SELECT
+    M.*,
+    coalesce(LC.total_count, 0) AS totalCount,
+    coalesce(LC.read_count, 0) AS readCount,
+    coalesce(LC.latest_upload, 0) AS latestUpload,
+    coalesce(LC.chapter_fetched_at, 0) AS chapterFetchedAt,
+    coalesce(LC.last_read, 0) AS lastRead,
+    coalesce(LC.bookmark_count, 0) AS bookmarkCount,
+    coalesce(LC.category_ids, '0') AS categories
+FROM mangas M
+INNER JOIN library_cache LC ON M._id = LC.manga_id
+WHERE M.favorite = 1;
+
+-- Lightweight grid query - only fields needed for display
+libraryGrid:
+SELECT
+    M._id,
+    M.source,
+    M.url,
+    NULL AS artist,
+    NULL AS author,
+    NULL AS description,
+    M.genre,
+    M.title,
+    NULL AS alternative_titles,
+    0 AS status,
+    M.thumbnail_url,
+    M.favorite,
+    M.last_update,
+    M.next_update,
+    0 AS initialized,
+    0 AS viewer,
+    0 AS chapter_flags,
+    M.cover_last_modified,
+    M.date_added,
+    0 AS update_strategy,
+    0 AS calculate_interval,
+    0 AS last_modified_at,
+    NULL AS favorite_modified_at,
+    0 AS version,
+    0 AS is_syncing,
+    '' AS notes,
+    coalesce(LC.total_count, 0) AS totalCount,
+    CAST(coalesce(LC.read_count, 0) AS REAL) AS readCount,
+    coalesce(LC.latest_upload, 0) AS latestUpload,
+    coalesce(LC.chapter_fetched_at, 0) AS chapterFetchedAt,
+    coalesce(LC.last_read, 0) AS lastRead,
+    CAST(coalesce(LC.bookmark_count, 0) AS REAL) AS bookmarkCount,
+    coalesce(LC.category_ids, '0') AS categories
+FROM mangas M
+INNER JOIN library_cache LC ON M._id = LC.manga_id
+WHERE M.favorite = 1;
+
+-- Lightweight query for LibraryUpdateJob - only fields needed for filtering
+libraryForUpdate:
+SELECT
+    M._id,
+    M.source,
+    M.url,
+    M.title,
+    M.status,
+    M.favorite,
+    M.last_update,
+    M.next_update,
+    M.update_strategy,
+    coalesce(LC.total_count, 0) AS totalCount,
+    CAST(coalesce(LC.read_count, 0) AS REAL) AS readCount,
+    coalesce(LC.category_ids, '0') AS categories
+FROM mangas M
+INNER JOIN library_cache LC ON M._id = LC.manga_id
+WHERE M.favorite = 1;
+
+-- Get cache entry for a specific manga
+getCacheEntry:
+SELECT * FROM library_cache WHERE manga_id = ?;
+
+-- Refresh entire cache (for use after bulk operations or app startup)
+refreshAllCache:
+INSERT OR REPLACE INTO library_cache (
+    manga_id,
+    total_count,
+    read_count,
+    latest_upload,
+    chapter_fetched_at,
+    last_read,
+    bookmark_count,
+    category_ids
+)
+SELECT
+    M._id,
+    coalesce(C.total, 0),
+    coalesce(C.readCount, 0),
+    coalesce(C.latestUpload, 0),
+    coalesce(C.fetchedAt, 0),
+    coalesce(C.lastRead, 0),
+    coalesce(C.bookmarkCount, 0),
+    coalesce(MC.categories, '0')
+FROM mangas M
+LEFT JOIN (
+    SELECT
+        chapters.manga_id,
+        count(*) AS total,
+        sum(read) AS readCount,
+        coalesce(max(chapters.date_upload), 0) AS latestUpload,
+        coalesce(max(history.last_read), 0) AS lastRead,
+        coalesce(max(chapters.date_fetch), 0) AS fetchedAt,
+        sum(chapters.bookmark) AS bookmarkCount
+    FROM chapters
+    LEFT JOIN excluded_scanlators
+    ON chapters.manga_id = excluded_scanlators.manga_id
+    AND chapters.scanlator = excluded_scanlators.scanlator
+    LEFT JOIN history
+    ON chapters._id = history.chapter_id
+    WHERE excluded_scanlators.scanlator IS NULL
+    GROUP BY chapters.manga_id
+) AS C
+ON M._id = C.manga_id
+LEFT JOIN (
+    SELECT manga_id, group_concat(category_id) AS categories
+    FROM mangas_categories
+    GROUP BY manga_id
+) AS MC
+ON MC.manga_id = M._id
+WHERE M.favorite = 1;
+
+-- Refresh cache for a specific manga
+refreshCacheForManga:
+INSERT OR REPLACE INTO library_cache (
+    manga_id,
+    total_count,
+    read_count,
+    latest_upload,
+    chapter_fetched_at,
+    last_read,
+    bookmark_count,
+    category_ids
+)
+SELECT
+    M._id,
+    coalesce(C.total, 0),
+    coalesce(C.readCount, 0),
+    coalesce(C.latestUpload, 0),
+    coalesce(C.fetchedAt, 0),
+    coalesce(C.lastRead, 0),
+    coalesce(C.bookmarkCount, 0),
+    coalesce(MC.categories, '0')
+FROM mangas M
+LEFT JOIN (
+    SELECT
+        chapters.manga_id,
+        count(*) AS total,
+        sum(read) AS readCount,
+        coalesce(max(chapters.date_upload), 0) AS latestUpload,
+        coalesce(max(history.last_read), 0) AS lastRead,
+        coalesce(max(chapters.date_fetch), 0) AS fetchedAt,
+        sum(chapters.bookmark) AS bookmarkCount
+    FROM chapters
+    LEFT JOIN excluded_scanlators
+    ON chapters.manga_id = excluded_scanlators.manga_id
+    AND chapters.scanlator = excluded_scanlators.scanlator
+    LEFT JOIN history
+    ON chapters._id = history.chapter_id
+    WHERE excluded_scanlators.scanlator IS NULL
+    AND chapters.manga_id = :mangaId
+    GROUP BY chapters.manga_id
+) AS C
+ON M._id = C.manga_id
+LEFT JOIN (
+    SELECT manga_id, group_concat(category_id) AS categories
+    FROM mangas_categories
+    WHERE manga_id = :mangaId
+    GROUP BY manga_id
+) AS MC
+ON MC.manga_id = M._id
+WHERE M._id = :mangaId AND M.favorite = 1;
+
+-- Delete stale cache entries (manga no longer favorited)
+cleanupStaleCache:
+DELETE FROM library_cache
+WHERE manga_id NOT IN (SELECT _id FROM mangas WHERE favorite = 1);
+
+-- Get count of cached items
+getCacheCount:
+SELECT count(*) FROM library_cache;
+
+-- Check if cache needs refresh (compare count with favorites)
+checkCacheIntegrity:
+SELECT
+    (SELECT count(*) FROM mangas WHERE favorite = 1) AS favoriteCount,
+    (SELECT count(*) FROM library_cache) AS cacheCount;

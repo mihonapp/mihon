@@ -1,0 +1,113 @@
+-- History cache queries
+-- This file provides efficient queries against the pre-computed history_cache table
+-- Replaces the slow historyView with a cached table updated via triggers
+-- This cache stores only the LATEST read chapter per manga for fast lookups
+
+import java.util.Date;
+import kotlin.Boolean;
+
+CREATE TABLE IF NOT EXISTS history_cache (
+    _id INTEGER NOT NULL PRIMARY KEY,
+    manga_id INTEGER NOT NULL,
+    chapter_id INTEGER NOT NULL,
+    manga_title TEXT NOT NULL,
+    manga_thumbnail_url TEXT,
+    manga_source INTEGER NOT NULL,
+    manga_favorite INTEGER AS Boolean NOT NULL,
+    manga_cover_last_modified INTEGER NOT NULL,
+    chapter_number REAL NOT NULL,
+    last_read INTEGER AS Date,
+    time_read INTEGER NOT NULL,
+    FOREIGN KEY (manga_id) REFERENCES mangas(_id) ON DELETE CASCADE,
+    FOREIGN KEY (chapter_id) REFERENCES chapters(_id) ON DELETE CASCADE
+);
+
+-- Get history with search filter, returns latest chapter per manga
+getHistoryWithSearch:
+SELECT
+    _id AS id,
+    manga_id AS mangaId,
+    chapter_id AS chapterId,
+    manga_title AS title,
+    manga_thumbnail_url AS thumbnailUrl,
+    manga_source AS source,
+    manga_favorite AS favorite,
+    manga_cover_last_modified AS cover_last_modified,
+    chapter_number AS chapterNumber,
+    last_read AS readAt,
+    time_read AS readDuration
+FROM history_cache
+WHERE last_read > 0
+AND lower(manga_title) LIKE ('%' || :query || '%')
+ORDER BY last_read DESC;
+
+-- Get latest history entry
+getLatestHistoryCache:
+SELECT
+    _id AS id,
+    manga_id AS mangaId,
+    chapter_id AS chapterId,
+    manga_title AS title,
+    manga_thumbnail_url AS thumbnailUrl,
+    manga_source AS source,
+    manga_favorite AS favorite,
+    manga_cover_last_modified AS cover_last_modified,
+    chapter_number AS chapterNumber,
+    last_read AS readAt,
+    time_read AS readDuration
+FROM history_cache
+WHERE last_read > 0
+ORDER BY last_read DESC
+LIMIT 1;
+
+-- Get history for a specific manga
+getHistoryByMangaId:
+SELECT
+    _id AS id,
+    manga_id AS mangaId,
+    chapter_id AS chapterId,
+    manga_title AS title,
+    manga_thumbnail_url AS thumbnailUrl,
+    manga_source AS source,
+    manga_favorite AS favorite,
+    manga_cover_last_modified AS cover_last_modified,
+    chapter_number AS chapterNumber,
+    last_read AS readAt,
+    time_read AS readDuration
+FROM history_cache
+WHERE manga_id = :mangaId
+AND last_read > 0
+ORDER BY last_read DESC;
+
+-- Delete all history cache entries
+deleteAll:
+DELETE FROM history_cache;
+
+-- Touch/notify the history_cache table (triggers SQLDelight query listeners)
+-- This is a no-op UPDATE that forces SQLDelight to notify cache listeners
+-- Used after upsertHistory since triggers don't notify SQLDelight
+touchCache:
+UPDATE history_cache SET _id = _id WHERE 0;
+
+-- Refresh history cache from source tables
+refreshAll:
+INSERT OR REPLACE INTO history_cache (
+    _id, manga_id, chapter_id, manga_title, manga_thumbnail_url, manga_source,
+    manga_favorite, manga_cover_last_modified, chapter_number, last_read, time_read
+)
+SELECT
+    history._id,
+    mangas._id,
+    chapters._id,
+    mangas.title,
+    mangas.thumbnail_url,
+    mangas.source,
+    mangas.favorite,
+    mangas.cover_last_modified,
+    chapters.chapter_number,
+    history.last_read,
+    history.time_read
+FROM history
+JOIN chapters ON chapters._id = history.chapter_id
+JOIN mangas ON mangas._id = chapters.manga_id
+WHERE history.last_read > 0;

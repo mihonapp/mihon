@@ -1,0 +1,242 @@
+-- Migration 14: Add download_count to library_cache and create history_cache/updates_cache tables
+-- This eliminates expensive VIEW queries for history and updates screens
+
+-- Add download_count column to library_cache for cached download counts
+ALTER TABLE library_cache ADD COLUMN download_count INTEGER NOT NULL DEFAULT 0;
+
+-- Create history_cache table to replace slow historyView
+CREATE TABLE IF NOT EXISTS history_cache (
+    _id INTEGER NOT NULL PRIMARY KEY,
+    manga_id INTEGER NOT NULL,
+    chapter_id INTEGER NOT NULL,
+    manga_title TEXT NOT NULL,
+    manga_thumbnail_url TEXT,
+    manga_source INTEGER NOT NULL,
+    manga_favorite INTEGER NOT NULL,
+    manga_cover_last_modified INTEGER NOT NULL,
+    chapter_number REAL NOT NULL,
+    last_read INTEGER,
+    time_read INTEGER NOT NULL,
+    FOREIGN KEY (manga_id) REFERENCES mangas(_id) ON DELETE CASCADE,
+    FOREIGN KEY (chapter_id) REFERENCES chapters(_id) ON DELETE CASCADE
+);
+
+CREATE INDEX history_cache_manga_id_idx ON history_cache(manga_id);
+CREATE INDEX history_cache_last_read_idx ON history_cache(last_read DESC);
+CREATE INDEX history_cache_chapter_id_idx ON history_cache(chapter_id);
+
+-- Populate history_cache from existing data (only latest chapter per manga)
+INSERT OR REPLACE INTO history_cache (
+    _id, manga_id, chapter_id, manga_title, manga_thumbnail_url, manga_source,
+    manga_favorite, manga_cover_last_modified, chapter_number, last_read, time_read
+)
+SELECT
+    history._id,
+    mangas._id,
+    chapters._id,
+    mangas.title,
+    mangas.thumbnail_url,
+    mangas.source,
+    mangas.favorite,
+    mangas.cover_last_modified,
+    chapters.chapter_number,
+    history.last_read,
+    history.time_read
+FROM history
+JOIN chapters ON chapters._id = history.chapter_id
+JOIN mangas ON mangas._id = chapters.manga_id
+WHERE history.last_read > 0;
+
+-- Create updates_cache table to replace slow updatesView
+CREATE TABLE IF NOT EXISTS updates_cache (
+    _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    manga_id INTEGER NOT NULL,
+    manga_title TEXT NOT NULL,
+    chapter_id INTEGER NOT NULL,
+    chapter_name TEXT NOT NULL,
+    scanlator TEXT,
+    chapter_url TEXT NOT NULL,
+    read INTEGER NOT NULL,
+    bookmark INTEGER NOT NULL,
+    last_page_read INTEGER NOT NULL,
+    source INTEGER NOT NULL,
+    favorite INTEGER NOT NULL,
+    thumbnail_url TEXT,
+    cover_last_modified INTEGER NOT NULL,
+    date_upload INTEGER NOT NULL,
+    date_fetch INTEGER NOT NULL,
+    FOREIGN KEY (manga_id) REFERENCES mangas(_id) ON DELETE CASCADE,
+    FOREIGN KEY (chapter_id) REFERENCES chapters(_id) ON DELETE CASCADE
+);
+
+CREATE INDEX updates_cache_manga_id_idx ON updates_cache(manga_id);
+CREATE INDEX updates_cache_date_fetch_idx ON updates_cache(date_fetch DESC);
+CREATE INDEX updates_cache_chapter_id_idx ON updates_cache(chapter_id);
+CREATE INDEX updates_cache_read_idx ON updates_cache(read, date_upload);
+
+-- Populate updates_cache from existing data
+INSERT INTO updates_cache (
+    manga_id, manga_title, chapter_id, chapter_name, scanlator, chapter_url,
+    read, bookmark, last_page_read, source, favorite, thumbnail_url,
+    cover_last_modified, date_upload, date_fetch
+)
+SELECT
+    mangas._id,
+    mangas.title,
+    chapters._id,
+    chapters.name,
+    chapters.scanlator,
+    chapters.url,
+    chapters.read,
+    chapters.bookmark,
+    chapters.last_page_read,
+    mangas.source,
+    mangas.favorite,
+    mangas.thumbnail_url,
+    mangas.cover_last_modified,
+    chapters.date_upload,
+    chapters.date_fetch
+FROM mangas
+JOIN chapters ON mangas._id = chapters.manga_id
+WHERE mangas.favorite = 1
+AND chapters.date_fetch > mangas.date_added;
+
+-- Triggers for history_cache
+
+-- Update history_cache when history is inserted
+CREATE TRIGGER history_cache_insert
+AFTER INSERT ON history
+BEGIN
+    INSERT OR REPLACE INTO history_cache (
+        _id, manga_id, chapter_id, manga_title, manga_thumbnail_url, manga_source,
+        manga_favorite, manga_cover_last_modified, chapter_number, last_read, time_read
+    )
+    SELECT
+        NEW._id,
+        mangas._id,
+        chapters._id,
+        mangas.title,
+        mangas.thumbnail_url,
+        mangas.source,
+        mangas.favorite,
+        mangas.cover_last_modified,
+        chapters.chapter_number,
+        NEW.last_read,
+        NEW.time_read
+    FROM chapters
+    JOIN mangas ON mangas._id = chapters.manga_id
+    WHERE chapters._id = NEW.chapter_id;
+END;
+
+-- Update history_cache when history is updated
+CREATE TRIGGER history_cache_update
+AFTER UPDATE ON history
+BEGIN
+    UPDATE history_cache
+    SET last_read = NEW.last_read,
+        time_read = NEW.time_read
+    WHERE _id = NEW._id;
+END;
+
+-- Delete from history_cache when history is deleted
+CREATE TRIGGER history_cache_delete
+AFTER DELETE ON history
+BEGIN
+    DELETE FROM history_cache WHERE _id = OLD._id;
+END;
+
+-- Update history_cache when manga is updated (title, thumbnail, etc.)
+CREATE TRIGGER history_cache_manga_update
+AFTER UPDATE ON mangas
+WHEN OLD.title != NEW.title OR OLD.thumbnail_url != NEW.thumbnail_url OR OLD.favorite != NEW.favorite OR OLD.cover_last_modified != NEW.cover_last_modified
+BEGIN
+    UPDATE history_cache
+    SET manga_title = NEW.title,
+        manga_thumbnail_url = NEW.thumbnail_url,
+        manga_favorite = NEW.favorite,
+        manga_cover_last_modified = NEW.cover_last_modified
+    WHERE manga_id = NEW._id;
+END;
+
+-- Triggers for updates_cache
+
+-- Insert into updates_cache when a chapter is inserted for a favorite manga
+CREATE TRIGGER updates_cache_chapter_insert
+AFTER INSERT ON chapters
+WHEN (SELECT favorite FROM mangas WHERE _id = NEW.manga_id) = 1
+AND NEW.date_fetch > (SELECT date_added FROM mangas WHERE _id = NEW.manga_id)
+BEGIN
+    INSERT INTO updates_cache (
+        manga_id, manga_title, chapter_id, chapter_name, scanlator, chapter_url,
+        read, bookmark, last_page_read, source, favorite, thumbnail_url,
+        cover_last_modified, date_upload, date_fetch
+    )
+    SELECT
+        mangas._id,
+        mangas.title,
+        NEW._id,
+        NEW.name,
+        NEW.scanlator,
+        NEW.url,
+        NEW.read,
+        NEW.bookmark,
+        NEW.last_page_read,
+        mangas.source,
+        mangas.favorite,
+        mangas.thumbnail_url,
+        mangas.cover_last_modified,
+        NEW.date_upload,
+        NEW.date_fetch
+    FROM mangas
+    WHERE mangas._id = NEW.manga_id;
+END;
+
+-- Update updates_cache when chapter is updated (read status, bookmark, etc.)
+CREATE TRIGGER updates_cache_chapter_update
+AFTER UPDATE ON chapters
+BEGIN
+    UPDATE updates_cache
+    SET chapter_name = NEW.name,
+        scanlator = NEW.scanlator,
+        chapter_url = NEW.url,
+        read = NEW.read,
+        bookmark = NEW.bookmark,
+        last_page_read = NEW.last_page_read,
+        date_upload = NEW.date_upload,
+        date_fetch = NEW.date_fetch
+    WHERE chapter_id = NEW._id;
+END;
+
+-- Delete from updates_cache when chapter is deleted
+CREATE TRIGGER updates_cache_chapter_delete
+AFTER DELETE ON chapters
+BEGIN
+    DELETE FROM updates_cache WHERE chapter_id = OLD._id;
+END;
+
+-- Update updates_cache when manga is updated
+CREATE TRIGGER updates_cache_manga_update
+AFTER UPDATE ON mangas
+WHEN OLD.title != NEW.title OR OLD.thumbnail_url != NEW.thumbnail_url OR OLD.cover_last_modified != NEW.cover_last_modified
+BEGIN
+    UPDATE updates_cache
+    SET manga_title = NEW.title,
+        thumbnail_url = NEW.thumbnail_url,
+        cover_last_modified = NEW.cover_last_modified
+    WHERE manga_id = NEW._id;
+END;
+
+-- Remove from updates_cache when manga is unfavorited
+CREATE TRIGGER updates_cache_manga_unfavorite
+AFTER UPDATE OF favorite ON mangas
+WHEN NEW.favorite = 0 AND OLD.favorite = 1
+BEGIN
+    DELETE FROM updates_cache WHERE manga_id = OLD._id;
+END;
+
+-- Delete from updates_cache when manga is deleted
+CREATE TRIGGER updates_cache_manga_delete
+AFTER DELETE ON mangas
+BEGIN
+    DELETE FROM updates_cache WHERE manga_id = OLD._id;
+END;

@@ -146,6 +146,13 @@ interface MangaRepository {
     suspend fun refreshLibraryCacheForManga(mangaId: Long)
 
     /**
+     * Invalidate the in-memory library cache.
+     * Forces the next getLibraryManga() call to re-query the database.
+     * Use this before forced refreshes to ensure fresh data.
+     */
+    fun invalidateLibraryCache()
+
+    /**
      * Normalize all tags/genres in the library.
      * - Trims whitespace
      * - Removes duplicates (case-insensitive)

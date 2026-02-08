@@ -775,6 +775,11 @@ class LibraryScreenModel(
                 val mangaIds = mangas.map { it.id }
                 removeChapters.awaitByMangaIds(mangaIds)
             }
+            
+            // Refresh library UI after modifications
+            if (deleteFromLibrary || deleteChapters || clearChaptersFromDb) {
+                getLibraryManga.refreshForced()
+            }
         }
     }
 
@@ -873,6 +878,8 @@ class LibraryScreenModel(
             }
             // Single refresh at the end of batch operation
             setMangaCategories.refreshLibrary()
+            // Force full library refresh to ensure UI updates immediately
+            getLibraryManga.refreshForced()
             
             // Clear selection so UI reflects the change
             clearSelection()

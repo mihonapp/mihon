@@ -14,6 +14,8 @@ import androidx.work.workDataOf
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.manga.model.toSManga
 import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.jsplugin.source.JsSource
+import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.isNovelSource
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.storage.getUriCompat
@@ -99,6 +101,8 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
         return withIOContext {
             try {
                 performImport(urls, categoryId, addToLibrary, fetchDetails, fetchChapters, batchId)
+                // Full library cache refresh to update UI after bulk import
+                try { refreshLibraryCache.await() } catch (_: Exception) {}
                 Result.success()
             } catch (e: Exception) {
                 if (e is CancellationException) {
@@ -159,7 +163,7 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
             url.startsWith("http://") || url.startsWith("https://")
         }.filter { url ->
             val source = findMatchingSource(url, novelSources) ?: return@filter false
-            val path = normalizeUrl(extractPathFromUrl(url, source.baseUrl))
+            val path = normalizeUrl(extractPathFromUrl(url, getSourceBaseUrl(source)))
             !libraryUrlIndex.contains(source.id to path)
         }
 
@@ -373,7 +377,7 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
 
     private suspend fun processUrl(
         url: String,
-        novelSources: List<HttpSource>,
+        novelSources: List<CatalogueSource>,
         addToLibrary: Boolean,
         fetchDetails: Boolean,
         categoryId: Long,
@@ -385,13 +389,13 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
 
     private suspend fun processUrlWithSource(
         url: String,
-        source: HttpSource,
+        source: CatalogueSource,
         addToLibrary: Boolean,
         fetchDetails: Boolean,
         categoryId: Long,
         fetchChapters: Boolean,
     ): Boolean {
-        val rawPath = extractPathFromUrl(url, source.baseUrl)
+        val rawPath = extractPathFromUrl(url, getSourceBaseUrl(source))
         if (rawPath.isEmpty()) return false
         
         // Normalize URL before any operations
@@ -583,9 +587,9 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
         }
     }
 
-    private fun getNovelSources(): List<HttpSource> {
+    private fun getNovelSources(): List<CatalogueSource> {
         return sourceManager.getCatalogueSources()
-            .filterIsInstance<HttpSource>()
+            .filter { it is HttpSource || it is JsSource }
             .filter { it.isNovelSource() }
     }
 
@@ -593,13 +597,13 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
      * Find source that matches the given URL.
      * Prioritizes Kotlin extensions over JS plugins when multiple sources match the same URL.
      */
-    private fun findMatchingSource(url: String, sources: List<HttpSource>): HttpSource? {
-        val normalizedUrl = stripScheme(url).removeSuffix("/")
+    private fun findMatchingSource(url: String, sources: List<CatalogueSource>): CatalogueSource? {
+        val normalizedUrl = stripScheme(url).removePrefix("www.").removeSuffix("/")
         
         // Find all matching sources
         val matchingSources = sources.filter { source ->
             try {
-                val baseUrl = stripScheme(source.baseUrl).removeSuffix("/")
+                val baseUrl = stripScheme(getSourceBaseUrl(source)).removePrefix("www.").removeSuffix("/")
                 normalizedUrl.startsWith(baseUrl)
             } catch (_: Exception) {
                 false
@@ -610,12 +614,17 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
         if (matchingSources.size == 1) return matchingSources.first()
         
         // Prioritize Kotlin extensions over JS plugins
-        // JS plugins are from JsSource class, Kotlin extensions are other HttpSource implementations
-        val kotlinSources = matchingSources.filter { 
-            it::class.java.name != "eu.kanade.tachiyomi.jsplugin.source.JsSource" 
-        }
+        val kotlinSources = matchingSources.filter { it !is JsSource }
         
         return kotlinSources.firstOrNull() ?: matchingSources.first()
+    }
+
+    private fun getSourceBaseUrl(source: CatalogueSource): String {
+        return when (source) {
+            is HttpSource -> source.baseUrl
+            is JsSource -> source.baseUrl
+            else -> ""
+        }
     }
 
     private fun stripScheme(url: String): String {
@@ -636,10 +645,10 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
         return try {
             val baseUri = URI(baseUrl)
             val urlUri = URI(url)
-            val baseHost = baseUri.host?.lowercase()
-            val urlHost = urlUri.host?.lowercase()
+            val baseHost = baseUri.host?.lowercase()?.removePrefix("www.")
+            val urlHost = urlUri.host?.lowercase()?.removePrefix("www.")
 
-            val result = if (baseHost != null && urlHost != null && baseHost == urlHost) {
+            if (baseHost != null && urlHost != null && baseHost == urlHost) {
                 buildString {
                     append(urlUri.rawPath ?: "")
                     val q = urlUri.rawQuery
@@ -649,16 +658,20 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
                     }
                 }
             } else {
-                val normalizedBase = stripScheme(baseUrl).removeSuffix("/")
-                val normalizedUrl = stripScheme(url)
+                val normalizedBase = baseUrl.removePrefix("https://").removePrefix("http://").removePrefix("www.").removeSuffix("/")
+                val normalizedUrl = url.removePrefix("https://").removePrefix("http://").removePrefix("www.")
+                
                 if (normalizedUrl.startsWith(normalizedBase)) {
-                    normalizedUrl.removePrefix(normalizedBase)
+                     var path = normalizedUrl.removePrefix(normalizedBase)
+                     if (!path.startsWith("/") && path.isNotEmpty()) {
+                         path = "/$path"
+                     }
+                     path
                 } else {
-                    normalizedUrl
+                     // Fallback: return full URL path if hosts mismatch but we assume it's correct source
+                     urlUri.rawPath ?: ""
                 }
             }
-            // Already normalized via normalizeUrl() wrapper
-            result
         } catch (_: Exception) {
             ""
         }

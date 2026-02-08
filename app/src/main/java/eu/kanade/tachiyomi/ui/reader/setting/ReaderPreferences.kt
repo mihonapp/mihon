@@ -175,6 +175,8 @@ class ReaderPreferences(
     fun novelVolumeKeysScroll() = preferenceStore.getBoolean("pref_novel_volume_keys_scroll", false)
     fun novelTapToScroll() = preferenceStore.getBoolean("pref_novel_tap_to_scroll", false)
     fun novelTextSelectable() = preferenceStore.getBoolean("pref_novel_text_selectable", true)
+    // Block media elements (images, videos) in WebView and TextView readers
+    fun novelBlockMedia() = preferenceStore.getBoolean("pref_novel_block_media", false)
 
     // Font color (stored as ARGB int, 0 means use theme default)
     // Note: Using 0 instead of -1 because 0xFFFFFFFF (white) = -1 as signed int
@@ -239,9 +241,6 @@ class ReaderPreferences(
     // Chapter sort order for novel reader: "source" = use source order, "chapter_number" = sort by chapter number
     // Default is "source" since many novel sources don't provide proper chapter numbers
     fun novelChapterSortOrder() = preferenceStore.getString("pref_novel_chapter_sort_order", "source")
-
-    // Block media elements (images, videos) in WebView - useful for ad blocking
-    fun novelBlockMedia() = preferenceStore.getBoolean("pref_novel_block_media", false)
 
     // Keep screen on while reading
     fun novelKeepScreenOn() = preferenceStore.getBoolean("pref_novel_keep_screen_on", false)

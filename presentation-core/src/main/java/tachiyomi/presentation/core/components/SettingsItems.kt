@@ -285,6 +285,8 @@ fun SelectItem(
     onSelect: (Int) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
+    if (options.isEmpty()) return
+    val safeIndex = selectedIndex.coerceIn(0, options.lastIndex)
 
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -299,7 +301,7 @@ fun SelectItem(
                     vertical = SettingsItemsPaddings.Vertical,
                 ),
             label = { Text(text = label) },
-            value = options[selectedIndex].toString(),
+            value = options[safeIndex].toString(),
             onValueChange = {},
             readOnly = true,
             singleLine = true,

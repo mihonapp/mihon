@@ -9,6 +9,8 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateNotifier
 import eu.kanade.tachiyomi.data.notification.NotificationHandler
 import eu.kanade.tachiyomi.data.translation.TranslationService
+import eu.kanade.tachiyomi.jsplugin.source.JsSource
+import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.UnmeteredSource
 import eu.kanade.tachiyomi.source.fetchNovelPageText
 import eu.kanade.tachiyomi.source.isNovelSource
@@ -389,9 +391,9 @@ class Downloader(
             return
         }
 
-        val source = sourceManager.get(manga.source) as? HttpSource
+        val source = sourceManager.get(manga.source) as? CatalogueSource
         if (source == null) {
-            logcat { "queueChapters: Source is null or not HttpSource. sourceId=${manga.source}" }
+            logcat { "queueChapters: Source is null or not CatalogueSource. sourceId=${manga.source}" }
             return
         }
         logcat { "queueChapters: Source is ${source.name}, isNovelSource=${source.isNovelSource()}" }
@@ -533,7 +535,10 @@ class Downloader(
                     if (!isNovel && page.imageUrl.isNullOrEmpty()) {
                         page.status = Page.State.LoadPage
                         try {
-                            page.imageUrl = download.source.getImageUrl(page)
+                            val httpSource = download.source as? HttpSource
+                            if (httpSource != null) {
+                                page.imageUrl = httpSource.getImageUrl(page)
+                            }
                         } catch (e: Throwable) {
                             page.status = Page.State.Error(e)
                         }
@@ -650,8 +655,9 @@ class Downloader(
             // Embed images if enabled
             val htmlContent = if (novelDownloadPreferences.downloadChapterImages().get()) {
                 logcat { "  -> Embedding images in chapter HTML" }
-                val httpSource = download.source as? HttpSource
-                val baseUrl = page.url.takeIf { it.isNotBlank() } ?: httpSource?.baseUrl
+                val baseUrl = page.url.takeIf { it.isNotBlank() }
+                    ?: (download.source as? HttpSource)?.baseUrl
+                    ?: (download.source as? JsSource)?.baseUrl
                 val embedder = ChapterImageEmbedder()
                 embedder.processHtml(page.text!!, baseUrl)
             } else {
@@ -709,7 +715,11 @@ class Downloader(
                 chapterCache.isImageInCache(
                     page.imageUrl!!,
                 ) -> copyImageFromCache(chapterCache.getImageFile(page.imageUrl!!), tmpDir, filename)
-                else -> downloadImage(page, download.source, tmpDir, filename)
+                else -> {
+                    val httpSource = download.source as? HttpSource
+                        ?: throw IllegalStateException("Image download requires HttpSource, got ${download.source::class.simpleName}")
+                    downloadImage(page, httpSource, tmpDir, filename)
+                }
             }
 
             // When the page is ready, set page path, progress (just in case) and status
@@ -879,14 +889,19 @@ class Downloader(
         dir: UniFile,
         manga: Manga,
         chapter: Chapter,
-        source: HttpSource,
+        source: CatalogueSource,
     ) {
         val categories = getCategories.await(manga.id).map { it.name.trim() }.takeUnless { it.isEmpty() }
         val urls = getTracks.await(manga.id)
             .mapNotNull { track ->
                 track.remoteUrl.takeUnless { url -> url.isBlank() }?.trim()
             }
-            .plus(source.getChapterUrl(chapter.toSChapter()).trim())
+            .plus(
+                when (source) {
+                    is HttpSource -> source.getChapterUrl(chapter.toSChapter()).trim()
+                    else -> chapter.url.trim()
+                },
+            )
             .distinct()
 
         val comicInfo = getComicInfo(

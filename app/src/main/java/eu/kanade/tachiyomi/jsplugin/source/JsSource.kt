@@ -319,18 +319,31 @@ class JsSource(
         try {
             val escapedQuery = query.replace("'", "\\'").replace("\"", "\\\"")
             
-            // Check if we have filters to apply
-            if (filters.isNotEmpty() && query.isBlank()) {
-                // Use popularNovels with filters for browsing with filters
-                val filtersJs = convertFiltersToJs(filters)
-                val result = executePluginMethod("plugin.popularNovels($page, { showLatestNovels: false, filters: $filtersJs })")
-                parseMangasPage(result, page)
-            } else if (query.isNotBlank()) {
+            // Determine if non-default filters are present
+            val hasActiveFilters = filters.isNotEmpty() && filters.any { filter ->
+                when (filter) {
+                    is JsSelectFilter -> filter.state != 0
+                    is JsCheckboxGroup -> filter.selectedValues().isNotEmpty()
+                    is JsTriStateGroup -> filter.includedValues().isNotEmpty() || filter.excludedValues().isNotEmpty()
+                    is JsSwitchFilter -> filter.state
+                    is JsTextFilter -> filter.state.isNotBlank()
+                    is Filter.CheckBox -> filter.state
+                    is Filter.Text -> filter.state.isNotBlank()
+                    else -> false
+                }
+            }
+            
+            if (query.isNotBlank()) {
                 // Use searchNovels for text search
                 val result = executePluginMethod("plugin.searchNovels('$escapedQuery', $page)")
                 parseMangasPage(result, page)
+            } else if (hasActiveFilters) {
+                // Use popularNovels with user-modified filters
+                val filtersJs = convertFiltersToJs(filters)
+                val result = executePluginMethod("plugin.popularNovels($page, { showLatestNovels: false, filters: $filtersJs })")
+                parseMangasPage(result, page)
             } else {
-                // Default to popular
+                // Default to popular with plugin's original filters
                 val result = executePluginMethod("plugin.popularNovels($page, { showLatestNovels: false, filters: plugin.filters })")
                 parseMangasPage(result, page)
             }
@@ -350,7 +363,7 @@ class JsSource(
         filters.forEach { filter ->
             when (filter) {
                 is JsSelectFilter -> {
-                    filterEntries[filter.name] = JsonObject(
+                    filterEntries[filter.key] = JsonObject(
                         mapOf(
                             "type" to JsonPrimitive("Picker"),
                             "value" to JsonPrimitive(filter.selectedValue()),
@@ -358,7 +371,7 @@ class JsSource(
                     )
                 }
                 is JsCheckboxGroup -> {
-                    filterEntries[filter.name] = JsonObject(
+                    filterEntries[filter.key] = JsonObject(
                         mapOf(
                             "type" to JsonPrimitive("Checkbox"),
                             "value" to JsonArray(filter.selectedValues().map { JsonPrimitive(it) }),
@@ -366,7 +379,7 @@ class JsSource(
                     )
                 }
                 is JsTriStateGroup -> {
-                    filterEntries[filter.name] = JsonObject(
+                    filterEntries[filter.key] = JsonObject(
                         mapOf(
                             "type" to JsonPrimitive("XCheckbox"),
                             "value" to JsonObject(
@@ -378,10 +391,26 @@ class JsSource(
                         ),
                     )
                 }
+                is JsSwitchFilter -> {
+                    filterEntries[filter.key] = JsonObject(
+                        mapOf(
+                            "type" to JsonPrimitive("Switch"),
+                            "value" to JsonPrimitive(filter.state),
+                        ),
+                    )
+                }
                 is Filter.CheckBox -> {
                     filterEntries[filter.name] = JsonObject(
                         mapOf(
                             "type" to JsonPrimitive("Switch"),
+                            "value" to JsonPrimitive(filter.state),
+                        ),
+                    )
+                }
+                is JsTextFilter -> {
+                    filterEntries[filter.key] = JsonObject(
+                        mapOf(
+                            "type" to JsonPrimitive("Text"),
                             "value" to JsonPrimitive(filter.state),
                         ),
                     )
@@ -436,7 +465,27 @@ class JsSource(
             
             val path = manga.url.replace("'", "\\'").replace("\"", "\\\"")
             val result = executePluginMethod("plugin.parseNovel('$path')")
-            val chapters = parseChapterList(result)
+            val chapters = parseChapterList(result).toMutableList()
+            
+            // Support paged chapter sources (like novelight, novelfire)
+            // If parseNovel returns totalPages > 1, fetch remaining pages via parsePage
+            val totalPages = try {
+                val obj = json.parseToJsonElement(result).jsonObject
+                obj["totalPages"]?.jsonPrimitive?.content?.toIntOrNull() ?: 1
+            } catch (_: Exception) { 1 }
+            
+            if (totalPages > 1) {
+                logcat(LogPriority.DEBUG) { "JsSource[$pluginId]: Paged source detected, totalPages=$totalPages" }
+                for (page in 2..totalPages) {
+                    try {
+                        val pageResult = executePluginMethod("plugin.parsePage('$path', '$page')")
+                        val pageChapters = parsePageChapters(pageResult, chapters.size)
+                        chapters.addAll(pageChapters)
+                    } catch (e: Exception) {
+                        logcat(LogPriority.ERROR, e) { "JsSource[$pluginId]: Error fetching page $page of $totalPages" }
+                    }
+                }
+            }
             
             // Cache the result
             chaptersCache[manga.url] = chapters to now
@@ -480,7 +529,57 @@ class JsSource(
     }
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) {
-        // JS plugins typically don't have configurable preferences
+        // Read plugin's pluginSettings and create preferences backed by persistent storage
+        try {
+            val result = runBlocking { executePluginMethod("JSON.stringify(plugin.pluginSettings || {})") }
+            val settingsJson = decodeJsonStringIfQuoted(result)
+            if (settingsJson.isBlank() || settingsJson == "{}" || settingsJson == "null") return
+            
+            val settings = json.parseToJsonElement(settingsJson).jsonObject
+            val prefs = screen.context.getSharedPreferences("jsplugin_storage_$pluginId", android.content.Context.MODE_PRIVATE)
+            
+            settings.forEach { (key, value) ->
+                val settingObj = value as? JsonObject ?: return@forEach
+                val label = settingObj["label"]?.jsonPrimitive?.content ?: key
+                val type = settingObj["type"]?.jsonPrimitive?.content ?: "Switch"
+                
+                when (type) {
+                    "Switch" -> {
+                        val pref = androidx.preference.SwitchPreferenceCompat(screen.context).apply {
+                            this.key = key
+                            this.title = label
+                            this.setDefaultValue(false)
+                            this.isChecked = prefs.getString(key, "")?.toBooleanStrictOrNull() ?: false
+                            setOnPreferenceChangeListener { _, newValue ->
+                                val strVal = newValue.toString()
+                                prefs.edit().putString(key, strVal).apply()
+                                true
+                            }
+                        }
+                        screen.addPreference(pref)
+                    }
+                    "Text" -> {
+                        val defaultValue = settingObj["value"]?.jsonPrimitive?.content ?: ""
+                        val pref = androidx.preference.EditTextPreference(screen.context).apply {
+                            this.key = key
+                            this.title = label
+                            this.setDefaultValue(defaultValue)
+                            this.text = prefs.getString(key, defaultValue) ?: defaultValue
+                            this.summary = this.text
+                            setOnPreferenceChangeListener { p, newValue ->
+                                val strVal = newValue.toString()
+                                prefs.edit().putString(key, strVal).apply()
+                                (p as? androidx.preference.EditTextPreference)?.summary = strVal
+                                true
+                            }
+                        }
+                        screen.addPreference(pref)
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Error setting up preference screen for ${plugin.name}" }
+        }
     }
 
     private fun anyToJsonElement(any: Any?): JsonElement {
@@ -624,6 +723,47 @@ class JsSource(
         }
     }
 
+    /**
+     * Parse chapters from a parsePage() result.
+     * parsePage returns { chapters: [...] } like parseNovel, but just for one page.
+     * @param chapterOffset the number of chapters already parsed from previous pages,
+     *        used to continue chapter numbering instead of resetting to 1.
+     */
+    private fun parsePageChapters(jsonResult: String, chapterOffset: Int = 0): List<SChapter> {
+        if (jsonResult == "null" || jsonResult.isBlank()) return emptyList()
+        try {
+            val element = json.parseToJsonElement(jsonResult)
+            val chaptersArray = when (element) {
+                is JsonObject -> element["chapters"]?.jsonArray ?: return emptyList()
+                is JsonArray -> element // Some plugins return a plain array
+                else -> return emptyList()
+            }
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+            return chaptersArray.mapIndexedNotNull { index, item ->
+                try {
+                    val chapterObj = item.jsonObject
+                    val globalIndex = chapterOffset + index
+                    SChapter.create().apply {
+                        name = chapterObj["name"]?.jsonPrimitive?.content ?: "Chapter ${globalIndex + 1}"
+                        url = chapterObj["path"]?.jsonPrimitive?.content ?: return@mapIndexedNotNull null
+                        chapter_number = chapterObj["chapterNumber"]?.jsonPrimitive?.content?.toFloatOrNull()
+                            ?: (globalIndex + 1).toFloat()
+                        date_upload = try {
+                            chapterObj["releaseTime"]?.jsonPrimitive?.content?.let { dateStr ->
+                                if (dateStr.contains("T")) java.time.Instant.parse(dateStr).toEpochMilli()
+                                else dateFormat.parse(dateStr)?.time ?: 0L
+                            } ?: 0L
+                        } catch (_: Exception) { 0L }
+                        scanlator = chapterObj["page"]?.jsonPrimitive?.content
+                    }
+                } catch (_: Exception) { null }
+            }.reversed()
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Failed to parse page chapters: $jsonResult" }
+            return emptyList()
+        }
+    }
+
     private fun parseFiltersFromJson(jsonResult: String): FilterList {
         if (jsonResult == "null" || jsonResult.isBlank() || jsonResult == "{}" || jsonResult == "[]") {
             return FilterList()
@@ -666,6 +806,7 @@ class JsSource(
     /** Picker filter that stores label-value pairs */
     class JsSelectFilter(
         name: String,
+        val key: String,
         val options: List<Pair<String, String>>, // Pair of (label, value)
         defaultIndex: Int = 0,
     ) : Filter.Select<String>(name, options.map { it.first }.toTypedArray(), defaultIndex) {
@@ -676,6 +817,7 @@ class JsSource(
     /** Checkbox group filter where each checkbox has a label and value */
     class JsCheckboxGroup(
         name: String,
+        val key: String,
         val checkboxes: List<JsCheckbox>,
     ) : Filter.Group<JsCheckbox>(name, checkboxes) {
         /** Get list of selected values */
@@ -691,6 +833,7 @@ class JsSource(
     /** TriState checkbox group for include/exclude functionality */
     class JsTriStateGroup(
         name: String,
+        val key: String,
         val triStates: List<JsTriState>,
     ) : Filter.Group<JsTriState>(name, triStates) {
         /** Get included values */
@@ -704,13 +847,32 @@ class JsSource(
         val label: String,
         val value: String,
     ) : Filter.TriState(label)
+    
+    /** Text input filter that stores the original JSON key */
+    class JsTextFilter(
+        name: String,
+        val key: String,
+        defaultValue: String = "",
+    ) : Filter.Text(name) {
+        init { state = defaultValue }
+    }
+    
+    /** Switch filter that stores the original JSON key */
+    class JsSwitchFilter(
+        name: String,
+        val key: String,
+        defaultValue: Boolean = false,
+    ) : Filter.CheckBox(name, defaultValue)
 
     private fun parseFilterObject(key: String, filterObj: JsonObject, filters: MutableList<Filter<*>>) {
         val type = filterObj["type"]?.jsonPrimitive?.content
         val label = filterObj["label"]?.jsonPrimitive?.content ?: key
 
         when (type) {
-            "Text" -> filters.add(object : Filter.Text(label) {})
+            "Text" -> {
+                val defaultValue = filterObj["value"]?.jsonPrimitive?.content ?: ""
+                filters.add(JsTextFilter(label, key, defaultValue))
+            }
             
             "Picker" -> {
                 // Parse options as label-value pairs
@@ -732,7 +894,7 @@ class JsSource(
                     options.indexOfFirst { it.second == defaultValue }.takeIf { it >= 0 } ?: 0
                 } else 0
                 
-                filters.add(JsSelectFilter(label, options, defaultIndex))
+                filters.add(JsSelectFilter(label, key, options, defaultIndex))
             }
             
             "Checkbox" -> {
@@ -759,14 +921,14 @@ class JsSource(
                     checkbox.state = checkbox.value in defaultValues
                 }
                 
-                filters.add(JsCheckboxGroup(label, options))
+                filters.add(JsCheckboxGroup(label, key, options))
             }
             
             "Switch" -> {
                 val defaultValue = filterObj["value"]?.jsonPrimitive?.let { 
                     it.content.toBooleanStrictOrNull() ?: (it.content == "true")
                 } ?: false
-                filters.add(object : Filter.CheckBox(label, defaultValue) {})
+                filters.add(JsSwitchFilter(label, key, defaultValue))
             }
             
             "XCheckbox" -> {
@@ -801,7 +963,7 @@ class JsSource(
                     }
                 }
                 
-                filters.add(JsTriStateGroup(label, options))
+                filters.add(JsTriStateGroup(label, key, options))
             }
         }
     }
