@@ -91,7 +91,20 @@ fun novelExtensionsTab(
                         else -> {}
                     }
                 },
-                onOpenExtension = { if (it is Extension.Installed) navigator.push(ExtensionDetailsScreen(it.pkgName)) },
+                onOpenExtension = {
+                    when (it) {
+                        is Extension.Installed -> navigator.push(ExtensionDetailsScreen(it.pkgName))
+                        is Extension.JsPlugin -> {
+                            // Navigate to source preferences for JS plugins
+                            it.sources.firstOrNull()?.let { source ->
+                                navigator.push(
+                                    eu.kanade.tachiyomi.ui.browse.extension.details.SourcePreferencesScreen(source.id),
+                                )
+                            }
+                        }
+                        else -> {}
+                    }
+                },
                 onTrustExtension = { extensionsScreenModel.trustExtension(it) },
                 onUninstallExtension = { extensionsScreenModel.uninstallExtension(it) },
                 onUpdateExtension = {
@@ -102,6 +115,7 @@ fun novelExtensionsTab(
                     }
                 },
                 onRefresh = extensionsScreenModel::findAvailableExtensions,
+                onEmptyReposAction = { navigator.push(NovelExtensionReposScreen()) },
             )
 
             privateExtensionToUninstall?.let { extension ->

@@ -88,6 +88,7 @@ fun ExtensionScreen(
     onOpenExtension: (Extension) -> Unit,
     onClickUpdateAll: () -> Unit,
     onRefresh: () -> Unit,
+    onEmptyReposAction: (() -> Unit)? = null,
 ) {
     val navigator = LocalNavigator.currentOrThrow
 
@@ -111,7 +112,7 @@ fun ExtensionScreen(
                         EmptyScreenAction(
                             stringRes = MR.strings.label_extension_repos,
                             icon = Icons.Outlined.Settings,
-                            onClick = { navigator.push(ExtensionReposScreen()) },
+                            onClick = onEmptyReposAction ?: { navigator.push(ExtensionReposScreen()) },
                         ),
                     ),
                 )
@@ -229,7 +230,7 @@ private fun ExtensionContent(
                             }
                             is Extension.JsPlugin -> {
                                 if (it.isInstalled) {
-                                    // onOpenExtension(it) // Not supported yet for JS
+                                    onOpenExtension(it)
                                 } else {
                                     onInstallExtension(it)
                                 }
@@ -273,7 +274,9 @@ private fun ExtensionContent(
                             is Extension.JsPlugin -> {
                                 if (it.isInstalled && it.hasUpdate) {
                                     onUpdateExtension(it)
-                                } else if (!it.isInstalled) {
+                                } else if (it.isInstalled) {
+                                    onOpenExtension(it)
+                                } else {
                                     onInstallExtension(it)
                                 }
                             }
@@ -528,6 +531,15 @@ private fun ExtensionItemActions(
                         }
                     }
                     is Extension.JsPlugin -> {
+                        if (extension.isInstalled) {
+                            // Settings gear for installed JS plugins - navigate to source preferences
+                            IconButton(onClick = { onClickItemAction(extension) }) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Settings,
+                                    contentDescription = stringResource(MR.strings.action_settings),
+                                )
+                            }
+                        }
                         if (extension.sources.isNotEmpty()) {
                             IconButton(
                                 onClick = { onClickItemSecondaryAction(extension) },
