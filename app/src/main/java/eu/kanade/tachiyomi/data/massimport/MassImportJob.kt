@@ -598,16 +598,32 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
      * Prioritizes Kotlin extensions over JS plugins when multiple sources match the same URL.
      */
     private fun findMatchingSource(url: String, sources: List<CatalogueSource>): CatalogueSource? {
-        val normalizedUrl = stripScheme(url).removePrefix("www.").removeSuffix("/")
-        
-        // Find all matching sources
+        val urlHost = try { URI(url).host?.lowercase()?.removePrefix("www.") } catch (_: Exception) { null }
         val matchingSources = sources.filter { source ->
             try {
-                val baseUrl = stripScheme(getSourceBaseUrl(source)).removePrefix("www.").removeSuffix("/")
-                normalizedUrl.startsWith(baseUrl)
+                val rawBase = getSourceBaseUrl(source)
+                val baseForUri = if (rawBase.startsWith("http")) rawBase else "https://$rawBase"
+                val baseUri = URI(baseForUri)
+                val baseHost = baseUri.host?.lowercase()?.removePrefix("www.")
+                val basePath = baseUri.path?.trimEnd('/')
+                if (baseHost.isNullOrEmpty() || urlHost.isNullOrEmpty()) return@filter false
+
+                val hostMatches = urlHost == baseHost || urlHost.endsWith(".$baseHost")
+                if (!hostMatches) return@filter false
+
+                if (!basePath.isNullOrBlank() && basePath != "/") {
+                    val urlPath = URI(url).path ?: ""
+                    urlPath.startsWith(basePath)
+                } else {
+                    true
+                }
             } catch (_: Exception) {
                 false
             }
+        }
+
+        if (matchingSources.isEmpty()) {
+            logcat(LogPriority.DEBUG) { "MassImport: No source match for $url host=$urlHost" }
         }
         
         if (matchingSources.isEmpty()) return null

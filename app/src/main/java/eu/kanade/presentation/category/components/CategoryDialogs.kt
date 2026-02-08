@@ -286,6 +286,9 @@ fun ChangeCategoryDialog(
         return
     }
     var selection by remember { mutableStateOf(initialSelection) }
+    val initialById = remember(initialSelection) {
+        initialSelection.associateBy { it.value.id }
+    }
     AlertDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
@@ -303,14 +306,22 @@ fun ChangeCategoryDialog(
                 tachiyomi.presentation.core.components.material.TextButton(
                     onClick = {
                         onDismissRequest()
-                        onConfirm(
-                            selection
-                                .filter { it is CheckboxState.State.Checked || it is CheckboxState.TriState.Include }
-                                .map { it.value.id },
-                            selection
-                                .filter { it is CheckboxState.State.None || it is CheckboxState.TriState.None }
-                                .map { it.value.id },
-                        )
+                        val addIds = selection.filter { current ->
+                            val initial = initialById[current.value.id]
+                            val currentChecked = current is CheckboxState.State.Checked || current is CheckboxState.TriState.Include
+                            val initialChecked = initial is CheckboxState.State.Checked || initial is CheckboxState.TriState.Include
+                            currentChecked && !initialChecked
+                        }.map { it.value.id }
+
+                        val removeIds = selection.filter { current ->
+                            val initial = initialById[current.value.id]
+                            val initialChecked = initial is CheckboxState.State.Checked || initial is CheckboxState.TriState.Include
+                            val currentExcluded = current is CheckboxState.TriState.Exclude
+                            val currentUnchecked = current is CheckboxState.State.None && initialChecked
+                            currentExcluded || currentUnchecked
+                        }.map { it.value.id }
+
+                        onConfirm(addIds, removeIds)
                     },
                 ) {
                     Text(text = stringResource(MR.strings.action_ok))

@@ -68,6 +68,12 @@ fun EpubReader.fillMetadata(manga: SManga, chapter: SChapter) {
  */
 private fun EpubReader.extractCoverUrl(manga: SManga, doc: org.jsoup.nodes.Document, packageRef: String) {
     try {
+        val coverPath = getCoverImage()
+        if (!coverPath.isNullOrBlank()) {
+            manga.thumbnail_url = coverPath
+            return
+        }
+
         // Try to find cover via manifest cover property
         var coverId = doc.select("meta[name=cover]").firstOrNull()?.attr("content")
 

@@ -62,6 +62,18 @@ class EpubReader(private val reader: ArchiveReader) : Closeable by reader {
             }
         }
 
+        // Fallback: common cover filenames inside archive
+        val commonPattern = Regex("(?i)(^|.*/)(cover)\\.(jpg|jpeg|png|webp)$")
+        val commonCandidates = reader.useEntries { entries ->
+            entries.mapNotNull { entry ->
+                val name = entry.name
+                if (commonPattern.matches(name)) name else null
+            }.toList()
+        }
+        if (commonCandidates.isNotEmpty()) {
+            return commonCandidates.sortedBy { it.length }.first()
+        }
+
         return null
     }
 
@@ -155,6 +167,9 @@ class EpubReader(private val reader: ArchiveReader) : Closeable by reader {
      * Resolves a zip path from base and relative components and a path separator.
      */
     private fun resolveZipPath(basePath: String, relativePath: String): String {
+        if (relativePath.startsWith("http://") || relativePath.startsWith("https://")) {
+            return relativePath
+        }
         if (relativePath.startsWith(pathSeparator)) {
             // Path is absolute, so return as-is.
             return relativePath

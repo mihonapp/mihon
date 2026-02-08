@@ -60,6 +60,9 @@ import tachiyomi.source.local.metadata.fillMetadata
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
+import java.io.ByteArrayInputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 data class EpubFileInfo(
     val uri: Uri,
@@ -137,8 +140,22 @@ fun ImportEpubDialog(
                             var coverUri: Uri? = null
                             try {
                                 val coverHref = manga.thumbnail_url
+                                val coverExt = coverHref?.substringAfterLast('.', "png")?.takeIf { it.length <= 4 }
+                                    ?: "png"
                                 val coverStream = if (!coverHref.isNullOrBlank()) {
-                                    epubReader.getInputStream(coverHref)
+                                    if (coverHref.startsWith("http://") || coverHref.startsWith("https://")) {
+                                        try {
+                                            val connection = URL(coverHref).openConnection() as HttpURLConnection
+                                            connection.connectTimeout = 10_000
+                                            connection.readTimeout = 10_000
+                                            val bytes = connection.inputStream.use { it.readBytes() }
+                                            ByteArrayInputStream(bytes)
+                                        } catch (_: Exception) {
+                                            null
+                                        }
+                                    } else {
+                                        epubReader.getInputStream(coverHref)
+                                    }
                                 } else {
                                     // Fallback: try common cover filenames
                                     val commonNames = listOf(
@@ -154,10 +171,10 @@ fun ImportEpubDialog(
                                     stream
                                 }
 
-                                if (coverStream != null) {
-                                    val coverFile = File.createTempFile("epub_cover_", ".png", context.cacheDir)
+                                coverStream?.use { stream ->
+                                    val coverFile = File.createTempFile("epub_cover_", ".${coverExt}", context.cacheDir)
                                     coverFile.outputStream().use { out ->
-                                        coverStream.copyTo(out)
+                                        stream.copyTo(out)
                                     }
                                     coverUri = UniFile.fromFile(coverFile)?.uri
                                 }

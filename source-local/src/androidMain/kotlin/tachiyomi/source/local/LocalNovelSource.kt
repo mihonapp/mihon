@@ -40,9 +40,12 @@ import tachiyomi.source.local.io.LocalNovelSourceFileSystem
 import tachiyomi.source.local.metadata.fillMetadata
 import uy.kohesive.injekt.injectLazy
 import java.io.InputStream
+import java.io.ByteArrayInputStream
 import java.nio.charset.StandardCharsets
 import kotlin.time.Duration.Companion.days
 import tachiyomi.domain.source.model.Source as DomainSource
+import java.net.HttpURLConnection
+import java.net.URL
 
 actual class LocalNovelSource(
     private val context: Context,
@@ -215,8 +218,14 @@ actual class LocalNovelSource(
                                 try {
                                     val cover = epub.getCoverImage()
                                     if (cover != null) {
-                                        epub.getInputStream(cover)?.use { stream ->
-                                            coverManager.update(manga, stream)
+                                        if (cover.startsWith("http://") || cover.startsWith("https://")) {
+                                            downloadCoverBytes(cover)?.let { bytes ->
+                                                coverManager.update(manga, ByteArrayInputStream(bytes))
+                                            }
+                                        } else {
+                                            epub.getInputStream(cover)?.use { stream ->
+                                                coverManager.update(manga, stream)
+                                            }
                                         }
                                     }
                                 } catch (e: Exception) {
@@ -296,6 +305,17 @@ actual class LocalNovelSource(
         if (file.isDirectory) return true
         val ext = file.extension?.lowercase() ?: return false
         return ext in SUPPORTED_EXTENSIONS
+    }
+
+    private fun downloadCoverBytes(url: String): ByteArray? {
+        return try {
+            val connection = URL(url).openConnection() as HttpURLConnection
+            connection.connectTimeout = 10_000
+            connection.readTimeout = 10_000
+            connection.inputStream.use { it.readBytes() }
+        } catch (_: Exception) {
+            null
+        }
     }
 
     // Filters

@@ -124,8 +124,12 @@ class LibraryScreenModel(
             // Subscribe to categories filtered by content type based on library type
             val categoriesFlow = when (type) {
                 LibraryType.All -> getCategories.subscribe()
-                LibraryType.Manga -> getCategories.subscribeByContentType(Category.CONTENT_TYPE_MANGA)
-                LibraryType.Novel -> getCategories.subscribeByContentType(Category.CONTENT_TYPE_NOVEL)
+                LibraryType.Manga -> getCategories.subscribe().map { categories ->
+                    categories.filter { it.contentType == Category.CONTENT_TYPE_ALL || it.contentType == Category.CONTENT_TYPE_MANGA }
+                }
+                LibraryType.Novel -> getCategories.subscribe().map { categories ->
+                    categories.filter { it.contentType == Category.CONTENT_TYPE_ALL || it.contentType == Category.CONTENT_TYPE_NOVEL }
+                }
             }
 
             // Flow that emits manga IDs with matching chapter names when search is active
@@ -862,6 +866,10 @@ class LibraryScreenModel(
         screenModelScope.launchNonCancellable {
             val mangaIds = mangaList.map { it.id }
             val count = mangaIds.size
+
+            logcat(LogPriority.DEBUG) {
+                "Category change: ids=$count add=${addCategories.size} remove=${removeCategories.size} type=$type"
+            }
             
             // Show starting message
             snackbarHostState.showSnackbar(
@@ -1072,7 +1080,7 @@ class LibraryScreenModel(
                 .map {
                     when (it) {
                         in common -> CheckboxState.State.Checked(it)
-                        in mix -> CheckboxState.TriState.Exclude(it)
+                        in mix -> CheckboxState.TriState.None(it)
                         else -> CheckboxState.State.None(it)
                     }
                 }
