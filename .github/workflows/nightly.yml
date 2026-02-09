@@ -1,0 +1,168 @@
+name: Nightly
+on:
+  push:
+    tags:
+      - '*-nightly'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  get_tag:
+    name: Extract tag name
+    runs-on: 'ubuntu-24.04'
+    outputs:
+      tag: ${{ steps.extract.outputs.tag }}
+
+    steps:
+      - name: Get tag name
+        id: extract
+        run: echo "tag=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
+
+  build:
+    name: Build
+    runs-on: 'ubuntu-24.04'
+    needs: get_tag
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Build
+        run: ./gradlew assembleRelease -Pinclude-telemetry -Penable-updater
+
+      - name: Sign APK
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: '35.0.1'
+
+      - name: Rename APK
+        run: |
+          set -e
+
+          mv app/build/outputs/apk/release/app-universal-release-unsigned-signed.apk mihon-ds-${{ needs.get_tag.outputs.tag }}.apk
+          mv app/build/outputs/apk/release/app-arm64-v8a-release-unsigned-signed.apk mihon-ds-arm64-v8a-${{ needs.get_tag.outputs.tag }}.apk
+          mv app/build/outputs/apk/release/app-armeabi-v7a-release-unsigned-signed.apk mihon-ds-armeabi-v7a-${{ needs.get_tag.outputs.tag }}.apk
+          mv app/build/outputs/apk/release/app-x86-release-unsigned-signed.apk mihon-ds-x86-${{ needs.get_tag.outputs.tag }}.apk
+          mv app/build/outputs/apk/release/app-x86_64-release-unsigned-signed.apk mihon-ds-x86_64-${{ needs.get_tag.outputs.tag }}.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: mihon-ds
+          path: |
+            mihon-ds-${{ needs.get_tag.outputs.tag }}.apk
+            mihon-ds-arm64-v8a-${{ needs.get_tag.outputs.tag }}.apk
+            mihon-ds-armeabi-v7a-${{ needs.get_tag.outputs.tag }}.apk
+            mihon-ds-x86-${{ needs.get_tag.outputs.tag }}.apk
+            mihon-ds-x86_64-${{ needs.get_tag.outputs.tag }}.apk
+
+  build_foss:
+    name: Build (FOSS)
+    runs-on: ubuntu-24.04
+    needs: get_tag
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-disabled: true
+
+      - name: Build
+        run: ./gradlew assembleFoss -Penable-updater
+
+      - name: Sign APK
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: app/build/outputs/apk/foss
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: '35.0.1'
+
+      - name: Rename APK
+        run: |
+          set -e
+
+          mv app/build/outputs/apk/foss/app-universal-foss-unsigned-signed.apk mihon-ds-${{ needs.get_tag.outputs.tag }}-foss.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: mihon-ds-foss
+          path: mihon-ds-${{ needs.get_tag.outputs.tag }}-foss.apk
+
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-24.04
+    needs: [get_tag, build, build_foss]
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download Standard APKs
+        uses: actions/download-artifact@v4
+        with:
+          name: mihon-ds
+          path: .
+
+      - name: Download FOSS APKs
+        uses: actions/download-artifact@v4
+        with:
+          name: mihon-ds-foss
+          path: .
+
+      - name: Delete all artifacts
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          failOnError: false
+          name: |
+            mihon-ds
+            mihon-ds-foss
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.get_tag.outputs.tag }}
+          name: Mihon DS ${{ needs.get_tag.outputs.tag }}
+          body: |
+            **Nightly Build**
+
+            This is a pre-release build containing the latest changes.
+            May contain bugs and unstable features.
+          files: |
+            mihon-ds-${{ needs.get_tag.outputs.tag }}.apk
+            mihon-ds-${{ needs.get_tag.outputs.tag }}-foss.apk
+            mihon-ds-arm64-v8a-${{ needs.get_tag.outputs.tag }}.apk
+            mihon-ds-armeabi-v7a-${{ needs.get_tag.outputs.tag }}.apk
+            mihon-ds-x86-${{ needs.get_tag.outputs.tag }}.apk
+            mihon-ds-x86_64-${{ needs.get_tag.outputs.tag }}.apk
+          draft: false
+          prerelease: true
