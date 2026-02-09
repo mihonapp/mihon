@@ -494,8 +494,7 @@ class MangaRepositoryImpl(
                 }
             }
         }
-        // Full cache refresh for bulk operation (categories column is precomputed)
-        refreshLibraryCache()
+        refreshCacheForMangaIds(mangaIds)
     }
 
     override suspend fun addMangasCategories(mangaIds: List<Long>, categoryIds: List<Long>) {
@@ -507,8 +506,7 @@ class MangaRepositoryImpl(
                 }
             }
         }
-        // Full cache refresh for bulk operation (categories column is precomputed)
-        refreshLibraryCache()
+        refreshCacheForMangaIds(mangaIds)
     }
 
     override suspend fun removeMangasCategories(mangaIds: List<Long>, categoryIds: List<Long>) {
@@ -517,8 +515,17 @@ class MangaRepositoryImpl(
             // Use bulk delete for better performance
             mangas_categoriesQueries.deleteBulkMangaCategories(mangaIds, categoryIds)
         }
-        // Full cache refresh for bulk operation (categories column is precomputed)
-        refreshLibraryCache()
+        refreshCacheForMangaIds(mangaIds)
+    }
+
+    private suspend fun refreshCacheForMangaIds(mangaIds: List<Long>) {
+        val uniqueIds = mangaIds.distinct()
+        if (uniqueIds.isEmpty()) return
+        if (uniqueIds.size > 500) {
+            refreshLibraryCache()
+            return
+        }
+        uniqueIds.forEach { refreshLibraryCacheForManga(it) }
     }
 
     override suspend fun update(update: MangaUpdate): Boolean {
@@ -799,8 +806,10 @@ class MangaRepositoryImpl(
         handler.await(inTransaction = true) {
             library_cacheQueries.refreshCacheForManga(mangaId)
         }
-        // Invalidate in-memory cache
-        invalidateLibraryCacheInternal()
+        // Don't invalidate in-memory cache here — callers that need the in-memory
+        // list updated (e.g., category changes) should use applyCategoryUpdates()
+        // or refresh() explicitly. Invalidating here triggers expensive full
+        // library re-queries (107K+ items) on every per-manga cache update.
     }
 
     override suspend fun normalizeAllTags(): Int {

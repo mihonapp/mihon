@@ -676,6 +676,26 @@ class NovelWebViewViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.On
         val fontColor = preferences.novelFontColor().get()
 
         return when (theme) {
+            "app" -> {
+                // Follow app theme - use actual Material theme colors
+                val typedValue = android.util.TypedValue()
+                val theme = activity.theme
+                val bgColor = if (theme.resolveAttribute(com.google.android.material.R.attr.colorSurface, typedValue, true)) {
+                    typedValue.data
+                } else {
+                    val nightMode = activity.resources.configuration.uiMode and
+                        android.content.res.Configuration.UI_MODE_NIGHT_MASK
+                    if (nightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES) 0xFF121212.toInt() else 0xFFFFFFFF.toInt()
+                }
+                val textColor = if (theme.resolveAttribute(com.google.android.material.R.attr.colorOnSurface, typedValue, true)) {
+                    typedValue.data
+                } else {
+                    val nightMode = activity.resources.configuration.uiMode and
+                        android.content.res.Configuration.UI_MODE_NIGHT_MASK
+                    if (nightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES) 0xFFE0E0E0.toInt() else 0xFF000000.toInt()
+                }
+                bgColor to textColor
+            }
             "dark" -> 0xFF121212.toInt() to 0xFFE0E0E0.toInt()
             "sepia" -> 0xFFF4ECD8.toInt() to 0xFF5B4636.toInt()
             "black" -> 0xFF000000.toInt() to 0xFFCCCCCC.toInt()

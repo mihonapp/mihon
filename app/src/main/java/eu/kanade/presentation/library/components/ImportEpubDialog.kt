@@ -140,7 +140,10 @@ fun ImportEpubDialog(
                             var coverUri: Uri? = null
                             try {
                                 val coverHref = manga.thumbnail_url
-                                val coverExt = coverHref?.substringAfterLast('.', "png")?.takeIf { it.length <= 4 }
+                                val coverExt = coverHref
+                                    ?.substringBefore('?')
+                                    ?.substringAfterLast('.', "png")
+                                    ?.takeIf { it.length <= 4 }
                                     ?: "png"
                                 val coverStream = if (!coverHref.isNullOrBlank()) {
                                     if (coverHref.startsWith("http://") || coverHref.startsWith("https://")) {

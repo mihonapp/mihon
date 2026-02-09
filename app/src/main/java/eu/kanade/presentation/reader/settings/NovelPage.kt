@@ -86,6 +86,7 @@ data class CodeSnippet(
 )
 
 private val novelThemes = listOf(
+    "App" to "app",
     "Light" to "light",
     "Dark" to "dark",
     "Sepia" to "sepia",
@@ -294,16 +295,6 @@ internal fun ColumnScope.NovelReadingTab(screenModel: ReaderSettingsScreenModel,
             pref = screenModel.preferences.novelUseOriginalFonts(),
         )
     }
-
-    CheckboxItem(
-        label = "Block images", // TODO: Add string resource
-        pref = screenModel.preferences.novelBlockMedia(),
-    )
-
-    CheckboxItem(
-        label = "Enable text selection", // TODO: Add string resource
-        pref = screenModel.preferences.novelTextSelectable(),
-    )
 
     // Text Alignment
     SettingsChipRow(MR.strings.pref_novel_text_align) {
@@ -626,13 +617,11 @@ internal fun ColumnScope.NovelControlsTab(screenModel: ReaderSettingsScreenModel
         )
     }
 
-    // Block Media (WebView only)
-    if (renderingMode == "webview") {
-        CheckboxItem(
-            label = stringResource(MR.strings.pref_novel_block_media),
-            pref = screenModel.preferences.novelBlockMedia(),
-        )
-    }
+    // Block Media (images, videos, audio)
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_novel_block_media),
+        pref = screenModel.preferences.novelBlockMedia(),
+    )
 
     // Show Raw HTML (Custom Parser only) - for debugging
     if (renderingMode == "default") {

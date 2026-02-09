@@ -98,6 +98,29 @@ class GetLibraryManga(
     suspend fun awaitRefresh() {
         refreshInternal(force = false)
     }
+
+    /**
+     * Apply category updates to the in-memory library list without a full DB refresh.
+     * This keeps UI responsive for small, targeted changes.
+     */
+    suspend fun applyCategoryUpdates(
+        mangaIds: List<Long>,
+        addCategories: List<Long>,
+        removeCategories: List<Long>,
+    ) {
+        if (mangaIds.isEmpty()) return
+        mutex.withLock {
+            val idSet = mangaIds.toSet()
+            _libraryState.value = _libraryState.value.map { item ->
+                if (item.id !in idSet) return@map item
+
+                val updated = item.categories.toMutableSet()
+                addCategories.forEach { updated.add(it) }
+                removeCategories.forEach { updated.remove(it) }
+                item.copy(categories = updated.toList())
+            }
+        }
+    }
     
     private suspend fun refreshInternal(force: Boolean) {
         mutex.withLock {

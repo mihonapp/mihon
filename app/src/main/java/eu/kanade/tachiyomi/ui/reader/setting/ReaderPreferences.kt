@@ -168,7 +168,7 @@ class ReaderPreferences(
     // region Novel
     fun novelFontSize() = preferenceStore.getInt("pref_novel_font_size", 16)
     fun novelFontFamily() = preferenceStore.getString("pref_novel_font_family", "sans-serif")
-    fun novelTheme() = preferenceStore.getString("pref_novel_theme", "light")
+    fun novelTheme() = preferenceStore.getString("pref_novel_theme", "app")
     fun novelLineHeight() = preferenceStore.getFloat("pref_novel_line_height", 1.6f)
     fun novelTextAlign() = preferenceStore.getString("pref_novel_text_align", "left")
     fun novelAutoScrollSpeed() = preferenceStore.getInt("pref_novel_auto_scroll_speed", 30)

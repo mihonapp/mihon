@@ -608,7 +608,9 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
                 val basePath = baseUri.path?.trimEnd('/')
                 if (baseHost.isNullOrEmpty() || urlHost.isNullOrEmpty()) return@filter false
 
-                val hostMatches = urlHost == baseHost || urlHost.endsWith(".$baseHost")
+                val hostMatches = urlHost == baseHost ||
+                    urlHost.endsWith(".$baseHost") ||
+                    baseHost.endsWith(".$urlHost")
                 if (!hostMatches) return@filter false
 
                 if (!basePath.isNullOrBlank() && basePath != "/") {
@@ -623,7 +625,7 @@ class MassImportJob(private val context: Context, workerParams: WorkerParameters
         }
 
         if (matchingSources.isEmpty()) {
-            logcat(LogPriority.DEBUG) { "MassImport: No source match for $url host=$urlHost" }
+            logcat(LogPriority.WARN) { "MassImport: No source match for $url host=$urlHost" }
         }
         
         if (matchingSources.isEmpty()) return null
