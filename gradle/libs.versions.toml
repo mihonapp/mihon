@@ -12,7 +12,7 @@ ktlint-core = "1.8.0"
 firebase-bom = "34.8.0"
 markdown = "0.39.2"
 junit = "6.0.2"
-materialKolor = "5.0.0-alpha05"
+materialKolor = "5.0.0-alpha06"
 
 [libraries]
 desugar = "com.android.tools:desugar_jdk_libs:2.1.5"
