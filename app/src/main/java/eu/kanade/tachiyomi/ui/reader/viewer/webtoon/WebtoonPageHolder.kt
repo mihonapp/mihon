@@ -1,6 +1,9 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.content.res.Resources
+import java.io.ByteArrayOutputStream
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -216,19 +219,58 @@ class WebtoonPageHolder(
     }
 
     private fun process(imageSource: BufferedSource): BufferedSource {
+        var source = imageSource
+        if (viewer.config.stripFilter) {
+            source = applyStripFilter(source)
+        }
+
         if (viewer.config.dualPageRotateToFit) {
-            return rotateDualPage(imageSource)
+            return rotateDualPage(source)
         }
 
         if (viewer.config.dualPageSplit) {
-            val isDoublePage = ImageUtil.isWideImage(imageSource)
+            val isDoublePage = ImageUtil.isWideImage(source)
             if (isDoublePage) {
                 val upperSide = if (viewer.config.dualPageInvert) ImageUtil.Side.LEFT else ImageUtil.Side.RIGHT
-                return ImageUtil.splitAndMerge(imageSource, upperSide)
+                return ImageUtil.splitAndMerge(source, upperSide)
             }
         }
 
-        return imageSource
+        return source
+    }
+
+    private fun applyStripFilter(imageSource: BufferedSource): BufferedSource {
+        val bitmap = BitmapFactory.decodeStream(imageSource.inputStream()) ?: return imageSource
+
+        // Determine reading mode based on current viewer configuration
+        // This is evaluated at processing time in case user switches between reading modes, haven't found a better way to do this
+        val readingMode = detectReadingMode()
+
+        val filterConfig = StripFilter.Config(
+            whiteThreshold = viewer.config.stripFilterWhiteThreshold,
+            replacementColor = viewer.config.stripFilterColor,
+            gutterWidthPercentage = viewer.config.stripFilterGutterWidth / 100f,
+            tallMarginHeightPercentage = viewer.config.stripFilterTallMarginHeight / 100f,
+            bigChunkAreaPercentage = viewer.config.stripFilterBigChunkArea / 100f,
+            readingMode = readingMode,
+        )
+
+        val processedBitmap = StripFilter.process(bitmap, filterConfig)
+
+        val outputStream = ByteArrayOutputStream()
+        processedBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+        return Buffer().write(outputStream.toByteArray())
+    }
+
+    /**
+     * Detects the current reading mode
+     */
+    private fun detectReadingMode(): StripFilter.ReadingMode {
+        return if (viewer.config.dualPageSplit || viewer.config.dualPageRotateToFit) {
+            StripFilter.ReadingMode.MANGA_PAGED
+        } else {
+            StripFilter.ReadingMode.WEBTOON
+        }
     }
 
     private fun rotateDualPage(imageSource: BufferedSource): BufferedSource {
