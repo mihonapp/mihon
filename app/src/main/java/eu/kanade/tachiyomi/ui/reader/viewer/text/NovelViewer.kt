@@ -1772,6 +1772,7 @@ class NovelViewer(val activity: ReaderActivity) : Viewer, TextToSpeech.OnInitLis
             "dark" -> 0xFF121212.toInt() to 0xFFE0E0E0.toInt()
             "sepia" -> 0xFFF4ECD8.toInt() to 0xFF5B4636.toInt()
             "black" -> 0xFF000000.toInt() to 0xFFCCCCCC.toInt()
+            "grey" -> 0xFF292832.toInt() to 0xFFCCCCCC.toInt()
             "custom" -> {
                 // 0 = default, use fallback colors
                 val bg = if (backgroundColor != 0) backgroundColor else 0xFFFFFFFF.toInt()

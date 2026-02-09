@@ -91,6 +91,7 @@ private val novelThemes = listOf(
     "Dark" to "dark",
     "Sepia" to "sepia",
     "Black" to "black",
+    "Grey" to "grey",
     "Custom" to "custom",
 )
 
@@ -125,6 +126,7 @@ private val fontColors = listOf(
     "Gray" to 0xFF808080.toInt(),
     "Dark Gray" to 0xFF404040.toInt(),
     "Light Gray" to 0xFFC0C0C0.toInt(),
+    "OffWhite" to 0xFFCCCCCC.toInt(),
     "Sepia" to 0xFF5C4033.toInt(),
     "Custom" to Int.MIN_VALUE,
 )
@@ -139,6 +141,7 @@ private val backgroundColors = listOf(
     "Dark Gray" to 0xFF1A1A1A.toInt(),
     "Sepia" to 0xFFF4ECD8.toInt(),
     "Cream" to 0xFFFFFDD0.toInt(),
+    "Charcoal" to 0xFF292832.toInt(),
     "Custom" to Int.MIN_VALUE,
 )
 
@@ -338,7 +341,7 @@ internal fun ColumnScope.NovelAppearanceTab(screenModel: ReaderSettingsScreenMod
     if (showFontColorPicker) {
         ColorPickerDialog(
             title = stringResource(MR.strings.pref_novel_font_color),
-            initialColor = if (fontColor > 0) fontColor else 0xFF000000.toInt(),
+            initialColor = if (fontColor != 0) fontColor else 0xFF000000.toInt(),
             onDismiss = { showFontColorPicker = false },
             onConfirm = { color ->
                 screenModel.preferences.novelFontColor().set(color)
@@ -350,7 +353,7 @@ internal fun ColumnScope.NovelAppearanceTab(screenModel: ReaderSettingsScreenMod
     if (showBgColorPicker) {
         ColorPickerDialog(
             title = stringResource(MR.strings.pref_novel_background_color),
-            initialColor = if (backgroundColor > 0) backgroundColor else 0xFFFFFFFF.toInt(),
+            initialColor = if (backgroundColor != 0) backgroundColor else 0xFFFFFFFF.toInt(),
             onDismiss = { showBgColorPicker = false },
             onConfirm = { color ->
                 screenModel.preferences.novelBackgroundColor().set(color)

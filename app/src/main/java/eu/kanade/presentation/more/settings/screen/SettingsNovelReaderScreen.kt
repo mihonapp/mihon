@@ -49,6 +49,7 @@ object SettingsNovelReaderScreen : SearchableSettings {
                         "dark" to "Dark",
                         "sepia" to "Sepia",
                         "black" to "Black",
+                        "grey" to "Grey",
                     ).toImmutableMap(),
                     title = stringResource(MR.strings.pref_novel_theme),
                 ),
