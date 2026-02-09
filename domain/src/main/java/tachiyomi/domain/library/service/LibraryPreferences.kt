@@ -117,15 +117,15 @@ class LibraryPreferences(
     fun includedTags() = preferenceStore.getStringSet("pref_filter_library_included_tags", emptySet())
     fun excludedTags() = preferenceStore.getStringSet("pref_filter_library_excluded_tags", emptySet())
     fun filterNoTags() = preferenceStore.getEnum("pref_filter_library_no_tags", TriState.DISABLED)
-    
+
     // Tag filter logic modes (true = AND, false = OR)
     fun tagIncludeMode() = preferenceStore.getBoolean("pref_tag_include_mode_and", false) // Default OR
     fun tagExcludeMode() = preferenceStore.getBoolean("pref_tag_exclude_mode_and", false) // Default OR
-    
+
     // Tag sort preferences
     fun tagSortByName() = preferenceStore.getBoolean("pref_tag_sort_by_name", false) // Default sort by count
     fun tagSortAscending() = preferenceStore.getBoolean("pref_tag_sort_ascending", false) // Default descending
-    
+
     // Tag case sensitivity (default insensitive)
     fun tagCaseSensitive() = preferenceStore.getBoolean("pref_tag_case_sensitive", false)
 
@@ -228,7 +228,7 @@ class LibraryPreferences(
      * Disabling this improves performance on large libraries by requiring manual refresh.
      */
     fun autoRefreshLibrary() = preferenceStore.getBoolean("pref_auto_refresh_library", true)
-    
+
     /**
      * Whether to verify library cache integrity on app startup.
      * Disabling this speeds up startup but may result in stale cache data.

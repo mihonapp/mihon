@@ -220,10 +220,12 @@ actual class LocalNovelSource(
                                     if (cover != null) {
                                         if (cover.startsWith("http://") || cover.startsWith("https://")) {
                                             downloadCoverBytes(cover)?.let { bytes ->
+                                                logcat(LogPriority.INFO) { "LocalNovelSource: Downloaded external cover $cover" }
                                                 coverManager.update(manga, ByteArrayInputStream(bytes))
                                             }
                                         } else {
                                             epub.getInputStream(cover)?.use { stream ->
+                                                logcat(LogPriority.INFO) { "LocalNovelSource: Extracted embedded cover $cover" }
                                                 coverManager.update(manga, stream)
                                             }
                                         }

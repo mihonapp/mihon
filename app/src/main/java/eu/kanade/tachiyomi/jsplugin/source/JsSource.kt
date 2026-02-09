@@ -51,7 +51,7 @@ class JsSource(
     private val networkHelper: NetworkHelper = Injekt.get()
 
     private val json = Json { ignoreUnknownKeys = true }
-    
+
     // Single-thread executor for JS execution to avoid JNI caching issues
     // QuickJS caches the JNI environment on the thread that creates it,
     // so all operations must happen on the same thread
@@ -59,17 +59,17 @@ class JsSource(
         Thread(r, "JsSource-$pluginId").apply { isDaemon = true }
     }
     private val jsDispatcher = jsExecutor.asCoroutineDispatcher()
-    
+
     // Cached runtime instance to avoid recreating for every method call
     @Volatile private var cachedInstance: eu.kanade.tachiyomi.jsplugin.runtime.PluginInstance? = null
     private val instanceLock = Any()
     private var lastUsed = System.currentTimeMillis()
-    
+
     // Cache manga details and chapters to prevent re-fetching
     private val detailsCache = mutableMapOf<String, Pair<SManga, Long>>()
     private val chaptersCache = mutableMapOf<String, Pair<List<SChapter>, Long>>()
     private val cacheTimeout = 300_000L // 5 minutes
-    
+
     companion object {
         private const val INSTANCE_TIMEOUT_MS = 60_000L // 1 minute timeout
     }
@@ -131,18 +131,18 @@ class JsSource(
         synchronized(instanceLock) {
             val now = System.currentTimeMillis()
             val existing = cachedInstance
-            
+
             // Return existing instance if still valid
             if (existing != null && (now - lastUsed) < INSTANCE_TIMEOUT_MS) {
                 lastUsed = now
                 return@withContext existing
             }
-            
+
             // Close old instance if timed out
             existing?.close()
             cachedInstance = null
         }
-        
+
         // Create new instance outside lock to avoid blocking
         val codeToUse = maybeHealCode(jsCode)
         val runtime = PluginRuntime(pluginId, context, jsDispatcher)
@@ -153,7 +153,7 @@ class JsSource(
             logcat(LogPriority.ERROR, e) { "JsSource[$pluginId]: Failed to execute plugin" }
             throw e
         }
-        
+
         synchronized(instanceLock) {
             // Double-check: another thread might have created one
             val existing = cachedInstance
@@ -162,13 +162,13 @@ class JsSource(
                 lastUsed = System.currentTimeMillis()
                 return@withContext existing
             }
-            
+
             cachedInstance = newInstance
             lastUsed = System.currentTimeMillis()
             newInstance
         }
     }
-    
+
     /**
      * Invalidate the cached instance (call on errors).
      */
@@ -178,7 +178,7 @@ class JsSource(
             cachedInstance = null
         }
     }
-    
+
     /**
      * Force cleanup of resources. Call when navigating away.
      */
@@ -206,7 +206,7 @@ class JsSource(
         val token = "mihon_${System.nanoTime()}"
         try {
             logcat(LogPriority.DEBUG) { "JsSource[$pluginId]: Executing: $methodCall" }
-            
+
             // Store result in global variable, handle Promise resolution in JS
             instance.execute(
                 """
@@ -214,7 +214,7 @@ class JsSource(
                     globalThis.__mihon_result_$token = null;
                     globalThis.__mihon_error_$token = null;
                     globalThis.__mihon_done_$token = false;
-                    
+
                     try {
                         var maybePromise = ($methodCall);
                         Promise.resolve(maybePromise).then(function(result) {
@@ -235,7 +235,7 @@ class JsSource(
                 })();
                 """.trimIndent()
             )
-            
+
             // Poll for completion with proper async waiting
             // QuickJS asyncFunction needs actual time to execute Kotlin coroutines
             var attempts = 0
@@ -250,15 +250,15 @@ class JsSource(
                 // Also process JS microtasks
                 instance.execute("null")
             }
-            
+
             if (attempts >= maxAttempts) {
                 logcat(LogPriority.WARN) { "JsSource[$pluginId]: Execution timed out after ${maxAttempts * 50}ms" }
             }
-            
+
             // Read results FIRST before cleanup
             val error = instance.execute("globalThis.__mihon_error_$token") as? String
             val jsonResult = instance.execute("globalThis.__mihon_result_$token") as? String
-            
+
             // Cleanup global variables AFTER reading
             instance.execute("""
                 delete globalThis.__mihon_result_$token;
@@ -268,19 +268,19 @@ class JsSource(
                     globalThis.__clearCheerioCache();
                 }
             """.trimIndent())
-            
+
             // Check for errors - "null" string from error means no error, not "Plugin error: null"
             if (!error.isNullOrEmpty() && error != "null") {
                 throw Exception("Plugin error: $error")
             }
-            
+
             logcat(LogPriority.DEBUG) { "JsSource[$pluginId]: Result: ${jsonResult?.take(200)}" }
             jsonResult ?: "null"
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e) { "JsSource[$pluginId]: Error executing: $methodCall" }
             // Invalidate on SyntaxError or critical errors
             val message = e.message.orEmpty()
-            if (message.contains("SyntaxError", ignoreCase = true) || 
+            if (message.contains("SyntaxError", ignoreCase = true) ||
                 message.contains("vm is not cached", ignoreCase = true)) {
                 invalidateInstance()
             }
@@ -318,7 +318,7 @@ class JsSource(
     override suspend fun getSearchManga(page: Int, query: String, filters: FilterList): MangasPage = withContext(Dispatchers.IO) {
         try {
             val escapedQuery = query.replace("'", "\\'").replace("\"", "\\\"")
-            
+
             // Determine if non-default filters are present
             val hasActiveFilters = filters.isNotEmpty() && filters.any { filter ->
                 when (filter) {
@@ -332,7 +332,7 @@ class JsSource(
                     else -> false
                 }
             }
-            
+
             if (query.isNotBlank()) {
                 // Use searchNovels for text search
                 val result = executePluginMethod("plugin.searchNovels('$escapedQuery', $page)")
@@ -352,7 +352,7 @@ class JsSource(
             MangasPage(emptyList(), false)
         }
     }
-    
+
     /**
      * Convert Mihon FilterList back to JS filter object format for plugin.
      * Uses JsonObject builder to avoid kotlinx.serialization issues with Map<String, Any>.
@@ -440,11 +440,11 @@ class JsSource(
             if (cached != null && (now - cached.second) < cacheTimeout) {
                 return@withContext cached.first
             }
-            
+
             val path = manga.url.replace("'", "\\'").replace("\"", "\\\"")
             val result = executePluginMethod("plugin.parseNovel('$path')")
             val details = parseNovelDetails(result, manga)
-            
+
             // Cache the result
             detailsCache[manga.url] = details to now
             details
@@ -462,31 +462,45 @@ class JsSource(
             if (cached != null && (now - cached.second) < cacheTimeout) {
                 return@withContext cached.first
             }
-            
+
             val path = manga.url.replace("'", "\\'").replace("\"", "\\\"")
             val result = executePluginMethod("plugin.parseNovel('$path')")
             val chapters = parseChapterList(result).toMutableList()
-            
+
             // Support paged chapter sources (like novelight, novelfire)
             // If parseNovel returns totalPages > 1, fetch remaining pages via parsePage
             val totalPages = try {
                 val obj = json.parseToJsonElement(result).jsonObject
                 obj["totalPages"]?.jsonPrimitive?.content?.toIntOrNull() ?: 1
             } catch (_: Exception) { 1 }
-            
-            if (totalPages > 1) {
-                logcat(LogPriority.DEBUG) { "JsSource[$pluginId]: Paged source detected, totalPages=$totalPages" }
-                for (page in 2..totalPages) {
+
+         val needsPaging = (chapters.isEmpty() && totalPages >= 0) || totalPages > 0
+            if (needsPaging) {
+                val startPage = if (chapters.isEmpty()) 1 else 2
+                logcat(LogPriority.DEBUG) { "JsSource[$pluginId]: Paged source detected, totalPages=$totalPages, startPage=$startPage, existingChapters=${chapters.size}" }
+                for (page in startPage..totalPages) {
                     try {
                         val pageResult = executePluginMethod("plugin.parsePage('$path', '$page')")
-                        val pageChapters = parsePageChapters(pageResult, chapters.size)
+                        val pageChapters = parsePageChapters(pageResult)
                         chapters.addAll(pageChapters)
                     } catch (e: Exception) {
                         logcat(LogPriority.ERROR, e) { "JsSource[$pluginId]: Error fetching page $page of $totalPages" }
                     }
                 }
             }
-            
+
+            // LNReader plugins return newest-first. Reverse the entire combined list
+            // so oldest chapters come first (index 0 = Ch1), then assign chapter_number
+            // globally based on final position so numbering is consistent across pages.
+            chapters.reverse()
+            chapters.forEachIndexed { index, chapter ->
+                // Only override chapter_number if the plugin didn't provide one
+                // (default SChapter chapter_number is -1)
+                if (chapter.chapter_number < 0 || chapters.size > 1) {
+                    chapter.chapter_number = (index + 1).toFloat()
+                }
+            }
+
             // Cache the result
             chaptersCache[manga.url] = chapters to now
             chapters
@@ -534,38 +548,45 @@ class JsSource(
             val result = runBlocking { executePluginMethod("JSON.stringify(plugin.pluginSettings || {})") }
             val settingsJson = decodeJsonStringIfQuoted(result)
             if (settingsJson.isBlank() || settingsJson == "{}" || settingsJson == "null") return
-            
+
             val settings = json.parseToJsonElement(settingsJson).jsonObject
             val prefs = screen.context.getSharedPreferences("jsplugin_storage_$pluginId", android.content.Context.MODE_PRIVATE)
-            
+
             settings.forEach { (key, value) ->
                 val settingObj = value as? JsonObject ?: return@forEach
                 val label = settingObj["label"]?.jsonPrimitive?.content ?: key
                 val type = settingObj["type"]?.jsonPrimitive?.content ?: "Switch"
-                
+
                 when (type) {
                     "Switch" -> {
+                        val storedValue = prefs.getString(key, "")?.toBooleanStrictOrNull() ?: false
+                        logcat(LogPriority.DEBUG) { "[$pluginId] Switch pref '$key' loaded: $storedValue" }
                         val pref = androidx.preference.SwitchPreferenceCompat(screen.context).apply {
+                            // Set isPersistent=false BEFORE key to prevent framework auto-load
+                            this.isPersistent = false
                             this.key = key
                             this.title = label
-                            this.setDefaultValue(false)
-                            this.isChecked = prefs.getString(key, "")?.toBooleanStrictOrNull() ?: false
+                            this.setDefaultValue(storedValue)
                             setOnPreferenceChangeListener { _, newValue ->
-                                val strVal = newValue.toString()
-                                prefs.edit().putString(key, strVal).apply()
+                                val boolVal = newValue as? Boolean ?: false
+                                prefs.edit().putString(key, boolVal.toString()).apply()
+                                logcat(LogPriority.DEBUG) { "[${pluginId}] Switch pref '$key' changed: $boolVal" }
                                 true
                             }
                         }
                         screen.addPreference(pref)
+                        // Set isChecked AFTER addPreference so onSetInitialValue doesn't override it
+                        pref.isChecked = storedValue
                     }
                     "Text" -> {
                         val defaultValue = settingObj["value"]?.jsonPrimitive?.content ?: ""
+                        val storedText = prefs.getString(key, defaultValue) ?: defaultValue
                         val pref = androidx.preference.EditTextPreference(screen.context).apply {
+                            // Set isPersistent=false BEFORE key to prevent framework auto-load
+                            this.isPersistent = false
                             this.key = key
                             this.title = label
                             this.setDefaultValue(defaultValue)
-                            this.text = prefs.getString(key, defaultValue) ?: defaultValue
-                            this.summary = this.text
                             setOnPreferenceChangeListener { p, newValue ->
                                 val strVal = newValue.toString()
                                 prefs.edit().putString(key, strVal).apply()
@@ -574,6 +595,9 @@ class JsSource(
                             }
                         }
                         screen.addPreference(pref)
+                        // Set text/summary AFTER addPreference so onSetInitialValue doesn't override
+                        pref.text = storedText
+                        pref.summary = storedText
                     }
                 }
             }
@@ -691,14 +715,19 @@ class JsSource(
 
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 
+            // Return chapters in source order (newest-first from LNReader);
+            // reversal and chapter_number assignment happen in getChapterList() after all pages are collected.
             return chaptersArray.mapIndexedNotNull { index, item ->
                 try {
                     val chapterObj = item.jsonObject
                     SChapter.create().apply {
                         name = chapterObj["name"]?.jsonPrimitive?.content ?: "Chapter ${index + 1}"
                         url = chapterObj["path"]?.jsonPrimitive?.content ?: return@mapIndexedNotNull null
-                        chapter_number = chapterObj["chapterNumber"]?.jsonPrimitive?.content?.toFloatOrNull()
-                            ?: (index + 1).toFloat()
+                        // Keep plugin-provided chapterNumber if available; otherwise leave as -1
+                        // (global numbering is assigned later in getChapterList)
+                        chapterObj["chapterNumber"]?.jsonPrimitive?.content?.toFloatOrNull()?.let {
+                            chapter_number = it
+                        }
                         date_upload = try {
                             chapterObj["releaseTime"]?.jsonPrimitive?.content?.let { dateStr ->
                                 if (dateStr.contains("T")) {
@@ -716,7 +745,7 @@ class JsSource(
                 } catch (e: Exception) {
                     null
                 }
-            }.reversed() // LNReader returns newest first, Mihon expects oldest first
+            }
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e) { "Failed to parse chapters: $jsonResult" }
             return emptyList()
@@ -726,10 +755,10 @@ class JsSource(
     /**
      * Parse chapters from a parsePage() result.
      * parsePage returns { chapters: [...] } like parseNovel, but just for one page.
-     * @param chapterOffset the number of chapters already parsed from previous pages,
-     *        used to continue chapter numbering instead of resetting to 1.
+     * Returns chapters in source order (newest-first from LNReader);
+     * reversal and chapter_number assignment happen in getChapterList().
      */
-    private fun parsePageChapters(jsonResult: String, chapterOffset: Int = 0): List<SChapter> {
+    private fun parsePageChapters(jsonResult: String): List<SChapter> {
         if (jsonResult == "null" || jsonResult.isBlank()) return emptyList()
         try {
             val element = json.parseToJsonElement(jsonResult)
@@ -742,12 +771,14 @@ class JsSource(
             return chaptersArray.mapIndexedNotNull { index, item ->
                 try {
                     val chapterObj = item.jsonObject
-                    val globalIndex = chapterOffset + index
                     SChapter.create().apply {
-                        name = chapterObj["name"]?.jsonPrimitive?.content ?: "Chapter ${globalIndex + 1}"
+                        name = chapterObj["name"]?.jsonPrimitive?.content ?: "Chapter ${index + 1}"
                         url = chapterObj["path"]?.jsonPrimitive?.content ?: return@mapIndexedNotNull null
-                        chapter_number = chapterObj["chapterNumber"]?.jsonPrimitive?.content?.toFloatOrNull()
-                            ?: (globalIndex + 1).toFloat()
+                        // Keep plugin-provided chapterNumber if available; otherwise leave as -1
+                        // (global numbering is assigned later in getChapterList)
+                        chapterObj["chapterNumber"]?.jsonPrimitive?.content?.toFloatOrNull()?.let {
+                            chapter_number = it
+                        }
                         date_upload = try {
                             chapterObj["releaseTime"]?.jsonPrimitive?.content?.let { dateStr ->
                                 if (dateStr.contains("T")) java.time.Instant.parse(dateStr).toEpochMilli()
@@ -757,7 +788,7 @@ class JsSource(
                         scanlator = chapterObj["page"]?.jsonPrimitive?.content
                     }
                 } catch (_: Exception) { null }
-            }.reversed()
+            }
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e) { "Failed to parse page chapters: $jsonResult" }
             return emptyList()
@@ -802,7 +833,7 @@ class JsSource(
     }
 
     // Custom filter classes that store both label and value
-    
+
     /** Picker filter that stores label-value pairs */
     class JsSelectFilter(
         name: String,
@@ -813,7 +844,7 @@ class JsSource(
         /** Get the selected option's value (not label) */
         fun selectedValue(): String = options.getOrNull(state)?.second ?: ""
     }
-    
+
     /** Checkbox group filter where each checkbox has a label and value */
     class JsCheckboxGroup(
         name: String,
@@ -823,13 +854,13 @@ class JsSource(
         /** Get list of selected values */
         fun selectedValues(): List<String> = state.filter { it.state }.map { it.value }
     }
-    
+
     /** Single checkbox with associated value */
     class JsCheckbox(
         val label: String,
         val value: String,
     ) : Filter.CheckBox(label)
-    
+
     /** TriState checkbox group for include/exclude functionality */
     class JsTriStateGroup(
         name: String,
@@ -841,13 +872,13 @@ class JsSource(
         /** Get excluded values */
         fun excludedValues(): List<String> = state.filter { it.isExcluded() }.map { it.value }
     }
-    
+
     /** Single TriState checkbox with associated value */
     class JsTriState(
         val label: String,
         val value: String,
     ) : Filter.TriState(label)
-    
+
     /** Text input filter that stores the original JSON key */
     class JsTextFilter(
         name: String,
@@ -856,7 +887,7 @@ class JsSource(
     ) : Filter.Text(name) {
         init { state = defaultValue }
     }
-    
+
     /** Switch filter that stores the original JSON key */
     class JsSwitchFilter(
         name: String,
@@ -873,7 +904,7 @@ class JsSource(
                 val defaultValue = filterObj["value"]?.jsonPrimitive?.content ?: ""
                 filters.add(JsTextFilter(label, key, defaultValue))
             }
-            
+
             "Picker" -> {
                 // Parse options as label-value pairs
                 val options = filterObj["options"]?.jsonArray?.mapNotNull { optionEl ->
@@ -887,16 +918,16 @@ class JsSource(
                         else -> null
                     }
                 } ?: emptyList()
-                
+
                 // Get default value and find its index
                 val defaultValue = filterObj["value"]?.jsonPrimitive?.content
                 val defaultIndex = if (defaultValue != null) {
                     options.indexOfFirst { it.second == defaultValue }.takeIf { it >= 0 } ?: 0
                 } else 0
-                
+
                 filters.add(JsSelectFilter(label, key, options, defaultIndex))
             }
-            
+
             "Checkbox" -> {
                 // CheckboxGroup: array of checkboxes
                 val options = filterObj["options"]?.jsonArray?.mapNotNull { optionEl ->
@@ -910,27 +941,27 @@ class JsSource(
                         else -> null
                     }
                 } ?: emptyList()
-                
+
                 // Get default selected values
-                val defaultValues = filterObj["value"]?.jsonArray?.mapNotNull { 
-                    it.jsonPrimitive?.content 
+                val defaultValues = filterObj["value"]?.jsonArray?.mapNotNull {
+                    it.jsonPrimitive?.content
                 }?.toSet() ?: emptySet()
-                
+
                 // Set initial state for checkboxes
                 options.forEach { checkbox ->
                     checkbox.state = checkbox.value in defaultValues
                 }
-                
+
                 filters.add(JsCheckboxGroup(label, key, options))
             }
-            
+
             "Switch" -> {
-                val defaultValue = filterObj["value"]?.jsonPrimitive?.let { 
+                val defaultValue = filterObj["value"]?.jsonPrimitive?.let {
                     it.content.toBooleanStrictOrNull() ?: (it.content == "true")
                 } ?: false
                 filters.add(JsSwitchFilter(label, key, defaultValue))
             }
-            
+
             "XCheckbox" -> {
                 // ExcludableCheckboxGroup: TriState checkboxes for include/exclude
                 val options = filterObj["options"]?.jsonArray?.mapNotNull { optionEl ->
@@ -944,7 +975,7 @@ class JsSource(
                         else -> null
                     }
                 } ?: emptyList()
-                
+
                 // Get default include/exclude values
                 val defaultValueObj = filterObj["value"]?.jsonObject
                 val includeValues = defaultValueObj?.get("include")?.jsonArray?.mapNotNull {
@@ -953,7 +984,7 @@ class JsSource(
                 val excludeValues = defaultValueObj?.get("exclude")?.jsonArray?.mapNotNull {
                     it.jsonPrimitive?.content
                 }?.toSet() ?: emptySet()
-                
+
                 // Set initial state using Filter.TriState constants
                 options.forEach { triState ->
                     triState.state = when (triState.value) {
@@ -962,7 +993,7 @@ class JsSource(
                         else -> Filter.TriState.STATE_IGNORE
                     }
                 }
-                
+
                 filters.add(JsTriStateGroup(label, key, options))
             }
         }
