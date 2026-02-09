@@ -99,9 +99,23 @@ class ReaderPreferences(
 
     // endregion
 
-    // region Book mode (dual-screen)
+    // region Side-by-Side View (dual-screen)
 
     fun bookModeEnabled() = preferenceStore.getBoolean("book_mode_enabled", false)
+
+    fun sideBySideMode() = preferenceStore.getBoolean("side_by_side_mode", false)
+
+    fun manualHingeGap() = preferenceStore.getInt("manual_hinge_gap", 0)
+
+    fun autoEnableBookMode() = preferenceStore.getBoolean("auto_enable_book_mode", true)
+
+    fun autoDisableBookMode() = preferenceStore.getBoolean("auto_disable_book_mode", true)
+
+    fun autoAdjustHingeGap() = preferenceStore.getBoolean("auto_adjust_hinge_gap", true)
+
+    fun autoDisableBookModeOnSingleScreenStart() = preferenceStore.getBoolean("auto_disable_book_mode_on_start", true)
+
+    fun centerSinglePage() = preferenceStore.getBoolean("center_single_page", false)
 
     // endregion
 

@@ -6,6 +6,7 @@ import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import android.content.Context
@@ -22,7 +23,7 @@ import eu.kanade.core.preference.asState
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.more.MoreScreen
 import eu.kanade.presentation.more.settings.screen.SearchableSettings
-import eu.kanade.presentation.more.settings.screen.SettingsDualScreenScreen
+import eu.kanade.presentation.more.settings.screen.SettingsSpanningScreen
 import eu.kanade.presentation.util.Tab
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadManager
@@ -71,6 +72,8 @@ data object MoreTab : Tab {
         val navigator = LocalNavigator.currentOrThrow
         val screenModel = rememberScreenModel { MoreScreenModel() }
         val downloadQueueState by screenModel.downloadQueueState.collectAsState()
+        val detectedDisplays by screenModel.detectedDisplays.collectAsState()
+        val hasSecondaryDisplay = remember(detectedDisplays) { detectedDisplays.isNotEmpty() }
 
         val openScreen = { screen: cafe.adriel.voyager.core.screen.Screen ->
             val preferences = Injekt.get<BasePreferences>()
@@ -89,6 +92,7 @@ data object MoreTab : Tab {
             onIncognitoModeChange = { screenModel.incognitoMode = it },
             dualScreenMode = screenModel.dualScreenMode,
             onDualScreenModeChange = { screenModel.dualScreenMode = it },
+            hasSecondaryDisplay = hasSecondaryDisplay,
             onClickDownloadQueue = { openScreen(DownloadQueueScreen) },
             onClickCategories = { openScreen(CategoryScreen()) },
             onClickStats = { openScreen(StatsScreen()) },

@@ -41,6 +41,26 @@
     <string name="label_warning">Warning</string>
     <string name="label_auto">Auto</string>
 
+    <string name="label_spanning">Dual-screen &amp; Tablet</string>
+    <string name="pref_spanning_summary">Dual-screen and tablet optimization settings</string>
+    <string name="pref_category_spanning">Optimizations</string>
+    <string name="pref_category_secondary_display">Secondary Display</string>
+    <string name="pref_dual_screen_no_secondary_display">No secondary display detected</string>
+    <string name="pref_always_show_dashboard">Always show Companion Dashboard</string>
+    <string name="pref_always_show_dashboard_summary">Show the dashboard on the secondary screen during normal app navigation</string>
+    <string name="book_mode">Side-by-Side View</string>
+    <string name="pref_hinge_gap">Hinge gap</string>
+    <string name="pref_auto_enable_book_mode">Auto-enable Side-by-Side View when spanning</string>
+    <string name="pref_auto_disable_book_mode">Auto-disable Side-by-Side View when un-spanning</string>
+    <string name="pref_auto_adjust_hinge_gap">Auto-adjust Hinge gap on foldables</string>
+    <string name="pref_auto_disable_on_start">Auto-disable Side-by-Side View on single screen start</string>
+    <string name="pref_center_single_page">Center single pages</string>
+    <string name="pref_center_single_page_summary">Center the page when only one is visible (only if no hinge is detected)</string>
+    <string name="pref_hinge_presets">Hinge presets</string>
+    <string name="hinge_duo1">Surface Duo 1 (84px)</string>
+    <string name="hinge_duo2">Surface Duo 2 (66px)</string>
+    <string name="hinge_fold">Z Fold (0px)</string>
+
     <!-- Shared labels -->
     <string name="label_started">Started</string>
     <string name="label_local">Local</string>
@@ -188,8 +208,8 @@
     <string name="onboarding_storage_selection_required">A folder must be selected</string>
     <string name="onboarding_storage_help_info">Updating from an older version and not sure what to select? Refer to the storage guide for more information.</string>
     <string name="onboarding_storage_help_action">Storage guide</string>
-    <string name="onboarding_dual_screen_info">If you have a dual-screen device, you can enable dual-screen mode to show reader controls on the secondary display.</string>
-    <string name="onboarding_dual_screen_note">This can also be toggled later in Settings > More.</string>
+    <string name="onboarding_dual_screen_info">If you have a dual-screen device, you can enable Dual-screen Mode to show reader controls on the secondary display.</string>
+    <string name="onboarding_dual_screen_note">This can also be toggled later in Settings > Dual-screen &amp; Tablet.</string>
     <string name="onboarding_permission_install_apps">Install apps permission</string>
     <string name="onboarding_permission_install_apps_description">To install source extensions.</string>
     <string name="onboarding_permission_notifications">Notification permission</string>
@@ -665,12 +685,13 @@
     <string name="pref_incognito_mode_extension_summary">Pause reading history for extension</string>
     <string name="notification_incognito_text">Disable incognito mode</string>
     <string name="downloaded_only_summary">Filters all entries in your library</string>
-    <string name="pref_dual_screen_mode">Enable dual-screen mode</string>
-    <string name="pref_dual_screen_mode_summary">Show reader controls on secondary display when available</string>
+    <string name="pref_dual_screen_mode">Enable Dual-screen Mode</string>
+    <string name="pref_dual_screen_mode_summary">Show reader content or controls on secondary display when available</string>
     <string name="pref_dual_screen_settings">Dual-screen settings</string>
     <string name="pref_dual_screen_summary">Hardware overrides, display selection</string>
-    <string name="pref_book_mode">Book mode</string>
-    <string name="pref_book_mode_summary">Display two pages side by side like a book on dual-screen devices</string>
+    <string name="pref_book_mode">Side-by-Side View</string>
+    <string name="pref_book_mode_summary">Display two pages side by side like a book</string>
+    <string name="action_dual_screen_mode">Dual-screen Mode</string>
     <string name="pref_swap_presentation_rotation">Swap presentation rotation</string>
     <string name="pref_swap_presentation_rotation_summary">Rotates the secondary display by 180 degrees</string>
     <string name="pref_secondary_display_id">Secondary display ID</string>

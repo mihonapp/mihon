@@ -7,6 +7,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
 object DualScreenState {
@@ -27,11 +28,12 @@ object DualScreenState {
     )
     val mainScreenEvents = _mainScreenEvents.receiveAsFlow()
 
-    private val _rotationEvents = Channel<Unit>(
-        capacity = 1,
+    private val _rotationEvents = kotlinx.coroutines.flow.MutableSharedFlow<Unit>(
+        replay = 0,
+        extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
-    val rotationEvents = _rotationEvents.receiveAsFlow()
+    val rotationEvents = _rotationEvents.asSharedFlow()
 
     val LocalNavigateUp = staticCompositionLocalOf<(() -> Unit)?> { null }
 
@@ -49,7 +51,7 @@ object DualScreenState {
     }
 
     fun triggerRotationUpdate() {
-        _rotationEvents.trySend(Unit)
+        _rotationEvents.tryEmit(Unit)
     }
 
     fun close() {

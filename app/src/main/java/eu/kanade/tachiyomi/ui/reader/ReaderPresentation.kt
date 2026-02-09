@@ -64,8 +64,10 @@ import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonRecyclerView
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonAdapter
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.util.view.setComposeContent
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import okio.Buffer
+import mihon.core.dualscreen.DualScreenState
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
@@ -136,6 +138,12 @@ class ReaderPresentation(
         setContentView(container!!)
 
         setupComposeOverlay()
+
+        lifecycleScope.launch {
+            DualScreenState.rotationEvents.collect {
+                container?.post { setupRotation() }
+            }
+        }
 
         setupRotation()
     }
@@ -273,8 +281,8 @@ class ReaderPresentation(
                     cropEnabled = false,
                     onClickCropBorder = { },
                     onClickSettings = { activity.viewModel.openSettingsDialog() },
-                    bookModeEnabled = activity.isBookModeEnabled(),
-                    onClickBookMode = { activity.setBookMode(!activity.isBookModeEnabled()) },
+                    dualScreenModeEnabled = activity.isBookModeEnabled(),
+                    onClickDualScreenMode = { activity.setBookMode(!activity.isBookModeEnabled()) },
                 )
             }
         }

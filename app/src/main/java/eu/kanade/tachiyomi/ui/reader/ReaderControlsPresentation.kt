@@ -38,13 +38,14 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.source.model.Page
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import androidx.recyclerview.widget.LinearLayoutManager
 import okio.Buffer
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
+import mihon.core.dualscreen.DualScreenState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -58,7 +59,7 @@ sealed class DashboardMode {
     /** Scrubber mode with horizontal page thumbnail strip */
     object SCRUBBER : DashboardMode()
 
-    /** Get the next mode in the cycle (book mode is toggled separately) */
+    /** Get the next mode in the cycle (Dual-screen mode is toggled separately) */
     fun next(): DashboardMode = when (this) {
         NORMAL -> SCRUBBER
         SCRUBBER -> NORMAL
@@ -101,6 +102,12 @@ class ReaderControlsPresentation(
         window!!.decorView.setViewTreeLifecycleOwner(this)
         window!!.decorView.setViewTreeSavedStateRegistryOwner(this)
         window!!.decorView.setViewTreeViewModelStoreOwner(this)
+
+        lifecycleScope.launch {
+            DualScreenState.rotationEvents.collect {
+                normalDashboardRoot?.post { setupRotation() }
+            }
+        }
 
         showNormalDashboard()
     }
@@ -148,18 +155,6 @@ class ReaderControlsPresentation(
             activity.moveToPageIndex(page.index)
         }
         recyclerPreviews.adapter = adapter
-
-        fun moveNext() {
-            val current = activity.viewModel.state.value.currentPage
-            val total = activity.viewModel.state.value.totalPages
-            if (current < total) activity.moveToPageIndex(current)
-            else activity.loadNextChapter()
-        }
-        fun movePrev() {
-            val current = activity.viewModel.state.value.currentPage
-            if (current > 1) activity.moveToPageIndex(current - 2)
-            else activity.loadPreviousChapter()
-        }
 
         fun updateMiddleAreaVisibility(isWebtoon: Boolean) {
             when (currentDashboardMode) {
@@ -234,11 +229,11 @@ class ReaderControlsPresentation(
 
         btnPrevPage.setOnClickListener {
             val readingMode = ReadingMode.fromPreference(activity.viewModel.getMangaReadingMode())
-            if (readingMode == ReadingMode.RIGHT_TO_LEFT) moveNext() else movePrev()
+            if (readingMode == ReadingMode.RIGHT_TO_LEFT) activity.loadNextPage() else activity.loadPreviousPage()
         }
         btnNextPage.setOnClickListener {
             val readingMode = ReadingMode.fromPreference(activity.viewModel.getMangaReadingMode())
-            if (readingMode == ReadingMode.RIGHT_TO_LEFT) movePrev() else moveNext()
+            if (readingMode == ReadingMode.RIGHT_TO_LEFT) activity.loadPreviousPage() else activity.loadNextPage()
         }
         btnPrevChapter.setOnClickListener { activity.loadPreviousChapter() }
         btnNextChapter.setOnClickListener { activity.loadNextChapter() }

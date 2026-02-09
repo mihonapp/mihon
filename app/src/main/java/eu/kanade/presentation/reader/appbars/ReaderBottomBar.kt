@@ -26,8 +26,8 @@ fun ReaderBottomBar(
     cropEnabled: Boolean,
     onClickCropBorder: () -> Unit,
     onClickSettings: () -> Unit,
-    bookModeEnabled: Boolean = false,
-    onClickBookMode: (() -> Unit)? = null,
+    dualScreenModeEnabled: Boolean = false,
+    onClickDualScreenMode: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -57,11 +57,11 @@ fun ReaderBottomBar(
             )
         }
 
-        if (onClickBookMode != null) {
-            IconButton(onClick = onClickBookMode) {
+        if (onClickDualScreenMode != null) {
+            IconButton(onClick = onClickDualScreenMode) {
                 Icon(
-                    painter = painterResource(if (bookModeEnabled) R.drawable.ic_book_open_24dp else R.drawable.ic_book_open_24dp),
-                    contentDescription = stringResource(MR.strings.viewer),
+                    painter = painterResource(if (dualScreenModeEnabled) R.drawable.ic_book_open_24dp else R.drawable.ic_book_open_24dp),
+                    contentDescription = stringResource(MR.strings.action_dual_screen_mode),
                 )
             }
         }

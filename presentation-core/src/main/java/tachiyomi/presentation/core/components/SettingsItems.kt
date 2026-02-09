@@ -42,6 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -135,40 +136,45 @@ fun BaseSortItem(label: String, icon: ImageVector?, onClick: () -> Unit) {
 }
 
 @Composable
-fun CheckboxItem(label: String, pref: Preference<Boolean>) {
+fun CheckboxItem(label: String, pref: Preference<Boolean>, enabled: Boolean = true) {
     val checked by pref.collectAsState()
     CheckboxItem(
         label = label,
         checked = checked,
+        enabled = enabled,
         onClick = { pref.toggle() },
     )
 }
 
 @Composable
-fun CheckboxItem(label: String, checked: Boolean, onClick: () -> Unit) {
+fun CheckboxItem(label: String, checked: Boolean, enabled: Boolean = true, onClick: () -> Unit) {
     BaseSettingsItem(
         label = label,
         widget = {
             Checkbox(
                 checked = checked,
                 onCheckedChange = null,
+                enabled = enabled,
             )
         },
         onClick = onClick,
+        enabled = enabled,
     )
 }
 
 @Composable
-fun RadioItem(label: String, selected: Boolean, onClick: () -> Unit) {
+fun RadioItem(label: String, selected: Boolean, enabled: Boolean = true, onClick: () -> Unit) {
     BaseSettingsItem(
         label = label,
         widget = {
             RadioButton(
                 selected = selected,
                 onClick = null,
+                enabled = enabled,
             )
         },
         onClick = onClick,
+        enabled = enabled,
     )
 }
 
@@ -212,11 +218,13 @@ fun BaseSliderItem(
     titleStyle: TextStyle = MaterialTheme.typography.titleLarge,
     subtitleStyle: TextStyle = MaterialTheme.typography.bodySmall,
     pillColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
+    enabled: Boolean = true,
 ) {
     val haptic = LocalHapticFeedback.current
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .alpha(if (enabled) 1f else 0.4f)
             .then(modifier),
         verticalArrangement = Arrangement.spacedBy(2.dp),
     ) {
@@ -252,6 +260,7 @@ fun BaseSliderItem(
             },
             valueRange = valueRange,
             steps = steps,
+            enabled = enabled,
         )
     }
 }
@@ -435,12 +444,14 @@ fun SettingsIconGrid(labelRes: StringResource, content: LazyGridScope.() -> Unit
 private fun BaseSettingsItem(
     label: String,
     widget: @Composable RowScope.() -> Unit,
+    enabled: Boolean = true,
     onClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier
-            .clickable(onClick = onClick)
+            .clickable(enabled = enabled, onClick = onClick)
             .fillMaxWidth()
+            .alpha(if (enabled) 1f else DISABLED_ALPHA)
             .padding(
                 horizontal = SettingsItemsPaddings.Horizontal,
                 vertical = SettingsItemsPaddings.Vertical,

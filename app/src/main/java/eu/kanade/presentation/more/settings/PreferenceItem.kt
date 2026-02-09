@@ -31,27 +31,39 @@ import tachiyomi.presentation.core.components.BaseSliderItem
 import tachiyomi.presentation.core.util.collectAsState
 
 val LocalPreferenceHighlighted = compositionLocalOf(structuralEqualityPolicy()) { false }
+val LocalPreferenceEnabled = compositionLocalOf(structuralEqualityPolicy()) { true }
 val LocalPreferenceMinHeight = compositionLocalOf(structuralEqualityPolicy()) { 56.dp }
 
 @Composable
 fun StatusWrapper(
     item: Preference.PreferenceItem<*, *>,
     highlightKey: String?,
+    hideOnDisabled: Boolean = true,
     content: @Composable () -> Unit,
 ) {
     val enabled = item.enabled
     val highlighted = item.title == highlightKey
-    AnimatedVisibility(
-        visible = enabled,
-        enter = expandVertically() + fadeIn(),
-        exit = shrinkVertically() + fadeOut(),
-        content = {
-            CompositionLocalProvider(
-                LocalPreferenceHighlighted provides highlighted,
-                content = content,
-            )
-        },
-    )
+    
+    if (hideOnDisabled) {
+        AnimatedVisibility(
+            visible = enabled,
+            enter = expandVertically() + fadeIn(),
+            exit = shrinkVertically() + fadeOut(),
+            content = {
+                CompositionLocalProvider(
+                    LocalPreferenceHighlighted provides highlighted,
+                    LocalPreferenceEnabled provides true, // If it's visible in hide mode, it's enabled
+                    content = content,
+                )
+            },
+        )
+    } else {
+        CompositionLocalProvider(
+            LocalPreferenceHighlighted provides highlighted,
+            LocalPreferenceEnabled provides enabled,
+            content = content,
+        )
+    }
 }
 
 @Composable
@@ -63,7 +75,10 @@ internal fun PreferenceItem(
     StatusWrapper(
         item = item,
         highlightKey = highlightKey,
+        // Don't hide SwitchPreferences if they are disabled; show them as greyed out instead.
+        hideOnDisabled = item !is Preference.PreferenceItem.SwitchPreference,
     ) {
+        val enabled = LocalPreferenceEnabled.current
         when (item) {
             is Preference.PreferenceItem.SwitchPreference -> {
                 val value by item.preference.collectAsState()
@@ -72,6 +87,7 @@ internal fun PreferenceItem(
                     subtitle = item.subtitle,
                     icon = item.icon,
                     checked = value,
+                    enabled = enabled,
                     onCheckedChanged = { newValue ->
                         scope.launch {
                             if (item.onValueChanged(newValue)) {
@@ -88,6 +104,7 @@ internal fun PreferenceItem(
                     steps = item.steps,
                     title = item.title,
                     subtitle = item.subtitle,
+                    enabled = enabled,
                     valueString = item.valueString.takeUnless { it.isNullOrEmpty() } ?: item.value.toString(),
                     onChange = {
                         scope.launch {
@@ -109,6 +126,7 @@ internal fun PreferenceItem(
                     subtitle = item.internalSubtitleProvider(value, item.entries),
                     icon = item.icon,
                     entries = item.entries,
+                    enabled = enabled,
                     onValueChange = { newValue ->
                         scope.launch {
                             if (item.internalOnValueChanged(newValue!!)) {
@@ -125,6 +143,7 @@ internal fun PreferenceItem(
                     subtitle = item.subtitleProvider(item.value, item.entries),
                     icon = item.icon,
                     entries = item.entries,
+                    enabled = enabled,
                     onValueChange = { scope.launch { item.onValueChanged(it) } },
                 )
             }
@@ -147,6 +166,7 @@ internal fun PreferenceItem(
                     title = item.title,
                     subtitle = item.subtitle,
                     icon = item.icon,
+                    enabled = enabled,
                     onPreferenceClick = item.onClick,
                 )
             }

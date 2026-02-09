@@ -25,6 +25,7 @@ fun TextPreferenceWidget(
     iconTint: Color = MaterialTheme.colorScheme.primary,
     widget: @Composable (() -> Unit)? = null,
     onPreferenceClick: (() -> Unit)? = null,
+    enabled: Boolean = true,
 ) {
     BasePreferenceWidget(
         modifier = modifier,
@@ -56,6 +57,7 @@ fun TextPreferenceWidget(
         },
         onClick = onPreferenceClick,
         widget = widget,
+        enabled = enabled,
     )
 }
 

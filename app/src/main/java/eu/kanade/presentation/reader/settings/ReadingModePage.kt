@@ -94,6 +94,8 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
         }
     }
 
+    val isSideBySideViewEnabled by screenModel.preferences.sideBySideMode().collectAsState()
+
     CheckboxItem(
         label = stringResource(MR.strings.pref_crop_borders),
         pref = screenModel.preferences.cropBorders(),
@@ -113,6 +115,7 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
     CheckboxItem(
         label = stringResource(MR.strings.pref_dual_page_split),
         pref = screenModel.preferences.dualPageSplitPaged(),
+        enabled = !isSideBySideViewEnabled,
     )
 
     if (dualPageSplitPaged) {
@@ -134,6 +137,63 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
             pref = screenModel.preferences.dualPageRotateToFitInvert(),
         )
     }
+
+    HeadingItem(MR.strings.label_spanning)
+
+    CheckboxItem(
+        label = stringResource(MR.strings.book_mode),
+        pref = screenModel.preferences.sideBySideMode(),
+    )
+
+    if (isSideBySideViewEnabled) {
+        val manualHingeGap by screenModel.preferences.manualHingeGap().collectAsState()
+        SliderItem(
+            label = stringResource(MR.strings.pref_hinge_gap),
+            value = manualHingeGap,
+            valueRange = 0..200,
+            valueString = "${manualHingeGap}px",
+            onChange = { screenModel.preferences.manualHingeGap().set(it) },
+        )
+
+        SettingsChipRow(MR.strings.pref_hinge_presets) {
+            FilterChip(
+                selected = manualHingeGap == 84,
+                onClick = { screenModel.preferences.manualHingeGap().set(84) },
+                label = { Text(stringResource(MR.strings.hinge_duo1)) },
+            )
+            FilterChip(
+                selected = manualHingeGap == 66,
+                onClick = { screenModel.preferences.manualHingeGap().set(66) },
+                label = { Text(stringResource(MR.strings.hinge_duo2)) },
+            )
+            FilterChip(
+                selected = manualHingeGap == 0,
+                onClick = { screenModel.preferences.manualHingeGap().set(0) },
+                label = { Text(stringResource(MR.strings.hinge_fold)) },
+            )
+        }
+    }
+
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_auto_enable_book_mode),
+        pref = screenModel.preferences.autoEnableBookMode(),
+    )
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_auto_disable_book_mode),
+        pref = screenModel.preferences.autoDisableBookMode(),
+    )
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_auto_adjust_hinge_gap),
+        pref = screenModel.preferences.autoAdjustHingeGap(),
+    )
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_auto_disable_on_start),
+        pref = screenModel.preferences.autoDisableBookModeOnSingleScreenStart(),
+    )
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_center_single_page),
+        pref = screenModel.preferences.centerSinglePage(),
+    )
 }
 
 @Composable

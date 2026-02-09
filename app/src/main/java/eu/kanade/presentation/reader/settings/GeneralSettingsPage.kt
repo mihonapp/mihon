@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import eu.kanade.presentation.more.settings.screen.SettingsDualScreenScreen
+import eu.kanade.presentation.more.settings.screen.SettingsSpanningScreen
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import eu.kanade.tachiyomi.util.system.hasDisplayCutout
@@ -121,9 +121,9 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
         )
         IconItem(
-            label = stringResource(MR.strings.pref_dual_screen_settings),
+            label = stringResource(MR.strings.label_spanning),
             icon = androidx.compose.material.icons.Icons.Outlined.DisplaySettings,
-            onClick = { navigator.push(SettingsDualScreenScreen) },
+            onClick = { navigator.push(SettingsSpanningScreen) },
         )
     }
 

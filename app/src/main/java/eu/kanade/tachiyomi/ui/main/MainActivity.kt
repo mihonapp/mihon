@@ -169,7 +169,7 @@ class MainActivity : BaseActivity() {
 
         preferences.enableDualScreenMode().changes()
             .onEach { enabled ->
-                if (enabled || preferences.enableDualScreenMode().get()) {
+                if (enabled) {
                     checkAndStartDualScreenActivity()
                 } else {
                     DualScreenState.close()
@@ -182,6 +182,16 @@ class MainActivity : BaseActivity() {
                     }
                 }
             }
+            .launchIn(lifecycleScope)
+
+        preferences.alwaysShowDashboard().changes()
+            .drop(1)
+            .onEach { checkAndStartDualScreenActivity() }
+            .launchIn(lifecycleScope)
+
+        DualScreenState.activeScreen
+            .drop(1)
+            .onEach { checkAndStartDualScreenActivity() }
             .launchIn(lifecycleScope)
 
         setComposeContent {
@@ -349,8 +359,10 @@ class MainActivity : BaseActivity() {
         }
 
         val dualScreenEnabled = preferences.enableDualScreenMode().get()
+        val alwaysShowDashboard = preferences.alwaysShowDashboard().get()
+        val activeScreen = DualScreenState.activeScreen.value
 
-        if (presentationDisplay != null && dualScreenEnabled) {
+        if (presentationDisplay != null && dualScreenEnabled && (alwaysShowDashboard || activeScreen != null)) {
             val options = android.app.ActivityOptions.makeBasic()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 options.setLaunchDisplayId(presentationDisplay.displayId)

@@ -266,6 +266,22 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         }
     }
 
+    /**
+     * Tells this viewer to move to the next page/pair.
+     */
+    override fun moveToNext(): Boolean {
+        scrollDown()
+        return true
+    }
+
+    /**
+     * Tells this viewer to move to the previous page/pair.
+     */
+    override fun moveToPrevious(): Boolean {
+        scrollUp()
+        return true
+    }
+
     fun onScrolled(pos: Int? = null) {
         val position = pos ?: layoutManager.findLastEndVisibleItemPosition()
         val item = adapter.items.getOrNull(position)

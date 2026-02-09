@@ -41,6 +41,7 @@ fun MoreScreen(
     onIncognitoModeChange: (Boolean) -> Unit,
     dualScreenMode: Boolean,
     onDualScreenModeChange: (Boolean) -> Unit,
+    hasSecondaryDisplay: Boolean,
     onClickDownloadQueue: () -> Unit,
     onClickCategories: () -> Unit,
     onClickStats: () -> Unit,
@@ -78,10 +79,15 @@ fun MoreScreen(
             item {
                 SwitchPreferenceWidget(
                     title = stringResource(MR.strings.pref_dual_screen_mode),
-                    subtitle = stringResource(MR.strings.pref_dual_screen_mode_summary),
+                    subtitle = if (hasSecondaryDisplay) {
+                        stringResource(MR.strings.pref_dual_screen_mode_summary)
+                    } else {
+                        stringResource(MR.strings.pref_dual_screen_no_secondary_display)
+                    },
                     icon = Icons.Outlined.DisplaySettings,
                     checked = dualScreenMode,
                     onCheckedChanged = onDualScreenModeChange,
+                    enabled = hasSecondaryDisplay,
                 )
             }
 

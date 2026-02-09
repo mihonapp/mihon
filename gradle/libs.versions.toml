@@ -40,6 +40,8 @@ sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = 
 sqlite-ktx = { module = "androidx.sqlite:sqlite-ktx", version.ref = "sqlite" }
 sqlite-android = "com.github.requery:sqlite-android:3.49.0"
 
+window = "androidx.window:window:1.3.0"
+
 preferencektx = "androidx.preference:preference-ktx:1.2.1"
 
 injekt = "com.github.mihonapp:injekt:91edab2317"

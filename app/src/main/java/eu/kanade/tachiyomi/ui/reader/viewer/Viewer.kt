@@ -32,6 +32,18 @@ interface Viewer {
     fun moveToPage(page: ReaderPage)
 
     /**
+     * Tells this viewer to move to the next page/pair.
+     * @return true if moved, false if at the end of chapter.
+     */
+    fun moveToNext(): Boolean
+
+    /**
+     * Tells this viewer to move to the previous page/pair.
+     * @return true if moved, false if at the start of chapter.
+     */
+    fun moveToPrevious(): Boolean
+
+    /**
      * Called from the containing activity when a key [event] is received. It should return true
      * if the event was handled, false otherwise.
      */

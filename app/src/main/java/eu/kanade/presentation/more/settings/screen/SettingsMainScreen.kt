@@ -45,7 +45,7 @@ import eu.kanade.presentation.more.settings.screen.about.AboutScreen
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.presentation.util.LocalBackPress
 import eu.kanade.presentation.util.Screen
-import eu.kanade.presentation.more.settings.screen.SettingsDualScreenScreen
+import eu.kanade.presentation.more.settings.screen.SettingsSpanningScreen
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -217,10 +217,10 @@ object SettingsMainScreen : Screen() {
             screen = SettingsDataScreen,
         ),
         Item(
-            titleRes = MR.strings.pref_dual_screen_settings,
-            subtitleRes = MR.strings.pref_dual_screen_summary,
+            titleRes = MR.strings.label_spanning,
+            subtitleRes = MR.strings.pref_spanning_summary,
             icon = Icons.Outlined.DisplaySettings,
-            screen = SettingsDualScreenScreen,
+            screen = SettingsSpanningScreen,
         ),
         Item(
             titleRes = MR.strings.pref_category_security,
