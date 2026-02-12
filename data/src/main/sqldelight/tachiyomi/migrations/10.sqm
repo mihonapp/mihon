@@ -5,6 +5,7 @@ CREATE TABLE hidden_images(
     normalized_image_url TEXT,
     image_sha256 TEXT,
     image_dhash TEXT,
+    preview_image BLOB,
     scope INTEGER NOT NULL,
     created_at INTEGER NOT NULL,
     FOREIGN KEY(manga_id) REFERENCES mangas (_id)

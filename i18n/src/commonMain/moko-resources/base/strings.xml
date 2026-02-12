@@ -173,6 +173,10 @@
     <string name="hidden_images_hide_image">Hide image forever</string>
     <string name="hidden_images_remove_from_hidden">Unhide forever</string>
     <string name="hidden_images_manage">Manage hidden images</string>
+    <string name="hidden_images_manage_title">Hidden images: %1$s</string>
+    <string name="hidden_images_clear_list">Clear all entries</string>
+    <string name="hidden_images_clear_list_confirm">Remove all hidden image rules for this manga?</string>
+    <string name="hidden_images_no_preview">No preview</string>
 
     <!-- Operations -->
     <string name="loading">Loading…</string>

@@ -34,6 +34,7 @@ class SetHiddenImage(
                     normalizedImageUrl = signature.normalizedImageUrl,
                     imageSha256 = signature.imageSha256,
                     imageDhash = signature.imageDhash,
+                    previewImage = signature.previewImage,
                     scope = targetScope.value,
                     id = existing.id,
                 )
@@ -46,6 +47,7 @@ class SetHiddenImage(
                 normalizedImageUrl = signature.normalizedImageUrl,
                 imageSha256 = signature.imageSha256,
                 imageDhash = signature.imageDhash,
+                previewImage = signature.previewImage,
                 scope = scope.value,
                 createdAt = System.currentTimeMillis(),
             )

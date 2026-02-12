@@ -34,7 +34,6 @@ import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.presentation.manga.MangaScreen
 import eu.kanade.presentation.manga.components.DeleteChaptersDialog
-import eu.kanade.presentation.manga.components.HiddenImagesDialog
 import eu.kanade.presentation.manga.components.MangaCoverDialog
 import eu.kanade.presentation.manga.components.ScanlatorFilterDialog
 import eu.kanade.presentation.manga.components.SetIntervalDialog
@@ -48,6 +47,7 @@ import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.home.HomeScreen
+import eu.kanade.tachiyomi.ui.manga.hiddenimages.HiddenImagesScreen
 import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesScreen
 import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialogHomeScreen
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -116,7 +116,6 @@ class MangaScreen(
         }
 
         var showScanlatorsDialog by remember { mutableStateOf(false) }
-        var showHiddenImagesDialog by remember { mutableStateOf(false) }
 
         MangaScreen(
             state = successState,
@@ -162,7 +161,9 @@ class MangaScreen(
             onShareClicked = { shareManga(context, screenModel.manga, screenModel.source) }.takeIf { isHttpSource },
             onDownloadActionClicked = screenModel::runDownloadAction.takeIf { !successState.source.isLocalOrStub() },
             onEditCategoryClicked = screenModel::showChangeCategoryDialog.takeIf { successState.manga.favorite },
-            onManageHiddenImagesClicked = { showHiddenImagesDialog = true },
+            onManageHiddenImagesClicked = {
+                navigator.push(HiddenImagesScreen(successState.manga.id, successState.manga.title))
+            },
             onEditFetchIntervalClicked = screenModel::showSetFetchIntervalDialog.takeIf {
                 successState.manga.favorite
             },
@@ -289,15 +290,6 @@ class MangaScreen(
                 excludedScanlators = successState.excludedScanlators,
                 onDismissRequest = { showScanlatorsDialog = false },
                 onConfirm = screenModel::setExcludedScanlators,
-            )
-        }
-
-        if (showHiddenImagesDialog) {
-            HiddenImagesDialog(
-                hiddenImages = successState.hiddenImages,
-                onDismissRequest = { showHiddenImagesDialog = false },
-                onRemove = screenModel::removeHiddenImage,
-                onUpdateScope = screenModel::updateHiddenImageScope,
             )
         }
     }

@@ -28,6 +28,7 @@ internal fun hiddenImageMapper(
     normalizedImageUrl: String?,
     imageSha256: String?,
     imageDhash: String?,
+    previewImage: ByteArray?,
     scope: Long,
     createdAt: Long,
 ): HiddenImage {
@@ -38,6 +39,7 @@ internal fun hiddenImageMapper(
         normalizedImageUrl = normalizedImageUrl,
         imageSha256 = imageSha256,
         imageDhash = imageDhash,
+        previewImage = previewImage,
         scope = when (scope) {
             HiddenImage.Scope.START.value -> HiddenImage.Scope.START
             HiddenImage.Scope.END.value -> HiddenImage.Scope.END

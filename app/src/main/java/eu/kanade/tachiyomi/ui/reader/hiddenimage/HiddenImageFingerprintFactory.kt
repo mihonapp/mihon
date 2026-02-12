@@ -2,7 +2,9 @@ package eu.kanade.tachiyomi.ui.reader.hiddenimage
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Bitmap.CompressFormat
 import eu.kanade.tachiyomi.util.lang.Hash
+import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import androidx.core.graphics.scale
 import androidx.core.graphics.get
@@ -21,6 +23,7 @@ class HiddenImageFingerprintFactory {
                 normalizedImageUrl = normalizedImageUrl,
                 imageSha256 = null,
                 imageDhash = null,
+                previewImage = null,
             )
         }
 
@@ -28,13 +31,47 @@ class HiddenImageFingerprintFactory {
 
         val sha256 = bytes?.let(Hash::sha256)
         val dHash = bytes?.let(::computeDHash)
+        val previewImage = bytes?.let(::computePreviewImage)
 
         return HiddenImageSignature(
             imageUrl = rawImageUrl,
             normalizedImageUrl = normalizedImageUrl,
             imageSha256 = sha256,
             imageDhash = dHash,
+            previewImage = previewImage,
         )
+    }
+
+    private fun computePreviewImage(bytes: ByteArray): ByteArray? {
+        val decodedBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size) ?: return null
+        val targetWidth = 360
+        val targetHeight = 520
+        val scale = minOf(
+            targetWidth.toFloat() / decodedBitmap.width.toFloat(),
+            targetHeight.toFloat() / decodedBitmap.height.toFloat(),
+            1f,
+        )
+
+        val scaledBitmap = if (scale < 1f) {
+            Bitmap.createScaledBitmap(
+                decodedBitmap,
+                (decodedBitmap.width * scale).toInt().coerceAtLeast(1),
+                (decodedBitmap.height * scale).toInt().coerceAtLeast(1),
+                true,
+            )
+        } else {
+            decodedBitmap
+        }
+
+        val output = ByteArrayOutputStream()
+        scaledBitmap.compress(CompressFormat.JPEG, 82, output)
+
+        if (scaledBitmap != decodedBitmap) {
+            decodedBitmap.recycle()
+        }
+        scaledBitmap.recycle()
+
+        return output.toByteArray()
     }
 
     private fun computeDHash(bytes: ByteArray): String? {

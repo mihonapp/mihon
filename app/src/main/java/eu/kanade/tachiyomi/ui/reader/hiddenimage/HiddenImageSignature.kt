@@ -5,4 +5,5 @@ data class HiddenImageSignature(
     val normalizedImageUrl: String?,
     val imageSha256: String?,
     val imageDhash: String?,
+    val previewImage: ByteArray?,
 )
