@@ -18,7 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Photo
-import androidx.compose.material.icons.outlined.Public
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.VisibilityOff
@@ -59,7 +58,6 @@ fun ReaderPageActionsDialog(
     onSave: () -> Unit,
     onToggleImageVisibility: (Boolean) -> Unit,
     onRemoveFromHidden: () -> Unit,
-    onOpenInWebView: (() -> Unit)?,
 ) {
     var showSetCoverDialog by remember { mutableStateOf(false) }
 
@@ -109,17 +107,6 @@ fun ReaderPageActionsDialog(
                         icon = Icons.Outlined.Photo,
                         onClick = { showSetCoverDialog = true },
                     )
-                    if (onOpenInWebView != null) { // webview not available in downloaded chapters
-                        ActionButton(
-                            modifier = Modifier.weight(1f),
-                            title = stringResource(MR.strings.action_open_in_web_view),
-                            icon = Icons.Outlined.Public,
-                            onClick = {
-                                onOpenInWebView()
-                                onDismissRequest()
-                            },
-                        )
-                    }
                 }
 
                 Row(

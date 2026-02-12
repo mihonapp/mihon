@@ -340,15 +340,6 @@ class ReaderActivity : BaseActivity() {
                 ) {
                     value = viewModel.getHiddenImageUiState(pageDialog.page)
                 }
-                val source = viewModel.getSource()
-                val pageImageUrl = pageDialog.page.imageUrl
-                val onOpenImageInWebView = if (source != null && !pageImageUrl.isNullOrBlank()) {
-                    {
-                        startActivity(WebViewActivity.newIntent(this@ReaderActivity, pageImageUrl, source.id))
-                    }
-                } else {
-                    null
-                }
                 ReaderPageActionsDialog(
                     onDismissRequest = onDismissRequest,
                     page = pageDialog.page,
@@ -364,7 +355,6 @@ class ReaderActivity : BaseActivity() {
                         viewModel.removeImageFromHidden()
                         onDismissRequest()
                     },
-                    onOpenInWebView = onOpenImageInWebView,
                 )
             }
             null -> {}
