@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -76,6 +77,8 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.isNightMode
 import eu.kanade.tachiyomi.util.system.openInBrowser
@@ -223,6 +226,12 @@ class ReaderActivity : BaseActivity() {
                     ReaderViewModel.Event.ReloadViewerChapters -> {
                         viewModel.state.value.viewerChapters?.let(::setChapters)
                     }
+                    ReaderViewModel.Event.RefreshHiddenImageState -> {
+                        when (val viewer = viewModel.state.value.viewer) {
+                            is WebtoonViewer -> viewer.config.imagePropertyChangedListener?.invoke()
+                            is PagerViewer -> viewer.config.imagePropertyChangedListener?.invoke()
+                        }
+                    }
                     ReaderViewModel.Event.PageChanged -> {
                         displayRefreshHost.flash()
                     }
@@ -321,11 +330,41 @@ class ReaderActivity : BaseActivity() {
                 )
             }
             is ReaderViewModel.Dialog.PageActions -> {
+                val pageDialog = state.dialog as ReaderViewModel.Dialog.PageActions
+                val hiddenUiState by produceState(
+                    initialValue = ReaderViewModel.HiddenImageUiState(
+                        renderState = ReaderViewModel.HiddenImageRenderState.VISIBLE,
+                        isInHiddenList = false,
+                    ),
+                    key1 = pageDialog.page,
+                ) {
+                    value = viewModel.getHiddenImageUiState(pageDialog.page)
+                }
+                val source = viewModel.getSource()
+                val pageImageUrl = pageDialog.page.imageUrl
+                val onOpenImageInWebView = if (source != null && !pageImageUrl.isNullOrBlank()) {
+                    {
+                        startActivity(WebViewActivity.newIntent(this@ReaderActivity, pageImageUrl, source.id))
+                    }
+                } else {
+                    null
+                }
                 ReaderPageActionsDialog(
                     onDismissRequest = onDismissRequest,
+                    page = pageDialog.page,
+                    hiddenUiState = hiddenUiState,
                     onSetAsCover = viewModel::setAsCover,
                     onShare = viewModel::shareImage,
                     onSave = viewModel::saveImage,
+                    onToggleImageVisibility = { showImage ->
+                        viewModel.setImageVisibility(showImage)
+                        onDismissRequest()
+                    },
+                    onRemoveFromHidden = {
+                        viewModel.removeImageFromHidden()
+                        onDismissRequest()
+                    },
+                    onOpenInWebView = onOpenImageInWebView,
                 )
             }
             null -> {}

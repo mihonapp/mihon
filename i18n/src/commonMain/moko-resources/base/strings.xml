@@ -168,6 +168,11 @@
     <string name="action_start_downloading_now">Start downloading now</string>
     <string name="action_not_now">Not now</string>
     <string name="action_add_anyway">Add anyway</string>
+    <string name="hidden_images_minimized_show">Show</string>
+    <string name="hidden_images_action_show">Show image</string>
+    <string name="hidden_images_hide_image">Hide image forever</string>
+    <string name="hidden_images_remove_from_hidden">Unhide forever</string>
+    <string name="hidden_images_manage">Manage hidden images</string>
 
     <!-- Operations -->
     <string name="loading">Loading…</string>
@@ -403,6 +408,10 @@
     <string name="pref_show_page_number">Show page number</string>
     <string name="pref_show_reading_mode">Show reading mode</string>
     <string name="pref_show_reading_mode_summary">Briefly show current mode when reader is opened</string>
+    <string name="pref_hidden_images_display_mode">Hidden images behavior</string>
+    <string name="hidden_images_display_mode_disabled">Disabled</string>
+    <string name="hidden_images_display_mode_minimize">Minimize hidden images</string>
+    <string name="hidden_images_display_mode_hide">Completely hide hidden images</string>
     <string name="pref_hardware_bitmap_threshold">Custom hardware bitmap threshold</string>
     <string name="pref_hardware_bitmap_threshold_default">Default (%d)</string>
     <string name="pref_hardware_bitmap_threshold_summary">If reader loads a blank image incrementally reduce the threshold.\nSelected: %s</string>
@@ -589,6 +598,10 @@
     <string name="cache_deleted">Cache cleared, %1$d files deleted</string>
     <string name="cache_delete_error">Error occurred while clearing</string>
     <string name="pref_auto_clear_chapter_cache">Clear chapter cache on app launch</string>
+    <string name="hidden_images_clear_all">Erase hidden images</string>
+    <string name="hidden_images_clear_all_summary">Remove all hidden image rules</string>
+    <string name="hidden_images_clear_all_confirm">This will remove all hidden image rules across all entries.</string>
+    <string name="hidden_images_cleared">Hidden images erased</string>
     <string name="export">Export</string>
     <string name="library_list">Library List</string>
     <string name="library_exported">Library Exported</string>
@@ -834,6 +847,11 @@
     <string name="chapter_progress">Page: %1$d</string>
     <string name="no_next_chapter">Next chapter not found</string>
     <string name="decode_image_error">The image couldn\'t be loaded</string>
+    <string name="hidden_images_minimized">Image minimized</string>
+    <string name="hidden_images_none">No hidden images</string>
+    <string name="hidden_images_scope_start">Start</string>
+    <string name="hidden_images_scope_end">End</string>
+    <string name="hidden_images_scope_any">Any</string>
     <string name="confirm_set_image_as_cover">Use this image as cover art?</string>
     <string name="pref_category_for_this_series">For this series</string>
     <string name="viewer">Reading mode</string>

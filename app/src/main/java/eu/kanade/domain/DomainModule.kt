@@ -9,8 +9,13 @@ import eu.kanade.domain.extension.interactor.GetExtensionSources
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
 import eu.kanade.domain.extension.interactor.TrustExtension
 import eu.kanade.domain.manga.interactor.GetExcludedScanlators
+import eu.kanade.domain.manga.interactor.GetHiddenImages
+import eu.kanade.domain.manga.interactor.RemoveHiddenImage
+import eu.kanade.domain.manga.interactor.RemoveHiddenImageBySignature
+import eu.kanade.domain.manga.interactor.SetHiddenImage
 import eu.kanade.domain.manga.interactor.SetExcludedScanlators
 import eu.kanade.domain.manga.interactor.SetMangaViewerFlags
+import eu.kanade.domain.manga.interactor.UpdateHiddenImageScope
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.source.interactor.GetEnabledSources
 import eu.kanade.domain.source.interactor.GetIncognitoState
@@ -71,6 +76,7 @@ import tachiyomi.domain.history.interactor.RemoveHistory
 import tachiyomi.domain.history.interactor.UpsertHistory
 import tachiyomi.domain.history.repository.HistoryRepository
 import tachiyomi.domain.manga.interactor.FetchInterval
+import eu.kanade.domain.manga.interactor.ClearHiddenImages
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.manga.interactor.GetLibraryManga
@@ -135,6 +141,12 @@ class DomainModule : InjektModule {
         addFactory { SetMangaCategories(get()) }
         addFactory { GetExcludedScanlators(get()) }
         addFactory { SetExcludedScanlators(get()) }
+        addFactory { GetHiddenImages(get()) }
+        addFactory { SetHiddenImage(get()) }
+        addFactory { RemoveHiddenImage(get()) }
+        addFactory { RemoveHiddenImageBySignature(get()) }
+        addFactory { UpdateHiddenImageScope(get()) }
+        addFactory { ClearHiddenImages(get()) }
         addFactory {
             MigrateMangaUseCase(
                 get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(),

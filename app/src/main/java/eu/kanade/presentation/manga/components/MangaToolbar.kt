@@ -35,6 +35,7 @@ fun MangaToolbar(
     onClickShare: (() -> Unit)?,
     onClickDownload: ((DownloadAction) -> Unit)?,
     onClickEditCategory: (() -> Unit)?,
+    onClickManageHiddenImages: () -> Unit,
     onClickRefresh: () -> Unit,
     onClickMigrate: (() -> Unit)?,
     onClickEditNotes: () -> Unit,
@@ -125,6 +126,12 @@ fun MangaToolbar(
                             ),
                         )
                     }
+                    add(
+                        AppBar.OverflowAction(
+                            title = stringResource(MR.strings.hidden_images_manage),
+                            onClick = onClickManageHiddenImages,
+                        ),
+                    )
                     if (onClickMigrate != null) {
                         add(
                             AppBar.OverflowAction(

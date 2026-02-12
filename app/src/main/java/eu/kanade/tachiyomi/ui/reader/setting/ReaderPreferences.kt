@@ -77,6 +77,8 @@ class ReaderPreferences(
 
     fun webtoonDisableZoomOut() = preferenceStore.getBoolean("webtoon_disable_zoom_out", false)
 
+    fun hiddenImagesDisplayMode() = preferenceStore.getEnum("reader_hidden_images_display_mode", HiddenImagesDisplayMode.MINIMIZE)
+
     // endregion
 
     // region Split two page spread
@@ -161,6 +163,12 @@ class ReaderPreferences(
         HIGH(13),
         LOW(31),
         LOWEST(47),
+    }
+
+    enum class HiddenImagesDisplayMode {
+        DISABLED,
+        MINIMIZE,
+        HIDE,
     }
 
     companion object {

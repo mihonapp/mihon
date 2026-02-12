@@ -1,0 +1,14 @@
+CREATE TABLE hidden_images(
+    _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    manga_id INTEGER NOT NULL,
+    image_url TEXT,
+    normalized_image_url TEXT,
+    image_sha256 TEXT,
+    image_dhash TEXT,
+    scope INTEGER NOT NULL,
+    created_at INTEGER NOT NULL,
+    FOREIGN KEY(manga_id) REFERENCES mangas (_id)
+    ON DELETE CASCADE
+);
+
+CREATE INDEX hidden_images_manga_id_index ON hidden_images(manga_id);

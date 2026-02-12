@@ -18,8 +18,12 @@ import eu.kanade.domain.chapter.interactor.GetAvailableScanlators
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.manga.interactor.GetExcludedScanlators
+import eu.kanade.domain.manga.interactor.GetHiddenImages
+import eu.kanade.domain.manga.interactor.RemoveHiddenImage
 import eu.kanade.domain.manga.interactor.SetExcludedScanlators
+import eu.kanade.domain.manga.interactor.UpdateHiddenImageScope
 import eu.kanade.domain.manga.interactor.UpdateManga
+import eu.kanade.domain.manga.model.HiddenImage
 import eu.kanade.domain.manga.model.chaptersFiltered
 import eu.kanade.domain.manga.model.downloadedFilter
 import eu.kanade.domain.manga.model.toSManga
@@ -108,6 +112,9 @@ class MangaScreenModel(
     private val getAvailableScanlators: GetAvailableScanlators = Injekt.get(),
     private val getExcludedScanlators: GetExcludedScanlators = Injekt.get(),
     private val setExcludedScanlators: SetExcludedScanlators = Injekt.get(),
+    private val getHiddenImages: GetHiddenImages = Injekt.get(),
+    private val removeHiddenImageInteractor: RemoveHiddenImage = Injekt.get(),
+    private val updateHiddenImageScopeInteractor: UpdateHiddenImageScope = Injekt.get(),
     private val setMangaChapterFlags: SetMangaChapterFlags = Injekt.get(),
     private val setMangaDefaultChapterFlags: SetMangaDefaultChapterFlags = Injekt.get(),
     private val setReadStatus: SetReadStatus = Injekt.get(),
@@ -205,6 +212,17 @@ class MangaScreenModel(
                 }
         }
 
+        screenModelScope.launchIO {
+            getHiddenImages.subscribe(mangaId)
+                .flowWithLifecycle(lifecycle)
+                .distinctUntilChanged()
+                .collectLatest { hiddenImages ->
+                    updateSuccessState {
+                        it.copy(hiddenImages = hiddenImages)
+                    }
+                }
+        }
+
         observeDownloads()
 
         screenModelScope.launchIO {
@@ -228,6 +246,7 @@ class MangaScreenModel(
                     chapters = chapters,
                     availableScanlators = getAvailableScanlators.await(mangaId),
                     excludedScanlators = getExcludedScanlators.await(mangaId),
+                    hiddenImages = getHiddenImages.await(mangaId),
                     isRefreshingData = needRefreshInfo || needRefreshChapter,
                     dialog = null,
                     hideMissingChapters = libraryPreferences.hideMissingChapters().get(),
@@ -1116,6 +1135,18 @@ class MangaScreenModel(
         }
     }
 
+    fun removeHiddenImage(id: Long) {
+        screenModelScope.launchIO {
+            removeHiddenImageInteractor.await(id)
+        }
+    }
+
+    fun updateHiddenImageScope(id: Long, scope: HiddenImage.Scope) {
+        screenModelScope.launchIO {
+            updateHiddenImageScopeInteractor.await(id, scope)
+        }
+    }
+
     sealed interface State {
         @Immutable
         data object Loading : State
@@ -1128,6 +1159,7 @@ class MangaScreenModel(
             val chapters: List<ChapterList.Item>,
             val availableScanlators: Set<String>,
             val excludedScanlators: Set<String>,
+            val hiddenImages: List<HiddenImage>,
             val trackingCount: Int = 0,
             val hasLoggedInTrackers: Boolean = false,
             val isRefreshingData: Boolean = false,

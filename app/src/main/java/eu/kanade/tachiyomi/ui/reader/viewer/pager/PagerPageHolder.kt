@@ -2,11 +2,16 @@ package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.view.Gravity
 import android.view.LayoutInflater
+import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.core.view.isVisible
 import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
 import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.ui.reader.ReaderViewModel
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
@@ -54,6 +59,11 @@ class PagerPageHolder(
      * Error layout to show when the image fails to load.
      */
     private var errorLayout: ReaderErrorBinding? = null
+
+    /**
+     * Placeholder layout to show when an image is hidden minimized.
+     */
+    private var hiddenPlaceholder: FrameLayout? = null
 
     private val scope = MainScope()
 
@@ -147,6 +157,20 @@ class PagerPageHolder(
     private suspend fun setImage() {
         progressIndicator?.setProgress(0)
 
+        val hiddenUiState = viewer.activity.viewModel.getHiddenImageUiState(page)
+        when (hiddenUiState.renderState) {
+            ReaderViewModel.HiddenImageRenderState.MINIMIZED -> {
+                showHiddenPlaceholder()
+                return
+            }
+            ReaderViewModel.HiddenImageRenderState.SUPPRESSED -> {
+                removeHiddenPlaceholder()
+                recycle()
+                return
+            }
+            ReaderViewModel.HiddenImageRenderState.VISIBLE -> Unit
+        }
+
         val streamFn = page.stream ?: return
 
         try {
@@ -176,6 +200,7 @@ class PagerPageHolder(
                     pageBackground = background
                 }
                 removeErrorLayout()
+                removeHiddenPlaceholder()
             }
         } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e)
@@ -272,6 +297,7 @@ class PagerPageHolder(
     }
 
     private fun showErrorLayout(error: Throwable?): ReaderErrorBinding {
+        removeHiddenPlaceholder()
         if (errorLayout == null) {
             errorLayout = ReaderErrorBinding.inflate(LayoutInflater.from(context), this, true)
             errorLayout?.actionRetry?.viewer = viewer
@@ -307,5 +333,58 @@ class PagerPageHolder(
     private fun removeErrorLayout() {
         errorLayout?.root?.isVisible = false
         errorLayout = null
+    }
+
+    private fun showHiddenPlaceholder() {
+        removeErrorLayout()
+        recycle()
+
+        if (hiddenPlaceholder == null) {
+            hiddenPlaceholder = FrameLayout(context).apply {
+                layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+
+                val label = TextView(context).apply {
+                    text = context.stringResource(MR.strings.hidden_images_minimized)
+                    gravity = Gravity.CENTER
+                }
+                addView(
+                    label,
+                    LayoutParams(
+                        LayoutParams.WRAP_CONTENT,
+                        LayoutParams.WRAP_CONTENT,
+                        Gravity.CENTER,
+                    ),
+                )
+
+                val showButton = Button(context).apply {
+                    text = context.stringResource(MR.strings.hidden_images_minimized_show)
+                    setOnClickListener {
+                        viewer.activity.viewModel.setHiddenImageExpanded(page, true)
+                        viewer.activity.viewModel.requestHiddenImageRefresh()
+                    }
+                }
+                addView(
+                    showButton,
+                    LayoutParams(
+                        LayoutParams.WRAP_CONTENT,
+                        LayoutParams.WRAP_CONTENT,
+                        Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,
+                    ).apply {
+                        bottomMargin = 24
+                    },
+                )
+
+                setOnLongClickListener {
+                    viewer.activity.onPageLongTap(page)
+                    true
+                }
+            }
+            addView(hiddenPlaceholder)
+        }
+        hiddenPlaceholder?.isVisible = true
+    }
+
+    private fun removeHiddenPlaceholder() {
+        hiddenPlaceholder?.isVisible = false
     }
 }

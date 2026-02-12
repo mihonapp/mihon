@@ -113,6 +113,15 @@ object SettingsReaderScreen : SearchableSettings {
                     preference = readerPreferences.showPageNumber(),
                     title = stringResource(MR.strings.pref_show_page_number),
                 ),
+                Preference.PreferenceItem.ListPreference(
+                    preference = readerPreferences.hiddenImagesDisplayMode(),
+                    entries = persistentMapOf(
+                        ReaderPreferences.HiddenImagesDisplayMode.DISABLED to stringResource(MR.strings.hidden_images_display_mode_disabled),
+                        ReaderPreferences.HiddenImagesDisplayMode.MINIMIZE to stringResource(MR.strings.hidden_images_display_mode_minimize),
+                        ReaderPreferences.HiddenImagesDisplayMode.HIDE to stringResource(MR.strings.hidden_images_display_mode_hide),
+                    ),
+                    title = stringResource(MR.strings.pref_hidden_images_display_mode),
+                ),
             ),
         )
     }

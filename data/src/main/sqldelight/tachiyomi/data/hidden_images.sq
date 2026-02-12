@@ -1,0 +1,62 @@
+CREATE TABLE hidden_images(
+    _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    manga_id INTEGER NOT NULL,
+    image_url TEXT,
+    normalized_image_url TEXT,
+    image_sha256 TEXT,
+    image_dhash TEXT,
+    scope INTEGER NOT NULL,
+    created_at INTEGER NOT NULL,
+    FOREIGN KEY(manga_id) REFERENCES mangas (_id)
+    ON DELETE CASCADE
+);
+
+CREATE INDEX hidden_images_manga_id_index ON hidden_images(manga_id);
+
+insert:
+INSERT INTO hidden_images(
+    manga_id,
+    image_url,
+    normalized_image_url,
+    image_sha256,
+    image_dhash,
+    scope,
+    created_at
+)
+VALUES (
+    :mangaId,
+    :imageUrl,
+    :normalizedImageUrl,
+    :imageSha256,
+    :imageDhash,
+    :scope,
+    :createdAt
+);
+
+update:
+UPDATE hidden_images
+SET manga_id = :mangaId,
+    image_url = :imageUrl,
+    normalized_image_url = :normalizedImageUrl,
+    image_sha256 = :imageSha256,
+    image_dhash = :imageDhash,
+    scope = :scope
+WHERE _id = :id;
+
+updateScope:
+UPDATE hidden_images
+SET scope = :scope
+WHERE _id = :id;
+
+deleteById:
+DELETE FROM hidden_images
+WHERE _id = :id;
+
+deleteAll:
+DELETE FROM hidden_images;
+
+getByMangaId:
+SELECT _id, manga_id, image_url, normalized_image_url, image_sha256, image_dhash, scope, created_at
+FROM hidden_images
+WHERE manga_id = :mangaId
+ORDER BY created_at DESC;

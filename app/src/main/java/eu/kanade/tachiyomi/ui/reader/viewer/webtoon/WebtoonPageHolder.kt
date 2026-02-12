@@ -1,11 +1,15 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
 import android.content.res.Resources
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
@@ -13,6 +17,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
 import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.ui.reader.ReaderViewModel
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
@@ -61,6 +66,8 @@ class WebtoonPageHolder(
      * Error layout to show when the image fails to load.
      */
     private var errorLayout: ReaderErrorBinding? = null
+    private var hiddenPlaceholder: LinearLayout? = null
+    private var hiddenPlaceholderPage: ReaderPage? = null
 
     /**
      * Getter to retrieve the height of the recycler view.
@@ -118,6 +125,7 @@ class WebtoonPageHolder(
         loadJob = null
 
         removeErrorLayout()
+        removeHiddenPlaceholder()
         frame.recycle()
         progressIndicator.setProgress(0)
         progressContainer.isVisible = true
@@ -187,7 +195,24 @@ class WebtoonPageHolder(
     private suspend fun setImage() {
         progressIndicator.setProgress(0)
 
-        val streamFn = page?.stream ?: return
+        val page = page ?: return
+        val hiddenUiState = viewer.activity.viewModel.getHiddenImageUiState(page)
+        when (hiddenUiState.renderState) {
+            ReaderViewModel.HiddenImageRenderState.MINIMIZED -> {
+                showHiddenPlaceholder(page)
+                return
+            }
+            ReaderViewModel.HiddenImageRenderState.SUPPRESSED -> {
+                removeHiddenPlaceholder()
+                frame.recycle()
+                progressContainer.isVisible = false
+                return
+            }
+            ReaderViewModel.HiddenImageRenderState.VISIBLE -> Unit
+        }
+        removeHiddenPlaceholder()
+
+        val streamFn = page.stream ?: return
 
         try {
             val (source, isAnimated) = withIOContext {
@@ -245,6 +270,7 @@ class WebtoonPageHolder(
      * Called when the page has an error.
      */
     private fun setError(error: Throwable?) {
+        removeHiddenPlaceholder()
         progressContainer.isVisible = false
         initErrorLayout(error)
     }
@@ -254,6 +280,7 @@ class WebtoonPageHolder(
      */
     private fun onImageDecoded() {
         progressContainer.isVisible = false
+        removeHiddenPlaceholder()
         removeErrorLayout()
     }
 
@@ -311,6 +338,62 @@ class WebtoonPageHolder(
         errorLayout?.let {
             frame.removeView(it.root)
             errorLayout = null
+        }
+    }
+
+    private fun showHiddenPlaceholder(page: ReaderPage) {
+        progressContainer.isVisible = false
+        removeErrorLayout()
+        frame.recycle()
+        hiddenPlaceholderPage = page
+
+        if (hiddenPlaceholder == null) {
+            hiddenPlaceholder = LinearLayout(context).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding(32, 12, 32, 12)
+                layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
+
+                addView(
+                    TextView(context).apply {
+                        text = context.stringResource(MR.strings.hidden_images_minimized)
+                        layoutParams = LinearLayout.LayoutParams(0, WRAP_CONTENT, 1f)
+                        includeFontPadding = false
+                    },
+                )
+
+                addView(
+                    Button(context).apply {
+                        text = context.stringResource(MR.strings.hidden_images_minimized_show)
+                        includeFontPadding = false
+                        setOnClickListener {
+                            val currentPage = hiddenPlaceholderPage ?: return@setOnClickListener
+                            viewer.activity.viewModel.setHiddenImageExpanded(currentPage, true)
+                            viewer.activity.viewModel.requestHiddenImageRefresh()
+                        }
+                    },
+                )
+
+                setOnLongClickListener {
+                    val currentPage = hiddenPlaceholderPage ?: return@setOnLongClickListener true
+                    viewer.activity.onPageLongTap(currentPage)
+                    true
+                }
+            }
+            frame.addView(hiddenPlaceholder)
+        }
+
+        hiddenPlaceholder?.isVisible = true
+        frame.layoutParams = frame.layoutParams.apply {
+            height = 72.dpToPx
+        }
+    }
+
+    private fun removeHiddenPlaceholder() {
+        hiddenPlaceholder?.isVisible = false
+        hiddenPlaceholderPage = null
+        frame.layoutParams = frame.layoutParams.apply {
+            height = WRAP_CONTENT
         }
     }
 }
