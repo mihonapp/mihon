@@ -160,10 +160,12 @@ class PagerPageHolder(
         val hiddenUiState = viewer.activity.viewModel.getHiddenImageUiState(page)
         when (hiddenUiState.renderState) {
             ReaderViewModel.HiddenImageRenderState.MINIMIZED -> {
+                progressIndicator?.hide()
                 showHiddenPlaceholder()
                 return
             }
             ReaderViewModel.HiddenImageRenderState.SUPPRESSED -> {
+                progressIndicator?.hide()
                 removeHiddenPlaceholder()
                 recycle()
                 return
