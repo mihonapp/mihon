@@ -95,6 +95,11 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
     )
 
     CheckboxItem(
+        label = stringResource(MR.strings.pref_animate_page_swipe),
+        pref = screenModel.preferences.animatePageSwipe(),
+    )
+
+    CheckboxItem(
         label = stringResource(MR.strings.pref_flash_page),
         pref = screenModel.preferences.flashOnPageChange(),
     )
