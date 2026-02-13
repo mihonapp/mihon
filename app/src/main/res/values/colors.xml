@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- E-Ink Theme Colors -->
+    <color name="eink_primary">#000000</color>
+    <color name="eink_onPrimary">#FFFFFF</color>
+    <color name="eink_primaryContainer">#000000</color>
+    <color name="eink_onPrimaryContainer">#FFFFFF</color>
+    <color name="eink_inversePrimary">#FFFFFF</color>
+    <color name="eink_secondary">#000000</color>
+    <color name="eink_onSecondary">#FFFFFF</color>
+    <color name="eink_secondaryContainer">#000000</color>
+    <color name="eink_onSecondaryContainer">#FFFFFF</color>
+    <color name="eink_tertiary">#000000</color>
+    <color name="eink_onTertiary">#FFFFFF</color>
+    <color name="eink_tertiaryContainer">#000000</color>
+    <color name="eink_onTertiaryContainer">#FFFFFF</color>
+    <color name="eink_background">#FFFFFF</color>
+    <color name="eink_onBackground">#000000</color>
+    <color name="eink_surface">#FFFFFF</color>
+    <color name="eink_onSurface">#000000</color>
+    <color name="eink_surfaceVariant">#FFFFFF</color>
+    <color name="eink_onSurfaceVariant">#000000</color>
+    <color name="eink_error">#000000</color>
+    <color name="eink_onError">#FFFFFF</color>
+    <color name="eink_errorContainer">#000000</color>
+    <color name="eink_onErrorContainer">#FFFFFF</color>
+    <color name="eink_outline">#000000</color>
+    <color name="eink_outlineVariant">#000000</color>
+    <color name="eink_scrim">#FFFFFF</color>
+    <color name="eink_inverseSurface">#000000</color>
+    <color name="eink_inverseOnSurface">#FFFFFF</color>
+    <color name="eink_surfaceBright">#FFFFFF</color>
+    <color name="eink_surfaceDim">#FFFFFF</color>
+    <color name="eink_surfaceContainer">#FFFFFF</color>
+    <color name="eink_surfaceContainerHigh">#FFFFFF</color>
+    <color name="eink_surfaceContainerHighest">#FFFFFF</color>
+    <color name="eink_surfaceContainerLow">#FFFFFF</color>
+    <color name="eink_surfaceContainerLowest">#FFFFFF</color>
+</resources>
