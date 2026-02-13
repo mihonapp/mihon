@@ -67,6 +67,9 @@ class PagerConfig(
         readerPreferences.cropBorders()
             .register({ imageCropBorders = it }, { imagePropertyChangedListener?.invoke() })
 
+        readerPreferences.animatePageSwipe()
+            .register({ viewer.pager.animatePageSwipe = it })
+
         readerPreferences.navigateToPan()
             .register({ navigateToPan = it })
 

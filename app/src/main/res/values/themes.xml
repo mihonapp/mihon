@@ -524,6 +524,45 @@
         <item name="colorSurfaceContainerHighest">@color/monochrome_surfaceContainerHighest</item>
     </style>
 
+    <!--== E-Ink Theme ==-->
+    <style name="Theme.Tachiyomi.EInk">
+        <!-- Theme Colors -->
+        <item name="colorPrimary">@color/eink_primary</item>
+        <item name="colorOnPrimary">@color/eink_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/eink_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/eink_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/eink_secondary</item>
+        <item name="colorOnSecondary">@color/eink_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/eink_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/eink_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/eink_tertiary</item>
+        <item name="colorOnTertiary">@color/eink_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/eink_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/eink_onTertiaryContainer</item>
+        <item name="colorError">@color/eink_error</item>
+        <item name="colorOnError">@color/eink_onError</item>
+        <item name="colorErrorContainer">@color/eink_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/eink_onErrorContainer</item>
+        <item name="android:colorBackground">@color/eink_background</item>
+        <item name="colorOnBackground">@color/eink_onBackground</item>
+        <item name="colorSurface">@color/eink_surface</item>
+        <item name="colorOnSurface">@color/eink_onSurface</item>
+        <item name="colorSurfaceVariant">@color/eink_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/eink_onSurfaceVariant</item>
+        <item name="colorOutline">@color/eink_outline</item>
+        <item name="colorOutlineVariant">@color/eink_outlineVariant</item>
+        <item name="colorSurfaceInverse">@color/eink_inverseSurface</item>
+        <item name="colorOnSurfaceInverse">@color/eink_inverseOnSurface</item>
+        <item name="colorPrimaryInverse">@color/eink_inversePrimary</item>
+        <item name="colorSurfaceDim">@color/eink_surfaceDim</item>
+        <item name="colorSurfaceBright">@color/eink_surfaceBright</item>
+        <item name="colorSurfaceContainerLowest">@color/eink_surfaceContainerLowest</item>
+        <item name="colorSurfaceContainerLow">@color/eink_surfaceContainerLow</item>
+        <item name="colorSurfaceContainer">@color/eink_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/eink_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/eink_surfaceContainerHighest</item>
+    </style>
+
     <!--== AMOLED Mode Overlay ==-->
     <style name="ThemeOverlay.Tachiyomi.Amoled" parent="" />
 

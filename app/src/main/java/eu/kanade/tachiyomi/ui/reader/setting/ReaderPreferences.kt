@@ -15,6 +15,8 @@ class ReaderPreferences(
 
     fun pageTransitions() = preferenceStore.getBoolean("pref_enable_transitions_key", true)
 
+    fun animatePageSwipe() = preferenceStore.getBoolean("pref_animate_page_swipe_key", true)
+
     fun flashOnPageChange() = preferenceStore.getBoolean("pref_reader_flash", false)
 
     fun flashDurationMillis() = preferenceStore.getInt("pref_reader_flash_duration", MILLI_CONVERSION)

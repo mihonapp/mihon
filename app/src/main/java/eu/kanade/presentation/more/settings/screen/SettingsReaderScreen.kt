@@ -62,6 +62,10 @@ object SettingsReaderScreen : SearchableSettings {
                 preference = readerPref.pageTransitions(),
                 title = stringResource(MR.strings.pref_page_transitions),
             ),
+            Preference.PreferenceItem.SwitchPreference(
+                preference = readerPref.animatePageSwipe(),
+                title = stringResource(MR.strings.pref_animate_page_swipe),
+            ),
             getDisplayGroup(readerPreferences = readerPref),
             getEInkGroup(readerPreferences = readerPref),
             getReadingGroup(readerPreferences = readerPref),
