@@ -3,31 +3,36 @@ package eu.kanade.tachiyomi.ui.reader.hiddenimage
 import eu.kanade.domain.manga.model.HiddenImage
 
 interface HiddenImageMatcher {
-    fun findMatch(hiddenImages: List<HiddenImage>, signature: HiddenImageSignature): HiddenImage?
+    fun findMatch(hiddenImages: Sequence<HiddenImage>, signature: HiddenImageSignature): HiddenImage?
 }
 
 class DefaultHiddenImageMatcher(
     private val similarityDistanceThreshold: Int = 8,
 ) : HiddenImageMatcher {
 
-    override fun findMatch(hiddenImages: List<HiddenImage>, signature: HiddenImageSignature): HiddenImage? {
-        hiddenImages.firstOrNull { entry ->
-            entry.normalizedImageUrl != null &&
-                signature.normalizedImageUrl != null &&
-                entry.normalizedImageUrl == signature.normalizedImageUrl
-        }?.let { return it }
+    override fun findMatch(hiddenImages: Sequence<HiddenImage>, signature: HiddenImageSignature): HiddenImage? {
+        val signatureSha256 = signature.imageSha256
+        val candidateHash = signature.imageDhash?.toULongOrNull(16)
+        var dhashMatch: HiddenImage? = null
 
-        hiddenImages.firstOrNull { entry ->
-            entry.imageSha256 != null &&
-                signature.imageSha256 != null &&
-                entry.imageSha256 == signature.imageSha256
-        }?.let { return it }
+        for (entry in hiddenImages) {
+            if (
+                signatureSha256 != null &&
+                entry.imageSha256 != null &&
+                entry.imageSha256 == signatureSha256
+            ) {
+                return entry
+            }
 
-        val candidateHash = signature.imageDhash?.toULongOrNull(16) ?: return null
-        return hiddenImages.firstOrNull { entry ->
-            val entryHash = entry.imageDhash?.toULongOrNull(16) ?: return@firstOrNull false
-            hammingDistance(candidateHash, entryHash) <= similarityDistanceThreshold
+            if (dhashMatch == null && candidateHash != null) {
+                val entryHash = entry.imageDhash?.toULongOrNull(16) ?: continue
+                if (hammingDistance(candidateHash, entryHash) <= similarityDistanceThreshold) {
+                    dhashMatch = entry
+                }
+            }
         }
+
+        return dhashMatch
     }
 
     private fun hammingDistance(a: ULong, b: ULong): Int {

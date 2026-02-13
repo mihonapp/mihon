@@ -15,7 +15,7 @@ class RemoveHiddenImageBySignature(
             val current = handler.awaitList {
                 hidden_imagesQueries.getByMangaId(mangaId, ::hiddenImageMapper)
             }
-            val existing = matcher.findMatch(current, signature) ?: return@await
+            val existing = matcher.findMatch(current.asSequence(), signature) ?: return@await
             hidden_imagesQueries.deleteById(existing.id)
         }
     }

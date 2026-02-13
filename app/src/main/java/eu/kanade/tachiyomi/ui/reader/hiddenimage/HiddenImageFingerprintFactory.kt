@@ -11,16 +11,9 @@ import androidx.core.graphics.get
 
 class HiddenImageFingerprintFactory {
 
-    fun create(
-        imageUrl: String?,
-        streamProvider: (() -> InputStream)?,
-    ): HiddenImageSignature {
-        val rawImageUrl = imageUrl?.trim()?.takeIf(String::isNotEmpty)
-        val normalizedImageUrl = normalizeImageUrl(rawImageUrl)
+    fun create(streamProvider: (() -> InputStream)?): HiddenImageSignature {
         if (streamProvider == null) {
             return HiddenImageSignature(
-                imageUrl = rawImageUrl,
-                normalizedImageUrl = normalizedImageUrl,
                 imageSha256 = null,
                 imageDhash = null,
                 previewImage = null,
@@ -34,8 +27,6 @@ class HiddenImageFingerprintFactory {
         val previewImage = bytes?.let(::computePreviewImage)
 
         return HiddenImageSignature(
-            imageUrl = rawImageUrl,
-            normalizedImageUrl = normalizedImageUrl,
             imageSha256 = sha256,
             imageDhash = dHash,
             previewImage = previewImage,
@@ -106,8 +97,4 @@ class HiddenImageFingerprintFactory {
         return (r * 299 + g * 587 + b * 114) / 1000
     }
 
-    private fun normalizeImageUrl(url: String?): String? {
-        val raw = url?.trim()?.takeIf(String::isNotEmpty) ?: return null
-        return raw.substringBefore('#').substringBefore('?')
-    }
 }

@@ -126,6 +126,10 @@ class ReaderViewModel @JvmOverloads constructor(
     private var hiddenImagesForManga: List<HiddenImage> = emptyList()
     private val hiddenImageExpandedKeys = mutableSetOf<String>()
     private val hiddenImageSignatureCache = mutableMapOf<String, HiddenImageSignature>()
+    private val visibleHiddenImageUiState = HiddenImageUiState(
+        renderState = HiddenImageRenderState.VISIBLE,
+        isInHiddenList = false,
+    )
 
     /**
      * The manga loaded in the reader. It can be null when instantiated for a short time.
@@ -813,38 +817,31 @@ class ReaderViewModel @JvmOverloads constructor(
     suspend fun getHiddenImageUiState(page: ReaderPage): HiddenImageUiState {
         val displayMode = readerPreferences.hiddenImagesDisplayMode().get()
         if (displayMode == ReaderPreferences.HiddenImagesDisplayMode.DISABLED || hiddenImagesForManga.isEmpty()) {
-            return HiddenImageUiState(
-                renderState = HiddenImageRenderState.VISIBLE,
-                isInHiddenList = false,
-            )
+            return visibleHiddenImageUiState
         }
 
+        val signature = createSignature(page) ?: return visibleHiddenImageUiState
         val totalPages = page.chapter.pages?.size ?: 0
-        val applicableHiddenImages = hiddenImagesForManga.filter {
-            it.scope.appliesToPageIndex(
-                pageIndex = page.index,
-                totalPages = totalPages,
-                edgeWindowSize = HIDDEN_IMAGES_EDGE_WINDOW_SIZE,
-            )
-        }
-        if (applicableHiddenImages.isEmpty()) { // Could be cleaner; repeated code
-            return HiddenImageUiState(
-                renderState = HiddenImageRenderState.VISIBLE,
-                isInHiddenList = false,
-            )
-        }
-        val signature = createSignature(page)
-        val match = hiddenImageMatcher.findMatch(applicableHiddenImages, signature)
-        val isExpanded = isHiddenImageExpanded(page)
+        hiddenImagesForManga
+            .asSequence()
+            .filter {
+                it.scope.appliesToPageIndex(
+                    pageIndex = page.index,
+                    totalPages = totalPages,
+                    edgeWindowSize = HIDDEN_IMAGES_EDGE_WINDOW_SIZE,
+                )
+            }
+            .let { hiddenImageMatcher.findMatch(it, signature) }
+            ?: return visibleHiddenImageUiState
+
         val renderState = when {
-            match == null -> HiddenImageRenderState.VISIBLE
-            displayMode == ReaderPreferences.HiddenImagesDisplayMode.HIDE && !isExpanded -> HiddenImageRenderState.SUPPRESSED
-            displayMode == ReaderPreferences.HiddenImagesDisplayMode.MINIMIZE && !isExpanded -> HiddenImageRenderState.MINIMIZED
+            displayMode == ReaderPreferences.HiddenImagesDisplayMode.HIDE && !isHiddenImageExpanded(page) -> HiddenImageRenderState.SUPPRESSED
+            displayMode == ReaderPreferences.HiddenImagesDisplayMode.MINIMIZE && !isHiddenImageExpanded(page) -> HiddenImageRenderState.MINIMIZED
             else -> HiddenImageRenderState.VISIBLE
         }
         return HiddenImageUiState(
             renderState = renderState,
-            isInHiddenList = match != null,
+            isInHiddenList = true,
         )
     }
 
@@ -877,7 +874,7 @@ class ReaderViewModel @JvmOverloads constructor(
         }
 
         viewModelScope.launchIO {
-            val signature = createSignature(page)
+            val signature = createSignature(page) ?: return@launchIO
             val pages = page.chapter.pages.orEmpty()
             val scope = inferScope(page.index, pages.size)
 
@@ -893,7 +890,7 @@ class ReaderViewModel @JvmOverloads constructor(
         val manga = manga ?: return
 
         viewModelScope.launchIO {
-            val signature = createSignature(page)
+            val signature = createSignature(page) ?: return@launchIO
             removeHiddenImageBySignature.await(manga.id, signature)
             hiddenImagesForManga = getHiddenImages.await(manga.id)
             hiddenImageExpandedKeys.remove(pageKey(page))
@@ -922,13 +919,15 @@ class ReaderViewModel @JvmOverloads constructor(
         return "$chapterId:${page.index}"
     }
 
-    private suspend fun createSignature(page: ReaderPage): HiddenImageSignature {
+    private suspend fun createSignature(page: ReaderPage): HiddenImageSignature? {
+        if (page.stream == null) return null
         val key = pageKey(page)
         hiddenImageSignatureCache[key]?.let { return it }
 
         val signature = withIOContext {
-            hiddenImageFingerprintFactory.create(page.imageUrl ?: page.url, page.stream)
+            hiddenImageFingerprintFactory.create(page.stream)
         }
+        if (signature.imageSha256 == null && signature.imageDhash == null) return null
         hiddenImageSignatureCache[key] = signature
         return signature
     }

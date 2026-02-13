@@ -45,7 +45,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -271,17 +270,6 @@ class HiddenImagesScreen(
                         Text(text = stringResource(MR.strings.hidden_images_no_preview))
                     }
                 }
-
-                Text(
-                    text = item.imageUrl?.takeIf { it.isNotBlank() }
-                        ?: item.normalizedImageUrl?.takeIf { it.isNotBlank() }
-                        ?: item.imageSha256?.takeIf { it.isNotBlank() }
-                        ?: "#${item.id}",
-                    style = MaterialTheme.typography.bodySmall,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                )
 
                 Row(
                     modifier = Modifier

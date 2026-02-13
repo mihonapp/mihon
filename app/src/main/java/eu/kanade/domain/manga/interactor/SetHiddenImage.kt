@@ -21,7 +21,7 @@ class SetHiddenImage(
                 hidden_imagesQueries.getByMangaId(mangaId, ::hiddenImageMapper)
             }
 
-            val existing = matcher.findMatch(current, signature)
+            val existing = matcher.findMatch(current.asSequence(), signature)
             if (existing != null) {
                 val targetScope = when {
                     existing.scope == HiddenImage.Scope.ANY || scope == HiddenImage.Scope.ANY -> HiddenImage.Scope.ANY
@@ -30,8 +30,6 @@ class SetHiddenImage(
                 }
                 hidden_imagesQueries.update(
                     mangaId = mangaId,
-                    imageUrl = signature.imageUrl,
-                    normalizedImageUrl = signature.normalizedImageUrl,
                     imageSha256 = signature.imageSha256,
                     imageDhash = signature.imageDhash,
                     previewImage = signature.previewImage,
@@ -43,8 +41,6 @@ class SetHiddenImage(
 
             hidden_imagesQueries.insert(
                 mangaId = mangaId,
-                imageUrl = signature.imageUrl,
-                normalizedImageUrl = signature.normalizedImageUrl,
                 imageSha256 = signature.imageSha256,
                 imageDhash = signature.imageDhash,
                 previewImage = signature.previewImage,

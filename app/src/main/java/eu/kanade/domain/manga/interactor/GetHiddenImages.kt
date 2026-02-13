@@ -24,8 +24,6 @@ class GetHiddenImages(
 internal fun hiddenImageMapper(
     id: Long,
     mangaId: Long,
-    imageUrl: String?,
-    normalizedImageUrl: String?,
     imageSha256: String?,
     imageDhash: String?,
     previewImage: ByteArray?,
@@ -35,8 +33,6 @@ internal fun hiddenImageMapper(
     return HiddenImage(
         id = id,
         mangaId = mangaId,
-        imageUrl = imageUrl,
-        normalizedImageUrl = normalizedImageUrl,
         imageSha256 = imageSha256,
         imageDhash = imageDhash,
         previewImage = previewImage,
