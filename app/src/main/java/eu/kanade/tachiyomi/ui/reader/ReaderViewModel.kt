@@ -145,84 +145,92 @@ class ReaderViewModel @JvmOverloads constructor(
 
     private var chapterToDownload: Download? = null
 
-    private val unfilteredChapterList by lazy {
-        val manga = manga!!
-        runBlocking { getChaptersByMangaId.await(manga.id, applyScanlatorFilter = false) }
+    private var unfilteredChapterListCache: List<tachiyomi.domain.chapter.model.Chapter>? = null
+    private suspend fun getUnfilteredChapterList(): List<tachiyomi.domain.chapter.model.Chapter> {
+        if (unfilteredChapterListCache == null) {
+            val manga = manga!!
+            unfilteredChapterListCache = getChaptersByMangaId.await(manga.id, applyScanlatorFilter = false)
+        }
+        return unfilteredChapterListCache!!
     }
 
     /**
      * Chapter list for the active manga. It's retrieved lazily and should be accessed for the first
      * time in a background thread to avoid blocking the UI.
      */
-    private val chapterList by lazy {
-        val manga = manga!!
-        val chapters = runBlocking { getChaptersByMangaId.await(manga.id, applyScanlatorFilter = true) }
+    private var chapterListCache: List<ReaderChapter>? = null
+    private suspend fun getChapterList(): List<ReaderChapter> {
+        if (chapterListCache == null) {
+            val manga = manga!!
+            val chapters = getChaptersByMangaId.await(manga.id, applyScanlatorFilter = true)
 
-        val selectedChapter = chapters.find { it.id == chapterId }
-            ?: error("Requested chapter of id $chapterId not found in chapter list")
+            val selectedChapter = chapters.find { it.id == chapterId }
+                ?: error("Requested chapter of id $chapterId not found in chapter list")
 
-        val chaptersForReader = when {
-            (readerPreferences.skipRead().get() || readerPreferences.skipFiltered().get()) -> {
-                val filteredChapters = chapters.filterNot {
-                    when {
-                        readerPreferences.skipRead().get() && it.read -> true
-                        readerPreferences.skipFiltered().get() -> {
-                            (manga.unreadFilterRaw == Manga.CHAPTER_SHOW_READ && !it.read) ||
-                                (manga.unreadFilterRaw == Manga.CHAPTER_SHOW_UNREAD && it.read) ||
-                                (
-                                    manga.downloadedFilterRaw == Manga.CHAPTER_SHOW_DOWNLOADED &&
-                                        !downloadManager.isChapterDownloaded(
-                                            it.name,
-                                            it.scanlator,
-                                            it.url,
-                                            manga.title,
-                                            manga.source,
-                                        )
-                                    ) ||
-                                (
-                                    manga.downloadedFilterRaw == Manga.CHAPTER_SHOW_NOT_DOWNLOADED &&
-                                        downloadManager.isChapterDownloaded(
-                                            it.name,
-                                            it.scanlator,
-                                            it.url,
-                                            manga.title,
-                                            manga.source,
-                                        )
-                                    ) ||
-                                (manga.bookmarkedFilterRaw == Manga.CHAPTER_SHOW_BOOKMARKED && !it.bookmark) ||
-                                (manga.bookmarkedFilterRaw == Manga.CHAPTER_SHOW_NOT_BOOKMARKED && it.bookmark)
+            val chaptersForReader = when {
+                (readerPreferences.skipRead().get() || readerPreferences.skipFiltered().get()) -> {
+                    val filteredChapters = chapters.filterNot {
+                        when {
+                            readerPreferences.skipRead().get() && it.read -> true
+                            readerPreferences.skipFiltered().get() -> {
+                                (manga.unreadFilterRaw == Manga.CHAPTER_SHOW_READ && !it.read) ||
+                                    (manga.unreadFilterRaw == Manga.CHAPTER_SHOW_UNREAD && it.read) ||
+                                    (
+                                        manga.downloadedFilterRaw == Manga.CHAPTER_SHOW_DOWNLOADED &&
+                                            !downloadManager.isChapterDownloaded(
+                                                it.name,
+                                                it.scanlator,
+                                                it.url,
+                                                manga.title,
+                                                manga.source,
+                                            )
+                                        ) ||
+                                    (
+                                        manga.downloadedFilterRaw == Manga.CHAPTER_SHOW_NOT_DOWNLOADED &&
+                                            downloadManager.isChapterDownloaded(
+                                                it.name,
+                                                it.scanlator,
+                                                it.url,
+                                                manga.title,
+                                                manga.source,
+                                            )
+                                        ) ||
+                                    (manga.bookmarkedFilterRaw == Manga.CHAPTER_SHOW_BOOKMARKED && !it.bookmark) ||
+                                    (manga.bookmarkedFilterRaw == Manga.CHAPTER_SHOW_NOT_BOOKMARKED && it.bookmark)
+                            }
+                            else -> false
                         }
-                        else -> false
+                    }
+
+                    if (filteredChapters.any { it.id == chapterId }) {
+                        filteredChapters
+                    } else {
+                        filteredChapters + listOf(selectedChapter)
                     }
                 }
-
-                if (filteredChapters.any { it.id == chapterId }) {
-                    filteredChapters
-                } else {
-                    filteredChapters + listOf(selectedChapter)
-                }
+                else -> chapters
             }
-            else -> chapters
+
+            chapterListCache = chaptersForReader
+                .sortedWith(getChapterSort(manga, sortDescending = false))
+                .run {
+                    if (readerPreferences.skipDupe().get()) {
+                        removeDuplicates(selectedChapter)
+                    } else {
+                        this
+                    }
+                }
+                .run {
+                    if (basePreferences.downloadedOnly().get()) {
+                        filterDownloaded(manga)
+                    } else {
+                        this
+                    }
+                }
+                .map { it.toDbChapter() }
+                .map(::ReaderChapter)
         }
-
-        chaptersForReader
-            .sortedWith(getChapterSort(manga, sortDescending = false))
-            .run {
-                if (readerPreferences.skipDupe().get()) {
-                    removeDuplicates(selectedChapter)
-                } else {
-                    this
-                }
-            }
-            .run {
-                if (basePreferences.downloadedOnly().get()) {
-                    filterDownloaded(manga)
-                } else {
-                    this
-                }
-            }
-            .map { it.toDbChapter() }
-            .map(::ReaderChapter)
+        return chapterListCache!!
     }
 
     private val incognitoMode: Boolean by lazy { getIncognitoState.await(manga?.source) }
@@ -288,7 +296,7 @@ class ReaderViewModel @JvmOverloads constructor(
                     val source = sourceManager.getOrStub(manga.source)
                     loader = ChapterLoader(context, downloadManager, downloadProvider, manga, source)
 
-                    loadChapter(loader!!, chapterList.first { chapterId == it.chapter.id })
+                    loadChapter(loader!!, getChapterList().first { chapterId == it.chapter.id })
                     Result.success(true)
                 } else {
                     // Unlikely but okay
@@ -313,6 +321,7 @@ class ReaderViewModel @JvmOverloads constructor(
     ): ViewerChapters {
         loader.loadChapter(chapter)
 
+        val chapterList = getChapterList()
         val chapterPos = chapterList.indexOf(chapter)
         val newChapters = ViewerChapters(
             chapter,
@@ -511,11 +520,12 @@ class ReaderViewModel @JvmOverloads constructor(
      * If both conditions are satisfied enqueues chapter for delete
      * @param currentChapter current chapter, which is going to be marked as read.
      */
-    private fun deleteChapterIfNeeded(currentChapter: ReaderChapter) {
+    private suspend fun deleteChapterIfNeeded(currentChapter: ReaderChapter) {
         val removeAfterReadSlots = downloadPreferences.removeAfterReadSlots().get()
         if (removeAfterReadSlots == -1) return
 
         // Determine which chapter should be deleted and enqueue
+        val chapterList = getChapterList()
         val currentChapterPosition = chapterList.indexOf(currentChapter)
         val chapterToDelete = chapterList.getOrNull(currentChapterPosition - removeAfterReadSlots)
 
@@ -566,7 +576,7 @@ class ReaderViewModel @JvmOverloads constructor(
             .contains(LibraryPreferences.MARK_DUPLICATE_CHAPTER_READ_EXISTING)
         if (!markDuplicateAsRead) return
 
-        val duplicateUnreadChapters = unfilteredChapterList
+        val duplicateUnreadChapters = getUnfilteredChapterList()
             .mapNotNull { chapter ->
                 if (
                     !chapter.read &&
@@ -679,7 +689,7 @@ class ReaderViewModel @JvmOverloads constructor(
      */
     fun setMangaReadingMode(readingMode: ReadingMode) {
         val manga = manga ?: return
-        runBlocking(Dispatchers.IO) {
+        viewModelScope.launchIO {
             setMangaViewerFlags.awaitSetReadingMode(manga.id, readingMode.flagValue.toLong())
             val currChapters = state.value.viewerChapters
             if (currChapters != null) {
