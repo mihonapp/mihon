@@ -239,7 +239,7 @@ class UpdatesScreenModel(
         }
     }
 
-    private fun startDownloadingNow(chapterId: Long) {
+    private suspend fun startDownloadingNow(chapterId: Long) {
         downloadManager.startDownloadNow(chapterId)
     }
 

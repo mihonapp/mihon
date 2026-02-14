@@ -5,6 +5,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.asContextElement
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.util.concurrent.RejectedExecutionException
 import kotlin.concurrent.atomics.AtomicInt
@@ -16,6 +18,10 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.coroutines.coroutineContext
 import kotlin.coroutines.resume
+
+// Global mutex to serialize transaction entry and prevent thread pool exhaustion.
+// If you have multiple distinct database files/handlers, this should be a property of AndroidDatabaseHandler.
+private val transactionMutex = Mutex()
 
 /**
  * Returns the transaction dispatcher if we are on a transaction, or the database dispatchers.
@@ -39,20 +45,41 @@ internal suspend fun AndroidDatabaseHandler.getCurrentDatabaseContext(): Corouti
  * The dispatcher used to execute the given [block] will utilize threads from SQLDelight's query executor.
  */
 internal suspend fun <T> AndroidDatabaseHandler.withTransaction(block: suspend () -> T): T {
-    // Use inherited transaction context if available, this allows nested suspending transactions.
-    val transactionContext =
-        coroutineContext[TransactionElement]?.transactionDispatcher ?: createTransactionContext()
-    return withContext(transactionContext) {
-        val transactionElement = coroutineContext[TransactionElement]!!
-        transactionElement.acquire()
-        try {
-            db.transactionWithResult {
-                runBlocking(transactionContext) {
-                    block()
+    val transactionElement = coroutineContext[TransactionElement]
+
+    // If we are already in a transaction, we don't need to lock the Mutex.
+    // We just reuse the existing thread/context.
+    if (transactionElement != null) {
+        return withContext(transactionElement.transactionDispatcher) {
+            transactionElement.acquire()
+            try {
+                db.transactionWithResult {
+                    runBlocking(transactionElement.transactionDispatcher) {
+                        block()
+                    }
                 }
+            } finally {
+                transactionElement.release()
             }
-        } finally {
-            transactionElement.release()
+        }
+    }
+
+    // transaction: Acquire Mutex BEFORE acquiring a thread.
+    // This ensures we only block a real thread when we have exclusive access.
+    return transactionMutex.withLock {
+        val transactionContext = createTransactionContext()
+        withContext(transactionContext) {
+            val element = coroutineContext[TransactionElement]!!
+            element.acquire()
+            try {
+                db.transactionWithResult {
+                    runBlocking(transactionContext) {
+                        block()
+                    }
+                }
+            } finally {
+                element.release()
+            }
         }
     }
 }

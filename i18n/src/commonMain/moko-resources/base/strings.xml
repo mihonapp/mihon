@@ -171,6 +171,7 @@
 
     <!-- Operations -->
     <string name="loading">Loading…</string>
+    <string name="calculating">Calculating…</string>
     <string name="internal_error">InternalError: Check crash logs for further information</string>
 
     <!-- Shortcuts-->
