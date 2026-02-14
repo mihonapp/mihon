@@ -17,6 +17,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add filter options to Updates tab ([@MajorTanya](https://github.com/MajorTanya)) ([#2851](https://github.com/mihonapp/mihon/pull/2851))
 - Add `src:` prefix to search the library by source ID ([@MajorTanya](https://github.com/MajorTanya)) ([#2927](https://github.com/mihonapp/mihon/pull/2927))
   - Add `src:local` as a way to search for Local Source entries ([@MajorTanya](https://github.com/MajorTanya)) ([#2928](https://github.com/mihonapp/mihon/pull/2928))
+- Add automatic reinstall support via Shizuku for extension installation ([@Mohin2295747](https://github.com/Mohin2295747)) ([#2954](https://github.com/mihonapp/mihon/pull/2954))
 
 ### Improved
 - Minimize memory usage by reducing in-memory cover cache size ([@Lolle2000la](https://github.com/Lolle2000la)) ([#2266](https://github.com/mihonapp/mihon/pull/2266))
