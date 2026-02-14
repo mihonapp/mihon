@@ -152,6 +152,7 @@
     <string name="download_notifier_download_paused">下載已暫停</string>
     <string name="pref_library_columns">每列數目</string>
     <string name="pref_page_transitions">翻頁轉場動畫</string>
+    <string name="pref_page_preload_amount">預載後續頁數</string>
     <string name="pref_crop_borders">邊緣裁剪</string>
     <string name="pref_color_filter_mode">濾鏡融合機制</string>
     <string name="filter_mode_overlay">覆蓋</string>
