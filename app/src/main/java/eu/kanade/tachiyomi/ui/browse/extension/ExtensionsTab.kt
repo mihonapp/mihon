@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.browse.extension
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -33,6 +34,10 @@ fun extensionsTab(
 
     val state by extensionsScreenModel.state.collectAsState()
     var privateExtensionToUninstall by remember { mutableStateOf<Extension?>(null) }
+
+    BackHandler(enabled = state.searchQuery != null) {
+        extensionsScreenModel.search(null)
+    }
 
     return TabContent(
         titleRes = MR.strings.label_extensions,
