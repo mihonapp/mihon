@@ -285,7 +285,10 @@ object SettingsDataScreen : SearchableSettings {
 
         val chapterCache = remember { Injekt.get<ChapterCache>() }
         var cacheReadableSizeSema by remember { mutableIntStateOf(0) }
-        val cacheReadableSize = remember(cacheReadableSizeSema) { chapterCache.readableSize }
+        var cacheReadableSize by remember { mutableStateOf(context.stringResource(MR.strings.calculating)) }
+        LaunchedEffect(cacheReadableSizeSema) {
+            cacheReadableSize = chapterCache.getReadableSize()
+        }
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_storage_usage),
