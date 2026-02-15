@@ -1,7 +1,7 @@
 [versions]
 agp_version = "8.13.2"
 lifecycle_version = "2.10.0"
-paging_version = "3.4.0"
+paging_version = "3.4.1"
 interpolator_version = "1.0.0"
 
 [libraries]
