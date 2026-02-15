@@ -2,7 +2,7 @@
 compose-bom = "2026.01.01"
 
 [libraries]
-activity = "androidx.activity:activity-compose:1.12.3"
+activity = "androidx.activity:activity-compose:1.12.4"
 bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 foundation = { module = "androidx.compose.foundation:foundation" }
 animation = { module = "androidx.compose.animation:animation" }
