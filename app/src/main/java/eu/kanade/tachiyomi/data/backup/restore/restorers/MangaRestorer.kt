@@ -57,6 +57,10 @@ class MangaRestorer(
         backupManga: BackupManga,
         backupCategories: List<BackupCategory>,
     ) {
+        require(backupManga.url.isNotBlank()) { "Manga URL cannot be blank" }
+        require(backupManga.title.isNotBlank()) { "Manga title cannot be blank" }
+        require(backupManga.source > 0) { "Manga source must be valid" }
+
         handler.await(inTransaction = true) {
             val dbManga = findExistingManga(backupManga)
             val manga = backupManga.getMangaImpl()
@@ -148,6 +152,7 @@ class MangaRestorer(
             .associateBy { it.url }
 
         val (existingChapters, newChapters) = backupChapters
+            .filter { it.url.isNotBlank() }
             .mapNotNull {
                 val chapter = it.toChapterImpl().copy(mangaId = manga.id)
 
@@ -319,7 +324,7 @@ class MangaRestorer(
     }
 
     private suspend fun restoreHistory(backupHistory: List<BackupHistory>) {
-        val toUpdate = backupHistory.mapNotNull { history ->
+        val toUpdate = backupHistory.filter { it.url.isNotBlank() && it.lastRead >= 0 && it.readDuration >= 0 }.mapNotNull { history ->
             val dbHistory = handler.awaitOneOrNull { historyQueries.getHistoryByChapterUrl(history.url) }
             val item = history.getHistoryImpl()
 
@@ -362,6 +367,7 @@ class MangaRestorer(
         val dbTrackByTrackerId = getTracks.await(manga.id).associateBy { it.trackerId }
 
         val (existingTracks, newTracks) = backupTracks
+            .filter { it.syncId > 0 }
             .mapNotNull {
                 val track = it.getTrackImpl()
                 val dbTrack = dbTrackByTrackerId[track.trackerId]
