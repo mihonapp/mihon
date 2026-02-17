@@ -831,6 +831,9 @@ class ReaderViewModel @JvmOverloads constructor(
 
     fun openPageDialog(page: ReaderPage) {
         mutableState.update { it.copy(dialog = Dialog.PageActions(page)) }
+        if (!canOpenPageStream(page)) {
+            requestPageReload(page)
+        }
     }
 
     suspend fun getHiddenImageUiState(page: ReaderPage): HiddenImageUiState {
@@ -1069,6 +1072,20 @@ class ReaderViewModel @JvmOverloads constructor(
     )
 
     private val HIDDEN_IMAGES_EDGE_WINDOW_SIZE = 1
+
+    private fun canOpenPageStream(page: ReaderPage): Boolean {
+        if (page.status != Page.State.Ready) return false
+        val streamProvider = page.stream ?: return false
+        return runCatching {
+            streamProvider().use { }
+        }.isSuccess
+    }
+
+    private fun requestPageReload(page: ReaderPage) {
+        viewModelScope.launchIO {
+            page.chapter.pageLoader?.loadPage(page)
+        }
+    }
 
     /**
      * Starts the service that updates the last chapter read in sync services. This operation

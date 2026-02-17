@@ -40,6 +40,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import okio.Buffer
 import tachiyomi.i18n.MR
 import tachiyomi.core.common.util.system.ImageUtil
+import eu.kanade.tachiyomi.source.model.Page
 import tachiyomi.presentation.core.components.ActionButton
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
@@ -156,13 +157,20 @@ fun ReaderPageActionsDialog(
 @Composable
 private fun PagePreview(page: ReaderPage, maxPreviewHeight: Dp) {
     val previewState by produceState(initialValue = PreviewState(source = null, isAnimated = false), key1 = page) {
-        value = withContext(Dispatchers.IO) {
-            runCatching {
-                val streamProvider = page.stream ?: return@runCatching PreviewState(source = null, isAnimated = false)
-                val source = streamProvider().use { Buffer().readFrom(it) }
-                val isAnimated = ImageUtil.isAnimatedAndSupported(source)
-                PreviewState(source = source, isAnimated = isAnimated)
-            }.getOrDefault(PreviewState(source = null, isAnimated = false))
+        page.statusFlow.collect { pageState ->
+            if (pageState != Page.State.Ready) {
+                value = PreviewState(source = null, isAnimated = false)
+                return@collect
+            }
+
+            value = withContext(Dispatchers.IO) {
+                runCatching {
+                    val streamProvider = page.stream ?: return@runCatching PreviewState(source = null, isAnimated = false)
+                    val source = streamProvider().use { Buffer().readFrom(it) }
+                    val isAnimated = ImageUtil.isAnimatedAndSupported(source)
+                    PreviewState(source = source, isAnimated = isAnimated)
+                }.getOrDefault(PreviewState(source = null, isAnimated = false))
+            }
         }
     }
 
