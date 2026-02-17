@@ -18,6 +18,7 @@ import androidx.work.WorkInfo
 import androidx.work.WorkQuery
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.toSManga
@@ -37,6 +38,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import logcat.LogPriority
@@ -81,6 +84,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     CoroutineWorker(context, workerParams) {
 
     private val sourceManager: SourceManager = Injekt.get()
+    private val extensionManager: ExtensionManager = Injekt.get()
     private val libraryPreferences: LibraryPreferences = Injekt.get()
     private val downloadManager: DownloadManager = Injekt.get()
     private val coverCache: CoverCache = Injekt.get()
@@ -112,6 +116,8 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         }
 
         setForegroundSafely()
+
+        extensionManager.isInitialized.filter { it }.first()
 
         libraryPreferences.lastUpdatedTimestamp().set(Instant.now().toEpochMilli())
 
