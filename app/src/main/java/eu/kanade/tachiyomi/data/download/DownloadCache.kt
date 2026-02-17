@@ -103,9 +103,7 @@ class DownloadCache(
     init {
         // Attempt to read cache file
         scope.launch {
-            if (renewalJob?.isActive == true) return@launch
             rootDownloadsDirMutex.withLock {
-                if (renewalJob?.isActive == true) return@withLock
                 try {
                     if (diskCacheFile.exists()) {
                         val diskCache = diskCacheFile.inputStream().use {
