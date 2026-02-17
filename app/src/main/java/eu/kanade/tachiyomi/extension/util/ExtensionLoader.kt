@@ -15,8 +15,10 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceFactory
 import eu.kanade.tachiyomi.util.lang.Hash
 import eu.kanade.tachiyomi.util.storage.copyAndSetReadOnlyTo
+import android.webkit.WebView
 import eu.kanade.tachiyomi.util.system.ChildFirstPathClassLoader
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
@@ -116,6 +118,7 @@ internal object ExtensionLoader {
      * @param context The application context.
      */
     suspend fun loadExtensions(context: Context): List<LoadResult> {
+        awaitPackageManagerReady(context)
         val pkgManager = context.packageManager
 
         val installedPkgs = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -396,4 +399,33 @@ internal object ExtensionLoader {
         val packageInfo: PackageInfo,
         val isShared: Boolean,
     )
+
+    private suspend fun awaitPackageManagerReady(context: Context) {
+        val pkgManager = context.packageManager
+        val webviewPkg = try {
+            WebView.getCurrentWebViewPackage()?.packageName ?: "com.google.android.webview"
+        } catch (e: Exception) {
+            "com.google.android.webview"
+        }
+
+        for (i in 1..50) { // Poll for max 10 seconds
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    pkgManager.getPackageInfo(
+                        webviewPkg,
+                        PackageManager.PackageInfoFlags.of(0L),
+                    )
+                } else {
+                    @Suppress("DEPRECATION")
+                    pkgManager.getPackageInfo(webviewPkg, 0)
+                }
+                // Found it, PM is ready
+                return
+            } catch (e: PackageManager.NameNotFoundException) {
+                // Not found yet
+                delay(200)
+            }
+        }
+        logcat(LogPriority.WARN) { "Timed out waiting for PackageManager" }
+    }
 }
