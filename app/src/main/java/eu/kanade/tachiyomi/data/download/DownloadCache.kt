@@ -348,9 +348,8 @@ class DownloadCache(
                 _isInitializing.emit(true)
             }
 
-            // Try to wait until extensions and sources have loaded
-            extensionManager.isInitialized.first { it }
-            sourceManager.isInitialized.first { it }
+            // Wait until sources are loaded.
+            sourceManager.catalogueSources.first { it.isNotEmpty() }
 
             val sources = getSources()
             val sourceMap = sources.associate { provider.getSourceDirName(it).lowercase() to it.id }
