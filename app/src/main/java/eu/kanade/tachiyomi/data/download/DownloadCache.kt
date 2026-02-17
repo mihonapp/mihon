@@ -459,7 +459,7 @@ class DownloadCache(
  * Class to store the files under the root downloads directory.
  */
 @Serializable
-internal class RootDirectory(
+private class RootDirectory(
     @Serializable(with = UniFileAsStringSerializer::class)
     val dir: UniFile?,
     var sourceDirs: Map<Long, SourceDirectory> = mapOf(),
@@ -469,7 +469,7 @@ internal class RootDirectory(
  * Class to store the files under a source directory.
  */
 @Serializable
-internal class SourceDirectory(
+private class SourceDirectory(
     @Serializable(with = UniFileAsStringSerializer::class)
     val dir: UniFile?,
     var mangaDirs: Map<String, MangaDirectory> = mapOf(),
@@ -479,13 +479,13 @@ internal class SourceDirectory(
  * Class to store the files under a manga directory.
  */
 @Serializable
-internal class MangaDirectory(
+private class MangaDirectory(
     @Serializable(with = UniFileAsStringSerializer::class)
     val dir: UniFile?,
     var chapterDirs: MutableSet<String> = mutableSetOf(),
 )
 
-internal object UniFileAsStringSerializer : KSerializer<UniFile?> {
+private object UniFileAsStringSerializer : KSerializer<UniFile?> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("UniFile", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: UniFile?) {
