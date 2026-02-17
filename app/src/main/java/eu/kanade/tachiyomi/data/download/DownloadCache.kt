@@ -356,14 +356,10 @@ class DownloadCache(
             }
 
             // Try to wait until extensions and sources have loaded
-            var sources = emptyList<Source>()
-            withTimeoutOrNull(30.seconds) {
-                extensionManager.isInitialized.first { it }
-                sourceManager.isInitialized.first { it }
+            extensionManager.isInitialized.first { it }
+            sourceManager.isInitialized.first { it }
 
-                sources = getSources()
-            }
-
+            val sources = getSources()
             val sourceMap = sources.associate { provider.getSourceDirName(it).lowercase() to it.id }
 
             rootDownloadsDirMutex.withLock {
