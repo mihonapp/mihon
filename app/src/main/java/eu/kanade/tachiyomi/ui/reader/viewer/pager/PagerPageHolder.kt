@@ -61,7 +61,7 @@ class PagerPageHolder(
     private var errorLayout: ReaderErrorBinding? = null
 
     /**
-     * Placeholder layout to show when an image is hidden minimized.
+     * Placeholder layout to show when an image is hidden.
      */
     private var hiddenPlaceholder: FrameLayout? = null
 
@@ -158,19 +158,10 @@ class PagerPageHolder(
         progressIndicator?.setProgress(0)
 
         val hiddenUiState = viewer.activity.viewModel.getHiddenImageUiState(page)
-        when (hiddenUiState.renderState) {
-            ReaderViewModel.HiddenImageRenderState.MINIMIZED -> {
-                progressIndicator?.hide()
-                showHiddenPlaceholder()
-                return
-            }
-            ReaderViewModel.HiddenImageRenderState.SUPPRESSED -> {
-                progressIndicator?.hide()
-                removeHiddenPlaceholder()
-                recycle()
-                return
-            }
-            ReaderViewModel.HiddenImageRenderState.VISIBLE -> Unit
+        if (hiddenUiState.isHidden) {
+            progressIndicator?.hide()
+            showHiddenPlaceholder()
+            return
         }
 
         val streamFn = page.stream ?: return
@@ -346,7 +337,7 @@ class PagerPageHolder(
                 layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
 
                 val label = TextView(context).apply {
-                    text = context.stringResource(MR.strings.hidden_images_minimized)
+                    text = context.stringResource(MR.strings.hidden_images_hidden)
                     gravity = Gravity.CENTER
                 }
                 addView(
@@ -359,7 +350,7 @@ class PagerPageHolder(
                 )
 
                 val showButton = Button(context).apply {
-                    text = context.stringResource(MR.strings.hidden_images_minimized_show)
+                    text = context.stringResource(MR.strings.hidden_images_show)
                     setOnClickListener {
                         viewer.activity.viewModel.setHiddenImageExpanded(page, true)
                         viewer.activity.viewModel.requestHiddenImageRefresh()

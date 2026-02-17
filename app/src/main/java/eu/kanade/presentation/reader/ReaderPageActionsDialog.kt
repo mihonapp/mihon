@@ -79,7 +79,7 @@ fun ReaderPageActionsDialog(
                         modifier = Modifier.weight(1f),
                         title = if (
                             hiddenUiState.isInHiddenList &&
-                                hiddenUiState.renderState != ReaderViewModel.HiddenImageRenderState.VISIBLE
+                                hiddenUiState.isHidden
                         ) {
                             stringResource(MR.strings.hidden_images_action_show)
                         } else {
@@ -89,7 +89,7 @@ fun ReaderPageActionsDialog(
                         onClick = {
                             onToggleImageVisibility(
                                 hiddenUiState.isInHiddenList &&
-                                    hiddenUiState.renderState != ReaderViewModel.HiddenImageRenderState.VISIBLE,
+                                    hiddenUiState.isHidden,
                             )
                         },
                     )

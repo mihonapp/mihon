@@ -197,18 +197,9 @@ class WebtoonPageHolder(
 
         val page = page ?: return
         val hiddenUiState = viewer.activity.viewModel.getHiddenImageUiState(page)
-        when (hiddenUiState.renderState) {
-            ReaderViewModel.HiddenImageRenderState.MINIMIZED -> {
-                showHiddenPlaceholder(page)
-                return
-            }
-            ReaderViewModel.HiddenImageRenderState.SUPPRESSED -> {
-                removeHiddenPlaceholder()
-                frame.recycle()
-                progressContainer.isVisible = false
-                return
-            }
-            ReaderViewModel.HiddenImageRenderState.VISIBLE -> Unit
+        if (hiddenUiState.isHidden) {
+            showHiddenPlaceholder(page)
+            return
         }
         removeHiddenPlaceholder()
 
@@ -356,7 +347,7 @@ class WebtoonPageHolder(
 
                 addView(
                     TextView(context).apply {
-                        text = context.stringResource(MR.strings.hidden_images_minimized)
+                        text = context.stringResource(MR.strings.hidden_images_hidden)
                         layoutParams = LinearLayout.LayoutParams(0, WRAP_CONTENT, 1f)
                         includeFontPadding = false
                     },
@@ -364,7 +355,7 @@ class WebtoonPageHolder(
 
                 addView(
                     Button(context).apply {
-                        text = context.stringResource(MR.strings.hidden_images_minimized_show)
+                        text = context.stringResource(MR.strings.hidden_images_show)
                         includeFontPadding = false
                         setOnClickListener {
                             val currentPage = hiddenPlaceholderPage ?: return@setOnClickListener

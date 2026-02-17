@@ -127,7 +127,7 @@ class ReaderViewModel @JvmOverloads constructor(
     private val hiddenImageExpandedKeys = mutableSetOf<String>()
     private val hiddenImageSignatureCache = mutableMapOf<String, HiddenImageSignature>()
     private val visibleHiddenImageUiState = HiddenImageUiState(
-        renderState = HiddenImageRenderState.VISIBLE,
+        isHidden = false,
         isInHiddenList = false,
     )
 
@@ -815,8 +815,7 @@ class ReaderViewModel @JvmOverloads constructor(
     }
 
     suspend fun getHiddenImageUiState(page: ReaderPage): HiddenImageUiState {
-        val displayMode = readerPreferences.hiddenImagesDisplayMode().get()
-        if (displayMode == ReaderPreferences.HiddenImagesDisplayMode.DISABLED || hiddenImagesForManga.isEmpty()) {
+        if (hiddenImagesForManga.isEmpty()) {
             return visibleHiddenImageUiState
         }
 
@@ -834,13 +833,8 @@ class ReaderViewModel @JvmOverloads constructor(
             .let { hiddenImageMatcher.findMatch(it, signature) }
             ?: return visibleHiddenImageUiState
 
-        val renderState = when {
-            displayMode == ReaderPreferences.HiddenImagesDisplayMode.HIDE && !isHiddenImageExpanded(page) -> HiddenImageRenderState.SUPPRESSED
-            displayMode == ReaderPreferences.HiddenImagesDisplayMode.MINIMIZE && !isHiddenImageExpanded(page) -> HiddenImageRenderState.MINIMIZED
-            else -> HiddenImageRenderState.VISIBLE
-        }
         return HiddenImageUiState(
-            renderState = renderState,
+            isHidden = !isHiddenImageExpanded(page),
             isInHiddenList = true,
         )
     }
@@ -1050,14 +1044,8 @@ class ReaderViewModel @JvmOverloads constructor(
         class Error(val error: Throwable) : SaveImageResult
     }
 
-    enum class HiddenImageRenderState {
-        VISIBLE,
-        MINIMIZED,
-        SUPPRESSED,
-    }
-
     data class HiddenImageUiState(
-        val renderState: HiddenImageRenderState,
+        val isHidden: Boolean,
         val isInHiddenList: Boolean,
     )
 

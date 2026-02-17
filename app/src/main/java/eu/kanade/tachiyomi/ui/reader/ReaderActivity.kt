@@ -333,7 +333,7 @@ class ReaderActivity : BaseActivity() {
                 val pageDialog = state.dialog as ReaderViewModel.Dialog.PageActions
                 val hiddenUiState by produceState(
                     initialValue = ReaderViewModel.HiddenImageUiState(
-                        renderState = ReaderViewModel.HiddenImageRenderState.VISIBLE,
+                        isHidden = false,
                         isInHiddenList = false,
                     ),
                     key1 = pageDialog.page,
