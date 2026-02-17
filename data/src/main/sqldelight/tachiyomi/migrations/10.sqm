@@ -7,3 +7,19 @@ CREATE INDEX IF NOT EXISTS idx_mangas_categories_category_id ON mangas_categorie
 CREATE INDEX IF NOT EXISTS idx_excluded_scanlators_scanlator ON excluded_scanlators(scanlator);
 CREATE INDEX IF NOT EXISTS idx_manga_sync_manga_id ON manga_sync(manga_id);
 CREATE INDEX IF NOT EXISTS idx_history_last_read ON history(last_read);
+
+-- Hidden images
+
+CREATE TABLE hidden_images(
+    _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    manga_id INTEGER NOT NULL,
+    image_sha256 TEXT,
+    image_dhash TEXT,
+    preview_image BLOB,
+    scope INTEGER NOT NULL,
+    created_at INTEGER NOT NULL,
+    FOREIGN KEY(manga_id) REFERENCES mangas (_id)
+    ON DELETE CASCADE
+);
+
+CREATE INDEX hidden_images_manga_id_index ON hidden_images(manga_id);

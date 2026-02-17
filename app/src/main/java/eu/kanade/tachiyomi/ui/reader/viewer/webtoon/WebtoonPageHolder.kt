@@ -11,8 +11,10 @@ import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import eu.kanade.presentation.util.formattedMessage
+import eu.kanade.tachiyomi.databinding.ReaderPageHiddenPlaceholderWebtoonBinding
 import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
 import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.ui.reader.ReaderViewModel
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
@@ -61,6 +63,8 @@ class WebtoonPageHolder(
      * Error layout to show when the image fails to load.
      */
     private var errorLayout: ReaderErrorBinding? = null
+    private var hiddenPlaceholder: ReaderPageHiddenPlaceholderWebtoonBinding? = null
+    private var hiddenPlaceholderPage: ReaderPage? = null
 
     /**
      * Getter to retrieve the height of the recycler view.
@@ -118,6 +122,7 @@ class WebtoonPageHolder(
         loadJob = null
 
         removeErrorLayout()
+        removeHiddenPlaceholder()
         frame.recycle()
         progressIndicator.setProgress(0)
         progressContainer.isVisible = true
@@ -187,7 +192,15 @@ class WebtoonPageHolder(
     private suspend fun setImage() {
         progressIndicator.setProgress(0)
 
-        val streamFn = page?.stream ?: return
+        val page = page ?: return
+        val hiddenUiState = viewer.activity.viewModel.getHiddenImageUiState(page)
+        if (hiddenUiState.isHidden) {
+            showHiddenPlaceholder(page)
+            return
+        }
+        removeHiddenPlaceholder()
+
+        val streamFn = page.stream ?: return
 
         try {
             val (source, isAnimated) = withIOContext {
@@ -245,6 +258,7 @@ class WebtoonPageHolder(
      * Called when the page has an error.
      */
     private fun setError(error: Throwable?) {
+        removeHiddenPlaceholder()
         progressContainer.isVisible = false
         initErrorLayout(error)
     }
@@ -254,6 +268,7 @@ class WebtoonPageHolder(
      */
     private fun onImageDecoded() {
         progressContainer.isVisible = false
+        removeHiddenPlaceholder()
         removeErrorLayout()
     }
 
@@ -312,5 +327,35 @@ class WebtoonPageHolder(
             frame.removeView(it.root)
             errorLayout = null
         }
+    }
+
+    private fun showHiddenPlaceholder(page: ReaderPage) {
+        progressContainer.isVisible = false
+        removeErrorLayout()
+        frame.recycle()
+        hiddenPlaceholderPage = page
+
+        if (hiddenPlaceholder == null) {
+            hiddenPlaceholder = ReaderPageHiddenPlaceholderWebtoonBinding.inflate(LayoutInflater.from(context), frame, true).apply {
+                message.text = context.stringResource(MR.strings.hidden_images_hidden)
+                actionShow.setOnClickListener {
+                    val currentPage = hiddenPlaceholderPage ?: return@setOnClickListener
+                    viewer.activity.viewModel.setHiddenImageExpanded(currentPage, true)
+                    viewer.activity.viewModel.requestHiddenImageRefresh()
+                }
+                root.setOnLongClickListener {
+                    val currentPage = hiddenPlaceholderPage ?: return@setOnLongClickListener true
+                    viewer.activity.onPageLongTap(currentPage)
+                    true
+                }
+            }
+        }
+
+        hiddenPlaceholder?.root?.isVisible = true
+    }
+
+    private fun removeHiddenPlaceholder() {
+        hiddenPlaceholder?.root?.isVisible = false
+        hiddenPlaceholderPage = null
     }
 }

@@ -89,7 +89,11 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         recycler.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    onScrolled()
+                    val trackedPosition = when {
+                        dy < 0 -> layoutManager.findFirstVisibleItemPosition()
+                        else -> layoutManager.findLastEndVisibleItemPosition()
+                    }
+                    onScrolled(pos = trackedPosition.takeIf { it >= 0 })
 
                     if ((dy > threshold || dy < -threshold) && activity.viewModel.state.value.menuVisible) {
                         activity.hideMenu()

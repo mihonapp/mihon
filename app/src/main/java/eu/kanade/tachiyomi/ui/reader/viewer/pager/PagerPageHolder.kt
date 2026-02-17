@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import androidx.core.view.isVisible
+import eu.kanade.tachiyomi.databinding.ReaderPageHiddenPlaceholderPagerBinding
 import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
 import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.ui.reader.ReaderViewModel
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
@@ -54,6 +56,11 @@ class PagerPageHolder(
      * Error layout to show when the image fails to load.
      */
     private var errorLayout: ReaderErrorBinding? = null
+
+    /**
+     * Placeholder layout to show when an image is hidden.
+     */
+    private var hiddenPlaceholder: ReaderPageHiddenPlaceholderPagerBinding? = null
 
     private val scope = MainScope()
 
@@ -147,6 +154,13 @@ class PagerPageHolder(
     private suspend fun setImage() {
         progressIndicator?.setProgress(0)
 
+        val hiddenUiState = viewer.activity.viewModel.getHiddenImageUiState(page)
+        if (hiddenUiState.isHidden) {
+            progressIndicator?.hide()
+            showHiddenPlaceholder()
+            return
+        }
+
         val streamFn = page.stream ?: return
 
         try {
@@ -176,6 +190,7 @@ class PagerPageHolder(
                     pageBackground = background
                 }
                 removeErrorLayout()
+                removeHiddenPlaceholder()
             }
         } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e)
@@ -272,6 +287,7 @@ class PagerPageHolder(
     }
 
     private fun showErrorLayout(error: Throwable?): ReaderErrorBinding {
+        removeHiddenPlaceholder()
         if (errorLayout == null) {
             errorLayout = ReaderErrorBinding.inflate(LayoutInflater.from(context), this, true)
             errorLayout?.actionRetry?.viewer = viewer
@@ -307,5 +323,29 @@ class PagerPageHolder(
     private fun removeErrorLayout() {
         errorLayout?.root?.isVisible = false
         errorLayout = null
+    }
+
+    private fun showHiddenPlaceholder() {
+        removeErrorLayout()
+        recycle()
+
+        if (hiddenPlaceholder == null) {
+            hiddenPlaceholder = ReaderPageHiddenPlaceholderPagerBinding.inflate(LayoutInflater.from(context), this, true).apply {
+                message.text = context.stringResource(MR.strings.hidden_images_hidden)
+                actionShow.setOnClickListener {
+                    viewer.activity.viewModel.setHiddenImageExpanded(page, true)
+                    viewer.activity.viewModel.requestHiddenImageRefresh()
+                }
+                root.setOnLongClickListener {
+                    viewer.activity.onPageLongTap(page)
+                    true
+                }
+            }
+        }
+        hiddenPlaceholder?.root?.isVisible = true
+    }
+
+    private fun removeHiddenPlaceholder() {
+        hiddenPlaceholder?.root?.isVisible = false
     }
 }

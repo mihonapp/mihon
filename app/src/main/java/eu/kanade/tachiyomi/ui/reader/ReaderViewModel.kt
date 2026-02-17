@@ -10,8 +10,13 @@ import androidx.lifecycle.viewModelScope
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.manga.interactor.SetMangaViewerFlags
+import eu.kanade.domain.manga.interactor.GetHiddenImages
+import eu.kanade.domain.manga.interactor.RemoveHiddenImageBySignature
+import eu.kanade.domain.manga.interactor.SetHiddenImage
 import eu.kanade.domain.manga.model.readerOrientation
 import eu.kanade.domain.manga.model.readingMode
+import eu.kanade.domain.manga.model.HiddenImage
+import eu.kanade.domain.manga.model.appliesToPageIndex
 import eu.kanade.domain.source.interactor.GetIncognitoState
 import eu.kanade.domain.track.interactor.TrackChapter
 import eu.kanade.domain.track.service.TrackPreferences
@@ -34,6 +39,10 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
+import eu.kanade.tachiyomi.ui.reader.hiddenimage.DefaultHiddenImageMatcher
+import eu.kanade.tachiyomi.ui.reader.hiddenimage.HiddenImageFingerprintFactory
+import eu.kanade.tachiyomi.ui.reader.hiddenimage.HiddenImageMatcher
+import eu.kanade.tachiyomi.ui.reader.hiddenimage.HiddenImageSignature
 import eu.kanade.tachiyomi.util.chapter.filterDownloaded
 import eu.kanade.tachiyomi.util.chapter.removeDuplicates
 import eu.kanade.tachiyomi.util.editCover
@@ -48,6 +57,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -99,6 +110,9 @@ class ReaderViewModel @JvmOverloads constructor(
     private val upsertHistory: UpsertHistory = Injekt.get(),
     private val updateChapter: UpdateChapter = Injekt.get(),
     private val setMangaViewerFlags: SetMangaViewerFlags = Injekt.get(),
+    private val getHiddenImages: GetHiddenImages = Injekt.get(),
+    private val setHiddenImage: SetHiddenImage = Injekt.get(),
+    private val removeHiddenImageBySignature: RemoveHiddenImageBySignature = Injekt.get(),
     private val getIncognitoState: GetIncognitoState = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
 ) : ViewModel() {
@@ -106,8 +120,18 @@ class ReaderViewModel @JvmOverloads constructor(
     private val mutableState = MutableStateFlow(State())
     val state = mutableState.asStateFlow()
 
-    private val eventChannel = Channel<Event>()
+    private val eventChannel = Channel<Event>(Channel.BUFFERED)
     val eventFlow = eventChannel.receiveAsFlow()
+
+    private val hiddenImageFingerprintFactory = HiddenImageFingerprintFactory()
+    private val hiddenImageMatcher: HiddenImageMatcher = DefaultHiddenImageMatcher()
+    private var hiddenImagesForManga: List<HiddenImage> = emptyList()
+    private val hiddenImageExpandedKeys = mutableSetOf<String>()
+    private val hiddenImageSignatureCache = mutableMapOf<String, HiddenImageSignature>()
+    private val visibleHiddenImageUiState = HiddenImageUiState(
+        isHidden = false,
+        isInHiddenList = false,
+    )
 
     /**
      * The manga loaded in the reader. It can be null when instantiated for a short time.
@@ -250,6 +274,25 @@ class ReaderViewModel @JvmOverloads constructor(
                     currentChapter.requestedPage = currentChapter.chapter.last_page_read
                 }
                 chapterId = currentChapter.chapter.id!!
+            }
+            .launchIn(viewModelScope)
+
+        state.map { it.manga?.id }
+            .distinctUntilChanged()
+            .onEach {
+                hiddenImageExpandedKeys.clear()
+                hiddenImageSignatureCache.clear()
+            }
+            .flatMapLatest { mangaId ->
+                if (mangaId != null) {
+                    getHiddenImages.subscribe(mangaId)
+                } else {
+                    flowOf(emptyList())
+                }
+            }
+            .onEach {
+                hiddenImagesForManga = it
+                eventChannel.trySend(Event.RefreshHiddenImageState)
             }
             .launchIn(viewModelScope)
     }
@@ -788,6 +831,87 @@ class ReaderViewModel @JvmOverloads constructor(
 
     fun openPageDialog(page: ReaderPage) {
         mutableState.update { it.copy(dialog = Dialog.PageActions(page)) }
+        if (!canOpenPageStream(page)) {
+            requestPageReload(page)
+        }
+    }
+
+    suspend fun getHiddenImageUiState(page: ReaderPage): HiddenImageUiState {
+        if (hiddenImagesForManga.isEmpty()) {
+            return visibleHiddenImageUiState
+        }
+
+        val signature = createSignature(page) ?: return visibleHiddenImageUiState
+        val totalPages = page.chapter.pages?.size ?: 0
+        hiddenImagesForManga
+            .asSequence()
+            .filter {
+                it.scope.appliesToPageIndex(
+                    pageIndex = page.index,
+                    totalPages = totalPages,
+                    edgeWindowSize = HIDDEN_IMAGES_EDGE_WINDOW_SIZE,
+                )
+            }
+            .let { hiddenImageMatcher.findMatch(it, signature) }
+            ?: return visibleHiddenImageUiState
+
+        return HiddenImageUiState(
+            isHidden = !isHiddenImageExpanded(page),
+            isInHiddenList = true,
+        )
+    }
+
+    fun isHiddenImageExpanded(page: ReaderPage): Boolean {
+        return hiddenImageExpandedKeys.contains(pageKey(page))
+    }
+
+    fun setHiddenImageExpanded(page: ReaderPage, expanded: Boolean) {
+        if (expanded) {
+            hiddenImageExpandedKeys.add(pageKey(page))
+        } else {
+            hiddenImageExpandedKeys.remove(pageKey(page))
+        }
+    }
+
+    fun requestHiddenImageRefresh() {
+        viewModelScope.launchIO {
+            eventChannel.send(Event.RefreshHiddenImageState)
+        }
+    }
+
+    fun setImageVisibility(showImage: Boolean) {
+        val page = (state.value.dialog as? Dialog.PageActions)?.page ?: return
+        val manga = manga ?: return
+
+        if (showImage) {
+            setHiddenImageExpanded(page, true)
+            requestHiddenImageRefresh()
+            return
+        }
+
+        viewModelScope.launchIO {
+            val signature = createSignature(page) ?: return@launchIO
+            val pages = page.chapter.pages.orEmpty()
+            val scope = inferScope(page.index, pages.size)
+
+            setHiddenImage.await(manga.id, signature, scope)
+            hiddenImagesForManga = getHiddenImages.await(manga.id)
+            hiddenImageExpandedKeys.remove(pageKey(page))
+            eventChannel.send(Event.RefreshHiddenImageState)
+        }
+    }
+
+    fun removeImageFromHidden() {
+        val page = (state.value.dialog as? Dialog.PageActions)?.page ?: return
+        val manga = manga ?: return
+
+        viewModelScope.launchIO {
+            val signature = createSignature(page) ?: return@launchIO
+            removeHiddenImageBySignature.await(manga.id, signature)
+            hiddenImagesForManga = getHiddenImages.await(manga.id)
+            hiddenImageExpandedKeys.remove(pageKey(page))
+            eventChannel.send(Event.RefreshHiddenImageState)
+        }
     }
 
     fun openSettingsDialog() {
@@ -796,6 +920,32 @@ class ReaderViewModel @JvmOverloads constructor(
 
     fun closeDialog() {
         mutableState.update { it.copy(dialog = null) }
+    }
+
+    private fun inferScope(pageIndex: Int, totalPages: Int): HiddenImage.Scope {
+        return when {
+            pageIndex < HIDDEN_IMAGES_EDGE_WINDOW_SIZE -> HiddenImage.Scope.START
+            totalPages > 0 && pageIndex >= totalPages - HIDDEN_IMAGES_EDGE_WINDOW_SIZE -> HiddenImage.Scope.END
+            else -> HiddenImage.Scope.ANY
+        }
+    }
+
+    private fun pageKey(page: ReaderPage): String {
+        val chapterId = page.chapter.chapter.id ?: -1L
+        return "$chapterId:${page.index}"
+    }
+
+    private suspend fun createSignature(page: ReaderPage): HiddenImageSignature? {
+        if (page.stream == null) return null
+        val key = pageKey(page)
+        hiddenImageSignatureCache[key]?.let { return it }
+
+        val signature = withIOContext {
+            hiddenImageFingerprintFactory.create(page.stream)
+        }
+        if (signature.imageSha256 == null && signature.imageDhash == null) return null
+        hiddenImageSignatureCache[key] = signature
+        return signature
     }
 
     fun setBrightnessOverlayValue(value: Int) {
@@ -916,6 +1066,27 @@ class ReaderViewModel @JvmOverloads constructor(
         class Error(val error: Throwable) : SaveImageResult
     }
 
+    data class HiddenImageUiState(
+        val isHidden: Boolean,
+        val isInHiddenList: Boolean,
+    )
+
+    private val HIDDEN_IMAGES_EDGE_WINDOW_SIZE = 1
+
+    private fun canOpenPageStream(page: ReaderPage): Boolean {
+        if (page.status != Page.State.Ready) return false
+        val streamProvider = page.stream ?: return false
+        return runCatching {
+            streamProvider().use { }
+        }.isSuccess
+    }
+
+    private fun requestPageReload(page: ReaderPage) {
+        viewModelScope.launchIO {
+            page.chapter.pageLoader?.loadPage(page)
+        }
+    }
+
     /**
      * Starts the service that updates the last chapter read in sync services. This operation
      * will run in a background thread and errors are ignored.
@@ -988,6 +1159,7 @@ class ReaderViewModel @JvmOverloads constructor(
 
     sealed interface Event {
         data object ReloadViewerChapters : Event
+        data object RefreshHiddenImageState : Event
         data object PageChanged : Event
         data class SetOrientation(val orientation: Int) : Event
         data class SetCoverResult(val result: SetAsCoverResult) : Event

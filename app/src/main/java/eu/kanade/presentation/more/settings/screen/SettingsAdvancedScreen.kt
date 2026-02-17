@@ -64,6 +64,7 @@ import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.library.service.LibraryPreferences
+import eu.kanade.domain.manga.interactor.ClearHiddenImages
 import tachiyomi.domain.manga.interactor.ResetViewerFlags
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
@@ -176,6 +177,35 @@ object SettingsAdvancedScreen : SearchableSettings {
     private fun getDataGroup(): Preference.PreferenceGroup {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
+        val scope = rememberCoroutineScope()
+        val clearHiddenImages = remember { Injekt.get<ClearHiddenImages>() }
+        var showClearHiddenImagesDialog by remember { mutableStateOf(false) }
+
+        if (showClearHiddenImagesDialog) {
+            AlertDialog(
+                onDismissRequest = { showClearHiddenImagesDialog = false },
+                title = { Text(text = stringResource(MR.strings.hidden_images_clear_all)) },
+                text = { Text(text = stringResource(MR.strings.hidden_images_clear_all_confirm)) },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showClearHiddenImagesDialog = false
+                            scope.launchNonCancellable {
+                                clearHiddenImages.await()
+                                withUIContext { context.toast(MR.strings.hidden_images_cleared) }
+                            }
+                        },
+                    ) {
+                        Text(text = stringResource(MR.strings.action_delete))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showClearHiddenImagesDialog = false }) {
+                        Text(text = stringResource(MR.strings.action_cancel))
+                    }
+                },
+            )
+        }
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.label_data),
@@ -192,6 +222,11 @@ object SettingsAdvancedScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_clear_database),
                     subtitle = stringResource(MR.strings.pref_clear_database_summary),
                     onClick = { navigator.push(ClearDatabaseScreen()) },
+                ),
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.hidden_images_clear_all),
+                    subtitle = stringResource(MR.strings.hidden_images_clear_all_summary),
+                    onClick = { showClearHiddenImagesDialog = true },
                 ),
             ),
         )
