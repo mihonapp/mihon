@@ -46,6 +46,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import cafe.adriel.voyager.core.model.StateScreenModel
@@ -64,7 +65,9 @@ import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.util.Screen
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.collectLatest
+import okio.Buffer
 import tachiyomi.core.common.util.lang.launchIO
+import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.TextButton
@@ -74,6 +77,7 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Color
+import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 
 class HiddenImagesScreen(
     private val mangaId: Long,
@@ -299,9 +303,14 @@ class HiddenImagesScreen(
         imageBytes: ByteArray,
         onDismissRequest: () -> Unit,
     ) {
-        val bitmap = remember(imageBytes) {
-            BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        val previewData = remember(imageBytes) {
+            val source = Buffer().write(imageBytes)
+            HiddenImagePreviewData(
+                source = source,
+                isAnimated = ImageUtil.isAnimatedAndSupported(source),
+            )
         }
+        val previewToken = remember(imageBytes) { imageBytes.contentHashCode() }
 
         Dialog(
             onDismissRequest = onDismissRequest,
@@ -337,23 +346,39 @@ class HiddenImagesScreen(
                         .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.42f))
                         .clickableNoIndication(onClick = onDismissRequest),
                 ) {
-                    if (bitmap != null) {
-                        Image(
-                            bitmap = bitmap.asImageBitmap(),
-                            contentDescription = null,
-                            contentScale = ContentScale.Fit,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(
-                                    top = contentPadding.calculateTopPadding(),
-                                    bottom = contentPadding.calculateBottomPadding(),
-                                ),
-                        )
-                    }
+                    AndroidView(
+                        factory = { context ->
+                            ReaderPageImageView(context).apply {
+                                onViewClicked = onDismissRequest
+                                tag = null
+                            }
+                        },
+                        update = { view ->
+                            if (view.tag != previewToken) {
+                                view.setImage(
+                                    previewData.source,
+                                    previewData.isAnimated,
+                                    ReaderPageImageView.Config(zoomDuration = 500),
+                                )
+                                view.tag = previewToken
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(
+                                top = contentPadding.calculateTopPadding(),
+                                bottom = contentPadding.calculateBottomPadding(),
+                            ),
+                    )
                 }
             }
         }
     }
+
+    private data class HiddenImagePreviewData(
+        val source: Buffer,
+        val isAnimated: Boolean,
+    )
 
     @Composable
     private fun ActionsPill(content: @Composable () -> Unit) {

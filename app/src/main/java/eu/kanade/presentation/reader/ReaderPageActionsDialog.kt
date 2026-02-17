@@ -1,18 +1,14 @@
 package eu.kanade.presentation.reader
 
-import android.graphics.BitmapFactory
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContentCopy
@@ -34,14 +30,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import eu.kanade.presentation.components.AdaptiveSheet
 import eu.kanade.tachiyomi.ui.reader.ReaderViewModel
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
+import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
+import okio.Buffer
 import tachiyomi.i18n.MR
+import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.presentation.core.components.ActionButton
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
@@ -157,22 +155,14 @@ fun ReaderPageActionsDialog(
 
 @Composable
 private fun PagePreview(page: ReaderPage, maxPreviewHeight: Dp) {
-    val previewState by produceState(initialValue = PreviewState(bitmap = null, aspectRatio = 1f), key1 = page) {
+    val previewState by produceState(initialValue = PreviewState(source = null, isAnimated = false), key1 = page) {
         value = withContext(Dispatchers.IO) {
             runCatching {
-                val streamBytes = page.stream?.invoke()?.use { it.readBytes() }
-                val bitmap = streamBytes?.let(::decodeSampledBitmap)
-                    ?: decodeBitmapFromLocalPath(page.imageUrl ?: page.url)
-
-                PreviewState(
-                    bitmap = bitmap,
-                    aspectRatio = if (bitmap != null && bitmap.height != 0) {
-                        (bitmap.width.toFloat() / bitmap.height.toFloat()).coerceIn(0.3f, 2.2f)
-                    } else {
-                        1f
-                    },
-                )
-            }.getOrDefault(PreviewState(bitmap = null, aspectRatio = 1f))
+                val streamProvider = page.stream ?: return@runCatching PreviewState(source = null, isAnimated = false)
+                val source = streamProvider().use { Buffer().readFrom(it) }
+                val isAnimated = ImageUtil.isAnimatedAndSupported(source)
+                PreviewState(source = source, isAnimated = isAnimated)
+            }.getOrDefault(PreviewState(source = null, isAnimated = false))
         }
     }
 
@@ -182,24 +172,35 @@ private fun PagePreview(page: ReaderPage, maxPreviewHeight: Dp) {
             .clip(RoundedCornerShape(MaterialTheme.padding.small))
             .padding(horizontal = 12.dp),
     ) {
-        BoxWithConstraints(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = 96.dp, max = maxPreviewHeight.coerceAtLeast(120.dp))
                 .padding(12.dp),
         ) {
-            val bitmap = previewState.bitmap
-            if (bitmap != null) {
+            val source = previewState.source
+            if (source != null) {
                 Box(modifier = Modifier.fillMaxWidth()) {
-                    Image(
-                        bitmap = bitmap.asImageBitmap(),
-                        contentDescription = null,
-                        contentScale = ContentScale.Fit,
+                    AndroidView(
+                        factory = { context ->
+                            ReaderPageImageView(context).apply {
+                                tag = null
+                            }
+                        },
+                        update = { view ->
+                            if (view.tag !== source) {
+                                view.setImage(
+                                    source,
+                                    previewState.isAnimated,
+                                    ReaderPageImageView.Config(zoomDuration = 0),
+                                )
+                                view.tag = source
+                            }
+                        },
                         modifier = Modifier
                             .align(Alignment.Center)
                             .fillMaxHeight()
-                            .aspectRatio(previewState.aspectRatio)
-                            .widthIn(max = this@BoxWithConstraints.maxWidth),
+                            .fillMaxWidth(),
                     )
                 }
             } else {
@@ -213,36 +214,9 @@ private fun PagePreview(page: ReaderPage, maxPreviewHeight: Dp) {
 }
 
 private data class PreviewState(
-    val bitmap: android.graphics.Bitmap?,
-    val aspectRatio: Float,
+    val source: okio.BufferedSource?,
+    val isAnimated: Boolean,
 )
-
-private fun decodeSampledBitmap(bytes: ByteArray): android.graphics.Bitmap? {
-    val boundsOptions = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-    BitmapFactory.decodeByteArray(bytes, 0, bytes.size, boundsOptions)
-
-    val maxDimension = maxOf(boundsOptions.outWidth, boundsOptions.outHeight)
-    val targetMaxDimension = 1400
-    var inSampleSize = 1
-    while (maxDimension / inSampleSize > targetMaxDimension) {
-        inSampleSize *= 2
-    }
-
-    return BitmapFactory.decodeByteArray(
-        bytes,
-        0,
-        bytes.size,
-        BitmapFactory.Options().apply {
-            this.inSampleSize = inSampleSize
-        },
-    )
-}
-
-private fun decodeBitmapFromLocalPath(path: String?): android.graphics.Bitmap? {
-    val rawPath = path?.trim()?.takeIf { it.isNotEmpty() } ?: return null
-    val filePath = rawPath.removePrefix("file://")
-    return BitmapFactory.decodeFile(filePath)
-}
 
 @Composable
 private fun SetCoverDialog(
