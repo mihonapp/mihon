@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
+import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
 import kotlinx.coroutines.CancellationException
@@ -70,6 +71,8 @@ class DownloadCache(
 ) {
 
     private val scope = CoroutineScope(Dispatchers.IO)
+
+    private val app: App by lazy { context.applicationContext as App }
 
     private val _changes: Channel<Unit> = Channel(Channel.UNLIMITED)
     val changes = _changes.receiveAsFlow()
@@ -348,8 +351,8 @@ class DownloadCache(
                 _isInitializing.emit(true)
             }
 
-            // Wait until sources are loaded.
-            sourceManager.catalogueSources.first { it.isNotEmpty() }
+            // Wait until app is ready
+            app.isReady.first { it }
 
             val sources = getSources()
             val sourceMap = sources.associate { provider.getSourceDirName(it).lowercase() to it.id }
