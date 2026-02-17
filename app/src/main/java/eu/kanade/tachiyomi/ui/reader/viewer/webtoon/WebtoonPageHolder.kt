@@ -1,20 +1,17 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
 import android.content.res.Resources
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.Button
 import android.widget.FrameLayout
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import eu.kanade.presentation.util.formattedMessage
+import eu.kanade.tachiyomi.databinding.ReaderPageHiddenPlaceholderWebtoonBinding
 import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.ReaderViewModel
@@ -66,7 +63,7 @@ class WebtoonPageHolder(
      * Error layout to show when the image fails to load.
      */
     private var errorLayout: ReaderErrorBinding? = null
-    private var hiddenPlaceholder: LinearLayout? = null
+    private var hiddenPlaceholder: ReaderPageHiddenPlaceholderWebtoonBinding? = null
     private var hiddenPlaceholderPage: ReaderPage? = null
 
     /**
@@ -339,52 +336,26 @@ class WebtoonPageHolder(
         hiddenPlaceholderPage = page
 
         if (hiddenPlaceholder == null) {
-            hiddenPlaceholder = LinearLayout(context).apply {
-                orientation = LinearLayout.HORIZONTAL
-                gravity = Gravity.CENTER_VERTICAL
-                setPadding(32, 12, 32, 12)
-                layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
-
-                addView(
-                    TextView(context).apply {
-                        text = context.stringResource(MR.strings.hidden_images_hidden)
-                        layoutParams = LinearLayout.LayoutParams(0, WRAP_CONTENT, 1f)
-                        includeFontPadding = false
-                    },
-                )
-
-                addView(
-                    Button(context).apply {
-                        text = context.stringResource(MR.strings.hidden_images_show)
-                        includeFontPadding = false
-                        setOnClickListener {
-                            val currentPage = hiddenPlaceholderPage ?: return@setOnClickListener
-                            viewer.activity.viewModel.setHiddenImageExpanded(currentPage, true)
-                            viewer.activity.viewModel.requestHiddenImageRefresh()
-                        }
-                    },
-                )
-
-                setOnLongClickListener {
+            hiddenPlaceholder = ReaderPageHiddenPlaceholderWebtoonBinding.inflate(LayoutInflater.from(context), frame, true).apply {
+                message.text = context.stringResource(MR.strings.hidden_images_hidden)
+                actionShow.setOnClickListener {
+                    val currentPage = hiddenPlaceholderPage ?: return@setOnClickListener
+                    viewer.activity.viewModel.setHiddenImageExpanded(currentPage, true)
+                    viewer.activity.viewModel.requestHiddenImageRefresh()
+                }
+                root.setOnLongClickListener {
                     val currentPage = hiddenPlaceholderPage ?: return@setOnLongClickListener true
                     viewer.activity.onPageLongTap(currentPage)
                     true
                 }
             }
-            frame.addView(hiddenPlaceholder)
         }
 
-        hiddenPlaceholder?.isVisible = true
-        frame.layoutParams = frame.layoutParams.apply {
-            height = 72.dpToPx
-        }
+        hiddenPlaceholder?.root?.isVisible = true
     }
 
     private fun removeHiddenPlaceholder() {
-        hiddenPlaceholder?.isVisible = false
+        hiddenPlaceholder?.root?.isVisible = false
         hiddenPlaceholderPage = null
-        frame.layoutParams = frame.layoutParams.apply {
-            height = WRAP_CONTENT
-        }
     }
 }

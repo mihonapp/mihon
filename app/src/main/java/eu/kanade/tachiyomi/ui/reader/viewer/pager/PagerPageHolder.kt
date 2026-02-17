@@ -2,12 +2,9 @@ package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.view.Gravity
 import android.view.LayoutInflater
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.TextView
 import androidx.core.view.isVisible
+import eu.kanade.tachiyomi.databinding.ReaderPageHiddenPlaceholderPagerBinding
 import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
 import eu.kanade.tachiyomi.source.model.Page
@@ -63,7 +60,7 @@ class PagerPageHolder(
     /**
      * Placeholder layout to show when an image is hidden.
      */
-    private var hiddenPlaceholder: FrameLayout? = null
+    private var hiddenPlaceholder: ReaderPageHiddenPlaceholderPagerBinding? = null
 
     private val scope = MainScope()
 
@@ -333,51 +330,22 @@ class PagerPageHolder(
         recycle()
 
         if (hiddenPlaceholder == null) {
-            hiddenPlaceholder = FrameLayout(context).apply {
-                layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-
-                val label = TextView(context).apply {
-                    text = context.stringResource(MR.strings.hidden_images_hidden)
-                    gravity = Gravity.CENTER
+            hiddenPlaceholder = ReaderPageHiddenPlaceholderPagerBinding.inflate(LayoutInflater.from(context), this, true).apply {
+                message.text = context.stringResource(MR.strings.hidden_images_hidden)
+                actionShow.setOnClickListener {
+                    viewer.activity.viewModel.setHiddenImageExpanded(page, true)
+                    viewer.activity.viewModel.requestHiddenImageRefresh()
                 }
-                addView(
-                    label,
-                    LayoutParams(
-                        LayoutParams.WRAP_CONTENT,
-                        LayoutParams.WRAP_CONTENT,
-                        Gravity.CENTER,
-                    ),
-                )
-
-                val showButton = Button(context).apply {
-                    text = context.stringResource(MR.strings.hidden_images_show)
-                    setOnClickListener {
-                        viewer.activity.viewModel.setHiddenImageExpanded(page, true)
-                        viewer.activity.viewModel.requestHiddenImageRefresh()
-                    }
-                }
-                addView(
-                    showButton,
-                    LayoutParams(
-                        LayoutParams.WRAP_CONTENT,
-                        LayoutParams.WRAP_CONTENT,
-                        Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,
-                    ).apply {
-                        bottomMargin = 24
-                    },
-                )
-
-                setOnLongClickListener {
+                root.setOnLongClickListener {
                     viewer.activity.onPageLongTap(page)
                     true
                 }
             }
-            addView(hiddenPlaceholder)
         }
-        hiddenPlaceholder?.isVisible = true
+        hiddenPlaceholder?.root?.isVisible = true
     }
 
     private fun removeHiddenPlaceholder() {
-        hiddenPlaceholder?.isVisible = false
+        hiddenPlaceholder?.root?.isVisible = false
     }
 }
