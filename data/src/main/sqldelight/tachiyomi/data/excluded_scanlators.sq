@@ -6,6 +6,7 @@ CREATE TABLE excluded_scanlators(
 );
 
 CREATE INDEX excluded_scanlators_manga_id_index ON excluded_scanlators(manga_id);
+CREATE INDEX idx_excluded_scanlators_scanlator ON excluded_scanlators(scanlator);
 
 insert:
 INSERT INTO excluded_scanlators(manga_id, scanlator)

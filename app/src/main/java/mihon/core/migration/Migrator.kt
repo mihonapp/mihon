@@ -35,7 +35,7 @@ object Migrator {
         result = null
     }
 
-    fun awaitAndRelease(): Boolean = runBlocking {
-        await().also { release() }
+    suspend fun awaitAndRelease(): Boolean {
+        return await().also { release() }
     }
 }

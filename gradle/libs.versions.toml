@@ -1,7 +1,7 @@
 [versions]
 aboutlib_version = "13.2.1"
 leakcanary = "2.14"
-moko = "0.25.2"
+moko = "0.26.0"
 okhttp_version = "5.3.2"
 shizuku_version = "13.1.5"
 sqldelight = "2.2.1"
@@ -9,9 +9,9 @@ sqlite = "2.6.2"
 voyager = "1.1.0-beta03"
 spotless = "8.2.1"
 ktlint-core = "1.8.0"
-firebase-bom = "34.8.0"
+firebase-bom = "34.9.0"
 markdown = "0.39.2"
-junit = "6.0.2"
+junit = "6.0.3"
 materialKolor = "5.0.0-alpha06"
 
 [libraries]
