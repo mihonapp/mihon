@@ -86,6 +86,7 @@ class DownloadCache(
      * The last time the cache was refreshed.
      */
     private var lastRenew = 0L
+    private val renewalMutex = Mutex()
     private var renewalJob: Job? = null
 
     private val _isInitializing = MutableStateFlow(false)
@@ -343,6 +344,10 @@ class DownloadCache(
             return
         }
 
+        if (!renewalMutex.tryLock()) {
+            return
+        }
+
         renewalJob = scope.launchIO {
             if (lastRenew == 0L) {
                 _isInitializing.emit(true)
@@ -404,11 +409,15 @@ class DownloadCache(
             _isInitializing.emit(false)
         }.also {
             it.invokeOnCompletion(onCancelling = true) { exception ->
-                if (exception != null && exception !is CancellationException) {
-                    logcat(LogPriority.ERROR, exception) { "DownloadCache: failed to create cache" }
+                try {
+                    if (exception != null && exception !is CancellationException) {
+                        logcat(LogPriority.ERROR, exception) { "DownloadCache: failed to create cache" }
+                    }
+                    lastRenew = System.currentTimeMillis()
+                    notifyChanges()
+                } finally {
+                    renewalMutex.unlock()
                 }
-                lastRenew = System.currentTimeMillis()
-                notifyChanges()
             }
         }
 
