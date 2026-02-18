@@ -115,6 +115,12 @@ class DownloadCache(
                     diskCacheFile.delete()
                 }
             }
+
+            sourceManager.catalogueSources.collect {
+                lastRenew = 0L
+                renewalJob?.cancel()
+                renewCache()
+            }
         }
 
         storageManager.changes
