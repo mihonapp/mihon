@@ -14,7 +14,6 @@ import eu.kanade.tachiyomi.extension.util.ExtensionInstaller
 import eu.kanade.tachiyomi.extension.util.ExtensionLoader
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -73,33 +72,9 @@ class ExtensionManager(
     private val untrustedExtensionMapFlow = MutableStateFlow(emptyMap<String, Extension.Untrusted>())
     val untrustedExtensionsFlow = untrustedExtensionMapFlow.mapExtensions(scope)
 
-    private var initialLoadJob: Job? = null
-
     init {
-        triggerInitialLoad()
+        initExtensions()
         ExtensionInstallReceiver(InstallationListener()).register(context)
-    }
-
-    @Synchronized
-    fun triggerInitialLoad(): Job {
-        if (initialLoadJob != null) {
-            return initialLoadJob!!
-        }
-        val job = scope.launch {
-            val extensions = ExtensionLoader.loadExtensions(context)
-
-            installedExtensionMapFlow.value = extensions
-                .filterIsInstance<LoadResult.Success>()
-                .associate { it.extension.pkgName to it.extension }
-
-            untrustedExtensionMapFlow.value = extensions
-                .filterIsInstance<LoadResult.Untrusted>()
-                .associate { it.extension.pkgName to it.extension }
-
-            _isInitialized.value = true
-        }
-        initialLoadJob = job
-        return job
     }
 
     private var subLanguagesEnabledOnFirstRun = preferences.enabledLanguages().isSet()
@@ -139,6 +114,25 @@ class ExtensionManager(
     }
 
     fun getSourceData(id: Long) = availableExtensionsSourcesData[id]
+
+    /**
+     * Loads and registers the installed extensions.
+     */
+    private fun initExtensions() {
+        scope.launch {
+            val extensions = ExtensionLoader.loadExtensions(context)
+
+            installedExtensionMapFlow.value = extensions
+                .filterIsInstance<LoadResult.Success>()
+                .associate { it.extension.pkgName to it.extension }
+
+            untrustedExtensionMapFlow.value = extensions
+                .filterIsInstance<LoadResult.Untrusted>()
+                .associate { it.extension.pkgName to it.extension }
+
+            _isInitialized.value = true
+        }
+    }
 
     /**
      * Finds the available extensions in the [api] and updates [availableExtensionMapFlow].
