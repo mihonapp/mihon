@@ -18,8 +18,10 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -116,11 +118,14 @@ class DownloadCache(
                 }
             }
 
-            sourceManager.catalogueSources.collect {
-                lastRenew = 0L
-                renewalJob?.cancel()
-                renewCache()
-            }
+            sourceManager.catalogueSources
+                .map { sources -> sources.map { it.id }.toSet() }
+                .distinctUntilChanged()
+                .collect {
+                    lastRenew = 0L
+                    renewalJob?.cancel()
+                    renewCache()
+                }
         }
 
         storageManager.changes
