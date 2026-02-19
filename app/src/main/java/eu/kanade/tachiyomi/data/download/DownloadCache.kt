@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
@@ -122,9 +123,7 @@ class DownloadCache(
                 .map { sources -> sources.map { it.id }.toSet() }
                 .distinctUntilChanged()
                 .collect {
-                    lastRenew = 0L
-                    renewalJob?.cancel()
-                    renewCache()
+                    restartRenewal()
                 }
         }
 
@@ -338,19 +337,34 @@ class DownloadCache(
         notifyChanges()
     }
 
-    fun invalidateCache() {
-        lastRenew = 0L
-        renewalJob?.cancel()
+    suspend fun invalidateCache() {
+        renewalJob?.cancelAndJoin()
         diskCacheFile.delete()
-        renewCache()
+        lastRenew = 0L
+        renewCache(forceRenew = true)
+    }
+
+    /**
+     * Safely cancels any in-progress renewal job, resets the last-renew timestamp, and
+     * immediately starts a new renewal, bypassing the time-based throttle.
+     */
+    private fun restartRenewal() {
+        renewalJob?.cancel()
+        lastRenew = 0L
+        renewCache(forceRenew = true)
     }
 
     /**
      * Renews the downloads cache.
+     *
+     * @param forceRenew when `true`, the time-based throttle is bypassed. Use this after
+     * explicitly cancelling the previous job to avoid a race where the cancelled job's
+     * [invokeOnCompletion] handler sets [lastRenew] after the reset but before the new
+     * job's guard check.
      */
-    private fun renewCache() {
+    private fun renewCache(forceRenew: Boolean = false) {
         // Avoid renewing cache if in the process nor too often
-        if (lastRenew + renewInterval >= System.currentTimeMillis() || renewalJob?.isActive == true) {
+        if ((!forceRenew && lastRenew + renewInterval >= System.currentTimeMillis()) || renewalJob?.isActive == true) {
             return
         }
 
