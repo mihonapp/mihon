@@ -449,8 +449,9 @@ class DownloadCache(
 
     private var updateDiskCacheJob: Job? = null
     private fun updateDiskCache() {
-        updateDiskCacheJob?.cancel()
+        val previousJob = updateDiskCacheJob
         updateDiskCacheJob = scope.launchIO {
+            previousJob?.cancelAndJoin()
             delay(1000)
             ensureActive()
             val bytes = ProtoBuf.encodeToByteArray(rootDownloadsDir)
