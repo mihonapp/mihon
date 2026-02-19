@@ -533,7 +533,7 @@
     <string name="label_warning">Cảnh báo</string>
     <string name="ext_installer_pref">Trình cài đặt</string>
     <string name="ext_installer_shizuku_stopped">Shizuku đang không chạy</string>
-    <string name="ext_installer_legacy">Phần kế thừa</string>
+    <string name="ext_installer_legacy">Cũ</string>
     <string name="pref_verbose_logging">Ghi nhật ký chi tiết</string>
     <string name="action_display_language_badge">Ngôn ngữ</string>
     <string name="backup_info">Bạn nên giữ lại bản sao của sao lưu ở các nơi khác nữa.</string>
@@ -737,7 +737,7 @@
     <string name="onboarding_permission_ignore_battery_opts">Sử dụng pin nền</string>
     <string name="onboarding_permission_install_apps_description">Để cài đặt nguồn mở rộng.</string>
     <string name="notification_updating_progress">Đang cập nhật thư viện… (%s)</string>
-    <string name="download_cache_invalidated">Chỉ mục tải xuống bị vô hiệu</string>
+    <string name="download_cache_invalidated">Tái tạo chỉ mục tải xuống</string>
     <string name="action_bar_up_description">Điều hướng trên</string>
     <string name="onboarding_description">Trước tiên hãy thiết lập một số thứ nhé. Bạn có thể tùy ý chỉnh lại những cài đặt này lại sau.</string>
     <string name="action_sort_tracker_score">Điểm bộ theo dõi</string>
@@ -909,4 +909,5 @@
     <string name="pref_download_concurrent_pages">Tải xuống trang đồng thời</string>
     <string name="pref_download_concurrent_pages_summary">Các trang được tải xuống đồng thời theo từng nguồn</string>
     <string name="action_webview_close_tab">Đóng thẻ</string>
+    <string name="action_filter_excluded_scanlators">Lọc nhóm dịch bị loại trừ</string>
 </resources>

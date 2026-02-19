@@ -707,7 +707,7 @@
     <string name="syncing_library">正在同步书架</string>
     <string name="library_sync_complete">书架同步完成</string>
     <string name="information_cloudflare_help">点击这里查看 Cloudflare 帮助</string>
-    <string name="download_cache_invalidated">已清除下载索引</string>
+    <string name="download_cache_invalidated">重建下载索引</string>
     <string name="track_activity_name">登录进度记录平台</string>
     <string name="create_backup_file_error">创建备份文件失败</string>
     <string name="exception_offline">未连接网络</string>
@@ -909,4 +909,6 @@
     <string name="pref_download_concurrent_pages">同时下载的页数</string>
     <string name="pref_download_concurrent_pages_summary">每个图源同时下载的页数</string>
     <string name="action_webview_close_tab">关闭标签</string>
+    <string name="action_filter_excluded_scanlators">筛选排除翻译组</string>
+    <string name="calculating">计算中…</string>
 </resources>

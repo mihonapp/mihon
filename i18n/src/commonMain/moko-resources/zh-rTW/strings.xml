@@ -702,7 +702,7 @@
     <string name="has_results">有結果</string>
     <string name="syncing_library">正在同步書櫃</string>
     <string name="library_sync_complete">書櫃同步完成</string>
-    <string name="download_cache_invalidated">已清除下載索引</string>
+    <string name="download_cache_invalidated">正在重新建立下載索引</string>
     <string name="information_cloudflare_help">查看 Cloudflare 相關說明</string>
     <string name="track_activity_name">登入歷程平臺</string>
     <string name="create_backup_file_error">無法建立備份檔</string>
@@ -900,4 +900,5 @@
     <string name="pref_download_concurrent_pages">同時下載的頁數</string>
     <string name="pref_download_concurrent_pages_summary">每個來源同時下載的頁數</string>
     <string name="action_webview_close_tab">關閉頁籤</string>
+    <string name="action_filter_excluded_scanlators">篩選排除掃譯者</string>
 </resources>

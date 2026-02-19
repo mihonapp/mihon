@@ -707,7 +707,7 @@
     <string name="library_sync_complete">Синхронизация библиотеки завершена</string>
     <string name="syncing_library">Синхронизация библиотеки</string>
     <string name="information_cloudflare_help">Нажмите здесь, чтобы получить помощь с Cloudflare</string>
-    <string name="download_cache_invalidated">Индекс загрузок недействителен</string>
+    <string name="download_cache_invalidated">Пересоздаётся индекс загрузок</string>
     <string name="create_backup_file_error">Не удалось создать файл резервной копии</string>
     <string name="track_activity_name">Вход в сервис отслеживания</string>
     <string name="exception_http">HTTP %d, проверьте сайт в WebView</string>
@@ -909,4 +909,6 @@
     <string name="action_webview_close_tab">Закрыть вкладку</string>
     <string name="pref_download_concurrent_pages">Параллельные загрузки страниц</string>
     <string name="pref_download_concurrent_pages_summary">Число одновременных загрузок страниц с источника</string>
+    <string name="action_filter_excluded_scanlators">Фильтровать исключенных переводчиков</string>
+    <string name="calculating">Вычисление…</string>
 </resources>
