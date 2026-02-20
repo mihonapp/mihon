@@ -836,7 +836,7 @@
     <string name="add_repo_confirmation">هل تريد اضافة الفهرس \"%s\"؟</string>
     <string name="pref_update_library_manga_titles">تحديث عنوان المانغا لتطابق المصدر</string>
     <string name="logging_in">جاري الدخول…</string>
-    <string name="pref_update_library_manga_titles_summary">تحذير: إذا تمت إعادة تسمية المانجا، فسيتم إزالتها من قائمة التنزيل (إن وجدت)</string>
+    <string name="pref_update_library_manga_titles_summary">تحذير: إذا تمت إعادة تسمية المانجا، فسيتم إزالتها من قائمة التنزيل (إن وجدت).</string>
     <string name="action_toggle_private_on">التتبع الخاص</string>
     <string name="notes_placeholder">استمتعت بالجزء حين …</string>
     <string name="trackers_updated_summary">تحديث المتابعات إلى الفصل %d</string>
@@ -848,7 +848,7 @@
     <string name="non_library_settings">جميع الإدخالات المقروئة</string>
     <string name="pref_hardware_bitmap_threshold">عتبة خريطة الصورة النقطية للأجهزة المخصصة</string>
     <string name="pref_hardware_bitmap_threshold_default">افتراضي (%d)</string>
-    <string name="possible_duplicates_summary">لديك مداخلات متشابهة في مكتبك بنفس الاسم.\nحدد واحدة للنقل أو الإضافة على أي حال</string>
+    <string name="possible_duplicates_summary">لديك مداخلات متشابهة في مكتبك بنفس الاسم.\n\nحدد واحدة للنقل أو الإضافة على أي حال.</string>
     <string name="possible_duplicates_title">التكرارات المحتملة</string>
     <string name="confirm_tracker_update">تحديث المتابعات إلى الفصل %d؟</string>
     <string name="pref_incognito_mode_extension_summary">إيقاف قراءة التاريخ مؤقتًا للتمديد</string>
@@ -856,7 +856,7 @@
     <string name="theme_catppuccin">كاتبوتشين</string>
     <string name="pref_display_images_description">­تقديم الصور في أوصاف المانجا</string>
     <string name="pref_hide_missing_chapter_indicators">إخفاء مؤشرات الفصل المفقودة</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">يؤثر على الأداء. فعّله فقط إذا لم يُحل تقليل عتبة الخريطة النقطية مشاكل الصورة الفارغة.</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">يؤثر على الأداء. فعّله فقط إذا لم يُحل تقليل عتبة الخريطة النقطية مشاكل الصورة الفارغة</string>
     <string name="pref_download_new_unread_chapters_only">تخطي تنزيل الفصول المقروءة المكررة</string>
     <string name="pref_auto_update_manga_on_mark_read">تحديث التقدم عند وضع علامة عليه كمقروء</string>
     <string name="export">يصدّر</string>

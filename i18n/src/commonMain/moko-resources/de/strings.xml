@@ -707,7 +707,7 @@
     <string name="syncing_library">Bibliothek wird synchronisiert</string>
     <string name="library_sync_complete">Bibliothekssynchronisierung abgeschlossen</string>
     <string name="information_cloudflare_help">Tippe hier, um Hilfe zu Cloudflare zu erhalten</string>
-    <string name="download_cache_invalidated">Index der Downloads invalide</string>
+    <string name="download_cache_invalidated">Downloads werden neu indexiert</string>
     <string name="track_activity_name">Tracker-Login</string>
     <string name="create_backup_file_error">Sicherungsdatei konnte nicht erstellt werden</string>
     <string name="exception_http">HTTP %d, überprüfe die Webseite in WebView</string>
@@ -729,11 +729,11 @@
     <string name="action_create">Erstellen</string>
     <string name="action_apply">Anwenden</string>
     <string name="action_revert_to_default">Auf Standard zurücksetzen</string>
-    <string name="no_scanlators_found">Keine Scanlatoren gefunden</string>
+    <string name="no_scanlators_found">Keine Scanlationgruppe gefunden</string>
     <string name="scanlator">Scanlator</string>
     <string name="pref_storage_usage">Speichernutzung</string>
     <string name="action_sort_tracker_score">Tracker-Bewertung</string>
-    <string name="exclude_scanlators">Scanlatoren ausschließen</string>
+    <string name="exclude_scanlators">Scanlationgruppe ausschließen</string>
     <string name="selected">Ausgewählt</string>
     <string name="not_selected">Nicht ausgewählt</string>
     <string name="pref_storage_location">Speicherort</string>
@@ -909,4 +909,6 @@
     <string name="pref_download_concurrent_pages">Gleichzeitige Seitendownloads</string>
     <string name="pref_download_concurrent_pages_summary">Pro Quelle gleichzeitig heruntergeladene Seiten</string>
     <string name="action_webview_close_tab">Tab schließen</string>
+    <string name="action_filter_excluded_scanlators">Ausgeschlossene Scanlationgruppen herausfiltern</string>
+    <string name="calculating">Wird berechnet…</string>
 </resources>

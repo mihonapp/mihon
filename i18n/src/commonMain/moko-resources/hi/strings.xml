@@ -901,4 +901,8 @@
     <string name="migrationListScreen.matchWithoutChapterToast">कोई अध्याय नहीं मिला, इस प्रविष्टि का उपयोग स्थानांतरण के लिए नहीं किया जा सकता</string>
     <string name="pref_disallow_non_ascii_filenames">ग़ैर-ASCII फ़ाइल नामों की अनुमति न दें</string>
     <string name="pref_disallow_non_ascii_filenames_details">यह उन स्टोरेज मीडिया के साथ संगतता सुनिश्चित करता है जो यूनिकोड का समर्थन नहीं करते, और सक्षम होने पर स्रोत व मंगा फ़ोल्डरों के गैर-ASCII अक्षरों को उनके छोटे अक्षरों वाले UTF-8 हेक्साडेसिमल रूप में मैन्युअली बदलना आवश्यक होता है, जबकि चैप्टर फ़ाइलों के नाम बदलने की आवश्यकता नहीं होती।</string>
+    <string name="action_webview_close_tab">टैब बंद करें</string>
+    <string name="pref_download_concurrent_sources">एक साथ स्रोत डाउनलोड</string>
+    <string name="pref_download_concurrent_pages">एक साथ पेज डाउनलोड</string>
+    <string name="pref_download_concurrent_pages_summary">प्रति स्रोत एक साथ डाउनलोड किए जाने वाले पृष्ठ</string>
 </resources>

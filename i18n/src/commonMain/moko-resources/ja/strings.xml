@@ -869,4 +869,10 @@
     <string name="tracked_privately">非公開で追跡</string>
     <string name="action_toggle_private_on">非公開で追跡する</string>
     <string name="action_toggle_private_off">公開で追跡する</string>
+    <string name="action_webview_close_tab">タブを閉じる</string>
+    <string name="migrationConfigScreen.availableHeader">利用可能</string>
+    <string name="migrationConfigScreen.selectAllLabel">すべて選択</string>
+    <string name="migrationConfigScreen.selectEnabledLabel">有効なソースを選択</string>
+    <string name="migrationConfigScreen.selectPinnedLabel">固定されたソースを選択</string>
+    <string name="migrationConfigScreen.dataToMigrateHeader">移行するデータ</string>
 </resources>
