@@ -35,10 +35,6 @@ fun extensionsTab(
     val state by extensionsScreenModel.state.collectAsState()
     var privateExtensionToUninstall by remember { mutableStateOf<Extension?>(null) }
 
-    BackHandler(enabled = state.searchQuery != null) {
-        extensionsScreenModel.search(null)
-    }
-
     return TabContent(
         titleRes = MR.strings.label_extensions,
         badgeNumber = state.updates.takeIf { it > 0 },
@@ -54,6 +50,10 @@ fun extensionsTab(
             ),
         ),
         content = { contentPadding, _ ->
+            BackHandler(enabled = state.searchQuery != null) {
+                extensionsScreenModel.search(null)
+            }
+
             ExtensionScreen(
                 state = state,
                 contentPadding = contentPadding,
