@@ -953,7 +953,6 @@ class MangaScreenModel(
     fun toggleSelection(
         item: ChapterList.Item,
         selected: Boolean,
-        userSelected: Boolean = false,
         fromLongPress: Boolean = false,
     ) {
         updateSuccessState { successState ->
@@ -968,7 +967,7 @@ class MangaScreenModel(
                 set(selectedIndex, selectedItem.copy(selected = selected))
                 selectedChapterIds.addOrRemove(item.id, selected)
 
-                if (selected && userSelected && fromLongPress) {
+                if (selected && fromLongPress) {
                     if (firstSelection) {
                         selectedPositions[0] = selectedIndex
                         selectedPositions[1] = selectedIndex
@@ -994,7 +993,7 @@ class MangaScreenModel(
                             }
                         }
                     }
-                } else if (userSelected && !fromLongPress) {
+                } else if (!fromLongPress) {
                     if (!selected) {
                         if (selectedIndex == selectedPositions[0]) {
                             selectedPositions[0] = indexOfFirst { it.selected }
