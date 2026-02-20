@@ -835,4 +835,12 @@
     <string name="pref_hardware_bitmap_threshold">Niestandardowy zakres graniczny bitmapy dla urządzenia</string>
     <string name="pref_always_decode_long_strip_with_ssiv_summary">Wpływa na wydajność. Włącz tylko wtedy, gdy zmniejszenie zakresu granicznego bitmapy nie pomaga przy naprawie nieładujących się obrazów</string>
     <string name="pref_incognito_mode_extension_summary">Wstrzymaj historię dla rozszerzenia</string>
+    <string name="action_notes">Notatki</string>
+    <string name="action_edit_notes">Edytuj notatki</string>
+    <string name="action_webview_close_tab">Zamknij kartę</string>
+    <string name="theme_monochrome">Monochromatyczny</string>
+    <string name="pref_display_images_description">Wyświetlaj obrazy w opisach mang</string>
+    <string name="storage_failed_to_create_download_directory">Nie udało się utworzyć folderu pobierania</string>
+    <string name="storage_failed_to_create_directory">Nie udało się utworzyć folderu: %s</string>
+    <string name="export">Eksportuj</string>
 </resources>
