@@ -262,6 +262,7 @@ class ReaderActivity : BaseActivity() {
                 ReaderPageIndicator(
                     currentPage = state.currentPage,
                     totalPages = state.totalPages,
+                    combinedPageNumber = state.combinedPageNumber,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .navigationBarsPadding(),
