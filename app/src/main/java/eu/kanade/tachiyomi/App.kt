@@ -282,7 +282,6 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
     companion object {
         val processStartTimeMillis: Long = System.currentTimeMillis()
     }
-
 }
 
 private const val ACTION_DISABLE_INCOGNITO_MODE = "tachi.action.DISABLE_INCOGNITO_MODE"
