@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.manga.interactor.SetMangaViewerFlags
+import eu.kanade.domain.manga.model.downloadedFilter
 import eu.kanade.domain.manga.model.readerOrientation
 import eu.kanade.domain.manga.model.readingMode
 import eu.kanade.domain.source.interactor.GetIncognitoState
@@ -63,6 +64,7 @@ import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.UpdateChapter
+import tachiyomi.domain.chapter.model.Chapter as DomainChapter
 import tachiyomi.domain.chapter.model.ChapterUpdate
 import tachiyomi.domain.chapter.service.getChapterSort
 import tachiyomi.domain.download.service.DownloadPreferences
@@ -72,6 +74,7 @@ import tachiyomi.domain.history.model.HistoryUpdate
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
@@ -628,6 +631,84 @@ class ReaderViewModel @JvmOverloads constructor(
         loadAdjacent(prevChapter)
     }
 
+    suspend fun loadChapterById(targetChapterId: Long) {
+        val chapter = getChapterList().firstOrNull { it.chapter.id == targetChapterId } ?: return
+        loadAdjacent(chapter)
+    }
+
+    private suspend fun getChapterNavigationList(direction: ChapterNavigationDirection): List<ChapterNavigationItem> {
+        val manga = manga ?: return emptyList()
+        val currentChapterId = state.value.viewerChapters?.currChapter?.chapter?.id ?: return emptyList()
+        val isLocalManga = manga.isLocal()
+
+        val chapterItems = getChapterList()
+            .mapNotNull { it.chapter.toDomainChapter() }
+            .map { createChapterNavigationItem(it, manga, isLocalManga) }
+
+        val sortedAndFilteredChapterItems = chapterItems
+            .asSequence()
+            .filter { (chapter) -> applyFilter(manga.unreadFilter) { !chapter.read } }
+            .filter { (chapter) -> applyFilter(manga.bookmarkedFilter) { chapter.bookmark } }
+            .filter { item -> applyFilter(manga.downloadedFilter) { item.isDownloaded || isLocalManga } }
+            .sortedWith { item1, item2 -> getChapterSort(manga).invoke(item1.chapter, item2.chapter) }
+            .toList()
+
+        val currentChapterPosition = sortedAndFilteredChapterItems.indexOfFirst { it.chapter.id == currentChapterId }
+        if (currentChapterPosition < 0) return emptyList()
+        val sortDescending = manga.sortDescending()
+
+        return when (direction) {
+            ChapterNavigationDirection.Previous -> {
+                if (sortDescending) {
+                    sortedAndFilteredChapterItems.subList(currentChapterPosition + 1, sortedAndFilteredChapterItems.size)
+                } else {
+                    sortedAndFilteredChapterItems.subList(0, currentChapterPosition)
+                }
+            }
+            ChapterNavigationDirection.Next -> {
+                if (sortDescending) {
+                    sortedAndFilteredChapterItems.subList(0, currentChapterPosition)
+                } else {
+                    sortedAndFilteredChapterItems.subList(currentChapterPosition + 1, sortedAndFilteredChapterItems.size)
+                }
+            }
+        }
+    }
+
+    private fun createChapterNavigationItem(
+        chapter: DomainChapter,
+        manga: Manga,
+        isLocalManga: Boolean,
+    ): ChapterNavigationItem {
+        val activeDownload = if (isLocalManga) {
+            null
+        } else {
+            downloadManager.getQueuedDownloadOrNull(chapter.id)
+        }
+        val downloaded = if (isLocalManga) {
+            true
+        } else {
+            downloadManager.isChapterDownloaded(
+                chapter.name,
+                chapter.scanlator,
+                chapter.url,
+                manga.title,
+                manga.source,
+            )
+        }
+        val downloadState = when {
+            activeDownload != null -> activeDownload.status
+            downloaded -> Download.State.DOWNLOADED
+            else -> Download.State.NOT_DOWNLOADED
+        }
+
+        return ChapterNavigationItem(
+            chapter = chapter,
+            downloadState = downloadState,
+            downloadProgress = activeDownload?.progress ?: 0,
+        )
+    }
+
     /**
      * Returns the currently active chapter.
      */
@@ -788,6 +869,19 @@ class ReaderViewModel @JvmOverloads constructor(
 
     fun openPageDialog(page: ReaderPage) {
         mutableState.update { it.copy(dialog = Dialog.PageActions(page)) }
+    }
+
+    fun openChapterNavigationDialog(direction: ChapterNavigationDirection) {
+        viewModelScope.launchIO {
+            val chapters = getChapterNavigationList(direction)
+            if (chapters.isEmpty()) return@launchIO
+
+            withUIContext {
+                mutableState.update {
+                    it.copy(dialog = Dialog.ChapterNavigation(direction, chapters))
+                }
+            }
+        }
     }
 
     fun openSettingsDialog() {
@@ -984,6 +1078,24 @@ class ReaderViewModel @JvmOverloads constructor(
         data object ReadingModeSelect : Dialog
         data object OrientationModeSelect : Dialog
         data class PageActions(val page: ReaderPage) : Dialog
+        data class ChapterNavigation(
+            val direction: ChapterNavigationDirection,
+            val chapters: List<ChapterNavigationItem>,
+        ) : Dialog
+    }
+
+    enum class ChapterNavigationDirection {
+        Previous,
+        Next,
+    }
+
+    @Immutable
+    data class ChapterNavigationItem(
+        val chapter: DomainChapter,
+        val downloadState: Download.State,
+        val downloadProgress: Int,
+    ) {
+        val isDownloaded = downloadState == Download.State.DOWNLOADED
     }
 
     sealed interface Event {
