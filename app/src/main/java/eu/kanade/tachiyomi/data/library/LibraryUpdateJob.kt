@@ -436,6 +436,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                     NetworkType.CONNECTED
                 }
                 val networkRequestBuilder = NetworkRequest.Builder()
+                networkRequestBuilder.removeCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN)
                 if (DEVICE_ONLY_ON_WIFI in restrictions) {
                     networkRequestBuilder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
                 }
