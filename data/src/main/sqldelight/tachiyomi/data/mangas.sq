@@ -158,10 +158,10 @@ track_dupes AS (
 duplicates AS (
     SELECT M.*
     FROM mangas M
-    LEFT JOIN hidden_dupes H
-    ON M._id = H.manga2_id
     LEFT JOIN track_dupes D
     ON D.manga_id = M._id
+    LEFT JOIN hidden_dupes H
+    ON M._id = H.manga2_id
     WHERE M.favorite = 1
     AND H.manga1_id IS NULL
     AND M._id != :id
