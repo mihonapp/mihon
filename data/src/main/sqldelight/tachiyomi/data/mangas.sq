@@ -118,12 +118,23 @@ AND source = :sourceId;
 
 getDuplicateLibraryManga:
 WITH
+track_dupes AS (
+    SELECT S2.manga_id
+    FROM manga_sync S1
+    INNER JOIN manga_sync S2
+    ON S1.sync_id = S2.sync_id
+    AND S1.remote_id = S2.remote_id
+    AND S1.manga_id != S2.manga_id
+    WHERE S1.manga_id = :id
+),
 duplicates AS (
-    SELECT *
-    FROM mangas
+    SELECT M.*
+    FROM mangas M
+    LEFT JOIN track_dupes D
+    ON D.manga_id = _id
     WHERE favorite = 1
     AND _id != :id
-    AND lower(title) LIKE '%' || lower(:title) || '%'
+    AND (lower(title) LIKE '%' || lower(:title) || '%' OR D.manga_id IS NOT NULL)
 ),
 chapter_counts AS (
     SELECT
