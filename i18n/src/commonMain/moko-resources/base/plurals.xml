@@ -109,4 +109,10 @@
         <item quantity="one">An entry was skipped</item>
         <item quantity="other">%1$d entries were skipped</item>
     </plurals>
+
+    <!-- Failed Updates -->
+    <plurals name="failed_updates">
+        <item quantity="one">1 failed update</item>
+        <item quantity="other">%d failed updates</item>
+    </plurals>
 </resources>
