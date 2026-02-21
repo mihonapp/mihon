@@ -129,7 +129,7 @@ class HiddenImagesScreen(
         Scaffold(
             topBar = { scrollBehavior ->
                 AppBar(
-                    title = stringResource(MR.strings.hidden_images_manage_title, mangaTitle),
+                    title = stringResource(MR.strings.hidden_images_menu_title, mangaTitle),
                     navigateUp = {
                         if (state.selection.isNotEmpty()) {
                             screenModel.clearSelection()

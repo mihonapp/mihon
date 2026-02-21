@@ -126,12 +126,6 @@ fun MangaToolbar(
                             ),
                         )
                     }
-                    add(
-                        AppBar.OverflowAction(
-                            title = stringResource(MR.strings.hidden_images_manage),
-                            onClick = onClickManageHiddenImages,
-                        ),
-                    )
                     if (onClickMigrate != null) {
                         add(
                             AppBar.OverflowAction(
@@ -148,6 +142,12 @@ fun MangaToolbar(
                             ),
                         )
                     }
+                    add(
+                        AppBar.OverflowAction(
+                            title = stringResource(MR.strings.hidden_images_menu),
+                            onClick = onClickManageHiddenImages,
+                        ),
+                    )
                     add(
                         AppBar.OverflowAction(
                             title = stringResource(MR.strings.action_notes),

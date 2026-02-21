@@ -172,8 +172,8 @@
     <string name="hidden_images_action_show">Show image</string>
     <string name="hidden_images_hide_image">Hide image forever</string>
     <string name="hidden_images_remove_from_hidden">Unhide forever</string>
-    <string name="hidden_images_manage">Manage hidden images</string>
-    <string name="hidden_images_manage_title">Hidden images: %1$s</string>
+    <string name="hidden_images_menu">Hidden images</string>
+    <string name="hidden_images_menu_title">Hidden images: %1$s</string>
     <string name="hidden_images_clear_list">Clear all entries</string>
     <string name="hidden_images_clear_list_confirm">Remove all hidden image rules for this manga?</string>
     <string name="hidden_images_no_preview">No preview</string>
@@ -599,10 +599,10 @@
     <string name="cache_deleted">Cache cleared, %1$d files deleted</string>
     <string name="cache_delete_error">Error occurred while clearing</string>
     <string name="pref_auto_clear_chapter_cache">Clear chapter cache on app launch</string>
-    <string name="hidden_images_clear_all">Erase hidden images</string>
-    <string name="hidden_images_clear_all_summary">Remove all hidden image rules</string>
-    <string name="hidden_images_clear_all_confirm">This will remove all hidden image rules across all entries.</string>
-    <string name="hidden_images_cleared">Hidden images erased</string>
+    <string name="hidden_images_clear_all">Clear image rules</string>
+    <string name="hidden_images_clear_all_summary">Delete all hidden image rules in the database</string>
+    <string name="hidden_images_clear_all_confirm">This will delete all hidden image rules in the database.</string>
+    <string name="hidden_images_cleared">Image rules cleared</string>
     <string name="export">Export</string>
     <string name="library_list">Library List</string>
     <string name="library_exported">Library Exported</string>
