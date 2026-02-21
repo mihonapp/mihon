@@ -161,6 +161,16 @@ sealed class Preference {
             override val onValueChanged: suspend (value: String) -> Unit = {}
         }
 
+        data class TimePreference(
+            val preference: PreferenceData<String>,
+            override val title: String,
+            override val subtitle: String? = "%s",
+            override val enabled: Boolean = true,
+            override val onValueChanged: suspend (value: String) -> Boolean = { true },
+        ) : PreferenceItem<String>() {
+            override val icon: ImageVector? = null
+        }
+
         data class CustomPreference(
             override val title: String,
             val content: @Composable () -> Unit,

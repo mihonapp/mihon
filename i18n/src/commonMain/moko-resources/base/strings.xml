@@ -287,6 +287,7 @@
     <string name="update_48hour">Every 2 days</string>
     <string name="update_72hour">Every 3 days</string>
     <string name="update_weekly">Weekly</string>
+    <string name="update_set_time">Update time</string>
     <string name="pref_library_update_restriction">Automatic updates device restrictions</string>
     <string name="connected_to_wifi">Only on Wi-Fi</string>
     <string name="network_not_metered">Only on unmetered network</string>
