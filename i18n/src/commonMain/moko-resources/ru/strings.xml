@@ -911,4 +911,5 @@
     <string name="pref_download_concurrent_pages_summary">Число одновременных загрузок страниц с источника</string>
     <string name="action_filter_excluded_scanlators">Фильтровать исключенных переводчиков</string>
     <string name="calculating">Вычисление…</string>
+    <string name="download_bookmarked">В закладках</string>
 </resources>
