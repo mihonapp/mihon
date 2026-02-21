@@ -21,6 +21,7 @@ import androidx.work.workDataOf
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.toSManga
+import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.notification.Notifications
@@ -34,6 +35,7 @@ import eu.kanade.tachiyomi.util.system.isRunning
 import eu.kanade.tachiyomi.util.system.setForegroundSafely
 import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -118,6 +120,12 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         setForegroundSafely()
 
         extensionManager.isInitialized.filter { it }.first()
+
+        // If the job starts within the first 10 seconds of launch, wait out the remainder
+        // to ensure Android has finished binding all extensions
+        val elapsed = System.currentTimeMillis() - App.processStartTimeMillis
+        val remaining = 5_000L - elapsed
+        if (remaining > 0) delay(remaining)
 
         libraryPreferences.lastUpdatedTimestamp().set(Instant.now().toEpochMilli())
 
