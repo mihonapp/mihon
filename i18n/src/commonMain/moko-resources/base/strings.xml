@@ -185,10 +185,20 @@
     <string name="onboarding_action_finish">Get started</string>
     <string name="onboarding_action_skip">Skip</string>
     <string name="onboarding_storage_info">Select a folder where %1$s will store chapter downloads, backups, and more.\n\nA dedicated folder is recommended.\n\nSelected folder: %2$s</string>
+    <string name="onboarding_storage_secure_folder">Secure environment detected!\n\nFor compatibility, the app will automatically use app-specific storage for chapter downloads, backups, and local manga.\n\nThis is the only accessible location within secure environments and ensures all your data remains isolated and secure.</string>
+    <string name="onboarding_storage_secure_folder_custom">Secure environment detected!\n\nEnter the folder name where you want to store your manga data. The folder will be created automatically if it doesn't exist.</string>
+    <string name="storage_folder_name">Folder name</string>
     <string name="onboarding_storage_action_select">Select a folder</string>
     <string name="onboarding_storage_selection_required">A folder must be selected</string>
     <string name="onboarding_storage_help_info">Updating from an older version and not sure what to select? Refer to the storage guide for more information.</string>
     <string name="onboarding_storage_help_action">Storage guide</string>
+    <string name="onboarding_guides_secure_folder_backup">Returning user? Due to Secure Folder restrictions, the file picker cannot access your backup files. You can manually enter the path to your backup file below.</string>
+    <string name="onboarding_guides_enter_backup_path">Enter backup file path</string>
+    <string name="secure_folder_backup_path_title">Enter Backup File Path</string>
+    <string name="secure_folder_backup_path_label">Backup file path</string>
+    <string name="secure_folder_backup_path_description">Enter the full path to your backup file (.tachibk or .proto.gz).</string>
+    <string name="secure_folder_backup_path_examples">Examples:\n• /storage/emulated/150/Download/backup.tachibk\n• /storage/emulated/150/Documents/mihon_backup.proto.gz</string>
+    <string name="secure_folder_backup_manual_not_implemented">Manual backup restoration will be implemented. For now, please restore your backup from Settings after completing onboarding.</string>
     <string name="onboarding_permission_install_apps">Install apps permission</string>
     <string name="onboarding_permission_install_apps_description">To install source extensions.</string>
     <string name="onboarding_permission_notifications">Notification permission</string>
@@ -546,6 +556,37 @@
       <!-- Data and storage section -->
     <string name="pref_storage_location">Storage location</string>
     <string name="pref_storage_location_info">Used for automatic backups, chapter downloads, and local source.</string>
+    <string name="pref_storage_secure_folder_info">Secure environment detected. App-specific storage is automatically used. Manual selection is disabled due to storage restrictions.</string>
+    <string name="secure_folder_app_storage">Secure Folder: App Storage (Default)</string>
+    <string name="secure_folder_manual_path_title">Enter Storage Path</string>
+    <string name="secure_folder_manual_path_label">Storage path</string>
+    <string name="secure_folder_manual_path_description">Since the file picker cannot access Secure Folder storage, you can manually enter the full path to your desired folder.</string>
+    <string name="secure_folder_manual_path_examples">Examples:\n• /storage/emulated/150/Download/Mihon\n• /storage/emulated/150/Documents/Manga</string>
+    <string name="error_path_empty">Path cannot be empty</string>
+    <string name="error_path_invalid">Invalid path</string>
+    <string name="error_path_cannot_create">Cannot create directory at this path</string>
+    <string name="error_secure_folder_primary_storage">Cannot use primary storage in Secure Folder. Please select a folder within the Secure Folder\'s internal storage or use the default app-specific storage.</string>
+    <string name="error_secure_folder_manual_selection_disabled">Manual storage selection is disabled in secure environments. The app automatically uses app-specific storage which is the only accessible location.</string>
+
+    <!-- Folder Picker Dialog -->
+    <string name="folder_picker_title_folder">Select Folder</string>
+    <string name="folder_picker_title_file">Select Backup File</string>
+    <string name="folder_picker_go_up">Go up</string>
+    <string name="folder_picker_create_folder">Create folder</string>
+    <string name="folder_picker_select_this_folder">Select this folder</string>
+    <string name="folder_picker_new_folder_title">Create new folder</string>
+    <string name="folder_picker_folder_name">Folder name</string>
+    <string name="folder_picker_no_folders">No folders in this directory</string>
+    <string name="folder_picker_no_files">No backup files or folders in this directory</string>
+    <string name="folder_picker_permission_required">⚠️ All files access permission required</string>
+    <string name="folder_picker_grant_permission">Grant Permission</string>
+    <string name="folder_picker_error_access">Cannot access directory</string>
+    <string name="folder_picker_error_create">Failed to create folder</string>
+    <string name="folder_created_successfully">Folder created successfully</string>
+    <string name="error_permission_denied">Permission denied. Cannot access file.</string>
+    <string name="folder_picker_item_count_single">1 item</string>
+    <string name="folder_picker_item_count_multiple">%d items</string>
+
     <string name="pref_create_backup">Create backup</string>
     <string name="pref_create_backup_summ">Can be used to restore current library</string>
     <string name="pref_restore_backup">Restore backup</string>

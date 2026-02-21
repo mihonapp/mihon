@@ -12,12 +12,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
+import eu.kanade.presentation.components.FolderPickerDialog
+import eu.kanade.presentation.components.PickerMode
 import eu.kanade.presentation.more.settings.screen.SettingsDataScreen
+import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.collectLatest
 import tachiyomi.domain.storage.service.StoragePreferences
@@ -28,19 +33,42 @@ import tachiyomi.presentation.core.i18n.stringResource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
+@Composable
+private fun StorageHelpSection(handler: androidx.compose.ui.platform.UriHandler) {
+    HorizontalDivider(
+        modifier = Modifier.padding(vertical = 8.dp),
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
+    )
+
+    Text(stringResource(MR.strings.onboarding_storage_help_info, stringResource(MR.strings.app_name)))
+    Button(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = { handler.openUri(SettingsDataScreen.HELP_URL) },
+    ) {
+        Text(stringResource(MR.strings.onboarding_storage_help_action))
+    }
+}
+
 internal class StorageStep : OnboardingStep {
 
     private val storagePref = Injekt.get<StoragePreferences>().baseStorageDirectory()
 
     private var _isComplete by mutableStateOf(false)
+    private var _isSecureFolder by mutableStateOf(false)
 
     override val isComplete: Boolean
-        get() = _isComplete
+        get() = _isComplete || (_isSecureFolder && storagePref.isSet())
 
     @Composable
     override fun Content() {
         val context = LocalContext.current
         val handler = LocalUriHandler.current
+        val isSecureFolder = DeviceUtil.isInSecureFolder(context)
+
+        // Update secure folder state
+        LaunchedEffect(Unit) {
+            _isSecureFolder = isSecureFolder
+        }
 
         val pickStorageLocation = SettingsDataScreen.storageLocationPicker(storagePref)
 
@@ -48,44 +76,76 @@ internal class StorageStep : OnboardingStep {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
         ) {
-            Text(
-                stringResource(
-                    MR.strings.onboarding_storage_info,
-                    stringResource(MR.strings.app_name),
-                    SettingsDataScreen.storageLocationText(storagePref),
-                ),
-            )
+            if (isSecureFolder) {
+                var showFolderPicker by remember { mutableStateOf(false) }
 
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = {
-                    try {
-                        pickStorageLocation.launch(null)
-                    } catch (e: ActivityNotFoundException) {
-                        context.toast(MR.strings.file_picker_error)
-                    }
-                },
-            ) {
-                Text(stringResource(MR.strings.onboarding_storage_action_select))
-            }
+                // In Secure Folder with MANAGE_EXTERNAL_STORAGE, use root storage
+                val basePath = remember { DeviceUtil.getSecureFolderBasePath(context) }
 
-            HorizontalDivider(
-                modifier = Modifier.padding(vertical = 8.dp),
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-            )
+                // Secure Folder: Show same layout as normal mode
+                Text(
+                    stringResource(
+                        MR.strings.onboarding_storage_info,
+                        stringResource(MR.strings.app_name),
+                        SettingsDataScreen.storageLocationText(storagePref),
+                    ),
+                )
 
-            Text(stringResource(MR.strings.onboarding_storage_help_info, stringResource(MR.strings.app_name)))
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { handler.openUri(SettingsDataScreen.HELP_URL) },
-            ) {
-                Text(stringResource(MR.strings.onboarding_storage_help_action))
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { showFolderPicker = true },
+                ) {
+                    Text(stringResource(MR.strings.onboarding_storage_action_select))
+                }
+
+                // Show folder picker dialog
+                if (showFolderPicker) {
+                    FolderPickerDialog(
+                        initialPath = basePath,
+                        onDismiss = { showFolderPicker = false },
+                        onFolderSelected = { selectedPath ->
+                            val uri = java.io.File(selectedPath).toUri().toString()
+                            storagePref.set(uri)
+                            _isComplete = true
+                            showFolderPicker = false
+                        }
+                    )
+                }
+
+                StorageHelpSection(handler)
+            } else {
+                // Normal flow: Allow manual selection
+                Text(
+                    stringResource(
+                        MR.strings.onboarding_storage_info,
+                        stringResource(MR.strings.app_name),
+                        SettingsDataScreen.storageLocationText(storagePref),
+                    ),
+                )
+
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        try {
+                            pickStorageLocation.launch(null)
+                        } catch (e: ActivityNotFoundException) {
+                            context.toast(MR.strings.file_picker_error)
+                        }
+                    },
+                ) {
+                    Text(stringResource(MR.strings.onboarding_storage_action_select))
+                }
+
+                StorageHelpSection(handler)
             }
         }
 
+        // Monitor storage preference changes (except in Secure Folder where it's auto-configured)
         LaunchedEffect(Unit) {
-            storagePref.changes()
-                .collectLatest { _isComplete = storagePref.isSet() }
+            if (!isSecureFolder) {
+                storagePref.changes()
+                    .collectLatest { _isComplete = storagePref.isSet() }
+            }
         }
     }
 }
