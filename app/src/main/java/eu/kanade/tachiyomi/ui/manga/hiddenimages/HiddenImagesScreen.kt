@@ -253,7 +253,7 @@ class HiddenImagesScreen(
                     onLongClick = onLongClick,
                 ),
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
                 if (imageBitmap != null) {
                     Image(
                         bitmap = imageBitmap.asImageBitmap(),
@@ -278,7 +278,7 @@ class HiddenImagesScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 4.dp, vertical = 4.dp),
+                        .padding(horizontal = 4.dp, vertical = 0.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
