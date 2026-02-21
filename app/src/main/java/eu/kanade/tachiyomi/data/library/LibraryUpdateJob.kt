@@ -121,7 +121,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
 
         extensionManager.isInitialized.filter { it }.first()
 
-        // If the job starts within the first 10 seconds of launch, wait out the remainder
+        // If the job starts within the first 5 seconds of launch, wait out the remainder
         // to ensure Android has finished binding all extensions
         val elapsed = System.currentTimeMillis() - App.processStartTimeMillis
         val remaining = 5_000L - elapsed
