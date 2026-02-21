@@ -44,6 +44,8 @@ class SourcePreferences(
 
     fun hideInLibraryItems() = preferenceStore.getBoolean("browse_hide_in_library_items", false)
 
+    fun showClipboardSearch() = preferenceStore.getBoolean("show_clipboard_search", false)
+
     fun extensionRepos() = preferenceStore.getStringSet("extension_repos", emptySet())
 
     fun extensionUpdatesCount() = preferenceStore.getInt("ext_updates_count", 0)
