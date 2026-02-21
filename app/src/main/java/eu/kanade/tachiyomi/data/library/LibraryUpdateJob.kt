@@ -21,9 +21,11 @@ import androidx.work.workDataOf
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.toSManga
+import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
 import eu.kanade.tachiyomi.util.storage.getUriCompat
@@ -36,7 +38,10 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import logcat.LogPriority
@@ -81,6 +86,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     CoroutineWorker(context, workerParams) {
 
     private val sourceManager: SourceManager = Injekt.get()
+    private val extensionManager: ExtensionManager = Injekt.get()
     private val libraryPreferences: LibraryPreferences = Injekt.get()
     private val downloadManager: DownloadManager = Injekt.get()
     private val coverCache: CoverCache = Injekt.get()
@@ -112,6 +118,14 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         }
 
         setForegroundSafely()
+
+        extensionManager.isInitialized.filter { it }.first()
+
+        // If the job starts within the first 5 seconds of launch, wait out the remainder
+        // to ensure Android has finished binding all extensions
+        val elapsed = System.currentTimeMillis() - App.processStartTimeMillis
+        val remaining = 5_000L - elapsed
+        if (remaining > 0) delay(remaining)
 
         libraryPreferences.lastUpdatedTimestamp().set(Instant.now().toEpochMilli())
 
