@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.map
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.library.service.LibraryPreferences.DuplicateMatchLevel.ExactMatch
 import tachiyomi.domain.library.service.LibraryPreferences.DuplicateMatchLevel.FuzzyTitle
+import tachiyomi.domain.library.service.LibraryPreferences.DuplicateMatchLevel.TitleSubstring
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.manga.repository.MangaRepository
@@ -45,7 +46,7 @@ class GetDuplicateLibraryManga(
         return when (searchLevel) {
             ExactMatch -> exactTitleMatch(manga)
             FuzzyTitle -> fuzzyTitleSearch(manga)
-            LibraryPreferences.DuplicateMatchLevel.TitleSubstring -> fuzzySubstringSearch(manga)
+            TitleSubstring -> fuzzySubstringSearch(manga)
         }
     }
 
@@ -56,6 +57,7 @@ class GetDuplicateLibraryManga(
     private suspend fun fuzzyTitleSearch(manga: Manga): List<MangaWithChapterCount> {
         val regex = fuzzyTitleRegex(manga)
         return mangaRepository.getDuplicateLibraryManga(manga.id, "%${manga.title}%")
+            // TODO: this likely filters out matches from trackers which we probably wanna keep. Not sure how to solve rn tho
             .filter { regex.containsMatchIn(it.manga.title) }
     }
 
