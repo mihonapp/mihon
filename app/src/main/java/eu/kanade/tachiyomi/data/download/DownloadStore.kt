@@ -42,7 +42,7 @@ class DownloadStore(
      * @param downloads the list of downloads to add.
      */
     fun addAll(downloads: List<Download>) {
-        preferences.edit {
+        preferences.edit(commit = true) {
             downloads.forEach { putString(getKey(it), serialize(it)) }
         }
     }
@@ -53,7 +53,7 @@ class DownloadStore(
      * @param download the download to remove.
      */
     fun remove(download: Download) {
-        preferences.edit {
+        preferences.edit(commit = true) {
             remove(getKey(download))
         }
     }
@@ -64,7 +64,7 @@ class DownloadStore(
      * @param downloads the download to remove.
      */
     fun removeAll(downloads: List<Download>) {
-        preferences.edit {
+        preferences.edit(commit = true) {
             downloads.forEach { remove(getKey(it)) }
         }
     }
