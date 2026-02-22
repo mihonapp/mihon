@@ -8,22 +8,15 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runInterruptible
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import java.util.concurrent.PriorityBlockingQueue
-import kotlin.concurrent.atomics.AtomicInt
-import kotlin.concurrent.atomics.ExperimentalAtomicApi
-import kotlin.concurrent.atomics.incrementAndFetch
-import kotlin.math.min
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Loader used to load chapters from an online source.
@@ -36,43 +29,9 @@ internal class HttpPageLoader(
 ) : PageLoader() {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-
-    /**
-     * A queue used to manage requests one by one while allowing priorities.
-     */
-    private val queue = PriorityBlockingQueue<PriorityPage>()
-
-    private val preloadSize = 4
-
-    // How many pending loadPage calls want each page index, counting their preloads. Pages are downloaded one
-    // at a time, so once nothing wants the page in flight its download is cancelled instead of holding up the
-    // pages being read. Guards inFlight too.
-    private val wantedPages = HashMap<Int, Int>()
-    private var inFlight: Pair<Int, Job>? = null
-
-    init {
-        scope.launch(Dispatchers.IO) {
-            flow {
-                while (true) {
-                    emit(runInterruptible { queue.take() })
-                }
-            }
-                .filter { it.page.status == Page.State.Queue }
-                .collect {
-                    coroutineScope {
-                        val load = launch {
-                            internalLoadPage(
-                                page = it.page,
-                                force = it.priority == PriorityPage.RETRY,
-                            )
-                        }
-                        synchronized(wantedPages) { inFlight = it.page.index to load }
-                        load.join()
-                        synchronized(wantedPages) { inFlight = null }
-                    }
-                }
-        }
-    }
+    private val chunkProcessLock = Any()
+    private var chunkProcessJob: Job? = null
+    private val downloadJobs = ConcurrentHashMap<Int, Job>()
 
     override var isLocal: Boolean = false
 
@@ -91,21 +50,24 @@ internal class HttpPageLoader(
         }
         return pages.mapIndexed { index, page ->
             // Don't trust sources and use our own indexing
-            ReaderPage(index, page.url, page.imageUrl)
+            ReaderPage(index, page.url, page.imageUrl).also {
+                // Loading starts below, before ChapterLoader gets to set this, and chapter is a lateinit
+                it.chapter = chapter
+            }
         }
+            .also {
+                it.loadByRollingChunked(0, 1, 1)
+            }
     }
 
     /**
      * Loads a page through the queue. Handles re-enqueueing pages if they were evicted from the cache.
      */
-    override suspend fun loadPage(page: ReaderPage) {
+    override suspend fun loadPage(page: ReaderPage) = withContext(Dispatchers.IO) {
         val imageUrl = page.imageUrl
 
-        // Check if the image has been deleted. Only this touches the disk; the queueing below
-        // stays on the caller's thread, so requests queue in the order they were made.
-        if (page.status == Page.State.Ready && imageUrl != null &&
-            !withContext(Dispatchers.IO) { chapterCache.isImageInCache(imageUrl) }
-        ) {
+        // Check if the image has been deleted
+        if (page.status == Page.State.Ready && imageUrl != null && !chapterCache.isImageInCache(imageUrl)) {
             page.status = Page.State.Queue
         }
 
@@ -114,39 +76,16 @@ internal class HttpPageLoader(
             page.status = Page.State.Queue
         }
 
-        val nextPages = nextPages(page, preloadSize)
-        val wanted = listOf(page) + nextPages
-        synchronized(wantedPages) {
-            wanted.forEach { wantedPages.merge(it.index, 1, Int::plus) }
-        }
+        // Start the page being read before anything else. Planning the chunks walks the whole chapter and takes
+        // chunkProcessLock, and the chain only reaches this page once it has, so don't make it wait on either.
+        launchLoadOnce(page)
 
-        val queuedPages = mutableListOf<PriorityPage>()
-        if (page.status == Page.State.Queue) {
-            queuedPages += PriorityPage(page, PriorityPage.DEFAULT).also { queue.offer(it) }
-        }
-        queuedPages += nextPages.mapNotNull {
-            if (it.status == Page.State.Queue) {
-                PriorityPage(it, PriorityPage.ADJACENT).apply { queue.offer(this) }
-            } else {
-                null
-            }
-        }
-
-        suspendCancellableCoroutine<Nothing> { continuation ->
-            continuation.invokeOnCancellation {
-                queuedPages.forEach {
-                    if (it.page.status == Page.State.Queue) {
-                        queue.remove(it)
-                    }
-                }
-                synchronized(wantedPages) {
-                    wanted.forEach {
-                        wantedPages.computeIfPresent(it.index) { _, count -> (count - 1).takeIf { it > 0 } }
-                    }
-                    // A cancelled load ends in Error, which the next loadPage of that page queues again
-                    inFlight?.let { (index, load) -> if (index !in wantedPages) load.cancel() }
-                }
-            }
+        val pages = page.chapter.pages.orEmpty()
+        if (page.index !in pages.indices) return@withContext
+        pages.loadByRollingChunked(page.index, 3, 5) { chunks ->
+            val continueLoading = chunks.take(2).flatten().map { it.index }.toSet()
+            downloadJobs.keys.filter { it !in continueLoading }
+                .forEach { downloadJobs.remove(it)?.cancel() }
         }
     }
 
@@ -157,13 +96,16 @@ internal class HttpPageLoader(
         if (page.status is Page.State.Error) {
             page.status = Page.State.Queue
         }
-        queue.offer(PriorityPage(page, PriorityPage.RETRY))
+
+        val pageIndex = page.index
+        downloadJobs.remove(pageIndex)?.cancel()
+        scope.launch { internalLoadPage(page, force = true) }.trackAsDownloadJob(pageIndex)
     }
 
     override fun recycle() {
         super.recycle()
         scope.cancel()
-        queue.clear()
+        downloadJobs.clear()
 
         // Cache current page list progress for online chapters to allow a faster reopen
         chapter.pages?.let { pages ->
@@ -182,14 +124,89 @@ internal class HttpPageLoader(
     }
 
     /**
-     * Returns the [amount] of pages after [currentPage], which are preloaded with a lower priority.
+     * Keeps [this] in [downloadJobs] under [pageIndex] until it completes. The entry is only removed if it still
+     * points at this job, so a newer job for the same page isn't evicted by an older one finishing.
      */
-    private fun nextPages(currentPage: ReaderPage, amount: Int): List<ReaderPage> {
-        val pageIndex = currentPage.index
-        val pages = currentPage.chapter.pages ?: return emptyList()
-        if (pageIndex == pages.lastIndex) return emptyList()
+    private fun Job.trackAsDownloadJob(pageIndex: Int) = also { job ->
+        downloadJobs[pageIndex] = job
+        job.invokeOnCompletion { downloadJobs.remove(pageIndex, job) }
+    }
 
-        return pages.subList(pageIndex + 1, min(pageIndex + 1 + amount, pages.size))
+    /**
+     * Starts loading [page] unless it's already loaded or a load is already in flight for it. Claiming the slot and
+     * starting the job has to be atomic, otherwise two chunk chains can both launch the same page.
+     */
+    private fun launchLoadOnce(page: ReaderPage): Job? {
+        if (page.status !is Page.State.Queue && page.status !is Page.State.Error) return null
+
+        val pageIndex = page.index
+        val job = scope.launch(start = CoroutineStart.LAZY) { internalLoadPage(page) }
+        val running = downloadJobs.putIfAbsent(pageIndex, job)
+        if (running != null) {
+            job.cancel()
+            // Hand back the in flight job so the chunk still waits for this page and the chunk size keeps bounding
+            // how many downloads run at once
+            return running
+        }
+        job.invokeOnCompletion { downloadJobs.remove(pageIndex, job) }
+        job.start()
+        return job
+    }
+
+    private fun List<ReaderPage>.loadByRollingChunked(
+        index: Int,
+        chunkStartSize: Int,
+        chunkEndSize: Int,
+        onNewChunks: (List<List<ReaderPage>>) -> Unit = {},
+    ) {
+        val items = this
+        val chunks = buildList {
+            items.getOrNull(index)?.let(::add)
+            items.getOrNull(index - 1)?.let(::add)
+            items.getOrNull(index + 1)?.let(::add)
+            // `items.lastIndex`, not the list being built, whose lastIndex is at most 2 here
+            if (index < items.lastIndex - 1) {
+                items.subList(index + 2, items.size).let(::addAll)
+            }
+            if (index > 1) {
+                items.subList(0, index - 1).reversed().let(::addAll)
+            }
+        }
+            .rollingChunked(chunkStartSize, chunkEndSize)
+            .also(onNewChunks)
+
+        // Every visible page holder calls loadPage, so this runs concurrently
+        synchronized(chunkProcessLock) {
+            chunkProcessJob?.cancel()
+            chunkProcessJob = scope.launch {
+                for (chunk in chunks) {
+                    val jobs = chunk.mapNotNull { page -> launchLoadOnce(page) }
+                    jobs.joinAll()
+                }
+            }
+        }
+    }
+
+    /**
+     * Splits the list into chunks with rolling sizes between a starting size and an ending size.
+     *
+     * The chunking process starts with the given `startSize` and increases by 1 until it reaches
+     * the `endSize`, at which point it continues with the `endSize` size for the remaining items.
+     */
+    private fun <T> List<T>.rollingChunked(startSize: Int, endSize: Int): List<List<T>> {
+        // A start size of 0 never advances the index
+        require(startSize >= 1) { "startSize must be at least 1, was $startSize" }
+        val thisSize = this.size
+        val result = ArrayList<List<T>>()
+        var chunkSize = startSize
+        var index = 0
+        while (index < thisSize) {
+            val localChunkSize = chunkSize.coerceAtMost(thisSize - index)
+            result.add(List(localChunkSize) { this[it + index] })
+            index += chunkSize
+            if (chunkSize < endSize) chunkSize += 1
+        }
+        return result
     }
 
     /**
@@ -198,7 +215,7 @@ internal class HttpPageLoader(
      *
      * @param page the page whose source image has to be downloaded.
      */
-    private suspend fun internalLoadPage(page: ReaderPage, force: Boolean) {
+    private suspend fun internalLoadPage(page: ReaderPage, force: Boolean = false) {
         try {
             if (page.imageUrl.isNullOrEmpty()) {
                 page.status = Page.State.LoadPage
@@ -224,34 +241,13 @@ internal class HttpPageLoader(
             page.status = Page.State.Ready
         } catch (e: Throwable) {
             page.downloadStream = null
-            page.status = Page.State.Error(e)
             if (e is CancellationException) {
+                // Chunk chains get cancelled on every page turn, so a cancelled page isn't an error. Put it back in
+                // the queue, otherwise it's stuck in a state no later pass will pick up.
+                page.status = Page.State.Queue
                 throw e
             }
+            page.status = Page.State.Error(e)
         }
-    }
-}
-
-/**
- * Data class used to keep ordering of pages in order to maintain priority.
- */
-@OptIn(ExperimentalAtomicApi::class)
-private class PriorityPage(
-    val page: ReaderPage,
-    val priority: Int,
-) : Comparable<PriorityPage> {
-    companion object {
-        private val idGenerator = AtomicInt(0)
-
-        const val RETRY = 2
-        const val DEFAULT = 1
-        const val ADJACENT = 0
-    }
-
-    private val identifier = idGenerator.incrementAndFetch()
-
-    override fun compareTo(other: PriorityPage): Int {
-        val p = other.priority.compareTo(priority)
-        return if (p != 0) p else identifier.compareTo(other.identifier)
     }
 }

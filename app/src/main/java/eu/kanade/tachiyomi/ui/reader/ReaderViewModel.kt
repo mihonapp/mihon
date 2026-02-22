@@ -380,6 +380,9 @@ class ReaderViewModel(
             chapterList.getOrNull(chapterPos - 1),
             chapterList.getOrNull(chapterPos + 1),
         )
+        newChapters.nextChapter?.let { nextChapter ->
+            viewModelScope.launch(Dispatchers.IO) { preload(nextChapter) }
+        }
 
         withContext(Dispatchers.Main) {
             val toDownload = cancelQueuedDownloads(newChapters.currChapter)
