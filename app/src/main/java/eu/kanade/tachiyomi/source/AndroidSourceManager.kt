@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -47,7 +48,10 @@ class AndroidSourceManager(
 
     init {
         scope.launch {
-            extensionManager.installedExtensionsFlow
+            combine(
+                extensionManager.installedExtensionsFlow,
+                extensionManager.isInitialized,
+            ) { extensions, _ -> extensions }
                 .collectLatest { extensions ->
                     val mutableMap = ConcurrentHashMap<Long, Source>(
                         mapOf(
@@ -65,7 +69,7 @@ class AndroidSourceManager(
                         }
                     }
                     sourcesMapFlow.value = mutableMap
-                    _isInitialized.value = true
+                    _isInitialized.value = extensionManager.isInitialized.value
                 }
         }
 

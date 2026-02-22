@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import eu.kanade.domain.extension.interactor.TrustExtension
 import eu.kanade.domain.source.service.SourcePreferences
+import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.extension.api.ExtensionApi
 import eu.kanade.tachiyomi.extension.api.ExtensionUpdateNotifier
 import eu.kanade.tachiyomi.extension.model.Extension
@@ -15,6 +16,7 @@ import eu.kanade.tachiyomi.extension.util.ExtensionLoader
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -120,6 +122,9 @@ class ExtensionManager(
      */
     private fun initExtensions() {
         scope.launch {
+            val delayMs = INIT_DELAY_MS - (System.currentTimeMillis() - App.processStartTimeMillis)
+            if (delayMs > 0) delay(delayMs)
+
             val extensions = ExtensionLoader.loadExtensions(context)
 
             installedExtensionMapFlow.value = extensions
@@ -381,3 +386,8 @@ class ExtensionManager(
         return map { it.values.toList() }.stateIn(scope, SharingStarted.Lazily, value.values.toList())
     }
 }
+
+/**
+ * 5 seconds to give Android time to bind all the installed extensions before querying the list.
+ */
+private const val INIT_DELAY_MS = 5_000L
