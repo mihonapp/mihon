@@ -19,7 +19,6 @@ class AndroidDatabaseHandler(
     val queryDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : DatabaseHandler {
 
-
     override suspend fun <T> await(inTransaction: Boolean, block: suspend Database.() -> T): T {
         return dispatch(inTransaction, block)
     }
