@@ -4,6 +4,7 @@ import android.content.Context
 import com.hippo.unifile.UniFile
 import eu.kanade.domain.chapter.model.toSChapter
 import eu.kanade.domain.manga.model.getComicInfo
+import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateNotifier
@@ -112,6 +113,8 @@ class Downloader(
 
     init {
         scope.launch {
+            val delayMs = RESTORE_DELAY_MS - (System.currentTimeMillis() - App.processStartTimeMillis)
+            if (delayMs > 0) delay(delayMs)
             val chapters = store.restore()
             addAllToQueue(chapters)
         }
@@ -728,6 +731,7 @@ class Downloader(
         const val WARNING_NOTIF_TIMEOUT_MS = 30_000L
         const val CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD = 15
         private const val DOWNLOADS_QUEUED_WARNING_THRESHOLD = 30
+        private const val RESTORE_DELAY_MS = 5_000L
     }
 }
 
