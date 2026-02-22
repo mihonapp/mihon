@@ -32,6 +32,10 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add a small increment to chapter number before comparison to fix progress sync issues for Suwayomi ([@cpiber](https://github.com/cpiber)) ([#2657](https://github.com/mihonapp/mihon/pull/2675))
 - Add all pages of adjacent chapters in the UI instead of only the first or last three ([@AntsyLich](https://github.com/AntsyLich)) ([#2995](https://github.com/mihonapp/mihon/pull/2995))
 - Going back now first clears search query on browse extension tab ([@cuong-tran](https://github.com/cuong-tran)) ([#2906](https://github.com/mihonapp/mihon/pull/2906))
+- Reader images are now loaded in parallel ([@AntsyLich](https://github.com/AntsyLich)) ([#2986](https://github.com/mihonapp/mihon/pull/2986))
+- Full chapter is loaded in the background ([@AntsyLich](https://github.com/AntsyLich)) ([#2986](https://github.com/mihonapp/mihon/pull/2986))
+- Next reader chapter is preloaded as soon as possible ([@AntsyLich](https://github.com/AntsyLich)) ([#2986](https://github.com/mihonapp/mihon/pull/2986))
+- Retry in reader redownloads the image ([@AntsyLich](https://github.com/AntsyLich)) ([#2986](https://github.com/mihonapp/mihon/pull/2986))
 
 ### Fixed
 - Fix reader tap zones triggering after scrolling is stopped by tapping ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2680](https://github.com/mihonapp/mihon/pull/2680))
