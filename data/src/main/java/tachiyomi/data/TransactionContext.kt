@@ -1,30 +1,24 @@
 package tachiyomi.data
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.asContextElement
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import java.util.concurrent.RejectedExecutionException
-import kotlin.concurrent.atomics.AtomicInt
-import kotlin.concurrent.atomics.ExperimentalAtomicApi
-import kotlin.concurrent.atomics.decrementAndFetch
-import kotlin.concurrent.atomics.incrementAndFetch
 import kotlin.coroutines.ContinuationInterceptor
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.coroutines.coroutineContext
-import kotlin.coroutines.resume
-
-// Global mutex to serialize transaction entry and prevent thread pool exhaustion.
-// If you have multiple distinct database files/handlers, this should be a property of AndroidDatabaseHandler.
-private val transactionMutex = Mutex()
 
 /**
- * Returns the transaction dispatcher if we are on a transaction, or the database dispatchers.
+ * A single-threaded dispatcher backed by the IO thread pool.
+ * Allows yielding while still putting the SQLite interaction off-thread.
+ *
+ * This still keeps serialization, keeps the calling thread unblocked,
+ * but doesn't suffer from lock contention.
+ */
+private val transactionDispatcher = Dispatchers.IO.limitedParallelism(1)
+
+/**
+ * Returns the transaction dispatcher if we are on a transaction, or the database dispatcher.
  */
 internal suspend fun AndroidDatabaseHandler.getCurrentDatabaseContext(): CoroutineContext {
     return coroutineContext[TransactionElement]?.transactionDispatcher ?: queryDispatcher
@@ -35,158 +29,47 @@ internal suspend fun AndroidDatabaseHandler.getCurrentDatabaseContext(): Corouti
  * marked as successful unless an exception is thrown in the suspending [block] or the coroutine
  * is cancelled.
  *
- * SQLDelight will only perform at most one transaction at a time, additional transactions are queued
- * and executed on a first come, first serve order.
+ * Transactions are serialized by dispatching onto a [Dispatchers.IO] dispatcher limited to a
+ * single thread of parallelism. Transactions are queued and executed on
+ * a first-come, first-serve basis.
  *
  * Performing blocking database operations is not permitted in a coroutine scope other than the
- * one received by the suspending block. It is recommended that all [Dao] function invoked within
+ * one received by the suspending block. It is recommended that all Dao functions invoked within
  * the [block] be suspending functions.
- *
- * The dispatcher used to execute the given [block] will utilize threads from SQLDelight's query executor.
  */
 internal suspend fun <T> AndroidDatabaseHandler.withTransaction(block: suspend () -> T): T {
     val transactionElement = coroutineContext[TransactionElement]
 
-    // If we are already in a transaction, we don't need to lock the Mutex.
-    // We just reuse the existing thread/context.
+    // If we are already inside a transaction, just run the block directly — we are already
+    // on the correct thread and re-dispatching would deadlock the single-slot dispatcher.
     if (transactionElement != null) {
-        return withContext(transactionElement.transactionDispatcher) {
-            transactionElement.acquire()
-            try {
-                db.transactionWithResult {
-                    runBlocking(transactionElement.transactionDispatcher) {
-                        block()
-                    }
-                }
-            } finally {
-                transactionElement.release()
-            }
-        }
+        return block()
     }
 
-    // transaction: Acquire Mutex BEFORE acquiring a thread.
-    // This ensures we only block a real thread when we have exclusive access.
-    return transactionMutex.withLock {
-        val transactionContext = createTransactionContext()
-        withContext(transactionContext) {
-            val element = coroutineContext[TransactionElement]!!
-            element.acquire()
-            try {
-                db.transactionWithResult {
-                    runBlocking(transactionContext) {
-                        block()
-                    }
-                }
-            } finally {
-                element.release()
+    return withContext(transactionDispatcher) {
+        val element = TransactionElement(transactionDispatcher)
+        // Build a context that carries TransactionElement (so nested calls detect the active
+        // transaction) but has no dispatcher, so runBlocking's own event loop drives execution
+        // on the current thread without re-dispatching to the (now-blocked) transactionDispatcher.
+        val blockingCtx = coroutineContext.minusKey(ContinuationInterceptor) + element
+        db.transactionWithResult {
+            runBlocking(blockingCtx) {
+                block()
             }
         }
     }
 }
 
 /**
- * Creates a [CoroutineContext] for performing database operations within a coroutine transaction.
- *
- * The context is a combination of a dispatcher, a [TransactionElement] and a thread local element.
- *
- * * The dispatcher will dispatch coroutines to a single thread that is taken over from the SQLDelight
- * query executor. If the coroutine context is switched, suspending DAO functions will be able to
- * dispatch to the transaction thread.
- *
- * * The [TransactionElement] serves as an indicator for inherited context, meaning, if there is a
- * switch of context, suspending DAO methods will be able to use the indicator to dispatch the
- * database operation to the transaction thread.
- *
- * * The thread local element serves as a second indicator and marks threads that are used to
- * execute coroutines within the coroutine transaction, more specifically it allows us to identify
- * if a blocking DAO method is invoked within the transaction coroutine. Never assign meaning to
- * this value, for now all we care is if its present or not.
+ * A [CoroutineContext.Element] that indicates there is an on-going database transaction and
+ * carries the dispatcher that should be used for nested DB operations.
  */
-private suspend fun AndroidDatabaseHandler.createTransactionContext(): CoroutineContext {
-    val controlJob = Job()
-    // make sure to tie the control job to this context to avoid blocking the transaction if
-    // context get cancelled before we can even start using this job. Otherwise, the acquired
-    // transaction thread will forever wait for the controlJob to be cancelled.
-    // see b/148181325
-    coroutineContext[Job]?.invokeOnCompletion {
-        controlJob.cancel()
-    }
-
-    val dispatcher = transactionDispatcher.acquireTransactionThread(controlJob)
-    val transactionElement = TransactionElement(controlJob, dispatcher)
-    val threadLocalElement =
-        suspendingTransactionId.asContextElement(System.identityHashCode(controlJob))
-    return dispatcher + transactionElement + threadLocalElement
-}
-
-/**
- * Acquires a thread from the executor and returns a [ContinuationInterceptor] to dispatch
- * coroutines to the acquired thread. The [controlJob] is used to control the release of the
- * thread by cancelling the job.
- */
-private suspend fun CoroutineDispatcher.acquireTransactionThread(
-    controlJob: Job,
-): ContinuationInterceptor {
-    return suspendCancellableCoroutine { continuation ->
-        continuation.invokeOnCancellation {
-            // We got cancelled while waiting to acquire a thread, we can't stop our attempt to
-            // acquire a thread, but we can cancel the controlling job so once it gets acquired it
-            // is quickly released.
-            controlJob.cancel()
-        }
-        try {
-            dispatch(EmptyCoroutineContext) {
-                runBlocking {
-                    // Thread acquired, resume coroutine
-                    continuation.resume(coroutineContext[ContinuationInterceptor]!!)
-                    controlJob.join()
-                }
-            }
-        } catch (ex: RejectedExecutionException) {
-            // Couldn't acquire a thread, cancel coroutine
-            continuation.cancel(
-                IllegalStateException(
-                    "Unable to acquire a thread to perform the database transaction",
-                    ex,
-                ),
-            )
-        }
-    }
-}
-
-/**
- * A [CoroutineContext.Element] that indicates there is an on-going database transaction.
- */
-@OptIn(ExperimentalAtomicApi::class)
 private class TransactionElement(
-    private val transactionThreadControlJob: Job,
-    val transactionDispatcher: ContinuationInterceptor,
+    val transactionDispatcher: CoroutineDispatcher,
 ) : CoroutineContext.Element {
 
     companion object Key : CoroutineContext.Key<TransactionElement>
 
     override val key: CoroutineContext.Key<TransactionElement>
         get() = TransactionElement
-
-    /**
-     * Number of transactions (including nested ones) started with this element.
-     * Call [acquire] to increase the count and [release] to decrease it. If the count reaches zero
-     * when [release] is invoked then the transaction job is cancelled and the transaction thread
-     * is released.
-     */
-    private val referenceCount = AtomicInt(0)
-
-    fun acquire() {
-        referenceCount.incrementAndFetch()
-    }
-
-    fun release() {
-        val count = referenceCount.decrementAndFetch()
-        if (count < 0) {
-            throw IllegalStateException("Transaction was never started or was already released")
-        } else if (count == 0) {
-            // Cancel the job that controls the transaction thread, causing it to be released.
-            transactionThreadControlJob.cancel()
-        }
-    }
 }
