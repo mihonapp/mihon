@@ -93,7 +93,7 @@ class HistoryRepositoryImpl(
     }
 
     override suspend fun getReadDurationByManga(): List<ReadDurationByManga> {
-        return database.historyQueries
+        val raw = database.historyQueries
             .getReadDurationByManga {
                     manga_id, title, total_time_read, source_id, is_favorite, thumbnail_url, cover_last_modified ->
                 ReadDurationByManga(
@@ -110,6 +110,21 @@ class HistoryRepositoryImpl(
                 )
             }
             .awaitAsList()
+        // Merge duplicate manga entries (e.g. from source migrations) by normalized title. Sum all read times.
+        return raw
+            .groupBy { it.title.trim().lowercase() }
+            .map { (_, group) ->
+                val representative = group.maxWithOrNull(
+                    compareBy(
+                        { it.cover.isMangaFavorite },
+                        { it.cover.url != null },
+                        { it.totalTimeRead },
+                    ),
+                )!!
+                representative.copy(totalTimeRead = group.sumOf { it.totalTimeRead })
+            }
+            .sortedByDescending { it.totalTimeRead }
+            .take(30)
     }
 
     override suspend fun getReadDurationForManga(mangaId: Long): Long {
