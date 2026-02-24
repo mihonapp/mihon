@@ -904,4 +904,5 @@
     <string name="action_webview_close_tab">Cerrar pestaña</string>
     <string name="action_filter_excluded_scanlators">Ocultar equipos de traducción excluidos</string>
     <string name="calculating">Calculando…</string>
+    <string name="download_bookmarked">Favoritos</string>
 </resources>
