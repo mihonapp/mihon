@@ -140,10 +140,10 @@ class ExtensionManager(
                 .associate { it.extension.pkgName to it.extension }
 
             notLoadedExtensionFlowMap.value = extensions
-            .filterIsInstance<LoadResult.NotLoaded>()
-            .associate { it.extension.pkgName to it.extension }
+                .filterIsInstance<LoadResult.NotLoaded>()
+                .associate { it.extension.pkgName to it.extension }
 
-        _isInitialized.value = true
+            _isInitialized.value = true
         }
     }
 
