@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.browse.extension
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -49,6 +50,10 @@ fun extensionsTab(
             ),
         ),
         content = { contentPadding, _ ->
+            BackHandler(enabled = state.searchQuery != null) {
+                extensionsScreenModel.search(null)
+            }
+
             ExtensionScreen(
                 state = state,
                 contentPadding = contentPadding,
