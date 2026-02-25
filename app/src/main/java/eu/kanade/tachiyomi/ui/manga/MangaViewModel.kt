@@ -1088,7 +1088,12 @@ class MangaViewModel(
 
     fun showReadingStatsDialog() {
         viewModelScope.launch(Dispatchers.IO) {
-            val totalReadDuration = getReadDurationForManga.await(mangaId)
+            val manga = successState?.manga
+            val totalReadDuration = if (manga != null) {
+                getReadDurationForManga.await(mangaId, manga.title)
+            } else {
+                getReadDurationForManga.await(mangaId)
+            }
             dialog.value = Dialog.ReadingStats(totalReadDuration = totalReadDuration)
         }
     }

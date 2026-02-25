@@ -64,9 +64,15 @@ INNER JOIN history H ON M.id = H.manga_id
 GROUP BY M.id
 HAVING total_time_read > 0
 ORDER BY total_time_read DESC
-LIMIT 50;
+LIMIT 500;
 
 getReadDurationForManga:
 SELECT COALESCE(SUM(read_duration), 0)
 FROM history
 WHERE manga_id = :mangaId;
+
+getReadDurationForMangaByTitle:
+SELECT COALESCE(SUM(H.read_duration), 0)
+FROM history H
+JOIN manga M ON H.manga_id = M.id
+WHERE LOWER(TRIM(M.remote_title)) = LOWER(TRIM(:title));

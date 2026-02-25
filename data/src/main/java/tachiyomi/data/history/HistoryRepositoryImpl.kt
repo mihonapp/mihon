@@ -18,12 +18,14 @@ import tachiyomi.domain.history.model.HistoryWithRelations
 import tachiyomi.domain.history.model.ReadDurationByManga
 import tachiyomi.domain.history.repository.HistoryRepository
 import tachiyomi.domain.manga.model.MangaCover
+import tachiyomi.domain.source.service.SourceManager
 
 @Inject
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
 class HistoryRepositoryImpl(
     private val database: Database,
+    private val sourceManager: SourceManager,
 ) : HistoryRepository {
 
     override fun getHistory(query: String): Flow<List<HistoryWithRelations>> {
@@ -111,11 +113,16 @@ class HistoryRepositoryImpl(
             }
             .awaitAsList()
         // Merge duplicate manga entries (e.g. from source migrations) by normalized title. Sum all read times.
+        // Newly migrated entries will have low reading time, so try to get existing entry from sourceManager. Maybe problematic if library has more than 500 entries.
+        val availableSourceIds = raw.map { it.cover.sourceId }.distinct()
+            .filter { sourceManager.get(it) != null }
+            .toSet()
         return raw
             .groupBy { it.title.trim().lowercase() }
             .map { (_, group) ->
                 val representative = group.maxWithOrNull(
                     compareBy(
+                        { it.cover.sourceId in availableSourceIds },
                         { it.cover.isMangaFavorite },
                         { it.cover.url != null },
                         { it.totalTimeRead },
@@ -130,6 +137,12 @@ class HistoryRepositoryImpl(
     override suspend fun getReadDurationForManga(mangaId: Long): Long {
         return database.historyQueries
             .getReadDurationForManga(mangaId)
+            .awaitAsOne()
+    }
+
+    override suspend fun getReadDurationForMangaByTitle(title: String): Long {
+        return database.historyQueries
+            .getReadDurationForMangaByTitle(title)
             .awaitAsOne()
     }
 }
