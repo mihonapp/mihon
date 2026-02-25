@@ -9,13 +9,25 @@ import okhttp3.Response
  *
  * This nullifies the transparent gzip of [okhttp3.internal.http.BridgeInterceptor]
  * so gzip and Brotli are explicitly handled by the [okhttp3.brotli.BrotliInterceptor].
+ *
+ * This hack causes OkHttp cache to store decompressed responses, thus very inefficient.
  */
 class IgnoreGzipInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        var request = chain.request()
-        if (request.header("Accept-Encoding") == "gzip") {
-            request = request.newBuilder().removeHeader("Accept-Encoding").build()
+        val request = chain.request()
+        if (request.header("Accept-Encoding") != "gzip") {
+            return chain.proceed(request)
         }
-        return chain.proceed(request)
+        val response = chain.proceed(
+            request.newBuilder()
+                .removeHeader("Accept-Encoding")
+                .build(),
+        )
+        // Restore the request header before passing it back to CacheInterceptor.
+        return response.newBuilder().request(
+            response.request.newBuilder()
+                .header("Accept-Encoding", "gzip")
+                .build(),
+        ).build()
     }
 }
