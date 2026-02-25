@@ -708,7 +708,7 @@
     <string name="library_sync_complete">Sinkroniziranje biblioteke završeno</string>
     <string name="information_cloudflare_help">Dodirni ovdje za pomoć s Cloudflareom</string>
     <string name="track_activity_name">Prijava za uslugu praćenja</string>
-    <string name="download_cache_invalidated">Indeks preuzimanja poništen</string>
+    <string name="download_cache_invalidated">Ponovno stvaranje indeksa preuzimanja</string>
     <string name="create_backup_file_error">Nije bilo moguće stvoriti datoteku sigurnosne kopije</string>
     <string name="unlock_app_title">Otključaj %s</string>
     <string name="exception_offline">Ne postoji veza s internetom</string>
@@ -909,4 +909,6 @@
     <string name="pref_download_concurrent_pages">Istovremena preuzimanja stranica</string>
     <string name="pref_download_concurrent_pages_summary">Istovremeno preuzete stranice po izvoru</string>
     <string name="action_webview_close_tab">Zatvori karticu</string>
+    <string name="calculating">Izračunavanje …</string>
+    <string name="action_filter_excluded_scanlators">Filtriraj isključene amaterske prevoditelje</string>
 </resources>

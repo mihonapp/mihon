@@ -40,14 +40,14 @@ class SuwayomiApi(private val trackId: Long) {
     public fun sourcePreferences(): SharedPreferences = configurableSource.sourcePreferences()
 
     suspend fun getTrackSearch(mangaId: Long): TrackSearch = withIOContext {
-        val query = """
-        |query GetManga(${'$'}mangaId: Int!) {
-        |    manga(id: ${'$'}mangaId) {
+        val query = $$"""
+        |query GetManga($mangaId: Int!) {
+        |    manga(id: $mangaId) {
         |        ...MangaFragment
         |    }
         |}
         |
-        |$MangaFragment
+        |$$MangaFragment
         """.trimMargin()
         val payload = buildJsonObject {
             put("query", query)
@@ -90,9 +90,9 @@ class SuwayomiApi(private val trackId: Long) {
 
         // TODO: Include a filter on the chapter number here
         // Below, we only consider older chapters; since v2.1.1985 filtering works properly in the query
-        val chaptersQuery = """
-        |query GetMangaUnreadChapters(${'$'}mangaId: Int!) {
-        |  chapters(condition: {mangaId: ${'$'}mangaId, isRead: false}) {
+        val chaptersQuery = $$"""
+        |query GetMangaUnreadChapters($mangaId: Int!) {
+        |  chapters(condition: {mangaId: $mangaId, isRead: false}) {
         |    nodes {
         |      id
         |      chapterNumber
@@ -122,20 +122,20 @@ class SuwayomiApi(private val trackId: Long) {
         }
 
         val markQuery = if (deleteDownloadsOnServer) {
-            """
-            |mutation MarkChaptersRead(${'$'}chapters: [Int!]!) {
-            |  updateChapters(input: {ids: ${'$'}chapters, patch: {isRead: true}}) {
+            $$"""
+            |mutation MarkChaptersRead($chapters: [Int!]!) {
+            |  updateChapters(input: {ids: $chapters, patch: {isRead: true}}) {
             |    __typename
             |  }
-            |  deleteDownloadedChapters(input: {ids: ${'$'}chapters}) {
+            |  deleteDownloadedChapters(input: {ids: $chapters}) {
             |    __typename
             |  }
             |}
             """.trimMargin()
         } else {
-            """
-            |mutation MarkChaptersRead(${'$'}chapters: [Int!]!) {
-            |  updateChapters(input: {ids: ${'$'}chapters, patch: {isRead: true}}) {
+            $$"""
+            |mutation MarkChaptersRead($chapters: [Int!]!) {
+            |  updateChapters(input: {ids: $chapters, patch: {isRead: true}}) {
             |    __typename
             |  }
             |}
@@ -159,9 +159,9 @@ class SuwayomiApi(private val trackId: Long) {
                 .awaitSuccess()
         }
 
-        val trackQuery = """
-        |mutation TrackManga(${'$'}mangaId: Int!) {
-        |  trackProgress(input: {mangaId: ${'$'}mangaId}) {
+        val trackQuery = $$"""
+        |mutation TrackManga($mangaId: Int!) {
+        |  trackProgress(input: {mangaId: $mangaId}) {
         |    __typename
         |  }
         |}

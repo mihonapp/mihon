@@ -108,7 +108,7 @@ class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
             // Users can set a 'username' (not nickname) once which effectively
             // replaces the stringified ID in certain queries.
             // If no username is set, the API returns the user ID as a strings
-            var username = api.getUsername()
+            val username = api.getUsername()
             saveCredentials(username, oauth.accessToken)
         } catch (_: Throwable) {
             logout()

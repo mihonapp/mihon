@@ -54,9 +54,11 @@ fun CalenderHeader(
         }
         Row {
             IconButton(onClick = onPreviousClick) {
+                @Suppress("DEPRECATION")
                 Icon(Icons.Default.KeyboardArrowLeft, stringResource(MR.strings.upcoming_calendar_prev))
             }
             IconButton(onClick = onNextClick) {
+                @Suppress("DEPRECATION")
                 Icon(Icons.Default.KeyboardArrowRight, stringResource(MR.strings.upcoming_calendar_next))
             }
         }
