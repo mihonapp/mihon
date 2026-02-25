@@ -87,10 +87,17 @@ INNER JOIN history H ON C._id = H.chapter_id
 GROUP BY M._id, M.title, M.source, M.favorite, M.thumbnail_url, M.cover_last_modified
 HAVING total_time_read > 0
 ORDER BY total_time_read DESC
-LIMIT 50;
+LIMIT 500;
 
 getReadDurationForManga:
 SELECT COALESCE(SUM(H.time_read), 0)
 FROM history H
 JOIN chapters C ON H.chapter_id = C._id
 WHERE C.manga_id = :mangaId;
+
+getReadDurationForMangaByTitle:
+SELECT COALESCE(SUM(H.time_read), 0)
+FROM history H
+JOIN chapters C ON H.chapter_id = C._id
+JOIN mangas M ON C.manga_id = M._id
+WHERE LOWER(TRIM(M.title)) = LOWER(TRIM(:title));

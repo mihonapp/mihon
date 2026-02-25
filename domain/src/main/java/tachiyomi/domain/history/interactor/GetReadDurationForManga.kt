@@ -8,4 +8,8 @@ class GetReadDurationForManga(
     suspend fun await(mangaId: Long): Long {
         return repository.getReadDurationForManga(mangaId)
     }
+
+    suspend fun await(mangaId: Long, title: String): Long {
+        return repository.getReadDurationForMangaByTitle(title)
+    }
 }

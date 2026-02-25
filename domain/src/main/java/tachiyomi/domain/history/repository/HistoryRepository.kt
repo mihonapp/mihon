@@ -27,4 +27,6 @@ interface HistoryRepository {
     suspend fun getReadDurationByManga(): List<ReadDurationByManga>
 
     suspend fun getReadDurationForManga(mangaId: Long): Long
+
+    suspend fun getReadDurationForMangaByTitle(title: String): Long
 }

@@ -1110,7 +1110,12 @@ class MangaScreenModel(
 
     fun showReadingStatsDialog() {
         screenModelScope.launchIO {
-            val totalReadDuration = getReadDurationForManga.await(mangaId)
+            val manga = successState?.manga
+            val totalReadDuration = if (manga != null) {
+                getReadDurationForManga.await(mangaId, manga.title)
+            } else {
+                getReadDurationForManga.await(mangaId)
+            }
             updateSuccessState {
                 it.copy(dialog = Dialog.ReadingStats(totalReadDuration = totalReadDuration))
             }

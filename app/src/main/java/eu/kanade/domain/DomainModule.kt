@@ -167,7 +167,7 @@ class DomainModule : InjektModule {
         addFactory { GetAvailableScanlators(get()) }
         addFactory { FilterChaptersForDownload(get(), get(), get()) }
 
-        addSingletonFactory<HistoryRepository> { HistoryRepositoryImpl(get()) }
+        addSingletonFactory<HistoryRepository> { HistoryRepositoryImpl(get(), get()) }
         addFactory { GetHistory(get()) }
         addFactory { UpsertHistory(get()) }
         addFactory { RemoveHistory(get()) }

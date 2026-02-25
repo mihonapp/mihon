@@ -10,9 +10,11 @@ import tachiyomi.domain.history.model.HistoryWithRelations
 import tachiyomi.domain.history.model.ReadDurationByManga
 import tachiyomi.domain.history.repository.HistoryRepository
 import tachiyomi.domain.manga.model.MangaCover
+import tachiyomi.domain.source.service.SourceManager
 
 class HistoryRepositoryImpl(
     private val handler: DatabaseHandler,
+    private val sourceManager: SourceManager,
 ) : HistoryRepository {
 
     override fun getHistory(query: String): Flow<List<HistoryWithRelations>> {
@@ -94,11 +96,13 @@ class HistoryRepositoryImpl(
             }
         }
         // Merge duplicate manga entries (e.g. from source migrations) by normalized title. Sum all read times.
+        // Newly migrated entries will have low reading time, so try to get existing entry from sourceManager. Maybe problematic if library has more than 500 entries.
         return raw
             .groupBy { it.title.trim().lowercase() }
             .map { (_, group) ->
                 val representative = group.maxWithOrNull(
                     compareBy(
+                        { sourceManager.get(it.cover.sourceId) != null },
                         { it.cover.isMangaFavorite },
                         { it.cover.url != null },
                         { it.totalTimeRead },
@@ -113,6 +117,12 @@ class HistoryRepositoryImpl(
     override suspend fun getReadDurationForManga(mangaId: Long): Long {
         return handler.awaitOne {
             historyQueries.getReadDurationForManga(mangaId)
+        }
+    }
+
+    override suspend fun getReadDurationForMangaByTitle(title: String): Long {
+        return handler.awaitOne {
+            historyQueries.getReadDurationForMangaByTitle(title)
         }
     }
 }
