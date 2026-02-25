@@ -1,12 +1,15 @@
 package eu.kanade.presentation.manga.components
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -19,6 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
+import eu.kanade.presentation.manga.ExportToLocalReason
 import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import kotlinx.collections.immutable.toImmutableList
 import tachiyomi.domain.manga.interactor.FetchInterval
@@ -148,5 +153,75 @@ fun SetIntervalDialog(
                 Text(text = stringResource(MR.strings.action_ok))
             }
         },
+    )
+}
+
+@Composable
+fun ExportToLocalDialog(
+    reason: ExportToLocalReason,
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit,
+) {
+    val textRes = remember(reason) {
+        when (reason) {
+            ExportToLocalReason.ALREADY_EXISTS -> MR.strings.export_to_local_already_exists
+            ExportToLocalReason.NO_DOWNLOADS -> MR.strings.export_to_local_no_downloads
+        }
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        dismissButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text(text = stringResource(MR.strings.action_cancel))
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onDismissRequest()
+                    onConfirm()
+                },
+            ) {
+                Text(text = stringResource(MR.strings.action_ok))
+            }
+        },
+        title = {
+            Text(text = stringResource(MR.strings.are_you_sure))
+        },
+        text = {
+            Text(text = stringResource(textRes))
+        },
+    )
+}
+
+@Composable
+fun ExportToLocalProgressDialog(
+    progress: Float,
+    exitMigration: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = {},
+        confirmButton = {
+            TextButton(onClick = exitMigration) {
+                Text(text = stringResource(MR.strings.migrationListScreen_progressDialog_cancelLabel))
+            }
+        },
+        text = {
+            if (!progress.isNaN()) {
+                val progressAnimated by animateFloatAsState(
+                    targetValue = progress,
+                    animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
+                    label = "migration_progress",
+                )
+                LinearProgressIndicator(
+                    progress = { progressAnimated },
+                )
+            }
+        },
+        properties = DialogProperties(
+            dismissOnBackPress = false,
+            dismissOnClickOutside = false,
+        ),
     )
 }

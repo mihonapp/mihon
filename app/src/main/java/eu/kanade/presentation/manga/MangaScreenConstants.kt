@@ -21,3 +21,8 @@ enum class MangaScreenItem {
     CHAPTER_HEADER,
     CHAPTER,
 }
+
+enum class ExportToLocalReason {
+    ALREADY_EXISTS,
+    NO_DOWNLOADS
+}
