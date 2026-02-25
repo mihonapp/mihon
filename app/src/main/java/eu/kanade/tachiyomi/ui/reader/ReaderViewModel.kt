@@ -145,25 +145,18 @@ class ReaderViewModel @JvmOverloads constructor(
 
     private var chapterToDownload: Download? = null
 
-    private var unfilteredChapterListCache: List<tachiyomi.domain.chapter.model.Chapter>? = null
-    private suspend fun getUnfilteredChapterList(): List<tachiyomi.domain.chapter.model.Chapter> {
-        if (unfilteredChapterListCache == null) {
-            val manga = manga!!
-            unfilteredChapterListCache = getChaptersByMangaId.await(manga.id, applyScanlatorFilter = false)
-        }
-        return unfilteredChapterListCache!!
+    private val unfilteredChapterList by lazy {
+        val manga = manga!!
+        runBlocking { getChaptersByMangaId.await(manga.id, applyScanlatorFilter = false) }
     }
 
     /**
      * Chapter list for the active manga. It's retrieved lazily and should be accessed for the first
      * time in a background thread to avoid blocking the UI.
      */
-    private var chapterListCache: List<ReaderChapter>? = null
-    private suspend fun getChapterList(): List<ReaderChapter> {
-        chapterListCache?.let { return it }
-
+    private val chapterList by lazy {
         val manga = manga!!
-        val chapters = getChaptersByMangaId.await(manga.id, applyScanlatorFilter = true)
+        val chapters = runBlocking { getChaptersByMangaId.await(manga.id, applyScanlatorFilter = true) }
 
         val selectedChapter = chapters.find { it.id == chapterId }
             ?: error("Requested chapter of id $chapterId not found in chapter list")
@@ -212,7 +205,7 @@ class ReaderViewModel @JvmOverloads constructor(
             else -> chapters
         }
 
-        val result = chaptersForReader
+        chaptersForReader
             .sortedWith(getChapterSort(manga, sortDescending = false))
             .run {
                 if (readerPreferences.skipDupe().get()) {
@@ -230,8 +223,6 @@ class ReaderViewModel @JvmOverloads constructor(
             }
             .map { it.toDbChapter() }
             .map(::ReaderChapter)
-        chapterListCache = result
-        return result
     }
 
     private val incognitoMode: Boolean by lazy { getIncognitoState.await(manga?.source) }
@@ -297,7 +288,7 @@ class ReaderViewModel @JvmOverloads constructor(
                     val source = sourceManager.getOrStub(manga.source)
                     loader = ChapterLoader(context, downloadManager, downloadProvider, manga, source)
 
-                    loadChapter(loader!!, getChapterList().first { chapterId == it.chapter.id })
+                    loadChapter(loader!!, chapterList.first { chapterId == it.chapter.id })
                     Result.success(true)
                 } else {
                     // Unlikely but okay
@@ -322,7 +313,6 @@ class ReaderViewModel @JvmOverloads constructor(
     ): ViewerChapters {
         loader.loadChapter(chapter)
 
-        val chapterList = getChapterList()
         val chapterPos = chapterList.indexOf(chapter)
         val newChapters = ViewerChapters(
             chapter,
@@ -521,12 +511,11 @@ class ReaderViewModel @JvmOverloads constructor(
      * If both conditions are satisfied enqueues chapter for delete
      * @param currentChapter current chapter, which is going to be marked as read.
      */
-    private suspend fun deleteChapterIfNeeded(currentChapter: ReaderChapter) {
+    private fun deleteChapterIfNeeded(currentChapter: ReaderChapter) {
         val removeAfterReadSlots = downloadPreferences.removeAfterReadSlots().get()
         if (removeAfterReadSlots == -1) return
 
         // Determine which chapter should be deleted and enqueue
-        val chapterList = getChapterList()
         val currentChapterPosition = chapterList.indexOf(currentChapter)
         val chapterToDelete = chapterList.getOrNull(currentChapterPosition - removeAfterReadSlots)
 
@@ -577,7 +566,7 @@ class ReaderViewModel @JvmOverloads constructor(
             .contains(LibraryPreferences.MARK_DUPLICATE_CHAPTER_READ_EXISTING)
         if (!markDuplicateAsRead) return
 
-        val duplicateUnreadChapters = getUnfilteredChapterList()
+        val duplicateUnreadChapters = unfilteredChapterList
             .mapNotNull { chapter ->
                 if (
                     !chapter.read &&
@@ -690,7 +679,7 @@ class ReaderViewModel @JvmOverloads constructor(
      */
     fun setMangaReadingMode(readingMode: ReadingMode) {
         val manga = manga ?: return
-        viewModelScope.launchIO {
+        runBlocking(Dispatchers.IO) {
             setMangaViewerFlags.awaitSetReadingMode(manga.id, readingMode.flagValue.toLong())
             val currChapters = state.value.viewerChapters
             if (currChapters != null) {

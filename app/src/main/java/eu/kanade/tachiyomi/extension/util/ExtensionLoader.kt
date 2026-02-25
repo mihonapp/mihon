@@ -18,7 +18,6 @@ import eu.kanade.tachiyomi.util.storage.copyAndSetReadOnlyTo
 import eu.kanade.tachiyomi.util.system.ChildFirstPathClassLoader
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
@@ -115,7 +114,7 @@ internal object ExtensionLoader {
      *
      * @param context The application context.
      */
-    suspend fun loadExtensions(context: Context): List<LoadResult> {
+    fun loadExtensions(context: Context): List<LoadResult> {
         val pkgManager = context.packageManager
 
         val installedPkgs = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -161,10 +160,11 @@ internal object ExtensionLoader {
         if (extPkgs.isEmpty()) return emptyList()
 
         // Load each extension concurrently and wait for completion
-        return coroutineScope {
-            extPkgs.map {
+        return runBlocking {
+            val deferred = extPkgs.map {
                 async { loadExtension(context, it) }
-            }.awaitAll()
+            }
+            deferred.awaitAll()
         }
     }
 
