@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
@@ -82,6 +83,7 @@ import eu.kanade.tachiyomi.ui.more.OnboardingScreen
 import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.util.system.isNavigationBarNeedsScrim
 import eu.kanade.tachiyomi.util.system.openInBrowser
+import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.system.updaterEnabled
 import eu.kanade.tachiyomi.util.view.setComposeContent
 import kotlinx.coroutines.channels.awaitClose
@@ -138,11 +140,11 @@ class MainActivity : BaseActivity() {
             return
         }
 
-        if (intent.getBooleanExtra("safeMode", false)) {
-            preferences.safeMode().set(true)
+        val safeMode = intent.getBooleanExtra("safeMode", false)
+        if (isLaunch) {
+            preferences.safeMode().set(safeMode)
+            if (safeMode) toast(MR.strings.safe_mode_summary, Toast.LENGTH_LONG)
         }
-
-        val safeMode = preferences.safeMode().get()
 
         setComposeContent {
             var didMigration by remember { mutableStateOf<Boolean?>(null) }
