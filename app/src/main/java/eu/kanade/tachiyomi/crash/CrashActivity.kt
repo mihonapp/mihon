@@ -19,15 +19,18 @@ class CrashActivity : BaseActivity() {
         setComposeContent {
             CrashScreen(
                 exception = exception,
-                onRestartClick = { safeMode ->
-                    finishAffinity()
-                    startActivity(
-                        Intent(this@CrashActivity, MainActivity::class.java).apply {
-                            putExtra("safeMode", safeMode)
-                        },
-                    )
-                },
+                onRestartClick = { restartApp() },
+                onSafeModeClick = { restartApp(safeMode = true) },
             )
         }
+    }
+
+    private fun restartApp(safeMode: Boolean = false) {
+        finishAffinity()
+        startActivity(
+            Intent(this@CrashActivity, MainActivity::class.java).apply {
+                putExtra("safeMode", safeMode)
+            },
+        )
     }
 }

@@ -209,7 +209,7 @@ private fun ExtensionContent(
                         is Extension.Untrusted -> "extension-untrusted-${item.hashCode()}"
                         is Extension.Installed -> "extension-installed-${item.hashCode()}"
                         is Extension.Available -> "extension-available-${item.hashCode()}"
-                        is Extension.NotLoaded -> "extension-notLoaded-${item.hashCode()}"
+                        is Extension.NotLoaded -> "extension-not-loaded-${item.hashCode()}"
                     }
                 },
             ) { item ->
