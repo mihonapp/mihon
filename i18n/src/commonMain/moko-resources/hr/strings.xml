@@ -911,4 +911,5 @@
     <string name="action_webview_close_tab">Zatvori karticu</string>
     <string name="calculating">Izračunavanje …</string>
     <string name="action_filter_excluded_scanlators">Filtriraj isključene amaterske prevoditelje</string>
+    <string name="download_bookmarked">Zabilježeno</string>
 </resources>
