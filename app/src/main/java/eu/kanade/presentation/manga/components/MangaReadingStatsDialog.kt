@@ -8,16 +8,29 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import eu.kanade.presentation.util.toDurationString
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 @Composable
 fun MangaReadingStatsDialog(
     totalReadDuration: Long,
     onDismissRequest: () -> Unit,
 ) {
+    val context = LocalContext.current
+    val none = stringResource(MR.strings.none)
+    val durationString = remember(totalReadDuration) {
+        totalReadDuration
+            .toDuration(DurationUnit.MILLISECONDS)
+            .toDurationString(context, fallback = none)
+    }
+
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
@@ -34,7 +47,7 @@ fun MangaReadingStatsDialog(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
-                    text = formatDuration(totalReadDuration),
+                    text = durationString,
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.primary,
                 )
@@ -46,21 +59,4 @@ fun MangaReadingStatsDialog(
             }
         },
     )
-}
-
-private fun formatDuration(milliseconds: Long): String {
-    val minutes = milliseconds / 60000
-    return when {
-        minutes == 0L -> "Less than 1 minute"
-        minutes < 60 -> "$minutes minutes"
-        else -> {
-            val hours = minutes / 60
-            val remainingMinutes = minutes % 60
-            when {
-                remainingMinutes == 0L -> "$hours hours"
-                hours == 1L -> "1 hour $remainingMinutes minutes"
-                else -> "$hours hours $remainingMinutes minutes"
-            }
-        }
-    }
 }
