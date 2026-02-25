@@ -137,7 +137,7 @@ class Kavita(id: Long) : BaseTracker(id, "Kavita"), EnhancedTracker {
             }
 
             authentication.apiUrl = prefApiUrl
-            authentication.jwtToken = token.toString()
+            authentication.jwtToken = token
         }
         authentications = oauth
     }

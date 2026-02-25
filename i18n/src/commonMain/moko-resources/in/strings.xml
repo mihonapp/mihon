@@ -707,7 +707,7 @@
     <string name="syncing_library">Sinkronisasi pustaka</string>
     <string name="library_sync_complete">Sinkronisasi pustaka selesai</string>
     <string name="information_cloudflare_help">Ketuk di sini untuk bantuan dengan Cloudflare</string>
-    <string name="download_cache_invalidated">Indeks unduhan tidak valid</string>
+    <string name="download_cache_invalidated">Membuat ulang indeks unduhan</string>
     <string name="track_activity_name">Pelacak login</string>
     <string name="create_backup_file_error">Tidak dapat membuat file cadangan</string>
     <string name="unlock_app_title">Buka kunci %s</string>
@@ -909,4 +909,5 @@
     <string name="pref_download_concurrent_pages">Ambil berkas halaman secara bersamaan</string>
     <string name="pref_download_concurrent_pages_summary">Halaman yang diunduh secara bersamaan per sumber</string>
     <string name="action_webview_close_tab">Tutup tab</string>
+    <string name="action_filter_excluded_scanlators">Filter yang mengecualikan pemindai</string>
 </resources>

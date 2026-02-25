@@ -705,7 +705,7 @@
     <string name="library_sync_complete">La biblioteca se ha sincronizado correctamente</string>
     <string name="syncing_library">Sincronizando la biblioteca</string>
     <string name="information_cloudflare_help">Toca aquí para solucionar problemas de acceso con Cloudflare</string>
-    <string name="download_cache_invalidated">Se ha borrado el índice de descargas</string>
+    <string name="download_cache_invalidated">Reconstruyendo el índice de descargas</string>
     <string name="track_activity_name">Iniciar sesión en el servicio</string>
     <string name="create_backup_file_error">No se ha podido crear un archivo de respaldo</string>
     <string name="exception_unknown_host">«%s» no parece estar disponible</string>
@@ -902,4 +902,6 @@
     <string name="pref_download_concurrent_pages">Descarga simultánea de páginas</string>
     <string name="pref_download_concurrent_pages_summary">Cantidad de páginas a descargar simultáneamente desde cada fuente remota</string>
     <string name="action_webview_close_tab">Cerrar pestaña</string>
+    <string name="action_filter_excluded_scanlators">Ocultar equipos de traducción excluidos</string>
+    <string name="calculating">Calculando…</string>
 </resources>
