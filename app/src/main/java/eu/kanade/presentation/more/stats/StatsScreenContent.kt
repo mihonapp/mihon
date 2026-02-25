@@ -39,7 +39,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.unit.dp
 import eu.kanade.domain.ui.model.StatsProgressBarStyle
 
 @Composable
@@ -191,35 +190,38 @@ private fun LazyItemScope.MangaReadTimeSection(
 
     var progressBarStyle by remember { mutableStateOf(StatsProgressBarStyle.RELATIVE_TO_MAX) }
 
-    SectionCard(MR.strings.label_read_duration) {
-        Column {
-            // scale selection
-            SingleChoiceSegmentedButtonRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-            ) {
-                SegmentedButton(
-                    selected = progressBarStyle == StatsProgressBarStyle.RELATIVE_TO_MAX,
-                    onClick = { progressBarStyle = StatsProgressBarStyle.RELATIVE_TO_MAX },
-                    shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
-                ) {
-                    Text(stringResource(MR.strings.stats_scale_by_manga))
-                }
-                SegmentedButton(
-                    selected = progressBarStyle == StatsProgressBarStyle.RELATIVE_TO_TOTAL,
-                    onClick = { progressBarStyle = StatsProgressBarStyle.RELATIVE_TO_TOTAL },
-                    shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
-                ) {
-                    Text(stringResource(MR.strings.stats_scale_total))
-                }
-            }
+    Column {
+        Text(
+            modifier = Modifier.padding(horizontal = MaterialTheme.padding.extraLarge),
+            text = stringResource(MR.strings.label_read_duration),
+            style = MaterialTheme.typography.titleSmall,
+        )
 
-            MangaReadTimeChart(
-                readDurations = readDurations,
-                progressBarStyle = progressBarStyle,
-                onMangaClick = onMangaClick,
-            )
+        SingleChoiceSegmentedButtonRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
+        ) {
+            SegmentedButton(
+                selected = progressBarStyle == StatsProgressBarStyle.RELATIVE_TO_MAX,
+                onClick = { progressBarStyle = StatsProgressBarStyle.RELATIVE_TO_MAX },
+                shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
+            ) {
+                Text(stringResource(MR.strings.stats_scale_by_manga))
+            }
+            SegmentedButton(
+                selected = progressBarStyle == StatsProgressBarStyle.RELATIVE_TO_TOTAL,
+                onClick = { progressBarStyle = StatsProgressBarStyle.RELATIVE_TO_TOTAL },
+                shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
+            ) {
+                Text(stringResource(MR.strings.stats_scale_total))
+            }
         }
+
+        MangaReadTimeChart(
+            readDurations = readDurations,
+            progressBarStyle = progressBarStyle,
+            onMangaClick = onMangaClick,
+        )
     }
 }

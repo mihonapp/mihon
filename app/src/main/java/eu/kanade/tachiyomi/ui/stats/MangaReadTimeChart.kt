@@ -17,19 +17,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.ui.model.StatsCoverStyle
 import eu.kanade.domain.ui.model.StatsProgressBarStyle
 import eu.kanade.presentation.manga.components.MangaCover
+import eu.kanade.presentation.util.toDurationString
 import tachiyomi.domain.history.model.ReadDurationByManga
 import tachiyomi.domain.manga.model.MangaCover as MangaCoverData
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 @Composable
 fun MangaReadTimeChart(
@@ -88,11 +94,10 @@ private fun MangaReadTimeItem(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onMangaClick(mangaId) }
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = MaterialTheme.padding.medium),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        // Manga cover thumbnail
         when (coverStyle) {
             StatsCoverStyle.SQUARE -> {
                 MangaCover.Square(
@@ -110,7 +115,6 @@ private fun MangaReadTimeItem(
             }
         }
 
-        // Title and progress bar column
         Column(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
@@ -122,7 +126,6 @@ private fun MangaReadTimeItem(
                 overflow = TextOverflow.Ellipsis,
             )
 
-            // Progress bar
             LinearProgressIndicator(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.small)
@@ -131,25 +134,16 @@ private fun MangaReadTimeItem(
                 progress = { (timeRead.toFloat() / scaleBase.toFloat()).coerceIn(0f, 1f) },
             )
 
-            // Time text
+            val context = LocalContext.current
+            val none = stringResource(MR.strings.none)
+            val durationString = remember(timeRead) {
+                timeRead.toDuration(DurationUnit.MILLISECONDS).toDurationString(context, fallback = none)
+            }
             Text(
-                text = formatDuration(timeRead),
+                text = durationString,
                 modifier = Modifier.secondaryItemAlpha(),
                 style = MaterialTheme.typography.bodySmall,
             )
-        }
-    }
-}
-
-private fun formatDuration(milliseconds: Long): String {
-    val minutes = milliseconds / 60000
-    return when {
-        minutes < 60 -> "${minutes}m"
-        else -> {
-            val hours = minutes / 60
-            val remainingMinutes = minutes % 60
-            if (remainingMinutes == 0L) "${hours}h"
-            else "${hours}h ${remainingMinutes}m"
         }
     }
 }
