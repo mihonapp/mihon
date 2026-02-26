@@ -49,6 +49,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Other
 - Enable logcat logging on stable and debug builds without enabling verbose logging ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2836](https://github.com/mihonapp/mihon/pull/2836))
 
+### Added
+- Add an option to expend titles on manga pages ([@NathanBap](https://github.com/NathanBap)) ([#2738](https://github.com/mihonapp/mihon/issues/2738))
+
 ## [v0.19.3] - 2025-11-07
 ### Improved
 - Improved various aspects of the WebView multi window support ([@TheUnlocked](https://github.com/TheUnlocked)) ([#2662](https://github.com/mihonapp/mihon/pull/2662))

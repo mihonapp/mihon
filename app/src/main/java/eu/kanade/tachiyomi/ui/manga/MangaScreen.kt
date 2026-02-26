@@ -57,6 +57,7 @@ import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import mihon.feature.migration.config.MigrationConfigScreen
+import tachiyomi.presentation.core.util.collectAsState
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
@@ -90,6 +91,7 @@ class MangaScreen(
         }
 
         val state by screenModel.state.collectAsStateWithLifecycle()
+        val expandChapterTitles by screenModel.expandChapterTitles.collectAsState()
 
         if (state is MangaScreenModel.State.Loading) {
             LoadingScreen()
@@ -118,6 +120,7 @@ class MangaScreen(
             isTabletUi = isTabletUi(),
             chapterSwipeStartAction = screenModel.chapterSwipeStartAction,
             chapterSwipeEndAction = screenModel.chapterSwipeEndAction,
+            expandChapterTitles = expandChapterTitles,
             navigateUp = navigator::pop,
             onChapterClicked = { openChapter(context, it) },
             onDownloadChapter = screenModel::runChapterDownloadActions.takeIf { !successState.source.isLocalOrStub() },
@@ -224,6 +227,8 @@ class MangaScreen(
                 onBookmarkedFilterChanged = screenModel::setBookmarkedFilter,
                 onSortModeChanged = screenModel::setSorting,
                 onDisplayModeChanged = screenModel::setDisplayMode,
+                expandChapterTitles = expandChapterTitles,
+                onExpandChapterTitlesChanged = { screenModel.expandChapterTitles.set(it) },
                 onSetAsDefault = screenModel::setCurrentSettingsAsDefault,
                 onResetToDefault = screenModel::resetToDefaultSettings,
                 scanlatorFilterActive = successState.scanlatorFilterActive,

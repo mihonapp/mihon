@@ -35,6 +35,8 @@ import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.ChapterListDisplaySwitch
+import tachiyomi.presentation.core.components.HeadingItem
 import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.RadioItem
 import tachiyomi.presentation.core.components.SortItem
@@ -55,6 +57,8 @@ fun ChapterSettingsDialog(
     onScanlatorFilterClicked: (() -> Unit),
     onSortModeChanged: (Long) -> Unit,
     onDisplayModeChanged: (Long) -> Unit,
+    expandChapterTitles: Boolean,
+    onExpandChapterTitlesChanged: (Boolean) -> Unit,
     onSetAsDefault: (applyToExistingManga: Boolean) -> Unit,
     onResetToDefault: () -> Unit,
 ) {
@@ -122,6 +126,8 @@ fun ChapterSettingsDialog(
                     DisplayPage(
                         displayMode = manga?.displayMode ?: 0,
                         onItemSelected = onDisplayModeChanged,
+                        expandChapterTitles = expandChapterTitles,
+                        onExpandChapterTitlesChanged = onExpandChapterTitlesChanged,
                     )
                 }
             }
@@ -214,7 +220,15 @@ private fun ColumnScope.SortPage(
 private fun ColumnScope.DisplayPage(
     displayMode: Long,
     onItemSelected: (Long) -> Unit,
+    expandChapterTitles: Boolean,
+    onExpandChapterTitlesChanged: (Boolean) -> Unit,
 ) {
+    ChapterListDisplaySwitch(
+        label = stringResource(MR.strings.expand_chapter_titles),
+        checked = expandChapterTitles,
+        onClick = { onExpandChapterTitlesChanged(!expandChapterTitles) },
+    )
+    HeadingItem(MR.strings.action_display_mode)
     listOf(
         MR.strings.show_title to Manga.CHAPTER_DISPLAY_NAME,
         MR.strings.show_chapter_number to Manga.CHAPTER_DISPLAY_NUMBER,
