@@ -21,12 +21,15 @@ import io.woong.compose.grid.SimpleGridCells
 import io.woong.compose.grid.VerticalGrid
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.YearMonth
+import kotlinx.datetime.minusMonth
+import kotlinx.datetime.plusMonth
+import kotlinx.datetime.toJavaDayOfWeek
 import mihon.core.designsystem.utils.isExpandedWidthWindow
 import mihon.core.designsystem.utils.isMediumWidthWindow
 import tachiyomi.presentation.core.components.material.padding
 import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.YearMonth
 import java.time.format.TextStyle
 import java.time.temporal.WeekFields
 import java.util.Locale
@@ -49,8 +52,8 @@ fun Calendar(
     ) {
         CalenderHeader(
             yearMonth = selectedYearMonth,
-            onPreviousClick = { setSelectedYearMonth(selectedYearMonth.minusMonths(1L)) },
-            onNextClick = { setSelectedYearMonth(selectedYearMonth.plusMonths(1L)) },
+            onPreviousClick = { setSelectedYearMonth(selectedYearMonth.minusMonth()) },
+            onNextClick = { setSelectedYearMonth(selectedYearMonth.plusMonth()) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = MaterialTheme.padding.small)
@@ -77,8 +80,8 @@ private fun CalendarGrid(
             .toImmutableList()
     }
 
-    val emptyFieldCount = weekDays.indexOf(selectedYearMonth.atDay(1).dayOfWeek)
-    val daysInMonth = selectedYearMonth.lengthOfMonth()
+    val emptyFieldCount = weekDays.indexOf(selectedYearMonth.firstDay.dayOfWeek.toJavaDayOfWeek())
+    val daysInMonth = selectedYearMonth.numberOfDays
 
     VerticalGrid(
         columns = SimpleGridCells.Fixed(DAYS_OF_WEEK),
@@ -101,7 +104,7 @@ private fun CalendarGrid(
         }
         repeat(emptyFieldCount) { Box { } }
         repeat(daysInMonth) { dayIndex ->
-            val localDate = selectedYearMonth.atDay(dayIndex + 1)
+            val localDate = LocalDate(selectedYearMonth.year, selectedYearMonth.month, dayIndex + 1)
             CalendarDay(
                 date = localDate,
                 onDayClick = { onClickDay(localDate) },

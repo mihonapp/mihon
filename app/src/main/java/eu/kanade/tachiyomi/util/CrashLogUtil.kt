@@ -9,12 +9,14 @@ import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.offsetAt
+import kotlinx.datetime.toLocalDateTime
 import tachiyomi.core.common.util.lang.withNonCancellableContext
 import tachiyomi.core.common.util.lang.withUIContext
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.time.OffsetDateTime
-import java.time.ZoneId
+import kotlin.time.Clock
 
 class CrashLogUtil(
     private val context: Context,
@@ -33,12 +35,14 @@ class CrashLogUtil(
 
             val uri = file.getUriCompat(context)
             context.startActivity(uri.toShareIntent(context, "text/plain"))
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             withUIContext { context.toast("Failed to get logs") }
         }
     }
 
     fun getDebugInfo(): String {
+        val now = Clock.System.now()
+        val tz = TimeZone.currentSystemDefault()
         return """
             App ID: ${BuildConfig.APPLICATION_ID}
             App version: ${BuildConfig.VERSION_NAME} (${BuildConfig.COMMIT_SHA}, ${BuildConfig.VERSION_CODE}, ${BuildConfig.BUILD_TIME})
@@ -48,7 +52,7 @@ class CrashLogUtil(
             Device name: ${Build.DEVICE} (${Build.PRODUCT})
             Device model: ${Build.MODEL}
             WebView: ${WebViewUtil.getVersion(context)}
-            Current time: ${OffsetDateTime.now(ZoneId.systemDefault())}
+            Current time: ${now.toLocalDateTime(tz)}${tz.offsetAt(now)}
         """.trimIndent()
     }
 

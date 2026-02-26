@@ -33,9 +33,9 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
-import java.time.Instant
 import java.util.Date
 import java.util.Locale
+import kotlin.time.Clock
 
 class BackupCreator(
     private val context: Context,
@@ -108,7 +108,7 @@ class BackupCreator(
             BackupFileValidator(context).validate(fileUri)
 
             if (isAutoBackup) {
-                backupPreferences.lastAutoBackupTimestamp().set(Instant.now().toEpochMilli())
+                backupPreferences.lastAutoBackupTimestamp().set(Clock.System.now().toEpochMilliseconds())
             }
 
             return fileUri.toString()

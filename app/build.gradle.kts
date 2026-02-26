@@ -208,6 +208,8 @@ dependencies {
     implementation(platform(kotlinx.coroutines.bom))
     implementation(kotlinx.bundles.coroutines)
 
+    implementation(kotlinx.datetime)
+
     // AndroidX libraries
     implementation(androidx.annotation)
     implementation(androidx.appcompat)
