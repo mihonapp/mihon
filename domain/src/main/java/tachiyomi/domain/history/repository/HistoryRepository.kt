@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import tachiyomi.domain.history.model.History
 import tachiyomi.domain.history.model.HistoryUpdate
 import tachiyomi.domain.history.model.HistoryWithRelations
+import tachiyomi.domain.history.model.ReadDurationByManga
 
 interface HistoryRepository {
 
@@ -22,4 +23,10 @@ interface HistoryRepository {
     suspend fun deleteAllHistory(): Boolean
 
     suspend fun upsertHistory(historyUpdate: HistoryUpdate)
+
+    suspend fun getReadDurationByManga(): List<ReadDurationByManga>
+
+    suspend fun getReadDurationForManga(mangaId: Long): Long
+
+    suspend fun getReadDurationForMangaByTitle(title: String): Long
 }

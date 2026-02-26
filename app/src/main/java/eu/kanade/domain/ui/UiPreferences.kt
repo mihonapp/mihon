@@ -1,6 +1,7 @@
 package eu.kanade.domain.ui
 
 import eu.kanade.domain.ui.model.AppTheme
+import eu.kanade.domain.ui.model.StatsCoverStyle
 import eu.kanade.domain.ui.model.TabletUiMode
 import eu.kanade.domain.ui.model.ThemeMode
 import eu.kanade.tachiyomi.util.system.DeviceUtil
@@ -35,6 +36,9 @@ class UiPreferences(
     fun tabletUiMode() = preferenceStore.getEnum("tablet_ui_mode", TabletUiMode.AUTOMATIC)
 
     fun imagesInDescription() = preferenceStore.getBoolean("pref_render_images_description", true)
+
+    fun statsScreenCoverStyle() = preferenceStore.getEnum("stats_screen_cover_style", StatsCoverStyle.SQUARE)
+
 
     companion object {
         fun dateFormat(format: String): DateTimeFormatter = when (format) {

@@ -7,10 +7,14 @@ import tachiyomi.data.DatabaseHandler
 import tachiyomi.domain.history.model.History
 import tachiyomi.domain.history.model.HistoryUpdate
 import tachiyomi.domain.history.model.HistoryWithRelations
+import tachiyomi.domain.history.model.ReadDurationByManga
 import tachiyomi.domain.history.repository.HistoryRepository
+import tachiyomi.domain.manga.model.MangaCover
+import tachiyomi.domain.source.service.SourceManager
 
 class HistoryRepositoryImpl(
     private val handler: DatabaseHandler,
+    private val sourceManager: SourceManager,
 ) : HistoryRepository {
 
     override fun getHistory(query: String): Flow<List<HistoryWithRelations>> {
@@ -70,6 +74,55 @@ class HistoryRepositoryImpl(
             }
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, throwable = e)
+        }
+    }
+
+    override suspend fun getReadDurationByManga(): List<ReadDurationByManga> {
+        val raw = handler.awaitList {
+            historyQueries.getReadDurationByManga {
+                    manga_id, title, total_time_read, source_id, is_favorite, thumbnail_url, cover_last_modified ->
+                ReadDurationByManga(
+                    mangaId = manga_id,
+                    title = title,
+                    totalTimeRead = total_time_read,
+                    cover = MangaCover(
+                        mangaId = manga_id,
+                        sourceId = source_id,
+                        isMangaFavorite = is_favorite,
+                        url = thumbnail_url,
+                        lastModified = cover_last_modified,
+                    )
+                )
+            }
+        }
+        // Merge duplicate manga entries (e.g. from source migrations) by normalized title. Sum all read times.
+        // Newly migrated entries will have low reading time, so try to get existing entry from sourceManager. Maybe problematic if library has more than 500 entries.
+        return raw
+            .groupBy { it.title.trim().lowercase() }
+            .map { (_, group) ->
+                val representative = group.maxWithOrNull(
+                    compareBy(
+                        { sourceManager.get(it.cover.sourceId) != null },
+                        { it.cover.isMangaFavorite },
+                        { it.cover.url != null },
+                        { it.totalTimeRead },
+                    ),
+                )!!
+                representative.copy(totalTimeRead = group.sumOf { it.totalTimeRead })
+            }
+            .sortedByDescending { it.totalTimeRead }
+            .take(30)
+    }
+
+    override suspend fun getReadDurationForManga(mangaId: Long): Long {
+        return handler.awaitOne {
+            historyQueries.getReadDurationForManga(mangaId)
+        }
+    }
+
+    override suspend fun getReadDurationForMangaByTitle(title: String): Long {
+        return handler.awaitOne {
+            historyQueries.getReadDurationForMangaByTitle(title)
         }
     }
 }
