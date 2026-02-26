@@ -911,4 +911,5 @@
     <string name="action_webview_close_tab">Sekmeyi kapat</string>
     <string name="action_filter_excluded_scanlators">Hariç tutulan Çevirenleri filtrele</string>
     <string name="calculating">Hesaplanıyor…</string>
+    <string name="download_bookmarked">Yer imli</string>
 </resources>

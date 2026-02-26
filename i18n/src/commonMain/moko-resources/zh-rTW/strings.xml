@@ -901,4 +901,6 @@
     <string name="pref_download_concurrent_pages_summary">每個來源同時下載的頁數</string>
     <string name="action_webview_close_tab">關閉頁籤</string>
     <string name="action_filter_excluded_scanlators">篩選排除掃譯者</string>
+    <string name="calculating">計算中…</string>
+    <string name="download_bookmarked">已新增書籤</string>
 </resources>

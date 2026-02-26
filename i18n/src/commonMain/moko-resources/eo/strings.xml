@@ -697,7 +697,7 @@
     <string name="requires_app_restart">Devigas restartigi apon por efektiviĝi</string>
     <string name="pref_reset_viewer_flags_summary">Restarigas legadan reĝimon kaj orientiĝon de ĉiuj serioj</string>
     <string name="pref_invalidate_download_cache">Reindeksi elŝutojn</string>
-    <string name="download_cache_invalidated">Indeksoj de elŝutoj nevalidigitaj</string>
+    <string name="download_cache_invalidated">Rekreado de indekso de elŝutoj</string>
     <string name="pref_clear_database_summary">Forigi historion de elementoj ne konservitaj en biblioteko</string>
     <string name="clear_database_source_item_count">%1$d nebibliotekaj elementoj en datumbazo</string>
     <string name="database_clean">Nenio por viŝi</string>
@@ -901,4 +901,6 @@
     <string name="pref_download_concurrent_pages">Kunrulaj elŝutoj de paĝoj</string>
     <string name="pref_download_concurrent_pages_summary">Paĝoj elŝutitaj sammomente por fonto</string>
     <string name="action_filter_excluded_scanlators">Filtri ekskluzivitajn skantradukistojn</string>
+    <string name="calculating">Kalkulado…</string>
+    <string name="download_bookmarked">Legosignita</string>
 </resources>

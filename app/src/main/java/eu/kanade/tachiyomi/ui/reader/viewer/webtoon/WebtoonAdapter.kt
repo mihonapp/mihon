@@ -43,14 +43,7 @@ class WebtoonAdapter(val viewer: WebtoonViewer) : RecyclerView.Adapter<RecyclerV
         val nextHasMissingChapters = calculateChapterGap(chapters.nextChapter, chapters.currChapter) > 0
 
         // Add previous chapter pages and transition.
-        if (chapters.prevChapter != null) {
-            // We only need to add the last few pages of the previous chapter, because it'll be
-            // selected as the current chapter when one of those pages is selected.
-            val prevPages = chapters.prevChapter.pages
-            if (prevPages != null) {
-                newItems.addAll(prevPages.takeLast(2))
-            }
-        }
+        chapters.prevChapter?.pages?.let(newItems::addAll)
 
         // Skip transition page if the chapter is loaded & current page is not a transition page
         if (prevHasMissingChapters || forceTransition || chapters.prevChapter?.state !is ReaderChapter.State.Loaded) {
@@ -70,14 +63,7 @@ class WebtoonAdapter(val viewer: WebtoonViewer) : RecyclerView.Adapter<RecyclerV
             newItems.add(ChapterTransition.Next(chapters.currChapter, chapters.nextChapter))
         }
 
-        if (chapters.nextChapter != null) {
-            // Add at most two pages, because this chapter will be selected before the user can
-            // swap more pages.
-            val nextPages = chapters.nextChapter.pages
-            if (nextPages != null) {
-                newItems.addAll(nextPages.take(2))
-            }
-        }
+        chapters.nextChapter?.pages?.let(newItems::addAll)
 
         updateItems(newItems)
     }
