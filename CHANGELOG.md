@@ -49,6 +49,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix migration dialog not showing for consecutive prompts from the same screen ([@AntsyLich](https://github.com/AntsyLich)) ([#2994](https://github.com/mihonapp/mihon/pull/2994))
 - Fix extension install/update stuck at pending ([@AntsyLich](https://github.com/AntsyLich)) ([#3000](https://github.com/mihonapp/mihon/pull/3000))
 - Fix crash when downloading multiple chapters with Arabic locale ([@MajorTanya](https://github.com/MajorTanya)) ([#2676](https://github.com/mihonapp/mihon/pull/2676)) 
+- Fix tracker finish date not being populated when status is manually changed to Completed ([@shrikantbadwaik](https://github.com/shrikantbadwaik)) ([#2727](https://github.com/mihonapp/mihon/pull/2727))
 
 ### Other
 - Enable logcat logging on stable and debug builds without enabling verbose logging ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2836](https://github.com/mihonapp/mihon/pull/2836))
