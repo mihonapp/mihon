@@ -112,6 +112,7 @@ class Downloader(
 
     init {
         scope.launch {
+            sourceManager.isInitialized.first { it }
             val chapters = store.restore()
             addAllToQueue(chapters)
         }
