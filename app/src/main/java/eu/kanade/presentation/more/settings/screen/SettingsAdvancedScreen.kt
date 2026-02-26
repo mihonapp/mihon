@@ -176,6 +176,7 @@ object SettingsAdvancedScreen : SearchableSettings {
     private fun getDataGroup(): Preference.PreferenceGroup {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
+        val scope = rememberCoroutineScope()
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.label_data),
@@ -184,8 +185,10 @@ object SettingsAdvancedScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_invalidate_download_cache),
                     subtitle = stringResource(MR.strings.pref_invalidate_download_cache_summary),
                     onClick = {
-                        Injekt.get<DownloadCache>().invalidateCache()
-                        context.toast(MR.strings.download_cache_invalidated)
+                        scope.launch {
+                            Injekt.get<DownloadCache>().invalidateCache()
+                            context.toast(MR.strings.download_cache_invalidated)
+                        }
                     },
                 ),
                 Preference.PreferenceItem.TextPreference(
