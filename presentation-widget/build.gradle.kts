@@ -24,6 +24,8 @@ dependencies {
 
     implementation(kotlinx.immutables)
 
+    implementation(kotlinx.datetime)
+
     implementation(platform(libs.coil.bom))
     implementation(libs.coil.core)
 

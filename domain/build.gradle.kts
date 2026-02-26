@@ -27,6 +27,8 @@ dependencies {
     implementation(kotlinx.bundles.coroutines)
     implementation(kotlinx.bundles.serialization)
 
+    implementation(kotlinx.datetime)
+
     implementation(libs.unifile)
 
     api(libs.sqldelight.android.paging)

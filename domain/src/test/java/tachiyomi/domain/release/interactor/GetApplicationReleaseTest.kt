@@ -12,7 +12,7 @@ import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.domain.release.model.Release
 import tachiyomi.domain.release.service.ReleaseService
-import java.time.Instant
+import kotlin.time.Clock
 
 class GetApplicationReleaseTest {
 
@@ -117,7 +117,7 @@ class GetApplicationReleaseTest {
 
     @Test
     fun `When now is before three days expect no new update`() = runTest {
-        every { preference.get() } returns Instant.now().toEpochMilli()
+        every { preference.get() } returns Clock.System.now().toEpochMilliseconds()
         every { preference.set(any()) }.answers { }
 
         val release = Release(
