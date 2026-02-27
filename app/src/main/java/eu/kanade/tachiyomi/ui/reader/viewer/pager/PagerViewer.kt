@@ -57,6 +57,16 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     private var currentPage: Any? = null
 
     /**
+     * Set of pages that have been hidden in combined page combinations.
+     */
+    private val hiddenPages = mutableSetOf<ReaderPage>()
+
+    /**
+     * Set of pages that have been combined with the next page.
+     */
+    private val combinedPages = mutableSetOf<ReaderPage>()
+
+    /**
      * Viewer chapters to set when the pager enters idle mode. Otherwise, if the view was settling
      * or dragging, there'd be a noticeable and annoying jump.
      */
@@ -120,7 +130,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
         }
         pager.longTapListener = f@{
             if (activity.viewModel.state.value.menuVisible || config.longTapEnabled) {
-                val item = adapter.items.getOrNull(pager.currentItem)
+                val item = adapter.getFilteredItems().getOrNull(pager.currentItem)
                 if (item is ReaderPage) {
                     activity.onPageLongTap(item)
                     return@f true
@@ -133,6 +143,11 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             if (!enabled) {
                 cleanupPageSplit()
             }
+        }
+
+        config.combinedPagesChangedListener = { enabled ->
+            clearPageState()
+            adapter.notifyDataSetChanged()
         }
 
         config.imagePropertyChangedListener = {
@@ -174,7 +189,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
      * Called when a new page (either a [ReaderPage] or [ChapterTransition]) is marked as active
      */
     private fun onPageChange(position: Int) {
-        val page = adapter.items.getOrNull(position)
+        val page = adapter.getFilteredItems().getOrNull(position)
         if (page != null && currentPage != page) {
             val allowPreload = checkAllowPreload(page as? ReaderPage)
             val forward = when {
@@ -279,7 +294,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
         pager.removeOnPageChangeListener(pagerListener)
 
         val forceTransition = config.alwaysShowChapterTransition ||
-            adapter.items.getOrNull(pager.currentItem) is ChapterTransition
+            adapter.getFilteredItems().getOrNull(pager.currentItem) is ChapterTransition
         adapter.setChapters(chapters, forceTransition)
 
         // Layout the pager once a chapter is being set
@@ -299,7 +314,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
      * Tells this viewer to move to the given [page].
      */
     override fun moveToPage(page: ReaderPage) {
-        val position = adapter.items.indexOf(page)
+        val position = adapter.getFilteredPosition(page)
         if (position != -1) {
             val currentPosition = pager.currentItem
             pager.setCurrentItem(position, true)
@@ -451,5 +466,27 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
 
     private fun cleanupPageSplit() {
         adapter.cleanupPageSplit()
+    }
+
+    fun getItemIndex(item: Any): Int = adapter.items.indexOf(item)
+
+    fun getItemAt(index: Int): Any? = adapter.items.getOrNull(index)
+
+    fun getItemCount(): Int = adapter.items.size
+
+    fun markPageAsHidden(page: ReaderPage) {
+        hiddenPages.add(page)
+        adapter.notifyDataSetChanged()
+    }
+
+    fun isPageHidden(page: ReaderPage): Boolean = hiddenPages.contains(page)
+
+    fun markPageAsCombined(page: ReaderPage) = combinedPages.add(page)
+
+    fun isPageCombined(page: ReaderPage): Boolean = combinedPages.contains(page)
+
+    internal fun clearPageState() {
+        hiddenPages.clear()
+        combinedPages.clear()
     }
 }
