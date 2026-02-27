@@ -50,8 +50,10 @@ fun ReaderAppBars(
 
     viewer: Viewer?,
     onNextChapter: () -> Unit,
+    onNextChapterLongClick: () -> Unit,
     enabledNext: Boolean,
     onPreviousChapter: () -> Unit,
+    onPreviousChapterLongClick: () -> Unit,
     enabledPrevious: Boolean,
     currentPage: Int,
     totalPages: Int,
@@ -106,8 +108,10 @@ fun ReaderAppBars(
                 ChapterNavigator(
                     isRtl = isRtl,
                     onNextChapter = onNextChapter,
+                    onNextChapterLongClick = onNextChapterLongClick,
                     enabledNext = enabledNext,
                     onPreviousChapter = onPreviousChapter,
+                    onPreviousChapterLongClick = onPreviousChapterLongClick,
                     enabledPrevious = enabledPrevious,
                     currentPage = currentPage,
                     totalPages = totalPages,
