@@ -41,8 +41,10 @@ package mihon.app.shizuku
 
 import android.annotation.SuppressLint
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.IntentSender
 import android.content.pm.PackageInstaller
 import android.content.res.AssetFileDescriptor
@@ -54,6 +56,9 @@ import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.extension.installer.ACTION_INSTALL_RESULT
 import rikka.shizuku.SystemServiceHelper
 import java.io.OutputStream
+import java.util.UUID
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import kotlin.system.exitProcess
 
 class ShellInterface : IShellInterface.Stub() {
@@ -66,7 +71,7 @@ class ShellInterface : IShellInterface.Stub() {
 
     @SuppressLint("PrivateApi")
     override fun install(apk: AssetFileDescriptor) {
-        val pmInterface = Class.forName($$"android.content.pm.IPackageManager$Stub")
+        val pmInterface = Class.forName("android.content.pm.IPackageManager\$Stub")
             .getMethod("asInterface", IBinder::class.java)
             .invoke(null, SystemServiceHelper.getSystemService("package"))
 
@@ -96,38 +101,38 @@ class ShellInterface : IShellInterface.Stub() {
                 PackageInstaller.SessionParams::class.java,
                 String::class.java,
                 String::class.java,
-                Int::class.java,
+                Int::class.javaPrimitiveType,
             ).invoke(packageInstaller, params, packageName, packageName, userId) as Int
         } else {
             packageInstaller::class.java.getMethod(
                 "createSession",
                 PackageInstaller.SessionParams::class.java,
                 String::class.java,
-                Int::class.java,
+                Int::class.javaPrimitiveType,
             ).invoke(packageInstaller, params, packageName, userId) as Int
         }
 
         val session = packageInstaller::class.java
-            .getMethod("openSession", Int::class.java)
+            .getMethod("openSession", Int::class.javaPrimitiveType)
             .invoke(packageInstaller, sessionId)
 
         session::class.java.getMethod(
             "openWrite",
             String::class.java,
-            Long::class.java,
-            Long::class.java,
+            Long::class.javaPrimitiveType,
+            Long::class.javaPrimitiveType,
         )
             .invoke(session, "extension", 0L, apk.length)
             .let { it as ParcelFileDescriptor }
             .let { fd ->
                 val revocable = Class.forName("android.os.SystemProperties")
-                    .getMethod("getBoolean", String::class.java, Boolean::class.java)
+                    .getMethod("getBoolean", String::class.java, Boolean::class.javaPrimitiveType)
                     .invoke(null, "fw.revocable_fd", false) as Boolean
 
                 if (revocable) {
                     ParcelFileDescriptor.AutoCloseOutputStream(fd)
                 } else {
-                    Class.forName($$"android.os.FileBridge$FileBridgeOutputStream")
+                    Class.forName("android.os.FileBridge\$FileBridgeOutputStream")
                         .getConstructor(ParcelFileDescriptor::class.java)
                         .newInstance(fd) as OutputStream
                 }
@@ -144,11 +149,40 @@ class ShellInterface : IShellInterface.Stub() {
         )
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-            session::class.java.getMethod("commit", IntentSender::class.java, Boolean::class.java)
+            session::class.java.getMethod("commit", IntentSender::class.java, Boolean::class.javaPrimitiveType)
                 .invoke(session, statusIntent.intentSender, false)
         } else {
             session::class.java.getMethod("commit", IntentSender::class.java)
                 .invoke(session, statusIntent.intentSender)
+        }
+    }
+
+    override fun uninstall(packageName: String) {
+        val action = "mihon.app.shizuku.UNINSTALL_RESULT_${UUID.randomUUID()}"
+        val intent = Intent(action).setPackage("com.android.shell")
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+        )
+
+        val latch = CountDownLatch(1)
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                latch.countDown()
+            }
+        }
+        context.registerReceiver(receiver, IntentFilter(action), Context.RECEIVER_EXPORTED)
+
+        try {
+            val packageInstaller = context.packageManager.packageInstaller
+            packageInstaller.uninstall(packageName, pendingIntent.intentSender)
+            latch.await(30, TimeUnit.SECONDS)
+        } catch (e: Exception) {
+            android.util.Log.e("Shizuku", "Uninstall failed for $packageName", e)
+        } finally {
+            context.unregisterReceiver(receiver)
         }
     }
 
@@ -163,13 +197,13 @@ class ShellInterface : IShellInterface.Stub() {
         val systemContext = activityThread.getMethod("getSystemContext").invoke(systemMain) as Context
 
         val shellUserHandle = UserHandle::class.java
-            .getConstructor(Int::class.java)
+            .getConstructor(Int::class.javaPrimitiveType)
             .newInstance(userId)
 
         val shellContext = systemContext::class.java.getMethod(
             "createPackageContextAsUser",
             String::class.java,
-            Int::class.java,
+            Int::class.javaPrimitiveType,
             UserHandle::class.java,
         ).invoke(
             systemContext,
