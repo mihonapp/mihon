@@ -397,6 +397,7 @@ object SettingsAdvancedScreen : SearchableSettings {
         val extensionInstallerPref = basePreferences.extensionInstaller()
         var shizukuMissing by rememberSaveable { mutableStateOf(false) }
         val trustExtension = remember { Injekt.get<TrustExtension>() }
+        val currentInstaller by extensionInstallerPref.collectAsState()
 
         if (shizukuMissing) {
             val dismiss = { shizukuMissing = false }
@@ -447,6 +448,15 @@ object SettingsAdvancedScreen : SearchableSettings {
                         } else {
                             true
                         }
+                    },
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = basePreferences.shizukuReinstallOnFailure(),
+                    title = stringResource(MR.strings.pref_shizuku_reinstall_on_failure),
+                    subtitle = stringResource(MR.strings.pref_shizuku_reinstall_on_failure_summary),
+                    enabled = currentInstaller == BasePreferences.ExtensionInstaller.SHIZUKU,
+                    onValueChanged = {
+                        true
                     },
                 ),
                 Preference.PreferenceItem.TextPreference(
