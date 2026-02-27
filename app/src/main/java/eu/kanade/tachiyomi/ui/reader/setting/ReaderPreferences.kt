@@ -115,6 +115,18 @@ class ReaderPreferences(
 
     fun invertedColors() = preferenceStore.getBoolean("pref_inverted_colors", false)
 
+    fun stripFilter() = preferenceStore.getBoolean("strip_filter", false)
+
+    fun stripFilterColor() = preferenceStore.getInt("strip_filter_color", -0x1000000) // #FF000000 (black)
+
+    fun stripFilterWhiteThreshold() = preferenceStore.getInt("strip_filter_white_threshold", 230)
+
+    fun stripFilterGutterWidth() = preferenceStore.getInt("strip_filter_gutter_width", 90)
+
+    fun stripFilterTallMarginHeight() = preferenceStore.getInt("strip_filter_tall_margin_height", 30)
+
+    fun stripFilterBigChunkArea() = preferenceStore.getInt("strip_filter_big_chunk_area", 20)
+
     // endregion
 
     // region Controls

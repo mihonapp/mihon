@@ -42,6 +42,24 @@ class WebtoonConfig(
 
     var doubleTapZoomChangedListener: ((Boolean) -> Unit)? = null
 
+    var stripFilter = false
+        private set
+
+    var stripFilterColor = -0x1000000
+        private set
+
+    var stripFilterWhiteThreshold = 230
+        private set
+
+    var stripFilterGutterWidth = 90
+        private set
+
+    var stripFilterTallMarginHeight = 30
+        private set
+
+    var stripFilterBigChunkArea = 20
+        private set
+
     val theme = readerPreferences.readerTheme().get()
 
     init {
@@ -90,6 +108,24 @@ class WebtoonConfig(
                 { doubleTapZoom = it },
                 { doubleTapZoomChangedListener?.invoke(it) },
             )
+
+        readerPreferences.stripFilter()
+            .register({ stripFilter = it }, { imagePropertyChangedListener?.invoke() })
+
+        readerPreferences.stripFilterColor()
+            .register({ stripFilterColor = it }, { imagePropertyChangedListener?.invoke() })
+
+        readerPreferences.stripFilterWhiteThreshold()
+            .register({ stripFilterWhiteThreshold = it }, { imagePropertyChangedListener?.invoke() })
+
+        readerPreferences.stripFilterGutterWidth()
+            .register({ stripFilterGutterWidth = it }, { imagePropertyChangedListener?.invoke() })
+
+        readerPreferences.stripFilterTallMarginHeight()
+            .register({ stripFilterTallMarginHeight = it }, { imagePropertyChangedListener?.invoke() })
+
+        readerPreferences.stripFilterBigChunkArea()
+            .register({ stripFilterBigChunkArea = it }, { imagePropertyChangedListener?.invoke() })
 
         readerPreferences.readerTheme().changes()
             .drop(1)
