@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,7 +22,9 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MultiChoiceSegmentedButtonRow
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.Text
@@ -38,10 +41,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.hippo.unifile.UniFile
+import eu.kanade.presentation.components.FolderPickerDialog
+import eu.kanade.presentation.components.PickerMode
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.data.CreateBackupScreen
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
@@ -54,10 +60,12 @@ import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.export.LibraryExporter
 import eu.kanade.tachiyomi.data.export.LibraryExporter.ExportOptions
+import eu.kanade.tachiyomi.util.backup.BackupUtil
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import logcat.LogPriority
@@ -100,17 +108,34 @@ object SettingsDataScreen : SearchableSettings {
 
     @Composable
     override fun getPreferences(): List<Preference> {
+        val context = LocalContext.current
         val backupPreferences = Injekt.get<BackupPreferences>()
         val storagePreferences = Injekt.get<StoragePreferences>()
 
-        return persistentListOf(
+        val preferences = mutableListOf<Preference>(
             getStorageLocationPref(storagePreferences = storagePreferences),
-            Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.pref_storage_location_info)),
-
-            getBackupAndRestoreGroup(backupPreferences = backupPreferences),
-            getDataGroup(),
-            getExportGroup(),
         )
+
+        // Secure environment specific information
+        if (DeviceUtil.isInSecureFolder(context)) {
+            preferences.add(
+                Preference.PreferenceItem.InfoPreference(
+                    stringResource(MR.strings.pref_storage_secure_folder_info),
+                ),
+            )
+        }
+
+        preferences.add(Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.pref_storage_location_info)))
+
+        preferences.addAll(
+            listOf(
+                getBackupAndRestoreGroup(backupPreferences = backupPreferences),
+                getDataGroup(),
+                getExportGroup(),
+            ),
+        )
+
+        return preferences.toPersistentList()
     }
 
     @Composable
@@ -123,6 +148,22 @@ object SettingsDataScreen : SearchableSettings {
             contract = ActivityResultContracts.OpenDocumentTree(),
         ) { uri ->
             if (uri != null) {
+                val uriString = uri.toString()
+
+                // Secure environment: Prevent selecting primary storage
+                if (DeviceUtil.isInSecureFolder(context)) {
+                    val isPointingToPrimaryStorage = uriString.contains("primary:", ignoreCase = true) ||
+                                                    uriString.contains("0@", ignoreCase = false)
+
+                    if (isPointingToPrimaryStorage) {
+                        logcat(LogPriority.WARN) {
+                            "User tried to select primary storage in Secure Folder: $uriString"
+                        }
+                        context.toast(MR.strings.error_secure_folder_primary_storage)
+                        return@rememberLauncherForActivityResult
+                    }
+                }
+
                 val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
                     Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 
@@ -151,14 +192,26 @@ object SettingsDataScreen : SearchableSettings {
     ): String {
         val context = LocalContext.current
         val storageDir by storageDirPref.collectAsState()
+        val isSecureFolder = DeviceUtil.isInSecureFolder(context)
 
         if (storageDir == storageDirPref.defaultValue()) {
-            return stringResource(MR.strings.no_location_set)
+            return if (isSecureFolder) {
+                stringResource(MR.strings.secure_folder_app_storage)
+            } else {
+                stringResource(MR.strings.no_location_set)
+            }
         }
 
         return remember(storageDir) {
             val file = UniFile.fromUri(context, storageDir.toUri())
-            file?.displayablePath
+            val path = file?.displayablePath
+
+            // In Secure Folder, show a friendly name for app-specific storage
+            if (isSecureFolder && path != null && path.contains("Android/data/")) {
+                "Secure Folder: App Storage"
+            } else {
+                path
+            }
         } ?: stringResource(MR.strings.invalid_location, storageDir)
     }
 
@@ -168,11 +221,30 @@ object SettingsDataScreen : SearchableSettings {
     ): Preference.PreferenceItem.TextPreference {
         val context = LocalContext.current
         val pickStorageLocation = storageLocationPicker(storagePreferences.baseStorageDirectory())
+        val isSecureFolder = DeviceUtil.isInSecureFolder(context)
+        var showManualPathDialog by remember { mutableStateOf(false) }
+
+        if (showManualPathDialog) {
+            ManualPathInputDialog(
+                currentPath = storagePreferences.baseStorageDirectory().get(),
+                onDismiss = { showManualPathDialog = false },
+                onConfirm = { path ->
+                    storagePreferences.baseStorageDirectory().set(path)
+                    showManualPathDialog = false
+                },
+            )
+        }
 
         return Preference.PreferenceItem.TextPreference(
             title = stringResource(MR.strings.pref_storage_location),
             subtitle = storageLocationText(storagePreferences.baseStorageDirectory()),
             onClick = {
+                // In Secure Folder, show manual path input dialog
+                if (isSecureFolder) {
+                    showManualPathDialog = true
+                    return@TextPreference
+                }
+
                 try {
                     pickStorageLocation.launch(null)
                 } catch (e: ActivityNotFoundException) {
@@ -188,6 +260,8 @@ object SettingsDataScreen : SearchableSettings {
         val navigator = LocalNavigator.currentOrThrow
 
         val lastAutoBackup by backupPreferences.lastAutoBackupTimestamp().collectAsState()
+        val isSecureFolder = DeviceUtil.isInSecureFolder(context)
+        var showBackupFilePicker by remember { mutableStateOf(false) }
 
         val chooseBackup = rememberLauncherForActivityResult(
             object : ActivityResultContracts.GetContent() {
@@ -203,6 +277,17 @@ object SettingsDataScreen : SearchableSettings {
             }
 
             navigator.push(RestoreBackupScreen(it.toString()))
+        }
+
+        // Secure Folder: Custom file picker for backup restoration
+        if (showBackupFilePicker) {
+            RestoreBackupFilePicker(
+                onDismiss = { showBackupFilePicker = false },
+                onFileSelected = { fileUri ->
+                    navigator.push(RestoreBackupScreen(fileUri))
+                    showBackupFilePicker = false
+                },
+            )
         }
 
         return Preference.PreferenceGroup(
@@ -237,8 +322,13 @@ object SettingsDataScreen : SearchableSettings {
                                                 context.toast(MR.strings.restore_miui_warning)
                                             }
 
-                                            // no need to catch because it's wrapped with a chooser
-                                            chooseBackup.launch("*/*")
+                                            if (isSecureFolder) {
+                                                // In Secure Folder, use custom file picker
+                                                showBackupFilePicker = true
+                                            } else {
+                                                // Normal mode, use SAF
+                                                chooseBackup.launch("*/*")
+                                            }
                                         } else {
                                             context.toast(MR.strings.restore_in_progress)
                                         }
@@ -394,6 +484,44 @@ object SettingsDataScreen : SearchableSettings {
         )
     }
 
+    /**
+     * Custom file picker for restoring backups in secure environments.
+     * Uses FolderPickerDialog to navigate and select .tachibk or .proto.gz files,
+     * then copies them to cache before passing to RestoreBackupScreen.
+     */
+    @Composable
+    private fun RestoreBackupFilePicker(
+        onDismiss: () -> Unit,
+        onFileSelected: (String) -> Unit,
+    ) {
+        val context = LocalContext.current
+        val basePath = remember { DeviceUtil.getSecureFolderBasePath(context) }
+
+        FolderPickerDialog(
+            initialPath = basePath,
+            onDismiss = onDismiss,
+            onFolderSelected = { }, // Not used in FILE mode
+            mode = PickerMode.FILE,
+            onFileSelected = { path ->
+                BackupUtil.copyBackupToCache(path, context)
+                    .onSuccess { filePath ->
+                        // Convert file path to URI for RestoreBackupScreen
+                        val fileUri = java.io.File(filePath).toUri().toString()
+                        onFileSelected(fileUri)
+                    }
+                    .onFailure { error ->
+                        when (error) {
+                            is java.io.FileNotFoundException -> context.toast(MR.strings.error_path_invalid)
+                            is SecurityException -> context.toast(MR.strings.error_permission_denied)
+                            is IllegalStateException -> context.toast(MR.strings.download_insufficient_space)
+                            else -> context.toast(MR.strings.error_path_invalid)
+                        }
+                        onDismiss()
+                    }
+            },
+        )
+    }
+
     @Composable
     private fun ColumnSelectionDialog(
         options: ExportOptions,
@@ -467,4 +595,125 @@ object SettingsDataScreen : SearchableSettings {
             },
         )
     }
+}
+
+@Composable
+private fun ManualPathInputDialog(
+    currentPath: String,
+    onDismiss: () -> Unit,
+    onConfirm: (String) -> Unit,
+) {
+    val context = LocalContext.current
+    var pathInput by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+
+    // Pre-load all strings (must be called in Composable context)
+    val errorPathEmpty = stringResource(MR.strings.error_path_empty)
+    val errorPathCannotCreate = stringResource(MR.strings.error_path_cannot_create)
+    val errorPathInvalid = stringResource(MR.strings.error_path_invalid)
+    val actionOk = stringResource(MR.strings.action_ok)
+    val actionCancel = stringResource(MR.strings.action_cancel)
+
+    // Initialize with a suggested path for Secure Folder
+    LaunchedEffect(Unit) {
+        val externalFilesDir = context.getExternalFilesDir(null)
+        if (externalFilesDir != null) {
+            // Extract user ID from path (e.g., /storage/emulated/150/)
+            val userIdMatch = Regex("""/storage/emulated/(\d+)/""").find(externalFilesDir.absolutePath)
+            val userId = userIdMatch?.groupValues?.get(1) ?: "0"
+            pathInput = "/storage/emulated/$userId/Download/Mihon"
+        }
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(MR.strings.secure_folder_manual_path_title)) },
+        text = {
+            Column {
+                Text(
+                    text = stringResource(MR.strings.secure_folder_manual_path_description),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                OutlinedTextField(
+                    value = pathInput,
+                    onValueChange = {
+                        pathInput = it
+                        errorMessage = null
+                    },
+                    label = { Text(stringResource(MR.strings.secure_folder_manual_path_label)) },
+                    placeholder = { Text("/storage/emulated/150/Download/Mihon") },
+                    singleLine = false,
+                    maxLines = 3,
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = errorMessage != null,
+                    supportingText = errorMessage?.let { { Text(it) } },
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = stringResource(MR.strings.secure_folder_manual_path_examples),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    val trimmedPath = pathInput.trim()
+                    if (trimmedPath.isEmpty()) {
+                        errorMessage = errorPathEmpty
+                        return@TextButton
+                    }
+
+                    // Try to validate the path
+                    try {
+                        val file = java.io.File(trimmedPath)
+
+                        // Security: Validate path to prevent traversal attacks
+                        val canonicalPath = file.canonicalPath
+
+                        // Ensure path is within allowed directories (storage/emulated or app-specific)
+                        val appFilesPath = context.getExternalFilesDir(null)?.canonicalPath ?: ""
+                        val isAllowedPath = canonicalPath.startsWith("/storage/emulated/") ||
+                                          canonicalPath.startsWith("/sdcard/") ||
+                                          canonicalPath.startsWith(appFilesPath)
+
+                        if (!isAllowedPath) {
+                            errorMessage = errorPathInvalid
+                            return@TextButton
+                        }
+
+                        // Create directory if it doesn't exist
+                        if (!file.exists()) {
+                            val created = file.mkdirs()
+                            if (!created) {
+                                errorMessage = errorPathCannotCreate
+                                return@TextButton
+                            }
+                        }
+
+                        // Convert to URI
+                        val uri = file.toUri().toString()
+                        onConfirm(uri)
+                    } catch (e: SecurityException) {
+                        errorMessage = errorPathInvalid
+                    } catch (e: Exception) {
+                        errorMessage = errorPathInvalid
+                    }
+                },
+            ) {
+                Text(actionOk)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(actionCancel)
+            }
+        },
+    )
 }
