@@ -52,4 +52,16 @@
         <item quantity="one">Seuraava lukematon luku</item>
         <item quantity="other">Seuraavat %d lukematonta lukua</item>
     </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Huomenna</item>
+        <item quantity="other">%1$d:n päivän päästä</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">1 päivä</item>
+        <item quantity="other">%d päivää</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 sivu</item>
+        <item quantity="other">%1$s sivua</item>
+    </plurals>
 </resources>
