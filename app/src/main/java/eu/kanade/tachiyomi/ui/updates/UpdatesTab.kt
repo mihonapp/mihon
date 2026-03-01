@@ -3,6 +3,8 @@ package eu.kanade.tachiyomi.ui.updates
 import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -109,7 +111,16 @@ data object UpdatesTab : Tab {
                         } else {
                             MR.strings.update_already_running
                         }
-                        screenModel.snackbarHostState.showSnackbar(context.stringResource(msg))
+                        val actionLabel = context.stringResource(MR.strings.action_cancel).takeIf { event.started }
+                        val snackbarResult =
+                            screenModel.snackbarHostState.showSnackbar(
+                                context.stringResource(msg),
+                                actionLabel,
+                                duration = SnackbarDuration.Short
+                            )
+                        if (snackbarResult == SnackbarResult.ActionPerformed) {
+                            screenModel.cancelLibraryUpdate()
+                        }
                     }
                 }
             }
