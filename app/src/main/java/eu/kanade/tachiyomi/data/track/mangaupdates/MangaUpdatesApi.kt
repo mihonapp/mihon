@@ -70,7 +70,7 @@ class MangaUpdatesApi(
         )
             .awaitSuccess()
             .let {
-                if (it.code == 200) {
+                if (it.isSuccessful) {
                     track.status = status
                     track.last_chapter_read = 1.0
                 }
@@ -193,6 +193,6 @@ class MangaUpdatesApi(
     companion object {
         private const val BASE_URL = "https://api.mangaupdates.com"
 
-        private val CONTENT_TYPE = "application/vnd.api+json".toMediaType()
+        private val CONTENT_TYPE = "application/json".toMediaType()
     }
 }
