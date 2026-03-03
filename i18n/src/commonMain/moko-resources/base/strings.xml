@@ -696,6 +696,7 @@
     <string name="other_source">Other</string>
     <string name="last_used_source">Last used</string>
     <string name="pinned_sources">Pinned</string>
+    <string name="pinned_sources_only">Pinned only</string>
     <string name="action_global_search_hint">Global search…</string>
     <string name="action_global_search_query">Search for \"%1$s\" globally</string>
     <string name="latest">Latest</string>

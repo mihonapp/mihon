@@ -67,7 +67,7 @@ class GlobalSearchScreen(
                 onChangeSearchQuery = screenModel::updateSearchQuery,
                 onSearch = { screenModel.search() },
                 getManga = { screenModel.getManga(it) },
-                onChangeSearchFilter = screenModel::setSourceFilter,
+                onTogglePinnedOnly = screenModel::togglePinnedOnly,
                 onToggleResults = screenModel::toggleFilterResults,
                 onClickSource = {
                     navigator.push(BrowseSourceScreen(it.id, state.searchQuery))

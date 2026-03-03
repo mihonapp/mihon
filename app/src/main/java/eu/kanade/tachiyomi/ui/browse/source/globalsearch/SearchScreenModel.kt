@@ -52,7 +52,7 @@ abstract class SearchScreenModel(
     protected val pinnedSources = sourcePreferences.pinnedSources().get()
 
     private var lastQuery: String? = null
-    private var lastSourceFilter: SourceFilter? = null
+    private var lastPinnedOnly: Boolean? = null
 
     protected var extensionFilter: String? = null
 
@@ -68,6 +68,12 @@ abstract class SearchScreenModel(
         screenModelScope.launch {
             preferences.globalSearchFilterState().changes().collectLatest { state ->
                 mutableState.update { it.copy(onlyShowHasResults = state) }
+            }
+        }
+        screenModelScope.launch {
+            preferences.globalSearchPinnedOnly().changes().collectLatest { pinned ->
+                mutableState.update { it.copy(pinnedOnly = pinned) }
+                search()
             }
         }
     }
@@ -113,9 +119,8 @@ abstract class SearchScreenModel(
         mutableState.update { it.copy(searchQuery = query) }
     }
 
-    fun setSourceFilter(filter: SourceFilter) {
-        mutableState.update { it.copy(sourceFilter = filter) }
-        search()
+    fun togglePinnedOnly() {
+        preferences.globalSearchPinnedOnly().toggle()
     }
 
     fun toggleFilterResults() {
@@ -124,15 +129,15 @@ abstract class SearchScreenModel(
 
     fun search() {
         val query = state.value.searchQuery
-        val sourceFilter = state.value.sourceFilter
+        val pinnedOnly = state.value.pinnedOnly
 
         if (query.isNullOrBlank()) return
 
         val sameQuery = this.lastQuery == query
-        if (sameQuery && this.lastSourceFilter == sourceFilter) return
+        if (sameQuery && this.lastPinnedOnly == pinnedOnly) return
 
         this.lastQuery = query
-        this.lastSourceFilter = sourceFilter
+        this.lastPinnedOnly = pinnedOnly
 
         searchJob?.cancel()
 
@@ -217,7 +222,7 @@ abstract class SearchScreenModel(
     data class State(
         val from: Manga? = null,
         val searchQuery: String? = null,
-        val sourceFilter: SourceFilter = SourceFilter.PinnedOnly,
+        val pinnedOnly: Boolean = false,
         val onlyShowHasResults: Boolean = false,
         val items: PersistentMap<CatalogueSource, SearchItemResult> = persistentMapOf(),
         val dialog: Dialog? = null,
@@ -230,11 +235,6 @@ abstract class SearchScreenModel(
     sealed interface Dialog {
         data class Migrate(val target: Manga, val current: Manga) : Dialog
     }
-}
-
-enum class SourceFilter {
-    All,
-    PinnedOnly,
 }
 
 sealed interface SearchItemResult {
