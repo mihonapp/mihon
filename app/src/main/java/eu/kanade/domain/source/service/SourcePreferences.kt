@@ -64,6 +64,11 @@ class SourcePreferences(
         false,
     )
 
+    val globalSearchPinnedOnly: Preference<Boolean> = preferenceStore.getBoolean(
+        Preference.appStateKey("global_search_pinned_only"),
+        false,
+    )
+
     val migrationSources: Preference<List<Long>> = preferenceStore.getLongArray("migration_sources", emptyList())
 
     val migrationFlags: Preference<Set<MigrationFlag>> = preferenceStore.getObjectFromInt(

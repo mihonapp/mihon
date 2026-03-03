@@ -27,16 +27,12 @@ class GlobalSearchViewModel(
     init {
         extensionFilter = initialExtensionFilter
         if (initialQuery.isNotBlank() || !initialExtensionFilter.isNullOrBlank()) {
-            if (extensionFilter != null) {
-                // we're going to use custom extension filter instead
-                setSourceFilter(SourceFilter.All)
-            }
             search()
         }
     }
 
     override fun getEnabledSources(): List<Source> {
         return super.getEnabledSources()
-            .filter { state.value.sourceFilter != SourceFilter.PinnedOnly || "${it.id}" in pinnedSources }
+            .filter { extensionFilter != null || !state.value.pinnedOnly || "${it.id}" in pinnedSources }
     }
 }
