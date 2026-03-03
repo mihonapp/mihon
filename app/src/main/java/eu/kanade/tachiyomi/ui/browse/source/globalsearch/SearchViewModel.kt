@@ -65,12 +65,13 @@ abstract class SearchViewModel(
     open val sortComparator = { map: Map<Source, SearchItemResult> ->
         compareBy<Source>(
             { (map[it] as? SearchItemResult.Success)?.isEmpty ?: true },
-            { "${it.id}" !in pinnedSources },
+            { it.id.toString() !in pinnedSources },
             { "${it.name.lowercase()} (${it.lang})" },
         )
     }
 
     init {
+        state.update { it.copy(hasPinnedSources = pinnedSources.isNotEmpty()) }
         viewModelScope.launch {
             preferences.globalSearchFilterState.changes().collectLatest { onlyShowHasResults ->
                 state.update { it.copy(onlyShowHasResults = onlyShowHasResults) }
@@ -78,7 +79,7 @@ abstract class SearchViewModel(
         }
         viewModelScope.launch {
             preferences.globalSearchPinnedOnly.changes().collectLatest { pinned ->
-                state.update { it.copy(pinnedOnly = pinned) }
+                state.update { it.copy(pinnedOnly = pinned && it.hasPinnedSources) }
                 search()
             }
         }
@@ -222,6 +223,7 @@ abstract class SearchViewModel(
         val from: Manga? = null,
         val searchQuery: String? = null,
         val pinnedOnly: Boolean = false,
+        val hasPinnedSources: Boolean = false,
         val onlyShowHasResults: Boolean = false,
         val items: Map<Source, SearchItemResult> = mapOf(),
         val dialog: Dialog? = null,
