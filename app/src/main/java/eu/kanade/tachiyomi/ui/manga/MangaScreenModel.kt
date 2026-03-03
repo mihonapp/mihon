@@ -1220,10 +1220,7 @@ class MangaScreenModel(
                     .filter { (chapter) -> applyFilter(bookmarkedFilter) { chapter.bookmark } }
                     .filter { applyFilter(downloadedFilter) { it.isDownloaded || isLocalManga } }
                     .filter { (chapter) ->
-                        applyFilter(subChapterFilter) {
-                            chapter.chapterNumber >= 0 &&
-                                chapter.chapterNumber != floor(chapter.chapterNumber)
-                        }
+                        applyFilter(subChapterFilter) { chapter.isSubChapter }
                     }
                     .sortedWith { (chapter1), (chapter2) -> getChapterSort(manga).invoke(chapter1, chapter2) }
             }

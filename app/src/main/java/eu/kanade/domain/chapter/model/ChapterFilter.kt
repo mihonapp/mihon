@@ -8,7 +8,6 @@ import tachiyomi.domain.chapter.service.getChapterSort
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.source.local.isLocal
-import kotlin.math.floor
 
 /**
  * Applies the view filters to the list of chapters obtained from the database.
@@ -36,11 +35,7 @@ fun List<Chapter>.applyFilters(manga: Manga, downloadManager: DownloadManager): 
                 downloaded || isLocalManga
             }
         }
-        .filter { chapter ->
-            applyFilter(subChapterFilter) {
-                chapter.chapterNumber >= 0 && chapter.chapterNumber != floor(chapter.chapterNumber)
-            }
-        }
+        .filter { chapter -> applyFilter(subChapterFilter) { chapter.isSubChapter } }
         .sortedWith(getChapterSort(manga)).toList()
 }
 
@@ -58,10 +53,6 @@ fun List<ChapterList.Item>.applyFilters(manga: Manga): Sequence<ChapterList.Item
         .filter { (chapter) -> applyFilter(unreadFilter) { !chapter.read } }
         .filter { (chapter) -> applyFilter(bookmarkedFilter) { chapter.bookmark } }
         .filter { applyFilter(downloadedFilter) { it.isDownloaded || isLocalManga } }
-        .filter { (chapter) ->
-            applyFilter(subChapterFilter) {
-                chapter.chapterNumber >= 0 && chapter.chapterNumber != floor(chapter.chapterNumber)
-            }
-        }
+        .filter { (chapter) -> applyFilter(subChapterFilter) { chapter.isSubChapter } }
         .sortedWith { (chapter1), (chapter2) -> getChapterSort(manga).invoke(chapter1, chapter2) }
 }

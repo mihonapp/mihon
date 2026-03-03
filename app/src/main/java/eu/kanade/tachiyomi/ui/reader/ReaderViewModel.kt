@@ -198,20 +198,8 @@ class ReaderViewModel @JvmOverloads constructor(
                                     ) ||
                                 (manga.bookmarkedFilterRaw == Manga.CHAPTER_SHOW_BOOKMARKED && !it.bookmark) ||
                                 (manga.bookmarkedFilterRaw == Manga.CHAPTER_SHOW_NOT_BOOKMARKED && it.bookmark) ||
-                                (
-                                    manga.subChapterFilterRaw == Manga.CHAPTER_SHOW_SUB_CHAPTER &&
-                                        !(
-                                            it.chapterNumber >= 0 &&
-                                                it.chapterNumber != kotlin.math.floor(it.chapterNumber)
-                                            )
-                                    ) ||
-                                (
-                                    manga.subChapterFilterRaw == Manga.CHAPTER_SHOW_NOT_SUB_CHAPTER &&
-                                        (
-                                            it.chapterNumber >= 0 &&
-                                                it.chapterNumber != kotlin.math.floor(it.chapterNumber)
-                                            )
-                                    )
+                                (manga.subChapterFilterRaw == Manga.CHAPTER_SHOW_SUB_CHAPTER && !it.isSubChapter) ||
+                                (manga.subChapterFilterRaw == Manga.CHAPTER_SHOW_NOT_SUB_CHAPTER && it.isSubChapter)
                         }
                         else -> false
                     }
