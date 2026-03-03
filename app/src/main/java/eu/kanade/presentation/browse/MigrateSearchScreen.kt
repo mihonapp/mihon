@@ -31,6 +31,7 @@ fun MigrateSearchScreen(
                 navigateUp = navigateUp,
                 onChangeSearchQuery = onChangeSearchQuery,
                 onSearch = onSearch,
+                hasPinnedSources = state.hasPinnedSources,
                 pinnedOnly = state.pinnedOnly,
                 onTogglePinnedOnly = onTogglePinnedOnly,
                 onlyShowHasResults = state.onlyShowHasResults,

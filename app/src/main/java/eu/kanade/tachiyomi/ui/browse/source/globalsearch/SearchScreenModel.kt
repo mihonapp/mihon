@@ -59,12 +59,13 @@ abstract class SearchScreenModel(
     open val sortComparator = { map: Map<CatalogueSource, SearchItemResult> ->
         compareBy<CatalogueSource>(
             { (map[it] as? SearchItemResult.Success)?.isEmpty ?: true },
-            { "${it.id}" !in pinnedSources },
+            { it.id.toString() !in pinnedSources },
             { "${it.name.lowercase()} (${it.lang})" },
         )
     }
 
     init {
+        mutableState.update { it.copy(hasPinnedSources = pinnedSources.isNotEmpty()) }
         screenModelScope.launch {
             preferences.globalSearchFilterState().changes().collectLatest { state ->
                 mutableState.update { it.copy(onlyShowHasResults = state) }
@@ -72,7 +73,7 @@ abstract class SearchScreenModel(
         }
         screenModelScope.launch {
             preferences.globalSearchPinnedOnly().changes().collectLatest { pinned ->
-                mutableState.update { it.copy(pinnedOnly = pinned) }
+                mutableState.update { it.copy(pinnedOnly = pinned && it.hasPinnedSources) }
                 search()
             }
         }
@@ -223,6 +224,7 @@ abstract class SearchScreenModel(
         val from: Manga? = null,
         val searchQuery: String? = null,
         val pinnedOnly: Boolean = false,
+        val hasPinnedSources: Boolean = false,
         val onlyShowHasResults: Boolean = false,
         val items: PersistentMap<CatalogueSource, SearchItemResult> = persistentMapOf(),
         val dialog: Dialog? = null,

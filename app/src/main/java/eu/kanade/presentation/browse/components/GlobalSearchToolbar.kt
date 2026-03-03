@@ -37,6 +37,7 @@ fun GlobalSearchToolbar(
     navigateUp: () -> Unit,
     onChangeSearchQuery: (String?) -> Unit,
     onSearch: (String) -> Unit,
+    hasPinnedSources: Boolean,
     pinnedOnly: Boolean,
     onTogglePinnedOnly: () -> Unit,
     onlyShowHasResults: Boolean,
@@ -69,21 +70,23 @@ fun GlobalSearchToolbar(
                 .padding(horizontal = MaterialTheme.padding.small),
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
         ) {
-            FilterChip(
-                selected = pinnedOnly,
-                onClick = onTogglePinnedOnly,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Outlined.PushPin,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(FilterChipDefaults.IconSize),
-                    )
-                },
-                label = {
-                    Text(text = stringResource(MR.strings.pinned_sources_only))
-                },
-            )
+            if (hasPinnedSources) {
+                FilterChip(
+                    selected = pinnedOnly,
+                    onClick = onTogglePinnedOnly,
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.PushPin,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(FilterChipDefaults.IconSize),
+                        )
+                    },
+                    label = {
+                        Text(text = stringResource(MR.strings.pinned_sources_only))
+                    },
+                )
+            }
 
             FilterChip(
                 selected = onlyShowHasResults,
