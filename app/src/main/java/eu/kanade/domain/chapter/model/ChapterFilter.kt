@@ -8,6 +8,7 @@ import tachiyomi.domain.chapter.service.getChapterSort
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.source.local.isLocal
+import kotlin.math.floor
 
 /**
  * Applies the view filters to the list of chapters obtained from the database.
@@ -18,8 +19,10 @@ fun List<Chapter>.applyFilters(manga: Manga, downloadManager: DownloadManager): 
     val unreadFilter = manga.unreadFilter
     val downloadedFilter = manga.downloadedFilter
     val bookmarkedFilter = manga.bookmarkedFilter
+    val subChapterFilter = manga.subChapterFilter
 
-    return filter { chapter -> applyFilter(unreadFilter) { !chapter.read } }
+    return asSequence()
+        .filter { chapter -> applyFilter(unreadFilter) { !chapter.read } }
         .filter { chapter -> applyFilter(bookmarkedFilter) { chapter.bookmark } }
         .filter { chapter ->
             applyFilter(downloadedFilter) {
@@ -33,7 +36,12 @@ fun List<Chapter>.applyFilters(manga: Manga, downloadManager: DownloadManager): 
                 downloaded || isLocalManga
             }
         }
-        .sortedWith(getChapterSort(manga))
+        .filter { chapter ->
+            applyFilter(subChapterFilter) {
+                chapter.chapterNumber >= 0 && chapter.chapterNumber != floor(chapter.chapterNumber)
+            }
+        }
+        .sortedWith(getChapterSort(manga)).toList()
 }
 
 /**
@@ -45,9 +53,15 @@ fun List<ChapterList.Item>.applyFilters(manga: Manga): Sequence<ChapterList.Item
     val unreadFilter = manga.unreadFilter
     val downloadedFilter = manga.downloadedFilter
     val bookmarkedFilter = manga.bookmarkedFilter
+    val subChapterFilter = manga.subChapterFilter
     return asSequence()
         .filter { (chapter) -> applyFilter(unreadFilter) { !chapter.read } }
         .filter { (chapter) -> applyFilter(bookmarkedFilter) { chapter.bookmark } }
         .filter { applyFilter(downloadedFilter) { it.isDownloaded || isLocalManga } }
+        .filter { (chapter) ->
+            applyFilter(subChapterFilter) {
+                chapter.chapterNumber >= 0 && chapter.chapterNumber != floor(chapter.chapterNumber)
+            }
+        }
         .sortedWith { (chapter1), (chapter2) -> getChapterSort(manga).invoke(chapter1, chapter2) }
 }
