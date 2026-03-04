@@ -410,6 +410,10 @@
     <string name="pref_always_decode_long_strip_with_ssiv_2">Use legacy decoder for long strip reader</string>
     <string name="pref_always_decode_long_strip_with_ssiv_summary">Affects performance. Only enable if reducing bitmap threshold doesn\'t fix blank image issues</string>
     <string name="pref_display_profile">Custom display profile</string>
+    <string name="pref_image_decoder_backend">Image decoder backend</string>
+    <string name="pref_image_decoder_backend_summary">Requires app restart to take effect</string>
+    <string name="pref_image_decoder_backend_cpp">C++ (Default)</string>
+    <string name="pref_image_decoder_backend_rust">Rust (Experimental)</string>
     <string name="pref_crop_borders">Crop borders</string>
     <string name="pref_custom_brightness">Custom brightness</string>
     <string name="pref_grayscale">Grayscale</string>

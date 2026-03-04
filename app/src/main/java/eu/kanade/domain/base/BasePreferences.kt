@@ -5,6 +5,8 @@ import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.util.system.GLUtil
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
+import tachiyomi.core.common.preference.getEnum
+import tachiyomi.decoder.ImageDecoderConfig
 import tachiyomi.i18n.MR
 
 class BasePreferences(
@@ -35,4 +37,6 @@ class BasePreferences(
     fun hardwareBitmapThreshold() = preferenceStore.getInt("pref_hardware_bitmap_threshold", GLUtil.SAFE_TEXTURE_LIMIT)
 
     fun alwaysDecodeLongStripWithSSIV() = preferenceStore.getBoolean("pref_always_decode_long_strip_with_ssiv", false)
+
+    fun imageDecoderBackend() = preferenceStore.getEnum("pref_image_decoder_backend", ImageDecoderConfig.Backend.CPP)
 }

@@ -49,6 +49,7 @@ import eu.kanade.tachiyomi.ui.more.OnboardingScreen
 import eu.kanade.tachiyomi.util.CrashLogUtil
 import eu.kanade.tachiyomi.util.system.GLUtil
 import eu.kanade.tachiyomi.util.system.isReleaseBuildType
+import tachiyomi.decoder.ImageDecoderConfig
 import eu.kanade.tachiyomi.util.system.isShizukuInstalled
 import eu.kanade.tachiyomi.util.system.powerManager
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
@@ -382,6 +383,19 @@ object SettingsAdvancedScreen : SearchableSettings {
                     subtitle = basePreferences.displayProfile().get(),
                     onClick = {
                         chooseColorProfile.launch(arrayOf("*/*"))
+                    },
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    preference = basePreferences.imageDecoderBackend(),
+                    entries = persistentMapOf(
+                        ImageDecoderConfig.Backend.CPP to stringResource(MR.strings.pref_image_decoder_backend_cpp),
+                        ImageDecoderConfig.Backend.RUST to stringResource(MR.strings.pref_image_decoder_backend_rust),
+                    ),
+                    title = stringResource(MR.strings.pref_image_decoder_backend),
+                    subtitle = stringResource(MR.strings.pref_image_decoder_backend_summary),
+                    onValueChanged = {
+                        context.toast(MR.strings.requires_app_restart)
+                        true
                     },
                 ),
             ),

@@ -62,6 +62,7 @@ import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.decoder.ImageDecoderConfig
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.widget.WidgetManager
 import uy.kohesive.injekt.Injekt
@@ -99,6 +100,9 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
         Injekt.importModule(PreferenceModule(this))
         Injekt.importModule(AppModule(this))
         Injekt.importModule(DomainModule())
+
+        // Must be set before ImageDecoder's native library is loaded (happens lazily on first use)
+        ImageDecoderConfig.setBackend(basePreferences.imageDecoderBackend().get())
 
         setupNotificationChannels()
 
