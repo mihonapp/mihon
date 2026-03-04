@@ -35,6 +35,12 @@ dependencyResolutionManagement {
     }
 }
 
+includeBuild("/path/to/gradle-root/of/image-decoder") {
+    dependencySubstitution {
+        substitute(module("com.github.tachiyomiorg:image-decoder")).using(project(":library"))
+    }
+}
+
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "Mihon"
