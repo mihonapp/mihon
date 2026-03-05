@@ -122,8 +122,21 @@ class ExtensionManager(
      */
     private fun initExtensions() {
         scope.launch {
-            val delayMs = INIT_DELAY_MS - (System.currentTimeMillis() - App.processStartTimeMillis)
-            if (delayMs > 0) delay(delayMs)
+            var lastCount = -1
+            var stabilityCounter = 0
+            val maxChecks = 12
+
+            for (i in 0 until maxChecks) {
+                val currentCount = ExtensionLoader.getExtensionCount(context)
+                if (currentCount == lastCount) {
+                    stabilityCounter++
+                    if (stabilityCounter >= 3) break
+                } else {
+                    stabilityCounter = 0
+                }
+                lastCount = currentCount
+                if (i < maxChecks - 1) delay(250)
+            }
 
             val extensions = ExtensionLoader.loadExtensions(context)
 
@@ -386,8 +399,3 @@ class ExtensionManager(
         return map { it.values.toList() }.stateIn(scope, SharingStarted.Lazily, value.values.toList())
     }
 }
-
-/**
- * 1 second to give Android time to bind all the installed extensions before querying the list.
- */
-private const val INIT_DELAY_MS = 1_000L
