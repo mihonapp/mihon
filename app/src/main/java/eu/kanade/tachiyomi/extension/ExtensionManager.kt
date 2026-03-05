@@ -390,4 +390,4 @@ class ExtensionManager(
 /**
  * 5 seconds to give Android time to bind all the installed extensions before querying the list.
  */
-private const val INIT_DELAY_MS = 5_000L
+private const val INIT_DELAY_MS = 1_000L
