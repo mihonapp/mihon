@@ -155,7 +155,7 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
             val installedInfo = try {
                 service.packageManager.getPackageInfo(
                     apkPackageName,
-                    PackageManager.GET_SIGNING_CERTIFICATES
+                    PackageManager.GET_SIGNING_CERTIFICATES,
                 )
             } catch (e: PackageManager.NameNotFoundException) {
                 null
@@ -165,12 +165,12 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
                 val signaturesMatch = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     val apkSigningInfo = apkInfo.signingInfo
                     val installedSigningInfo = installedInfo.signingInfo
-                    
+
                     if (apkSigningInfo != null && installedSigningInfo != null) {
                         if (apkSigningInfo.hasMultipleSigners() || installedSigningInfo.hasMultipleSigners()) {
                             val apkSignatures = apkSigningInfo.apkContentsSigners
                             val installedSignatures = installedSigningInfo.apkContentsSigners
-                            
+
                             apkSignatures.size == installedSignatures.size &&
                                 apkSignatures.zip(installedSignatures).all { (a, b) ->
                                     a.toByteArray().contentEquals(b.toByteArray())
@@ -178,7 +178,7 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
                         } else {
                             val apkSignature = apkSigningInfo.signingCertificateHistory?.firstOrNull()
                             val installedSignature = installedSigningInfo.signingCertificateHistory?.firstOrNull()
-                            
+
                             apkSignature?.toByteArray()?.contentEquals(installedSignature?.toByteArray()) == true
                         }
                     } else {
@@ -189,14 +189,14 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
                     val apkSignatures = apkInfo.signatures
                     @Suppress("DEPRECATION")
                     val installedSignatures = installedInfo.signatures
-                    
+
                     apkSignatures != null && installedSignatures != null &&
                         apkSignatures.size == installedSignatures.size &&
                         apkSignatures.zip(installedSignatures).all { (a, b) ->
                             a.toByteArray().contentEquals(b.toByteArray())
                         }
                 }
-                
+
                 if (!signaturesMatch) {
                     logcat { "Signatures differ for $apkPackageName, uninstalling existing package" }
                     withContext(Dispatchers.IO) {
