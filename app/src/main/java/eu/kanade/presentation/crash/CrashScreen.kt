@@ -26,6 +26,7 @@ import tachiyomi.presentation.core.screens.InfoScreen
 fun CrashScreen(
     exception: Throwable?,
     onRestartClick: () -> Unit,
+    onSafeModeClick: (() -> Unit)? = null,
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -42,6 +43,8 @@ fun CrashScreen(
         },
         rejectText = stringResource(MR.strings.crash_screen_restart_application),
         onRejectClick = onRestartClick,
+        cancelText = stringResource(MR.strings.crash_screen_restart_safe_mode),
+        onCancelClick = onSafeModeClick,
     ) {
         Box(
             modifier = Modifier
@@ -64,6 +67,10 @@ fun CrashScreen(
 @Composable
 private fun CrashScreenPreview() {
     TachiyomiPreviewTheme {
-        CrashScreen(exception = RuntimeException("Dummy")) {}
+        CrashScreen(
+            exception = RuntimeException("Dummy"),
+            onRestartClick = {},
+            onSafeModeClick = {},
+        )
     }
 }

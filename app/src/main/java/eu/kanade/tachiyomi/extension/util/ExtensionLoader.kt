@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.pm.PackageInfoCompat
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.extension.interactor.TrustExtension
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.model.Extension
@@ -46,6 +47,10 @@ internal object ExtensionLoader {
     private val loadNsfwSource by lazy {
         preferences.showNsfwSource().get()
     }
+
+    private val basePreferences: BasePreferences by injectLazy()
+    private val safeMode: Boolean
+        get() = basePreferences.safeMode().get()
 
     private const val EXTENSION_FEATURE = "tachiyomi.extension"
     private const val METADATA_SOURCE_CLASS = "tachiyomi.extension.class"
@@ -248,18 +253,31 @@ internal object ExtensionLoader {
             return LoadResult.Error
         }
 
+        if (safeMode) {
+            val extension = Extension.NotLoaded(
+                name = extName,
+                pkgName = pkgName,
+                versionName = versionName,
+                versionCode = versionCode,
+                libVersion = libVersion,
+                isShared = extensionInfo.isShared,
+            )
+            return LoadResult.NotLoaded(extension)
+        }
+
         val signatures = getSignatures(pkgInfo)
         if (signatures.isNullOrEmpty()) {
             logcat(LogPriority.WARN) { "Package $pkgName isn't signed" }
             return LoadResult.Error
         } else if (!trustExtension.isTrusted(pkgInfo, signatures)) {
             val extension = Extension.Untrusted(
-                extName,
-                pkgName,
-                versionName,
-                versionCode,
-                libVersion,
-                signatures.last(),
+                name = extName,
+                pkgName = pkgName,
+                versionName = versionName,
+                versionCode = versionCode,
+                libVersion = libVersion,
+                signatureHash = signatures.last(),
+                isShared = extensionInfo.isShared,
             )
             logcat(LogPriority.WARN) { "Extension $pkgName isn't trusted" }
             return LoadResult.Untrusted(extension)
