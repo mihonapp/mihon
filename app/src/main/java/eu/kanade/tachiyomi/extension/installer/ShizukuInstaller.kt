@@ -187,6 +187,7 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
                 } else {
                     @Suppress("DEPRECATION")
                     val apkSignatures = apkInfo.signatures
+
                     @Suppress("DEPRECATION")
                     val installedSignatures = installedInfo.signatures
 
