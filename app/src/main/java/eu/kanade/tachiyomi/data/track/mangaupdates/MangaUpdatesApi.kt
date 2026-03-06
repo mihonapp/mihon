@@ -70,7 +70,7 @@ class MangaUpdatesApi(
         )
             .awaitSuccess()
             .let {
-                if (it.isSuccessful) {
+                if (it.code == 200) {
                     track.status = status
                     track.last_chapter_read = 1.0
                 }
