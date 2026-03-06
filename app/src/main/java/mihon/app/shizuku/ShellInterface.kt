@@ -101,32 +101,32 @@ class ShellInterface : IShellInterface.Stub() {
                 PackageInstaller.SessionParams::class.java,
                 String::class.java,
                 String::class.java,
-                Int::class.javaPrimitiveType,
+                Int::class.java,
             ).invoke(packageInstaller, params, packageName, packageName, userId) as Int
         } else {
             packageInstaller::class.java.getMethod(
                 "createSession",
                 PackageInstaller.SessionParams::class.java,
                 String::class.java,
-                Int::class.javaPrimitiveType,
+                Int::class.java,
             ).invoke(packageInstaller, params, packageName, userId) as Int
         }
 
         val session = packageInstaller::class.java
-            .getMethod("openSession", Int::class.javaPrimitiveType)
+            .getMethod("openSession", Int::class.java)
             .invoke(packageInstaller, sessionId)
 
         session::class.java.getMethod(
             "openWrite",
             String::class.java,
-            Long::class.javaPrimitiveType,
-            Long::class.javaPrimitiveType,
+            Long::class.java,
+            Long::class.java,
         )
             .invoke(session, "extension", 0L, apk.length)
             .let { it as ParcelFileDescriptor }
             .let { fd ->
                 val revocable = Class.forName("android.os.SystemProperties")
-                    .getMethod("getBoolean", String::class.java, Boolean::class.javaPrimitiveType)
+                    .getMethod("getBoolean", String::class.java, Boolean::class.java)
                     .invoke(null, "fw.revocable_fd", false) as Boolean
 
                 if (revocable) {
@@ -149,7 +149,7 @@ class ShellInterface : IShellInterface.Stub() {
         )
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-            session::class.java.getMethod("commit", IntentSender::class.java, Boolean::class.javaPrimitiveType)
+            session::class.java.getMethod("commit", IntentSender::class.java, Boolean::class.java)
                 .invoke(session, statusIntent.intentSender, false)
         } else {
             session::class.java.getMethod("commit", IntentSender::class.java)
@@ -197,13 +197,13 @@ class ShellInterface : IShellInterface.Stub() {
         val systemContext = activityThread.getMethod("getSystemContext").invoke(systemMain) as Context
 
         val shellUserHandle = UserHandle::class.java
-            .getConstructor(Int::class.javaPrimitiveType)
+            .getConstructor(Int::class.java)
             .newInstance(userId)
 
         val shellContext = systemContext::class.java.getMethod(
             "createPackageContextAsUser",
             String::class.java,
-            Int::class.javaPrimitiveType,
+            Int::class.java,
             UserHandle::class.java,
         ).invoke(
             systemContext,
