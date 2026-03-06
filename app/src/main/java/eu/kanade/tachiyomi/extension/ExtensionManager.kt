@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import eu.kanade.domain.extension.interactor.TrustExtension
 import eu.kanade.domain.source.service.SourcePreferences
+import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.extension.api.ExtensionApi
 import eu.kanade.tachiyomi.extension.api.ExtensionUpdateNotifier
 import eu.kanade.tachiyomi.extension.model.Extension
@@ -15,6 +16,7 @@ import eu.kanade.tachiyomi.extension.util.ExtensionLoader
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -120,6 +122,22 @@ class ExtensionManager(
      */
     private fun initExtensions() {
         scope.launch {
+            var lastCount = -1
+            var stabilityCounter = 0
+            val maxChecks = 12
+
+            for (i in 0 until maxChecks) {
+                val currentCount = ExtensionLoader.getExtensionCount(context)
+                if (currentCount == lastCount) {
+                    stabilityCounter++
+                    if (stabilityCounter >= 3) break
+                } else {
+                    stabilityCounter = 0
+                }
+                lastCount = currentCount
+                if (i < maxChecks - 1) delay(250)
+            }
+
             val extensions = ExtensionLoader.loadExtensions(context)
 
             installedExtensionMapFlow.value = extensions
