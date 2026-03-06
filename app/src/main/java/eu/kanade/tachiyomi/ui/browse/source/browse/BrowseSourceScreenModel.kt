@@ -50,7 +50,7 @@ import tachiyomi.domain.source.interactor.GetRemoteManga
 import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.time.Instant
+import kotlin.time.Clock
 import eu.kanade.tachiyomi.source.model.Filter as SourceModelFilter
 
 class BrowseSourceScreenModel(
@@ -223,7 +223,7 @@ class BrowseSourceScreenModel(
                 favorite = !manga.favorite,
                 dateAdded = when (manga.favorite) {
                     true -> 0
-                    false -> Instant.now().toEpochMilli()
+                    false -> Clock.System.now().toEpochMilliseconds()
                 },
             )
 

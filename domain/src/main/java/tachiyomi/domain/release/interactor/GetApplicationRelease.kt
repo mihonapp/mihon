@@ -4,8 +4,9 @@ import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.domain.release.model.Release
 import tachiyomi.domain.release.service.ReleaseService
-import java.time.Instant
-import java.time.temporal.ChronoUnit
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Instant
 
 class GetApplicationRelease(
     private val service: ReleaseService,
@@ -17,17 +18,17 @@ class GetApplicationRelease(
     }
 
     suspend fun await(arguments: Arguments): Result {
-        val now = Instant.now()
+        val now = Clock.System.now()
 
         // Limit checks to once every 3 days at most
-        val nextCheckTime = Instant.ofEpochMilli(lastChecked.get()).plus(3, ChronoUnit.DAYS)
-        if (!arguments.forceCheck && now.isBefore(nextCheckTime)) {
+        val next = Instant.fromEpochMilliseconds(lastChecked.get()).plus(3.days)
+        if (!arguments.forceCheck && now < next) {
             return Result.NoNewUpdate
         }
 
         val release = service.latest(arguments) ?: return Result.NoNewUpdate
 
-        lastChecked.set(now.toEpochMilli())
+        lastChecked.set(now.toEpochMilliseconds())
 
         // Check if latest version is different from current version
         val isNewVersion = isNewVersion(

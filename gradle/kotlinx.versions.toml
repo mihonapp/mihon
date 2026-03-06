@@ -23,6 +23,8 @@ serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization
 serialization-xml-core = { module = "io.github.pdvrieze.xmlutil:core-android", version.ref = "xml_serialization_version" }
 serialization-xml = { module = "io.github.pdvrieze.xmlutil:serialization", version.ref = "xml_serialization_version" }
 
+datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.7.1" }
+
 [bundles]
 coroutines = ["coroutines-core", "coroutines-android", "coroutines-guava"]
 serialization = ["serialization-json", "serialization-json-okio", "serialization-protobuf", "serialization-xml-core", "serialization-xml"]

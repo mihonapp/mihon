@@ -36,15 +36,15 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.plus
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
+import kotlin.time.Instant
 
 class WorkerInfoScreen : Screen() {
 
@@ -150,10 +150,8 @@ class WorkerInfoScreen : Screen() {
                     }
                     appendLine("State: ${workInfo.state}")
                     if (workInfo.state == WorkInfo.State.ENQUEUED) {
-                        val timestamp = LocalDateTime.ofInstant(
-                            Instant.ofEpochMilli(workInfo.nextScheduleTimeMillis),
-                            ZoneId.systemDefault(),
-                        )
+                        val timestamp = Instant.fromEpochMilliseconds(workInfo.nextScheduleTimeMillis)
+                            .toLocalDateTime(TimeZone.currentSystemDefault())
                             .toDateTimestampString(
                                 UiPreferences.dateFormat(
                                     Injekt.get<UiPreferences>().dateFormat().get(),
