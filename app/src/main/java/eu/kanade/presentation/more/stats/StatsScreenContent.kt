@@ -16,10 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import eu.kanade.presentation.more.stats.components.MangaReadTimeChart
 import eu.kanade.presentation.more.stats.components.StatsItem
 import eu.kanade.presentation.more.stats.components.StatsOverviewItem
 import eu.kanade.presentation.more.stats.data.StatsData
 import eu.kanade.presentation.util.toDurationString
+import tachiyomi.domain.history.model.ReadDurationByManga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.SectionCard
 import tachiyomi.presentation.core.components.material.padding
@@ -27,11 +29,23 @@ import tachiyomi.presentation.core.i18n.stringResource
 import java.util.Locale
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import eu.kanade.domain.ui.model.StatsProgressBarStyle
 
 @Composable
 fun StatsScreenContent(
     state: StatsScreenState.Success,
     paddingValues: PaddingValues,
+    onMangaClick: (Long) -> Unit,
 ) {
     LazyColumn(
         contentPadding = paddingValues,
@@ -48,6 +62,12 @@ fun StatsScreenContent(
         }
         item {
             TrackerStats(state.trackers)
+        }
+        item {
+            MangaReadTimeSection(
+                state.readDurationByManga,
+                onMangaClick = onMangaClick,
+            )
         }
     }
 }
@@ -158,5 +178,50 @@ private fun LazyItemScope.TrackerStats(
                 stringResource(MR.strings.label_used),
             )
         }
+    }
+}
+
+@Composable
+private fun LazyItemScope.MangaReadTimeSection(
+    readDurations: List<ReadDurationByManga>,
+    onMangaClick: (Long) -> Unit,
+) {
+    if (readDurations.isEmpty()) return
+
+    var progressBarStyle by remember { mutableStateOf(StatsProgressBarStyle.RELATIVE_TO_MAX) }
+
+    Column {
+        Text(
+            modifier = Modifier.padding(horizontal = MaterialTheme.padding.extraLarge),
+            text = stringResource(MR.strings.label_read_duration),
+            style = MaterialTheme.typography.titleSmall,
+        )
+
+        SingleChoiceSegmentedButtonRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
+        ) {
+            SegmentedButton(
+                selected = progressBarStyle == StatsProgressBarStyle.RELATIVE_TO_MAX,
+                onClick = { progressBarStyle = StatsProgressBarStyle.RELATIVE_TO_MAX },
+                shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
+            ) {
+                Text(stringResource(MR.strings.stats_scale_by_manga))
+            }
+            SegmentedButton(
+                selected = progressBarStyle == StatsProgressBarStyle.RELATIVE_TO_TOTAL,
+                onClick = { progressBarStyle = StatsProgressBarStyle.RELATIVE_TO_TOTAL },
+                shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
+            ) {
+                Text(stringResource(MR.strings.stats_scale_total))
+            }
+        }
+
+        MangaReadTimeChart(
+            readDurations = readDurations,
+            progressBarStyle = progressBarStyle,
+            onMangaClick = onMangaClick,
+        )
     }
 }

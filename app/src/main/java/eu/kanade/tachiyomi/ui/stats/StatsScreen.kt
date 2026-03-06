@@ -14,6 +14,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
+import eu.kanade.tachiyomi.ui.manga.MangaScreen
 
 class StatsScreen : Screen() {
 
@@ -41,6 +42,9 @@ class StatsScreen : Screen() {
             StatsScreenContent(
                 state = state as StatsScreenState.Success,
                 paddingValues = paddingValues,
+                onMangaClick = { mangaId ->
+                    navigator.push(MangaScreen(mangaId))
+                },
             )
         }
     }
