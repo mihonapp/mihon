@@ -9,6 +9,7 @@ import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.content.pm.PackageInstaller
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.IBinder
 import androidx.core.content.ContextCompat
 import eu.kanade.domain.base.BasePreferences
@@ -140,7 +141,6 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
     private suspend fun installWithRetry(entry: Entry) {
         var tempFile: File? = null
         try {
-            // getPackageArchiveInfo requires a file path, not a content URI
             tempFile = File(service.cacheDir, "install_${System.currentTimeMillis()}.apk")
             service.contentResolver.openInputStream(entry.uri)?.use { input ->
                 tempFile.outputStream().use { output -> input.copyTo(output) }
@@ -148,36 +148,59 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
 
             val apkInfo = service.packageManager.getPackageArchiveInfo(
                 tempFile.absolutePath,
-                PackageManager.GET_SIGNATURES,
+                PackageManager.GET_SIGNING_CERTIFICATES,
             ) ?: throw Exception("Failed to read APK package info")
             val apkPackageName = apkInfo.packageName
-            val apkSignatures = apkInfo.signatures
 
             val installedInfo = try {
-                service.packageManager.getPackageInfo(apkPackageName, PackageManager.GET_SIGNATURES)
+                service.packageManager.getPackageInfo(
+                    apkPackageName,
+                    PackageManager.GET_SIGNING_CERTIFICATES
+                )
             } catch (e: PackageManager.NameNotFoundException) {
                 null
             }
 
             if (installedInfo != null) {
-                val installedSignatures = installedInfo.signatures
-
-                // Only uninstall if both signatures are present and don't match
-                if (apkSignatures != null && installedSignatures != null) {
-                    val signaturesMatch = apkSignatures.size == installedSignatures.size &&
+                val signaturesMatch = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    val apkSigningInfo = apkInfo.signingInfo
+                    val installedSigningInfo = installedInfo.signingInfo
+                    
+                    if (apkSigningInfo != null && installedSigningInfo != null) {
+                        if (apkSigningInfo.hasMultipleSigners() || installedSigningInfo.hasMultipleSigners()) {
+                            val apkSignatures = apkSigningInfo.apkContentsSigners
+                            val installedSignatures = installedSigningInfo.apkContentsSigners
+                            
+                            apkSignatures.size == installedSignatures.size &&
+                                apkSignatures.zip(installedSignatures).all { (a, b) ->
+                                    a.toByteArray().contentEquals(b.toByteArray())
+                                }
+                        } else {
+                            val apkSignature = apkSigningInfo.signingCertificateHistory?.firstOrNull()
+                            val installedSignature = installedSigningInfo.signingCertificateHistory?.firstOrNull()
+                            
+                            apkSignature?.toByteArray()?.contentEquals(installedSignature?.toByteArray()) == true
+                        }
+                    } else {
+                        false
+                    }
+                } else {
+                    @Suppress("DEPRECATION")
+                    val apkSignatures = apkInfo.signatures
+                    @Suppress("DEPRECATION")
+                    val installedSignatures = installedInfo.signatures
+                    
+                    apkSignatures != null && installedSignatures != null &&
+                        apkSignatures.size == installedSignatures.size &&
                         apkSignatures.zip(installedSignatures).all { (a, b) ->
                             a.toByteArray().contentEquals(b.toByteArray())
                         }
-
-                    if (!signaturesMatch) {
-                        logcat { "Signatures differ for $apkPackageName, uninstalling existing package" }
-                        withContext(Dispatchers.IO) {
-                            shellInterface?.uninstall(apkPackageName)
-                        }
-                    }
-                } else {
-                    logcat(LogPriority.WARN) {
-                        "Cannot verify signatures for $apkPackageName (new sig: ${apkSignatures != null}, installed sig: ${installedSignatures != null})"
+                }
+                
+                if (!signaturesMatch) {
+                    logcat { "Signatures differ for $apkPackageName, uninstalling existing package" }
+                    withContext(Dispatchers.IO) {
+                        shellInterface?.uninstall(apkPackageName)
                     }
                 }
             }
