@@ -197,7 +197,9 @@ class ReaderViewModel @JvmOverloads constructor(
                                         )
                                     ) ||
                                 (manga.bookmarkedFilterRaw == Manga.CHAPTER_SHOW_BOOKMARKED && !it.bookmark) ||
-                                (manga.bookmarkedFilterRaw == Manga.CHAPTER_SHOW_NOT_BOOKMARKED && it.bookmark)
+                                (manga.bookmarkedFilterRaw == Manga.CHAPTER_SHOW_NOT_BOOKMARKED && it.bookmark) ||
+                                (manga.subChapterFilterRaw == Manga.CHAPTER_SHOW_SUB_CHAPTER && !it.isSubChapter) ||
+                                (manga.subChapterFilterRaw == Manga.CHAPTER_SHOW_NOT_SUB_CHAPTER && it.isSubChapter)
                         }
                         else -> false
                     }

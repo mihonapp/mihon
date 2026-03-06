@@ -35,6 +35,15 @@ class SetMangaChapterFlags(
         )
     }
 
+    suspend fun awaitSetSubChapterFilter(manga: Manga, flag: Long): Boolean {
+        return mangaRepository.update(
+            MangaUpdate(
+                id = manga.id,
+                chapterFlags = manga.chapterFlags.setFlag(flag, Manga.CHAPTER_SUB_CHAPTER_MASK),
+            ),
+        )
+    }
+
     suspend fun awaitSetDisplayMode(manga: Manga, flag: Long): Boolean {
         return mangaRepository.update(
             MangaUpdate(
@@ -74,6 +83,7 @@ class SetMangaChapterFlags(
         unreadFilter: Long,
         downloadedFilter: Long,
         bookmarkedFilter: Long,
+        subChapterFilter: Long,
         sortingMode: Long,
         sortingDirection: Long,
         displayMode: Long,
@@ -84,6 +94,7 @@ class SetMangaChapterFlags(
                 chapterFlags = 0L.setFlag(unreadFilter, Manga.CHAPTER_UNREAD_MASK)
                     .setFlag(downloadedFilter, Manga.CHAPTER_DOWNLOADED_MASK)
                     .setFlag(bookmarkedFilter, Manga.CHAPTER_BOOKMARKED_MASK)
+                    .setFlag(subChapterFilter, Manga.CHAPTER_SUB_CHAPTER_MASK)
                     .setFlag(sortingMode, Manga.CHAPTER_SORTING_MASK)
                     .setFlag(sortingDirection, Manga.CHAPTER_SORT_DIR_MASK)
                     .setFlag(displayMode, Manga.CHAPTER_DISPLAY_MASK),
