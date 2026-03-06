@@ -911,4 +911,5 @@
     <string name="migrationConfigScreen.availableHeader">Maaaring Magamit</string>
     <string name="action_filter_excluded_scanlators">I-filter ang na-ibukod na mga scanlator</string>
     <string name="calculating">Kinakalkula…</string>
+    <string name="download_bookmarked">Na-bookmark</string>
 </resources>

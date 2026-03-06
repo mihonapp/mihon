@@ -163,7 +163,7 @@
     <string name="file_select_backup">Selecteer back-upbestand</string>
     <string name="update_check_confirm">Download</string>
     <string name="update_check_no_new_updates">Geen nieuwe updates beschikbaar</string>
-    <string name="update_check_notification_download_complete">Download voltooid</string>
+    <string name="update_check_notification_download_complete">Tik om update te installeren</string>
     <string name="update_check_notification_update_available">Nieuwe versie beschikbaar!</string>
     <string name="information_no_downloads">Geen downloads</string>
     <string name="information_no_recent">Geen recente updates</string>
@@ -430,7 +430,7 @@
     <string name="file_picker_error">Geen bestandskiezer-app gevonden</string>
     <string name="myanimelist_relogin">Log alstublieft opnieuw in op MAL</string>
     <string name="pref_show_nsfw_source">Weergeven in bronnen- en extensielijst</string>
-    <string name="pref_viewer_nav">Navigatie-indeling</string>
+    <string name="pref_viewer_nav">Tikzones</string>
     <string name="edge_nav">Rand</string>
     <string name="kindlish_nav">Kindle-achtig</string>
     <string name="l_nav">L-vormig</string>
@@ -463,7 +463,7 @@
     <string name="pref_library_update_categories_details">Items in uitgesloten categorieën worden niet bijgewerkt, zelfs niet als ze onder opgenomen categorieën vallen.</string>
     <string name="action_sort_chapter_fetch_date">Datum opgehaald</string>
     <string name="none">Geen</string>
-    <string name="action_show_errors">Klik om details te weergeven</string>
+    <string name="action_show_errors">Tik om details weer te geven</string>
     <string name="update_check_eol">Deze Android versie wordt niet meer ondersteund</string>
     <string name="clipboard_copy_error">Mislukt om naar het klemboord te kopiëren</string>
     <string name="notification_incognito_text">Incognitomodus uitschakelen</string>
@@ -555,7 +555,7 @@
     <string name="cancelled">Geannuleerd</string>
     <string name="on_hiatus">Gepauzeerd</string>
     <string name="notification_update_error">%1$d update(s) mislukt</string>
-    <string name="learn_more">Kom meer te weten</string>
+    <string name="learn_more">Tik om meer te leren</string>
     <string name="skipped_reason_not_caught_up">Overgeslagen want er zijn geen ongelezen hoofdstukken</string>
     <string name="skipped_reason_not_started">Overgeslagen want er zijn geen gelezen hoofdstukken</string>
     <string name="pref_landscape_zoom">Zoom liggende afbeelding</string>
@@ -594,7 +594,7 @@
     <string name="download_ahead_info">Werkt alleen als het huidige hoofdstuk en het volgende alreeds gedownload zijn.</string>
     <string name="pref_user_agent_string">Standaard \'user-agent-string\'</string>
     <string name="action_search_hint">Zoek…</string>
-    <string name="missing_storage_permission">Opslag bevoegdheden niet verleent</string>
+    <string name="missing_storage_permission">Opslagrechten niet verleend</string>
     <string name="action_display_show_continue_reading_button">Knop om lezen te hervatten weergeven</string>
     <string name="label_stats">Statistieken</string>
     <string name="label_started">Gestart</string>
@@ -613,8 +613,7 @@
     <string name="pref_reset_viewer_flags_error">Kon leesinstellingen niet terugzetten naar standaardwaarden</string>
     <string name="popular">Populair</string>
     <string name="download_notifier_cache_renewal">Downloads worden gecontroleerd</string>
-    <string name="fdroid_warning">F-Droid versies worden niet officieel ondersteund.
-\nTik hier voor meer informatie.</string>
+    <string name="fdroid_warning">F-Droid versies worden niet officieel ondersteund. \nTik om meer te leren.</string>
     <string name="pref_skip_dupe_chapters">Dubbele hoofdstukken overslaan</string>
     <string name="are_you_sure">Weet je het zeker?</string>
     <string name="reading_list">Leeslijst</string>
@@ -676,7 +675,7 @@
     <string name="label_read_duration">Leesduur</string>
     <string name="manga_display_interval_title">Schat elke</string>
     <string name="crash_screen_restart_application">Herstart de applicatie</string>
-    <string name="download_cache_invalidated">Download Index geïnvalideerd</string>
+    <string name="download_cache_invalidated">Downloadindex hermaken</string>
     <string name="pref_invalidate_download_cache">Herindexeer downloads</string>
     <string name="action_ok">OK</string>
     <string name="pref_chapter_swipe_start">Hoofdstuk bij links vegen</string>
@@ -720,7 +719,7 @@
     <string name="pref_storage_usage">Opslaggebruik</string>
     <string name="notification_updating_progress">Bibliotheek bijwerken... (%s)</string>
     <string name="label_data_storage">Data en opslag</string>
-    <string name="file_null_uri_error">Bestandskiezer gaf geen bestand terug aan de app</string>
+    <string name="file_null_uri_error">Geen bestand geselecteerd</string>
     <string name="source_settings">Bron-instellingen</string>
     <string name="app_settings">App-instellingen</string>
     <string name="pref_relative_format">Relatieve tijdstempels</string>
@@ -732,7 +731,7 @@
     <string name="scanlator">Scanlator</string>
     <string name="action_apply">Toepassen</string>
     <string name="action_revert_to_default">Naar standaard terugkeren</string>
-    <string name="pref_onboarding_guide">Onboarding gids</string>
+    <string name="pref_onboarding_guide">Onboardinggids</string>
     <string name="onboarding_heading">Welkom!</string>
     <string name="action_copy_link">Link kopiëren</string>
     <string name="ext_revoke_trust">Vertrouwde onbekende extensies intrekken</string>
@@ -887,4 +886,22 @@
     <string name="migrationListScreen.migrateDialog.cancelLabel">Annuleer</string>
     <string name="migrationListScreen.progressDialog.cancelLabel">Annuleer</string>
     <string name="migrationListScreen.matchWithoutChapterToast">Geen hoofdstukken gevonden. Dit item kan niet worden gebruikt voor migratie</string>
+    <string name="action_webview_close_tab">Tabblad sluiten</string>
+    <string name="calculating">Berekenen…</string>
+    <string name="pref_download_concurrent_sources">Gelijktijdige brondownloads</string>
+    <string name="pref_download_concurrent_pages">Gelijktijdige paginadownloads</string>
+    <string name="pref_download_concurrent_pages_summary">Gelijktijdig gedownloade pagina\'s per bron</string>
+    <string name="download_bookmarked">Met bladwijzer</string>
+    <string name="action_filter_excluded_scanlators">Filter uitgesloten scanlators</string>
+    <string name="theme_catppuccin">Catppuccin</string>
+    <string name="onboarding_storage_info">Selecteer een map waarin %1$s hoofdstukdownloads, back-ups en meer zal opslaan.\n\nEen specifiek hiervoor bestemde map is aangeraden.\n\nGeselecteerde map: %2$s</string>
+    <string name="onboarding_permission_install_apps">App-installatierecht</string>
+    <string name="onboarding_permission_notifications">Meldingsrecht</string>
+    <string name="onboarding_permission_ignore_battery_opts">Achtergrondbatterijgebruik</string>
+    <string name="firebase_summary">Het verzenden van crashlogs en analytics zal ons toestaan om problemen te identificeren en op te lossen, performance te verbeteren en om toekomstige updates relevanter te maken voor jouw noden</string>
+    <string name="action_replace_repo_title">Ondertekeningssleutelvingerafdruk bestaat al</string>
+    <string name="action_replace_repo_message">Repo %1$s heeft dezelfde ondertekeningssleutelvingerafdruk als %2$s.\nAls dit verwacht is zal %2$s vervangen worden. Zo niet, neem dan contact op met de beheerder van uw repo.</string>
+    <string name="upcoming_guide">Toekomstige Updatesgids</string>
+    <string name="file_picker_uri_permission_unsupported">Kon geen permanente toegang tot map vergijken. De app kan zich onverwacht gedragen.</string>
+    <string name="onboarding_action_finish">Beginnen</string>
 </resources>

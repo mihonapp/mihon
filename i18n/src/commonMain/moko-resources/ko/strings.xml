@@ -910,4 +910,5 @@
     <string name="migrationListScreen.matchWithoutChapterToast">챕터를 찾을 수 없어 이 항목은 마이그레이션에 사용할 수 없습니다</string>
     <string name="action_filter_excluded_scanlators">스캔레이터를 제외한 필터</string>
     <string name="calculating">계산 중…</string>
+    <string name="download_bookmarked">북마크됨</string>
 </resources>
