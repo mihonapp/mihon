@@ -3,6 +3,8 @@ package eu.kanade.presentation.webview
 import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap
 import android.os.Message
+import android.webkit.JsPromptResult
+import android.webkit.JsResult
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import androidx.activity.compose.BackHandler
@@ -20,6 +22,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -95,6 +98,11 @@ fun WebViewScreenContent(
 
     var currentUrl by remember { mutableStateOf(url) }
     var showCloudflareHelp by remember { mutableStateOf(false) }
+    val isActive = remember { mutableStateOf(true) }
+
+    DisposableEffect(Unit) {
+        onDispose { isActive.value = false }
+    }
 
     val webClient = remember {
         object : AccompanistWebViewClient() {
@@ -162,6 +170,30 @@ fun WebViewScreenContent(
                     return true
                 }
                 return false
+            }
+
+            override fun onJsAlert(view: WebView, url: String?, message: String?, result: JsResult): Boolean {
+                if (!isActive.value) {
+                    result.confirm()
+                    return true
+                }
+                return super.onJsAlert(view, url, message, result)
+            }
+
+            override fun onJsConfirm(view: WebView, url: String?, message: String?, result: JsResult): Boolean {
+                if (!isActive.value) {
+                    result.cancel()
+                    return true
+                }
+                return super.onJsConfirm(view, url, message, result)
+            }
+
+            override fun onJsPrompt(view: WebView, url: String?, message: String?, defaultValue: String?, result: JsPromptResult): Boolean {
+                if (!isActive.value) {
+                    result.cancel()
+                    return true
+                }
+                return super.onJsPrompt(view, url, message, defaultValue, result)
             }
         }
     }
