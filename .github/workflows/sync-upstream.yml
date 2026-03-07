@@ -1,0 +1,172 @@
+name: Sync Upstream
+
+on:
+  schedule:
+    # Run daily at 04:00 UTC
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    name: Sync with upstream
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+          # A PAT is required so that tag pushes trigger release.yml.
+          # GITHUB_TOKEN pushes do NOT trigger other workflows.
+          # Create a fine-grained PAT with "Contents: Read and write"
+          # scoped to this repo and store it as SYNC_PAT.
+          token: ${{ secrets.SYNC_PAT }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Add upstream remote
+        run: git remote add upstream https://github.com/mihonapp/mihon.git
+
+      - name: Fetch upstream (tags into separate namespace)
+        run: |
+          # Fetch upstream main branch normally
+          git fetch upstream main
+          # Fetch upstream tags into refs/upstream-tags/ so they don't
+          # collide with the fork's own v* tags
+          git fetch upstream '+refs/tags/*:refs/upstream-tags/*'
+
+      - name: Detect new upstream releases
+        id: detect
+        run: |
+          # List upstream tags reachable from our current main (before merge)
+          # These are upstream tags whose commits we already have
+          PREV_UPSTREAM_TAG=""
+          for ref in $(git for-each-ref --sort=-v:refname --format='%(refname)' 'refs/upstream-tags/v*'); do
+            tag_commit=$(git rev-parse "$ref^{}" 2>/dev/null || git rev-parse "$ref")
+            if git merge-base --is-ancestor "$tag_commit" origin/main 2>/dev/null; then
+              PREV_UPSTREAM_TAG=$(basename "$ref")
+              break
+            fi
+          done
+
+          # Latest upstream tag reachable from upstream/main
+          LATEST_UPSTREAM_TAG=""
+          for ref in $(git for-each-ref --sort=-v:refname --format='%(refname)' 'refs/upstream-tags/v*'); do
+            tag_commit=$(git rev-parse "$ref^{}" 2>/dev/null || git rev-parse "$ref")
+            if git merge-base --is-ancestor "$tag_commit" upstream/main 2>/dev/null; then
+              LATEST_UPSTREAM_TAG=$(basename "$ref")
+              break
+            fi
+          done
+
+          echo "Previous upstream tag on our main: ${PREV_UPSTREAM_TAG:-none}"
+          echo "Latest upstream tag: ${LATEST_UPSTREAM_TAG:-none}"
+          echo "prev_upstream_tag=${PREV_UPSTREAM_TAG}" >> "$GITHUB_OUTPUT"
+          echo "latest_upstream_tag=${LATEST_UPSTREAM_TAG}" >> "$GITHUB_OUTPUT"
+
+          if [ -z "$LATEST_UPSTREAM_TAG" ] || [ "$PREV_UPSTREAM_TAG" = "$LATEST_UPSTREAM_TAG" ]; then
+            echo "No new upstream release detected."
+            echo "new_release=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "New upstream release: ${PREV_UPSTREAM_TAG:-none} -> ${LATEST_UPSTREAM_TAG}"
+            echo "new_release=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Fast-forward merge
+        id: merge
+        run: |
+          git checkout main
+
+          if git merge --ff-only upstream/main; then
+            echo "Fast-forward merge succeeded."
+            echo "merged=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::Fast-forward merge not possible (fork has diverged). Skipping sync."
+            echo "merged=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Compute and create fork tag
+        if: steps.detect.outputs.new_release == 'true' && steps.merge.outputs.merged == 'true'
+        id: tag
+        run: |
+          PREV="${{ steps.detect.outputs.prev_upstream_tag }}"
+          LATEST="${{ steps.detect.outputs.latest_upstream_tag }}"
+
+          # Parse version string, stripping leading 'v'
+          parse_semver() {
+            local ver="${1#v}"
+            IFS='.' read -r major minor patch <<< "$ver"
+            echo "${major} ${minor:-0} ${patch:-0}"
+          }
+
+          if [ -n "$PREV" ]; then
+            read -r PREV_MAJOR PREV_MINOR PREV_PATCH <<< "$(parse_semver "$PREV")"
+          else
+            # First time: treat as minor bump
+            echo "No previous upstream tag found, defaulting to minor bump."
+            PREV_MAJOR=0; PREV_MINOR=0; PREV_PATCH=0
+          fi
+          read -r LATEST_MAJOR LATEST_MINOR LATEST_PATCH <<< "$(parse_semver "$LATEST")"
+
+          # Determine bump type by comparing upstream versions
+          if [ "$LATEST_MAJOR" -gt "$PREV_MAJOR" ]; then
+            BUMP_TYPE="major"
+          elif [ "$LATEST_MINOR" -gt "$PREV_MINOR" ]; then
+            BUMP_TYPE="minor"
+          elif [ "$LATEST_PATCH" -gt "$PREV_PATCH" ]; then
+            BUMP_TYPE="patch"
+          else
+            echo "::warning::Could not determine bump type (${PREV} -> ${LATEST}). Skipping tag."
+            echo "tagged=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "Upstream bump type: ${BUMP_TYPE} (${PREV} -> ${LATEST})"
+
+          # Get the fork's latest tag (only real tags, not upstream refs)
+          FORK_LATEST=$(git tag -l 'v*' --sort=-v:refname | head -n1)
+
+          if [ -z "$FORK_LATEST" ]; then
+            echo "::warning::No existing fork tags found. Using upstream tag as-is."
+            NEW_TAG="$LATEST"
+          else
+            read -r F_MAJOR F_MINOR F_PATCH <<< "$(parse_semver "$FORK_LATEST")"
+
+            case "$BUMP_TYPE" in
+              major)
+                NEW_TAG="v$((F_MAJOR + 1)).0.0"
+                ;;
+              minor)
+                NEW_TAG="v${F_MAJOR}.$((F_MINOR + 1)).0"
+                ;;
+              patch)
+                NEW_TAG="v${F_MAJOR}.${F_MINOR}.$((F_PATCH + 1))"
+                ;;
+            esac
+
+            echo "Fork was at: ${FORK_LATEST}"
+          fi
+
+          echo "Creating fork tag: ${NEW_TAG}"
+          git tag "$NEW_TAG"
+          echo "new_tag=${NEW_TAG}" >> "$GITHUB_OUTPUT"
+          echo "tagged=true" >> "$GITHUB_OUTPUT"
+
+      - name: Push changes
+        if: steps.merge.outputs.merged == 'true'
+        run: |
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            git push origin main
+            echo "Pushed upstream changes."
+          else
+            echo "Already up to date, nothing to push."
+          fi
+
+      - name: Push fork tag
+        if: steps.tag.outputs.tagged == 'true'
+        run: |
+          git push origin "${{ steps.tag.outputs.new_tag }}"
+          echo "Pushed fork tag: ${{ steps.tag.outputs.new_tag }}"
