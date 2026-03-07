@@ -65,7 +65,7 @@
     <string name="pref_category_tracking">Monitoramento</string>
     <string name="pref_category_advanced">Avançado</string>
     <string name="pref_category_about">Sobre</string>
-    <string name="pref_library_columns">Tamanho da grade</string>
+    <string name="pref_library_columns">Itens por linha</string>
     <string name="portrait">Retrato</string>
     <string name="landscape">Paisagem</string>
     <string name="pref_library_update_interval">Atualizações automáticas</string>
@@ -687,7 +687,7 @@
     <string name="pref_page_rotate">Rotacionar páginas largas para caber</string>
     <string name="pref_page_rotate_invert">Inverter a orientação das páginas largas rotacionadas</string>
     <string name="pref_debug_info">Informações de depuração</string>
-    <string name="pref_chapter_swipe_end">Ação de deslizar para a direita</string>
+    <string name="pref_chapter_swipe_end">Capitulo ao deslizar para a direita</string>
     <string name="pref_chapter_swipe_start">Ação de deslizar para a esquerda</string>
     <string name="pref_double_tap_zoom">Toque duplo para dar zoom</string>
     <string name="action_sort_next_updated">Próxima atualização esperada</string>
@@ -901,4 +901,7 @@
     <string name="action_edit_notes">Editar anotações</string>
     <string name="action_notes">Anotações</string>
     <string name="theme_catppuccin">Catppuccin</string>
+    <string name="label_donate">Doar</string>
+    <string name="action_webview_close_tab">Fechar aba</string>
+    <string name="pref_display_images_description">Renderizar imagens em descrições de mangá</string>
 </resources>
