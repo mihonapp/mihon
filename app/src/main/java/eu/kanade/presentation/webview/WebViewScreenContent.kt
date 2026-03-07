@@ -98,10 +98,10 @@ fun WebViewScreenContent(
 
     var currentUrl by remember { mutableStateOf(url) }
     var showCloudflareHelp by remember { mutableStateOf(false) }
-    val isActive = remember { mutableStateOf(true) }
+    var isActive by remember { mutableStateOf(true) }
 
     DisposableEffect(Unit) {
-        onDispose { isActive.value = false }
+        onDispose { isActive = false }
     }
 
     val webClient = remember {
