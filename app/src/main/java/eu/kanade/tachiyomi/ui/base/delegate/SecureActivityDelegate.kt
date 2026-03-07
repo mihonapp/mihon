@@ -88,8 +88,13 @@ class SecureActivityDelegateImpl : SecureActivityDelegate, DefaultLifecycleObser
         setSecureScreen()
     }
 
+    override fun onStart(owner: LifecycleOwner) {
+        updateProtectedContentVisibility()
+    }
+
     override fun onResume(owner: LifecycleOwner) {
         setAppLock()
+        updateProtectedContentVisibility()
     }
 
     private fun setSecureScreen() {
@@ -117,5 +122,15 @@ class SecureActivityDelegateImpl : SecureActivityDelegate, DefaultLifecycleObser
         } else {
             securityPreferences.useAuthenticator.set(false)
         }
+    }
+
+    private fun updateProtectedContentVisibility() {
+        activity.window.decorView.alpha = if (shouldHideProtectedContent()) 0f else 1f
+    }
+
+    private fun shouldHideProtectedContent(): Boolean {
+        return securityPreferences.useAuthenticator().get() &&
+            activity.isAuthenticationSupported() &&
+            SecureActivityDelegate.requireUnlock
     }
 }
