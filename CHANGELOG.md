@@ -14,6 +14,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Improved
 - Rework internals for better performance ([@Lolle2000la](https://github.com/Lolle2000la)) ([#2955](https://github.com/mihonapp/mihon/pull/2955))
 
+### Fixed
+- Enqueue duplicate chapters for deletion after marking as read ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3030](https://github.com/mihonapp/mihon/pull/3030))
+
 ## [v0.19.4] - 2026-02-25
 ### Added
 - Automatically remove downloads on Suwayomi after reading, configurable via extension settings ([@cpiber](https://github.com/cpiber)) ([#2673](https://github.com/mihonapp/mihon/pull/2673))
