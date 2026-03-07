@@ -173,7 +173,7 @@ fun WebViewScreenContent(
             }
 
             override fun onJsAlert(view: WebView, url: String?, message: String?, result: JsResult): Boolean {
-                if (!isActive.value) {
+                if (!isActive) {
                     result.confirm()
                     return true
                 }
@@ -181,7 +181,7 @@ fun WebViewScreenContent(
             }
 
             override fun onJsConfirm(view: WebView, url: String?, message: String?, result: JsResult): Boolean {
-                if (!isActive.value) {
+                if (!isActive) {
                     result.cancel()
                     return true
                 }
@@ -189,7 +189,7 @@ fun WebViewScreenContent(
             }
 
             override fun onJsPrompt(view: WebView, url: String?, message: String?, defaultValue: String?, result: JsPromptResult): Boolean {
-                if (!isActive.value) {
+                if (!isActive) {
                     result.cancel()
                     return true
                 }
@@ -367,3 +367,4 @@ fun WebViewScreenContent(
         }
     }
 }
+
