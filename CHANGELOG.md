@@ -18,6 +18,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix performance regression introduced in v0.19.4 ([@AntsyLich](https://github.com/AntsyLich)) ([#3082](https://github.com/mihonapp/mihon/pull/3082))
 - Fix duplicate key crash in duplicate detection ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3040](https://github.com/mihonapp/mihon/pull/3040))
 - Fix MangaUpdates HTTP 4XX errors ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3021](https://github.com/mihonapp/mihon/pull/3021))
+- Fix WebView JavaScript dialogs popup after screen is closed ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3041](https://github.com/mihonapp/mihon/pull/3041))
 
 ## [v0.19.4] - 2026-02-25
 ### Added
@@ -506,3 +507,4 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 [v0.16.2]: https://github.com/mihonapp/mihon/compare/v0.16.1...v0.16.2
 [v0.16.1]: https://github.com/mihonapp/mihon/compare/v0.16.0...v0.16.1
 [v0.16.0]: https://github.com/mihonapp/mihon/compare/a9c7cbf...v0.16.0
+
