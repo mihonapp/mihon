@@ -14,6 +14,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Improved
 - Rework internals for better performance ([@Lolle2000la](https://github.com/Lolle2000la)) ([#2955](https://github.com/mihonapp/mihon/pull/2955))
 
+### Fixed
+- Suppress WebView JavaScript dialogs after screen is closed ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3041](https://github.com/mihonapp/mihon/pull/3041))
+
 ## [v0.19.4] - 2026-02-25
 ### Added
 - Automatically remove downloads on Suwayomi after reading, configurable via extension settings ([@cpiber](https://github.com/cpiber)) ([#2673](https://github.com/mihonapp/mihon/pull/2673))
@@ -501,3 +504,4 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 [v0.16.2]: https://github.com/mihonapp/mihon/compare/v0.16.1...v0.16.2
 [v0.16.1]: https://github.com/mihonapp/mihon/compare/v0.16.0...v0.16.1
 [v0.16.0]: https://github.com/mihonapp/mihon/compare/a9c7cbf...v0.16.0
+
