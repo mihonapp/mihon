@@ -36,6 +36,8 @@ import kotlin.math.min
 
 object ImageUtil {
 
+    private val customDecoderImageTypes = setOf(ImageType.JXL)
+
     fun isImage(name: String?, openStream: (() -> InputStream)? = null): Boolean {
         if (name == null) return false
 
@@ -127,7 +129,7 @@ object ImageUtil {
      * Extract the 'side' part from [BufferedSource] and return it as [BufferedSource].
      */
     fun splitInHalf(imageSource: BufferedSource, side: Side): BufferedSource {
-        val imageBitmap = BitmapFactory.decodeStream(imageSource.inputStream())
+        val imageBitmap = decodeBitmap(imageSource)
         val height = imageBitmap.height
         val width = imageBitmap.width
 
@@ -148,7 +150,7 @@ object ImageUtil {
     }
 
     fun rotateImage(imageSource: BufferedSource, degrees: Float): BufferedSource {
-        val imageBitmap = BitmapFactory.decodeStream(imageSource.inputStream())
+        val imageBitmap = decodeBitmap(imageSource)
         val rotated = rotateBitMap(imageBitmap, degrees)
 
         val output = Buffer()
@@ -166,7 +168,7 @@ object ImageUtil {
      * Split the image into left and right parts, then merge them into a new image.
      */
     fun splitAndMerge(imageSource: BufferedSource, upperSide: Side): BufferedSource {
-        val imageBitmap = BitmapFactory.decodeStream(imageSource.inputStream())
+        val imageBitmap = decodeBitmap(imageSource)
         val height = imageBitmap.height
         val width = imageBitmap.width
 
@@ -558,9 +560,47 @@ object ImageUtil {
      * Used to check an image's dimensions without loading it in the memory.
      */
     private fun extractImageOptions(imageSource: BufferedSource): BitmapFactory.Options {
+        val specialDimensions = extractCustomDecoderDimensions(imageSource)
+        if (specialDimensions != null) {
+            return BitmapFactory.Options().apply {
+                outWidth = specialDimensions.first
+                outHeight = specialDimensions.second
+            }
+        }
+
         val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
         BitmapFactory.decodeStream(imageSource.peek().inputStream(), null, options)
         return options
+    }
+
+    private fun decodeBitmap(imageSource: BufferedSource): Bitmap {
+        val imageType = imageSource.peek().inputStream().use(::findImageType)
+        return if (imageType in customDecoderImageTypes) {
+            decodeBitmapWithCustomDecoder(imageSource) ?: error("Failed to decode image")
+        } else {
+            BitmapFactory.decodeStream(imageSource.inputStream()) ?: error("Failed to decode image")
+        }
+    }
+
+    private fun decodeBitmapWithCustomDecoder(imageSource: BufferedSource): Bitmap? {
+        val decoder = ImageDecoder.newInstance(imageSource.inputStream(), false, null) ?: return null
+        return try {
+            decoder.decode(sampleSize = 1)
+        } finally {
+            decoder.recycle()
+        }
+    }
+
+    private fun extractCustomDecoderDimensions(imageSource: BufferedSource): Pair<Int, Int>? {
+        val imageType = imageSource.peek().inputStream().use(::findImageType)
+        if (imageType !in customDecoderImageTypes) return null
+
+        val decoder = ImageDecoder.newInstance(imageSource.peek().inputStream(), false, null) ?: return null
+        return try {
+            decoder.width to decoder.height
+        } finally {
+            decoder.recycle()
+        }
     }
 
     private fun getBitmapRegionDecoder(imageStream: InputStream): BitmapRegionDecoder? {
