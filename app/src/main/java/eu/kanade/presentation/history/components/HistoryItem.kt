@@ -29,6 +29,7 @@ import eu.kanade.presentation.util.formatChapterNumber
 import eu.kanade.tachiyomi.util.lang.toTimestampString
 import tachiyomi.domain.history.model.HistoryWithRelations
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.material.DISABLED_ALPHA
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 
@@ -82,6 +83,17 @@ fun HistoryItem(
                 modifier = Modifier.padding(top = 4.dp),
                 style = textStyle,
             )
+            val readProgress = history.lastPageRead
+                .takeIf { it > 0L }
+                ?.let { stringResource(MR.strings.chapter_progress, it + 1) }
+            if (readProgress != null) {
+                Text(
+                    text = readProgress,
+                    modifier = Modifier.padding(top = 2.dp),
+                    style = textStyle,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = DISABLED_ALPHA),
+                )
+            }
         }
 
         if (!history.coverData.isMangaFavorite) {
