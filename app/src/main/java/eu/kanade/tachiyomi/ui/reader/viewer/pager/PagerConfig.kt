@@ -1,5 +1,8 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
+import android.content.res.Configuration
+import eu.kanade.domain.manga.model.readingMode
+import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerConfig
@@ -31,24 +34,50 @@ class PagerConfig(
     var automaticBackground = false
         private set
 
+    var dualPageMode = false
+        private set
+
+    val isLandscape: Boolean
+        get() = viewer.activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+    var dualPageFirstPageCover = readerPreferences.dualPageFirstPageCover().get()
+        private set
+
+    var dualPageFoldable = readerPreferences.dualPageFoldable().get()
+        private set
+
+    val isWideScreen: Boolean
+        get() = viewer.activity.resources.configuration.screenWidthDp >= 600
+
     var dualPageSplitChangedListener: ((Boolean) -> Unit)? = null
 
-    var imageScaleType = 1
+    var imageScaleType = readerPreferences.imageScaleType().get()
         private set
 
     var imageZoomType = ReaderPageImageView.ZoomStartPosition.LEFT
         private set
 
-    var imageCropBorders = false
+    var imageCropBorders = readerPreferences.cropBorders().get()
         private set
 
-    var navigateToPan = false
+    var navigateToPan = readerPreferences.navigateToPan().get()
         private set
 
-    var landscapeZoom = false
+    var landscapeZoom = readerPreferences.landscapeZoom().get()
         private set
 
     init {
+        zoomTypeFromPreference(readerPreferences.zoomStart().get())
+        navigationMode = readerPreferences.navigationModePager().get()
+        tappingInverted = readerPreferences.pagerNavInverted().get()
+        dualPageSplit = readerPreferences.dualPageSplitPaged().get()
+        dualPageInvert = readerPreferences.dualPageInvertPaged().get()
+        dualPageRotateToFit = readerPreferences.dualPageRotateToFit().get()
+        dualPageRotateToFitInvert = readerPreferences.dualPageRotateToFitInvert().get()
+        dualPageFoldable = readerPreferences.dualPageFoldable().get()
+
+        updateDualPageMode(readerPreferences.dualPageMode().get())
+
         readerPreferences.readerTheme()
             .register(
                 {
@@ -78,10 +107,23 @@ class PagerConfig(
 
         readerPreferences.pagerNavInverted()
             .register({ tappingInverted = it }, { navigator.invertMode = it })
+
         readerPreferences.pagerNavInverted().changes()
             .drop(1)
             .onEach { navigationModeChangedListener?.invoke() }
             .launchIn(scope)
+
+        readerPreferences.dualPageMode()
+            .register(
+                { updateDualPageMode(it) },
+                { imagePropertyChangedListener?.invoke() },
+            )
+
+        readerPreferences.dualPageFirstPageCover()
+            .register({ dualPageFirstPageCover = it }, { imagePropertyChangedListener?.invoke() })
+
+        readerPreferences.dualPageFoldable()
+            .register({ dualPageFoldable = it; updateDualPageMode(readerPreferences.dualPageMode().get()) }, { imagePropertyChangedListener?.invoke() })
 
         readerPreferences.dualPageSplitPaged()
             .register(
@@ -106,6 +148,17 @@ class PagerConfig(
                 { dualPageRotateToFitInvert = it },
                 { imagePropertyChangedListener?.invoke() },
             )
+    }
+
+    private fun updateDualPageMode(enabled: Boolean) {
+        val manga = viewer.activity.viewModel.state.value.manga
+        val readingMode = ReadingMode.fromPreference(manga?.readingMode?.toInt())
+        val isDualPageReadingMode = readingMode == ReadingMode.DUAL_PAGE_LTR || readingMode == ReadingMode.DUAL_PAGE_RTL
+        val shouldEnableDual = enabled || isDualPageReadingMode
+        // Enable dual-page mode if:
+        // 1. Landscape orientation, OR
+        // 2. Foldable option is enabled AND screen is wide enough AND using dual-page reading mode
+        dualPageMode = shouldEnableDual && (isLandscape || (dualPageFoldable && isWideScreen && isDualPageReadingMode))
     }
 
     private fun zoomTypeFromPreference(value: Int) {

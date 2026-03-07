@@ -80,6 +80,12 @@ class ReaderPreferences(
     // endregion
 
     // region Split two page spread
+ 
+    fun dualPageMode() = preferenceStore.getBoolean("pref_dual_page_mode", false)
+
+    fun dualPageFirstPageCover() = preferenceStore.getBoolean("pref_dual_page_first_page_cover", true)
+
+    fun dualPageFoldable() = preferenceStore.getBoolean("pref_dual_page_foldable", false)
 
     fun dualPageSplitPaged() = preferenceStore.getBoolean("pref_dual_page_split", false)
 
