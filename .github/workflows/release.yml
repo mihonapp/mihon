@@ -3,33 +3,136 @@ on:
   push:
     tags:
       - v*
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag name to use (e.g. v1.2.3, leave empty for auto-bump)'
+        required: false
+        type: string
+      commitHash:
+        description: 'Commit hash to tag and release (leave empty to release the latest commit on main)'
+        required: false
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: write
+
 jobs:
+  prepare:
+    if: github.event_name == 'workflow_dispatch' && (github.repository == 'mihonapp/mihon' || github.repository == 'SecretX33/mihon')
+    name: Prepare tag
+    runs-on: 'ubuntu-24.04'
+    outputs:
+      tag: ${{ steps.resolve.outputs.tag }}
+      commit: ${{ steps.resolve.outputs.commit }}
+
+    steps:
+      - name: Validate branch
+        run: |
+          set -e
+          if [[ "${{ github.ref_name }}" != "main" ]]; then
+            echo "::error::Release workflow can only be triggered from the 'main' branch (current: '${{ github.ref_name }}')."
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ inputs.commitHash || 'main' }}
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Resolve tag and commit
+        id: resolve
+        run: |
+          set -e
+
+          COMMIT=$(git rev-parse HEAD)
+          echo "commit=$COMMIT" >> $GITHUB_OUTPUT
+
+          INPUT_TAG="${{ inputs.tag }}"
+
+          if [[ -n "$INPUT_TAG" ]]; then
+            TAG="$INPUT_TAG"
+          else
+            # Get latest tag matching v*, bump patch
+            LATEST_TAG=$(git tag --list 'v*' --sort=-v:refname | head -n 1)
+            if [[ -z "$LATEST_TAG" ]]; then
+              TAG="v0.0.1"
+            else
+              # Strip leading 'v', split by '.', bump patch
+              VERSION="${LATEST_TAG#v}"
+              IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+              PATCH=$((PATCH + 1))
+              TAG="v${MAJOR}.${MINOR}.${PATCH}"
+            fi
+          fi
+
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Resolved tag: $TAG for commit: $COMMIT"
+
+      - name: Create and push tag
+        run: |
+          set -e
+
+          TAG="${{ steps.resolve.outputs.tag }}"
+          COMMIT="${{ steps.resolve.outputs.commit }}"
+
+          # Check if tag already exists on this commit
+          EXISTING_TAG_COMMIT=$(git rev-list -n 1 "refs/tags/$TAG" 2>/dev/null || true)
+          if [[ "$EXISTING_TAG_COMMIT" == "$COMMIT" ]]; then
+            echo "Tag $TAG already exists on commit $COMMIT, skipping."
+            exit 0
+          elif [[ -n "$EXISTING_TAG_COMMIT" ]]; then
+            echo "::error::Tag $TAG already exists but points to a different commit ($EXISTING_TAG_COMMIT instead of $COMMIT)."
+            exit 1
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "$TAG" "$COMMIT"
+          git push origin "$TAG"
+
   get_tag:
-    if: github.repository == 'mihonapp/mihon' || github.repository == 'SecretX33/mihon'
     name: Extract tag name
     runs-on: 'ubuntu-24.04'
+    needs: [prepare]
+    # Allow this job to run even when 'prepare' is skipped (tag push event)
+    if: |
+      always() &&
+      (github.repository == 'mihonapp/mihon' || github.repository == 'SecretX33/mihon') &&
+      (needs.prepare.result == 'success' || needs.prepare.result == 'skipped')
     outputs:
       tag: ${{ steps.extract.outputs.tag }}
 
     steps:
       - name: Get tag name
         id: extract
-        run: echo "tag=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "tag=${{ needs.prepare.outputs.tag }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
+          fi
 
   build:
-    if: github.repository == 'mihonapp/mihon' || github.repository == 'SecretX33/mihon'
     name: Build
     runs-on: 'ubuntu-24.04'
     needs: get_tag
+    if: |
+      always() &&
+      (github.repository == 'mihonapp/mihon' || github.repository == 'SecretX33/mihon') &&
+      needs.get_tag.result == 'success'
 
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ needs.get_tag.outputs.tag }}
 
       - name: Set up JDK
         uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
@@ -76,14 +179,19 @@ jobs:
             mihon-x86_64-${{ needs.get_tag.outputs.tag }}.apk
 
   build_foss:
-    if: github.repository == 'mihonapp/mihon' || github.repository == 'SecretX33/mihon'
     name: Build (FOSS)
     runs-on: ubuntu-24.04
     needs: get_tag
+    if: |
+      always() &&
+      (github.repository == 'mihonapp/mihon' || github.repository == 'SecretX33/mihon') &&
+      needs.get_tag.result == 'success'
 
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ needs.get_tag.outputs.tag }}
 
       - name: Set up JDK
         uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
@@ -123,10 +231,15 @@ jobs:
           path: mihon-${{ needs.get_tag.outputs.tag }}-foss.apk
 
   release:
-    if: github.repository == 'mihonapp/mihon' || github.repository == 'SecretX33/mihon'
     name: Create GitHub Release
     runs-on: ubuntu-24.04
     needs: [get_tag, build, build_foss]
+    if: |
+      always() &&
+      (github.repository == 'mihonapp/mihon' || github.repository == 'SecretX33/mihon') &&
+      needs.get_tag.result == 'success' &&
+      needs.build.result == 'success' &&
+      needs.build_foss.result == 'success'
 
     steps:
       - name: Download all artifacts
