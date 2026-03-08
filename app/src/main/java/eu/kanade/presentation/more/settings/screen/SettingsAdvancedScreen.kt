@@ -63,6 +63,7 @@ import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.decoder.ImageDecoderConfig
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.ResetViewerFlags
 import tachiyomi.i18n.MR
@@ -382,6 +383,19 @@ object SettingsAdvancedScreen : SearchableSettings {
                     subtitle = basePreferences.displayProfile().get(),
                     onClick = {
                         chooseColorProfile.launch(arrayOf("*/*"))
+                    },
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    preference = basePreferences.imageDecoderBackend(),
+                    entries = persistentMapOf(
+                        ImageDecoderConfig.Backend.CPP to stringResource(MR.strings.pref_image_decoder_backend_cpp),
+                        ImageDecoderConfig.Backend.RUST to stringResource(MR.strings.pref_image_decoder_backend_rust),
+                    ),
+                    title = stringResource(MR.strings.pref_image_decoder_backend),
+                    subtitle = stringResource(MR.strings.pref_image_decoder_backend_summary),
+                    onValueChanged = {
+                        context.toast(MR.strings.requires_app_restart)
+                        true
                     },
                 ),
             ),
