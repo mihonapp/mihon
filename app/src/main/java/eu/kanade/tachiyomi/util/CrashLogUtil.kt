@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.util
 
 import android.content.Context
 import android.os.Build
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.util.storage.getUriCompat
@@ -19,6 +20,7 @@ import java.time.ZoneId
 class CrashLogUtil(
     private val context: Context,
     private val extensionManager: ExtensionManager = Injekt.get(),
+    private val preferences: BasePreferences = Injekt.get(),
 ) {
 
     suspend fun dumpLogs(exception: Throwable? = null) = withNonCancellableContext {
@@ -42,6 +44,7 @@ class CrashLogUtil(
         return """
             App ID: ${BuildConfig.APPLICATION_ID}
             App version: ${BuildConfig.VERSION_NAME} (${BuildConfig.COMMIT_SHA}, ${BuildConfig.VERSION_CODE}, ${BuildConfig.BUILD_TIME})
+            Installation ID: ${preferences.installationId().get()}
             Android version: ${Build.VERSION.RELEASE} (SDK ${Build.VERSION.SDK_INT}; build ${Build.DISPLAY})
             Device brand: ${Build.BRAND}
             Device manufacturer: ${Build.MANUFACTURER}
