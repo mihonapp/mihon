@@ -212,22 +212,21 @@ class MangaScreenModel(
             val chapters = getMangaAndChapters.awaitChapters(mangaId, applyScanlatorFilter = true)
                 .toChapterListItems(manga)
 
-            if (!manga.favorite) {
-                setMangaDefaultChapterFlags.await(manga)
-            }
-
             val needRefreshInfo = !manga.initialized
             val needRefreshChapter = chapters.isEmpty()
 
-            // Show what we have earlier
+            val availableScanlators = getAvailableScanlators.await(mangaId)
+            val excludedScanlators = getExcludedScanlators.await(mangaId)
+
+            // Show what we already have early
             mutableState.update {
                 State.Success(
                     manga = manga,
                     source = Injekt.get<SourceManager>().getOrStub(manga.source),
                     isFromSource = isFromSource,
                     chapters = chapters,
-                    availableScanlators = getAvailableScanlators.await(mangaId),
-                    excludedScanlators = getExcludedScanlators.await(mangaId),
+                    availableScanlators = availableScanlators,
+                    excludedScanlators = excludedScanlators,
                     isRefreshingData = needRefreshInfo || needRefreshChapter,
                     dialog = null,
                     hideMissingChapters = libraryPreferences.hideMissingChapters().get(),
@@ -236,6 +235,11 @@ class MangaScreenModel(
 
             // Start observe tracking since it only needs mangaId
             observeTrackers()
+
+            if (!manga.favorite) {
+                // keep this after the success state, or it'll write to mangas DB and slow things down
+                setMangaDefaultChapterFlags.await(manga)
+            }
 
             // Fetch info-chapters when needed
             if (screenModelScope.isActive) {
