@@ -707,7 +707,7 @@
     <string name="syncing_library">Συγχρονισμός βιβλιοθήκης</string>
     <string name="library_sync_complete">Ο συγχρονισμός βιβλιοθήκης ολοκληρώθηκε</string>
     <string name="information_cloudflare_help">Πατήστε εδώ για βοήθεια με το Cloudflare</string>
-    <string name="download_cache_invalidated">Το ευρετήριο λήψεων ακυρώθηκε</string>
+    <string name="download_cache_invalidated">Αναδημιουργία ευρετηρίου λήψεων</string>
     <string name="track_activity_name">Σύνδεση παρακολούθησης</string>
     <string name="create_backup_file_error">Δεν ήταν δυνατή η δημιουργία αντιγράφου ασφαλείας</string>
     <string name="exception_unknown_host">Δεν ήταν δυνατή η πρόσβαση στο %s</string>
@@ -909,4 +909,7 @@
     <string name="pref_download_concurrent_sources">Ταυτόχρονες λήψεις πηγών</string>
     <string name="pref_download_concurrent_pages">Ταυτόχρονες λήψεις σελίδων</string>
     <string name="pref_download_concurrent_pages_summary">Σελίδες που λήφθηκαν ταυτόχρονα ανά πηγή</string>
+    <string name="calculating">Υπολογισμός…</string>
+    <string name="download_bookmarked">Προστέθηκε στους σελιδοδείκτες</string>
+    <string name="action_filter_excluded_scanlators">Φιλτράρισμα εξαιρούμενων scanlator</string>
 </resources>

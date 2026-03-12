@@ -704,7 +704,7 @@
     <string name="library_sync_complete">S’ha completat la sincronització de la biblioteca</string>
     <string name="create_backup_file_error">No s’ha pogut crear un fitxer de còpia de seguretat</string>
     <string name="track_activity_name">Inici de sessió al servei de seguiment</string>
-    <string name="download_cache_invalidated">S’ha invalidat l\'índex de baixades</string>
+    <string name="download_cache_invalidated">S’està recreant l’índex de baixades</string>
     <string name="information_cloudflare_help">Premeu aquí per a obtenir ajuda amb el Cloudflare</string>
     <string name="unlock_app_title">Desbloca %s</string>
     <string name="exception_offline">No hi ha connexió a Internet</string>
@@ -900,4 +900,5 @@
     <string name="migrationListScreen.migrateDialog.cancelLabel">Cancel·la</string>
     <string name="migrationListScreen.progressDialog.cancelLabel">Cancel·la</string>
     <string name="migrationListScreen.matchWithoutChapterToast">No s’ha trobat cap capítol, aquest element no es pot utilitzar per a migrar</string>
+    <string name="action_filter_excluded_scanlators">Filtra els scanlators exclosos</string>
 </resources>

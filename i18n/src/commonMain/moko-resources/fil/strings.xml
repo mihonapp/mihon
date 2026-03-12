@@ -19,7 +19,7 @@
     <string name="action_cancel">Kanselahin</string>
     <string name="action_unpin">I-unpin</string>
     <string name="action_pin">I-pin</string>
-    <string name="action_disable">Isara</string>
+    <string name="action_disable">Di-paganahin</string>
     <string name="action_display_show_tabs">Ipakita ang mga tab ng kategorya</string>
     <string name="action_display_download_badge">Bilang ng kabanatang na-download</string>
     <string name="action_display_comfortable_grid">Kumportableng grid</string>
@@ -460,10 +460,10 @@
     <string name="nav_zone_prev">Nakaraan</string>
     <string name="pref_show_navigation_mode_summary">Mabilis na ipakita ang lugar na ita-tap kapag nakabukas ang reader</string>
     <string name="pref_show_navigation_mode">Ipakita ang mga overlay ng tap zone</string>
-    <string name="exclude">Di-isali: %s</string>
+    <string name="exclude">Na-ibukod: %s</string>
     <string name="include">Kasali ang: %s</string>
     <string name="none">Wala</string>
-    <string name="pref_library_update_categories_details">Hindi ia-update ang mga entry na nasa mga di kasamang kategorya kahit na nasa mga kasamang kategorya rin sila.</string>
+    <string name="pref_library_update_categories_details">Hindi ia-update ang mga entry na nasa na-ibukod na mga kategorya kahit na nasa mga kasamang kategorya rin sila.</string>
     <string name="action_sort_chapter_fetch_date">Petsa ng pagkuha ng kabanata</string>
     <string name="action_show_errors">I-tap para makita ang detalye</string>
     <string name="update_check_eol">Di na suportado ang bersyong ito ng Android</string>
@@ -526,7 +526,7 @@
     <string name="getting_started_guide">Gabay sa Pagsisimula</string>
     <string name="pref_tablet_ui_mode">Pang-tablet na UI</string>
     <string name="help_translate">Tumulong sa pagsalin</string>
-    <string name="pref_remove_exclude_categories">Mga hindi kasamang kategorya</string>
+    <string name="pref_remove_exclude_categories">Mga na-ibukod na mga kategorya</string>
     <string name="ext_app_info">Tungkol sa app</string>
     <string name="ext_installer_shizuku_unavailable_dialog">I-Install at buksan ang Shizuku para magamit ito bilang taga-install ng extension.</string>
     <string name="ext_installer_shizuku_stopped">Di tumatakbo ang Shizuku</string>
@@ -707,7 +707,7 @@
     <string name="syncing_library">Nagsi-sync ang aklatan</string>
     <string name="library_sync_complete">Natapos na ang pag-sync ng aklatan</string>
     <string name="information_cloudflare_help">I-tap dito para sa tulong sa Cloudflare</string>
-    <string name="download_cache_invalidated">Napawalang-bisa ang index ng mga download</string>
+    <string name="download_cache_invalidated">Ginagawa muli ang download index</string>
     <string name="create_backup_file_error">Hindi makalikha ng backup file</string>
     <string name="track_activity_name">Mag-login sa tracker</string>
     <string name="unlock_app_title">I-unlock ang %s</string>
@@ -909,4 +909,6 @@
     <string name="action_webview_close_tab">Isara ang tab</string>
     <string name="theme_catppuccin">Catppuccin</string>
     <string name="migrationConfigScreen.availableHeader">Maaaring Magamit</string>
+    <string name="action_filter_excluded_scanlators">I-filter ang na-ibukod na mga scanlator</string>
+    <string name="calculating">Kinakalkula…</string>
 </resources>

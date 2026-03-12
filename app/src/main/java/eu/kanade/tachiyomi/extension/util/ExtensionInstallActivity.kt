@@ -64,6 +64,11 @@ class ExtensionInstallActivity : Activity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        intent.data?.let { contentResolver.delete(it, null, null) }
+    }
+
     private fun checkInstallationResult(resultCode: Int) {
         val downloadId = intent.extras!!.getLong(ExtensionInstaller.EXTRA_DOWNLOAD_ID)
         val extensionManager = Injekt.get<ExtensionManager>()

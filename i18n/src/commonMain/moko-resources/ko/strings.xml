@@ -701,7 +701,7 @@
     <string name="skipped_reason_not_in_release_period">오늘 연재가 예상되지 않았기 때문에 건너뛰었습니다</string>
     <string name="track_delete_title">%s 동기화를 삭제 하시겠습니까?</string>
     <string name="pref_update_only_in_release_period">다음 연재 기간 예측</string>
-    <string name="download_cache_invalidated">다운로드 인덱스를 제거함</string>
+    <string name="download_cache_invalidated">다운로드 인덱스 재생성</string>
     <string name="action_sort_next_updated">다음 업데이트 예정</string>
     <string name="information_cloudflare_help">탭하여 Cloudflare에 관한 도움말 보기</string>
     <string name="unlock_app_title">%s를 잠금해제</string>
@@ -839,7 +839,7 @@
     <string name="library_exported">라이브러리 내보냄</string>
     <string name="clear_database_text">데이터베이스에서 항목을 삭제하려 합니다</string>
     <string name="clear_database_history_warning">읽은 챕터와 라이브러리 항목에 없는 진행상황이 삭제됩니다</string>
-    <string name="clear_db_exclude_read">읽은 챕터가 있는 항목 유지</string>
+    <string name="clear_db_exclude_read">읽은 챕터가 있는 항목을 유지</string>
     <string name="pref_update_library_manga_titles">라이브러리 만화 타이틀을 원본과 일치하도록 업데이트</string>
     <string name="pref_update_library_manga_titles_summary">경고: 만화의 이름이 변경될 경우 다운로드 대기열에서 (존재할 경우) 제거됩니다.</string>
     <string name="pref_incognito_mode_extension_summary">확장 앱 읽기 기록 중지</string>
@@ -908,4 +908,6 @@
     <string name="migrationListScreen.migrateDialog.cancelLabel">취소</string>
     <string name="migrationListScreen.progressDialog.cancelLabel">취소</string>
     <string name="migrationListScreen.matchWithoutChapterToast">챕터를 찾을 수 없어 이 항목은 마이그레이션에 사용할 수 없습니다</string>
+    <string name="action_filter_excluded_scanlators">스캔레이터를 제외한 필터</string>
+    <string name="calculating">계산 중…</string>
 </resources>

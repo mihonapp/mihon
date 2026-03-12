@@ -27,6 +27,7 @@ sealed class Preference {
             override val title: String,
             override val subtitle: String? = null,
             override val enabled: Boolean = true,
+            val widget: @Composable (() -> Unit)? = null,
             val onClick: (() -> Unit)? = null,
         ) : PreferenceItem<String, Unit>() {
             override val icon: ImageVector? = null
