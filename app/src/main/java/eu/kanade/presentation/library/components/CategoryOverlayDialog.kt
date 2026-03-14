@@ -62,6 +62,95 @@ enum class CategoryOverlayDisplayMode {
     Thumbnail,
 }
 
+data class CategoryGroup(
+    val parentName: String,
+    val children: List<CategoryChild>,
+    val isTopLevel: Boolean,
+)
+
+data class CategoryChild(
+    val category: Category,
+    val childName: String,
+    val originalIndex: Int,
+)
+
+fun buildCategoryGroups(categories: List<Category>): List<CategoryGroup> {
+    val groups = mutableListOf<CategoryGroup>()
+    val groupMap = mutableMapOf<String, MutableList<CategoryChild>>()
+    val topLevel = mutableListOf<CategoryChild>()
+
+    categories.forEachIndexed { index, category ->
+        val name = category.name
+        val slashIndex = name.indexOf('/')
+
+        if (slashIndex > 0 && slashIndex < name.length - 1) {
+            val parentName = name.substring(0, slashIndex).trim()
+            val childName = name.substring(slashIndex + 1).trim()
+            if (parentName.isNotEmpty() && childName.isNotEmpty()) {
+                groupMap.getOrPut(parentName) { mutableListOf() }
+                    .add(CategoryChild(category, childName, index))
+            } else {
+                topLevel.add(CategoryChild(category, name, index))
+            }
+        } else {
+            topLevel.add(CategoryChild(category, name, index))
+        }
+    }
+
+    // Build output: interleave top-level items and groups in original order
+    val usedGroups = mutableSetOf<String>()
+    categories.forEachIndexed { index, category ->
+        val name = category.name
+        val slashIndex = name.indexOf('/')
+
+        if (slashIndex > 0 && slashIndex < name.length - 1) {
+            val parentName = name.substring(0, slashIndex).trim()
+            if (parentName.isNotEmpty() && parentName !in usedGroups) {
+                val children = groupMap[parentName]
+                if (children != null && children.size > 1) {
+                    groups.add(
+                        CategoryGroup(
+                            parentName = parentName,
+                            children = children,
+                            isTopLevel = false,
+                        ),
+                    )
+                    usedGroups.add(parentName)
+                } else if (children != null) {
+                    // Single child: treat as top-level
+                    groups.add(
+                        CategoryGroup(
+                            parentName = children[0].category.name,
+                            children = children,
+                            isTopLevel = true,
+                        ),
+                    )
+                    usedGroups.add(parentName)
+                }
+            }
+        } else {
+            // Only add if not already added
+            val alreadyAdded = groups.any { g ->
+                g.isTopLevel && g.children.any { it.originalIndex == index }
+            }
+            if (!alreadyAdded) {
+                groups.add(
+                    CategoryGroup(
+                        parentName = name,
+                        children = listOf(
+                            CategoryChild(category, name, index),
+                        ),
+                        isTopLevel = true,
+                    ),
+                )
+            }
+        }
+    }
+
+    return groups
+}
+
+
 @Composable
 fun CategoryOverlayDialog(
     visible: Boolean,
