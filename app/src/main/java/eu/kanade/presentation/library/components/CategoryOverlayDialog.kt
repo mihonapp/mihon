@@ -20,9 +20,10 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ViewList
+import androidx.compose.material.icons.filled.AccountTree
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.GridView
-import androidx.compose.material.icons.automirrored.filled.ViewList
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -49,14 +50,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil3.compose.AsyncImage
-import tachiyomi.presentation.core.i18n.stringResource
 import eu.kanade.presentation.category.visualName
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.manga.model.MangaCover
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.i18n.stringResource
 
 enum class CategoryOverlayDisplayMode {
     List,
+    Nested,
     Thumbnail,
 }
 
@@ -111,53 +113,42 @@ fun CategoryOverlayDialog(
 
                 HorizontalDivider()
 
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    state = gridState,
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
-                    contentPadding = PaddingValues(
-                        horizontal = 8.dp,
-                        vertical = 8.dp,
-                    ),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    items(
-                        items = categories,
-                        key = { it.id },
-                    ) { category ->
-                        val index = categories.indexOf(category)
-                        val isSelected = index == currentCategoryIndex
-                        val itemCount = getItemCountForCategory(category)
-
-                        when (displayMode) {
-                            CategoryOverlayDisplayMode.List -> {
-                                CategoryListItem(
-                                    category = category,
-                                    isSelected = isSelected,
-                                    itemCount = itemCount,
-                                    onClick = {
-                                        onCategorySelected(index)
-                                        onDismiss()
-                                    },
-                                )
-                            }
-                            CategoryOverlayDisplayMode.Thumbnail -> {
-                                val cover = getFirstMangaCoverForCategory(category)
-                                CategoryThumbnailItem(
-                                    category = category,
-                                    isSelected = isSelected,
-                                    itemCount = itemCount,
-                                    coverData = cover,
-                                    onClick = {
-                                        onCategorySelected(index)
-                                        onDismiss()
-                                    },
-                                )
-                            }
-                        }
+                when (displayMode) {
+                    CategoryOverlayDisplayMode.Nested -> {
+                        // TODO: Step 3 で実装
+                        // 暫定的に List と同じ表示
+                        CategoryFlatGrid(
+                            categories = categories,
+                            currentCategoryIndex = currentCategoryIndex,
+                            gridState = gridState,
+                            getItemCountForCategory = getItemCountForCategory,
+                            onCategorySelected = onCategorySelected,
+                            onDismiss = onDismiss,
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+                    CategoryOverlayDisplayMode.List -> {
+                        CategoryFlatGrid(
+                            categories = categories,
+                            currentCategoryIndex = currentCategoryIndex,
+                            gridState = gridState,
+                            getItemCountForCategory = getItemCountForCategory,
+                            onCategorySelected = onCategorySelected,
+                            onDismiss = onDismiss,
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+                    CategoryOverlayDisplayMode.Thumbnail -> {
+                        CategoryThumbnailGrid(
+                            categories = categories,
+                            currentCategoryIndex = currentCategoryIndex,
+                            gridState = gridState,
+                            getItemCountForCategory = getItemCountForCategory,
+                            getFirstMangaCoverForCategory = getFirstMangaCoverForCategory,
+                            onCategorySelected = onCategorySelected,
+                            onDismiss = onDismiss,
+                            modifier = Modifier.weight(1f),
+                        )
                     }
                 }
 
@@ -175,6 +166,87 @@ fun CategoryOverlayDialog(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun CategoryFlatGrid(
+    categories: List<Category>,
+    currentCategoryIndex: Int,
+    gridState: androidx.compose.foundation.lazy.grid.LazyGridState,
+    getItemCountForCategory: (Category) -> Int?,
+    onCategorySelected: (Int) -> Unit,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        state = gridState,
+        modifier = modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        items(
+            items = categories,
+            key = { it.id },
+        ) { category ->
+            val index = categories.indexOf(category)
+            val isSelected = index == currentCategoryIndex
+            val itemCount = getItemCountForCategory(category)
+
+            CategoryListItem(
+                category = category,
+                isSelected = isSelected,
+                itemCount = itemCount,
+                onClick = {
+                    onCategorySelected(index)
+                    onDismiss()
+                },
+            )
+        }
+    }
+}
+
+@Composable
+private fun CategoryThumbnailGrid(
+    categories: List<Category>,
+    currentCategoryIndex: Int,
+    gridState: androidx.compose.foundation.lazy.grid.LazyGridState,
+    getItemCountForCategory: (Category) -> Int?,
+    getFirstMangaCoverForCategory: (Category) -> MangaCover?,
+    onCategorySelected: (Int) -> Unit,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        state = gridState,
+        modifier = modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        items(
+            items = categories,
+            key = { it.id },
+        ) { category ->
+            val index = categories.indexOf(category)
+            val isSelected = index == currentCategoryIndex
+            val itemCount = getItemCountForCategory(category)
+            val cover = getFirstMangaCoverForCategory(category)
+
+            CategoryThumbnailItem(
+                category = category,
+                isSelected = isSelected,
+                itemCount = itemCount,
+                coverData = cover,
+                onClick = {
+                    onCategorySelected(index)
+                    onDismiss()
+                },
+            )
         }
     }
 }
@@ -199,41 +271,26 @@ private fun CategoryOverlayHeader(
             modifier = Modifier.weight(1f),
         )
 
-        IconButton(
+        CategoryModeIconButton(
+            icon = Icons.AutoMirrored.Filled.ViewList,
+            contentDescription = stringResource(MR.strings.action_list_view),
+            isSelected = displayMode == CategoryOverlayDisplayMode.List,
             onClick = { onDisplayModeChange(CategoryOverlayDisplayMode.List) },
-            colors = if (displayMode == CategoryOverlayDisplayMode.List) {
-                IconButtonDefaults.iconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                )
-            } else {
-                IconButtonDefaults.iconButtonColors()
-            },
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ViewList,
-                contentDescription = stringResource(MR.strings.action_list_view),
-                modifier = Modifier.size(20.dp),
-            )
-        }
+        )
 
-        IconButton(
+        CategoryModeIconButton(
+            icon = Icons.Default.AccountTree,
+            contentDescription = stringResource(MR.strings.action_nested_view),
+            isSelected = displayMode == CategoryOverlayDisplayMode.Nested,
+            onClick = { onDisplayModeChange(CategoryOverlayDisplayMode.Nested) },
+        )
+
+        CategoryModeIconButton(
+            icon = Icons.Default.GridView,
+            contentDescription = stringResource(MR.strings.action_thumbnail_view),
+            isSelected = displayMode == CategoryOverlayDisplayMode.Thumbnail,
             onClick = { onDisplayModeChange(CategoryOverlayDisplayMode.Thumbnail) },
-            colors = if (displayMode == CategoryOverlayDisplayMode.Thumbnail) {
-                IconButtonDefaults.iconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                )
-            } else {
-                IconButtonDefaults.iconButtonColors()
-            },
-        ) {
-            Icon(
-                imageVector = Icons.Default.GridView,
-                contentDescription = stringResource(MR.strings.action_thumbnail_view),
-                modifier = Modifier.size(20.dp),
-            )
-        }
+        )
 
         IconButton(onClick = onDismiss) {
             Icon(
@@ -241,6 +298,32 @@ private fun CategoryOverlayHeader(
                 contentDescription = stringResource(MR.strings.action_close),
             )
         }
+    }
+}
+
+@Composable
+private fun CategoryModeIconButton(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    contentDescription: String,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+) {
+    IconButton(
+        onClick = onClick,
+        colors = if (isSelected) {
+            IconButtonDefaults.iconButtonColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            )
+        } else {
+            IconButtonDefaults.iconButtonColors()
+        },
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = contentDescription,
+            modifier = Modifier.size(20.dp),
+        )
     }
 }
 
