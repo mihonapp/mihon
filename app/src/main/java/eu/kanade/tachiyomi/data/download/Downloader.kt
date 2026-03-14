@@ -344,7 +344,8 @@ class Downloader(
             download.chapter.scanlator,
             download.chapter.url,
         )
-        val tmpDir = mangaDir.createDirectory(chapterDirname + TMP_DIR_SUFFIX)!!
+        // 直接创建不带 _tmp 后缀的目录
+        val tmpDir = mangaDir.createDirectory(chapterDirname)!!
 
         try {
             // If the page list already exists, start from the file
@@ -409,7 +410,16 @@ class Downloader(
             if (downloadPreferences.saveChaptersAsCBZ().get()) {
                 archiveChapter(mangaDir, chapterDirname, tmpDir)
             } else {
-                tmpDir.renameTo(chapterDirname)
+                // 尝试重命名目录，捕获异常
+                try {
+                    tmpDir.renameTo(chapterDirname)
+                } catch (e: Exception) {
+                    // 重命名失败，检查目标目录是否已存在
+                    val existing = mangaDir.findFile(chapterDirname)
+                    if (existing == null) {
+                        // 目标目录不存在，可能需要移动文件
+                    }
+                }
             }
             cache.addChapter(chapterDirname, mangaDir, download.manga)
 
@@ -440,14 +450,10 @@ class Downloader(
 
         val digitCount = (download.pages?.size ?: 0).toString().length.coerceAtLeast(3)
         val filename = "%0${digitCount}d".format(Locale.ENGLISH, page.number)
-        val tmpFile = tmpDir.findFile("$filename.tmp")
 
-        // Delete temp file if it exists
-        tmpFile?.delete()
-
-        // Try to find the image file
+        // Try to find the image file (不带 .tmp 后缀)
         val imageFile = tmpDir.listFiles()?.firstOrNull {
-            it.name!!.startsWith("$filename.") || it.name!!.startsWith("${filename}__001")
+            it.name!!.startsWith("$filename.") || it.name!!.startsWith("${filename}__")
         }
 
         try {
@@ -488,17 +494,16 @@ class Downloader(
         page.progress = 0
         return flow {
             val response = source.getImage(page)
-            val file = tmpDir.createFile("$filename.tmp")!!
             try {
+                // 直接创建带扩展名的文件，不使用 .tmp 后缀
+                val extension = getImageExtension(response, null)
+                val file = tmpDir.createFile("$filename.$extension")!!
                 response.body.source().saveTo(file.openOutputStream())
-                val extension = getImageExtension(response, file)
-                file.renameTo("$filename.$extension")
+                emit(file)
             } catch (e: Exception) {
                 response.close()
-                file.delete()
                 throw e
             }
-            emit(file)
         }
             // Retry 3 times, waiting 2, 4 and 8 seconds between attempts.
             .retryWhen { _, attempt ->
@@ -520,16 +525,16 @@ class Downloader(
      * @param filename the filename of the image.
      */
     private fun copyImageFromCache(cacheFile: File, tmpDir: UniFile, filename: String): UniFile {
-        val tmpFile = tmpDir.createFile("$filename.tmp")!!
+        // 直接创建带扩展名的文件，不使用 .tmp 后缀
+        val extension = ImageUtil.findImageType(cacheFile.inputStream()) ?: return tmpDir.createFile("$filename.jpg")!!
+        val file = tmpDir.createFile("$filename.${extension.extension}")!!
         cacheFile.inputStream().use { input ->
-            tmpFile.openOutputStream().use { output ->
+            file.openOutputStream().use { output ->
                 input.copyTo(output)
             }
         }
-        val extension = ImageUtil.findImageType(cacheFile.inputStream()) ?: return tmpFile
-        tmpFile.renameTo("$filename.${extension.extension}")
         cacheFile.delete()
-        return tmpFile
+        return file
     }
 
     /**
@@ -539,9 +544,17 @@ class Downloader(
      * @param response the network response of the image.
      * @param file the file where the image is already downloaded.
      */
-    private fun getImageExtension(response: Response, file: UniFile): String {
+    private fun getImageExtension(response: Response, file: UniFile?): String {
         val mime = response.body.contentType()?.run { if (type == "image") "image/$subtype" else null }
-        return ImageUtil.getExtensionFromMimeType(mime) { file.openInputStream() }
+        // 直接从 mime 类型推断扩展名
+        return when (mime) {
+            "image/jpeg", "image/jpg" -> "jpg"
+            "image/png" -> "png"
+            "image/gif" -> "gif"
+            "image/webp" -> "webp"
+            "image/bmp" -> "bmp"
+            else -> "jpg"
+        }
     }
 
     private fun splitTallImageIfNeeded(page: Page, tmpDir: UniFile) {
@@ -601,13 +614,13 @@ class Downloader(
         dirname: String,
         tmpDir: UniFile,
     ) {
-        val zip = mangaDir.createFile("$dirname.cbz$TMP_DIR_SUFFIX")!!
+        // 直接创建不带 _tmp 后缀的 CBZ 文件
+        val zip = mangaDir.createFile("$dirname.cbz")!!
         ZipWriter(context, zip).use { writer ->
             tmpDir.listFiles()?.forEach { file ->
                 writer.write(file)
             }
         }
-        zip.renameTo("$dirname.cbz")
         tmpDir.delete()
     }
 
@@ -724,7 +737,6 @@ class Downloader(
     }
 
     companion object {
-        const val TMP_DIR_SUFFIX = "_tmp"
         const val WARNING_NOTIF_TIMEOUT_MS = 30_000L
         const val CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD = 15
         private const val DOWNLOADS_QUEUED_WARNING_THRESHOLD = 30

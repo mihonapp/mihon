@@ -316,8 +316,8 @@ class DownloadManager(
 
         val capitalizationChanged = oldFolder.name.equals(newName, ignoreCase = true)
         if (capitalizationChanged) {
-            val tempName = newName + Downloader.TMP_DIR_SUFFIX
-            if (!oldFolder.renameTo(tempName)) {
+            // 大小写更改时直接重命名
+            if (!oldFolder.renameTo(newName)) {
                 logcat(LogPriority.ERROR) { "Failed to rename source download folder: ${oldFolder.name}" }
                 return
             }
@@ -346,8 +346,8 @@ class DownloadManager(
 
         val capitalizationChanged = oldFolder.name.equals(newName, ignoreCase = true)
         if (capitalizationChanged) {
-            val tempName = newName + Downloader.TMP_DIR_SUFFIX
-            if (!oldFolder.renameTo(tempName)) {
+            // 大小写更改时直接重命名
+            if (!oldFolder.renameTo(newName)) {
                 logcat(LogPriority.ERROR) { "Failed to rename manga download folder: ${oldFolder.name}" }
                 return
             }

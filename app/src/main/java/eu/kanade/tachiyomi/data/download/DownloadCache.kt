@@ -400,8 +400,6 @@ class DownloadCache(
                             val chapterDirs = mangaDir.dir?.listFiles().orEmpty()
                                 .mapNotNull {
                                     when {
-                                        // Ignore incomplete downloads
-                                        it.name?.endsWith(Downloader.TMP_DIR_SUFFIX) == true -> null
                                         // Folder of images
                                         it.isDirectory -> it.name
                                         // CBZ files
