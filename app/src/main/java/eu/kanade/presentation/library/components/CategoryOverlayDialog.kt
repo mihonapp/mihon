@@ -1,5 +1,6 @@
 package eu.kanade.presentation.library.components
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,18 +12,23 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ViewList
 import androidx.compose.material.icons.filled.AccountTree
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -36,7 +42,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -77,7 +85,6 @@ data class CategoryChild(
 fun buildCategoryGroups(categories: List<Category>): List<CategoryGroup> {
     val groups = mutableListOf<CategoryGroup>()
     val groupMap = mutableMapOf<String, MutableList<CategoryChild>>()
-    val topLevel = mutableListOf<CategoryChild>()
 
     categories.forEachIndexed { index, category ->
         val name = category.name
@@ -89,16 +96,12 @@ fun buildCategoryGroups(categories: List<Category>): List<CategoryGroup> {
             if (parentName.isNotEmpty() && childName.isNotEmpty()) {
                 groupMap.getOrPut(parentName) { mutableListOf() }
                     .add(CategoryChild(category, childName, index))
-            } else {
-                topLevel.add(CategoryChild(category, name, index))
             }
-        } else {
-            topLevel.add(CategoryChild(category, name, index))
         }
     }
 
-    // Build output: interleave top-level items and groups in original order
     val usedGroups = mutableSetOf<String>()
+
     categories.forEachIndexed { index, category ->
         val name = category.name
         val slashIndex = name.indexOf('/')
@@ -115,9 +118,7 @@ fun buildCategoryGroups(categories: List<Category>): List<CategoryGroup> {
                             isTopLevel = false,
                         ),
                     )
-                    usedGroups.add(parentName)
                 } else if (children != null) {
-                    // Single child: treat as top-level
                     groups.add(
                         CategoryGroup(
                             parentName = children[0].category.name,
@@ -125,11 +126,10 @@ fun buildCategoryGroups(categories: List<Category>): List<CategoryGroup> {
                             isTopLevel = true,
                         ),
                     )
-                    usedGroups.add(parentName)
                 }
+                usedGroups.add(parentName)
             }
         } else {
-            // Only add if not already added
             val alreadyAdded = groups.any { g ->
                 g.isTopLevel && g.children.any { it.originalIndex == index }
             }
@@ -149,7 +149,6 @@ fun buildCategoryGroups(categories: List<Category>): List<CategoryGroup> {
 
     return groups
 }
-
 
 @Composable
 fun CategoryOverlayDialog(
@@ -204,12 +203,9 @@ fun CategoryOverlayDialog(
 
                 when (displayMode) {
                     CategoryOverlayDisplayMode.Nested -> {
-                        // TODO: Step 3 で実装
-                        // 暫定的に List と同じ表示
-                        CategoryFlatGrid(
+                        CategoryNestedList(
                             categories = categories,
                             currentCategoryIndex = currentCategoryIndex,
-                            gridState = gridState,
                             getItemCountForCategory = getItemCountForCategory,
                             onCategorySelected = onCategorySelected,
                             onDismiss = onDismiss,
@@ -254,6 +250,231 @@ fun CategoryOverlayDialog(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CategoryNestedList(
+    categories: List<Category>,
+    currentCategoryIndex: Int,
+    getItemCountForCategory: (Category) -> Int?,
+    onCategorySelected: (Int) -> Unit,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val groups = remember(categories) { buildCategoryGroups(categories) }
+    val expandedState = remember { mutableStateMapOf<String, Boolean>() }
+    val listState = rememberLazyListState()
+
+    LazyColumn(
+        state = listState,
+        modifier = modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        groups.forEach { group ->
+            if (group.isTopLevel) {
+                val child = group.children.first()
+                val isSelected = child.originalIndex == currentCategoryIndex
+                val itemCount = getItemCountForCategory(child.category)
+
+                item(key = "top_${child.originalIndex}") {
+                    CategoryNestedChildItem(
+                        name = child.childName,
+                        isSelected = isSelected,
+                        itemCount = itemCount,
+                        indented = false,
+                        onClick = {
+                            onCategorySelected(child.originalIndex)
+                            onDismiss()
+                        },
+                    )
+                }
+            } else {
+                val isExpanded = expandedState[group.parentName] ?: false
+                val totalItemCount = group.children.sumOf { child ->
+                    getItemCountForCategory(child.category) ?: 0
+                }
+                val hasSelectedChild = group.children.any {
+                    it.originalIndex == currentCategoryIndex
+                }
+
+                item(key = "header_${group.parentName}") {
+                    CategoryNestedGroupHeader(
+                        parentName = group.parentName,
+                        childCount = group.children.size,
+                        totalItemCount = totalItemCount,
+                        isExpanded = isExpanded,
+                        hasSelectedChild = hasSelectedChild,
+                        onClick = {
+                            expandedState[group.parentName] = !isExpanded
+                        },
+                    )
+                }
+
+                if (isExpanded) {
+                    group.children.forEach { child ->
+                        val isSelected = child.originalIndex == currentCategoryIndex
+                        val itemCount = getItemCountForCategory(child.category)
+
+                        item(key = "child_${child.originalIndex}") {
+                            CategoryNestedChildItem(
+                                name = child.childName,
+                                isSelected = isSelected,
+                                itemCount = itemCount,
+                                indented = true,
+                                onClick = {
+                                    onCategorySelected(child.originalIndex)
+                                    onDismiss()
+                                },
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CategoryNestedGroupHeader(
+    parentName: String,
+    childCount: Int,
+    totalItemCount: Int,
+    isExpanded: Boolean,
+    hasSelectedChild: Boolean,
+    onClick: () -> Unit,
+) {
+    val backgroundColor = if (hasSelectedChild) {
+        MaterialTheme.colorScheme.secondaryContainer
+    } else {
+        MaterialTheme.colorScheme.surfaceContainerHigh
+    }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize()
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = backgroundColor),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                imageVector = if (isExpanded) {
+                    Icons.Default.ExpandLess
+                } else {
+                    Icons.Default.ExpandMore
+                },
+                contentDescription = null,
+                modifier = Modifier.size(20.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Text(
+                text = parentName,
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                color = if (hasSelectedChild) {
+                    MaterialTheme.colorScheme.onSecondaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                },
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f),
+            )
+
+            Text(
+                text = "($childCount)",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Text(
+                text = "$totalItemCount",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+            )
+        }
+    }
+}
+
+@Composable
+private fun CategoryNestedChildItem(
+    name: String,
+    isSelected: Boolean,
+    itemCount: Int?,
+    indented: Boolean,
+    onClick: () -> Unit,
+) {
+    val backgroundColor = if (isSelected) {
+        MaterialTheme.colorScheme.primaryContainer
+    } else {
+        MaterialTheme.colorScheme.surfaceContainerLow
+    }
+    val textColor = if (isSelected) {
+        MaterialTheme.colorScheme.onPrimaryContainer
+    } else {
+        MaterialTheme.colorScheme.onSurface
+    }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = if (indented) 28.dp else 0.dp)
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = backgroundColor),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = if (isSelected) 2.dp else 0.dp,
+        ),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            if (isSelected) {
+                Box(
+                    modifier = Modifier
+                        .size(8.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .background(MaterialTheme.colorScheme.primary),
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+            }
+
+            Text(
+                text = name,
+                style = MaterialTheme.typography.bodyMedium,
+                color = textColor,
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f),
+            )
+
+            if (itemCount != null) {
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = "($itemCount)",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = textColor.copy(alpha = 0.7f),
+                )
             }
         }
     }
