@@ -22,7 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.GridView
-import androidx.compose.material.icons.filled.ViewList
+import androidx.compose.material.icons.automirrored.filled.ViewList
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -49,9 +49,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil3.compose.AsyncImage
+import tachiyomi.presentation.core.i18n.stringResource
 import eu.kanade.presentation.category.visualName
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.manga.model.MangaCover
+import tachiyomi.i18n.MR
 
 enum class CategoryOverlayDisplayMode {
     List,
@@ -167,7 +169,7 @@ fun CategoryOverlayDialog(
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
-                        text = "${categories.size} categories",
+                        text = stringResource(MR.strings.category_count, categories.size),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -191,7 +193,7 @@ private fun CategoryOverlayHeader(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = "Select Category",
+            text = stringResource(MR.strings.action_select_category),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
@@ -209,8 +211,8 @@ private fun CategoryOverlayHeader(
             },
         ) {
             Icon(
-                imageVector = Icons.Default.ViewList,
-                contentDescription = "List view",
+                imageVector = Icons.AutoMirrored.Filled.ViewList,
+                contentDescription = stringResource(MR.strings.action_list_view),
                 modifier = Modifier.size(20.dp),
             )
         }
@@ -228,7 +230,7 @@ private fun CategoryOverlayHeader(
         ) {
             Icon(
                 imageVector = Icons.Default.GridView,
-                contentDescription = "Thumbnail view",
+                contentDescription = stringResource(MR.strings.action_thumbnail_view),
                 modifier = Modifier.size(20.dp),
             )
         }
@@ -236,7 +238,7 @@ private fun CategoryOverlayHeader(
         IconButton(onClick = onDismiss) {
             Icon(
                 imageVector = Icons.Default.Close,
-                contentDescription = "Close",
+                contentDescription = stringResource(MR.strings.action_close),
             )
         }
     }
@@ -392,7 +394,7 @@ private fun CategoryThumbnailItem(
 
                 if (itemCount != null) {
                     Text(
-                        text = "$itemCount items",
+                        text = stringResource(MR.strings.category_item_count, itemCount),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
