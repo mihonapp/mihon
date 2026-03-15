@@ -56,7 +56,9 @@ internal fun LibraryCompactGrid(
                 },
                 onLongClick = { onLongClick(libraryItem.libraryManga) },
                 onClick = { onClick(libraryItem.libraryManga) },
-                onClickContinueReading = if (onClickContinueReading != null && libraryItem.unreadCount > 0) {
+                onClickContinueReading = if (onClickContinueReading != null &&
+                    libraryItem.libraryManga.unreadCount > 0
+                ) {
                     { onClickContinueReading(libraryItem.libraryManga) }
                 } else {
                     null
