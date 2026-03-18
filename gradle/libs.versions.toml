@@ -5,7 +5,6 @@ moko = "0.26.1"
 okhttp_version = "5.3.2"
 shizuku_version = "13.1.5"
 sqldelight = "2.3.2"
-sqlite = "2.6.2"
 voyager = "1.1.0-beta03"
 spotless = "8.3.0"
 ktlint-core = "1.8.0"
@@ -35,10 +34,6 @@ jsoup = "org.jsoup:jsoup:1.22.1"
 disklrucache = "com.jakewharton:disklrucache:2.0.2"
 unifile = "com.github.tachiyomiorg:unifile:e0def6b3dc"
 libarchive = "me.zhanghai.android.libarchive:library:1.1.6"
-
-sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = "sqlite" }
-sqlite-ktx = { module = "androidx.sqlite:sqlite-ktx", version.ref = "sqlite" }
-sqlite-android = "com.github.requery:sqlite-android:3.49.0"
 
 preferencektx = "androidx.preference:preference-ktx:1.2.1"
 
@@ -84,7 +79,7 @@ shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizu
 leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
 leakcanary-plumber = { module = "com.squareup.leakcanary:plumber-android", version.ref = "leakcanary" }
 
-sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
+sqldelight-androidx-driver = { module = "com.eygraber:sqldelight-androidx-driver", version = "0.0.17" }
 sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions-jvm", version.ref = "sqldelight" }
 sqldelight-android-paging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqldelight" }
 sqldelight-dialects-sql = { module = "app.cash.sqldelight:sqlite-3-38-dialect", version.ref = "sqldelight" }
@@ -119,10 +114,9 @@ firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.
 [bundles]
 okhttp = ["okhttp-core", "okhttp-logging", "okhttp-brotli", "okhttp-dnsoverhttps"]
 js-engine = ["quickjs-android"]
-sqlite = ["sqlite-framework", "sqlite-ktx", "sqlite-android"]
 coil = ["coil-core", "coil-gif", "coil-compose", "coil-network-okhttp"]
 shizuku = ["shizuku-api", "shizuku-provider"]
-sqldelight = ["sqldelight-android-driver", "sqldelight-coroutines", "sqldelight-android-paging"]
+sqldelight = ["sqldelight-androidx-driver", "sqldelight-coroutines", "sqldelight-android-paging"]
 voyager = ["voyager-navigator", "voyager-screenmodel", "voyager-tab-navigator", "voyager-transitions"]
 test = ["junit-jupiter", "kotest-assertions", "mockk"]
 markdown = ["markdown-core", "markdown-coil"]

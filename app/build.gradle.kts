@@ -200,7 +200,7 @@ dependencies {
     implementation(androidx.paging.runtime)
     implementation(androidx.paging.compose)
 
-    implementation(libs.bundles.sqlite)
+    implementation(androidx.sqlite.bundled)
 
     implementation(kotlinx.reflect)
     implementation(kotlinx.immutables)

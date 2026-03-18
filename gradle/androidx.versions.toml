@@ -3,6 +3,7 @@ agp_version = "8.13.2"
 lifecycle_version = "2.10.0"
 paging_version = "3.4.2"
 interpolator_version = "1.0.0"
+sqlite = "2.6.2"
 
 [libraries]
 gradle = { module = "com.android.tools.build:gradle", version.ref = "agp_version" }
@@ -32,6 +33,8 @@ benchmark-macro = "androidx.benchmark:benchmark-macro-junit4:1.4.1"
 test-ext = "androidx.test.ext:junit-ktx:1.3.0"
 test-espresso-core = "androidx.test.espresso:espresso-core:3.7.0"
 test-uiautomator = "androidx.test.uiautomator:uiautomator:2.3.0"
+
+sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
 [bundles]
 lifecycle = ["lifecycle-common", "lifecycle-process", "lifecycle-runtimektx"]
