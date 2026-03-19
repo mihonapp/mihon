@@ -917,6 +917,24 @@ class MangaScreenModel(
     }
 
     /**
+     * Sets the sub-chapter filter and requests an UI update.
+     * @param state whether to display only sub-chapters or only whole chapters or all chapters.
+     */
+    fun setSubChapterFilter(state: TriState) {
+        val manga = successState?.manga ?: return
+
+        val flag = when (state) {
+            TriState.DISABLED -> Manga.SHOW_ALL
+            TriState.ENABLED_IS -> Manga.CHAPTER_SHOW_SUB_CHAPTER
+            TriState.ENABLED_NOT -> Manga.CHAPTER_SHOW_NOT_SUB_CHAPTER
+        }
+
+        screenModelScope.launchNonCancellable {
+            setMangaChapterFlags.awaitSetSubChapterFilter(manga, flag)
+        }
+    }
+
+    /**
      * Sets the active display mode.
      * @param mode the mode to set.
      */
@@ -1196,10 +1214,14 @@ class MangaScreenModel(
                 val unreadFilter = manga.unreadFilter
                 val downloadedFilter = manga.downloadedFilter
                 val bookmarkedFilter = manga.bookmarkedFilter
+                val subChapterFilter = manga.subChapterFilter
                 return asSequence()
                     .filter { (chapter) -> applyFilter(unreadFilter) { !chapter.read } }
                     .filter { (chapter) -> applyFilter(bookmarkedFilter) { chapter.bookmark } }
                     .filter { applyFilter(downloadedFilter) { it.isDownloaded || isLocalManga } }
+                    .filter { (chapter) ->
+                        applyFilter(subChapterFilter) { chapter.isSubChapter }
+                    }
                     .sortedWith { (chapter1), (chapter2) -> getChapterSort(manga).invoke(chapter1, chapter2) }
             }
         }

@@ -1,5 +1,7 @@
 package tachiyomi.domain.chapter.model
 
+import kotlin.math.floor
+
 data class Chapter(
     val id: Long,
     val mangaId: Long,
@@ -18,6 +20,9 @@ data class Chapter(
 ) {
     val isRecognizedNumber: Boolean
         get() = chapterNumber >= 0f
+
+    val isSubChapter: Boolean
+        get() = isRecognizedNumber && chapterNumber != floor(chapterNumber)
 
     fun copyFrom(other: Chapter): Chapter {
         return copy(

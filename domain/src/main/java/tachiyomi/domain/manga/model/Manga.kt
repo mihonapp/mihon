@@ -55,6 +55,9 @@ data class Manga(
     val bookmarkedFilterRaw: Long
         get() = chapterFlags and CHAPTER_BOOKMARKED_MASK
 
+    val subChapterFilterRaw: Long
+        get() = chapterFlags and CHAPTER_SUB_CHAPTER_MASK
+
     val unreadFilter: TriState
         get() = when (unreadFilterRaw) {
             CHAPTER_SHOW_UNREAD -> TriState.ENABLED_IS
@@ -66,6 +69,13 @@ data class Manga(
         get() = when (bookmarkedFilterRaw) {
             CHAPTER_SHOW_BOOKMARKED -> TriState.ENABLED_IS
             CHAPTER_SHOW_NOT_BOOKMARKED -> TriState.ENABLED_NOT
+            else -> TriState.DISABLED
+        }
+
+    val subChapterFilter: TriState
+        get() = when (subChapterFilterRaw) {
+            CHAPTER_SHOW_SUB_CHAPTER -> TriState.ENABLED_IS
+            CHAPTER_SHOW_NOT_SUB_CHAPTER -> TriState.ENABLED_NOT
             else -> TriState.DISABLED
         }
 
@@ -92,6 +102,10 @@ data class Manga(
         const val CHAPTER_SHOW_BOOKMARKED = 0x00000020L
         const val CHAPTER_SHOW_NOT_BOOKMARKED = 0x00000040L
         const val CHAPTER_BOOKMARKED_MASK = 0x00000060L
+
+        const val CHAPTER_SHOW_SUB_CHAPTER = 0x00000400L
+        const val CHAPTER_SHOW_NOT_SUB_CHAPTER = 0x00000800L
+        const val CHAPTER_SUB_CHAPTER_MASK = 0x00000C00L
 
         const val CHAPTER_SORTING_SOURCE = 0x00000000L
         const val CHAPTER_SORTING_NUMBER = 0x00000100L
