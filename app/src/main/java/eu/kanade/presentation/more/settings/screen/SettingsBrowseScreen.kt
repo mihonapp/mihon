@@ -46,6 +46,10 @@ object SettingsBrowseScreen : SearchableSettings {
                         preference = sourcePreferences.hideInLibraryItems(),
                         title = stringResource(MR.strings.pref_hide_in_library_items),
                     ),
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = sourcePreferences.showClipboardSearch(),
+                        title = stringResource(MR.strings.pref_show_clipboard_search),
+                    ),
                     Preference.PreferenceItem.TextPreference(
                         title = stringResource(MR.strings.label_extension_repos),
                         subtitle = pluralStringResource(MR.plurals.num_repos, reposCount, reposCount),
