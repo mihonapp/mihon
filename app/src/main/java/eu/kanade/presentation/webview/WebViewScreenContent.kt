@@ -367,4 +367,3 @@ fun WebViewScreenContent(
         }
     }
 }
-
