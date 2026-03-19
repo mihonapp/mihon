@@ -42,6 +42,9 @@ abstract class ViewerConfig(readerPreferences: ReaderPreferences, private val sc
     var dualPageRotateToFitInvert = false
         protected set
 
+    var automationMaxMinutes = readerPreferences.automationMaxMinutes().get()
+    var automationMaxChapters = readerPreferences.automationMaxChapters().get()
+
     abstract var navigator: ViewerNavigation
         protected set
 
@@ -63,6 +66,12 @@ abstract class ViewerConfig(readerPreferences: ReaderPreferences, private val sc
 
         readerPreferences.alwaysShowChapterTransition()
             .register({ alwaysShowChapterTransition = it })
+
+        readerPreferences.automationMaxMinutes()
+            .register({ automationMaxMinutes = it })
+
+        readerPreferences.automationMaxChapters()
+            .register({ automationMaxChapters = it })
 
         forceNavigationOverlay = readerPreferences.showNavigationOverlayNewUser().get()
         if (forceNavigationOverlay) {
