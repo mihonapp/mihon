@@ -168,6 +168,7 @@
     <string name="action_start_downloading_now">Start downloading now</string>
     <string name="action_not_now">Not now</string>
     <string name="action_add_anyway">Add anyway</string>
+    <string name="action_export_to_local">Export to Local</string>
 
     <!-- Operations -->
     <string name="loading">Loading…</string>
@@ -1049,4 +1050,9 @@
     <string name="migrationListScreen.migrateDialog.cancelLabel">Cancel</string>
     <string name="migrationListScreen.progressDialog.cancelLabel">Cancel</string>
     <string name="migrationListScreen.matchWithoutChapterToast">No chapters found, this entry cannot be used for migration</string>
+
+    <!-- Export To Local -->
+    <string name="export_to_local_already_exists">The current manga has already been exported to local. Are you sure you want to export?</string>
+    <string name="export_to_local_no_downloads">The current manga has no chapters downloaded. Are you sure you want to export?</string>
+    <string name="export_to_local_success">Successfully exported to local source</string>
 </resources>
