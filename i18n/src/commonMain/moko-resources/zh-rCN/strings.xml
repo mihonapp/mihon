@@ -117,6 +117,8 @@
     <string name="pref_viewer_type">默认阅读模式</string>
     <string name="left_to_right_viewer">单页式（从左到右）</string>
     <string name="right_to_left_viewer">单页式（从右到左）</string>
+    <string name="dual_page_ltr_viewer">横屏双页（从左到右）</string>
+    <string name="dual_page_rtl_viewer">横屏双页（从右到左）</string>
     <string name="vertical_viewer">单页式（从上到下）</string>
     <string name="webtoon_viewer">条漫</string>
     <string name="pager_viewer">单页式</string>
@@ -448,6 +450,9 @@
     <string name="action_display_show_number_of_items">显示作品数</string>
     <string name="right_and_left_nav">左右</string>
     <string name="pref_dual_page_split">拆分双页</string>
+    <string name="pref_dual_page_mode">双页模式</string>
+    <string name="pref_dual_page_first_page_cover">首页为封面</string>
+    <string name="pref_dual_page_foldable">折叠屏展开强制双页布局</string>
     <string name="pref_dual_page_invert">拆分双页时交换顺序</string>
     <string name="pref_dual_page_invert_summary">拆分双页的顺序与阅读方向不符时可以开启</string>
     <string name="backup_restore_content_full">可能需要安装缺失的插件并重新登录进度记录平台。</string>
