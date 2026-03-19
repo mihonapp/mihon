@@ -188,7 +188,13 @@ fun WebViewScreenContent(
                 return super.onJsConfirm(view, url, message, result)
             }
 
-            override fun onJsPrompt(view: WebView, url: String?, message: String?, defaultValue: String?, result: JsPromptResult): Boolean {
+            override fun onJsPrompt(
+                view: WebView,
+                url: String?,
+                message: String?,
+                defaultValue: String?,
+                result: JsPromptResult,
+            ): Boolean {
                 if (!isActive) {
                     result.cancel()
                     return true
