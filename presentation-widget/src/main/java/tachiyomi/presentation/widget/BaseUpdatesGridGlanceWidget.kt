@@ -65,7 +65,7 @@ abstract class BaseUpdatesGridGlanceWidget(
     abstract val bottomPadding: Dp
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val locked = preferences.useAuthenticator().get()
+        val locked = preferences.useAuthenticator.get()
         val containerModifier = GlanceModifier
             .fillMaxSize()
             .background(background)

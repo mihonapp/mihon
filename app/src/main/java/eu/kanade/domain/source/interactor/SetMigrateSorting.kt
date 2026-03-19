@@ -7,8 +7,8 @@ class SetMigrateSorting(
 ) {
 
     fun await(mode: Mode, direction: Direction) {
-        preferences.migrationSortingMode().set(mode)
-        preferences.migrationSortingDirection().set(direction)
+        preferences.migrationSortingMode.set(mode)
+        preferences.migrationSortingDirection.set(direction)
     }
 
     enum class Mode {

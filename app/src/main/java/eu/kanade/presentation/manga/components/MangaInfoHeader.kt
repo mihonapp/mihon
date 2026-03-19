@@ -618,7 +618,7 @@ private fun MangaSummary(
     modifier: Modifier = Modifier,
 ) {
     val preferences = remember { Injekt.get<UiPreferences>() }
-    val loadImages = remember { preferences.imagesInDescription().get() }
+    val loadImages = remember { preferences.imagesInDescription.get() }
     val animProgress by animateFloatAsState(
         targetValue = if (expanded) 1f else 0f,
         label = "summary",

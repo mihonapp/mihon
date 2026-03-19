@@ -99,7 +99,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         if (tags.contains(WORK_NAME_AUTO)) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
                 val preferences = Injekt.get<LibraryPreferences>()
-                val restrictions = preferences.autoUpdateDeviceRestrictions().get()
+                val restrictions = preferences.autoUpdateDeviceRestrictions.get()
                 if ((DEVICE_ONLY_ON_WIFI in restrictions) && !context.isConnectedToWifi()) {
                     return Result.retry()
                 }
@@ -113,7 +113,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
 
         setForegroundSafely()
 
-        libraryPreferences.lastUpdatedTimestamp().set(Instant.now().toEpochMilli())
+        libraryPreferences.lastUpdatedTimestamp.set(Instant.now().toEpochMilli())
 
         val categoryId = inputData.getLong(KEY_CATEGORY, -1L)
         addMangaToQueue(categoryId)
@@ -160,8 +160,8 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         val listToUpdate = if (categoryId != -1L) {
             libraryManga.filter { categoryId in it.categories }
         } else {
-            val includedCategories = libraryPreferences.updateCategories().get().map { it.toLong() }
-            val excludedCategories = libraryPreferences.updateCategoriesExclude().get().map { it.toLong() }
+            val includedCategories = libraryPreferences.updateCategories.get().map { it.toLong() }
+            val excludedCategories = libraryPreferences.updateCategoriesExclude.get().map { it.toLong() }
 
             libraryManga.filter {
                 val included = includedCategories.isEmpty() || it.categories.intersect(includedCategories).isNotEmpty()
@@ -170,7 +170,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             }
         }
 
-        val restrictions = libraryPreferences.autoUpdateMangaRestrictions().get()
+        val restrictions = libraryPreferences.autoUpdateMangaRestrictions.get()
         val skippedUpdates = mutableListOf<Pair<Manga, String?>>()
         val (_, fetchWindowUpperBound) = fetchInterval.getWindow(ZonedDateTime.now())
 
@@ -272,7 +272,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                                 hasDownloads.store(true)
                                             }
 
-                                            libraryPreferences.newUpdatesCount().getAndSet { it + newChapters.size }
+                                            libraryPreferences.newUpdatesCount.getAndSet { it + newChapters.size }
 
                                             // Convert to the manga that contains new chapters
                                             newUpdates.add(manga to newChapters.toTypedArray())
@@ -332,7 +332,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         val source = sourceManager.getOrStub(manga.source)
 
         // Update manga metadata if needed
-        if (libraryPreferences.autoUpdateMetadata().get()) {
+        if (libraryPreferences.autoUpdateMetadata.get()) {
             val networkManga = source.getMangaDetails(manga.toSManga())
             updateManga.awaitUpdateFromSource(manga, networkManga, manualFetch = false, coverCache)
         }
@@ -423,9 +423,9 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             prefInterval: Int? = null,
         ) {
             val preferences = Injekt.get<LibraryPreferences>()
-            val interval = prefInterval ?: preferences.autoUpdateInterval().get()
+            val interval = prefInterval ?: preferences.autoUpdateInterval.get()
             if (interval > 0) {
-                val restrictions = preferences.autoUpdateDeviceRestrictions().get()
+                val restrictions = preferences.autoUpdateDeviceRestrictions.get()
                 val networkType = if (DEVICE_NETWORK_NOT_METERED in restrictions) {
                     NetworkType.UNMETERED
                 } else {

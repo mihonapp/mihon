@@ -64,7 +64,7 @@ class DebugInfoScreen : Screen() {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
 
-        val installationIdPref = remember { Injekt.get<BasePreferences>().installationId() }
+        val installationIdPref = remember { Injekt.get<BasePreferences>().installationId }
         val installationId by installationIdPref.collectAsState()
 
         return Preference.PreferenceGroup(

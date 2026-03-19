@@ -340,10 +340,10 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
         }
 
         private fun initSources() {
-            val languages = sourcePreferences.enabledLanguages().get()
-            val pinnedSources = sourcePreferences.pinnedSources().get().mapNotNull { it.toLongOrNull() }
-            val includedSources = sourcePreferences.migrationSources().get()
-            val disabledSources = sourcePreferences.disabledSources().get()
+            val languages = sourcePreferences.enabledLanguages.get()
+            val pinnedSources = sourcePreferences.pinnedSources.get().mapNotNull { it.toLongOrNull() }
+            val includedSources = sourcePreferences.migrationSources.get()
+            val disabledSources = sourcePreferences.disabledSources.get()
                 .mapNotNull { it.toLongOrNull() }
             val sources = sourceManager.getCatalogueSources()
                 .asSequence()
@@ -382,8 +382,8 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
         }
 
         fun toggleSelection(config: SelectionConfig) {
-            val pinnedSources = sourcePreferences.pinnedSources().get().mapNotNull { it.toLongOrNull() }
-            val disabledSources = sourcePreferences.disabledSources().get().mapNotNull { it.toLongOrNull() }
+            val pinnedSources = sourcePreferences.pinnedSources.get().mapNotNull { it.toLongOrNull() }
+            val disabledSources = sourcePreferences.disabledSources.get().mapNotNull { it.toLongOrNull() }
             val isSelected: (Long) -> Boolean = {
                 when (config) {
                     SelectionConfig.All -> true
@@ -413,7 +413,7 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
             state.value.sources
                 .filter { source -> source.isSelected }
                 .map { source -> source.source.id }
-                .let { sources -> sourcePreferences.migrationSources().set(sources) }
+                .let { sources -> sourcePreferences.migrationSources.set(sources) }
         }
 
         data class State(

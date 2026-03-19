@@ -71,7 +71,7 @@ class BrowseSourceScreenModel(
     private val getIncognitoState: GetIncognitoState = Injekt.get(),
 ) : StateScreenModel<BrowseSourceScreenModel.State>(State(Listing.valueOf(listingQuery))) {
 
-    var displayMode by sourcePreferences.sourceDisplayMode().asState(screenModelScope)
+    var displayMode by sourcePreferences.sourceDisplayMode.asState(screenModelScope)
 
     val source = sourceManager.getOrStub(sourceId)
 
@@ -95,14 +95,14 @@ class BrowseSourceScreenModel(
         }
 
         if (!getIncognitoState.await(source.id)) {
-            sourcePreferences.lastUsedSource().set(source.id)
+            sourcePreferences.lastUsedSource.set(source.id)
         }
     }
 
     /**
      * Flow of Pager flow tied to [State.listing]
      */
-    private val hideInLibraryItems = sourcePreferences.hideInLibraryItems().get()
+    private val hideInLibraryItems = sourcePreferences.hideInLibraryItems.get()
     val mangaPagerFlowFlow = state.map { it.listing }
         .distinctUntilChanged()
         .map { listing ->
@@ -123,9 +123,9 @@ class BrowseSourceScreenModel(
     fun getColumnsPreference(orientation: Int): GridCells {
         val isLandscape = orientation == Configuration.ORIENTATION_LANDSCAPE
         val columns = if (isLandscape) {
-            libraryPreferences.landscapeColumns()
+            libraryPreferences.landscapeColumns
         } else {
-            libraryPreferences.portraitColumns()
+            libraryPreferences.portraitColumns
         }.get()
         return if (columns == 0) GridCells.Adaptive(128.dp) else GridCells.Fixed(columns)
     }
@@ -241,7 +241,7 @@ class BrowseSourceScreenModel(
     fun addFavorite(manga: Manga) {
         screenModelScope.launch {
             val categories = getCategories()
-            val defaultCategoryId = libraryPreferences.defaultCategory().get()
+            val defaultCategoryId = libraryPreferences.defaultCategory.get()
             val defaultCategory = categories.find { it.id == defaultCategoryId.toLong() }
 
             when {

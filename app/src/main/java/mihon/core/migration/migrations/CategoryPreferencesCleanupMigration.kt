@@ -17,17 +17,17 @@ class CategoryPreferencesCleanupMigration : Migration {
         val getCategories = migrationContext.get<GetCategories>() ?: return@withIOContext false
         val allCategories = getCategories.await().map { it.id.toString() }.toSet()
 
-        val defaultCategory = libraryPreferences.defaultCategory().get()
+        val defaultCategory = libraryPreferences.defaultCategory.get()
         if (defaultCategory.toString() !in allCategories) {
-            libraryPreferences.defaultCategory().delete()
+            libraryPreferences.defaultCategory.delete()
         }
 
         val categoryPreferences = listOf(
-            libraryPreferences.updateCategories(),
-            libraryPreferences.updateCategoriesExclude(),
-            downloadPreferences.removeExcludeCategories(),
-            downloadPreferences.downloadNewChapterCategories(),
-            downloadPreferences.downloadNewChapterCategoriesExclude(),
+            libraryPreferences.updateCategories,
+            libraryPreferences.updateCategoriesExclude,
+            downloadPreferences.removeExcludeCategories,
+            downloadPreferences.downloadNewChapterCategories,
+            downloadPreferences.downloadNewChapterCategoriesExclude,
         )
         categoryPreferences.forEach { preference ->
             val ids = preference.get()

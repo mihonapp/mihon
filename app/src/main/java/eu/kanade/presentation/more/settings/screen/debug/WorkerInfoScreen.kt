@@ -156,7 +156,7 @@ class WorkerInfoScreen : Screen() {
                         )
                             .toDateTimestampString(
                                 UiPreferences.dateFormat(
-                                    Injekt.get<UiPreferences>().dateFormat().get(),
+                                    Injekt.get<UiPreferences>().dateFormat.get(),
                                 ),
                             )
                         appendLine("Next scheduled run: $timestamp")
