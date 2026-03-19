@@ -1,8 +1,9 @@
 [versions]
 agp_version = "8.13.2"
 lifecycle_version = "2.10.0"
-paging_version = "3.4.1"
+paging_version = "3.4.2"
 interpolator_version = "1.0.0"
+sqlite = "2.6.2"
 
 [libraries]
 gradle = { module = "com.android.tools.build:gradle", version.ref = "agp_version" }
@@ -11,7 +12,7 @@ annotation = "androidx.annotation:annotation:1.9.1"
 appcompat = "androidx.appcompat:appcompat:1.7.1"
 biometricktx = "androidx.biometric:biometric-ktx:1.2.0-alpha05"
 constraintlayout = "androidx.constraintlayout:constraintlayout:2.2.1"
-corektx = "androidx.core:core-ktx:1.17.0"
+corektx = "androidx.core:core-ktx:1.18.0"
 splashscreen = "androidx.core:core-splashscreen:1.2.0"
 recyclerview = "androidx.recyclerview:recyclerview:1.4.0"
 viewpager = "androidx.viewpager:viewpager:1.1.0"
@@ -32,6 +33,8 @@ benchmark-macro = "androidx.benchmark:benchmark-macro-junit4:1.4.1"
 test-ext = "androidx.test.ext:junit-ktx:1.3.0"
 test-espresso-core = "androidx.test.espresso:espresso-core:3.7.0"
 test-uiautomator = "androidx.test.uiautomator:uiautomator:2.3.0"
+
+sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
 [bundles]
 lifecycle = ["lifecycle-common", "lifecycle-process", "lifecycle-runtimektx"]

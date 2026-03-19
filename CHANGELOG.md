@@ -15,7 +15,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Rework internals for better performance ([@Lolle2000la](https://github.com/Lolle2000la)) ([#2955](https://github.com/mihonapp/mihon/pull/2955))
 
 ### Fixed
-- Correct MangaUpdates API content-type header ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3021](https://github.com/mihonapp/mihon/pull/3021))
+- Fix tracker-induced duplicate key crash in duplicate detection ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3040](https://github.com/mihonapp/mihon/pull/3040))
+- MangaUpdates API content-type header ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3021](https://github.com/mihonapp/mihon/pull/3021))
 
 ## [v0.19.4] - 2026-02-25
 ### Added
