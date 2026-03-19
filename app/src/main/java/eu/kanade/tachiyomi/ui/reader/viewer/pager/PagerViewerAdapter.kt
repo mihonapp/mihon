@@ -104,6 +104,11 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         }
 
         preprocessed = mutableMapOf()
+
+        if (currentChapter?.chapter?.id != chapters.currChapter.chapter.id) {
+            viewer.clearPageState()
+        }
+
         items = newItems
         notifyDataSetChanged()
 
@@ -114,17 +119,18 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     }
 
     /**
-     * Returns the amount of items of the adapter.
+     * Returns the amount of items of the adapter, excluding hidden pages.
      */
     override fun getCount(): Int {
-        return items.size
+        return getFilteredItems().size
     }
 
     /**
      * Creates a new view for the item at the given [position].
      */
     override fun createView(container: ViewGroup, position: Int): View {
-        return when (val item = items[position]) {
+        val filteredItems = getFilteredItems()
+        return when (val item = filteredItems[position]) {
             is ReaderPage -> PagerPageHolder(readerThemedContext, viewer, item)
             is ChapterTransition -> PagerTransitionHolder(readerThemedContext, viewer, item)
             else -> throw NotImplementedError("Holder for ${item.javaClass} not implemented")
@@ -136,7 +142,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
      */
     override fun getItemPosition(view: Any): Int {
         if (view is PositionableView) {
-            val position = items.indexOf(view.item)
+            val position = getFilteredPosition(view.item)
             if (position != -1) {
                 return position
             } else {
@@ -183,6 +189,20 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         val insertPages = items.filterIsInstance<InsertPage>()
         items.removeAll(insertPages)
         notifyDataSetChanged()
+    }
+
+    /**
+     * Returns a filtered list of items, excluding hidden pages.
+     */
+    fun getFilteredItems(): List<Any> {
+        return items.filterNot { it is ReaderPage && viewer.isPageHidden(it) }
+    }
+
+    /**
+     * Returns the position of the given item in the filtered list.
+     */
+    fun getFilteredPosition(item: Any): Int {
+        return getFilteredItems().indexOf(item)
     }
 
     fun refresh() {

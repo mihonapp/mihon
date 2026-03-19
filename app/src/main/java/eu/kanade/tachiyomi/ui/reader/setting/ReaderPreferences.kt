@@ -97,6 +97,10 @@ class ReaderPreferences(
 
     fun dualPageRotateToFitInvertWebtoon() = preferenceStore.getBoolean("pref_dual_page_rotate_invert_webtoon", false)
 
+    fun combinedPagesPaged() = preferenceStore.getBoolean("pref_combined_pages", false)
+
+    fun combinedPagesShowCoverPage() = preferenceStore.getBoolean("pref_combined_pages_show_cover", true)
+
     // endregion
 
     // region Color filter
