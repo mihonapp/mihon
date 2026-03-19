@@ -111,6 +111,31 @@ internal object ExtensionLoader {
     }
 
     /**
+     * Polls the total number of extensions installed to wait for few consecutive passes
+     * so that the package manager has finished resolving the installed apps.
+     */
+    fun getExtensionCount(context: Context): Int {
+        val pkgManager = context.packageManager
+
+        val pollingFlags = PackageManager.GET_CONFIGURATIONS
+        val installedPkgs = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            pkgManager.getInstalledPackages(PackageManager.PackageInfoFlags.of(pollingFlags.toLong()))
+        } else {
+            @Suppress("DEPRECATION")
+            pkgManager.getInstalledPackages(pollingFlags)
+        }
+
+        val sharedCount = installedPkgs.count { isPackageAnExtension(it) }
+
+        val privateCount = getPrivateExtensionDir(context)
+            .listFiles()
+            ?.count { it.isFile && it.extension == PRIVATE_EXTENSION_EXTENSION }
+            ?: 0
+
+        return sharedCount + privateCount
+    }
+
+    /**
      * Return a list of all the available extensions initialized concurrently.
      *
      * @param context The application context.
