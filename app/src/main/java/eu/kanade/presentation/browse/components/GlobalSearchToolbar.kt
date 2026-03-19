@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.DoneAll
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material3.FilterChip
@@ -22,12 +21,10 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import eu.kanade.presentation.components.SearchToolbar
-import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SourceFilter
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
@@ -40,9 +37,9 @@ fun GlobalSearchToolbar(
     navigateUp: () -> Unit,
     onChangeSearchQuery: (String?) -> Unit,
     onSearch: (String) -> Unit,
-    hideSourceFilter: Boolean,
-    sourceFilter: SourceFilter,
-    onChangeSearchFilter: (SourceFilter) -> Unit,
+    hasPinnedSources: Boolean,
+    pinnedOnly: Boolean,
+    onTogglePinnedOnly: () -> Unit,
     onlyShowHasResults: Boolean,
     onToggleResults: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
@@ -73,11 +70,10 @@ fun GlobalSearchToolbar(
                 .padding(horizontal = MaterialTheme.padding.small),
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
         ) {
-            // TODO: make this UX better; it only applies when triggering a new search
-            if (!hideSourceFilter) {
+            if (hasPinnedSources) {
                 FilterChip(
-                    selected = sourceFilter == SourceFilter.PinnedOnly,
-                    onClick = { onChangeSearchFilter(SourceFilter.PinnedOnly) },
+                    selected = pinnedOnly,
+                    onClick = onTogglePinnedOnly,
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Outlined.PushPin,
@@ -87,26 +83,9 @@ fun GlobalSearchToolbar(
                         )
                     },
                     label = {
-                        Text(text = stringResource(MR.strings.pinned_sources))
+                        Text(text = stringResource(MR.strings.pinned_sources_only))
                     },
                 )
-                FilterChip(
-                    selected = sourceFilter == SourceFilter.All,
-                    onClick = { onChangeSearchFilter(SourceFilter.All) },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Outlined.DoneAll,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(FilterChipDefaults.IconSize),
-                        )
-                    },
-                    label = {
-                        Text(text = stringResource(MR.strings.all))
-                    },
-                )
-
-                VerticalDivider()
             }
 
             FilterChip(

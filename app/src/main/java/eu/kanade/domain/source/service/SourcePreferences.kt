@@ -58,6 +58,11 @@ class SourcePreferences(
         false,
     )
 
+    fun globalSearchPinnedOnly() = preferenceStore.getBoolean(
+        Preference.appStateKey("global_search_pinned_only"),
+        false,
+    )
+
     fun migrationSources() = preferenceStore.getLongArray("migration_sources", emptyList())
 
     fun migrationFlags() = preferenceStore.getObjectFromInt(
