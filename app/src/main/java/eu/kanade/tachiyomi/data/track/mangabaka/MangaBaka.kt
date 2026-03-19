@@ -24,6 +24,8 @@ class MangaBaka(id: Long) : BaseTracker(id, "MangaBaka"), DeletableTracker {
     override val supportsReadingDates: Boolean = true
     override val supportsPrivateTracking: Boolean = true
 
+    private val scorePreference = trackPreferences.mangabakaScoreType()
+
     override fun getLogo(): Int = R.drawable.ic_tracker_mangabaka
 
     override fun getStatusList(): List<Long> {
@@ -47,7 +49,21 @@ class MangaBaka(id: Long) : BaseTracker(id, "MangaBaka"), DeletableTracker {
 
     override fun getCompletionStatus(): Long = COMPLETED
 
-    override fun getScoreList(): ImmutableList<String> = SCORE_LIST
+    override fun getScoreList(): ImmutableList<String> {
+        return when (scorePreference.get()) {
+            // 1, 2, ..., 99, 100
+            STEP_1 -> IntRange(0, 100).map(Int::toString).toImmutableList()
+            // 5, 10, ..., 95, 100
+            STEP_5 -> IntRange(0, 100).step(5).map(Int::toString).toImmutableList()
+            // 10, 20, ..., 90, 100
+            STEP_10 -> IntRange(0, 100).step(10).map(Int::toString).toImmutableList()
+            // 20, 40, ..., 80, 100
+            STEP_20 -> IntRange(0, 100).step(20).map(Int::toString).toImmutableList()
+            // 25, 50, 75, 100
+            STEP_25 -> IntRange(0, 100).step(25).map(Int::toString).toImmutableList()
+            else -> throw Exception("Unknown score type")
+        }
+    }
 
     override fun displayScore(track: DomainTrack): String = track.score.toInt().toString()
 
@@ -116,6 +132,15 @@ class MangaBaka(id: Long) : BaseTracker(id, "MangaBaka"), DeletableTracker {
             val oauth = api.getAccessToken(code)
             interceptor.setAuth(oauth)
             saveCredentials("user", oauth.accessToken)
+            val scoreType = when (val scoreStep = api.getScoreStepSize()) {
+                1 -> STEP_1
+                5 -> STEP_5
+                10 -> STEP_10
+                20 -> STEP_20
+                25 -> STEP_25
+                else -> throw Exception("Unknown score step size $scoreStep")
+            }
+            scorePreference.set(scoreType)
         } catch (_: Exception) {
             logout()
         }
@@ -152,6 +177,10 @@ class MangaBaka(id: Long) : BaseTracker(id, "MangaBaka"), DeletableTracker {
         const val REREADING = 6L
         const val CONSIDERING = 7L
 
-        private val SCORE_LIST = IntRange(0, 100).map(Int::toString).toImmutableList()
+        const val STEP_1 = "STEP_1"
+        const val STEP_5 = "STEP_5"
+        const val STEP_10 = "STEP_10"
+        const val STEP_20 = "STEP_20"
+        const val STEP_25 = "STEP_25"
     }
 }
