@@ -362,6 +362,8 @@
     <string name="ext_installer_shizuku_stopped">Shizuku is not running</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Install and start Shizuku to use Shizuku as extension installer.</string>
     <string name="ext_revoke_trust">Revoke trusted unknown extensions</string>
+    <string name="pref_shizuku_reinstall_on_failure">Reinstall on signature mismatch</string>
+    <string name="pref_shizuku_reinstall_on_failure_summary">If installation fails due to signature mismatch, automatically uninstall and retry</string>
 
     <!-- Extension repos -->
     <string name="label_extension_repos">Extension repos</string>

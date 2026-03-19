@@ -9,8 +9,10 @@ import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.content.pm.PackageInstaller
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.IBinder
 import androidx.core.content.ContextCompat
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.util.system.toast
@@ -18,16 +20,23 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.app.shizuku.IShellInterface
 import mihon.app.shizuku.ShellInterface
 import rikka.shizuku.Shizuku
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
+import java.io.File
 
 class ShizukuInstaller(private val service: Service) : Installer(service) {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val preferences = Injekt.get<BasePreferences>()
+    private val reinstallOnFailure get() = preferences.shizukuReinstallOnFailure().get()
 
     private var shellInterface: IShellInterface? = null
 
@@ -60,6 +69,13 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
             val packageName = intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME)
 
             if (status == PackageInstaller.STATUS_SUCCESS) {
+                getActiveEntry()?.uri?.let { uri ->
+                    try {
+                        service.contentResolver.delete(uri, null, null)
+                    } catch (e: Exception) {
+                        logcat(LogPriority.ERROR, e) { "Failed to delete source APK for $packageName" }
+                    }
+                }
                 continueQueue(InstallStep.Installed)
             } else {
                 logcat(LogPriority.ERROR) { "Failed to install extension $packageName: $message" }
@@ -108,18 +124,101 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
 
     override fun processEntry(entry: Entry) {
         super.processEntry(entry)
-        try {
-            service.contentResolver.openAssetFileDescriptor(entry.uri, "r").use {
-                shellInterface?.install(it)
+        if (reinstallOnFailure) {
+            scope.launch { installWithRetry(entry) }
+        } else {
+            try {
+                service.contentResolver.openAssetFileDescriptor(entry.uri, "r").use { fd ->
+                    shellInterface?.install(fd)
+                }
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e) { "Failed to install extension ${entry.downloadId}" }
+                continueQueue(InstallStep.Error)
             }
-            service.contentResolver.delete(entry.uri, null, null)
-        } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e) { "Failed to install extension ${entry.downloadId} ${entry.uri}" }
-            continueQueue(InstallStep.Error)
         }
     }
 
-    // Don't cancel if entry is already started installing
+    private suspend fun installWithRetry(entry: Entry) {
+        var tempFile: File? = null
+        try {
+            tempFile = File(service.cacheDir, "install_${System.currentTimeMillis()}.apk")
+            service.contentResolver.openInputStream(entry.uri)?.use { input ->
+                tempFile.outputStream().use { output -> input.copyTo(output) }
+            } ?: throw Exception("Failed to open APK input stream")
+
+            val apkInfo = service.packageManager.getPackageArchiveInfo(
+                tempFile.absolutePath,
+                PackageManager.GET_SIGNING_CERTIFICATES,
+            ) ?: throw Exception("Failed to read APK package info")
+            val apkPackageName = apkInfo.packageName
+
+            val installedInfo = try {
+                service.packageManager.getPackageInfo(
+                    apkPackageName,
+                    PackageManager.GET_SIGNING_CERTIFICATES,
+                )
+            } catch (e: PackageManager.NameNotFoundException) {
+                null
+            }
+
+            if (installedInfo != null) {
+                val signaturesMatch = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    val apkSigningInfo = apkInfo.signingInfo
+                    val installedSigningInfo = installedInfo.signingInfo
+
+                    if (apkSigningInfo != null && installedSigningInfo != null) {
+                        if (apkSigningInfo.hasMultipleSigners() || installedSigningInfo.hasMultipleSigners()) {
+                            val apkSignatures = apkSigningInfo.apkContentsSigners
+                            val installedSignatures = installedSigningInfo.apkContentsSigners
+
+                            apkSignatures.size == installedSignatures.size &&
+                                apkSignatures.zip(installedSignatures).all { (a, b) ->
+                                    a.toByteArray().contentEquals(b.toByteArray())
+                                }
+                        } else {
+                            val apkSignature = apkSigningInfo.signingCertificateHistory?.firstOrNull()
+                            val installedSignature = installedSigningInfo.signingCertificateHistory?.firstOrNull()
+
+                            apkSignature?.toByteArray()?.contentEquals(installedSignature?.toByteArray()) == true
+                        }
+                    } else {
+                        false
+                    }
+                } else {
+                    @Suppress("DEPRECATION")
+                    val apkSignatures = apkInfo.signatures
+
+                    @Suppress("DEPRECATION")
+                    val installedSignatures = installedInfo.signatures
+
+                    apkSignatures != null && installedSignatures != null &&
+                        apkSignatures.size == installedSignatures.size &&
+                        apkSignatures.zip(installedSignatures).all { (a, b) ->
+                            a.toByteArray().contentEquals(b.toByteArray())
+                        }
+                }
+
+                if (!signaturesMatch) {
+                    logcat { "Signatures differ for $apkPackageName, uninstalling existing package" }
+                    withContext(Dispatchers.IO) {
+                        shellInterface?.uninstall(apkPackageName)
+                    }
+                }
+            }
+
+            tempFile.delete()
+            tempFile = null
+
+            service.contentResolver.openAssetFileDescriptor(entry.uri, "r")?.use { fd ->
+                shellInterface?.install(fd) ?: throw Exception("Shizuku shell interface not available")
+            } ?: throw Exception("Failed to open APK file descriptor")
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Failed during pre-install steps for ${entry.downloadId}" }
+            tempFile?.delete()
+            withContext(Dispatchers.Main) { continueQueue(InstallStep.Error) }
+        }
+    }
+
     override fun cancelEntry(entry: Entry): Boolean = getActiveEntry() != entry
 
     override fun onDestroy() {

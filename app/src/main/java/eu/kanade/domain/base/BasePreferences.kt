@@ -21,6 +21,11 @@ class BasePreferences(
 
     fun extensionInstaller() = ExtensionInstallerPreference(context, preferenceStore)
 
+    fun shizukuReinstallOnFailure() = preferenceStore.getBoolean(
+        Preference.appStateKey("pref_shizuku_reinstall_on_failure"),
+        false,
+    )
+
     fun shownOnboardingFlow() = preferenceStore.getBoolean(Preference.appStateKey("onboarding_complete"), false)
 
     enum class ExtensionInstaller(val titleRes: StringResource, val requiresSystemPermission: Boolean) {
