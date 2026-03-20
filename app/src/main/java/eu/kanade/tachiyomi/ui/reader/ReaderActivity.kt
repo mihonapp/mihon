@@ -50,6 +50,7 @@ import com.hippo.unifile.UniFile
 import eu.kanade.core.util.ifSourcesLoaded
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.reader.DisplayRefreshHost
+import eu.kanade.presentation.reader.ChapterNavigationDialog
 import eu.kanade.presentation.reader.OrientationSelectDialog
 import eu.kanade.presentation.reader.ReaderContentOverlay
 import eu.kanade.presentation.reader.ReaderPageActionsDialog
@@ -328,6 +329,23 @@ class ReaderActivity : BaseActivity() {
                     onSave = viewModel::saveImage,
                 )
             }
+            is ReaderViewModel.Dialog.ChapterNavigation -> {
+                val dialog = state.dialog as ReaderViewModel.Dialog.ChapterNavigation
+                ChapterNavigationDialog(
+                    chapters = dialog.chapters,
+                    direction = dialog.direction,
+                    mangaDisplayMode = state.manga?.displayMode ?: Long.MIN_VALUE,
+                    currentChapterNumber = state.currentChapter?.chapter?.chapter_number?.toDouble(),
+                    onDismissRequest = onDismissRequest,
+                    onChapterClick = { chapterId ->
+                        onDismissRequest()
+                        lifecycleScope.launch {
+                            viewModel.loadChapterById(chapterId)
+                            moveToPageIndex(0)
+                        }
+                    },
+                )
+            }
             null -> {}
         }
     }
@@ -473,8 +491,14 @@ class ReaderActivity : BaseActivity() {
 
             viewer = state.viewer,
             onNextChapter = ::loadNextChapter,
+            onNextChapterLongClick = {
+                viewModel.openChapterNavigationDialog(ReaderViewModel.ChapterNavigationDirection.Next)
+            },
             enabledNext = state.viewerChapters?.nextChapter != null,
             onPreviousChapter = ::loadPreviousChapter,
+            onPreviousChapterLongClick = {
+                viewModel.openChapterNavigationDialog(ReaderViewModel.ChapterNavigationDirection.Previous)
+            },
             enabledPrevious = state.viewerChapters?.prevChapter != null,
             currentPage = state.currentPage,
             totalPages = state.totalPages,
