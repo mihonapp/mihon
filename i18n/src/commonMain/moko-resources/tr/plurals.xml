@@ -2,7 +2,7 @@
 <resources>
     <plurals name="lock_after_mins">
         <item quantity="one">%1$s dakika sonra</item>
-        <item quantity="other">%1$s dakika sonra</item>
+        <item quantity="other">%1$s dakika sonrası</item>
     </plurals>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d yeni bölüm</item>
@@ -70,7 +70,7 @@
     </plurals>
     <plurals name="upcoming_relative_time">
         <item quantity="one">Yarın</item>
-        <item quantity="other">%1$d gün içinde</item>
+        <item quantity="other">%1$d günleri içinde</item>
     </plurals>
     <plurals name="pref_pages">
         <item quantity="one">1 sayfa</item>

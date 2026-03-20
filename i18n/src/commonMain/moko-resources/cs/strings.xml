@@ -868,7 +868,6 @@
     <string name="pref_download_concurrent_sources">Souběžné stahování zdrojů</string>
     <string name="pref_download_concurrent_pages">Souběžné stahování stránek</string>
     <string name="action_webview_close_tab">Zavřít okno</string>
-    <string name="calculating">Vypočítávání…</string>
     <string name="pref_download_concurrent_pages_summary">Souběžně stahované stránky na zdroj</string>
     <string name="migrationConfigScreen.selectAllLabel">Vybrat vše</string>
     <string name="migrationConfigScreen.selectNoneLabel">Vybrat žádné</string>

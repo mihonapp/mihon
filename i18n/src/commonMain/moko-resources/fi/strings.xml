@@ -668,4 +668,5 @@
     <string name="pref_downloads_summary">Automaattinen lataus, ennakkolataus</string>
     <string name="pref_tracking_summary">Yksisuuntainen synkronointi, paranneltu synkronointi</string>
     <string name="pref_library_summary">Kategoriat, globaalit päivitykset, luvun pyyhkäisy</string>
+    <string name="action_bar_up_description">Navigoi ylös</string>
 </resources>

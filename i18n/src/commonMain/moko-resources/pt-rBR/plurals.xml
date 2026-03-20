@@ -3,7 +3,7 @@
     <plurals name="lock_after_mins">
         <item quantity="one">Após %1$s minuto</item>
         <item quantity="many">Após %1$s minutos</item>
-        <item quantity="other">Após %1$s minuto</item>
+        <item quantity="other">Após %1$s minutos</item>
     </plurals>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d capítulo novo</item>
@@ -108,6 +108,6 @@
     <plurals name="pref_pages">
         <item quantity="one">1 página</item>
         <item quantity="many">%1$s páginas</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
 </resources>
