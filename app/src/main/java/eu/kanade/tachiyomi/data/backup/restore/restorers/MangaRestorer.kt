@@ -55,7 +55,7 @@ class MangaRestorer(
 
     suspend fun restore(
         backupManga: BackupManga,
-        backupCategories: List<BackupCategory>,
+        backupCategoriesByOrder: Map<Long, BackupCategory>,
     ) {
         handler.await(inTransaction = true) {
             val dbManga = findExistingManga(backupManga)
@@ -70,7 +70,7 @@ class MangaRestorer(
                 manga = restoredManga,
                 chapters = backupManga.chapters,
                 categories = backupManga.categories,
-                backupCategories = backupCategories,
+                backupCategoriesByOrder = backupCategoriesByOrder,
                 history = backupManga.history,
                 tracks = backupManga.tracking,
                 excludedScanlators = backupManga.excludedScanlators,
@@ -270,12 +270,12 @@ class MangaRestorer(
         manga: Manga,
         chapters: List<BackupChapter>,
         categories: List<Long>,
-        backupCategories: List<BackupCategory>,
+        backupCategoriesByOrder: Map<Long, BackupCategory>,
         history: List<BackupHistory>,
         tracks: List<BackupTracking>,
         excludedScanlators: List<String>,
     ): Manga {
-        restoreCategories(manga, categories, backupCategories)
+        restoreCategories(manga, categories, backupCategoriesByOrder)
         restoreChapters(manga, chapters)
         restoreTracking(manga, tracks)
         restoreHistory(history)
@@ -293,12 +293,10 @@ class MangaRestorer(
     private suspend fun restoreCategories(
         manga: Manga,
         categories: List<Long>,
-        backupCategories: List<BackupCategory>,
+        backupCategoriesByOrder: Map<Long, BackupCategory>,
     ) {
         val dbCategories = getCategories.await()
         val dbCategoriesByName = dbCategories.associateBy { it.name }
-
-        val backupCategoriesByOrder = backupCategories.associateBy { it.order }
 
         val mangaCategoriesToUpdate = categories.mapNotNull { backupCategoryOrder ->
             backupCategoriesByOrder[backupCategoryOrder]?.let { backupCategory ->
