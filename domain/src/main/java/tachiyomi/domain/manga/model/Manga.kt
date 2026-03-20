@@ -10,7 +10,7 @@ import kotlinx.serialization.json.JsonObject
 import mihon.core.common.extensions.EMPTY
 import tachiyomi.core.common.preference.TriState
 import java.io.ObjectStreamException
-import java.time.Instant
+import kotlin.time.Instant
 import java.io.Serializable as JavaSerializable
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -47,7 +47,7 @@ data class Manga(
     val expectedNextUpdate: Instant?
         get() = nextUpdate
             .takeIf { status != SManga.COMPLETED.toLong() }
-            ?.let { Instant.ofEpochMilli(it) }
+            ?.let { Instant.fromEpochMilliseconds(it) }
 
     val sorting: Long
         get() = chapterFlags and CHAPTER_SORTING_MASK
