@@ -23,6 +23,10 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix WebView JavaScript dialogs popup after screen is closed ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3041](https://github.com/mihonapp/mihon/pull/3041))
 - Fix extension actions disappearing after installing and uninstalling in same session ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3049](https://github.com/mihonapp/mihon/pull/3049))
 
+### Fixed
+- Fix page flashing when using automatic background with fast swiping ([@gerteck](https://github.com/gerteck) ([#2827](https://github.com/mihonapp/mihon/pull/2827))
+
+
 ## [v0.19.4] - 2026-02-25
 ### Added
 - Automatically remove downloads on Suwayomi after reading, configurable via extension settings ([@cpiber](https://github.com/cpiber)) ([#2673](https://github.com/mihonapp/mihon/pull/2673))
