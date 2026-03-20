@@ -11,12 +11,12 @@ import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.InputStream
-import java.time.Instant
+import kotlin.time.Clock
 
 fun Manga.removeCovers(coverCache: CoverCache = Injekt.get()): Manga {
     if (isLocal()) return this
     return if (coverCache.deleteFromCache(this, true) > 0) {
-        copy(coverLastModified = Instant.now().toEpochMilli())
+        copy(coverLastModified = Clock.System.now().toEpochMilliseconds())
     } else {
         this
     }
