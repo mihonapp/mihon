@@ -21,6 +21,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Fixed
 - Fix app trying to split long strip when not needed ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3121](https://github.com/mihonapp/mihon/pull/3121))
+- Fix download cache not invalidating after backup restore ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3096](https://github.com/mihonapp/mihon/pull/3096))
 
 ## [v0.19.7] - 2026-03-23
 Same as v0.19.6
