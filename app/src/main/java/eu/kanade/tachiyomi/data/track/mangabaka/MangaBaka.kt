@@ -24,7 +24,7 @@ class MangaBaka(id: Long) : BaseTracker(id, "MangaBaka"), DeletableTracker {
     override val supportsReadingDates: Boolean = true
     override val supportsPrivateTracking: Boolean = true
 
-    private val scorePreference = trackPreferences.mangabakaScoreType()
+    private val scorePreference = trackPreferences.mangabakaScoreType
 
     override fun getLogo(): Int = R.drawable.ic_tracker_mangabaka
 
