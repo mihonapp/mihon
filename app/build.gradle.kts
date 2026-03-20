@@ -26,7 +26,7 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 17
+        versionCode = 18
         versionName = "0.19.4"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
@@ -200,7 +200,7 @@ dependencies {
     implementation(androidx.paging.runtime)
     implementation(androidx.paging.compose)
 
-    implementation(libs.bundles.sqlite)
+    implementation(androidx.sqlite.bundled)
 
     implementation(kotlinx.reflect)
     implementation(kotlinx.immutables)

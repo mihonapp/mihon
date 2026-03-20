@@ -1,24 +1,38 @@
 package eu.kanade.presentation.more.settings.screen.debug
 
 import android.os.Build
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Autorenew
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.profileinstaller.ProfileVerifier
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.PreferenceScaffold
 import eu.kanade.presentation.more.settings.screen.about.AboutScreen
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.WebViewUtil
+import eu.kanade.tachiyomi.util.system.copyToClipboard
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.guava.await
+import kotlinx.coroutines.launch
+import mihon.core.common.FeatureFlags
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.util.collectAsState
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 class DebugInfoScreen : Screen() {
 
@@ -47,6 +61,12 @@ class DebugInfoScreen : Screen() {
 
     @Composable
     private fun getAppInfoGroup(): Preference.PreferenceGroup {
+        val context = LocalContext.current
+        val scope = rememberCoroutineScope()
+
+        val installationIdPref = remember { Injekt.get<BasePreferences>().installationId() }
+        val installationId by installationIdPref.collectAsState()
+
         return Preference.PreferenceGroup(
             title = "App info",
             preferenceItems = persistentListOf(
@@ -57,6 +77,28 @@ class DebugInfoScreen : Screen() {
                 Preference.PreferenceItem.TextPreference(
                     title = "Build time",
                     subtitle = AboutScreen.getFormattedBuildTime(),
+                ),
+                Preference.PreferenceItem.TextPreference(
+                    title = "Installation ID",
+                    subtitle = installationId,
+                    widget = {
+                        IconButton(
+                            onClick = {
+                                scope.launch {
+                                    installationIdPref.set(FeatureFlags.newInstallationId())
+                                }
+                            },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Autorenew,
+                                tint = MaterialTheme.colorScheme.primary,
+                                contentDescription = null,
+                            )
+                        }
+                    },
+                    onClick = {
+                        context.copyToClipboard(installationId, installationId)
+                    },
                 ),
                 getProfileVerifierPreference(),
                 Preference.PreferenceItem.TextPreference(
