@@ -19,7 +19,7 @@ class MigrateSearchScreenModel(
     private val sourcePreferences: SourcePreferences = Injekt.get(),
 ) : SearchScreenModel() {
 
-    private val migrationSources by lazy { sourcePreferences.migrationSources().get() }
+    private val migrationSources by lazy { sourcePreferences.migrationSources.get() }
 
     override val sortComparator = { map: Map<CatalogueSource, SearchItemResult> ->
         compareBy<CatalogueSource>(

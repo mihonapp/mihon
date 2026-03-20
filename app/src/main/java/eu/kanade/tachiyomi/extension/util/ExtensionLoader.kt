@@ -44,7 +44,7 @@ internal object ExtensionLoader {
     private val preferences: SourcePreferences by injectLazy()
     private val trustExtension: TrustExtension by injectLazy()
     private val loadNsfwSource by lazy {
-        preferences.showNsfwSource().get()
+        preferences.showNsfwSource.get()
     }
 
     private const val EXTENSION_FEATURE = "tachiyomi.extension"

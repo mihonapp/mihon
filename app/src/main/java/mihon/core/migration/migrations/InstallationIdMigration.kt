@@ -11,7 +11,7 @@ class InstallationIdMigration : Migration {
 
     @OptIn(ExperimentalUuidApi::class)
     override suspend fun invoke(migrationContext: MigrationContext): Boolean {
-        val installationId = migrationContext.get<BasePreferences>()?.installationId() ?: return false
+        val installationId = migrationContext.get<BasePreferences>()?.installationId ?: return false
         if (!installationId.isSet()) installationId.set(FeatureFlags.newInstallationId())
         return true
     }

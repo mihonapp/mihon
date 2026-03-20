@@ -86,7 +86,7 @@ class ExtensionDetailsScreenModel(
                 }
             }
             launch {
-                preferences.incognitoExtensions()
+                preferences.incognitoExtensions
                     .changes()
                     .map { pkgName in it }
                     .distinctUntilChanged()

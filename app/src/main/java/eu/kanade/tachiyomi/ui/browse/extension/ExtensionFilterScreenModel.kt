@@ -37,7 +37,7 @@ class ExtensionFilterScreenModel(
         screenModelScope.launch {
             combine(
                 getExtensionLanguages.subscribe(),
-                preferences.enabledLanguages().changes(),
+                preferences.enabledLanguages.changes(),
             ) { a, b -> a to b }
                 .catch { throwable ->
                     logcat(LogPriority.ERROR, throwable)

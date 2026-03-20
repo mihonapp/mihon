@@ -397,7 +397,7 @@ class DownloadManager(
 
     private suspend fun getChaptersToDelete(chapters: List<Chapter>, manga: Manga): List<Chapter> {
         // Retrieve the categories that are set to exclude from being deleted on read
-        val categoriesToExclude = downloadPreferences.removeExcludeCategories().get().map(String::toLong)
+        val categoriesToExclude = downloadPreferences.removeExcludeCategories.get().map(String::toLong)
 
         val categoriesForManga = getCategories.await(manga.id)
             .map { it.id }
@@ -408,7 +408,7 @@ class DownloadManager(
             chapters
         }
 
-        return if (!downloadPreferences.removeBookmarkedChapters().get()) {
+        return if (!downloadPreferences.removeBookmarkedChapters.get()) {
             filteredCategoryManga.filterNot { it.bookmark }
         } else {
             filteredCategoryManga
