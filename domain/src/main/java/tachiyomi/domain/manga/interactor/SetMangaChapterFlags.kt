@@ -85,9 +85,9 @@ class SetMangaChapterFlags(
             .setFlag(sortingMode, Manga.CHAPTER_SORTING_MASK)
             .setFlag(sortingDirection, Manga.CHAPTER_SORT_DIR_MASK)
             .setFlag(displayMode, Manga.CHAPTER_DISPLAY_MASK)
+        // avoid writing to the mangas DB if unnecessary
+        // debatable whether no-op should be counted as success
         if (currentFlags == newFlags) {
-            // avoid writing to the mangas DB if unnecessary
-            // debatable whether no-op should be counted as success
             return true
         }
         return mangaRepository.update(
