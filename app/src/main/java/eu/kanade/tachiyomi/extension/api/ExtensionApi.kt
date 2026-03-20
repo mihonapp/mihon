@@ -22,7 +22,7 @@ import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.injectLazy
-import java.time.Instant
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
 
 internal class ExtensionApi {
@@ -71,7 +71,7 @@ internal class ExtensionApi {
     ): List<Extension.Installed>? {
         // Limit checks to once a day at most
         if (!fromAvailableExtensionList &&
-            Instant.now().toEpochMilli() < lastExtCheck.get() + 1.days.inWholeMilliseconds
+            Clock.System.now().toEpochMilliseconds() < lastExtCheck.get() + 1.days.inWholeMilliseconds
         ) {
             return null
         }
@@ -82,7 +82,7 @@ internal class ExtensionApi {
         val extensions = if (fromAvailableExtensionList) {
             extensionManager.availableExtensionsFlow.value
         } else {
-            findExtensions().also { lastExtCheck.set(Instant.now().toEpochMilli()) }
+            findExtensions().also { lastExtCheck.set(Clock.System.now().toEpochMilliseconds()) }
         }
 
         val installedExtensions = ExtensionLoader.loadExtensions(context)
