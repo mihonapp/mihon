@@ -1,4 +1,4 @@
-package mihon.buildlogic
+package mihon.gradle
 
 import org.gradle.api.Project
 
