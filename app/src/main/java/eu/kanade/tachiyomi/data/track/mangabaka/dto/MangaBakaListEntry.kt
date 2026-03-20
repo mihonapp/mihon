@@ -14,7 +14,7 @@ data class MangaBakaListEntry(
     val state: String,
     @SerialName("start_date")
     val startDate: String?,
-    @SerialName("finish_name")
+    @SerialName("finish_date")
     val finishDate: String?,
     @SerialName("is_private")
     val isPrivate: Boolean,
