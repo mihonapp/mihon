@@ -3,7 +3,7 @@ package tachiyomi.domain.updates.interactor
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.domain.updates.model.UpdatesWithRelations
 import tachiyomi.domain.updates.repository.UpdatesRepository
-import java.time.Instant
+import kotlin.time.Instant
 
 class GetUpdates(
     private val repository: UpdatesRepository,
@@ -21,7 +21,7 @@ class GetUpdates(
         hideExcludedScanlators: Boolean,
     ): Flow<List<UpdatesWithRelations>> {
         return repository.subscribeAll(
-            instant.toEpochMilli(),
+            instant.toEpochMilliseconds(),
             limit = 500,
             unread = unread,
             started = started,
