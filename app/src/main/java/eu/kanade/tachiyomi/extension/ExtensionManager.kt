@@ -135,7 +135,7 @@ class ExtensionManager(
                     stabilityCounter = 0
                 }
                 lastCount = currentCount
-                if (i < maxChecks - 1) delay(250)
+                if (i < maxChecks - 1) delay(500)
             }
 
             val extensions = ExtensionLoader.loadExtensions(context)
