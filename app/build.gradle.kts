@@ -185,91 +185,89 @@ dependencies {
     implementation(projects.telemetry)
 
     // Compose
-    implementation(compose.activity)
-    implementation(compose.foundation)
-    implementation(compose.material3.core)
-    implementation(compose.material.icons)
-    implementation(compose.animation)
-    implementation(compose.animation.graphics)
-    debugImplementation(compose.ui.tooling)
-    implementation(compose.ui.tooling.preview)
-    implementation(compose.ui.util)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.materialIcons)
+    implementation(libs.androidx.compose.animation)
+    implementation(libs.androidx.compose.animationGraphics)
+    debugImplementation(libs.androidx.compose.uiTooling)
+    implementation(libs.androidx.compose.uiToolingPreview)
+    implementation(libs.androidx.compose.uiUtil)
 
-    implementation(androidx.interpolator)
+    implementation(libs.androidx.interpolator)
 
-    implementation(androidx.paging.runtime)
-    implementation(androidx.paging.compose)
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
 
-    implementation(androidx.sqlite.bundled)
+    implementation(libs.androidx.sqlite.bundled)
 
-    implementation(kotlinx.reflect)
-    implementation(kotlinx.immutables)
+    implementation(libs.kotlin.reflect)
+    implementation(libs.kotlinx.collections.immutable)
 
-    implementation(platform(kotlinx.coroutines.bom))
-    implementation(kotlinx.bundles.coroutines)
+    implementation(libs.bundles.kotlinx.coroutines)
 
     // AndroidX libraries
-    implementation(androidx.annotation)
-    implementation(androidx.appcompat)
-    implementation(androidx.biometricktx)
-    implementation(androidx.constraintlayout)
-    implementation(androidx.corektx)
-    implementation(androidx.splashscreen)
-    implementation(androidx.recyclerview)
-    implementation(androidx.viewpager)
-    implementation(androidx.profileinstaller)
+    implementation(libs.androidx.annotation)
+    implementation(libs.androidx.appCompat)
+    implementation(libs.androidx.biometric)
+    implementation(libs.androidx.constraintLayout)
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.coreSplashScreen)
+    implementation(libs.androidx.recyclerView)
+    implementation(libs.androidx.viewPager)
+    implementation(libs.androidx.profileInstaller)
 
-    implementation(androidx.bundles.lifecycle)
+    implementation(libs.bundles.androidx.lifecycle)
 
     // Job scheduling
-    implementation(androidx.workmanager)
+    implementation(libs.androidx.work)
 
     // RxJava
-    implementation(libs.rxjava)
+    implementation(libs.rxJava)
 
     // Networking
     implementation(libs.bundles.okhttp)
     implementation(libs.okio)
-    implementation(libs.conscrypt.android) // TLS 1.3 support for Android < 10
+    implementation(libs.conscrypt) // TLS 1.3 support for Android < 10
 
     // Data serialization (JSON, protobuf, xml)
-    implementation(kotlinx.bundles.serialization)
+    implementation(libs.bundles.serialization)
 
     // HTML parser
     implementation(libs.jsoup)
 
     // Disk
-    implementation(libs.disklrucache)
+    implementation(libs.diskLruCache)
     implementation(libs.unifile)
 
     // Preferences
-    implementation(libs.preferencektx)
+    implementation(libs.androidx.preference)
 
     // Dependency injection
     implementation(libs.injekt)
 
     // Image loading
-    implementation(platform(libs.coil.bom))
     implementation(libs.bundles.coil)
-    implementation(libs.subsamplingscaleimageview) {
+    implementation(libs.subsamplingScaleImageView) {
         exclude(module = "image-decoder")
     }
     implementation(libs.image.decoder)
 
     // UI libraries
     implementation(libs.material)
-    implementation(libs.flexible.adapter.core)
-    implementation(libs.photoview)
-    implementation(libs.directionalviewpager) {
+    implementation(libs.flexibleAdapter)
+    implementation(libs.photoView)
+    implementation(libs.directionalViewPager) {
         exclude(group = "androidx.viewpager", module = "viewpager")
     }
-    implementation(libs.richeditor.compose)
+    implementation(libs.composeRichEditor)
     implementation(libs.aboutLibraries.compose)
     implementation(libs.bundles.voyager)
-    implementation(libs.compose.materialmotion)
+    implementation(libs.composeMaterialMotion)
     implementation(libs.swipe)
-    implementation(libs.compose.webview)
-    implementation(libs.compose.grid)
+    implementation(libs.composeWebview)
+    implementation(libs.composeGrid)
     implementation(libs.reorderable)
     implementation(libs.bundles.markdown)
     implementation(libs.materialKolor)
@@ -288,10 +286,10 @@ dependencies {
     testRuntimeOnly(libs.junit.platform.launcher)
 
     // For detecting memory leaks; see https://square.github.io/leakcanary/
-    // debugImplementation(libs.leakcanary.android)
-    implementation(libs.leakcanary.plumber)
+    // debugImplementation(libs.leakCanary.android)
+    implementation(libs.leakCanary.plumber)
 
-    testImplementation(kotlinx.coroutines.test)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
 
 androidComponents {
@@ -304,6 +302,6 @@ androidComponents {
 
 buildscript {
     dependencies {
-        classpath(kotlinx.gradle)
+        classpath(libs.kotlin.gradle)
     }
 }

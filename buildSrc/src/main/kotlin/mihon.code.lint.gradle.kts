@@ -22,7 +22,7 @@ spotless {
     kotlin {
         target("**/*.kt", "**/*.kts")
         targetExclude("**/build/**/*.kt")
-        ktlint(libs.ktlint.core.get().version)
+        ktlint(libs.ktlint.bom.get().version)
         trimTrailingWhitespace()
         endWithNewline()
     }

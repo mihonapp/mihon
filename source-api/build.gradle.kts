@@ -11,23 +11,22 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(kotlinx.serialization.json)
+                api(libs.kotlinx.serialization.json)
                 api(libs.injekt)
-                api(libs.rxjava)
+                api(libs.rxJava)
                 api(libs.jsoup)
 
-                implementation(project.dependencies.platform(compose.bom))
-                implementation(compose.runtime)
+                implementation(project.dependencies.platform(libs.androidx.compose.bom))
+                implementation(libs.androidx.compose.runtime)
             }
         }
         val androidMain by getting {
             dependencies {
                 implementation(projects.core.common)
-                api(libs.preferencektx)
+                api(libs.androidx.preference)
 
                 // Workaround for https://youtrack.jetbrains.com/issue/KT-57605
-                implementation(kotlinx.coroutines.android)
-                implementation(project.dependencies.platform(kotlinx.coroutines.bom))
+                implementation(libs.kotlinx.coroutines.android)
             }
         }
     }
