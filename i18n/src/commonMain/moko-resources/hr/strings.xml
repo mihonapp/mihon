@@ -909,7 +909,6 @@
     <string name="pref_download_concurrent_pages">Istovremena preuzimanja stranica</string>
     <string name="pref_download_concurrent_pages_summary">Istovremeno preuzete stranice po izvoru</string>
     <string name="action_webview_close_tab">Zatvori karticu</string>
-    <string name="calculating">Izračunavanje …</string>
     <string name="action_filter_excluded_scanlators">Filtriraj isključene amaterske prevoditelje</string>
     <string name="download_bookmarked">Zabilježeno</string>
 </resources>

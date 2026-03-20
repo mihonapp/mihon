@@ -675,7 +675,6 @@
     <string name="action_webview_close_tab">Zatvoriť kartu</string>
     <string name="action_not_now">Nie teraz</string>
     <string name="action_add_anyway">Ajtak pridať</string>
-    <string name="calculating">Vypočítavam…</string>
     <string name="pref_onboarding_guide">Príručka na úvod</string>
     <string name="onboarding_description">Poďme najprv nastaviť nejaké veci. Vždy ich môžete neskôr zmeniť.</string>
     <string name="onboarding_storage_info">Vyberte priečinok, kde %1$s bude ukladať stiahnuté kapitoly, zálohy a ďalšie.\n\nOdporúčame použiť samostatný priečinok špecificky pre túto aplikáciu.\n\nVybraný priečinok: %2$s</string>
