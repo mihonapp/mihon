@@ -28,6 +28,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Improved
 - Show informative error when trying to add unapproved titles to list on MAL ([@MajorTanya](https://github.com/MajorTanya)) ([#3155](https://github.com/mihonapp/mihon/pull/3155))
 - Show AniList publishing type based on country of origin ([@zweimach](https://github.com/zweimach)) ([#3100](https://github.com/mihonapp/mihon/pull/3100))
+- Reduce repeated work in manga restoration ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#3099](https://github.com/mihonapp/mihon/pull/3099))
 
 ### Fixed
 - Fix app trying to split long strip when not needed ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3121](https://github.com/mihonapp/mihon/pull/3121))
