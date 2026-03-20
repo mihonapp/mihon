@@ -26,10 +26,10 @@ android {
 }
 
 dependencies {
-    implementation(androidx.test.ext)
-    implementation(androidx.test.espresso.core)
-    implementation(androidx.test.uiautomator)
-    implementation(androidx.benchmark.macro)
+    implementation(libs.androidx.test.junit)
+    implementation(libs.androidx.test.espresso.core)
+    implementation(libs.androidx.test.uiautomator)
+    implementation(libs.androidx.benchmark.macroJunit4)
 }
 
 androidComponents {
