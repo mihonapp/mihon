@@ -48,6 +48,8 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.domain.updates.interactor.GetMangaUpdateErrorCount
+import tachiyomi.domain.updates.interactor.GetMangaUpdateErrors
 import tachiyomi.domain.updates.interactor.GetUpdates
 import tachiyomi.domain.updates.model.UpdatesWithRelations
 import tachiyomi.domain.updates.service.UpdatesPreferences
@@ -65,6 +67,7 @@ class UpdatesScreenModel(
     private val getManga: GetManga = Injekt.get(),
     private val getChapter: GetChapter = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
+    private val getMangaUpdateErrors: GetMangaUpdateErrors = Injekt.get(),
     private val updatesPreferences: UpdatesPreferences = Injekt.get(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) : StateScreenModel<UpdatesScreenModel.State>(State()) {
@@ -124,6 +127,14 @@ class UpdatesScreenModel(
                 .collect(this@UpdatesScreenModel::updateDownloadState)
         }
 
+        // Subscribe to failed updates count
+        screenModelScope.launchIO {
+            getMangaUpdateErrors.subscribe()
+                .catch { logcat(LogPriority.ERROR, it) }
+                .collectLatest { errors ->
+                    mutableState.update { it.copy(failedUpdatesCount = errors.size.toLong()) }
+                }
+        }
         getUpdatesItemPreferenceFlow()
             .map { prefs ->
                 listOf(
@@ -455,6 +466,7 @@ class UpdatesScreenModel(
         val hasActiveFilters: Boolean = false,
         val items: PersistentList<UpdatesItem> = persistentListOf(),
         val dialog: Dialog? = null,
+        val failedUpdatesCount: Long = 0,
     ) {
         val selected = items.filter { it.selected }
         val selectionMode = selected.isNotEmpty()
