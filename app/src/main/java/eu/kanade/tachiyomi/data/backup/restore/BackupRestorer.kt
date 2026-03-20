@@ -125,13 +125,14 @@ class BackupRestorer(
         backupCategories: List<BackupCategory>,
     ) = launch {
         val backupCategoriesByOrder = backupCategories.associateBy { it.order }
+        val dbCategoriesByName = mangaRestorer.getCategoriesByName()
 
         mangaRestorer.sortByNew(backupMangas)
             .forEach {
                 ensureActive()
 
                 try {
-                    mangaRestorer.restore(it, backupCategoriesByOrder)
+                    mangaRestorer.restore(it, backupCategoriesByOrder, dbCategoriesByName)
                 } catch (e: Exception) {
                     val sourceName = sourceMapping[it.source] ?: it.source.toString()
                     errors.add(Date() to "${it.title} [$sourceName]: ${e.message}")
