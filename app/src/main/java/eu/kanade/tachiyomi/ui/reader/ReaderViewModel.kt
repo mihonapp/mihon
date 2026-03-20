@@ -577,19 +577,19 @@ class ReaderViewModel @JvmOverloads constructor(
             .contains(LibraryPreferences.MARK_DUPLICATE_CHAPTER_READ_EXISTING)
         if (!markDuplicateAsRead) return
 
-        val duplicateUnreadChapters = getUnfilteredChapterList()
-            .mapNotNull { chapter ->
-                if (
-                    !chapter.read &&
+        val duplicateChapters = getUnfilteredChapterList()
+            .filter { chapter ->
+                !chapter.read &&
                     chapter.isRecognizedNumber &&
                     chapter.chapterNumber.toFloat() == readerChapter.chapter.chapter_number
-                ) {
-                    ChapterUpdate(id = chapter.id, read = true)
-                } else {
-                    null
-                }
             }
-        updateChapter.awaitAll(duplicateUnreadChapters)
+        updateChapter.awaitAll(duplicateChapters.map { ChapterUpdate(id = it.id, read = true) })
+
+        // Also delete downloaded duplicate chapters if "delete after read" is enabled
+        if (downloadPreferences.removeAfterReadSlots().get() != -1) {
+            val manga = manga ?: return
+            downloadManager.enqueueChaptersToDelete(duplicateChapters, manga)
+        }
     }
 
     fun restartReadTimer() {
