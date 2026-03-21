@@ -904,4 +904,6 @@
     <string name="label_donate">Doar</string>
     <string name="action_webview_close_tab">Fechar aba</string>
     <string name="pref_display_images_description">Renderizar imagens em descrições de mangá</string>
+    <string name="pref_disallow_non_ascii_filenames">Não permitir nomes de arquivos não ASCII</string>
+    <string name="pref_disallow_non_ascii_filenames_details">Garante a compatibilidade com determinadas mídias de armazenamento que não suportam Unicode. Quando esta opção estiver ativada, você precisará renomear manualmente as pastas de origem e de mangá, substituindo os caracteres não ASCII por suas representações hexadecimais UTF-8 em minúsculas. Os arquivos de capítulos não precisam ser renomeados.</string>
 </resources>
