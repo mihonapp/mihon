@@ -56,7 +56,7 @@ enum class ReadingMode(
     ),
     WEBTOON_HORIZONTAL(
         MR.strings.webtoon_horizontal_plus_viewer,
-        R.drawable.ic_reader_continuous_vertical_24dp,
+        R.drawable.ic_reader_webtoon_horizontal_rtl_24dp,
         0x00000006,
         Direction.Horizontal,
         ViewerType.Webtoon,
