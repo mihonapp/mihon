@@ -6,11 +6,13 @@ import eu.kanade.tachiyomi.data.backup.BackupDecoder
 import eu.kanade.tachiyomi.data.backup.BackupNotifier
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.models.BackupExtensionRepos
+import eu.kanade.tachiyomi.data.backup.models.BackupHiddenDuplicate
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupPreference
 import eu.kanade.tachiyomi.data.backup.models.BackupSourcePreferences
 import eu.kanade.tachiyomi.data.backup.restore.restorers.CategoriesRestorer
 import eu.kanade.tachiyomi.data.backup.restore.restorers.ExtensionRepoRestorer
+import eu.kanade.tachiyomi.data.backup.restore.restorers.HiddenDuplicatesRestorer
 import eu.kanade.tachiyomi.data.backup.restore.restorers.MangaRestorer
 import eu.kanade.tachiyomi.data.backup.restore.restorers.PreferenceRestorer
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
@@ -31,6 +33,7 @@ class BackupRestorer(
     private val isSync: Boolean,
 
     private val categoriesRestorer: CategoriesRestorer = CategoriesRestorer(),
+    private val hiddenDuplicatesRestorer: HiddenDuplicatesRestorer = HiddenDuplicatesRestorer(),
     private val preferenceRestorer: PreferenceRestorer = PreferenceRestorer(context),
     private val extensionRepoRestorer: ExtensionRepoRestorer = ExtensionRepoRestorer(),
     private val mangaRestorer: MangaRestorer = MangaRestorer(),
@@ -76,6 +79,9 @@ class BackupRestorer(
         if (options.categories) {
             restoreAmount += 1
         }
+        if (options.hiddenDuplicates) {
+            restoreAmount += 1
+        }
         if (options.appSettings) {
             restoreAmount += 1
         }
@@ -102,6 +108,9 @@ class BackupRestorer(
             if (options.extensionRepoSettings) {
                 restoreExtensionRepos(backup.backupExtensionRepo)
             }
+            if (options.hiddenDuplicates) {
+                restoreHiddenDuplicates(backup.backupHiddenDuplicates)
+            }
 
             // TODO: optionally trigger online library + tracker update
         }
@@ -114,6 +123,19 @@ class BackupRestorer(
         restoreProgress += 1
         notifier.showRestoreProgress(
             context.stringResource(MR.strings.categories),
+            restoreProgress,
+            restoreAmount,
+            isSync,
+        )
+    }
+
+    private fun CoroutineScope.restoreHiddenDuplicates(backupHiddenDuplicates: List<BackupHiddenDuplicate>) = launch {
+        ensureActive()
+        hiddenDuplicatesRestorer(backupHiddenDuplicates)
+
+        restoreProgress += 1
+        notifier.showRestoreProgress(
+            context.stringResource(MR.strings.hidden_duplicates),
             restoreProgress,
             restoreAmount,
             isSync,
