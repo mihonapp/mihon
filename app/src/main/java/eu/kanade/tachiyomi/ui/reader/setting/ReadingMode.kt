@@ -79,7 +79,7 @@ enum class ReadingMode(
                 RIGHT_TO_LEFT -> R2LPagerViewer(activity)
                 VERTICAL -> VerticalPagerViewer(activity)
                 WEBTOON -> WebtoonViewer(activity)
-                WEBTOON_HORIZONTAL -> WebtoonViewer(activity, isHorizontal = true)
+                WEBTOON_HORIZONTAL -> WebtoonViewer(activity, isHorizontal = true, isRightToLeft = true)
                 CONTINUOUS_VERTICAL -> WebtoonViewer(activity, isContinuous = false)
                 DEFAULT -> throw IllegalStateException("Preference value must be resolved: $preference")
             }

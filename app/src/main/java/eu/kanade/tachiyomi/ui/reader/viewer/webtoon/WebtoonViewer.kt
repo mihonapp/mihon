@@ -31,7 +31,12 @@ import kotlin.math.min
 /**
  * Implementation of a [Viewer] to display pages with a [RecyclerView].
  */
-class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = true, val isHorizontal: Boolean = false) : Viewer {
+class WebtoonViewer(
+    val activity: ReaderActivity,
+    val isContinuous: Boolean = true,
+    val isHorizontal: Boolean = false,
+    val isRightToLeft: Boolean = false,
+) : Viewer {
 
     val downloadManager: DownloadManager by injectLazy()
 
@@ -61,6 +66,9 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      */
     private val layoutManager = WebtoonLayoutManager(activity, scrollDistance).apply {
         orientation = if (isHorizontal) RecyclerView.HORIZONTAL else RecyclerView.VERTICAL
+        if (isHorizontal && isRightToLeft) {
+            reverseLayout = true
+        }
     }
 
     /**
