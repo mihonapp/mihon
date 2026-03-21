@@ -31,7 +31,7 @@ import kotlin.math.min
 /**
  * Implementation of a [Viewer] to display pages with a [RecyclerView].
  */
-class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = true) : Viewer {
+class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = true, val isHorizontal: Boolean = false) : Viewer {
 
     val downloadManager: DownloadManager by injectLazy()
 
@@ -50,12 +50,18 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
     /**
      * Distance to scroll when the user taps on one side of the recycler view.
      */
-    private val scrollDistance = activity.resources.displayMetrics.heightPixels * 3 / 4
+    private val scrollDistance = if (isHorizontal) {
+        activity.resources.displayMetrics.widthPixels * 3 / 4
+    } else {
+        activity.resources.displayMetrics.heightPixels * 3 / 4
+    }
 
     /**
      * Layout manager of the recycler view.
      */
-    private val layoutManager = WebtoonLayoutManager(activity, scrollDistance)
+    private val layoutManager = WebtoonLayoutManager(activity, scrollDistance).apply {
+        orientation = if (isHorizontal) RecyclerView.HORIZONTAL else RecyclerView.VERTICAL
+    }
 
     /**
      * Configuration used by this viewer, like allow taps, or crop image borders.
@@ -79,6 +85,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
             .threshold
 
     init {
+        recycler.isHorizontal = isHorizontal
         recycler.setItemViewCacheSize(RECYCLER_VIEW_CACHE_SIZE)
         recycler.isVisible = false // Don't let the recycler layout yet
         recycler.layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
@@ -283,10 +290,12 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      * Scrolls up by [scrollDistance].
      */
     private fun scrollUp() {
+        val dx = if (isHorizontal) -scrollDistance else 0
+        val dy = if (isHorizontal) 0 else -scrollDistance
         if (config.usePageTransitions) {
-            recycler.smoothScrollBy(0, -scrollDistance)
+            recycler.smoothScrollBy(dx, dy)
         } else {
-            recycler.scrollBy(0, -scrollDistance)
+            recycler.scrollBy(dx, dy)
         }
     }
 
@@ -294,10 +303,12 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      * Scrolls down by [scrollDistance].
      */
     private fun scrollDown() {
+        val dx = if (isHorizontal) scrollDistance else 0
+        val dy = if (isHorizontal) 0 else scrollDistance
         if (config.usePageTransitions) {
-            recycler.smoothScrollBy(0, scrollDistance)
+            recycler.smoothScrollBy(dx, dy)
         } else {
-            recycler.scrollBy(0, scrollDistance)
+            recycler.scrollBy(dx, dy)
         }
     }
 
