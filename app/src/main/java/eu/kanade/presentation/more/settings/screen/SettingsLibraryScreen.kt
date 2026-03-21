@@ -73,7 +73,7 @@ object SettingsLibraryScreen : SearchableSettings {
         val userCategoriesCount = allCategories.filterNot(Category::isSystemCategory).size
 
         // For default category
-        val ids = listOf(libraryPreferences.defaultCategory().defaultValue()) +
+        val ids = listOf(libraryPreferences.defaultCategory.defaultValue()) +
             allCategories.fastMap { it.id.toInt() }
         val labels = listOf(stringResource(MR.strings.default_category_summary)) +
             allCategories.fastMap { it.visualName }
@@ -91,12 +91,12 @@ object SettingsLibraryScreen : SearchableSettings {
                     onClick = { navigator.push(CategoryScreen()) },
                 ),
                 Preference.PreferenceItem.ListPreference(
-                    preference = libraryPreferences.defaultCategory(),
+                    preference = libraryPreferences.defaultCategory,
                     entries = ids.zip(labels).toMap().toImmutableMap(),
                     title = stringResource(MR.strings.default_category),
                 ),
                 Preference.PreferenceItem.SwitchPreference(
-                    preference = libraryPreferences.categorizedDisplaySettings(),
+                    preference = libraryPreferences.categorizedDisplaySettings,
                     title = stringResource(MR.strings.categorized_display_settings),
                     onValueChanged = {
                         if (!it) {
@@ -118,9 +118,9 @@ object SettingsLibraryScreen : SearchableSettings {
     ): Preference.PreferenceGroup {
         val context = LocalContext.current
 
-        val autoUpdateIntervalPref = libraryPreferences.autoUpdateInterval()
-        val autoUpdateCategoriesPref = libraryPreferences.updateCategories()
-        val autoUpdateCategoriesExcludePref = libraryPreferences.updateCategoriesExclude()
+        val autoUpdateIntervalPref = libraryPreferences.autoUpdateInterval
+        val autoUpdateCategoriesPref = libraryPreferences.updateCategories
+        val autoUpdateCategoriesExcludePref = libraryPreferences.updateCategoriesExclude
 
         val autoUpdateInterval by autoUpdateIntervalPref.collectAsState()
 
@@ -164,7 +164,7 @@ object SettingsLibraryScreen : SearchableSettings {
                     },
                 ),
                 Preference.PreferenceItem.MultiSelectListPreference(
-                    preference = libraryPreferences.autoUpdateDeviceRestrictions(),
+                    preference = libraryPreferences.autoUpdateDeviceRestrictions,
                     entries = persistentMapOf(
                         DEVICE_ONLY_ON_WIFI to stringResource(MR.strings.connected_to_wifi),
                         DEVICE_NETWORK_NOT_METERED to stringResource(MR.strings.network_not_metered),
@@ -189,12 +189,12 @@ object SettingsLibraryScreen : SearchableSettings {
                     onClick = { showCategoriesDialog = true },
                 ),
                 Preference.PreferenceItem.SwitchPreference(
-                    preference = libraryPreferences.autoUpdateMetadata(),
+                    preference = libraryPreferences.autoUpdateMetadata,
                     title = stringResource(MR.strings.pref_library_update_refresh_metadata),
                     subtitle = stringResource(MR.strings.pref_library_update_refresh_metadata_summary),
                 ),
                 Preference.PreferenceItem.MultiSelectListPreference(
-                    preference = libraryPreferences.autoUpdateMangaRestrictions(),
+                    preference = libraryPreferences.autoUpdateMangaRestrictions,
                     entries = persistentMapOf(
                         MANGA_HAS_UNREAD to stringResource(MR.strings.pref_update_only_completely_read),
                         MANGA_NON_READ to stringResource(MR.strings.pref_update_only_started),
@@ -204,7 +204,7 @@ object SettingsLibraryScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_library_update_smart_update),
                 ),
                 Preference.PreferenceItem.SwitchPreference(
-                    preference = libraryPreferences.newShowUpdatesCount(),
+                    preference = libraryPreferences.newShowUpdatesCount,
                     title = stringResource(MR.strings.pref_library_update_show_tab_badge),
                 ),
             ),
@@ -219,7 +219,7 @@ object SettingsLibraryScreen : SearchableSettings {
             title = stringResource(MR.strings.pref_behavior),
             preferenceItems = persistentListOf(
                 Preference.PreferenceItem.ListPreference(
-                    preference = libraryPreferences.swipeToStartAction(),
+                    preference = libraryPreferences.swipeToStartAction,
                     entries = persistentMapOf(
                         LibraryPreferences.ChapterSwipeAction.Disabled to
                             stringResource(MR.strings.disabled),
@@ -233,7 +233,7 @@ object SettingsLibraryScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_chapter_swipe_start),
                 ),
                 Preference.PreferenceItem.ListPreference(
-                    preference = libraryPreferences.swipeToEndAction(),
+                    preference = libraryPreferences.swipeToEndAction,
                     entries = persistentMapOf(
                         LibraryPreferences.ChapterSwipeAction.Disabled to
                             stringResource(MR.strings.disabled),
@@ -247,7 +247,7 @@ object SettingsLibraryScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_chapter_swipe_end),
                 ),
                 Preference.PreferenceItem.MultiSelectListPreference(
-                    preference = libraryPreferences.markDuplicateReadChapterAsRead(),
+                    preference = libraryPreferences.markDuplicateReadChapterAsRead,
                     entries = persistentMapOf(
                         MARK_DUPLICATE_CHAPTER_READ_EXISTING to
                             stringResource(MR.strings.pref_mark_duplicate_read_chapter_read_existing),
@@ -257,7 +257,7 @@ object SettingsLibraryScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_mark_duplicate_read_chapter_read),
                 ),
                 Preference.PreferenceItem.SwitchPreference(
-                    preference = libraryPreferences.hideMissingChapters(),
+                    preference = libraryPreferences.hideMissingChapters,
                     title = stringResource(MR.strings.pref_hide_missing_chapter_indicators),
                 ),
             ),

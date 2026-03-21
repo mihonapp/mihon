@@ -119,7 +119,7 @@ AND source = :sourceId;
 getDuplicateLibraryManga:
 WITH
 track_dupes AS (
-    SELECT S2.manga_id
+    SELECT DISTINCT S2.manga_id
     FROM manga_sync S1
     INNER JOIN manga_sync S2
     ON S1.sync_id = S2.sync_id

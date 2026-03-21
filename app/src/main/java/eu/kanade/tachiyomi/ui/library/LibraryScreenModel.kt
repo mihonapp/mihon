@@ -89,7 +89,7 @@ class LibraryScreenModel(
 
     init {
         mutableState.update { state ->
-            state.copy(activeCategoryIndex = libraryPreferences.lastUsedCategory().get())
+            state.copy(activeCategoryIndex = libraryPreferences.lastUsedCategory.get())
         }
         screenModelScope.launchIO {
             combine(
@@ -142,9 +142,9 @@ class LibraryScreenModel(
         }
 
         combine(
-            libraryPreferences.categoryTabs().changes(),
-            libraryPreferences.categoryNumberOfItems().changes(),
-            libraryPreferences.showContinueReadingButton().changes(),
+            libraryPreferences.categoryTabs.changes(),
+            libraryPreferences.categoryNumberOfItems.changes(),
+            libraryPreferences.showContinueReadingButton.changes(),
         ) { a, b, c -> arrayOf(a, b, c) }
             .onEach { (showCategoryTabs, showMangaCount, showMangaContinueButton) ->
                 mutableState.update { state ->
@@ -337,7 +337,7 @@ class LibraryScreenModel(
 
         return mapValues { (key, value) ->
             if (key.sort.type == LibrarySort.Type.Random) {
-                return@mapValues value.shuffled(Random(libraryPreferences.randomSortSeed().get()))
+                return@mapValues value.shuffled(Random(libraryPreferences.randomSortSeed.get()))
             }
 
             val manga = value.mapNotNull { favoritesById[it] }
@@ -352,19 +352,19 @@ class LibraryScreenModel(
 
     private fun getLibraryItemPreferencesFlow(): Flow<ItemPreferences> {
         return combine(
-            libraryPreferences.downloadBadge().changes(),
-            libraryPreferences.unreadBadge().changes(),
-            libraryPreferences.localBadge().changes(),
-            libraryPreferences.languageBadge().changes(),
-            libraryPreferences.autoUpdateMangaRestrictions().changes(),
+            libraryPreferences.downloadBadge.changes(),
+            libraryPreferences.unreadBadge.changes(),
+            libraryPreferences.localBadge.changes(),
+            libraryPreferences.languageBadge.changes(),
+            libraryPreferences.autoUpdateMangaRestrictions.changes(),
 
-            preferences.downloadedOnly().changes(),
-            libraryPreferences.filterDownloaded().changes(),
-            libraryPreferences.filterUnread().changes(),
-            libraryPreferences.filterStarted().changes(),
-            libraryPreferences.filterBookmarked().changes(),
-            libraryPreferences.filterCompleted().changes(),
-            libraryPreferences.filterIntervalCustom().changes(),
+            preferences.downloadedOnly.changes(),
+            libraryPreferences.filterDownloaded.changes(),
+            libraryPreferences.filterUnread.changes(),
+            libraryPreferences.filterStarted.changes(),
+            libraryPreferences.filterBookmarked.changes(),
+            libraryPreferences.filterCompleted.changes(),
+            libraryPreferences.filterIntervalCustom.changes(),
         ) {
             ItemPreferences(
                 downloadBadge = it[0] as Boolean,
@@ -589,11 +589,11 @@ class LibraryScreenModel(
     }
 
     fun getDisplayMode(): PreferenceMutableState<LibraryDisplayMode> {
-        return libraryPreferences.displayMode().asState(screenModelScope)
+        return libraryPreferences.displayMode.asState(screenModelScope)
     }
 
     fun getColumnsForOrientation(isLandscape: Boolean): PreferenceMutableState<Int> {
-        return (if (isLandscape) libraryPreferences.landscapeColumns() else libraryPreferences.portraitColumns())
+        return (if (isLandscape) libraryPreferences.landscapeColumns else libraryPreferences.portraitColumns)
             .asState(screenModelScope)
     }
 
@@ -686,7 +686,7 @@ class LibraryScreenModel(
         }
             .coercedActiveCategoryIndex
 
-        libraryPreferences.lastUsedCategory().set(newIndex)
+        libraryPreferences.lastUsedCategory.set(newIndex)
     }
 
     fun openChangeCategoryDialog() {

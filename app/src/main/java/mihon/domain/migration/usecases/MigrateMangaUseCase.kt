@@ -43,7 +43,7 @@ class MigrateMangaUseCase(
     suspend operator fun invoke(current: Manga, target: Manga, replace: Boolean) {
         val targetSource = sourceManager.get(target.source) ?: return
         val currentSource = sourceManager.get(current.source)
-        val flags = sourcePreferences.migrationFlags().get()
+        val flags = sourcePreferences.migrationFlags.get()
 
         try {
             val chapters = targetSource.getChapterList(target.toSManga())

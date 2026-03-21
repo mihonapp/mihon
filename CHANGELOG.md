@@ -11,8 +11,17 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
-### Improved
-- Rework internals for better performance ([@Lolle2000la](https://github.com/Lolle2000la)) ([#2955](https://github.com/mihonapp/mihon/pull/2955))
+
+## [v0.19.5] - 2026-03-20
+### Changed
+- Retry in reader now redownloads image ([@AntsyLich](https://github.com/AntsyLich)) ([#3089](https://github.com/mihonapp/mihon/pull/3089))
+
+### Fixed
+- Fix performance regression introduced in v0.19.4 ([@AntsyLich](https://github.com/AntsyLich)) ([#3082](https://github.com/mihonapp/mihon/pull/3082))
+- Fix duplicate key crash in duplicate detection ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3040](https://github.com/mihonapp/mihon/pull/3040))
+- Fix MangaUpdates HTTP 4XX errors ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3021](https://github.com/mihonapp/mihon/pull/3021))
+- Fix WebView JavaScript dialogs popup after screen is closed ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3041](https://github.com/mihonapp/mihon/pull/3041))
+- Fix extension actions disappearing after installing and uninstalling in same session ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3049](https://github.com/mihonapp/mihon/pull/3049))
 
 ## [v0.19.4] - 2026-02-25
 ### Added
@@ -28,7 +37,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Optimize MAL search queries ([@MajorTanya](https://github.com/MajorTanya)) ([#2832](https://github.com/mihonapp/mihon/pull/2832))
 - Reword download reindexing message to avoid confusion ([@MajorTanya](https://github.com/MajorTanya)) ([#2874](https://github.com/mihonapp/mihon/pull/2874))
 - Optimize tracked library filter ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#2977](https://github.com/mihonapp/mihon/pull/2977))
-- Utilize tracker for library duplicate detection ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#2977](https://github.com/mihonapp/mihon/pull/2978))
+- Utilize tracker for library duplicate detection ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#2978](https://github.com/mihonapp/mihon/pull/2978))
 
 ### Changed
 - Update tracker icons ([@AntsyLich](https://github.com/AntsyLich)) ([#2773](https://github.com/mihonapp/mihon/pull/2773))
@@ -48,7 +57,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix migration's selected sources order not preserved ([@AntsyLich](https://github.com/AntsyLich)) ([#2993](https://github.com/mihonapp/mihon/pull/2993))
 - Fix migration dialog not showing for consecutive prompts from the same screen ([@AntsyLich](https://github.com/AntsyLich)) ([#2994](https://github.com/mihonapp/mihon/pull/2994))
 - Fix extension install/update stuck at pending ([@AntsyLich](https://github.com/AntsyLich)) ([#3000](https://github.com/mihonapp/mihon/pull/3000))
-- Fix crash when downloading multiple chapters with Arabic locale ([@MajorTanya](https://github.com/MajorTanya)) ([#2676](https://github.com/mihonapp/mihon/pull/2676)) 
+- Fix crash when downloading multiple chapters with Arabic locale ([@MajorTanya](https://github.com/MajorTanya)) ([#2676](https://github.com/mihonapp/mihon/pull/2676))
 
 ### Other
 - Enable logcat logging on stable and debug builds without enabling verbose logging ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2836](https://github.com/mihonapp/mihon/pull/2836))
@@ -486,7 +495,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Branding to Mihon ([@AntsyLich](https://github.com/AntsyLich))
 - Minimum supported Android version to 8 ([@AntsyLich](https://github.com/AntsyLich)) ([`dfb3091`](https://github.com/mihonapp/mihon/commit/dfb3091e380dda3e9bfb64bf5c9a685cf3a03d0e))
 
-[unreleased]: https://github.com/mihonapp/mihon/compare/v0.19.4...main
+[unreleased]: https://github.com/mihonapp/mihon/compare/v0.19.5...main
+[v0.19.4]: https://github.com/mihonapp/mihon/compare/v0.19.4...v0.19.5
 [v0.19.4]: https://github.com/mihonapp/mihon/compare/v0.19.3...v0.19.4
 [v0.19.3]: https://github.com/mihonapp/mihon/compare/v0.19.2...v0.19.3
 [v0.19.2]: https://github.com/mihonapp/mihon/compare/v0.19.1...v0.19.2

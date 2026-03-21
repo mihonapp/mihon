@@ -18,12 +18,12 @@ class SetMangaDefaultChapterFlags(
                 setMangaChapterFlags.awaitSetAllFlags(
                     mangaId = manga.id,
                     currentFlags = manga.chapterFlags,
-                    unreadFilter = filterChapterByRead().get(),
-                    downloadedFilter = filterChapterByDownloaded().get(),
-                    bookmarkedFilter = filterChapterByBookmarked().get(),
-                    sortingMode = sortChapterBySourceOrNumber().get(),
-                    sortingDirection = sortChapterByAscendingOrDescending().get(),
-                    displayMode = displayChapterByNameOrNumber().get(),
+                    unreadFilter = filterChapterByRead.get(),
+                    downloadedFilter = filterChapterByDownloaded.get(),
+                    bookmarkedFilter = filterChapterByBookmarked.get(),
+                    sortingMode = sortChapterBySourceOrNumber.get(),
+                    sortingDirection = sortChapterByAscendingOrDescending.get(),
+                    displayMode = displayChapterByNameOrNumber.get(),
                 )
             }
         }

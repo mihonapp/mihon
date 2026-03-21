@@ -111,9 +111,9 @@ class Downloader(
     var isPaused: Boolean = false
 
     init {
-        scope.launch {
-            val chapters = store.restore()
-            addAllToQueue(chapters)
+        launchNow {
+            val chapters = async { store.restore() }
+            addAllToQueue(chapters.await())
         }
     }
 
@@ -193,7 +193,7 @@ class Downloader(
         downloaderJob = scope.launch {
             val activeDownloadsFlow = combine(
                 queueState,
-                downloadPreferences.parallelSourceLimit().changes(),
+                downloadPreferences.parallelSourceLimit.changes(),
             ) { a, b -> a to b }.transformLatest { (queue, parallelCount) ->
                 while (true) {
                     val activeDownloads = queue.asSequence()
@@ -369,7 +369,7 @@ class Downloader(
             download.status = Download.State.DOWNLOADING
 
             // Start downloading images, consider we can have downloaded images already
-            pageList.asFlow().flatMapMerge(concurrency = downloadPreferences.parallelPageLimit().get()) { page ->
+            pageList.asFlow().flatMapMerge(concurrency = downloadPreferences.parallelPageLimit.get()) { page ->
                 flow {
                     // Fetch image URL if necessary
                     if (page.imageUrl.isNullOrEmpty()) {
@@ -406,7 +406,7 @@ class Downloader(
             )
 
             // Only rename the directory if it's downloaded
-            if (downloadPreferences.saveChaptersAsCBZ().get()) {
+            if (downloadPreferences.saveChaptersAsCBZ.get()) {
                 archiveChapter(mangaDir, chapterDirname, tmpDir)
             } else {
                 tmpDir.renameTo(chapterDirname)
@@ -545,7 +545,7 @@ class Downloader(
     }
 
     private fun splitTallImageIfNeeded(page: Page, tmpDir: UniFile) {
-        if (!downloadPreferences.splitTallImages().get()) return
+        if (!downloadPreferences.splitTallImages.get()) return
 
         try {
             val filenamePrefix = "%03d".format(Locale.ENGLISH, page.number)

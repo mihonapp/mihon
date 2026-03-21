@@ -19,12 +19,11 @@ dependencies {
     implementation(projects.presentationCore)
     api(projects.i18n)
 
-    implementation(compose.glance)
+    implementation(libs.androidx.glance.appWidget)
     implementation(libs.material)
 
-    implementation(kotlinx.immutables)
+    implementation(libs.kotlinx.collections.immutable)
 
-    implementation(platform(libs.coil.bom))
     implementation(libs.coil.core)
 
     api(libs.injekt)
