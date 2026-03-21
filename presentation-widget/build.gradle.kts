@@ -1,16 +1,12 @@
 plugins {
-    id("mihon.library")
-    id("mihon.library.compose")
-    kotlin("android")
+    alias(mihonx.plugins.android.library)
+    alias(mihonx.plugins.compose)
+
+    alias(mihonx.plugins.spotless)
 }
 
 android {
     namespace = "tachiyomi.presentation.widget"
-
-    defaultConfig {
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
 }
 
 dependencies {

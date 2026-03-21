@@ -1,8 +1,8 @@
-import mihon.buildlogic.Config
+import mihon.gradle.Config
 
 plugins {
-    id("mihon.library")
-    kotlin("android")
+    alias(mihonx.plugins.android.library)
+    alias(mihonx.plugins.spotless)
 }
 
 android {

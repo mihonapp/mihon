@@ -2,7 +2,6 @@
 aboutLibraries = "13.2.1"
 android-desugar = "2.1.5"
 android-gradle = "8.13.2"
-android-shortcut = "0.1.2"
 androidx-activity-compose = "1.13.0"
 androidx-annotation = "1.9.1"
 androidx-appCompat = "1.7.1"
@@ -68,6 +67,7 @@ sqldelight-androidx-driver = "0.0.17"
 stringSimilarity = "0.1.0"
 subsamplingScaleImageView = "66e0db195d"
 swipe = "1.3.0"
+tapmoc = "0.4.0"
 unifile = "e0def6b3dc"
 voyager = "1.1.0-beta03"
 xmlutil = "0.91.3"
@@ -76,7 +76,6 @@ xmlutil = "0.91.3"
 aboutLibraries-compose = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutLibraries" }
 android-desugar = { module = "com.android.tools:desugar_jdk_libs", version.ref = "android-desugar" }
 android-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
-android-shortcut-gradle = { module = "com.github.zellius:android-shortcut-gradle-plugin", version.ref = "android-shortcut" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "androidx-annotation" }
 androidx-appCompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appCompat" }
@@ -175,6 +174,7 @@ sqldelight-sqliteDialect338 = { module = "app.cash.sqldelight:sqlite-3-38-dialec
 stringSimilarity = { module = "com.aallam.similarity:string-similarity-kotlin", version.ref = "stringSimilarity" }
 subsamplingScaleImageView = { module = "com.github.tachiyomiorg:subsampling-scale-image-view", version.ref = "subsamplingScaleImageView" }
 swipe = { module = "me.saket.swipe:swipe", version.ref = "swipe" }
+tapmoc-gradle = { module = "com.gradleup.tapmoc:tapmoc-gradle-plugin", version.ref = "tapmoc" }
 unifile = { module = "com.github.tachiyomiorg:unifile", version.ref = "unifile" }
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-screenModel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
@@ -185,12 +185,19 @@ xmlutil-serialization = { module = "io.github.pdvrieze.xmlutil:serialization", v
 
 [plugins]
 aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "aboutLibraries" }
+android-application = { id = "com.android.application", version.ref = "android-gradle" }
+android-library = { id = "com.android.library", version.ref = "android-gradle" }
+android-test = { id = "com.android.test", version.ref = "android-gradle" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-gradle" }
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-gradle" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-gradle" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin-gradle" }
+kotlin-samWithReceiver = { id = "org.jetbrains.kotlin.plugin.sam.with.receiver", version.ref = "kotlin-gradle" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-gradle" }
 moko-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko-resources" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 
 [bundles]

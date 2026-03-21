@@ -1,5 +1,5 @@
 plugins {
-    id("mihon.benchmark")
+    alias(mihonx.plugins.android.test)
 }
 
 android {
