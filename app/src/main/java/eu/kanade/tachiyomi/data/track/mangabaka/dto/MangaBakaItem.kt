@@ -25,8 +25,6 @@ data class MangaBakaItem(
     val status: String,
     val type: String,
     val rating: Double?,
-    @SerialName("total_chapters")
-    val totalChapters: String?,
 )
 
 @Serializable
