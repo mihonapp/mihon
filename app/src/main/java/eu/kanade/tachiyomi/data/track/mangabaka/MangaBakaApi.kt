@@ -108,7 +108,6 @@ class MangaBakaApi(
                         finished_reading_date =
                             userData.finishDate?.let { Instant.parse(it).toEpochMilliseconds() } ?: 0
                         last_chapter_read = userData.progressChapter ?: 0.0
-                        total_chapters = additionalData.totalChapters?.toLong() ?: 0
                         private = userData.isPrivate
                     }
                 } catch (e: HttpException) {
@@ -176,7 +175,6 @@ class MangaBakaApi(
                             remote_id = it.id
                             title = it.title
                             summary = it.description?.trim().orEmpty()
-                            total_chapters = it.totalChapters?.toLongOrNull() ?: 0
                             score = it.rating?.toBigDecimal()?.setScale(2, RoundingMode.HALF_UP)?.toDouble() ?: -1.0
                             cover_url = it.cover.x250.x1.orEmpty()
                             tracking_url = "$BASE_URL/${it.id}"
