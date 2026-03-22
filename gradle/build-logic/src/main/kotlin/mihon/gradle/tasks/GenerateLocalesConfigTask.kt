@@ -2,19 +2,24 @@ package mihon.gradle.tasks
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.model.ObjectFactory
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
+import javax.inject.Inject
 
 abstract class GenerateLocalesConfigTask : DefaultTask() {
+
+    @get:Inject
+    abstract val objectFactory: ObjectFactory
 
     @get:OutputDirectory
     abstract val outputDir: DirectoryProperty
 
     @TaskAction
     fun action() {
-        val locales = project.fileTree("src/commonMain/moko-resources") {
-            matching { include("**/strings.xml") }
-        }
+        val locales = objectFactory.fileTree()
+            .from("src/commonMain/moko-resources")
+            .matching { include("**/strings.xml") }
             .asSequence()
             .filterNot { it.readText().contains(emptyResourcesElement) }
             .map {
