@@ -95,7 +95,6 @@ class MangaBaka(id: Long) : BaseTracker(id, "MangaBaka"), DeletableTracker {
             track.copyPersonalFrom(remoteTrack, copyRemotePrivate = false)
             track.title = remoteTrack.title
             track.remote_id = remoteTrack.remote_id
-            track.total_chapters = remoteTrack.total_chapters
 
             if (track.status != COMPLETED) {
                 val isRereading = track.status == REREADING
@@ -121,7 +120,6 @@ class MangaBaka(id: Long) : BaseTracker(id, "MangaBaka"), DeletableTracker {
         track.copyPersonalFrom(remoteTrack)
         track.remote_id = remoteTrack.remote_id
         track.title = remoteTrack.title
-        track.total_chapters = remoteTrack.total_chapters
         return track
     }
 
