@@ -12,6 +12,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ## [Unreleased]
 
+## [v0.19.7] - 2026-03-23
+Same as v0.19.6
+
 ## [v0.19.6] - 2026-03-23
 ### Fixed
 - Fix app crashing when trying to add extension repo with existing signature ([@AntsyLich](https://github.com/AntsyLich)) ([`cb0e329`](https://github.com/mihonapp/mihon/commit/cb0e329))
@@ -502,7 +505,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Branding to Mihon ([@AntsyLich](https://github.com/AntsyLich))
 - Minimum supported Android version to 8 ([@AntsyLich](https://github.com/AntsyLich)) ([`dfb3091`](https://github.com/mihonapp/mihon/commit/dfb3091e380dda3e9bfb64bf5c9a685cf3a03d0e))
 
-[unreleased]: https://github.com/mihonapp/mihon/compare/v0.19.6...main
+[unreleased]: https://github.com/mihonapp/mihon/compare/v0.19.7...main
+[v0.19.7]: https://github.com/mihonapp/mihon/compare/v0.19.6...v0.19.7
 [v0.19.6]: https://github.com/mihonapp/mihon/compare/v0.19.5...v0.19.6
 [v0.19.5]: https://github.com/mihonapp/mihon/compare/v0.19.4...v0.19.5
 [v0.19.4]: https://github.com/mihonapp/mihon/compare/v0.19.3...v0.19.4
