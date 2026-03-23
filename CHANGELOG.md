@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Fixed
+- Fix app crashing when trying to add extension repo with existing signature ([@AntsyLich](https://github.com/AntsyLich))
 
 ## [v0.19.5] - 2026-03-20
 ### Changed
