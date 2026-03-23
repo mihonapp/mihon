@@ -7,7 +7,6 @@ import app.cash.sqldelight.db.SqlDriver
 import com.eygraber.sqldelight.androidx.driver.AndroidxSqliteConfiguration
 import com.eygraber.sqldelight.androidx.driver.AndroidxSqliteDatabaseType
 import com.eygraber.sqldelight.androidx.driver.AndroidxSqliteDriver
-import com.eygraber.sqldelight.androidx.driver.File
 import com.eygraber.sqldelight.androidx.driver.FileProvider
 import eu.kanade.domain.track.store.DelayedTrackingStore
 import eu.kanade.tachiyomi.data.cache.ChapterCache
@@ -44,21 +43,31 @@ import uy.kohesive.injekt.api.InjektRegistrar
 import uy.kohesive.injekt.api.addSingleton
 import uy.kohesive.injekt.api.addSingletonFactory
 import uy.kohesive.injekt.api.get
+import java.lang.ref.WeakReference
+
+private val lock = Any()
 
 class AppModule(val app: Application) : InjektModule {
+
+    private var sqlDriverRef: WeakReference<SqlDriver>? = null
 
     override fun InjektRegistrar.registerInjectables() {
         addSingleton(app)
 
         addSingletonFactory<SqlDriver> {
-            AndroidxSqliteDriver(
-                driver = BundledSQLiteDriver(),
-                databaseType = AndroidxSqliteDatabaseType.FileProvider(app, "tachiyomi.db"),
-                schema = Database.Schema,
-                configuration = AndroidxSqliteConfiguration(
-                    isForeignKeyConstraintsEnabled = true,
-                ),
-            )
+            synchronized(lock) {
+                sqlDriverRef?.get()?.let { return@synchronized it }
+
+                AndroidxSqliteDriver(
+                    driver = BundledSQLiteDriver(),
+                    databaseType = AndroidxSqliteDatabaseType.FileProvider(app, "tachiyomi.db"),
+                    schema = Database.Schema,
+                    configuration = AndroidxSqliteConfiguration(
+                        isForeignKeyConstraintsEnabled = true,
+                    ),
+                )
+                    .also { sqlDriverRef = WeakReference(it) }
+            }
         }
         addSingletonFactory {
             Database(
