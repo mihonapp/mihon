@@ -15,6 +15,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix app crashing when trying to add extension repo with existing signature ([@AntsyLich](https://github.com/AntsyLich))
 - Potentially fix 'database is locked' crash ([@AntsyLich](https://github.com/AntsyLich))
 - Fix occasional crash when mass installing/uninstalling extension using `PackageManager` ([@AntsyLich](https://github.com/AntsyLich))
+- Fix app crash on startup on some Android TV ([@AntsyLich](https://github.com/AntsyLich))
 
 ## [v0.19.5] - 2026-03-20
 ### Changed
