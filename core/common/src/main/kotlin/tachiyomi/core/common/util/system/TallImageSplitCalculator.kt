@@ -6,6 +6,7 @@ internal object TallImageSplitCalculator {
         require(imageHeight > 0) { "imageHeight must be positive" }
         require(optimalImageHeight > 0) { "optimalImageHeight must be positive" }
         // -1 so it doesn't try to split when imageHeight = optimalImageHeight
+        // -1 so it doesn't try to split when imageHeight = optimalImageHeight
         return (imageHeight - 1) / optimalImageHeight + 1
     }
 
