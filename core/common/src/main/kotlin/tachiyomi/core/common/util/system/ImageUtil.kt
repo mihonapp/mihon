@@ -231,9 +231,6 @@ object ImageUtil {
             inJustDecodeBounds = false
         }
         val splitDataList = options.splitData
-        if (splitDataList.size <= 1) {
-            return true
-        }
 
         return try {
             splitDataList.forEach { splitData ->
