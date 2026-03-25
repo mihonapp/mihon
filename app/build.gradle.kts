@@ -1,7 +1,5 @@
 import mihon.gradle.Config
-import mihon.gradle.getBuildTime
 import mihon.gradle.getLatestCommitCount
-import mihon.gradle.getLatestCommitSha
 import mihon.gradle.tasks.GenerateBuildConstantsTask
 import mihon.gradle.tasks.ReplaceShortcutsPlaceholderTask
 
@@ -30,9 +28,6 @@ android {
         versionCode = 20
         versionName = "0.19.7"
 
-        buildConfigField("String", "COMMIT_COUNT", "\"${getLatestCommitCount()}\"")
-        buildConfigField("String", "COMMIT_SHA", "\"${getLatestCommitSha()}\"")
-        buildConfigField("String", "BUILD_TIME", "\"${getBuildTime(useLatestCommitTime = false)}\"")
         buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
         buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
 
@@ -50,8 +45,6 @@ android {
             isShrinkResources = Config.enableCodeShrink
 
             proguardFiles("proguard-android-optimize.txt", "proguard-rules.pro")
-
-            buildConfigField("String", "BUILD_TIME", "\"${getBuildTime(useLatestCommitTime = true)}\"")
         }
 
         val commonMatchingFallbacks = listOf(release.name)
@@ -72,8 +65,6 @@ android {
             signingConfig = debug.signingConfig
 
             matchingFallbacks.addAll(commonMatchingFallbacks)
-
-            buildConfigField("String", "BUILD_TIME", "\"${getBuildTime(useLatestCommitTime = false)}\"")
         }
         create("benchmark") {
             initWith(release)
