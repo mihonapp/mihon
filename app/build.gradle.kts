@@ -2,6 +2,7 @@ import mihon.gradle.Config
 import mihon.gradle.getBuildTime
 import mihon.gradle.getLatestCommitCount
 import mihon.gradle.getLatestCommitSha
+import mihon.gradle.tasks.GenerateBuildConstantsTask
 import mihon.gradle.tasks.ReplaceShortcutsPlaceholderTask
 
 plugins {
@@ -304,6 +305,27 @@ androidComponents {
             shortcutsFile.set(projectDir.resolve("src/main/shortcuts.xml"))
         }
         resSource.addGeneratedSourceDirectory(replaceShortcutsPlaceholderTask) { it.outputDir }
+    }
+
+    onVariants { variant ->
+        val variantName = variant.name.replaceFirstChar { it.uppercase() }
+        val generateConstantsTaskName = "generateBuildConstants$variantName"
+        val generateConstantsTaskDescription = "Generates BuildConstants.kt with commit count and SHA for $variantName"
+
+        val isRelease = variantName.contains("release", ignoreCase = true)
+
+        val buildConstantTasks = tasks.register<GenerateBuildConstantsTask>(generateConstantsTaskName) {
+            group = "build"
+            description = generateConstantsTaskDescription
+            useLatestCommitTime.set(isRelease)
+            packageName.set("app.mihon.generated")
+            outputDir.set(layout.buildDirectory.dir("generated/source/buildConstants/kotlin"))
+            outputs.upToDateWhen { false }
+            outputs.cacheIf { false }
+        }
+        variant.sources.kotlin?.addGeneratedSourceDirectory(buildConstantTasks) { tasks ->
+            tasks.outputDir
+        }
     }
 
     onVariants(selector().withFlavor("default" to "standard")) {
