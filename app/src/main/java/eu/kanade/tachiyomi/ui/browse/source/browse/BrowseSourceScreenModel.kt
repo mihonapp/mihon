@@ -241,7 +241,7 @@ class BrowseSourceScreenModel(
 
             updateManga.await(new.toMangaUpdate())
 
-            if (!new.initialized) {
+            if (!new.initialized && new.favorite) {
                 fetchMangaFromSource(new)
             }
         }
