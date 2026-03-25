@@ -88,6 +88,12 @@ abstract class GenerateBuildConstantsTask @Inject constructor(
     }
 }
 
+/**
+ * The output of this function must be wrapped with try-catch when called.
+ * The reason is that when running this in Android Studio in Mac with xcode uninstalled,
+ * it will throw an exception causing the build to fail.
+ * But building it with gradle in terminal at Mac will work just fine.
+ */
 private fun runCommand(execOperations: ExecOperations, command: String): String {
     println("Running command: $command")
     val output = ByteArrayOutputStream()
