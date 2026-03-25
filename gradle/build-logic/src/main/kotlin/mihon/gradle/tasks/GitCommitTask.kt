@@ -14,6 +14,8 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
+private val BUILD_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+
 abstract class GenerateBuildConstantsTask @Inject constructor(
     private val execOperations: ExecOperations,
 ) : DefaultTask() {
@@ -65,8 +67,6 @@ abstract class GenerateBuildConstantsTask @Inject constructor(
         println("Error getting git sha: ${e.message}")
         "0"
     }
-
-    private val BUILD_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
     /**
      * @param execOperations: ExecOperations instance to run Git commands.
