@@ -11,9 +11,9 @@ android {
     sourceSets {
         getByName("main") {
             if (Config.includeTelemetry) {
-                kotlin.directories.add("src/firebase/kotlin")
+                kotlin.srcDirs("src/firebase/kotlin")
             } else {
-                kotlin.directories.add("src/noop/kotlin")
+                kotlin.srcDirs("src/noop/kotlin")
                 manifest.srcFile("src/noop/AndroidManifext.xml")
             }
         }

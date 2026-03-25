@@ -8,9 +8,6 @@ plugins {
 kotlin {
     android {
         namespace = "tachiyomi.source.local"
-
-        // TODO(antsy): Remove when https://youtrack.jetbrains.com/issue/KT-83319 is resolved
-        withHostTest { }
     }
 
     @OptIn(ExperimentalKotlinGradlePluginApi::class)

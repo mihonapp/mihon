@@ -8,15 +8,12 @@ plugins {
 }
 
 kotlin {
-    @Suppress("UnstableApiUsage")
     android {
         namespace = "eu.kanade.tachiyomi.source"
-        optimization {
-            consumerKeepRules.file("consumer-proguard.pro")
-        }
 
-        // TODO(antsy): Remove when https://youtrack.jetbrains.com/issue/KT-83319 is resolved
-        withHostTest { }
+        defaultConfig {
+            consumerProguardFile("consumer-proguard.pro")
+        }
     }
 
     @OptIn(ExperimentalKotlinGradlePluginApi::class)

@@ -1,5 +1,3 @@
-import com.android.build.api.dsl.BuildFeatures
-import com.android.build.api.dsl.CommonExtension
 import mihon.gradle.extensions.alias
 import mihon.gradle.extensions.android
 import mihon.gradle.extensions.api
@@ -32,8 +30,4 @@ class PluginComposeAndroid : Plugin<Project> {
             debugApi(libs.androidx.compose.uiTooling)
         }
     }
-}
-
-private fun CommonExtension.buildFeatures(block: BuildFeatures.() -> Unit) {
-    buildFeatures.apply(block)
 }
