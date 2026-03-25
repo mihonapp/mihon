@@ -229,6 +229,8 @@ class BrowseSourceScreenModel(
      */
     fun changeMangaFavorite(manga: Manga) {
         screenModelScope.launch {
+            if (!manga.favorite) fetchChaptersFromSource(manga)
+
             var new = manga.copy(
                 favorite = !manga.favorite,
                 dateAdded = when (manga.favorite) {
@@ -246,13 +248,7 @@ class BrowseSourceScreenModel(
 
             updateManga.await(new.toMangaUpdate())
 
-            if (!new.initialized && new.favorite) {
-                val fetchFromSourceTasks = listOf(
-                    async { fetchMangaFromSource(new) },
-                    async { fetchChaptersFromSource(new) },
-                )
-                fetchFromSourceTasks.awaitAll()
-            }
+            if (new.favorite && !new.initialized) async { fetchMangaFromSource(new) }
         }
     }
 
