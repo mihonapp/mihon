@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.core.net.toUri
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackerManager
+import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaItem
 import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaItemResult
 import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaListResult
 import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaOAuth
@@ -170,23 +171,47 @@ class MangaBakaApi(
                     .awaitSuccess()
                     .parseAs<MangaBakaSearchResult>()
                     .data
-                    .map {
-                        TrackSearch.create(trackId).apply {
-                            remote_id = it.id
-                            title = it.title
-                            summary = it.description?.trim().orEmpty()
-                            score = it.rating?.toBigDecimal()?.setScale(2, RoundingMode.HALF_UP)?.toDouble() ?: -1.0
-                            cover_url = it.cover.x250.x1.orEmpty()
-                            tracking_url = "$BASE_URL/${it.id}"
-                            start_date = it.year?.toString().orEmpty()
-                            publishing_status = it.status
-                            publishing_type = it.type.replaceFirstChar { c ->
-                                if (c.isLowerCase()) c.titlecase(Locale.getDefault()) else c.toString()
-                            }
-                            authors = it.authors.orEmpty()
-                            artists = it.artists.orEmpty()
-                        }
+                    .map { parseSearchItem(it) }
+            }
+        }
+    }
+
+    private fun parseSearchItem(item: MangaBakaItem): TrackSearch {
+        return TrackSearch.create(trackId).apply {
+            remote_id = item.id
+            title = item.title
+            summary = item.description?.trim().orEmpty()
+            score = item.rating?.toBigDecimal()?.setScale(2, RoundingMode.HALF_UP)?.toDouble() ?: -1.0
+            cover_url = item.cover.x250.x1.orEmpty()
+            tracking_url = "$BASE_URL/${item.id}"
+            start_date = item.year?.toString().orEmpty()
+            publishing_status = item.status
+            publishing_type = item.type.replaceFirstChar { c ->
+                if (c.isLowerCase()) c.titlecase(Locale.getDefault()) else c.toString()
+            }
+            authors = item.authors.orEmpty()
+            artists = item.artists.orEmpty()
+        }
+    }
+
+    suspend fun getMangaDetails(id: Int): TrackSearch? {
+        return withIOContext {
+            val url = "$API_BASE_URL/v1/series".toUri().buildUpon()
+                .appendPath(id.toString())
+                .build()
+            with(json) {
+                try {
+                    authClient.newCall(GET(url.toString()))
+                        .awaitSuccess()
+                        .parseAs<MangaBakaItemResult>()
+                        .data
+                        .let { parseSearchItem(it) }
+                } catch (e: HttpException) {
+                    if (e.code == 404) {
+                        return@with null
                     }
+                    throw e
+                }
             }
         }
     }
