@@ -1,7 +1,7 @@
 [versions]
 aboutLibraries = "14.0.1"
 android-desugar = "2.1.5"
-android-gradle = "8.13.2"
+android-gradle = "9.2.0"
 androidx-activity-compose = "1.13.0"
 androidx-annotation = "1.10.0"
 androidx-appCompat = "1.7.1"
@@ -83,7 +83,7 @@ androidx-benchmark-macroJunit4 = { module = "androidx.benchmark:benchmark-macro-
 androidx-biometric = { module = "androidx.biometric:biometric-ktx", version.ref = "androidx-biometric" }
 androidx-compose-animation = { module = "androidx.compose.animation:animation" }
 androidx-compose-animationGraphics = { module = "androidx.compose.animation:animation-graphics" }
-androidx-compose-bom = { module = "androidx.compose:compose-bom-beta", version.ref = "androidx-compose-bom" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom-alpha", version.ref = "androidx-compose-bom" }
 androidx-compose-foundation = { module = "androidx.compose.foundation:foundation" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-compose-materialIcons = { module = "androidx.compose.material:material-icons-extended" }
@@ -186,11 +186,11 @@ xmlutil-serialization = { module = "io.github.pdvrieze.xmlutil:serialization", v
 [plugins]
 aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "aboutLibraries" }
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
-android-library = { id = "com.android.library", version.ref = "android-gradle" }
 android-test = { id = "com.android.test", version.ref = "android-gradle" }
+android-kmp-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle" }
+android-library = { id = "com.android.library", version.ref = "android-gradle" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-gradle" }
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-gradle" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-gradle" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin-gradle" }
