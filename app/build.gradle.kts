@@ -301,7 +301,8 @@ androidComponents {
     onVariants { variant ->
         val variantName = variant.name.replaceFirstChar { it.uppercase() }
         val generateConstantsTaskName = "generateBuildConstants$variantName"
-        val generateConstantsTaskDescription = "Generates BuildConstants.kt with commit count and SHA for $variantName"
+        val generateConstantsTaskDescription =
+            "Generates BuildConstants.kt with commit count, commit SHA and Build time for $variantName"
 
         val isRelease = variantName.contains("release", ignoreCase = true)
 
