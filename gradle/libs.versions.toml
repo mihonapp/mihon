@@ -1,7 +1,7 @@
 [versions]
 aboutLibraries = "13.2.1"
 android-desugar = "2.1.5"
-android-gradle = "8.13.2"
+android-gradle = "9.1.0"
 androidx-activity-compose = "1.13.0"
 androidx-annotation = "1.9.1"
 androidx-appCompat = "1.7.1"
