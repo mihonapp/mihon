@@ -1,5 +1,4 @@
 import mihon.gradle.Config
-import mihon.gradle.getLatestCommitCount
 import mihon.gradle.tasks.GenerateBuildConstantsTask
 import mihon.gradle.tasks.ReplaceShortcutsPlaceholderTask
 
@@ -37,7 +36,6 @@ android {
     buildTypes {
         val debug by getting {
             applicationIdSuffix = ".dev"
-            versionNameSuffix = "-${getLatestCommitCount()}"
             isPseudoLocalesEnabled = true
         }
         val release by getting {
