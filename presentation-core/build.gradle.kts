@@ -1,16 +1,12 @@
 plugins {
-    id("mihon.library")
-    id("mihon.library.compose")
-    kotlin("android")
+    alias(mihonx.plugins.android.library)
+    alias(mihonx.plugins.compose)
+
+    alias(mihonx.plugins.spotless)
 }
 
 android {
     namespace = "tachiyomi.presentation.core"
-
-    defaultConfig {
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
 }
 
 kotlin {
@@ -32,17 +28,17 @@ dependencies {
     api(projects.i18n)
 
     // Compose
-    implementation(compose.activity)
-    implementation(compose.foundation)
-    implementation(compose.material3.core)
-    implementation(compose.material.icons)
-    implementation(compose.animation)
-    implementation(compose.animation.graphics)
-    debugImplementation(compose.ui.tooling)
-    implementation(compose.ui.tooling.preview)
-    implementation(compose.ui.util)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.materialIcons)
+    implementation(libs.androidx.compose.animation)
+    implementation(libs.androidx.compose.animationGraphics)
+    debugImplementation(libs.androidx.compose.uiTooling)
+    implementation(libs.androidx.compose.uiToolingPreview)
+    implementation(libs.androidx.compose.uiUtil)
 
-    implementation(androidx.paging.runtime)
-    implementation(androidx.paging.compose)
-    implementation(kotlinx.immutables)
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
+    implementation(libs.kotlinx.collections.immutable)
 }

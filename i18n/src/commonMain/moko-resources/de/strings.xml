@@ -910,6 +910,5 @@
     <string name="pref_download_concurrent_pages_summary">Pro Quelle gleichzeitig heruntergeladene Seiten</string>
     <string name="action_webview_close_tab">Tab schließen</string>
     <string name="action_filter_excluded_scanlators">Ausgeschlossene Scanlationgruppen herausfiltern</string>
-    <string name="calculating">Wird berechnet…</string>
     <string name="download_bookmarked">Mit Lesezeichen versehen</string>
 </resources>

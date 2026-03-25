@@ -1,16 +1,12 @@
 plugins {
-    id("mihon.library")
-    kotlin("android")
-    kotlin("plugin.serialization")
+    alias(mihonx.plugins.android.library)
+    alias(mihonx.plugins.spotless)
+
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
     namespace = "tachiyomi.domain"
-
-    defaultConfig {
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
 }
 
 kotlin {
@@ -23,17 +19,16 @@ dependencies {
     implementation(projects.sourceApi)
     implementation(projects.core.common)
 
-    implementation(platform(kotlinx.coroutines.bom))
-    implementation(kotlinx.bundles.coroutines)
-    implementation(kotlinx.bundles.serialization)
+    implementation(libs.bundles.kotlinx.coroutines)
+    implementation(libs.bundles.serialization)
 
     implementation(libs.unifile)
 
-    api(libs.sqldelight.android.paging)
+    api(libs.sqldelight.androidxPaging)
 
-    compileOnly(compose.runtime.annotation)
+    compileOnly(libs.androidx.compose.runtimeAnnotation)
 
     testImplementation(libs.bundles.test)
-    testImplementation(kotlinx.coroutines.test)
+    testImplementation(libs.kotlinx.coroutines.test)
     testRuntimeOnly(libs.junit.platform.launcher)
 }

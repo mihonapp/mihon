@@ -909,7 +909,6 @@
     <string name="pref_download_concurrent_sources">Ταυτόχρονες λήψεις πηγών</string>
     <string name="pref_download_concurrent_pages">Ταυτόχρονες λήψεις σελίδων</string>
     <string name="pref_download_concurrent_pages_summary">Σελίδες που λήφθηκαν ταυτόχρονα ανά πηγή</string>
-    <string name="calculating">Υπολογισμός…</string>
     <string name="download_bookmarked">Προστέθηκε στους σελιδοδείκτες</string>
     <string name="action_filter_excluded_scanlators">Φιλτράρισμα εξαιρούμενων scanlator</string>
 </resources>

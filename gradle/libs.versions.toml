@@ -1,122 +1,213 @@
 [versions]
-aboutlib_version = "13.2.1"
-leakcanary = "2.14"
-moko = "0.26.1"
-okhttp_version = "5.3.2"
-shizuku_version = "13.1.5"
-sqldelight = "2.3.2"
-voyager = "1.1.0-beta03"
-spotless = "8.4.0"
-ktlint-core = "1.8.0"
+aboutLibraries = "13.2.1"
+android-desugar = "2.1.5"
+android-gradle = "8.13.2"
+androidx-activity-compose = "1.13.0"
+androidx-annotation = "1.9.1"
+androidx-appCompat = "1.7.1"
+androidx-benchmark = "1.4.1"
+androidx-biometric = "1.2.0-alpha05"
+androidx-compose-bom = "2026.03.00"
+androidx-constraintLayout = "2.2.1"
+androidx-core = "1.18.0"
+androidx-coreSplashScreen = "1.2.0"
+androidx-glance = "1.1.1"
+androidx-interpolator = "1.0.0"
+androidx-lifecycle = "2.10.0"
+androidx-paging = "3.4.2"
+androidx-preference = "1.2.1"
+androidx-profileInstaller = "1.4.1"
+androidx-recyclerView = "1.4.0"
+androidx-sqlite = "2.6.2"
+androidx-test-espresso = "3.7.0"
+androidx-test-junit = "1.3.0"
+androidx-test-uiautomator = "2.3.0"
+androidx-viewPager = "1.1.0"
+androidx-work = "2.11.1"
+archive = "1.1.6"
+coil = "3.4.0"
+composeGrid = "1.2.2"
+composeMaterialMotion = "2.0.1"
+composeRichEditor = "1.0.0-rc13"
+composeWebview = "0.33.6"
+conscrypt = "2.5.3"
+directionalViewPager = "1.0.0"
+diskLruCache = "2.0.2"
 firebase-bom = "34.11.0"
-markdown = "0.39.2"
+firebase-crashlytics = "3.0.6"
+flexibleAdapter = "c8013533"
+google-services = "4.4.4"
+image-decoder = "41c059e540"
+injekt = "91edab2317"
+jsoup = "1.22.1"
 junit = "6.0.3"
+kotest-assertions = "6.1.9"
+kotlin-gradle = "2.3.20"
+kotlinx-collections-immutable = "0.4.0"
+kotlinx-coroutines = "1.10.2"
+kotlinx-serialization = "1.10.0"
+ktlint = "1.8.0"
+leakCanary = "2.14"
+logcat = "0.4"
+markdown = "0.39.2"
+material = "1.12.0"
 materialKolor = "5.0.0-alpha07"
+mockk = "1.14.9"
+moko-resources = "0.26.1"
+okhttp = "5.3.2"
+okio = "3.17.0"
+photoView = "2.3.0"
+quickJs = "547f5b1597"
+reorderable = "3.0.0"
+rxJava = "1.3.8"
+shizuku = "13.1.5"
+spotless = "8.4.0"
+sqldelight = "2.3.2"
+sqldelight-androidx-driver = "0.0.17"
+stringSimilarity = "0.1.0"
+subsamplingScaleImageView = "66e0db195d"
+swipe = "1.3.0"
+tapmoc = "0.4.0"
+unifile = "e0def6b3dc"
+voyager = "1.1.0-beta03"
+xmlutil = "0.91.3"
 
 [libraries]
-desugar = "com.android.tools:desugar_jdk_libs:2.1.5"
-android-shortcut-gradle = "com.github.zellius:android-shortcut-gradle-plugin:0.1.2"
-
-rxjava = "io.reactivex:rxjava:1.3.8"
-
-okhttp-core = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp_version" }
-okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp_version" }
-okhttp-brotli = { module = "com.squareup.okhttp3:okhttp-brotli", version.ref = "okhttp_version" }
-okhttp-dnsoverhttps = { module = "com.squareup.okhttp3:okhttp-dnsoverhttps", version.ref = "okhttp_version" }
-okio = "com.squareup.okio:okio:3.17.0"
-
-conscrypt-android = "org.conscrypt:conscrypt-android:2.5.3"
-
-quickjs-android = { group = "com.github.zhanghai.quickjs-java", name = "quickjs-android", version = "547f5b1597" }
-
-jsoup = "org.jsoup:jsoup:1.22.1"
-
-disklrucache = "com.jakewharton:disklrucache:2.0.2"
-unifile = "com.github.tachiyomiorg:unifile:e0def6b3dc"
-libarchive = "me.zhanghai.android.libarchive:library:1.1.6"
-
-preferencektx = "androidx.preference:preference-ktx:1.2.1"
-
-injekt = "com.github.mihonapp:injekt:91edab2317"
-
-coil-bom = { module = "io.coil-kt.coil3:coil-bom", version = "3.4.0" }
-coil-core = { module = "io.coil-kt.coil3:coil" }
-coil-gif = { module = "io.coil-kt.coil3:coil-gif" }
-coil-compose = { module = "io.coil-kt.coil3:coil-compose" }
-coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp" }
-
-subsamplingscaleimageview = "com.github.tachiyomiorg:subsampling-scale-image-view:66e0db195d"
-image-decoder = "com.github.tachiyomiorg:image-decoder:41c059e540"
-
-natural-comparator = "com.github.gpanther:java-nat-sort:natural-comparator-1.1"
-
-richeditor-compose = "com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-rc13"
-
-material = "com.google.android.material:material:1.12.0"
-flexible-adapter-core = "com.github.arkon.FlexibleAdapter:flexible-adapter:c8013533"
-photoview = "com.github.chrisbanes:PhotoView:2.3.0"
-directionalviewpager = "com.github.tachiyomiorg:DirectionalViewPager:1.0.0"
-compose-materialmotion = "io.github.fornewid:material-motion-compose-core:2.0.1"
-compose-webview = "io.github.kevinnzou:compose-webview:0.33.6"
-compose-grid = "io.woong.compose.grid:grid:1.2.2"
-reorderable = { module = "sh.calvin.reorderable:reorderable", version = "3.0.0" }
-
-swipe = "me.saket.swipe:swipe:1.3.0"
-
-moko-core = { module = "dev.icerock.moko:resources", version.ref = "moko" }
-
-logcat = "com.squareup.logcat:logcat:0.4"
-
-firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
+aboutLibraries-compose = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutLibraries" }
+android-desugar = { module = "com.android.tools:desugar_jdk_libs", version.ref = "android-desugar" }
+android-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
+androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "androidx-annotation" }
+androidx-appCompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appCompat" }
+androidx-benchmark-macroJunit4 = { module = "androidx.benchmark:benchmark-macro-junit4", version.ref = "androidx-benchmark" }
+androidx-biometric = { module = "androidx.biometric:biometric-ktx", version.ref = "androidx-biometric" }
+androidx-compose-animation = { module = "androidx.compose.animation:animation" }
+androidx-compose-animationGraphics = { module = "androidx.compose.animation:animation-graphics" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom-beta", version.ref = "androidx-compose-bom" }
+androidx-compose-foundation = { module = "androidx.compose.foundation:foundation" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-materialIcons = { module = "androidx.compose.material:material-icons-extended" }
+androidx-compose-runtime = { module = "androidx.compose.runtime:runtime" }
+androidx-compose-runtimeAnnotation = { module = "androidx.compose.runtime:runtime-annotation" }
+androidx-compose-uiTooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-compose-uiUtil = { module = "androidx.compose.ui:ui-util" }
+androidx-constraintLayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintLayout" }
+androidx-core = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
+androidx-coreSplashScreen = { module = "androidx.core:core-splashscreen", version.ref = "androidx-coreSplashScreen" }
+androidx-glance-appWidget = { module = "androidx.glance:glance-appwidget", version.ref = "androidx-glance" }
+androidx-interpolator = { module = "androidx.interpolator:interpolator", version.ref = "androidx-interpolator" }
+androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging" }
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "androidx-paging" }
+androidx-preference = { module = "androidx.preference:preference-ktx", version.ref = "androidx-preference" }
+androidx-profileInstaller = { module = "androidx.profileinstaller:profileinstaller", version.ref = "androidx-profileInstaller" }
+androidx-recyclerView = { module = "androidx.recyclerview:recyclerview", version.ref = "androidx-recyclerView" }
+androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "androidx-sqlite" }
+androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-test-espresso" }
+androidx-test-junit = { module = "androidx.test.ext:junit-ktx", version.ref = "androidx-test-junit" }
+androidx-test-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "androidx-test-uiautomator" }
+androidx-viewPager = { module = "androidx.viewpager:viewpager", version.ref = "androidx-viewPager" }
+androidx-work = { module = "androidx.work:work-runtime", version.ref = "androidx-work" }
+archive = { module = "me.zhanghai.android.libarchive:library", version.ref = "archive" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-core = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
+coil-gif = { module = "io.coil-kt.coil3:coil-gif", version.ref = "coil" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
+composeGrid = { module = "io.woong.compose.grid:grid", version.ref = "composeGrid" }
+composeMaterialMotion = { module = "io.github.fornewid:material-motion-compose-core", version.ref = "composeMaterialMotion" }
+composeRichEditor = { module = "com.mohamedrejeb.richeditor:richeditor-compose", version.ref = "composeRichEditor" }
+composeWebview = { module = "io.github.kevinnzou:compose-webview", version.ref = "composeWebview" }
+conscrypt = { module = "org.conscrypt:conscrypt-android", version.ref = "conscrypt" }
+directionalViewPager = { module = "com.github.tachiyomiorg:DirectionalViewPager", version.ref = "directionalViewPager" }
+diskLruCache = { module = "com.jakewharton:disklrucache", version.ref = "diskLruCache" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
-
-aboutLibraries-compose = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutlib_version" }
-
-shizuku-api = { module = "dev.rikka.shizuku:api", version.ref = "shizuku_version" }
-shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizuku_version" }
-
-leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
-leakcanary-plumber = { module = "com.squareup.leakcanary:plumber-android", version.ref = "leakcanary" }
-
-sqldelight-androidx-driver = { module = "com.eygraber:sqldelight-androidx-driver", version = "0.0.17" }
-sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions-jvm", version.ref = "sqldelight" }
-sqldelight-android-paging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqldelight" }
-sqldelight-dialects-sql = { module = "app.cash.sqldelight:sqlite-3-38-dialect", version.ref = "sqldelight" }
-
+flexibleAdapter = { module = "com.github.arkon.FlexibleAdapter:flexible-adapter", version.ref = "flexibleAdapter" }
+image-decoder = { module = "com.github.tachiyomiorg:image-decoder", version.ref = "image-decoder" }
+injekt = { module = "com.github.mihonapp:injekt", version.ref = "injekt" }
+jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
-kotest-assertions = "io.kotest:kotest-assertions-core:6.1.7"
-mockk = "io.mockk:mockk:1.14.9"
-
-voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
-voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
-voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
-voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
-
-spotless-gradle = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
-ktlint-core = { module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint-core" }
-
-markdown-core = { module = "com.mikepenz:multiplatform-markdown-renderer", version.ref = "markdown" }
+kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest-assertions" }
+kotlin-compose-compiler-gradle = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin-gradle" }
+kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-gradle" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin-gradle" }
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-guava = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-guava", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-jsonOkio = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json-okio", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
+ktlint-bom = { module = "com.pinterest.ktlint:ktlint-bom", version.ref = "ktlint" }
+leakCanary-core = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakCanary" }
+leakCanary-plumber = { module = "com.squareup.leakcanary:plumber-android", version.ref = "leakCanary" }
+logcat = { module = "com.squareup.logcat:logcat", version.ref = "logcat" }
 markdown-coil = { module = "com.mikepenz:multiplatform-markdown-renderer-coil3", version.ref = "markdown" }
-
-stringSimilarity = { module = "com.aallam.similarity:string-similarity-kotlin", version = "0.1.0" }
-
+markdown-core = { module = "com.mikepenz:multiplatform-markdown-renderer", version.ref = "markdown" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
 materialKolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
+natural-comparator = { module = "com.github.gpanther:java-nat-sort", version = "natural-comparator-1.1" }
+okhttp-brotli = { module = "com.squareup.okhttp3:okhttp-brotli", version.ref = "okhttp" }
+okhttp-core = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+okhttp-dnsOverHttps = { module = "com.squareup.okhttp3:okhttp-dnsoverhttps", version.ref = "okhttp" }
+okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
+okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
+photoView = { module = "com.github.chrisbanes:PhotoView", version.ref = "photoView" }
+quickJs = { module = "com.github.zhanghai.quickjs-java:quickjs-android", version.ref = "quickJs" }
+reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
+rxJava = { module = "io.reactivex:rxjava", version.ref = "rxJava" }
+shizuku-api = { module = "dev.rikka.shizuku:api", version.ref = "shizuku" }
+shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizuku" }
+spotless-gradle = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
+sqldelight-androidxDriver = { module = "com.eygraber:sqldelight-androidx-driver", version.ref = "sqldelight-androidx-driver" }
+sqldelight-androidxPaging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqldelight" }
+sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions-jvm", version.ref = "sqldelight" }
+sqldelight-sqliteDialect338 = { module = "app.cash.sqldelight:sqlite-3-38-dialect", version.ref = "sqldelight" }
+stringSimilarity = { module = "com.aallam.similarity:string-similarity-kotlin", version.ref = "stringSimilarity" }
+subsamplingScaleImageView = { module = "com.github.tachiyomiorg:subsampling-scale-image-view", version.ref = "subsamplingScaleImageView" }
+swipe = { module = "me.saket.swipe:swipe", version.ref = "swipe" }
+tapmoc-gradle = { module = "com.gradleup.tapmoc:tapmoc-gradle-plugin", version.ref = "tapmoc" }
+unifile = { module = "com.github.tachiyomiorg:unifile", version.ref = "unifile" }
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-screenModel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
+voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
+voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
+xmlutil-core = { module = "io.github.pdvrieze.xmlutil:core-android", version.ref = "xmlutil" }
+xmlutil-serialization = { module = "io.github.pdvrieze.xmlutil:serialization", version.ref = "xmlutil" }
 
 [plugins]
-google-services = { id = "com.google.gms.google-services", version = "4.4.4" }
-aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "aboutlib_version" }
+aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "aboutLibraries" }
+android-application = { id = "com.android.application", version.ref = "android-gradle" }
+android-library = { id = "com.android.library", version.ref = "android-gradle" }
+android-test = { id = "com.android.test", version.ref = "android-gradle" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-gradle" }
+kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-gradle" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-gradle" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin-gradle" }
+kotlin-samWithReceiver = { id = "org.jetbrains.kotlin.plugin.sam.with.receiver", version.ref = "kotlin-gradle" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-gradle" }
+moko-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko-resources" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
-moko = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko" }
-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.6" }
 
 [bundles]
-okhttp = ["okhttp-core", "okhttp-logging", "okhttp-brotli", "okhttp-dnsoverhttps"]
-js-engine = ["quickjs-android"]
+androidx-lifecycle = ["androidx-lifecycle-common", "androidx-lifecycle-process", "androidx-lifecycle-runtime"]
 coil = ["coil-core", "coil-gif", "coil-compose", "coil-network-okhttp"]
-shizuku = ["shizuku-api", "shizuku-provider"]
-sqldelight = ["sqldelight-androidx-driver", "sqldelight-coroutines", "sqldelight-android-paging"]
-voyager = ["voyager-navigator", "voyager-screenmodel", "voyager-tab-navigator", "voyager-transitions"]
-test = ["junit-jupiter", "kotest-assertions", "mockk"]
+kotlinx-coroutines = ["kotlinx-coroutines-core", "kotlinx-coroutines-android", "kotlinx-coroutines-guava"]
 markdown = ["markdown-core", "markdown-coil"]
+okhttp = ["okhttp-core", "okhttp-logging", "okhttp-brotli", "okhttp-dnsOverHttps"]
+serialization = ["kotlinx-serialization-json", "kotlinx-serialization-jsonOkio", "kotlinx-serialization-protobuf", "xmlutil-core", "xmlutil-serialization"]
+shizuku = ["shizuku-api", "shizuku-provider"]
+sqldelight = ["sqldelight-androidxDriver", "sqldelight-coroutines", "sqldelight-androidxPaging"]
+test = ["junit-jupiter", "kotest-assertions", "mockk"]
+voyager = ["voyager-navigator", "voyager-screenModel", "voyager-tabNavigator", "voyager-transitions"]
