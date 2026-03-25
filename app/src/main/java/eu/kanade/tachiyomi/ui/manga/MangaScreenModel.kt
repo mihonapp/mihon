@@ -85,6 +85,8 @@ import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracks
+import tachiyomi.domain.updates.interactor.DeleteMangaUpdateError
+import tachiyomi.domain.updates.interactor.InsertMangaUpdateError
 import tachiyomi.i18n.MR
 import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
@@ -120,6 +122,8 @@ class MangaScreenModel(
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
     private val mangaRepository: MangaRepository = Injekt.get(),
     private val filterChaptersForDownload: FilterChaptersForDownload = Injekt.get(),
+    private val insertMangaUpdateError: InsertMangaUpdateError = Injekt.get(),
+    private val deleteMangaUpdateError: DeleteMangaUpdateError = Injekt.get(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) : StateScreenModel<MangaScreenModel.State>(State.Loading) {
 
@@ -566,6 +570,13 @@ class MangaScreenModel(
                     manualFetch,
                 )
 
+                // Delete any previous error for this manga since update was successful
+                try {
+                    deleteMangaUpdateError.await(state.manga.id)
+                } catch (e: Exception) {
+                    logcat(LogPriority.ERROR, e) { "Failed to delete update error for manga ${state.manga.title}" }
+                }
+
                 if (manualFetch) {
                     downloadNewChapters(newChapters)
                 }
@@ -576,6 +587,15 @@ class MangaScreenModel(
             } else {
                 logcat(LogPriority.ERROR, e)
                 with(context) { e.formattedMessage }
+            }
+
+            // Insert error into database if manga is favorited
+            if (state.manga.favorite) {
+                try {
+                    insertMangaUpdateError.await(state.manga.id, message, System.currentTimeMillis())
+                } catch (ex: Exception) {
+                    logcat(LogPriority.ERROR, ex) { "Failed to insert update error for manga ${state.manga.title}" }
+                }
             }
 
             screenModelScope.launch {
