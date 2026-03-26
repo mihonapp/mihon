@@ -969,6 +969,13 @@
     <!-- Do not translate "WebView" -->
     <string name="information_webview_outdated">Please update the WebView app for better compatibility</string>
     <string name="chapter_settings_updated">Updated default chapter settings</string>
+    <string name="action_select_category">Select Category</string>
+    <string name="action_list_view">List view</string>
+    <string name="action_thumbnail_view">Thumbnail view</string>
+    <string name="action_nested_view">Nested view</string>
+    <string name="category_count">%d categories</string>
+    <string name="category_item_count">%d items</string>
+
 
     <!-- Download Notification -->
     <string name="download_notifier_downloader_title">Downloader</string>
