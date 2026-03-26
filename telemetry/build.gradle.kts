@@ -21,6 +21,8 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.common)
+
     if (Config.includeTelemetry) {
         implementation(platform(libs.firebase.bom))
         implementation(libs.firebase.analytics)
