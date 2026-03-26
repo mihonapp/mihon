@@ -6,6 +6,8 @@ import eu.kanade.tachiyomi.data.backup.models.BackupChapter
 import eu.kanade.tachiyomi.data.backup.models.BackupHistory
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupTracking
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import tachiyomi.data.DatabaseHandler
 import tachiyomi.data.UpdateStrategyColumnAdapter
 import tachiyomi.domain.category.interactor.GetCategories
@@ -19,9 +21,9 @@ import tachiyomi.domain.track.interactor.InsertTrack
 import tachiyomi.domain.track.model.Track
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.time.ZonedDateTime
 import java.util.Date
 import kotlin.math.max
+import kotlin.time.Clock
 
 class MangaRestorer(
     private val handler: DatabaseHandler = Injekt.get(),
@@ -34,12 +36,14 @@ class MangaRestorer(
     fetchInterval: FetchInterval = Injekt.get(),
 ) {
 
-    private var now = ZonedDateTime.now()
-    private var currentFetchWindow = fetchInterval.getWindow(now)
+    private var timeZone = TimeZone.currentSystemDefault()
+    private var now = Clock.System.now().toLocalDateTime(timeZone)
+    private var currentFetchWindow = fetchInterval.getWindow(now.date, timeZone)
 
     init {
-        now = ZonedDateTime.now()
-        currentFetchWindow = fetchInterval.getWindow(now)
+        timeZone = TimeZone.currentSystemDefault()
+        now = Clock.System.now().toLocalDateTime(timeZone)
+        currentFetchWindow = fetchInterval.getWindow(now.date, timeZone)
     }
 
     suspend fun sortByNew(backupMangas: List<BackupManga>): List<BackupManga> {
@@ -280,7 +284,7 @@ class MangaRestorer(
         restoreTracking(manga, tracks)
         restoreHistory(history)
         restoreExcludedScanlators(manga, excludedScanlators)
-        updateManga.awaitUpdateFetchInterval(manga, now, currentFetchWindow)
+        updateManga.awaitUpdateFetchInterval(manga, timeZone, now, currentFetchWindow)
         return manga
     }
 
