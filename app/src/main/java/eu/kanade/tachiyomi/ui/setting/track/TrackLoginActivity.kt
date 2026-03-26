@@ -24,6 +24,7 @@ class TrackLoginActivity : BaseOAuthLoginActivity() {
             when (uri.host) {
                 "anilist-auth" -> handleAniList(data["access_token"])
                 "bangumi-auth" -> handleBangumi(data["code"])
+                "mangabaka-auth" -> handleMangaBaka(data["code"])
                 "myanimelist-auth" -> handleMyAnimeList(data["code"])
                 "shikimori-auth" -> handleShikimori(data["code"])
             }
@@ -44,6 +45,14 @@ class TrackLoginActivity : BaseOAuthLoginActivity() {
             trackerManager.bangumi.login(code)
         } else {
             trackerManager.bangumi.logout()
+        }
+    }
+
+    private suspend fun handleMangaBaka(code: String?) {
+        if (code != null) {
+            trackerManager.mangaBaka.login(code)
+        } else {
+            trackerManager.mangaBaka.logout()
         }
     }
 
