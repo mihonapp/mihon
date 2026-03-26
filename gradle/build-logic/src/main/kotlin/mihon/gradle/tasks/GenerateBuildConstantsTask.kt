@@ -56,8 +56,6 @@ abstract class GenerateBuildConstantsTask @Inject constructor(
         outputFile.writeText(fileContent)
     }
 
-
-
     /**
      * @param execOperations: ExecOperations instance to run Git commands.
      * @param useLatestCommitTime If `true`, the build time is based on the timestamp of the last Git commit;
