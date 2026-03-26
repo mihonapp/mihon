@@ -80,5 +80,6 @@ class MyAnimeListInterceptor(private val myanimelist: MyAnimeList) : Interceptor
     }
 }
 
+class MALTitleNotApproved : IOException("MAL: This title can't be added because it is waiting for approval.")
 class MALTokenRefreshFailed : IOException("MAL: Failed to refresh account token")
 class MALTokenExpired : IOException("MAL: Login has expired")
