@@ -28,6 +28,9 @@ Same as v0.19.6
 ### Changed
 - Retry in reader now redownloads image ([@AntsyLich](https://github.com/AntsyLich)) ([#3089](https://github.com/mihonapp/mihon/pull/3089))
 
+### Improved
+- Fetch manga details when adding uninitialized manga from the browse source screen ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#3144](https://github.com/mihonapp/mihon/pull/3144))
+
 ### Fixed
 - Fix performance regression introduced in v0.19.4 ([@AntsyLich](https://github.com/AntsyLich)) ([#3082](https://github.com/mihonapp/mihon/pull/3082))
 - Fix duplicate key crash in duplicate detection ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3040](https://github.com/mihonapp/mihon/pull/3040))
