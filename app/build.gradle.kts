@@ -301,7 +301,7 @@ androidComponents {
         resSource.addGeneratedSourceDirectory(replaceShortcutsPlaceholderTask) { it.outputDir }
     }
 
-    val baseVersionName = android.defaultConfig.versionName!!
+    val baseVersionName = android.defaultConfig.versionName ?: ""
     onVariants { variant ->
         if (variant.buildType == "debug") {
             variant.outputs.forEach { output ->
@@ -328,13 +328,11 @@ androidComponents {
             description = generateConstantsTaskDescription
             useLatestCommitTime.set(isRelease)
             packageName.set("app.mihon.generated")
-            outputDir.set(layout.buildDirectory.dir("generated/source/buildConstants/kotlin"))
+            outputDir.set(layout.buildDirectory.dir("generated/source/buildConstants/$variantName"))
             outputs.upToDateWhen { false }
             outputs.cacheIf { false }
         }
-        variant.sources.kotlin?.addGeneratedSourceDirectory(buildConstantTasks) { tasks ->
-            tasks.outputDir
-        }
+        variant.sources.java?.addGeneratedSourceDirectory(buildConstantTasks) { it.outputDir }
     }
 
     onVariants(selector().withFlavor("default" to "standard")) {
