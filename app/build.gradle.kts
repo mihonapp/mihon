@@ -1,4 +1,5 @@
 import mihon.gradle.Config
+import mihon.gradle.tasks.ComputeGitHashTask
 import mihon.gradle.tasks.GenerateBuildConstantsTask
 import mihon.gradle.tasks.ReplaceShortcutsPlaceholderTask
 
@@ -59,7 +60,6 @@ android {
 
             applicationIdSuffix = ".debug"
 
-            versionNameSuffix = debug.versionNameSuffix
             signingConfig = debug.signingConfig
 
             matchingFallbacks.addAll(commonMatchingFallbacks)
@@ -282,6 +282,11 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
 }
 
+val computeGitHash = tasks.register<ComputeGitHashTask>("computeGitHash") {
+    gitHashFile.set(layout.buildDirectory.file("intermediates/git-hash.txt"))
+    outputs.upToDateWhen { false }
+}
+
 androidComponents {
     onVariants { variant ->
         val resSource = variant.sources.res ?: return@onVariants
@@ -294,6 +299,20 @@ androidComponents {
             shortcutsFile.set(projectDir.resolve("src/main/shortcuts.xml"))
         }
         resSource.addGeneratedSourceDirectory(replaceShortcutsPlaceholderTask) { it.outputDir }
+    }
+
+    val baseVersionName = android.defaultConfig.versionName!!
+    onVariants { variant ->
+        if (variant.buildType == "debug") {
+            variant.outputs.forEach { output ->
+                output.versionName.set(
+                    computeGitHash.flatMap { it.gitHashFile }.map { file ->
+                        val hash = file.asFile.readText().trim()
+                        "$baseVersionName-$hash"
+                    },
+                )
+            }
+        }
     }
 
     onVariants { variant ->

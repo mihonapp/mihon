@@ -2,9 +2,11 @@ package mihon.gradle.tasks
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.gradle.process.ExecOperations
 import java.io.ByteArrayOutputStream
@@ -54,19 +56,7 @@ abstract class GenerateBuildConstantsTask @Inject constructor(
         outputFile.writeText(fileContent)
     }
 
-    fun getCommitCount(execOperations: ExecOperations): String = try {
-        runCommand(execOperations, "git rev-list --count HEAD")
-    } catch (e: Exception) {
-        println("Error getting commit count: ${e.message}")
-        "0"
-    }
 
-    fun getGitSha(execOperations: ExecOperations): String = try {
-        runCommand(execOperations, "git rev-parse --short HEAD")
-    } catch (e: Exception) {
-        println("Error getting git sha: ${e.message}")
-        "0"
-    }
 
     /**
      * @param execOperations: ExecOperations instance to run Git commands.
@@ -86,6 +76,32 @@ abstract class GenerateBuildConstantsTask @Inject constructor(
             LocalDateTime.now(ZoneOffset.UTC).format(BUILD_TIME_FORMATTER)
         }
     }
+}
+
+abstract class ComputeGitHashTask @Inject constructor(
+    private val execOperations: ExecOperations,
+) : DefaultTask() {
+    @get:OutputFile
+    abstract val gitHashFile: RegularFileProperty
+
+    @TaskAction
+    fun compute() {
+        gitHashFile.get().asFile.writeText(getGitSha(execOperations))
+    }
+}
+
+private fun getCommitCount(execOperations: ExecOperations): String = try {
+    runCommand(execOperations, "git rev-list --count HEAD")
+} catch (e: Exception) {
+    println("Error getting commit count: ${e.message}")
+    "0"
+}
+
+private fun getGitSha(execOperations: ExecOperations): String = try {
+    runCommand(execOperations, "git rev-parse --short HEAD")
+} catch (e: Exception) {
+    println("Error getting git sha: ${e.message}")
+    "0"
 }
 
 /**
