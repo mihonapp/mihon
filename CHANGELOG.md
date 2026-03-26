@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Fixed
+- Fix Google Play Services spam notifications on non-FOSS builds when Google Play Services is unavailable ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3152](https://github.com/mihonapp/mihon/pull/3152))
 
 ## [v0.19.7] - 2026-03-23
 Same as v0.19.6
