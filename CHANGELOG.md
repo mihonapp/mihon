@@ -37,6 +37,7 @@ Same as v0.19.6
 - Fix MangaUpdates HTTP 4XX errors ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3021](https://github.com/mihonapp/mihon/pull/3021))
 - Fix WebView JavaScript dialogs popup after screen is closed ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3041](https://github.com/mihonapp/mihon/pull/3041))
 - Fix extension actions disappearing after installing and uninstalling in same session ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3049](https://github.com/mihonapp/mihon/pull/3049))
+- Fix false duplicate popup when re-adding manga from Komga ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3031](https://github.com/mihonapp/mihon/pull/3031))
 
 ## [v0.19.4] - 2026-02-25
 ### Added
