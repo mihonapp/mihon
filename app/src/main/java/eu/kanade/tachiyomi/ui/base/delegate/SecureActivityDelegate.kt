@@ -129,7 +129,7 @@ class SecureActivityDelegateImpl : SecureActivityDelegate, DefaultLifecycleObser
     }
 
     private fun shouldHideProtectedContent(): Boolean {
-        return securityPreferences.useAuthenticator().get() &&
+        return securityPreferences.useAuthenticator.get() &&
             activity.isAuthenticationSupported() &&
             SecureActivityDelegate.requireUnlock
     }
