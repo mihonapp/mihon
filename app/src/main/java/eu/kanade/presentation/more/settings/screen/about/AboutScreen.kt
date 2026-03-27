@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import app.mihon.generated.BuildConstants
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.domain.ui.UiPreferences
@@ -238,7 +239,7 @@ object AboutScreen : Screen() {
     fun getVersionName(withBuildDate: Boolean): String {
         return when {
             BuildConfig.DEBUG -> {
-                "Debug ${BuildConfig.COMMIT_SHA}".let {
+                "Debug ${BuildConstants.COMMIT_SHA}".let {
                     if (withBuildDate) {
                         "$it (${getFormattedBuildTime()})"
                     } else {
@@ -247,11 +248,11 @@ object AboutScreen : Screen() {
                 }
             }
             isPreviewBuildType -> {
-                "Beta r${BuildConfig.COMMIT_COUNT}".let {
+                "Beta r${BuildConstants.COMMIT_COUNT}".let {
                     if (withBuildDate) {
-                        "$it (${BuildConfig.COMMIT_SHA}, ${getFormattedBuildTime()})"
+                        "$it (${BuildConstants.COMMIT_SHA}, ${getFormattedBuildTime()})"
                     } else {
-                        "$it (${BuildConfig.COMMIT_SHA})"
+                        "$it (${BuildConstants.COMMIT_SHA})"
                     }
                 }
             }
@@ -270,7 +271,7 @@ object AboutScreen : Screen() {
     internal fun getFormattedBuildTime(): String {
         return try {
             LocalDateTime.ofInstant(
-                Instant.parse(BuildConfig.BUILD_TIME),
+                Instant.parse(BuildConstants.BUILD_TIME),
                 ZoneId.systemDefault(),
             )
                 .toDateTimestampString(
@@ -279,7 +280,7 @@ object AboutScreen : Screen() {
                     ),
                 )
         } catch (e: Exception) {
-            BuildConfig.BUILD_TIME
+            BuildConstants.BUILD_TIME
         }
     }
 }
