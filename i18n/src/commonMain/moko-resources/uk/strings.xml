@@ -561,7 +561,6 @@
     <string name="pref_update_only_started">Пропустити непочаті глави</string>
     <string name="action_move_to_top_all_for_series">Перемістити серію на початок</string>
     <string name="rotation_reverse_portrait">Портретна навпаки</string>
-    <string name="notification_update_error">%1$d оновлення(нь) не вдалось</string>
     <string name="skipped_reason_completed">Пропущено, оскільки серія завершена</string>
     <string name="skipped_reason_not_caught_up">Пропущено через те, що є непрочитані розділи</string>
     <string name="skipped_reason_not_started">Пропущено, оскільки серія не почата</string>

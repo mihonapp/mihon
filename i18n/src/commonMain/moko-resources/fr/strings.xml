@@ -565,7 +565,6 @@
     <string name="skipped_reason_not_started">Sauté car aucun chapitre n\'est lu</string>
     <string name="skipped_reason_not_caught_up">Sauté car il y a des chapitres non lus</string>
     <string name="learn_more">Appuyez pour en savoir plus</string>
-    <string name="notification_update_error">Échec de %1$d mise(s) à jour</string>
     <string name="rotation_reverse_portrait">Portrait inversé</string>
     <string name="action_move_to_top_all_for_series">Déplacer la série vers le haut</string>
     <string name="disabled_nav">Désactivé</string>

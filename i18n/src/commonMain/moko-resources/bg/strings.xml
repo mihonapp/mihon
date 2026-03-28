@@ -618,7 +618,6 @@
     <string name="ext_info_version">Версия</string>
     <string name="on_hiatus">В хиатус</string>
     <string name="custom_cover">Корица по избор</string>
-    <string name="notification_update_error">%1$d провалени обновление/я</string>
     <string name="action_search_hint">Търсене…</string>
     <string name="disabled_nav">Деактивирано</string>
     <string name="learn_more">Натисни, за да научиш повече</string>

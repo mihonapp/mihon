@@ -538,7 +538,6 @@
     <string name="transition_current">Jelenlegi:</string>
     <string name="empty_screen">Hát, ez kínos</string>
     <string name="notification_size_warning">A nagy frissítések kárt okoznak a forrásoknak, és lassabb frissítésekhez, valamint megnövekedett akkumulátorhasználathoz vezethetnek. Koppintson további információért.</string>
-    <string name="notification_update_error">%1$d frissítés sikertelen</string>
     <string name="split_tall_images_summary">Javítja az olvasó teljesítményét</string>
     <string name="backup_restore_missing_trackers">Nem bejelentkezett nyilvántartó:</string>
     <string name="pref_incognito_mode">Inkognitó mód</string>

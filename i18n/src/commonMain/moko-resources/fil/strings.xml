@@ -565,7 +565,6 @@
     <string name="pref_landscape_zoom">Awtomatikong mag-zoom sa mga malalawak na larawan</string>
     <string name="pref_navigate_pan">I-pan ang mga malalapad na larawan</string>
     <string name="learn_more">Matuto pa</string>
-    <string name="notification_update_error">Nabigo ang %1$d (na) update</string>
     <string name="rotation_reverse_portrait">Baligtad na patayo</string>
     <string name="action_move_to_top_all_for_series">Ilagay sa taas ang serye</string>
     <string name="disabled_nav">Nakasara</string>

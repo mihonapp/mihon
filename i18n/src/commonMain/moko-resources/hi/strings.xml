@@ -567,7 +567,6 @@
     <string name="action_display_cover_only_grid">केवल कवर ग्रिड</string>
     <string name="disabled_nav">अक्षम</string>
     <string name="rotation_reverse_portrait">रिवर्स पोर्ट्रेट</string>
-    <string name="notification_update_error">%1$d अपडेट विफल</string>
     <string name="pref_navigate_pan">चौड़ी छवियां पैन करें</string>
     <string name="pref_landscape_zoom">ज़ूम लैंडस्केप इमेज</string>
     <string name="action_move_to_top_all_for_series">श्रृंखला को शीर्ष पर ले जाएं</string>

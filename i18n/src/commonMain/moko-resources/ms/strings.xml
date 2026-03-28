@@ -564,7 +564,6 @@
     <string name="skipped_reason_not_started">Dilangkau kerana tiada bab yang dibaca</string>
     <string name="pref_landscape_zoom">Zum secara automatik pada imej lebar</string>
     <string name="pref_navigate_pan">Panorama imej lebar</string>
-    <string name="notification_update_error">%1$d kemas kini gagal</string>
     <string name="learn_more">Ketik untuk ketahui selebihnya</string>
     <string name="rotation_reverse_portrait">Potret terbalik</string>
     <string name="action_move_to_top_all_for_series">Alih siri ke atas</string>

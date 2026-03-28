@@ -606,7 +606,6 @@
     <string name="transition_finished">Rematado:</string>
     <string name="chapter_progress">Páxina: %1$d</string>
     <string name="error_saving_picture">Produciuse un erro ao gardar a imaxe</string>
-    <string name="notification_update_error">Actualizacións erradas: %1$d</string>
     <string name="update_check_confirm">Descargar</string>
     <string name="channel_app_updates">Actualizacións da aplicación</string>
     <string name="learn_more">Preme para saber máis</string>

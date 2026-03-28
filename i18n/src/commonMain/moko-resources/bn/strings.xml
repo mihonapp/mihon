@@ -551,7 +551,6 @@
     <string name="skipped_reason_completed">এড়িয়ে যাওয়া হয়েছে কারণ সিরিজটি সম্পূর্ণ</string>
     <string name="cancelled">বাতিল করা হয়েছে</string>
     <string name="on_hiatus">বিরতিতে রয়েছে</string>
-    <string name="notification_update_error">%1$d আপডেট(গুলি) ব্যর্থ হয়েছে</string>
     <string name="publishing_finished">সম্পূর্ণ প্রকাশিত</string>
     <string name="action_sort_last_manga_update">সর্বশেষ হালনাগাদ চেক</string>
     <string name="delete_category_confirmation">আপনি কি “%s” ক্যাটাগরিটি মুছে ফেলতে চান?</string>

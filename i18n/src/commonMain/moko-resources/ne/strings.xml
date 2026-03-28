@@ -564,7 +564,6 @@
     <string name="getting_started_guide">सुरु गर्ने गाइड</string>
     <string name="pref_navigate_pan">चौडा छविहरू प्यान गर्नुहोस्</string>
     <string name="pref_landscape_zoom">फराकिलो छविहरूमा स्वचालित रूपमा जूम गर्नुहोस्</string>
-    <string name="notification_update_error">%1$d अपडेट(हरू) असफल भयो</string>
     <string name="disabled_nav">असक्षम</string>
     <string name="library_errors_help">पुस्तकालय अपडेट त्रुटिहरू कसरी समाधान गर्ने भन्ने बारे मद्दतको लागि, %1$s हेर्नुहोस्</string>
     <string name="action_sort_unread_count">नपढिएको संख्या</string>
