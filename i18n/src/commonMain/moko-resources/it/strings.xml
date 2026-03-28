@@ -564,7 +564,6 @@
     <string name="skipped_reason_completed">Saltato perché la serie è completa</string>
     <string name="skipped_reason_not_caught_up">Saltato perché ci sono capitoli non letti</string>
     <string name="skipped_reason_not_started">Saltato perché non ci sono capitoli letti</string>
-    <string name="notification_update_error">%1$d aggiornamento(i) fallito(i)</string>
     <string name="learn_more">Tocca per approfondire</string>
     <string name="rotation_reverse_portrait">Verticale inverso</string>
     <string name="action_move_to_top_all_for_series">Sposta la serie in cima</string>

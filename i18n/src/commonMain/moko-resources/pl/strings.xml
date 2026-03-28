@@ -568,7 +568,6 @@
     <string name="skipped_reason_not_started">Pominięto, ponieważ brak przeczytanych rozdziałów</string>
     <string name="skipped_reason_completed">Pominięto, ponieważ seria została ukończona</string>
     <string name="skipped_reason_not_caught_up">Pominięto, ponieważ istnieją nieprzeczytane rozdziały</string>
-    <string name="notification_update_error">%1$d aktualizacja (aktualizacje) nie powiodła się</string>
     <string name="action_close">Zamknij</string>
     <string name="action_move_to_top_all_for_series">Przenieś serię na górę</string>
     <string name="action_sort_unread_count">Ilość nieprzeczytanych</string>
@@ -843,4 +842,9 @@
     <string name="storage_failed_to_create_download_directory">Nie udało się utworzyć folderu pobierania</string>
     <string name="storage_failed_to_create_directory">Nie udało się utworzyć folderu: %s</string>
     <string name="export">Eksportuj</string>
+    <string name="label_donate">Przekaż datek</string>
+    <string name="label_auto">Auto</string>
+    <string name="action_display_unread_badge">Nieprzeczytane rozdziały</string>
+    <string name="theme_catppuccin">Catppucin</string>
+    <string name="pref_behavior">Zachowanie</string>
 </resources>

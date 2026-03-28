@@ -810,7 +810,6 @@
     <string name="notification_chapters_single">Раздзел %1$s</string>
     <string name="notification_chapters_single_and_more">Раздзел %1$s ды яшчэ %2$d</string>
     <string name="notification_chapters_multiple">Раздзелы %1$s</string>
-    <string name="notification_update_error">Не ўдалося %1$d абнаўленне(яў)</string>
     <string name="learn_more">Націсніце, каб даведацца больш</string>
     <string name="notification_cover_update_failed">Не ўдалося абнавіць вокладку</string>
     <string name="notification_first_add_to_library">Калі ласка, дадайце твор у бібліятэку перад гэтым дзеяннем</string>

@@ -563,7 +563,6 @@
     <string name="pref_navigate_pan">Xoay ảnh rộng</string>
     <string name="action_display_cover_only_grid">Lưới chỉ mỗi bìa</string>
     <string name="rotation_reverse_portrait">Đảo ngược chân dung</string>
-    <string name="notification_update_error">%1$d cập nhật thất bại</string>
     <string name="skipped_reason_completed">Đã bỏ qua vì bộ truyện đã hoàn thành</string>
     <string name="skipped_reason_not_caught_up">Đã bỏ qua vì vẫn còn chương chưa đọc</string>
     <string name="skipped_reason_not_started">Đã bỏ qua vì chưa chương được đọc</string>

@@ -563,7 +563,6 @@
     <string name="skipped_reason_not_caught_up">Omitido porque todavía hay capítulos sin leer</string>
     <string name="skipped_reason_not_started">Omitido porque no hay capítulos leídos</string>
     <string name="learn_more">Ver más detalles</string>
-    <string name="notification_update_error">Actualizaciones fallidas: %1$d</string>
     <string name="rotation_reverse_portrait">En vertical, al revés</string>
     <string name="action_move_to_top_all_for_series">Mover al primer puesto</string>
     <string name="disabled_nav">Desactivado</string>

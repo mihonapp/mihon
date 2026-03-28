@@ -564,7 +564,6 @@
     <string name="skipped_reason_completed">Übersprungen, da die Serie abgeschlossen ist</string>
     <string name="skipped_reason_not_caught_up">Übersprungen, weil es ungelesene Kapitel gibt</string>
     <string name="skipped_reason_not_started">Übersprungen, weil keine Kapitel gelesen wurden</string>
-    <string name="notification_update_error">%1$d Aktualisierung(en) fehlgeschlagen</string>
     <string name="learn_more">Antippen, um mehr zu erfahren</string>
     <string name="rotation_reverse_portrait">Umgekehrtes Hochformat</string>
     <string name="action_move_to_top_all_for_series">Serie nach oben verschieben</string>

@@ -563,7 +563,6 @@
     <string name="skipped_reason_not_started">由於無已讀章節，因此略過</string>
     <string name="rotation_reverse_portrait">顛倒直向</string>
     <string name="learn_more">瞭解詳情</string>
-    <string name="notification_update_error">%1$d 項更新失敗</string>
     <string name="action_move_to_top_all_for_series">置頂此作品</string>
     <string name="disabled_nav">停用</string>
     <string name="empty_backup_error">書櫃中尚無作品可供備份</string>
