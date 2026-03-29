@@ -66,6 +66,7 @@ class HistoryRepositoryImpl(
             false
         }
     }
+
     override suspend fun upsertHistory(historyUpdate: HistoryUpdate) {
         partialUpdate(historyUpdate)
     }
@@ -73,6 +74,7 @@ class HistoryRepositoryImpl(
     override suspend fun upsertAllHistory(historyUpdate: List<HistoryUpdate>) {
         partialUpdate(*historyUpdate.toTypedArray())
     }
+
     private suspend fun partialUpdate(vararg historyUpdates: HistoryUpdate) {
         try {
             handler.await(inTransaction = true) {
@@ -80,7 +82,7 @@ class HistoryRepositoryImpl(
                     database.historyQueries.upsert(
                         chapterId = historyUpdate.chapterId,
                         readAt = historyUpdate.readAt,
-                        time_read = historyUpdate.sessionReadDuration
+                        time_read = historyUpdate.sessionReadDuration,
                     )
                 }
             }

@@ -14,7 +14,6 @@ class UpsertHistory(
             historyRepository.upsertHistory(historyUpdate)
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
-
         }
     }
 
@@ -23,7 +22,6 @@ class UpsertHistory(
             historyRepository.upsertAllHistory(historyUpdate)
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
-
         }
     }
 }
