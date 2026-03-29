@@ -11,7 +11,7 @@ data class HistoryUpdate(
 fun History.toHistoryUpdate(): HistoryUpdate {
     return HistoryUpdate(
         chapterId,
-        readAt?: Date(0),
+        readAt ?: Date(0),
         readDuration,
     )
 }
