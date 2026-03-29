@@ -9,7 +9,7 @@ import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaItemResult
 import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaListResult
 import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaOAuth
 import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaSearchResult
-import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaUserInfo
+import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaUserProfileResponse
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.DELETE
 import eu.kanade.tachiyomi.network.GET
@@ -219,9 +219,10 @@ class MangaBakaApi(
     suspend fun getScoreStepSize(): Int {
         return withIOContext {
             with(json) {
-                authClient.newCall(GET("$OAUTH_URL/userinfo"))
+                authClient.newCall(GET("$API_BASE_URL/v1/my/profile"))
                     .awaitSuccess()
-                    .parseAs<MangaBakaUserInfo>()
+                    .parseAs<MangaBakaUserProfileResponse>()
+                    .data
                     .ratingSteps
             }
         }
