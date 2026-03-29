@@ -15,6 +15,9 @@ import tachiyomi.domain.category.interactor.SetMangaCategories
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.UpdateChapter
 import tachiyomi.domain.chapter.model.toChapterUpdate
+import tachiyomi.domain.history.interactor.GetHistory
+import tachiyomi.domain.history.interactor.UpsertHistory
+import tachiyomi.domain.history.model.toHistoryUpdate
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.source.service.SourceManager
@@ -29,7 +32,9 @@ class MigrateMangaUseCase(
     private val downloadManager: DownloadManager,
     private val updateManga: UpdateManga,
     private val getChaptersByMangaId: GetChaptersByMangaId,
+    private val getHistoryByMangaId: GetHistory,
     private val updateChapter: UpdateChapter,
+    private val updateHistory: UpsertHistory,
     private val getCategories: GetCategories,
     private val setMangaCategories: SetMangaCategories,
     private val getTracks: GetTracks,
@@ -79,6 +84,26 @@ class MigrateMangaUseCase(
 
                 val chapterUpdates = updatedMangaChapters.map { it.toChapterUpdate() }
                 updateChapter.awaitAll(chapterUpdates)
+
+                val prevMangaHistory = getHistoryByMangaId.await(current.id)
+
+                val updateChaptersHistory = prevMangaHistory.map { history ->
+                    var updatedHistory = history
+                    val prevChapter = prevMangaChapters.find { it.id == history.chapterId }
+                    if (history.readAt != null && prevChapter != null) {
+                        val prevHistory = prevMangaHistory.find { it.readAt !== null && it.chapterId == prevChapter.id }
+                        val currentChapter = mangaChapters.find { it.chapterNumber == prevChapter.chapterNumber }
+
+                        if (prevHistory != null && currentChapter != null) {
+                            updatedHistory = updatedHistory.copy(chapterId = currentChapter.id)
+                        }
+                    }
+
+                    updatedHistory
+                }
+
+                val historyUpdates = updateChaptersHistory.map { it.toHistoryUpdate() }
+                updateHistory.awaitAll(historyUpdates)
             }
 
             // Update categories
