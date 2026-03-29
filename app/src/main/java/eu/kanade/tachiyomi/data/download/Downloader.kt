@@ -490,11 +490,13 @@ class Downloader(
             val response = source.getImage(page)
 
             try {
-                // append if partial (HTTP 206), else overwrite
                 response.body
                     .source()
                     .saveTo(
-                        file.openOutputStream(append = response.code == 206),
+                        // If the server supports partial downloads (HTTP 206),
+                        // append to the existing file.
+                        // Otherwise, start from scratch and overwrite the file.
+                        file.openOutputStream(response.code == 206),
                     )
                 val extension = getImageExtension(response, file)
                 file.renameTo("$filename.$extension")
