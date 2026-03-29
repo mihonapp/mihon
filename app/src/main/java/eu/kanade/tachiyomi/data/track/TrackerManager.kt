@@ -18,7 +18,9 @@ class TrackerManager {
         const val ANILIST = 2L
         const val KITSU = 3L
         const val KAVITA = 8L
-        const val MANGABAKA = 10L
+
+        // 10 is in-progress Hikka
+        const val MANGABAKA = 11L
     }
 
     val myAnimeList = MyAnimeList(1L)
