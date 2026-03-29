@@ -440,7 +440,7 @@ class Downloader(
         // Try to find the image file
         val imageFile = tmpDir.listFiles()?.firstOrNull {
             (it.name!!.startsWith("$filename.") || it.name!!.startsWith("${filename}__001")) &&
-            !it.name!!.endsWith(".tmp")
+                !it.name!!.endsWith(".tmp")
         }
 
         try {
@@ -494,7 +494,7 @@ class Downloader(
                 response.body
                     .source()
                     .saveTo(
-                        file.openOutputStream(append = response.code == 206)
+                        file.openOutputStream(append = response.code == 206),
                     )
                 val extension = getImageExtension(response, file)
                 file.renameTo("$filename.$extension")
