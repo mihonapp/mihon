@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.track.mangabaka.dto
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
