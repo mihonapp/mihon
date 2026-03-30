@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.updater
 
 import android.content.Context
+import app.mihon.generated.BuildConstants
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.util.system.isFossBuildType
 import eu.kanade.tachiyomi.util.system.isPreviewBuildType
@@ -23,7 +24,7 @@ class AppUpdateChecker {
                 GetApplicationRelease.Arguments(
                     isFossBuildType,
                     isPreviewBuildType,
-                    BuildConfig.COMMIT_COUNT.toInt(),
+                    BuildConstants.COMMIT_COUNT.toInt(),
                     BuildConfig.VERSION_NAME,
                     GITHUB_REPO,
                     forceCheck,
@@ -50,7 +51,7 @@ val GITHUB_REPO: String by lazy {
 
 val RELEASE_TAG: String by lazy {
     if (isPreviewBuildType) {
-        "r${BuildConfig.COMMIT_COUNT}"
+        "r${BuildConstants.COMMIT_COUNT}"
     } else {
         "v${BuildConfig.VERSION_NAME}"
     }
