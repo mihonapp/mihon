@@ -19,7 +19,9 @@ import android.view.View
 import android.view.View.LAYER_TYPE_HARDWARE
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -57,6 +59,8 @@ import eu.kanade.presentation.reader.ReaderPageIndicator
 import eu.kanade.presentation.reader.ReadingModeSelectDialog
 import eu.kanade.presentation.reader.appbars.ReaderAppBars
 import eu.kanade.presentation.reader.settings.ReaderSettingsDialog
+import eu.kanade.presentation.util.LEGACY_STORAGE_PERMISSION
+import eu.kanade.presentation.util.rememberLegacyStoragePermissionState
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.coil.TachiyomiImageDecoder
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
@@ -256,6 +260,15 @@ class ReaderActivity : BaseActivity() {
                 onChangeOrientation = viewModel::setMangaOrientationType,
             )
         }
+        val hasStoragePermission = rememberLegacyStoragePermissionState()
+        val requestStoragePermission =
+            rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+                if (granted) {
+                    viewModel.saveImage()
+                } else {
+                    toast(MR.strings.missing_storage_permission)
+                }
+            }
 
         Box(modifier = Modifier.fillMaxSize()) {
             if (!state.menuVisible && showPageNumber) {
@@ -325,7 +338,13 @@ class ReaderActivity : BaseActivity() {
                     onDismissRequest = onDismissRequest,
                     onSetAsCover = viewModel::setAsCover,
                     onShare = viewModel::shareImage,
-                    onSave = viewModel::saveImage,
+                    onSave = {
+                        if (hasStoragePermission) {
+                            viewModel.saveImage()
+                        } else {
+                            requestStoragePermission.launch(LEGACY_STORAGE_PERMISSION)
+                        }
+                    },
                 )
             }
             null -> {}
