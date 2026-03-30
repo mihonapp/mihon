@@ -14,17 +14,22 @@ import androidx.paging.map
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.core.preference.asState
+import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.manga.interactor.UpdateManga
+import eu.kanade.domain.manga.model.toSManga
 import eu.kanade.domain.source.interactor.GetIncognitoState
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.presentation.util.ioCoroutineScope
 import eu.kanade.tachiyomi.data.cache.CoverCache
+import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
@@ -33,13 +38,17 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import logcat.LogPriority
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.mapAsCheckboxState
 import tachiyomi.core.common.util.lang.launchIO
+import tachiyomi.core.common.util.lang.withIOContext
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.SetMangaCategories
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.chapter.interactor.SetMangaDefaultChapterFlags
+import tachiyomi.domain.chapter.model.NoChaptersException
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetManga
@@ -68,6 +77,7 @@ class BrowseSourceScreenModel(
     private val getManga: GetManga = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
     private val addTracks: AddTracks = Injekt.get(),
+    private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get(),
     private val getIncognitoState: GetIncognitoState = Injekt.get(),
 ) : StateScreenModel<BrowseSourceScreenModel.State>(State(Listing.valueOf(listingQuery))) {
 
@@ -219,6 +229,8 @@ class BrowseSourceScreenModel(
      */
     fun changeMangaFavorite(manga: Manga) {
         screenModelScope.launch {
+            if (!manga.favorite) fetchChaptersFromSource(manga)
+
             var new = manga.copy(
                 favorite = !manga.favorite,
                 dateAdded = when (manga.favorite) {
@@ -235,6 +247,45 @@ class BrowseSourceScreenModel(
             }
 
             updateManga.await(new.toMangaUpdate())
+
+            if (new.favorite && !new.initialized) async { fetchMangaFromSource(new) }
+        }
+    }
+
+    /**
+     * Fetch manga information from source.
+     */
+    private suspend fun fetchMangaFromSource(manga: Manga, manualFetch: Boolean = false) {
+        try {
+            withIOContext {
+                val networkManga = source.getMangaDetails(manga.toSManga())
+                updateManga.awaitUpdateFromSource(manga, networkManga, manualFetch)
+            }
+        } catch (e: Throwable) {
+            // Ignore early hints "errors" that aren't handled by OkHttp
+            if (e is HttpException && e.code == 103) return
+            logcat(LogPriority.ERROR, e)
+        }
+    }
+
+    /**
+     * Requests an updated list of chapters from the source.
+     */
+    private suspend fun fetchChaptersFromSource(manga: Manga, manualFetch: Boolean = false) {
+        try {
+            withIOContext {
+                val chapters = source.getChapterList(manga.toSManga())
+
+                syncChaptersWithSource.await(
+                    chapters,
+                    manga,
+                    source,
+                    manualFetch,
+                )
+            }
+        } catch (e: Throwable) {
+            if (e is NoChaptersException) return
+            logcat(LogPriority.ERROR, e)
         }
     }
 
