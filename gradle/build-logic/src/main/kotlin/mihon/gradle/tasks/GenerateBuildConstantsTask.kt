@@ -84,7 +84,7 @@ abstract class ComputeGitHashTask @Inject constructor(
 
     @TaskAction
     fun compute() {
-        gitHashFile.get().asFile.writeText(getGitSha(execOperations))
+        gitHashFile.get().asFile.writeText(getCommitCount(execOperations))
     }
 }
 
