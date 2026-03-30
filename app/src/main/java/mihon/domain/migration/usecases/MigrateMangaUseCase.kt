@@ -64,20 +64,21 @@ class MigrateMangaUseCase(
             // Update chapters read state, history, bookmark and dateFetch
             if (MigrationFlag.CHAPTER in flags) {
                 val chapterUpdates = mutableListOf<ChapterUpdate>()
-                val mangaChapters = getChaptersByMangaId.await(target.id)
-                val prevMangaChapters = getChaptersByMangaId.await(current.id)
+                val targetChapters = getChaptersByMangaId.await(target.id)
+                val currentChapters = getChaptersByMangaId.await(current.id)
                 val historyUpdates = mutableListOf<HistoryUpdate>()
-                val prevMangaHistory = getHistoryByMangaId.await(current.id)
+                val targetHistory = getHistoryByMangaId.await(target.id)
+                val currentHistory = getHistoryByMangaId.await(current.id)
 
-                val maxChapterRead = prevMangaChapters
+                val maxChapterRead = currentChapters
                     .filter { it.read }
                     .maxOfOrNull { it.chapterNumber }
 
-                mangaChapters.forEach { mangaChapter ->
+                targetChapters.forEach { mangaChapter ->
                     var updatedChapter = mangaChapter
 
                     if (updatedChapter.isRecognizedNumber) {
-                        val prevChapter = prevMangaChapters
+                        val prevChapter = currentChapters
                             .find { it.isRecognizedNumber && it.chapterNumber == updatedChapter.chapterNumber }
 
                         if (prevChapter != null) {
@@ -86,9 +87,11 @@ class MigrateMangaUseCase(
                                 bookmark = prevChapter.bookmark,
                             )
 
-                            var updatedHistory = prevMangaHistory.find { it.chapterId == prevChapter.id }
+                            var updatedHistory = currentHistory.find { it.chapterId == prevChapter.id }
+                            val chapterHasHistory =
+                                mangaChapter.read && targetHistory.find { it.chapterId == mangaChapter.id } != null
 
-                            if (updatedHistory != null) {
+                            if (updatedHistory != null && !chapterHasHistory) {
                                 updatedHistory = updatedHistory.copy(chapterId = updatedChapter.id)
                                 historyUpdates.add(updatedHistory.toHistoryUpdate())
                             }
