@@ -51,6 +51,9 @@ jobs:
         id: unit_tests
         run: ./gradlew testReleaseUnitTest
 
+      - name: Verify SQLDelight migrations
+        run: ./gradlew verifySqlDelightMigration
+
       - name: Upload test report
         if: steps.unit_tests.outcome == 'failure'
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
