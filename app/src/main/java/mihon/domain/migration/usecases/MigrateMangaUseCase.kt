@@ -15,9 +15,11 @@ import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.SetMangaCategories
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.UpdateChapter
+import tachiyomi.domain.chapter.model.ChapterUpdate
 import tachiyomi.domain.chapter.model.toChapterUpdate
 import tachiyomi.domain.history.interactor.GetHistory
 import tachiyomi.domain.history.interactor.UpsertHistory
+import tachiyomi.domain.history.model.HistoryUpdate
 import tachiyomi.domain.history.model.toHistoryUpdate
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
@@ -59,17 +61,21 @@ class MigrateMangaUseCase(
                 // Worst case, chapters won't be synced
             }
 
-            // Update chapters read, bookmark and dateFetch
+            // Update chapters read state, history, bookmark and dateFetch
             if (MigrationFlag.CHAPTER in flags) {
-                val prevMangaChapters = getChaptersByMangaId.await(current.id)
+                val chapterUpdates = mutableListOf<ChapterUpdate>()
                 val mangaChapters = getChaptersByMangaId.await(target.id)
+                val prevMangaChapters = getChaptersByMangaId.await(current.id)
+                val historyUpdates = mutableListOf<HistoryUpdate>()
+                val prevMangaHistory = getHistoryByMangaId.await(current.id)
 
                 val maxChapterRead = prevMangaChapters
                     .filter { it.read }
                     .maxOfOrNull { it.chapterNumber }
 
-                val updatedMangaChapters = mangaChapters.map { mangaChapter ->
+                mangaChapters.forEach { mangaChapter ->
                     var updatedChapter = mangaChapter
+
                     if (updatedChapter.isRecognizedNumber) {
                         val prevChapter = prevMangaChapters
                             .find { it.isRecognizedNumber && it.chapterNumber == updatedChapter.chapterNumber }
@@ -79,37 +85,23 @@ class MigrateMangaUseCase(
                                 dateFetch = prevChapter.dateFetch,
                                 bookmark = prevChapter.bookmark,
                             )
+
+                            var updatedHistory = prevMangaHistory.find { it.chapterId == prevChapter.id }
+
+                            if (updatedHistory != null) {
+                                updatedHistory = updatedHistory.copy(chapterId = updatedChapter.id)
+                                historyUpdates.add(updatedHistory.toHistoryUpdate())
+                            }
                         }
 
                         if (maxChapterRead != null && updatedChapter.chapterNumber <= maxChapterRead) {
                             updatedChapter = updatedChapter.copy(read = true)
                         }
                     }
-
-                    updatedChapter
+                    chapterUpdates.add(updatedChapter.toChapterUpdate())
                 }
 
-                val chapterUpdates = updatedMangaChapters.map { it.toChapterUpdate() }
                 updateChapter.awaitAll(chapterUpdates)
-
-                val prevMangaHistory = getHistoryByMangaId.await(current.id)
-
-                val updateChaptersHistory = prevMangaHistory.map { history ->
-                    var updatedHistory = history
-                    val prevChapter = prevMangaChapters.find { it.id == history.chapterId }
-                    if (history.readAt != null && prevChapter != null) {
-                        val prevHistory = prevMangaHistory.find { it.readAt !== null && it.chapterId == prevChapter.id }
-                        val currentChapter = mangaChapters.find { it.chapterNumber == prevChapter.chapterNumber }
-
-                        if (prevHistory != null && currentChapter != null) {
-                            updatedHistory = updatedHistory.copy(chapterId = currentChapter.id)
-                        }
-                    }
-
-                    updatedHistory
-                }
-
-                val historyUpdates = updateChaptersHistory.map { it.toHistoryUpdate() }
                 updateHistory.awaitAll(historyUpdates)
             }
 
