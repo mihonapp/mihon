@@ -16,6 +16,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Improved
 - Show informative error when trying to add unapproved titles to list on MAL ([@MajorTanya](https://github.com/MajorTanya)) ([#3155](https://github.com/mihonapp/mihon/pull/3155))
+- Include read history when migrating an entry with Chapters ([@BrutuZ](https://github.com/BrutuZ)) ([#3163](https://github.com/mihonapp/mihon/pull/3163))
 
 ## [v0.19.7] - 2026-03-23
 Same as v0.19.6

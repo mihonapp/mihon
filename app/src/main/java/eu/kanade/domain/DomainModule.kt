@@ -138,7 +138,7 @@ class DomainModule : InjektModule {
         addFactory { SetExcludedScanlators(get()) }
         addFactory {
             MigrateMangaUseCase(
-                get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(),
+                get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(),
             )
         }
 

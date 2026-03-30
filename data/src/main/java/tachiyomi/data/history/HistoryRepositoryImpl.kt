@@ -60,13 +60,23 @@ class HistoryRepositoryImpl(
     }
 
     override suspend fun upsertHistory(historyUpdate: HistoryUpdate) {
+        partialUpdate(historyUpdate)
+    }
+
+    override suspend fun upsertAllHistory(historyUpdate: List<HistoryUpdate>) {
+        partialUpdate(*historyUpdate.toTypedArray())
+    }
+
+    private suspend fun partialUpdate(vararg historyUpdates: HistoryUpdate) {
         try {
-            handler.await {
-                historyQueries.upsert(
-                    historyUpdate.chapterId,
-                    historyUpdate.readAt,
-                    historyUpdate.sessionReadDuration,
-                )
+            handler.await(inTransaction = true) {
+                historyUpdates.forEach { historyUpdate ->
+                    historyQueries.upsert(
+                        chapterId = historyUpdate.chapterId,
+                        readAt = historyUpdate.readAt,
+                        time_read = historyUpdate.sessionReadDuration,
+                    )
+                }
             }
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, throwable = e)
