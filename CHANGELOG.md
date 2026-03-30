@@ -16,6 +16,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Improved
 - Show informative error when trying to add unapproved titles to list on MAL ([@MajorTanya](https://github.com/MajorTanya)) ([#3155](https://github.com/mihonapp/mihon/pull/3155))
+- Add long click range selection on migrate manga screen ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#3171](https://github.com/mihonapp/mihon/pull/3171))
 
 ## [v0.19.7] - 2026-03-23
 Same as v0.19.6

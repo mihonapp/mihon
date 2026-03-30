@@ -67,6 +67,27 @@ class MigrateMangaScreenModel(
         }
     }
 
+    fun toggleRangeSelection(item: Manga) {
+        mutableState.update { state ->
+            val newSelection = state.selection.mutate { list ->
+                val lastSelectedId = list.lastOrNull()
+                val lastSelectedManga = state.titles.find { it.id == lastSelectedId }
+                list.add(item.id)
+                val lastMangaIndex = state.titles.indexOf(lastSelectedManga)
+                val curMangaIndex = state.titles.indexOf(item)
+
+                val selectionRange = when {
+                    lastMangaIndex < curMangaIndex -> lastMangaIndex..curMangaIndex
+                    curMangaIndex < lastMangaIndex -> curMangaIndex..lastMangaIndex
+                    // We shouldn't reach this point
+                    else -> return@mutate
+                }
+                selectionRange.mapNotNull { state.titles[it].id }.let(list::addAll)
+            }
+            state.copy(selection = newSelection)
+        }
+    }
+
     fun clearSelection() {
         mutableState.update { it.copy(selection = emptySet()) }
     }
