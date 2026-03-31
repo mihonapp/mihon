@@ -31,5 +31,7 @@ dependencies {
     implementation(projects.domain)
     implementation(projects.core.common)
 
+    implementation(libs.kotlinx.datetime)
+
     api(libs.bundles.sqldelight)
 }

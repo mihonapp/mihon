@@ -20,6 +20,8 @@ dependencies {
 
     implementation(libs.kotlinx.collections.immutable)
 
+    implementation(libs.kotlinx.datetime)
+
     implementation(libs.coil.core)
 
     api(libs.injekt)
