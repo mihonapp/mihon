@@ -192,7 +192,7 @@ class MangaBakaApi(
             score = item.rating?.toBigDecimal()?.setScale(2, RoundingMode.HALF_UP)?.toDouble() ?: -1.0
             cover_url = item.cover.x250.x1.orEmpty()
             tracking_url = "$BASE_URL/${item.id}"
-            start_date = item.year?.toString().orEmpty()
+            start_date = item.published.startDate.orEmpty()
             publishing_status = item.status
             publishing_type = item.type.replaceFirstChar { c ->
                 if (c.isLowerCase()) c.titlecase(Locale.getDefault()) else c.toString()
