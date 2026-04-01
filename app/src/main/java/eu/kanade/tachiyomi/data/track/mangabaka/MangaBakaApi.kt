@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.track.mangabaka
 
 import android.net.Uri
 import androidx.core.net.toUri
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaItem
@@ -36,11 +37,18 @@ import tachiyomi.domain.track.model.Track as DomainTrack
 
 class MangaBakaApi(
     private val trackId: Long,
-    private val client: OkHttpClient,
+    baseClient: OkHttpClient,
     interceptor: MangaBakaInterceptor,
 ) {
 
     private val json: Json by injectLazy()
+
+    private val client = baseClient.newBuilder().addInterceptor {
+        it.request().newBuilder()
+            .header("User-Agent", "Mihon/v${BuildConfig.VERSION_NAME} (Android) (https://github.com/mihonapp/mihon)")
+            .build()
+            .let(it::proceed)
+    }.build()
 
     private val authClient = client.newBuilder().addInterceptor(interceptor).build()
 
