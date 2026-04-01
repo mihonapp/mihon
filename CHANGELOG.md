@@ -16,6 +16,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Improved
 - Show informative error when trying to add unapproved titles to list on MAL ([@MajorTanya](https://github.com/MajorTanya)) ([#3155](https://github.com/mihonapp/mihon/pull/3155))
+- Always update manga if uninitialized after being added to library ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#3179](https://github.com/mihonapp/mihon/pull/3179))
 
 ## [v0.19.7] - 2026-03-23
 Same as v0.19.6
