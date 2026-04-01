@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.track.mangabaka
 
-import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaOAuth
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
@@ -29,7 +28,6 @@ class MangaBakaInterceptor(private val mangaBaka: MangaBaka) : Interceptor {
         }
 
         return originalRequest.newBuilder()
-            .header("User-Agent", "Mihon/v${BuildConfig.VERSION_NAME} (Android) (https://github.com/mihonapp/mihon)")
             .addHeader("Authorization", "Bearer ${currentAuth.accessToken}")
             .build()
             .let(chain::proceed)
