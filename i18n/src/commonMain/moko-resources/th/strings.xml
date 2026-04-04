@@ -565,7 +565,6 @@
     <string name="pref_update_only_started">ข้ามรายการที่ยังไม่ได้เริ่มอ่าน</string>
     <string name="skipped_reason_completed">ถูกข้ามเนื่องจากเรื่องนี้จบแล้ว</string>
     <string name="learn_more">แตะเพื่อเรียนรู้เพิ่มเติม</string>
-    <string name="notification_update_error">อัปเดตผิดพลาด %1$d รายการ</string>
     <string name="rotation_reverse_portrait">แนวตั้งแบบกลับด้าน</string>
     <string name="action_move_to_top_all_for_series">ย้ายเรื่องไปด้านบน</string>
     <string name="disabled_nav">ปิดใช้งาน</string>

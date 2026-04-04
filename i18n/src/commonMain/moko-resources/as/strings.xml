@@ -755,7 +755,6 @@
     <string name="notification_chapters_single">অধ্যায় %1$s</string>
     <string name="notification_chapters_single_and_more">অধ্যায় %1$s আৰু %2$d অধিক</string>
     <string name="notification_chapters_multiple">অধ্যায়সমূহ %1$s</string>
-    <string name="notification_update_error">%1$d আপডেট(s) ব্যৰ্থ</string>
     <string name="learn_more">অধিক জানিবলৈ টেপ কৰক</string>
     <string name="notification_cover_update_failed">কভাৰ আপডেট কৰিবলৈ ব্যৰ্থ</string>
     <string name="notification_first_add_to_library">এইটো কৰিবলৈ আগত অনুগ্ৰহ কৰি ৰেকৰ্ডটো আপোনাৰ লাইব্রেৰীত যোগ কৰক</string>

@@ -13,7 +13,7 @@
     <string name="label_backup">バックアップと復元</string>
     <string name="action_settings">設定</string>
     <string name="action_filter">絞り込む</string>
-    <string name="action_filter_bookmarked">お気に入り</string>
+    <string name="action_filter_bookmarked">ブックマーク済み</string>
     <string name="action_filter_unread">未読</string>
     <string name="action_filter_empty">フィルタを削除</string>
     <string name="action_sort_alpha">アルファベット順</string>
@@ -565,7 +565,6 @@
     <string name="skipped_reason_not_started">読了した章がない為スキップしました</string>
     <string name="pref_navigate_pan">幅広い画像を左右に移動</string>
     <string name="learn_more">タップでもっと詳しく</string>
-    <string name="notification_update_error">%1$d件の更新に失敗しました</string>
     <string name="rotation_reverse_portrait">縦向き (反転)</string>
     <string name="action_move_to_top_all_for_series">シリーズをトップに移動</string>
     <string name="disabled_nav">無効</string>
@@ -875,4 +874,5 @@
     <string name="migrationConfigScreen.selectEnabledLabel">有効なソースを選択</string>
     <string name="migrationConfigScreen.selectPinnedLabel">固定されたソースを選択</string>
     <string name="migrationConfigScreen.dataToMigrateHeader">移行するデータ</string>
+    <string name="download_bookmarked">ブックマーク済み</string>
 </resources>

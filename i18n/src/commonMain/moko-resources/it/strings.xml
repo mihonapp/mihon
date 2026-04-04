@@ -564,7 +564,6 @@
     <string name="skipped_reason_completed">Saltato perché la serie è completa</string>
     <string name="skipped_reason_not_caught_up">Saltato perché ci sono capitoli non letti</string>
     <string name="skipped_reason_not_started">Saltato perché non ci sono capitoli letti</string>
-    <string name="notification_update_error">%1$d aggiornamento(i) fallito(i)</string>
     <string name="learn_more">Tocca per approfondire</string>
     <string name="rotation_reverse_portrait">Verticale inverso</string>
     <string name="action_move_to_top_all_for_series">Sposta la serie in cima</string>
@@ -707,7 +706,7 @@
     <string name="library_sync_complete">Sincronizzazione libreria completata</string>
     <string name="syncing_library">Sincronizzazione libreria</string>
     <string name="information_cloudflare_help">Tocca qua per assistenza con Cloudflare</string>
-    <string name="download_cache_invalidated">Indice dei download invalidato</string>
+    <string name="download_cache_invalidated">Ricreando l\'indice dei download</string>
     <string name="track_activity_name">Login del trakcer</string>
     <string name="create_backup_file_error">Non è stato possibile creare un file di backup</string>
     <string name="exception_http">HTTP %d, controlla il sito nella WebView</string>
@@ -733,7 +732,7 @@
     <string name="action_menu_overflow_description">Altre opzioni</string>
     <string name="selected">Selezionato</string>
     <string name="not_selected">Non selezionato</string>
-    <string name="scanlator">Scanlator</string>
+    <string name="scanlator">Traduttore</string>
     <string name="onboarding_action_skip">Salta</string>
     <string name="onboarding_action_next">Prossimo</string>
     <string name="onboarding_permission_ignore_battery_opts">Uso della batteria in secondo piano</string>
@@ -850,7 +849,7 @@
     <string name="library_list">Lista libreria</string>
     <string name="library_exported">Libreria esportata</string>
     <string name="pref_incognito_mode_extension_summary">Metti in pausa la cronologia di lettura per l\'estensione</string>
-    <string name="pref_update_library_manga_titles">Aggiorna i titoli della libreria perchè coincidano con la fonte</string>
+    <string name="pref_update_library_manga_titles">Aggiorna i titoli della libreria perché coincidano con la fonte</string>
     <string name="pref_update_library_manga_titles_summary">Attenzione: se un manga viene rinominato, sarà rimosso dalla coda download (se presente).</string>
     <string name="logging_in">Autenticazione in corso…</string>
     <string name="possible_duplicates_title">Possibili duplicati</string>
@@ -909,4 +908,6 @@
     <string name="migrationListScreen.migrateDialog.cancelLabel">Annulla</string>
     <string name="migrationListScreen.progressDialog.cancelLabel">Annulla</string>
     <string name="migrationListScreen.matchWithoutChapterToast">Nessun capitolo trovato, questa voce non può essere utilizzata per la migrazione</string>
+    <string name="download_bookmarked">Segnato</string>
+    <string name="action_filter_excluded_scanlators">Filtrare i scanlator esclusi</string>
 </resources>

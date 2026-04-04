@@ -110,4 +110,9 @@
         <item quantity="many">%1$s páginas</item>
         <item quantity="other"/>
     </plurals>
+    <plurals name="notification_update_error">
+        <item quantity="one">%1$d atualização falhou</item>
+        <item quantity="many">%1$d atualizações falharam</item>
+        <item quantity="other">%1$d atualizações falharam</item>
+    </plurals>
 </resources>

@@ -565,7 +565,6 @@
     <string name="skipped_reason_not_caught_up">已跳过，因为有未读章节</string>
     <string name="skipped_reason_not_started">已跳过，因为尚未开始阅读</string>
     <string name="learn_more">点击了解详情</string>
-    <string name="notification_update_error">%1$d 个更新失败了</string>
     <string name="rotation_reverse_portrait">反向竖屏</string>
     <string name="action_move_to_top_all_for_series">将作品移到顶部</string>
     <string name="disabled_nav">关闭</string>
