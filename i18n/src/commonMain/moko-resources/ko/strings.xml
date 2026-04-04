@@ -465,7 +465,6 @@
     <string name="download_queue_size_warning">경고: 대량 다운로드는 원본 속도에 영향을 미치거나 %s을 차단할 수 있습니다. 탭하여 자세히 알아보기.</string>
     <string name="notification_size_warning">대규모 업데이트는 소스에 피해를 입히고 업데이트가 느려지고 배터리 사용량이 증가할 수 있습니다. 탭하여 자세히 알아보기.</string>
     <string name="notification_chapters_single">%1$s화</string>
-    <string name="notification_update_error">%1$d개의 업데이트가 실패했습니다</string>
     <string name="library_errors_help">서재 업데이트 오류를 해결하려면 %1$s를 참조하세요</string>
     <string name="skipped_reason_completed">완결된 만화를 건너 뛰었습니다</string>
     <string name="skipped_reason_not_started">읽지 않은 만화를 건너 뛰었습니다</string>

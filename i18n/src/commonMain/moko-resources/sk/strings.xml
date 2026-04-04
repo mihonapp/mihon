@@ -603,7 +603,6 @@
     <string name="manga_info_expand">Viac</string>
     <string name="download_queue_size_warning">Upozornenie: Veľké hromadné sťahovanie môže viesť k spomaleniu zdrojov a/alebo blokovaniu %s. Klepnutím sa dozviete viac.</string>
     <string name="notification_size_warning">Veľké aktualizácie poškodzujú zdroje a môžu viesť k pomalším aktualizáciám a tiež k zvýšeniu spotreby batérie. Klepnutím sa dozviete viac.</string>
-    <string name="notification_update_error">Zlyhané aktualizácie: %1$d</string>
     <string name="creating_backup_error">Zálohovanie zlyhalo</string>
     <string name="action_track">Sledovať</string>
     <string name="website">Webová stránka</string>

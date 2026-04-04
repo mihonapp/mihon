@@ -564,7 +564,6 @@
     <string name="skipped_reason_not_started">Hiçbir bölüm okunmadığı için atlandı</string>
     <string name="pref_navigate_pan">Geniş görselleri kaydır</string>
     <string name="pref_landscape_zoom">Geniş görsellere otomatik yakınlaştır</string>
-    <string name="notification_update_error">%1$d güncelleme başarısız oldu</string>
     <string name="learn_more">Daha fazla bilgi için dokunun</string>
     <string name="rotation_reverse_portrait">Ters portre</string>
     <string name="action_move_to_top_all_for_series">Seriyi en üste taşı</string>

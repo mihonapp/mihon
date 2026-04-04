@@ -347,7 +347,6 @@
     <string name="pref_category_for_this_series">Priskirti šiai serijai</string>
     <string name="transition_finished">Baigta:</string>
     <string name="transition_current">Dabartinis:</string>
-    <string name="notification_update_error">Nepavyko atnaujinti %1$d</string>
     <string name="notification_first_add_to_library">Prieš atlikdami šį veiksmą, pridėkite įrašą į savo biblioteką</string>
     <string name="skipped_reason_not_started">Praleista, nes nėra perskaitytų skyrių</string>
     <string name="information_cloudflare_bypass_failure">Nepavyko apeiti \"Cloudflare\"</string>

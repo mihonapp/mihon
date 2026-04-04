@@ -766,7 +766,6 @@
     <string name="notification_chapters_single">அத்தியாயம் %1$s</string>
     <string name="notification_chapters_single_and_more">அத்தியாயம் %1$s மற்றும் %2$d மேலும்</string>
     <string name="notification_chapters_multiple">அத்தியாயங்கள் %1$s</string>
-    <string name="notification_update_error">%1$d புதுப்பிப்பு (கள்) தோல்வியடைந்தது</string>
     <string name="learn_more">மேலும் அறிய தட்டவும்</string>
     <string name="notification_cover_update_failed">அட்டையைப் புதுப்பிக்கத் தவறிவிட்டது</string>
     <string name="notification_first_add_to_library">இதைச் செய்வதற்கு முன் உங்கள் நூலகத்தில் உள்ளீட்டைச் சேர்க்கவும்</string>

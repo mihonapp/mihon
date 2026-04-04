@@ -565,7 +565,6 @@
     <string name="skipped_reason_not_caught_up">Hoppade över eftersom det finns olästa kapitel</string>
     <string name="skipped_reason_not_started">Hoppade över eftersom inga kapitel läses</string>
     <string name="learn_more">Tryck på för att få veta mer</string>
-    <string name="notification_update_error">%1$d uppdatering(ar) misslyckades</string>
     <string name="rotation_reverse_portrait">Omvänt porträtt</string>
     <string name="action_move_to_top_all_for_series">Flytta serien till toppen</string>
     <string name="disabled_nav">Inaktiverad</string>

@@ -571,7 +571,6 @@
     <string name="error_saving_picture">Virhe tallentaessa kuvaa</string>
     <string name="update_already_running">Kirjastoa ollaan jo päivitämässä</string>
     <string name="updates_last_update_info">Kirjasto päivitetty viimeksi: %s</string>
-    <string name="notification_update_error">%1$d päivitys(tä) epäonnistui</string>
     <string name="skipped_reason_completed">Ohitettu, koska sarja on päättynyt</string>
     <string name="information_empty_category_dialog">Sinulla ei vielä ole kategorioita.</string>
     <string name="on_hiatus">Tauolla</string>

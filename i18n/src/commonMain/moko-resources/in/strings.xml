@@ -566,7 +566,6 @@
     <string name="pref_navigate_pan">Geser gambar lebar</string>
     <string name="learn_more">Pelajari lebih lanjut</string>
     <string name="rotation_reverse_portrait">Layar tegak terbalik</string>
-    <string name="notification_update_error">%1$d pembaruan gagal</string>
     <string name="action_move_to_top_all_for_series">Pindahkan seri ke atas</string>
     <string name="disabled_nav">Dinonaktifkan</string>
     <string name="error_saving_picture">Gagal menyimpan gambar</string>

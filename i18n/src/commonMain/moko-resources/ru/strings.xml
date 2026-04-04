@@ -565,7 +565,6 @@
     <string name="skipped_reason_not_caught_up">Пропущено, т.к есть непрочитанные главы</string>
     <string name="skipped_reason_not_started">Пропущено, т.к серия не начата</string>
     <string name="learn_more">Нажать для подробностей</string>
-    <string name="notification_update_error">%1$d обновление(ий) не удалось</string>
     <string name="rotation_reverse_portrait">Портретная наоборот</string>
     <string name="action_move_to_top_all_for_series">Переместить серию в начало</string>
     <string name="disabled_nav">Отключено</string>

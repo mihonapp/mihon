@@ -524,7 +524,6 @@
     <string name="information_webview_required">WebView נצרך ל-Mihon</string>
     <string name="action_display_cover_only_grid">רשת רק של הכריכות</string>
     <string name="action_open_log">פתח את יומן האירועים</string>
-    <string name="notification_update_error">%1$d עדכונים נכשלו</string>
     <string name="pref_landscape_zoom">בצע קירוב לתמונות אופקיות באופן אוטומטי</string>
     <string name="split_tall_images_summary">משפר את ביצועי מצב הקריאה</string>
     <string name="skipped_reason_completed">דולג בגלל שהסדרה נגמרה</string>
