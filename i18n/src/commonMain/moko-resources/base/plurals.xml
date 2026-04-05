@@ -112,7 +112,11 @@
 
     <!-- Failed Updates -->
     <plurals name="failed_updates">
-        <item quantity="one">1 failed update</item>
-        <item quantity="other">%d failed updates</item>
+        <item quantity="one">%1$d update failed</item>
+        <item quantity="other">%1$d updates failed</item>
+    </plurals>
+    <plurals name="notification_update_error">
+        <item quantity="one">%1$d update failed</item>
+        <item quantity="other">%1$d updates failed</item>
     </plurals>
 </resources>

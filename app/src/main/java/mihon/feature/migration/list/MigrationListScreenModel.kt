@@ -60,8 +60,8 @@ class MigrationListScreenModel(
     val items
         inline get() = state.value.items
 
-    private val hideUnmatched = preferences.migrationHideUnmatched().get()
-    private val hideWithoutUpdates = preferences.migrationHideWithoutUpdates().get()
+    private val hideUnmatched = preferences.migrationHideUnmatched.get()
+    private val hideWithoutUpdates = preferences.migrationHideWithoutUpdates.get()
 
     private val navigateBackChannel = Channel<Unit>()
     val navigateBackEvent = navigateBackChannel.receiveAsFlow()
@@ -110,10 +110,10 @@ class MigrationListScreenModel(
     }
 
     private suspend fun runMigrations(mangas: List<MigratingManga>) {
-        val prioritizeByChapters = preferences.migrationPrioritizeByChapters().get()
-        val deepSearchMode = preferences.migrationDeepSearchMode().get()
+        val prioritizeByChapters = preferences.migrationPrioritizeByChapters.get()
+        val deepSearchMode = preferences.migrationDeepSearchMode.get()
 
-        val sources = preferences.migrationSources().get()
+        val sources = preferences.migrationSources.get()
             .mapNotNull { sourceManager.get(it) as? CatalogueSource }
 
         for (manga in mangas) {

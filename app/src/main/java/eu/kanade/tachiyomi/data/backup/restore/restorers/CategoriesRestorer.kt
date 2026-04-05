@@ -32,7 +32,7 @@ class CategoriesRestorer(
                         .let { id -> it.toCategory(id).copy(order = order) }
                 }
 
-            libraryPreferences.categorizedDisplaySettings().set(
+            libraryPreferences.categorizedDisplaySettings.set(
                 (dbCategories + categories)
                     .distinctBy { it.flags }
                     .size > 1,

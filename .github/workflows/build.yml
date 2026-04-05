@@ -30,26 +30,26 @@ jobs:
 
       - name: Dependency Review
         if: github.event_name == 'pull_request'
-        uses: actions/dependency-review-action@3c4e3dcb1aa7874d2c16be7d79418e9b7efd6261 # v4.8.2
+        uses: actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48 # v4.9.0
 
       - name: Set up JDK
         uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
         with:
-          java-version: 17
+          java-version-file: .github/.java-version
           distribution: temurin
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
+        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
 
       - name: Check code format
         run: ./gradlew spotlessCheck
 
-      - name: Build app
-        run: ./gradlew assembleRelease -Pinclude-telemetry -Penable-updater
-
       - name: Run unit tests
         id: unit_tests
         run: ./gradlew testReleaseUnitTest
+
+      - name: Verify SQLDelight migrations
+        run: ./gradlew verifySqlDelightMigration
 
       - name: Upload test report
         if: steps.unit_tests.outcome == 'failure'
@@ -57,6 +57,9 @@ jobs:
         with:
           name: test-report-${{ github.sha }}
           path: app/build/reports/tests/testReleaseUnitTest
+
+      - name: Build app
+        run: ./gradlew assembleRelease -Pinclude-telemetry -Penable-updater
 
       - name: Upload APK
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0

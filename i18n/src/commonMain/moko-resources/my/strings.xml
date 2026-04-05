@@ -8,7 +8,7 @@
     <string name="action_bar_up_description">အပေါ်သို့</string>
     <string name="name">အမည်</string>
     <string name="categories">အမျိုးအစားများ</string>
-    <string name="manga">စာအုပ်စင်</string>
+    <string name="manga">စာအုပ်စင် မှတ်တမ်းများ</string>
     <string name="chapters">အပိုင်းများ</string>
     <string name="track">ခြေရာခံ</string>
     <string name="scanlator">ဘာသာပြန်သူ</string>
@@ -35,11 +35,11 @@
     <string name="label_extensions">ချိတ်ဆက်မှုများ</string>
     <string name="label_backup">အရံသိမ်းဆည်းခြင်းနှင့် ပြန်လည်ရယူခြင်း</string>
     <string name="unlock_app_title">%s ကို လော့ခ်ဖွင့်ပါ။</string>
-    <string name="confirm_lock_change">ဖြည့်ထားသည်ကို အတည်ပြုပါ</string>
+    <string name="confirm_lock_change">ဖြည့်ထားသည်ကို အတည်ပြုပါ။</string>
     <string name="action_settings">ဆက်တင်များ</string>
     <string name="action_menu">မီနူး</string>
     <string name="action_filter">စစ်ထုတ်မှု</string>
-    <string name="action_set_interval">အချိန်ကြားကို သတ်မှတ်ပါ</string>
+    <string name="action_set_interval">အချိန်ကြားကို သတ်မှတ်ပါ။</string>
     <string name="action_filter_bookmarked">မှတ်သားထားသည်။</string>
     <string name="action_sort_last_read">နောက်ဆုံး ဖတ်ခဲ့သည်အားဖြင့် စီပါ</string>
     <string name="action_sort_last_manga_update">နောက်ဆုံး အပ်ဒိတ်အားဖြင့် စီပါ</string>
@@ -66,10 +66,10 @@
     <string name="pref_library_summary">စာကြည့်တိုက်အနှစ်ချုပ်</string>
     <string name="pref_tracking_summary">လမ်းညွှန်စက်များအနှစ်ချုပ်</string>
     <string name="theme_dark">အမှောင်</string>
-    <string name="action_filter_empty">အလွတ် စစ်ထုတ်မှု</string>
-    <string name="action_filter_tracked">ခြေရာခံထားမှု စစ်ထုတ်မှု</string>
-    <string name="action_filter_unread">မဖတ်ရသေးသော စစ်ထုတ်မှု</string>
-    <string name="action_filter_interval_custom">စိတ်ကြိုက် အချိန်ကြား စစ်ထုတ်မှု</string>
+    <string name="action_filter_empty">စစ်ထုတ်မှု ဖယ်သည်။</string>
+    <string name="action_filter_tracked">ခြေရာခံထားသည်။</string>
+    <string name="action_filter_unread">မဖတ်ရသေးသော</string>
+    <string name="action_filter_interval_custom">စိတ်ကြိုက် အပ်ဒိတ် အကြိမ်ရေ</string>
     <string name="action_sort_alpha">အက္ခရာစဉ်အားဖြင့် စီပါ</string>
     <string name="action_sort_count">စာအုပ်စင်တွင်ရှိသော အရေအတွက်စုစုပေါင်း</string>
     <string name="action_sort_next_updated">နောက်တစ်ခု အပ်ဒိတ်မည်အားဖြင့် စီပါ</string>
@@ -292,4 +292,6 @@
     <string name="network_not_metered">ကန့်သက်မထားသော ကွန်ရက်ပေါ်တွင်သာ</string>
     <string name="ext_uninstall">သင့်ဖုန်းမှ ဖယ်ရှားရန်</string>
     <string name="theme_monet">Dynamic</string>
+    <string name="label_donate">လှူဒါန်း</string>
+    <string name="label_auto">အလိုအလျောက်</string>
 </resources>

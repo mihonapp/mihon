@@ -49,11 +49,11 @@ class MigrateSourceScreenModel(
                 }
         }
 
-        preferences.migrationSortingDirection().changes()
+        preferences.migrationSortingDirection.changes()
             .onEach { mutableState.update { state -> state.copy(sortingDirection = it) } }
             .launchIn(screenModelScope)
 
-        preferences.migrationSortingMode().changes()
+        preferences.migrationSortingMode.changes()
             .onEach { mutableState.update { state -> state.copy(sortingMode = it) } }
             .launchIn(screenModelScope)
     }

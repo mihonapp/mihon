@@ -701,7 +701,7 @@
     <string name="intervals_header">Intervalles</string>
     <string name="library_sync_complete">Synchronisation de la bibliothèque complété</string>
     <string name="exception_offline">Aucune connexion internet</string>
-    <string name="download_cache_invalidated">Indice de téléchargement invalidé</string>
+    <string name="download_cache_invalidated">Recréation de l\'index de téléchargement</string>
     <string name="skipped_reason_not_in_release_period">Ignoré car aucune sortie n\'était attendue aujourd\'hui</string>
     <string name="has_results">A des résultats</string>
     <string name="manga_display_interval_title">Estimer chaque</string>
@@ -909,4 +909,5 @@
     <string name="pref_download_concurrent_sources">Téléchargements simultanés de sources</string>
     <string name="pref_download_concurrent_pages">Téléchargements simultanés de pages</string>
     <string name="pref_download_concurrent_pages_summary">Pages téléchargées simultanément par source</string>
+    <string name="action_filter_excluded_scanlators">Filtrer les scantrads exclus</string>
 </resources>

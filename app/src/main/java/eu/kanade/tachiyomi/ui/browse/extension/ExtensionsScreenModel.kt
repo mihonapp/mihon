@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import tachiyomi.core.common.util.lang.launchIO
@@ -97,11 +98,11 @@ class ExtensionsScreenModel(
 
         screenModelScope.launchIO { findAvailableExtensions() }
 
-        preferences.extensionUpdatesCount().changes()
+        preferences.extensionUpdatesCount.changes()
             .onEach { mutableState.update { state -> state.copy(updates = it) } }
             .launchIn(screenModelScope)
 
-        basePreferences.extensionInstaller().changes()
+        basePreferences.extensionInstaller.changes()
             .onEach { mutableState.update { state -> state.copy(installer = it) } }
             .launchIn(screenModelScope)
     }
@@ -180,6 +181,7 @@ class ExtensionsScreenModel(
     private suspend fun Flow<InstallStep>.collectToInstallUpdate(extension: Extension) =
         this
             .onEach { installStep -> addDownloadState(extension, installStep) }
+            .takeWhile { installStep -> installStep != InstallStep.Installed }
             .onCompletion { removeDownloadState(extension) }
             .collect()
 

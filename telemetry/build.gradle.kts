@@ -1,8 +1,8 @@
-import mihon.buildlogic.Config
+import mihon.gradle.Config
 
 plugins {
-    id("mihon.library")
-    kotlin("android")
+    alias(mihonx.plugins.android.library)
+    alias(mihonx.plugins.spotless)
 }
 
 android {
@@ -21,6 +21,8 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.common)
+
     if (Config.includeTelemetry) {
         implementation(platform(libs.firebase.bom))
         implementation(libs.firebase.analytics)

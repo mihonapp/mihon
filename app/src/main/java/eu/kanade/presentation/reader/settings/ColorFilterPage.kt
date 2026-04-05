@@ -22,10 +22,10 @@ import tachiyomi.presentation.core.util.collectAsState
 
 @Composable
 internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel) {
-    val customBrightness by screenModel.preferences.customBrightness().collectAsState()
+    val customBrightness by screenModel.preferences.customBrightness.collectAsState()
     CheckboxItem(
         label = stringResource(MR.strings.pref_custom_brightness),
-        pref = screenModel.preferences.customBrightness(),
+        pref = screenModel.preferences.customBrightness,
     )
 
     /*
@@ -35,31 +35,31 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
      * 0 sets system brightness and hides the overlay.
      */
     if (customBrightness) {
-        val customBrightnessValue by screenModel.preferences.customBrightnessValue().collectAsState()
+        val customBrightnessValue by screenModel.preferences.customBrightnessValue.collectAsState()
         SliderItem(
             value = customBrightnessValue,
             valueRange = -75..100,
             steps = 0,
             label = stringResource(MR.strings.pref_custom_brightness),
-            onChange = { screenModel.preferences.customBrightnessValue().set(it) },
+            onChange = { screenModel.preferences.customBrightnessValue.set(it) },
             pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         )
     }
 
-    val colorFilter by screenModel.preferences.colorFilter().collectAsState()
+    val colorFilter by screenModel.preferences.colorFilter.collectAsState()
     CheckboxItem(
         label = stringResource(MR.strings.pref_custom_color_filter),
-        pref = screenModel.preferences.colorFilter(),
+        pref = screenModel.preferences.colorFilter,
     )
     if (colorFilter) {
-        val colorFilterValue by screenModel.preferences.colorFilterValue().collectAsState()
+        val colorFilterValue by screenModel.preferences.colorFilterValue.collectAsState()
         SliderItem(
             value = colorFilterValue.red,
             valueRange = 0..255,
             steps = 0,
             label = stringResource(MR.strings.color_filter_r_value),
             onChange = { newRValue ->
-                screenModel.preferences.colorFilterValue().getAndSet {
+                screenModel.preferences.colorFilterValue.getAndSet {
                     getColorValue(it, newRValue, RED_MASK, 16)
                 }
             },
@@ -71,7 +71,7 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
             steps = 0,
             label = stringResource(MR.strings.color_filter_g_value),
             onChange = { newGValue ->
-                screenModel.preferences.colorFilterValue().getAndSet {
+                screenModel.preferences.colorFilterValue.getAndSet {
                     getColorValue(it, newGValue, GREEN_MASK, 8)
                 }
             },
@@ -83,7 +83,7 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
             steps = 0,
             label = stringResource(MR.strings.color_filter_b_value),
             onChange = { newBValue ->
-                screenModel.preferences.colorFilterValue().getAndSet {
+                screenModel.preferences.colorFilterValue.getAndSet {
                     getColorValue(it, newBValue, BLUE_MASK, 0)
                 }
             },
@@ -95,19 +95,19 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
             steps = 0,
             label = stringResource(MR.strings.color_filter_a_value),
             onChange = { newAValue ->
-                screenModel.preferences.colorFilterValue().getAndSet {
+                screenModel.preferences.colorFilterValue.getAndSet {
                     getColorValue(it, newAValue, ALPHA_MASK, 24)
                 }
             },
             pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         )
 
-        val colorFilterMode by screenModel.preferences.colorFilterMode().collectAsState()
+        val colorFilterMode by screenModel.preferences.colorFilterMode.collectAsState()
         SettingsChipRow(MR.strings.pref_color_filter_mode) {
             ColorFilterMode.mapIndexed { index, it ->
                 FilterChip(
                     selected = colorFilterMode == index,
-                    onClick = { screenModel.preferences.colorFilterMode().set(index) },
+                    onClick = { screenModel.preferences.colorFilterMode.set(index) },
                     label = { Text(stringResource(it.first)) },
                 )
             }
@@ -116,11 +116,11 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
 
     CheckboxItem(
         label = stringResource(MR.strings.pref_grayscale),
-        pref = screenModel.preferences.grayscale(),
+        pref = screenModel.preferences.grayscale,
     )
     CheckboxItem(
         label = stringResource(MR.strings.pref_inverted_colors),
-        pref = screenModel.preferences.invertedColors(),
+        pref = screenModel.preferences.invertedColors,
     )
 }
 

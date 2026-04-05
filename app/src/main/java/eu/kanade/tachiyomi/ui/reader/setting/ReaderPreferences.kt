@@ -3,139 +3,173 @@ package eu.kanade.tachiyomi.ui.reader.setting
 import android.os.Build
 import androidx.compose.ui.graphics.BlendMode
 import dev.icerock.moko.resources.StringResource
+import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.preference.getEnum
 import tachiyomi.i18n.MR
 
 class ReaderPreferences(
-    private val preferenceStore: PreferenceStore,
+    preferenceStore: PreferenceStore,
 ) {
 
     // region General
 
-    fun pageTransitions() = preferenceStore.getBoolean("pref_enable_transitions_key", true)
+    val pageTransitions: Preference<Boolean> = preferenceStore.getBoolean("pref_enable_transitions_key", true)
 
-    fun flashOnPageChange() = preferenceStore.getBoolean("pref_reader_flash", false)
+    val flashOnPageChange: Preference<Boolean> = preferenceStore.getBoolean("pref_reader_flash", false)
 
-    fun flashDurationMillis() = preferenceStore.getInt("pref_reader_flash_duration", MILLI_CONVERSION)
+    val flashDurationMillis: Preference<Int> = preferenceStore.getInt("pref_reader_flash_duration", MILLI_CONVERSION)
 
-    fun flashPageInterval() = preferenceStore.getInt("pref_reader_flash_interval", 1)
+    val flashPageInterval: Preference<Int> = preferenceStore.getInt("pref_reader_flash_interval", 1)
 
-    fun flashColor() = preferenceStore.getEnum("pref_reader_flash_mode", FlashColor.BLACK)
+    val flashColor: Preference<FlashColor> = preferenceStore.getEnum("pref_reader_flash_mode", FlashColor.BLACK)
 
-    fun doubleTapAnimSpeed() = preferenceStore.getInt("pref_double_tap_anim_speed", 500)
+    val doubleTapAnimSpeed: Preference<Int> = preferenceStore.getInt("pref_double_tap_anim_speed", 500)
 
-    fun showPageNumber() = preferenceStore.getBoolean("pref_show_page_number_key", true)
+    val showPageNumber: Preference<Boolean> = preferenceStore.getBoolean("pref_show_page_number_key", true)
 
-    fun showReadingMode() = preferenceStore.getBoolean("pref_show_reading_mode", true)
+    val showReadingMode: Preference<Boolean> = preferenceStore.getBoolean("pref_show_reading_mode", true)
 
-    fun fullscreen() = preferenceStore.getBoolean("fullscreen", true)
+    val fullscreen: Preference<Boolean> = preferenceStore.getBoolean("fullscreen", true)
 
-    fun drawUnderCutout() = preferenceStore.getBoolean("cutout_short", true)
+    val drawUnderCutout: Preference<Boolean> = preferenceStore.getBoolean("cutout_short", true)
 
-    fun keepScreenOn() = preferenceStore.getBoolean("pref_keep_screen_on_key", false)
+    val keepScreenOn: Preference<Boolean> = preferenceStore.getBoolean("pref_keep_screen_on_key", false)
 
-    fun defaultReadingMode() = preferenceStore.getInt(
+    val defaultReadingMode: Preference<Int> = preferenceStore.getInt(
         "pref_default_reading_mode_key",
         ReadingMode.RIGHT_TO_LEFT.flagValue,
     )
 
-    fun defaultOrientationType() = preferenceStore.getInt(
+    val defaultOrientationType: Preference<Int> = preferenceStore.getInt(
         "pref_default_orientation_type_key",
         ReaderOrientation.FREE.flagValue,
     )
 
-    fun webtoonDoubleTapZoomEnabled() = preferenceStore.getBoolean("pref_enable_double_tap_zoom_webtoon", true)
+    val webtoonDoubleTapZoomEnabled: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_enable_double_tap_zoom_webtoon",
+        true,
+    )
 
-    fun imageScaleType() = preferenceStore.getInt("pref_image_scale_type_key", 1)
+    val imageScaleType: Preference<Int> = preferenceStore.getInt("pref_image_scale_type_key", 1)
 
-    fun zoomStart() = preferenceStore.getInt("pref_zoom_start_key", 1)
+    val zoomStart: Preference<Int> = preferenceStore.getInt("pref_zoom_start_key", 1)
 
-    fun readerTheme() = preferenceStore.getInt("pref_reader_theme_key", 1)
+    val readerTheme: Preference<Int> = preferenceStore.getInt("pref_reader_theme_key", 1)
 
-    fun alwaysShowChapterTransition() = preferenceStore.getBoolean("always_show_chapter_transition", true)
+    val alwaysShowChapterTransition: Preference<Boolean> = preferenceStore.getBoolean(
+        "always_show_chapter_transition",
+        true,
+    )
 
-    fun cropBorders() = preferenceStore.getBoolean("crop_borders", false)
+    val cropBorders: Preference<Boolean> = preferenceStore.getBoolean("crop_borders", false)
 
-    fun navigateToPan() = preferenceStore.getBoolean("navigate_pan", true)
+    val navigateToPan: Preference<Boolean> = preferenceStore.getBoolean("navigate_pan", true)
 
-    fun landscapeZoom() = preferenceStore.getBoolean("landscape_zoom", true)
+    val landscapeZoom: Preference<Boolean> = preferenceStore.getBoolean("landscape_zoom", true)
 
-    fun cropBordersWebtoon() = preferenceStore.getBoolean("crop_borders_webtoon", false)
+    val cropBordersWebtoon: Preference<Boolean> = preferenceStore.getBoolean("crop_borders_webtoon", false)
 
-    fun webtoonSidePadding() = preferenceStore.getInt("webtoon_side_padding", WEBTOON_PADDING_MIN)
+    val webtoonSidePadding: Preference<Int> = preferenceStore.getInt("webtoon_side_padding", WEBTOON_PADDING_MIN)
 
-    fun readerHideThreshold() = preferenceStore.getEnum("reader_hide_threshold", ReaderHideThreshold.LOW)
+    val readerHideThreshold: Preference<ReaderHideThreshold> = preferenceStore.getEnum(
+        "reader_hide_threshold",
+        ReaderHideThreshold.LOW,
+    )
 
-    fun folderPerManga() = preferenceStore.getBoolean("create_folder_per_manga", false)
+    val folderPerManga: Preference<Boolean> = preferenceStore.getBoolean("create_folder_per_manga", false)
 
-    fun skipRead() = preferenceStore.getBoolean("skip_read", false)
+    val skipRead: Preference<Boolean> = preferenceStore.getBoolean("skip_read", false)
 
-    fun skipFiltered() = preferenceStore.getBoolean("skip_filtered", true)
+    val skipFiltered: Preference<Boolean> = preferenceStore.getBoolean("skip_filtered", true)
 
-    fun skipDupe() = preferenceStore.getBoolean("skip_dupe", false)
+    val skipDupe: Preference<Boolean> = preferenceStore.getBoolean("skip_dupe", false)
 
-    fun webtoonDisableZoomOut() = preferenceStore.getBoolean("webtoon_disable_zoom_out", false)
+    val webtoonDisableZoomOut: Preference<Boolean> = preferenceStore.getBoolean("webtoon_disable_zoom_out", false)
 
     // endregion
 
-    // region Split two page spread
+    // region Split two-page spread
 
-    fun dualPageSplitPaged() = preferenceStore.getBoolean("pref_dual_page_split", false)
+    val dualPageSplitPaged: Preference<Boolean> = preferenceStore.getBoolean("pref_dual_page_split", false)
 
-    fun dualPageInvertPaged() = preferenceStore.getBoolean("pref_dual_page_invert", false)
+    val dualPageInvertPaged: Preference<Boolean> = preferenceStore.getBoolean("pref_dual_page_invert", false)
 
-    fun dualPageSplitWebtoon() = preferenceStore.getBoolean("pref_dual_page_split_webtoon", false)
+    val dualPageSplitWebtoon: Preference<Boolean> = preferenceStore.getBoolean("pref_dual_page_split_webtoon", false)
 
-    fun dualPageInvertWebtoon() = preferenceStore.getBoolean("pref_dual_page_invert_webtoon", false)
+    val dualPageInvertWebtoon: Preference<Boolean> = preferenceStore.getBoolean("pref_dual_page_invert_webtoon", false)
 
-    fun dualPageRotateToFit() = preferenceStore.getBoolean("pref_dual_page_rotate", false)
+    val dualPageRotateToFit: Preference<Boolean> = preferenceStore.getBoolean("pref_dual_page_rotate", false)
 
-    fun dualPageRotateToFitInvert() = preferenceStore.getBoolean("pref_dual_page_rotate_invert", false)
+    val dualPageRotateToFitInvert: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_dual_page_rotate_invert",
+        false,
+    )
 
-    fun dualPageRotateToFitWebtoon() = preferenceStore.getBoolean("pref_dual_page_rotate_webtoon", false)
+    val dualPageRotateToFitWebtoon: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_dual_page_rotate_webtoon",
+        false,
+    )
 
-    fun dualPageRotateToFitInvertWebtoon() = preferenceStore.getBoolean("pref_dual_page_rotate_invert_webtoon", false)
+    val dualPageRotateToFitInvertWebtoon: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_dual_page_rotate_invert_webtoon",
+        false,
+    )
 
     // endregion
 
     // region Color filter
 
-    fun customBrightness() = preferenceStore.getBoolean("pref_custom_brightness_key", false)
+    val customBrightness: Preference<Boolean> = preferenceStore.getBoolean("pref_custom_brightness_key", false)
 
-    fun customBrightnessValue() = preferenceStore.getInt("custom_brightness_value", 0)
+    val customBrightnessValue: Preference<Int> = preferenceStore.getInt("custom_brightness_value", 0)
 
-    fun colorFilter() = preferenceStore.getBoolean("pref_color_filter_key", false)
+    val colorFilter: Preference<Boolean> = preferenceStore.getBoolean("pref_color_filter_key", false)
 
-    fun colorFilterValue() = preferenceStore.getInt("color_filter_value", 0)
+    val colorFilterValue: Preference<Int> = preferenceStore.getInt("color_filter_value", 0)
 
-    fun colorFilterMode() = preferenceStore.getInt("color_filter_mode", 0)
+    val colorFilterMode: Preference<Int> = preferenceStore.getInt("color_filter_mode", 0)
 
-    fun grayscale() = preferenceStore.getBoolean("pref_grayscale", false)
+    val grayscale: Preference<Boolean> = preferenceStore.getBoolean("pref_grayscale", false)
 
-    fun invertedColors() = preferenceStore.getBoolean("pref_inverted_colors", false)
+    val invertedColors: Preference<Boolean> = preferenceStore.getBoolean("pref_inverted_colors", false)
 
     // endregion
 
     // region Controls
 
-    fun readWithLongTap() = preferenceStore.getBoolean("reader_long_tap", true)
+    val readWithLongTap: Preference<Boolean> = preferenceStore.getBoolean("reader_long_tap", true)
 
-    fun readWithVolumeKeys() = preferenceStore.getBoolean("reader_volume_keys", false)
+    val readWithVolumeKeys: Preference<Boolean> = preferenceStore.getBoolean("reader_volume_keys", false)
 
-    fun readWithVolumeKeysInverted() = preferenceStore.getBoolean("reader_volume_keys_inverted", false)
+    val readWithVolumeKeysInverted: Preference<Boolean> = preferenceStore.getBoolean(
+        "reader_volume_keys_inverted",
+        false,
+    )
 
-    fun navigationModePager() = preferenceStore.getInt("reader_navigation_mode_pager", 0)
+    val navigationModePager: Preference<Int> = preferenceStore.getInt("reader_navigation_mode_pager", 0)
 
-    fun navigationModeWebtoon() = preferenceStore.getInt("reader_navigation_mode_webtoon", 0)
+    val navigationModeWebtoon: Preference<Int> = preferenceStore.getInt("reader_navigation_mode_webtoon", 0)
 
-    fun pagerNavInverted() = preferenceStore.getEnum("reader_tapping_inverted", TappingInvertMode.NONE)
+    val pagerNavInverted: Preference<TappingInvertMode> = preferenceStore.getEnum(
+        "reader_tapping_inverted",
+        TappingInvertMode.NONE,
+    )
 
-    fun webtoonNavInverted() = preferenceStore.getEnum("reader_tapping_inverted_webtoon", TappingInvertMode.NONE)
+    val webtoonNavInverted: Preference<TappingInvertMode> = preferenceStore.getEnum(
+        "reader_tapping_inverted_webtoon",
+        TappingInvertMode.NONE,
+    )
 
-    fun showNavigationOverlayNewUser() = preferenceStore.getBoolean("reader_navigation_overlay_new_user", true)
+    val showNavigationOverlayNewUser: Preference<Boolean> = preferenceStore.getBoolean(
+        "reader_navigation_overlay_new_user",
+        true,
+    )
 
-    fun showNavigationOverlayOnStart() = preferenceStore.getBoolean("reader_navigation_overlay_on_start", false)
+    val showNavigationOverlayOnStart: Preference<Boolean> = preferenceStore.getBoolean(
+        "reader_navigation_overlay_on_start",
+        false,
+    )
 
     // endregion
 

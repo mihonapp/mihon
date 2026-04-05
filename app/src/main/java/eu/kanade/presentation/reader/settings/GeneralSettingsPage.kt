@@ -33,24 +33,24 @@ private val flashColors = listOf(
 
 @Composable
 internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
-    val readerTheme by screenModel.preferences.readerTheme().collectAsState()
+    val readerTheme by screenModel.preferences.readerTheme.collectAsState()
 
-    val flashPageState by screenModel.preferences.flashOnPageChange().collectAsState()
+    val flashPageState by screenModel.preferences.flashOnPageChange.collectAsState()
 
-    val flashMillisPref = screenModel.preferences.flashDurationMillis()
+    val flashMillisPref = screenModel.preferences.flashDurationMillis
     val flashMillis by flashMillisPref.collectAsState()
 
-    val flashIntervalPref = screenModel.preferences.flashPageInterval()
+    val flashIntervalPref = screenModel.preferences.flashPageInterval
     val flashInterval by flashIntervalPref.collectAsState()
 
-    val flashColorPref = screenModel.preferences.flashColor()
+    val flashColorPref = screenModel.preferences.flashColor
     val flashColor by flashColorPref.collectAsState()
 
     SettingsChipRow(MR.strings.pref_reader_theme) {
         themes.map { (labelRes, value) ->
             FilterChip(
                 selected = readerTheme == value,
-                onClick = { screenModel.preferences.readerTheme().set(value) },
+                onClick = { screenModel.preferences.readerTheme.set(value) },
                 label = { Text(stringResource(labelRes)) },
             )
         }
@@ -58,45 +58,45 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
 
     CheckboxItem(
         label = stringResource(MR.strings.pref_show_page_number),
-        pref = screenModel.preferences.showPageNumber(),
+        pref = screenModel.preferences.showPageNumber,
     )
 
     CheckboxItem(
         label = stringResource(MR.strings.pref_fullscreen),
-        pref = screenModel.preferences.fullscreen(),
+        pref = screenModel.preferences.fullscreen,
     )
 
-    val isFullscreen by screenModel.preferences.fullscreen().collectAsState()
+    val isFullscreen by screenModel.preferences.fullscreen.collectAsState()
     if (LocalActivity.current?.hasDisplayCutout() == true && isFullscreen) {
         CheckboxItem(
             label = stringResource(MR.strings.pref_cutout_short),
-            pref = screenModel.preferences.drawUnderCutout(),
+            pref = screenModel.preferences.drawUnderCutout,
         )
     }
 
     CheckboxItem(
         label = stringResource(MR.strings.pref_keep_screen_on),
-        pref = screenModel.preferences.keepScreenOn(),
+        pref = screenModel.preferences.keepScreenOn,
     )
 
     CheckboxItem(
         label = stringResource(MR.strings.pref_read_with_long_tap),
-        pref = screenModel.preferences.readWithLongTap(),
+        pref = screenModel.preferences.readWithLongTap,
     )
 
     CheckboxItem(
         label = stringResource(MR.strings.pref_always_show_chapter_transition),
-        pref = screenModel.preferences.alwaysShowChapterTransition(),
+        pref = screenModel.preferences.alwaysShowChapterTransition,
     )
 
     CheckboxItem(
         label = stringResource(MR.strings.pref_page_transitions),
-        pref = screenModel.preferences.pageTransitions(),
+        pref = screenModel.preferences.pageTransitions,
     )
 
     CheckboxItem(
         label = stringResource(MR.strings.pref_flash_page),
-        pref = screenModel.preferences.flashOnPageChange(),
+        pref = screenModel.preferences.flashOnPageChange,
     )
     if (flashPageState) {
         SliderItem(
