@@ -96,7 +96,6 @@ import tachiyomi.domain.track.interactor.GetTracksPerManga
 import tachiyomi.domain.track.interactor.InsertTrack
 import tachiyomi.domain.track.repository.TrackRepository
 import tachiyomi.domain.updates.interactor.DeleteMangaUpdateError
-import tachiyomi.domain.updates.interactor.GetMangaUpdateErrorCount
 import tachiyomi.domain.updates.interactor.GetMangaUpdateErrors
 import tachiyomi.domain.updates.interactor.GetUpdates
 import tachiyomi.domain.updates.interactor.InsertMangaUpdateError
@@ -192,7 +191,6 @@ class DomainModule : InjektModule {
         addFactory { GetMangaUpdateErrors(get()) }
         addFactory { InsertMangaUpdateError(get()) }
         addFactory { DeleteMangaUpdateError(get()) }
-        addFactory { GetMangaUpdateErrorCount(get()) }
 
         addSingletonFactory<SourceRepository> { SourceRepositoryImpl(get(), get()) }
         addSingletonFactory<StubSourceRepository> { StubSourceRepositoryImpl(get()) }
