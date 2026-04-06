@@ -23,6 +23,7 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
+import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.manga.components.BaseMangaListItem
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
@@ -47,7 +48,7 @@ data class MigrateMangaScreen(
     override fun Content() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
-        val screenModel = rememberScreenModel { MigrateMangaScreenModel(sourceId) }
+        val screenModel = rememberScreenModel { MigrateMangaScreenModel(context, sourceId) }
 
         val state by screenModel.state.collectAsState()
 
@@ -66,6 +67,7 @@ data class MigrateMangaScreen(
             topBar = { scrollBehavior ->
                 AppBar(
                     title = state.source!!.name,
+                    subtitle = state.selection.size.toString() + '/' + screenModel.maximumMigrationSelection,
                     navigateUp = {
                         if (state.selectionMode) {
                             screenModel.clearSelection()
