@@ -3,6 +3,7 @@ package eu.kanade.presentation.more.settings.screen.about
 import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -85,7 +86,9 @@ object AboutScreen : Screen() {
                 contentPadding = contentPadding,
             ) {
                 item {
-                    LogoHeader()
+                    LogoHeader(
+                        iconPadding = PaddingValues(vertical = 56.dp),
+                    )
                 }
 
                 item {

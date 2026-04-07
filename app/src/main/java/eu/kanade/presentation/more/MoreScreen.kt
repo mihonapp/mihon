@@ -1,10 +1,10 @@
 package eu.kanade.presentation.more
 
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.automirrored.outlined.Label
-import androidx.compose.material.icons.outlined.AttachMoney
+import androidx.compose.material.icons.filled.VolunteerActivism
 import androidx.compose.material.icons.outlined.CloudOff
 import androidx.compose.material.icons.outlined.GetApp
 import androidx.compose.material.icons.outlined.Info
@@ -13,10 +13,10 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Storage
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.more.settings.widget.SwitchPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.tachiyomi.R
@@ -45,11 +45,11 @@ fun MoreScreen(
     val uriHandler = LocalUriHandler.current
 
     Scaffold { contentPadding ->
-        ScrollbarLazyColumn(
-            modifier = Modifier.padding(contentPadding),
-        ) {
+        ScrollbarLazyColumn(contentPadding = contentPadding) {
             item {
-                LogoHeader()
+                LogoHeader(
+                    iconPadding = PaddingValues(vertical = 32.dp),
+                )
             }
             item {
                 SwitchPreferenceWidget(
@@ -134,6 +134,13 @@ fun MoreScreen(
             }
             item {
                 TextPreferenceWidget(
+                    title = stringResource(MR.strings.label_support_us),
+                    icon = Icons.Default.VolunteerActivism,
+                    onPreferenceClick = { uriHandler.openUri(Constants.URL_DONATE) },
+                )
+            }
+            item {
+                TextPreferenceWidget(
                     title = stringResource(MR.strings.pref_category_about),
                     icon = Icons.Outlined.Info,
                     onPreferenceClick = onClickAbout,
@@ -144,13 +151,6 @@ fun MoreScreen(
                     title = stringResource(MR.strings.label_help),
                     icon = Icons.AutoMirrored.Outlined.HelpOutline,
                     onPreferenceClick = { uriHandler.openUri(Constants.URL_HELP) },
-                )
-            }
-            item {
-                TextPreferenceWidget(
-                    title = stringResource(MR.strings.label_donate),
-                    icon = Icons.Outlined.AttachMoney,
-                    onPreferenceClick = { uriHandler.openUri(Constants.URL_DONATE) },
                 )
             }
         }
