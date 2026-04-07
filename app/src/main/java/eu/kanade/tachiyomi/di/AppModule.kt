@@ -12,6 +12,9 @@ import eu.kanade.domain.track.store.DelayedTrackingStore
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
+import eu.kanade.tachiyomi.data.ocr.RecognizeTextUseCase
+import eu.kanade.tachiyomi.data.ocr.TranslateTextUseCase
+import eu.kanade.tachiyomi.data.security.SecureOcrPreferences
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.data.saver.ImageSaver
@@ -127,6 +130,10 @@ class AppModule(val app: Application) : InjektModule {
         addSingletonFactory { LocalCoverManager(app, get()) }
         addSingletonFactory { StorageManager(app, get()) }
 
+        addSingletonFactory { SecureOcrPreferences(app) }
+        addSingletonFactory { RecognizeTextUseCase() }
+        addSingletonFactory { TranslateTextUseCase() }
+
         // Asynchronously init expensive components for a faster cold start
         ContextCompat.getMainExecutor(app).execute {
             get<NetworkHelper>()
@@ -136,6 +143,8 @@ class AppModule(val app: Application) : InjektModule {
             get<Database>()
 
             get<DownloadManager>()
+            
+            get<SecureOcrPreferences>()
         }
     }
 }

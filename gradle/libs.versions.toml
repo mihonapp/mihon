@@ -53,6 +53,12 @@ markdown = "0.39.2"
 material = "1.12.0"
 materialKolor = "5.0.0-alpha07"
 mockk = "1.14.9"
+mlkit-text = "16.0.0"
+mlkit-text-japanese = "16.0.0"
+mlkit-text-korean = "16.0.0"
+mlkit-text-chinese = "16.0.0"
+mlkit-text-devanagari = "16.0.0"
+androidx-security = "1.1.0-alpha06"
 moko-resources = "0.26.1"
 okhttp = "5.3.2"
 okio = "3.17.0"
@@ -152,6 +158,12 @@ markdown-coil = { module = "com.mikepenz:multiplatform-markdown-renderer-coil3",
 markdown-core = { module = "com.mikepenz:multiplatform-markdown-renderer", version.ref = "markdown" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 materialKolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
+mlkit-text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "mlkit-text" }
+mlkit-text-recognition-japanese = { module = "com.google.mlkit:text-recognition-japanese", version.ref = "mlkit-text-japanese" }
+mlkit-text-recognition-korean = { module = "com.google.mlkit:text-recognition-korean", version.ref = "mlkit-text-korean" }
+mlkit-text-recognition-chinese = { module = "com.google.mlkit:text-recognition-chinese", version.ref = "mlkit-text-chinese" }
+mlkit-text-recognition-devanagari = { module = "com.google.mlkit:text-recognition-devanagari", version.ref = "mlkit-text-devanagari" }
+androidx-security-crypto = { module = "androidx.security:security-crypto-ktx", version.ref = "androidx-security" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
 natural-comparator = { module = "com.github.gpanther:java-nat-sort", version = "natural-comparator-1.1" }

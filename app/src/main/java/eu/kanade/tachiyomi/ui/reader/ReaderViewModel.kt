@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.reader
 
 import android.app.Application
 import android.net.Uri
+import android.graphics.BitmapFactory
 import androidx.annotation.IntRange
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
@@ -15,6 +16,10 @@ import eu.kanade.domain.manga.model.readingMode
 import eu.kanade.domain.source.interactor.GetIncognitoState
 import eu.kanade.domain.track.interactor.TrackChapter
 import eu.kanade.domain.track.service.TrackPreferences
+import eu.kanade.tachiyomi.data.ocr.OcrResultBlock
+import eu.kanade.tachiyomi.data.ocr.RecognizeTextUseCase
+import eu.kanade.tachiyomi.data.ocr.TranslateTextUseCase
+import eu.kanade.tachiyomi.data.security.SecureOcrPreferences
 import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
@@ -101,6 +106,8 @@ class ReaderViewModel @JvmOverloads constructor(
     private val setMangaViewerFlags: SetMangaViewerFlags = Injekt.get(),
     private val getIncognitoState: GetIncognitoState = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
+    private val recognizeText: RecognizeTextUseCase = Injekt.get(),
+    private val translateText: TranslateTextUseCase = Injekt.get(),
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(State())
@@ -437,6 +444,18 @@ class ReaderViewModel @JvmOverloads constructor(
      * [page]'s chapter is different from the currently active.
      */
     fun onPageSelected(page: ReaderPage) {
+        val chapterChanged = state.value.currentChapter?.chapter?.id != page.chapter.chapter.id
+        
+        mutableState.update { 
+            // If the user navigates perfectly between chapters in the same view, 
+            // we should clear out the old chapter's cached ocr results.
+            val newResults = if (chapterChanged) emptyMap() else it.ocrResults
+            it.copy(currentPage = page.number, ocrResults = newResults) 
+        }
+
+        // Trigger background translation job for upcoming pages/current page
+        checkAndStartOcrBackgroundJob()
+        
         // InsertPage doesn't change page progress
         if (page is InsertPage) {
             return
@@ -944,6 +963,129 @@ class ReaderViewModel @JvmOverloads constructor(
         }
     }
 
+    /**
+     * Toggles the visibility of the OCR overlay. If turning on, it triggers translation
+     * for the current page and (if enabled) kicks off background translation for upcoming pages.
+     */
+    fun toggleOcrOverlay() {
+        val wasShowing = state.value.showOcrOverlay
+        mutableState.update { it.copy(showOcrOverlay = !wasShowing) }
+
+        if (!wasShowing) {
+            // Turning it on -> start translating current and/or upcoming pages
+            checkAndStartOcrBackgroundJob()
+        }
+    }
+
+    /**
+     * Checks the user's auto-translate preference and translates the current page
+     * plus optionally upcoming pages in the background.
+     */
+    fun checkAndStartOcrBackgroundJob() {
+        if (!state.value.showOcrOverlay) return
+
+        val chapter = state.value.currentChapter ?: return
+        val currentIdx = (state.value.currentPage - 1).coerceAtLeast(0)
+        
+        val mode = readerPreferences.ocrAutoTranslateMode.get()
+        val pagesToTranslate = if (mode == 1) {
+            // All pages mode: translate current + next 3 downloaded pages
+            (currentIdx..currentIdx + 3).toList()
+        } else {
+            // Current page only
+            listOf(currentIdx)
+        }
+
+        viewModelScope.launchIO {
+            for (idx in pagesToTranslate) {
+                // Skip if out of bounds or already translated
+                val page = chapter.pages?.getOrNull(idx) ?: continue
+                if (page.status != Page.State.Ready || page.stream == null) continue
+                if (state.value.ocrResults.containsKey(idx)) continue
+
+                // Show loading spinner ONLY if translating the page the user is currently looking at
+                val isCurrent = (idx == currentIdx)
+                if (isCurrent) {
+                    mutableState.update { it.copy(isOcrLoading = true) }
+                }
+
+                try {
+                    val stream = page.stream!!()
+                    val rawBytes = stream.use { it.readBytes() }
+                    val bitmap = BitmapFactory.decodeByteArray(rawBytes, 0, rawBytes.size)
+
+                    if (bitmap == null) {
+                        if (isCurrent) mutableState.update { it.copy(isOcrLoading = false) }
+                        continue
+                    }
+
+                    val sourceLang = readerPreferences.ocrSourceLanguage.get()
+                    val targetLang = readerPreferences.ocrTargetLanguage.get()
+                    val service = readerPreferences.ocrTranslateService.get()
+
+                    val ocrBlocks = recognizeText.await(bitmap, sourceLang)
+                    if (ocrBlocks.isNotEmpty()) {
+                        val textsToTranslate = ocrBlocks.map { it.text }
+                        val translatedTexts = translateText.awaitBatch(
+                            texts = textsToTranslate,
+                            sourceLang = sourceLang,
+                            targetLang = targetLang,
+                            service = service,
+                        )
+
+                        val translatedBlocks = ocrBlocks.mapIndexed { i, block ->
+                            block.copy(text = translatedTexts.getOrElse(i) { block.text })
+                        }
+
+                        val translatedPage = TranslatedPage(
+                            blocks = translatedBlocks,
+                            bitmapWidth = bitmap.width,
+                            bitmapHeight = bitmap.height
+                        )
+
+                        mutableState.update {
+                            val newMap = it.ocrResults.toMutableMap()
+                            newMap[idx] = translatedPage
+                            it.copy(ocrResults = newMap)
+                        }
+                    }
+                } catch (e: Exception) {
+                    logcat(LogPriority.ERROR, e)
+                } finally {
+                    if (isCurrent) {
+                        mutableState.update { it.copy(isOcrLoading = false) }
+                    }
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Updates the current SubsamplingScaleImageView transform info.
+     * Called by ReaderActivity's 60fps polling loop to keep the OCR overlay in sync
+     * with the viewer's zoom/pan state — without modifying any core viewer classes.
+     */
+    fun updateOcrViewerTransform(
+        ssivScale: Float,
+        ssivCenterX: Float,
+        ssivCenterY: Float,
+    ) {
+        mutableState.update {
+            it.copy(
+                ssivScale = ssivScale,
+                ssivCenterX = ssivCenterX,
+                ssivCenterY = ssivCenterY,
+            )
+        }
+    }
+
+    data class TranslatedPage(
+        val blocks: List<OcrResultBlock>,
+        val bitmapWidth: Int,
+        val bitmapHeight: Int,
+    )
+
     @Immutable
     data class State(
         val manga: Manga? = null,
@@ -959,6 +1101,18 @@ class ReaderViewModel @JvmOverloads constructor(
         val dialog: Dialog? = null,
         val menuVisible: Boolean = false,
         @IntRange(from = -100, to = 100) val brightnessOverlayValue: Int = 0,
+        val ocrResults: Map<Int, TranslatedPage> = emptyMap(),
+        val showOcrOverlay: Boolean = false,
+        val isOcrLoading: Boolean = false,
+        /**
+         * SubsamplingScaleImageView transform state — updated at ~60fps by ReaderActivity
+         * while the OCR overlay is visible, so the overlay boxes follow zoom/pan.
+         * |ssivScale|  : full SSIV scale (not relative; 1.0 at fit-center)
+         * |ssivCenterX/Y|: source-image point currently shown at the center of the view
+         */
+        val ssivScale: Float = 0f,
+        val ssivCenterX: Float = 0f,
+        val ssivCenterY: Float = 0f,
     ) {
         val currentChapter: ReaderChapter?
             get() = viewerChapters?.currChapter

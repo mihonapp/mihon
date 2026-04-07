@@ -104,6 +104,7 @@ android {
 
     packaging {
         jniLibs {
+            useLegacyPackaging = true
             keepDebugSymbols += listOf(
                 "libandroidx.graphics.path",
                 "libarchive-jni",
@@ -253,6 +254,14 @@ dependencies {
         exclude(module = "image-decoder")
     }
     implementation(libs.image.decoder)
+
+    // ML Kit OCR & Security
+    implementation(libs.mlkit.text.recognition)
+    implementation(libs.mlkit.text.recognition.japanese)
+    implementation(libs.mlkit.text.recognition.korean)
+    implementation(libs.mlkit.text.recognition.chinese)
+    implementation(libs.mlkit.text.recognition.devanagari)
+    implementation(libs.androidx.security.crypto)
 
     // UI libraries
     implementation(libs.material)

@@ -173,10 +173,30 @@ class ReaderPreferences(
 
     // endregion
 
+    // region OCR & Translate
+
+    val ocrTranslateEnabled: Preference<Boolean> = preferenceStore.getBoolean("pref_ocr_translate_enabled", false)
+
+    val ocrAutoTranslateMode: Preference<Int> = preferenceStore.getInt("pref_ocr_auto_translate_mode", 0)
+
+    val ocrTranslateService: Preference<Int> = preferenceStore.getInt("pref_ocr_translate_service", TranslateService.GOOGLE_FREE.id)
+
+    val ocrSourceLanguage: Preference<String> = preferenceStore.getString("pref_ocr_source_lang", "auto") // Default to Auto Detect
+
+    val ocrTargetLanguage: Preference<String> = preferenceStore.getString("pref_ocr_target_lang", "en") // Default to English
+
+    // endregion
+
     enum class FlashColor {
         BLACK,
         WHITE,
         WHITE_BLACK,
+    }
+
+    enum class TranslateService(val id: Int) {
+        GOOGLE_FREE(0),
+        DEEPL(1),
+        GOOGLE_CLOUD(2)
     }
 
     enum class TappingInvertMode(

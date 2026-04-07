@@ -21,6 +21,10 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -63,12 +67,19 @@ fun ReaderAppBars(
     onClickOrientation: () -> Unit,
     cropEnabled: Boolean,
     onClickCropBorder: () -> Unit,
+    onClickOcr: () -> Unit,
     onClickSettings: () -> Unit,
 ) {
     val isRtl = viewer is R2LPagerViewer
     val backgroundColor = MaterialTheme.colorScheme
         .surfaceColorAtElevation(3.dp)
         .copy(alpha = if (isSystemInDarkTheme()) 0.9f else 0.95f)
+
+    var showOcrQuickMenu by remember { mutableStateOf(false) }
+
+    if (showOcrQuickMenu) {
+        OcrQuickSettingsDialog(onDismissRequest = { showOcrQuickMenu = false })
+    }
 
     Column(modifier = Modifier.fillMaxHeight()) {
         AnimatedVisibility(
@@ -125,6 +136,8 @@ fun ReaderAppBars(
                     onClickOrientation = onClickOrientation,
                     cropEnabled = cropEnabled,
                     onClickCropBorder = onClickCropBorder,
+                    onClickOcr = onClickOcr,
+                    onLongClickOcr = { showOcrQuickMenu = true },
                     onClickSettings = onClickSettings,
                 )
             }

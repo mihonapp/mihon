@@ -1047,4 +1047,14 @@
     <string name="migrationListScreen.migrateDialog.cancelLabel">Cancel</string>
     <string name="migrationListScreen.progressDialog.cancelLabel">Cancel</string>
     <string name="migrationListScreen.matchWithoutChapterToast">No chapters found, this entry cannot be used for migration</string>
+    
+    <!-- OCR & Translation -->
+    <string name="pref_category_ocr">OCR &amp; Translation</string>
+    <string name="pref_ocr_reader_overlay">In-Page Translation (OCR)</string>
+    <string name="pref_ocr_reader_overlay_summary">Show translated text over manga bubbles</string>
+    <string name="pref_ocr_service">Translation Service</string>
+    <string name="pref_ocr_api_key">API Key</string>
+    <string name="pref_ocr_source_lang">Source Language</string>
+    <string name="pref_ocr_target_lang">Target Language</string>
+    <string name="action_translate">Translate</string>
 </resources>

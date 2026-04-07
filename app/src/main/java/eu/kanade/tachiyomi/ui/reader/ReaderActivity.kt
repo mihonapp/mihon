@@ -21,6 +21,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -30,9 +31,12 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import android.view.ViewGroup
+import kotlinx.coroutines.delay
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -270,6 +274,48 @@ class ReaderActivity : BaseActivity() {
 
             ContentOverlay(state = state)
 
+            // OCR & Translation Overlay — shows based on user toggle
+            if (state.showOcrOverlay) {
+                // Get pre-translated results for current page (0-indexed)
+                val pageIndex = (state.currentPage - 1).coerceAtLeast(0)
+                val translatedPage = state.ocrResults[pageIndex]
+
+                if (translatedPage != null) {
+                    // 60fps polling: read SSIV scale+center from the view hierarchy and push
+                    // to ViewModel so OcrOverlay re-draws at the correct zoom/pan position.
+                    LaunchedEffect(translatedPage) {
+                        while (true) {
+                            val ssiv = findSsivInViewHierarchy(binding.root)
+                            if (ssiv != null) {
+                                val center = ssiv.center
+                                viewModel.updateOcrViewerTransform(
+                                    ssivScale   = ssiv.scale,
+                                    ssivCenterX = center?.x ?: 0f,
+                                    ssivCenterY = center?.y ?: 0f,
+                                )
+                            }
+                            delay(16) // ~60 fps
+                        }
+                    }
+
+                    eu.kanade.presentation.reader.components.OcrOverlay(
+                        ocrResult = translatedPage.blocks,
+                        imageSize = androidx.compose.ui.unit.IntSize(
+                            translatedPage.bitmapWidth,
+                            translatedPage.bitmapHeight,
+                        ),
+                        ssivScale   = state.ssivScale,
+                        ssivCenterX = state.ssivCenterX,
+                        ssivCenterY = state.ssivCenterY,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                } else if (state.isOcrLoading) {
+                    androidx.compose.material3.CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            }
+
             AppBars(state = state)
         }
 
@@ -496,6 +542,9 @@ class ReaderActivity : BaseActivity() {
                 val enabled = viewModel.toggleCropBorders()
                 menuToggleToast?.cancel()
                 menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
+            },
+            onClickOcr = {
+                viewModel.toggleOcrOverlay()
             },
             onClickSettings = viewModel::openSettingsDialog,
         )
@@ -962,6 +1011,35 @@ class ReaderActivity : BaseActivity() {
         private fun setLayerPaint(grayscale: Boolean, invertedColors: Boolean) {
             val paint = if (grayscale || invertedColors) getCombinedPaint(grayscale, invertedColors) else null
             binding.viewerContainer.setLayerType(LAYER_TYPE_HARDWARE, paint)
+        }
+    }
+
+    /**
+     * Walks the view hierarchy rooted at [root] and returns the [SubsamplingScaleImageView]
+     * that is closest to the center of the screen. This ensures we pick the *active* page's
+     * SSIV rather than a preloaded adjacent page in the ViewPager.
+     */
+    private fun findSsivInViewHierarchy(root: View): SubsamplingScaleImageView? {
+        val ssivs = mutableListOf<SubsamplingScaleImageView>()
+        fun walk(view: View) {
+            if (view is SubsamplingScaleImageView && view.isShown) {
+                ssivs.add(view)
+            } else if (view is ViewGroup) {
+                for (i in 0 until view.childCount) {
+                    walk(view.getChildAt(i))
+                }
+            }
+        }
+        walk(root)
+
+        if (ssivs.isEmpty()) return null
+
+        val screenCenterX = root.width / 2
+        return ssivs.minByOrNull { view ->
+            val location = IntArray(2)
+            view.getLocationInWindow(location)
+            val viewCenterX = location[0] + view.width / 2
+            kotlin.math.abs(viewCenterX - screenCenterX)
         }
     }
 }

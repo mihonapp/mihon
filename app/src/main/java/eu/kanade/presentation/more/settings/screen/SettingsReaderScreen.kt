@@ -5,6 +5,8 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalView
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
@@ -30,8 +32,14 @@ object SettingsReaderScreen : SearchableSettings {
     @Composable
     override fun getPreferences(): List<Preference> {
         val readerPref = remember { Injekt.get<ReaderPreferences>() }
+        val navigator = LocalNavigator.currentOrThrow
 
         return listOf(
+            Preference.PreferenceItem.TextPreference(
+                title = stringResource(MR.strings.pref_category_ocr),
+                subtitle = stringResource(MR.strings.pref_ocr_reader_overlay_summary),
+                onClick = { navigator.push(SettingsOcrScreen) },
+            ),
             Preference.PreferenceItem.ListPreference(
                 preference = readerPref.defaultReadingMode,
                 entries = ReadingMode.entries.drop(1)
