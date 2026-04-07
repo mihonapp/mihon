@@ -1057,4 +1057,8 @@
     <string name="pref_ocr_source_lang">Source Language</string>
     <string name="pref_ocr_target_lang">Target Language</string>
     <string name="action_translate">Translate</string>
+    <string name="pref_ocr_translation_mode">Translation Mode</string>
+    <string name="pref_ocr_translation_mode_summary">Choose how other pages in the chapter should be translated</string>
+    <string name="pref_ocr_mode_current">Translate current page only</string>
+    <string name="pref_ocr_mode_all">Translate all pages (Pre-load in background)</string>
 </resources>

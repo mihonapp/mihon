@@ -76,11 +76,11 @@ object SettingsOcrScreen : SearchableSettings {
                     ),
                     Preference.PreferenceItem.ListPreference(
                         preference = readerPreferences.ocrAutoTranslateMode,
-                        title = "Çeviri Modu",
-                        subtitle = "Bölüm içindeki diğer sayfaların nasıl çevrileceğini seçin",
+                        title = stringResource(MR.strings.pref_ocr_translation_mode),
+                        subtitle = stringResource(MR.strings.pref_ocr_translation_mode_summary),
                         entries = persistentMapOf(
-                            0 to "O an ekranda açık olan sayfayı çevir",
-                            1 to "Tüm sayfaları çevir (Arkaplanda önden yükler)"
+                            0 to stringResource(MR.strings.pref_ocr_mode_current),
+                            1 to stringResource(MR.strings.pref_ocr_mode_all)
                         ),
                         enabled = ocrEnabled,
                     ),
