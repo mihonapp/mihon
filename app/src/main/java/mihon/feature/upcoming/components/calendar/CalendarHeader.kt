@@ -24,11 +24,16 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.YearMonth
+import kotlinx.datetime.toJavaYearMonth
+import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.yearMonth
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
-import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlin.time.Clock
 
 @Composable
 fun CalenderHeader(
@@ -88,14 +93,14 @@ private fun AnimatedContentTransitionScope<YearMonth>.getAnimation(): ContentTra
 @ReadOnlyComposable
 private fun getTitleText(monthYear: YearMonth): String {
     val formatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.getDefault())
-    return formatter.format(monthYear)
+    return formatter.format(monthYear.toJavaYearMonth())
 }
 
 @Preview
 @Composable
 private fun CalenderHeaderPreview() {
     CalenderHeader(
-        yearMonth = YearMonth.now(),
+        yearMonth = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.yearMonth,
         onNextClick = {},
         onPreviousClick = {},
     )
