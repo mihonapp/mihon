@@ -524,6 +524,44 @@
         <item name="colorSurfaceContainerHighest">@color/monochrome_surfaceContainerHighest</item>
     </style>
 
+    <!--== Tokyo Night Theme ==-->
+    <style name="Theme.Tachiyomi.TokyoNight">
+        <!-- Theme Colors -->
+        <item name="colorPrimary">@color/tokyonight_primary</item>
+        <item name="colorOnPrimary">@color/tokyonight_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/tokyonight_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/tokyonight_onPrimaryContainer</item>
+        <item name="colorPrimaryInverse">@color/tokyonight_inversePrimary</item>
+        <item name="colorSecondary">@color/tokyonight_secondary</item>
+        <item name="colorOnSecondary">@color/tokyonight_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/tokyonight_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/tokyonight_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/tokyonight_tertiary</item>
+        <item name="colorOnTertiary">@color/tokyonight_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/tokyonight_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/tokyonight_onTertiaryContainer</item>
+        <item name="colorError">@color/tokyonight_error</item>
+        <item name="colorOnError">@color/tokyonight_onError</item>
+        <item name="colorErrorContainer">@color/tokyonight_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/tokyonight_onErrorContainer</item>
+        <item name="android:colorBackground">@color/tokyonight_background</item>
+        <item name="colorOnBackground">@color/tokyonight_onBackground</item>
+        <item name="colorSurface">@color/tokyonight_surface</item>
+        <item name="colorOnSurface">@color/tokyonight_onSurface</item>
+        <item name="colorSurfaceVariant">@color/tokyonight_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/tokyonight_onSurfaceVariant</item>
+        <item name="elevationOverlayColor">@color/tokyonight_surfaceTint</item>
+        <item name="colorSurfaceInverse">@color/tokyonight_inverseSurface</item>
+        <item name="colorOnSurfaceInverse">@color/tokyonight_inverseOnSurface</item>
+        <item name="colorOutline">@color/tokyonight_outline</item>
+        <item name="colorOutlineVariant">@color/tokyonight_outlineVariant</item>
+        <item name="colorSurfaceContainer">@color/tokyonight_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/tokyonight_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/tokyonight_surfaceContainerHighest</item>
+        <item name="colorSurfaceContainerLow">@color/tokyonight_surfaceContainerLow</item>
+        <item name="colorSurfaceContainerLowest">@color/tokyonight_surfaceContainerLowest</item>
+    </style>
+
     <!--== AMOLED Mode Overlay ==-->
     <style name="ThemeOverlay.Tachiyomi.Amoled" parent="" />
 

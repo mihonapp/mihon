@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="tokyonight_primary">#7AA2F7</color>
+    <color name="tokyonight_onPrimary">#1A1B26</color>
+    <color name="tokyonight_primaryContainer">#3D59A1</color>
+    <color name="tokyonight_onPrimaryContainer">#C0CAF5</color>
+    <color name="tokyonight_inversePrimary">#2E7DE9</color>
+    <color name="tokyonight_secondary">#BB9AF7</color>
+    <color name="tokyonight_onSecondary">#1A1B26</color>
+    <color name="tokyonight_secondaryContainer">#504072</color>
+    <color name="tokyonight_onSecondaryContainer">#BB9AF7</color>
+    <color name="tokyonight_tertiary">#7DCFFF</color>
+    <color name="tokyonight_onTertiary">#1A1B26</color>
+    <color name="tokyonight_tertiaryContainer">#2A6485</color>
+    <color name="tokyonight_onTertiaryContainer">#C0CAF5</color>
+    <color name="tokyonight_error">#F7768E</color>
+    <color name="tokyonight_onError">#1A1B26</color>
+    <color name="tokyonight_errorContainer">#F7768E</color>
+    <color name="tokyonight_onErrorContainer">#1A1B26</color>
+    <color name="tokyonight_background">#1A1B26</color>
+    <color name="tokyonight_onBackground">#C0CAF5</color>
+    <color name="tokyonight_surface">#1A1B26</color>
+    <color name="tokyonight_onSurface">#C0CAF5</color>
+    <color name="tokyonight_surfaceVariant">#292E42</color>
+    <color name="tokyonight_onSurfaceVariant">#A9B1D6</color>
+    <color name="tokyonight_surfaceTint">#7AA2F7</color>
+    <color name="tokyonight_outline">#565F89</color>
+    <color name="tokyonight_outlineVariant">#3B4261</color>
+    <color name="tokyonight_inverseSurface">#C0CAF5</color>
+    <color name="tokyonight_inverseOnSurface">#1A1B26</color>
+    <color name="tokyonight_surfaceContainerLowest">#16161E</color>
+    <color name="tokyonight_surfaceContainerLow">#1E1F2B</color>
+    <color name="tokyonight_surfaceContainer">#292E42</color>
+    <color name="tokyonight_surfaceContainerHigh">#2F3449</color>
+    <color name="tokyonight_surfaceContainerHighest">#3B4261</color>
+</resources>
