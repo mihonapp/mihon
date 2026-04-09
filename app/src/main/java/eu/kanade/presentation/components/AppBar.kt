@@ -1,7 +1,9 @@
 package eu.kanade.presentation.components
 
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -148,7 +150,17 @@ fun AppBar(
                     }
                 }
             },
-            title = titleContent,
+            title = {
+                if (!isActionMode && navigateUp != null) {
+                    // Make title area clickable for back navigation, matching the
+                    // reader's behavior where the entire top bar navigates back
+                    Box(modifier = Modifier.clickable(onClick = navigateUp)) {
+                        titleContent()
+                    }
+                } else {
+                    titleContent()
+                }
+            },
             actions = actions,
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = backgroundColor ?: MaterialTheme.colorScheme.surfaceColorAtElevation(
