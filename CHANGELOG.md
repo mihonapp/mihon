@@ -22,6 +22,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Fixed
 - Fix app trying to split long strip when not needed ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3121](https://github.com/mihonapp/mihon/pull/3121))
 
+### Fixed
+- Fix blank image on tall webtoons exceeding hardware texture limits ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3190](https://github.com/mihonapp/mihon/pull/3190))
+
 ## [v0.19.7] - 2026-03-23
 Same as v0.19.6
 
@@ -42,6 +45,11 @@ Same as v0.19.6
 - Fix MangaUpdates HTTP 4XX errors ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3021](https://github.com/mihonapp/mihon/pull/3021))
 - Fix WebView JavaScript dialogs popup after screen is closed ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3041](https://github.com/mihonapp/mihon/pull/3041))
 - Fix extension actions disappearing after installing and uninstalling in same session ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3049](https://github.com/mihonapp/mihon/pull/3049))
+<<<<<<< HEAD
+=======
+- Enqueue duplicate chapters for deletion after marking as read ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3030](https://github.com/mihonapp/mihon/pull/3030))
+- Fix blank image on tall webtoons exceeding hardware texture limits ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3190](https://github.com/mihonapp/mihon/pull/3190))
+>>>>>>> 77153a61b (docs: add changelog entry for tall webtoon rendering fix)
 
 ## [v0.19.4] - 2026-02-25
 ### Added
