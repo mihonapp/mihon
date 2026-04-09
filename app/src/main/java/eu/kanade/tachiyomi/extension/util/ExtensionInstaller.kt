@@ -140,8 +140,10 @@ internal class ExtensionInstaller(
      * Cancels extension install and remove from download manager and installer.
      */
     fun cancelInstall(pkgName: String) {
-        activeJobs.remove(pkgName)?.cancel()
-        Installer.cancelInstallQueue(context, pkgName.hashCode().toLong())
+        scope.launch {
+            activeJobs.remove(pkgName)?.cancel()
+            Installer.cancelInstallQueue(pkgName.hashCode().toLong())
+        }
     }
 
     /**
