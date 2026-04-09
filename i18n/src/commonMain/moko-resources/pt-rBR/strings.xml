@@ -116,10 +116,10 @@
     <string name="rotation_free">Automática</string>
     <string name="rotation_force_portrait">Retrato bloqueado</string>
     <string name="rotation_force_landscape">Paisagem bloqueado</string>
-    <string name="color_filter_r_value">R</string>
-    <string name="color_filter_g_value">G</string>
-    <string name="color_filter_b_value">B</string>
-    <string name="color_filter_a_value">A</string>
+    <string name="color_filter_r_value">Vermelho</string>
+    <string name="color_filter_g_value">Verde</string>
+    <string name="color_filter_b_value">Azul</string>
+    <string name="color_filter_a_value">Alfa</string>
     <string name="pref_remove_after_marked_as_read">Após marcado como lido manualmente</string>
     <string name="pref_remove_after_read">Excluir automaticamente após a leitura</string>
     <string name="disabled">Desativado</string>
@@ -393,7 +393,6 @@
     <string name="pref_read_with_tapping_inverted">Inverter as zonas de toque</string>
     <string name="unknown_status">Estado desconhecido</string>
     <string name="unknown_author">Autor desconhecido</string>
-    <string name="updated_version">Atualizado para v%1$s</string>
     <string name="whats_new">O que há de novo</string>
     <string name="download_insufficient_space">Não foi possível fazer o download dos capítulos devido ao pouco espaço de armazenamento</string>
     <string name="action_sort_date_added">Data de inclusão</string>
@@ -564,7 +563,6 @@
     <string name="skipped_reason_completed">Pulado porque a série está finalizada</string>
     <string name="skipped_reason_not_caught_up">Pulado porque há capítulos não lidos</string>
     <string name="skipped_reason_not_started">Pulado porque nenhum capítulo foi lido</string>
-    <string name="notification_update_error">%1$d atualização(ões) falhou(aram)</string>
     <string name="learn_more">Toque para saber mais</string>
     <string name="rotation_reverse_portrait">Retrato invertido</string>
     <string name="action_move_to_top_all_for_series">Mover série para o começo</string>
@@ -578,7 +576,7 @@
     <string name="source_filter_empty_screen">Nenhuma fonte instalada foi encontrada</string>
     <string name="source_empty_screen">Nenhuma fonte encontrada</string>
     <string name="action_sort_unread_count">Contagem de não lidos</string>
-    <string name="action_sort_last_manga_update">Ultima checagem de atualização</string>
+    <string name="action_sort_last_manga_update">Última checagem de atualização</string>
     <string name="split_tall_images_summary">Melhora o desempenho do leitor</string>
     <string name="download_notifier_split_page_not_found">Página %d não encontrada durante a divisão</string>
     <string name="download_notifier_split_page_path_not_found">Não foi possível encontrar o caminho do arquivo da página %d</string>
@@ -649,7 +647,7 @@
     <string name="track_remove_date_conf_title">Remover data?</string>
     <string name="track_remove_start_date_conf_text">Isto irá remover sua data de início selecionada anteriormente no %s</string>
     <string name="track_remove_finish_date_conf_text">Isto irá remover sua data de término selecionada anteriormente no %s</string>
-    <string name="pref_invalidate_download_cache">Invalidar o índice de downloads</string>
+    <string name="pref_invalidate_download_cache">Reindexar downloads</string>
     <string name="pref_invalidate_download_cache_summary">Força o aplicativo a checar novamente por capítulos disponíveis offline</string>
     <string name="label_local">Local</string>
     <string name="label_downloaded">Disponíveis offline</string>
@@ -687,7 +685,7 @@
     <string name="pref_page_rotate">Rotacionar páginas largas para caber</string>
     <string name="pref_page_rotate_invert">Inverter a orientação das páginas largas rotacionadas</string>
     <string name="pref_debug_info">Informações de depuração</string>
-    <string name="pref_chapter_swipe_end">Capitulo ao deslizar para a direita</string>
+    <string name="pref_chapter_swipe_end">Capítulo ao deslizar para a direita</string>
     <string name="pref_chapter_swipe_start">Ação de deslizar para a esquerda</string>
     <string name="pref_double_tap_zoom">Toque duplo para dar zoom</string>
     <string name="action_sort_next_updated">Próxima atualização esperada</string>
@@ -901,9 +899,12 @@
     <string name="action_edit_notes">Editar anotações</string>
     <string name="action_notes">Anotações</string>
     <string name="theme_catppuccin">Catppuccin</string>
-    <string name="label_donate">Doar</string>
     <string name="action_webview_close_tab">Fechar aba</string>
     <string name="pref_display_images_description">Renderizar imagens em descrições de mangá</string>
     <string name="pref_disallow_non_ascii_filenames">Não permitir nomes de arquivos não ASCII</string>
     <string name="pref_disallow_non_ascii_filenames_details">Garante a compatibilidade com determinadas mídias de armazenamento que não suportam Unicode. Quando esta opção estiver ativada, você precisará renomear manualmente as pastas de origem e de mangá, substituindo os caracteres não ASCII por suas representações hexadecimais UTF-8 em minúsculas. Os arquivos de capítulos não precisam ser renomeados.</string>
+    <string name="download_bookmarked">Favoritos</string>
+    <string name="pref_download_concurrent_pages">Download simultâneo de páginas</string>
+    <string name="pref_download_concurrent_pages_summary">Páginas baixadas simultâneamente por fonte</string>
+    <string name="action_filter_excluded_scanlators">Filtrar grupo de traduções excluidos</string>
 </resources>

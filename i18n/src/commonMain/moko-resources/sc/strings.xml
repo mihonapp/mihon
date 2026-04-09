@@ -391,7 +391,6 @@
     <string name="pref_read_with_tapping_inverted">Fùrria sas zonas de tocu</string>
     <string name="unknown_status">Istadu disconnotu</string>
     <string name="unknown_author">Autore disconnotu</string>
-    <string name="updated_version">Agiornadu a v%1$s</string>
     <string name="whats_new">Ite b\'at de nou</string>
     <string name="download_insufficient_space">Iscarrigamentu de sos capìtulos fallidu pro neghe de su pagu ispàtziu lìberu in su discu</string>
     <string name="action_global_search_query">Chirca \"%1$s\" globalmente</string>
@@ -563,7 +562,6 @@
     <string name="skipped_reason_not_caught_up">Brincadu ca bi sunt capìtulos non lèghidos</string>
     <string name="skipped_reason_not_started">Brincadu ca non bi sunt capìtulos lèghidos</string>
     <string name="learn_more">Toca pro àteras informatziones</string>
-    <string name="notification_update_error">%1$d agiornamentu(os) fallidu(os)</string>
     <string name="rotation_reverse_portrait">Verticale a s\'imbesse</string>
     <string name="action_move_to_top_all_for_series">Move sa sèrie cara a pitzos</string>
     <string name="disabled_nav">Disabilitadu</string>

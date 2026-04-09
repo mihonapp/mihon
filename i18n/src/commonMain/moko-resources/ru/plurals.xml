@@ -61,10 +61,10 @@
         <item quantity="other">%d сервисов отслеживания</item>
     </plurals>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Отсутствует %d глава в источнике или была отфильтрована</item>
-        <item quantity="few">Отсутствуют %d главы в источнике или были отфильтрованы</item>
-        <item quantity="many">Отсутствуют %d глав в источнике или были отфильтрованы</item>
-        <item quantity="other">Отсутствуют %d глав в источнике или были отфильтрованы</item>
+        <item quantity="one">Была пропущена %d глава, поскольку она отсутствует в источнике или была отфильтрована</item>
+        <item quantity="few">Были пропущены %d главы, поскольку они отсутствуют в источнике или были отфильтрованы</item>
+        <item quantity="many">Было пропущено %d глав, поскольку они отсутствуют в источнике или были отфильтрованы</item>
+        <item quantity="other">Было пропущено %d глав, поскольку они отсутствуют в источнике или были отфильтрованы</item>
     </plurals>
     <plurals name="relative_time">
         <item quantity="one">Вчера</item>
@@ -131,5 +131,11 @@
         <item quantity="few">Копировать %1$d серии?</item>
         <item quantity="many">Копировать %1$d серий?</item>
         <item quantity="other">Копировать %1$d серий?</item>
+    </plurals>
+    <plurals name="notification_update_error">
+        <item quantity="one">%1$d ошибка обновления</item>
+        <item quantity="few">%1$d ошибки обновлений</item>
+        <item quantity="many">%1$d ошибок обновлений</item>
+        <item quantity="other">%1$d ошибок обновлений</item>
     </plurals>
 </resources>

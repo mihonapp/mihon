@@ -391,7 +391,6 @@
     <string name="tapping_inverted_none">No invertir</string>
     <string name="pref_read_with_tapping_inverted">Invertir zonas de toque</string>
     <string name="unknown_author">Autor desconocido</string>
-    <string name="updated_version">Actualizado a v%1$s</string>
     <string name="whats_new">Novedades</string>
     <string name="download_insufficient_space">No se pudo descargar ningún capítulo, queda muy poco espacio</string>
     <string name="action_global_search_query">Buscar por «%1$s» en todas las fuentes</string>
@@ -563,7 +562,6 @@
     <string name="skipped_reason_not_caught_up">Omitido porque todavía hay capítulos sin leer</string>
     <string name="skipped_reason_not_started">Omitido porque no hay capítulos leídos</string>
     <string name="learn_more">Ver más detalles</string>
-    <string name="notification_update_error">Actualizaciones fallidas: %1$d</string>
     <string name="rotation_reverse_portrait">En vertical, al revés</string>
     <string name="action_move_to_top_all_for_series">Mover al primer puesto</string>
     <string name="disabled_nav">Desactivado</string>
@@ -894,7 +892,6 @@
     <string name="migrationListScreenTitleWithProgress">Migrando (%1$d/%2$d)</string>
     <string name="migrationListScreen.migrateNowActionLabel">Migrar ahora</string>
     <string name="pref_hide_missing_chapter_indicators">Ocultar los indicadores de capítulos que falten</string>
-    <string name="label_donate">Donar</string>
     <string name="pref_display_images_description">Ver imágenes en las descripciones de manga</string>
     <string name="pref_disallow_non_ascii_filenames">Prohibir los nombres de archivo que no sean ASCII</string>
     <string name="pref_disallow_non_ascii_filenames_details">Permite guardar tus datos en ciertos tipos de almacenamiento que no admitan Unicode. Al activarlo tendrás que renombrar las carpetas de tus fuentes y manga, pasándolas a representaciones UTF-8 en hexadecimal en minúscula. No tienes que hacer lo mismo con las carpetas de capítulos.</string>

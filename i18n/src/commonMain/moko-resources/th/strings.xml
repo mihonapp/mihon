@@ -431,7 +431,6 @@
     <string name="pref_incognito_mode_summary">หยุดประวัติการอ่านชั่วคราว</string>
     <string name="pref_incognito_mode">โหมดไม่ระบุตัวตน</string>
     <string name="label_downloaded_only">ดาวน์โหลดแล้วเท่านั้น</string>
-    <string name="updated_version">อัปเดตเป็น v%1$s แล้ว</string>
     <string name="check_for_updates">ตรวจสอบการอัปเดต</string>
     <string name="licenses">ใบอนุญาตโอเพ่นซอร์ส</string>
     <string name="whats_new">มีอะไรใหม่</string>
@@ -565,7 +564,6 @@
     <string name="pref_update_only_started">ข้ามรายการที่ยังไม่ได้เริ่มอ่าน</string>
     <string name="skipped_reason_completed">ถูกข้ามเนื่องจากเรื่องนี้จบแล้ว</string>
     <string name="learn_more">แตะเพื่อเรียนรู้เพิ่มเติม</string>
-    <string name="notification_update_error">อัปเดตผิดพลาด %1$d รายการ</string>
     <string name="rotation_reverse_portrait">แนวตั้งแบบกลับด้าน</string>
     <string name="action_move_to_top_all_for_series">ย้ายเรื่องไปด้านบน</string>
     <string name="disabled_nav">ปิดใช้งาน</string>
@@ -848,7 +846,6 @@
     <string name="library_list">รายการคลัง</string>
     <string name="library_exported">ส่งออกคลังแล้ว</string>
     <string name="clear_database_text">คุณกำลังจะลบรายการออกจากฐานข้อมูล</string>
-    <string name="label_donate">บริจาค</string>
     <string name="pref_display_images_description">เรนเดอร์รูปภาพในคำอธิบายเรื่อง</string>
     <string name="pref_disallow_non_ascii_filenames">ไม่อนุญาตชื่อไฟล์ที่ไม่ใช่ ASCII</string>
 </resources>

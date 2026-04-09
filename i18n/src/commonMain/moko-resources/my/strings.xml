@@ -292,6 +292,5 @@
     <string name="network_not_metered">ကန့်သက်မထားသော ကွန်ရက်ပေါ်တွင်သာ</string>
     <string name="ext_uninstall">သင့်ဖုန်းမှ ဖယ်ရှားရန်</string>
     <string name="theme_monet">Dynamic</string>
-    <string name="label_donate">လှူဒါန်း</string>
     <string name="label_auto">အလိုအလျောက်</string>
 </resources>

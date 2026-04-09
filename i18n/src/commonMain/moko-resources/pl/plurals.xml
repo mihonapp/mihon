@@ -114,4 +114,10 @@
         <item quantity="many">%1$s stron</item>
         <item quantity="other">%1$s stron</item>
     </plurals>
+    <plurals name="notification_update_error">
+        <item quantity="one">%1$d aktualizacja się nie powiodła</item>
+        <item quantity="few">%1$d aktualizacje się nie powiodły</item>
+        <item quantity="many">%1$d aktualizacji się nie powiodły</item>
+        <item quantity="other">%1$d aktualizacji się nie powiodły</item>
+    </plurals>
 </resources>
