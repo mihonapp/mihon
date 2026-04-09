@@ -37,7 +37,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -291,9 +290,8 @@ fun SearchToolbar(
             val searchAndClearFocus: () -> Unit = f@{
                 if (searchQuery.isBlank()) return@f
                 onSearch(searchQuery)
-                focusManager.clearFocus()
                 keyboardController?.hide()
-                focusManager.moveFocus(FocusDirection.Next)
+                focusManager.clearFocus(force = true)
             }
 
             BasicTextField(
