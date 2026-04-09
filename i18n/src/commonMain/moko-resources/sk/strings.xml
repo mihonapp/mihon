@@ -535,7 +535,6 @@
     <string name="tapping_inverted_horizontal">Horizontálne</string>
     <string name="disabled_nav">Zakázané</string>
     <string name="pref_remove_exclude_categories">Vylúčené kategórie</string>
-    <string name="updated_version">Aktualizované na v%1$s</string>
     <string name="label_downloaded_only">Iba stiahnuté</string>
     <string name="wish_list">Zoznam prianí</string>
     <string name="remove_manga">Chystáte sa odstrániť \"%s\" zo svojej knižnice</string>
@@ -603,7 +602,6 @@
     <string name="manga_info_expand">Viac</string>
     <string name="download_queue_size_warning">Upozornenie: Veľké hromadné sťahovanie môže viesť k spomaleniu zdrojov a/alebo blokovaniu %s. Klepnutím sa dozviete viac.</string>
     <string name="notification_size_warning">Veľké aktualizácie poškodzujú zdroje a môžu viesť k pomalším aktualizáciám a tiež k zvýšeniu spotreby batérie. Klepnutím sa dozviete viac.</string>
-    <string name="notification_update_error">Zlyhané aktualizácie: %1$d</string>
     <string name="creating_backup_error">Zálohovanie zlyhalo</string>
     <string name="action_track">Sledovať</string>
     <string name="website">Webová stránka</string>
@@ -663,7 +661,6 @@
     <string name="label_upcoming">Nadchádzajúce</string>
     <string name="action_replace_repo">Nahradiť</string>
     <string name="action_bar_up_description">Navigovať hore</string>
-    <string name="label_donate">Prispieť finančne</string>
     <string name="label_auto">Auto</string>
     <string name="action_filter_interval_custom">Vlastná frekvencia aktualizácie</string>
     <string name="action_sort_tracker_score">Skóre na sledovači</string>

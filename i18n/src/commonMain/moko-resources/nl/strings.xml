@@ -393,7 +393,6 @@
     <string name="unknown_author">Onbekende auteur</string>
     <string name="download_insufficient_space">Kon hoofdstukken niet downloaden omdat er te weinig opslagruimte is</string>
     <string name="action_global_search_query">Overal zoeken naar \"%1$s\"</string>
-    <string name="updated_version">Bijgewerkt naar v%1$s</string>
     <string name="whats_new">Wat is er nieuw</string>
     <string name="pref_category_reading_mode">Leesmodus</string>
     <string name="pref_category_theme">Thema</string>
@@ -554,7 +553,6 @@
     <string name="publishing_finished">Uitgave voltooid</string>
     <string name="cancelled">Geannuleerd</string>
     <string name="on_hiatus">Gepauzeerd</string>
-    <string name="notification_update_error">%1$d update(s) mislukt</string>
     <string name="learn_more">Tik om meer te leren</string>
     <string name="skipped_reason_not_caught_up">Overgeslagen want er zijn geen ongelezen hoofdstukken</string>
     <string name="skipped_reason_not_started">Overgeslagen want er zijn geen gelezen hoofdstukken</string>
@@ -818,7 +816,6 @@
     <string name="pref_mark_duplicate_read_chapter_read">Duplicaat gelezen hoofdstuk als gelezen markeren</string>
     <string name="action_display_unread_badge">Ongelezen hoofdstukken</string>
     <string name="theme_monochrome">Monochroom</string>
-    <string name="label_donate">Doneer</string>
     <string name="pref_display_images_description">Geef afbeeldingen weer in mangabeschrijvingen</string>
     <string name="pref_hide_missing_chapter_indicators">Verberg ontbrekende hoofdstukindicatoren</string>
     <string name="pref_disallow_non_ascii_filenames">Verbied niet-ASCII-bestandsnamen</string>

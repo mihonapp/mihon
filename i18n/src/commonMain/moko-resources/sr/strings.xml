@@ -481,7 +481,6 @@
     <string name="track_finished_reading_date">Датум завршетка</string>
     <string name="automatic_background">Аутоматски</string>
     <string name="licenses">Лиценце отвореног кода</string>
-    <string name="updated_version">Ажурирано на v%1$s</string>
     <string name="error_no_match">Ништа није пронађено</string>
     <string name="pref_dual_page_split">Раздели широке странице</string>
     <string name="none">Ништа</string>
@@ -561,7 +560,6 @@
     <string name="pref_update_only_started">Прескочи уносе који нису започети</string>
     <string name="action_show_manga">Прикажи наслов</string>
     <string name="action_move_to_top_all_for_series">Помакни наслов на врх</string>
-    <string name="notification_update_error">%1$d ажурирање није успело</string>
     <string name="learn_more">Додирните да сазнате више</string>
     <string name="library_errors_help">За помоћ о томе како да поправите грешке у ажурирању колекције, погледајте %1$s</string>
     <string name="skipped_reason_not_started">Прескочено јер ниједно поглавље није прочитано</string>

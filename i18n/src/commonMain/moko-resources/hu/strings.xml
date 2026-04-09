@@ -510,7 +510,6 @@
     <string name="update_check_eol">Ez az Android verzió már nem támogatott</string>
     <string name="channel_app_updates">Alkalmazás frissítések</string>
     <string name="cant_open_last_read_chapter">Nem sikerült megnyitni az utoljára olvasott fejezetet</string>
-    <string name="updated_version">Frissítve erre: v%1$s</string>
     <string name="pref_navigate_pan">Széles képek pásztázása</string>
     <string name="save_chapter_as_cbz">Mentés CBZ archívumkén</string>
     <string name="theme_lavender">Levendula</string>
@@ -538,7 +537,6 @@
     <string name="transition_current">Jelenlegi:</string>
     <string name="empty_screen">Hát, ez kínos</string>
     <string name="notification_size_warning">A nagy frissítések kárt okoznak a forrásoknak, és lassabb frissítésekhez, valamint megnövekedett akkumulátorhasználathoz vezethetnek. Koppintson további információért.</string>
-    <string name="notification_update_error">%1$d frissítés sikertelen</string>
     <string name="split_tall_images_summary">Javítja az olvasó teljesítményét</string>
     <string name="backup_restore_missing_trackers">Nem bejelentkezett nyilvántartó:</string>
     <string name="pref_incognito_mode">Inkognitó mód</string>

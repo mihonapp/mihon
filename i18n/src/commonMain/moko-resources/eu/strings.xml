@@ -169,7 +169,6 @@
     <string name="off">Itzali</string>
     <string name="pref_reader_navigation">Nabigazioa</string>
     <string name="color_filter_b_value">U</string>
-    <string name="updated_version">v%1$s-ra eguneratua</string>
     <string name="login_success">Saioa hasia</string>
     <string name="logout_title">Itxi saioa %1$s-n?</string>
     <string name="manga_added_library">Liburutegira gehitua</string>

@@ -367,7 +367,6 @@
     <string name="label_downloaded_only">Mga na-download lang</string>
     <string name="pref_acra_summary">Nakatutulong sa pag-ayos sa mga bug. Walang sensitibong data ang ipapadala</string>
     <string name="pref_enable_acra">Ipadala ang mga ulat ng pag-crash</string>
-    <string name="updated_version">Na-update sa v%1$s</string>
     <string name="check_for_updates">Maghanap ng update</string>
     <string name="licenses">Mga lisensiyang open-source</string>
     <string name="whats_new">Anong bago</string>
@@ -565,7 +564,6 @@
     <string name="pref_landscape_zoom">Awtomatikong mag-zoom sa mga malalawak na larawan</string>
     <string name="pref_navigate_pan">I-pan ang mga malalapad na larawan</string>
     <string name="learn_more">Matuto pa</string>
-    <string name="notification_update_error">Nabigo ang %1$d (na) update</string>
     <string name="rotation_reverse_portrait">Baligtad na patayo</string>
     <string name="action_move_to_top_all_for_series">Ilagay sa taas ang serye</string>
     <string name="disabled_nav">Nakasara</string>
@@ -900,7 +898,6 @@
     <string name="migrationListScreen.exitDialog.stopLabel">Ihinto</string>
     <string name="pref_hide_missing_chapter_indicators">Itago ang mga indikasyon ng nawawalang kabanata</string>
     <string name="pref_display_images_description">I-render ang mga imahe sa mga paglalarawan ng manga</string>
-    <string name="label_donate">Mag-donate</string>
     <string name="pref_disallow_non_ascii_filenames">Di-payagan ang mga non-ASCII na filename</string>
     <string name="pref_disallow_non_ascii_filenames_details">Tinitiyak ang pagiging tugma sa ilang partikular na storage media na hindi sumusuporta sa Unicode. Kapag napagana ito, kakailanganin mong manu-manong palitan ang pangalan ng source at manga folder sa pamamagitan ng pagpapalit ng mga hindi ASCII na character ng kanilang lowercase na UTF-8 hexadecimal na representasyon. Hindi kailangang palitan ng pangalan ang mga file ng kabanata.</string>
     <string name="pref_download_concurrent_sources">Kasabay na pag-download ng source</string>
@@ -911,4 +908,5 @@
     <string name="migrationConfigScreen.availableHeader">Maaaring Magamit</string>
     <string name="action_filter_excluded_scanlators">I-filter ang na-ibukod na mga scanlator</string>
     <string name="download_bookmarked">Na-bookmark</string>
+    <string name="label_support_us">Suportahan Kami</string>
 </resources>

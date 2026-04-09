@@ -393,7 +393,6 @@
     <string name="unknown_status">უცნობი სტატუსი</string>
     <string name="unknown_author">უცნობი ავტორი</string>
     <string name="action_global_search_query">მოიძებნოს \"%1$s\"-თვის გლობალურად</string>
-    <string name="updated_version">განახლებულია v%1$s-მდე</string>
     <string name="whats_new">რა არის ახალი</string>
     <string name="requires_app_restart">ასამოქმედებლად საჭიროა აპლიკაციის გადატვირთვა</string>
     <string name="label_network">ქსელი</string>

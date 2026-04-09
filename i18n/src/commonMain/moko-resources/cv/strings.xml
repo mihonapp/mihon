@@ -391,7 +391,6 @@
     <string name="pref_restore_backup_summ">Вулавӑша йантӑлавран тавӑр</string>
     <string name="pref_restore_backup">Йантӑлав тавӑр</string>
     <string name="pref_create_backup">Йантӑлав ту</string>
-    <string name="updated_version">v%1$s верссиччен ҫӗнетнӗ</string>
     <string name="whats_new">Мӗн ҫӗнни</string>
     <string name="pref_category_theme">Темӗ</string>
     <string name="action_sort_date_added">Хушни вӑхӑчӗпе</string>

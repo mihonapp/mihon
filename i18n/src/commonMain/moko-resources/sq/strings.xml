@@ -420,7 +420,6 @@
     <string name="viewer">Mënyra e leximit</string>
     <string name="transition_next">Tjetra:</string>
     <string name="pref_clear_history">Pastro historinë</string>
-    <string name="notification_update_error">%1$d përditësim(e) dështoi</string>
     <string name="skipped_reason_completed">U anashkalua sepse seria ka përfunduar</string>
     <string name="file_select_cover">Zgjidhni imazhin e kopertinës</string>
     <string name="update_check_open">Hapni në GitHub</string>
@@ -524,7 +523,6 @@
     <string name="battery_optimization_disabled">Optimizimi i baterisë është tashmë i çaktivizuar</string>
     <string name="battery_optimization_setting_activity_not_found">Cilësimet e pajisjes nuk mund të hapeshin</string>
     <string name="check_for_updates">Kontrolloni për përditësime</string>
-    <string name="updated_version">Përditësuar në v%1$s</string>
     <string name="pref_enable_acra">Dërgoni raporte përplasjesh</string>
     <string name="pref_acra_summary">Ndihmon në rregullimin e çdo defekti. Nuk do të dërgohen të dhëna sensitive</string>
     <string name="fdroid_warning">Ndërtimet e F-Droid nuk mbështeten zyrtarisht.

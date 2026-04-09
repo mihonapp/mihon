@@ -393,7 +393,6 @@
     <string name="pref_read_with_tapping_inverted">Inversați zonele de atingere</string>
     <string name="unknown_status">Stare necunoscută</string>
     <string name="unknown_author">Autor necunoscut</string>
-    <string name="updated_version">Actualizat la v%1$s</string>
     <string name="whats_new">Ce este nou</string>
     <string name="download_insufficient_space">Nu s-au putut descărca capitole din cauza spațiului de stocare redus</string>
     <string name="action_global_search_query">Căutați „%1$s” la nivel global</string>
@@ -500,7 +499,6 @@
     <string name="local_invalid_format">Format de capitol invalid</string>
     <string name="download_queue_size_warning">Atenție : actualizarile mari în masă vor face sursele mai incete și/sau vor bloca %s. Apăsați pentru mai multe informatii.</string>
     <string name="getting_started_guide">Ghidul de inceput</string>
-    <string name="notification_update_error">%1$d actualizari esuate</string>
     <string name="skipped_reason_not_caught_up">Ignorata deoarece sunt capitole necitite</string>
     <string name="empty_backup_error">Nu există intrări în bibliotecă pentru a face backupuri</string>
     <string name="delete_category">Ștergeți categoria</string>
@@ -833,7 +831,6 @@
     <string name="pref_always_decode_long_strip_with_ssiv_summary">Afectează performanța. Activați numai dacă reducerea pragului bitmap nu rezolvă problemele legate de imaginile goale</string>
     <string name="label_auto">Automatic</string>
     <string name="pref_incognito_mode_extension_summary">Întrerupeți istoricul de lectură pentru extensie</string>
-    <string name="label_donate">Donează</string>
     <string name="action_display_unread_badge">Capitole necitite</string>
     <string name="action_notes">Notițe</string>
     <string name="action_edit_notes">Editează notițe</string>

@@ -419,7 +419,6 @@
     <string name="pref_incognito_mode">Incognito mode</string>
     <string name="version">Bersyon</string>
     <string name="check_for_updates">Susiha ang mga update</string>
-    <string name="updated_version">Mga update sa v%1$s</string>
     <string name="pref_enable_acra">Ipadala ang mga taho sa pagkahagsa</string>
     <string name="logout_success">Naka-log out ka na karon</string>
     <string name="password">Password</string>
