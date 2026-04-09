@@ -40,6 +40,7 @@ fun MoreScreen(
     onClickStats: () -> Unit,
     onClickDataAndStorage: () -> Unit,
     onClickSettings: () -> Unit,
+    onClickSupport: () -> Unit,
     onClickAbout: () -> Unit,
 ) {
     val uriHandler = LocalUriHandler.current
@@ -136,7 +137,7 @@ fun MoreScreen(
                 TextPreferenceWidget(
                     title = stringResource(MR.strings.label_support_us),
                     icon = Icons.Default.VolunteerActivism,
-                    onPreferenceClick = { uriHandler.openUri(Constants.URL_DONATE) },
+                    onPreferenceClick = onClickSupport,
                 )
             }
             item {

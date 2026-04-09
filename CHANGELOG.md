@@ -11,6 +11,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Added
+- Add dedicated "Support Us" screen ([@AntsyLich](https://github.com/AntsyLich)) ([#3200](https://github.com/mihonapp/mihon/pull/3200))
+
 ### Changed
 - Don't prompt users to enable Google Play services if disabled or unavailable ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3152](https://github.com/mihonapp/mihon/pull/3152))
 - Make "Support Us" more prominent in More screen ([@AntsyLich](https://github.com/AntsyLich)) ([#3196](https://github.com/mihonapp/mihon/pull/3196))
