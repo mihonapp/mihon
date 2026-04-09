@@ -59,6 +59,9 @@ object SettingsAppearanceScreen : SearchableSettings {
         val amoledPref = uiPreferences.themeDarkAmoled
         val amoled by amoledPref.collectAsState()
 
+        val einkPref = uiPreferences.themeEInk
+        val eink by einkPref.collectAsState()
+
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_category_theme),
             preferenceItems = persistentListOf(
@@ -85,6 +88,15 @@ object SettingsAppearanceScreen : SearchableSettings {
                     preference = amoledPref,
                     title = stringResource(MR.strings.pref_dark_theme_pure_black),
                     enabled = themeMode != ThemeMode.LIGHT,
+                    onValueChanged = {
+                        (context as? Activity)?.let { ActivityCompat.recreate(it) }
+                        true
+                    },
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = einkPref,
+                    title = stringResource(MR.strings.pref_theme_eink),
+                    subtitle = stringResource(MR.strings.pref_theme_eink_summary),
                     onValueChanged = {
                         (context as? Activity)?.let { ActivityCompat.recreate(it) }
                         true

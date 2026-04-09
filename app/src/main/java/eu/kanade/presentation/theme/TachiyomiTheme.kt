@@ -31,12 +31,14 @@ import uy.kohesive.injekt.api.get
 fun TachiyomiTheme(
     appTheme: AppTheme? = null,
     amoled: Boolean? = null,
+    eink: Boolean? = null,
     content: @Composable () -> Unit,
 ) {
     val uiPreferences = Injekt.get<UiPreferences>()
     BaseTachiyomiTheme(
         appTheme = appTheme ?: uiPreferences.appTheme.get(),
         isAmoled = amoled ?: uiPreferences.themeDarkAmoled.get(),
+        isEInk = eink ?: uiPreferences.themeEInk.get(),
         content = content,
     )
 }
@@ -46,23 +48,25 @@ fun TachiyomiPreviewTheme(
     appTheme: AppTheme = AppTheme.DEFAULT,
     isAmoled: Boolean = false,
     content: @Composable () -> Unit,
-) = BaseTachiyomiTheme(appTheme, isAmoled, content)
+) = BaseTachiyomiTheme(appTheme, isAmoled, isEInk = false, content)
 
 @Composable
 private fun BaseTachiyomiTheme(
     appTheme: AppTheme,
     isAmoled: Boolean,
+    isEInk: Boolean,
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
     val isDark = isSystemInDarkTheme()
     MaterialExpressiveTheme(
-        colorScheme = remember(appTheme, isDark, isAmoled) {
+        colorScheme = remember(appTheme, isDark, isAmoled, isEInk) {
             getThemeColorScheme(
                 context = context,
                 appTheme = appTheme,
                 isDark = isDark,
                 isAmoled = isAmoled,
+                isEInk = isEInk,
             )
         },
         content = content,
@@ -74,6 +78,7 @@ private fun getThemeColorScheme(
     appTheme: AppTheme,
     isDark: Boolean,
     isAmoled: Boolean,
+    isEInk: Boolean,
 ): ColorScheme {
     val colorScheme = if (appTheme == AppTheme.MONET) {
         MonetColorScheme(context)
@@ -83,6 +88,7 @@ private fun getThemeColorScheme(
     return colorScheme.getColorScheme(
         isDark = isDark,
         isAmoled = isAmoled,
+        isEInk = isEInk,
         overrideDarkSurfaceContainers = appTheme != AppTheme.MONET,
     )
 }
