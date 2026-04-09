@@ -85,6 +85,7 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.ZoneOffset
 
 data class TrackInfoDialogHomeScreen(
@@ -451,15 +452,20 @@ private data class TrackDateSelectorScreen(
             // Disallow future dates
             if (targetDate > LocalDate.now(ZoneOffset.UTC)) return false
 
+            // Stored dates use the system's local timezone (see setDate below),
+            // so we must interpret them with systemDefault() — not UTC — to get
+            // the correct calendar date for comparison.
+            val localZone = ZoneId.systemDefault()
+
             return when {
                 // Disallow setting start date after finish date
                 start && track.finishDate > 0 -> {
-                    val finishDate = Instant.ofEpochMilli(track.finishDate).toLocalDate(ZoneOffset.UTC)
+                    val finishDate = Instant.ofEpochMilli(track.finishDate).toLocalDate(localZone)
                     targetDate <= finishDate
                 }
                 // Disallow setting finish date before start date
                 !start && track.startDate > 0 -> {
-                    val startDate = Instant.ofEpochMilli(track.startDate).toLocalDate(ZoneOffset.UTC)
+                    val startDate = Instant.ofEpochMilli(track.startDate).toLocalDate(localZone)
                     startDate <= targetDate
                 }
                 else -> {
@@ -472,15 +478,17 @@ private data class TrackDateSelectorScreen(
             // Disallow future years
             if (year > LocalDate.now(ZoneOffset.UTC).year) return false
 
+            val localZone = ZoneId.systemDefault()
+
             return when {
                 // Disallow setting start year after finish year
                 start && track.finishDate > 0 -> {
-                    val finishDate = Instant.ofEpochMilli(track.finishDate).toLocalDate(ZoneOffset.UTC)
+                    val finishDate = Instant.ofEpochMilli(track.finishDate).toLocalDate(localZone)
                     year <= finishDate.year
                 }
                 // Disallow setting finish year before start year
                 !start && track.startDate > 0 -> {
-                    val startDate = Instant.ofEpochMilli(track.startDate).toLocalDate(ZoneOffset.UTC)
+                    val startDate = Instant.ofEpochMilli(track.startDate).toLocalDate(localZone)
                     startDate.year <= year
                 }
                 else -> {
