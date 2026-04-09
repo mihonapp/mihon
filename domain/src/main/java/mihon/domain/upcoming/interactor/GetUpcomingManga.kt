@@ -11,7 +11,6 @@ class GetUpcomingManga(
 
     private val includedStatuses = setOf(
         SManga.ONGOING.toLong(),
-        SManga.PUBLISHING_FINISHED.toLong(),
     )
 
     suspend fun subscribe(): Flow<List<Manga>> {
