@@ -29,6 +29,7 @@ import eu.kanade.domain.track.interactor.TrackChapter
 import eu.kanade.domain.track.model.AutoTrackState
 import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.presentation.manga.DownloadAction
+import eu.kanade.presentation.manga.ExportAction
 import eu.kanade.presentation.manga.components.ChapterDownloadAction
 import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.data.download.DownloadCache
@@ -710,6 +711,10 @@ class MangaScreenModel(
                 deleteChapters(items.map { it.chapter })
             }
         }
+    }
+
+    fun runExportAction(action: ExportAction) {
+        // TODO: implement in single-title export step
     }
 
     fun runDownloadAction(action: DownloadAction) {

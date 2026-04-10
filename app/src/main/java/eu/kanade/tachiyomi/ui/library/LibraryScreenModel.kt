@@ -15,6 +15,7 @@ import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.presentation.components.SEARCH_DEBOUNCE_MILLIS
 import eu.kanade.presentation.library.components.LibraryToolbarTitle
 import eu.kanade.presentation.manga.DownloadAction
+import eu.kanade.presentation.manga.ExportAction
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
@@ -518,6 +519,10 @@ class LibraryScreenModel(
                 downloadManager.downloadChapters(manga, chapters)
             }
         }
+    }
+
+    fun performExportAction(action: ExportAction) {
+        // TODO: implement in bulk export step
     }
 
     /**
