@@ -30,6 +30,7 @@ import eu.kanade.domain.track.model.AutoTrackState
 import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.presentation.manga.ExportAction
+import eu.kanade.tachiyomi.data.export.EReaderExporter
 import eu.kanade.presentation.manga.components.ChapterDownloadAction
 import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.data.download.DownloadCache
@@ -714,7 +715,55 @@ class MangaScreenModel(
     }
 
     fun runExportAction(action: ExportAction) {
-        // TODO: implement in single-title export step
+        val manga = successState?.manga ?: return
+        val source = successState?.source ?: return
+        val exportableChapters = getExportableChaptersSorted()
+
+        if (exportableChapters.isEmpty()) {
+            screenModelScope.launch {
+                snackbarHostState.showSnackbar(
+                    message = context.stringResource(MR.strings.export_no_downloaded_chapters),
+                )
+            }
+            return
+        }
+
+        screenModelScope.launchIO {
+            when (action) {
+                ExportAction.E_READER -> {
+                    val result = EReaderExporter(context).export(
+                        manga = manga,
+                        source = source,
+                        chapters = exportableChapters,
+                    )
+                    when (result) {
+                        is EReaderExporter.Result.Success -> {
+                            snackbarHostState.showSnackbar(
+                                message = context.stringResource(
+                                    MR.strings.export_success,
+                                    "exports/${result.file.name}",
+                                ),
+                                duration = SnackbarDuration.Long,
+                            )
+                        }
+                        is EReaderExporter.Result.Error -> {
+                            snackbarHostState.showSnackbar(
+                                message = context.stringResource(MR.strings.export_failed),
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getExportableChaptersSorted(): List<Chapter> {
+        val manga = successState?.manga ?: return emptyList()
+        val isLocalManga = manga.isLocal()
+        return allChapters.orEmpty()
+            .filter { isLocalManga || it.isDownloaded }
+            .map { it.chapter }
+            .sortedWith(getChapterSort(manga, sortDescending = false))
     }
 
     fun runDownloadAction(action: DownloadAction) {
