@@ -348,7 +348,6 @@
     <string name="label_upcoming">Наступнае</string>
     <string name="scanlator">Сканлейтар</string>
     <string name="label_downloaded">Спампована</string>
-    <string name="label_donate">Падтрымаць</string>
     <string name="label_auto">Аўта</string>
     <string name="action_sort_next_updated">Наступнае чаканае абнаўленне</string>
     <string name="action_sort_tracker_score">Ацэнка трэкера</string>
@@ -587,7 +586,6 @@
     <string name="licenses">Ліцэнзіі адкрытага кода</string>
     <string name="privacy_policy">Палітыка прыватнасці</string>
     <string name="check_for_updates">Праверыць абнаўленні</string>
-    <string name="updated_version">Абноўлена да %1$s</string>
     <string name="pref_enable_acra">Адпраўляць справаздачы пра збоі</string>
     <string name="pref_acra_summary">Дапамагае выпраўляць памылкі. Ніякія асабістыя даныя не будуць адпраўлены</string>
     <string name="fdroid_warning">Зборкі F-Droid афіцыйна не падтрымліваюцца.\nНацісніце, каб даведацца больш.</string>
@@ -810,7 +808,6 @@
     <string name="notification_chapters_single">Раздзел %1$s</string>
     <string name="notification_chapters_single_and_more">Раздзел %1$s ды яшчэ %2$d</string>
     <string name="notification_chapters_multiple">Раздзелы %1$s</string>
-    <string name="notification_update_error">Не ўдалося %1$d абнаўленне(яў)</string>
     <string name="learn_more">Націсніце, каб даведацца больш</string>
     <string name="notification_cover_update_failed">Не ўдалося абнавіць вокладку</string>
     <string name="notification_first_add_to_library">Калі ласка, дадайце твор у бібліятэку перад гэтым дзеяннем</string>

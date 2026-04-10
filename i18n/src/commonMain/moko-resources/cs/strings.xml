@@ -332,7 +332,6 @@
     <string name="pref_incognito_mode_summary">Pozastaví historii čtení</string>
     <string name="pref_incognito_mode">Anonymní režim</string>
     <string name="label_downloaded_only">Pouze staženo</string>
-    <string name="updated_version">Aktualizováno na verzi v%1$s</string>
     <string name="check_for_updates">Zkontrolovat aktualizace</string>
     <string name="licenses">Open Source licence</string>
     <string name="whats_new">Co je nového</string>
@@ -558,7 +557,6 @@
     <string name="action_show_manga">Zobrazit položku</string>
     <string name="action_display_cover_only_grid">Mřížka jen s přebaly</string>
     <string name="pref_update_only_started">Přeskočit nerozečtené položky</string>
-    <string name="notification_update_error">%1$d aktualizace(í) selhalo</string>
     <string name="on_hiatus">Má pauzu</string>
     <string name="skipped_reason_not_caught_up">Přeskočeno, protože obsahuje nepřečtené kapitoly</string>
     <string name="action_move_to_top_all_for_series">Přesunout sérii na začátek</string>
@@ -860,7 +858,6 @@
     <string name="storage_failed_to_create_directory">Nepodařilo se vytvořit adresář: %s</string>
     <string name="clear_database_text">Chystáte se odstranit položky z databáze</string>
     <string name="clear_db_exclude_read">Ponechat položky s přečtenými kapitolami</string>
-    <string name="label_donate">Přispěj</string>
     <string name="theme_catppuccin">Catppuccin</string>
     <string name="pref_hide_missing_chapter_indicators">Skrýt indikátory chybějících kapitol</string>
     <string name="pref_disallow_non_ascii_filenames">Nepovolovat soubory s non-ASCII znaky</string>

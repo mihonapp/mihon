@@ -393,7 +393,6 @@
     <string name="tapping_inverted_horizontal">Yatay</string>
     <string name="unknown_status">Bilinmeyen durum</string>
     <string name="unknown_author">Bilinmeyen yazar</string>
-    <string name="updated_version">v%1$s sürümüne güncellendi</string>
     <string name="whats_new">Yenilikler</string>
     <string name="download_insufficient_space">Depolama alanı az olduğu için bölümler indirilemedi</string>
     <string name="action_sort_date_added">Eklendiği tarih</string>
@@ -564,7 +563,6 @@
     <string name="skipped_reason_not_started">Hiçbir bölüm okunmadığı için atlandı</string>
     <string name="pref_navigate_pan">Geniş görselleri kaydır</string>
     <string name="pref_landscape_zoom">Geniş görsellere otomatik yakınlaştır</string>
-    <string name="notification_update_error">%1$d güncelleme başarısız oldu</string>
     <string name="learn_more">Daha fazla bilgi için dokunun</string>
     <string name="rotation_reverse_portrait">Ters portre</string>
     <string name="action_move_to_top_all_for_series">Seriyi en üste taşı</string>
@@ -902,7 +900,6 @@
     <string name="migrationListScreen.exitDialog.stopLabel">Durdur</string>
     <string name="pref_hide_missing_chapter_indicators">Eksik bölüm göstergelerini gizle</string>
     <string name="pref_display_images_description">Manga açıklamalarında bulunan görselleri göster</string>
-    <string name="label_donate">Bağış</string>
     <string name="pref_disallow_non_ascii_filenames">ASCII olmayan dosya isimlerine izin verme</string>
     <string name="pref_disallow_non_ascii_filenames_details">Unicode desteklemeyen bazı depolama sistemleri için uyumluluk sağlar. Etkinleştirildiğinde kaynak ve manga klasörlerini manuel olarak yeniden adlandırıp ASCII olmayan karakterleri küçük UTF-8 heksadesimal karşılıklarıyla değiştirmeniz gerekir. Bölüm dosyalarının yeniden adlandırılması gerekli değildir.</string>
     <string name="pref_download_concurrent_pages">Tek seferde indirilen sayfa sayısı</string>

@@ -207,4 +207,17 @@
     <string name="onboarding_permission_notifications_description">ലൈബ്രറി അപ്‌ഡേറ്റുകൾക്കും മറ്റും അറിയിപ്പ് നേടുക.</string>
     <string name="onboarding_permission_ignore_battery_opts">പശ്ചാത്തല ബാറ്ററി ഉപയോഗം</string>
     <string name="onboarding_permission_ignore_battery_opts_description">ദീർഘകാല ലൈബ്രറി അപ്‌ഡേറ്റുകൾ, ഡൗൺലോഡ്, ബാക്കപ്പ് പുനഃസ്ഥാപിക്കൽ എന്നിവയ്ക്കുള്ള തടസ്സങ്ങൾ ഒഴിവാക്കുക.</string>
+    <string name="migrationListScreen.progressDialog.cancelLabel">നിരസിക്കുക</string>
+    <string name="migrationListScreen.migrateDialog.cancelLabel">നിരസിക്കുക</string>
+    <string name="migrationListScreen.migrateDialog.migrateLabel">സ്ഥലാന്തരീകരിക്കുക</string>
+    <string name="migrationListScreen.migrateDialog.copyLabel">പകർത്തുക</string>
+    <string name="migrationListScreen.exitDialog.cancelLabel">നിരസിക്കുക</string>
+    <string name="migrationListScreen.exitDialog.stopLabel">നിർത്തുക</string>
+    <string name="migrationListScreen.exitDialogTitle">സ്ഥലാന്തരീകരണം നിർത്തണോ?</string>
+    <string name="migrationListScreen.unknownLatestChapter">അജ്ഞാതം</string>
+    <string name="migrationListScreen.migrateActionLabel">സ്ഥലാന്തരീകരിക്കുക</string>
+    <string name="migrationListScreen.copyActionLabel">പകർത്തുക</string>
+    <string name="migrationListScreenTitle">സ്ഥലാന്തരീകരണം</string>
+    <string name="migrationConfigScreen.continueButtonText">തുടരുക</string>
+    <string name="migrationConfigScreen.availableHeader">ലഭ്യം</string>
 </resources>

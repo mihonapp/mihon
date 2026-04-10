@@ -386,7 +386,6 @@
     <string name="unknown_status">Estat desconegut</string>
     <string name="unknown_author">Autor desconegut</string>
     <string name="action_global_search_query">Cerca «%1$s» globalment</string>
-    <string name="updated_version">S’ha actualitzat a la v%1$s</string>
     <string name="whats_new">Novetats</string>
     <string name="requires_app_restart">Cal reiniciar l’aplicació perquè tingui efecte</string>
     <string name="label_network">Xarxa</string>
@@ -562,7 +561,6 @@
     <string name="skipped_reason_not_started">S’ha omès perquè no hi ha cap capítol llegit</string>
     <string name="skipped_reason_not_caught_up">S’ha omès perquè hi ha capítols no llegits</string>
     <string name="learn_more">Premeu per a obtenir més informació</string>
-    <string name="notification_update_error">Han fallat %1$d actualitzacions</string>
     <string name="rotation_reverse_portrait">Vertical inversa</string>
     <string name="action_move_to_top_all_for_series">Mou la sèrie a dalt de tot</string>
     <string name="disabled_nav">Desactivat</string>
@@ -833,7 +831,6 @@
     <string name="theme_monochrome">Monocrom</string>
     <string name="library_list">Llista de la biblioteca</string>
     <string name="action_toggle_private_on">Segueix de manera privada</string>
-    <string name="label_donate">Dóna</string>
     <string name="action_display_unread_badge">Capítols no llegits</string>
     <string name="action_notes">Notes</string>
     <string name="action_edit_notes">Edita les notes</string>
