@@ -31,6 +31,7 @@ import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.presentation.manga.ExportAction
 import eu.kanade.tachiyomi.data.export.EReaderExporter
+import eu.kanade.tachiyomi.util.system.openExportsDirectory
 import eu.kanade.presentation.manga.components.ChapterDownloadAction
 import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.data.download.DownloadCache
@@ -738,13 +739,22 @@ class MangaScreenModel(
                     )
                     when (result) {
                         is EReaderExporter.Result.Success -> {
-                            snackbarHostState.showSnackbar(
+                            val snackbarResult = snackbarHostState.showSnackbar(
                                 message = context.stringResource(
                                     MR.strings.export_success,
                                     "exports/${result.file.name}",
                                 ),
+                                actionLabel = context.stringResource(MR.strings.export_open_folder),
+                                withDismissAction = true,
                                 duration = SnackbarDuration.Long,
                             )
+                            if (snackbarResult == SnackbarResult.ActionPerformed) {
+                                if (!context.openExportsDirectory()) {
+                                    snackbarHostState.showSnackbar(
+                                        context.stringResource(MR.strings.export_open_folder_error),
+                                    )
+                                }
+                            }
                         }
                         is EReaderExporter.Result.Error -> {
                             snackbarHostState.showSnackbar(

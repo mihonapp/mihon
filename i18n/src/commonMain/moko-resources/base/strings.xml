@@ -766,6 +766,8 @@
     <string name="export_bulk_success">Exported %d titles</string>
     <string name="export_bulk_skipped">skipped %d</string>
     <string name="export_bulk_failed">failed %d</string>
+    <string name="export_open_folder">Open folder</string>
+    <string name="export_open_folder_error">No file explorer app found</string>
     <string name="custom_cover">Custom cover</string>
     <string name="manga_cover">Cover</string>
     <string name="cover_saved">Cover saved</string>
