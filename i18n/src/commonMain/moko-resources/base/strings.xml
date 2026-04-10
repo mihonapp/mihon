@@ -759,6 +759,13 @@
     <string name="manga_download">Download</string>
     <string name="download_unread">Unread</string>
     <string name="download_bookmarked">Bookmarked</string>
+    <string name="export_for_ereader">Export for e-reader</string>
+    <string name="export_no_downloaded_chapters">No downloaded chapters to export</string>
+    <string name="export_success">Exported to %s</string>
+    <string name="export_failed">Export failed</string>
+    <string name="export_bulk_success">Exported %d titles</string>
+    <string name="export_bulk_skipped">skipped %d</string>
+    <string name="export_bulk_failed">failed %d</string>
     <string name="custom_cover">Custom cover</string>
     <string name="manga_cover">Cover</string>
     <string name="cover_saved">Cover saved</string>
