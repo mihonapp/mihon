@@ -276,6 +276,30 @@ data object LibraryTab : Tab {
         LaunchedEffect(Unit) {
             launch { queryEvent.receiveAsFlow().collect(screenModel::search) }
             launch { requestSettingsSheetEvent.receiveAsFlow().collectLatest { screenModel.showSettingsDialog() } }
+            launch {
+                screenModel.exportEvent.receiveAsFlow().collectLatest { event ->
+                    val message = when (event) {
+                        is LibraryScreenModel.ExportEvent.Success -> {
+                            buildString {
+                                append(context.stringResource(MR.strings.export_bulk_success, event.exportedCount))
+                                if (event.skippedCount > 0) {
+                                    append(", ")
+                                    append(context.stringResource(MR.strings.export_bulk_skipped, event.skippedCount))
+                                }
+                                if (event.failedCount > 0) {
+                                    append(", ")
+                                    append(context.stringResource(MR.strings.export_bulk_failed, event.failedCount))
+                                }
+                            }
+                        }
+                        LibraryScreenModel.ExportEvent.NothingToExport ->
+                            context.stringResource(MR.strings.export_no_downloaded_chapters)
+                        LibraryScreenModel.ExportEvent.StorageError ->
+                            context.stringResource(MR.strings.export_failed)
+                    }
+                    snackbarHostState.showSnackbar(message)
+                }
+            }
         }
     }
 
