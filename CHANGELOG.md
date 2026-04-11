@@ -27,6 +27,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Fixed
 - Fix app trying to split long strip when not needed ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3121](https://github.com/mihonapp/mihon/pull/3121))
+- Fix blank image on tall webtoons exceeding hardware texture limits ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3190](https://github.com/mihonapp/mihon/pull/3190))
 
 ### Removed
 - Remove the empty "Updated to X.Y.Z" popup after app update ([@AntsyLich](https://github.com/AntsyLich)) ([#3203](https://github.com/mihonapp/mihon/pull/3203))
