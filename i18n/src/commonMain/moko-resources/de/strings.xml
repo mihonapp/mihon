@@ -908,4 +908,17 @@
     <string name="action_webview_close_tab">Tab schließen</string>
     <string name="action_filter_excluded_scanlators">Ausgeschlossene Scanlationgruppen herausfiltern</string>
     <string name="download_bookmarked">Mit Lesezeichen versehen</string>
+    <string name="label_support_us">Unterstütze Uns</string>
+    <string name="supportUsScreen.perks">Unterstützende erhalten Zugang zu exklusiven Kanälen. Weitere Vorteile folgen.</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreon (bevorzugt)</string>
+    <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
+    <string name="supportUsScreen.currentlySupportedBy">Mihon wird aktuell von %d+ Personen unterstützt. Wir bedanken uns bei euch allen. Lasst uns Mihon gemeinsam noch besser machen.</string>
+    <string name="supportUsScreen.contactForDetailsMessage">Trete unserem Discord-Server für alternative Optionen oder bei weiteren Fragen bei.</string>
+    <string name="supportUsScreen.contactPlatform">Discord</string>
+    <string name="donationCampaign.title">Gefällt dir die App?</string>
+    <string name="donationCampaign.paragraph1">Hi! Ich bin der Hauptentwickler von Mihon und möchte darum bitten, die Entwicklung finanziell zu unterstützen. Mit genügend Unterstützung werde ich in der Lage sein, in Vollzeit an Mihon zu arbeiten und sowohl langjährige Probleme zu beheben als auch häufig gewünschte Features zu implementieren.</string>
+    <string name="donationCampaign.paragraph2">Du kannst entweder mittels Patreon (bevorzugt) oder OpenCollective spenden. Wenn du Fragen hast oder auf anderem Wege die Entwicklung unterstützen möchstest, dann kannst du mich gerne über Mihons Discord-Server erreichen.</string>
+    <string name="donationCampaign.paragraph3">Unabhängig davon wird Mihon weiterhin von mir und anderen Freiwilligen entwickelt werden und bleibt Open-Source-Software.</string>
+    <string name="donationCampaign.contactPlatform">Discord</string>
+    <string name="donationCampaign.dismiss">Verwerfen</string>
 </resources>

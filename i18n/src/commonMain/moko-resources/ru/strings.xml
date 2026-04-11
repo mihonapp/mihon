@@ -909,4 +909,16 @@
     <string name="action_filter_excluded_scanlators">Фильтровать исключенных переводчиков</string>
     <string name="download_bookmarked">В закладках</string>
     <string name="label_support_us">Поддержите нас</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreon (Предпочтительно)</string>
+    <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
+    <string name="supportUsScreen.currentlySupportedBy">Mihon сейчас поддерживается %d+ Patreon-спонсорами. Мы хотим поблагодарить каждого из вас. Давайте сделаем Mihon лучше.</string>
+    <string name="donationCampaign.contactPlatform">Discord</string>
+    <string name="supportUsScreen.perks">Patreon-спонсоры получать доступ к эксклюзивным каналам с будущими привилегиями и возможностями.</string>
+    <string name="supportUsScreen.contactPlatform">Discord</string>
+    <string name="donationCampaign.title">Нравится приложение?</string>
+    <string name="donationCampaign.paragraph1">Приветствую! Я главный разработчик Mihon и хотел бы попросить вас об финансовой поддержке проекта. При достаточной поддержке я смогу работать над Mihon в полную силу и сосредоточиться как на давно существующих проблемах, так и на функциях, которые пользователи уже давно просят добавить.</string>
+    <string name="donationCampaign.paragraph2">Вы можете поддержать проект через Patreon (Предпочтительно) или OpenCollective. Если у вас есть вопросы или хотите поддержать, используя другие способы, вы можете связаться со мной через Discord-сервер нашего приложения.</string>
+    <string name="donationCampaign.paragraph3">Независимо от поддержки, проект останется с открытым исходным кодом, и я с волонтёрами будем и дальше поддерживать это приложение.</string>
+    <string name="donationCampaign.dismiss">Отклонить</string>
+    <string name="supportUsScreen.contactForDetailsMessage">Если у вас есть другие способы поддержки или вопросы по этому поводу, можете присоединиться к нашему Discord-серверу.</string>
 </resources>
