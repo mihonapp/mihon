@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Improved
+- Update manga details of uninitialized manga migration targets ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#3191](https://github.com/mihonapp/mihon/pull/3191))
 
 ## [v0.19.9] - 2026-04-11
 ### Fixed
@@ -28,7 +30,6 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Improved
 - Show informative error when trying to add unapproved titles to list on MAL ([@MajorTanya](https://github.com/MajorTanya)) ([#3155](https://github.com/mihonapp/mihon/pull/3155))
 - Show AniList publishing type based on country of origin ([@zweimach](https://github.com/zweimach)) ([#3100](https://github.com/mihonapp/mihon/pull/3100))
-- Update manga details of uninitialized manga migration targets ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#3191](https://github.com/mihonapp/mihon/pull/3191))
 
 ### Fixed
 - Fix app trying to split long strip when not needed ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3121](https://github.com/mihonapp/mihon/pull/3121))
