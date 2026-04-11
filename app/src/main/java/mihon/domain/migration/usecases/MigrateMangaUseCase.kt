@@ -46,6 +46,11 @@ class MigrateMangaUseCase(
         val flags = sourcePreferences.migrationFlags.get()
 
         try {
+            if (!target.initialized) {
+                val targetRemote = targetSource.getMangaDetails(target.toSManga())
+                updateManga.awaitUpdateFromSource(target, targetRemote, manualFetch = false, coverCache)
+            }
+
             val chapters = targetSource.getChapterList(target.toSManga())
 
             try {
