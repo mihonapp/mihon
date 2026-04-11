@@ -55,6 +55,8 @@ Same as v0.19.6
 - Fix MangaUpdates HTTP 4XX errors ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3021](https://github.com/mihonapp/mihon/pull/3021))
 - Fix WebView JavaScript dialogs popup after screen is closed ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3041](https://github.com/mihonapp/mihon/pull/3041))
 - Fix extension actions disappearing after installing and uninstalling in same session ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3049](https://github.com/mihonapp/mihon/pull/3049))
+- Enqueue duplicate chapters for deletion after marking as read ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3030](https://github.com/mihonapp/mihon/pull/3030))
+- Fix blank image on tall webtoons exceeding hardware texture limits ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3190](https://github.com/mihonapp/mihon/pull/3190))
 
 ## [v0.19.4] - 2026-02-25
 ### Added
