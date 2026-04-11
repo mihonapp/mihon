@@ -909,4 +909,16 @@
     <string name="action_filter_excluded_scanlators">筛选排除翻译组</string>
     <string name="download_bookmarked">已添加书签</string>
     <string name="label_support_us">支持我们</string>
+    <string name="supportUsScreen.perks">赞助者可访问专属频道，更多福利即将推出。</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreon（首选）</string>
+    <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
+    <string name="supportUsScreen.currentlySupportedBy">目前 Mihon 已获得 %d+ 位赞助者的支持。我们衷心感谢大家。让我们携手把 Mihon 办得更出色。</string>
+    <string name="supportUsScreen.contactForDetailsMessage">如需替代方案或有任何相关问题，请加入我们的 Discord 服务器。</string>
+    <string name="supportUsScreen.contactPlatform">Discord</string>
+    <string name="donationCampaign.title">喜欢本应用吗？</string>
+    <string name="donationCampaign.paragraph1">你好！我是 Mihon 的首席开发者，恳请你考虑为 Mihon 的开发工作给予资金方面的支持。有了足够的资金支持，我就能全职投入 Mihon 的开发，专注于解决长期存在的问题以及用户呼声很高的功能。</string>
+    <string name="donationCampaign.paragraph2">您可以通过 Patreon（首选）或 OpenCollective 进行捐赠。如果您有任何疑问，或者希望使用其他方式提供支持，欢迎通过 Mihon 的 Discord 服务器联系我。</string>
+    <string name="donationCampaign.paragraph3">无论如何，Mihon 仍将由我和志愿者们继续维护，并且会保持开源。</string>
+    <string name="donationCampaign.contactPlatform">Discord</string>
+    <string name="donationCampaign.dismiss">放弃</string>
 </resources>
