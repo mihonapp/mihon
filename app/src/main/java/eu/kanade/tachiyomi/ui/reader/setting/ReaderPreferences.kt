@@ -3,14 +3,24 @@ package eu.kanade.tachiyomi.ui.reader.setting
 import android.os.Build
 import androidx.compose.ui.graphics.BlendMode
 import dev.icerock.moko.resources.StringResource
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.decodeFromString
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.preference.getEnum
+import tachiyomi.domain.reader.model.ReadingModeAutoRulesConfig
+import tachiyomi.domain.reader.model.withPresetsMerged
 import tachiyomi.i18n.MR
 
 class ReaderPreferences(
     preferenceStore: PreferenceStore,
 ) {
+
+    private val readingModeAutoRulesJson = Json {
+        ignoreUnknownKeys = true
+        encodeDefaults = true
+    }
 
     // region General
 
@@ -39,6 +49,28 @@ class ReaderPreferences(
     val defaultReadingMode: Preference<Int> = preferenceStore.getInt(
         "pref_default_reading_mode_key",
         ReadingMode.RIGHT_TO_LEFT.flagValue,
+    )
+
+    val readingModeAutoRulesEnabled: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_reading_mode_auto_rules_enabled",
+        false,
+    )
+
+    val readingModeAutoRules: Preference<ReadingModeAutoRulesConfig> = preferenceStore.getObjectFromString(
+        key = "pref_reading_mode_auto_rules_v1",
+        defaultValue = ReadingModeAutoRulesConfig().withPresetsMerged(),
+        serializer = { readingModeAutoRulesJson.encodeToString(it) },
+        deserializer = { str ->
+            if (str.isBlank()) {
+                ReadingModeAutoRulesConfig().withPresetsMerged()
+            } else {
+                try {
+                    readingModeAutoRulesJson.decodeFromString<ReadingModeAutoRulesConfig>(str).withPresetsMerged()
+                } catch (_: Exception) {
+                    ReadingModeAutoRulesConfig().withPresetsMerged()
+                }
+            }
+        },
     )
 
     val defaultOrientationType: Preference<Int> = preferenceStore.getInt(
