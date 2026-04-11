@@ -909,4 +909,16 @@
     <string name="action_filter_excluded_scanlators">I-filter ang na-ibukod na mga scanlator</string>
     <string name="download_bookmarked">Na-bookmark</string>
     <string name="label_support_us">Suportahan Kami</string>
+    <string name="supportUsScreen.perks">Ang mga patron ay may access sa exclusive channels, at marami pang perks ang darating.</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreon (mas mainam)</string>
+    <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
+    <string name="supportUsScreen.currentlySupportedBy">Ang Mihon ay kasalukuyang sinusuportahan ng %d+ na patron. Nais naming pasalamatan ang bawat isa sa inyo. Sama-sama nating pagandahin pa lalo ang Mihon.</string>
+    <string name="supportUsScreen.contactForDetailsMessage">Para sa iba pang alternatibong opsyon o anumang mga katanungan, sumali sa aming Discord server.</string>
+    <string name="supportUsScreen.contactPlatform">Discord</string>
+    <string name="donationCampaign.title">Nasisiyahan ka ba sa paggamit ng app?</string>
+    <string name="donationCampaign.paragraph1">Kumusta! Ako ang main developer ng Mihon. Nais ko sanang humiling ng inyong suportang pinansyal para sa development nito. Sa sapat na suporta, magagawa kong pagtuunan ng panahon ang Mihon full-time at mabigyang-pansin ang mga dati pang isyu pati na ang mga feature na madalas ninyong hinihiling.</string>
+    <string name="donationCampaign.paragraph2">Maaari kang mag-donate sa pamamagitan ng Patreon (mas mainam) o OpenCollective. Kung mayroon kang mga katanungan o nais tumulong gamit ang ibang paraan, huwag mag-atubiling makipag-ugnayan sa akin sa Discord server ng Mihon.</string>
+    <string name="donationCampaign.paragraph3">Anuman ang mangyari, patuloy na itataguyod ang Mihon ko at ng mga volunteer, at mananatili itong open source.</string>
+    <string name="donationCampaign.contactPlatform">Discord</string>
+    <string name="donationCampaign.dismiss">Alisin</string>
 </resources>
