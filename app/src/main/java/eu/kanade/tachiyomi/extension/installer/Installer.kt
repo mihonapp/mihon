@@ -1,17 +1,15 @@
 package eu.kanade.tachiyomi.extension.installer
 
 import android.app.Service
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
 import androidx.annotation.CallSuper
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.InstallStep
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
 import uy.kohesive.injekt.injectLazy
 import java.util.Collections
 import kotlin.concurrent.atomics.AtomicReference
@@ -27,6 +25,13 @@ abstract class Installer(private val service: Service) {
 
     private var waitingInstall = AtomicReference<Entry?>(null)
     private val queue = Collections.synchronizedList(mutableListOf<Entry>())
+
+    private val cancelReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val downloadId = intent.getLongExtra(EXTRA_DOWNLOAD_ID, -1).takeIf { it >= 0 } ?: return
+            cancelQueue(downloadId)
+        }
+    }
 
     /**
      * Installer readiness. If false, queue check will not run.
@@ -109,7 +114,7 @@ abstract class Installer(private val service: Service) {
      */
     @CallSuper
     open fun onDestroy() {
-        scope.cancel()
+        LocalBroadcastManager.getInstance(service).unregisterReceiver(cancelReceiver)
         queue.forEach { extensionManager.updateInstallStep(it.downloadId, InstallStep.Error) }
         queue.clear()
         waitingInstall.store(null)
@@ -144,24 +149,24 @@ abstract class Installer(private val service: Service) {
      */
     data class Entry(val downloadId: Long, val uri: Uri)
 
-    private val scope = CoroutineScope(Dispatchers.Main)
-
     init {
-        cancelChannel.receiveAsFlow()
-            .onEach(::cancelQueue)
-            .launchIn(scope)
+        val filter = IntentFilter(ACTION_CANCEL_QUEUE)
+        LocalBroadcastManager.getInstance(service).registerReceiver(cancelReceiver, filter)
     }
 
     companion object {
-        private val cancelChannel = Channel<Long>(Channel.UNLIMITED)
+        private const val ACTION_CANCEL_QUEUE = "Installer.action.CANCEL_QUEUE"
+        private const val EXTRA_DOWNLOAD_ID = "Installer.extra.DOWNLOAD_ID"
 
         /**
          * Attempts to cancel the installation entry for the provided download ID.
          *
          * @param downloadId Download ID as known by [ExtensionManager]
          */
-        suspend fun cancelInstallQueue(downloadId: Long) {
-            cancelChannel.send(downloadId)
+        fun cancelInstallQueue(context: Context, downloadId: Long) {
+            val intent = Intent(ACTION_CANCEL_QUEUE)
+            intent.putExtra(EXTRA_DOWNLOAD_ID, downloadId)
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
         }
     }
 }
