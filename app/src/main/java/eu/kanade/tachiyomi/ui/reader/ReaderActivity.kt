@@ -511,6 +511,7 @@ class ReaderActivity : BaseActivity() {
         } else if (readerPreferences.fullscreen.get()) {
             windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
         }
+        updateViewerInset(readerPreferences.fullscreen.get(), readerPreferences.drawUnderCutout.get(), visible)
     }
 
     /**
@@ -535,7 +536,7 @@ class ReaderActivity : BaseActivity() {
             binding.viewerContainer.removeAllViews()
         }
         viewModel.onViewerLoaded(newViewer)
-        updateViewerInset(readerPreferences.fullscreen.get(), readerPreferences.drawUnderCutout.get())
+        updateViewerInset(readerPreferences.fullscreen.get(), readerPreferences.drawUnderCutout.get(), viewModel.state.value.menuVisible)
         binding.viewerContainer.addView(newViewer.getView())
 
         if (readerPreferences.showReadingMode.get()) {
@@ -778,13 +779,13 @@ class ReaderActivity : BaseActivity() {
     /**
      * Updates viewer inset depending on fullscreen reader preferences.
      */
-    private fun updateViewerInset(fullscreen: Boolean, drawUnderCutout: Boolean) {
+    private fun updateViewerInset(fullscreen: Boolean, drawUnderCutout: Boolean, menuVisible: Boolean) {
         if (!::binding.isInitialized) return
         val view = binding.viewerContainer
 
-        view.applyInsetsPadding(ViewCompat.getRootWindowInsets(view), fullscreen, drawUnderCutout)
+        view.applyInsetsPadding(ViewCompat.getRootWindowInsets(view), fullscreen, drawUnderCutout, menuVisible)
         ViewCompat.setOnApplyWindowInsetsListener(view) { view, windowInsets ->
-            view.applyInsetsPadding(windowInsets, fullscreen, drawUnderCutout)
+            view.applyInsetsPadding(windowInsets, fullscreen, drawUnderCutout, menuVisible)
             windowInsets
         }
     }
@@ -793,9 +794,10 @@ class ReaderActivity : BaseActivity() {
         windowInsets: WindowInsetsCompat?,
         fullscreen: Boolean,
         drawUnderCutout: Boolean,
+        menuVisible: Boolean,
     ) {
         val insets = when {
-            !fullscreen -> windowInsets?.getInsets(WindowInsetsCompat.Type.systemBars())
+            !fullscreen || menuVisible -> windowInsets?.getInsets(WindowInsetsCompat.Type.systemBars())
             !drawUnderCutout -> windowInsets?.getInsets(WindowInsetsCompat.Type.displayCutout())
             else -> null
         }
@@ -878,7 +880,7 @@ class ReaderActivity : BaseActivity() {
                 readerPreferences.drawUnderCutout.changes(),
             ) { fullscreen, drawUnderCutout -> fullscreen to drawUnderCutout }
                 .onEach { (fullscreen, drawUnderCutout) ->
-                    updateViewerInset(fullscreen, drawUnderCutout)
+                    updateViewerInset(fullscreen, drawUnderCutout, viewModel.state.value.menuVisible)
                 }
                 .launchIn(lifecycleScope)
         }
