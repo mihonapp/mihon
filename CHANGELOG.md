@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Added
+- Duplicates Management ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#1997](https://github.com/mihonapp/mihon/pull/1997))
 
 ## [v0.19.9] - 2026-04-11
 ### Fixed
@@ -20,7 +22,6 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Added
 - Add dedicated "Support Us" screen ([@AntsyLich](https://github.com/AntsyLich)) ([#3200](https://github.com/mihonapp/mihon/pull/3200))
 - Add a one time popup asking for donation from long time users ([@AntsyLich](https://github.com/AntsyLich)) ([#3203](https://github.com/mihonapp/mihon/pull/3203))
-- Duplicates Management ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#1997](https://github.com/mihonapp/mihon/pull/1997))
 
 ### Changed
 - Don't prompt users to enable Google Play services if disabled or unavailable ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3152](https://github.com/mihonapp/mihon/pull/3152))
