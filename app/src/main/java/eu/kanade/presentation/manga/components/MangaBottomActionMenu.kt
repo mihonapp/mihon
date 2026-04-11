@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.DownloadDropdownMenu
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.manga.DownloadAction
+import eu.kanade.presentation.manga.ExportAction
 import eu.kanade.tachiyomi.R
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -235,6 +236,7 @@ fun LibraryBottomActionMenu(
     onMarkAsReadClicked: () -> Unit,
     onMarkAsUnreadClicked: () -> Unit,
     onDownloadClicked: ((DownloadAction) -> Unit)?,
+    onExportClicked: ((ExportAction) -> Unit)?,
     onDeleteClicked: () -> Unit,
     onMigrateClicked: () -> Unit,
     modifier: Modifier = Modifier,
@@ -262,7 +264,7 @@ fun LibraryBottomActionMenu(
                     if (isActive) confirm[toConfirmIndex] = false
                 }
             }
-            val itemOverflow = onDownloadClicked != null
+            val itemOverflow = onDownloadClicked != null && onExportClicked != null
             Row(
                 modifier = Modifier
                     .windowInsetsPadding(
@@ -292,7 +294,7 @@ fun LibraryBottomActionMenu(
                     onLongClick = { onLongClickItem(2) },
                     onClick = onMarkAsUnreadClicked,
                 )
-                if (onDownloadClicked != null) {
+                if (onDownloadClicked != null && onExportClicked != null) {
                     var downloadExpanded by remember { mutableStateOf(false) }
                     Button(
                         title = stringResource(MR.strings.action_download),
@@ -305,6 +307,7 @@ fun LibraryBottomActionMenu(
                             expanded = downloadExpanded,
                             onDismissRequest = { downloadExpanded = false },
                             onDownloadClicked = onDownloadClicked,
+                            onExportClicked = onExportClicked,
                             offset = BottomBarMenuDpOffset,
                         )
                     }
