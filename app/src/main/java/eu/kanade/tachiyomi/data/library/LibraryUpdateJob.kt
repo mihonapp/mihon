@@ -177,6 +177,8 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         mangaToUpdate = listToUpdate
             .filter {
                 when {
+                    !it.manga.initialized -> true
+
                     it.manga.updateStrategy == UpdateStrategy.ONLY_FETCH_ONCE && it.totalChapters > 0L -> {
                         skippedUpdates.add(
                             it.manga to context.stringResource(MR.strings.skipped_reason_not_always_update),
@@ -332,7 +334,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         val source = sourceManager.getOrStub(manga.source)
 
         // Update manga metadata if needed
-        if (libraryPreferences.autoUpdateMetadata.get()) {
+        if (!manga.initialized || libraryPreferences.autoUpdateMetadata.get()) {
             val networkManga = source.getMangaDetails(manga.toSManga())
             updateManga.awaitUpdateFromSource(manga, networkManga, manualFetch = false, coverCache)
         }
