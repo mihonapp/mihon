@@ -12,6 +12,10 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ## [Unreleased]
 
+## [v0.19.9] - 2026-04-11
+### Fixed
+- Regression with installing/updating extension ([@AntsyLich](https://github.com/AntsyLich))
+
 ## [v0.19.8] - 2026-04-11
 ### Added
 - Add dedicated "Support Us" screen ([@AntsyLich](https://github.com/AntsyLich)) ([#3200](https://github.com/mihonapp/mihon/pull/3200))
@@ -524,7 +528,8 @@ Same as v0.19.6
 - Branding to Mihon ([@AntsyLich](https://github.com/AntsyLich))
 - Minimum supported Android version to 8 ([@AntsyLich](https://github.com/AntsyLich)) ([`dfb3091`](https://github.com/mihonapp/mihon/commit/dfb3091e380dda3e9bfb64bf5c9a685cf3a03d0e))
 
-[unreleased]: https://github.com/mihonapp/mihon/compare/v0.19.8...main
+[unreleased]: https://github.com/mihonapp/mihon/compare/v0.19.9...main
+[v0.19.9]: https://github.com/mihonapp/mihon/compare/v0.19.8...v0.19.9
 [v0.19.8]: https://github.com/mihonapp/mihon/compare/v0.19.7...v0.19.8
 [v0.19.7]: https://github.com/mihonapp/mihon/compare/v0.19.6...v0.19.7
 [v0.19.6]: https://github.com/mihonapp/mihon/compare/v0.19.5...v0.19.6
