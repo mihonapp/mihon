@@ -1,3 +1,5 @@
+DROP VIEW IF EXISTS historyView;
+
 CREATE VIEW historyView AS
 SELECT
     history._id AS id,
@@ -27,41 +29,3 @@ JOIN (
 ) AS max_last_read
 ON chapters.manga_id = max_last_read.manga_id;
 
-history:
-SELECT
-id,
-mangaId,
-chapterId,
-title,
-thumbnailUrl,
-source,
-favorite,
-cover_last_modified,
-chapterNumber,
-lastPageRead,
-readAt,
-readDuration
-FROM historyView
-WHERE historyView.readAt > 0
-AND maxReadAtChapterId = historyView.chapterId
-AND lower(historyView.title) LIKE ('%' || :query || '%')
-ORDER BY readAt DESC;
-
-getLatestHistory:
-SELECT
-id,
-mangaId,
-chapterId,
-title,
-thumbnailUrl,
-source,
-favorite,
-cover_last_modified,
-chapterNumber,
-lastPageRead,
-readAt,
-readDuration
-FROM historyView
-WHERE historyView.readAt > 0
-ORDER BY readAt DESC
-LIMIT 1;
