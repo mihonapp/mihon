@@ -7,8 +7,10 @@ import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -101,7 +103,12 @@ data object LibraryTab : Tab {
                     category != null -> MR.strings.updating_category
                     else -> MR.strings.updating_library
                 }
-                snackbarHostState.showSnackbar(context.stringResource(msgRes))
+                val actionLabel = context.stringResource(MR.strings.action_cancel).takeIf { started }
+                val snackBarResult =
+                    snackbarHostState.showSnackbar(context.stringResource(msgRes), actionLabel, duration = SnackbarDuration.Short)
+                if (snackBarResult == SnackbarResult.ActionPerformed) {
+                    LibraryUpdateJob.stop(context)
+                }
             }
             started
         }
