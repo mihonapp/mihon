@@ -639,6 +639,8 @@
     <string name="pref_debug_info">Debug info</string>
     <string name="pref_update_library_manga_titles">Update library manga titles to match source</string>
     <string name="pref_update_library_manga_titles_summary">Warning: if a manga is renamed, it will be removed from the download queue (if present).</string>
+    <string name="pref_enable_fractional">Show fractional progress</string>
+    <string name="pref_enable_fractional_summary">Display progress as a fraction (e.g., 34/89) in addition to percentage.</string>
 
       <!-- About section -->
     <string name="website">Website</string>
