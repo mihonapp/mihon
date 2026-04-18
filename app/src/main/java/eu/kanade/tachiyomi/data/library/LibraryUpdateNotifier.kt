@@ -46,6 +46,7 @@ class LibraryUpdateNotifier(
     private val context: Context,
 
     private val securityPreferences: SecurityPreferences = Injekt.get(),
+    private val basePreferences: BasePreferences = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
 ) {
 
@@ -90,26 +91,35 @@ class LibraryUpdateNotifier(
      * @param total the total progress.
      */
     fun showProgressNotification(manga: List<Manga>, current: Int, total: Int) {
+    // Determine the content text based on the user preference
+        val contentText = if (basePreferences.enableFractionalProgress.get()) {
+            // Show both fraction and percentage
+            "$current/$total (${percentFormatter.format(current.toFloat() / total)})"
+        } else {
+            // Show only percentage
+            percentFormatter.format(current.toFloat() / total)
+        }
+    
         progressNotificationBuilder
             .setContentTitle(
                 context.stringResource(
                     MR.strings.notification_updating_progress,
-                    percentFormatter.format(current.toFloat() / total),
+                    contentText,
                 ),
             )
-
+    
         if (!securityPreferences.hideNotificationContent.get()) {
             val updatingText = manga.joinToString("\n") { it.title.chop(40) }
             progressNotificationBuilder.setStyle(NotificationCompat.BigTextStyle().bigText(updatingText))
         }
-
+    
         context.notify(
             Notifications.ID_LIBRARY_PROGRESS,
             progressNotificationBuilder
                 .setProgress(total, current, false)
                 .build(),
-        )
-    }
+    )
+}
 
     /**
      * Warn when excessively checking any single source.
