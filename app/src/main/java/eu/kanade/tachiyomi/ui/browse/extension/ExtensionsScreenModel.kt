@@ -121,7 +121,7 @@ class ExtensionsScreenModel(
                 when (extension) {
                     is Extension.Installed -> extension.sources.any { source ->
                         source.name.contains(subquery, ignoreCase = true) ||
-                            (source as? HttpSource)?.baseUrl?.contains(subquery, ignoreCase = true) == true ||
+                            (source as? HttpSource)?.getHomeUrl()?.contains(subquery, ignoreCase = true) == true ||
                             source.id == subquery.toLongOrNull()
                     }
 

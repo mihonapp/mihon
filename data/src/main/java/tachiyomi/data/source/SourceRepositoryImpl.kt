@@ -1,6 +1,5 @@
 package tachiyomi.data.source
 
-import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -21,7 +20,7 @@ class SourceRepositoryImpl(
 ) : SourceRepository {
 
     override fun getSources(): Flow<List<DomainSource>> {
-        return sourceManager.catalogueSources.map { sources ->
+        return sourceManager.sources.map { sources ->
             sources.map {
                 mapSourceToDomainSource(it).copy(
                     supportsLatest = it.supportsLatest,
@@ -31,7 +30,7 @@ class SourceRepositoryImpl(
     }
 
     override fun getOnlineSources(): Flow<List<DomainSource>> {
-        return sourceManager.catalogueSources.map { sources ->
+        return sourceManager.sources.map { sources ->
             sources
                 .filterIsInstance<HttpSource>()
                 .map(::mapSourceToDomainSource)
@@ -41,7 +40,7 @@ class SourceRepositoryImpl(
     override fun getSourcesWithFavoriteCount(): Flow<List<Pair<DomainSource, Long>>> {
         return combine(
             handler.subscribeToList { mangasQueries.getSourceIdWithFavoriteCount() },
-            sourceManager.catalogueSources,
+            sourceManager.sources,
         ) { sourceIdWithFavoriteCount, _ -> sourceIdWithFavoriteCount }
             .map {
                 it.map { (sourceId, count) ->
@@ -73,18 +72,15 @@ class SourceRepositoryImpl(
         query: String,
         filterList: FilterList,
     ): SourcePagingSource {
-        val source = sourceManager.get(sourceId) as CatalogueSource
-        return SourceSearchPagingSource(source, query, filterList)
+        return SourceSearchPagingSource(sourceManager.getOrStub(sourceId), query, filterList)
     }
 
     override fun getPopular(sourceId: Long): SourcePagingSource {
-        val source = sourceManager.get(sourceId) as CatalogueSource
-        return SourcePopularPagingSource(source)
+        return SourcePopularPagingSource(sourceManager.getOrStub(sourceId))
     }
 
     override fun getLatest(sourceId: Long): SourcePagingSource {
-        val source = sourceManager.get(sourceId) as CatalogueSource
-        return SourceLatestPagingSource(source)
+        return SourceLatestPagingSource(sourceManager.getOrStub(sourceId))
     }
 
     private fun mapSourceToDomainSource(source: Source): DomainSource = DomainSource(
