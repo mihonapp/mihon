@@ -15,6 +15,13 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Support resumable image downloads if supported by source ([@xMohnad](https://github.com/xMohnad)) ([#3167](https://github.com/mihonapp/mihon/pull/3167))
   - Fix HTTP Error 416 not being handled properly ([@AntsyLich](https://github.com/AntsyLich)) ([#3563](https://github.com/mihonapp/mihon/pull/3563))
 
+### Changed
+- Library updates and swipe refresh now always refresh manga metadata ([@AntsyLich](https://github.com/AntsyLich)) ([#3246](https://github.com/mihonapp/mihon/pull/3246))
+
+### Removed
+- Advanced option to run a metadata-only library update ([@AntsyLich](https://github.com/AntsyLich)) ([#3246](https://github.com/mihonapp/mihon/pull/3246))
+- Settings that allowed disabling metadata updates during library updates ([@AntsyLich](https://github.com/AntsyLich)) ([#3246](https://github.com/mihonapp/mihon/pull/3246))
+
 ### Fixed
 - Fixed app bars remaining visible after changing pages by tapping in the paged reader after using the chapter navigator slider ([@AntsyLich](https://github.com/AntsyLich)) ([#3567](https://github.com/mihonapp/mihon/pull/3567))
 - Fixed MangaBaka User Agent string ([@MajorTanya](https://github.com/MajorTanya)) ([#3578](https://github.com/mihonapp/mihon/pull/3578))
