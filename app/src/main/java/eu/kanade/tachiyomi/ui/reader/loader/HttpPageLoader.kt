@@ -12,7 +12,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.suspendCancellableCoroutine
 import tachiyomi.core.common.util.lang.launchIO
@@ -85,17 +88,7 @@ internal class HttpPageLoader(
      * Loads a page through the queue. Handles re-enqueueing pages if they were evicted from the cache.
      */
     override suspend fun loadPage(page: ReaderPage) = withIOContext {
-        val imageUrl = page.imageUrl
-
-        // Check if the image has been deleted
-        if (page.status == Page.State.Ready && imageUrl != null && !chapterCache.isImageInCache(imageUrl)) {
-            page.status = Page.State.Queue
-        }
-
-        // Automatically retry failed pages when subscribed to this page
-        if (page.status is Page.State.Error) {
-            page.status = Page.State.Queue
-        }
+        preparePageForQueueing(page)
 
         val queuedPages = mutableListOf<PriorityPage>()
         if (page.status == Page.State.Queue) {
@@ -111,6 +104,32 @@ internal class HttpPageLoader(
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Queues a page for background caching and waits until it is ready or fails.
+     */
+    suspend fun awaitCache(page: ReaderPage) = withIOContext {
+        preparePageForQueueing(page)
+
+        val queuedPage = if (page.status == Page.State.Queue) {
+            PriorityPage(page, PriorityPage.BACKGROUND).also { queue.offer(it) }
+        } else {
+            null
+        }
+
+        try {
+            page.statusFlow.first { it == Page.State.Ready || it is Page.State.Error }
+        } finally {
+            if (!currentCoroutineContext().isActive && queuedPage != null && page.status == Page.State.Queue) {
+                queue.remove(queuedPage)
+            }
+        }
+
+        val status = page.status
+        if (status is Page.State.Error) {
+            throw status.error
         }
     }
 
@@ -166,6 +185,20 @@ internal class HttpPageLoader(
             }
     }
 
+    private fun preparePageForQueueing(page: ReaderPage) {
+        val imageUrl = page.imageUrl
+
+        // Check if the image has been deleted
+        if (page.status == Page.State.Ready && imageUrl != null && !chapterCache.isImageInCache(imageUrl)) {
+            page.status = Page.State.Queue
+        }
+
+        // Automatically retry failed pages when subscribed to this page
+        if (page.status is Page.State.Error) {
+            page.status = Page.State.Queue
+        }
+    }
+
     /**
      * Loads the page, retrieving the image URL and downloading the image if necessary.
      * Downloaded images are stored in the chapter cache.
@@ -211,6 +244,7 @@ private class PriorityPage(
         const val RETRY = 2
         const val DEFAULT = 1
         const val ADJACENT = 0
+        const val BACKGROUND = -1
     }
 
     private val identifier = idGenerator.incrementAndFetch()

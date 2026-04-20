@@ -26,6 +26,7 @@ import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.loader.ChapterLoader
 import eu.kanade.tachiyomi.ui.reader.loader.DownloadPageLoader
+import eu.kanade.tachiyomi.ui.reader.loader.HttpPageLoader
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
@@ -45,12 +46,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.runBlocking
@@ -137,6 +140,13 @@ class ReaderViewModel @JvmOverloads constructor(
      * The chapter loader for the loaded manga. It'll be null until [manga] is set.
      */
     private var loader: ChapterLoader? = null
+
+    private val autoCacheManager = ReaderAutoCacheManager(
+        scope = viewModelScope,
+        prepareChapter = ::prepareChapterForAutoCache,
+        canCacheChapter = { it.pageLoader is HttpPageLoader && !it.pages.isNullOrEmpty() },
+        cacheChapterPages = ::cacheChapterPagesSequentially,
+    )
 
     /**
      * The time the chapter was started reading
@@ -229,6 +239,18 @@ class ReaderViewModel @JvmOverloads constructor(
     private val downloadAheadAmount = downloadPreferences.autoDownloadWhileReading.get()
 
     init {
+        combine(
+            readerPreferences.autoCacheReaderChapters.changes()
+                .onStart { emit(readerPreferences.autoCacheReaderChapters.get()) },
+            state.map { it.viewerChapters }.distinctUntilChanged(),
+        ) { enabled, viewerChapters ->
+            enabled to viewerChapters
+        }
+            .onEach { (enabled, viewerChapters) ->
+                autoCacheManager.update(enabled, viewerChapters)
+            }
+            .launchIn(viewModelScope)
+
         // To save state
         state.map { it.viewerChapters?.currChapter }
             .distinctUntilChanged()
@@ -423,6 +445,30 @@ class ReaderViewModel @JvmOverloads constructor(
             return
         }
         eventChannel.trySend(Event.ReloadViewerChapters)
+    }
+
+    private suspend fun prepareChapterForAutoCache(chapter: ReaderChapter) {
+        if (chapter.pages.isNullOrEmpty()) {
+            preload(chapter)
+        }
+    }
+
+    private suspend fun cacheChapterPagesSequentially(chapter: ReaderChapter) {
+        val pageLoader = chapter.pageLoader as? HttpPageLoader ?: return
+        val pages = chapter.pages ?: return
+
+        pages.forEach { page ->
+            try {
+                pageLoader.awaitCache(page)
+            } catch (e: Throwable) {
+                if (e is CancellationException) {
+                    throw e
+                }
+                logcat(LogPriority.WARN, e) {
+                    "Failed to auto-cache page ${page.index} for chapter ${chapter.chapter.url}"
+                }
+            }
+        }
     }
 
     fun onViewerLoaded(viewer: Viewer?) {

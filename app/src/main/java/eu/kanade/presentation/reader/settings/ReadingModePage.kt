@@ -51,6 +51,11 @@ internal fun ColumnScope.ReadingModePage(screenModel: ReaderSettingsScreenModel)
         }
     }
 
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_auto_cache_reader_chapters),
+        pref = screenModel.preferences.autoCacheReaderChapters,
+    )
+
     val viewer by screenModel.viewerFlow.collectAsState()
     if (viewer is WebtoonViewer) {
         WebtoonViewerSettings(screenModel)

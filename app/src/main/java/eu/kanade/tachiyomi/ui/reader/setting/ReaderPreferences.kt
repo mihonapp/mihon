@@ -62,6 +62,11 @@ class ReaderPreferences(
         true,
     )
 
+    val autoCacheReaderChapters: Preference<Boolean> = preferenceStore.getBoolean(
+        "reader_auto_cache_chapters",
+        false,
+    )
+
     val cropBorders: Preference<Boolean> = preferenceStore.getBoolean("crop_borders", false)
 
     val navigateToPan: Preference<Boolean> = preferenceStore.getBoolean("navigate_pan", true)
