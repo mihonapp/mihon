@@ -11,6 +11,12 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Changed
+- Library updates and swipe refresh now always refresh manga metadata ([@AntsyLich](https://github.com/AntsyLich)) ([#3246](https://github.com/mihonapp/mihon/pull/3246))
+
+### Removed
+- Advanced option to run a metadata-only library update ([@AntsyLich](https://github.com/AntsyLich)) ([#3246](https://github.com/mihonapp/mihon/pull/3246))
+- Settings that allowed disabling metadata updates during library updates ([@AntsyLich](https://github.com/AntsyLich)) ([#3246](https://github.com/mihonapp/mihon/pull/3246))
 
 ## [v0.19.9] - 2026-04-11
 ### Fixed
