@@ -99,6 +99,7 @@ object SettingsTrackingScreen : SearchableSettings {
                     TrackingLoginDialog(
                         tracker = tracker,
                         uNameStringRes = uNameStringRes,
+                        passwordStringRes = passwordStringRes,
                         onDismissRequest = { dialog = null },
                     )
                 }
@@ -173,7 +174,13 @@ object SettingsTrackingScreen : SearchableSettings {
                     ),
                     Preference.PreferenceItem.TrackerPreference(
                         tracker = trackerManager.yamtrack,
-                        login = { dialog = LoginDialog(trackerManager.yamtrack, MR.strings.host_url) },
+                        login = {
+                            dialog = LoginDialog(
+                                tracker = trackerManager.yamtrack,
+                                uNameStringRes = MR.strings.host_url,
+                                passwordStringRes = MR.strings.api_key,
+                            )
+                        },
                         logout = { dialog = LogoutDialog(trackerManager.yamtrack) },
                     ),
                     Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.tracking_info)),
@@ -199,6 +206,7 @@ object SettingsTrackingScreen : SearchableSettings {
     private fun TrackingLoginDialog(
         tracker: Tracker,
         uNameStringRes: StringResource,
+        passwordStringRes: StringResource = MR.strings.password,
         onDismissRequest: () -> Unit,
     ) {
         val context = LocalContext.current
@@ -246,7 +254,7 @@ object SettingsTrackingScreen : SearchableSettings {
                             .semantics { contentType = ContentType.Password },
                         value = password,
                         onValueChange = { password = it },
-                        label = { Text(text = stringResource(MR.strings.password)) },
+                        label = { Text(text = stringResource(passwordStringRes)) },
                         trailingIcon = {
                             IconButton(onClick = { hidePassword = !hidePassword }) {
                                 Icon(
@@ -362,6 +370,7 @@ object SettingsTrackingScreen : SearchableSettings {
 private data class LoginDialog(
     val tracker: Tracker,
     val uNameStringRes: StringResource,
+    val passwordStringRes: StringResource = MR.strings.password,
 )
 
 private data class LogoutDialog(
