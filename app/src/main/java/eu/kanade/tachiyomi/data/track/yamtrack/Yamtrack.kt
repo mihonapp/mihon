@@ -260,6 +260,4 @@ class Yamtrack(id: Long) : BaseTracker(id, "Yamtrack"), DeletableTracker {
             "https://$trimmed"
         }
     }
-
-    override fun hasNotStartedReading(status: Long): Boolean = status == PLANNING
 }
