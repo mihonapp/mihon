@@ -171,6 +171,11 @@ object SettingsTrackingScreen : SearchableSettings {
                         login = { context.openInBrowser(BangumiApi.authUrl(), forceDefaultBrowser = true) },
                         logout = { dialog = LogoutDialog(trackerManager.bangumi) },
                     ),
+                    Preference.PreferenceItem.TrackerPreference(
+                        tracker = trackerManager.yamtrack,
+                        login = { dialog = LoginDialog(trackerManager.yamtrack, MR.strings.host_url) },
+                        logout = { dialog = LogoutDialog(trackerManager.yamtrack) },
+                    ),
                     Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.tracking_info)),
                 ),
             ),
