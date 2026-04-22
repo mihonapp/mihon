@@ -148,6 +148,11 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
         },
         pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
     )
+
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_pager_cover_mode),
+        pref = screenModel.preferences.pagerCoverMode,
+    )
 }
 
 @Composable

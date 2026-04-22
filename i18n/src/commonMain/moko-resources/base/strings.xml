@@ -492,6 +492,7 @@
     <string name="pref_category_reading">Reading</string>
     <string name="pref_webtoon_side_padding">Side padding</string>
     <string name="pref_pager_edge_width">Edge width</string>
+    <string name="pref_pager_cover_mode">Cover mode (fill &amp; crop)</string>
     <string name="pref_hide_threshold">Sensitivity for hiding menu on scroll</string>
     <string name="pref_highest">Highest</string>
     <string name="pref_high">High</string>

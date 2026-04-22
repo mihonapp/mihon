@@ -69,6 +69,7 @@ class PagerPageHolder(
     }
 
     private fun applyEdgeWidth() {
+        if (viewer.config.edgeWidth >= 100) return
         val screenWidth = Resources.getSystem().displayMetrics.widthPixels
         val rightPadding = (screenWidth * (1f - viewer.config.edgeWidth / 100f)).toInt()
         setPadding(0, paddingTop, rightPadding, paddingBottom)
@@ -178,6 +179,7 @@ class PagerPageHolder(
                         cropBorders = viewer.config.imageCropBorders,
                         zoomStartPosition = viewer.config.imageZoomType,
                         landscapeZoom = viewer.config.landscapeZoom,
+                        coverMode = viewer.config.coverMode,
                     ),
                 )
                 if (!isAnimated) {
@@ -261,16 +263,19 @@ class PagerPageHolder(
     override fun onImageLoaded() {
         super.onImageLoaded()
         progressIndicator?.hide()
+        if (viewer.config.edgeWidth >= 100) return
         // After the image decodes inside the manually-constrained container,
         // sWidth * minScale = min(natural dynamic width, manual edge width) in pixels.
         // Adjust right padding to that exact rendered width so portrait images
         // (narrower than the manual limit) are not over-padded.
+        // Skip when rendered content overflows the container (e.g. CENTER_CROP / cover mode)
+        // to preserve the manual edge width padding.
         val screenWidth = Resources.getSystem().displayMetrics.widthPixels
-        val renderedWidth = getRenderedContentWidth()
-        if (renderedWidth != null) {
-            val rightPadding = (screenWidth - renderedWidth).coerceAtLeast(0)
-            setPadding(0, paddingTop, rightPadding, paddingBottom)
-        }
+        val renderedWidth = getRenderedContentWidth() ?: return
+        val containerWidth = screenWidth - paddingRight
+        if (renderedWidth > containerWidth) return
+        val rightPadding = (screenWidth - renderedWidth).coerceAtLeast(0)
+        setPadding(0, paddingTop, rightPadding, paddingBottom)
     }
 
     /**

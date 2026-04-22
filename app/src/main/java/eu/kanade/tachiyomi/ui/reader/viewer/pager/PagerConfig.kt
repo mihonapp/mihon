@@ -51,6 +51,9 @@ class PagerConfig(
     var edgeWidth = 100
         private set
 
+    var coverMode = false
+        private set
+
     init {
         readerPreferences.readerTheme
             .register(
@@ -112,6 +115,9 @@ class PagerConfig(
 
         readerPreferences.pagerEdgeWidth
             .register({ edgeWidth = it }, { imagePropertyChangedListener?.invoke() })
+
+        readerPreferences.pagerCoverMode
+            .register({ coverMode = it }, { imagePropertyChangedListener?.invoke() })
     }
 
     private fun zoomTypeFromPreference(value: Int) {

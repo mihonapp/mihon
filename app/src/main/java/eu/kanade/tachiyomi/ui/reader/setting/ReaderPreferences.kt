@@ -74,6 +74,8 @@ class ReaderPreferences(
 
     val pagerEdgeWidth: Preference<Int> = preferenceStore.getInt("pager_edge_width", PAGER_EDGE_WIDTH_MAX)
 
+    val pagerCoverMode: Preference<Boolean> = preferenceStore.getBoolean("pager_cover_mode", false)
+
     val readerHideThreshold: Preference<ReaderHideThreshold> = preferenceStore.getEnum(
         "reader_hide_threshold",
         ReaderHideThreshold.LOW,
