@@ -32,6 +32,8 @@ import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
 import java.math.RoundingMode
+import java.security.SecureRandom
+import java.util.Base64
 import java.util.Locale
 import kotlin.time.Instant
 import tachiyomi.domain.track.model.Track as DomainTrack
@@ -263,6 +265,8 @@ class MangaBakaApi(
         }
     }
 
+    fun verifyOAuthState(state: String): Boolean = state == oauthStateParam
+
     companion object {
         private const val CLIENT_ID = "zEZYMHXLWsLsafgbvJHXqzGvqQNOdkpo"
 
@@ -277,6 +281,7 @@ class MangaBakaApi(
         private const val APP_JSON = "application/json"
 
         private var codeVerifier: String = ""
+        private var oauthStateParam: String = ""
 
         fun authUrl(): Uri = "$OAUTH_URL/authorize".toUri().buildUpon() //
             .appendQueryParameter("client_id", CLIENT_ID)
@@ -285,6 +290,7 @@ class MangaBakaApi(
             .appendQueryParameter("response_type", "code")
             .appendQueryParameter("scope", SCOPES)
             .appendQueryParameter("redirect_uri", REDIRECT_URI)
+            .appendQueryParameter("state", getOAuthStateParam())
             .build()
 
         fun refreshTokenRequest(token: String) = POST(
@@ -296,6 +302,16 @@ class MangaBakaApi(
                 .add("redirect_uri", REDIRECT_URI)
                 .build(),
         )
+
+        private fun getOAuthStateParam(): String {
+            val bytes = ByteArray(16)
+            SecureRandom().nextBytes(bytes)
+            oauthStateParam = Base64.getUrlEncoder()
+                .withoutPadding()
+                .encodeToString(bytes)
+
+            return oauthStateParam
+        }
 
         private fun getPkceS256ChallengeCode(): String {
             // MangaBaka requires an actually conformant PKCE process, unlike MAL
