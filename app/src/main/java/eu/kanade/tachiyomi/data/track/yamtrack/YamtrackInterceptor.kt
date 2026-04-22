@@ -20,7 +20,7 @@ class YamtrackInterceptor(private val yamtrack: Yamtrack) : Interceptor {
         fun applyAuthHeaders(builder: Request.Builder, token: String): Request.Builder {
             return builder
                 .header("Authorization", "Bearer $token")
-                .header("User-Agent", "Komikku v${BuildConfig.VERSION_NAME} (${BuildConfig.APPLICATION_ID})")
+                .header("User-Agent", "Mihon v${BuildConfig.VERSION_NAME} (${BuildConfig.APPLICATION_ID})")
                 .header("Accept", "application/json")
         }
     }

@@ -668,7 +668,9 @@
     <string name="login_title">Log in to %1$s</string>
     <string name="username">Username</string>
     <string name="email">Email address</string>
+    <string name="host_url">Host URL</string>
     <string name="password">Password</string>
+    <string name="api_key">API key</string>
     <string name="login">Login</string>
     <string name="logging_in">Logging in…</string>
     <string name="login_success">Logged in</string>
