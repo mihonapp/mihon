@@ -69,9 +69,10 @@ class PagerPageHolder(
     }
 
     private fun applyEdgeWidth() {
-        if (viewer.config.edgeWidth >= 100) return
+        if (viewer.config.edgeWidth >= 400) return
         val screenWidth = Resources.getSystem().displayMetrics.widthPixels
-        val rightPadding = (screenWidth * (1f - viewer.config.edgeWidth / 100f)).toInt()
+        // edgeWidth is stored in quarter-percent units (280 = 70%, 400 = 100%)
+        val rightPadding = (screenWidth * (1f - viewer.config.edgeWidth / 400f)).toInt()
         setPadding(0, paddingTop, rightPadding, paddingBottom)
     }
 
@@ -263,7 +264,7 @@ class PagerPageHolder(
     override fun onImageLoaded() {
         super.onImageLoaded()
         progressIndicator?.hide()
-        if (viewer.config.edgeWidth >= 100) return
+        if (viewer.config.edgeWidth >= 400) return
         // After the image decodes inside the manually-constrained container,
         // sWidth * minScale = min(natural dynamic width, manual edge width) in pixels.
         // Adjust right padding to that exact rendered width so portrait images

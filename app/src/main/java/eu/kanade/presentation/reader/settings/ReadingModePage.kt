@@ -62,6 +62,12 @@ internal fun ColumnScope.ReadingModePage(screenModel: ReaderSettingsScreenModel)
 @Composable
 private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenModel) {
     val numberFormat = remember { NumberFormat.getPercentInstance() }
+    val edgeWidthFormat = remember {
+        NumberFormat.getPercentInstance().apply {
+            minimumFractionDigits = 2
+            maximumFractionDigits = 2
+        }
+    }
 
     HeadingItem(MR.strings.pager_viewer)
 
@@ -142,7 +148,7 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
         value = pagerEdgeWidth,
         valueRange = ReaderPreferences.PAGER_EDGE_WIDTH_MIN..ReaderPreferences.PAGER_EDGE_WIDTH_MAX,
         label = stringResource(MR.strings.pref_pager_edge_width),
-        valueString = numberFormat.format(pagerEdgeWidth / 100f),
+        valueString = edgeWidthFormat.format(pagerEdgeWidth / 400f),
         onChange = {
             screenModel.preferences.pagerEdgeWidth.set(it)
         },

@@ -48,7 +48,7 @@ class PagerConfig(
     var landscapeZoom = false
         private set
 
-    var edgeWidth = 100
+    var edgeWidth = 400
         private set
 
     var coverMode = false

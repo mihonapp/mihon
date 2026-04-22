@@ -205,8 +205,8 @@ class ReaderPreferences(
         const val WEBTOON_PADDING_MIN = 0
         const val WEBTOON_PADDING_MAX = 25
 
-        const val PAGER_EDGE_WIDTH_MIN = 70
-        const val PAGER_EDGE_WIDTH_MAX = 100
+        const val PAGER_EDGE_WIDTH_MIN = 280
+        const val PAGER_EDGE_WIDTH_MAX = 400
 
         const val MILLI_CONVERSION = 100
 
