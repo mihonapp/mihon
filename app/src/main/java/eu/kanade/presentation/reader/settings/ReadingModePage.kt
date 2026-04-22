@@ -61,6 +61,8 @@ internal fun ColumnScope.ReadingModePage(screenModel: ReaderSettingsScreenModel)
 
 @Composable
 private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenModel) {
+    val numberFormat = remember { NumberFormat.getPercentInstance() }
+
     HeadingItem(MR.strings.pager_viewer)
 
     val navigationModePager by screenModel.preferences.navigationModePager.collectAsState()
@@ -134,6 +136,18 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
             pref = screenModel.preferences.dualPageRotateToFitInvert,
         )
     }
+
+    val pagerEdgeWidth by screenModel.preferences.pagerEdgeWidth.collectAsState()
+    SliderItem(
+        value = pagerEdgeWidth,
+        valueRange = ReaderPreferences.PAGER_EDGE_WIDTH_MIN..ReaderPreferences.PAGER_EDGE_WIDTH_MAX,
+        label = stringResource(MR.strings.pref_pager_edge_width),
+        valueString = numberFormat.format(pagerEdgeWidth / 100f),
+        onChange = {
+            screenModel.preferences.pagerEdgeWidth.set(it)
+        },
+        pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+    )
 }
 
 @Composable

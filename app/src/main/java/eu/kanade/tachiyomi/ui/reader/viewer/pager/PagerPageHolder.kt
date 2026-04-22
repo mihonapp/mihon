@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Resources
 import android.view.LayoutInflater
 import androidx.core.view.isVisible
 import eu.kanade.presentation.util.formattedMessage
@@ -63,7 +64,14 @@ class PagerPageHolder(
     private var loadJob: Job? = null
 
     init {
+        applyEdgeWidth()
         loadJob = scope.launch { loadPageAndProcessStatus() }
+    }
+
+    private fun applyEdgeWidth() {
+        val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+        val rightPadding = (screenWidth * (1f - viewer.config.edgeWidth / 100f)).toInt()
+        setPadding(0, paddingTop, rightPadding, paddingBottom)
     }
 
     /**
@@ -253,6 +261,16 @@ class PagerPageHolder(
     override fun onImageLoaded() {
         super.onImageLoaded()
         progressIndicator?.hide()
+        // After the image decodes inside the manually-constrained container,
+        // sWidth * minScale = min(natural dynamic width, manual edge width) in pixels.
+        // Adjust right padding to that exact rendered width so portrait images
+        // (narrower than the manual limit) are not over-padded.
+        val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+        val renderedWidth = getRenderedContentWidth()
+        if (renderedWidth != null) {
+            val rightPadding = (screenWidth - renderedWidth).coerceAtLeast(0)
+            setPadding(0, paddingTop, rightPadding, paddingBottom)
+        }
     }
 
     /**

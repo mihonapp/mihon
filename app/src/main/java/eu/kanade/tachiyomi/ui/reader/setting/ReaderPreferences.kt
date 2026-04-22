@@ -72,6 +72,8 @@ class ReaderPreferences(
 
     val webtoonSidePadding: Preference<Int> = preferenceStore.getInt("webtoon_side_padding", WEBTOON_PADDING_MIN)
 
+    val pagerEdgeWidth: Preference<Int> = preferenceStore.getInt("pager_edge_width", PAGER_EDGE_WIDTH_MAX)
+
     val readerHideThreshold: Preference<ReaderHideThreshold> = preferenceStore.getEnum(
         "reader_hide_threshold",
         ReaderHideThreshold.LOW,
@@ -200,6 +202,9 @@ class ReaderPreferences(
     companion object {
         const val WEBTOON_PADDING_MIN = 0
         const val WEBTOON_PADDING_MAX = 25
+
+        const val PAGER_EDGE_WIDTH_MIN = 70
+        const val PAGER_EDGE_WIDTH_MAX = 100
 
         const val MILLI_CONVERSION = 100
 

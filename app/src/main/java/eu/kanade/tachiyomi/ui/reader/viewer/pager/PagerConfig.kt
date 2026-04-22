@@ -48,6 +48,9 @@ class PagerConfig(
     var landscapeZoom = false
         private set
 
+    var edgeWidth = 100
+        private set
+
     init {
         readerPreferences.readerTheme
             .register(
@@ -106,6 +109,9 @@ class PagerConfig(
                 { dualPageRotateToFitInvert = it },
                 { imagePropertyChangedListener?.invoke() },
             )
+
+        readerPreferences.pagerEdgeWidth
+            .register({ edgeWidth = it }, { imagePropertyChangedListener?.invoke() })
     }
 
     private fun zoomTypeFromPreference(value: Int) {

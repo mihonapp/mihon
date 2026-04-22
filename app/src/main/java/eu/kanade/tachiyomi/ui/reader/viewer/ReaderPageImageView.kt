@@ -178,6 +178,17 @@ open class ReaderPageImageView @JvmOverloads constructor(
     }
 
     /**
+     * Returns the rendered pixel width of the image content, or null if unavailable (animated/not ready).
+     * After the image is ready, this equals sWidth * minScale, which naturally reflects min(dynamic, manual)
+     * when the view was pre-constrained to the manual edge width.
+     */
+    fun getRenderedContentWidth(): Int? {
+        val ssiv = pageView as? SubsamplingScaleImageView ?: return null
+        if (!ssiv.isReady) return null
+        return (ssiv.sWidth * ssiv.minScale).toInt()
+    }
+
+    /**
      * Check if the image can be panned to the left
      */
     fun canPanLeft(): Boolean = canPan { it.left }
