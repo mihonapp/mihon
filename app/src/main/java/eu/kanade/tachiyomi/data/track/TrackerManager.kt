@@ -29,7 +29,7 @@ class TrackerManager {
     val mangaUpdates = MangaUpdates(7L)
     val kavita = Kavita(KAVITA)
     val suwayomi = Suwayomi(9L)
-    val yamtrack = Yamtrack(10L)
+    val yamtrack = Yamtrack(16L)
 
     val trackers =
         listOf(myAnimeList, aniList, kitsu, shikimori, bangumi, komga, mangaUpdates, kavita, suwayomi, yamtrack)
