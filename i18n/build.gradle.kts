@@ -17,7 +17,6 @@ kotlin {
     }
 
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    @Suppress("UnstableApiUsage")
     dependencies {
         api(libs.moko.resources)
     }
