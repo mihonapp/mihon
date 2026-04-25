@@ -795,7 +795,7 @@ private fun LazyListScope.sharedChapterItems(
                             chapterItem = item,
                             isAnyChapterSelected = isAnyChapterSelected,
                             onToggleSelection = { onChapterSelected(item, !item.selected, false) },
-                            onChapterClicked = onChapterClicked,
+                            onChapterClicked = onChapterClicked,                            
                         )
                     },
                     onDownloadClick = if (onDownloadChapter != null) {
