@@ -1,7 +1,6 @@
 import mihon.gradle.Config
-import mihon.gradle.getBuildTime
-import mihon.gradle.getLatestCommitCount
-import mihon.gradle.getLatestCommitSha
+import mihon.gradle.tasks.ComputeGitHashTask
+import mihon.gradle.tasks.GenerateBuildConstantsTask
 import mihon.gradle.tasks.ReplaceShortcutsPlaceholderTask
 
 plugins {
@@ -29,9 +28,6 @@ android {
         versionCode = 22
         versionName = "0.19.9"
 
-        buildConfigField("String", "COMMIT_COUNT", "\"${getLatestCommitCount()}\"")
-        buildConfigField("String", "COMMIT_SHA", "\"${getLatestCommitSha()}\"")
-        buildConfigField("String", "BUILD_TIME", "\"${getBuildTime(useLatestCommitTime = false)}\"")
         buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
         buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
 
@@ -41,7 +37,6 @@ android {
     buildTypes {
         val debug by getting {
             applicationIdSuffix = ".dev"
-            versionNameSuffix = "-${getLatestCommitCount()}"
             isPseudoLocalesEnabled = true
         }
         val release by getting {
@@ -49,8 +44,6 @@ android {
             isShrinkResources = Config.enableCodeShrink
 
             proguardFiles("proguard-android-optimize.txt", "proguard-rules.pro")
-
-            buildConfigField("String", "BUILD_TIME", "\"${getBuildTime(useLatestCommitTime = true)}\"")
         }
 
         val commonMatchingFallbacks = listOf(release.name)
@@ -67,12 +60,9 @@ android {
 
             applicationIdSuffix = ".debug"
 
-            versionNameSuffix = debug.versionNameSuffix
             signingConfig = debug.signingConfig
 
             matchingFallbacks.addAll(commonMatchingFallbacks)
-
-            buildConfigField("String", "BUILD_TIME", "\"${getBuildTime(useLatestCommitTime = false)}\"")
         }
         create("benchmark") {
             initWith(release)
@@ -288,6 +278,11 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
 }
 
+val computeGitHash = tasks.register<ComputeGitHashTask>("computeGitHash") {
+    gitHashFile.set(layout.buildDirectory.file("intermediates/git-hash.txt"))
+    outputs.upToDateWhen { false }
+}
+
 androidComponents {
     onVariants { variant ->
         val resSource = variant.sources.res ?: return@onVariants
@@ -300,6 +295,40 @@ androidComponents {
             shortcutsFile.set(projectDir.resolve("src/main/shortcuts.xml"))
         }
         resSource.addGeneratedSourceDirectory(replaceShortcutsPlaceholderTask) { it.outputDir }
+    }
+
+    val baseVersionName = android.defaultConfig.versionName ?: ""
+    onVariants { variant ->
+        if (variant.buildType == "debug") {
+            variant.outputs.forEach { output ->
+                output.versionName.set(
+                    computeGitHash.flatMap { it.gitHashFile }.map { file ->
+                        val hash = file.asFile.readText().trim()
+                        "$baseVersionName-$hash"
+                    },
+                )
+            }
+        }
+    }
+
+    onVariants { variant ->
+        val variantName = variant.name.replaceFirstChar { it.uppercase() }
+        val generateConstantsTaskName = "generateBuildConstants$variantName"
+        val generateConstantsTaskDescription =
+            "Generates BuildConstants.kt with commit count, commit SHA and Build time for $variantName"
+
+        val isRelease = variantName.contains("release", ignoreCase = true)
+
+        val buildConstantTasks = tasks.register<GenerateBuildConstantsTask>(generateConstantsTaskName) {
+            group = "build"
+            description = generateConstantsTaskDescription
+            useLatestCommitTime.set(isRelease)
+            packageName.set("app.mihon.generated")
+            outputDir.set(layout.buildDirectory.dir("generated/source/buildConstants/$variantName"))
+            outputs.upToDateWhen { false }
+            outputs.cacheIf { false }
+        }
+        variant.sources.java?.addGeneratedSourceDirectory(buildConstantTasks) { it.outputDir }
     }
 
     onVariants(selector().withFlavor("default" to "standard")) {
