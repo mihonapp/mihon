@@ -131,7 +131,7 @@ private suspend fun CoroutineDispatcher.acquireTransactionThread(
  * A [CoroutineContext.Element] that indicates there is an on-going database transaction.
  */
 @OptIn(ExperimentalAtomicApi::class)
-private class TransactionElement(
+internal class TransactionElement(
     private val transactionThreadControlJob: Job,
     val transactionDispatcher: ContinuationInterceptor,
 ) : CoroutineContext.Element {
