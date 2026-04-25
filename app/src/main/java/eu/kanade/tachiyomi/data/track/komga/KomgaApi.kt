@@ -99,12 +99,14 @@ class KomgaApi(
     }
 
     private fun SeriesDto.toTrack(): TrackSearch = TrackSearch.create(trackId).also {
+        it.remote_id = id.hashCode().toLong()
         it.title = metadata.title
         it.summary = metadata.summary
         it.publishing_status = metadata.status
     }
 
     private fun ReadListDto.toTrack(): TrackSearch = TrackSearch.create(trackId).also {
+        it.remote_id = id.hashCode().toLong()
         it.title = name
     }
 }
