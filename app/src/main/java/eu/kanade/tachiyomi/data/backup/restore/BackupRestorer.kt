@@ -19,7 +19,10 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.data.DatabaseHandler
 import tachiyomi.i18n.MR
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -30,6 +33,7 @@ class BackupRestorer(
     private val notifier: BackupNotifier,
     private val isSync: Boolean,
 
+    private val handler: DatabaseHandler = Injekt.get(),
     private val categoriesRestorer: CategoriesRestorer = CategoriesRestorer(),
     private val preferenceRestorer: PreferenceRestorer = PreferenceRestorer(context),
     private val extensionRepoRestorer: ExtensionRepoRestorer = ExtensionRepoRestorer(),
@@ -125,18 +129,23 @@ class BackupRestorer(
         backupCategories: List<BackupCategory>,
     ) = launch {
         mangaRestorer.sortByNew(backupMangas)
-            .forEach {
-                ensureActive()
+            .chunked(100)
+            .forEach { chunk ->
+                handler.await(inTransaction = true) {
+                    chunk.forEach {
+                        ensureActive()
 
-                try {
-                    mangaRestorer.restore(it, backupCategories)
-                } catch (e: Exception) {
-                    val sourceName = sourceMapping[it.source] ?: it.source.toString()
-                    errors.add(Date() to "${it.title} [$sourceName]: ${e.message}")
+                        try {
+                            mangaRestorer.restore(it, backupCategories)
+                        } catch (e: Exception) {
+                            val sourceName = sourceMapping[it.source] ?: it.source.toString()
+                            errors.add(Date() to "${it.title} [$sourceName]: ${e.message}")
+                        }
+
+                        restoreProgress += 1
+                        notifier.showRestoreProgress(it.title, restoreProgress, restoreAmount, isSync)
+                    }
                 }
-
-                restoreProgress += 1
-                notifier.showRestoreProgress(it.title, restoreProgress, restoreAmount, isSync)
             }
     }
 
@@ -176,22 +185,27 @@ class BackupRestorer(
         backupExtensionRepo: List<BackupExtensionRepos>,
     ) = launch {
         backupExtensionRepo
-            .forEach {
-                ensureActive()
+            .chunked(100)
+            .forEach { chunk ->
+                handler.await(inTransaction = true) {
+                    chunk.forEach {
+                        ensureActive()
 
-                try {
-                    extensionRepoRestorer(it)
-                } catch (e: Exception) {
-                    errors.add(Date() to "Error Adding Repo: ${it.name} : ${e.message}")
+                        try {
+                            extensionRepoRestorer(it)
+                        } catch (e: Exception) {
+                            errors.add(Date() to "Error Adding Repo: ${it.name} : ${e.message}")
+                        }
+
+                        restoreProgress += 1
+                        notifier.showRestoreProgress(
+                            context.stringResource(MR.strings.extensionRepo_settings),
+                            restoreProgress,
+                            restoreAmount,
+                            isSync,
+                        )
+                    }
                 }
-
-                restoreProgress += 1
-                notifier.showRestoreProgress(
-                    context.stringResource(MR.strings.extensionRepo_settings),
-                    restoreProgress,
-                    restoreAmount,
-                    isSync,
-                )
             }
     }
 

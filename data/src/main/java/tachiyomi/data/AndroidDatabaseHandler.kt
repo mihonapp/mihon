@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.coroutineContext
 
 class AndroidDatabaseHandler(
     val db: Database,
@@ -87,6 +88,11 @@ class AndroidDatabaseHandler(
     }
 
     private suspend fun <T> dispatch(inTransaction: Boolean, block: suspend Database.() -> T): T {
+        // If we're already in a transaction, just run the block.
+        if (coroutineContext[TransactionElement] != null) {
+            return block(db)
+        }
+
         // Create a transaction if needed and run the calling block inside it.
         if (inTransaction) {
             return withTransaction { block(db) }
