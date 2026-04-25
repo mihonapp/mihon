@@ -299,9 +299,6 @@
     <string name="pref_update_only_in_release_period">Predict next release time</string>
     <string name="pref_library_update_show_tab_badge">Show unread count on Updates icon</string>
 
-    <string name="pref_library_update_refresh_metadata">Automatically refresh metadata</string>
-    <string name="pref_library_update_refresh_metadata_summary">Check for new cover and details when updating library</string>
-
     <string name="default_category">Default category</string>
     <string name="default_category_summary">Always ask</string>
     <string name="categorized_display_settings">Per-category settings for sort</string>
@@ -620,7 +617,6 @@
     <string name="database_clean">Nothing to clear</string>
     <string name="pref_clear_webview_data">Clear WebView data</string>
     <string name="webview_data_deleted">WebView data cleared</string>
-    <string name="pref_refresh_library_covers">Refresh library covers</string>
     <string name="pref_reset_viewer_flags">Reset per-series reader settings</string>
     <string name="pref_reset_viewer_flags_summary">Resets reading mode and orientation of all series</string>
     <string name="pref_reset_viewer_flags_success">All reader settings reset</string>

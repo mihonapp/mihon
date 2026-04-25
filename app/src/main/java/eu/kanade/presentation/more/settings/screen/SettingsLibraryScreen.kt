@@ -188,11 +188,6 @@ object SettingsLibraryScreen : SearchableSettings {
                     ),
                     onClick = { showCategoriesDialog = true },
                 ),
-                Preference.PreferenceItem.SwitchPreference(
-                    preference = libraryPreferences.autoUpdateMetadata,
-                    title = stringResource(MR.strings.pref_library_update_refresh_metadata),
-                    subtitle = stringResource(MR.strings.pref_library_update_refresh_metadata_summary),
-                ),
                 Preference.PreferenceItem.MultiSelectListPreference(
                     preference = libraryPreferences.autoUpdateMangaRestrictions,
                     entries = persistentMapOf(
