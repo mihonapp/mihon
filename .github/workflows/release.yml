@@ -38,7 +38,7 @@ jobs:
           distribution: temurin
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
+        uses: gradle/actions/setup-gradle@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e # v6.1.0
 
       - name: Build
         run: ./gradlew assembleRelease -Pinclude-telemetry -Penable-updater
@@ -65,7 +65,7 @@ jobs:
           mv app/build/outputs/apk/release/app-x86_64-release-unsigned-signed.apk mihon-x86_64-${{ needs.get_tag.outputs.tag }}.apk
 
       - name: Upload APK
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: mihon
           path: |
@@ -92,7 +92,7 @@ jobs:
           distribution: temurin
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
+        uses: gradle/actions/setup-gradle@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e # v6.1.0
         with:
           cache-disabled: true
 
@@ -117,7 +117,7 @@ jobs:
           mv app/build/outputs/apk/foss/app-universal-foss-unsigned-signed.apk mihon-${{ needs.get_tag.outputs.tag }}-foss.apk
 
       - name: Upload APK
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: mihon-foss
           path: mihon-${{ needs.get_tag.outputs.tag }}-foss.apk
@@ -130,12 +130,12 @@ jobs:
 
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           merge-multiple: true
 
       - name: Delete all artifacts
-        uses: geekyeggo/delete-artifact@f275313e70c08f6120db482d7a6b98377786765b # v5.1.0
+        uses: geekyeggo/delete-artifact@176a747ab7e287e3ff4787bf8a148716375ca118 # v6
         with:
           failOnError: false
           name: |
@@ -143,7 +143,7 @@ jobs:
             mihon-foss
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3
         with:
           tag_name: ${{ needs.get_tag.outputs.tag }}
           name: Mihon ${{ needs.get_tag.outputs.tag }}

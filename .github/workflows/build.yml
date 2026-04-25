@@ -39,7 +39,7 @@ jobs:
           distribution: temurin
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
+        uses: gradle/actions/setup-gradle@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e # v6.1.0
 
       - name: Check code format
         run: ./gradlew spotlessCheck
@@ -53,7 +53,7 @@ jobs:
 
       - name: Upload test report
         if: steps.unit_tests.outcome == 'failure'
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: test-report-${{ github.sha }}
           path: app/build/reports/tests/testDebugUnitTest
@@ -62,13 +62,13 @@ jobs:
         run: ./gradlew assembleRelease -Pinclude-telemetry -Penable-updater
 
       - name: Upload APK
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: arm64-v8a-${{ github.sha }}
           path: app/build/outputs/apk/release/app-arm64-v8a-release-unsigned.apk
 
       - name: Upload mapping
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: mapping-${{ github.sha }}
           path: app/build/outputs/mapping/release
