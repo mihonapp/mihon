@@ -15,6 +15,7 @@ import okhttp3.Response
 import rx.Observable
 import rx.Producer
 import rx.Subscription
+import java.io.File
 import java.io.IOException
 import kotlin.concurrent.atomics.AtomicBoolean
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
@@ -124,9 +125,17 @@ fun OkHttpClient.newCachelessCallWithProgress(request: Request, listener: Progre
     val progressClient = newBuilder()
         .cache(null)
         .addNetworkInterceptor { chain ->
-            val originalResponse = chain.proceed(chain.request())
+            var req = chain.request()
+            val existingSize = req.url.queryParameter("existingSize")?.toLong() ?: 0L
+
+            req = req.newBuilder()
+                .url(req.url.newBuilder().removeAllQueryParameters("existingSize").build())
+                .apply { if (existingSize > 0 && req.header("Range") == null) header("Range", "bytes=$existingSize-") }
+                .build()
+
+            val originalResponse = chain.proceed(req)
             originalResponse.newBuilder()
-                .body(ProgressResponseBody(originalResponse.body, listener))
+                .body(ProgressResponseBody(originalResponse.body, listener, existingSize))
                 .build()
         }
         .build()
