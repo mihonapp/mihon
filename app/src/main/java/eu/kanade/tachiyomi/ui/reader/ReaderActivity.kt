@@ -539,7 +539,7 @@ class ReaderActivity : BaseActivity() {
         binding.viewerContainer.addView(newViewer.getView())
 
         if (readerPreferences.showReadingMode.get()) {
-            showReadingModeToast(viewModel.getMangaReadingMode())
+            showReadingModeToast(viewModel.getReadingModeToastDetails())
         }
 
         loadingIndicator = ReaderProgressIndicator(this)
@@ -582,12 +582,17 @@ class ReaderActivity : BaseActivity() {
         }
     }
 
-    private fun showReadingModeToast(mode: Int) {
+    private fun showReadingModeToast(details: ReadingModeToastDetails) {
         try {
             readingModeToast?.cancel()
-            readingModeToast = toast(ReadingMode.fromPreference(mode).stringRes)
+            val mode = details.modeFlag
+            val modeName = stringResource(ReadingMode.fromPreference(mode).stringRes)
+            val text = details.autoRuleNumber?.let { ruleNumber ->
+                stringResource(MR.strings.reader_toast_reading_mode_auto_rule, modeName, ruleNumber)
+            } ?: modeName
+            readingModeToast = toast(text)
         } catch (_: ArrayIndexOutOfBoundsException) {
-            logcat(LogPriority.ERROR) { "Unknown reading mode: $mode" }
+            logcat(LogPriority.ERROR) { "Unknown reading mode: ${details.modeFlag}" }
         }
     }
 
