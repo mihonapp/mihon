@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Improved
+- Always update manga if uninitialized after being added to library ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#3179](https://github.com/mihonapp/mihon/pull/3179))
 
 ## [v0.19.9] - 2026-04-11
 ### Fixed
