@@ -900,4 +900,16 @@
     <string name="action_filter_excluded_scanlators">篩選排除掃譯者</string>
     <string name="download_bookmarked">已新增書籤</string>
     <string name="label_support_us">支持我們</string>
+    <string name="supportUsScreen.contactPlatform">Discord</string>
+    <string name="donationCampaign.contactPlatform">Discord</string>
+    <string name="supportUsScreen.perks">贊助者可使用專屬頻道，未來也會提供更多福利。</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreon（建議優先使用）</string>
+    <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
+    <string name="supportUsScreen.currentlySupportedBy">Mihon 目前由 %d 位以上的贊助者支持。感謝每一位的支持，讓我們一起讓 Mihon 變得更好。</string>
+    <string name="supportUsScreen.contactForDetailsMessage">如需其他贊助方式或有相關問題，請加入我們的 Discord 伺服器。</string>
+    <string name="donationCampaign.title">喜歡這個 App 嗎？</string>
+    <string name="donationCampaign.paragraph1">您好！我是 Mihon 的主要開發者，想邀請您考慮以金錢方式支持本專案的開發。若能獲得足夠的支持，將能全職投入 Mihon 的開發，專注解決長期存在的問題，以及實作許多使用者期待已久的功能。</string>
+    <string name="donationCampaign.paragraph2">您可以透過 Patreon（建議優先使用）或 OpenCollective 進行贊助。如果有任何問題，或希望透過其他方式支持，歡迎透過 Mihon 的 Discord 伺服器與我聯繫。</string>
+    <string name="donationCampaign.paragraph3">無論是否贊助，Mihon 都會持續由我與志工維護，並且維持開源。</string>
+    <string name="donationCampaign.dismiss">關閉</string>
 </resources>

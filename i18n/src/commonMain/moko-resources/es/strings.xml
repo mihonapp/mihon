@@ -902,16 +902,16 @@
     <string name="action_filter_excluded_scanlators">Ocultar equipos de traducción excluidos</string>
     <string name="download_bookmarked">Favoritos</string>
     <string name="label_support_us">Apóyanos</string>
-    <string name="supportUsScreen.perks">Los patrocinadores obtienen acceso a canales exclusivos, con más beneficios por venir.</string>
+    <string name="supportUsScreen.perks">Las personas que contribuyan obtendrán acceso a canales exclusivos, y en el futuro tendréis muchas más ventajas.</string>
     <string name="supportUsScreen.donationPlatform.patreon">Patreon (preferido)</string>
     <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
-    <string name="supportUsScreen.currentlySupportedBy">Mihon cuenta actualmente con el apoyo de %d+ patrocinadores. Queremos agradecerles a cada uno de ustedes. Hagamos Mihon aún mejor juntos.</string>
-    <string name="supportUsScreen.contactForDetailsMessage">Para opciones alternativas o cualquier pregunta relacionada, únete a nuestro servidor de Discord.</string>
+    <string name="supportUsScreen.currentlySupportedBy">Mihon cuenta ahora mismo con el apoyo de %d+ personas. Os damos las gracias de corazón por hacer que Mihon mejore día a día.</string>
+    <string name="supportUsScreen.contactForDetailsMessage">Únete a nuestro servidor de Discord si tienes dudas u otras formas de pago.</string>
     <string name="supportUsScreen.contactPlatform">Discord</string>
-    <string name="donationCampaign.title">¿Disfrutando la aplicación?</string>
-    <string name="donationCampaign.paragraph1">¡Hola! Soy el desarrollador principal de Mihon, y me gustaría pedirte que consideres apoyar su desarrollo económicamente. Con suficiente apoyo, podré trabajar en Mihon a tiempo completo y centrarme en problemas antiguos, así como en funciones muy solicitadas.</string>
-    <string name="donationCampaign.paragraph2">Puedes donar a través de Patreon (preferido) o OpenCollective. Si tienes preguntas o prefieres apoyar usando otros métodos, no dudes en contactarme a través del servidor de Discord de Mihon.</string>
-    <string name="donationCampaign.paragraph3">De todas formas, Mihon seguirá siendo mantenido por mí y los voluntarios, y se mantendrá como código abierto.</string>
-    <string name="donationCampaign.dismiss">Descartar</string>
+    <string name="donationCampaign.title">¿Te gusta la aplicación?</string>
+    <string name="donationCampaign.paragraph1">¡Hola! Soy el desarrollador principal de Mihon y me gustaría pedirte que apoyes su desarrollo económicamente. Así podré trabajar en Mihon a tiempo completo, centrarme en arreglar lo importante y añadir todo lo que me pedís.</string>
+    <string name="donationCampaign.paragraph2">Puedes donar a través de Patreon (la mejor opción) u OpenCollective. Si tienes alguna pregunta o quieres utilizar otras opciones de pago no dudes en contactarme a través del servidor de Discord de Mihon.</string>
+    <string name="donationCampaign.paragraph3">Pase lo que pase los voluntarios y yo seguiremos mejorando Mihon y seguirá siendo de código abierto.</string>
+    <string name="donationCampaign.dismiss">Cerrar</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
 </resources>

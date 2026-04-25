@@ -873,4 +873,6 @@
     <string name="migrationConfigScreen.selectPinnedLabel">固定されたソースを選択</string>
     <string name="migrationConfigScreen.dataToMigrateHeader">移行するデータ</string>
     <string name="download_bookmarked">ブックマーク済み</string>
+    <string name="migrationConfigScreen.continueButtonText">移行</string>
+    <string name="migrationConfigScreen.removeDownloadsTitle">移行後に既存のダウンロード済みデータを削除する</string>
 </resources>
