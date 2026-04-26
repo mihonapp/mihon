@@ -141,14 +141,14 @@ class MangaScreenModel(
     private val filteredChapters: List<ChapterList.Item>?
         get() = successState?.processedChapters
 
-    val chapterSwipeStartAction = libraryPreferences.swipeToEndAction().get()
-    val chapterSwipeEndAction = libraryPreferences.swipeToStartAction().get()
-    var autoTrackState = trackPreferences.autoUpdateTrackOnMarkRead().get()
+    val chapterSwipeStartAction = libraryPreferences.swipeToEndAction.get()
+    val chapterSwipeEndAction = libraryPreferences.swipeToStartAction.get()
+    var autoTrackState = trackPreferences.autoUpdateTrackOnMarkRead.get()
 
-    private val skipFiltered by readerPreferences.skipFiltered().asState(screenModelScope)
+    private val skipFiltered by readerPreferences.skipFiltered.asState(screenModelScope)
 
     val isUpdateIntervalEnabled =
-        LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in libraryPreferences.autoUpdateMangaRestrictions().get()
+        LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in libraryPreferences.autoUpdateMangaRestrictions.get()
 
     private val selectedPositions: Array<Int> = arrayOf(-1, -1) // first and last selected index in list
     private val selectedChapterIds: HashSet<Long> = HashSet()
@@ -230,7 +230,7 @@ class MangaScreenModel(
                     excludedScanlators = getExcludedScanlators.await(mangaId),
                     isRefreshingData = needRefreshInfo || needRefreshChapter,
                     dialog = null,
-                    hideMissingChapters = libraryPreferences.hideMissingChapters().get(),
+                    hideMissingChapters = libraryPreferences.hideMissingChapters.get(),
                 )
             }
 
@@ -338,7 +338,7 @@ class MangaScreenModel(
 
                 // Now check if user previously set categories, when available
                 val categories = getCategories()
-                val defaultCategoryId = libraryPreferences.defaultCategory().get().toLong()
+                val defaultCategoryId = libraryPreferences.defaultCategory.get().toLong()
                 val defaultCategory = categories.find { it.id == defaultCategoryId }
                 when {
                     // Default category set
@@ -650,6 +650,13 @@ class MangaScreenModel(
         return if (manga.sortDescending()) chaptersSorted.reversed() else chaptersSorted
     }
 
+    private fun getBookmarkedChapters(): List<Chapter> {
+        val chapterItems = if (skipFiltered) filteredChapters.orEmpty() else allChapters.orEmpty()
+        return chapterItems
+            .filter { (chapter, dlStatus) -> chapter.bookmark && dlStatus == Download.State.NOT_DOWNLOADED }
+            .map { it.chapter }
+    }
+
     private fun startDownload(
         chapters: List<Chapter>,
         startNow: Boolean,
@@ -712,6 +719,7 @@ class MangaScreenModel(
             DownloadAction.NEXT_10_CHAPTERS -> getUnreadChaptersSorted().take(10)
             DownloadAction.NEXT_25_CHAPTERS -> getUnreadChaptersSorted().take(25)
             DownloadAction.UNREAD_CHAPTERS -> getUnreadChapters()
+            DownloadAction.BOOKMARKED_CHAPTERS -> getBookmarkedChapters()
         }
         if (chaptersToDownload.isNotEmpty()) {
             startDownload(chaptersToDownload, false)
@@ -953,7 +961,6 @@ class MangaScreenModel(
     fun toggleSelection(
         item: ChapterList.Item,
         selected: Boolean,
-        userSelected: Boolean = false,
         fromLongPress: Boolean = false,
     ) {
         updateSuccessState { successState ->
@@ -968,7 +975,7 @@ class MangaScreenModel(
                 set(selectedIndex, selectedItem.copy(selected = selected))
                 selectedChapterIds.addOrRemove(item.id, selected)
 
-                if (selected && userSelected && fromLongPress) {
+                if (selected && fromLongPress) {
                     if (firstSelection) {
                         selectedPositions[0] = selectedIndex
                         selectedPositions[1] = selectedIndex
@@ -994,7 +1001,7 @@ class MangaScreenModel(
                             }
                         }
                     }
-                } else if (userSelected && !fromLongPress) {
+                } else if (!fromLongPress) {
                     if (!selected) {
                         if (selectedIndex == selectedPositions[0]) {
                             selectedPositions[0] = indexOfFirst { it.selected }

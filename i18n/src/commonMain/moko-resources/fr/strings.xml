@@ -394,7 +394,6 @@
     <string name="unknown_status">Statut inconnu</string>
     <string name="unknown_author">Auteur inconnu</string>
     <string name="whats_new">Quoi de neuf</string>
-    <string name="updated_version">Mise à jour de v%1$s</string>
     <string name="download_insufficient_space">Impossible de télécharger les chapitres, l\'espace de stockage est insuffisant</string>
     <string name="action_global_search_query">Rechercher « %1$s » partout</string>
     <string name="action_sort_date_added">Date ajoutée</string>
@@ -565,7 +564,6 @@
     <string name="skipped_reason_not_started">Sauté car aucun chapitre n\'est lu</string>
     <string name="skipped_reason_not_caught_up">Sauté car il y a des chapitres non lus</string>
     <string name="learn_more">Appuyez pour en savoir plus</string>
-    <string name="notification_update_error">Échec de %1$d mise(s) à jour</string>
     <string name="rotation_reverse_portrait">Portrait inversé</string>
     <string name="action_move_to_top_all_for_series">Déplacer la série vers le haut</string>
     <string name="disabled_nav">Désactivé</string>
@@ -701,7 +699,7 @@
     <string name="intervals_header">Intervalles</string>
     <string name="library_sync_complete">Synchronisation de la bibliothèque complété</string>
     <string name="exception_offline">Aucune connexion internet</string>
-    <string name="download_cache_invalidated">Indice de téléchargement invalidé</string>
+    <string name="download_cache_invalidated">Recréation de l\'index de téléchargement</string>
     <string name="skipped_reason_not_in_release_period">Ignoré car aucune sortie n\'était attendue aujourd\'hui</string>
     <string name="has_results">A des résultats</string>
     <string name="manga_display_interval_title">Estimer chaque</string>
@@ -901,6 +899,12 @@
     <string name="migrationListScreen.migrateDialog.migrateLabel">Migrer</string>
     <string name="migrationListScreen.migrateDialog.cancelLabel">Annuler</string>
     <string name="migrationListScreen.progressDialog.cancelLabel">Annuler</string>
-    <string name="label_donate">Donation</string>
     <string name="pref_display_images_description">Rendre les images dans les descriptions de mangas</string>
+    <string name="action_webview_close_tab">Fermer l\'onglet</string>
+    <string name="pref_disallow_non_ascii_filenames">Interdire les noms de fichiers non ASCII</string>
+    <string name="pref_disallow_non_ascii_filenames_details">Assure la compatibilité avec certains supports de stockage qui ne prennent pas en charge Unicode. Lorsque cette option est activée, vous devrez renommer manuellement les dossiers source et manga en remplaçant les caractères non ASCII par leur représentation hexadécimale UTF-8 en minuscules. Les fichiers de chapitre n\'ont pas besoin d\'être renommés.</string>
+    <string name="pref_download_concurrent_sources">Téléchargements simultanés de sources</string>
+    <string name="pref_download_concurrent_pages">Téléchargements simultanés de pages</string>
+    <string name="pref_download_concurrent_pages_summary">Pages téléchargées simultanément par source</string>
+    <string name="action_filter_excluded_scanlators">Filtrer les scantrads exclus</string>
 </resources>

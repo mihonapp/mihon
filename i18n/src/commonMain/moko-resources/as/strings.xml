@@ -551,7 +551,6 @@
     <string name="licenses">খুলা উৎস লাইচেন্স</string>
     <string name="privacy_policy">গোপনীয়তা নীতি</string>
     <string name="check_for_updates">আপডেট চাওক</string>
-    <string name="updated_version">v%1$s ত আপডেট কৰা হৈছে</string>
     <string name="pref_enable_acra">ক্রাশ ৰিপ\'ৰ্ট পঠিয়াব</string>
     <string name="pref_acra_summary">যিকোনো বাগ মেলাবলৈ সহায় কৰে। কোনো সংবেদনশীল তথ্য পঠিয়াব নোৱাৰি</string>
     <string name="fdroid_warning">F-Droid নিৰ্মাণসমূহৰ আনুষ্ঠানিক সমৰ্থন নাই।
@@ -755,7 +754,6 @@
     <string name="notification_chapters_single">অধ্যায় %1$s</string>
     <string name="notification_chapters_single_and_more">অধ্যায় %1$s আৰু %2$d অধিক</string>
     <string name="notification_chapters_multiple">অধ্যায়সমূহ %1$s</string>
-    <string name="notification_update_error">%1$d আপডেট(s) ব্যৰ্থ</string>
     <string name="learn_more">অধিক জানিবলৈ টেপ কৰক</string>
     <string name="notification_cover_update_failed">কভাৰ আপডেট কৰিবলৈ ব্যৰ্থ</string>
     <string name="notification_first_add_to_library">এইটো কৰিবলৈ আগত অনুগ্ৰহ কৰি ৰেকৰ্ডটো আপোনাৰ লাইব্রেৰীত যোগ কৰক</string>

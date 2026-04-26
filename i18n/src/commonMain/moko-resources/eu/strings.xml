@@ -169,7 +169,6 @@
     <string name="off">Itzali</string>
     <string name="pref_reader_navigation">Nabigazioa</string>
     <string name="color_filter_b_value">U</string>
-    <string name="updated_version">v%1$s-ra eguneratua</string>
     <string name="login_success">Saioa hasia</string>
     <string name="logout_title">Itxi saioa %1$s-n?</string>
     <string name="manga_added_library">Liburutegira gehitua</string>
@@ -223,11 +222,7 @@
     <string name="file_picker_error">Ez da aurkitu fitxategiak hautatzeko aplikaziorik</string>
     <string name="all">Denak</string>
     <string name="about_dont_kill_my_app">Fabrikatzaile batzuek aplikazioen murrizketa gehigarriak dituzte, atzeko planoko zerbitzuak akabatzen dituztenak. Webgune honek informazio gehiago du nola konpondu jakiteko.</string>
-    <string name="untrusted_extension_message">Luzapen hau fidagarria ez den ziurtagiri batekin sinatu zen eta ez zen aktibatu.
-\n
-\nLuzapen maltzur batek Mihon-n gordetako saio-hasierako kredentzialak irakur ditzake edo kode arbitrarioa exekutatu.
-\n
-\nZiurtagiri honetaz fidatzean, arrisku hauek onartzen dituzu.</string>
+    <string name="untrusted_extension_message">Luzapen maltzurrek gordetako edozein saio kredentzialak irakur ditzake edota kode arbitrarioa exekutatu.\n\nLuzapen honetaz fidatzen bazara, arrisku horiek onartzen dituzu.</string>
     <string name="ext_untrusted">Fidatu gabekoa</string>
     <string name="pref_reader_theme">Atzeko planoaren kolorea</string>
     <string name="ext_update">Eguneratu</string>
@@ -601,4 +596,23 @@
     <string name="action_set_interval">Ezarri denbora-bitartea</string>
     <string name="label_data_storage">Datu eta memoria</string>
     <string name="action_sort_last_manga_update">Azkenengo egunearatze egiaztapena</string>
+    <string name="relative_time_span_never">Inoiz ez</string>
+    <string name="action_sort_random">Ausaz</string>
+    <string name="artist">Artista</string>
+    <string name="donationCampaign.title">Aplikazioa gustoko duzu?</string>
+    <string name="donationCampaign.paragraph1">Kaixo! Mihonen atzean dagoen garatzaile nagusia naiz, eta haren garapena ekonomikoki babestea aztertzeko eskatu nahi nizuke. Laguntza nahikoarekin, Mihonen denbora osoz lan egin ahal izango dut eta arazo zaharretan zein oso eskatutako funtzioetan zentratu ahal izango naiz.</string>
+    <string name="donationCampaign.paragraph2">Patreon (hobetsia) edo OpenCollective bitartez dirua eman dezakezu. Galderarik baduzu edo beste metodo batzuk erabiliz lagundu nahi baduzu, jar zaitez nirekin harremanetan Mihonen Discord zerbitzariaren bitartez.</string>
+    <string name="donationCampaign.paragraph3">Nolanahi ere, Mihon boluntarioek eta nik mantentzen jarraituko dugu, eta kode irekikoa izaten jarraituko du.</string>
+    <string name="donationCampaign.contactPlatform">Discord</string>
+    <string name="donationCampaign.dismiss">Baztertu</string>
+    <string name="supportUsScreen.perks">Mezenasek kanal esklusiboetarako sarbidea lortzen dute, abantaila gehiagorekin etorkizunean.</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreon (hobetsia)</string>
+    <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
+    <string name="supportUsScreen.currentlySupportedBy">Gaur egun %d+ mezenasek babesten dute Mihon. Eskerrak eman nahi dizkizuegu guztioi. Mihon are hobea egin dezagun elkarrekin.</string>
+    <string name="supportUsScreen.contactForDetailsMessage">Aukera alternatiboak edo lotutako edozein zalantza argitzeko, gure Discord zerbitzarian sartu.</string>
+    <string name="supportUsScreen.contactPlatform">Discord</string>
+    <string name="label_support_us">Lagun iezaguzu</string>
+    <string name="label_upcoming">Etorkizunean</string>
+    <string name="unlock_app_title">%s desblokeatu</string>
+    <string name="action_copy_link">Esteka kopiatu</string>
 </resources>

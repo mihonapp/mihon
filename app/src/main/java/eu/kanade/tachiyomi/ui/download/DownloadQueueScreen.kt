@@ -1,9 +1,6 @@
 package eu.kanade.tachiyomi.ui.download
 
 import android.view.LayoutInflater
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -16,8 +13,10 @@ import androidx.compose.material.icons.outlined.Pause
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SmallExtendedFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -56,7 +55,6 @@ import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.core.common.util.lang.launchUI
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.Pill
-import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
@@ -201,39 +199,37 @@ object DownloadQueueScreen : Screen() {
                 )
             },
             floatingActionButton = {
-                AnimatedVisibility(
-                    visible = downloadList.isNotEmpty(),
-                    enter = fadeIn(),
-                    exit = fadeOut(),
-                ) {
-                    val isRunning by screenModel.isDownloaderRunning.collectAsState()
-                    ExtendedFloatingActionButton(
-                        text = {
-                            val id = if (isRunning) {
-                                MR.strings.action_pause
-                            } else {
-                                MR.strings.action_resume
-                            }
-                            Text(text = stringResource(id))
-                        },
-                        icon = {
-                            val icon = if (isRunning) {
-                                Icons.Outlined.Pause
-                            } else {
-                                Icons.Filled.PlayArrow
-                            }
-                            Icon(imageVector = icon, contentDescription = null)
-                        },
-                        onClick = {
-                            if (isRunning) {
-                                screenModel.pauseDownloads()
-                            } else {
-                                screenModel.startDownloads()
-                            }
-                        },
-                        expanded = fabExpanded,
-                    )
-                }
+                val isRunning by screenModel.isDownloaderRunning.collectAsState()
+                SmallExtendedFloatingActionButton(
+                    text = {
+                        val id = if (isRunning) {
+                            MR.strings.action_pause
+                        } else {
+                            MR.strings.action_resume
+                        }
+                        Text(text = stringResource(id))
+                    },
+                    icon = {
+                        val icon = if (isRunning) {
+                            Icons.Outlined.Pause
+                        } else {
+                            Icons.Filled.PlayArrow
+                        }
+                        Icon(imageVector = icon, contentDescription = null)
+                    },
+                    onClick = {
+                        if (isRunning) {
+                            screenModel.pauseDownloads()
+                        } else {
+                            screenModel.startDownloads()
+                        }
+                    },
+                    expanded = fabExpanded,
+                    modifier = Modifier.animateFloatingActionButton(
+                        visible = downloadList.isNotEmpty(),
+                        alignment = Alignment.BottomEnd,
+                    ),
+                )
             },
         ) { contentPadding ->
             if (downloadList.isEmpty()) {

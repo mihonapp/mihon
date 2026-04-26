@@ -22,7 +22,7 @@ fun relativeDateText(
             Instant.ofEpochMilli(dateEpochMillis),
             ZoneId.systemDefault(),
         )
-            .takeIf { dateEpochMillis > 0L },
+            .takeIf { dateEpochMillis != 0L },
     )
 }
 
@@ -33,8 +33,8 @@ fun relativeDateText(
     val context = LocalContext.current
 
     val preferences = remember { Injekt.get<UiPreferences>() }
-    val relativeTime = remember { preferences.relativeTime().get() }
-    val dateFormat = remember { UiPreferences.dateFormat(preferences.dateFormat().get()) }
+    val relativeTime = remember { preferences.relativeTime.get() }
+    val dateFormat = remember { UiPreferences.dateFormat(preferences.dateFormat.get()) }
 
     return localDate?.toRelativeString(
         context = context,

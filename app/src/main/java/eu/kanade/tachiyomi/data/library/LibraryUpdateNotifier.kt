@@ -98,7 +98,7 @@ class LibraryUpdateNotifier(
                 ),
             )
 
-        if (!securityPreferences.hideNotificationContent().get()) {
+        if (!securityPreferences.hideNotificationContent.get()) {
             val updatingText = manga.joinToString("\n") { it.title.chop(40) }
             progressNotificationBuilder.setStyle(NotificationCompat.BigTextStyle().bigText(updatingText))
         }
@@ -153,7 +153,7 @@ class LibraryUpdateNotifier(
             Notifications.ID_LIBRARY_ERROR,
             Notifications.CHANNEL_LIBRARY_ERROR,
         ) {
-            setContentTitle(context.stringResource(MR.strings.notification_update_error, failed))
+            setContentTitle(context.pluralStringResource(MR.plurals.notification_update_error, failed, failed))
             setContentText(context.stringResource(MR.strings.action_show_errors))
             setSmallIcon(R.drawable.ic_mihon)
 
@@ -173,7 +173,7 @@ class LibraryUpdateNotifier(
             Notifications.CHANNEL_NEW_CHAPTERS,
         ) {
             setContentTitle(context.stringResource(MR.strings.notification_new_chapters))
-            if (updates.size == 1 && !securityPreferences.hideNotificationContent().get()) {
+            if (updates.size == 1 && !securityPreferences.hideNotificationContent.get()) {
                 setContentText(updates.first().first.title.chop(NOTIF_TITLE_MAX_LEN))
             } else {
                 setContentText(
@@ -184,7 +184,7 @@ class LibraryUpdateNotifier(
                     ),
                 )
 
-                if (!securityPreferences.hideNotificationContent().get()) {
+                if (!securityPreferences.hideNotificationContent.get()) {
                     setStyle(
                         NotificationCompat.BigTextStyle().bigText(
                             updates.joinToString("\n") {
@@ -208,7 +208,7 @@ class LibraryUpdateNotifier(
         }
 
         // Per-manga notification
-        if (!securityPreferences.hideNotificationContent().get()) {
+        if (!securityPreferences.hideNotificationContent.get()) {
             launchUI {
                 context.notify(
                     updates.map { (manga, chapters) ->

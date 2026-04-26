@@ -393,7 +393,6 @@
     <string name="pref_read_with_tapping_inverted">Preokreni područja za dodirivanje</string>
     <string name="unknown_status">Nepoznato stanje</string>
     <string name="unknown_author">Nepoznat autor</string>
-    <string name="updated_version">Aktualizirano na v%1$s</string>
     <string name="whats_new">Što je novo</string>
     <string name="download_insufficient_space">Neuspjelo preuzimanje poglavlja zbog nedovoljne memorije</string>
     <string name="action_global_search_query">Traži „%1$s” globalno</string>
@@ -564,7 +563,6 @@
     <string name="skipped_reason_completed">Preskočeno, jer je serija kompletna</string>
     <string name="skipped_reason_not_started">Preskočeno, jer nijedno poglavlje nije pročitano</string>
     <string name="skipped_reason_not_caught_up">Preskočeno, jer postoje nepročitana poglavlja</string>
-    <string name="notification_update_error">Nauspjela aktualiziranja: %1$d</string>
     <string name="learn_more">Dodirni za daljnje informacije</string>
     <string name="rotation_reverse_portrait">Preokreni uspravni format</string>
     <string name="action_move_to_top_all_for_series">Premjesti seriju na vrh</string>
@@ -708,7 +706,7 @@
     <string name="library_sync_complete">Sinkroniziranje biblioteke završeno</string>
     <string name="information_cloudflare_help">Dodirni ovdje za pomoć s Cloudflareom</string>
     <string name="track_activity_name">Prijava za uslugu praćenja</string>
-    <string name="download_cache_invalidated">Indeks preuzimanja poništen</string>
+    <string name="download_cache_invalidated">Ponovno stvaranje indeksa preuzimanja</string>
     <string name="create_backup_file_error">Nije bilo moguće stvoriti datoteku sigurnosne kopije</string>
     <string name="unlock_app_title">Otključaj %s</string>
     <string name="exception_offline">Ne postoji veza s internetom</string>
@@ -901,7 +899,6 @@
     <string name="migrationListScreen.latestChapterLabel">Najnovije: %1$s</string>
     <string name="migrationListScreen.unknownLatestChapter">Nepoznato</string>
     <string name="migrationListScreen.matchWithoutChapterToast">Nije pronađeno nijedno poglavlje. Ovaj se unos ne može koristiti za premještanje</string>
-    <string name="label_donate">Doniraj</string>
     <string name="pref_display_images_description">Iscrtaj slike u opisima manga</string>
     <string name="pref_disallow_non_ascii_filenames">Zabrani imena datoteka koji nisu u ASCII formatu</string>
     <string name="pref_disallow_non_ascii_filenames_details">Osigurava kompatibilnost s određenim medijima za spremanje podataka koji ne podržavaju Unicode. Kada je ova opcija aktivirana, morat ćeš ručno preimenovati izvor i mape s mangama zamjenjivanjem znakova koji nisu ASCII s njihovim UTF-8 heksadecimalnim vrijednostima (u malim slovima). Datoteke poglavlja se ne moraju preimenovati.</string>
@@ -909,4 +906,6 @@
     <string name="pref_download_concurrent_pages">Istovremena preuzimanja stranica</string>
     <string name="pref_download_concurrent_pages_summary">Istovremeno preuzete stranice po izvoru</string>
     <string name="action_webview_close_tab">Zatvori karticu</string>
+    <string name="action_filter_excluded_scanlators">Filtriraj isključene amaterske prevoditelje</string>
+    <string name="download_bookmarked">Zabilježeno</string>
 </resources>

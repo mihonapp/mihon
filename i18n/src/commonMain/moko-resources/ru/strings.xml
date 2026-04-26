@@ -393,7 +393,6 @@
     <string name="pref_read_with_tapping_inverted">Зоны касания наоборот</string>
     <string name="unknown_status">Неизвестный статус</string>
     <string name="unknown_author">Неизвестный автор</string>
-    <string name="updated_version">Обновлено до %1$s</string>
     <string name="whats_new">Что нового</string>
     <string name="download_insufficient_space">Не удалось загрузить главы из-за малого объема хранилища</string>
     <string name="action_global_search_query">Искать \"%1$s\" глобально</string>
@@ -565,7 +564,6 @@
     <string name="skipped_reason_not_caught_up">Пропущено, т.к есть непрочитанные главы</string>
     <string name="skipped_reason_not_started">Пропущено, т.к серия не начата</string>
     <string name="learn_more">Нажать для подробностей</string>
-    <string name="notification_update_error">%1$d обновление(ий) не удалось</string>
     <string name="rotation_reverse_portrait">Портретная наоборот</string>
     <string name="action_move_to_top_all_for_series">Переместить серию в начало</string>
     <string name="disabled_nav">Отключено</string>
@@ -707,7 +705,7 @@
     <string name="library_sync_complete">Синхронизация библиотеки завершена</string>
     <string name="syncing_library">Синхронизация библиотеки</string>
     <string name="information_cloudflare_help">Нажмите здесь, чтобы получить помощь с Cloudflare</string>
-    <string name="download_cache_invalidated">Индекс загрузок недействителен</string>
+    <string name="download_cache_invalidated">Пересоздаётся индекс загрузок</string>
     <string name="create_backup_file_error">Не удалось создать файл резервной копии</string>
     <string name="track_activity_name">Вход в сервис отслеживания</string>
     <string name="exception_http">HTTP %d, проверьте сайт в WebView</string>
@@ -902,11 +900,25 @@
     <string name="migrationListScreen.migrateDialog.cancelLabel">Отменить</string>
     <string name="pref_hide_missing_chapter_indicators">Скрывать индикаторы отсутствующих глав</string>
     <string name="pref_display_images_description">Отрисововать изображения в описаниях серий</string>
-    <string name="label_donate">Спонсорство</string>
     <string name="pref_disallow_non_ascii_filenames">Не позволять наименования файлов в виде non-ASCII</string>
     <string name="pref_disallow_non_ascii_filenames_details">Обеспечивает совместимость с некоторыми носителями информации, которые не поддерживают Unicode. Когда этот функция включена, вам нужно будет вручную переименовать папки серий и источников, заменив non-ASCII символы на шестнадцатеричные UTF-8 в нижнем регистре. Файлы глав можно не переименовать.</string>
     <string name="pref_download_concurrent_sources">Параллельные загрузки с источников</string>
     <string name="action_webview_close_tab">Закрыть вкладку</string>
     <string name="pref_download_concurrent_pages">Параллельные загрузки страниц</string>
     <string name="pref_download_concurrent_pages_summary">Число одновременных загрузок страниц с источника</string>
+    <string name="action_filter_excluded_scanlators">Фильтровать исключенных переводчиков</string>
+    <string name="download_bookmarked">В закладках</string>
+    <string name="label_support_us">Поддержите нас</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreon (Предпочтительно)</string>
+    <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
+    <string name="supportUsScreen.currentlySupportedBy">Mihon сейчас поддерживается %d+ Patreon-спонсорами. Мы хотим поблагодарить каждого из вас. Давайте сделаем Mihon лучше.</string>
+    <string name="donationCampaign.contactPlatform">Discord</string>
+    <string name="supportUsScreen.perks">Patreon-спонсоры получать доступ к эксклюзивным каналам с будущими привилегиями и возможностями.</string>
+    <string name="supportUsScreen.contactPlatform">Discord</string>
+    <string name="donationCampaign.title">Нравится приложение?</string>
+    <string name="donationCampaign.paragraph1">Приветствую! Я главный разработчик Mihon и хотел бы попросить вас об финансовой поддержке проекта. При достаточной поддержке я смогу работать над Mihon в полную силу и сосредоточиться как на давно существующих проблемах, так и на функциях, которые пользователи уже давно просят добавить.</string>
+    <string name="donationCampaign.paragraph2">Вы можете поддержать проект через Patreon (Предпочтительно) или OpenCollective. Если у вас есть вопросы или хотите поддержать, используя другие способы, вы можете связаться со мной через Discord-сервер нашего приложения.</string>
+    <string name="donationCampaign.paragraph3">Независимо от поддержки, проект останется с открытым исходным кодом, и я с волонтёрами будем и дальше поддерживать это приложение.</string>
+    <string name="donationCampaign.dismiss">Отклонить</string>
+    <string name="supportUsScreen.contactForDetailsMessage">Если у вас есть другие способы поддержки или вопросы по этому поводу, можете присоединиться к нашему Discord-серверу.</string>
 </resources>

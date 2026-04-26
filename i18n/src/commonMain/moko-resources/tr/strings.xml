@@ -393,7 +393,6 @@
     <string name="tapping_inverted_horizontal">Yatay</string>
     <string name="unknown_status">Bilinmeyen durum</string>
     <string name="unknown_author">Bilinmeyen yazar</string>
-    <string name="updated_version">v%1$s sürümüne güncellendi</string>
     <string name="whats_new">Yenilikler</string>
     <string name="download_insufficient_space">Depolama alanı az olduğu için bölümler indirilemedi</string>
     <string name="action_sort_date_added">Eklendiği tarih</string>
@@ -564,7 +563,6 @@
     <string name="skipped_reason_not_started">Hiçbir bölüm okunmadığı için atlandı</string>
     <string name="pref_navigate_pan">Geniş görselleri kaydır</string>
     <string name="pref_landscape_zoom">Geniş görsellere otomatik yakınlaştır</string>
-    <string name="notification_update_error">%1$d güncelleme başarısız oldu</string>
     <string name="learn_more">Daha fazla bilgi için dokunun</string>
     <string name="rotation_reverse_portrait">Ters portre</string>
     <string name="action_move_to_top_all_for_series">Seriyi en üste taşı</string>
@@ -705,7 +703,7 @@
     <string name="has_results">Sonuç var</string>
     <string name="delete_downloaded">İndirilenleri sil</string>
     <string name="create_backup_file_error">Yedekleme dosyası oluşturulamadı</string>
-    <string name="download_cache_invalidated">İndirilenler dizini geçersiz kılındı</string>
+    <string name="download_cache_invalidated">İndirme dizini tekrar oluşturuluyor</string>
     <string name="information_cloudflare_help">Cloudflare ile ilgili yardım için buraya dokunun</string>
     <string name="exception_unknown_host">%s verisine erişilemedi</string>
     <string name="track_activity_name">İzleyici girişi</string>
@@ -850,7 +848,7 @@
     <string name="pref_mark_duplicate_read_chapter_read_new">Yeni bir bölüm geldiğinde</string>
     <string name="action_edit_notes">Notları düzenle</string>
     <string name="action_notes">Notlar</string>
-    <string name="notes_placeholder">…olduğu kısmı beğendim</string>
+    <string name="notes_placeholder">…olduğu kısmı beğendim.</string>
     <string name="possible_duplicates_title">Muhtemel yinelenenler</string>
     <string name="possible_duplicates_summary">Kitaplığınızda benzer isimli girdiler var.\n\nTaşımak için bir girdi seçin veya yine de ekleyin.</string>
     <string name="clear_database_history_warning">Kitaplıkta olmayan girdilerin okunmuş bölümleri ve ilerlemeleri kaybolacaktır</string>
@@ -902,11 +900,25 @@
     <string name="migrationListScreen.exitDialog.stopLabel">Durdur</string>
     <string name="pref_hide_missing_chapter_indicators">Eksik bölüm göstergelerini gizle</string>
     <string name="pref_display_images_description">Manga açıklamalarında bulunan görselleri göster</string>
-    <string name="label_donate">Bağış</string>
     <string name="pref_disallow_non_ascii_filenames">ASCII olmayan dosya isimlerine izin verme</string>
     <string name="pref_disallow_non_ascii_filenames_details">Unicode desteklemeyen bazı depolama sistemleri için uyumluluk sağlar. Etkinleştirildiğinde kaynak ve manga klasörlerini manuel olarak yeniden adlandırıp ASCII olmayan karakterleri küçük UTF-8 heksadesimal karşılıklarıyla değiştirmeniz gerekir. Bölüm dosyalarının yeniden adlandırılması gerekli değildir.</string>
     <string name="pref_download_concurrent_pages">Tek seferde indirilen sayfa sayısı</string>
     <string name="pref_download_concurrent_pages_summary">Her kaynak için aynı anda indirilen sayfa sayısı</string>
     <string name="pref_download_concurrent_sources">Tek seferde indirilen kaynak sayısı</string>
     <string name="action_webview_close_tab">Sekmeyi kapat</string>
+    <string name="action_filter_excluded_scanlators">Hariç tutulan Çevirenleri filtrele</string>
+    <string name="download_bookmarked">Yer imli</string>
+    <string name="label_support_us">Bizi Destekleyin</string>
+    <string name="supportUsScreen.perks">Patronlar, özel kanallara ve gelecekte daha fazlasına erişim elde eder.</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreon (tercih edilen)</string>
+    <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
+    <string name="supportUsScreen.currentlySupportedBy">Mihon, şu anda %d+ patron tarafından desteklenmektedir. Her birinize ayrı olarak teşekkür etmek istiyoruz. Hadi Mihon\'u birlikte daha iyi yapalım.</string>
+    <string name="supportUsScreen.contactForDetailsMessage">Başka seçenekler ve sorularınız için Discord sunucumuza katılın.</string>
+    <string name="supportUsScreen.contactPlatform">Discord</string>
+    <string name="donationCampaign.title">Uygulamayı beğendiniz mi?</string>
+    <string name="donationCampaign.paragraph1">Merhaba! Ben, Mihon\'un ana geliştiricisiyim ve geliştirme sürecine maddi olarak destek olmayı düşünmenizi isterim. Yeterli destek olursa Mihon üzerinde tam zamanlı olarak çalışabilirim ve uzun zamandır olan sorunlara ve çok istenen özelliklere odaklanabilirim.</string>
+    <string name="donationCampaign.paragraph2">Patreon (tercih edilen) veya OpenCollective üzerinden bağışta bulunabilirsiniz. Sorularınız varsa veya başka bir yolla destek olmak isterseniz Mihon\'un Discord sunucusu üzerinden bana ulaşmaktan çekinmeyin.</string>
+    <string name="donationCampaign.paragraph3">Ancak ne olursa olsun Mihon, ben ve gönüllü insanlar tarafından geliştirilmeye devam edecek ve açık kaynak kodlu olarak kalacaktır.</string>
+    <string name="donationCampaign.contactPlatform">Discord</string>
+    <string name="donationCampaign.dismiss">Kapat</string>
 </resources>

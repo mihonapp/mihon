@@ -56,7 +56,7 @@ class DownloadJob(context: Context, workerParams: WorkerParameters) : CoroutineW
     override suspend fun doWork(): Result {
         var networkCheck = checkNetworkState(
             applicationContext.activeNetworkState(),
-            downloadPreferences.downloadOnlyOverWifi().get(),
+            downloadPreferences.downloadOnlyOverWifi.get(),
         )
         var active = networkCheck && downloadManager.downloaderStart()
 
@@ -69,7 +69,7 @@ class DownloadJob(context: Context, workerParams: WorkerParameters) : CoroutineW
         coroutineScope {
             combineTransform(
                 applicationContext.networkStateFlow(),
-                downloadPreferences.downloadOnlyOverWifi().changes(),
+                downloadPreferences.downloadOnlyOverWifi.changes(),
                 transform = { a, b -> emit(checkNetworkState(a, b)) },
             )
                 .onEach { networkCheck = it }

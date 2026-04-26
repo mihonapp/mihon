@@ -46,30 +46,30 @@ abstract class ViewerConfig(readerPreferences: ReaderPreferences, private val sc
         protected set
 
     init {
-        readerPreferences.readWithLongTap()
+        readerPreferences.readWithLongTap
             .register({ longTapEnabled = it })
 
-        readerPreferences.pageTransitions()
+        readerPreferences.pageTransitions
             .register({ usePageTransitions = it })
 
-        readerPreferences.doubleTapAnimSpeed()
+        readerPreferences.doubleTapAnimSpeed
             .register({ doubleTapAnimDuration = it })
 
-        readerPreferences.readWithVolumeKeys()
+        readerPreferences.readWithVolumeKeys
             .register({ volumeKeysEnabled = it })
 
-        readerPreferences.readWithVolumeKeysInverted()
+        readerPreferences.readWithVolumeKeysInverted
             .register({ volumeKeysInverted = it })
 
-        readerPreferences.alwaysShowChapterTransition()
+        readerPreferences.alwaysShowChapterTransition
             .register({ alwaysShowChapterTransition = it })
 
-        forceNavigationOverlay = readerPreferences.showNavigationOverlayNewUser().get()
+        forceNavigationOverlay = readerPreferences.showNavigationOverlayNewUser.get()
         if (forceNavigationOverlay) {
-            readerPreferences.showNavigationOverlayNewUser().set(false)
+            readerPreferences.showNavigationOverlayNewUser.set(false)
         }
 
-        readerPreferences.showNavigationOverlayOnStart()
+        readerPreferences.showNavigationOverlayOnStart
             .register({ navigationOverlayOnStart = it })
     }
 

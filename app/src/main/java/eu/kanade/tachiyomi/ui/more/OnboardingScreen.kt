@@ -24,10 +24,10 @@ class OnboardingScreen : Screen() {
         val navigator = LocalNavigator.currentOrThrow
 
         val basePreferences = remember { Injekt.get<BasePreferences>() }
-        val shownOnboardingFlow by basePreferences.shownOnboardingFlow().collectAsState()
+        val shownOnboardingFlow by basePreferences.shownOnboardingFlow.collectAsState()
 
         val finishOnboarding: () -> Unit = {
-            basePreferences.shownOnboardingFlow().set(true)
+            basePreferences.shownOnboardingFlow.set(true)
             navigator.pop()
         }
 

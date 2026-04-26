@@ -393,7 +393,6 @@
     <string name="pref_read_with_tapping_inverted">Αντιστροφή ζωνών πατήματος</string>
     <string name="unknown_status">Άγνωστη κατάσταση</string>
     <string name="unknown_author">Άγνωστος συγγραφέας</string>
-    <string name="updated_version">Ενημερώθηκε σε v%1$s</string>
     <string name="whats_new">Τι νέο υπάρχει</string>
     <string name="download_insufficient_space">Δεν ήταν δυνατή η λήψη κεφαλαίων λόγω χαμηλού αποθηκευτικού χώρου</string>
     <string name="action_global_search_query">Αναζήτηση του \"%1$s\" καθολικά</string>
@@ -564,7 +563,6 @@
     <string name="skipped_reason_completed">Παραλείφθηκε επειδή η σειρά ολοκληρώθηκε</string>
     <string name="skipped_reason_not_caught_up">Παραβλέφθηκε επειδή υπάρχουν μη αναγνωσμένα κεφάλαια</string>
     <string name="skipped_reason_not_started">Παραλείπεται επειδή δεν έχουν διαβαστεί κεφάλαια</string>
-    <string name="notification_update_error">%1$d ενημέρωση(ες) απέτυχε(-αν)</string>
     <string name="learn_more">Πατήστε για να μάθετε περισσότερα</string>
     <string name="rotation_reverse_portrait">Αντίστροφο πορτρέτο</string>
     <string name="action_move_to_top_all_for_series">Μετακίνηση σειράς προς τα πάνω</string>
@@ -707,7 +705,7 @@
     <string name="syncing_library">Συγχρονισμός βιβλιοθήκης</string>
     <string name="library_sync_complete">Ο συγχρονισμός βιβλιοθήκης ολοκληρώθηκε</string>
     <string name="information_cloudflare_help">Πατήστε εδώ για βοήθεια με το Cloudflare</string>
-    <string name="download_cache_invalidated">Το ευρετήριο λήψεων ακυρώθηκε</string>
+    <string name="download_cache_invalidated">Αναδημιουργία ευρετηρίου λήψεων</string>
     <string name="track_activity_name">Σύνδεση παρακολούθησης</string>
     <string name="create_backup_file_error">Δεν ήταν δυνατή η δημιουργία αντιγράφου ασφαλείας</string>
     <string name="exception_unknown_host">Δεν ήταν δυνατή η πρόσβαση στο %s</string>
@@ -901,7 +899,6 @@
     <string name="clear_db_exclude_read">Κρατήστε καταχωρήσεις με αναγνωσμένα κεφάλαια</string>
     <string name="storage_failed_to_create_download_directory">Αποτυχία δημιουργίας καταλόγου λήψης</string>
     <string name="storage_failed_to_create_directory">Αποτυχία δημιουργίας καταλόγου: %s</string>
-    <string name="label_donate">Δωρεά</string>
     <string name="pref_display_images_description">Αναπαράσταση εικόνων σε περιγραφές manga</string>
     <string name="pref_disallow_non_ascii_filenames">Απαγόρευση μη ASCII ονομάτων αρχείων</string>
     <string name="pref_disallow_non_ascii_filenames_details">Εξασφαλίζει συμβατότητα με ορισμένα μέσα αποθήκευσης που δεν υποστηρίζουν Unicode. Όταν αυτή η επιλογή είναι ενεργοποιημένη, θα πρέπει να μετονομάσετε χειροκίνητα τους φακέλους πηγής και manga, αντικαθιστώντας τους χαρακτήρες που δεν είναι ASCII με τις μικρές κεφαλαίες δεκαεξαδικές αναπαραστάσεις UTF-8. Τα αρχεία κεφαλαίων δε χρειάζεται να μετονομάζονται.</string>
@@ -909,4 +906,7 @@
     <string name="pref_download_concurrent_sources">Ταυτόχρονες λήψεις πηγών</string>
     <string name="pref_download_concurrent_pages">Ταυτόχρονες λήψεις σελίδων</string>
     <string name="pref_download_concurrent_pages_summary">Σελίδες που λήφθηκαν ταυτόχρονα ανά πηγή</string>
+    <string name="download_bookmarked">Προστέθηκε στους σελιδοδείκτες</string>
+    <string name="action_filter_excluded_scanlators">Φιλτράρισμα εξαιρούμενων scanlator</string>
+    <string name="label_support_us">Υποστηρίξτε μας</string>
 </resources>

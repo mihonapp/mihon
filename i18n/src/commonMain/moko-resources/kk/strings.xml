@@ -403,7 +403,6 @@
     <string name="local_filter_order_by">Сұрыптау</string>
     <string name="version">Нұсқа</string>
     <string name="licenses">Open source лицензасы</string>
-    <string name="updated_version">%1$s дейін жаңартылды</string>
     <string name="local_invalid_format">Жарамсыз тарау пішіні</string>
     <string name="date">Күн</string>
     <string name="ongoing">Шығып жатыр</string>
@@ -509,7 +508,6 @@
     <string name="transition_next">Келесі:</string>
     <string name="clear_history_confirmation">Сенімдісіз бе? Бар тарих жоғалады.</string>
     <string name="source_empty_screen">Дереккөз табылмады</string>
-    <string name="notification_update_error">%1$d жаңарту сәтсіз өтті</string>
     <string name="notification_cover_update_failed">Мұқаба жаңартылмады</string>
     <string name="update_check_notification_update_available">Жаңа нұсқа қолжетімді!</string>
     <string name="download_notifier_split_page_not_found">%d бет табылмады, бөлінгенде</string>

@@ -393,7 +393,6 @@
     <string name="pref_read_with_tapping_inverted">Songsangkan zon ketik</string>
     <string name="unknown_status">Status tidak diketahui</string>
     <string name="unknown_author">Pengarang tidak diketahui</string>
-    <string name="updated_version">Dikemas kini ke v%1$s</string>
     <string name="whats_new">Apa yang terbaharu</string>
     <string name="action_sort_date_added">Tarikh ditambah</string>
     <string name="download_insufficient_space">Memuat turun tidak berjaya kerana kekurangan ruang storan</string>
@@ -564,7 +563,6 @@
     <string name="skipped_reason_not_started">Dilangkau kerana tiada bab yang dibaca</string>
     <string name="pref_landscape_zoom">Zum secara automatik pada imej lebar</string>
     <string name="pref_navigate_pan">Panorama imej lebar</string>
-    <string name="notification_update_error">%1$d kemas kini gagal</string>
     <string name="learn_more">Ketik untuk ketahui selebihnya</string>
     <string name="rotation_reverse_portrait">Potret terbalik</string>
     <string name="action_move_to_top_all_for_series">Alih siri ke atas</string>
@@ -792,7 +790,6 @@
     <string name="upcoming_guide">Panduan yang akan datang</string>
     <string name="upcoming_calendar_next">Bulan depan</string>
     <string name="upcoming_calendar_prev">Bulan sebelumnya</string>
-    <string name="label_donate">Menderma</string>
     <string name="label_auto">Otomatis</string>
     <string name="action_sort_random">Rawak</string>
     <string name="action_copy_link">Pautan salin</string>

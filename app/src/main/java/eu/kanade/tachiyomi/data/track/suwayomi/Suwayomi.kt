@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.track.suwayomi
 
-import android.graphics.Color
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
@@ -18,14 +17,15 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
 
     val api by lazy { SuwayomiApi(id) }
 
-    override fun getLogo() = R.drawable.ic_tracker_suwayomi
-
-    override fun getLogoColor() = Color.rgb(255, 35, 35) // TODO
+    override fun getLogo() = R.drawable.brand_suwayomi
 
     companion object {
         const val UNREAD = 1L
         const val READING = 2L
         const val COMPLETED = 3L
+
+        private const val TRACKER_DELETE_KEY = "Tracker Delete"
+        private const val TRACKER_DELETE_DEFAULT = false
     }
 
     override fun getStatusList(): List<Long> = listOf(UNREAD, READING, COMPLETED)
@@ -58,7 +58,7 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
             }
         }
 
-        return api.updateProgress(track)
+        return api.updateProgress(track, getPrefTrackerDelete())
     }
 
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {
@@ -105,4 +105,9 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
 
     private fun String.getMangaId(): Long =
         this.substringAfterLast('/').toLong()
+
+    private fun getPrefTrackerDelete(): Boolean {
+        val preferences = api.sourcePreferences()
+        return preferences.getBoolean(TRACKER_DELETE_KEY, TRACKER_DELETE_DEFAULT)
+    }
 }

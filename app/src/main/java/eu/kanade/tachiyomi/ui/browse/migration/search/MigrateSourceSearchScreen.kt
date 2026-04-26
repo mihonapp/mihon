@@ -1,17 +1,20 @@
 package eu.kanade.tachiyomi.ui.browse.migration.search
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SmallExtendedFloatingActionButton
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalUriHandler
 import cafe.adriel.voyager.core.model.rememberScreenModel
@@ -34,7 +37,6 @@ import mihon.presentation.core.util.collectAsLazyPagingItems
 import tachiyomi.core.common.Constants
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
@@ -73,13 +75,15 @@ data class MigrateSourceSearchScreen(
                 )
             },
             floatingActionButton = {
-                AnimatedVisibility(visible = state.filters.isNotEmpty()) {
-                    ExtendedFloatingActionButton(
-                        text = { Text(text = stringResource(MR.strings.action_filter)) },
-                        icon = { Icon(Icons.Outlined.FilterList, contentDescription = null) },
-                        onClick = screenModel::openFilterSheet,
-                    )
-                }
+                SmallExtendedFloatingActionButton(
+                    text = { Text(text = stringResource(MR.strings.action_filter)) },
+                    icon = { Icon(Icons.Outlined.FilterList, contentDescription = null) },
+                    onClick = screenModel::openFilterSheet,
+                    modifier = Modifier.animateFloatingActionButton(
+                        visible = state.filters.isNotEmpty(),
+                        alignment = Alignment.BottomEnd,
+                    ),
+                )
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         ) { paddingValues ->

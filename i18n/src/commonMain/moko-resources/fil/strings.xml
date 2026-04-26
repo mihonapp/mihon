@@ -19,7 +19,7 @@
     <string name="action_cancel">Kanselahin</string>
     <string name="action_unpin">I-unpin</string>
     <string name="action_pin">I-pin</string>
-    <string name="action_disable">Isara</string>
+    <string name="action_disable">Di-paganahin</string>
     <string name="action_display_show_tabs">Ipakita ang mga tab ng kategorya</string>
     <string name="action_display_download_badge">Bilang ng kabanatang na-download</string>
     <string name="action_display_comfortable_grid">Kumportableng grid</string>
@@ -225,7 +225,7 @@
     <string name="pref_restore_backup">I-restore ang backup</string>
     <string name="pref_create_backup_summ">Magagamit para ma-restore ang kasalukuyang aklatan</string>
     <string name="pref_create_backup">Gumawa ng backup</string>
-    <string name="tracking_info">Isahang pag-sync para mai-update ang progress sa mga kabanata sa mga external na tracking service. Ayusin ang pagta-track para sa mga indibidwal na entry gamit ang button na Pagta-track.</string>
+    <string name="tracking_info">Isahang pag-sync para mai-update ang progress ng kabanata sa mga external na tracking service. Ayusin ang pagta-track para sa mga indibidwal na entry gamit ang button na Pagta-track.</string>
     <string name="services">Mga Tracker</string>
     <string name="pref_auto_update_manga_sync">I-update ang progress pagkatapos basahin</string>
     <string name="pref_download_new">I-download ang mga bagong kabanata</string>
@@ -367,7 +367,6 @@
     <string name="label_downloaded_only">Mga na-download lang</string>
     <string name="pref_acra_summary">Nakatutulong sa pag-ayos sa mga bug. Walang sensitibong data ang ipapadala</string>
     <string name="pref_enable_acra">Ipadala ang mga ulat ng pag-crash</string>
-    <string name="updated_version">Na-update sa v%1$s</string>
     <string name="check_for_updates">Maghanap ng update</string>
     <string name="licenses">Mga lisensiyang open-source</string>
     <string name="whats_new">Anong bago</string>
@@ -460,10 +459,10 @@
     <string name="nav_zone_prev">Nakaraan</string>
     <string name="pref_show_navigation_mode_summary">Mabilis na ipakita ang lugar na ita-tap kapag nakabukas ang reader</string>
     <string name="pref_show_navigation_mode">Ipakita ang mga overlay ng tap zone</string>
-    <string name="exclude">Di-isali: %s</string>
+    <string name="exclude">Na-ibukod: %s</string>
     <string name="include">Kasali ang: %s</string>
     <string name="none">Wala</string>
-    <string name="pref_library_update_categories_details">Hindi ia-update ang mga entry na nasa mga di kasamang kategorya kahit na nasa mga kasamang kategorya rin sila.</string>
+    <string name="pref_library_update_categories_details">Hindi ia-update ang mga entry na nasa na-ibukod na mga kategorya kahit na nasa mga kasamang kategorya rin sila.</string>
     <string name="action_sort_chapter_fetch_date">Petsa ng pagkuha ng kabanata</string>
     <string name="action_show_errors">I-tap para makita ang detalye</string>
     <string name="update_check_eol">Di na suportado ang bersyong ito ng Android</string>
@@ -526,7 +525,7 @@
     <string name="getting_started_guide">Gabay sa Pagsisimula</string>
     <string name="pref_tablet_ui_mode">Pang-tablet na UI</string>
     <string name="help_translate">Tumulong sa pagsalin</string>
-    <string name="pref_remove_exclude_categories">Mga hindi kasamang kategorya</string>
+    <string name="pref_remove_exclude_categories">Mga na-ibukod na mga kategorya</string>
     <string name="ext_app_info">Tungkol sa app</string>
     <string name="ext_installer_shizuku_unavailable_dialog">I-Install at buksan ang Shizuku para magamit ito bilang taga-install ng extension.</string>
     <string name="ext_installer_shizuku_stopped">Di tumatakbo ang Shizuku</string>
@@ -565,7 +564,6 @@
     <string name="pref_landscape_zoom">Awtomatikong mag-zoom sa mga malalawak na larawan</string>
     <string name="pref_navigate_pan">I-pan ang mga malalapad na larawan</string>
     <string name="learn_more">Matuto pa</string>
-    <string name="notification_update_error">Nabigo ang %1$d (na) update</string>
     <string name="rotation_reverse_portrait">Baligtad na patayo</string>
     <string name="action_move_to_top_all_for_series">Ilagay sa taas ang serye</string>
     <string name="disabled_nav">Nakasara</string>
@@ -650,7 +648,7 @@
     <string name="track_remove_start_date_conf_text">Tatanggalin nito ang huling petsa na napili mo mula sa %s</string>
     <string name="track_remove_finish_date_conf_text">Aalisin nito ang dati mong napiling petsa ng pagtatapos mula sa %s</string>
     <string name="pref_invalidate_download_cache">Muling i-index ang mga download</string>
-    <string name="pref_invalidate_download_cache_summary">Pilitin ang app na tingnan kung may naka-download</string>
+    <string name="pref_invalidate_download_cache_summary">Pilitin ang app na tingnan kung may naka-download na kabanata</string>
     <string name="label_completed_titles">Mga natapos na entry</string>
     <string name="label_started">Nasimulan</string>
     <string name="label_local">Lokal</string>
@@ -707,7 +705,7 @@
     <string name="syncing_library">Nagsi-sync ang aklatan</string>
     <string name="library_sync_complete">Natapos na ang pag-sync ng aklatan</string>
     <string name="information_cloudflare_help">I-tap dito para sa tulong sa Cloudflare</string>
-    <string name="download_cache_invalidated">Napawalang-bisa ang index ng mga download</string>
+    <string name="download_cache_invalidated">Ginagawa muli ang download index</string>
     <string name="create_backup_file_error">Hindi makalikha ng backup file</string>
     <string name="track_activity_name">Mag-login sa tracker</string>
     <string name="unlock_app_title">I-unlock ang %s</string>
@@ -857,10 +855,10 @@
     <string name="clear_db_exclude_read">Panatilihin ang mga entry na may mga nabasang kabanata</string>
     <string name="clear_database_history_warning">Mga nabasang kabanata at ang progress ng mga entry na wala sa aklatan ay mawawala</string>
     <string name="logging_in">Nagla-log in…</string>
-    <string name="storage_failed_to_create_download_directory">Nabigong lumikha ng direktory para sa pag-download</string>
-    <string name="storage_failed_to_create_directory">Nabigong lumikha ng direktory: %s</string>
-    <string name="pref_update_library_manga_titles">I-update ang mga pamagat ng manga ng aklatan upang tumugma sa source</string>
-    <string name="pref_update_library_manga_titles_summary">Babala: kung ang isang manga ay pinalitan ng pangalan, ito ay aalisin sa pila ng mga download (kung mayroon).</string>
+    <string name="storage_failed_to_create_download_directory">Nabigong lumikha ng directory para sa pag-download</string>
+    <string name="storage_failed_to_create_directory">Nabigong lumikha ng directory: %s</string>
+    <string name="pref_update_library_manga_titles">I-update ang mga pamagat ng manga upang tumugma sa source</string>
+    <string name="pref_update_library_manga_titles_summary">Babala: kung ang manga ay pinalitan ng pangalan, ito ay aalisin sa pila ng mga download (kung mayroon).</string>
     <string name="migrationConfigScreen.selectedHeader">Napili</string>
     <string name="migrationConfigScreen.selectAllLabel">Piliin lahat</string>
     <string name="migrationConfigScreen.selectNoneLabel">Pumili ng wala</string>
@@ -900,11 +898,27 @@
     <string name="migrationListScreen.exitDialog.stopLabel">Ihinto</string>
     <string name="pref_hide_missing_chapter_indicators">Itago ang mga indikasyon ng nawawalang kabanata</string>
     <string name="pref_display_images_description">I-render ang mga imahe sa mga paglalarawan ng manga</string>
-    <string name="label_donate">Mag-donate</string>
     <string name="pref_disallow_non_ascii_filenames">Di-payagan ang mga non-ASCII na filename</string>
     <string name="pref_disallow_non_ascii_filenames_details">Tinitiyak ang pagiging tugma sa ilang partikular na storage media na hindi sumusuporta sa Unicode. Kapag napagana ito, kakailanganin mong manu-manong palitan ang pangalan ng source at manga folder sa pamamagitan ng pagpapalit ng mga hindi ASCII na character ng kanilang lowercase na UTF-8 hexadecimal na representasyon. Hindi kailangang palitan ng pangalan ang mga file ng kabanata.</string>
     <string name="pref_download_concurrent_sources">Kasabay na pag-download ng source</string>
     <string name="pref_download_concurrent_pages">Kasabay na pag-download ng pahina</string>
     <string name="pref_download_concurrent_pages_summary">Mga pahina na nai-download nang sabay-sabay kada source</string>
     <string name="action_webview_close_tab">Isara ang tab</string>
+    <string name="theme_catppuccin">Catppuccin</string>
+    <string name="migrationConfigScreen.availableHeader">Maaaring Magamit</string>
+    <string name="action_filter_excluded_scanlators">I-filter ang na-ibukod na mga scanlator</string>
+    <string name="download_bookmarked">Na-bookmark</string>
+    <string name="label_support_us">Suportahan Kami</string>
+    <string name="supportUsScreen.perks">Ang mga patron ay may access sa exclusive channels, at marami pang perks ang darating.</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreon (mas mainam)</string>
+    <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
+    <string name="supportUsScreen.currentlySupportedBy">Ang Mihon ay kasalukuyang sinusuportahan ng %d+ na patron. Nais naming pasalamatan ang bawat isa sa inyo. Sama-sama nating pagandahin pa lalo ang Mihon.</string>
+    <string name="supportUsScreen.contactForDetailsMessage">Para sa iba pang alternatibong opsyon o anumang mga katanungan, sumali sa aming Discord server.</string>
+    <string name="supportUsScreen.contactPlatform">Discord</string>
+    <string name="donationCampaign.title">Nasisiyahan ka ba sa paggamit ng app?</string>
+    <string name="donationCampaign.paragraph1">Kumusta! Ako ang main developer ng Mihon. Nais ko sanang humiling ng inyong suportang pinansyal para sa development nito. Sa sapat na suporta, magagawa kong pagtuunan ng panahon ang Mihon full-time at mabigyang-pansin ang mga dati pang isyu pati na ang mga feature na madalas ninyong hinihiling.</string>
+    <string name="donationCampaign.paragraph2">Maaari kang mag-donate sa pamamagitan ng Patreon (mas mainam) o OpenCollective. Kung mayroon kang mga katanungan o nais tumulong gamit ang ibang paraan, huwag mag-atubiling makipag-ugnayan sa akin sa Discord server ng Mihon.</string>
+    <string name="donationCampaign.paragraph3">Anuman ang mangyari, patuloy na itataguyod ang Mihon ko at ng mga volunteer, at mananatili itong open source.</string>
+    <string name="donationCampaign.contactPlatform">Discord</string>
+    <string name="donationCampaign.dismiss">Alisin</string>
 </resources>

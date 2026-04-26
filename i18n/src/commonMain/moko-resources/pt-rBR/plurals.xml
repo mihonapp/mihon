@@ -3,7 +3,7 @@
     <plurals name="lock_after_mins">
         <item quantity="one">Após %1$s minuto</item>
         <item quantity="many">Após %1$s minutos</item>
-        <item quantity="other">Após %1$s minuto</item>
+        <item quantity="other">Após %1$s minutos</item>
     </plurals>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d capítulo novo</item>
@@ -93,16 +93,26 @@
     <plurals name="migrationListScreen.migrateDialog.migrateTitle">
         <item quantity="one">Migrar %1$d entrada?</item>
         <item quantity="many">Migrar %1$d entradas?</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <plurals name="migrationListScreen.migrateDialog.copyTitle">
         <item quantity="one">Copiar %1$d entrada?</item>
         <item quantity="many">Copiar %1$d entradas?</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <plurals name="migrationListScreen.migrateDialog.skipText">
         <item quantity="one">Uma entrada foi ignorada</item>
         <item quantity="many">%1$d entradas foram ignoradas</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 página</item>
+        <item quantity="many">%1$s páginas</item>
+        <item quantity="other"/>
+    </plurals>
+    <plurals name="notification_update_error">
+        <item quantity="one">%1$d atualização falhou</item>
+        <item quantity="many">%1$d atualizações falharam</item>
+        <item quantity="other">%1$d atualizações falharam</item>
     </plurals>
 </resources>

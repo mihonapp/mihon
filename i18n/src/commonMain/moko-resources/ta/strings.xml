@@ -348,7 +348,7 @@
     <string name="action_add_repo">ரெப்போ சேர்க்கவும்</string>
     <string name="label_add_repo_input">முகவரி களஞ்சி</string>
     <string name="untrusted_extension_message">தீங்கிழைக்கும் நீட்டிப்புகள் சேமிக்கப்பட்ட உள்நுழைவு நற்சான்றிதழ்களைப் படிக்கலாம் அல்லது தன்னிச்சையான குறியீட்டை இயக்கலாம்.\n\n இந்த நீட்டிப்பை நம்புவதன் மூலம், இந்த அபாயங்களை நீங்கள் ஏற்றுக்கொள்கிறீர்கள்.</string>
-    <string name="action_add_repo_message">மிஓனில் கூடுதல் களஞ்சியங்களைச் சேர்க்கவும். இது \"index.min.json\" உடன் முடிவடையும் முகவரி ஆக இருக்க வேண்டும்.</string>
+    <string name="action_add_repo_message">%s இல் கூடுதல் களஞ்சியங்களைச் சேர்க்கவும். இது \"index.min.json\" என்று முடிவடையும் முகவரி ஆக இருக்க வேண்டும்.</string>
     <string name="error_repo_exists">இந்த ரெப்போ ஏற்கனவே உள்ளது!</string>
     <string name="action_delete_repo">ரெப்போவை நீக்கு</string>
     <string name="invalid_repo_name">தவறான ரெப்போ முகவரி</string>
@@ -372,7 +372,7 @@
     <string name="pref_fullscreen">முழு திரை</string>
     <string name="pref_show_navigation_mode">குழாய் மண்டலங்கள் மேலடுக்கைக் காட்டு</string>
     <string name="pref_show_navigation_mode_summary">வாசகர் திறக்கப்படும்போது சுருக்கமாகக் காட்டுங்கள்</string>
-    <string name="pref_flash_duration_summary">%1$s MS</string>
+    <string name="pref_flash_duration_summary">%1$s மிநொ</string>
     <string name="pref_flash_page_interval">ஒவ்வொரு ஃபிளாச்</string>
     <string name="pref_flash_with">உடன் ஃபிளாச்</string>
     <string name="pref_always_decode_long_strip_with_ssiv_summary">செயல்திறனை பாதிக்கிறது. பிட்மேப் வாசலைக் குறைப்பது வெற்று பட சிக்கல்களை சரிசெய்யவில்லை என்றால் மட்டுமே இயக்கவும்</string>
@@ -547,9 +547,9 @@
     <string name="syncing_library">நூலகம் ஒத்திசைத்தல்</string>
     <string name="library_sync_complete">நூலக ஒத்திசைவு முடிந்தது</string>
     <string name="label_network">நெட்வொர்க்கிங்</string>
-    <string name="pref_invalidate_download_cache">REINDEX பதிவிறக்கங்கள்</string>
+    <string name="pref_invalidate_download_cache">மறுகுறியீடு பதிவிறக்கங்கள்</string>
     <string name="pref_invalidate_download_cache_summary">பதிவிறக்கம் செய்யப்பட்ட அத்தியாயங்களை மறுபரிசீலனை செய்ய பயன்பாடு</string>
-    <string name="download_cache_invalidated">பதிவிறக்கங்கள் அட்டவணை செல்லாதது</string>
+    <string name="download_cache_invalidated">பதிவிறக்க அட்டவணையை மீண்டும் உருவாக்குகிறது</string>
     <string name="pref_clear_database">தரவுத்தளத்தை அழிக்கவும்</string>
     <string name="pref_clear_database_summary">உங்கள் நூலகத்தில் சேமிக்கப்படாத உள்ளீடுகளுக்கான வரலாற்றை நீக்கவும்</string>
     <string name="clear_database_source_item_count">தரவுத்தளத்தில் %1$d நூலகமற்ற உள்ளீடுகள்</string>
@@ -575,7 +575,6 @@
     <string name="pref_verbose_logging_summary">கணினி பதிவுக்கு வாய்மொழி பதிவுகளை அச்சிடுக (பயன்பாட்டு செயல்திறனைக் குறைக்கிறது)</string>
     <string name="privacy_policy">தனியுரிமைக் கொள்கை</string>
     <string name="check_for_updates">புதுப்பிப்புகளை சரிபார்க்கவும்</string>
-    <string name="updated_version">V%1$s க்கு புதுப்பிக்கப்பட்டது</string>
     <string name="pref_enable_acra">செயலிழப்பு அறிக்கைகளை அனுப்பவும்</string>
     <string name="pref_acra_summary">எந்த பிழைகளையும் சரிசெய்ய உதவுகிறது. முக்கியமான தரவு எதுவும் அனுப்பப்படாது</string>
     <string name="fdroid_warning">எஃப்-டிராய்டு கட்டடங்கள் அதிகாரப்பூர்வமாக ஆதரிக்கப்படவில்லை.\n மேலும் அறிய தட்டவும்.</string>
@@ -753,7 +752,7 @@
     <string name="label_mean_score">சராசரி மதிப்பெண்</string>
     <string name="label_used">பயன்படுத்தப்பட்டது</string>
     <string name="download_insufficient_space">குறைந்த சேமிப்பு இடம் காரணமாக அத்தியாயங்களை பதிவிறக்கம் செய்ய முடியவில்லை</string>
-    <string name="download_queue_size_warning">எச்சரிக்கை: பெரிய மொத்த பதிவிறக்கங்கள் ஆதாரங்கள் மெதுவாகவும்/அல்லது மிஓனைத் தடுக்கவும் வழிவகுக்கும். மேலும் அறிய தட்டவும்.</string>
+    <string name="download_queue_size_warning">எச்சரிக்கை: பெரிய மொத்தப் பதிவிறக்கங்கள் மூலங்கள் மெதுவாக மாறுவதற்கும்/அல்லது %sஐத் தடுப்பதற்கும் வழிவகுக்கும். மேலும் அறிய தட்டவும்.</string>
     <string name="not_applicable">இதற்கில்லை</string>
     <string name="day_short">%d.டி.</string>
     <string name="notification_updating_progress">நூலகத்தைப் புதுப்பித்தல்… (%s)</string>
@@ -766,7 +765,6 @@
     <string name="notification_chapters_single">அத்தியாயம் %1$s</string>
     <string name="notification_chapters_single_and_more">அத்தியாயம் %1$s மற்றும் %2$d மேலும்</string>
     <string name="notification_chapters_multiple">அத்தியாயங்கள் %1$s</string>
-    <string name="notification_update_error">%1$d புதுப்பிப்பு (கள்) தோல்வியடைந்தது</string>
     <string name="learn_more">மேலும் அறிய தட்டவும்</string>
     <string name="notification_cover_update_failed">அட்டையைப் புதுப்பிக்கத் தவறிவிட்டது</string>
     <string name="notification_first_add_to_library">இதைச் செய்வதற்கு முன் உங்கள் நூலகத்தில் உள்ளீட்டைச் சேர்க்கவும்</string>
@@ -892,4 +890,13 @@
     <string name="author">நூலாசிரியர்</string>
     <string name="storage_failed_to_create_directory">கோப்பகத்தை உருவாக்குவதில் தோல்வி: %s</string>
     <string name="storage_failed_to_create_download_directory">பதிவிறக்க கோப்பகத்தை உருவாக்குவதில் தோல்வி</string>
+    <string name="action_webview_close_tab">தாவலை மூடு</string>
+    <string name="pref_display_images_description">மங்கா விளக்கங்களில் படங்களை வழங்கவும்</string>
+    <string name="pref_disallow_non_ascii_filenames">ASCII அல்லாத கோப்பு பெயர்களை அனுமதிக்க வேண்டாம்</string>
+    <string name="pref_disallow_non_ascii_filenames_details">யூனிகோடை ஆதரிக்காத சில சேமிப்பக மீடியாவுடன் இணக்கத்தன்மையை உறுதி செய்கிறது. இது இயக்கப்பட்டால், ASCII அல்லாத எழுத்துக்களை அவற்றின் சிறிய UTF-8 எக்சாடெசிமல் பிரதிநிதித்துவங்களுடன் மாற்றுவதன் மூலம், நீங்கள் மூல மற்றும் மங்கா கோப்புறைகளை கைமுறையாக மறுபெயரிட வேண்டும். அத்தியாய கோப்புகளை மறுபெயரிட தேவையில்லை.</string>
+    <string name="pref_download_concurrent_sources">ஒரே நேரத்தில் மூல பதிவிறக்கங்கள்</string>
+    <string name="pref_download_concurrent_pages">ஒரே நேரத்தில் பக்க பதிவிறக்கங்கள்</string>
+    <string name="pref_download_concurrent_pages_summary">ஒவ்வொரு மூலத்திற்கும் ஒரே நேரத்தில் பதிவிறக்கம் செய்யப்பட்ட பக்கங்கள்</string>
+    <string name="download_bookmarked">புத்தகக்குறி செய்யப்பட்டது</string>
+    <string name="action_filter_excluded_scanlators">நீக்கப்பட்ட ச்கேலேட்டர்களை வடிகட்டி</string>
 </resources>

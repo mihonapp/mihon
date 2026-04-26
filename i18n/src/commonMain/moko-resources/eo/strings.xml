@@ -297,7 +297,6 @@
     <string name="login">Ensaluti</string>
     <string name="login_title">Ensaluti al %1$s</string>
     <string name="label_downloaded_only">Nur elŝutitaj</string>
-    <string name="updated_version">Ĝisdatigita al v%1$s</string>
     <string name="licenses">Malfermitkodaj permesiloj</string>
     <string name="whats_new">Kio novas</string>
     <string name="version">Versio</string>
@@ -697,7 +696,7 @@
     <string name="requires_app_restart">Devigas restartigi apon por efektiviĝi</string>
     <string name="pref_reset_viewer_flags_summary">Restarigas legadan reĝimon kaj orientiĝon de ĉiuj serioj</string>
     <string name="pref_invalidate_download_cache">Reindeksi elŝutojn</string>
-    <string name="download_cache_invalidated">Indeksoj de elŝutoj nevalidigitaj</string>
+    <string name="download_cache_invalidated">Rekreado de indekso de elŝutoj</string>
     <string name="pref_clear_database_summary">Forigi historion de elementoj ne konservitaj en biblioteko</string>
     <string name="clear_database_source_item_count">%1$d nebibliotekaj elementoj en datumbazo</string>
     <string name="database_clean">Nenio por viŝi</string>
@@ -815,7 +814,6 @@
     <string name="download_queue_size_warning">Averto: grandaj amasaj elŝutoj povas igi fontojn fariĝi pli malrapidaj kaj/aŭ bloki %s. Tuŝetu por ekscii pli.</string>
     <string name="notification_updating_progress">Ĝisdatigado de biblioteko… (%s)</string>
     <string name="notification_size_warning">Grandaj ĝisdatigoj povas damaĝi fontojn kaj konduki al pli malrapidaj ĝisdatigoj kaj pliigan baterian uzadon. Tuŝetu por ekscii pli.</string>
-    <string name="notification_update_error">%1$d ĝisdatigo(j) fiaskis</string>
     <string name="learn_more">Tuŝetu por ekscii pli</string>
     <string name="notification_first_add_to_library">Bonvolu aldoni la elementon al via biblioteko antaŭ ol fari tion</string>
     <string name="library_errors_help">Por helpo pri kiel ripari erarojn de bibliotekaj ĝisdatigoj, vidu %1$s</string>
@@ -889,11 +887,16 @@
     <string name="migrationListScreen.migrateDialog.cancelLabel">Nuligi</string>
     <string name="migrationListScreen.progressDialog.cancelLabel">Nuligi</string>
     <string name="migrationListScreen.matchWithoutChapterToast">Neniu ĉapitro trovita, ĉi tiu elemento ne povas esti uzota por migri</string>
-    <string name="label_donate">Donacu</string>
     <string name="theme_catppuccin">Katpuĉino</string>
     <string name="pref_display_images_description">Montri bildojn en mangaaj priskriboj</string>
     <string name="pref_hide_missing_chapter_indicators">Kaŝi mankantajn ĉapitrajn indikilojn</string>
     <string name="tracked_privately">Sekvata private</string>
     <string name="pref_disallow_non_ascii_filenames">Malpermesi ne-ASCII-dosiernomojn</string>
     <string name="pref_disallow_non_ascii_filenames_details">Certigas kongruon kun certaj konservejaj dosiersistemoj kiuj ne subtenas Unikodon. Kiam tio estas ŝaltita, vi bezonos permane renomi dosierujojn de fontoj kaj mangaoj anstataŭigante ne-ASCII-signojn per iliaj minusklaj UTF-8-deksesumaj prezentoj. Ĉapitraj dosieroj ne necesas esti renomitaj.</string>
+    <string name="action_webview_close_tab">Fermi langeton</string>
+    <string name="pref_download_concurrent_sources">Kunrulaj elŝutoj de fontoj</string>
+    <string name="pref_download_concurrent_pages">Kunrulaj elŝutoj de paĝoj</string>
+    <string name="pref_download_concurrent_pages_summary">Paĝoj elŝutitaj sammomente por fonto</string>
+    <string name="action_filter_excluded_scanlators">Filtri ekskluzivitajn skantradukistojn</string>
+    <string name="download_bookmarked">Legosignita</string>
 </resources>

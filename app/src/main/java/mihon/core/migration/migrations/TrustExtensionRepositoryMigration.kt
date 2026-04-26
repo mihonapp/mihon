@@ -16,7 +16,7 @@ class TrustExtensionRepositoryMigration : Migration {
         val sourcePreferences = migrationContext.get<SourcePreferences>() ?: return@withIOContext false
         val extensionRepositoryRepository =
             migrationContext.get<ExtensionRepoRepository>() ?: return@withIOContext false
-        for ((index, source) in sourcePreferences.extensionRepos().get().withIndex()) {
+        for ((index, source) in sourcePreferences.extensionRepos.get().withIndex()) {
             try {
                 extensionRepositoryRepository.upsertRepo(
                     source,
@@ -29,7 +29,7 @@ class TrustExtensionRepositoryMigration : Migration {
                 logcat(LogPriority.ERROR, e) { "Error Migrating Extension Repo with baseUrl: $source" }
             }
         }
-        sourcePreferences.extensionRepos().delete()
+        sourcePreferences.extensionRepos.delete()
         return@withIOContext true
     }
 }

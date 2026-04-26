@@ -272,7 +272,6 @@
     <string name="check_for_updates">Procurar actualizacións</string>
     <string name="licenses">Licenzas de código aberto</string>
     <string name="privacy_policy">Política de privacidade</string>
-    <string name="updated_version">Actualizado a v%1$s</string>
     <string name="pref_acra_summary">Axuda a corrixir os erros. Non se enviará ningunha información sensíbel</string>
     <string name="notification_incognito_text">Desactivar o modo incógnito</string>
     <string name="login">Iniciar sesión</string>
@@ -606,7 +605,6 @@
     <string name="transition_finished">Rematado:</string>
     <string name="chapter_progress">Páxina: %1$d</string>
     <string name="error_saving_picture">Produciuse un erro ao gardar a imaxe</string>
-    <string name="notification_update_error">Actualizacións erradas: %1$d</string>
     <string name="update_check_confirm">Descargar</string>
     <string name="channel_app_updates">Actualizacións da aplicación</string>
     <string name="learn_more">Preme para saber máis</string>

@@ -1,6 +1,5 @@
 package eu.kanade.test
 
-import android.graphics.Color
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.Tracker
@@ -20,8 +19,7 @@ data class DummyTracker(
     override val supportsPrivateTracking: Boolean = false,
     override val isLoggedIn: Boolean = false,
     override val isLoggedInFlow: Flow<Boolean> = flowOf(false),
-    val valLogoColor: Int = Color.rgb(18, 25, 35),
-    val valLogo: Int = R.drawable.ic_tracker_anilist,
+    val valLogo: Int = R.drawable.brand_anilist,
     val valStatuses: List<Long> = (1L..6L).toList(),
     val valReadingStatus: Long = 1L,
     val valRereadingStatus: Long = 1L,
@@ -33,8 +31,6 @@ data class DummyTracker(
 
     override val client: OkHttpClient
         get() = TODO("Not yet implemented")
-
-    override fun getLogoColor(): Int = valLogoColor
 
     override fun getLogo(): Int = valLogo
 

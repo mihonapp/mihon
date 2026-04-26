@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.track.anilist
 
-import android.graphics.Color
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.tachiyomi.R
@@ -44,7 +43,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
 
     override val supportsPrivateTracking: Boolean = true
 
-    private val scorePreference = trackPreferences.anilistScoreType()
+    private val scorePreference = trackPreferences.anilistScoreType
 
     init {
         // If the preference is an int from APIv1, logout user to force using APIv2
@@ -56,9 +55,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
         }
     }
 
-    override fun getLogo() = R.drawable.ic_tracker_anilist
-
-    override fun getLogoColor() = Color.rgb(18, 25, 35)
+    override fun getLogo() = R.drawable.brand_anilist
 
     override fun getStatusList(): List<Long> {
         return listOf(READING, COMPLETED, ON_HOLD, DROPPED, PLAN_TO_READ, REREADING)

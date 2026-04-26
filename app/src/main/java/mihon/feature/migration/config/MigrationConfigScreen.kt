@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SmallExtendedFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -61,7 +62,6 @@ import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.Pill
-import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
@@ -143,7 +143,7 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
                 )
             },
             floatingActionButton = {
-                ExtendedFloatingActionButton(
+                SmallExtendedFloatingActionButton(
                     text = { Text(text = stringResource(MR.strings.migrationConfigScreen_continueButtonText)) },
                     icon = { Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowForward, contentDescription = null) },
                     onClick = {
@@ -330,20 +330,20 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
             }
         }
 
-        private fun updateSources(save: Boolean = true, action: (List<MigrationSource>) -> List<MigrationSource>) {
+        private fun updateSources(action: (List<MigrationSource>) -> List<MigrationSource>) {
             mutableState.update { state ->
                 val updatedSources = action(state.sources)
                 val includedSources = updatedSources.mapNotNull { if (!it.isSelected) null else it.id }
                 state.copy(sources = updatedSources.sortedWith(sourcesComparator(includedSources)))
             }
-            if (save) saveSources()
+            saveSources()
         }
 
         private fun initSources() {
-            val languages = sourcePreferences.enabledLanguages().get()
-            val pinnedSources = sourcePreferences.pinnedSources().get().mapNotNull { it.toLongOrNull() }
-            val includedSources = sourcePreferences.migrationSources().get()
-            val disabledSources = sourcePreferences.disabledSources().get()
+            val languages = sourcePreferences.enabledLanguages.get()
+            val pinnedSources = sourcePreferences.pinnedSources.get().mapNotNull { it.toLongOrNull() }
+            val includedSources = sourcePreferences.migrationSources.get()
+            val disabledSources = sourcePreferences.disabledSources.get()
                 .mapNotNull { it.toLongOrNull() }
             val sources = sourceManager.getCatalogueSources()
                 .asSequence()
@@ -368,7 +368,9 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
                 }
                 .toList()
 
-            updateSources(save = false) { sources }
+            mutableState.update { state ->
+                state.copy(sources = sources.sortedWith(sourcesComparator(includedSources)))
+            }
         }
 
         fun toggleSelection(id: Long) {
@@ -380,8 +382,8 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
         }
 
         fun toggleSelection(config: SelectionConfig) {
-            val pinnedSources = sourcePreferences.pinnedSources().get().mapNotNull { it.toLongOrNull() }
-            val disabledSources = sourcePreferences.disabledSources().get().mapNotNull { it.toLongOrNull() }
+            val pinnedSources = sourcePreferences.pinnedSources.get().mapNotNull { it.toLongOrNull() }
+            val disabledSources = sourcePreferences.disabledSources.get().mapNotNull { it.toLongOrNull() }
             val isSelected: (Long) -> Boolean = {
                 when (config) {
                     SelectionConfig.All -> true
@@ -411,7 +413,7 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
             state.value.sources
                 .filter { source -> source.isSelected }
                 .map { source -> source.source.id }
-                .let { sources -> sourcePreferences.migrationSources().set(sources) }
+                .let { sources -> sourcePreferences.migrationSources.set(sources) }
         }
 
         data class State(

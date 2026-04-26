@@ -13,7 +13,7 @@
     <string name="label_backup">バックアップと復元</string>
     <string name="action_settings">設定</string>
     <string name="action_filter">絞り込む</string>
-    <string name="action_filter_bookmarked">お気に入り</string>
+    <string name="action_filter_bookmarked">ブックマーク済み</string>
     <string name="action_filter_unread">未読</string>
     <string name="action_filter_empty">フィルタを削除</string>
     <string name="action_sort_alpha">アルファベット順</string>
@@ -393,7 +393,6 @@
     <string name="requires_app_restart">変更を適用するには再起動してください</string>
     <string name="label_network">ネットワーク</string>
     <string name="pref_read_with_tapping_inverted">タップでのページめくりを反転</string>
-    <string name="updated_version">v%1$sに更新しました</string>
     <string name="whats_new">更新情報</string>
     <string name="pref_category_reading_mode">読み方</string>
     <string name="channel_complete">完了</string>
@@ -565,7 +564,6 @@
     <string name="skipped_reason_not_started">読了した章がない為スキップしました</string>
     <string name="pref_navigate_pan">幅広い画像を左右に移動</string>
     <string name="learn_more">タップでもっと詳しく</string>
-    <string name="notification_update_error">%1$d件の更新に失敗しました</string>
     <string name="rotation_reverse_portrait">縦向き (反転)</string>
     <string name="action_move_to_top_all_for_series">シリーズをトップに移動</string>
     <string name="disabled_nav">無効</string>
@@ -852,8 +850,7 @@
     <string name="clear_database_history_warning">非図書館エントリの章の読み取りと進捗は失われます</string>
     <string name="clear_db_exclude_read">読み終えた章を含むエントリーを保持する</string>
     <string name="possible_duplicates_title">重複の可能性</string>
-    <string name="label_donate">寄付する</string>
-    <string name="label_auto">自動車</string>
+    <string name="label_auto">自動</string>
     <string name="theme_catppuccin">キャットプッチン</string>
     <string name="theme_monochrome">モノクロ</string>
     <string name="pref_display_images_description">マンガの描写で画像をレンダリングする</string>
@@ -869,4 +866,11 @@
     <string name="tracked_privately">非公開で追跡</string>
     <string name="action_toggle_private_on">非公開で追跡する</string>
     <string name="action_toggle_private_off">公開で追跡する</string>
+    <string name="action_webview_close_tab">タブを閉じる</string>
+    <string name="migrationConfigScreen.availableHeader">利用可能</string>
+    <string name="migrationConfigScreen.selectAllLabel">すべて選択</string>
+    <string name="migrationConfigScreen.selectEnabledLabel">有効なソースを選択</string>
+    <string name="migrationConfigScreen.selectPinnedLabel">固定されたソースを選択</string>
+    <string name="migrationConfigScreen.dataToMigrateHeader">移行するデータ</string>
+    <string name="download_bookmarked">ブックマーク済み</string>
 </resources>

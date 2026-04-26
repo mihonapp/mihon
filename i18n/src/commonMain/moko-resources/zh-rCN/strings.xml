@@ -392,7 +392,6 @@
     <string name="tapping_inverted_none">无</string>
     <string name="unknown_status">未知状态</string>
     <string name="unknown_author">未知作者</string>
-    <string name="updated_version">已更新至 v%1$s</string>
     <string name="whats_new">更新日志</string>
     <string name="download_insufficient_space">存储空间不足，无法下载章节</string>
     <string name="action_global_search_query">全局搜索 \"%1$s\"</string>
@@ -565,7 +564,6 @@
     <string name="skipped_reason_not_caught_up">已跳过，因为有未读章节</string>
     <string name="skipped_reason_not_started">已跳过，因为尚未开始阅读</string>
     <string name="learn_more">点击了解详情</string>
-    <string name="notification_update_error">%1$d 个更新失败了</string>
     <string name="rotation_reverse_portrait">反向竖屏</string>
     <string name="action_move_to_top_all_for_series">将作品移到顶部</string>
     <string name="disabled_nav">关闭</string>
@@ -707,7 +705,7 @@
     <string name="syncing_library">正在同步书架</string>
     <string name="library_sync_complete">书架同步完成</string>
     <string name="information_cloudflare_help">点击这里查看 Cloudflare 帮助</string>
-    <string name="download_cache_invalidated">已清除下载索引</string>
+    <string name="download_cache_invalidated">重建下载索引</string>
     <string name="track_activity_name">登录进度记录平台</string>
     <string name="create_backup_file_error">创建备份文件失败</string>
     <string name="exception_offline">未连接网络</string>
@@ -902,11 +900,25 @@
     <string name="migrationListScreenTitle">迁移</string>
     <string name="pref_hide_missing_chapter_indicators">隐藏缺失章节提示符</string>
     <string name="pref_display_images_description">在漫画注释中显示图片</string>
-    <string name="label_donate">捐赠</string>
     <string name="pref_disallow_non_ascii_filenames">禁用非ASCII文件名</string>
     <string name="pref_disallow_non_ascii_filenames_details">确保与某些不支持 Unicode 的存储介质相兼容。启用此功能后，你需要手动重命名图源和漫画文件夹，将非 ASCII 字符改为对应的 UTF-8 小写十六进制表示形式。章节文件无需重命名。</string>
     <string name="pref_download_concurrent_sources">同时下载的图源数量</string>
     <string name="pref_download_concurrent_pages">同时下载的页数</string>
     <string name="pref_download_concurrent_pages_summary">每个图源同时下载的页数</string>
     <string name="action_webview_close_tab">关闭标签</string>
+    <string name="action_filter_excluded_scanlators">筛选排除翻译组</string>
+    <string name="download_bookmarked">已添加书签</string>
+    <string name="label_support_us">支持我们</string>
+    <string name="supportUsScreen.perks">赞助者可访问专属频道，更多福利即将推出。</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreon（首选）</string>
+    <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
+    <string name="supportUsScreen.currentlySupportedBy">目前 Mihon 已获得 %d+ 位赞助者的支持。我们衷心感谢大家。让我们携手把 Mihon 办得更出色。</string>
+    <string name="supportUsScreen.contactForDetailsMessage">如需替代方案或有任何相关问题，请加入我们的 Discord 服务器。</string>
+    <string name="supportUsScreen.contactPlatform">Discord</string>
+    <string name="donationCampaign.title">喜欢本应用吗？</string>
+    <string name="donationCampaign.paragraph1">你好！我是 Mihon 的首席开发者，恳请你考虑为 Mihon 的开发工作给予资金方面的支持。有了足够的资金支持，我就能全职投入 Mihon 的开发，专注于解决长期存在的问题以及用户呼声很高的功能。</string>
+    <string name="donationCampaign.paragraph2">您可以通过 Patreon（首选）或 OpenCollective 进行捐赠。如果您有任何疑问，或者希望使用其他方式提供支持，欢迎通过 Mihon 的 Discord 服务器联系我。</string>
+    <string name="donationCampaign.paragraph3">无论如何，Mihon 仍将由我和志愿者们继续维护，并且会保持开源。</string>
+    <string name="donationCampaign.contactPlatform">Discord</string>
+    <string name="donationCampaign.dismiss">放弃</string>
 </resources>

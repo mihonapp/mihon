@@ -3,9 +3,9 @@
     <string name="name">الاسم</string>
     <string name="categories">الفئات</string>
     <string name="manga">إدخالات المكتبة</string>
-    <string name="chapters">الفصول</string>
-    <string name="track">التعقب</string>
-    <string name="history">التاريخ</string>
+    <string name="chapters">فصول</string>
+    <string name="track">تعقب</string>
+    <string name="history">تاريخ</string>
     <string name="label_settings">اﻹعدادات</string>
     <string name="label_download_queue">قائمة التنزيلات</string>
     <string name="label_library">المكتبة</string>
@@ -409,7 +409,6 @@
     <string name="unknown_author">مؤلّف غير معروف</string>
     <string name="no_pinned_sources">لا تمتلك أيّة مصادر مثبّتة</string>
     <string name="action_global_search_query">إبحث عن \"%1$s\" بشكلٍ شامل</string>
-    <string name="updated_version">حُدِّث إلى الإصدار v%1$s</string>
     <string name="no_chapters_error">لم يُعثر على فصول</string>
     <string name="share_page_info">%1$s: %2$s, صفحة %3$d</string>
     <string name="chapter_settings_updated">إعدادات الفصل الإفتراضية المُحدثة</string>
@@ -567,7 +566,6 @@
     <string name="error_saving_picture">خطأ أثناء حفظ الصورة</string>
     <string name="disabled_nav">معطل</string>
     <string name="rotation_reverse_portrait">رأسي بالعكس</string>
-    <string name="notification_update_error">فشل %1$d تحديث أو تحديثات</string>
     <string name="learn_more">اضغط لمعرفة المزيد</string>
     <string name="action_move_to_top_all_for_series">نقل سلسلة الفصول للأعلى</string>
     <string name="empty_backup_error">لا توجد مدخلات في المكتبة لإجراء نسخة احتياطي‮‮ة</string>
@@ -702,7 +700,7 @@
     <string name="track_delete_text">هذا يزيل التتبع محليًّا.</string>
     <string name="action_ok">حسنًا</string>
     <string name="track_delete_remote_text">وكذلك أزله من %s</string>
-    <string name="delete_downloaded">احذف ما نُزِّل</string>
+    <string name="delete_downloaded">حذف التنزيلات</string>
     <string name="syncing_library">تُزامن المكتبة</string>
     <string name="library_sync_complete">انتهت مزامنة المكتبة</string>
     <string name="has_results">وُجدت نتائج</string>
@@ -732,7 +730,7 @@
     <string name="action_apply">نفِّذ</string>
     <string name="action_revert_to_default">صفِّر</string>
     <string name="no_scanlators_found">لم يُعثَر على مترجمين</string>
-    <string name="scanlator">المترجم</string>
+    <string name="scanlator">سكانليتور</string>
     <string name="exclude_scanlators">احجب بعض المترجمين</string>
     <string name="action_menu_overflow_description">خيارات أكثر</string>
     <string name="selected">محدَّد</string>
@@ -836,7 +834,7 @@
     <string name="add_repo_confirmation">هل تريد اضافة الفهرس \"%s\"؟</string>
     <string name="pref_update_library_manga_titles">تحديث عنوان المانغا لتطابق المصدر</string>
     <string name="logging_in">جاري الدخول…</string>
-    <string name="pref_update_library_manga_titles_summary">تحذير: إذا تمت إعادة تسمية المانجا، فسيتم إزالتها من قائمة التنزيل (إن وجدت)</string>
+    <string name="pref_update_library_manga_titles_summary">تحذير: إذا تمت إعادة تسمية المانجا، فسيتم إزالتها من قائمة التنزيل (إن وجدت).</string>
     <string name="action_toggle_private_on">التتبع الخاص</string>
     <string name="notes_placeholder">استمتعت بالجزء حين …</string>
     <string name="trackers_updated_summary">تحديث المتابعات إلى الفصل %d</string>
@@ -848,15 +846,14 @@
     <string name="non_library_settings">جميع الإدخالات المقروئة</string>
     <string name="pref_hardware_bitmap_threshold">عتبة خريطة الصورة النقطية للأجهزة المخصصة</string>
     <string name="pref_hardware_bitmap_threshold_default">افتراضي (%d)</string>
-    <string name="possible_duplicates_summary">لديك مداخلات متشابهة في مكتبك بنفس الاسم.\nحدد واحدة للنقل أو الإضافة على أي حال</string>
+    <string name="possible_duplicates_summary">لديك مداخلات متشابهة في مكتبك بنفس الاسم.\n\nحدد واحدة للنقل أو الإضافة على أي حال.</string>
     <string name="possible_duplicates_title">التكرارات المحتملة</string>
     <string name="confirm_tracker_update">تحديث المتابعات إلى الفصل %d؟</string>
     <string name="pref_incognito_mode_extension_summary">إيقاف قراءة التاريخ مؤقتًا للتمديد</string>
-    <string name="label_donate">تبرع</string>
     <string name="theme_catppuccin">كاتبوتشين</string>
     <string name="pref_display_images_description">­تقديم الصور في أوصاف المانجا</string>
     <string name="pref_hide_missing_chapter_indicators">إخفاء مؤشرات الفصل المفقودة</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">يؤثر على الأداء. فعّله فقط إذا لم يُحل تقليل عتبة الخريطة النقطية مشاكل الصورة الفارغة.</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">يؤثر على الأداء. فعّله فقط إذا لم يُحل تقليل عتبة الخريطة النقطية مشاكل الصورة الفارغة</string>
     <string name="pref_download_new_unread_chapters_only">تخطي تنزيل الفصول المقروءة المكررة</string>
     <string name="pref_auto_update_manga_on_mark_read">تحديث التقدم عند وضع علامة عليه كمقروء</string>
     <string name="export">يصدّر</string>
@@ -903,4 +900,10 @@
     <string name="migrationListScreen.migrateDialog.cancelLabel">إلغاء</string>
     <string name="migrationListScreen.progressDialog.cancelLabel">إلغاء</string>
     <string name="migrationListScreen.matchWithoutChapterToast">لم يتم العثور على فصول، لا يمكن استخدام هذا الإدخال للنقل</string>
+    <string name="action_webview_close_tab">أغلق التبويب</string>
+    <string name="pref_disallow_non_ascii_filenames">منع استخدام أسماء ملفات بغير الحروف اللاتينية</string>
+    <string name="pref_disallow_non_ascii_filenames_details">يضمن التوافق مع بعض وسائط التخزين التي لا تدعم الترميز الموحد. عند تفعيل هذا الخيار، ستحتاج إلى إعادة تسمية مجلدات المصدر والمانغا يدويًا عبر استبدال الأحرف غير التابعة لـ ASCII (المحارف اللاتينية) بتمثيلها السداسي العشري (hex) بنظام UTF-8 وبحروف صغيرة. ملفات الفصول لا تحتاج إلى إعادة تسمية.</string>
+    <string name="pref_download_concurrent_sources">تنزيل مصادر متعددة في وقت واحد</string>
+    <string name="pref_download_concurrent_pages">تنزيل صفحات متعددة في وقت واحد</string>
+    <string name="pref_download_concurrent_pages_summary">عدد الصفحات التي يتم تنزيلها في وقت واحد لكل مصدر</string>
 </resources>

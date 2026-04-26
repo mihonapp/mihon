@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.track.komga
 
-import android.graphics.Color
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
@@ -31,9 +30,7 @@ class Komga(id: Long) : BaseTracker(id, "Komga"), EnhancedTracker {
 
     val api by lazy { KomgaApi(id, client) }
 
-    override fun getLogo() = R.drawable.ic_tracker_komga
-
-    override fun getLogoColor() = Color.rgb(51, 37, 50)
+    override fun getLogo() = R.drawable.brand_komga
 
     override fun getStatusList(): List<Long> = listOf(UNREAD, READING, COMPLETED)
 
