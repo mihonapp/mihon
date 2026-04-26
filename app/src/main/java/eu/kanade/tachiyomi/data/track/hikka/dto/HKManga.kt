@@ -51,7 +51,7 @@ data class HKManga(
                 val outputDf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
                 start_date = try {
                     outputDf.format(it * 1000)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     ""
                 }
             }

@@ -144,7 +144,7 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
             interceptor.setAuth(oauth)
             val user = api.getCurrentUser()
             saveCredentials(user.reference, oauth.accessToken)
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             logout()
         }
     }
@@ -164,7 +164,7 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
     fun loadOAuth(): HKOAuth? {
         return try {
             json.decodeFromString<HKOAuth>(trackPreferences.trackToken(this).get())
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }
