@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.track.hikka.dto
 
 import eu.kanade.tachiyomi.data.track.hikka.HikkaApi
 import eu.kanade.tachiyomi.data.track.hikka.stringToNumber
+import eu.kanade.tachiyomi.data.track.hikka.toTrackStatus
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -33,6 +34,7 @@ data class HKManga(
     val slug: String,
     @SerialName("start_date")
     val startDate: Long? = null,
+    val read: List<HKRead>? = emptyList(),
 ) {
     fun toTrack(trackId: Long): TrackSearch {
         return TrackSearch.create(trackId).apply {
@@ -44,13 +46,23 @@ data class HKManga(
             tracking_url = "${HikkaApi.BASE_URL}/manga/${this@HKManga.slug}"
             publishing_status = this@HKManga.status
             publishing_type = this@HKManga.mediaType
+
             startDate?.takeIf { it != 0L }?.let {
                 val outputDf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
                 start_date = try {
                     outputDf.format(it * 1000)
-                } catch (e: IllegalArgumentException) {
+                } catch (e: Exception) {
                     ""
                 }
+            }
+
+            val userProgress = read?.firstOrNull()
+            if (userProgress != null) {
+                status = toTrackStatus(userProgress.status)
+                last_chapter_read = userProgress.chapters.toDouble()
+                score = userProgress.score.toDouble()
+                started_reading_date = (userProgress.startDate ?: 0L) * 1000
+                finished_reading_date = (userProgress.endDate ?: 0L) * 1000
             }
         }
     }

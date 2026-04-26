@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.track.hikka
 
-import android.graphics.Color
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
@@ -33,11 +32,12 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
     private val json: Json by injectLazy()
 
     private val interceptor by lazy { HikkaInterceptor(this) }
+
     private val api by lazy { HikkaApi(id, client, interceptor) }
 
-    override fun getLogoColor(): Int = Color.rgb(0, 0, 0)
+    override val supportsReadingDates: Boolean = true
 
-    override fun getLogo(): Int = R.drawable.ic_tracker_hikka
+    override fun getLogo(): Int = R.drawable.brand_hikka
 
     override fun getStatusList(): List<Long> {
         return listOf(
@@ -80,8 +80,12 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
             if (didReadChapter) {
                 if (track.last_chapter_read.toLong() == track.total_chapters && track.total_chapters > 0) {
                     track.status = COMPLETED
+                    track.finished_reading_date = System.currentTimeMillis()
                 } else if (track.status != REREADING) {
                     track.status = READING
+                    if (track.last_chapter_read == 1.0) {
+                        track.started_reading_date = System.currentTimeMillis()
+                    }
                 }
             }
         }
@@ -93,6 +97,7 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
         val remoteTrack = api.getManga(track)
 
         track.copyPersonalFrom(remoteTrack)
+        track.remote_id = remoteTrack.remote_id
         track.library_id = remoteTrack.library_id
 
         if (track.status != COMPLETED) {
@@ -103,7 +108,8 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
         return if (readContent != null) {
             track.score = readContent.score.toDouble()
             track.last_chapter_read = readContent.chapters.toDouble()
-            track.score = readContent.score.toDouble()
+            track.started_reading_date = (readContent.startDate ?: 0L) * 1000
+            track.finished_reading_date = (readContent.endDate ?: 0L) * 1000
             update(track)
         } else {
             track.score = 0.0
@@ -114,9 +120,19 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
     override suspend fun search(query: String): List<TrackSearch> = api.searchManga(query)
 
     override suspend fun refresh(track: Track): Track {
-        val remoteTrack = api.updateUserManga(track)
+        val remoteTrack = api.getManga(track)
         track.copyPersonalFrom(remoteTrack)
         track.total_chapters = remoteTrack.total_chapters
+
+        val readContent = api.getRead(track)
+        if (readContent != null) {
+            track.score = readContent.score.toDouble()
+            track.last_chapter_read = readContent.chapters.toDouble()
+            track.status = toTrackStatus(readContent.status)
+            track.started_reading_date = (readContent.startDate ?: 0L) * 1000
+            track.finished_reading_date = (readContent.endDate ?: 0L) * 1000
+        }
+
         return track
     }
 

@@ -160,6 +160,8 @@ class HikkaApi(
                 put("rereads", rereads)
                 put("score", track.score.toInt())
                 put("status", track.toApiStatus())
+                put("start_date", if (track.started_reading_date > 0L) track.started_reading_date / 1000 else null)
+                put("end_date", if (track.finished_reading_date > 0L) track.finished_reading_date / 1000 else null)
             }
 
             with(json) {
