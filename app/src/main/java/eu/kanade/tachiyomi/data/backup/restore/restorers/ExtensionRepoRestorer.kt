@@ -2,12 +2,12 @@ package eu.kanade.tachiyomi.data.backup.restore.restorers
 
 import eu.kanade.tachiyomi.data.backup.models.BackupExtensionRepos
 import mihon.domain.extensionrepo.interactor.GetExtensionRepo
-import tachiyomi.data.DatabaseHandler
+import tachiyomi.data.Database
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class ExtensionRepoRestorer(
-    private val handler: DatabaseHandler = Injekt.get(),
+    private val database: Database = Injekt.get(),
     private val getExtensionRepos: GetExtensionRepo = Injekt.get(),
 ) {
 
@@ -26,15 +26,13 @@ class ExtensionRepoRestorer(
         } else if (shaExists != null) {
             error("${shaExists.name} has the same signing key fingerprint")
         } else {
-            handler.await {
-                extension_reposQueries.insert(
-                    backupRepo.baseUrl,
-                    backupRepo.name,
-                    backupRepo.shortName,
-                    backupRepo.website,
-                    backupRepo.signingKeyFingerprint,
-                )
-            }
+            database.extension_reposQueries.insert(
+                backupRepo.baseUrl,
+                backupRepo.name,
+                backupRepo.shortName,
+                backupRepo.website,
+                backupRepo.signingKeyFingerprint,
+            )
         }
     }
 }
