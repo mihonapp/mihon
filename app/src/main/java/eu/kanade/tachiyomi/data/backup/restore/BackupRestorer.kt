@@ -19,7 +19,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import tachiyomi.core.common.i18n.stringResource
-import tachiyomi.data.DatabaseHandler
+import tachiyomi.data.Database
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -35,7 +35,7 @@ class BackupRestorer(
     private val notifier: BackupNotifier,
     private val isSync: Boolean,
 
-    private val handler: DatabaseHandler = Injekt.get(),
+    private val database: Database = Injekt.get(),
     private val categoriesRestorer: CategoriesRestorer = CategoriesRestorer(),
     private val preferenceRestorer: PreferenceRestorer = PreferenceRestorer(context),
     private val extensionRepoRestorer: ExtensionRepoRestorer = ExtensionRepoRestorer(),
@@ -133,7 +133,7 @@ class BackupRestorer(
         mangaRestorer.sortByNew(backupMangas)
             .chunked(100)
             .forEach { chunk ->
-                handler.await(inTransaction = true) {
+                database.transaction {
                     chunk.forEach {
                         ensureActive()
 
@@ -189,7 +189,7 @@ class BackupRestorer(
         backupExtensionRepo
             .chunked(100)
             .forEach { chunk ->
-                handler.await(inTransaction = true) {
+                database.transaction {
                     chunk.forEach {
                         ensureActive()
 
