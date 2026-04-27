@@ -144,10 +144,10 @@ class BackupRestorer(
                             errors.add(Date() to "${it.title} [$sourceName]: ${e.message}")
                         }
 
-                        val progress = restoreProgress.incrementAndGet()
-                        notifier.showRestoreProgress(it.title, progress, restoreAmount, isSync)
+                        restoreProgress.incrementAndGet()
                     }
                 }
+                notifier.showRestoreProgress(chunk.last().title, restoreProgress.get(), restoreAmount, isSync)
             }
     }
 
@@ -199,15 +199,15 @@ class BackupRestorer(
                             errors.add(Date() to "Error Adding Repo: ${it.name} : ${e.message}")
                         }
 
-                        val progress = restoreProgress.incrementAndGet()
-                        notifier.showRestoreProgress(
-                            context.stringResource(MR.strings.extensionRepo_settings),
-                            progress,
-                            restoreAmount,
-                            isSync,
-                        )
+                        restoreProgress.incrementAndGet()
                     }
                 }
+                notifier.showRestoreProgress(
+                    context.stringResource(MR.strings.extensionRepo_settings),
+                    restoreProgress.get(),
+                    restoreAmount,
+                    isSync,
+                )
             }
     }
 
@@ -224,7 +224,7 @@ class BackupRestorer(
                 }
                 return file
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             // Empty
         }
         return File("")
