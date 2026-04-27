@@ -25,8 +25,10 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
 import java.text.SimpleDateFormat
+import java.util.Collections
 import java.util.Date
 import java.util.Locale
+import java.util.concurrent.atomic.AtomicInteger
 
 class BackupRestorer(
     private val context: Context,
@@ -41,8 +43,8 @@ class BackupRestorer(
 ) {
 
     private var restoreAmount = 0
-    private var restoreProgress = 0
-    private val errors = mutableListOf<Pair<Date, String>>()
+    private val restoreProgress = AtomicInteger(0)
+    private val errors = Collections.synchronizedList(mutableListOf<Pair<Date, String>>())
 
     /**
      * Mapping of source ID to source name from backup data
@@ -115,10 +117,10 @@ class BackupRestorer(
         ensureActive()
         categoriesRestorer(backupCategories)
 
-        restoreProgress += 1
+        val progress = restoreProgress.incrementAndGet()
         notifier.showRestoreProgress(
             context.stringResource(MR.strings.categories),
-            restoreProgress,
+            progress,
             restoreAmount,
             isSync,
         )
@@ -142,8 +144,8 @@ class BackupRestorer(
                             errors.add(Date() to "${it.title} [$sourceName]: ${e.message}")
                         }
 
-                        restoreProgress += 1
-                        notifier.showRestoreProgress(it.title, restoreProgress, restoreAmount, isSync)
+                        val progress = restoreProgress.incrementAndGet()
+                        notifier.showRestoreProgress(it.title, progress, restoreAmount, isSync)
                     }
                 }
             }
@@ -159,10 +161,10 @@ class BackupRestorer(
             categories,
         )
 
-        restoreProgress += 1
+        val progress = restoreProgress.incrementAndGet()
         notifier.showRestoreProgress(
             context.stringResource(MR.strings.app_settings),
-            restoreProgress,
+            progress,
             restoreAmount,
             isSync,
         )
@@ -172,10 +174,10 @@ class BackupRestorer(
         ensureActive()
         preferenceRestorer.restoreSource(preferences)
 
-        restoreProgress += 1
+        val progress = restoreProgress.incrementAndGet()
         notifier.showRestoreProgress(
             context.stringResource(MR.strings.source_settings),
-            restoreProgress,
+            progress,
             restoreAmount,
             isSync,
         )
@@ -197,10 +199,10 @@ class BackupRestorer(
                             errors.add(Date() to "Error Adding Repo: ${it.name} : ${e.message}")
                         }
 
-                        restoreProgress += 1
+                        val progress = restoreProgress.incrementAndGet()
                         notifier.showRestoreProgress(
                             context.stringResource(MR.strings.extensionRepo_settings),
-                            restoreProgress,
+                            progress,
                             restoreAmount,
                             isSync,
                         )
