@@ -193,9 +193,12 @@ AND (
     )
 );
 
-insert:
-INSERT INTO mangas(source, url, artist, author, description, genre, title, status, thumbnail_url, favorite, last_update, next_update, initialized, viewer, chapter_flags, cover_last_modified, date_added, update_strategy, calculate_interval, last_modified_at, version, notes)
-VALUES (:source, :url, :artist, :author, :description, :genre, :title, :status, :thumbnailUrl, :favorite, :lastUpdate, :nextUpdate, :initialized, :viewerFlags, :chapterFlags, :coverLastModified, :dateAdded, :updateStrategy, :calculateInterval, 0, :version, :notes);
+insert {
+    INSERT INTO mangas(source, url, artist, author, description, genre, title, status, thumbnail_url, favorite, last_update, next_update, initialized, viewer, chapter_flags, cover_last_modified, date_added, update_strategy, calculate_interval, last_modified_at, version, notes)
+    VALUES (:source, :url, :artist, :author, :description, :genre, :title, :status, :thumbnailUrl, :favorite, :lastUpdate, :nextUpdate, :initialized, :viewerFlags, :chapterFlags, :coverLastModified, :dateAdded, :updateStrategy, :calculateInterval, 0, :version, :notes);
+
+    SELECT last_insert_rowid();
+}
 
 update:
 UPDATE mangas SET
@@ -222,9 +225,6 @@ UPDATE mangas SET
     is_syncing = coalesce(:isSyncing, is_syncing),
     notes = coalesce(:notes, notes)
 WHERE _id = :mangaId;
-
-selectLastInsertedRowId:
-SELECT last_insert_rowid();
 
 insertNetworkManga {
     -- Insert the manga if it doesn't exist already
