@@ -24,6 +24,8 @@ data class YTSearchItem(
     @SerialName("media_type")
     val mediaType: String? = null,
     val description: String? = null,
+    // Source/upstream score (0-10) when the search endpoint provides one.
+    val score: Double? = null,
 )
 
 @Serializable
@@ -39,6 +41,8 @@ data class YTMediaItem(
     val tracked: Boolean = false,
     @SerialName("max_progress")
     val maxProgress: Int? = null,
+    // Source/upstream score (0-10), separate from the user's `consumption.score`.
+    val score: Double? = null,
     val consumptions: List<YTConsumption> = emptyList(),
 )
 
@@ -59,7 +63,7 @@ fun YTSearchItem.toTrackSearch(trackerId: Long, baseUrl: String): TrackSearch {
         remote_id = Yamtrack.buildRemoteId(item.source, item.mediaId)
         title = item.title
         cover_url = item.image.orEmpty()
-        summary = item.description.orEmpty()
+        summary = composeSummary(item.score, item.description)
         tracking_url = Yamtrack.buildTrackingUrl(baseUrl, item.source, item.mediaId, item.title)
         publishing_type = item.mediaType.orEmpty()
     }
@@ -73,6 +77,18 @@ fun YTMediaItem.copyToTrack(track: Track) {
     track.total_chapters = resolveTotalChapters(maxProgress)
     consumption?.startDate?.let { track.started_reading_date = Yamtrack.parseIsoDate(it) }
     consumption?.endDate?.let { track.finished_reading_date = Yamtrack.parseIsoDate(it) }
+}
+
+private fun composeSummary(sourceScore: Double?, description: String?): String {
+    val scoreLine = sourceScore
+        ?.takeIf { it > 0.0 }
+        ?.let { "★ %.1f / 10".format(it) }
+    val body = description?.trim().orEmpty()
+    return when {
+        scoreLine != null && body.isNotEmpty() -> "$scoreLine\n\n$body"
+        scoreLine != null -> scoreLine
+        else -> body
+    }
 }
 
 /**
