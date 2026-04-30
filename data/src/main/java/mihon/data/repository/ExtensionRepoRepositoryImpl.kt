@@ -1,36 +1,49 @@
 package mihon.data.repository
 
 import android.database.SQLException
+import app.cash.sqldelight.async.coroutines.awaitAsList
+import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import mihon.domain.extensionrepo.exception.SaveExtensionRepoException
 import mihon.domain.extensionrepo.model.ExtensionRepo
 import mihon.domain.extensionrepo.repository.ExtensionRepoRepository
-import tachiyomi.data.DatabaseHandler
+import tachiyomi.data.Database
+import tachiyomi.data.subscribeToList
+import tachiyomi.data.subscribeToOne
 
 class ExtensionRepoRepositoryImpl(
-    private val handler: DatabaseHandler,
+    private val database: Database,
 ) : ExtensionRepoRepository {
     override fun subscribeAll(): Flow<List<ExtensionRepo>> {
-        return handler.subscribeToList { extension_reposQueries.findAll(::mapExtensionRepo) }
+        return database.extension_reposQueries
+            .findAll(::mapExtensionRepo)
+            .subscribeToList()
     }
 
     override suspend fun getAll(): List<ExtensionRepo> {
-        return handler.awaitList { extension_reposQueries.findAll(::mapExtensionRepo) }
+        return database.extension_reposQueries
+            .findAll(::mapExtensionRepo)
+            .awaitAsList()
     }
 
     override suspend fun getRepo(baseUrl: String): ExtensionRepo? {
-        return handler.awaitOneOrNull { extension_reposQueries.findOne(baseUrl, ::mapExtensionRepo) }
+        return database.extension_reposQueries
+            .findOne(baseUrl, ::mapExtensionRepo)
+            .awaitAsOneOrNull()
     }
 
     override suspend fun getRepoBySigningKeyFingerprint(fingerprint: String): ExtensionRepo? {
-        return handler.awaitOneOrNull {
-            extension_reposQueries.findOneBySigningKeyFingerprint(fingerprint, ::mapExtensionRepo)
-        }
+        return database.extension_reposQueries
+            .findOneBySigningKeyFingerprint(fingerprint, ::mapExtensionRepo)
+            .awaitAsOneOrNull()
     }
 
     override fun getCount(): Flow<Int> {
-        return handler.subscribeToOne { extension_reposQueries.count() }.map { it.toInt() }
+        return database.extension_reposQueries
+            .count()
+            .subscribeToOne()
+            .map { it.toInt() }
     }
 
     override suspend fun insertRepo(
@@ -41,7 +54,13 @@ class ExtensionRepoRepositoryImpl(
         signingKeyFingerprint: String,
     ) {
         try {
-            handler.await { extension_reposQueries.insert(baseUrl, name, shortName, website, signingKeyFingerprint) }
+            database.extension_reposQueries.insert(
+                baseUrl,
+                name,
+                shortName,
+                website,
+                signingKeyFingerprint,
+            )
         } catch (ex: SQLException) {
             throw SaveExtensionRepoException(ex)
         }
@@ -55,26 +74,30 @@ class ExtensionRepoRepositoryImpl(
         signingKeyFingerprint: String,
     ) {
         try {
-            handler.await { extension_reposQueries.upsert(baseUrl, name, shortName, website, signingKeyFingerprint) }
+            database.extension_reposQueries.upsert(
+                baseUrl,
+                name,
+                shortName,
+                website,
+                signingKeyFingerprint,
+            )
         } catch (ex: SQLException) {
             throw SaveExtensionRepoException(ex)
         }
     }
 
     override suspend fun replaceRepo(newRepo: ExtensionRepo) {
-        handler.await {
-            extension_reposQueries.replace(
-                newRepo.baseUrl,
-                newRepo.name,
-                newRepo.shortName,
-                newRepo.website,
-                newRepo.signingKeyFingerprint,
-            )
-        }
+        database.extension_reposQueries.replace(
+            newRepo.baseUrl,
+            newRepo.name,
+            newRepo.shortName,
+            newRepo.website,
+            newRepo.signingKeyFingerprint,
+        )
     }
 
     override suspend fun deleteRepo(baseUrl: String) {
-        return handler.await { extension_reposQueries.delete(baseUrl) }
+        database.extension_reposQueries.delete(baseUrl)
     }
 
     private fun mapExtensionRepo(
