@@ -3,12 +3,14 @@ package tachiyomi.data
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import app.cash.sqldelight.Query
+import app.cash.sqldelight.async.coroutines.awaitAsList
+import app.cash.sqldelight.async.coroutines.awaitAsOne
 import kotlin.properties.Delegates
 
+@Suppress("unused")
 class QueryPagingSource<RowType : Any>(
-    val handler: DatabaseHandler,
-    val countQuery: Database.() -> Query<Long>,
-    val queryProvider: Database.(Long, Long) -> Query<RowType>,
+    val countQuery: () -> Query<Long>,
+    val queryProvider: (Long, Long) -> Query<RowType>,
 ) : PagingSource<Long, RowType>(), Query.Listener {
 
     override val jumpingSupported: Boolean = true
@@ -29,17 +31,16 @@ class QueryPagingSource<RowType : Any>(
         try {
             val key = params.key ?: 0L
             val loadSize = params.loadSize
-            val count = handler.awaitOne { countQuery() }
+            val count = countQuery().awaitAsOne()
 
             val (offset, limit) = when (params) {
                 is LoadParams.Prepend -> key - loadSize to loadSize.toLong()
                 else -> key to loadSize.toLong()
             }
 
-            val data = handler.awaitList {
-                queryProvider(limit, offset)
-                    .also { currentQuery = it }
-            }
+            val data = queryProvider(limit, offset)
+                .also { currentQuery = it }
+                .awaitAsList()
 
             val (prevKey, nextKey) = when (params) {
                 is LoadParams.Append -> (offset - loadSize to offset + loadSize)
