@@ -33,6 +33,7 @@ import kotlinx.coroutines.delay
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.domain.category.model.Category
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import kotlin.time.Duration.Companion.seconds
@@ -40,10 +41,11 @@ import kotlin.time.Duration.Companion.seconds
 @Composable
 fun CategoryCreateDialog(
     onDismissRequest: () -> Unit,
-    onCreate: (String) -> Unit,
+    onCreate: (String, Boolean) -> Unit,
     categories: ImmutableList<String>,
 ) {
     var name by remember { mutableStateOf("") }
+    var isSuper by remember { mutableStateOf(false) }
 
     val focusRequester = remember { FocusRequester() }
     val nameAlreadyExists = remember(name) { categories.contains(name) }
@@ -54,7 +56,7 @@ fun CategoryCreateDialog(
             TextButton(
                 enabled = name.isNotEmpty() && !nameAlreadyExists,
                 onClick = {
-                    onCreate(name)
+                    onCreate(name, isSuper)
                     onDismissRequest()
                 },
             ) {
@@ -70,25 +72,28 @@ fun CategoryCreateDialog(
             Text(text = stringResource(MR.strings.action_add_category))
         },
         text = {
-            OutlinedTextField(
-                modifier = Modifier
-                    .focusRequester(focusRequester),
-                value = name,
-                onValueChange = { name = it },
-                label = {
-                    Text(text = stringResource(MR.strings.name))
-                },
-                supportingText = {
-                    val msgRes = if (name.isNotEmpty() && nameAlreadyExists) {
-                        MR.strings.error_category_exists
-                    } else {
-                        MR.strings.information_required_plain
-                    }
-                    Text(text = stringResource(msgRes))
-                },
-                isError = name.isNotEmpty() && nameAlreadyExists,
-                singleLine = true,
-            )
+            Column {
+                OutlinedTextField(
+                    modifier = Modifier
+                        .focusRequester(focusRequester),
+                    value = name,
+                    onValueChange = { name = it },
+                    label = {
+                        Text(text = stringResource(MR.strings.name))
+                    },
+                    supportingText = {
+                        val msgRes = if (name.isNotEmpty() && nameAlreadyExists) {
+                            MR.strings.error_category_exists
+                        } else {
+                            MR.strings.information_required_plain
+                        }
+                        Text(text = stringResource(msgRes))
+                    },
+                    isError = name.isNotEmpty() && nameAlreadyExists,
+                    singleLine = true,
+                )
+                CheckboxItem(stringResource(MR.strings.is_category_super), isSuper, onClick = { isSuper = !isSuper })
+            }
         },
     )
 

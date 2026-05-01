@@ -35,11 +35,16 @@ class CategoryScreenModel(
     init {
         screenModelScope.launch {
             getCategories.subscribe()
-                .collectLatest { categories ->
+                .collectLatest { allCategories ->
                     mutableState.update {
                         CategoryScreenState.Success(
-                            categories = categories
+                            categories = allCategories
                                 .filterNot(Category::isSystemCategory)
+                                .filterNot { it.isSuper }
+                                .toImmutableList(),
+                            superCategories = allCategories
+                                .filterNot(Category::isSystemCategory)
+                                .filter { it.isSuper }
                                 .toImmutableList(),
                         )
                     }
@@ -47,9 +52,9 @@ class CategoryScreenModel(
         }
     }
 
-    fun createCategory(name: String) {
+    fun createCategory(name: String, isSuper: Boolean) {
         screenModelScope.launch {
-            when (createCategoryWithName.await(name)) {
+            when (createCategoryWithName.await(name, isSuper)) {
                 is CreateCategoryWithName.Result.InternalError -> _events.send(CategoryEvent.InternalError)
                 else -> {}
             }
@@ -121,10 +126,11 @@ sealed interface CategoryScreenState {
     @Immutable
     data class Success(
         val categories: ImmutableList<Category>,
+        val superCategories: ImmutableList<Category>,
         val dialog: CategoryDialog? = null,
     ) : CategoryScreenState {
 
         val isEmpty: Boolean
-            get() = categories.isEmpty()
+            get() = categories.isEmpty() && superCategories.isEmpty()
     }
 }

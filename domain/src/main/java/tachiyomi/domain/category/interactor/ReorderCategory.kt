@@ -18,6 +18,7 @@ class ReorderCategory(
         mutex.withLock {
             val categories = categoryRepository.getAll()
                 .filterNot(Category::isSystemCategory)
+                .filter { it.isSuper == category.isSuper }
                 .toMutableList()
 
             val currentIndex = categories.indexOfFirst { it.id == category.id }
