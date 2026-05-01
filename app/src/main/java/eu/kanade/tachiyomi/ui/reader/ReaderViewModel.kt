@@ -22,6 +22,13 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.saver.Image
 import eu.kanade.tachiyomi.data.saver.ImageSaver
 import eu.kanade.tachiyomi.data.saver.Location
+import eu.kanade.tachiyomi.data.translation.SavedTranslationPage
+import eu.kanade.tachiyomi.data.translation.TranslationBoxEdit
+import eu.kanade.tachiyomi.data.translation.TranslationJob
+import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
+import eu.kanade.tachiyomi.data.translation.TranslationMode
+import eu.kanade.tachiyomi.data.translation.TranslationRepository
+import eu.kanade.tachiyomi.data.translation.TranslationScope
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.loader.ChapterLoader
@@ -73,11 +80,13 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.domain.translation.service.TranslationPreferences
 import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.Instant
 import java.util.Date
+import java.util.Locale
 
 /**
  * Presenter used by the activity to perform background operations.
@@ -101,6 +110,9 @@ class ReaderViewModel @JvmOverloads constructor(
     private val setMangaViewerFlags: SetMangaViewerFlags = Injekt.get(),
     private val getIncognitoState: GetIncognitoState = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
+    private val translationRepository: TranslationRepository = Injekt.get(),
+    private val translationPreferences: TranslationPreferences = Injekt.get(),
+    private val application: Application = Injekt.get(),
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(State())
@@ -461,6 +473,126 @@ class ReaderViewModel @JvmOverloads constructor(
         }
 
         eventChannel.trySend(Event.PageChanged)
+    }
+
+    fun translatePageImage(page: ReaderPage) {
+        val chapterId = page.chapter.chapter.id ?: return
+        enqueueTranslationJob(
+            chapterId = chapterId,
+            pageIndex = page.index.toLong(),
+            scope = TranslationScope.Image,
+        )
+    }
+
+    fun translateCurrentChapter() {
+        val chapterId = state.value.currentChapter?.chapter?.id ?: return
+        enqueueTranslationJob(
+            chapterId = chapterId,
+            pageIndex = null,
+            scope = TranslationScope.Chapter,
+        )
+    }
+
+    fun toggleTranslationOverlay(): Boolean {
+        val enabled = translationPreferences.autoShowOverlay.toggle()
+        eventChannel.trySend(Event.ReloadViewerChapters)
+        return enabled
+    }
+
+    fun openTranslationOverlayEditor(page: ReaderPage) {
+        val chapterId = page.chapter.chapter.id ?: return
+        mutableState.update { it.copy(dialog = Dialog.Loading) }
+        viewModelScope.launchIO {
+            val targetLanguage = translationTargetLanguage()
+            val savedPage = translationRepository.getSavedPage(
+                chapterId = chapterId,
+                pageIndex = page.index.toLong(),
+                targetLanguage = targetLanguage,
+            )
+            withUIContext {
+                mutableState.update {
+                    it.copy(dialog = Dialog.TranslationOverlayEditor(page, savedPage))
+                }
+            }
+        }
+    }
+
+    fun saveTranslationOverlayEdits(page: ReaderPage, boxes: List<TranslationBoxEdit>) {
+        val manga = manga ?: return
+        val chapterId = page.chapter.chapter.id ?: return
+        mutableState.update { it.copy(dialog = Dialog.Loading) }
+        viewModelScope.launchIO {
+            try {
+                val targetLanguage = translationTargetLanguage()
+                val savedPage = translationRepository.getSavedPage(
+                    chapterId = chapterId,
+                    pageIndex = page.index.toLong(),
+                    targetLanguage = targetLanguage,
+                )?.page ?: translationRepository.ensurePage(
+                    mangaId = manga.id,
+                    chapterId = chapterId,
+                    pageIndex = page.index.toLong(),
+                    sourceImageKey = page.imageUrl ?: "${page.chapter.chapter.url}#${page.index}",
+                    model = translationPreferences.geminiModel.get(),
+                    targetLanguage = targetLanguage,
+                    sourceLanguage = translationPreferences.sourceLanguage.get().ifBlank { null },
+                    pipeline = translationPreferences.pipeline.get(),
+                )
+                translationRepository.replaceBoxes(savedPage._id, boxes)
+                translationRepository.insertLog(
+                    jobId = null,
+                    pageId = savedPage._id,
+                    level = TranslationLogLevel.Info,
+                    tag = "editor",
+                    message = "Saved translation overlay edits",
+                    details = "boxes=${boxes.size}",
+                )
+                withUIContext {
+                    mutableState.update { it.copy(dialog = null) }
+                    eventChannel.send(Event.ReloadViewerChapters)
+                    eventChannel.send(Event.TranslationOverlaySaved)
+                }
+            } catch (e: Throwable) {
+                logcat(LogPriority.ERROR, e)
+                withUIContext {
+                    mutableState.update { it.copy(dialog = Dialog.TranslationOverlayEditor(page, null)) }
+                    eventChannel.send(Event.TranslationOverlaySaveFailed(e.message ?: e::class.simpleName.orEmpty()))
+                }
+            }
+        }
+    }
+
+    private fun translationTargetLanguage(): String {
+        return translationPreferences.targetLanguage.get()
+            .ifBlank { Locale.getDefault().displayLanguage.ifBlank { "English" } }
+    }
+
+    private fun enqueueTranslationJob(
+        chapterId: Long,
+        pageIndex: Long?,
+        scope: TranslationScope,
+    ) {
+        val manga = manga ?: return
+        viewModelScope.launchIO {
+            val mode = if (translationPreferences.enableInpaint.get()) {
+                TranslationMode.OverlayAndInpaint
+            } else {
+                TranslationMode.Overlay
+            }
+            translationRepository.enqueueJob(
+                mangaId = manga.id,
+                chapterId = chapterId,
+                pageIndex = pageIndex,
+                scope = scope,
+                pipeline = translationPreferences.pipeline.get(),
+                mode = mode,
+                model = translationPreferences.geminiModel.get(),
+                targetLanguage = translationPreferences.targetLanguage.get(),
+                sourceLanguage = translationPreferences.sourceLanguage.get().ifBlank { null },
+                overwrite = !translationPreferences.skipExistingOverlays.get(),
+            )
+            TranslationJob.start(application)
+        }
     }
 
     private fun downloadNextChapters() {
@@ -973,6 +1105,10 @@ class ReaderViewModel @JvmOverloads constructor(
         data object ReadingModeSelect : Dialog
         data object OrientationModeSelect : Dialog
         data class PageActions(val page: ReaderPage) : Dialog
+        data class TranslationOverlayEditor(
+            val page: ReaderPage,
+            val savedPage: SavedTranslationPage?,
+        ) : Dialog
     }
 
     sealed interface Event {
@@ -984,5 +1120,7 @@ class ReaderViewModel @JvmOverloads constructor(
         data class SavedImage(val result: SaveImageResult) : Event
         data class ShareImage(val uri: Uri, val page: ReaderPage) : Event
         data class CopyImage(val uri: Uri) : Event
+        data object TranslationOverlaySaved : Event
+        data class TranslationOverlaySaveFailed(val message: String) : Event
     }
 }

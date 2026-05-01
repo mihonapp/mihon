@@ -1,0 +1,83 @@
+CREATE TABLE translation_jobs(
+    _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    manga_id INTEGER NOT NULL,
+    chapter_id INTEGER,
+    page_index INTEGER,
+    scope TEXT NOT NULL,
+    pipeline TEXT NOT NULL,
+    mode TEXT NOT NULL,
+    model TEXT NOT NULL,
+    target_language TEXT NOT NULL,
+    source_language TEXT,
+    overwrite INTEGER NOT NULL,
+    status TEXT NOT NULL,
+    progress_current INTEGER NOT NULL,
+    progress_total INTEGER NOT NULL,
+    attempts INTEGER NOT NULL,
+    created_at INTEGER NOT NULL,
+    updated_at INTEGER NOT NULL,
+    error_message TEXT,
+    FOREIGN KEY(manga_id) REFERENCES mangas (_id) ON DELETE CASCADE,
+    FOREIGN KEY(chapter_id) REFERENCES chapters (_id) ON DELETE CASCADE
+);
+
+CREATE INDEX translation_jobs_status_index ON translation_jobs(status, created_at);
+CREATE INDEX translation_jobs_manga_index ON translation_jobs(manga_id);
+CREATE INDEX translation_jobs_chapter_index ON translation_jobs(chapter_id);
+
+CREATE TABLE translation_pages(
+    _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    manga_id INTEGER NOT NULL,
+    chapter_id INTEGER NOT NULL,
+    page_index INTEGER NOT NULL,
+    source_image_key TEXT NOT NULL,
+    model TEXT NOT NULL,
+    target_language TEXT NOT NULL,
+    source_language TEXT,
+    pipeline TEXT NOT NULL,
+    image_width INTEGER,
+    image_height INTEGER,
+    inpaint_image_uri TEXT,
+    created_at INTEGER NOT NULL,
+    updated_at INTEGER NOT NULL,
+    FOREIGN KEY(manga_id) REFERENCES mangas (_id) ON DELETE CASCADE,
+    FOREIGN KEY(chapter_id) REFERENCES chapters (_id) ON DELETE CASCADE,
+    UNIQUE(chapter_id, page_index, target_language)
+);
+
+CREATE INDEX translation_pages_manga_index ON translation_pages(manga_id);
+CREATE INDEX translation_pages_chapter_index ON translation_pages(chapter_id, page_index);
+
+CREATE TABLE translation_boxes(
+    _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    page_id INTEGER NOT NULL,
+    x REAL NOT NULL,
+    y REAL NOT NULL,
+    width REAL NOT NULL,
+    height REAL NOT NULL,
+    original_text TEXT NOT NULL,
+    translated_text TEXT NOT NULL,
+    text_type TEXT NOT NULL,
+    confidence REAL,
+    style_json TEXT,
+    sort_order INTEGER NOT NULL,
+    FOREIGN KEY(page_id) REFERENCES translation_pages (_id) ON DELETE CASCADE
+);
+
+CREATE INDEX translation_boxes_page_index ON translation_boxes(page_id, sort_order);
+
+CREATE TABLE translation_logs(
+    _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    job_id INTEGER,
+    page_id INTEGER,
+    created_at INTEGER NOT NULL,
+    level TEXT NOT NULL,
+    tag TEXT NOT NULL,
+    message TEXT NOT NULL,
+    details TEXT,
+    FOREIGN KEY(job_id) REFERENCES translation_jobs (_id) ON DELETE SET NULL,
+    FOREIGN KEY(page_id) REFERENCES translation_pages (_id) ON DELETE SET NULL
+);
+
+CREATE INDEX translation_logs_created_index ON translation_logs(created_at);
+CREATE INDEX translation_logs_job_index ON translation_logs(job_id);

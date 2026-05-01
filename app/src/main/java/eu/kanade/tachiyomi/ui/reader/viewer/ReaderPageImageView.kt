@@ -1,8 +1,15 @@
 package eu.kanade.tachiyomi.ui.reader.viewer
 
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.PointF
 import android.graphics.RectF
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextPaint
+import android.text.TextUtils
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -40,6 +47,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonSubsamplingImageView
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
 import okio.BufferedSource
+import tachiyomi.data.Translation_boxes
 import tachiyomi.core.common.util.system.ImageUtil
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -65,6 +73,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
     }
 
     private var pageView: View? = null
+    private var translationOverlayView: TranslationOverlayView? = null
 
     private var config: Config? = null
 
@@ -91,6 +100,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
 
     @CallSuper
     open fun onScaleChanged(newScale: Float) {
+        translationOverlayView?.invalidate()
         onScaleChanged?.invoke(newScale)
     }
 
@@ -174,7 +184,31 @@ open class ReaderPageImageView @JvmOverloads constructor(
             is SubsamplingScaleImageView -> it.recycle()
             is AppCompatImageView -> it.dispose()
         }
+        clearTranslationOverlay()
         it.isVisible = false
+    }
+
+    fun setTranslationOverlay(boxes: List<Translation_boxes>) {
+        if (boxes.isEmpty()) {
+            clearTranslationOverlay()
+            return
+        }
+        val overlay = translationOverlayView ?: TranslationOverlayView(context) { pageView }.also {
+            translationOverlayView = it
+            addView(it, MATCH_PARENT, MATCH_PARENT)
+        }
+        overlay.boxes = boxes
+        overlay.isVisible = true
+        overlay.bringToFront()
+        overlay.invalidate()
+    }
+
+    fun clearTranslationOverlay() {
+        translationOverlayView?.let {
+            it.boxes = emptyList()
+            it.isVisible = false
+            it.invalidate()
+        }
     }
 
     /**
@@ -251,13 +285,14 @@ open class ReaderPageImageView @JvmOverloads constructor(
                     }
 
                     override fun onCenterChanged(newCenter: PointF?, origin: Int) {
-                        // Not used
+                        translationOverlayView?.invalidate()
                     }
                 },
             )
             setOnClickListener { this@ReaderPageImageView.onViewClicked() }
         }
         addView(pageView, MATCH_PARENT, MATCH_PARENT)
+        translationOverlayView?.bringToFront()
     }
 
     private fun SubsamplingScaleImageView.setupZoom(config: Config?) {
@@ -375,6 +410,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
             }
         }
         addView(pageView, MATCH_PARENT, MATCH_PARENT)
+        translationOverlayView?.bringToFront()
     }
 
     private fun setAnimatedImage(
@@ -427,6 +463,118 @@ open class ReaderPageImageView @JvmOverloads constructor(
         LEFT,
         CENTER,
         RIGHT,
+    }
+
+    private class TranslationOverlayView(
+        context: Context,
+        private val pageViewProvider: () -> View?,
+    ) : View(context) {
+
+        var boxes: List<Translation_boxes> = emptyList()
+
+        private val density = resources.displayMetrics.density
+        private val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.argb(210, 255, 255, 255)
+            style = Paint.Style.FILL
+        }
+        private val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.argb(230, 32, 32, 32)
+            style = Paint.Style.STROKE
+            strokeWidth = 1.5f * density
+        }
+        private val baseTextPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.BLACK
+        }
+
+        override fun onDraw(canvas: Canvas) {
+            super.onDraw(canvas)
+            if (boxes.isEmpty()) return
+
+            boxes.forEach { box ->
+                val rect = box.toViewRect() ?: return@forEach
+                if (rect.width() <= 1f || rect.height() <= 1f) return@forEach
+
+                val radius = 4f * density
+                canvas.drawRoundRect(rect, radius, radius, fillPaint)
+                canvas.drawRoundRect(rect, radius, radius, strokePaint)
+                drawText(canvas, rect, box.translated_text)
+            }
+        }
+
+        private fun drawText(canvas: Canvas, rect: RectF, text: String) {
+            if (text.isBlank()) return
+            val padding = (4f * density).coerceAtMost(rect.width() / 5f).coerceAtMost(rect.height() / 5f)
+            val width = (rect.width() - padding * 2).toInt().coerceAtLeast(1)
+            val textPaint = TextPaint(baseTextPaint).apply {
+                textSize = (rect.height() / 3.2f).coerceIn(10f * density, 20f * density)
+            }
+            val maxLines = ((rect.height() - padding * 2) / textPaint.fontSpacing).toInt().coerceAtLeast(1)
+            val layout = StaticLayout.Builder
+                .obtain(text, 0, text.length, textPaint, width)
+                .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                .setEllipsize(TextUtils.TruncateAt.END)
+                .setMaxLines(maxLines)
+                .build()
+
+            canvas.save()
+            canvas.clipRect(rect)
+            canvas.translate(rect.left + padding, rect.top + padding)
+            layout.draw(canvas)
+            canvas.restore()
+        }
+
+        private fun Translation_boxes.toViewRect(): RectF? {
+            val view = pageViewProvider() ?: return null
+            return when (view) {
+                is SubsamplingScaleImageView -> toSubsamplingRect(view)
+                is AppCompatImageView -> toImageViewRect(view)
+                else -> null
+            }
+        }
+
+        private fun Translation_boxes.toSubsamplingRect(view: SubsamplingScaleImageView): RectF? {
+            if (!view.isReady || view.sWidth <= 0 || view.sHeight <= 0) return null
+            val start = view.sourceToViewCoord((x * view.sWidth).toFloat(), (y * view.sHeight).toFloat())
+                ?: return null
+            val end = view.sourceToViewCoord(
+                ((x + width) * view.sWidth).toFloat(),
+                ((y + height) * view.sHeight).toFloat(),
+            ) ?: return null
+            return RectF(
+                view.left + start.x,
+                view.top + start.y,
+                view.left + end.x,
+                view.top + end.y,
+            ).normalize()
+        }
+
+        private fun Translation_boxes.toImageViewRect(view: AppCompatImageView): RectF? {
+            val drawable = view.drawable ?: return null
+            val imageRect = RectF(
+                0f,
+                0f,
+                drawable.intrinsicWidth.toFloat(),
+                drawable.intrinsicHeight.toFloat(),
+            )
+            view.imageMatrix.mapRect(imageRect)
+            imageRect.offset(view.left.toFloat(), view.top.toFloat())
+            return RectF(
+                imageRect.left + (x * imageRect.width()).toFloat(),
+                imageRect.top + (y * imageRect.height()).toFloat(),
+                imageRect.left + ((x + width) * imageRect.width()).toFloat(),
+                imageRect.top + ((y + height) * imageRect.height()).toFloat(),
+            ).normalize()
+        }
+
+        private fun RectF.normalize(): RectF {
+            if (left <= right && top <= bottom) return this
+            return RectF(
+                minOf(left, right),
+                minOf(top, bottom),
+                maxOf(left, right),
+                maxOf(top, bottom),
+            )
+        }
     }
 }
 

@@ -36,6 +36,10 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
+import eu.kanade.tachiyomi.data.translation.TranslationJob
+import eu.kanade.tachiyomi.data.translation.TranslationMode
+import eu.kanade.tachiyomi.data.translation.TranslationRepository
+import eu.kanade.tachiyomi.data.translation.TranslationScope
 import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
@@ -85,6 +89,7 @@ import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracks
+import tachiyomi.domain.translation.service.TranslationPreferences
 import tachiyomi.i18n.MR
 import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
@@ -120,6 +125,8 @@ class MangaScreenModel(
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
     private val mangaRepository: MangaRepository = Injekt.get(),
     private val filterChaptersForDownload: FilterChaptersForDownload = Injekt.get(),
+    private val translationRepository: TranslationRepository = Injekt.get(),
+    private val translationPreferences: TranslationPreferences = Injekt.get(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) : StateScreenModel<MangaScreenModel.State>(State.Loading) {
 
@@ -723,6 +730,48 @@ class MangaScreenModel(
         }
         if (chaptersToDownload.isNotEmpty()) {
             startDownload(chaptersToDownload, false)
+        }
+    }
+
+    fun runChapterTranslationActions(items: List<ChapterList.Item>) {
+        enqueueChapterTranslations(items)
+    }
+
+    fun runTranslateAllAction() {
+        enqueueChapterTranslations(filteredChapters.orEmpty())
+    }
+
+    private fun enqueueChapterTranslations(items: List<ChapterList.Item>) {
+        val manga = manga ?: return
+        val chapters = items
+            .map { it.chapter }
+            .distinctBy { it.id }
+        if (chapters.isEmpty()) return
+
+        screenModelScope.launchIO {
+            val mode = if (translationPreferences.enableInpaint.get()) {
+                TranslationMode.OverlayAndInpaint
+            } else {
+                TranslationMode.Overlay
+            }
+            chapters.forEach { chapter ->
+                translationRepository.enqueueJob(
+                    mangaId = manga.id,
+                    chapterId = chapter.id,
+                    pageIndex = null,
+                    scope = TranslationScope.Chapter,
+                    pipeline = translationPreferences.pipeline.get(),
+                    mode = mode,
+                    model = translationPreferences.geminiModel.get(),
+                    targetLanguage = translationPreferences.targetLanguage.get(),
+                    sourceLanguage = translationPreferences.sourceLanguage.get().ifBlank { null },
+                    overwrite = !translationPreferences.skipExistingOverlays.get(),
+                )
+            }
+            TranslationJob.start(context)
+            withUIContext {
+                context.toast("Queued translation for ${chapters.size} chapter(s)")
+            }
         }
     }
 

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import androidx.core.view.isVisible
 import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
+import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
@@ -27,7 +28,11 @@ import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.translation.service.TranslationPreferences
 import tachiyomi.i18n.MR
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
+import java.util.Locale
 
 /**
  * View of the ViewPager that contains a page of a chapter.
@@ -56,6 +61,8 @@ class PagerPageHolder(
     private var errorLayout: ReaderErrorBinding? = null
 
     private val scope = MainScope()
+    private val translationRepository: TranslationRepository = Injekt.get()
+    private val translationPreferences: TranslationPreferences = Injekt.get()
 
     /**
      * Job for loading the page and processing changes to the page's status.
@@ -120,6 +127,7 @@ class PagerPageHolder(
     private fun setQueued() {
         initProgressIndicator()
         progressIndicator?.show()
+        clearTranslationOverlay()
         removeErrorLayout()
     }
 
@@ -129,6 +137,7 @@ class PagerPageHolder(
     private fun setLoading() {
         initProgressIndicator()
         progressIndicator?.show()
+        clearTranslationOverlay()
         removeErrorLayout()
     }
 
@@ -138,6 +147,7 @@ class PagerPageHolder(
     private fun setDownloading() {
         initProgressIndicator()
         progressIndicator?.show()
+        clearTranslationOverlay()
         removeErrorLayout()
     }
 
@@ -177,6 +187,7 @@ class PagerPageHolder(
                 }
                 removeErrorLayout()
             }
+            setTranslationOverlay()
         } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e)
             withUIContext {
@@ -247,7 +258,28 @@ class PagerPageHolder(
      */
     private fun setError(error: Throwable?) {
         progressIndicator?.hide()
+        clearTranslationOverlay()
         showErrorLayout(error)
+    }
+
+    private suspend fun setTranslationOverlay() {
+        if (!translationPreferences.autoShowOverlay.get()) {
+            withUIContext { clearTranslationOverlay() }
+            return
+        }
+        val chapterId = page.chapter.chapter.id ?: return
+        val targetLanguage = translationPreferences.targetLanguage.get()
+            .ifBlank { Locale.getDefault().displayLanguage.ifBlank { "English" } }
+        val savedPage = withIOContext {
+            translationRepository.getSavedPage(
+                chapterId = chapterId,
+                pageIndex = page.index.toLong(),
+                targetLanguage = targetLanguage,
+            )
+        }
+        withUIContext {
+            setTranslationOverlay(savedPage?.boxes.orEmpty())
+        }
     }
 
     override fun onImageLoaded() {

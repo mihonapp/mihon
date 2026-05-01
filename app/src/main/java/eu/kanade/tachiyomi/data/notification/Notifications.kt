@@ -41,6 +41,13 @@ object Notifications {
     const val ID_DOWNLOAD_CHAPTER_ERROR = -202
 
     /**
+     * Notification channel and ids used by the translator.
+     */
+    private const val GROUP_TRANSLATION = "group_translation"
+    const val CHANNEL_TRANSLATION_PROGRESS = "translation_progress_channel"
+    const val ID_TRANSLATION_PROGRESS = -251
+
+    /**
      * Notification channel and ids used by the library updater.
      */
     const val CHANNEL_NEW_CHAPTERS = "new_chapters_channel"
@@ -108,6 +115,9 @@ object Notifications {
                 buildNotificationChannelGroup(GROUP_DOWNLOADER) {
                     setName(context.stringResource(MR.strings.download_notifier_downloader_title))
                 },
+                buildNotificationChannelGroup(GROUP_TRANSLATION) {
+                    setName(context.stringResource(MR.strings.pref_translation))
+                },
                 buildNotificationChannelGroup(GROUP_LIBRARY) {
                     setName(context.stringResource(MR.strings.label_library))
                 },
@@ -143,6 +153,11 @@ object Notifications {
                 buildNotificationChannel(CHANNEL_DOWNLOADER_ERROR, IMPORTANCE_LOW) {
                     setName(context.stringResource(MR.strings.channel_errors))
                     setGroup(GROUP_DOWNLOADER)
+                    setShowBadge(false)
+                },
+                buildNotificationChannel(CHANNEL_TRANSLATION_PROGRESS, IMPORTANCE_LOW) {
+                    setName(context.stringResource(MR.strings.channel_progress))
+                    setGroup(GROUP_TRANSLATION)
                     setShowBadge(false)
                 },
                 buildNotificationChannel(CHANNEL_BACKUP_RESTORE_PROGRESS, IMPORTANCE_LOW) {

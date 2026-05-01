@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Photo
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material.icons.outlined.Share
+import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,6 +33,8 @@ fun ReaderPageActionsDialog(
     onSetAsCover: () -> Unit,
     onShare: (Boolean) -> Unit,
     onSave: () -> Unit,
+    onTranslate: () -> Unit,
+    onEditTranslation: () -> Unit,
 ) {
     var showSetCoverDialog by remember { mutableStateOf(false) }
 
@@ -71,6 +75,21 @@ fun ReaderPageActionsDialog(
                     onSave()
                     onDismissRequest()
                 },
+            )
+            ActionButton(
+                modifier = Modifier.weight(1f),
+                title = stringResource(MR.strings.action_translate),
+                icon = Icons.Outlined.Translate,
+                onClick = {
+                    onTranslate()
+                    onDismissRequest()
+                },
+            )
+            ActionButton(
+                modifier = Modifier.weight(1f),
+                title = stringResource(MR.strings.action_edit_translation),
+                icon = Icons.Outlined.Edit,
+                onClick = onEditTranslation,
             )
         }
     }

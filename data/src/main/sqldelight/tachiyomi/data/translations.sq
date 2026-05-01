@@ -1,0 +1,313 @@
+import kotlin.Boolean;
+
+CREATE TABLE translation_jobs(
+    _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    manga_id INTEGER NOT NULL,
+    chapter_id INTEGER,
+    page_index INTEGER,
+    scope TEXT NOT NULL,
+    pipeline TEXT NOT NULL,
+    mode TEXT NOT NULL,
+    model TEXT NOT NULL,
+    target_language TEXT NOT NULL,
+    source_language TEXT,
+    overwrite INTEGER AS Boolean NOT NULL,
+    status TEXT NOT NULL,
+    progress_current INTEGER NOT NULL,
+    progress_total INTEGER NOT NULL,
+    attempts INTEGER NOT NULL,
+    created_at INTEGER NOT NULL,
+    updated_at INTEGER NOT NULL,
+    error_message TEXT,
+    FOREIGN KEY(manga_id) REFERENCES mangas (_id) ON DELETE CASCADE,
+    FOREIGN KEY(chapter_id) REFERENCES chapters (_id) ON DELETE CASCADE
+);
+
+CREATE INDEX translation_jobs_status_index ON translation_jobs(status, created_at);
+CREATE INDEX translation_jobs_manga_index ON translation_jobs(manga_id);
+CREATE INDEX translation_jobs_chapter_index ON translation_jobs(chapter_id);
+
+CREATE TABLE translation_pages(
+    _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    manga_id INTEGER NOT NULL,
+    chapter_id INTEGER NOT NULL,
+    page_index INTEGER NOT NULL,
+    source_image_key TEXT NOT NULL,
+    model TEXT NOT NULL,
+    target_language TEXT NOT NULL,
+    source_language TEXT,
+    pipeline TEXT NOT NULL,
+    image_width INTEGER,
+    image_height INTEGER,
+    inpaint_image_uri TEXT,
+    created_at INTEGER NOT NULL,
+    updated_at INTEGER NOT NULL,
+    FOREIGN KEY(manga_id) REFERENCES mangas (_id) ON DELETE CASCADE,
+    FOREIGN KEY(chapter_id) REFERENCES chapters (_id) ON DELETE CASCADE,
+    UNIQUE(chapter_id, page_index, target_language)
+);
+
+CREATE INDEX translation_pages_manga_index ON translation_pages(manga_id);
+CREATE INDEX translation_pages_chapter_index ON translation_pages(chapter_id, page_index);
+
+CREATE TABLE translation_boxes(
+    _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    page_id INTEGER NOT NULL,
+    x REAL NOT NULL,
+    y REAL NOT NULL,
+    width REAL NOT NULL,
+    height REAL NOT NULL,
+    original_text TEXT NOT NULL,
+    translated_text TEXT NOT NULL,
+    text_type TEXT NOT NULL,
+    confidence REAL,
+    style_json TEXT,
+    sort_order INTEGER NOT NULL,
+    FOREIGN KEY(page_id) REFERENCES translation_pages (_id) ON DELETE CASCADE
+);
+
+CREATE INDEX translation_boxes_page_index ON translation_boxes(page_id, sort_order);
+
+CREATE TABLE translation_logs(
+    _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    job_id INTEGER,
+    page_id INTEGER,
+    created_at INTEGER NOT NULL,
+    level TEXT NOT NULL,
+    tag TEXT NOT NULL,
+    message TEXT NOT NULL,
+    details TEXT,
+    FOREIGN KEY(job_id) REFERENCES translation_jobs (_id) ON DELETE SET NULL,
+    FOREIGN KEY(page_id) REFERENCES translation_pages (_id) ON DELETE SET NULL
+);
+
+CREATE INDEX translation_logs_created_index ON translation_logs(created_at);
+CREATE INDEX translation_logs_job_index ON translation_logs(job_id);
+
+insertJob:
+INSERT INTO translation_jobs(
+    manga_id,
+    chapter_id,
+    page_index,
+    scope,
+    pipeline,
+    mode,
+    model,
+    target_language,
+    source_language,
+    overwrite,
+    status,
+    progress_current,
+    progress_total,
+    attempts,
+    created_at,
+    updated_at,
+    error_message
+)
+VALUES (
+    :mangaId,
+    :chapterId,
+    :pageIndex,
+    :scope,
+    :pipeline,
+    :mode,
+    :model,
+    :targetLanguage,
+    :sourceLanguage,
+    :overwrite,
+    :status,
+    0,
+    :progressTotal,
+    0,
+    :createdAt,
+    :createdAt,
+    NULL
+);
+
+lastInsertedJobId:
+SELECT last_insert_rowid();
+
+getJob:
+SELECT *
+FROM translation_jobs
+WHERE _id = :id;
+
+getJobs:
+SELECT *
+FROM translation_jobs
+ORDER BY created_at DESC;
+
+getPendingJobs:
+SELECT *
+FROM translation_jobs
+WHERE status IN ('queued', 'retrying')
+ORDER BY created_at ASC;
+
+updateJobStatus:
+UPDATE translation_jobs
+SET status = :status,
+    attempts = :attempts,
+    error_message = :errorMessage,
+    updated_at = :updatedAt
+WHERE _id = :id;
+
+updateJobProgress:
+UPDATE translation_jobs
+SET progress_current = :progressCurrent,
+    progress_total = :progressTotal,
+    updated_at = :updatedAt
+WHERE _id = :id;
+
+deleteJob:
+DELETE FROM translation_jobs
+WHERE _id = :id;
+
+clearFinishedJobs:
+DELETE FROM translation_jobs
+WHERE status IN ('completed', 'failed', 'cancelled');
+
+upsertPage:
+INSERT INTO translation_pages(
+    manga_id,
+    chapter_id,
+    page_index,
+    source_image_key,
+    model,
+    target_language,
+    source_language,
+    pipeline,
+    image_width,
+    image_height,
+    inpaint_image_uri,
+    created_at,
+    updated_at
+)
+VALUES (
+    :mangaId,
+    :chapterId,
+    :pageIndex,
+    :sourceImageKey,
+    :model,
+    :targetLanguage,
+    :sourceLanguage,
+    :pipeline,
+    :imageWidth,
+    :imageHeight,
+    :inpaintImageUri,
+    :createdAt,
+    :createdAt
+)
+ON CONFLICT(chapter_id, page_index, target_language)
+DO UPDATE SET
+    source_image_key = excluded.source_image_key,
+    model = excluded.model,
+    source_language = excluded.source_language,
+    pipeline = excluded.pipeline,
+    image_width = excluded.image_width,
+    image_height = excluded.image_height,
+    inpaint_image_uri = excluded.inpaint_image_uri,
+    updated_at = excluded.updated_at;
+
+getPage:
+SELECT *
+FROM translation_pages
+WHERE chapter_id = :chapterId
+AND page_index = :pageIndex
+AND target_language = :targetLanguage;
+
+getPagesByChapter:
+SELECT *
+FROM translation_pages
+WHERE chapter_id = :chapterId
+AND target_language = :targetLanguage
+ORDER BY page_index ASC;
+
+clearPages:
+DELETE FROM translation_pages;
+
+deleteBoxesForPage:
+DELETE FROM translation_boxes
+WHERE page_id = :pageId;
+
+insertBox:
+INSERT INTO translation_boxes(
+    page_id,
+    x,
+    y,
+    width,
+    height,
+    original_text,
+    translated_text,
+    text_type,
+    confidence,
+    style_json,
+    sort_order
+)
+VALUES (
+    :pageId,
+    :x,
+    :y,
+    :width,
+    :height,
+    :originalText,
+    :translatedText,
+    :textType,
+    :confidence,
+    :styleJson,
+    :sortOrder
+);
+
+getBoxesForPage:
+SELECT *
+FROM translation_boxes
+WHERE page_id = :pageId
+ORDER BY sort_order ASC;
+
+touchPage:
+UPDATE translation_pages
+SET updated_at = :updatedAt
+WHERE _id = :id;
+
+updateBox:
+UPDATE translation_boxes
+SET x = :x,
+    y = :y,
+    width = :width,
+    height = :height,
+    translated_text = :translatedText,
+    text_type = :textType,
+    style_json = :styleJson,
+    sort_order = :sortOrder
+WHERE _id = :id;
+
+deleteBox:
+DELETE FROM translation_boxes
+WHERE _id = :id;
+
+insertLog:
+INSERT INTO translation_logs(
+    job_id,
+    page_id,
+    created_at,
+    level,
+    tag,
+    message,
+    details
+)
+VALUES (
+    :jobId,
+    :pageId,
+    :createdAt,
+    :level,
+    :tag,
+    :message,
+    :details
+);
+
+getLogs:
+SELECT *
+FROM translation_logs
+ORDER BY created_at DESC;
+
+clearLogs:
+DELETE FROM translation_logs;

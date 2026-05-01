@@ -12,6 +12,7 @@ import androidx.core.view.updateMargins
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
+import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
@@ -32,7 +33,11 @@ import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.translation.service.TranslationPreferences
 import tachiyomi.i18n.MR
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
+import java.util.Locale
 
 /**
  * Holder of the webtoon reader for a single page of a chapter.
@@ -74,6 +79,8 @@ class WebtoonPageHolder(
     private var page: ReaderPage? = null
 
     private val scope = MainScope()
+    private val translationRepository: TranslationRepository = Injekt.get()
+    private val translationPreferences: TranslationPreferences = Injekt.get()
 
     /**
      * Job for loading the page.
@@ -119,6 +126,7 @@ class WebtoonPageHolder(
 
         removeErrorLayout()
         frame.recycle()
+        frame.clearTranslationOverlay()
         progressIndicator.setProgress(0)
         progressContainer.isVisible = true
     }
@@ -160,6 +168,7 @@ class WebtoonPageHolder(
     private fun setQueued() {
         progressContainer.isVisible = true
         progressIndicator.show()
+        frame.clearTranslationOverlay()
         removeErrorLayout()
     }
 
@@ -169,6 +178,7 @@ class WebtoonPageHolder(
     private fun setLoading() {
         progressContainer.isVisible = true
         progressIndicator.show()
+        frame.clearTranslationOverlay()
         removeErrorLayout()
     }
 
@@ -178,6 +188,7 @@ class WebtoonPageHolder(
     private fun setDownloading() {
         progressContainer.isVisible = true
         progressIndicator.show()
+        frame.clearTranslationOverlay()
         removeErrorLayout()
     }
 
@@ -207,6 +218,7 @@ class WebtoonPageHolder(
                 )
                 removeErrorLayout()
             }
+            setTranslationOverlay(page)
         } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e)
             withUIContext {
@@ -246,7 +258,31 @@ class WebtoonPageHolder(
      */
     private fun setError(error: Throwable?) {
         progressContainer.isVisible = false
+        frame.clearTranslationOverlay()
         initErrorLayout(error)
+    }
+
+    private suspend fun setTranslationOverlay(page: ReaderPage?) {
+        if (!translationPreferences.autoShowOverlay.get()) {
+            withUIContext { frame.clearTranslationOverlay() }
+            return
+        }
+        page ?: return
+        val chapterId = page.chapter.chapter.id ?: return
+        val targetLanguage = translationPreferences.targetLanguage.get()
+            .ifBlank { Locale.getDefault().displayLanguage.ifBlank { "English" } }
+        val savedPage = withIOContext {
+            translationRepository.getSavedPage(
+                chapterId = chapterId,
+                pageIndex = page.index.toLong(),
+                targetLanguage = targetLanguage,
+            )
+        }
+        withUIContext {
+            if (this@WebtoonPageHolder.page == page) {
+                frame.setTranslationOverlay(savedPage?.boxes.orEmpty())
+            }
+        }
     }
 
     /**

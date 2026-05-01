@@ -47,6 +47,8 @@ fun ReaderAppBars(
     onOpenInWebView: (() -> Unit)?,
     onOpenInBrowser: (() -> Unit)?,
     onShare: (() -> Unit)?,
+    onTranslateChapter: (() -> Unit)?,
+    onToggleTranslationOverlay: (() -> Unit)?,
 
     viewer: Viewer?,
     onNextChapter: () -> Unit,
@@ -90,6 +92,8 @@ fun ReaderAppBars(
                 onOpenInWebView = onOpenInWebView,
                 onOpenInBrowser = onOpenInBrowser,
                 onShare = onShare,
+                onTranslateChapter = onTranslateChapter,
+                onToggleTranslationOverlay = onToggleTranslationOverlay,
             )
         }
 

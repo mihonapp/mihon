@@ -24,6 +24,7 @@
     <string name="label_more">More</string>
     <string name="label_settings">Settings</string>
     <string name="label_download_queue">Download queue</string>
+    <string name="label_translation_queue">Translation queue</string>
     <string name="label_library">Library</string>
     <string name="label_recent_updates">Updates</string>
     <string name="label_upcoming">Upcoming</string>
@@ -108,6 +109,10 @@
     <string name="action_remove_everything">Remove everything</string>
     <string name="action_start">Start</string>
     <string name="action_resume">Resume</string>
+    <string name="action_translate">Translate</string>
+    <string name="action_translate_all">Translate all</string>
+    <string name="action_translation_overlay">Translation overlay</string>
+    <string name="action_edit_translation">Edit translation</string>
     <string name="action_open_in_browser">Open in browser</string>
     <string name="action_show_manga">Show entry</string>
     <string name="action_copy_to_clipboard">Copy to clipboard</string>
@@ -209,6 +214,7 @@
     <string name="pref_category_library">Library</string>
     <string name="pref_category_reader">Reader</string>
     <string name="pref_category_downloads">Downloads</string>
+    <string name="pref_category_translation">Translation</string>
     <string name="pref_category_tracking">Tracking</string>
     <string name="pref_category_advanced">Advanced</string>
     <string name="pref_category_about">About</string>
@@ -217,6 +223,7 @@
     <string name="pref_library_summary">Categories, global update, chapter swipe</string>
     <string name="pref_reader_summary">Reading mode, display, navigation</string>
     <string name="pref_downloads_summary">Automatic download, download ahead</string>
+    <string name="pref_translation_summary">Gemini API, overlays, queue</string>
     <string name="pref_tracking_summary">One-way progress sync, enhanced sync</string>
     <string name="pref_browse_summary">Sources, extensions, global search</string>
     <string name="pref_backup_summary">Manual &amp; automatic backups, storage space</string>
@@ -527,6 +534,56 @@
     <string name="pref_download_concurrent_sources">Concurrent source downloads</string>
     <string name="pref_download_concurrent_pages">Concurrent page downloads</string>
     <string name="pref_download_concurrent_pages_summary">Pages downloaded simultaneously per source</string>
+
+      <!-- Translation section -->
+    <string name="pref_translation">Translation</string>
+    <string name="pref_translation_privacy_notice">Images and OCR text are sent to Gemini when translation jobs run. API keys, image bytes, and base64 images are never written to logs.</string>
+    <string name="pref_translation_gemini_api_key">Gemini API key</string>
+    <string name="pref_translation_gemini_api_key_summary">Stored privately on this device</string>
+    <string name="pref_translation_model">Translation model</string>
+    <string name="pref_translation_inpaint_model">Inpaint image model</string>
+    <string name="pref_translation_source_language">Source language</string>
+    <string name="pref_translation_target_language">Target language</string>
+    <string name="pref_translation_pipeline">Translation pipeline</string>
+    <string name="pref_translation_pipeline_gemini_vision">Gemini vision</string>
+    <string name="pref_translation_pipeline_local_ocr_gemini">Local OCR + Gemini</string>
+    <string name="pref_translation_ocr_script">OCR script</string>
+    <string name="pref_translation_skip_existing">Skip existing overlays</string>
+    <string name="pref_translation_show_overlays">Show saved overlays in reader</string>
+    <string name="pref_translation_raw_debug_logs">Raw debug logs</string>
+    <string name="pref_translation_raw_debug_logs_summary">Stores redacted prompts and Gemini JSON for troubleshooting</string>
+    <string name="pref_translation_enable_inpaint">Enable experimental inpaint</string>
+    <string name="pref_translation_generation">Generation</string>
+    <string name="pref_translation_temperature">Temperature</string>
+    <string name="pref_translation_top_p">Top P</string>
+    <string name="pref_translation_top_k">Top K</string>
+    <string name="pref_translation_max_tokens">Max output tokens</string>
+    <string name="pref_translation_thinking_budget">Thinking budget</string>
+    <string name="pref_translation_raw_json_override">Raw JSON override</string>
+    <string name="pref_translation_global_instructions">Global instructions</string>
+    <string name="pref_translation_queue">Queue</string>
+    <string name="pref_translation_concurrency">Concurrent translation jobs</string>
+    <string name="pref_translation_logs">Logs</string>
+    <string name="pref_translation_clear_logs">Clear translation logs</string>
+    <string name="pref_translation_clear_finished">Clear finished jobs</string>
+    <string name="pref_translation_clear_storage">Clear saved translations</string>
+    <string name="translation_model_refresh">Refresh Gemini models</string>
+    <string name="translation_model_refresh_summary">Fetch available generateContent models using the API key</string>
+    <string name="translation_model_test">Test API key and model</string>
+    <string name="translation_model_ready">Gemini key and model are reachable</string>
+    <string name="translation_model_unavailable">Default model unavailable; choose another generateContent model.</string>
+    <string name="translation_overlay_editor">Translation overlay editor</string>
+    <string name="translation_overlay_saved">Translation overlay saved</string>
+    <string name="translation_overlay_save_failed">Failed to save translation overlay: %s</string>
+    <string name="translation_overlay_no_boxes">No text boxes yet</string>
+    <string name="translation_overlay_box_label">Box %d</string>
+    <string name="translation_overlay_original_text">Original text</string>
+    <string name="translation_overlay_translated_text">Translated text</string>
+    <string name="translation_overlay_text_type">Text type</string>
+    <string name="translation_overlay_x">X</string>
+    <string name="translation_overlay_y">Y</string>
+    <string name="translation_overlay_width">Width</string>
+    <string name="translation_overlay_height">Height</string>
 
     <!-- Tracking section -->
     <string name="tracking_guide">Tracking guide</string>
@@ -952,6 +1009,7 @@
 
     <!-- Information Text -->
     <string name="information_no_downloads">No downloads</string>
+    <string name="information_no_translation_jobs">No translation jobs</string>
     <string name="information_no_recent">No recent updates</string>
     <string name="information_no_recent_manga">Nothing read recently</string>
     <string name="information_empty_library">Your library is empty</string>

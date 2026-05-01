@@ -55,6 +55,7 @@ import eu.kanade.presentation.reader.ReaderContentOverlay
 import eu.kanade.presentation.reader.ReaderPageActionsDialog
 import eu.kanade.presentation.reader.ReaderPageIndicator
 import eu.kanade.presentation.reader.ReadingModeSelectDialog
+import eu.kanade.presentation.reader.TranslationOverlayEditorDialog
 import eu.kanade.presentation.reader.appbars.ReaderAppBars
 import eu.kanade.presentation.reader.settings.ReaderSettingsDialog
 import eu.kanade.tachiyomi.R
@@ -241,6 +242,12 @@ class ReaderActivity : BaseActivity() {
                     is ReaderViewModel.Event.SetCoverResult -> {
                         onSetAsCoverResult(event.result)
                     }
+                    ReaderViewModel.Event.TranslationOverlaySaved -> {
+                        toast(MR.strings.translation_overlay_saved)
+                    }
+                    is ReaderViewModel.Event.TranslationOverlaySaveFailed -> {
+                        toast(stringResource(MR.strings.translation_overlay_save_failed, event.message))
+                    }
                 }
             }
             .launchIn(lifecycleScope)
@@ -274,7 +281,8 @@ class ReaderActivity : BaseActivity() {
         }
 
         val onDismissRequest = viewModel::closeDialog
-        when (state.dialog) {
+        val dialog = state.dialog
+        when (dialog) {
             is ReaderViewModel.Dialog.Loading -> {
                 AlertDialog(
                     onDismissRequest = {},
@@ -321,11 +329,21 @@ class ReaderActivity : BaseActivity() {
                 )
             }
             is ReaderViewModel.Dialog.PageActions -> {
+                val page = dialog.page
                 ReaderPageActionsDialog(
                     onDismissRequest = onDismissRequest,
                     onSetAsCover = viewModel::setAsCover,
                     onShare = viewModel::shareImage,
                     onSave = viewModel::saveImage,
+                    onTranslate = { viewModel.translatePageImage(page) },
+                    onEditTranslation = { viewModel.openTranslationOverlayEditor(page) },
+                )
+            }
+            is ReaderViewModel.Dialog.TranslationOverlayEditor -> {
+                TranslationOverlayEditorDialog(
+                    savedPage = dialog.savedPage,
+                    onDismissRequest = onDismissRequest,
+                    onSave = { boxes -> viewModel.saveTranslationOverlayEdits(dialog.page, boxes) },
                 )
             }
             null -> {}
@@ -470,6 +488,12 @@ class ReaderActivity : BaseActivity() {
             onOpenInWebView = ::openChapterInWebView.takeIf { isHttpSource },
             onOpenInBrowser = ::openChapterInBrowser.takeIf { isHttpSource },
             onShare = ::shareChapter.takeIf { isHttpSource },
+            onTranslateChapter = viewModel::translateCurrentChapter,
+            onToggleTranslationOverlay = {
+                val enabled = viewModel.toggleTranslationOverlay()
+                menuToggleToast?.cancel()
+                menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
+            },
 
             viewer = state.viewer,
             onNextChapter = ::loadNextChapter,

@@ -22,6 +22,8 @@ fun ReaderTopBar(
     onOpenInWebView: (() -> Unit)?,
     onOpenInBrowser: (() -> Unit)?,
     onShare: (() -> Unit)?,
+    onTranslateChapter: (() -> Unit)?,
+    onToggleTranslationOverlay: (() -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
     AppBar(
@@ -71,6 +73,22 @@ fun ReaderTopBar(
                             add(
                                 AppBar.OverflowAction(
                                     title = stringResource(MR.strings.action_share),
+                                    onClick = it,
+                                ),
+                            )
+                        }
+                        onTranslateChapter?.let {
+                            add(
+                                AppBar.OverflowAction(
+                                    title = stringResource(MR.strings.action_translate),
+                                    onClick = it,
+                                ),
+                            )
+                        }
+                        onToggleTranslationOverlay?.let {
+                            add(
+                                AppBar.OverflowAction(
+                                    title = stringResource(MR.strings.action_translation_overlay),
                                     onClick = it,
                                 ),
                             )

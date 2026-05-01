@@ -16,6 +16,11 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.data.saver.ImageSaver
 import eu.kanade.tachiyomi.data.track.TrackerManager
+import eu.kanade.tachiyomi.data.translation.GeminiTranslationClient
+import eu.kanade.tachiyomi.data.translation.LocalOcrClient
+import eu.kanade.tachiyomi.data.translation.TranslationImageResolver
+import eu.kanade.tachiyomi.data.translation.TranslationQueueProcessor
+import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.network.JavaScriptEngine
 import eu.kanade.tachiyomi.network.NetworkHelper
@@ -114,6 +119,12 @@ class AppModule(val app: Application) : InjektModule {
         addSingletonFactory { DownloadManager(app) }
         addSingletonFactory { DownloadCache(app) }
 
+        addSingletonFactory { TranslationRepository() }
+        addSingletonFactory { GeminiTranslationClient() }
+        addSingletonFactory { LocalOcrClient() }
+        addSingletonFactory { TranslationImageResolver() }
+        addSingletonFactory { TranslationQueueProcessor(app) }
+
         addSingletonFactory { TrackerManager() }
         addSingletonFactory { DelayedTrackingStore(app) }
 
@@ -133,6 +144,8 @@ class AppModule(val app: Application) : InjektModule {
             get<Database>()
 
             get<DownloadManager>()
+
+            get<TranslationQueueProcessor>()
         }
     }
 }

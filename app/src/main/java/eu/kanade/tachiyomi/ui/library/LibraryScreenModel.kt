@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.library
 
+import android.app.Application
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastFilter
@@ -19,6 +20,10 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.track.TrackerManager
+import eu.kanade.tachiyomi.data.translation.TranslationJob
+import eu.kanade.tachiyomi.data.translation.TranslationMode
+import eu.kanade.tachiyomi.data.translation.TranslationRepository
+import eu.kanade.tachiyomi.data.translation.TranslationScope
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
@@ -63,6 +68,7 @@ import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracksPerManga
 import tachiyomi.domain.track.model.Track
+import tachiyomi.domain.translation.service.TranslationPreferences
 import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -85,6 +91,9 @@ class LibraryScreenModel(
     private val downloadManager: DownloadManager = Injekt.get(),
     private val downloadCache: DownloadCache = Injekt.get(),
     private val trackerManager: TrackerManager = Injekt.get(),
+    private val translationRepository: TranslationRepository = Injekt.get(),
+    private val translationPreferences: TranslationPreferences = Injekt.get(),
+    private val application: Application = Injekt.get(),
 ) : StateScreenModel<LibraryScreenModel.State>(State()) {
 
     init {
@@ -518,6 +527,36 @@ class LibraryScreenModel(
                 downloadManager.downloadChapters(manga, chapters)
             }
         }
+    }
+
+    fun performTranslateSelection() {
+        val mangas = state.value.selectedManga
+        screenModelScope.launchNonCancellable {
+            val mode = if (translationPreferences.enableInpaint.get()) {
+                TranslationMode.OverlayAndInpaint
+            } else {
+                TranslationMode.Overlay
+            }
+            mangas.forEach { manga ->
+                getChaptersByMangaId.await(manga.id)
+                    .forEach { chapter ->
+                        translationRepository.enqueueJob(
+                            mangaId = manga.id,
+                            chapterId = chapter.id,
+                            pageIndex = null,
+                            scope = TranslationScope.Chapter,
+                            pipeline = translationPreferences.pipeline.get(),
+                            mode = mode,
+                            model = translationPreferences.geminiModel.get(),
+                            targetLanguage = translationPreferences.targetLanguage.get(),
+                            sourceLanguage = translationPreferences.sourceLanguage.get().ifBlank { null },
+                            overwrite = !translationPreferences.skipExistingOverlays.get(),
+                        )
+                    }
+            }
+            TranslationJob.start(application)
+        }
+        clearSelection()
     }
 
     /**

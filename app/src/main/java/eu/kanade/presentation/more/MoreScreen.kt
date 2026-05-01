@@ -11,6 +11,7 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.QueryStats
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Storage
+import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -21,6 +22,7 @@ import eu.kanade.presentation.more.settings.widget.SwitchPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.more.DownloadQueueState
+import eu.kanade.tachiyomi.ui.more.TranslationQueueState
 import tachiyomi.core.common.Constants
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
@@ -31,11 +33,13 @@ import tachiyomi.presentation.core.i18n.stringResource
 @Composable
 fun MoreScreen(
     downloadQueueStateProvider: () -> DownloadQueueState,
+    translationQueueStateProvider: () -> TranslationQueueState,
     downloadedOnly: Boolean,
     onDownloadedOnlyChange: (Boolean) -> Unit,
     incognitoMode: Boolean,
     onIncognitoModeChange: (Boolean) -> Unit,
     onClickDownloadQueue: () -> Unit,
+    onClickTranslationQueue: () -> Unit,
     onClickCategories: () -> Unit,
     onClickStats: () -> Unit,
     onClickDataAndStorage: () -> Unit,
@@ -100,6 +104,35 @@ fun MoreScreen(
                     },
                     icon = Icons.Outlined.GetApp,
                     onPreferenceClick = onClickDownloadQueue,
+                )
+            }
+            item {
+                val translationQueueState = translationQueueStateProvider()
+                TextPreferenceWidget(
+                    title = stringResource(MR.strings.label_translation_queue),
+                    subtitle = when (translationQueueState) {
+                        TranslationQueueState.Stopped -> null
+                        is TranslationQueueState.Paused -> {
+                            val pending = translationQueueState.pending
+                            if (pending == 0) {
+                                stringResource(MR.strings.paused)
+                            } else {
+                                "${stringResource(MR.strings.paused)} • ${
+                                    pluralStringResource(
+                                        MR.plurals.download_queue_summary,
+                                        count = pending,
+                                        pending,
+                                    )
+                                }"
+                            }
+                        }
+                        is TranslationQueueState.Running -> {
+                            val pending = translationQueueState.pending
+                            pluralStringResource(MR.plurals.download_queue_summary, count = pending, pending)
+                        }
+                    },
+                    icon = Icons.Outlined.Translate,
+                    onPreferenceClick = onClickTranslationQueue,
                 )
             }
             item {
