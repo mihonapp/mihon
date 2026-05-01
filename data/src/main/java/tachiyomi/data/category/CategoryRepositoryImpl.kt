@@ -1,6 +1,7 @@
 package tachiyomi.data.category
 
 import app.cash.sqldelight.async.coroutines.awaitAsList
+import app.cash.sqldelight.async.coroutines.awaitAsOne
 import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.data.Database
@@ -49,6 +50,7 @@ class CategoryRepositoryImpl(
             order = category.order,
             flags = category.flags,
         )
+            .awaitAsOne()
     }
 
     override suspend fun updatePartial(update: CategoryUpdate) {
