@@ -5,6 +5,9 @@ import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.data.track.yamtrack.Yamtrack
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 
 @Serializable
 data class YTSearchResponse(
@@ -24,6 +27,8 @@ data class YTSearchItem(
     @SerialName("media_type")
     val mediaType: String? = null,
     val description: String? = null,
+    // Source/upstream score (0-10) when the search endpoint provides one.
+    val score: Double? = null,
 )
 
 @Serializable
@@ -39,6 +44,11 @@ data class YTMediaItem(
     val tracked: Boolean = false,
     @SerialName("max_progress")
     val maxProgress: Int? = null,
+    // Source/upstream score (0-10), separate from the user's `consumption.score`.
+    val score: Double? = null,
+    // Provider-specific metadata (format, status, start_date, year, ...).
+    // Keys vary per source so we keep this loose.
+    val details: JsonObject? = null,
     val consumptions: List<YTConsumption> = emptyList(),
 )
 
@@ -59,7 +69,8 @@ fun YTSearchItem.toTrackSearch(trackerId: Long, baseUrl: String): TrackSearch {
         remote_id = Yamtrack.buildRemoteId(item.source, item.mediaId)
         title = item.title
         cover_url = item.image.orEmpty()
-        summary = item.description.orEmpty()
+        summary = item.description?.trim().orEmpty()
+        item.score?.takeIf { it > 0.0 }?.let { score = it }
         tracking_url = Yamtrack.buildTrackingUrl(baseUrl, item.source, item.mediaId, item.title)
         publishing_type = item.mediaType.orEmpty()
     }
@@ -73,6 +84,37 @@ fun YTMediaItem.copyToTrack(track: Track) {
     track.total_chapters = resolveTotalChapters(maxProgress)
     consumption?.startDate?.let { track.started_reading_date = Yamtrack.parseIsoDate(it) }
     consumption?.endDate?.let { track.finished_reading_date = Yamtrack.parseIsoDate(it) }
+}
+
+/**
+ * Search results from Yamtrack only carry id/title/image/media_type. The detail endpoint
+ * adds synopsis, source score, and a provider-specific `details` blob — so we layer those
+ * onto the existing TrackSearch (without clobbering fields the search response already
+ * populated, like cover or title).
+ */
+fun TrackSearch.applyDetail(detail: YTMediaItem): TrackSearch = apply {
+    if (cover_url.isBlank()) cover_url = detail.image.orEmpty()
+    detail.synopsis?.trim()?.takeIf { it.isNotEmpty() }?.let { summary = it }
+    detail.score?.takeIf { it > 0.0 }?.let { score = it }
+
+    val details = detail.details
+    // The search endpoint hardcodes media_type to the URL parameter ("manga"), so swap in
+    // the actual format ("Manga", "Light Novel", "Manhwa", "Manhua", "One Shot", ...) when
+    // the detail call provides one.
+    details.string("format")?.let { publishing_type = it }
+    // Publishing status — providers use different keys.
+    (details.string("status") ?: details.string("status_in_country_of_origin"))
+        ?.let { publishing_status = it }
+    // When publishing started — MAL gives a full date, MangaUpdates gives a year.
+    (details.string("start_date") ?: details.string("year"))
+        ?.let { start_date = it }
+}
+
+private fun JsonObject?.string(key: String): String? {
+    val element = this?.get(key) ?: return null
+    val primitive = element as? JsonPrimitive ?: return null
+    if (primitive is JsonNull) return null
+    return primitive.content.takeIf { it.isNotBlank() && it != "null" }
 }
 
 /**
