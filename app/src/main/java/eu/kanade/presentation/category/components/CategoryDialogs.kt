@@ -10,6 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -266,7 +267,10 @@ fun ChangeCategoryDialog(
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
             ) {
-                selection.forEach { checkbox ->
+                Text(
+                    text = stringResource(MR.strings.categories_super),
+                )
+                selection.filter { it.value.isSuper }.forEach { checkbox ->
                     val onChange: (CheckboxState<Category>) -> Unit = {
                         val index = selection.indexOf(it)
                         if (index != -1) {
@@ -275,34 +279,54 @@ fun ChangeCategoryDialog(
                             selection = mutableList.toList().toImmutableList()
                         }
                     }
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onChange(checkbox) },
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        when (checkbox) {
-                            is CheckboxState.TriState -> {
-                                TriStateCheckbox(
-                                    state = checkbox.asToggleableState(),
-                                    onClick = { onChange(checkbox) },
-                                )
-                            }
-                            is CheckboxState.State -> {
-                                Checkbox(
-                                    checked = checkbox.isChecked,
-                                    onCheckedChange = { onChange(checkbox) },
-                                )
-                            }
+                    CategoryItem(checkbox, onChange)
+                }
+                HorizontalDivider()
+                selection.filterNot { it.value.isSuper }.forEach { checkbox ->
+                    val onChange: (CheckboxState<Category>) -> Unit = {
+                        val index = selection.indexOf(it)
+                        if (index != -1) {
+                            val mutableList = selection.toMutableList()
+                            mutableList[index] = it.next()
+                            selection = mutableList.toList().toImmutableList()
                         }
-
-                        Text(
-                            text = checkbox.value.visualName,
-                            modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
-                        )
                     }
+                    CategoryItem(checkbox, onChange)
                 }
             }
         },
     )
+}
+
+@Composable
+fun CategoryItem(
+    checkbox: CheckboxState<Category>,
+    onChange: (CheckboxState<Category>) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onChange(checkbox) },
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        when (checkbox) {
+            is CheckboxState.TriState -> {
+                TriStateCheckbox(
+                    state = checkbox.asToggleableState(),
+                    onClick = { onChange(checkbox) },
+                )
+            }
+            is CheckboxState.State -> {
+                Checkbox(
+                    checked = checkbox.isChecked,
+                    onCheckedChange = { onChange(checkbox) },
+                )
+            }
+        }
+
+        Text(
+            text = checkbox.value.visualName,
+            modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
+        )
+    }
 }
