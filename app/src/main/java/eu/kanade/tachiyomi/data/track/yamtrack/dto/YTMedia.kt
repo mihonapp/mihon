@@ -69,6 +69,16 @@ fun YTSearchItem.toTrackSearch(trackerId: Long, baseUrl: String): TrackSearch {
     }
 }
 
+/**
+ * Search results from Yamtrack only carry id/title/image/media_type. The detail endpoint
+ * adds synopsis and source score, so we layer those onto the existing TrackSearch (without
+ * clobbering fields the search response already populated, like cover or title).
+ */
+fun TrackSearch.applyDetail(detail: YTMediaItem): TrackSearch = apply {
+    if (cover_url.isBlank()) cover_url = detail.image.orEmpty()
+    summary = composeSummary(detail.score, detail.synopsis)
+}
+
 fun YTMediaItem.copyToTrack(track: Track) {
     val consumption = consumptions.firstOrNull()
     track.status = Yamtrack.statusFromApi(consumption?.status)
