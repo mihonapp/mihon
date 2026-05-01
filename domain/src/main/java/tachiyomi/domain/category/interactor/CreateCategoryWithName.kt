@@ -26,6 +26,7 @@ class CreateCategoryWithName(
             name = name,
             order = nextOrder,
             flags = initialFlags,
+            isSuper = false,
         )
 
         try {

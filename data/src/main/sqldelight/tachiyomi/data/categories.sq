@@ -1,8 +1,11 @@
+import kotlin.Boolean;
+
 CREATE TABLE categories(
     _id INTEGER NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
     sort INTEGER NOT NULL,
-    flags INTEGER NOT NULL
+    flags INTEGER NOT NULL,
+    is_super INTEGER AS Boolean DEFAULT 0 NOT NULL
 );
 
 -- Insert system category
@@ -27,7 +30,8 @@ SELECT
 _id AS id,
 name,
 sort AS `order`,
-flags
+flags,
+is_super
 FROM categories
 ORDER BY sort;
 
@@ -36,15 +40,16 @@ SELECT
 C._id AS id,
 C.name,
 C.sort AS `order`,
-C.flags
+C.flags,
+C.is_super
 FROM categories C
 JOIN mangas_categories MC
 ON C._id = MC.category_id
 WHERE MC.manga_id = :mangaId;
 
 insert {
-    INSERT INTO categories(name, sort, flags)
-    VALUES (:name, :order, :flags);
+    INSERT INTO categories(name, sort, flags, is_super)
+    VALUES (:name, :order, :flags, :isSuper);
 
     SELECT last_insert_rowid();
 }

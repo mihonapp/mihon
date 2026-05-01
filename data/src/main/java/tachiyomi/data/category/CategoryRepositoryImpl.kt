@@ -49,6 +49,7 @@ class CategoryRepositoryImpl(
             name = category.name,
             order = category.order,
             flags = category.flags,
+            isSuper = category.isSuper,
         )
             .awaitAsOne()
     }
@@ -81,12 +82,14 @@ class CategoryRepositoryImpl(
         name: String,
         order: Long,
         flags: Long,
+        isSuper: Boolean,
     ): Category {
         return Category(
             id = id,
             name = name,
             order = order,
             flags = flags,
+            isSuper = isSuper,
         )
     }
 }
