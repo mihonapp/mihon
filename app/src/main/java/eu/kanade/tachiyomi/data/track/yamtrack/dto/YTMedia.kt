@@ -5,6 +5,9 @@ import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.data.track.yamtrack.Yamtrack
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 
 @Serializable
 data class YTSearchResponse(
@@ -43,6 +46,9 @@ data class YTMediaItem(
     val maxProgress: Int? = null,
     // Source/upstream score (0-10), separate from the user's `consumption.score`.
     val score: Double? = null,
+    // Provider-specific metadata (format, status, start_date, year, ...).
+    // Keys vary per source so we keep this loose.
+    val details: JsonObject? = null,
     val consumptions: List<YTConsumption> = emptyList(),
 )
 
@@ -82,13 +88,33 @@ fun YTMediaItem.copyToTrack(track: Track) {
 
 /**
  * Search results from Yamtrack only carry id/title/image/media_type. The detail endpoint
- * adds synopsis and source score, so we layer those onto the existing TrackSearch (without
- * clobbering fields the search response already populated, like cover or title).
+ * adds synopsis, source score, and a provider-specific `details` blob — so we layer those
+ * onto the existing TrackSearch (without clobbering fields the search response already
+ * populated, like cover or title).
  */
 fun TrackSearch.applyDetail(detail: YTMediaItem): TrackSearch = apply {
     if (cover_url.isBlank()) cover_url = detail.image.orEmpty()
     detail.synopsis?.trim()?.takeIf { it.isNotEmpty() }?.let { summary = it }
     detail.score?.takeIf { it > 0.0 }?.let { score = it }
+
+    val details = detail.details
+    // The search endpoint hardcodes media_type to the URL parameter ("manga"), so swap in
+    // the actual format ("Manga", "Light Novel", "Manhwa", "Manhua", "One Shot", ...) when
+    // the detail call provides one.
+    details.string("format")?.let { publishing_type = it }
+    // Publishing status — providers use different keys.
+    (details.string("status") ?: details.string("status_in_country_of_origin"))
+        ?.let { publishing_status = it }
+    // When publishing started — MAL gives a full date, MangaUpdates gives a year.
+    (details.string("start_date") ?: details.string("year"))
+        ?.let { start_date = it }
+}
+
+private fun JsonObject?.string(key: String): String? {
+    val element = this?.get(key) ?: return null
+    val primitive = element as? JsonPrimitive ?: return null
+    if (primitive is JsonNull) return null
+    return primitive.content.takeIf { it.isNotBlank() && it != "null" }
 }
 
 /**
