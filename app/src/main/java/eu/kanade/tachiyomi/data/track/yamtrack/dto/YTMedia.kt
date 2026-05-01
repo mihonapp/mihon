@@ -63,20 +63,11 @@ fun YTSearchItem.toTrackSearch(trackerId: Long, baseUrl: String): TrackSearch {
         remote_id = Yamtrack.buildRemoteId(item.source, item.mediaId)
         title = item.title
         cover_url = item.image.orEmpty()
-        summary = composeSummary(item.score, item.description)
+        summary = item.description?.trim().orEmpty()
+        item.score?.takeIf { it > 0.0 }?.let { score = it }
         tracking_url = Yamtrack.buildTrackingUrl(baseUrl, item.source, item.mediaId, item.title)
         publishing_type = item.mediaType.orEmpty()
     }
-}
-
-/**
- * Search results from Yamtrack only carry id/title/image/media_type. The detail endpoint
- * adds synopsis and source score, so we layer those onto the existing TrackSearch (without
- * clobbering fields the search response already populated, like cover or title).
- */
-fun TrackSearch.applyDetail(detail: YTMediaItem): TrackSearch = apply {
-    if (cover_url.isBlank()) cover_url = detail.image.orEmpty()
-    summary = composeSummary(detail.score, detail.synopsis)
 }
 
 fun YTMediaItem.copyToTrack(track: Track) {
@@ -89,16 +80,15 @@ fun YTMediaItem.copyToTrack(track: Track) {
     consumption?.endDate?.let { track.finished_reading_date = Yamtrack.parseIsoDate(it) }
 }
 
-private fun composeSummary(sourceScore: Double?, description: String?): String {
-    val scoreLine = sourceScore
-        ?.takeIf { it > 0.0 }
-        ?.let { "★ %.1f / 10".format(it) }
-    val body = description?.trim().orEmpty()
-    return when {
-        scoreLine != null && body.isNotEmpty() -> "$scoreLine\n\n$body"
-        scoreLine != null -> scoreLine
-        else -> body
-    }
+/**
+ * Search results from Yamtrack only carry id/title/image/media_type. The detail endpoint
+ * adds synopsis and source score, so we layer those onto the existing TrackSearch (without
+ * clobbering fields the search response already populated, like cover or title).
+ */
+fun TrackSearch.applyDetail(detail: YTMediaItem): TrackSearch = apply {
+    if (cover_url.isBlank()) cover_url = detail.image.orEmpty()
+    detail.synopsis?.trim()?.takeIf { it.isNotEmpty() }?.let { summary = it }
+    detail.score?.takeIf { it > 0.0 }?.let { score = it }
 }
 
 /**
