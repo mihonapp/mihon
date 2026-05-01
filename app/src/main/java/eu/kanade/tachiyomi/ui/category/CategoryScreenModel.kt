@@ -131,6 +131,8 @@ sealed interface CategoryScreenState {
     ) : CategoryScreenState {
 
         val isEmpty: Boolean
-            get() = categories.isEmpty() && superCategories.isEmpty()
+            get() = categories.isEmpty()
+        val isSuperCatsEmpty: Boolean
+            get() = superCategories.isEmpty()
     }
 }

@@ -1,6 +1,7 @@
 package eu.kanade.presentation.category
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -8,7 +9,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -28,6 +31,7 @@ import tachiyomi.presentation.core.components.material.topSmallPaddingValues
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.util.plus
+import tachiyomi.presentation.core.util.shouldExpandFAB
 
 @Composable
 fun CategoryScreen(
@@ -38,6 +42,7 @@ fun CategoryScreen(
     onChangeOrder: (Category, Int) -> Unit,
     navigateUp: () -> Unit,
 ) {
+    val lazyListStateSuper = rememberLazyListState()
     val lazyListState = rememberLazyListState()
     Scaffold(
         topBar = { scrollBehavior ->
@@ -49,12 +54,12 @@ fun CategoryScreen(
         },
         floatingActionButton = {
             CategoryFloatingActionButton(
-                lazyListState = lazyListState,
                 onCreate = onClickCreate,
+                expanded = lazyListState.shouldExpandFAB() || lazyListStateSuper.shouldExpandFAB(),
             )
         },
     ) { paddingValues ->
-        if (state.isEmpty) {
+        if (state.isEmpty && state.isSuperCatsEmpty) {
             EmptyScreen(
                 stringRes = MR.strings.information_empty_category,
                 modifier = Modifier.padding(paddingValues),
@@ -62,19 +67,64 @@ fun CategoryScreen(
             return@Scaffold
         }
 
-        CategoryContent(
-            categories = state.categories,
-            lazyListState = lazyListState,
-            paddingValues = paddingValues,
-            onClickRename = onClickRename,
-            onClickDelete = onClickDelete,
-            onChangeOrder = onChangeOrder,
-        )
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize(),
+        ) {
+            Text(
+                modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
+                text = stringResource(MR.strings.categories_super),
+                style = MaterialTheme.typography.titleMedium,
+            )
+            if (state.isSuperCatsEmpty) {
+                Text(
+                    text = stringResource(MR.strings.information_empty_super_category),
+                    modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
+                )
+            } else {
+                CategoryContent(
+                    categories = state.superCategories,
+                    lazyListState = lazyListStateSuper,
+                    paddingValues = paddingValues,
+                    onClickRename = onClickRename,
+                    onClickDelete = onClickDelete,
+                    onChangeOrder = onChangeOrder,
+                )
+            }
+
+            HorizontalDivider(
+                modifier = Modifier.padding(MaterialTheme.padding.medium),
+            )
+
+            Text(
+                modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
+                text = stringResource(MR.strings.categories),
+                style = MaterialTheme.typography.titleSmall,
+            )
+            if (state.isEmpty) {
+                Text(
+                    text = stringResource(MR.strings.information_empty_category),
+                    modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
+                )
+            } else {
+                CategoryContent(
+                    modifier = Modifier.weight(1f, fill = true),
+                    categories = state.categories,
+                    lazyListState = lazyListState,
+                    paddingValues = paddingValues,
+                    onClickRename = onClickRename,
+                    onClickDelete = onClickDelete,
+                    onChangeOrder = onChangeOrder,
+                )
+            }
+        }
     }
 }
 
 @Composable
 private fun CategoryContent(
+    modifier: Modifier = Modifier,
     categories: List<Category>,
     lazyListState: LazyListState,
     paddingValues: PaddingValues,
@@ -97,10 +147,9 @@ private fun CategoryContent(
     }
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         state = lazyListState,
-        contentPadding = paddingValues +
-            topSmallPaddingValues +
+        contentPadding = topSmallPaddingValues +
             PaddingValues(horizontal = MaterialTheme.padding.medium),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
     ) {
