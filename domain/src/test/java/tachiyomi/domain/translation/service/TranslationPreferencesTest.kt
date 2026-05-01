@@ -13,5 +13,6 @@ class TranslationPreferencesTest {
 
         preferences.geminiModel.get() shouldBe "gemini-3-flash-preview"
         Preference.isPrivate(preferences.geminiApiKey.key()) shouldBe true
+        Preference.isPrivate(preferences.setupFingerprint.key()) shouldBe true
     }
 }

@@ -38,6 +38,28 @@ class GeminiTranslationClient(
         }.models.generateContentModels()
     }
 
+    suspend fun testGenerateContent(apiKey: String, model: String) {
+        val request = GeminiGenerateContentRequest(
+            contents = listOf(
+                GeminiContent(
+                    parts = listOf(GeminiPart(text = "Reply with OK.")),
+                ),
+            ),
+            generationConfig = buildJsonObject {
+                put("temperature", 0)
+                put("maxOutputTokens", 8)
+            },
+        )
+        val response = generateContent(apiKey, model, request)
+        val hasText = response.candidates
+            .firstOrNull()
+            ?.content
+            ?.parts
+            ?.any { !it.text.isNullOrBlank() }
+            ?: false
+        check(hasText) { "Gemini model test returned no text" }
+    }
+
     suspend fun translatePageImage(
         apiKey: String,
         model: String,

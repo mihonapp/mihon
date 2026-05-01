@@ -21,6 +21,22 @@ class TranslationPreferences(
         "gemini-2.5-flash-image",
     )
 
+    val setupFingerprint: Preference<String> = preferenceStore.getString(
+        Preference.privateKey("translation_setup_fingerprint"),
+        "",
+    )
+    val setupTestedTranslationModel: Preference<String> = preferenceStore.getString(
+        "translation_setup_tested_translation_model",
+        "",
+    )
+    val setupTestedInpaintModel: Preference<String> = preferenceStore.getString(
+        "translation_setup_tested_inpaint_model",
+        "",
+    )
+    val setupTestedAt: Preference<Long> = preferenceStore.getLong("translation_setup_tested_at", 0)
+    val setupStatus: Preference<String> = preferenceStore.getString("translation_setup_status", "never")
+    val setupMessage: Preference<String> = preferenceStore.getString("translation_setup_message", "")
+
     val targetLanguage: Preference<String> = preferenceStore.getString("translation_target_language", "")
     val sourceLanguage: Preference<String> = preferenceStore.getString("translation_source_language", "")
     val pipeline: Preference<String> = preferenceStore.getString("translation_pipeline", "gemini_vision")

@@ -537,6 +537,7 @@
 
       <!-- Translation section -->
     <string name="pref_translation">Translation</string>
+    <string name="pref_translation_setup">Setup</string>
     <string name="pref_translation_privacy_notice">Images and OCR text are sent to Gemini when translation jobs run. API keys, image bytes, and base64 images are never written to logs.</string>
     <string name="pref_translation_gemini_api_key">Gemini API key</string>
     <string name="pref_translation_gemini_api_key_summary">Stored privately on this device</string>
@@ -572,6 +573,17 @@
     <string name="translation_model_test">Test API key and model</string>
     <string name="translation_model_ready">Gemini key and model are reachable</string>
     <string name="translation_model_unavailable">Default model unavailable; choose another generateContent model.</string>
+    <string name="translation_setup_ready">Ready to translate</string>
+    <string name="translation_setup_needs_attention">Setup needed</string>
+    <string name="translation_setup_configured">Configured</string>
+    <string name="translation_setup_missing">Missing</string>
+    <string name="translation_setup_model_ready">Ready: %s</string>
+    <string name="translation_setup_model_needs_test">Needs test: %s</string>
+    <string name="translation_setup_test">Test setup</string>
+    <string name="translation_setup_test_summary">Fetch models, verify selected model, and run a tiny Gemini text ping</string>
+    <string name="translation_setup_last_tested">Last tested: %s</string>
+    <string name="translation_setup_required">Translation setup required</string>
+    <string name="translation_setup_open_settings">Open Translation settings</string>
     <string name="translation_overlay_editor">Translation overlay editor</string>
     <string name="translation_overlay_saved">Translation overlay saved</string>
     <string name="translation_overlay_save_failed">Failed to save translation overlay: %s</string>

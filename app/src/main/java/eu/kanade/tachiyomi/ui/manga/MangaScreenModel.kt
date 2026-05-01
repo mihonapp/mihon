@@ -39,6 +39,7 @@ import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.translation.TranslationJob
 import eu.kanade.tachiyomi.data.translation.TranslationMode
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
+import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
 import eu.kanade.tachiyomi.data.translation.TranslationScope
 import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.source.Source
@@ -127,6 +128,7 @@ class MangaScreenModel(
     private val filterChaptersForDownload: FilterChaptersForDownload = Injekt.get(),
     private val translationRepository: TranslationRepository = Injekt.get(),
     private val translationPreferences: TranslationPreferences = Injekt.get(),
+    private val translationSetupValidator: TranslationSetupValidator = Injekt.get(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) : StateScreenModel<MangaScreenModel.State>(State.Loading) {
 
@@ -747,6 +749,11 @@ class MangaScreenModel(
             .map { it.chapter }
             .distinctBy { it.id }
         if (chapters.isEmpty()) return
+        val setup = translationSetupValidator.readiness()
+        if (!setup.ready) {
+            updateSuccessState { it.copy(dialog = Dialog.TranslationSetupRequired(setup.message)) }
+            return
+        }
 
         screenModelScope.launchIO {
             val mode = if (translationPreferences.enableInpaint.get()) {
@@ -1136,6 +1143,7 @@ class MangaScreenModel(
         data class DuplicateManga(val manga: Manga, val duplicates: List<MangaWithChapterCount>) : Dialog
         data class Migrate(val target: Manga, val current: Manga) : Dialog
         data class SetFetchInterval(val manga: Manga) : Dialog
+        data class TranslationSetupRequired(val message: String) : Dialog
         data object SettingsSheet : Dialog
         data object TrackSheet : Dialog
         data object FullCover : Dialog

@@ -28,6 +28,7 @@ import eu.kanade.tachiyomi.data.translation.TranslationJob
 import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
 import eu.kanade.tachiyomi.data.translation.TranslationMode
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
+import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
 import eu.kanade.tachiyomi.data.translation.TranslationScope
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -112,6 +113,7 @@ class ReaderViewModel @JvmOverloads constructor(
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
     private val translationRepository: TranslationRepository = Injekt.get(),
     private val translationPreferences: TranslationPreferences = Injekt.get(),
+    private val translationSetupValidator: TranslationSetupValidator = Injekt.get(),
     private val application: Application = Injekt.get(),
 ) : ViewModel() {
 
@@ -573,6 +575,11 @@ class ReaderViewModel @JvmOverloads constructor(
         scope: TranslationScope,
     ) {
         val manga = manga ?: return
+        val setup = translationSetupValidator.readiness()
+        if (!setup.ready) {
+            mutableState.update { it.copy(dialog = Dialog.TranslationSetupRequired(setup.message)) }
+            return
+        }
         viewModelScope.launchIO {
             val mode = if (translationPreferences.enableInpaint.get()) {
                 TranslationMode.OverlayAndInpaint
@@ -1109,6 +1116,7 @@ class ReaderViewModel @JvmOverloads constructor(
             val page: ReaderPage,
             val savedPage: SavedTranslationPage?,
         ) : Dialog
+        data class TranslationSetupRequired(val message: String) : Dialog
     }
 
     sealed interface Event {

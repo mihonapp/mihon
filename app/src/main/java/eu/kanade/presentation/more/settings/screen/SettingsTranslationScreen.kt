@@ -11,6 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableMap
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import tachiyomi.domain.translation.service.TranslationPreferences
 import tachiyomi.i18n.MR
@@ -22,8 +23,11 @@ import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.tachiyomi.data.translation.DEFAULT_GEMINI_TRANSLATION_MODEL
 import eu.kanade.tachiyomi.data.translation.GeminiTranslationClient
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
+import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
 import eu.kanade.tachiyomi.util.system.toast
 import java.io.File
+import java.text.DateFormat
+import java.util.Date
 import kotlin.math.roundToInt
 
 object SettingsTranslationScreen : SearchableSettings {
@@ -39,9 +43,18 @@ object SettingsTranslationScreen : SearchableSettings {
         val preferences = remember { Injekt.get<TranslationPreferences>() }
         val client = remember { Injekt.get<GeminiTranslationClient>() }
         val repository = remember { Injekt.get<TranslationRepository>() }
+        val setupValidator = remember { Injekt.get<TranslationSetupValidator>() }
 
+        val apiKey by preferences.geminiApiKey.collectAsState()
         val selectedModel by preferences.geminiModel.collectAsState()
         val selectedInpaintModel by preferences.geminiInpaintModel.collectAsState()
+        val enableInpaint by preferences.enableInpaint.collectAsState()
+        val setupFingerprint by preferences.setupFingerprint.collectAsState()
+        val setupTestedTranslationModel by preferences.setupTestedTranslationModel.collectAsState()
+        val setupTestedInpaintModel by preferences.setupTestedInpaintModel.collectAsState()
+        val setupTestedAt by preferences.setupTestedAt.collectAsState()
+        val setupStatus by preferences.setupStatus.collectAsState()
+        val setupMessage by preferences.setupMessage.collectAsState()
         val temperature by preferences.temperature.collectAsState()
         val topP by preferences.topP.collectAsState()
         val topK by preferences.topK.collectAsState()
@@ -53,6 +66,20 @@ object SettingsTranslationScreen : SearchableSettings {
             mutableStateOf(listOf(DEFAULT_GEMINI_TRANSLATION_MODEL, selectedModel, selectedInpaintModel).distinct())
         }
         var modelStatus by remember { mutableStateOf<String?>(null) }
+        val readiness = remember(
+            apiKey,
+            selectedModel,
+            selectedInpaintModel,
+            enableInpaint,
+            setupFingerprint,
+            setupTestedTranslationModel,
+            setupTestedInpaintModel,
+            setupTestedAt,
+            setupStatus,
+            setupMessage,
+        ) {
+            setupValidator.readiness()
+        }
 
         fun refreshModels(showReadyToast: Boolean) {
             scope.launch {
@@ -80,11 +107,93 @@ object SettingsTranslationScreen : SearchableSettings {
             }
         }
 
+        fun runSetupTest() {
+            scope.launch {
+                val result = setupValidator.testSetup()
+                if (result.models.isNotEmpty()) {
+                    models = (result.models.map { it.id } + selectedModel + selectedInpaintModel)
+                        .filter { it.isNotBlank() }
+                        .distinct()
+                        .sorted()
+                    modelStatus = "${models.size} models"
+                }
+                context.toast(result.message)
+            }
+        }
+
         val modelEntries = models.associateWith { it }.toImmutableMap()
+        val setupLastTested = readiness.testedAt
+            .takeIf { it > 0 }
+            ?.let { "\n${stringResource(MR.strings.translation_setup_last_tested, formatSetupTestedAt(it))}" }
+            .orEmpty()
 
         return listOf(
             Preference.PreferenceItem.InfoPreference(
                 stringResource(MR.strings.pref_translation_privacy_notice),
+            ),
+            Preference.PreferenceGroup(
+                title = stringResource(MR.strings.pref_translation_setup),
+                preferenceItems = buildList<Preference.PreferenceItem<out Any, out Any>> {
+                    add(
+                        Preference.PreferenceItem.TextPreference(
+                            title = stringResource(
+                                if (readiness.ready) {
+                                    MR.strings.translation_setup_ready
+                                } else {
+                                    MR.strings.translation_setup_needs_attention
+                                },
+                            ),
+                            subtitle = readiness.message + setupLastTested,
+                        ),
+                    )
+                    add(
+                        Preference.PreferenceItem.TextPreference(
+                            title = stringResource(MR.strings.pref_translation_gemini_api_key),
+                            subtitle = stringResource(
+                                if (readiness.apiKeyPresent) {
+                                    MR.strings.translation_setup_configured
+                                } else {
+                                    MR.strings.translation_setup_missing
+                                },
+                            ),
+                        ),
+                    )
+                    add(
+                        Preference.PreferenceItem.TextPreference(
+                            title = stringResource(MR.strings.pref_translation_model),
+                            subtitle = stringResource(
+                                if (readiness.translationModelReady) {
+                                    MR.strings.translation_setup_model_ready
+                                } else {
+                                    MR.strings.translation_setup_model_needs_test
+                                },
+                                readiness.translationModel,
+                            ),
+                        ),
+                    )
+                    if (readiness.inpaintRequired) {
+                        add(
+                            Preference.PreferenceItem.TextPreference(
+                                title = stringResource(MR.strings.pref_translation_inpaint_model),
+                                subtitle = stringResource(
+                                    if (readiness.inpaintModelReady) {
+                                        MR.strings.translation_setup_model_ready
+                                    } else {
+                                        MR.strings.translation_setup_model_needs_test
+                                    },
+                                    readiness.inpaintModel,
+                                ),
+                            ),
+                        )
+                    }
+                    add(
+                        Preference.PreferenceItem.TextPreference(
+                            title = stringResource(MR.strings.translation_setup_test),
+                            subtitle = stringResource(MR.strings.translation_setup_test_summary),
+                            onClick = { runSetupTest() },
+                        ),
+                    )
+                }.toPersistentList(),
             ),
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.pref_translation),
@@ -98,11 +207,6 @@ object SettingsTranslationScreen : SearchableSettings {
                         title = stringResource(MR.strings.translation_model_refresh),
                         subtitle = modelStatus ?: stringResource(MR.strings.translation_model_refresh_summary),
                         onClick = { refreshModels(showReadyToast = false) },
-                    ),
-                    Preference.PreferenceItem.TextPreference(
-                        title = stringResource(MR.strings.translation_model_test),
-                        subtitle = selectedModel,
-                        onClick = { refreshModels(showReadyToast = true) },
                     ),
                     Preference.PreferenceItem.BasicListPreference(
                         value = selectedModel,
@@ -253,4 +357,8 @@ object SettingsTranslationScreen : SearchableSettings {
 
 private fun clearTranslationFiles(context: Context) {
     File(context.filesDir, "translations").deleteRecursively()
+}
+
+private fun formatSetupTestedAt(timestamp: Long): String {
+    return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(Date(timestamp))
 }

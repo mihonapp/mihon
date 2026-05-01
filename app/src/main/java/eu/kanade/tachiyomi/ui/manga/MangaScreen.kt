@@ -36,6 +36,7 @@ import eu.kanade.presentation.manga.components.DeleteChaptersDialog
 import eu.kanade.presentation.manga.components.MangaCoverDialog
 import eu.kanade.presentation.manga.components.ScanlatorFilterDialog
 import eu.kanade.presentation.manga.components.SetIntervalDialog
+import eu.kanade.presentation.translation.TranslationSetupRequiredDialog
 import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.util.isTabletUi
@@ -275,6 +276,16 @@ class MangaScreen(
                     onDismissRequest = onDismissRequest,
                     onValueChanged = { interval: Int -> screenModel.setFetchInterval(dialog.manga, interval) }
                         .takeIf { screenModel.isUpdateIntervalEnabled },
+                )
+            }
+            is MangaScreenModel.Dialog.TranslationSetupRequired -> {
+                TranslationSetupRequiredDialog(
+                    message = dialog.message,
+                    onDismissRequest = onDismissRequest,
+                    onOpenSettings = {
+                        onDismissRequest()
+                        navigator.push(SettingsScreen(SettingsScreen.Destination.Translation))
+                    },
                 )
             }
         }

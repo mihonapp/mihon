@@ -58,6 +58,7 @@ import eu.kanade.presentation.reader.ReadingModeSelectDialog
 import eu.kanade.presentation.reader.TranslationOverlayEditorDialog
 import eu.kanade.presentation.reader.appbars.ReaderAppBars
 import eu.kanade.presentation.reader.settings.ReaderSettingsDialog
+import eu.kanade.presentation.translation.TranslationSetupRequiredDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.coil.TachiyomiImageDecoder
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
@@ -344,6 +345,20 @@ class ReaderActivity : BaseActivity() {
                     savedPage = dialog.savedPage,
                     onDismissRequest = onDismissRequest,
                     onSave = { boxes -> viewModel.saveTranslationOverlayEdits(dialog.page, boxes) },
+                )
+            }
+            is ReaderViewModel.Dialog.TranslationSetupRequired -> {
+                TranslationSetupRequiredDialog(
+                    message = dialog.message,
+                    onDismissRequest = onDismissRequest,
+                    onOpenSettings = {
+                        onDismissRequest()
+                        startActivity(
+                            Intent(this@ReaderActivity, MainActivity::class.java)
+                                .setAction(MainActivity.INTENT_TRANSLATION_SETTINGS)
+                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP),
+                        )
+                    },
                 )
             }
             null -> {}

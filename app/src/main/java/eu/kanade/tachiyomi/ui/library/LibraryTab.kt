@@ -34,6 +34,7 @@ import eu.kanade.presentation.library.components.LibraryContent
 import eu.kanade.presentation.library.components.LibraryToolbar
 import eu.kanade.presentation.manga.components.LibraryBottomActionMenu
 import eu.kanade.presentation.more.onboarding.GETTING_STARTED_URL
+import eu.kanade.presentation.translation.TranslationSetupRequiredDialog
 import eu.kanade.presentation.util.Tab
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
@@ -43,6 +44,7 @@ import eu.kanade.tachiyomi.ui.home.HomeScreen
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
+import eu.kanade.tachiyomi.ui.setting.SettingsScreen
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
@@ -250,6 +252,16 @@ data object LibraryTab : Tab {
                     onConfirm = { deleteManga, deleteChapter ->
                         screenModel.removeMangas(dialog.manga, deleteManga, deleteChapter)
                         screenModel.clearSelection()
+                    },
+                )
+            }
+            is LibraryScreenModel.Dialog.TranslationSetupRequired -> {
+                TranslationSetupRequiredDialog(
+                    message = dialog.message,
+                    onDismissRequest = onDismissRequest,
+                    onOpenSettings = {
+                        onDismissRequest()
+                        navigator.push(SettingsScreen(SettingsScreen.Destination.Translation))
                     },
                 )
             }

@@ -3,9 +3,13 @@ package eu.kanade.tachiyomi.data.translation
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.maps.shouldContain
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldNotContain
+import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import org.junit.jupiter.api.Test
+import tachiyomi.core.common.preference.InMemoryPreferenceStore
+import tachiyomi.domain.translation.service.TranslationPreferences
 
 class TranslationCoreTest {
 
@@ -78,5 +82,74 @@ class TranslationCoreTest {
 
         TranslationEnqueuePlanner.pagesToQueue(pages, overwrite = false) shouldContainExactly listOf(pages[1])
         TranslationEnqueuePlanner.pagesToQueue(pages, overwrite = true) shouldContainExactly pages
+    }
+
+    @Test
+    fun `setup validator blocks missing api key`() = runTest {
+        val preferences = TranslationPreferences(InMemoryPreferenceStore())
+        val validator = TranslationSetupValidator(
+            preferences = preferences,
+            listModels = { error("model list should not run") },
+            testGenerateContent = { _, _ -> error("model test should not run") },
+        )
+
+        val result = validator.testSetup()
+
+        result.ready shouldBe false
+        validator.readiness().ready shouldBe false
+    }
+
+    @Test
+    fun `setup validator cache stays ready until model changes`() = runTest {
+        val preferences = TranslationPreferences(InMemoryPreferenceStore())
+        preferences.geminiApiKey.set("secret-key")
+        val validator = TranslationSetupValidator(
+            preferences = preferences,
+            listModels = {
+                listOf(
+                    GeminiModel(
+                        name = "models/gemini-3-flash-preview",
+                        supportedGenerationMethods = listOf("generateContent"),
+                    ),
+                )
+            },
+            testGenerateContent = { _, model -> model shouldBe "gemini-3-flash-preview" },
+        )
+
+        val result = validator.testSetup()
+
+        result.ready shouldBe true
+        validator.readiness().ready shouldBe true
+        preferences.setupFingerprint.get() shouldNotContain "secret-key"
+
+        preferences.geminiModel.set("gemini-4-flash-preview")
+
+        validator.readiness().ready shouldBe false
+    }
+
+    @Test
+    fun `setup validator requires inpaint model only when inpaint is enabled`() = runTest {
+        val preferences = TranslationPreferences(InMemoryPreferenceStore())
+        preferences.geminiApiKey.set("secret-key")
+        preferences.geminiInpaintModel.set("gemini-image")
+        val validator = TranslationSetupValidator(
+            preferences = preferences,
+            listModels = {
+                listOf(
+                    GeminiModel(
+                        name = "models/gemini-3-flash-preview",
+                        supportedGenerationMethods = listOf("generateContent"),
+                    ),
+                )
+            },
+            testGenerateContent = { _, _ -> },
+        )
+
+        validator.testSetup().ready shouldBe true
+
+        preferences.enableInpaint.set(true)
+
+        validator.testSetup().ready shouldBe false
+        validator.readiness().ready shouldBe false
     }
 }

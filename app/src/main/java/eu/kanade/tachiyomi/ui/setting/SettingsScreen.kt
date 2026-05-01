@@ -16,6 +16,7 @@ import eu.kanade.presentation.more.settings.screen.SettingsAppearanceScreen
 import eu.kanade.presentation.more.settings.screen.SettingsDataScreen
 import eu.kanade.presentation.more.settings.screen.SettingsMainScreen
 import eu.kanade.presentation.more.settings.screen.SettingsTrackingScreen
+import eu.kanade.presentation.more.settings.screen.SettingsTranslationScreen
 import eu.kanade.presentation.more.settings.screen.about.AboutScreen
 import eu.kanade.presentation.util.DefaultNavigatorScreenTransition
 import eu.kanade.presentation.util.LocalBackPress
@@ -38,6 +39,7 @@ class SettingsScreen(
                     Destination.About.id -> AboutScreen
                     Destination.DataAndStorage.id -> SettingsDataScreen
                     Destination.Tracking.id -> SettingsTrackingScreen
+                    Destination.Translation.id -> SettingsTranslationScreen
                     else -> SettingsMainScreen
                 },
                 onBackPressed = null,
@@ -59,6 +61,7 @@ class SettingsScreen(
                     Destination.About.id -> AboutScreen
                     Destination.DataAndStorage.id -> SettingsDataScreen
                     Destination.Tracking.id -> SettingsTrackingScreen
+                    Destination.Translation.id -> SettingsTranslationScreen
                     else -> SettingsAppearanceScreen
                 },
                 onBackPressed = null,
@@ -83,5 +86,6 @@ class SettingsScreen(
         data object About : Destination(0)
         data object DataAndStorage : Destination(1)
         data object Tracking : Destination(2)
+        data object Translation : Destination(3)
     }
 }

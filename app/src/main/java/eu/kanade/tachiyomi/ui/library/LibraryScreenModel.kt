@@ -23,6 +23,7 @@ import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.translation.TranslationJob
 import eu.kanade.tachiyomi.data.translation.TranslationMode
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
+import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
 import eu.kanade.tachiyomi.data.translation.TranslationScope
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -93,6 +94,7 @@ class LibraryScreenModel(
     private val trackerManager: TrackerManager = Injekt.get(),
     private val translationRepository: TranslationRepository = Injekt.get(),
     private val translationPreferences: TranslationPreferences = Injekt.get(),
+    private val translationSetupValidator: TranslationSetupValidator = Injekt.get(),
     private val application: Application = Injekt.get(),
 ) : StateScreenModel<LibraryScreenModel.State>(State()) {
 
@@ -531,6 +533,11 @@ class LibraryScreenModel(
 
     fun performTranslateSelection() {
         val mangas = state.value.selectedManga
+        val setup = translationSetupValidator.readiness()
+        if (!setup.ready) {
+            mutableState.update { it.copy(dialog = Dialog.TranslationSetupRequired(setup.message)) }
+            return
+        }
         screenModelScope.launchNonCancellable {
             val mode = if (translationPreferences.enableInpaint.get()) {
                 TranslationMode.OverlayAndInpaint
@@ -768,6 +775,7 @@ class LibraryScreenModel(
             val initialSelection: ImmutableList<CheckboxState<Category>>,
         ) : Dialog
         data class DeleteManga(val manga: List<Manga>) : Dialog
+        data class TranslationSetupRequired(val message: String) : Dialog
     }
 
     @Immutable

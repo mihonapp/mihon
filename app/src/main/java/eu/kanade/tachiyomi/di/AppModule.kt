@@ -21,6 +21,7 @@ import eu.kanade.tachiyomi.data.translation.LocalOcrClient
 import eu.kanade.tachiyomi.data.translation.TranslationImageResolver
 import eu.kanade.tachiyomi.data.translation.TranslationQueueProcessor
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
+import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.network.JavaScriptEngine
 import eu.kanade.tachiyomi.network.NetworkHelper
@@ -124,6 +125,7 @@ class AppModule(val app: Application) : InjektModule {
         addSingletonFactory { LocalOcrClient() }
         addSingletonFactory { TranslationImageResolver() }
         addSingletonFactory { TranslationQueueProcessor(app) }
+        addSingletonFactory { TranslationSetupValidator() }
 
         addSingletonFactory { TrackerManager() }
         addSingletonFactory { DelayedTrackingStore(app) }
