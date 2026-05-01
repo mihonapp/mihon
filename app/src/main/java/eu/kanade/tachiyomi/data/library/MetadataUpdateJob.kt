@@ -57,9 +57,8 @@ class MetadataUpdateJob(private val context: Context, workerParams: WorkerParame
     override suspend fun doWork(): Result {
         setForegroundSafely()
 
-        addMangaToQueue()
-
         return withIOContext {
+            addMangaToQueue()
             try {
                 updateMetadata()
                 Result.success()

@@ -6,20 +6,23 @@ import kotlinx.coroutines.coroutineScope
 import mihon.domain.extensionrepo.model.ExtensionRepo
 import mihon.domain.extensionrepo.repository.ExtensionRepoRepository
 import mihon.domain.extensionrepo.service.ExtensionRepoService
+import tachiyomi.core.common.util.lang.withIOContext
 
 class UpdateExtensionRepo(
     private val repository: ExtensionRepoRepository,
     private val service: ExtensionRepoService,
 ) {
 
-    suspend fun awaitAll() = coroutineScope {
-        repository.getAll()
-            .map { async { await(it) } }
-            .awaitAll()
+    suspend fun awaitAll() = withIOContext {
+        coroutineScope {
+            repository.getAll()
+                .map { async { await(it) } }
+                .awaitAll()
+        }
     }
 
-    suspend fun await(repo: ExtensionRepo) {
-        val newRepo = service.fetchRepoDetails(repo.baseUrl) ?: return
+    suspend fun await(repo: ExtensionRepo) = withIOContext {
+        val newRepo = service.fetchRepoDetails(repo.baseUrl) ?: return@withIOContext
         if (
             repo.signingKeyFingerprint.startsWith("NOFINGERPRINT") ||
             repo.signingKeyFingerprint == newRepo.signingKeyFingerprint

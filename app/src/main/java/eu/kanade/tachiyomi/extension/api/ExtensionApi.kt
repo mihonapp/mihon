@@ -69,43 +69,45 @@ internal class ExtensionApi {
         context: Context,
         fromAvailableExtensionList: Boolean = false,
     ): List<Extension.Installed>? {
-        // Limit checks to once a day at most
-        if (!fromAvailableExtensionList &&
-            Instant.now().toEpochMilli() < lastExtCheck.get() + 1.days.inWholeMilliseconds
-        ) {
-            return null
-        }
-
-        // Update extension repo details
-        updateExtensionRepo.awaitAll()
-
-        val extensions = if (fromAvailableExtensionList) {
-            extensionManager.availableExtensionsFlow.value
-        } else {
-            findExtensions().also { lastExtCheck.set(Instant.now().toEpochMilli()) }
-        }
-
-        val installedExtensions = ExtensionLoader.loadExtensions(context)
-            .filterIsInstance<LoadResult.Success>()
-            .map { it.extension }
-
-        val extensionsWithUpdate = mutableListOf<Extension.Installed>()
-        for (installedExt in installedExtensions) {
-            val pkgName = installedExt.pkgName
-            val availableExt = extensions.find { it.pkgName == pkgName } ?: continue
-            val hasUpdatedVer = availableExt.versionCode > installedExt.versionCode
-            val hasUpdatedLib = availableExt.libVersion > installedExt.libVersion
-            val hasUpdate = hasUpdatedVer || hasUpdatedLib
-            if (hasUpdate) {
-                extensionsWithUpdate.add(installedExt)
+        return withIOContext {
+            // Limit checks to once a day at most
+            if (!fromAvailableExtensionList &&
+                Instant.now().toEpochMilli() < lastExtCheck.get() + 1.days.inWholeMilliseconds
+            ) {
+                return@withIOContext null
             }
-        }
 
-        if (extensionsWithUpdate.isNotEmpty()) {
-            ExtensionUpdateNotifier(context).promptUpdates(extensionsWithUpdate.map { it.name })
-        }
+            // Update extension repo details
+            updateExtensionRepo.awaitAll()
 
-        return extensionsWithUpdate
+            val extensions = if (fromAvailableExtensionList) {
+                extensionManager.availableExtensionsFlow.value
+            } else {
+                findExtensions().also { lastExtCheck.set(Instant.now().toEpochMilli()) }
+            }
+
+            val installedExtensions = ExtensionLoader.loadExtensions(context)
+                .filterIsInstance<LoadResult.Success>()
+                .map { it.extension }
+
+            val extensionsWithUpdate = mutableListOf<Extension.Installed>()
+            for (installedExt in installedExtensions) {
+                val pkgName = installedExt.pkgName
+                val availableExt = extensions.find { it.pkgName == pkgName } ?: continue
+                val hasUpdatedVer = availableExt.versionCode > installedExt.versionCode
+                val hasUpdatedLib = availableExt.libVersion > installedExt.libVersion
+                val hasUpdate = hasUpdatedVer || hasUpdatedLib
+                if (hasUpdate) {
+                    extensionsWithUpdate.add(installedExt)
+                }
+            }
+
+            if (extensionsWithUpdate.isNotEmpty()) {
+                ExtensionUpdateNotifier(context).promptUpdates(extensionsWithUpdate.map { it.name })
+            }
+
+            extensionsWithUpdate
+        }
     }
 
     private fun List<ExtensionJsonObject>.toExtensions(repoUrl: String): List<Extension.Available> {
