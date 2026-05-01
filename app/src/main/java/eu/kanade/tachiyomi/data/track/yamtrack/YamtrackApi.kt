@@ -4,6 +4,7 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.data.track.yamtrack.dto.YTMediaItem
 import eu.kanade.tachiyomi.data.track.yamtrack.dto.YTSearchResponse
+import eu.kanade.tachiyomi.data.track.yamtrack.dto.applyDetail
 import eu.kanade.tachiyomi.data.track.yamtrack.dto.toTrackSearch
 import eu.kanade.tachiyomi.network.DELETE
 import eu.kanade.tachiyomi.network.GET
