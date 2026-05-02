@@ -54,7 +54,7 @@ fun HistoryScreen(
                                 title = stringResource(MR.strings.pref_clear_history),
                                 icon = Icons.Outlined.DeleteSweep,
                                 onClick = {
-                                    onDialogChange(HistoryScreenModel.Dialog.DeleteAll)
+                                    onDialogChange(HistoryScreenModel.Dialog.DeleteTimeRange)
                                 },
                             ),
                         ),

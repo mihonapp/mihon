@@ -12,6 +12,7 @@ import tachiyomi.domain.history.model.History
 import tachiyomi.domain.history.model.HistoryUpdate
 import tachiyomi.domain.history.model.HistoryWithRelations
 import tachiyomi.domain.history.repository.HistoryRepository
+import java.util.Date
 
 class HistoryRepositoryImpl(
     private val database: Database,
@@ -65,6 +66,14 @@ class HistoryRepositoryImpl(
             logcat(LogPriority.ERROR, throwable = e)
             false
         }
+    }
+
+    override suspend fun deleteHistoryInRange(startDate: Date, endDate: Date) {
+       try {
+           handler.await { historyQueries.deleteHistoryInRange(startDate,endDate) }
+       } catch (e: Exception){
+           logcat(LogPriority.ERROR, throwable = e)
+       }
     }
 
     override suspend fun upsertHistory(historyUpdate: HistoryUpdate) {

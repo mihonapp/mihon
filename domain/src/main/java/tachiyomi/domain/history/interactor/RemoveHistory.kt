@@ -2,6 +2,7 @@ package tachiyomi.domain.history.interactor
 
 import tachiyomi.domain.history.model.HistoryWithRelations
 import tachiyomi.domain.history.repository.HistoryRepository
+import java.util.Date
 
 class RemoveHistory(
     private val repository: HistoryRepository,
@@ -17,5 +18,9 @@ class RemoveHistory(
 
     suspend fun await(mangaId: Long) {
         repository.resetHistoryByMangaId(mangaId)
+    }
+
+    suspend fun awaitRange(startDate: Date, endDate: Date){
+        repository.deleteHistoryInRange(startDate,endDate)
     }
 }
