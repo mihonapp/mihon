@@ -53,6 +53,7 @@ fun LibraryContent(
     onRefresh: () -> Boolean,
     onGlobalSearchClicked: () -> Unit,
     getItemCountForCategory: (Category) -> Int?,
+    getItemCountForSuperCategory: (Category) -> Int?,
     getDisplayMode: (Int) -> PreferenceMutableState<LibraryDisplayMode>,
     getColumnsForOrientation: (Boolean) -> PreferenceMutableState<Int>,
     getItemsForCategory: (Category) -> List<LibraryItem>,
@@ -88,7 +89,7 @@ fun LibraryContent(
                             text = {
                                 TabText(
                                     text = category.visualName,
-                                    badgeCount = getItemCountForCategory(category),
+                                    badgeCount = getItemCountForSuperCategory(category),
                                 )
                             },
                             unselectedContentColor = MaterialTheme.colorScheme.onSurface,

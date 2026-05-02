@@ -847,6 +847,15 @@ class LibraryScreenModel(
                 null
             }
         }
+        fun getItemCountForSuperCategory(category: Category): Int? {
+            return if (showMangaCount ||
+                !searchQuery.isNullOrEmpty()
+            ) {
+                groupedFavorites[category]?.values?.sumOf { it.size }
+            } else {
+                null
+            }
+        }
 
         fun getToolbarTitle(
             defaultTitle: String,
