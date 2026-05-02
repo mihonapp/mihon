@@ -6,6 +6,10 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryScrollableTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -15,7 +19,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import eu.kanade.core.preference.PreferenceMutableState
+import eu.kanade.presentation.category.visualName
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -23,18 +30,22 @@ import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.presentation.core.components.material.PullRefresh
+import tachiyomi.presentation.core.components.material.TabText
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun LibraryContent(
     categories: List<Category>,
+    superCategories: List<Category>,
     searchQuery: String?,
     selection: Set<Long>,
     contentPadding: PaddingValues,
     currentPage: Int,
+    currentSuperPage: Int,
     hasActiveFilters: Boolean,
     showPageTabs: Boolean,
     onChangeCurrentPage: (Int) -> Unit,
+    onChangeCurrentSuperPage: (Int) -> Unit,
     onClickManga: (Long) -> Unit,
     onContinueReadingClicked: ((LibraryManga) -> Unit)?,
     onToggleSelection: (Category, LibraryManga) -> Unit,
@@ -57,6 +68,37 @@ fun LibraryContent(
 
         val scope = rememberCoroutineScope()
         var isRefreshing by remember(pagerState.currentPage) { mutableStateOf(false) }
+
+        if (showPageTabs && superCategories.isNotEmpty() &&
+            (superCategories.size > 1 || !superCategories.first().isSystemCategory)
+        ) {
+            val currentPageIndex = currentSuperPage.coerceAtMost(superCategories.lastIndex)
+            Column(modifier = Modifier.zIndex(2f)) {
+                PrimaryScrollableTabRow(
+                    selectedTabIndex = currentSuperPage,
+                    edgePadding = 0.dp,
+                    // TODO: use default when width is fixed upstream
+                    // https://issuetracker.google.com/issues/242879624
+                    divider = {},
+                ) {
+                    superCategories.forEachIndexed { index, category ->
+                        Tab(
+                            selected = currentPageIndex == index,
+                            onClick = { onChangeCurrentSuperPage(index) },
+                            text = {
+                                TabText(
+                                    text = category.visualName,
+                                    badgeCount = getItemCountForCategory(category),
+                                )
+                            },
+                            unselectedContentColor = MaterialTheme.colorScheme.onSurface,
+                        )
+                    }
+                }
+
+                HorizontalDivider()
+            }
+        }
 
         if (showPageTabs && categories.isNotEmpty() && (categories.size > 1 || !categories.first().isSystemCategory)) {
             LaunchedEffect(categories) {

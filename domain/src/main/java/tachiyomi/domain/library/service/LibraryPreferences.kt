@@ -122,9 +122,13 @@ class LibraryPreferences(
 
     // region Category
 
-    val defaultCategory: Preference<Int> = preferenceStore.getInt(DEFAULT_CATEGORY_PREF_KEY, -1)
+    val defaultCategory: Preference<Int> = preferenceStore.getInt(DEFAULT_CATEGORY_PREF_KEY, -2)
 
     val lastUsedCategory: Preference<Int> = preferenceStore.getInt(Preference.appStateKey("last_used_category"), 0)
+    val lastUsedSuperCategory: Preference<Int> = preferenceStore.getInt(
+        Preference.appStateKey("last_used_super_category"),
+        -1,
+    )
 
     val categoryTabs: Preference<Boolean> = preferenceStore.getBoolean("display_category_tabs", true)
 

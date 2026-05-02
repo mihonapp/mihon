@@ -10,6 +10,7 @@ CREATE TABLE categories(
 
 -- Insert system category
 INSERT OR IGNORE INTO categories(_id, name, sort, flags) VALUES (0, "", -1, 0);
+INSERT OR IGNORE INTO categories(_id, name, sort, flags, is_super) VALUES (-1, "", -1, 0, 1);
 -- Disallow deletion of default category
 CREATE TRIGGER IF NOT EXISTS system_category_delete_trigger BEFORE DELETE
 ON categories

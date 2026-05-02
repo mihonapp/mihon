@@ -10,9 +10,10 @@ data class Category(
     val isSuper: Boolean,
 ) : Serializable {
 
-    val isSystemCategory: Boolean = id == UNCATEGORIZED_ID
+    val isSystemCategory: Boolean = id == UNCATEGORIZED_ID || id == UNCATEGORIZED_SUPER_ID
 
     companion object {
         const val UNCATEGORIZED_ID = 0L
+        const val UNCATEGORIZED_SUPER_ID = -1L
     }
 }
