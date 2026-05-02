@@ -14,8 +14,10 @@ import kotlinx.coroutines.launch
 import tachiyomi.domain.category.interactor.CreateCategoryWithName
 import tachiyomi.domain.category.interactor.DeleteCategory
 import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.category.interactor.PinCategory
 import tachiyomi.domain.category.interactor.RenameCategory
 import tachiyomi.domain.category.interactor.ReorderCategory
+import tachiyomi.domain.category.interactor.UnPinCategory
 import tachiyomi.domain.category.model.Category
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
@@ -27,6 +29,8 @@ class CategoryScreenModel(
     private val deleteCategory: DeleteCategory = Injekt.get(),
     private val reorderCategory: ReorderCategory = Injekt.get(),
     private val renameCategory: RenameCategory = Injekt.get(),
+    private val pinCategory: PinCategory = Injekt.get(),
+    private val unPinCategory: UnPinCategory = Injekt.get(),
 ) : StateScreenModel<CategoryScreenState>(CategoryScreenState.Loading) {
 
     private val _events: Channel<CategoryEvent> = Channel()
@@ -40,11 +44,11 @@ class CategoryScreenModel(
                         CategoryScreenState.Success(
                             categories = allCategories
                                 .filterNot(Category::isSystemCategory)
-                                .filterNot { it.isSuper }
+                                .filterNot { it.isPinned }
                                 .toImmutableList(),
-                            superCategories = allCategories
+                            pinnedCategories = allCategories
                                 .filterNot(Category::isSystemCategory)
-                                .filter { it.isSuper }
+                                .filter { it.isPinned }
                                 .toImmutableList(),
                         )
                     }
@@ -52,9 +56,9 @@ class CategoryScreenModel(
         }
     }
 
-    fun createCategory(name: String, isSuper: Boolean) {
+    fun createCategory(name: String) {
         screenModelScope.launch {
-            when (createCategoryWithName.await(name, isSuper)) {
+            when (createCategoryWithName.await(name)) {
                 is CreateCategoryWithName.Result.InternalError -> _events.send(CategoryEvent.InternalError)
                 else -> {}
             }
@@ -84,6 +88,22 @@ class CategoryScreenModel(
             when (renameCategory.await(category, name)) {
                 is RenameCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
                 else -> {}
+            }
+        }
+    }
+
+    fun togglePin(category: Category) {
+        screenModelScope.launch {
+            if (category.isPinned) {
+                when (unPinCategory.await(category.id)) {
+                    is UnPinCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
+                    else -> {}
+                }
+            } else {
+                when (pinCategory.await(category.id)) {
+                    is PinCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
+                    else -> {}
+                }
             }
         }
     }
@@ -126,13 +146,13 @@ sealed interface CategoryScreenState {
     @Immutable
     data class Success(
         val categories: ImmutableList<Category>,
-        val superCategories: ImmutableList<Category>,
+        val pinnedCategories: ImmutableList<Category>,
         val dialog: CategoryDialog? = null,
     ) : CategoryScreenState {
 
         val isEmpty: Boolean
             get() = categories.isEmpty()
-        val isSuperCatsEmpty: Boolean
-            get() = superCategories.isEmpty()
+        val isPinnedEmpty: Boolean
+            get() = pinnedCategories.isEmpty()
     }
 }

@@ -39,6 +39,7 @@ fun CategoryScreen(
     onClickCreate: () -> Unit,
     onClickRename: (Category) -> Unit,
     onClickDelete: (Category) -> Unit,
+    onClickPin: (Category) -> Unit,
     onChangeOrder: (Category, Int) -> Unit,
     navigateUp: () -> Unit,
 ) {
@@ -59,7 +60,7 @@ fun CategoryScreen(
             )
         },
     ) { paddingValues ->
-        if (state.isEmpty && state.isSuperCatsEmpty) {
+        if (state.isEmpty && state.isPinnedEmpty) {
             EmptyScreen(
                 stringRes = MR.strings.information_empty_category,
                 modifier = Modifier.padding(paddingValues),
@@ -74,21 +75,22 @@ fun CategoryScreen(
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
-                text = stringResource(MR.strings.categories_super),
+                text = stringResource(MR.strings.categories_pinned),
                 style = MaterialTheme.typography.titleMedium,
             )
-            if (state.isSuperCatsEmpty) {
+            if (state.isPinnedEmpty) {
                 Text(
-                    text = stringResource(MR.strings.information_empty_super_category),
+                    text = stringResource(MR.strings.information_empty_pinned_category),
                     modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
                 )
             } else {
                 CategoryContent(
-                    categories = state.superCategories,
+                    categories = state.pinnedCategories,
                     lazyListState = lazyListStateSuper,
                     paddingValues = paddingValues,
                     onClickRename = onClickRename,
                     onClickDelete = onClickDelete,
+                    onClickPin = onClickPin,
                     onChangeOrder = onChangeOrder,
                 )
             }
@@ -115,6 +117,7 @@ fun CategoryScreen(
                     paddingValues = paddingValues,
                     onClickRename = onClickRename,
                     onClickDelete = onClickDelete,
+                    onClickPin = onClickPin,
                     onChangeOrder = onChangeOrder,
                 )
             }
@@ -130,6 +133,7 @@ private fun CategoryContent(
     paddingValues: PaddingValues,
     onClickRename: (Category) -> Unit,
     onClickDelete: (Category) -> Unit,
+    onClickPin: (Category) -> Unit,
     onChangeOrder: (Category, Int) -> Unit,
 ) {
     val categoriesState = remember { categories.toMutableStateList() }
@@ -163,6 +167,7 @@ private fun CategoryContent(
                     category = category,
                     onRename = { onClickRename(category) },
                     onDelete = { onClickDelete(category) },
+                    onPin = { onClickPin(category) },
                 )
             }
         }

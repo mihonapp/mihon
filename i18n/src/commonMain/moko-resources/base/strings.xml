@@ -95,6 +95,8 @@
     <string name="action_add_category">Add category</string>
     <string name="action_edit_categories">Edit categories</string>
     <string name="action_rename_category">Rename category</string>
+    <string name="action_pin_category">Pin category</string>
+    <string name="action_unpin_category">Unpin category</string>
     <string name="action_move_category">Set categories</string>
     <string name="delete_category_confirmation">Do you wish to delete the category \"%s\"?</string>
     <string name="delete_category">Delete category</string>
@@ -817,8 +819,7 @@
     <string name="error_category_exists">A category with this name already exists!</string>
     <!-- missing undo feature after Compose rewrite #7454 -->
     <string name="snack_categories_deleted">Categories deleted</string>
-    <string name="is_category_super">Super category</string>
-    <string name="categories_super">Super categories</string>
+    <string name="categories_pinned">Pinned categories</string>
 
     <!-- Dialog option with checkbox view -->
     <string name="dialog_with_checkbox_remove_description">This will remove the read date of this chapter. Are you sure?</string>
@@ -961,7 +962,7 @@
     <string name="information_no_entries_found">No entries found in this category</string>
     <string name="getting_started_guide">Getting started guide</string>
     <string name="information_empty_category">You have no categories. Tap the plus button to create one for organizing your library.</string>
-    <string name="information_empty_super_category">You have no super categories. Tap the plus button to create one for organizing your library.</string>
+    <string name="information_empty_pinned_category">You have no pinned categories. Pin a category below to have a second level of categories.</string>
     <string name="information_empty_category_dialog">You don\'t have any categories yet.</string>
     <string name="information_cloudflare_bypass_failure">Failed to bypass Cloudflare</string>
     <string name="information_cloudflare_help">Tap here for help with Cloudflare</string>

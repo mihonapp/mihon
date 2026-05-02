@@ -92,7 +92,7 @@ class LibraryScreenModel(
         mutableState.update { state ->
             state.copy(
                 activeCategoryIndex = libraryPreferences.lastUsedCategory.get(),
-                activeSuperCategoryIndex = libraryPreferences.lastUsedSuperCategory.get(),
+                activePinnedCategoryIndex = libraryPreferences.lastUsedPinnedCategory.get(),
             )
         }
         screenModelScope.launchIO {
@@ -262,24 +262,24 @@ class LibraryScreenModel(
     private fun List<LibraryItem>.applyGrouping(
         categories: List<Category>,
         showSystemCategory: Boolean,
-    ): Map</* SuperCategory */ Category, Map<Category, List</* LibraryItem */ Long>>> {
-        val groupCache = mutableMapOf</* SuperCategory */
+    ): Map</* PinnedCategory */ Category, Map<Category, List</* LibraryItem */ Long>>> {
+        val groupCache = mutableMapOf</* PinnedCategory */
             Long,
             MutableMap</* Category */ Long, MutableList</* LibraryItem */ Long>>,
             >()
         forEach { item ->
-            item.libraryManga.superCategories.forEach { superCategoryId ->
+            item.libraryManga.pinnedCategories.forEach { pinnedCategoryId ->
                 item.libraryManga.categories.forEach { categoryId ->
-                    groupCache.getOrPut(superCategoryId) { mutableMapOf() }
+                    groupCache.getOrPut(pinnedCategoryId) { mutableMapOf() }
                         .getOrPut(categoryId) { mutableListOf() }.add(item.id)
                 }
             }
         }
-        val superCats = categories.filter { it.isSuper }
-        val normalCats = categories.filterNot { it.isSuper || (!showSystemCategory && it.isSystemCategory) }
-        return superCats.associateWith { superCat ->
+        val pinnedCats = categories.filter { it.isPinned }
+        val normalCats = categories.filterNot { it.isPinned || (!showSystemCategory && it.isSystemCategory) }
+        return pinnedCats.associateWith { pinnedCat ->
             normalCats.associateWith { cat ->
-                groupCache[superCat.id]?.toMap().orEmpty()[cat.id]?.toList().orEmpty()
+                groupCache[pinnedCat.id]?.toMap().orEmpty()[cat.id]?.toList().orEmpty()
             }
         }
     }
@@ -350,7 +350,7 @@ class LibraryScreenModel(
             }
         }
 
-        return mapValues { (superCategory, categoryMap) ->
+        return mapValues { (_, categoryMap) ->
             categoryMap.mapValues { (key, value) ->
                 if (key.sort.type == LibrarySort.Type.Random) {
                     return@mapValues value.shuffled(Random(libraryPreferences.randomSortSeed.get()))
@@ -705,13 +705,13 @@ class LibraryScreenModel(
 
         libraryPreferences.lastUsedCategory.set(newIndex)
     }
-    fun updateActiveSuperCategoryIndex(index: Int) {
+    fun updateActivePinnedCategoryIndex(index: Int) {
         val newIndex = mutableState.updateAndGet { state ->
-            state.copy(activeSuperCategoryIndex = index)
+            state.copy(activePinnedCategoryIndex = index)
         }
-            .coercedActiveSuperCategoryIndex
+            .coercedActivePinnedCategoryIndex
 
-        libraryPreferences.lastUsedSuperCategory.set(newIndex)
+        libraryPreferences.lastUsedPinnedCategory.set(newIndex)
     }
 
     fun openChangeCategoryDialog() {
@@ -797,21 +797,21 @@ class LibraryScreenModel(
         val showMangaContinueButton: Boolean = false,
         val dialog: Dialog? = null,
         val libraryData: LibraryData = LibraryData(),
-        private val activeSuperCategoryIndex: Int = 0,
+        private val activePinnedCategoryIndex: Int = 0,
         private val activeCategoryIndex: Int = 0,
-        private val groupedFavorites: Map</* SuperCategory */ Category, Map<Category, List</* LibraryItem */ Long>>> =
+        private val groupedFavorites: Map</* PinnedCategory */ Category, Map<Category, List</* LibraryItem */ Long>>> =
             emptyMap(),
     ) {
         val nonSystemCategories: List<Category> = libraryData.categories.filterNot { it.isSystemCategory }
-        val displayedSuperCategories: List<Category> = groupedFavorites.keys.toList()
+        val displayedPinnedCategories: List<Category> = groupedFavorites.keys.toList()
 
-        val coercedActiveSuperCategoryIndex = activeSuperCategoryIndex.coerceIn(
+        val coercedActivePinnedCategoryIndex = activePinnedCategoryIndex.coerceIn(
             minimumValue = 0,
-            maximumValue = displayedSuperCategories.lastIndex.coerceAtLeast(0),
+            maximumValue = displayedPinnedCategories.lastIndex.coerceAtLeast(0),
         )
-        val activeSuperCategory: Category? = displayedSuperCategories.getOrNull(coercedActiveSuperCategoryIndex)
+        val activePinnedCategory: Category? = displayedPinnedCategories.getOrNull(coercedActivePinnedCategoryIndex)
 
-        val displayedCategories: List<Category> = groupedFavorites[activeSuperCategory].orEmpty().keys.toList()
+        val displayedCategories: List<Category> = groupedFavorites[activePinnedCategory].orEmpty().keys.toList()
 
         val coercedActiveCategoryIndex = activeCategoryIndex.coerceIn(
             minimumValue = 0,
@@ -833,7 +833,7 @@ class LibraryScreenModel(
         }
 
         fun getItemsForCategory(category: Category): List<LibraryItem> {
-            return groupedFavorites[activeSuperCategory].orEmpty()[category].orEmpty().mapNotNull {
+            return groupedFavorites[activePinnedCategory].orEmpty()[category].orEmpty().mapNotNull {
                 libraryData.favoritesById[it]
             }
         }
@@ -842,16 +842,11 @@ class LibraryScreenModel(
             return if (showMangaCount ||
                 !searchQuery.isNullOrEmpty()
             ) {
-                groupedFavorites[activeSuperCategory].orEmpty()[category]?.size
-            } else {
-                null
-            }
-        }
-        fun getItemCountForSuperCategory(category: Category): Int? {
-            return if (showMangaCount ||
-                !searchQuery.isNullOrEmpty()
-            ) {
-                groupedFavorites[category]?.values?.sumOf { it.size }
+                if (category.isPinned) {
+                    groupedFavorites[category]?.values?.sumOf { it.size }
+                } else {
+                    groupedFavorites[activePinnedCategory].orEmpty()[category]?.size
+                }
             } else {
                 null
             }

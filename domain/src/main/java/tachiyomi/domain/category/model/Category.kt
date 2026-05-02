@@ -7,13 +7,13 @@ data class Category(
     val name: String,
     val order: Long,
     val flags: Long,
-    val isSuper: Boolean,
+    val isPinned: Boolean,
 ) : Serializable {
 
-    val isSystemCategory: Boolean = id == UNCATEGORIZED_ID || id == UNCATEGORIZED_SUPER_ID
+    val isSystemCategory: Boolean = id == UNCATEGORIZED_ID || id == UNCATEGORIZED_PINNED_ID
 
     companion object {
         const val UNCATEGORIZED_ID = 0L
-        const val UNCATEGORIZED_SUPER_ID = -1L
+        const val UNCATEGORIZED_PINNED_ID = -1L
     }
 }

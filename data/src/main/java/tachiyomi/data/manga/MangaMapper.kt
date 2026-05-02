@@ -93,7 +93,7 @@ object MangaMapper {
         lastRead: Long,
         bookmarkCount: Double,
         categories: String,
-        superCategories: String,
+        pinnedCategories: String,
     ): LibraryManga = LibraryManga(
         manga = mapManga(
             id,
@@ -123,7 +123,7 @@ object MangaMapper {
             notes,
         ),
         categories = categories.split(",").map { it.toLong() },
-        superCategories = superCategories.split(",").map { it.toLong() },
+        pinnedCategories = pinnedCategories.split(",").map { it.toLong() },
         totalChapters = totalCount,
         readCount = readCount.toLong(),
         bookmarkCount = bookmarkCount.toLong(),

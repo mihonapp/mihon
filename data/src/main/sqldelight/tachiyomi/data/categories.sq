@@ -5,12 +5,12 @@ CREATE TABLE categories(
     name TEXT NOT NULL,
     sort INTEGER NOT NULL,
     flags INTEGER NOT NULL,
-    is_super INTEGER AS Boolean DEFAULT 0 NOT NULL
+    is_pinned INTEGER AS Boolean DEFAULT 0 NOT NULL
 );
 
 -- Insert system category
 INSERT OR IGNORE INTO categories(_id, name, sort, flags) VALUES (0, "", -1, 0);
-INSERT OR IGNORE INTO categories(_id, name, sort, flags, is_super) VALUES (-1, "", -1, 0, 1);
+INSERT OR IGNORE INTO categories(_id, name, sort, flags, is_pinned) VALUES (-1, "", -1, 0, 1);
 -- Disallow deletion of default category
 CREATE TRIGGER IF NOT EXISTS system_category_delete_trigger BEFORE DELETE
 ON categories
@@ -32,7 +32,7 @@ _id AS id,
 name,
 sort AS `order`,
 flags,
-is_super
+is_pinned
 FROM categories
 ORDER BY sort;
 
@@ -42,15 +42,15 @@ C._id AS id,
 C.name,
 C.sort AS `order`,
 C.flags,
-C.is_super
+C.is_pinned
 FROM categories C
 JOIN mangas_categories MC
 ON C._id = MC.category_id
 WHERE MC.manga_id = :mangaId;
 
 insert {
-    INSERT INTO categories(name, sort, flags, is_super)
-    VALUES (:name, :order, :flags, :isSuper);
+    INSERT INTO categories(name, sort, flags, is_pinned)
+    VALUES (:name, :order, :flags, :isPinned);
 
     SELECT last_insert_rowid();
 }
@@ -63,7 +63,8 @@ update:
 UPDATE categories
 SET name = coalesce(:name, name),
     sort = coalesce(:order, sort),
-    flags = coalesce(:flags, flags)
+    flags = coalesce(:flags, flags),
+    is_pinned = coalesce(:isPinned, is_pinned)
 WHERE _id = :categoryId;
 
 updateAllFlags:

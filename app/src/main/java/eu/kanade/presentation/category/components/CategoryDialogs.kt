@@ -42,11 +42,10 @@ import kotlin.time.Duration.Companion.seconds
 @Composable
 fun CategoryCreateDialog(
     onDismissRequest: () -> Unit,
-    onCreate: (String, Boolean) -> Unit,
+    onCreate: (String) -> Unit,
     categories: ImmutableList<String>,
 ) {
     var name by remember { mutableStateOf("") }
-    var isSuper by remember { mutableStateOf(false) }
 
     val focusRequester = remember { FocusRequester() }
     val nameAlreadyExists = remember(name) { categories.contains(name) }
@@ -57,7 +56,7 @@ fun CategoryCreateDialog(
             TextButton(
                 enabled = name.isNotEmpty() && !nameAlreadyExists,
                 onClick = {
-                    onCreate(name, isSuper)
+                    onCreate(name)
                     onDismissRequest()
                 },
             ) {
@@ -73,28 +72,25 @@ fun CategoryCreateDialog(
             Text(text = stringResource(MR.strings.action_add_category))
         },
         text = {
-            Column {
-                OutlinedTextField(
-                    modifier = Modifier
-                        .focusRequester(focusRequester),
-                    value = name,
-                    onValueChange = { name = it },
-                    label = {
-                        Text(text = stringResource(MR.strings.name))
-                    },
-                    supportingText = {
-                        val msgRes = if (name.isNotEmpty() && nameAlreadyExists) {
-                            MR.strings.error_category_exists
-                        } else {
-                            MR.strings.information_required_plain
-                        }
-                        Text(text = stringResource(msgRes))
-                    },
-                    isError = name.isNotEmpty() && nameAlreadyExists,
-                    singleLine = true,
-                )
-                CheckboxItem(stringResource(MR.strings.is_category_super), isSuper, onClick = { isSuper = !isSuper })
-            }
+            OutlinedTextField(
+                modifier = Modifier
+                    .focusRequester(focusRequester),
+                value = name,
+                onValueChange = { name = it },
+                label = {
+                    Text(text = stringResource(MR.strings.name))
+                },
+                supportingText = {
+                    val msgRes = if (name.isNotEmpty() && nameAlreadyExists) {
+                        MR.strings.error_category_exists
+                    } else {
+                        MR.strings.information_required_plain
+                    }
+                    Text(text = stringResource(msgRes))
+                },
+                isError = name.isNotEmpty() && nameAlreadyExists,
+                singleLine = true,
+            )
         },
     )
 
@@ -268,9 +264,9 @@ fun ChangeCategoryDialog(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
             ) {
                 Text(
-                    text = stringResource(MR.strings.categories_super),
+                    text = stringResource(MR.strings.categories_pinned),
                 )
-                selection.filter { it.value.isSuper }.forEach { checkbox ->
+                selection.filter { it.value.isPinned }.forEach { checkbox ->
                     val onChange: (CheckboxState<Category>) -> Unit = {
                         val index = selection.indexOf(it)
                         if (index != -1) {
@@ -282,7 +278,7 @@ fun ChangeCategoryDialog(
                     CategoryItem(checkbox, onChange)
                 }
                 HorizontalDivider()
-                selection.filterNot { it.value.isSuper }.forEach { checkbox ->
+                selection.filterNot { it.value.isPinned }.forEach { checkbox ->
                     val onChange: (CheckboxState<Category>) -> Unit = {
                         val index = selection.indexOf(it)
                         if (index != -1) {

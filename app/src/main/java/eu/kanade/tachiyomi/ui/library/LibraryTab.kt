@@ -180,16 +180,16 @@ data object LibraryTab : Tab {
                 else -> {
                     LibraryContent(
                         categories = state.displayedCategories,
-                        superCategories = state.displayedSuperCategories,
+                        pinnedCategories = state.displayedPinnedCategories,
                         searchQuery = state.searchQuery,
                         selection = state.selection,
                         contentPadding = contentPadding,
                         currentPage = state.coercedActiveCategoryIndex,
-                        currentSuperPage = state.coercedActiveSuperCategoryIndex,
+                        currentPinnedPage = state.coercedActivePinnedCategoryIndex,
                         hasActiveFilters = state.hasActiveFilters,
                         showPageTabs = state.showCategoryTabs || !state.searchQuery.isNullOrEmpty(),
                         onChangeCurrentPage = screenModel::updateActiveCategoryIndex,
-                        onChangeCurrentSuperPage = screenModel::updateActiveSuperCategoryIndex,
+                        onChangeCurrentPinnedPage = screenModel::updateActivePinnedCategoryIndex,
                         onClickManga = { navigator.push(MangaScreen(it)) },
                         onContinueReadingClicked = { it: LibraryManga ->
                             scope.launchIO {
@@ -214,7 +214,6 @@ data object LibraryTab : Tab {
                             navigator.push(GlobalSearchScreen(screenModel.state.value.searchQuery ?: ""))
                         },
                         getItemCountForCategory = { state.getItemCountForCategory(it) },
-                        getItemCountForSuperCategory = { state.getItemCountForSuperCategory(it) },
                         getDisplayMode = { screenModel.getDisplayMode() },
                         getColumnsForOrientation = { screenModel.getColumnsForOrientation(it) },
                         getItemsForCategory = { state.getItemsForCategory(it) },

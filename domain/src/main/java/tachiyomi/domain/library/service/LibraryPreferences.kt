@@ -125,7 +125,7 @@ class LibraryPreferences(
     val defaultCategory: Preference<Int> = preferenceStore.getInt(DEFAULT_CATEGORY_PREF_KEY, -2)
 
     val lastUsedCategory: Preference<Int> = preferenceStore.getInt(Preference.appStateKey("last_used_category"), 0)
-    val lastUsedSuperCategory: Preference<Int> = preferenceStore.getInt(
+    val lastUsedPinnedCategory: Preference<Int> = preferenceStore.getInt(
         Preference.appStateKey("last_used_super_category"),
         -1,
     )

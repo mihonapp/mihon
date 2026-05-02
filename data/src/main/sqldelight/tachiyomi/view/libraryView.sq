@@ -8,7 +8,7 @@ SELECT
     coalesce(C.lastRead, 0) AS lastRead,
     coalesce(C.bookmarkCount, 0) AS bookmarkCount,
     coalesce(MC.categories, '0') AS categories,
-    coalesce(MSC.super_categories, '-1') AS superCategories
+    coalesce(MPC.pinned_categories, '-1') AS pinnedCategories
 FROM mangas M
 LEFT JOIN (
     SELECT
@@ -34,19 +34,19 @@ LEFT JOIN (
     FROM mangas_categories
     LEFT JOIN categories
     ON mangas_categories.category_id = categories._id
-    WHERE is_super == 0
+    WHERE is_pinned == 0
     GROUP BY manga_id
 ) AS MC
 ON MC.manga_id = M._id
 LEFT JOIN (
-    SELECT manga_id, group_concat(category_id) AS super_categories
+    SELECT manga_id, group_concat(category_id) AS pinned_categories
     FROM mangas_categories
     LEFT JOIN categories
     ON mangas_categories.category_id = categories._id
-    WHERE is_super == 1
+    WHERE is_pinned == 1
     GROUP BY manga_id
-) AS MSC
-ON MSC.manga_id = M._id
+) AS MPC
+ON MPC.manga_id = M._id
 WHERE M.favorite = 1;
 
 library:

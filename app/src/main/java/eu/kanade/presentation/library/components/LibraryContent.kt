@@ -36,16 +36,16 @@ import kotlin.time.Duration.Companion.seconds
 @Composable
 fun LibraryContent(
     categories: List<Category>,
-    superCategories: List<Category>,
+    pinnedCategories: List<Category>,
     searchQuery: String?,
     selection: Set<Long>,
     contentPadding: PaddingValues,
     currentPage: Int,
-    currentSuperPage: Int,
+    currentPinnedPage: Int,
     hasActiveFilters: Boolean,
     showPageTabs: Boolean,
     onChangeCurrentPage: (Int) -> Unit,
-    onChangeCurrentSuperPage: (Int) -> Unit,
+    onChangeCurrentPinnedPage: (Int) -> Unit,
     onClickManga: (Long) -> Unit,
     onContinueReadingClicked: ((LibraryManga) -> Unit)?,
     onToggleSelection: (Category, LibraryManga) -> Unit,
@@ -53,7 +53,6 @@ fun LibraryContent(
     onRefresh: () -> Boolean,
     onGlobalSearchClicked: () -> Unit,
     getItemCountForCategory: (Category) -> Int?,
-    getItemCountForSuperCategory: (Category) -> Int?,
     getDisplayMode: (Int) -> PreferenceMutableState<LibraryDisplayMode>,
     getColumnsForOrientation: (Boolean) -> PreferenceMutableState<Int>,
     getItemsForCategory: (Category) -> List<LibraryItem>,
@@ -70,26 +69,26 @@ fun LibraryContent(
         val scope = rememberCoroutineScope()
         var isRefreshing by remember(pagerState.currentPage) { mutableStateOf(false) }
 
-        if (showPageTabs && superCategories.isNotEmpty() &&
-            (superCategories.size > 1 || !superCategories.first().isSystemCategory)
+        if (showPageTabs && pinnedCategories.isNotEmpty() &&
+            (pinnedCategories.size > 1 || !pinnedCategories.first().isSystemCategory)
         ) {
-            val currentPageIndex = currentSuperPage.coerceAtMost(superCategories.lastIndex)
+            val currentPageIndex = currentPinnedPage.coerceAtMost(pinnedCategories.lastIndex)
             Column(modifier = Modifier.zIndex(2f)) {
                 PrimaryScrollableTabRow(
-                    selectedTabIndex = currentSuperPage,
+                    selectedTabIndex = currentPinnedPage,
                     edgePadding = 0.dp,
                     // TODO: use default when width is fixed upstream
                     // https://issuetracker.google.com/issues/242879624
                     divider = {},
                 ) {
-                    superCategories.forEachIndexed { index, category ->
+                    pinnedCategories.forEachIndexed { index, category ->
                         Tab(
                             selected = currentPageIndex == index,
-                            onClick = { onChangeCurrentSuperPage(index) },
+                            onClick = { onChangeCurrentPinnedPage(index) },
                             text = {
                                 TabText(
                                     text = category.visualName,
-                                    badgeCount = getItemCountForSuperCategory(category),
+                                    badgeCount = getItemCountForCategory(category),
                                 )
                             },
                             unselectedContentColor = MaterialTheme.colorScheme.onSurface,
