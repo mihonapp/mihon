@@ -962,7 +962,7 @@
     <string name="information_no_entries_found">No entries found in this category</string>
     <string name="getting_started_guide">Getting started guide</string>
     <string name="information_empty_category">You have no categories. Tap the plus button to create one for organizing your library.</string>
-    <string name="information_empty_pinned_category">You have no pinned categories. Pin a category below to have a second level of categories.</string>
+    <string name="information_empty_pinned_category">You can pin categories below to use them as a second level of categorization.</string>
     <string name="information_empty_category_dialog">You don\'t have any categories yet.</string>
     <string name="information_cloudflare_bypass_failure">Failed to bypass Cloudflare</string>
     <string name="information_cloudflare_help">Tap here for help with Cloudflare</string>

@@ -151,8 +151,6 @@ sealed interface CategoryScreenState {
     ) : CategoryScreenState {
 
         val isEmpty: Boolean
-            get() = categories.isEmpty()
-        val isPinnedEmpty: Boolean
-            get() = pinnedCategories.isEmpty()
+            get() = categories.isEmpty() && pinnedCategories.isEmpty()
     }
 }

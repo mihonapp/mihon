@@ -43,7 +43,7 @@ fun CategoryScreen(
     onChangeOrder: (Category, Int) -> Unit,
     navigateUp: () -> Unit,
 ) {
-    val lazyListStateSuper = rememberLazyListState()
+    val lazyListStatePinned = rememberLazyListState()
     val lazyListState = rememberLazyListState()
     Scaffold(
         topBar = { scrollBehavior ->
@@ -56,11 +56,11 @@ fun CategoryScreen(
         floatingActionButton = {
             CategoryFloatingActionButton(
                 onCreate = onClickCreate,
-                expanded = lazyListState.shouldExpandFAB() || lazyListStateSuper.shouldExpandFAB(),
+                expanded = lazyListState.shouldExpandFAB() || lazyListStatePinned.shouldExpandFAB(),
             )
         },
     ) { paddingValues ->
-        if (state.isEmpty && state.isPinnedEmpty) {
+        if (state.isEmpty) {
             EmptyScreen(
                 stringRes = MR.strings.information_empty_category,
                 modifier = Modifier.padding(paddingValues),
@@ -68,68 +68,83 @@ fun CategoryScreen(
             return@Scaffold
         }
 
-        Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize(),
-        ) {
-            Text(
-                modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
-                text = stringResource(MR.strings.categories_pinned),
-                style = MaterialTheme.typography.titleMedium,
-            )
-            if (state.isPinnedEmpty) {
-                Text(
-                    text = stringResource(MR.strings.information_empty_pinned_category),
-                    modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
-                )
-            } else {
-                CategoryContent(
-                    categories = state.pinnedCategories,
-                    lazyListState = lazyListStateSuper,
-                    paddingValues = paddingValues,
-                    onClickRename = onClickRename,
-                    onClickDelete = onClickDelete,
-                    onClickPin = onClickPin,
-                    onChangeOrder = onChangeOrder,
-                )
-            }
-
-            HorizontalDivider(
-                modifier = Modifier.padding(MaterialTheme.padding.medium),
-            )
-
-            Text(
-                modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
-                text = stringResource(MR.strings.categories),
-                style = MaterialTheme.typography.titleSmall,
-            )
-            if (state.isEmpty) {
-                Text(
-                    text = stringResource(MR.strings.information_empty_category),
-                    modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
-                )
-            } else {
-                CategoryContent(
-                    modifier = Modifier.weight(1f, fill = true),
-                    categories = state.categories,
-                    lazyListState = lazyListState,
-                    paddingValues = paddingValues,
-                    onClickRename = onClickRename,
-                    onClickDelete = onClickDelete,
-                    onClickPin = onClickPin,
-                    onChangeOrder = onChangeOrder,
-                )
-            }
-        }
+        CategoryContent(
+            categories = state.categories,
+            pinnedCategories = state.pinnedCategories,
+            lazyListState = lazyListState,
+            lazyListStatePinned = lazyListStatePinned,
+            paddingValues = paddingValues,
+            onClickRename = onClickRename,
+            onClickDelete = onClickDelete,
+            onClickPin = onClickPin,
+            onChangeOrder = onChangeOrder,
+        )
     }
 }
 
 @Composable
 private fun CategoryContent(
-    modifier: Modifier = Modifier,
+    pinnedCategories: List<Category>,
     categories: List<Category>,
     lazyListState: LazyListState,
+    lazyListStatePinned: LazyListState,
+    paddingValues: PaddingValues,
+    onClickRename: (Category) -> Unit,
+    onClickDelete: (Category) -> Unit,
+    onClickPin: (Category) -> Unit,
+    onChangeOrder: (Category, Int) -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .padding(paddingValues)
+            .fillMaxSize(),
+    ) {
+        if (pinnedCategories.isEmpty()) {
+            Text(
+                text = stringResource(MR.strings.information_empty_pinned_category),
+                modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
+            )
+        } else {
+            CategoryList(
+                categories = pinnedCategories,
+                lazyListState = lazyListStatePinned,
+                paddingValues = paddingValues,
+                onClickRename = onClickRename,
+                onClickDelete = onClickDelete,
+                onClickPin = onClickPin,
+                onChangeOrder = onChangeOrder,
+            )
+
+            HorizontalDivider(
+                modifier = Modifier.padding(MaterialTheme.padding.medium),
+            )
+        }
+
+        if (categories.isEmpty()) {
+            Text(
+                text = stringResource(MR.strings.information_empty_category),
+                modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
+            )
+        } else {
+            CategoryList(
+                modifier = Modifier.weight(1f, fill = true),
+                categories = categories,
+                lazyListState = lazyListState,
+                paddingValues = paddingValues,
+                onClickRename = onClickRename,
+                onClickDelete = onClickDelete,
+                onClickPin = onClickPin,
+                onChangeOrder = onChangeOrder,
+            )
+        }
+    }
+}
+
+@Composable
+private fun CategoryList(
+    categories: List<Category>,
+    lazyListState: LazyListState,
+    modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
     onClickRename: (Category) -> Unit,
     onClickDelete: (Category) -> Unit,
