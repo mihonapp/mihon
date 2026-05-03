@@ -91,6 +91,7 @@ class LibraryScreenModel(
     init {
         mutableState.update { state ->
             state.copy(
+                // TODO active cat index by pinned cat
                 activeCategoryIndex = libraryPreferences.lastUsedCategory.get(),
                 activePinnedCategoryIndex = libraryPreferences.lastUsedPinnedCategory.get(),
             )
