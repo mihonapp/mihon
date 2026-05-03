@@ -37,6 +37,8 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.translation.TranslationJob
+import eu.kanade.tachiyomi.data.translation.TranslationLogDetailsFormatter
+import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
 import eu.kanade.tachiyomi.data.translation.TranslationMode
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
@@ -751,6 +753,23 @@ class MangaScreenModel(
         if (chapters.isEmpty()) return
         val setup = translationSetupValidator.readiness()
         if (!setup.ready) {
+            screenModelScope.launchIO {
+                translationRepository.insertLog(
+                    jobId = null,
+                    pageId = null,
+                    level = TranslationLogLevel.Warning,
+                    tag = "queue",
+                    message = "Translate chapters blocked",
+                    details = TranslationLogDetailsFormatter.queueState(
+                        action = "manga_preflight_blocked",
+                        jobId = null,
+                        previousStatus = null,
+                        nextStatus = null,
+                        reason = setup.message,
+                        extra = mapOf("manga_id" to manga.id, "chapters" to chapters.size),
+                    ),
+                )
+            }
             updateSuccessState { it.copy(dialog = Dialog.TranslationSetupRequired(setup.message)) }
             return
         }

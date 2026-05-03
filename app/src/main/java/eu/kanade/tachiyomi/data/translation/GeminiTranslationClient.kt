@@ -6,9 +6,9 @@ import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.await
 import eu.kanade.tachiyomi.network.jsonMime
-import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -18,23 +18,32 @@ import kotlinx.serialization.json.put
 import okhttp3.Headers.Companion.headersOf
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.Response
+import tachiyomi.domain.translation.service.TranslationPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import kotlin.time.TimeSource
 
 class GeminiTranslationClient(
     private val network: NetworkHelper = Injekt.get(),
     private val json: Json = Injekt.get(),
+    private val repository: TranslationRepository = Injekt.get(),
+    private val preferences: TranslationPreferences = Injekt.get(),
 ) {
     suspend fun listModels(apiKey: String): List<GeminiModel> {
-        val response = executeGemini(
+        val response = executeGeminiText(
             GET(
                 "$BASE_URL/models?pageSize=1000",
                 headers = apiHeaders(apiKey),
             ),
+            operation = "listModels",
+            model = null,
+            requestJson = null,
+            requestSummary = "page_size=1000",
+            jobId = null,
+            pageId = null,
         )
         return with(json) {
-            response.parseAs<GeminiListModelsResponse>()
+            decodeFromString<GeminiListModelsResponse>(response)
         }.models.generateContentModels()
     }
 
@@ -50,7 +59,13 @@ class GeminiTranslationClient(
                 put("maxOutputTokens", 8)
             },
         )
-        val response = generateContent(apiKey, model, request)
+        val response = generateContent(
+            apiKey = apiKey,
+            model = model,
+            request = request,
+            operation = "testGenerateContent",
+            requestSummary = "prompt=Reply with OK.\nconfig=temperature=0,maxOutputTokens=8",
+        )
         val hasText = response.candidates
             .firstOrNull()
             ?.content
@@ -69,12 +84,19 @@ class GeminiTranslationClient(
         sourceLanguage: String?,
         generationConfig: TranslationGenerationConfig,
         extraInstructions: String,
+        jobId: Long? = null,
+        pageId: Long? = null,
     ): TranslationOverlayResult {
+        val prompt = pageTranslationPrompt(targetLanguage, sourceLanguage, extraInstructions)
+        val config = generationConfig
+            .copy(rawJsonOverride = generationConfig.rawJsonOverride)
+            .toGeminiJson(json)
+            .withStructuredOverlaySchema()
         val request = GeminiGenerateContentRequest(
             contents = listOf(
                 GeminiContent(
                     parts = listOf(
-                        GeminiPart(text = pageTranslationPrompt(targetLanguage, sourceLanguage, extraInstructions)),
+                        GeminiPart(text = prompt),
                         GeminiPart(
                             inlineData = GeminiInlineData(
                                 mimeType = mimeType,
@@ -84,12 +106,23 @@ class GeminiTranslationClient(
                     ),
                 ),
             ),
-            generationConfig = generationConfig
-                .copy(rawJsonOverride = generationConfig.rawJsonOverride)
-                .toGeminiJson(json)
-                .withStructuredOverlaySchema(),
+            generationConfig = config,
         )
-        return generateOverlay(apiKey, model, request)
+        return generateOverlay(
+            apiKey = apiKey,
+            model = model,
+            request = request,
+            operation = "translatePageImage",
+            requestSummary = buildString {
+                appendLine("prompt:")
+                appendLine(prompt)
+                appendLine("image_mime=$mimeType")
+                appendLine("image_bytes=${imageBytes.size}")
+                appendLine("generation_config=$config")
+            },
+            jobId = jobId,
+            pageId = pageId,
+        )
     }
 
     suspend fun translateOcrBlocks(
@@ -100,6 +133,8 @@ class GeminiTranslationClient(
         sourceLanguage: String?,
         generationConfig: TranslationGenerationConfig,
         extraInstructions: String,
+        jobId: Long? = null,
+        pageId: Long? = null,
     ): TranslationOverlayResult {
         val prompt = buildString {
             appendLine(pageTranslationPrompt(targetLanguage, sourceLanguage, extraInstructions))
@@ -114,7 +149,20 @@ class GeminiTranslationClient(
             contents = listOf(GeminiContent(parts = listOf(GeminiPart(text = prompt)))),
             generationConfig = generationConfig.toGeminiJson(json).withStructuredOverlaySchema(),
         )
-        return generateOverlay(apiKey, model, request)
+        return generateOverlay(
+            apiKey = apiKey,
+            model = model,
+            request = request,
+            operation = "translateOcrBlocks",
+            requestSummary = buildString {
+                appendLine("prompt:")
+                appendLine(prompt)
+                appendLine("ocr_blocks=${blocks.size}")
+                appendLine("generation_config=${request.generationConfig}")
+            },
+            jobId = jobId,
+            pageId = pageId,
+        )
     }
 
     suspend fun generateInpaintImage(
@@ -124,6 +172,8 @@ class GeminiTranslationClient(
         mimeType: String,
         overlay: TranslationOverlayResult,
         targetLanguage: String,
+        jobId: Long? = null,
+        pageId: Long? = null,
     ): ByteArray? {
         val prompt = buildString {
             appendLine("Edit this manga page by replacing original text with the translated text.")
@@ -148,7 +198,21 @@ class GeminiTranslationClient(
                 ),
             ),
         )
-        val response = generateContent(apiKey, model, request)
+        val response = generateContent(
+            apiKey = apiKey,
+            model = model,
+            request = request,
+            operation = "generateInpaintImage",
+            requestSummary = buildString {
+                appendLine("prompt:")
+                appendLine(prompt)
+                appendLine("image_mime=$mimeType")
+                appendLine("image_bytes=${imageBytes.size}")
+                appendLine("overlay_boxes=${overlay.boxes.size}")
+            },
+            jobId = jobId,
+            pageId = pageId,
+        )
         val imageData = response.candidates
             .firstOrNull()
             ?.content
@@ -162,46 +226,162 @@ class GeminiTranslationClient(
         apiKey: String,
         model: String,
         request: GeminiGenerateContentRequest,
+        operation: String,
+        requestSummary: String,
+        jobId: Long? = null,
+        pageId: Long? = null,
     ): TranslationOverlayResult {
-        val response = generateContent(apiKey, model, request)
+        val response = generateContent(apiKey, model, request, operation, requestSummary, jobId, pageId)
         val text = response.candidates
             .firstOrNull()
             ?.content
             ?.parts
             ?.firstNotNullOfOrNull { it.text }
             ?: error("Gemini response did not include text")
-        return json.decodeFromString<TranslationOverlayResult>(text)
+        val overlay = json.decodeFromString<TranslationOverlayResult>(text)
+        repository.insertLog(
+            jobId = jobId,
+            pageId = pageId,
+            level = TranslationLogLevel.Debug,
+            tag = "api",
+            message = "Gemini overlay response parsed",
+            details = buildString {
+                appendLine("operation=$operation")
+                appendLine("model=$model")
+                appendLine("source_language=${overlay.sourceLanguage ?: "-"}")
+                appendLine("target_language=${overlay.targetLanguage ?: "-"}")
+                appendLine("boxes=${overlay.boxes.size}")
+                overlay.boxes.forEachIndexed { index, box ->
+                    appendLine("${index + 1}. ${box.originalText} => ${box.translatedText}")
+                }
+            },
+        )
+        return overlay
     }
 
     private suspend fun generateContent(
         apiKey: String,
         model: String,
         request: GeminiGenerateContentRequest,
+        operation: String,
+        requestSummary: String,
+        jobId: Long? = null,
+        pageId: Long? = null,
     ): GeminiGenerateContentResponse {
         val modelId = model.removePrefix("models/")
-        val response = executeGemini(
+        val requestJson = json.encodeToString(request)
+        val response = executeGeminiText(
             POST(
                 "$BASE_URL/models/$modelId:generateContent",
                 headers = apiHeaders(apiKey),
-                body = json.encodeToString(request).toRequestBody(jsonMime),
+                body = requestJson.toRequestBody(jsonMime),
             ),
+            operation = operation,
+            model = modelId,
+            requestJson = requestJson,
+            requestSummary = requestSummary,
+            jobId = jobId,
+            pageId = pageId,
         )
-        return with(json) {
-            response.parseAs<GeminiGenerateContentResponse>()
-        }
+        val parsed = json.decodeFromString<GeminiGenerateContentResponse>(response)
+        repository.insertLog(
+            jobId = jobId,
+            pageId = pageId,
+            level = TranslationLogLevel.Debug,
+            tag = "api",
+            message = "Gemini generateContent response parsed",
+            details = buildString {
+                appendLine("operation=$operation")
+                appendLine("model=$modelId")
+                appendLine("candidate_count=${parsed.candidates.size}")
+                parsed.candidates.forEachIndexed { candidateIndex, candidate ->
+                    val texts = candidate.content?.parts.orEmpty().mapNotNull { it.text }
+                    appendLine("candidate_${candidateIndex + 1}_text_parts=${texts.size}")
+                    texts.forEachIndexed { partIndex, text ->
+                        appendLine("candidate_${candidateIndex + 1}_text_${partIndex + 1}:")
+                        appendLine(text)
+                    }
+                    val images = candidate.content?.parts.orEmpty().count { it.inlineData?.data != null }
+                    appendLine("candidate_${candidateIndex + 1}_image_parts=$images")
+                }
+            },
+        )
+        return parsed
     }
 
-    private suspend fun executeGemini(request: Request): Response {
+    private suspend fun executeGeminiText(
+        request: Request,
+        operation: String,
+        model: String?,
+        requestJson: String?,
+        requestSummary: String,
+        jobId: Long?,
+        pageId: Long?,
+    ): String {
+        val mark = TimeSource.Monotonic.markNow()
         val response = network.client.newCall(request).await()
-        if (response.isSuccessful) {
-            return response
+        val body = response.body.string()
+        val elapsedMs = mark.elapsedNow().inWholeMilliseconds
+        val endpoint = buildString {
+            append(request.url.encodedPath)
+            request.url.encodedQuery?.let { query ->
+                append("?")
+                append(query)
+            }
         }
-        val errorBody = response.body.string()
-        response.close()
-        throw GeminiApiException(
-            code = response.code,
-            errorBody = TranslationLogRedactor.redact(errorBody),
-        )
+        val rawRequest = requestJson.takeIf { preferences.rawDebugLogging.get() }
+        val rawResponse = body.takeIf { preferences.rawDebugLogging.get() }
+        return try {
+            if (response.isSuccessful) {
+                repository.insertLog(
+                    jobId = jobId,
+                    pageId = pageId,
+                    level = TranslationLogLevel.Info,
+                    tag = "api",
+                    message = "Gemini API call succeeded",
+                    details = TranslationLogDetailsFormatter.apiCall(
+                        operation = operation,
+                        method = request.method,
+                        endpoint = endpoint,
+                        model = model,
+                        statusCode = response.code,
+                        elapsedMs = elapsedMs,
+                        requestSummary = requestSummary,
+                        responseSummary = "response_bytes=${body.length}",
+                        rawRequestJson = rawRequest,
+                        rawResponseJson = rawResponse,
+                    ),
+                )
+                body
+            } else {
+                val redactedBody = TranslationLogRedactor.redact(body)
+                repository.insertLog(
+                    jobId = jobId,
+                    pageId = pageId,
+                    level = TranslationLogLevel.Error,
+                    tag = "api",
+                    message = "Gemini API call failed",
+                    details = TranslationLogDetailsFormatter.apiCall(
+                        operation = operation,
+                        method = request.method,
+                        endpoint = endpoint,
+                        model = model,
+                        statusCode = response.code,
+                        elapsedMs = elapsedMs,
+                        requestSummary = requestSummary,
+                        errorBody = redactedBody,
+                        rawRequestJson = rawRequest,
+                        rawResponseJson = rawResponse,
+                    ),
+                )
+                throw GeminiApiException(
+                    code = response.code,
+                    errorBody = redactedBody,
+                )
+            }
+        } finally {
+            response.close()
+        }
     }
 
     private fun apiHeaders(apiKey: String) = headersOf(

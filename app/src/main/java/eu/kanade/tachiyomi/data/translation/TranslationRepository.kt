@@ -93,10 +93,22 @@ class TranslationRepository(
                     level = TranslationLogLevel.Info,
                     tag = "queue",
                     message = "Skipped duplicate translation job",
-                    details = buildString {
-                        append("existing_job=${duplicate._id}, manga=$mangaId, chapter=$chapterId, ")
-                        append("page=$pageIndex, scope=${scope.value}, target=${targetLanguage.ifBlank { "app language" }}")
-                    },
+                    details = TranslationLogDetailsFormatter.queueState(
+                        action = "duplicate_skip",
+                        jobId = duplicate._id,
+                        previousStatus = duplicate.status,
+                        nextStatus = duplicate.status,
+                        reason = "Active matching job already exists",
+                        extra = mapOf(
+                            "manga_id" to mangaId,
+                            "chapter_id" to chapterId,
+                            "page_index" to pageIndex,
+                            "scope" to scope.value,
+                            "pipeline" to pipeline,
+                            "mode" to mode.value,
+                            "target_language" to targetLanguage.ifBlank { "app language" },
+                        ),
+                    ),
                 )
                 result = TranslationEnqueueResult(jobId = duplicate._id, inserted = false)
                 return@transaction
@@ -118,9 +130,35 @@ class TranslationRepository(
                 progressTotal = progressTotal,
                 createdAt = now,
             )
+            val insertedJobId = database.translationsQueries.lastInsertedJobId().awaitAsOne()
             result = TranslationEnqueueResult(
-                jobId = database.translationsQueries.lastInsertedJobId().awaitAsOne(),
+                jobId = insertedJobId,
                 inserted = true,
+            )
+            insertLog(
+                jobId = insertedJobId,
+                pageId = null,
+                level = TranslationLogLevel.Info,
+                tag = "queue",
+                message = "Queued translation job",
+                details = TranslationLogDetailsFormatter.queueState(
+                    action = "enqueue",
+                    jobId = insertedJobId,
+                    previousStatus = null,
+                    nextStatus = TranslationJobStatus.Queued.value,
+                    extra = mapOf(
+                        "manga_id" to mangaId,
+                        "chapter_id" to chapterId,
+                        "page_index" to pageIndex,
+                        "scope" to scope.value,
+                        "pipeline" to pipeline,
+                        "mode" to mode.value,
+                        "model" to model,
+                        "target_language" to targetLanguage.ifBlank { "app language" },
+                        "source_language" to sourceLanguage,
+                        "overwrite" to overwrite,
+                    ),
+                ),
             )
         }
         return requireNotNull(result)
@@ -182,7 +220,41 @@ class TranslationRepository(
                     level = TranslationLogLevel.Info,
                     tag = "queue",
                     message = "Requeued paused auth translation",
-                    details = reason,
+                    details = TranslationLogDetailsFormatter.queueState(
+                        action = "auto_requeue_auth",
+                        jobId = job._id,
+                        previousStatus = job.status,
+                        nextStatus = TranslationJobStatus.Queued.value,
+                        reason = reason,
+                    ),
+                )
+            }
+        }
+        return jobs.size.toLong()
+    }
+
+    suspend fun pausePendingJobsForSetup(message: String): Long {
+        val jobs = getPendingJobs()
+        database.transaction {
+            jobs.forEach { job ->
+                updateJobStatus(
+                    job = job,
+                    status = TranslationJobStatus.PausedAuth,
+                    errorMessage = message,
+                )
+                insertLog(
+                    jobId = job._id,
+                    pageId = null,
+                    level = TranslationLogLevel.Warning,
+                    tag = "queue",
+                    message = "Paused translation queue",
+                    details = TranslationLogDetailsFormatter.queueState(
+                        action = "pause_setup_not_ready",
+                        jobId = job._id,
+                        previousStatus = job.status,
+                        nextStatus = TranslationJobStatus.PausedAuth.value,
+                        reason = message,
+                    ),
                 )
             }
         }

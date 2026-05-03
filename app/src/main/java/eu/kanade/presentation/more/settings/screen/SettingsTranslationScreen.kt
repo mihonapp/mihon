@@ -28,6 +28,7 @@ import eu.kanade.tachiyomi.data.translation.TranslationModelLimits
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
 import eu.kanade.tachiyomi.data.translation.TranslationJob
+import eu.kanade.tachiyomi.data.translation.TranslationWorkStartPolicy
 import eu.kanade.tachiyomi.data.translation.TranslationThinkingLevel
 import eu.kanade.tachiyomi.util.system.toast
 import java.io.File
@@ -139,7 +140,11 @@ object SettingsTranslationScreen : SearchableSettings {
                 if (result.ready) {
                     val requeued = repository.requeuePausedAuthJobs("Setup test passed")
                     if (requeued > 0) {
-                        TranslationJob.start(context)
+                        TranslationJob.start(
+                            context = context,
+                            policy = TranslationWorkStartPolicy.Replace,
+                            reason = "setup_test_requeued_auth",
+                        )
                         context.toast(context.contextStringResource(MR.strings.translation_resume_requeued, requeued))
                     }
                 }

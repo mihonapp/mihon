@@ -25,6 +25,7 @@ import eu.kanade.tachiyomi.data.saver.Location
 import eu.kanade.tachiyomi.data.translation.SavedTranslationPage
 import eu.kanade.tachiyomi.data.translation.TranslationBoxEdit
 import eu.kanade.tachiyomi.data.translation.TranslationJob
+import eu.kanade.tachiyomi.data.translation.TranslationLogDetailsFormatter
 import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
 import eu.kanade.tachiyomi.data.translation.TranslationMode
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
@@ -580,6 +581,28 @@ class ReaderViewModel @JvmOverloads constructor(
         val manga = manga ?: return
         val setup = translationSetupValidator.readiness()
         if (!setup.ready) {
+            viewModelScope.launchIO {
+                translationRepository.insertLog(
+                    jobId = null,
+                    pageId = null,
+                    level = TranslationLogLevel.Warning,
+                    tag = "queue",
+                    message = "Reader translate blocked",
+                    details = TranslationLogDetailsFormatter.queueState(
+                        action = "reader_preflight_blocked",
+                        jobId = null,
+                        previousStatus = null,
+                        nextStatus = null,
+                        reason = setup.message,
+                        extra = mapOf(
+                            "manga_id" to manga.id,
+                            "chapter_id" to chapterId,
+                            "page_index" to pageIndex,
+                            "scope" to scope.value,
+                        ),
+                    ),
+                )
+            }
             mutableState.update { it.copy(dialog = Dialog.TranslationSetupRequired(setup.message)) }
             return
         }

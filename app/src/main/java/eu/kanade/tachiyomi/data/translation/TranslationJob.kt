@@ -20,7 +20,7 @@ import eu.kanade.tachiyomi.util.system.setForegroundSafely
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import tachiyomi.core.common.i18n.stringResource
-import tachiyomi.domain.translation.service.TranslationPreferences
+import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -30,7 +30,7 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
 
     private val processor: TranslationQueueProcessor = Injekt.get()
     private val repository: TranslationRepository = Injekt.get()
-    private val preferences: TranslationPreferences = Injekt.get()
+    private val setupValidator: TranslationSetupValidator = Injekt.get()
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
         val notification = applicationContext.notificationBuilder(Notifications.CHANNEL_TRANSLATION_PROGRESS) {
@@ -53,22 +53,9 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
         if (repository.getPendingJobs().isEmpty()) {
             return Result.success()
         }
-        if (preferences.geminiApiKey.get().isBlank()) {
-            repository.getPendingJobs().forEach { job ->
-                repository.updateJobStatus(
-                    job = job,
-                    status = TranslationJobStatus.PausedAuth,
-                    errorMessage = "Gemini API key is empty",
-                )
-                repository.insertLog(
-                    jobId = job._id,
-                    pageId = null,
-                    level = TranslationLogLevel.Error,
-                    tag = "queue",
-                    message = "Paused translation queue",
-                    details = "Gemini API key is empty",
-                )
-            }
+        val setup = setupValidator.readiness()
+        if (!setup.ready) {
+            repository.pausePendingJobsForSetup(setup.message)
             return Result.success()
         }
 
@@ -86,7 +73,12 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
     companion object {
         private const val TAG = "TranslationQueue"
 
-        fun start(context: Context) {
+        fun start(
+            context: Context,
+            policy: TranslationWorkStartPolicy = TranslationWorkStartPolicy.Keep,
+            reason: String = "start requested",
+        ) {
+            val appContext = context.applicationContext
             val request = OneTimeWorkRequestBuilder<TranslationJob>()
                 .addTag(TAG)
                 .setConstraints(
@@ -96,8 +88,50 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
                 )
                 .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
                 .build()
-            WorkManager.getInstance(context)
-                .enqueueUniqueWork(TAG, ExistingWorkPolicy.KEEP, request)
+            val existingWorkPolicy = when (policy) {
+                TranslationWorkStartPolicy.Keep -> ExistingWorkPolicy.KEEP
+                TranslationWorkStartPolicy.Replace -> ExistingWorkPolicy.REPLACE
+            }
+            runCatching {
+                WorkManager.getInstance(appContext)
+                    .enqueueUniqueWork(TAG, existingWorkPolicy, request)
+            }.onSuccess {
+                launchIO {
+                    Injekt.get<TranslationRepository>().insertLog(
+                        jobId = null,
+                        pageId = null,
+                        level = TranslationLogLevel.Debug,
+                        tag = "queue",
+                        message = "Translation worker start requested",
+                        details = TranslationLogDetailsFormatter.queueState(
+                            action = "worker_start",
+                            jobId = null,
+                            previousStatus = null,
+                            nextStatus = null,
+                            reason = reason,
+                            extra = mapOf("policy" to policy.name),
+                        ),
+                    )
+                }
+            }.onFailure { error ->
+                launchIO {
+                    Injekt.get<TranslationRepository>().insertLog(
+                        jobId = null,
+                        pageId = null,
+                        level = TranslationLogLevel.Error,
+                        tag = "queue",
+                        message = "Failed to start translation worker",
+                        details = TranslationLogDetailsFormatter.queueState(
+                            action = "worker_start_failed",
+                            jobId = null,
+                            previousStatus = null,
+                            nextStatus = null,
+                            reason = error.message ?: error::class.simpleName.orEmpty(),
+                            extra = mapOf("policy" to policy.name),
+                        ),
+                    )
+                }
+            }
         }
 
         fun stop(context: Context) {

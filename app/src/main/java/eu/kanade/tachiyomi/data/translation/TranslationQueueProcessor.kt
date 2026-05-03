@@ -55,7 +55,20 @@ class TranslationQueueProcessor(
             level = TranslationLogLevel.Info,
             tag = "queue",
             message = "Started ${job.scope} translation",
-            details = "model=${job.model}, pipeline=${job.pipeline}, mode=${job.mode}, attempt=$attempt",
+            details = TranslationLogDetailsFormatter.queueState(
+                action = "start_job",
+                jobId = job._id,
+                previousStatus = job.status,
+                nextStatus = TranslationJobStatus.Running.value,
+                extra = mapOf(
+                    "model" to job.model,
+                    "pipeline" to job.pipeline,
+                    "mode" to job.mode,
+                    "attempt" to attempt,
+                    "target_language" to job.target_language.ifBlank { "app language" },
+                    "source_language" to job.source_language,
+                ),
+            ),
         )
 
         return try {
@@ -137,6 +150,7 @@ class TranslationQueueProcessor(
                 sourceLanguage = job.source_language,
                 generationConfig = generationConfig,
                 extraInstructions = preferences.globalInstructions.get(),
+                jobId = job._id,
             )
         }
 
@@ -210,6 +224,7 @@ class TranslationQueueProcessor(
             sourceLanguage = job.source_language,
             generationConfig = generationConfig,
             extraInstructions = preferences.globalInstructions.get(),
+            jobId = job._id,
         )
     }
 
@@ -228,6 +243,7 @@ class TranslationQueueProcessor(
                 mimeType = image.mimeType,
                 overlay = overlay,
                 targetLanguage = targetLanguage,
+                jobId = job._id,
             ) ?: return null
             val mime = ImageUtil.findImageType { ByteArrayInputStream(bytes) } ?: ImageUtil.ImageType.JPEG
             val dir = File(context.filesDir, "translations/inpaint").also { it.mkdirs() }
@@ -261,7 +277,21 @@ class TranslationQueueProcessor(
         }
         if (status != null) {
             repository.updateJobStatus(job, status, errorMessage = message, attempts = attempt)
-            repository.insertLog(job._id, null, TranslationLogLevel.Error, "queue", "Paused translation queue", message)
+            repository.insertLog(
+                job._id,
+                null,
+                TranslationLogLevel.Error,
+                "queue",
+                "Paused translation queue",
+                TranslationLogDetailsFormatter.queueState(
+                    action = "pause_api_error",
+                    jobId = job._id,
+                    previousStatus = job.status,
+                    nextStatus = status.value,
+                    reason = message,
+                    extra = mapOf("attempt" to attempt, "http_code" to (error as? GeminiApiException)?.code),
+                ),
+            )
             return TranslationProcessResult.Paused
         }
 
@@ -279,7 +309,18 @@ class TranslationQueueProcessor(
             level = TranslationLogLevel.Error,
             tag = "queue",
             message = if (canRetry) "Translation failed; retry scheduled" else "Translation failed",
-            details = "attempt=$attempt, transient=$transient, error=$message",
+            details = TranslationLogDetailsFormatter.queueState(
+                action = if (canRetry) "retry_scheduled" else "fail_job",
+                jobId = job._id,
+                previousStatus = job.status,
+                nextStatus = if (canRetry) TranslationJobStatus.Retrying.value else TranslationJobStatus.Failed.value,
+                reason = message,
+                extra = mapOf(
+                    "attempt" to attempt,
+                    "transient" to transient,
+                    "http_code" to (error as? GeminiApiException)?.code,
+                ),
+            ),
         )
         return if (canRetry) TranslationProcessResult.RetryLater else TranslationProcessResult.Completed
     }

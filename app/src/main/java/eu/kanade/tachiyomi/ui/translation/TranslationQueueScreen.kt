@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.translation
 import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -16,6 +17,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SmallExtendedFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -45,9 +47,12 @@ import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.data.translation.TranslationJob
 import eu.kanade.tachiyomi.data.translation.TranslationJobStatus
+import eu.kanade.tachiyomi.data.translation.TranslationLogDetailsFormatter
 import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
+import eu.kanade.tachiyomi.data.translation.TranslationRetryPlanner
 import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
+import eu.kanade.tachiyomi.data.translation.TranslationWorkStartPolicy
 import eu.kanade.tachiyomi.data.translation.isRetryableFromQueue
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toast
@@ -84,15 +89,26 @@ object TranslationQueueScreen : Screen() {
         var levelFilter by remember { mutableStateOf<String?>(null) }
         var tagFilter by remember { mutableStateOf<String?>(null) }
         var jobFilter by remember { mutableStateOf<Long?>(null) }
+        var searchQuery by remember { mutableStateOf("") }
         val activeJobCount by remember(jobs) {
             derivedStateOf { jobs.count { it.status !in FINISHED_STATUSES } }
         }
-        val filteredLogs by remember(logs, levelFilter, tagFilter, jobFilter) {
+        val filteredLogs by remember(logs, levelFilter, tagFilter, jobFilter, searchQuery) {
             derivedStateOf {
+                val query = searchQuery.trim()
                 logs.filter { log ->
                     (levelFilter == null || log.level == levelFilter) &&
                         (tagFilter == null || log.tag == tagFilter) &&
-                        (jobFilter == null || log.job_id == jobFilter)
+                        (jobFilter == null || log.job_id == jobFilter) &&
+                        (
+                            query.isBlank() ||
+                                log.level.contains(query, ignoreCase = true) ||
+                                log.tag.contains(query, ignoreCase = true) ||
+                                log.message.contains(query, ignoreCase = true) ||
+                                log.details.orEmpty().contains(query, ignoreCase = true) ||
+                                log.job_id?.toString()?.contains(query) == true ||
+                                log.page_id?.toString()?.contains(query) == true
+                            )
                 }
             }
         }
@@ -148,6 +164,7 @@ object TranslationQueueScreen : Screen() {
                                                 levelFilter = null
                                                 tagFilter = null
                                                 jobFilter = null
+                                                searchQuery = ""
                                             },
                                         ),
                                     )
@@ -252,6 +269,7 @@ object TranslationQueueScreen : Screen() {
                                                 levelFilter = null
                                                 tagFilter = null
                                                 jobFilter = null
+                                                searchQuery = ""
                                             }
                                             .padding(horizontal = 8.dp, vertical = 12.dp),
                                     )
@@ -261,9 +279,20 @@ object TranslationQueueScreen : Screen() {
                             },
                         )
                     }
+                    item {
+                        OutlinedTextField(
+                            value = searchQuery,
+                            onValueChange = { searchQuery = it },
+                            label = { Text(text = stringResource(MR.strings.action_search_hint)) },
+                            singleLine = true,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                        )
+                    }
                 }
                 items(
-                    count = filteredLogs.take(LOG_LIMIT).size,
+                    count = filteredLogs.size,
                     key = { index -> "log-${filteredLogs[index]._id}" },
                 ) { index ->
                     TranslationLogItem(
@@ -288,8 +317,6 @@ object TranslationQueueScreen : Screen() {
             )
         }
     }
-
-    private const val LOG_LIMIT = 100
 }
 
 private val FINISHED_STATUSES = setOf(
@@ -446,9 +473,31 @@ private class TranslationQueueScreenModel(
 
     fun retry(context: Context, job: Translation_jobs) {
         screenModelScope.launchIO {
+            val setup = setupValidator.readiness()
+            val decision = TranslationRetryPlanner.manualRetry(setup.ready)
+            if (!decision.allowed) {
+                repository.insertLog(
+                    jobId = job._id,
+                    pageId = null,
+                    level = TranslationLogLevel.Warning,
+                    tag = "queue",
+                    message = "Retry blocked",
+                    details = TranslationLogDetailsFormatter.queueState(
+                        action = "manual_retry_blocked",
+                        jobId = job._id,
+                        previousStatus = job.status,
+                        nextStatus = job.status,
+                        reason = setup.message,
+                    ),
+                )
+                withUIContext {
+                    context.toast(setup.message)
+                }
+                return@launchIO
+            }
             repository.updateJobStatus(
                 job = job,
-                status = TranslationJobStatus.Queued,
+                status = requireNotNull(decision.nextStatus),
                 errorMessage = null,
                 attempts = 0,
             )
@@ -458,9 +507,18 @@ private class TranslationQueueScreenModel(
                 level = TranslationLogLevel.Info,
                 tag = "queue",
                 message = "Manually retried translation job",
-                details = "previous_status=${job.status}",
+                details = TranslationLogDetailsFormatter.queueState(
+                    action = "manual_retry",
+                    jobId = job._id,
+                    previousStatus = job.status,
+                    nextStatus = TranslationJobStatus.Queued.value,
+                ),
             )
-            TranslationJob.start(context)
+            TranslationJob.start(
+                context = context,
+                policy = requireNotNull(decision.startPolicy),
+                reason = "manual_retry",
+            )
         }
     }
 
@@ -501,7 +559,16 @@ private class TranslationQueueScreenModel(
                     context.toast(context.contextStringResource(MR.strings.translation_resume_quota_blocked))
                 }
             }
-            TranslationJob.start(context)
+            val hasPending = jobs.value.any {
+                it.status == TranslationJobStatus.Queued.value || it.status == TranslationJobStatus.Retrying.value
+            }
+            if (setup.ready && (requeued > 0 || hasPending)) {
+                TranslationJob.start(
+                    context = context,
+                    policy = TranslationWorkStartPolicy.Replace,
+                    reason = "queue_resume",
+                )
+            }
         }
     }
 

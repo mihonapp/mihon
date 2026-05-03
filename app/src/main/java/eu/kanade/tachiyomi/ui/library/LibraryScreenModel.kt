@@ -21,6 +21,8 @@ import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.translation.TranslationJob
+import eu.kanade.tachiyomi.data.translation.TranslationLogDetailsFormatter
+import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
 import eu.kanade.tachiyomi.data.translation.TranslationMode
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
@@ -539,6 +541,23 @@ class LibraryScreenModel(
         val mangas = state.value.selectedManga
         val setup = translationSetupValidator.readiness()
         if (!setup.ready) {
+            screenModelScope.launchIO {
+                translationRepository.insertLog(
+                    jobId = null,
+                    pageId = null,
+                    level = TranslationLogLevel.Warning,
+                    tag = "queue",
+                    message = "Translate selection blocked",
+                    details = TranslationLogDetailsFormatter.queueState(
+                        action = "library_preflight_blocked",
+                        jobId = null,
+                        previousStatus = null,
+                        nextStatus = null,
+                        reason = setup.message,
+                        extra = mapOf("selected_manga" to mangas.size),
+                    ),
+                )
+            }
             mutableState.update { it.copy(dialog = Dialog.TranslationSetupRequired(setup.message)) }
             return
         }

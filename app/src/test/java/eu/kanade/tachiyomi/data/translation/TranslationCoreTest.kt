@@ -4,6 +4,7 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.maps.shouldContain
 import io.kotest.matchers.maps.shouldNotContainKey
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
@@ -39,7 +40,10 @@ class TranslationCoreTest {
         val raw = """
             {
               "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini:generateContent?key=secret-key",
+              "x-goog-api-key": "secret-header",
+              "authorization": "Bearer secret-token",
               "inlineData": {"mimeType": "image/png", "data": "base64-image"},
+              "inline_data": {"mime_type": "image/jpeg", "data": "base64-image"},
               "text": "translated line"
             }
         """.trimIndent()
@@ -47,10 +51,47 @@ class TranslationCoreTest {
         TranslationLogRedactor.redact(raw) shouldBe """
             {
               "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini:generateContent?key=<redacted>",
+              "x-goog-api-key": "<redacted>",
+              "authorization": "<redacted>",
               "inlineData": {"mimeType": "image/png", "data": "<redacted-image>"},
+              "inline_data": {"mime_type": "image/jpeg", "data": "<redacted-image>"},
               "text": "translated line"
             }
         """.trimIndent()
+    }
+
+    @Test
+    fun `api log formatter keeps full state but redacts secrets and image data`() {
+        val details = TranslationLogDetailsFormatter.apiCall(
+            operation = "translatePageImage",
+            method = "POST",
+            endpoint = "/v1beta/models/gemini-3-flash-preview:generateContent",
+            model = "gemini-3-flash-preview",
+            statusCode = 429,
+            elapsedMs = 1234,
+            requestSummary = """
+                prompt:
+                Translate hello
+                x-goog-api-key: secret-header
+            """.trimIndent(),
+            errorBody = """{"error":{"code":429,"message":"quota exceeded"}}""",
+            rawRequestJson = """
+                {
+                  "inline_data": {"mime_type": "image/png", "data": "${"a".repeat(160)}"},
+                  "text": "Translate hello"
+                }
+            """.trimIndent(),
+            rawResponseJson = """{"error":{"message":"quota exceeded"}}""",
+        )
+
+        details shouldContain "operation=translatePageImage"
+        details shouldContain "status_code=429"
+        details shouldContain "Translate hello"
+        details shouldContain "quota exceeded"
+        details shouldContain "<redacted-image>"
+        details shouldContain "x-goog-api-key=<redacted>"
+        details shouldNotContain "secret-header"
+        details shouldNotContain "aaaaaaaaaaaaaaaa"
     }
 
     @Test
@@ -120,6 +161,35 @@ class TranslationCoreTest {
         TranslationJobStatus.PausedQuota.isActiveForDedupe() shouldBe true
         TranslationJobStatus.PausedQuota.isRetryableFromQueue() shouldBe true
         TranslationJobStatus.PausedQuota.canAutoRequeueAfterSetup() shouldBe false
+    }
+
+    @Test
+    fun `retry planner blocks until setup ready and uses replace for manual starts`() {
+        TranslationRetryPlanner.manualRetry(setupReady = false) shouldBe TranslationRetryDecision(
+            allowed = false,
+            nextStatus = null,
+            startPolicy = null,
+        )
+
+        TranslationRetryPlanner.manualRetry(setupReady = true) shouldBe TranslationRetryDecision(
+            allowed = true,
+            nextStatus = TranslationJobStatus.Queued,
+            startPolicy = TranslationWorkStartPolicy.Replace,
+        )
+
+        TranslationRetryPlanner.autoRequeueAfterSetup(
+            status = TranslationJobStatus.PausedAuth,
+            setupReady = true,
+        ) shouldBe TranslationRetryDecision(
+            allowed = true,
+            nextStatus = TranslationJobStatus.Queued,
+            startPolicy = TranslationWorkStartPolicy.Replace,
+        )
+
+        TranslationRetryPlanner.autoRequeueAfterSetup(
+            status = TranslationJobStatus.PausedQuota,
+            setupReady = true,
+        ).allowed shouldBe false
     }
 
     @Test
