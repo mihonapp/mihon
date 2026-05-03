@@ -4,7 +4,9 @@ import app.cash.sqldelight.async.coroutines.awaitAsList
 import app.cash.sqldelight.async.coroutines.awaitAsOne
 import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import tachiyomi.data.Database
+import tachiyomi.data.GetJobsForQueue
 import tachiyomi.data.Translation_boxes
 import tachiyomi.data.Translation_jobs
 import tachiyomi.data.Translation_logs
@@ -20,8 +22,18 @@ class TranslationRepository(
         return database.translationsQueries.getJobs().subscribeToList()
     }
 
+    fun observeJobsForQueue(): Flow<List<TranslationQueueItem>> {
+        return database.translationsQueries.getJobsForQueue()
+            .subscribeToList()
+            .map { jobs -> jobs.map(GetJobsForQueue::toQueueItem) }
+    }
+
     fun observeLogs(): Flow<List<Translation_logs>> {
         return database.translationsQueries.getLogs().subscribeToList()
+    }
+
+    fun observePagesByChapter(chapterId: Long, targetLanguage: String): Flow<List<Translation_pages>> {
+        return database.translationsQueries.observePagesByChapter(chapterId, targetLanguage).subscribeToList()
     }
 
     suspend fun getPendingJobs(): List<Translation_jobs> {
@@ -404,6 +416,55 @@ data class SavedTranslationPage(
     val page: Translation_pages,
     val boxes: List<Translation_boxes>,
 )
+
+fun TranslationQueueItem.toJob(): Translation_jobs {
+    return Translation_jobs(
+        _id = id,
+        manga_id = mangaId,
+        chapter_id = chapterId,
+        page_index = pageIndex,
+        scope = scope,
+        pipeline = pipeline,
+        mode = mode,
+        model = model,
+        target_language = targetLanguage,
+        source_language = sourceLanguage,
+        overwrite = overwrite,
+        status = status,
+        progress_current = progressCurrent,
+        progress_total = progressTotal,
+        attempts = attempts,
+        created_at = createdAt,
+        updated_at = updatedAt,
+        error_message = errorMessage,
+    )
+}
+
+private fun GetJobsForQueue.toQueueItem(): TranslationQueueItem {
+    return TranslationQueueItem(
+        id = _id,
+        mangaId = manga_id,
+        mangaTitle = manga_title,
+        chapterId = chapter_id,
+        chapterName = chapter_name,
+        chapterNumber = chapter_number,
+        pageIndex = page_index,
+        scope = scope,
+        pipeline = pipeline,
+        mode = mode,
+        model = model,
+        targetLanguage = target_language,
+        sourceLanguage = source_language,
+        overwrite = overwrite,
+        status = status,
+        progressCurrent = progress_current,
+        progressTotal = progress_total,
+        attempts = attempts,
+        createdAt = created_at,
+        updatedAt = updated_at,
+        errorMessage = error_message,
+    )
+}
 
 enum class TranslationScope(val value: String) {
     Image("image"),

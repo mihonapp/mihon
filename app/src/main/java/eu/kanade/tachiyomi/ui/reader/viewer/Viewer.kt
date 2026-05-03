@@ -32,6 +32,11 @@ interface Viewer {
     fun moveToPage(page: ReaderPage)
 
     /**
+     * Refreshes translation overlays for currently visible pages without rebuilding the viewer.
+     */
+    fun refreshTranslationOverlays() {}
+
+    /**
      * Called from the containing activity when a key [event] is received. It should return true
      * if the event was handled, false otherwise.
      */

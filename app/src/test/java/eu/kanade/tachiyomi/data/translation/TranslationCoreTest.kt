@@ -293,4 +293,120 @@ class TranslationCoreTest {
         validator.testSetup().ready shouldBe false
         validator.readiness().ready shouldBe false
     }
+
+    @Test
+    fun `queue ui groups by manga title and sorts chapters ascending`() {
+        val items = listOf(
+            queueItem(id = 1, mangaId = 2, mangaTitle = "Beta", chapterNumber = 5.0, chapterName = "Chapter 5"),
+            queueItem(id = 2, mangaId = 1, mangaTitle = "Alpha", chapterNumber = 2.0, chapterName = "Chapter 2"),
+            queueItem(id = 3, mangaId = 1, mangaTitle = "Alpha", chapterNumber = 1.0, chapterName = "Chapter 1"),
+        )
+
+        val groups = TranslationQueueUiModel.filterAndGroup(items, filters = emptySet())
+
+        groups.map { it.mangaTitle } shouldContainExactly listOf("Alpha", "Beta")
+        groups.first().items.map { it.id } shouldContainExactly listOf(3L, 2L)
+    }
+
+    @Test
+    fun `queue type filters are multi select and empty means all`() {
+        val items = listOf(
+            queueItem(id = 1, status = TranslationJobStatus.Queued.value),
+            queueItem(id = 2, status = TranslationJobStatus.Retrying.value),
+            queueItem(id = 3, status = TranslationJobStatus.Running.value),
+            queueItem(id = 4, status = TranslationJobStatus.PausedAuth.value),
+            queueItem(id = 5, status = TranslationJobStatus.Completed.value),
+        )
+
+        TranslationQueueUiModel.filterAndGroup(items, filters = emptySet())
+            .flatMap { it.items }
+            .map { it.id } shouldContainExactly listOf(1L, 2L, 3L, 4L, 5L)
+
+        TranslationQueueUiModel.filterAndGroup(
+            items,
+            filters = setOf(TranslationQueueTypeFilter.Waiting, TranslationQueueTypeFilter.Paused),
+        )
+            .flatMap { it.items }
+            .map { it.id } shouldContainExactly listOf(1L, 2L, 4L)
+    }
+
+    @Test
+    fun `adjacent identical logs collapse with count and time range`() {
+        val logs = listOf(
+            logItem(id = 3, createdAt = 3000, message = "Retry blocked", details = "same"),
+            logItem(id = 2, createdAt = 2000, message = "Retry blocked", details = "same"),
+            logItem(id = 1, createdAt = 1000, message = "Queued", details = "other"),
+        )
+
+        val grouped = TranslationLogUiModel.groupAdjacent(logs)
+
+        grouped.size shouldBe 2
+        grouped.first().count shouldBe 2
+        grouped.first().firstCreatedAt shouldBe 2000
+        grouped.first().latestCreatedAt shouldBe 3000
+        grouped.first().first.details shouldBe "same"
+    }
+
+    @Test
+    fun `non adjacent or different log details do not collapse`() {
+        val logs = listOf(
+            logItem(id = 4, message = "Retry blocked", details = "same"),
+            logItem(id = 3, message = "Queued", details = "other"),
+            logItem(id = 2, message = "Retry blocked", details = "same"),
+            logItem(id = 1, message = "Retry blocked", details = "different"),
+        )
+
+        TranslationLogUiModel.groupAdjacent(logs).map { it.count } shouldContainExactly listOf(1, 1, 1, 1)
+    }
+
+    private fun queueItem(
+        id: Long,
+        mangaId: Long = 1,
+        mangaTitle: String = "Alpha",
+        chapterNumber: Double? = 1.0,
+        chapterName: String? = "Chapter 1",
+        status: String = TranslationJobStatus.Queued.value,
+    ): TranslationQueueItem {
+        return TranslationQueueItem(
+            id = id,
+            mangaId = mangaId,
+            mangaTitle = mangaTitle,
+            chapterId = id,
+            chapterName = chapterName,
+            chapterNumber = chapterNumber,
+            pageIndex = null,
+            scope = TranslationScope.Chapter.value,
+            pipeline = "gemini_vision",
+            mode = TranslationMode.Overlay.value,
+            model = "gemini-3-flash-preview",
+            targetLanguage = "English",
+            sourceLanguage = null,
+            overwrite = false,
+            status = status,
+            progressCurrent = 0,
+            progressTotal = 1,
+            attempts = 0,
+            createdAt = id,
+            updatedAt = id,
+            errorMessage = null,
+        )
+    }
+
+    private fun logItem(
+        id: Long,
+        createdAt: Long = id,
+        message: String,
+        details: String?,
+    ): TranslationLogUiItem {
+        return TranslationLogUiItem(
+            id = id,
+            jobId = 1,
+            pageId = null,
+            createdAt = createdAt,
+            level = TranslationLogLevel.Warning.value,
+            tag = "queue",
+            message = message,
+            details = details,
+        )
+    }
 }

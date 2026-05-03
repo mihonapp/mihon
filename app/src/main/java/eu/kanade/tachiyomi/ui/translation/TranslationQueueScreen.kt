@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.translation
 
 import android.content.Context
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Row
@@ -9,10 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.Pause
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -30,6 +34,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,13 +52,21 @@ import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.data.translation.TranslationJob
 import eu.kanade.tachiyomi.data.translation.TranslationJobStatus
+import eu.kanade.tachiyomi.data.translation.GroupedTranslationLog
 import eu.kanade.tachiyomi.data.translation.TranslationLogDetailsFormatter
 import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
+import eu.kanade.tachiyomi.data.translation.TranslationLogUiItem
+import eu.kanade.tachiyomi.data.translation.TranslationLogUiModel
+import eu.kanade.tachiyomi.data.translation.TranslationQueueGroup
+import eu.kanade.tachiyomi.data.translation.TranslationQueueItem
+import eu.kanade.tachiyomi.data.translation.TranslationQueueTypeFilter
+import eu.kanade.tachiyomi.data.translation.TranslationQueueUiModel
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import eu.kanade.tachiyomi.data.translation.TranslationRetryPlanner
 import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
 import eu.kanade.tachiyomi.data.translation.TranslationWorkStartPolicy
 import eu.kanade.tachiyomi.data.translation.isRetryableFromQueue
+import eu.kanade.tachiyomi.data.translation.toJob
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.toPersistentList
@@ -85,31 +98,38 @@ object TranslationQueueScreen : Screen() {
         val jobs by screenModel.jobs.collectAsState()
         val logs by screenModel.logs.collectAsState()
         val isRunning by TranslationJob.isRunningFlow(context).collectAsState(false)
-        var selectedLog by remember { mutableStateOf<Translation_logs?>(null) }
+        var selectedLog by remember { mutableStateOf<GroupedTranslationLog?>(null) }
         var levelFilter by remember { mutableStateOf<String?>(null) }
         var tagFilter by remember { mutableStateOf<String?>(null) }
         var jobFilter by remember { mutableStateOf<Long?>(null) }
         var searchQuery by remember { mutableStateOf("") }
+        var selectedQueueFilters by remember { mutableStateOf(emptySet<TranslationQueueTypeFilter>()) }
+        var collapsedQueueGroups by remember { mutableStateOf(emptySet<String>()) }
+        var logsExpanded by rememberSaveable { mutableStateOf(false) }
         val activeJobCount by remember(jobs) {
             derivedStateOf { jobs.count { it.status !in FINISHED_STATUSES } }
         }
-        val filteredLogs by remember(logs, levelFilter, tagFilter, jobFilter, searchQuery) {
+        val queueGroups by remember(jobs, selectedQueueFilters) {
+            derivedStateOf { TranslationQueueUiModel.filterAndGroup(jobs, selectedQueueFilters) }
+        }
+        val groupedLogs by remember(logs, levelFilter, tagFilter, jobFilter, searchQuery) {
             derivedStateOf {
                 val query = searchQuery.trim()
-                logs.filter { log ->
+                val filteredLogs = logs.map(Translation_logs::toUiItem).filter { log ->
                     (levelFilter == null || log.level == levelFilter) &&
                         (tagFilter == null || log.tag == tagFilter) &&
-                        (jobFilter == null || log.job_id == jobFilter) &&
+                        (jobFilter == null || log.jobId == jobFilter) &&
                         (
                             query.isBlank() ||
                                 log.level.contains(query, ignoreCase = true) ||
                                 log.tag.contains(query, ignoreCase = true) ||
                                 log.message.contains(query, ignoreCase = true) ||
                                 log.details.orEmpty().contains(query, ignoreCase = true) ||
-                                log.job_id?.toString()?.contains(query) == true ||
-                                log.page_id?.toString()?.contains(query) == true
+                                log.jobId?.toString()?.contains(query) == true ||
+                                log.pageId?.toString()?.contains(query) == true
                             )
                 }
+                TranslationLogUiModel.groupAdjacent(filteredLogs)
             }
         }
         val activeFilterSummary = listOfNotNull(
@@ -165,6 +185,7 @@ object TranslationQueueScreen : Screen() {
                                                 tagFilter = null
                                                 jobFilter = null
                                                 searchQuery = ""
+                                                selectedQueueFilters = emptySet()
                                             },
                                         ),
                                     )
@@ -240,18 +261,56 @@ object TranslationQueueScreen : Screen() {
             }
 
             ScrollbarLazyColumn(contentPadding = contentPadding) {
-                items(
-                    count = jobs.size,
-                    key = { index -> jobs[index]._id },
-                ) { index ->
-                    TranslationJobItem(
-                        job = jobs[index],
-                        onRetry = { screenModel.retry(context, jobs[index]) },
-                        onCancel = { screenModel.cancel(jobs[index]) },
-                        onViewLogs = { jobFilter = jobs[index]._id },
-                    )
-                    HorizontalDivider()
+                if (jobs.isNotEmpty()) {
+                    item {
+                        TranslationQueueFilterRow(
+                            selectedFilters = selectedQueueFilters,
+                            onToggle = { filter ->
+                                selectedQueueFilters = if (filter in selectedQueueFilters) {
+                                    selectedQueueFilters - filter
+                                } else {
+                                    selectedQueueFilters + filter
+                                }
+                            },
+                        )
+                    }
                 }
+
+                queueGroups.forEach { group ->
+                    val expanded = group.key !in collapsedQueueGroups
+                    item(key = "group-${group.key}") {
+                        TranslationQueueGroupHeader(
+                            group = group,
+                            expanded = expanded,
+                            onClick = {
+                                collapsedQueueGroups = if (expanded) {
+                                    collapsedQueueGroups + group.key
+                                } else {
+                                    collapsedQueueGroups - group.key
+                                }
+                            },
+                        )
+                    }
+                    if (expanded) {
+                        items(
+                            count = group.items.size,
+                            key = { index -> group.items[index].id },
+                        ) { index ->
+                            val job = group.items[index]
+                            TranslationJobItem(
+                                job = job,
+                                onRetry = { screenModel.retry(context, job.toJob()) },
+                                onCancel = { screenModel.cancel(job.toJob()) },
+                                onViewLogs = {
+                                    jobFilter = job.id
+                                    logsExpanded = true
+                                },
+                            )
+                            HorizontalDivider()
+                        }
+                    }
+                }
+
                 if (logs.isNotEmpty()) {
                     item {
                         ListItem(
@@ -259,47 +318,57 @@ object TranslationQueueScreen : Screen() {
                             supportingContent = activeFilterSummary.takeIf { it.isNotBlank() }?.let {
                                 { Text(text = it) }
                             },
-                            trailingContent = if (activeFilterSummary.isNotBlank()) {
-                                {
+                            trailingContent = {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    if (activeFilterSummary.isNotBlank()) {
+                                        Text(
+                                            text = stringResource(MR.strings.translation_log_filter_all),
+                                            color = MaterialTheme.colorScheme.primary,
+                                            modifier = Modifier
+                                                .clickable {
+                                                    levelFilter = null
+                                                    tagFilter = null
+                                                    jobFilter = null
+                                                    searchQuery = ""
+                                                }
+                                                .padding(horizontal = 8.dp, vertical = 12.dp),
+                                        )
+                                    }
                                     Text(
-                                        text = stringResource(MR.strings.translation_log_filter_all),
+                                        text = stringResource(
+                                            if (logsExpanded) MR.strings.manga_info_collapse else MR.strings.manga_info_expand,
+                                        ),
                                         color = MaterialTheme.colorScheme.primary,
-                                        modifier = Modifier
-                                            .clickable {
-                                                levelFilter = null
-                                                tagFilter = null
-                                                jobFilter = null
-                                                searchQuery = ""
-                                            }
-                                            .padding(horizontal = 8.dp, vertical = 12.dp),
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 12.dp),
                                     )
                                 }
-                            } else {
-                                null
                             },
+                            modifier = Modifier.clickable { logsExpanded = !logsExpanded },
                         )
                     }
-                    item {
-                        OutlinedTextField(
-                            value = searchQuery,
-                            onValueChange = { searchQuery = it },
-                            label = { Text(text = stringResource(MR.strings.action_search_hint)) },
-                            singleLine = true,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 8.dp),
-                        )
+                    if (logsExpanded) {
+                        item {
+                            OutlinedTextField(
+                                value = searchQuery,
+                                onValueChange = { searchQuery = it },
+                                label = { Text(text = stringResource(MR.strings.action_search_hint)) },
+                                singleLine = true,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                            )
+                        }
+                        items(
+                            count = groupedLogs.size,
+                            key = { index -> "log-${groupedLogs[index].id}" },
+                        ) { index ->
+                            TranslationLogItem(
+                                log = groupedLogs[index],
+                                onClick = { selectedLog = groupedLogs[index] },
+                            )
+                            HorizontalDivider()
+                        }
                     }
-                }
-                items(
-                    count = filteredLogs.size,
-                    key = { index -> "log-${filteredLogs[index]._id}" },
-                ) { index ->
-                    TranslationLogItem(
-                        log = filteredLogs[index],
-                        onClick = { selectedLog = filteredLogs[index] },
-                    )
-                    HorizontalDivider()
                 }
             }
         }
@@ -326,8 +395,56 @@ private val FINISHED_STATUSES = setOf(
 )
 
 @Composable
+private fun TranslationQueueFilterRow(
+    selectedFilters: Set<TranslationQueueTypeFilter>,
+    onToggle: (TranslationQueueTypeFilter) -> Unit,
+) {
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+    ) {
+        items(TranslationQueueTypeFilter.entries) { filter ->
+            FilterChip(
+                selected = filter in selectedFilters,
+                onClick = { onToggle(filter) },
+                label = { Text(text = queueFilterLabel(filter)) },
+            )
+        }
+    }
+}
+
+@Composable
+private fun TranslationQueueGroupHeader(
+    group: TranslationQueueGroup,
+    expanded: Boolean,
+    onClick: () -> Unit,
+) {
+    ListItem(
+        headlineContent = {
+            Text(
+                text = group.mangaTitle,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        },
+        supportingContent = {
+            Text(text = "${group.items.size} job(s)")
+        },
+        trailingContent = {
+            Text(
+                text = stringResource(if (expanded) MR.strings.manga_info_collapse else MR.strings.manga_info_expand),
+                color = MaterialTheme.colorScheme.primary,
+            )
+        },
+        modifier = Modifier.clickable(onClick = onClick),
+    )
+}
+
+@Composable
 private fun TranslationJobItem(
-    job: Translation_jobs,
+    job: TranslationQueueItem,
     onRetry: () -> Unit,
     onCancel: () -> Unit,
     onViewLogs: () -> Unit,
@@ -338,20 +455,7 @@ private fun TranslationJobItem(
     ListItem(
         headlineContent = {
             Text(
-                text = buildString {
-                    append("#")
-                    append(job._id)
-                    append(" ")
-                    append(job.scope)
-                    job.chapter_id?.let {
-                        append(" · ch ")
-                        append(it)
-                    }
-                    job.page_index?.let {
-                        append(" · p ")
-                        append(it + 1)
-                    }
-                },
+                text = job.mangaTitle,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -359,16 +463,22 @@ private fun TranslationJobItem(
         supportingContent = {
             Text(
                 text = buildString {
+                    append(job.chapterName ?: "Chapter ${job.chapterId ?: "-"}")
+                    job.pageIndex?.let {
+                        append(" · p ")
+                        append(it + 1)
+                    }
+                    append("\n")
                     append(job.status)
                     append(" · ")
-                    append(job.progress_current)
+                    append(job.progressCurrent)
                     append("/")
-                    append(job.progress_total)
+                    append(job.progressTotal)
                     append(" · ")
-                    append(job.target_language.ifBlank { "app language" })
+                    append(job.targetLanguage.ifBlank { "app language" })
                     append(" · ")
                     append(job.model)
-                    job.error_message?.let {
+                    job.errorMessage?.let {
                         append("\n")
                         append(it)
                     }
@@ -400,23 +510,34 @@ private fun TranslationJobItem(
 
 @Composable
 private fun TranslationLogItem(
-    log: Translation_logs,
+    log: GroupedTranslationLog,
     onClick: () -> Unit,
 ) {
+    val item = log.first
     ListItem(
         headlineContent = {
             Text(
-                text = "${log.level} · ${log.tag} · ${log.message}",
+                text = buildString {
+                    append(item.level)
+                    append(" · ")
+                    append(item.tag)
+                    append(" · ")
+                    append(item.message)
+                    if (log.count > 1) {
+                        append(" ×")
+                        append(log.count)
+                    }
+                },
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = when (log.level) {
+                color = when (item.level) {
                     TranslationLogLevel.Error.value -> MaterialTheme.colorScheme.error
                     TranslationLogLevel.Warning.value -> MaterialTheme.colorScheme.tertiary
                     else -> MaterialTheme.colorScheme.onSurface
                 },
             )
         },
-        supportingContent = log.details?.let {
+        supportingContent = item.details?.let {
             {
                 Text(
                     text = it,
@@ -431,7 +552,7 @@ private fun TranslationLogItem(
 
 @Composable
 private fun TranslationLogDetailsDialog(
-    log: Translation_logs,
+    log: GroupedTranslationLog,
     onDismissRequest: () -> Unit,
     onCopy: () -> Unit,
 ) {
@@ -465,7 +586,7 @@ private class TranslationQueueScreenModel(
     private val setupValidator: TranslationSetupValidator = Injekt.get(),
 ) : ScreenModel {
 
-    val jobs = repository.observeJobs()
+    val jobs = repository.observeJobsForQueue()
         .stateIn(screenModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     val logs = repository.observeLogs()
@@ -588,7 +709,7 @@ private class TranslationQueueScreenModel(
                 .filter { it.status !in FINISHED_STATUSES }
                 .forEach {
                     repository.updateJobStatus(
-                        job = it,
+                        job = it.toJob(),
                         status = TranslationJobStatus.Cancelled,
                         errorMessage = null,
                     )
@@ -610,19 +731,50 @@ private class TranslationQueueScreenModel(
     }
 }
 
-private fun formatLogDetails(log: Translation_logs): String {
+private fun formatLogDetails(log: GroupedTranslationLog): String {
+    val item = log.first
     return buildString {
-        appendLine("Time: ${formatLogTimestamp(log.created_at)}")
-        appendLine("Level: ${log.level}")
-        appendLine("Tag: ${log.tag}")
-        appendLine("Job: ${log.job_id ?: "-"}")
-        appendLine("Page: ${log.page_id ?: "-"}")
-        appendLine("Message: ${log.message}")
-        log.details?.let {
+        appendLine("Time: ${formatLogTimestamp(item.createdAt)}")
+        if (log.count > 1) {
+            appendLine("Count: ${log.count}")
+            appendLine("First: ${formatLogTimestamp(log.firstCreatedAt)}")
+            appendLine("Latest: ${formatLogTimestamp(log.latestCreatedAt)}")
+        }
+        appendLine("Level: ${item.level}")
+        appendLine("Tag: ${item.tag}")
+        appendLine("Job: ${item.jobId ?: "-"}")
+        appendLine("Page: ${item.pageId ?: "-"}")
+        appendLine("Message: ${item.message}")
+        item.details?.let {
             appendLine()
             appendLine("Details:")
             append(it)
         }
+    }
+}
+
+private fun Translation_logs.toUiItem(): TranslationLogUiItem {
+    return TranslationLogUiItem(
+        id = _id,
+        jobId = job_id,
+        pageId = page_id,
+        createdAt = created_at,
+        level = level,
+        tag = tag,
+        message = message,
+        details = details,
+    )
+}
+
+@Composable
+private fun queueFilterLabel(filter: TranslationQueueTypeFilter): String {
+    return when (filter) {
+        TranslationQueueTypeFilter.Waiting -> "Waiting"
+        TranslationQueueTypeFilter.Translating -> "Translating"
+        TranslationQueueTypeFilter.Paused -> stringResource(MR.strings.paused)
+        TranslationQueueTypeFilter.Error -> "Error"
+        TranslationQueueTypeFilter.Done -> stringResource(MR.strings.completed)
+        TranslationQueueTypeFilter.Cancelled -> stringResource(MR.strings.cancelled)
     }
 }
 

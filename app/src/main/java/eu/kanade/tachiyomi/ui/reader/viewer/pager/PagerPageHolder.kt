@@ -83,6 +83,10 @@ class PagerPageHolder(
         loadJob = null
     }
 
+    fun refreshTranslationOverlay() {
+        scope.launch { setTranslationOverlay() }
+    }
+
     private fun initProgressIndicator() {
         if (progressIndicator == null) {
             progressIndicator = ReaderProgressIndicator(context)
@@ -263,7 +267,7 @@ class PagerPageHolder(
     }
 
     private suspend fun setTranslationOverlay() {
-        if (!translationPreferences.autoShowOverlay.get()) {
+        if (!viewer.activity.viewModel.state.value.translationOverlayVisible) {
             withUIContext { clearTranslationOverlay() }
             return
         }

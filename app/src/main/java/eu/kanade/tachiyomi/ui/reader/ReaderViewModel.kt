@@ -52,15 +52,19 @@ import eu.kanade.tachiyomi.util.storage.cacheImageDir
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.runBlocking
@@ -121,7 +125,9 @@ class ReaderViewModel @JvmOverloads constructor(
     private val application: Application = Injekt.get(),
 ) : ViewModel() {
 
-    private val mutableState = MutableStateFlow(State())
+    private val mutableState = MutableStateFlow(
+        State(translationOverlayVisible = translationPreferences.autoShowOverlay.get()),
+    )
     val state = mutableState.asStateFlow()
 
     private val eventChannel = Channel<Event>()
@@ -245,6 +251,7 @@ class ReaderViewModel @JvmOverloads constructor(
 
     private val incognitoMode: Boolean by lazy { getIncognitoState.await(manga?.source) }
     private val downloadAheadAmount = downloadPreferences.autoDownloadWhileReading.get()
+    private var translationOverlayWatchJob: Job? = null
 
     init {
         // To save state
@@ -259,6 +266,30 @@ class ReaderViewModel @JvmOverloads constructor(
                     currentChapter.requestedPage = currentChapter.chapter.last_page_read
                 }
                 chapterId = currentChapter.chapter.id!!
+            }
+            .launchIn(viewModelScope)
+
+        combine(
+            state.map { it.viewerChapters?.currChapter?.chapter?.id }.distinctUntilChanged(),
+            translationPreferences.targetLanguage.changes().onStart { emit(translationPreferences.targetLanguage.get()) },
+        ) { currentChapterId, _ ->
+            currentChapterId to translationTargetLanguage()
+        }
+            .distinctUntilChanged()
+            .onEach { (currentChapterId, targetLanguage) ->
+                translationOverlayWatchJob?.cancel()
+                translationOverlayWatchJob = null
+                if (currentChapterId != null) {
+                    translationOverlayWatchJob = translationRepository
+                        .observePagesByChapter(currentChapterId, targetLanguage)
+                        .drop(1)
+                        .onEach {
+                            if (state.value.translationOverlayVisible) {
+                                eventChannel.send(Event.RefreshTranslationOverlays)
+                            }
+                        }
+                        .launchIn(viewModelScope)
+                }
             }
             .launchIn(viewModelScope)
     }
@@ -500,8 +531,9 @@ class ReaderViewModel @JvmOverloads constructor(
     }
 
     fun toggleTranslationOverlay(): Boolean {
-        val enabled = translationPreferences.autoShowOverlay.toggle()
-        eventChannel.trySend(Event.ReloadViewerChapters)
+        val enabled = !state.value.translationOverlayVisible
+        mutableState.update { it.copy(translationOverlayVisible = enabled) }
+        eventChannel.trySend(Event.RefreshTranslationOverlays)
         return enabled
     }
 
@@ -555,7 +587,7 @@ class ReaderViewModel @JvmOverloads constructor(
                 )
                 withUIContext {
                     mutableState.update { it.copy(dialog = null) }
-                    eventChannel.send(Event.ReloadViewerChapters)
+                    eventChannel.send(Event.RefreshTranslationOverlays)
                     eventChannel.send(Event.TranslationOverlaySaved)
                 }
             } catch (e: Throwable) {
@@ -1132,6 +1164,7 @@ class ReaderViewModel @JvmOverloads constructor(
         val viewer: Viewer? = null,
         val dialog: Dialog? = null,
         val menuVisible: Boolean = false,
+        val translationOverlayVisible: Boolean = true,
         @IntRange(from = -100, to = 100) val brightnessOverlayValue: Int = 0,
     ) {
         val currentChapter: ReaderChapter?
@@ -1156,6 +1189,7 @@ class ReaderViewModel @JvmOverloads constructor(
 
     sealed interface Event {
         data object ReloadViewerChapters : Event
+        data object RefreshTranslationOverlays : Event
         data object PageChanged : Event
         data class SetOrientation(val orientation: Int) : Event
         data class SetCoverResult(val result: SetAsCoverResult) : Event

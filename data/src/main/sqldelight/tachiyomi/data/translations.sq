@@ -137,6 +137,19 @@ SELECT *
 FROM translation_jobs
 ORDER BY created_at DESC;
 
+getJobsForQueue:
+SELECT translation_jobs.*,
+    mangas.title AS manga_title,
+    chapters.name AS chapter_name,
+    chapters.chapter_number AS chapter_number
+FROM translation_jobs
+JOIN mangas ON mangas._id = translation_jobs.manga_id
+LEFT JOIN chapters ON chapters._id = translation_jobs.chapter_id
+ORDER BY mangas.title COLLATE NOCASE ASC,
+    chapters.chapter_number ASC,
+    translation_jobs.page_index ASC,
+    translation_jobs.created_at ASC;
+
 getPendingJobs:
 SELECT *
 FROM translation_jobs
@@ -328,6 +341,13 @@ getLogs:
 SELECT *
 FROM translation_logs
 ORDER BY created_at DESC;
+
+observePagesByChapter:
+SELECT *
+FROM translation_pages
+WHERE chapter_id = :chapterId
+AND target_language = :targetLanguage
+ORDER BY updated_at DESC;
 
 clearLogs:
 DELETE FROM translation_logs;

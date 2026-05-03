@@ -105,6 +105,10 @@ class WebtoonPageHolder(
         refreshLayoutParams()
     }
 
+    fun refreshTranslationOverlay() {
+        scope.launch { setTranslationOverlay(page) }
+    }
+
     private fun refreshLayoutParams() {
         frame.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
             if (!viewer.isContinuous) {
@@ -263,7 +267,7 @@ class WebtoonPageHolder(
     }
 
     private suspend fun setTranslationOverlay(page: ReaderPage?) {
-        if (!translationPreferences.autoShowOverlay.get()) {
+        if (!viewer.activity.viewModel.state.value.translationOverlayVisible) {
             withUIContext { frame.clearTranslationOverlay() }
             return
         }

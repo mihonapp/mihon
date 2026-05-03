@@ -170,6 +170,12 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             .filterIsInstance(PagerPageHolder::class.java)
             .firstOrNull { it.item == page }
 
+    override fun refreshTranslationOverlays() {
+        pager.children
+            .filterIsInstance(PagerPageHolder::class.java)
+            .forEach { it.refreshTranslationOverlay() }
+    }
+
     /**
      * Called when a new page (either a [ReaderPage] or [ChapterTransition]) is marked as active
      */
