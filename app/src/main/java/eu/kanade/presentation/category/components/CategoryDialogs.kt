@@ -8,9 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -34,7 +37,6 @@ import kotlinx.coroutines.delay
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.domain.category.model.Category
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import kotlin.time.Duration.Companion.seconds
@@ -263,21 +265,34 @@ fun ChangeCategoryDialog(
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
             ) {
-                Text(
-                    text = stringResource(MR.strings.categories_pinned),
-                )
-                selection.filter { it.value.isPinned }.forEach { checkbox ->
-                    val onChange: (CheckboxState<Category>) -> Unit = {
-                        val index = selection.indexOf(it)
-                        if (index != -1) {
-                            val mutableList = selection.toMutableList()
-                            mutableList[index] = it.next()
-                            selection = mutableList.toList().toImmutableList()
-                        }
+                if (selection.any { it.value.isPinned }) {
+                    Row(
+                        modifier = Modifier.padding(start = MaterialTheme.padding.small),
+                    )
+                    {
+                        Icon(
+                            imageVector = Icons.Filled.PushPin,
+                            contentDescription = stringResource(MR.strings.pinned_category),
+                        )
+                        Text(
+                            text = stringResource(MR.strings.categories_pinned),
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(start = MaterialTheme.padding.medium),
+                        )
                     }
-                    CategoryItem(checkbox, onChange)
+                    selection.filter { it.value.isPinned }.forEach { checkbox ->
+                        val onChange: (CheckboxState<Category>) -> Unit = {
+                            val index = selection.indexOf(it)
+                            if (index != -1) {
+                                val mutableList = selection.toMutableList()
+                                mutableList[index] = it.next()
+                                selection = mutableList.toList().toImmutableList()
+                            }
+                        }
+                        CategoryItem(checkbox, onChange)
+                    }
+                    HorizontalDivider()
                 }
-                HorizontalDivider()
                 selection.filterNot { it.value.isPinned }.forEach { checkbox ->
                     val onChange: (CheckboxState<Category>) -> Unit = {
                         val index = selection.indexOf(it)
@@ -322,7 +337,7 @@ fun CategoryItem(
 
         Text(
             text = checkbox.value.visualName,
-            modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
+            modifier = Modifier.padding(start = MaterialTheme.padding.medium),
         )
     }
 }

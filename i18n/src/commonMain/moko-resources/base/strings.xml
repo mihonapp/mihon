@@ -820,6 +820,7 @@
     <!-- missing undo feature after Compose rewrite #7454 -->
     <string name="snack_categories_deleted">Categories deleted</string>
     <string name="categories_pinned">Pinned categories</string>
+    <string name="pinned_category">Pinned category</string>
 
     <!-- Dialog option with checkbox view -->
     <string name="dialog_with_checkbox_remove_description">This will remove the read date of this chapter. Are you sure?</string>
