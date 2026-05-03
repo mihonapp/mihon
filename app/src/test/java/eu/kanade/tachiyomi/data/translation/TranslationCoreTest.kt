@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.translation
 
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.maps.shouldContain
+import io.kotest.matchers.maps.shouldNotContainKey
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldNotContain
 import kotlinx.coroutines.test.runTest
@@ -59,7 +60,7 @@ class TranslationCoreTest {
             topP = 0.9f,
             topK = 40,
             maxOutputTokens = 4096,
-            thinkingBudget = 1024,
+            thinkingLevel = TranslationThinkingLevel.Low.value,
             rawJsonOverride = """{"temperature":0.7,"candidateCount":1}""",
         )
 
@@ -70,7 +71,77 @@ class TranslationCoreTest {
         obj["topK"].toString() shouldBe "40"
         obj["maxOutputTokens"].toString() shouldBe "4096"
         obj["candidateCount"].toString() shouldBe "1"
-        obj["thinkingConfig"]!!.jsonObject shouldContain ("thinkingBudget" to Json.parseToJsonElement("1024"))
+        obj["thinkingConfig"]!!.jsonObject shouldContain (
+            "thinkingLevel" to Json.parseToJsonElement("\"low\"")
+            )
+        obj["thinkingConfig"]!!.jsonObject shouldNotContainKey "thinkingBudget"
+    }
+
+    @Test
+    fun `generation config defaults match Gemini 3 translation defaults`() {
+        val preferences = TranslationPreferences(InMemoryPreferenceStore())
+
+        preferences.temperature.get() shouldBe 1f
+        preferences.topP.get() shouldBe 0.95f
+        preferences.topK.get() shouldBe 64
+        preferences.maxOutputTokens.get() shouldBe 65_536
+        preferences.thinkingLevel.get() shouldBe TranslationThinkingLevel.High.value
+    }
+
+    @Test
+    fun `model output cap uses fetched selected model limit`() {
+        val models = listOf(
+            GeminiModel(name = "models/gemini-3-flash-preview", outputTokenLimit = 65_536),
+            GeminiModel(name = "models/custom-low-output", outputTokenLimit = 8_192),
+        )
+
+        TranslationModelLimits.maxOutputTokensFor(
+            requested = 65_536,
+            selectedModel = "custom-low-output",
+            cachedModels = models,
+        ) shouldBe 8_192
+    }
+
+    @Test
+    fun `unknown model output cap preserves Gemini 3 default`() {
+        TranslationModelLimits.maxOutputTokensFor(
+            requested = 65_536,
+            selectedModel = "unfetched-custom-model",
+            cachedModels = emptyList(),
+        ) shouldBe 65_536
+    }
+
+    @Test
+    fun `paused auth is recoverable but paused quota needs explicit retry`() {
+        TranslationJobStatus.PausedAuth.isActiveForDedupe() shouldBe true
+        TranslationJobStatus.PausedAuth.isRetryableFromQueue() shouldBe true
+        TranslationJobStatus.PausedAuth.canAutoRequeueAfterSetup() shouldBe true
+
+        TranslationJobStatus.PausedQuota.isActiveForDedupe() shouldBe true
+        TranslationJobStatus.PausedQuota.isRetryableFromQueue() shouldBe true
+        TranslationJobStatus.PausedQuota.canAutoRequeueAfterSetup() shouldBe false
+    }
+
+    @Test
+    fun `active duplicate matching is exact`() {
+        val queued = TranslationJobSignature(
+            mangaId = 1,
+            chapterId = 2,
+            pageIndex = null,
+            scope = TranslationScope.Chapter,
+            pipeline = "gemini_vision",
+            mode = TranslationMode.Overlay,
+            targetLanguage = "English",
+            status = TranslationJobStatus.Queued,
+        )
+
+        val same = queued.copy(status = TranslationJobStatus.PausedAuth)
+        val differentPage = queued.copy(scope = TranslationScope.Image, pageIndex = 0)
+        val finished = queued.copy(status = TranslationJobStatus.Completed)
+
+        TranslationJobDedupe.findActiveDuplicate(listOf(queued), same) shouldBe queued
+        TranslationJobDedupe.findActiveDuplicate(listOf(queued), differentPage) shouldBe null
+        TranslationJobDedupe.findActiveDuplicate(listOf(finished), same) shouldBe null
     }
 
     @Test

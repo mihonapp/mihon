@@ -113,7 +113,7 @@ class TranslationQueueProcessor(
 
         val mark = TimeSource.Monotonic.markNow()
         val image = imageResolver.resolvePage(job.manga_id, chapterId, pageIndex)
-        val generationConfig = preferences.toGenerationConfig()
+        val generationConfig = preferences.toGenerationConfig(job.model)
         repository.insertLog(
             jobId = job._id,
             pageId = null,
@@ -127,7 +127,7 @@ class TranslationQueueProcessor(
         )
 
         val overlay = when (job.pipeline) {
-            "local_ocr_gemini" -> translateWithLocalOcr(job, image, targetLanguage)
+            "local_ocr_gemini" -> translateWithLocalOcr(job, image, targetLanguage, generationConfig)
             else -> gemini.translatePageImage(
                 apiKey = preferences.geminiApiKey.get(),
                 model = job.model,
@@ -183,6 +183,7 @@ class TranslationQueueProcessor(
         job: Translation_jobs,
         image: TranslationPageImage,
         targetLanguage: String,
+        generationConfig: TranslationGenerationConfig,
     ): TranslationOverlayResult {
         val bitmap = BitmapFactory.decodeByteArray(image.bytes, 0, image.bytes.size)
             ?: error("Unable to decode page image for OCR")
@@ -207,7 +208,7 @@ class TranslationQueueProcessor(
             blocks = blocks,
             targetLanguage = targetLanguage,
             sourceLanguage = job.source_language,
-            generationConfig = preferences.toGenerationConfig(),
+            generationConfig = generationConfig,
             extraInstructions = preferences.globalInstructions.get(),
         )
     }
@@ -283,13 +284,18 @@ class TranslationQueueProcessor(
         return if (canRetry) TranslationProcessResult.RetryLater else TranslationProcessResult.Completed
     }
 
-    private fun TranslationPreferences.toGenerationConfig(): TranslationGenerationConfig {
+    private fun TranslationPreferences.toGenerationConfig(model: String): TranslationGenerationConfig {
+        val cachedModels = TranslationModelLimits.decodeModels(cachedModelsJson.get(), json)
         return TranslationGenerationConfig(
             temperature = temperature.get(),
             topP = topP.get(),
             topK = topK.get(),
-            maxOutputTokens = max(1, maxOutputTokens.get()),
-            thinkingBudget = thinkingBudget.get().takeIf { it >= 0 },
+            maxOutputTokens = TranslationModelLimits.maxOutputTokensFor(
+                requested = max(1, maxOutputTokens.get()),
+                selectedModel = model,
+                cachedModels = cachedModels,
+            ),
+            thinkingLevel = thinkingLevel.get(),
             rawJsonOverride = rawJsonOverride.get(),
         )
     }

@@ -143,6 +143,26 @@ FROM translation_jobs
 WHERE status IN ('queued', 'retrying')
 ORDER BY created_at ASC;
 
+getJobsByStatus:
+SELECT *
+FROM translation_jobs
+WHERE status = :status
+ORDER BY created_at ASC;
+
+getActiveMatchingJob:
+SELECT *
+FROM translation_jobs
+WHERE manga_id = :mangaId
+AND ((chapter_id IS NULL AND :chapterId IS NULL) OR chapter_id = :chapterId)
+AND ((page_index IS NULL AND :pageIndex IS NULL) OR page_index = :pageIndex)
+AND scope = :scope
+AND pipeline = :pipeline
+AND mode = :mode
+AND target_language = :targetLanguage
+AND status IN ('queued', 'running', 'retrying', 'paused_auth', 'paused_quota')
+ORDER BY created_at ASC
+LIMIT 1;
+
 updateJobStatus:
 UPDATE translation_jobs
 SET status = :status,

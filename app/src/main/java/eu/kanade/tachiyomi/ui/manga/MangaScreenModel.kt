@@ -761,8 +761,10 @@ class MangaScreenModel(
             } else {
                 TranslationMode.Overlay
             }
+            var queued = 0
+            var skipped = 0
             chapters.forEach { chapter ->
-                translationRepository.enqueueJob(
+                val result = translationRepository.enqueueJob(
                     mangaId = manga.id,
                     chapterId = chapter.id,
                     pageIndex = null,
@@ -774,11 +776,22 @@ class MangaScreenModel(
                     sourceLanguage = translationPreferences.sourceLanguage.get().ifBlank { null },
                     overwrite = !translationPreferences.skipExistingOverlays.get(),
                 )
+                if (result.inserted) queued++ else skipped++
             }
             TranslationJob.start(context)
             withUIContext {
-                context.toast("Queued translation for ${chapters.size} chapter(s)")
+                context.toast(translationQueueToast(context, queued, skipped))
             }
+        }
+    }
+
+    private fun translationQueueToast(context: Context, queued: Int, skipped: Int): String {
+        return when {
+            queued > 0 && skipped > 0 -> {
+                context.stringResource(MR.strings.translation_queue_mixed_summary, queued, skipped)
+            }
+            queued > 0 -> context.stringResource(MR.strings.translation_queued_summary, queued)
+            else -> context.stringResource(MR.strings.translation_already_queued)
         }
     }
 

@@ -48,6 +48,7 @@ import eu.kanade.tachiyomi.util.editCover
 import eu.kanade.tachiyomi.util.lang.byteSize
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.cacheImageDir
+import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -64,6 +65,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import tachiyomi.core.common.preference.toggle
+import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.core.common.util.lang.withIOContext
@@ -82,6 +84,7 @@ import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.translation.service.TranslationPreferences
+import tachiyomi.i18n.MR
 import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -586,7 +589,7 @@ class ReaderViewModel @JvmOverloads constructor(
             } else {
                 TranslationMode.Overlay
             }
-            translationRepository.enqueueJob(
+            val result = translationRepository.enqueueJob(
                 mangaId = manga.id,
                 chapterId = chapterId,
                 pageIndex = pageIndex,
@@ -599,6 +602,15 @@ class ReaderViewModel @JvmOverloads constructor(
                 overwrite = !translationPreferences.skipExistingOverlays.get(),
             )
             TranslationJob.start(application)
+            withUIContext {
+                application.toast(
+                    if (result.inserted) {
+                        application.stringResource(MR.strings.translation_queued_summary, 1)
+                    } else {
+                        application.stringResource(MR.strings.translation_already_queued)
+                    },
+                )
+            }
         }
     }
 

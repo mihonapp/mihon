@@ -74,24 +74,56 @@ class TranslationRepository(
         sourceLanguage: String?,
         overwrite: Boolean,
         progressTotal: Long = 1,
-    ): Long {
-        val now = System.currentTimeMillis()
-        database.translationsQueries.insertJob(
-            mangaId = mangaId,
-            chapterId = chapterId,
-            pageIndex = pageIndex,
-            scope = scope.value,
-            pipeline = pipeline,
-            mode = mode.value,
-            model = model,
-            targetLanguage = targetLanguage,
-            sourceLanguage = sourceLanguage,
-            overwrite = overwrite,
-            status = TranslationJobStatus.Queued.value,
-            progressTotal = progressTotal,
-            createdAt = now,
-        )
-        return database.translationsQueries.lastInsertedJobId().awaitAsOne()
+    ): TranslationEnqueueResult {
+        var result: TranslationEnqueueResult? = null
+        database.transaction {
+            val duplicate = database.translationsQueries.getActiveMatchingJob(
+                mangaId = mangaId,
+                chapterId = chapterId,
+                pageIndex = pageIndex,
+                scope = scope.value,
+                pipeline = pipeline,
+                mode = mode.value,
+                targetLanguage = targetLanguage,
+            ).awaitAsOneOrNull()
+            if (duplicate != null) {
+                insertLog(
+                    jobId = duplicate._id,
+                    pageId = null,
+                    level = TranslationLogLevel.Info,
+                    tag = "queue",
+                    message = "Skipped duplicate translation job",
+                    details = buildString {
+                        append("existing_job=${duplicate._id}, manga=$mangaId, chapter=$chapterId, ")
+                        append("page=$pageIndex, scope=${scope.value}, target=${targetLanguage.ifBlank { "app language" }}")
+                    },
+                )
+                result = TranslationEnqueueResult(jobId = duplicate._id, inserted = false)
+                return@transaction
+            }
+
+            val now = System.currentTimeMillis()
+            database.translationsQueries.insertJob(
+                mangaId = mangaId,
+                chapterId = chapterId,
+                pageIndex = pageIndex,
+                scope = scope.value,
+                pipeline = pipeline,
+                mode = mode.value,
+                model = model,
+                targetLanguage = targetLanguage,
+                sourceLanguage = sourceLanguage,
+                overwrite = overwrite,
+                status = TranslationJobStatus.Queued.value,
+                progressTotal = progressTotal,
+                createdAt = now,
+            )
+            result = TranslationEnqueueResult(
+                jobId = database.translationsQueries.lastInsertedJobId().awaitAsOne(),
+                inserted = true,
+            )
+        }
+        return requireNotNull(result)
     }
 
     suspend fun updateJobStatus(
@@ -132,6 +164,29 @@ class TranslationRepository(
 
     suspend fun clearPages() {
         database.translationsQueries.clearPages()
+    }
+
+    suspend fun requeuePausedAuthJobs(reason: String): Long {
+        val jobs = database.translationsQueries.getJobsByStatus(TranslationJobStatus.PausedAuth.value).awaitAsList()
+        database.transaction {
+            jobs.forEach { job ->
+                updateJobStatus(
+                    job = job,
+                    status = TranslationJobStatus.Queued,
+                    errorMessage = null,
+                    attempts = 0,
+                )
+                insertLog(
+                    jobId = job._id,
+                    pageId = null,
+                    level = TranslationLogLevel.Info,
+                    tag = "queue",
+                    message = "Requeued paused auth translation",
+                    details = reason,
+                )
+            }
+        }
+        return jobs.size.toLong()
     }
 
     suspend fun saveOverlay(
@@ -267,6 +322,11 @@ class TranslationRepository(
         private const val MAX_ERROR_LENGTH = 4_000
     }
 }
+
+data class TranslationEnqueueResult(
+    val jobId: Long,
+    val inserted: Boolean,
+)
 
 data class SavedTranslationPage(
     val page: Translation_pages,

@@ -14,5 +14,10 @@ class TranslationPreferencesTest {
         preferences.geminiModel.get() shouldBe "gemini-3-flash-preview"
         Preference.isPrivate(preferences.geminiApiKey.key()) shouldBe true
         Preference.isPrivate(preferences.setupFingerprint.key()) shouldBe true
+        preferences.temperature.get() shouldBe 1f
+        preferences.topP.get() shouldBe 0.95f
+        preferences.topK.get() shouldBe 64
+        preferences.maxOutputTokens.get() shouldBe 65_536
+        preferences.thinkingLevel.get() shouldBe "high"
     }
 }

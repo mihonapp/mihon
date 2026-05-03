@@ -29,6 +29,7 @@ import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
+import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
@@ -47,9 +48,11 @@ import kotlinx.coroutines.flow.updateAndGet
 import mihon.core.common.utils.mutate
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.TriState
+import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.compareToWithCollator
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.launchNonCancellable
+import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.SetMangaCategories
 import tachiyomi.domain.category.model.Category
@@ -70,6 +73,7 @@ import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracksPerManga
 import tachiyomi.domain.track.model.Track
 import tachiyomi.domain.translation.service.TranslationPreferences
+import tachiyomi.i18n.MR
 import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -544,10 +548,14 @@ class LibraryScreenModel(
             } else {
                 TranslationMode.Overlay
             }
+            var queued = 0
+            var skipped = 0
+            var totalChapters = 0
             mangas.forEach { manga ->
                 getChaptersByMangaId.await(manga.id)
                     .forEach { chapter ->
-                        translationRepository.enqueueJob(
+                        totalChapters++
+                        val result = translationRepository.enqueueJob(
                             mangaId = manga.id,
                             chapterId = chapter.id,
                             pageIndex = null,
@@ -559,11 +567,26 @@ class LibraryScreenModel(
                             sourceLanguage = translationPreferences.sourceLanguage.get().ifBlank { null },
                             overwrite = !translationPreferences.skipExistingOverlays.get(),
                         )
+                        if (result.inserted) queued++ else skipped++
                     }
             }
             TranslationJob.start(application)
+            withUIContext {
+                application.toast(translationQueueToast(queued, skipped, totalChapters))
+            }
         }
         clearSelection()
+    }
+
+    private fun translationQueueToast(queued: Int, skipped: Int, totalChapters: Int): String {
+        return when {
+            totalChapters == 0 -> application.stringResource(MR.strings.translation_nothing_to_queue)
+            queued > 0 && skipped > 0 -> {
+                application.stringResource(MR.strings.translation_queue_mixed_summary, queued, skipped)
+            }
+            queued > 0 -> application.stringResource(MR.strings.translation_queued_summary, queued)
+            else -> application.stringResource(MR.strings.translation_already_queued)
+        }
     }
 
     /**

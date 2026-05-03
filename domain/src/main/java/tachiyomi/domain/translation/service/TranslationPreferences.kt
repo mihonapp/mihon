@@ -36,6 +36,7 @@ class TranslationPreferences(
     val setupTestedAt: Preference<Long> = preferenceStore.getLong("translation_setup_tested_at", 0)
     val setupStatus: Preference<String> = preferenceStore.getString("translation_setup_status", "never")
     val setupMessage: Preference<String> = preferenceStore.getString("translation_setup_message", "")
+    val cachedModelsJson: Preference<String> = preferenceStore.getString("translation_cached_models_json", "")
 
     val targetLanguage: Preference<String> = preferenceStore.getString("translation_target_language", "")
     val sourceLanguage: Preference<String> = preferenceStore.getString("translation_source_language", "")
@@ -48,11 +49,11 @@ class TranslationPreferences(
     val rawDebugLogging: Preference<Boolean> = preferenceStore.getBoolean("translation_raw_debug_logging", false)
     val enableInpaint: Preference<Boolean> = preferenceStore.getBoolean("translation_enable_inpaint", false)
 
-    val temperature: Preference<Float> = preferenceStore.getFloat("translation_temperature", 0.2f)
-    val topP: Preference<Float> = preferenceStore.getFloat("translation_top_p", 0.9f)
-    val topK: Preference<Int> = preferenceStore.getInt("translation_top_k", 40)
-    val maxOutputTokens: Preference<Int> = preferenceStore.getInt("translation_max_output_tokens", 4096)
-    val thinkingBudget: Preference<Int> = preferenceStore.getInt("translation_thinking_budget", 1024)
+    val temperature: Preference<Float> = preferenceStore.getFloat("translation_temperature", 1f)
+    val topP: Preference<Float> = preferenceStore.getFloat("translation_top_p", 0.95f)
+    val topK: Preference<Int> = preferenceStore.getInt("translation_top_k", 64)
+    val maxOutputTokens: Preference<Int> = preferenceStore.getInt("translation_max_output_tokens", 65_536)
+    val thinkingLevel: Preference<String> = preferenceStore.getString("translation_thinking_level", "high")
     val rawJsonOverride: Preference<String> = preferenceStore.getString("translation_raw_json_override", "")
 
     val globalInstructions: Preference<String> = preferenceStore.getString("translation_global_instructions", "")
