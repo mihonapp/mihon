@@ -22,7 +22,7 @@ interface HistoryRepository {
 
     suspend fun deleteAllHistory(): Boolean
 
-    suspend fun deleteHistoryInRange(startDate: Date, endDate: Date)
+    suspend fun deleteHistoryInRange(startDate: Date, endDate: Date): Boolean
 
     suspend fun upsertHistory(historyUpdate: HistoryUpdate)
 }

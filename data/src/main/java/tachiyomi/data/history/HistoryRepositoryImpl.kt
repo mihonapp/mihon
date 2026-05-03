@@ -68,12 +68,14 @@ class HistoryRepositoryImpl(
         }
     }
 
-    override suspend fun deleteHistoryInRange(startDate: Date, endDate: Date) {
-       try {
-           handler.await { historyQueries.deleteHistoryInRange(startDate,endDate) }
-       } catch (e: Exception){
-           logcat(LogPriority.ERROR, throwable = e)
-       }
+    override suspend fun deleteHistoryInRange(startDate: Date, endDate: Date): Boolean {
+        return try {
+            database.historyQueries.deleteHistoryInRange(startDate, endDate)
+            true
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, throwable = e)
+            false
+        }
     }
 
     override suspend fun upsertHistory(historyUpdate: HistoryUpdate) {

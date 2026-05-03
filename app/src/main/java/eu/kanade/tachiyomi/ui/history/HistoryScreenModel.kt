@@ -127,7 +127,11 @@ class HistoryScreenModel(
     }
 
     fun removeHistoryInRange(startDate: Date, endDate: Date) {
-        screenModelScope.launchIO { removeHistory }
+        screenModelScope.launchIO {
+            val result = removeHistory.awaitRange(startDate, endDate)
+            if (!result) return@launchIO
+            _events.send(Event.HistoryCleared)
+        }
     }
 
     fun removeHistoryTimeRange(timeRange: HistoryDeleteTimeRange) {

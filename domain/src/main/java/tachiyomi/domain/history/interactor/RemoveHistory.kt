@@ -20,7 +20,7 @@ class RemoveHistory(
         repository.resetHistoryByMangaId(mangaId)
     }
 
-    suspend fun awaitRange(startDate: Date, endDate: Date){
-        repository.deleteHistoryInRange(startDate,endDate)
+    suspend fun awaitRange(startDate: Date, endDate: Date): Boolean {
+        return repository.deleteHistoryInRange(startDate, endDate)
     }
 }

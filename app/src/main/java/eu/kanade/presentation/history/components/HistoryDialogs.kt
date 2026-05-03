@@ -1,5 +1,8 @@
 package eu.kanade.presentation.history.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -70,6 +74,7 @@ fun HistoryDeleteDialog(
         },
     )
 }
+
 @Composable
 fun HistoryDeleteTimeRangeDialog(
     onDismissRequest: () -> Unit,
@@ -81,14 +86,18 @@ fun HistoryDeleteTimeRangeDialog(
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
-            Text(text = stringResource(MR.strings.action_remove_everything))
+            // MR.strings.action_remove_history
+            Text(text = stringResource(MR.strings.action_remove_history))
         },
         text = {
             Column {
-                Text(
-                    text = stringResource(MR.strings.clear_history_confirmation),
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
+                if (selectedOption == HistoryDeleteTimeRange.EVERYTHING) {
+                    Text(
+                        text = stringResource(MR.strings.clear_history_confirmation),
+                        modifier = Modifier.padding(bottom = 8.dp),
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
                 Column(Modifier.selectableGroup()) {
                     radioOptions.forEach { option ->
                         Row(
@@ -98,18 +107,18 @@ fun HistoryDeleteTimeRangeDialog(
                                 .selectable(
                                     selected = (option == selectedOption),
                                     onClick = { onOptionSelected(option) },
-                                    role = Role.RadioButton
+                                    role = Role.RadioButton,
                                 ),
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             RadioButton(
                                 selected = (option == selectedOption),
-                                onClick = null
+                                onClick = null,
                             )
                             Text(
                                 text = stringResource(option.timeRange),
                                 style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.padding(start = 16.dp)
+                                modifier = Modifier.padding(start = 16.dp),
                             )
                         }
                     }
@@ -117,10 +126,12 @@ fun HistoryDeleteTimeRangeDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = {
-                onDelete(selectedOption)
-                onDismissRequest()
-            }) {
+            TextButton(
+                onClick = {
+                    onDelete(selectedOption)
+                    onDismissRequest()
+                },
+            ) {
                 Text(text = stringResource(MR.strings.action_ok))
             }
         },
@@ -128,7 +139,7 @@ fun HistoryDeleteTimeRangeDialog(
             TextButton(onClick = onDismissRequest) {
                 Text(text = stringResource(MR.strings.action_cancel))
             }
-        }
+        },
     )
 }
 
