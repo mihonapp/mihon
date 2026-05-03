@@ -103,14 +103,12 @@ class LibraryScreenModel(
                 combine(getTracksPerManga.subscribe(), getTrackingFiltersFlow(), ::Pair),
                 getLibraryItemPreferencesFlow(),
             ) { searchQuery, categories, favorites, (tracksMap, trackingFilters), itemPreferences ->
-                val showSystemCategory = favorites.any { it.libraryManga.categories.contains(0) }
                 val filteredFavorites = favorites
                     .applyFilters(tracksMap, trackingFilters, itemPreferences)
                     .let { if (searchQuery == null) it else it.filter { m -> m.matches(searchQuery) } }
 
                 LibraryData(
                     isInitialized = true,
-                    showSystemCategory = showSystemCategory,
                     categories = categories,
                     favorites = filteredFavorites,
                     tracksMap = tracksMap,
@@ -132,7 +130,7 @@ class LibraryScreenModel(
                 .distinctUntilChanged()
                 .map { data ->
                     data.favorites
-                        .applyGrouping(data.categories, data.showSystemCategory)
+                        .applyGrouping(data.categories)
                         .applySort(data.favoritesById, data.tracksMap, data.loggedInTrackerIds)
                 }
                 .collectLatest {
@@ -261,26 +259,35 @@ class LibraryScreenModel(
 
     private fun List<LibraryItem>.applyGrouping(
         categories: List<Category>,
-        showSystemCategory: Boolean,
     ): Map</* PinnedCategory */ Category, Map<Category, List</* LibraryItem */ Long>>> {
         val groupCache = mutableMapOf</* PinnedCategory */
             Long,
             MutableMap</* Category */ Long, MutableList</* LibraryItem */ Long>>,
             >()
+        var showPinnedSystemCategory = false
+        val showSystemCategoryCache = mutableMapOf<Long, Boolean>()
         forEach { item ->
             item.libraryManga.pinnedCategories.forEach { pinnedCategoryId ->
                 item.libraryManga.categories.forEach { categoryId ->
                     groupCache.getOrPut(pinnedCategoryId) { mutableMapOf() }
                         .getOrPut(categoryId) { mutableListOf() }.add(item.id)
+
+                    if (categoryId == 0L) {
+                        showSystemCategoryCache[pinnedCategoryId] = true
+                    }
+                }
+
+                if (pinnedCategoryId == -1L) {
+                    showPinnedSystemCategory = true
                 }
             }
         }
-        val pinnedCats = categories.filter { it.isPinned }
-        val normalCats = categories.filterNot { it.isPinned || (!showSystemCategory && it.isSystemCategory) }
+        val pinnedCats = categories.filter { it.isPinned && (!it.isSystemCategory || showPinnedSystemCategory) }
+        val normalCats = categories.filterNot { it.isPinned }
         return pinnedCats.associateWith { pinnedCat ->
             normalCats.associateWith { cat ->
                 groupCache[pinnedCat.id]?.toMap().orEmpty()[cat.id]?.toList().orEmpty()
-            }
+            }.filter { !it.key.isSystemCategory || showSystemCategoryCache[pinnedCat.id] == true }
         }
     }
 
@@ -776,7 +783,6 @@ class LibraryScreenModel(
     @Immutable
     data class LibraryData(
         val isInitialized: Boolean = false,
-        val showSystemCategory: Boolean = false,
         val categories: List<Category> = emptyList(),
         val favorites: List<LibraryItem> = emptyList(),
         val tracksMap: Map</* Manga */ Long, List<Track>> = emptyMap(),
