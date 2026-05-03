@@ -1,8 +1,5 @@
 package eu.kanade.presentation.history.components
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -86,7 +82,6 @@ fun HistoryDeleteTimeRangeDialog(
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
-            // MR.strings.action_remove_history
             Text(text = stringResource(MR.strings.action_remove_history))
         },
         text = {
