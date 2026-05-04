@@ -72,12 +72,6 @@ object SettingsLibraryScreen : SearchableSettings {
         val scope = rememberCoroutineScope()
         val userCategoriesCount = allCategories.filterNot(Category::isSystemCategory).size
 
-        // For default category
-        val ids = listOf(libraryPreferences.defaultCategory.defaultValue()) +
-            allCategories.fastMap { it.id.toInt() }
-        val labels = listOf(stringResource(MR.strings.default_category_summary)) +
-            allCategories.fastMap { it.visualName }
-
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.categories),
             preferenceItems = persistentListOf(
@@ -90,10 +84,9 @@ object SettingsLibraryScreen : SearchableSettings {
                     ),
                     onClick = { navigator.push(CategoryScreen()) },
                 ),
-                Preference.PreferenceItem.ListPreference(
-                    preference = libraryPreferences.defaultCategory,
-                    entries = ids.zip(labels).toMap().toImmutableMap(),
-                    title = stringResource(MR.strings.default_category),
+                defaultCategoryPreferences(
+                    allCategories = allCategories,
+                    libraryPreferences = libraryPreferences,
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     preference = libraryPreferences.categorizedDisplaySettings,
@@ -108,6 +101,55 @@ object SettingsLibraryScreen : SearchableSettings {
                     },
                 ),
             ),
+        )
+    }
+
+    @Composable
+    private fun defaultCategoryPreferences(
+        allCategories: List<Category>,
+        libraryPreferences: LibraryPreferences,
+    ): Preference.PreferenceItem<out Any, out Any> {
+        val pinnedCategories = allCategories.filter { it.isPinned }
+        val unpinnedCategories = allCategories.filterNot { it.isPinned }
+
+        return when (pinnedCategories.isEmpty()) {
+            true -> {
+                defaultCategoryPreference(
+                    categories = unpinnedCategories,
+                    defaultCategoryPreference = libraryPreferences.defaultCategory,
+                    title = stringResource(MR.strings.default_category),
+                )
+            }
+            false -> {
+                defaultCategoryPreference(
+                    categories = pinnedCategories,
+                    defaultCategoryPreference = libraryPreferences.defaultPinnedCategory,
+                    title = stringResource(MR.strings.default_pinned_category),
+                )
+                defaultCategoryPreference(
+                    categories = unpinnedCategories,
+                    defaultCategoryPreference = libraryPreferences.defaultCategory,
+                    title = stringResource(MR.strings.default_category),
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun defaultCategoryPreference(
+        categories: List<Category>,
+        defaultCategoryPreference: tachiyomi.core.common.preference.Preference<Int>,
+        title: String,
+    ): Preference.PreferenceItem<out Any, out Any> {
+        val ids = listOf<Int>(defaultCategoryPreference.defaultValue()) +
+            categories.fastMap { it.id.toInt() }
+        val labels = listOf(stringResource(MR.strings.default_category_summary)) +
+            categories.fastMap { it.visualName }
+
+        return Preference.PreferenceItem.ListPreference(
+            preference = defaultCategoryPreference,
+            entries = ids.zip(labels).toMap().toImmutableMap(),
+            title = title,
         )
     }
 
