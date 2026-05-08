@@ -5,6 +5,7 @@ import tachiyomi.domain.manga.model.Manga
 data class LibraryManga(
     val manga: Manga,
     val categories: List<Long>,
+    val pinnedCategories: List<Long>,
     val totalChapters: Long,
     val readCount: Long,
     val bookmarkCount: Long,

@@ -14,8 +14,10 @@ import kotlinx.coroutines.launch
 import tachiyomi.domain.category.interactor.CreateCategoryWithName
 import tachiyomi.domain.category.interactor.DeleteCategory
 import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.category.interactor.PinCategory
 import tachiyomi.domain.category.interactor.RenameCategory
 import tachiyomi.domain.category.interactor.ReorderCategory
+import tachiyomi.domain.category.interactor.UnPinCategory
 import tachiyomi.domain.category.model.Category
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
@@ -27,6 +29,8 @@ class CategoryScreenModel(
     private val deleteCategory: DeleteCategory = Injekt.get(),
     private val reorderCategory: ReorderCategory = Injekt.get(),
     private val renameCategory: RenameCategory = Injekt.get(),
+    private val pinCategory: PinCategory = Injekt.get(),
+    private val unPinCategory: UnPinCategory = Injekt.get(),
 ) : StateScreenModel<CategoryScreenState>(CategoryScreenState.Loading) {
 
     private val _events: Channel<CategoryEvent> = Channel()
@@ -35,11 +39,16 @@ class CategoryScreenModel(
     init {
         screenModelScope.launch {
             getCategories.subscribe()
-                .collectLatest { categories ->
+                .collectLatest { allCategories ->
                     mutableState.update {
                         CategoryScreenState.Success(
-                            categories = categories
+                            categories = allCategories
                                 .filterNot(Category::isSystemCategory)
+                                .filterNot { it.isPinned }
+                                .toImmutableList(),
+                            pinnedCategories = allCategories
+                                .filterNot(Category::isSystemCategory)
+                                .filter { it.isPinned }
                                 .toImmutableList(),
                         )
                     }
@@ -83,6 +92,22 @@ class CategoryScreenModel(
         }
     }
 
+    fun togglePin(category: Category) {
+        screenModelScope.launch {
+            if (category.isPinned) {
+                when (unPinCategory.await(category.id)) {
+                    is UnPinCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
+                    else -> {}
+                }
+            } else {
+                when (pinCategory.await(category.id)) {
+                    is PinCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
+                    else -> {}
+                }
+            }
+        }
+    }
+
     fun showDialog(dialog: CategoryDialog) {
         mutableState.update {
             when (it) {
@@ -121,10 +146,11 @@ sealed interface CategoryScreenState {
     @Immutable
     data class Success(
         val categories: ImmutableList<Category>,
+        val pinnedCategories: ImmutableList<Category>,
         val dialog: CategoryDialog? = null,
     ) : CategoryScreenState {
 
         val isEmpty: Boolean
-            get() = categories.isEmpty()
+            get() = categories.isEmpty() && pinnedCategories.isEmpty()
     }
 }

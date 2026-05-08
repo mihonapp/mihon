@@ -23,6 +23,7 @@ import tachiyomi.presentation.core.components.material.topSmallPaddingValues
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.util.plus
+import tachiyomi.presentation.core.util.shouldExpandFAB
 
 @Composable
 fun ExtensionReposScreen(
@@ -52,8 +53,8 @@ fun ExtensionReposScreen(
         },
         floatingActionButton = {
             CategoryFloatingActionButton(
-                lazyListState = lazyListState,
                 onCreate = onClickCreate,
+                expanded = lazyListState.shouldExpandFAB(),
             )
         },
     ) { paddingValues ->

@@ -14,7 +14,7 @@ import tachiyomi.presentation.core.util.shouldExpandFAB
 
 @Composable
 fun CategoryFloatingActionButton(
-    lazyListState: LazyListState,
+    expanded: Boolean,
     onCreate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -22,7 +22,7 @@ fun CategoryFloatingActionButton(
         text = { Text(text = stringResource(MR.strings.action_add)) },
         icon = { Icon(imageVector = Icons.Outlined.Add, contentDescription = null) },
         onClick = onCreate,
-        expanded = lazyListState.shouldExpandFAB(),
+        expanded = expanded,
         modifier = modifier,
     )
 }
