@@ -201,10 +201,14 @@ class TranslationQueueProcessor(
     ): TranslationOverlayResult {
         val bitmap = BitmapFactory.decodeByteArray(image.bytes, 0, image.bytes.size)
             ?: error("Unable to decode page image for OCR")
-        val blocks = ocrClient.recognize(
-            bitmap = bitmap,
-            script = OcrScript.fromPreference(preferences.ocrScript.get()),
-        )
+        val blocks = try {
+            ocrClient.recognize(
+                bitmap = bitmap,
+                script = OcrScript.fromPreference(preferences.ocrScript.get()),
+            )
+        } finally {
+            bitmap.recycle()
+        }
         repository.insertLog(
             jobId = job._id,
             pageId = null,

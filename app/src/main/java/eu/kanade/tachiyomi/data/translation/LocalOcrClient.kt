@@ -11,6 +11,7 @@ import com.google.mlkit.vision.text.devanagari.DevanagariTextRecognizerOptions
 import com.google.mlkit.vision.text.japanese.JapaneseTextRecognizerOptions
 import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -29,7 +30,12 @@ class LocalOcrClient {
         val image = InputImage.fromBitmap(bitmap, 0)
         val blocks = mutableListOf<Text.TextBlock>()
         scripts.forEach { scriptToRun ->
-            blocks += recognizerFor(scriptToRun).process(image).await().textBlocks
+            val recognizer = recognizerFor(scriptToRun)
+            try {
+                blocks += recognizer.process(image).await().textBlocks
+            } finally {
+                recognizer.close()
+            }
         }
         return blocks
             .mapIndexedNotNull { index, block -> block.toOcrTextBlock(index, bitmap.width, bitmap.height) }
@@ -79,8 +85,20 @@ private fun Text.TextBlock.toOcrTextBlock(index: Int, imageWidth: Int, imageHeig
 
 private suspend fun <T> Task<T>.await(): T {
     return suspendCancellableCoroutine { continuation ->
-        addOnSuccessListener { continuation.resume(it) }
-        addOnFailureListener { continuation.resumeWithException(it) }
-        addOnCanceledListener { continuation.cancel() }
+        addOnSuccessListener {
+            if (continuation.isActive) {
+                continuation.resume(it)
+            }
+        }
+        addOnFailureListener {
+            if (continuation.isActive) {
+                continuation.resumeWithException(it)
+            }
+        }
+        addOnCanceledListener {
+            if (continuation.isActive) {
+                continuation.cancel(CancellationException("Task was cancelled"))
+            }
+        }
     }
 }

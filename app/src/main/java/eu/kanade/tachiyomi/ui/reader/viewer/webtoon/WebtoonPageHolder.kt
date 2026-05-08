@@ -271,16 +271,30 @@ class WebtoonPageHolder(
             withUIContext { frame.clearTranslationOverlay() }
             return
         }
-        page ?: return
-        val chapterId = page.chapter.chapter.id ?: return
+        if (page == null) {
+            withUIContext { frame.clearTranslationOverlay() }
+            return
+        }
+        val chapterId = page.chapter.chapter.id
+        if (chapterId == null) {
+            withUIContext { frame.clearTranslationOverlay() }
+            return
+        }
         val targetLanguage = translationPreferences.targetLanguage.get()
             .ifBlank { Locale.getDefault().displayLanguage.ifBlank { "English" } }
-        val savedPage = withIOContext {
-            translationRepository.getSavedPage(
-                chapterId = chapterId,
-                pageIndex = page.index.toLong(),
-                targetLanguage = targetLanguage,
-            )
+        val savedPage = try {
+            withIOContext {
+                translationRepository.getSavedPage(
+                    chapterId = chapterId,
+                    pageIndex = page.index.toLong(),
+                    targetLanguage = targetLanguage,
+                )
+            }
+        } catch (e: Throwable) {
+            if (e is kotlinx.coroutines.CancellationException) throw e
+            logcat(LogPriority.ERROR, e) { "Failed to load saved translation overlay" }
+            withUIContext { frame.clearTranslationOverlay() }
+            return
         }
         withUIContext {
             if (this@WebtoonPageHolder.page == page) {

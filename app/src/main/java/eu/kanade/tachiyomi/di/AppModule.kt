@@ -146,8 +146,6 @@ class AppModule(val app: Application) : InjektModule {
             get<Database>()
 
             get<DownloadManager>()
-
-            get<TranslationQueueProcessor>()
         }
     }
 }

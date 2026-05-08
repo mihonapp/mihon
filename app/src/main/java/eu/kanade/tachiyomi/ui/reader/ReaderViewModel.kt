@@ -591,6 +591,7 @@ class ReaderViewModel @JvmOverloads constructor(
                     eventChannel.send(Event.TranslationOverlaySaved)
                 }
             } catch (e: Throwable) {
+                if (e is CancellationException) throw e
                 logcat(LogPriority.ERROR, e)
                 withUIContext {
                     mutableState.update { it.copy(dialog = Dialog.TranslationOverlayEditor(page, null)) }

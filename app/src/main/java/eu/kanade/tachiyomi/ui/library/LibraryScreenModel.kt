@@ -592,9 +592,9 @@ class LibraryScreenModel(
             TranslationJob.start(application)
             withUIContext {
                 application.toast(translationQueueToast(queued, skipped, totalChapters))
+                clearSelection()
             }
         }
-        clearSelection()
     }
 
     private fun translationQueueToast(queued: Int, skipped: Int, totalChapters: Int): String {

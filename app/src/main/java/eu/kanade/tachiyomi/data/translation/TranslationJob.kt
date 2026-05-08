@@ -138,6 +138,13 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
             WorkManager.getInstance(context).cancelUniqueWork(TAG)
         }
 
+        /**
+         * Blocking WorkManager state check. Call off the main thread.
+         */
+        @Deprecated(
+            message = "Blocking; use isRunningFlow() instead",
+            replaceWith = ReplaceWith("TranslationJob.isRunningFlow(context)"),
+        )
         fun isRunning(context: Context): Boolean {
             return WorkManager.getInstance(context)
                 .getWorkInfosForUniqueWork(TAG)
