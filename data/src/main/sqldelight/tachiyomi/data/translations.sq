@@ -150,6 +150,16 @@ ORDER BY mangas.title COLLATE NOCASE ASC,
     translation_jobs.page_index ASC,
     translation_jobs.created_at ASC;
 
+getJobForQueue:
+SELECT translation_jobs.*,
+    mangas.title AS manga_title,
+    chapters.name AS chapter_name,
+    chapters.chapter_number AS chapter_number
+FROM translation_jobs
+JOIN mangas ON mangas._id = translation_jobs.manga_id
+LEFT JOIN chapters ON chapters._id = translation_jobs.chapter_id
+WHERE translation_jobs._id = :id;
+
 getPendingJobs:
 SELECT *
 FROM translation_jobs
@@ -194,6 +204,9 @@ WHERE _id = :id;
 deleteJob:
 DELETE FROM translation_jobs
 WHERE _id = :id;
+
+clearJobs:
+DELETE FROM translation_jobs;
 
 clearFinishedJobs:
 DELETE FROM translation_jobs

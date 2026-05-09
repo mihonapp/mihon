@@ -87,12 +87,16 @@ class GeminiTranslationClient(
         jobId: Long? = null,
         pageId: Long? = null,
     ): TranslationOverlayResult {
-        val prompt = pageTranslationPrompt(targetLanguage, sourceLanguage, extraInstructions)
+        val prompt = TranslationPromptPolicy.pagePrompt(targetLanguage, sourceLanguage)
+        val systemPrompt = TranslationPromptPolicy.systemPrompt(extraInstructions)
         val config = generationConfig
             .copy(rawJsonOverride = generationConfig.rawJsonOverride)
             .toGeminiJson(json)
             .withStructuredOverlaySchema()
         val request = GeminiGenerateContentRequest(
+            systemInstruction = GeminiContent(
+                parts = listOf(GeminiPart(text = systemPrompt)),
+            ),
             contents = listOf(
                 GeminiContent(
                     parts = listOf(
@@ -114,6 +118,8 @@ class GeminiTranslationClient(
             request = request,
             operation = "translatePageImage",
             requestSummary = buildString {
+                appendLine("system_prompt:")
+                appendLine(systemPrompt)
                 appendLine("prompt:")
                 appendLine(prompt)
                 appendLine("image_mime=$mimeType")
@@ -137,7 +143,7 @@ class GeminiTranslationClient(
         pageId: Long? = null,
     ): TranslationOverlayResult {
         val prompt = buildString {
-            appendLine(pageTranslationPrompt(targetLanguage, sourceLanguage, extraInstructions))
+            appendLine(TranslationPromptPolicy.pagePrompt(targetLanguage, sourceLanguage))
             appendLine("Translate these OCR blocks and preserve each id and box:")
             blocks.forEach { block ->
                 appendLine(
@@ -145,7 +151,11 @@ class GeminiTranslationClient(
                 )
             }
         }
+        val systemPrompt = TranslationPromptPolicy.systemPrompt(extraInstructions)
         val request = GeminiGenerateContentRequest(
+            systemInstruction = GeminiContent(
+                parts = listOf(GeminiPart(text = systemPrompt)),
+            ),
             contents = listOf(GeminiContent(parts = listOf(GeminiPart(text = prompt)))),
             generationConfig = generationConfig.toGeminiJson(json).withStructuredOverlaySchema(),
         )
@@ -155,6 +165,8 @@ class GeminiTranslationClient(
             request = request,
             operation = "translateOcrBlocks",
             requestSummary = buildString {
+                appendLine("system_prompt:")
+                appendLine(systemPrompt)
                 appendLine("prompt:")
                 appendLine(prompt)
                 appendLine("ocr_blocks=${blocks.size}")
@@ -238,7 +250,7 @@ class GeminiTranslationClient(
             ?.parts
             ?.firstNotNullOfOrNull { it.text }
             ?: error("Gemini response did not include text")
-        val overlay = json.decodeFromString<TranslationOverlayResult>(text)
+        val overlay = TranslationOverlaySanitizer.sanitize(json.decodeFromString<TranslationOverlayResult>(text))
         repository.insertLog(
             jobId = jobId,
             pageId = pageId,
@@ -391,24 +403,6 @@ class GeminiTranslationClient(
         "application/json",
     )
 
-    private fun pageTranslationPrompt(
-        targetLanguage: String,
-        sourceLanguage: String?,
-        extraInstructions: String,
-    ): String {
-        return buildString {
-            appendLine("Translate all visible manga text into ${targetLanguage.ifBlank { "the app language" }}.")
-            appendLine("Source language: ${sourceLanguage?.takeIf { it.isNotBlank() } ?: "auto-detect"}.")
-            appendLine("Include dialogue, captions, signs, and sound effects.")
-            appendLine("Return only JSON matching the schema. Coordinates must be normalized 0.0 to 1.0.")
-            appendLine("Each box needs x, y, width, height, originalText, translatedText, textType, confidence.")
-            if (extraInstructions.isNotBlank()) {
-                appendLine("User glossary/instructions:")
-                appendLine(extraInstructions)
-            }
-        }
-    }
-
     companion object {
         private const val BASE_URL = "https://generativelanguage.googleapis.com/v1beta"
     }
@@ -485,6 +479,8 @@ private data class GeminiListModelsResponse(
 
 @Serializable
 private data class GeminiGenerateContentRequest(
+    @SerialName("system_instruction")
+    val systemInstruction: GeminiContent? = null,
     val contents: List<GeminiContent>,
     val generationConfig: JsonElement? = null,
 )

@@ -6,6 +6,7 @@ import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import tachiyomi.data.Database
+import tachiyomi.data.GetJobForQueue
 import tachiyomi.data.GetJobsForQueue
 import tachiyomi.data.Translation_boxes
 import tachiyomi.data.Translation_jobs
@@ -26,6 +27,12 @@ class TranslationRepository(
         return database.translationsQueries.getJobsForQueue()
             .subscribeToList()
             .map { jobs -> jobs.map(GetJobsForQueue::toQueueItem) }
+    }
+
+    suspend fun getJobForQueue(id: Long): TranslationQueueItem? {
+        return database.translationsQueries.getJobForQueue(id)
+            .awaitAsOneOrNull()
+            ?.toQueueItem()
     }
 
     fun observeLogs(): Flow<List<Translation_logs>> {
@@ -206,6 +213,13 @@ class TranslationRepository(
 
     suspend fun clearFinishedJobs() {
         database.translationsQueries.clearFinishedJobs()
+    }
+
+    suspend fun clearAllJobsAndLogs() {
+        database.transaction {
+            database.translationsQueries.clearLogs()
+            database.translationsQueries.clearJobs()
+        }
     }
 
     suspend fun clearLogs() {
@@ -402,6 +416,26 @@ class TranslationRepository(
         )
     }
 
+    suspend fun hasActiveMatchingJob(
+        mangaId: Long,
+        chapterId: Long?,
+        pageIndex: Long?,
+        scope: TranslationScope,
+        pipeline: String,
+        mode: TranslationMode,
+        targetLanguage: String,
+    ): Boolean {
+        return database.translationsQueries.getActiveMatchingJob(
+            mangaId = mangaId,
+            chapterId = chapterId,
+            pageIndex = pageIndex,
+            scope = scope.value,
+            pipeline = pipeline,
+            mode = mode.value,
+            targetLanguage = targetLanguage,
+        ).awaitAsOneOrNull() != null
+    }
+
     companion object {
         private const val MAX_ERROR_LENGTH = 4_000
     }
@@ -441,6 +475,32 @@ fun TranslationQueueItem.toJob(): Translation_jobs {
 }
 
 private fun GetJobsForQueue.toQueueItem(): TranslationQueueItem {
+    return TranslationQueueItem(
+        id = _id,
+        mangaId = manga_id,
+        mangaTitle = manga_title,
+        chapterId = chapter_id,
+        chapterName = chapter_name,
+        chapterNumber = chapter_number,
+        pageIndex = page_index,
+        scope = scope,
+        pipeline = pipeline,
+        mode = mode,
+        model = model,
+        targetLanguage = target_language,
+        sourceLanguage = source_language,
+        overwrite = overwrite,
+        status = status,
+        progressCurrent = progress_current,
+        progressTotal = progress_total,
+        attempts = attempts,
+        createdAt = created_at,
+        updatedAt = updated_at,
+        errorMessage = error_message,
+    )
+}
+
+private fun GetJobForQueue.toQueueItem(): TranslationQueueItem {
     return TranslationQueueItem(
         id = _id,
         mangaId = manga_id,

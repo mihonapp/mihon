@@ -21,12 +21,12 @@ import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.translation.TranslationJob
+import eu.kanade.tachiyomi.data.translation.TranslationBatchEnqueuer
 import eu.kanade.tachiyomi.data.translation.TranslationLogDetailsFormatter
 import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
 import eu.kanade.tachiyomi.data.translation.TranslationMode
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
-import eu.kanade.tachiyomi.data.translation.TranslationScope
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
@@ -99,6 +99,7 @@ class LibraryScreenModel(
     private val downloadCache: DownloadCache = Injekt.get(),
     private val trackerManager: TrackerManager = Injekt.get(),
     private val translationRepository: TranslationRepository = Injekt.get(),
+    private val translationBatchEnqueuer: TranslationBatchEnqueuer = Injekt.get(),
     private val translationPreferences: TranslationPreferences = Injekt.get(),
     private val translationSetupValidator: TranslationSetupValidator = Injekt.get(),
     private val application: Application = Injekt.get(),
@@ -571,23 +572,15 @@ class LibraryScreenModel(
             var skipped = 0
             var totalChapters = 0
             mangas.forEach { manga ->
-                getChaptersByMangaId.await(manga.id)
-                    .forEach { chapter ->
-                        totalChapters++
-                        val result = translationRepository.enqueueJob(
-                            mangaId = manga.id,
-                            chapterId = chapter.id,
-                            pageIndex = null,
-                            scope = TranslationScope.Chapter,
-                            pipeline = translationPreferences.pipeline.get(),
-                            mode = mode,
-                            model = translationPreferences.geminiModel.get(),
-                            targetLanguage = translationPreferences.targetLanguage.get(),
-                            sourceLanguage = translationPreferences.sourceLanguage.get().ifBlank { null },
-                            overwrite = !translationPreferences.skipExistingOverlays.get(),
-                        )
-                        if (result.inserted) queued++ else skipped++
-                    }
+                val chapters = getChaptersByMangaId.await(manga.id)
+                totalChapters += chapters.size
+                val result = translationBatchEnqueuer.enqueueChapters(
+                    mangaId = manga.id,
+                    chapterIds = chapters.map { it.id },
+                    mode = mode,
+                )
+                queued += result.queued
+                skipped += result.skipped
             }
             TranslationJob.start(application)
             withUIContext {

@@ -18,7 +18,9 @@ import eu.kanade.tachiyomi.data.saver.ImageSaver
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.translation.GeminiTranslationClient
 import eu.kanade.tachiyomi.data.translation.LocalOcrClient
+import eu.kanade.tachiyomi.data.translation.TranslationBatchEnqueuer
 import eu.kanade.tachiyomi.data.translation.TranslationImageResolver
+import eu.kanade.tachiyomi.data.translation.TranslationNotifier
 import eu.kanade.tachiyomi.data.translation.TranslationQueueProcessor
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
@@ -124,6 +126,8 @@ class AppModule(val app: Application) : InjektModule {
         addSingletonFactory { GeminiTranslationClient() }
         addSingletonFactory { LocalOcrClient() }
         addSingletonFactory { TranslationImageResolver() }
+        addSingletonFactory { TranslationBatchEnqueuer() }
+        addSingletonFactory { TranslationNotifier(app) }
         addSingletonFactory { TranslationQueueProcessor(app) }
         addSingletonFactory { TranslationSetupValidator() }
 

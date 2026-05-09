@@ -39,13 +39,16 @@ class TranslationPreferences(
     val cachedModelsJson: Preference<String> = preferenceStore.getString("translation_cached_models_json", "")
 
     val targetLanguage: Preference<String> = preferenceStore.getString("translation_target_language", "")
-    val sourceLanguage: Preference<String> = preferenceStore.getString("translation_source_language", "")
+    val sourceLanguage: Preference<String> = preferenceStore.getString("translation_source_language", "auto")
     val pipeline: Preference<String> = preferenceStore.getString("translation_pipeline", "gemini_vision")
     val ocrScript: Preference<String> = preferenceStore.getString("translation_ocr_script", "auto")
 
     val concurrency: Preference<Int> = preferenceStore.getInt("translation_concurrency", 1)
+    val maxImagesPerBatch: Preference<Int> = preferenceStore.getInt("translation_max_images_per_batch", 38)
     val skipExistingOverlays: Preference<Boolean> = preferenceStore.getBoolean("translation_skip_existing_overlays", true)
     val autoShowOverlay: Preference<Boolean> = preferenceStore.getBoolean("translation_auto_show_overlay", true)
+    val overlayTextSizeMode: Preference<String> = preferenceStore.getString("translation_overlay_text_size_mode", "dynamic")
+    val overlayTextSizeSp: Preference<Int> = preferenceStore.getInt("translation_overlay_text_size_sp", 16)
     val rawDebugLogging: Preference<Boolean> = preferenceStore.getBoolean("translation_raw_debug_logging", false)
     val enableInpaint: Preference<Boolean> = preferenceStore.getBoolean("translation_enable_inpaint", false)
 

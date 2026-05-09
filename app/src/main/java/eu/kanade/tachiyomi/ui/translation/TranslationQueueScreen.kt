@@ -106,6 +106,7 @@ object TranslationQueueScreen : Screen() {
         var selectedQueueFilters by remember { mutableStateOf(emptySet<TranslationQueueTypeFilter>()) }
         var collapsedQueueGroups by remember { mutableStateOf(emptySet<String>()) }
         var logsExpanded by rememberSaveable { mutableStateOf(false) }
+        var showClearAllConfirmation by remember { mutableStateOf(false) }
         val activeJobCount by remember(jobs) {
             derivedStateOf { jobs.count { it.status !in FINISHED_STATUSES } }
         }
@@ -214,6 +215,12 @@ object TranslationQueueScreen : Screen() {
                                         AppBar.OverflowAction(
                                             title = stringResource(MR.strings.pref_translation_clear_logs),
                                             onClick = { screenModel.clearLogs() },
+                                        ),
+                                    )
+                                    add(
+                                        AppBar.OverflowAction(
+                                            title = stringResource(MR.strings.pref_translation_clear_queue_logs),
+                                            onClick = { showClearAllConfirmation = true },
                                         ),
                                     )
                                 }.toPersistentList(),
@@ -382,6 +389,29 @@ object TranslationQueueScreen : Screen() {
                         context.contextStringResource(MR.strings.translation_log_details),
                         formatLogDetails(log),
                     )
+                },
+            )
+        }
+
+        if (showClearAllConfirmation) {
+            AlertDialog(
+                onDismissRequest = { showClearAllConfirmation = false },
+                title = { Text(text = stringResource(MR.strings.pref_translation_clear_queue_logs)) },
+                text = { Text(text = stringResource(MR.strings.pref_translation_clear_queue_logs_summary)) },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showClearAllConfirmation = false
+                            screenModel.clearAllQueuesAndLogs(context)
+                        },
+                    ) {
+                        Text(text = stringResource(MR.strings.action_ok))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showClearAllConfirmation = false }) {
+                        Text(text = stringResource(MR.strings.action_cancel))
+                    }
                 },
             )
         }
@@ -727,6 +757,13 @@ private class TranslationQueueScreenModel(
     fun clearLogs() {
         screenModelScope.launchIO {
             repository.clearLogs()
+        }
+    }
+
+    fun clearAllQueuesAndLogs(context: Context) {
+        screenModelScope.launchIO {
+            TranslationJob.stop(context)
+            repository.clearAllJobsAndLogs()
         }
     }
 }

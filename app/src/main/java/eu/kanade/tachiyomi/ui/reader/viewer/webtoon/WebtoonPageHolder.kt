@@ -13,6 +13,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
+import eu.kanade.tachiyomi.data.translation.TranslationLanguages
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
@@ -37,7 +38,6 @@ import tachiyomi.domain.translation.service.TranslationPreferences
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.util.Locale
 
 /**
  * Holder of the webtoon reader for a single page of a chapter.
@@ -281,7 +281,7 @@ class WebtoonPageHolder(
             return
         }
         val targetLanguage = translationPreferences.targetLanguage.get()
-            .ifBlank { Locale.getDefault().displayLanguage.ifBlank { "English" } }
+            .ifBlank { TranslationLanguages.defaultTargetLanguage() }
         val savedPage = try {
             withIOContext {
                 translationRepository.getSavedPage(

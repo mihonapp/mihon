@@ -6,6 +6,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.json.Json
+import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.data.Translation_jobs
 import tachiyomi.domain.translation.service.TranslationPreferences
 import uy.kohesive.injekt.Injekt
@@ -13,10 +14,8 @@ import uy.kohesive.injekt.api.get
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.IOException
-import java.util.Locale
 import kotlin.math.max
 import kotlin.time.TimeSource
-import tachiyomi.core.common.util.system.ImageUtil
 
 class TranslationQueueProcessor(
     private val context: Application = Injekt.get(),
@@ -25,6 +24,7 @@ class TranslationQueueProcessor(
     private val gemini: GeminiTranslationClient = Injekt.get(),
     private val ocrClient: LocalOcrClient = Injekt.get(),
     private val imageResolver: TranslationImageResolver = Injekt.get(),
+    private val notifier: TranslationNotifier = Injekt.get(),
     private val json: Json = Injekt.get(),
 ) {
     suspend fun processPending(): TranslationProcessResult = coroutineScope {
@@ -49,6 +49,7 @@ class TranslationQueueProcessor(
         val attempt = job.attempts + 1
         val runningJob = job.copy(attempts = attempt, status = TranslationJobStatus.Running.value)
         repository.updateJobStatus(job, TranslationJobStatus.Running, attempts = attempt)
+        notifier.showJobProgress(runningJob, current = 0, total = runningJob.progress_total, status = TranslationJobStatus.Running)
         repository.insertLog(
             jobId = job._id,
             pageId = null,
@@ -78,6 +79,7 @@ class TranslationQueueProcessor(
                     val pageIndex = requireNotNull(job.page_index) { "Image job missing page index" }.toInt()
                     processPage(runningJob, chapterId, pageIndex, current = 0, total = 1)
                     repository.updateJobProgress(runningJob, current = 1, total = 1)
+                    notifier.showJobProgress(runningJob, current = 1, total = 1, status = TranslationJobStatus.Running)
                 }
                 TranslationScope.Chapter.value -> {
                     val chapterId = requireNotNull(job.chapter_id) { "Chapter job missing chapter id" }
@@ -86,11 +88,18 @@ class TranslationQueueProcessor(
                     for (pageIndex in 0 until pageCount) {
                         processPage(runningJob, chapterId, pageIndex, current = pageIndex.toLong(), total = pageCount.toLong())
                         repository.updateJobProgress(runningJob, current = pageIndex + 1L, total = pageCount.toLong())
+                        notifier.showJobProgress(
+                            runningJob,
+                            current = pageIndex + 1L,
+                            total = pageCount.toLong(),
+                            status = TranslationJobStatus.Running,
+                        )
                     }
                 }
                 else -> error("Unsupported translation scope: ${job.scope}")
             }
             repository.updateJobStatus(runningJob, TranslationJobStatus.Completed, attempts = attempt)
+            notifier.showJobProgress(runningJob, runningJob.progress_total, runningJob.progress_total, TranslationJobStatus.Completed)
             repository.insertLog(
                 jobId = job._id,
                 pageId = null,
@@ -111,7 +120,7 @@ class TranslationQueueProcessor(
         current: Long,
         total: Long,
     ) {
-        val targetLanguage = job.target_language.ifBlank { Locale.getDefault().displayLanguage.ifBlank { "English" } }
+        val targetLanguage = job.target_language.ifBlank { TranslationLanguages.defaultTargetLanguage() }
         if (!job.overwrite && repository.getPage(chapterId, pageIndex.toLong(), targetLanguage) != null) {
             repository.insertLog(
                 jobId = job._id,
@@ -147,7 +156,7 @@ class TranslationQueueProcessor(
                 imageBytes = image.bytes,
                 mimeType = image.mimeType,
                 targetLanguage = targetLanguage,
-                sourceLanguage = job.source_language,
+                sourceLanguage = TranslationLanguages.sourcePromptLabel(job.source_language),
                 generationConfig = generationConfig,
                 extraInstructions = preferences.globalInstructions.get(),
                 jobId = job._id,
@@ -160,6 +169,8 @@ class TranslationQueueProcessor(
             null
         }
 
+        val sanitizedOverlay = TranslationOverlaySanitizer.sanitize(overlay)
+
         val savedPage = repository.saveOverlay(
             mangaId = job.manga_id,
             chapterId = chapterId,
@@ -167,12 +178,12 @@ class TranslationQueueProcessor(
             sourceImageKey = image.sourceImageKey,
             model = job.model,
             targetLanguage = targetLanguage,
-            sourceLanguage = job.source_language,
+            sourceLanguage = TranslationLanguages.sourcePromptLabel(job.source_language),
             pipeline = job.pipeline,
             imageWidth = image.width,
             imageHeight = image.height,
             inpaintImageUri = inpaintUri,
-            overlay = overlay,
+            overlay = sanitizedOverlay,
         )
 
         repository.insertLog(
@@ -182,11 +193,12 @@ class TranslationQueueProcessor(
             tag = "page",
             message = "Saved translation overlay",
             details = buildString {
-                appendLine("chapter=$chapterId, page=$pageIndex, boxes=${overlay.boxes.size}")
+                appendLine("chapter=$chapterId, page=$pageIndex, boxes=${sanitizedOverlay.boxes.size}")
+                appendLine("dropped_boxes=${overlay.boxes.size - sanitizedOverlay.boxes.size}")
                 appendLine("elapsed_ms=${mark.elapsedNow().inWholeMilliseconds}")
-                appendLine("source_language=${overlay.sourceLanguage ?: job.source_language ?: "auto"}")
-                appendLine("target_language=${overlay.targetLanguage ?: targetLanguage}")
-                overlay.boxes.forEachIndexed { index, box ->
+                appendLine("source_language=${sanitizedOverlay.sourceLanguage ?: TranslationLanguages.sourcePromptLabel(job.source_language) ?: "auto"}")
+                appendLine("target_language=${sanitizedOverlay.targetLanguage ?: targetLanguage}")
+                sanitizedOverlay.boxes.forEachIndexed { index, box ->
                     appendLine("${index + 1}. ${box.originalText} => ${box.translatedText}")
                 }
             },
@@ -201,14 +213,15 @@ class TranslationQueueProcessor(
     ): TranslationOverlayResult {
         val bitmap = BitmapFactory.decodeByteArray(image.bytes, 0, image.bytes.size)
             ?: error("Unable to decode page image for OCR")
-        val blocks = try {
-            ocrClient.recognize(
+        val report = try {
+            ocrClient.recognizeDetailed(
                 bitmap = bitmap,
                 script = OcrScript.fromPreference(preferences.ocrScript.get()),
             )
         } finally {
             bitmap.recycle()
         }
+        val blocks = report.blocks.filter { TranslationOverlaySanitizer.isRelevantText(it.text) }
         repository.insertLog(
             jobId = job._id,
             pageId = null,
@@ -216,16 +229,36 @@ class TranslationQueueProcessor(
             tag = "ocr",
             message = "Local OCR completed",
             details = buildString {
-                appendLine("blocks=${blocks.size}")
+                appendLine("scripts:")
+                report.scriptResults.forEach { result ->
+                    appendLine("${result.script}: success=${result.success}, blocks=${result.blocks}, error=${result.error ?: "-"}")
+                }
+                appendLine("raw_blocks=${report.blocks.size}")
+                appendLine("filtered_blocks=${blocks.size}")
                 blocks.forEach { block -> appendLine("${block.id}: ${block.text}") }
             },
         )
+        if (blocks.isEmpty()) {
+            repository.insertLog(
+                jobId = job._id,
+                pageId = null,
+                level = TranslationLogLevel.Info,
+                tag = "ocr",
+                message = "No translatable OCR text",
+                details = "Saved empty overlay for page because OCR produced no relevant text after filtering.",
+            )
+            return TranslationOverlayResult(
+                sourceLanguage = TranslationLanguages.sourcePromptLabel(job.source_language) ?: "auto",
+                targetLanguage = targetLanguage,
+                boxes = emptyList(),
+            )
+        }
         return gemini.translateOcrBlocks(
             apiKey = preferences.geminiApiKey.get(),
             model = job.model,
             blocks = blocks,
             targetLanguage = targetLanguage,
-            sourceLanguage = job.source_language,
+            sourceLanguage = TranslationLanguages.sourcePromptLabel(job.source_language),
             generationConfig = generationConfig,
             extraInstructions = preferences.globalInstructions.get(),
             jobId = job._id,
@@ -281,6 +314,7 @@ class TranslationQueueProcessor(
         }
         if (status != null) {
             repository.updateJobStatus(job, status, errorMessage = message, attempts = attempt)
+            notifier.showJobProgress(job, job.progress_current, job.progress_total, status, message)
             repository.insertLog(
                 job._id,
                 null,
@@ -293,7 +327,7 @@ class TranslationQueueProcessor(
                     previousStatus = job.status,
                     nextStatus = status.value,
                     reason = message,
-                    extra = mapOf("attempt" to attempt, "http_code" to (error as? GeminiApiException)?.code),
+                    extra = errorDetails(error) + mapOf("attempt" to attempt, "http_code" to (error as? GeminiApiException)?.code),
                 ),
             )
             return TranslationProcessResult.Paused
@@ -307,6 +341,13 @@ class TranslationQueueProcessor(
             errorMessage = message,
             attempts = attempt,
         )
+        notifier.showJobProgress(
+            job = job,
+            current = job.progress_current,
+            total = job.progress_total,
+            status = if (canRetry) TranslationJobStatus.Retrying else TranslationJobStatus.Failed,
+            message = message,
+        )
         repository.insertLog(
             jobId = job._id,
             pageId = null,
@@ -319,7 +360,7 @@ class TranslationQueueProcessor(
                 previousStatus = job.status,
                 nextStatus = if (canRetry) TranslationJobStatus.Retrying.value else TranslationJobStatus.Failed.value,
                 reason = message,
-                extra = mapOf(
+                extra = errorDetails(error) + mapOf(
                     "attempt" to attempt,
                     "transient" to transient,
                     "http_code" to (error as? GeminiApiException)?.code,
@@ -347,6 +388,14 @@ class TranslationQueueProcessor(
 
     private fun Translation_jobs.wantsInpaint(): Boolean {
         return mode == TranslationMode.Inpaint.value || mode == TranslationMode.OverlayAndInpaint.value
+    }
+
+    private fun errorDetails(error: Throwable): Map<String, Any?> {
+        return mapOf(
+            "exception_class" to (error::class.qualifiedName ?: error::class.simpleName.orEmpty()),
+            "exception_message" to error.message,
+            "stack_trace" to error.stackTraceToString(),
+        )
     }
 
     companion object {

@@ -15,13 +15,10 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import eu.kanade.tachiyomi.data.notification.Notifications
-import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.setForegroundSafely
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchIO
-import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.TimeUnit
@@ -31,16 +28,12 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
     private val processor: TranslationQueueProcessor = Injekt.get()
     private val repository: TranslationRepository = Injekt.get()
     private val setupValidator: TranslationSetupValidator = Injekt.get()
+    private val notifier: TranslationNotifier = Injekt.get()
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
-        val notification = applicationContext.notificationBuilder(Notifications.CHANNEL_TRANSLATION_PROGRESS) {
-            setContentTitle(applicationContext.stringResource(MR.strings.label_translation_queue))
-            setSmallIcon(android.R.drawable.stat_sys_upload)
-            setOngoing(true)
-        }.build()
         return ForegroundInfo(
             Notifications.ID_TRANSLATION_PROGRESS,
-            notification,
+            notifier.foregroundNotification(),
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
             } else {

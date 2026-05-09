@@ -23,6 +23,7 @@ import eu.kanade.tachiyomi.data.saver.Image
 import eu.kanade.tachiyomi.data.saver.ImageSaver
 import eu.kanade.tachiyomi.data.saver.Location
 import eu.kanade.tachiyomi.data.translation.SavedTranslationPage
+import eu.kanade.tachiyomi.data.translation.TranslationBatchEnqueuer
 import eu.kanade.tachiyomi.data.translation.TranslationBoxEdit
 import eu.kanade.tachiyomi.data.translation.TranslationJob
 import eu.kanade.tachiyomi.data.translation.TranslationLogDetailsFormatter
@@ -31,6 +32,8 @@ import eu.kanade.tachiyomi.data.translation.TranslationMode
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
 import eu.kanade.tachiyomi.data.translation.TranslationScope
+import eu.kanade.tachiyomi.data.translation.TranslationLanguages
+import eu.kanade.tachiyomi.data.translation.resolvedTargetLanguage
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.loader.ChapterLoader
@@ -95,7 +98,6 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.Instant
 import java.util.Date
-import java.util.Locale
 
 /**
  * Presenter used by the activity to perform background operations.
@@ -120,6 +122,7 @@ class ReaderViewModel @JvmOverloads constructor(
     private val getIncognitoState: GetIncognitoState = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
     private val translationRepository: TranslationRepository = Injekt.get(),
+    private val translationBatchEnqueuer: TranslationBatchEnqueuer = Injekt.get(),
     private val translationPreferences: TranslationPreferences = Injekt.get(),
     private val translationSetupValidator: TranslationSetupValidator = Injekt.get(),
     private val application: Application = Injekt.get(),
@@ -573,7 +576,7 @@ class ReaderViewModel @JvmOverloads constructor(
                     sourceImageKey = page.imageUrl ?: "${page.chapter.chapter.url}#${page.index}",
                     model = translationPreferences.geminiModel.get(),
                     targetLanguage = targetLanguage,
-                    sourceLanguage = translationPreferences.sourceLanguage.get().ifBlank { null },
+                    sourceLanguage = TranslationLanguages.sourcePromptLabel(translationPreferences.sourceLanguage.get()),
                     pipeline = translationPreferences.pipeline.get(),
                 )
                 translationRepository.replaceBoxes(savedPage._id, boxes)
@@ -602,8 +605,7 @@ class ReaderViewModel @JvmOverloads constructor(
     }
 
     private fun translationTargetLanguage(): String {
-        return translationPreferences.targetLanguage.get()
-            .ifBlank { Locale.getDefault().displayLanguage.ifBlank { "English" } }
+        return translationPreferences.resolvedTargetLanguage()
     }
 
     private fun enqueueTranslationJob(
@@ -645,23 +647,33 @@ class ReaderViewModel @JvmOverloads constructor(
             } else {
                 TranslationMode.Overlay
             }
-            val result = translationRepository.enqueueJob(
-                mangaId = manga.id,
-                chapterId = chapterId,
-                pageIndex = pageIndex,
-                scope = scope,
-                pipeline = translationPreferences.pipeline.get(),
-                mode = mode,
-                model = translationPreferences.geminiModel.get(),
-                targetLanguage = translationPreferences.targetLanguage.get(),
-                sourceLanguage = translationPreferences.sourceLanguage.get().ifBlank { null },
-                overwrite = !translationPreferences.skipExistingOverlays.get(),
-            )
+            val queued = if (scope == TranslationScope.Chapter) {
+                translationBatchEnqueuer.enqueueChapters(
+                    mangaId = manga.id,
+                    chapterIds = listOf(chapterId),
+                    mode = mode,
+                ).queued
+            } else {
+                val result = translationRepository.enqueueJob(
+                    mangaId = manga.id,
+                    chapterId = chapterId,
+                    pageIndex = pageIndex,
+                    scope = scope,
+                    pipeline = translationPreferences.pipeline.get(),
+                    mode = mode,
+                    model = translationPreferences.geminiModel.get(),
+                    targetLanguage = translationPreferences.resolvedTargetLanguage(),
+                    sourceLanguage = translationPreferences.sourceLanguage.get()
+                        .takeUnless { it.isBlank() || it == TranslationLanguages.SOURCE_AUTO },
+                    overwrite = !translationPreferences.skipExistingOverlays.get(),
+                )
+                if (result.inserted) 1 else 0
+            }
             TranslationJob.start(application)
             withUIContext {
                 application.toast(
-                    if (result.inserted) {
-                        application.stringResource(MR.strings.translation_queued_summary, 1)
+                    if (queued > 0) {
+                        application.stringResource(MR.strings.translation_queued_summary, queued)
                     } else {
                         application.stringResource(MR.strings.translation_already_queued)
                     },

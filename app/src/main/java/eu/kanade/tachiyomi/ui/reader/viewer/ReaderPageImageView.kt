@@ -43,6 +43,7 @@ import com.github.chrisbanes.photoview.PhotoView
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.data.coil.cropBorders
 import eu.kanade.tachiyomi.data.coil.customDecoder
+import tachiyomi.domain.translation.service.TranslationPreferences
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonSubsamplingImageView
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
@@ -473,6 +474,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
         var boxes: List<Translation_boxes> = emptyList()
 
         private val density = resources.displayMetrics.density
+        private val translationPreferences: TranslationPreferences = Injekt.get()
         private val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = Color.argb(210, 255, 255, 255)
             style = Paint.Style.FILL
@@ -506,7 +508,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
             val padding = (4f * density).coerceAtMost(rect.width() / 5f).coerceAtMost(rect.height() / 5f)
             val width = (rect.width() - padding * 2).toInt().coerceAtLeast(1)
             val textPaint = TextPaint(baseTextPaint).apply {
-                textSize = (rect.height() / 3.2f).coerceIn(10f * density, 20f * density)
+                textSize = overlayTextSize(rect, padding)
             }
             val maxLines = ((rect.height() - padding * 2) / textPaint.fontSpacing).toInt().coerceAtLeast(1)
             val layout = StaticLayout.Builder
@@ -521,6 +523,17 @@ open class ReaderPageImageView @JvmOverloads constructor(
             canvas.translate(rect.left + padding, rect.top + padding)
             layout.draw(canvas)
             canvas.restore()
+        }
+
+        private fun overlayTextSize(rect: RectF, padding: Float): Float {
+            val scaledDensity = resources.displayMetrics.scaledDensity
+            val selected = when (translationPreferences.overlayTextSizeMode.get()) {
+                "system" -> 14f * scaledDensity
+                "custom" -> translationPreferences.overlayTextSizeSp.get().coerceIn(8, 48) * scaledDensity
+                else -> (rect.height() / 3.2f).coerceIn(10f * density, 20f * density)
+            }
+            val maxThatFitsBox = (rect.height() - padding * 2).coerceAtLeast(8f * scaledDensity)
+            return selected.coerceIn(8f * scaledDensity, maxThatFitsBox)
         }
 
         private fun Translation_boxes.toViewRect(): RectF? {

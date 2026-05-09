@@ -536,6 +536,10 @@ class MainActivity : BaseActivity() {
                 navigator.popUntilRoot()
                 HomeScreen.Tab.More(toDownloads = true)
             }
+            INTENT_TRANSLATION_QUEUE -> {
+                navigator.popUntilRoot()
+                HomeScreen.Tab.More(toTranslationQueue = true)
+            }
             INTENT_TRANSLATION_SETTINGS -> {
                 navigator.popUntilRoot()
                 navigator.push(SettingsScreen(SettingsScreen.Destination.Translation))
@@ -593,6 +597,7 @@ class MainActivity : BaseActivity() {
         const val INTENT_SEARCH_QUERY = "query"
         const val INTENT_SEARCH_FILTER = "filter"
         const val INTENT_TRANSLATION_SETTINGS = "eu.kanade.tachiyomi.TRANSLATION_SETTINGS"
+        const val INTENT_TRANSLATION_QUEUE = "eu.kanade.tachiyomi.TRANSLATION_QUEUE"
     }
 }
 

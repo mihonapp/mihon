@@ -42,6 +42,7 @@ import eu.kanade.tachiyomi.ui.history.HistoryTab
 import eu.kanade.tachiyomi.ui.library.LibraryTab
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.more.MoreTab
+import eu.kanade.tachiyomi.ui.translation.TranslationQueueScreen
 import eu.kanade.tachiyomi.ui.updates.UpdatesTab
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
@@ -170,6 +171,9 @@ object HomeScreen : Screen() {
                         }
                         if (it is Tab.More && it.toDownloads) {
                             navigator.push(DownloadQueueScreen)
+                        }
+                        if (it is Tab.More && it.toTranslationQueue) {
+                            navigator.push(TranslationQueueScreen)
                         }
                     }
                 }
@@ -307,6 +311,9 @@ object HomeScreen : Screen() {
         data object Updates : Tab
         data object History : Tab
         data class Browse(val toExtensions: Boolean = false) : Tab
-        data class More(val toDownloads: Boolean) : Tab
+        data class More(
+            val toDownloads: Boolean = false,
+            val toTranslationQueue: Boolean = false,
+        ) : Tab
     }
 }

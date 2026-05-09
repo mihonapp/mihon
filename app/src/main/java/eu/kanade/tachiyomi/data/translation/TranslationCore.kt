@@ -10,9 +10,52 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.put
 import kotlin.math.min
+import java.util.Locale
+import tachiyomi.data.Translation_jobs
+import tachiyomi.domain.translation.service.TranslationPreferences
 
 const val DEFAULT_GEMINI_TRANSLATION_MODEL = "gemini-3-flash-preview"
 const val DEFAULT_GEMINI_MAX_OUTPUT_TOKENS = 65_536
+const val DEFAULT_TRANSLATION_MAX_IMAGES_PER_BATCH = 38
+const val TRANSLATION_BATCH_ALL = 0
+
+object TranslationLanguages {
+    const val SOURCE_AUTO = "auto"
+    const val SOURCE_JAPANESE = "ja"
+    const val SOURCE_KOREAN = "ko"
+    const val SOURCE_CHINESE = "zh"
+
+    fun defaultTargetLanguage(): String {
+        return Locale.getDefault().displayLanguage.ifBlank { "English" }
+    }
+
+    fun sourcePromptLabel(value: String?): String? {
+        return when (value?.trim().orEmpty().lowercase(Locale.ROOT)) {
+            "", SOURCE_AUTO -> null
+            SOURCE_JAPANESE -> "Japanese"
+            SOURCE_KOREAN -> "Korean"
+            SOURCE_CHINESE -> "Chinese"
+            else -> value?.trim()
+        }
+    }
+
+    fun sourceDisplayLabel(value: String?): String {
+        return sourcePromptLabel(value) ?: "Auto"
+    }
+}
+
+fun TranslationPreferences.resolvedTargetLanguage(): String {
+    return targetLanguage.get().ifBlank { TranslationLanguages.defaultTargetLanguage() }
+}
+
+fun TranslationPreferences.resolvedSourceLanguageOrNull(): String? {
+    return TranslationLanguages.sourcePromptLabel(sourceLanguage.get())
+}
+
+fun TranslationPreferences.normalizedMaxImagesPerBatch(): Int {
+    val value = maxImagesPerBatch.get()
+    return if (value == TRANSLATION_BATCH_ALL) TRANSLATION_BATCH_ALL else value.coerceAtLeast(1)
+}
 
 @Serializable
 data class GeminiModel(
@@ -220,6 +263,7 @@ data class TranslationPageCandidate(
     val chapterId: Long,
     val pageIndex: Int,
     val hasOverlay: Boolean,
+    val hasActiveJob: Boolean = false,
 )
 
 data class TranslationBoxEdit(
@@ -239,11 +283,142 @@ object TranslationEnqueuePlanner {
         pages: List<TranslationPageCandidate>,
         overwrite: Boolean,
     ): List<TranslationPageCandidate> {
-        return if (overwrite) {
-            pages
-        } else {
-            pages.filterNot { it.hasOverlay }
+        return TranslationBatchPlanner.pagesToQueue(
+            pages = pages,
+            overwrite = overwrite,
+            maxImagesPerBatch = TRANSLATION_BATCH_ALL,
+        )
+    }
+}
+
+object TranslationBatchPlanner {
+    fun pagesToQueue(
+        pages: List<TranslationPageCandidate>,
+        overwrite: Boolean,
+        maxImagesPerBatch: Int,
+    ): List<TranslationPageCandidate> {
+        val eligible = pages.filter { page ->
+            (overwrite || !page.hasOverlay) && !page.hasActiveJob
         }
+        return if (maxImagesPerBatch == TRANSLATION_BATCH_ALL) {
+            eligible
+        } else {
+            eligible.take(maxImagesPerBatch.coerceAtLeast(1))
+        }
+    }
+}
+
+object TranslationPromptPolicy {
+    fun systemPrompt(userPrompt: String): String {
+        return buildString {
+            appendLine("You are a manga, manhwa, and manhua translation assistant.")
+            appendLine("Only translate relevant or critical information: speech bubbles, thought bubbles, signs, captions, narration, and author's notes.")
+            appendLine("Ignore sound effects, decorative text, unrelated background text, watermark text, and punctuation-only symbols.")
+            appendLine("Return no box for ignored text.")
+            userPrompt.trim().takeIf { it.isNotBlank() }?.let {
+                appendLine("Additional user system prompt:")
+                appendLine(it)
+            }
+        }.trimEnd()
+    }
+
+    fun pagePrompt(targetLanguage: String, sourceLanguage: String?): String {
+        return buildString {
+            appendLine("Translate the relevant manga text into ${targetLanguage.ifBlank { "the app language" }}.")
+            appendLine("Source language: ${TranslationLanguages.sourcePromptLabel(sourceLanguage) ?: "auto-detect"}.")
+            appendLine("Return only JSON matching the schema. Coordinates must be normalized 0.0 to 1.0.")
+            appendLine("Each box needs x, y, width, height, originalText, translatedText, textType, confidence.")
+        }.trimEnd()
+    }
+}
+
+object TranslationOverlaySanitizer {
+    private val ignoredTextTypes = setOf(
+        "sfx",
+        "soundeffect",
+        "soundeffects",
+        "sound_effect",
+        "sound_effects",
+        "punctuation",
+        "decorative",
+        "unrelated",
+        "irrelevant",
+        "watermark",
+    )
+
+    fun sanitize(overlay: TranslationOverlayResult): TranslationOverlayResult {
+        return overlay.copy(
+            boxes = overlay.boxes.filter(::isRelevantBox),
+        )
+    }
+
+    fun isRelevantText(text: String): Boolean {
+        val trimmed = text.trim()
+        return trimmed.isNotEmpty() && trimmed.any { it.isLetterOrDigit() }
+    }
+
+    private fun isRelevantBox(box: TranslationOverlayBox): Boolean {
+        val normalizedType = box.textType
+            .lowercase(Locale.ROOT)
+            .filter { it.isLetterOrDigit() || it == '_' }
+        if (normalizedType in ignoredTextTypes) return false
+        return isRelevantText(box.originalText.ifBlank { box.translatedText })
+    }
+}
+
+data class TranslationNotificationState(
+    val title: String,
+    val text: String,
+    val bigText: String,
+    val progressMax: Int,
+    val progressCurrent: Int,
+    val indeterminate: Boolean,
+)
+
+object TranslationNotificationFormatter {
+    fun format(
+        item: TranslationQueueItem?,
+        job: Translation_jobs,
+        current: Long,
+        total: Long,
+        status: TranslationJobStatus,
+        message: String?,
+        hideContent: Boolean,
+    ): TranslationNotificationState {
+        val safeTotal = total.takeIf { it > 0 } ?: job.progress_total.takeIf { it > 0 } ?: 0
+        val safeCurrent = current.coerceAtLeast(0)
+        val progressText = if (safeTotal > 0) "$safeCurrent/$safeTotal" else "preparing"
+        val title = if (hideContent) {
+            "Translation queue"
+        } else {
+            item?.mangaTitle ?: "Translation queue"
+        }
+        val chapter = item?.chapterName ?: job.chapter_id?.let { "Chapter $it" } ?: "Unknown chapter"
+        val page = job.page_index?.let { "page ${it + 1}" } ?: "chapter"
+        val text = if (hideContent) {
+            "${status.value} · $progressText"
+        } else {
+            "$chapter · $page · ${status.value} · $progressText"
+        }
+        val bigText = buildString {
+            appendLine(text)
+            appendLine("attempt=${job.attempts}")
+            appendLine("model=${job.model}")
+            appendLine("pipeline=${job.pipeline}")
+            appendLine("target=${job.target_language.ifBlank { "app language" }}")
+            appendLine("source=${TranslationLanguages.sourceDisplayLabel(job.source_language)}")
+            message?.takeIf { it.isNotBlank() }?.let {
+                appendLine("message=$it")
+            }
+        }.trimEnd()
+        return TranslationNotificationState(
+            title = title,
+            text = text,
+            bigText = if (hideContent) text else bigText,
+            progressMax = safeTotal.toInt().coerceAtLeast(0),
+            progressCurrent = safeCurrent.toInt().coerceAtLeast(0),
+            indeterminate = safeTotal <= 0,
+        )
     }
 }
 

@@ -127,6 +127,9 @@ class TranslationCoreTest {
         preferences.topK.get() shouldBe 64
         preferences.maxOutputTokens.get() shouldBe 65_536
         preferences.thinkingLevel.get() shouldBe TranslationThinkingLevel.High.value
+        preferences.maxImagesPerBatch.get() shouldBe DEFAULT_TRANSLATION_MAX_IMAGES_PER_BATCH
+        preferences.sourceLanguage.get() shouldBe TranslationLanguages.SOURCE_AUTO
+        preferences.overlayTextSizeMode.get() shouldBe "dynamic"
     }
 
     @Test
@@ -223,6 +226,111 @@ class TranslationCoreTest {
 
         TranslationEnqueuePlanner.pagesToQueue(pages, overwrite = false) shouldContainExactly listOf(pages[1])
         TranslationEnqueuePlanner.pagesToQueue(pages, overwrite = true) shouldContainExactly pages
+    }
+
+    @Test
+    fun `batch planner caps images and all means uncapped`() {
+        val pages = (0 until 50).map { page ->
+            TranslationPageCandidate(chapterId = 1, pageIndex = page, hasOverlay = false)
+        }
+
+        TranslationBatchPlanner.pagesToQueue(
+            pages = pages,
+            overwrite = false,
+            maxImagesPerBatch = 38,
+        ).map { it.pageIndex } shouldContainExactly (0 until 38).toList()
+
+        TranslationBatchPlanner.pagesToQueue(
+            pages = pages,
+            overwrite = false,
+            maxImagesPerBatch = TRANSLATION_BATCH_ALL,
+        ) shouldContainExactly pages
+    }
+
+    @Test
+    fun `batch planner skips overlays and active jobs so later tap advances`() {
+        val pages = listOf(
+            TranslationPageCandidate(chapterId = 1, pageIndex = 0, hasOverlay = false, hasActiveJob = true),
+            TranslationPageCandidate(chapterId = 1, pageIndex = 1, hasOverlay = true, hasActiveJob = false),
+            TranslationPageCandidate(chapterId = 1, pageIndex = 2, hasOverlay = false, hasActiveJob = false),
+            TranslationPageCandidate(chapterId = 1, pageIndex = 3, hasOverlay = false, hasActiveJob = false),
+        )
+
+        TranslationBatchPlanner.pagesToQueue(
+            pages = pages,
+            overwrite = false,
+            maxImagesPerBatch = 1,
+        ).map { it.pageIndex } shouldContainExactly listOf(2)
+    }
+
+    @Test
+    fun `source language values map to prompt labels`() {
+        TranslationLanguages.sourcePromptLabel("auto") shouldBe null
+        TranslationLanguages.sourcePromptLabel("ja") shouldBe "Japanese"
+        TranslationLanguages.sourcePromptLabel("ko") shouldBe "Korean"
+        TranslationLanguages.sourcePromptLabel("zh") shouldBe "Chinese"
+    }
+
+    @Test
+    fun `translation prompt uses system prompt for filtering rules`() {
+        val systemPrompt = TranslationPromptPolicy.systemPrompt("Keep honorifics.")
+        val pagePrompt = TranslationPromptPolicy.pagePrompt("English", "ja")
+
+        systemPrompt shouldContain "Ignore sound effects"
+        systemPrompt shouldContain "Keep honorifics."
+        pagePrompt shouldContain "Source language: Japanese"
+        pagePrompt shouldNotContain "Include dialogue, captions, signs, and sound effects"
+    }
+
+    @Test
+    fun `overlay sanitizer removes punctuation sfx and unrelated boxes`() {
+        val overlay = TranslationOverlayResult(
+            boxes = listOf(
+                TranslationOverlayBox(0f, 0f, 0.1f, 0.1f, originalText = "Hello", translatedText = "Hello", textType = "dialogue"),
+                TranslationOverlayBox(0f, 0f, 0.1f, 0.1f, originalText = "!!!", translatedText = "!!!", textType = "dialogue"),
+                TranslationOverlayBox(0f, 0f, 0.1f, 0.1f, originalText = "ドン", translatedText = "Boom", textType = "sfx"),
+                TranslationOverlayBox(0f, 0f, 0.1f, 0.1f, originalText = "scan", translatedText = "scan", textType = "watermark"),
+                TranslationOverlayBox(0f, 0f, 0.1f, 0.1f, originalText = "Exit", translatedText = "Exit", textType = "sign"),
+            ),
+        )
+
+        TranslationOverlaySanitizer.sanitize(overlay).boxes.map { it.originalText } shouldContainExactly listOf("Hello", "Exit")
+    }
+
+    @Test
+    fun `notification formatter includes full state unless content is hidden`() {
+        val job = queueItem(id = 1).toJob()
+        val item = queueItem(id = 1, mangaTitle = "Manga", chapterName = "Chapter 1")
+
+        val visible = TranslationNotificationFormatter.format(
+            item = item,
+            job = job,
+            current = 3,
+            total = 10,
+            status = TranslationJobStatus.Running,
+            message = "working",
+            hideContent = false,
+        )
+
+        visible.title shouldBe "Manga"
+        visible.bigText shouldContain "Chapter 1"
+        visible.bigText shouldContain "model=gemini-3-flash-preview"
+        visible.bigText shouldContain "pipeline=gemini_vision"
+        visible.bigText shouldContain "message=working"
+
+        val hidden = TranslationNotificationFormatter.format(
+            item = item,
+            job = job,
+            current = 3,
+            total = 10,
+            status = TranslationJobStatus.Running,
+            message = "working",
+            hideContent = true,
+        )
+
+        hidden.title shouldBe "Translation queue"
+        hidden.bigText shouldNotContain "Manga"
+        hidden.bigText shouldNotContain "Chapter 1"
     }
 
     @Test

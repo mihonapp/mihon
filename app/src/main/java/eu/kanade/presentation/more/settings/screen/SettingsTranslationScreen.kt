@@ -1,7 +1,11 @@
 package eu.kanade.presentation.more.settings.screen
 
 import android.content.Context
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,8 +26,11 @@ import uy.kohesive.injekt.api.get
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.tachiyomi.data.translation.DEFAULT_GEMINI_MAX_OUTPUT_TOKENS
 import eu.kanade.tachiyomi.data.translation.DEFAULT_GEMINI_TRANSLATION_MODEL
+import eu.kanade.tachiyomi.data.translation.DEFAULT_TRANSLATION_MAX_IMAGES_PER_BATCH
 import eu.kanade.tachiyomi.data.translation.GeminiModel
 import eu.kanade.tachiyomi.data.translation.GeminiTranslationClient
+import eu.kanade.tachiyomi.data.translation.TRANSLATION_BATCH_ALL
+import eu.kanade.tachiyomi.data.translation.TranslationLanguages
 import eu.kanade.tachiyomi.data.translation.TranslationModelLimits
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
@@ -72,6 +79,19 @@ object SettingsTranslationScreen : SearchableSettings {
         val topK by preferences.topK.collectAsState()
         val maxOutputTokens by preferences.maxOutputTokens.collectAsState()
         val concurrency by preferences.concurrency.collectAsState()
+        val maxImagesPerBatch by preferences.maxImagesPerBatch.collectAsState()
+        val overlayTextSizeMode by preferences.overlayTextSizeMode.collectAsState()
+        val overlayTextSizeSp by preferences.overlayTextSizeSp.collectAsState()
+        var showClearAllConfirmation by remember { mutableStateOf(false) }
+
+        LaunchedEffect(Unit) {
+            if (preferences.targetLanguage.get().isBlank()) {
+                preferences.targetLanguage.set(TranslationLanguages.defaultTargetLanguage())
+            }
+            if (preferences.sourceLanguage.get().isBlank()) {
+                preferences.sourceLanguage.set(TranslationLanguages.SOURCE_AUTO)
+            }
+        }
 
         var modelMetadata by remember(cachedModelsJson) {
             mutableStateOf(TranslationModelLimits.decodeModels(cachedModelsJson, json))
@@ -168,6 +188,38 @@ object SettingsTranslationScreen : SearchableSettings {
             selectedModel = selectedModel,
             cachedModels = modelMetadata,
         ).coerceIn(maxOutputTokenSliderMin, maxOutputTokenSliderMax)
+        val maxImagesValueString = if (maxImagesPerBatch == TRANSLATION_BATCH_ALL) {
+            stringResource(MR.strings.all)
+        } else {
+            maxImagesPerBatch.coerceAtLeast(1).toString()
+        }
+
+        if (showClearAllConfirmation) {
+            AlertDialog(
+                onDismissRequest = { showClearAllConfirmation = false },
+                title = { Text(text = stringResource(MR.strings.pref_translation_clear_queue_logs)) },
+                text = { Text(text = stringResource(MR.strings.pref_translation_clear_queue_logs_summary)) },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showClearAllConfirmation = false
+                            scope.launch {
+                                TranslationJob.stop(context)
+                                repository.clearAllJobsAndLogs()
+                                context.toast(MR.strings.pref_translation_clear_queue_logs)
+                            }
+                        },
+                    ) {
+                        Text(text = stringResource(MR.strings.action_ok))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showClearAllConfirmation = false }) {
+                        Text(text = stringResource(MR.strings.action_cancel))
+                    }
+                },
+            )
+        }
 
         return listOf(
             Preference.PreferenceItem.InfoPreference(
@@ -267,10 +319,15 @@ object SettingsTranslationScreen : SearchableSettings {
                         title = stringResource(MR.strings.pref_translation_target_language),
                         subtitle = "%s",
                     ),
-                    Preference.PreferenceItem.EditTextPreference(
+                    Preference.PreferenceItem.ListPreference(
                         preference = preferences.sourceLanguage,
+                        entries = mapOf(
+                            TranslationLanguages.SOURCE_AUTO to stringResource(MR.strings.label_auto),
+                            TranslationLanguages.SOURCE_JAPANESE to stringResource(MR.strings.pref_translation_source_japanese),
+                            TranslationLanguages.SOURCE_KOREAN to stringResource(MR.strings.pref_translation_source_korean),
+                            TranslationLanguages.SOURCE_CHINESE to stringResource(MR.strings.pref_translation_source_chinese),
+                        ).toImmutableMap(),
                         title = stringResource(MR.strings.pref_translation_source_language),
-                        subtitle = "%s",
                     ),
                 ),
             ),
@@ -304,6 +361,23 @@ object SettingsTranslationScreen : SearchableSettings {
                     Preference.PreferenceItem.SwitchPreference(
                         preference = preferences.autoShowOverlay,
                         title = stringResource(MR.strings.pref_translation_show_overlays),
+                    ),
+                    Preference.PreferenceItem.ListPreference(
+                        preference = preferences.overlayTextSizeMode,
+                        entries = mapOf(
+                            "dynamic" to stringResource(MR.strings.pref_translation_overlay_text_dynamic),
+                            "system" to stringResource(MR.strings.pref_translation_overlay_text_system),
+                            "custom" to stringResource(MR.strings.pref_translation_overlay_text_custom),
+                        ).toImmutableMap(),
+                        title = stringResource(MR.strings.pref_translation_overlay_text_size),
+                    ),
+                    Preference.PreferenceItem.SliderPreference(
+                        value = overlayTextSizeSp.coerceIn(8, 48),
+                        valueRange = 8..48,
+                        title = stringResource(MR.strings.pref_translation_overlay_text_custom_size),
+                        valueString = "$overlayTextSizeSp sp",
+                        enabled = overlayTextSizeMode == "custom",
+                        onValueChanged = { preferences.overlayTextSizeSp.set(it.coerceIn(8, 48)) },
                     ),
                     Preference.PreferenceItem.SwitchPreference(
                         preference = preferences.rawDebugLogging,
@@ -362,7 +436,7 @@ object SettingsTranslationScreen : SearchableSettings {
                     ),
                     Preference.PreferenceItem.EditTextPreference(
                         preference = preferences.globalInstructions,
-                        title = stringResource(MR.strings.pref_translation_global_instructions),
+                        title = stringResource(MR.strings.pref_translation_system_prompt),
                         subtitle = "%s",
                     ),
                 ),
@@ -376,6 +450,28 @@ object SettingsTranslationScreen : SearchableSettings {
                         title = stringResource(MR.strings.pref_translation_concurrency),
                         onValueChanged = { preferences.concurrency.set(it) },
                     ),
+                    Preference.PreferenceItem.SliderPreference(
+                        value = maxImagesPerBatch.coerceIn(0, 100),
+                        valueRange = 0..100,
+                        title = stringResource(MR.strings.pref_translation_max_images_per_batch),
+                        valueString = maxImagesValueString,
+                        onValueChanged = {
+                            preferences.maxImagesPerBatch.set(
+                                if (it == TRANSLATION_BATCH_ALL) {
+                                    TRANSLATION_BATCH_ALL
+                                } else {
+                                    it.coerceAtLeast(1)
+                                },
+                            )
+                        },
+                    ),
+                    Preference.PreferenceItem.TextPreference(
+                        title = stringResource(MR.strings.pref_translation_reset_max_images_per_batch),
+                        subtitle = stringResource(MR.strings.pref_translation_reset_max_images_per_batch_summary, DEFAULT_TRANSLATION_MAX_IMAGES_PER_BATCH),
+                        onClick = {
+                            preferences.maxImagesPerBatch.set(DEFAULT_TRANSLATION_MAX_IMAGES_PER_BATCH)
+                        },
+                    ),
                     Preference.PreferenceItem.TextPreference(
                         title = stringResource(MR.strings.pref_translation_clear_logs),
                         onClick = {
@@ -384,6 +480,11 @@ object SettingsTranslationScreen : SearchableSettings {
                                 context.toast(MR.strings.pref_translation_clear_logs)
                             }
                         },
+                    ),
+                    Preference.PreferenceItem.TextPreference(
+                        title = stringResource(MR.strings.pref_translation_clear_queue_logs),
+                        subtitle = stringResource(MR.strings.pref_translation_clear_queue_logs_summary),
+                        onClick = { showClearAllConfirmation = true },
                     ),
                     Preference.PreferenceItem.TextPreference(
                         title = stringResource(MR.strings.pref_translation_clear_storage),
