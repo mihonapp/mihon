@@ -11,6 +11,8 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import org.junit.jupiter.api.Test
 import tachiyomi.core.common.preference.InMemoryPreferenceStore
+import tachiyomi.data.Translation_jobs
+import tachiyomi.domain.translation.service.DEFAULT_TRANSLATION_SYSTEM_PROMPT
 import tachiyomi.domain.translation.service.TranslationPreferences
 
 class TranslationCoreTest {
@@ -130,6 +132,27 @@ class TranslationCoreTest {
         preferences.maxImagesPerBatch.get() shouldBe DEFAULT_TRANSLATION_MAX_IMAGES_PER_BATCH
         preferences.sourceLanguage.get() shouldBe TranslationLanguages.SOURCE_AUTO
         preferences.overlayTextSizeMode.get() shouldBe "dynamic"
+        preferences.globalInstructions.get() shouldBe DEFAULT_TRANSLATION_SYSTEM_PROMPT
+    }
+
+    @Test
+    fun `overlay editor geometry clamps page edge boxes without empty ranges`() {
+        val geometry = TranslationBoxGeometryNormalizer.normalize(
+            x = 0.99f,
+            y = 0.99f,
+            width = 0.5f,
+            height = Float.NaN,
+        )
+
+        geometry.x shouldBe 0.99f
+        geometry.y shouldBe 0.99f
+        geometry.width shouldBe TranslationBoxGeometryNormalizer.MIN_BOX_SIZE
+        geometry.height shouldBe TranslationBoxGeometryNormalizer.MIN_BOX_SIZE
+
+        val range = TranslationBoxGeometryNormalizer.safeSliderRange(0.01f, 0.00999999f)
+        range.start shouldBe 0f
+        range.endInclusive shouldBe 1f
+        TranslationBoxGeometryNormalizer.safeSliderValue(Float.NaN, range) shouldBe 0f
     }
 
     @Test
@@ -264,6 +287,29 @@ class TranslationCoreTest {
     }
 
     @Test
+    fun `pending job batcher groups compatible image jobs up to cap`() {
+        val jobs = (0 until 5).map { index ->
+            translationJob(
+                id = index + 1L,
+                chapterId = 10,
+                pageIndex = index.toLong(),
+            )
+        } + translationJob(
+            id = 20,
+            chapterId = 11,
+            pageIndex = 0,
+        )
+
+        val groups = TranslationPendingJobBatcher.groupPendingJobs(jobs, maxImagesPerBatch = 3)
+
+        groups.map { it.jobs.map(Translation_jobs::_id) } shouldContainExactly listOf(
+            listOf(1L, 2L, 3L),
+            listOf(4L, 5L),
+            listOf(20L),
+        )
+    }
+
+    @Test
     fun `source language values map to prompt labels`() {
         TranslationLanguages.sourcePromptLabel("auto") shouldBe null
         TranslationLanguages.sourcePromptLabel("ja") shouldBe "Japanese"
@@ -274,12 +320,29 @@ class TranslationCoreTest {
     @Test
     fun `translation prompt uses system prompt for filtering rules`() {
         val systemPrompt = TranslationPromptPolicy.systemPrompt("Keep honorifics.")
+        val defaultSystemPrompt = TranslationPromptPolicy.systemPrompt(DEFAULT_TRANSLATION_SYSTEM_PROMPT)
         val pagePrompt = TranslationPromptPolicy.pagePrompt("English", "ja")
 
         systemPrompt shouldContain "Ignore sound effects"
         systemPrompt shouldContain "Keep honorifics."
+        defaultSystemPrompt shouldNotContain "Additional user system prompt"
         pagePrompt shouldContain "Source language: Japanese"
         pagePrompt shouldNotContain "Include dialogue, captions, signs, and sound effects"
+    }
+
+    @Test
+    fun `overlay style json round trips overrides`() {
+        val style = TranslationOverlayBoxStyle(
+            fontFamily = "serif",
+            textColor = "#FFFFFFFF",
+            fillColor = "#80000000",
+            strokeColor = "#FFFF0000",
+            paddingDp = 6f,
+            textAlign = "start",
+        )
+
+        TranslationOverlayBoxStyle.fromJson(style.toJsonOrNull()) shouldBe style
+        TranslationOverlayBoxStyle().toJsonOrNull() shouldBe null
     }
 
     @Test
@@ -515,6 +578,34 @@ class TranslationCoreTest {
             tag = "queue",
             message = message,
             details = details,
+        )
+    }
+
+    private fun translationJob(
+        id: Long,
+        chapterId: Long,
+        pageIndex: Long?,
+        status: String = TranslationJobStatus.Queued.value,
+    ): Translation_jobs {
+        return Translation_jobs(
+            _id = id,
+            manga_id = 1,
+            chapter_id = chapterId,
+            page_index = pageIndex,
+            scope = TranslationScope.Image.value,
+            pipeline = "gemini_vision",
+            mode = TranslationMode.Overlay.value,
+            model = "gemini-3-flash-preview",
+            target_language = "English",
+            source_language = null,
+            overwrite = false,
+            status = status,
+            progress_current = 0,
+            progress_total = 1,
+            attempts = 0,
+            created_at = id,
+            updated_at = id,
+            error_message = null,
         )
     }
 }

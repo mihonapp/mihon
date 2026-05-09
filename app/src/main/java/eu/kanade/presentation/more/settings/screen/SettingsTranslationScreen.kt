@@ -18,6 +18,8 @@ import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import tachiyomi.domain.translation.service.TranslationPreferences
+import tachiyomi.domain.translation.service.TranslationLogSwipeAction
+import tachiyomi.domain.translation.service.TranslationQueueSwipeAction
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
@@ -46,6 +48,7 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlinx.serialization.json.Json
 import tachiyomi.core.common.i18n.stringResource as contextStringResource
+import tachiyomi.domain.translation.service.DEFAULT_TRANSLATION_SYSTEM_PROMPT
 
 object SettingsTranslationScreen : SearchableSettings {
 
@@ -90,6 +93,9 @@ object SettingsTranslationScreen : SearchableSettings {
             }
             if (preferences.sourceLanguage.get().isBlank()) {
                 preferences.sourceLanguage.set(TranslationLanguages.SOURCE_AUTO)
+            }
+            if (preferences.globalInstructions.get().isBlank()) {
+                preferences.globalInstructions.set(DEFAULT_TRANSLATION_SYSTEM_PROMPT)
             }
         }
 
@@ -379,6 +385,46 @@ object SettingsTranslationScreen : SearchableSettings {
                         enabled = overlayTextSizeMode == "custom",
                         onValueChanged = { preferences.overlayTextSizeSp.set(it.coerceIn(8, 48)) },
                     ),
+                    Preference.PreferenceItem.ListPreference(
+                        preference = preferences.overlayFontFamily,
+                        entries = mapOf(
+                            "sans" to "Sans",
+                            "serif" to "Serif",
+                            "monospace" to "Monospace",
+                        ).toImmutableMap(),
+                        title = stringResource(MR.strings.pref_translation_overlay_font_family),
+                    ),
+                    Preference.PreferenceItem.EditTextPreference(
+                        preference = preferences.overlayTextColor,
+                        title = stringResource(MR.strings.pref_translation_overlay_text_color),
+                        subtitle = "%s",
+                    ),
+                    Preference.PreferenceItem.EditTextPreference(
+                        preference = preferences.overlayBoxFillColor,
+                        title = stringResource(MR.strings.pref_translation_overlay_box_fill_color),
+                        subtitle = "%s",
+                    ),
+                    Preference.PreferenceItem.EditTextPreference(
+                        preference = preferences.overlayBoxStrokeColor,
+                        title = stringResource(MR.strings.pref_translation_overlay_box_stroke_color),
+                        subtitle = "%s",
+                    ),
+                    Preference.PreferenceItem.SliderPreference(
+                        value = preferences.overlayBoxPaddingDp.get().coerceIn(0, 24),
+                        valueRange = 0..24,
+                        title = stringResource(MR.strings.pref_translation_overlay_box_padding),
+                        valueString = "${preferences.overlayBoxPaddingDp.get().coerceIn(0, 24)} dp",
+                        onValueChanged = { preferences.overlayBoxPaddingDp.set(it.coerceIn(0, 24)) },
+                    ),
+                    Preference.PreferenceItem.ListPreference(
+                        preference = preferences.overlayTextAlignment,
+                        entries = mapOf(
+                            "center" to "Center",
+                            "start" to "Start",
+                            "end" to "End",
+                        ).toImmutableMap(),
+                        title = stringResource(MR.strings.pref_translation_overlay_text_alignment),
+                    ),
                     Preference.PreferenceItem.SwitchPreference(
                         preference = preferences.rawDebugLogging,
                         title = stringResource(MR.strings.pref_translation_raw_debug_logs),
@@ -472,6 +518,26 @@ object SettingsTranslationScreen : SearchableSettings {
                             preferences.maxImagesPerBatch.set(DEFAULT_TRANSLATION_MAX_IMAGES_PER_BATCH)
                         },
                     ),
+                    Preference.PreferenceItem.ListPreference(
+                        preference = preferences.queueSwipeStartAction,
+                        entries = translationQueueSwipeEntries(),
+                        title = stringResource(MR.strings.pref_translation_queue_swipe_start),
+                    ),
+                    Preference.PreferenceItem.ListPreference(
+                        preference = preferences.queueSwipeEndAction,
+                        entries = translationQueueSwipeEntries(),
+                        title = stringResource(MR.strings.pref_translation_queue_swipe_end),
+                    ),
+                    Preference.PreferenceItem.ListPreference(
+                        preference = preferences.logSwipeStartAction,
+                        entries = translationLogSwipeEntries(),
+                        title = stringResource(MR.strings.pref_translation_log_swipe_start),
+                    ),
+                    Preference.PreferenceItem.ListPreference(
+                        preference = preferences.logSwipeEndAction,
+                        entries = translationLogSwipeEntries(),
+                        title = stringResource(MR.strings.pref_translation_log_swipe_end),
+                    ),
                     Preference.PreferenceItem.TextPreference(
                         title = stringResource(MR.strings.pref_translation_clear_logs),
                         onClick = {
@@ -501,6 +567,21 @@ object SettingsTranslationScreen : SearchableSettings {
         )
     }
 }
+
+@Composable
+private fun translationQueueSwipeEntries() = mapOf(
+    TranslationQueueSwipeAction.Disabled to stringResource(MR.strings.pref_translation_swipe_disabled),
+    TranslationQueueSwipeAction.ViewLogs to stringResource(MR.strings.pref_translation_swipe_view_logs),
+    TranslationQueueSwipeAction.RetryOrLogs to stringResource(MR.strings.pref_translation_swipe_retry_or_logs),
+    TranslationQueueSwipeAction.CancelOrDelete to stringResource(MR.strings.pref_translation_swipe_cancel_or_delete),
+).toImmutableMap()
+
+@Composable
+private fun translationLogSwipeEntries() = mapOf(
+    TranslationLogSwipeAction.Disabled to stringResource(MR.strings.pref_translation_swipe_disabled),
+    TranslationLogSwipeAction.OpenDetails to stringResource(MR.strings.pref_translation_swipe_open_details),
+    TranslationLogSwipeAction.CopyDetails to stringResource(MR.strings.pref_translation_swipe_copy_details),
+).toImmutableMap()
 
 private fun clearTranslationFiles(context: Context) {
     File(context.filesDir, "translations").deleteRecursively()

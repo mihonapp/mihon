@@ -8,6 +8,7 @@ import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import eu.kanade.tachiyomi.data.translation.TranslationLanguages
+import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
@@ -289,8 +290,33 @@ class PagerPageHolder(
         } catch (e: Throwable) {
             if (e is kotlinx.coroutines.CancellationException) throw e
             logcat(LogPriority.ERROR, e) { "Failed to load saved translation overlay" }
+            translationRepository.insertLog(
+                jobId = null,
+                pageId = null,
+                level = TranslationLogLevel.Error,
+                tag = "overlay",
+                message = "Failed to load reader translation overlay",
+                details = buildString {
+                    appendLine("chapter_id=$chapterId")
+                    appendLine("page_index=${page.index}")
+                    appendLine("target_language=$targetLanguage")
+                    appendLine("exception_class=${e::class.qualifiedName ?: e::class.simpleName.orEmpty()}")
+                    appendLine("exception_message=${e.message ?: "-"}")
+                    appendLine("stack_trace=${e.stackTraceToString()}")
+                },
+            )
             withUIContext { clearTranslationOverlay() }
             return
+        }
+        if (savedPage == null) {
+            translationRepository.insertLog(
+                jobId = null,
+                pageId = null,
+                level = TranslationLogLevel.Debug,
+                tag = "overlay",
+                message = "Reader translation overlay missing",
+                details = "chapter_id=$chapterId\npage_index=${page.index}\ntarget_language=$targetLanguage",
+            )
         }
         withUIContext {
             setTranslationOverlay(savedPage?.boxes.orEmpty())

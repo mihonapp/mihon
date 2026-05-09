@@ -177,6 +177,124 @@ class GeminiTranslationClient(
         )
     }
 
+    suspend fun translatePageImages(
+        apiKey: String,
+        model: String,
+        pages: List<TranslationBatchImageInput>,
+        targetLanguage: String,
+        sourceLanguage: String?,
+        generationConfig: TranslationGenerationConfig,
+        extraInstructions: String,
+        jobId: Long? = null,
+        pageId: Long? = null,
+    ): List<TranslationBatchOverlayResult> {
+        require(pages.isNotEmpty()) { "Batch image translation requires at least one page" }
+        val prompt = TranslationPromptPolicy.batchPagePrompt(
+            pageIndexes = pages.map { it.pageIndex },
+            targetLanguage = targetLanguage,
+            sourceLanguage = sourceLanguage,
+        )
+        val systemPrompt = TranslationPromptPolicy.systemPrompt(extraInstructions)
+        val parts = buildList {
+            add(GeminiPart(text = prompt))
+            pages.forEach { page ->
+                add(
+                    GeminiPart(
+                        text = "Page ${page.pageIndex}. Return this page as pageIndex=${page.pageIndex}.",
+                    ),
+                )
+                add(
+                    GeminiPart(
+                        inlineData = GeminiInlineData(
+                            mimeType = page.mimeType,
+                            data = Base64.encodeToString(page.imageBytes, Base64.NO_WRAP),
+                        ),
+                    ),
+                )
+            }
+        }
+        val config = generationConfig.toGeminiJson(json).withStructuredBatchOverlaySchema()
+        val request = GeminiGenerateContentRequest(
+            systemInstruction = GeminiContent(parts = listOf(GeminiPart(text = systemPrompt))),
+            contents = listOf(GeminiContent(parts = parts)),
+            generationConfig = config,
+        )
+        return generateBatchOverlay(
+            apiKey = apiKey,
+            model = model,
+            request = request,
+            operation = "translatePageImages",
+            requestSummary = buildString {
+                appendLine("system_prompt:")
+                appendLine(systemPrompt)
+                appendLine("prompt:")
+                appendLine(prompt)
+                appendLine("pages=${pages.size}")
+                pages.forEach { page ->
+                    appendLine("page=${page.pageIndex}, mime=${page.mimeType}, bytes=${page.imageBytes.size}, size=${page.width ?: "-"}x${page.height ?: "-"}")
+                }
+                appendLine("generation_config=$config")
+            },
+            jobId = jobId,
+            pageId = pageId,
+        )
+    }
+
+    suspend fun translateOcrBlockBatch(
+        apiKey: String,
+        model: String,
+        pages: List<TranslationBatchOcrInput>,
+        targetLanguage: String,
+        sourceLanguage: String?,
+        generationConfig: TranslationGenerationConfig,
+        extraInstructions: String,
+        jobId: Long? = null,
+        pageId: Long? = null,
+    ): List<TranslationBatchOverlayResult> {
+        require(pages.isNotEmpty()) { "Batch OCR translation requires at least one page" }
+        val prompt = buildString {
+            appendLine(
+                TranslationPromptPolicy.batchPagePrompt(
+                    pageIndexes = pages.map { it.pageIndex },
+                    targetLanguage = targetLanguage,
+                    sourceLanguage = sourceLanguage,
+                ),
+            )
+            appendLine("Translate these OCR blocks. Preserve pageIndex, each box, and reading intent:")
+            pages.forEach { page ->
+                appendLine("Page ${page.pageIndex}:")
+                page.blocks.forEach { block ->
+                    appendLine(
+                        "${block.id}: [${block.x},${block.y},${block.width},${block.height}] ${block.text}",
+                    )
+                }
+            }
+        }
+        val systemPrompt = TranslationPromptPolicy.systemPrompt(extraInstructions)
+        val request = GeminiGenerateContentRequest(
+            systemInstruction = GeminiContent(parts = listOf(GeminiPart(text = systemPrompt))),
+            contents = listOf(GeminiContent(parts = listOf(GeminiPart(text = prompt)))),
+            generationConfig = generationConfig.toGeminiJson(json).withStructuredBatchOverlaySchema(),
+        )
+        return generateBatchOverlay(
+            apiKey = apiKey,
+            model = model,
+            request = request,
+            operation = "translateOcrBlockBatch",
+            requestSummary = buildString {
+                appendLine("system_prompt:")
+                appendLine(systemPrompt)
+                appendLine("prompt:")
+                appendLine(prompt)
+                appendLine("pages=${pages.size}")
+                appendLine("ocr_blocks=${pages.sumOf { it.blocks.size }}")
+                appendLine("generation_config=${request.generationConfig}")
+            },
+            jobId = jobId,
+            pageId = pageId,
+        )
+    }
+
     suspend fun generateInpaintImage(
         apiKey: String,
         model: String,
@@ -269,6 +387,56 @@ class GeminiTranslationClient(
             },
         )
         return overlay
+    }
+
+    private suspend fun generateBatchOverlay(
+        apiKey: String,
+        model: String,
+        request: GeminiGenerateContentRequest,
+        operation: String,
+        requestSummary: String,
+        jobId: Long? = null,
+        pageId: Long? = null,
+    ): List<TranslationBatchOverlayResult> {
+        val response = generateContent(apiKey, model, request, operation, requestSummary, jobId, pageId)
+        val text = response.candidates
+            .firstOrNull()
+            ?.content
+            ?.parts
+            ?.firstNotNullOfOrNull { it.text }
+            ?: error("Gemini batch response did not include text")
+        val parsed = json.decodeFromString<GeminiBatchOverlayResponse>(text)
+        val overlays = parsed.pages.map { page ->
+            TranslationBatchOverlayResult(
+                pageIndex = page.pageIndex,
+                overlay = TranslationOverlaySanitizer.sanitize(
+                    TranslationOverlayResult(
+                        sourceLanguage = page.sourceLanguage ?: parsed.sourceLanguage,
+                        targetLanguage = page.targetLanguage ?: parsed.targetLanguage,
+                        boxes = page.boxes,
+                    ),
+                ),
+            )
+        }
+        repository.insertLog(
+            jobId = jobId,
+            pageId = pageId,
+            level = TranslationLogLevel.Debug,
+            tag = "api",
+            message = "Gemini batch overlay response parsed",
+            details = buildString {
+                appendLine("operation=$operation")
+                appendLine("model=$model")
+                appendLine("pages=${overlays.size}")
+                overlays.forEach { page ->
+                    appendLine("page=${page.pageIndex}, boxes=${page.overlay.boxes.size}")
+                    page.overlay.boxes.forEachIndexed { index, box ->
+                        appendLine("page=${page.pageIndex}, box=${index + 1}, ${box.originalText} => ${box.translatedText}")
+                    }
+                }
+            },
+        )
+        return overlays
     }
 
     private suspend fun generateContent(
@@ -472,6 +640,92 @@ private fun JsonElement.withStructuredOverlaySchema(): JsonElement {
     }
 }
 
+private fun JsonElement.withStructuredBatchOverlaySchema(): JsonElement {
+    val base = jsonObject
+    return buildJsonObject {
+        base.forEach { (key, value) -> put(key, value) }
+        put("responseMimeType", "application/json")
+        put(
+            "responseJsonSchema",
+            buildJsonObject {
+                put("type", "object")
+                put(
+                    "properties",
+                    buildJsonObject {
+                        put("sourceLanguage", buildJsonObject { put("type", "string") })
+                        put("targetLanguage", buildJsonObject { put("type", "string") })
+                        put(
+                            "pages",
+                            buildJsonObject {
+                                put("type", "array")
+                                put(
+                                    "items",
+                                    buildJsonObject {
+                                        put("type", "object")
+                                        put(
+                                            "properties",
+                                            buildJsonObject {
+                                                put("pageIndex", buildJsonObject { put("type", "integer") })
+                                                put("sourceLanguage", buildJsonObject { put("type", "string") })
+                                                put("targetLanguage", buildJsonObject { put("type", "string") })
+                                                put(
+                                                    "boxes",
+                                                    buildJsonObject {
+                                                        put("type", "array")
+                                                        put(
+                                                            "items",
+                                                            buildJsonObject {
+                                                                put("type", "object")
+                                                                put(
+                                                                    "properties",
+                                                                    buildJsonObject {
+                                                                        listOf("x", "y", "width", "height", "confidence").forEach {
+                                                                            put(it, buildJsonObject { put("type", "number") })
+                                                                        }
+                                                                        listOf("originalText", "translatedText", "textType").forEach {
+                                                                            put(it, buildJsonObject { put("type", "string") })
+                                                                        }
+                                                                    },
+                                                                )
+                                                                put(
+                                                                    "required",
+                                                                    kotlinx.serialization.json.buildJsonArray {
+                                                                        listOf(
+                                                                            "x",
+                                                                            "y",
+                                                                            "width",
+                                                                            "height",
+                                                                            "originalText",
+                                                                            "translatedText",
+                                                                            "textType",
+                                                                        ).forEach { add(kotlinx.serialization.json.JsonPrimitive(it)) }
+                                                                    },
+                                                                )
+                                                            },
+                                                        )
+                                                    },
+                                                )
+                                            },
+                                        )
+                                        put(
+                                            "required",
+                                            kotlinx.serialization.json.buildJsonArray {
+                                                add(kotlinx.serialization.json.JsonPrimitive("pageIndex"))
+                                                add(kotlinx.serialization.json.JsonPrimitive("boxes"))
+                                            },
+                                        )
+                                    },
+                                )
+                            },
+                        )
+                    },
+                )
+                put("required", kotlinx.serialization.json.buildJsonArray { add(kotlinx.serialization.json.JsonPrimitive("pages")) })
+            },
+        )
+    }
+}
+
 @Serializable
 private data class GeminiListModelsResponse(
     val models: List<GeminiModel> = emptyList(),
@@ -531,6 +785,21 @@ data class TranslationOverlayBox(
     val translatedText: String,
     val textType: String = "dialogue",
     val confidence: Float? = null,
+)
+
+@Serializable
+private data class GeminiBatchOverlayResponse(
+    val sourceLanguage: String? = null,
+    val targetLanguage: String? = null,
+    val pages: List<GeminiBatchOverlayPage> = emptyList(),
+)
+
+@Serializable
+private data class GeminiBatchOverlayPage(
+    val pageIndex: Int,
+    val sourceLanguage: String? = null,
+    val targetLanguage: String? = null,
+    val boxes: List<TranslationOverlayBox> = emptyList(),
 )
 
 data class OcrTextBlock(

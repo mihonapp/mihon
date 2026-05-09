@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.animateFloatingActionButton
+import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -38,6 +39,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -72,12 +74,17 @@ import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
+import me.saket.swipe.SwipeAction
+import me.saket.swipe.SwipeableActionsBox
 import tachiyomi.core.common.i18n.stringResource as contextStringResource
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.data.Translation_jobs
 import tachiyomi.data.Translation_logs
 import tachiyomi.i18n.MR
+import tachiyomi.domain.translation.service.TranslationLogSwipeAction
+import tachiyomi.domain.translation.service.TranslationPreferences
+import tachiyomi.domain.translation.service.TranslationQueueSwipeAction
 import tachiyomi.presentation.core.components.Pill
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -95,16 +102,23 @@ object TranslationQueueScreen : Screen() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
         val screenModel = rememberScreenModel { TranslationQueueScreenModel() }
+        val translationPreferences = remember { Injekt.get<TranslationPreferences>() }
         val jobs by screenModel.jobs.collectAsState()
         val logs by screenModel.logs.collectAsState()
         val isRunning by TranslationJob.isRunningFlow(context).collectAsState(false)
+        val queueSwipeStart = translationPreferences.queueSwipeStartAction.get()
+        val queueSwipeEnd = translationPreferences.queueSwipeEndAction.get()
+        val logSwipeStart = translationPreferences.logSwipeStartAction.get()
+        val logSwipeEnd = translationPreferences.logSwipeEndAction.get()
         var selectedLog by remember { mutableStateOf<GroupedTranslationLog?>(null) }
+        var confirmCancelJob by remember { mutableStateOf<TranslationQueueItem?>(null) }
         var levelFilter by remember { mutableStateOf<String?>(null) }
         var tagFilter by remember { mutableStateOf<String?>(null) }
         var jobFilter by remember { mutableStateOf<Long?>(null) }
         var searchQuery by remember { mutableStateOf("") }
         var selectedQueueFilters by remember { mutableStateOf(emptySet<TranslationQueueTypeFilter>()) }
         var collapsedQueueGroups by remember { mutableStateOf(emptySet<String>()) }
+        var inlineLogJobIds by remember { mutableStateOf(emptySet<Long>()) }
         var logsExpanded by rememberSaveable { mutableStateOf(false) }
         var showClearAllConfirmation by remember { mutableStateOf(false) }
         val activeJobCount by remember(jobs) {
@@ -306,13 +320,39 @@ object TranslationQueueScreen : Screen() {
                             val job = group.items[index]
                             TranslationJobItem(
                                 job = job,
+                                startAction = queueSwipeStart,
+                                endAction = queueSwipeEnd,
                                 onRetry = { screenModel.retry(context, job.toJob()) },
-                                onCancel = { screenModel.cancel(job.toJob()) },
+                                onCancel = { confirmCancelJob = job },
                                 onViewLogs = {
-                                    jobFilter = job.id
-                                    logsExpanded = true
+                                    inlineLogJobIds = if (job.id in inlineLogJobIds) {
+                                        inlineLogJobIds - job.id
+                                    } else {
+                                        inlineLogJobIds + job.id
+                                    }
                                 },
                             )
+                            if (job.id in inlineLogJobIds) {
+                                logs
+                                    .map(Translation_logs::toUiItem)
+                                    .filter { it.jobId == job.id }
+                                    .let(TranslationLogUiModel::groupAdjacent)
+                                    .forEach { log ->
+                                        TranslationLogItem(
+                                            log = log,
+                                            indent = 32.dp,
+                                            startAction = logSwipeStart,
+                                            endAction = logSwipeEnd,
+                                            onClick = { selectedLog = log },
+                                            onCopy = {
+                                                context.copyToClipboard(
+                                                    context.contextStringResource(MR.strings.translation_log_details),
+                                                    formatLogDetails(log),
+                                                )
+                                            },
+                                        )
+                                    }
+                            }
                             HorizontalDivider()
                         }
                     }
@@ -371,7 +411,16 @@ object TranslationQueueScreen : Screen() {
                         ) { index ->
                             TranslationLogItem(
                                 log = groupedLogs[index],
+                                indent = 0.dp,
+                                startAction = logSwipeStart,
+                                endAction = logSwipeEnd,
                                 onClick = { selectedLog = groupedLogs[index] },
+                                onCopy = {
+                                    context.copyToClipboard(
+                                        context.contextStringResource(MR.strings.translation_log_details),
+                                        formatLogDetails(groupedLogs[index]),
+                                    )
+                                },
                             )
                             HorizontalDivider()
                         }
@@ -410,6 +459,29 @@ object TranslationQueueScreen : Screen() {
                 },
                 dismissButton = {
                     TextButton(onClick = { showClearAllConfirmation = false }) {
+                        Text(text = stringResource(MR.strings.action_cancel))
+                    }
+                },
+            )
+        }
+
+        confirmCancelJob?.let { job ->
+            AlertDialog(
+                onDismissRequest = { confirmCancelJob = null },
+                title = { Text(text = stringResource(MR.strings.action_cancel)) },
+                text = { Text(text = job.mangaTitle) },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            confirmCancelJob = null
+                            screenModel.cancel(job.toJob())
+                        },
+                    ) {
+                        Text(text = stringResource(MR.strings.action_ok))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { confirmCancelJob = null }) {
                         Text(text = stringResource(MR.strings.action_cancel))
                     }
                 },
@@ -475,6 +547,8 @@ private fun TranslationQueueGroupHeader(
 @Composable
 private fun TranslationJobItem(
     job: TranslationQueueItem,
+    startAction: TranslationQueueSwipeAction,
+    endAction: TranslationQueueSwipeAction,
     onRetry: () -> Unit,
     onCancel: () -> Unit,
     onViewLogs: () -> Unit,
@@ -482,102 +556,126 @@ private fun TranslationJobItem(
     val isFinished = job.status in FINISHED_STATUSES
     val status = TranslationJobStatus.entries.firstOrNull { it.value == job.status }
     val canRetry = isFinished || status?.isRetryableFromQueue() == true
-    ListItem(
-        headlineContent = {
-            Text(
-                text = job.mangaTitle,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        },
-        supportingContent = {
-            Text(
-                text = buildString {
-                    append(job.chapterName ?: "Chapter ${job.chapterId ?: "-"}")
-                    job.pageIndex?.let {
-                        append(" · p ")
-                        append(it + 1)
-                    }
-                    append("\n")
-                    append(job.status)
-                    append(" · ")
-                    append(job.progressCurrent)
-                    append("/")
-                    append(job.progressTotal)
-                    append(" · ")
-                    append(job.targetLanguage.ifBlank { "app language" })
-                    append(" · ")
-                    append(job.model)
-                    job.errorMessage?.let {
+    SwipeableActionsBox(
+        modifier = Modifier.clipToBounds(),
+        startActions = listOfNotNull(queueSwipeAction(startAction, canRetry, onRetry, onCancel, onViewLogs)),
+        endActions = listOfNotNull(queueSwipeAction(endAction, canRetry, onRetry, onCancel, onViewLogs)),
+        swipeThreshold = 56.dp,
+        backgroundUntilSwipeThreshold = MaterialTheme.colorScheme.surfaceContainerLowest,
+    ) {
+        ListItem(
+            headlineContent = {
+                Text(
+                    text = job.mangaTitle,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = statusColor(job.status),
+                )
+            },
+            supportingContent = {
+                Text(
+                    text = buildString {
+                        append(job.chapterName ?: "Chapter ${job.chapterId ?: "-"}")
+                        job.pageIndex?.let {
+                            append(" · p ")
+                            append(it + 1)
+                        }
                         append("\n")
-                        append(it)
-                    }
-                },
-                maxLines = 3,
-                overflow = TextOverflow.Ellipsis,
-            )
-        },
-        trailingContent = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = stringResource(MR.strings.pref_translation_logs),
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-                        .clickable(onClick = onViewLogs)
-                        .padding(horizontal = 8.dp, vertical = 12.dp),
+                        append(job.status)
+                        append(" · ")
+                        append(job.progressCurrent)
+                        append("/")
+                        append(job.progressTotal)
+                        append(" · ")
+                        append(job.targetLanguage.ifBlank { "app language" })
+                        append(" · ")
+                        append(job.model)
+                        job.errorMessage?.let {
+                            append("\n")
+                            append(it)
+                        }
+                    },
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis,
                 )
-                Text(
-                    text = stringResource(if (canRetry) MR.strings.action_retry else MR.strings.action_cancel),
-                    color = if (canRetry) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
-                    modifier = Modifier
-                        .clickable(onClick = if (canRetry) onRetry else onCancel)
-                        .padding(horizontal = 8.dp, vertical = 12.dp),
-                )
-            }
-        },
-    )
+            },
+            trailingContent = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = stringResource(MR.strings.pref_translation_logs),
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .clickable(onClick = onViewLogs)
+                            .padding(horizontal = 8.dp, vertical = 12.dp),
+                    )
+                    Text(
+                        text = stringResource(if (canRetry) MR.strings.action_retry else MR.strings.action_cancel),
+                        color = if (canRetry) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                        modifier = Modifier
+                            .clickable(onClick = if (canRetry) onRetry else onCancel)
+                            .padding(horizontal = 8.dp, vertical = 12.dp),
+                    )
+                }
+            },
+            modifier = Modifier.padding(start = 16.dp),
+        )
+    }
 }
 
 @Composable
 private fun TranslationLogItem(
     log: GroupedTranslationLog,
+    indent: androidx.compose.ui.unit.Dp,
+    startAction: TranslationLogSwipeAction,
+    endAction: TranslationLogSwipeAction,
     onClick: () -> Unit,
+    onCopy: () -> Unit,
 ) {
     val item = log.first
-    ListItem(
-        headlineContent = {
-            Text(
-                text = buildString {
-                    append(item.level)
-                    append(" · ")
-                    append(item.tag)
-                    append(" · ")
-                    append(item.message)
-                    if (log.count > 1) {
-                        append(" ×")
-                        append(log.count)
-                    }
-                },
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                color = when (item.level) {
-                    TranslationLogLevel.Error.value -> MaterialTheme.colorScheme.error
-                    TranslationLogLevel.Warning.value -> MaterialTheme.colorScheme.tertiary
-                    else -> MaterialTheme.colorScheme.onSurface
-                },
-            )
-        },
-        supportingContent = item.details?.let {
-            {
+    SwipeableActionsBox(
+        modifier = Modifier.clipToBounds(),
+        startActions = listOfNotNull(logSwipeAction(startAction, onClick, onCopy)),
+        endActions = listOfNotNull(logSwipeAction(endAction, onClick, onCopy)),
+        swipeThreshold = 56.dp,
+        backgroundUntilSwipeThreshold = MaterialTheme.colorScheme.surfaceContainerLowest,
+    ) {
+        ListItem(
+            headlineContent = {
                 Text(
-                    text = it,
-                    maxLines = 3,
+                    text = buildString {
+                        append(item.level)
+                        append(" · ")
+                        append(item.tag)
+                        append(" · ")
+                        append(item.message)
+                        if (log.count > 1) {
+                            append(" ×")
+                            append(log.count)
+                        }
+                    },
+                    maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
+                    color = when (item.level) {
+                        TranslationLogLevel.Error.value -> MaterialTheme.colorScheme.error
+                        TranslationLogLevel.Warning.value -> MaterialTheme.colorScheme.tertiary
+                        else -> MaterialTheme.colorScheme.onSurface
+                    },
                 )
-            }
-        },
-        modifier = Modifier.clickable(onClick = onClick),
-    )
+            },
+            supportingContent = item.details?.let {
+                {
+                    Text(
+                        text = it,
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+            },
+            modifier = Modifier
+                .padding(start = indent)
+                .clickable(onClick = onClick),
+        )
+    }
 }
 
 @Composable
@@ -608,6 +706,76 @@ private fun TranslationLogDetailsDialog(
                 Text(text = stringResource(MR.strings.action_cancel))
             }
         },
+    )
+}
+
+@Composable
+private fun queueSwipeAction(
+    action: TranslationQueueSwipeAction,
+    canRetry: Boolean,
+    onRetry: () -> Unit,
+    onCancel: () -> Unit,
+    onViewLogs: () -> Unit,
+): SwipeAction? {
+    return when (action) {
+        TranslationQueueSwipeAction.Disabled -> null
+        TranslationQueueSwipeAction.ViewLogs -> textSwipeAction(
+            label = stringResource(MR.strings.pref_translation_logs),
+            background = MaterialTheme.colorScheme.primaryContainer,
+            onSwipe = onViewLogs,
+        )
+        TranslationQueueSwipeAction.RetryOrLogs -> textSwipeAction(
+            label = stringResource(if (canRetry) MR.strings.action_retry else MR.strings.pref_translation_logs),
+            background = MaterialTheme.colorScheme.primaryContainer,
+            onSwipe = if (canRetry) onRetry else onViewLogs,
+        )
+        TranslationQueueSwipeAction.CancelOrDelete -> textSwipeAction(
+            label = stringResource(MR.strings.action_cancel),
+            background = MaterialTheme.colorScheme.errorContainer,
+            onSwipe = onCancel,
+        )
+    }
+}
+
+@Composable
+private fun logSwipeAction(
+    action: TranslationLogSwipeAction,
+    onOpen: () -> Unit,
+    onCopy: () -> Unit,
+): SwipeAction? {
+    return when (action) {
+        TranslationLogSwipeAction.Disabled -> null
+        TranslationLogSwipeAction.OpenDetails -> textSwipeAction(
+            label = stringResource(MR.strings.translation_log_details),
+            background = MaterialTheme.colorScheme.primaryContainer,
+            onSwipe = onOpen,
+        )
+        TranslationLogSwipeAction.CopyDetails -> textSwipeAction(
+            label = stringResource(MR.strings.action_copy_to_clipboard),
+            background = MaterialTheme.colorScheme.secondaryContainer,
+            onSwipe = onCopy,
+        )
+    }
+}
+
+@Composable
+private fun textSwipeAction(
+    label: String,
+    background: androidx.compose.ui.graphics.Color,
+    onSwipe: () -> Unit,
+): SwipeAction {
+    return SwipeAction(
+        icon = {
+            Text(
+                text = label,
+                color = contentColorFor(background),
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 16.dp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        },
+        background = background,
+        onSwipe = onSwipe,
     )
 }
 
@@ -817,4 +985,14 @@ private fun queueFilterLabel(filter: TranslationQueueTypeFilter): String {
 
 private fun formatLogTimestamp(timestamp: Long): String {
     return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(Date(timestamp))
+}
+
+@Composable
+private fun statusColor(status: String) = when (status) {
+    TranslationJobStatus.Failed.value -> MaterialTheme.colorScheme.error
+    TranslationJobStatus.PausedAuth.value,
+    TranslationJobStatus.PausedQuota.value -> MaterialTheme.colorScheme.tertiary
+    TranslationJobStatus.Running.value -> MaterialTheme.colorScheme.primary
+    TranslationJobStatus.Completed.value -> MaterialTheme.colorScheme.secondary
+    else -> MaterialTheme.colorScheme.onSurface
 }

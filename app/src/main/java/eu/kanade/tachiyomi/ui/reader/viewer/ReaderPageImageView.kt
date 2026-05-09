@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
 import android.graphics.RectF
+import android.graphics.Typeface
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
@@ -43,6 +44,7 @@ import com.github.chrisbanes.photoview.PhotoView
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.data.coil.cropBorders
 import eu.kanade.tachiyomi.data.coil.customDecoder
+import eu.kanade.tachiyomi.data.translation.TranslationOverlayBoxStyle
 import tachiyomi.domain.translation.service.TranslationPreferences
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonSubsamplingImageView
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
@@ -52,6 +54,7 @@ import tachiyomi.data.Translation_boxes
 import tachiyomi.core.common.util.system.ImageUtil
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.util.Locale
 
 /**
  * A wrapper view for showing page image.
@@ -496,24 +499,38 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 val rect = box.toViewRect() ?: return@forEach
                 if (rect.width() <= 1f || rect.height() <= 1f) return@forEach
 
+                val style = TranslationOverlayBoxStyle
+                    .fromJson(box.style_json)
+                    .mergedWith(TranslationOverlayBoxStyle.fromPreferences(translationPreferences))
                 val radius = 4f * density
+                fillPaint.color = parseColor(style.fillColor, Color.argb(210, 255, 255, 255))
+                strokePaint.color = parseColor(style.strokeColor, Color.argb(230, 32, 32, 32))
                 canvas.drawRoundRect(rect, radius, radius, fillPaint)
                 canvas.drawRoundRect(rect, radius, radius, strokePaint)
-                drawText(canvas, rect, box.translated_text)
+                drawText(canvas, rect, box.translated_text, style)
             }
         }
 
-        private fun drawText(canvas: Canvas, rect: RectF, text: String) {
+        private fun drawText(
+            canvas: Canvas,
+            rect: RectF,
+            text: String,
+            style: TranslationOverlayBoxStyle,
+        ) {
             if (text.isBlank()) return
-            val padding = (4f * density).coerceAtMost(rect.width() / 5f).coerceAtMost(rect.height() / 5f)
+            val padding = ((style.paddingDp ?: 4f).coerceIn(0f, 24f) * density)
+                .coerceAtMost(rect.width() / 5f)
+                .coerceAtMost(rect.height() / 5f)
             val width = (rect.width() - padding * 2).toInt().coerceAtLeast(1)
             val textPaint = TextPaint(baseTextPaint).apply {
+                color = parseColor(style.textColor, Color.BLACK)
+                typeface = typefaceFor(style.fontFamily)
                 textSize = overlayTextSize(rect, padding)
             }
             val maxLines = ((rect.height() - padding * 2) / textPaint.fontSpacing).toInt().coerceAtLeast(1)
             val layout = StaticLayout.Builder
                 .obtain(text, 0, text.length, textPaint, width)
-                .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                .setAlignment(alignmentFor(style.textAlign))
                 .setEllipsize(TextUtils.TruncateAt.END)
                 .setMaxLines(maxLines)
                 .build()
@@ -534,6 +551,29 @@ open class ReaderPageImageView @JvmOverloads constructor(
             }
             val maxThatFitsBox = (rect.height() - padding * 2).coerceAtLeast(8f * scaledDensity)
             return selected.coerceIn(8f * scaledDensity, maxThatFitsBox)
+        }
+
+        private fun parseColor(value: String?, fallback: Int): Int {
+            return value
+                ?.takeIf { it.isNotBlank() }
+                ?.let { runCatching { Color.parseColor(it) }.getOrNull() }
+                ?: fallback
+        }
+
+        private fun typefaceFor(value: String?): Typeface {
+            return when (value?.lowercase(Locale.ROOT)) {
+                "serif" -> Typeface.SERIF
+                "monospace" -> Typeface.MONOSPACE
+                else -> Typeface.SANS_SERIF
+            }
+        }
+
+        private fun alignmentFor(value: String?): Layout.Alignment {
+            return when (value?.lowercase(Locale.ROOT)) {
+                "start", "left" -> Layout.Alignment.ALIGN_NORMAL
+                "end", "right" -> Layout.Alignment.ALIGN_OPPOSITE
+                else -> Layout.Alignment.ALIGN_CENTER
+            }
         }
 
         private fun Translation_boxes.toViewRect(): RectF? {

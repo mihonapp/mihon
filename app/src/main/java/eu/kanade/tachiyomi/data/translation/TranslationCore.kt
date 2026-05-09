@@ -12,6 +12,7 @@ import kotlinx.serialization.json.put
 import kotlin.math.min
 import java.util.Locale
 import tachiyomi.data.Translation_jobs
+import tachiyomi.domain.translation.service.DEFAULT_TRANSLATION_SYSTEM_PROMPT
 import tachiyomi.domain.translation.service.TranslationPreferences
 
 const val DEFAULT_GEMINI_TRANSLATION_MODEL = "gemini-3-flash-preview"
@@ -278,6 +279,113 @@ data class TranslationBoxEdit(
     val styleJson: String? = null,
 )
 
+data class TranslationBoxGeometry(
+    val x: Float,
+    val y: Float,
+    val width: Float,
+    val height: Float,
+)
+
+object TranslationBoxGeometryNormalizer {
+    const val MIN_BOX_SIZE = 0.01f
+
+    fun normalize(
+        x: Float,
+        y: Float,
+        width: Float,
+        height: Float,
+    ): TranslationBoxGeometry {
+        val safeX = x.finiteOr(0f).coerceIn(0f, 1f - MIN_BOX_SIZE)
+        val safeY = y.finiteOr(0f).coerceIn(0f, 1f - MIN_BOX_SIZE)
+        val safeWidth = width.finiteOr(MIN_BOX_SIZE)
+            .coerceIn(MIN_BOX_SIZE, (1f - safeX).coerceAtLeast(MIN_BOX_SIZE))
+        val safeHeight = height.finiteOr(MIN_BOX_SIZE)
+            .coerceIn(MIN_BOX_SIZE, (1f - safeY).coerceAtLeast(MIN_BOX_SIZE))
+        return TranslationBoxGeometry(
+            x = safeX,
+            y = safeY,
+            width = safeWidth,
+            height = safeHeight,
+        )
+    }
+
+    fun safeSliderRange(
+        start: Float,
+        endInclusive: Float,
+    ): ClosedFloatingPointRange<Float> {
+        val safeStart = start.finiteOr(0f).coerceIn(0f, 1f)
+        val safeEnd = endInclusive.finiteOr(1f).coerceIn(0f, 1f)
+        return if (safeEnd > safeStart) {
+            safeStart..safeEnd
+        } else {
+            0f..1f
+        }
+    }
+
+    fun safeSliderValue(
+        value: Float,
+        range: ClosedFloatingPointRange<Float>,
+    ): Float {
+        return value.finiteOr(range.start).coerceIn(range.start, range.endInclusive)
+    }
+
+    private fun Float.finiteOr(defaultValue: Float): Float {
+        return if (isFinite()) this else defaultValue
+    }
+}
+
+@Serializable
+data class TranslationOverlayBoxStyle(
+    val fontFamily: String? = null,
+    val textColor: String? = null,
+    val fillColor: String? = null,
+    val strokeColor: String? = null,
+    val paddingDp: Float? = null,
+    val textAlign: String? = null,
+) {
+    fun mergedWith(base: TranslationOverlayBoxStyle): TranslationOverlayBoxStyle {
+        return TranslationOverlayBoxStyle(
+            fontFamily = fontFamily ?: base.fontFamily,
+            textColor = textColor ?: base.textColor,
+            fillColor = fillColor ?: base.fillColor,
+            strokeColor = strokeColor ?: base.strokeColor,
+            paddingDp = paddingDp ?: base.paddingDp,
+            textAlign = textAlign ?: base.textAlign,
+        )
+    }
+
+    fun toJsonOrNull(json: Json = Json): String? {
+        return takeIf {
+            !it.fontFamily.isNullOrBlank() ||
+                !it.textColor.isNullOrBlank() ||
+                !it.fillColor.isNullOrBlank() ||
+                !it.strokeColor.isNullOrBlank() ||
+                it.paddingDp != null ||
+                !it.textAlign.isNullOrBlank()
+        }?.let { json.encodeToString(it) }
+    }
+
+    companion object {
+        fun fromJson(value: String?, json: Json = Json): TranslationOverlayBoxStyle {
+            return value
+                ?.takeIf { it.isNotBlank() }
+                ?.let { runCatching { json.decodeFromString<TranslationOverlayBoxStyle>(it) }.getOrNull() }
+                ?: TranslationOverlayBoxStyle()
+        }
+
+        fun fromPreferences(preferences: TranslationPreferences): TranslationOverlayBoxStyle {
+            return TranslationOverlayBoxStyle(
+                fontFamily = preferences.overlayFontFamily.get(),
+                textColor = preferences.overlayTextColor.get(),
+                fillColor = preferences.overlayBoxFillColor.get(),
+                strokeColor = preferences.overlayBoxStrokeColor.get(),
+                paddingDp = preferences.overlayBoxPaddingDp.get().coerceIn(0, 24).toFloat(),
+                textAlign = preferences.overlayTextAlignment.get(),
+            )
+        }
+    }
+}
+
 object TranslationEnqueuePlanner {
     fun pagesToQueue(
         pages: List<TranslationPageCandidate>,
@@ -308,17 +416,105 @@ object TranslationBatchPlanner {
     }
 }
 
+data class TranslationBatchJobGroup(
+    val jobs: List<Translation_jobs>,
+) {
+    val first: Translation_jobs
+        get() = jobs.first()
+}
+
+object TranslationPendingJobBatcher {
+    fun groupPendingJobs(
+        jobs: List<Translation_jobs>,
+        maxImagesPerBatch: Int,
+    ): List<TranslationBatchJobGroup> {
+        val remaining = jobs.toMutableList()
+        val groups = mutableListOf<TranslationBatchJobGroup>()
+        while (remaining.isNotEmpty()) {
+            val first = remaining.removeAt(0)
+            if (first.scope != TranslationScope.Image.value) {
+                groups += TranslationBatchJobGroup(listOf(first))
+                continue
+            }
+            val limit = if (maxImagesPerBatch == TRANSLATION_BATCH_ALL) Int.MAX_VALUE else maxImagesPerBatch.coerceAtLeast(1)
+            val batch = mutableListOf(first)
+            val iterator = remaining.iterator()
+            while (iterator.hasNext() && batch.size < limit) {
+                val candidate = iterator.next()
+                if (first.isBatchCompatibleWith(candidate)) {
+                    batch += candidate
+                    iterator.remove()
+                }
+            }
+            groups += TranslationBatchJobGroup(batch)
+        }
+        return groups
+    }
+
+    private fun Translation_jobs.isBatchCompatibleWith(other: Translation_jobs): Boolean {
+        return scope == TranslationScope.Image.value &&
+            other.scope == TranslationScope.Image.value &&
+            manga_id == other.manga_id &&
+            chapter_id == other.chapter_id &&
+            pipeline == other.pipeline &&
+            mode == other.mode &&
+            model == other.model &&
+            target_language == other.target_language &&
+            source_language == other.source_language &&
+            overwrite == other.overwrite
+    }
+}
+
+data class TranslationBatchImageInput(
+    val pageIndex: Int,
+    val imageBytes: ByteArray,
+    val mimeType: String,
+    val width: Int?,
+    val height: Int?,
+) {
+    override fun equals(other: Any?): Boolean {
+        return other is TranslationBatchImageInput &&
+            pageIndex == other.pageIndex &&
+            imageBytes.contentEquals(other.imageBytes) &&
+            mimeType == other.mimeType &&
+            width == other.width &&
+            height == other.height
+    }
+
+    override fun hashCode(): Int {
+        var result = pageIndex
+        result = 31 * result + imageBytes.contentHashCode()
+        result = 31 * result + mimeType.hashCode()
+        result = 31 * result + (width ?: 0)
+        result = 31 * result + (height ?: 0)
+        return result
+    }
+}
+
+data class TranslationBatchOcrInput(
+    val pageIndex: Int,
+    val blocks: List<OcrTextBlock>,
+)
+
+data class TranslationBatchOverlayResult(
+    val pageIndex: Int,
+    val overlay: TranslationOverlayResult,
+)
+
 object TranslationPromptPolicy {
     fun systemPrompt(userPrompt: String): String {
+        val trimmedUserPrompt = userPrompt.trim()
         return buildString {
             appendLine("You are a manga, manhwa, and manhua translation assistant.")
             appendLine("Only translate relevant or critical information: speech bubbles, thought bubbles, signs, captions, narration, and author's notes.")
             appendLine("Ignore sound effects, decorative text, unrelated background text, watermark text, and punctuation-only symbols.")
             appendLine("Return no box for ignored text.")
-            userPrompt.trim().takeIf { it.isNotBlank() }?.let {
-                appendLine("Additional user system prompt:")
-                appendLine(it)
-            }
+            trimmedUserPrompt
+                .takeIf { it.isNotBlank() && it != DEFAULT_TRANSLATION_SYSTEM_PROMPT }
+                ?.let {
+                    appendLine("Additional user system prompt:")
+                    appendLine(it)
+                }
         }.trimEnd()
     }
 
@@ -327,6 +523,22 @@ object TranslationPromptPolicy {
             appendLine("Translate the relevant manga text into ${targetLanguage.ifBlank { "the app language" }}.")
             appendLine("Source language: ${TranslationLanguages.sourcePromptLabel(sourceLanguage) ?: "auto-detect"}.")
             appendLine("Return only JSON matching the schema. Coordinates must be normalized 0.0 to 1.0.")
+            appendLine("Each box needs x, y, width, height, originalText, translatedText, textType, confidence.")
+        }.trimEnd()
+    }
+
+    fun batchPagePrompt(
+        pageIndexes: List<Int>,
+        targetLanguage: String,
+        sourceLanguage: String?,
+    ): String {
+        return buildString {
+            appendLine("Translate these ${pageIndexes.size} manga pages into ${targetLanguage.ifBlank { "the app language" }}.")
+            appendLine("Source language: ${TranslationLanguages.sourcePromptLabel(sourceLanguage) ?: "auto-detect"}.")
+            appendLine("Return only JSON matching the schema: an object with a pages array.")
+            appendLine("Each page object must include pageIndex and boxes.")
+            appendLine("Required pageIndex values: ${pageIndexes.joinToString()}.")
+            appendLine("Coordinates must be normalized 0.0 to 1.0 for each original page.")
             appendLine("Each box needs x, y, width, height, originalText, translatedText, textType, confidence.")
         }.trimEnd()
     }
@@ -388,6 +600,11 @@ object TranslationNotificationFormatter {
         val safeTotal = total.takeIf { it > 0 } ?: job.progress_total.takeIf { it > 0 } ?: 0
         val safeCurrent = current.coerceAtLeast(0)
         val progressText = if (safeTotal > 0) "$safeCurrent/$safeTotal" else "preparing"
+        val percentText = if (safeTotal > 0) {
+            "${((safeCurrent.toDouble() / safeTotal.toDouble()) * 100).toInt().coerceIn(0, 100)}%"
+        } else {
+            "-"
+        }
         val title = if (hideContent) {
             "Translation queue"
         } else {
@@ -396,12 +613,14 @@ object TranslationNotificationFormatter {
         val chapter = item?.chapterName ?: job.chapter_id?.let { "Chapter $it" } ?: "Unknown chapter"
         val page = job.page_index?.let { "page ${it + 1}" } ?: "chapter"
         val text = if (hideContent) {
-            "${status.value} · $progressText"
+            "${status.value} · $progressText · $percentText"
         } else {
-            "$chapter · $page · ${status.value} · $progressText"
+            "$chapter · $page · ${status.value} · $progressText · $percentText"
         }
         val bigText = buildString {
             appendLine(text)
+            appendLine("progress=$progressText")
+            appendLine("percent=$percentText")
             appendLine("attempt=${job.attempts}")
             appendLine("model=${job.model}")
             appendLine("pipeline=${job.pipeline}")

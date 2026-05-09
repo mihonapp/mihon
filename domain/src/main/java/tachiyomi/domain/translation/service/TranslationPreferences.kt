@@ -2,6 +2,10 @@ package tachiyomi.domain.translation.service
 
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
+import tachiyomi.core.common.preference.getEnum
+
+const val DEFAULT_TRANSLATION_SYSTEM_PROMPT =
+    "Only translate relevant or critical information: speech and thought bubbles, signs, captions, narration, and author's notes. Ignore sound effects, decorative or unrelated background text, watermark text, and punctuation-only symbols."
 
 class TranslationPreferences(
     preferenceStore: PreferenceStore,
@@ -49,6 +53,28 @@ class TranslationPreferences(
     val autoShowOverlay: Preference<Boolean> = preferenceStore.getBoolean("translation_auto_show_overlay", true)
     val overlayTextSizeMode: Preference<String> = preferenceStore.getString("translation_overlay_text_size_mode", "dynamic")
     val overlayTextSizeSp: Preference<Int> = preferenceStore.getInt("translation_overlay_text_size_sp", 16)
+    val overlayFontFamily: Preference<String> = preferenceStore.getString("translation_overlay_font_family", "sans")
+    val overlayTextColor: Preference<String> = preferenceStore.getString("translation_overlay_text_color", "#FF000000")
+    val overlayBoxFillColor: Preference<String> = preferenceStore.getString("translation_overlay_box_fill_color", "#D2FFFFFF")
+    val overlayBoxStrokeColor: Preference<String> = preferenceStore.getString("translation_overlay_box_stroke_color", "#E6202020")
+    val overlayBoxPaddingDp: Preference<Int> = preferenceStore.getInt("translation_overlay_box_padding_dp", 4)
+    val overlayTextAlignment: Preference<String> = preferenceStore.getString("translation_overlay_text_alignment", "center")
+    val queueSwipeStartAction: Preference<TranslationQueueSwipeAction> = preferenceStore.getEnum(
+        "translation_queue_swipe_start_action",
+        TranslationQueueSwipeAction.ViewLogs,
+    )
+    val queueSwipeEndAction: Preference<TranslationQueueSwipeAction> = preferenceStore.getEnum(
+        "translation_queue_swipe_end_action",
+        TranslationQueueSwipeAction.CancelOrDelete,
+    )
+    val logSwipeStartAction: Preference<TranslationLogSwipeAction> = preferenceStore.getEnum(
+        "translation_log_swipe_start_action",
+        TranslationLogSwipeAction.OpenDetails,
+    )
+    val logSwipeEndAction: Preference<TranslationLogSwipeAction> = preferenceStore.getEnum(
+        "translation_log_swipe_end_action",
+        TranslationLogSwipeAction.CopyDetails,
+    )
     val rawDebugLogging: Preference<Boolean> = preferenceStore.getBoolean("translation_raw_debug_logging", false)
     val enableInpaint: Preference<Boolean> = preferenceStore.getBoolean("translation_enable_inpaint", false)
 
@@ -59,5 +85,21 @@ class TranslationPreferences(
     val thinkingLevel: Preference<String> = preferenceStore.getString("translation_thinking_level", "high")
     val rawJsonOverride: Preference<String> = preferenceStore.getString("translation_raw_json_override", "")
 
-    val globalInstructions: Preference<String> = preferenceStore.getString("translation_global_instructions", "")
+    val globalInstructions: Preference<String> = preferenceStore.getString(
+        "translation_global_instructions",
+        DEFAULT_TRANSLATION_SYSTEM_PROMPT,
+    )
+}
+
+enum class TranslationQueueSwipeAction {
+    Disabled,
+    ViewLogs,
+    RetryOrLogs,
+    CancelOrDelete,
+}
+
+enum class TranslationLogSwipeAction {
+    Disabled,
+    OpenDetails,
+    CopyDetails,
 }

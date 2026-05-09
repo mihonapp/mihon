@@ -544,15 +544,38 @@ class ReaderViewModel @JvmOverloads constructor(
         val chapterId = page.chapter.chapter.id ?: return
         mutableState.update { it.copy(dialog = Dialog.Loading) }
         viewModelScope.launchIO {
-            val targetLanguage = translationTargetLanguage()
-            val savedPage = translationRepository.getSavedPage(
-                chapterId = chapterId,
-                pageIndex = page.index.toLong(),
-                targetLanguage = targetLanguage,
-            )
-            withUIContext {
-                mutableState.update {
-                    it.copy(dialog = Dialog.TranslationOverlayEditor(page, savedPage))
+            try {
+                val targetLanguage = translationTargetLanguage()
+                val savedPage = translationRepository.getSavedPage(
+                    chapterId = chapterId,
+                    pageIndex = page.index.toLong(),
+                    targetLanguage = targetLanguage,
+                )
+                withUIContext {
+                    mutableState.update {
+                        it.copy(dialog = Dialog.TranslationOverlayEditor(page, savedPage))
+                    }
+                }
+            } catch (e: Throwable) {
+                if (e is CancellationException) throw e
+                logcat(LogPriority.ERROR, e)
+                translationRepository.insertLog(
+                    jobId = null,
+                    pageId = null,
+                    level = TranslationLogLevel.Error,
+                    tag = "editor",
+                    message = "Failed to open translation overlay editor",
+                    details = overlayEditorFailureDetails(
+                        action = "open_editor",
+                        page = page,
+                        chapterId = chapterId,
+                        pageId = null,
+                        boxes = emptyList(),
+                        error = e,
+                    ),
+                )
+                withUIContext {
+                    mutableState.update { it.copy(dialog = Dialog.TranslationOverlayEditor(page, null)) }
                 }
             }
         }
@@ -596,6 +619,21 @@ class ReaderViewModel @JvmOverloads constructor(
             } catch (e: Throwable) {
                 if (e is CancellationException) throw e
                 logcat(LogPriority.ERROR, e)
+                translationRepository.insertLog(
+                    jobId = null,
+                    pageId = null,
+                    level = TranslationLogLevel.Error,
+                    tag = "editor",
+                    message = "Failed to save translation overlay edits",
+                    details = overlayEditorFailureDetails(
+                        action = "save_editor",
+                        page = page,
+                        chapterId = chapterId,
+                        pageId = null,
+                        boxes = boxes,
+                        error = e,
+                    ),
+                )
                 withUIContext {
                     mutableState.update { it.copy(dialog = Dialog.TranslationOverlayEditor(page, null)) }
                     eventChannel.send(Event.TranslationOverlaySaveFailed(e.message ?: e::class.simpleName.orEmpty()))
@@ -606,6 +644,30 @@ class ReaderViewModel @JvmOverloads constructor(
 
     private fun translationTargetLanguage(): String {
         return translationPreferences.resolvedTargetLanguage()
+    }
+
+    private fun overlayEditorFailureDetails(
+        action: String,
+        page: ReaderPage,
+        chapterId: Long,
+        pageId: Long?,
+        boxes: List<TranslationBoxEdit>,
+        error: Throwable,
+    ): String {
+        return buildString {
+            appendLine("action=$action")
+            appendLine("manga_id=${manga?.id ?: "-"}")
+            appendLine("chapter_id=$chapterId")
+            appendLine("page_index=${page.index}")
+            appendLine("page_id=${pageId ?: "-"}")
+            appendLine("box_count=${boxes.size}")
+            boxes.forEachIndexed { index, box ->
+                appendLine("box_${index + 1}=x:${box.x},y:${box.y},w:${box.width},h:${box.height},textType:${box.textType}")
+            }
+            appendLine("exception_class=${error::class.qualifiedName ?: error::class.simpleName.orEmpty()}")
+            appendLine("exception_message=${error.message ?: "-"}")
+            appendLine("stack_trace=${error.stackTraceToString()}")
+        }.trimEnd()
     }
 
     private fun enqueueTranslationJob(

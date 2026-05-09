@@ -34,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.AdaptiveSheet
 import eu.kanade.tachiyomi.data.translation.SavedTranslationPage
 import eu.kanade.tachiyomi.data.translation.TranslationBoxEdit
+import eu.kanade.tachiyomi.data.translation.TranslationBoxGeometryNormalizer
+import eu.kanade.tachiyomi.data.translation.TranslationOverlayBoxStyle
 import tachiyomi.data.Translation_boxes
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
@@ -193,6 +195,47 @@ private fun TranslationBoxEditor(
             label = { Text(stringResource(MR.strings.translation_overlay_text_type)) },
             singleLine = true,
         )
+        OutlinedTextField(
+            value = box.style.fontFamily.orEmpty(),
+            onValueChange = { onChange(box.copy(style = box.style.copy(fontFamily = it.ifBlank { null }))) },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(stringResource(MR.strings.pref_translation_overlay_font_family)) },
+            singleLine = true,
+        )
+        OutlinedTextField(
+            value = box.style.textColor.orEmpty(),
+            onValueChange = { onChange(box.copy(style = box.style.copy(textColor = it.ifBlank { null }))) },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(stringResource(MR.strings.pref_translation_overlay_text_color)) },
+            singleLine = true,
+        )
+        OutlinedTextField(
+            value = box.style.fillColor.orEmpty(),
+            onValueChange = { onChange(box.copy(style = box.style.copy(fillColor = it.ifBlank { null }))) },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(stringResource(MR.strings.pref_translation_overlay_box_fill_color)) },
+            singleLine = true,
+        )
+        OutlinedTextField(
+            value = box.style.strokeColor.orEmpty(),
+            onValueChange = { onChange(box.copy(style = box.style.copy(strokeColor = it.ifBlank { null }))) },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(stringResource(MR.strings.pref_translation_overlay_box_stroke_color)) },
+            singleLine = true,
+        )
+        OutlinedTextField(
+            value = box.style.textAlign.orEmpty(),
+            onValueChange = { onChange(box.copy(style = box.style.copy(textAlign = it.ifBlank { null }))) },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(stringResource(MR.strings.pref_translation_overlay_text_alignment)) },
+            singleLine = true,
+        )
+        CoordinateSlider(
+            label = stringResource(MR.strings.pref_translation_overlay_box_padding),
+            value = box.style.paddingDp ?: 4f,
+            valueRange = 0f..24f,
+            onValueChange = { onChange(box.copy(style = box.style.copy(paddingDp = it))) },
+        )
 
         CoordinateSlider(
             label = stringResource(MR.strings.translation_overlay_x),
@@ -231,6 +274,8 @@ private fun CoordinateSlider(
     valueRange: ClosedFloatingPointRange<Float>,
     onValueChange: (Float) -> Unit,
 ) {
+    val safeRange = TranslationBoxGeometryNormalizer.safeSliderRange(valueRange.start, valueRange.endInclusive)
+    val safeValue = TranslationBoxGeometryNormalizer.safeSliderValue(value, safeRange)
     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -243,14 +288,14 @@ private fun CoordinateSlider(
                 style = MaterialTheme.typography.bodyMedium,
             )
             Text(
-                text = String.format(Locale.ROOT, "%.2f", value),
+                text = String.format(Locale.ROOT, "%.2f", safeValue),
                 style = MaterialTheme.typography.labelMedium,
             )
         }
         Slider(
-            value = value.coerceIn(valueRange.start, valueRange.endInclusive),
+            value = safeValue,
             onValueChange = onValueChange,
-            valueRange = valueRange,
+            valueRange = safeRange,
         )
     }
 }
@@ -265,16 +310,15 @@ private data class EditableTranslationBox(
     val translatedText: String,
     val textType: String,
     val confidence: Double? = null,
-    val styleJson: String? = null,
+    val style: TranslationOverlayBoxStyle = TranslationOverlayBoxStyle(),
 ) {
     fun constrained(): EditableTranslationBox {
-        val safeX = x.coerceIn(0f, 0.99f)
-        val safeY = y.coerceIn(0f, 0.99f)
+        val geometry = TranslationBoxGeometryNormalizer.normalize(x, y, width, height)
         return copy(
-            x = safeX,
-            y = safeY,
-            width = width.coerceIn(0.01f, 1f - safeX),
-            height = height.coerceIn(0.01f, 1f - safeY),
+            x = geometry.x,
+            y = geometry.y,
+            width = geometry.width,
+            height = geometry.height,
         )
     }
 
@@ -288,7 +332,7 @@ private data class EditableTranslationBox(
             translatedText = translatedText,
             textType = textType.ifBlank { "dialogue" },
             confidence = confidence,
-            styleJson = styleJson,
+            styleJson = style.toJsonOrNull(),
         )
     }
 }
@@ -304,6 +348,6 @@ private fun Translation_boxes.toEditableBox(): EditableTranslationBox {
         translatedText = translated_text,
         textType = text_type,
         confidence = confidence,
-        styleJson = style_json,
+        style = TranslationOverlayBoxStyle.fromJson(style_json),
     ).constrained()
 }
