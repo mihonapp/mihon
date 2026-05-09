@@ -570,13 +570,34 @@ class TranslationQueueProcessor(
         targetLanguage: String,
         elapsedMs: Long?,
     ) {
+        val normalized = TranslationOverlayCoordinateNormalizer.normalize(
+            overlay = overlay,
+            imageWidth = image.width,
+            imageHeight = image.height,
+        )
+        if (normalized.report.hasChanges) {
+            repository.insertLog(
+                jobId = job._id,
+                pageId = null,
+                level = TranslationLogLevel.Debug,
+                tag = "page",
+                message = "Normalized translation overlay coordinates",
+                details = coordinateNormalizationDetails(
+                    chapterId = chapterId,
+                    pageIndex = pageIndex,
+                    image = image,
+                    report = normalized.report,
+                ),
+            )
+        }
+
+        val sanitizedOverlay = TranslationOverlaySanitizer.sanitize(normalized.overlay)
+
         val inpaintUri = if (job.wantsInpaint()) {
-            generateInpaint(job, pageIndex, image, overlay, targetLanguage)
+            generateInpaint(job, pageIndex, image, sanitizedOverlay, targetLanguage)
         } else {
             null
         }
-
-        val sanitizedOverlay = TranslationOverlaySanitizer.sanitize(overlay)
 
         val savedPage = repository.saveOverlay(
             mangaId = job.manga_id,
@@ -603,7 +624,12 @@ class TranslationQueueProcessor(
             message = "Saved translation overlay",
             details = buildString {
                 appendLine("chapter=$chapterId, page=$pageIndex, boxes=${sanitizedOverlay.boxes.size}")
-                appendLine("dropped_boxes=${overlay.boxes.size - sanitizedOverlay.boxes.size}")
+                appendLine("input_boxes=${overlay.boxes.size}")
+                appendLine("normalized_boxes=${normalized.report.outputBoxes}")
+                appendLine("coordinate_converted_boxes=${normalized.report.convertedPixelBoxes}")
+                appendLine("coordinate_dropped_boxes=${normalized.report.droppedBoxes}")
+                appendLine("coordinate_clamped_boxes=${normalized.report.clampedBoxes}")
+                appendLine("sanitizer_dropped_boxes=${normalized.overlay.boxes.size - sanitizedOverlay.boxes.size}")
                 appendLine("elapsed_ms=${elapsedMs ?: "-"}")
                 appendLine("source_language=${sanitizedOverlay.sourceLanguage ?: TranslationLanguages.sourcePromptLabel(job.source_language) ?: "auto"}")
                 appendLine("target_language=${sanitizedOverlay.targetLanguage ?: targetLanguage}")
@@ -626,13 +652,68 @@ class TranslationQueueProcessor(
                 appendLine("saved_page_id=${verifiedPage.page._id}")
                 appendLine("saved_box_count=${verifiedPage.boxes.size}")
                 appendLine("sanitized_box_count=${sanitizedOverlay.boxes.size}")
-                appendLine("dropped_boxes=${overlay.boxes.size - sanitizedOverlay.boxes.size}")
+                appendLine("input_boxes=${overlay.boxes.size}")
+                appendLine("normalized_boxes=${normalized.report.outputBoxes}")
+                appendLine("coordinate_converted_boxes=${normalized.report.convertedPixelBoxes}")
+                appendLine("coordinate_dropped_boxes=${normalized.report.droppedBoxes}")
+                appendLine("coordinate_clamped_boxes=${normalized.report.clampedBoxes}")
+                appendLine("sanitizer_dropped_boxes=${normalized.overlay.boxes.size - sanitizedOverlay.boxes.size}")
                 appendLine("source_image_key=${image.sourceImageKey}")
                 if (sanitizedOverlay.boxes.isEmpty()) {
                     appendLine("note=empty_overlay_saved")
                 }
             },
         )
+    }
+
+    private fun coordinateNormalizationDetails(
+        chapterId: Long,
+        pageIndex: Int,
+        image: TranslationPageImage,
+        report: TranslationOverlayCoordinateNormalizationReport,
+    ): String {
+        return buildString {
+            appendLine("action=coordinate_normalization")
+            appendLine("chapter=$chapterId")
+            appendLine("page=$pageIndex")
+            appendLine("image_width=${image.width ?: "-"}")
+            appendLine("image_height=${image.height ?: "-"}")
+            appendLine("input_boxes=${report.inputBoxes}")
+            appendLine("output_boxes=${report.outputBoxes}")
+            appendLine("converted_pixel_boxes=${report.convertedPixelBoxes}")
+            appendLine("dropped_boxes=${report.droppedBoxes}")
+            appendLine("clamped_boxes=${report.clampedBoxes}")
+            report.entries.forEach { entry ->
+                appendLine(
+                    buildString {
+                        append("box_${entry.index + 1}=")
+                        append(entry.action)
+                        append(":")
+                        append(entry.reason)
+                        append(" original=(")
+                        append(entry.originalX)
+                        append(",")
+                        append(entry.originalY)
+                        append(",")
+                        append(entry.originalWidth)
+                        append(",")
+                        append(entry.originalHeight)
+                        append(")")
+                        if (entry.normalizedX != null) {
+                            append(" normalized=(")
+                            append(entry.normalizedX)
+                            append(",")
+                            append(entry.normalizedY)
+                            append(",")
+                            append(entry.normalizedWidth)
+                            append(",")
+                            append(entry.normalizedHeight)
+                            append(")")
+                        }
+                    },
+                )
+            }
+        }
     }
 
     private suspend fun translateWithLocalOcr(

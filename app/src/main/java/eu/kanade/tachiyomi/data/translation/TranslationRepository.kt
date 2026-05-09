@@ -505,12 +505,18 @@ class TranslationRepository(
                 .awaitAsOne()
             database.translationsQueries.deleteBoxesForPage(page._id)
             overlay.boxes.forEachIndexed { index, box ->
+                val geometry = TranslationBoxGeometryNormalizer.normalize(
+                    x = box.x,
+                    y = box.y,
+                    width = box.width,
+                    height = box.height,
+                )
                 database.translationsQueries.insertBox(
                     pageId = page._id,
-                    x = box.x.toDouble().coerceIn(0.0, 1.0),
-                    y = box.y.toDouble().coerceIn(0.0, 1.0),
-                    width = box.width.toDouble().coerceIn(0.0, 1.0),
-                    height = box.height.toDouble().coerceIn(0.0, 1.0),
+                    x = geometry.x.toDouble(),
+                    y = geometry.y.toDouble(),
+                    width = geometry.width.toDouble(),
+                    height = geometry.height.toDouble(),
                     originalText = box.originalText,
                     translatedText = box.translatedText,
                     textType = box.textType,
@@ -559,12 +565,18 @@ class TranslationRepository(
         database.transaction {
             database.translationsQueries.deleteBoxesForPage(pageId)
             boxes.forEachIndexed { index, box ->
+                val geometry = TranslationBoxGeometryNormalizer.normalize(
+                    x = box.x.toFloat(),
+                    y = box.y.toFloat(),
+                    width = box.width.toFloat(),
+                    height = box.height.toFloat(),
+                )
                 database.translationsQueries.insertBox(
                     pageId = pageId,
-                    x = box.x.coerceIn(0.0, 1.0),
-                    y = box.y.coerceIn(0.0, 1.0),
-                    width = box.width.coerceIn(0.0, 1.0),
-                    height = box.height.coerceIn(0.0, 1.0),
+                    x = geometry.x.toDouble(),
+                    y = geometry.y.toDouble(),
+                    width = geometry.width.toDouble(),
+                    height = geometry.height.toDouble(),
                     originalText = box.originalText,
                     translatedText = box.translatedText,
                     textType = box.textType,

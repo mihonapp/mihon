@@ -364,6 +364,171 @@ object TranslationBoxGeometryNormalizer {
     }
 }
 
+data class TranslationOverlayCoordinateNormalizationResult(
+    val overlay: TranslationOverlayResult,
+    val report: TranslationOverlayCoordinateNormalizationReport,
+)
+
+data class TranslationOverlayCoordinateNormalizationReport(
+    val inputBoxes: Int,
+    val outputBoxes: Int,
+    val convertedPixelBoxes: Int,
+    val droppedBoxes: Int,
+    val clampedBoxes: Int,
+    val entries: List<TranslationOverlayCoordinateNormalizationEntry>,
+) {
+    val hasChanges: Boolean
+        get() = convertedPixelBoxes > 0 || droppedBoxes > 0 || clampedBoxes > 0
+}
+
+data class TranslationOverlayCoordinateNormalizationEntry(
+    val index: Int,
+    val action: String,
+    val reason: String,
+    val originalX: Float,
+    val originalY: Float,
+    val originalWidth: Float,
+    val originalHeight: Float,
+    val normalizedX: Float? = null,
+    val normalizedY: Float? = null,
+    val normalizedWidth: Float? = null,
+    val normalizedHeight: Float? = null,
+)
+
+object TranslationOverlayCoordinateNormalizer {
+    fun normalize(
+        overlay: TranslationOverlayResult,
+        imageWidth: Int?,
+        imageHeight: Int?,
+    ): TranslationOverlayCoordinateNormalizationResult {
+        val entries = mutableListOf<TranslationOverlayCoordinateNormalizationEntry>()
+        val boxes = overlay.boxes.mapIndexedNotNull { index, box ->
+            normalizeBox(
+                index = index,
+                box = box,
+                imageWidth = imageWidth,
+                imageHeight = imageHeight,
+                entries = entries,
+            )
+        }
+        return TranslationOverlayCoordinateNormalizationResult(
+            overlay = overlay.copy(boxes = boxes),
+            report = TranslationOverlayCoordinateNormalizationReport(
+                inputBoxes = overlay.boxes.size,
+                outputBoxes = boxes.size,
+                convertedPixelBoxes = entries.count { it.action == "converted_pixel" },
+                droppedBoxes = entries.count { it.action == "dropped" },
+                clampedBoxes = entries.count { it.action == "clamped" || it.reason.contains("clamped") },
+                entries = entries,
+            ),
+        )
+    }
+
+    private fun normalizeBox(
+        index: Int,
+        box: TranslationOverlayBox,
+        imageWidth: Int?,
+        imageHeight: Int?,
+        entries: MutableList<TranslationOverlayCoordinateNormalizationEntry>,
+    ): TranslationOverlayBox? {
+        val coordinates = listOf(box.x, box.y, box.width, box.height)
+        if (coordinates.any { !it.isFinite() }) {
+            entries += box.entry(index, action = "dropped", reason = "non_finite_coordinate")
+            return null
+        }
+        if (box.width <= 0f || box.height <= 0f) {
+            entries += box.entry(index, action = "dropped", reason = "non_positive_size")
+            return null
+        }
+        if (box.x < 0f || box.y < 0f) {
+            entries += box.entry(index, action = "dropped", reason = "negative_origin")
+            return null
+        }
+
+        val pixelCoordinates = coordinates.any { it > 1f }
+        val rawGeometry = if (pixelCoordinates) {
+            val safeWidth = imageWidth?.takeIf { it > 0 }
+            val safeHeight = imageHeight?.takeIf { it > 0 }
+            if (safeWidth == null || safeHeight == null) {
+                entries += box.entry(index, action = "dropped", reason = "pixel_coordinates_without_image_size")
+                return null
+            }
+            if (box.x >= safeWidth || box.y >= safeHeight) {
+                entries += box.entry(index, action = "dropped", reason = "pixel_origin_outside_image")
+                return null
+            }
+            TranslationBoxGeometry(
+                x = box.x / safeWidth.toFloat(),
+                y = box.y / safeHeight.toFloat(),
+                width = box.width / safeWidth.toFloat(),
+                height = box.height / safeHeight.toFloat(),
+            )
+        } else {
+            TranslationBoxGeometry(
+                x = box.x,
+                y = box.y,
+                width = box.width,
+                height = box.height,
+            )
+        }
+
+        if (rawGeometry.width <= 0f || rawGeometry.height <= 0f) {
+            entries += box.entry(index, action = "dropped", reason = "non_positive_normalized_size")
+            return null
+        }
+
+        val geometry = TranslationBoxGeometryNormalizer.normalize(
+            x = rawGeometry.x,
+            y = rawGeometry.y,
+            width = rawGeometry.width,
+            height = rawGeometry.height,
+        )
+        val adjusted = geometry != rawGeometry
+        val normalizedBox = box.copy(
+            x = geometry.x,
+            y = geometry.y,
+            width = geometry.width,
+            height = geometry.height,
+        )
+        when {
+            pixelCoordinates -> entries += box.entry(
+                index = index,
+                action = "converted_pixel",
+                reason = if (adjusted) "pixel_coordinates_converted_and_clamped" else "pixel_coordinates_converted",
+                normalized = geometry,
+            )
+            adjusted -> entries += box.entry(
+                index = index,
+                action = "clamped",
+                reason = "normalized_coordinates_clamped_to_page",
+                normalized = geometry,
+            )
+        }
+        return normalizedBox
+    }
+
+    private fun TranslationOverlayBox.entry(
+        index: Int,
+        action: String,
+        reason: String,
+        normalized: TranslationBoxGeometry? = null,
+    ): TranslationOverlayCoordinateNormalizationEntry {
+        return TranslationOverlayCoordinateNormalizationEntry(
+            index = index,
+            action = action,
+            reason = reason,
+            originalX = x,
+            originalY = y,
+            originalWidth = width,
+            originalHeight = height,
+            normalizedX = normalized?.x,
+            normalizedY = normalized?.y,
+            normalizedWidth = normalized?.width,
+            normalizedHeight = normalized?.height,
+        )
+    }
+}
+
 @Serializable
 data class TranslationOverlayBoxStyle(
     val fontFamily: String? = null,
@@ -548,6 +713,7 @@ object TranslationPromptPolicy {
             appendLine("Translate the relevant manga text into ${targetLanguage.ifBlank { "the app language" }}.")
             appendLine("Source language: ${TranslationLanguages.sourcePromptLabel(sourceLanguage) ?: "auto-detect"}.")
             appendLine("Return only JSON matching the schema. Coordinates must be normalized 0.0 to 1.0.")
+            appendLine("Do not return pixel coordinates like 811 or 38; return fractions of the original image width and height.")
             appendLine("Each box needs x, y, width, height, originalText, translatedText, textType, confidence.")
         }.trimEnd()
     }
@@ -564,6 +730,7 @@ object TranslationPromptPolicy {
             appendLine("Each page object must include pageIndex and boxes.")
             appendLine("Required pageIndex values: ${pageIndexes.joinToString()}.")
             appendLine("Coordinates must be normalized 0.0 to 1.0 for each original page.")
+            appendLine("Do not return pixel coordinates like 811 or 38; return fractions of each original page width and height.")
             appendLine("Each box needs x, y, width, height, originalText, translatedText, textType, confidence.")
         }.trimEnd()
     }

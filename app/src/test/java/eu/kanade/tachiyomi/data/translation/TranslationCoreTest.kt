@@ -7,6 +7,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import org.junit.jupiter.api.Test
@@ -154,6 +155,143 @@ class TranslationCoreTest {
         range.start shouldBe 0f
         range.endInclusive shouldBe 1f
         TranslationBoxGeometryNormalizer.safeSliderValue(Float.NaN, range) shouldBe 0f
+    }
+
+    @Test
+    fun `whole number Gemini coordinates normalize from image pixels`() {
+        val overlay = Json.decodeFromString<TranslationOverlayResult>(
+            """
+            {
+              "sourceLanguage": "ja",
+              "targetLanguage": "en",
+              "boxes": [
+                {
+                  "x": 811,
+                  "y": 38,
+                  "width": 106,
+                  "height": 155,
+                  "confidence": 0.99,
+                  "originalText": "恭子さん。",
+                  "translatedText": "Kyoko-san.",
+                  "textType": "speech"
+                },
+                {
+                  "x": 80,
+                  "y": 820,
+                  "width": 65,
+                  "height": 125,
+                  "confidence": 0.99,
+                  "originalText": "だめよ。",
+                  "translatedText": "No.",
+                  "textType": "speech"
+                }
+              ]
+            }
+            """.trimIndent(),
+        )
+
+        val result = TranslationOverlayCoordinateNormalizer.normalize(
+            overlay = overlay,
+            imageWidth = 1000,
+            imageHeight = 1000,
+        )
+
+        result.report.convertedPixelBoxes shouldBe 2
+        result.report.droppedBoxes shouldBe 0
+        result.overlay.boxes.map { it.x } shouldContainExactly listOf(0.811f, 0.08f)
+        result.overlay.boxes.map { it.y } shouldContainExactly listOf(0.038f, 0.82f)
+        result.overlay.boxes.map { it.width } shouldContainExactly listOf(0.106f, 0.065f)
+        result.overlay.boxes.map { it.height } shouldContainExactly listOf(0.155f, 0.125f)
+    }
+
+    @Test
+    fun `normalized Gemini coordinates remain stable`() {
+        val overlay = TranslationOverlayResult(
+            boxes = listOf(
+                TranslationOverlayBox(
+                    x = 0.738f,
+                    y = 0.117f,
+                    width = 0.123f,
+                    height = 0.267f,
+                    confidence = 0.99f,
+                    originalText = "掟があるとはいえ…",
+                    translatedText = "Even if there are rules...",
+                    textType = "thought",
+                ),
+            ),
+        )
+
+        val result = TranslationOverlayCoordinateNormalizer.normalize(
+            overlay = overlay,
+            imageWidth = 1000,
+            imageHeight = 1000,
+        )
+
+        result.report.convertedPixelBoxes shouldBe 0
+        result.report.droppedBoxes shouldBe 0
+        result.overlay.boxes.single() shouldBe overlay.boxes.single()
+    }
+
+    @Test
+    fun `pixel coordinates without image dimensions are dropped with report`() {
+        val overlay = TranslationOverlayResult(
+            boxes = listOf(
+                TranslationOverlayBox(
+                    x = 762f,
+                    y = 16f,
+                    width = 164f,
+                    height = 221f,
+                    confidence = 0.99f,
+                    originalText = "私が…",
+                    translatedText = "I...",
+                    textType = "speech",
+                ),
+            ),
+        )
+
+        val result = TranslationOverlayCoordinateNormalizer.normalize(
+            overlay = overlay,
+            imageWidth = null,
+            imageHeight = null,
+        )
+
+        result.overlay.boxes shouldBe emptyList()
+        result.report.convertedPixelBoxes shouldBe 0
+        result.report.droppedBoxes shouldBe 1
+        result.report.entries.single().reason shouldBe "pixel_coordinates_without_image_size"
+    }
+
+    @Test
+    fun `invalid coordinate geometry is dropped before saving`() {
+        val overlay = TranslationOverlayResult(
+            boxes = listOf(
+                TranslationOverlayBox(
+                    x = Float.NaN,
+                    y = 0.1f,
+                    width = 0.2f,
+                    height = 0.2f,
+                    originalText = "bad",
+                    translatedText = "bad",
+                ),
+                TranslationOverlayBox(
+                    x = 0.2f,
+                    y = 0.2f,
+                    width = 0f,
+                    height = 0.2f,
+                    originalText = "zero",
+                    translatedText = "zero",
+                ),
+            ),
+        )
+
+        val result = TranslationOverlayCoordinateNormalizer.normalize(
+            overlay = overlay,
+            imageWidth = 1000,
+            imageHeight = 1000,
+        )
+
+        result.overlay.boxes shouldBe emptyList()
+        result.report.droppedBoxes shouldBe 2
     }
 
     @Test
@@ -359,11 +497,14 @@ class TranslationCoreTest {
         val systemPrompt = TranslationPromptPolicy.systemPrompt("Keep honorifics.")
         val defaultSystemPrompt = TranslationPromptPolicy.systemPrompt(DEFAULT_TRANSLATION_SYSTEM_PROMPT)
         val pagePrompt = TranslationPromptPolicy.pagePrompt("English", "ja")
+        val batchPrompt = TranslationPromptPolicy.batchPagePrompt(listOf(1, 2), "English", "ja")
 
         systemPrompt shouldContain "Ignore sound effects"
         systemPrompt shouldContain "Keep honorifics."
         defaultSystemPrompt shouldNotContain "Additional user system prompt"
         pagePrompt shouldContain "Source language: Japanese"
+        pagePrompt shouldContain "Do not return pixel coordinates"
+        batchPrompt shouldContain "Do not return pixel coordinates"
         pagePrompt shouldNotContain "Include dialogue, captions, signs, and sound effects"
     }
 

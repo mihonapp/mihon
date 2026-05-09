@@ -368,7 +368,7 @@ class GeminiTranslationClient(
             ?.parts
             ?.firstNotNullOfOrNull { it.text }
             ?: error("Gemini response did not include text")
-        val overlay = TranslationOverlaySanitizer.sanitize(json.decodeFromString<TranslationOverlayResult>(text))
+        val overlay = json.decodeFromString<TranslationOverlayResult>(text)
         repository.insertLog(
             jobId = jobId,
             pageId = pageId,
@@ -409,12 +409,10 @@ class GeminiTranslationClient(
         val overlays = parsed.pages.map { page ->
             TranslationBatchOverlayResult(
                 pageIndex = page.pageIndex,
-                overlay = TranslationOverlaySanitizer.sanitize(
-                    TranslationOverlayResult(
-                        sourceLanguage = page.sourceLanguage ?: parsed.sourceLanguage,
-                        targetLanguage = page.targetLanguage ?: parsed.targetLanguage,
-                        boxes = page.boxes,
-                    ),
+                overlay = TranslationOverlayResult(
+                    sourceLanguage = page.sourceLanguage ?: parsed.sourceLanguage,
+                    targetLanguage = page.targetLanguage ?: parsed.targetLanguage,
+                    boxes = page.boxes,
                 ),
             )
         }
