@@ -20,6 +20,7 @@ class TranslationPreferencesTest {
         preferences.maxOutputTokens.get() shouldBe 65_536
         preferences.thinkingLevel.get() shouldBe "high"
         preferences.maxImagesPerBatch.get() shouldBe 38
+        preferences.parallelRetryLanes.get() shouldBe "1"
         preferences.sourceLanguage.get() shouldBe "auto"
         preferences.overlayTextSizeMode.get() shouldBe "dynamic"
         preferences.overlayTextSizeSp.get() shouldBe 16

@@ -48,6 +48,7 @@ class TranslationPreferences(
     val ocrScript: Preference<String> = preferenceStore.getString("translation_ocr_script", "auto")
 
     val concurrency: Preference<Int> = preferenceStore.getInt("translation_concurrency", 1)
+    val parallelRetryLanes: Preference<String> = preferenceStore.getString("translation_parallel_retry_lanes", "1")
     val maxImagesPerBatch: Preference<Int> = preferenceStore.getInt("translation_max_images_per_batch", 38)
     val skipExistingOverlays: Preference<Boolean> = preferenceStore.getBoolean("translation_skip_existing_overlays", true)
     val autoShowOverlay: Preference<Boolean> = preferenceStore.getBoolean("translation_auto_show_overlay", true)

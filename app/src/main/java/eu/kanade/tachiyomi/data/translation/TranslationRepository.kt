@@ -43,8 +43,15 @@ class TranslationRepository(
         return database.translationsQueries.observePagesByChapter(chapterId, targetLanguage).subscribeToList()
     }
 
-    suspend fun getPendingJobs(): List<Translation_jobs> {
-        return database.translationsQueries.getPendingJobs().awaitAsList()
+    suspend fun getPendingJobs(kind: TranslationWorkKind = TranslationWorkKind.Normal): List<Translation_jobs> {
+        return when (kind) {
+            TranslationWorkKind.Normal -> database.translationsQueries.getNormalPendingJobs().awaitAsList()
+            TranslationWorkKind.ManualRetry -> database.translationsQueries.getManualRetryPendingJobs().awaitAsList()
+        }
+    }
+
+    suspend fun countPendingManualRetryJobs(): Int {
+        return getPendingJobs(TranslationWorkKind.ManualRetry).size
     }
 
     suspend fun getPage(
@@ -215,6 +222,21 @@ class TranslationRepository(
         )
     }
 
+    suspend fun retryJobs(jobs: List<Translation_jobs>, forceOverwrite: Boolean): Int {
+        var retried = 0
+        database.transaction {
+            jobs.distinctBy { it._id }.forEach { job ->
+                database.translationsQueries.retryJob(
+                    overwrite = if (forceOverwrite) true else job.overwrite,
+                    updatedAt = System.currentTimeMillis(),
+                    id = job._id,
+                )
+                retried++
+            }
+        }
+        return retried
+    }
+
     suspend fun deleteJob(id: Long) {
         database.translationsQueries.deleteJob(id)
     }
@@ -271,8 +293,8 @@ class TranslationRepository(
         return jobs.size.toLong()
     }
 
-    suspend fun pausePendingJobsForSetup(message: String): Long {
-        val jobs = getPendingJobs()
+    suspend fun pausePendingJobsForSetup(kind: TranslationWorkKind, message: String): Long {
+        val jobs = getPendingJobs(kind)
         database.transaction {
             jobs.forEach { job ->
                 updateJobStatus(
@@ -297,6 +319,155 @@ class TranslationRepository(
             }
         }
         return jobs.size.toLong()
+    }
+
+    suspend fun claimJobs(
+        jobs: List<Translation_jobs>,
+        kind: TranslationWorkKind,
+        claimToken: String,
+    ): List<Translation_jobs> {
+        val claimed = mutableListOf<Translation_jobs>()
+        database.transaction {
+            jobs.forEach { job ->
+                val nextAttempt = job.attempts + 1
+                when (kind) {
+                    TranslationWorkKind.Normal -> database.translationsQueries.claimNormalJob(
+                        attempts = nextAttempt,
+                        claimToken = claimToken,
+                        updatedAt = System.currentTimeMillis(),
+                        id = job._id,
+                    )
+                    TranslationWorkKind.ManualRetry -> database.translationsQueries.claimManualRetryJob(
+                        attempts = nextAttempt,
+                        claimToken = claimToken,
+                        updatedAt = System.currentTimeMillis(),
+                        id = job._id,
+                    )
+                }
+                val refreshed = database.translationsQueries.getJob(job._id).awaitAsOneOrNull()
+                if (refreshed?.status == TranslationJobStatus.Running.value && refreshed.error_message == claimToken) {
+                    database.translationsQueries.clearClaimToken(
+                        updatedAt = System.currentTimeMillis(),
+                        id = job._id,
+                        claimToken = claimToken,
+                    )
+                    claimed += refreshed.copy(error_message = null)
+                    insertLog(
+                        jobId = job._id,
+                        pageId = null,
+                        level = TranslationLogLevel.Debug,
+                        tag = "queue",
+                        message = "Claimed translation job",
+                        details = TranslationLogDetailsFormatter.queueState(
+                            action = "claim_job",
+                            jobId = job._id,
+                            previousStatus = job.status,
+                            nextStatus = TranslationJobStatus.Running.value,
+                            extra = mapOf(
+                                "worker_kind" to kind.value,
+                                "claim_token" to claimToken,
+                                "attempt" to nextAttempt,
+                            ),
+                        ),
+                    )
+                } else {
+                    insertLog(
+                        jobId = job._id,
+                        pageId = null,
+                        level = TranslationLogLevel.Debug,
+                        tag = "queue",
+                        message = "Skipped unclaimed translation job",
+                        details = TranslationLogDetailsFormatter.queueState(
+                            action = "claim_skip",
+                            jobId = job._id,
+                            previousStatus = job.status,
+                            nextStatus = refreshed?.status,
+                            reason = "Job claimed or changed by another worker",
+                            extra = mapOf("worker_kind" to kind.value),
+                        ),
+                    )
+                }
+            }
+        }
+        return claimed
+    }
+
+    suspend fun resumeAllJobs(skipExistingOverlays: Boolean, includeRunning: Boolean): TranslationResumeAllResult {
+        val candidates = database.translationsQueries.getResumeCandidateJobs().awaitAsList()
+        var requeued = 0
+        var skippedExisting = 0
+        var skippedRunning = 0
+        database.transaction {
+            candidates.forEach { job ->
+                if (job.status == TranslationJobStatus.Running.value && !includeRunning) {
+                    skippedRunning++
+                    return@forEach
+                }
+                val chapterId = job.chapter_id
+                val pageIndex = job.page_index
+                val hasSavedOverlay = if (
+                    skipExistingOverlays &&
+                    job.status != TranslationJobStatus.ManualRetry.value &&
+                    job.scope == TranslationScope.Image.value &&
+                    chapterId != null &&
+                    pageIndex != null
+                ) {
+                    database.translationsQueries.getPage(
+                        chapterId = chapterId,
+                        pageIndex = pageIndex,
+                        targetLanguage = job.target_language.ifBlank { TranslationLanguages.defaultTargetLanguage() },
+                    ).awaitAsOneOrNull() != null
+                } else {
+                    false
+                }
+                if (hasSavedOverlay) {
+                    skippedExisting++
+                    insertLog(
+                        jobId = job._id,
+                        pageId = null,
+                        level = TranslationLogLevel.Info,
+                        tag = "queue",
+                        message = "Resume skipped existing overlay",
+                        details = TranslationLogDetailsFormatter.queueState(
+                            action = "resume_skip_existing_overlay",
+                            jobId = job._id,
+                            previousStatus = job.status,
+                            nextStatus = job.status,
+                            extra = mapOf(
+                                "chapter_id" to job.chapter_id,
+                                "page_index" to job.page_index,
+                                "target_language" to job.target_language,
+                            ),
+                        ),
+                    )
+                    return@forEach
+                }
+                database.translationsQueries.resumeJob(
+                    updatedAt = System.currentTimeMillis(),
+                    id = job._id,
+                )
+                requeued++
+                insertLog(
+                    jobId = job._id,
+                    pageId = null,
+                    level = TranslationLogLevel.Info,
+                    tag = "queue",
+                    message = "Resume requeued translation job",
+                    details = TranslationLogDetailsFormatter.queueState(
+                        action = "resume_all_requeue",
+                        jobId = job._id,
+                        previousStatus = job.status,
+                        nextStatus = TranslationJobStatus.Queued.value,
+                        extra = mapOf("include_running" to includeRunning),
+                    ),
+                )
+            }
+        }
+        return TranslationResumeAllResult(
+            requeued = requeued,
+            skippedExisting = skippedExisting,
+            skippedRunning = skippedRunning,
+        )
     }
 
     suspend fun saveOverlay(
@@ -554,6 +725,7 @@ enum class TranslationJobStatus(val value: String) {
     Queued("queued"),
     Running("running"),
     Retrying("retrying"),
+    ManualRetry("manual_retry"),
     Completed("completed"),
     Failed("failed"),
     Cancelled("cancelled"),

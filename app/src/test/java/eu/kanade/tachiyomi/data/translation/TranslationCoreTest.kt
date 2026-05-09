@@ -130,6 +130,7 @@ class TranslationCoreTest {
         preferences.maxOutputTokens.get() shouldBe 65_536
         preferences.thinkingLevel.get() shouldBe TranslationThinkingLevel.High.value
         preferences.maxImagesPerBatch.get() shouldBe DEFAULT_TRANSLATION_MAX_IMAGES_PER_BATCH
+        preferences.parallelRetryLanes.get() shouldBe "1"
         preferences.sourceLanguage.get() shouldBe TranslationLanguages.SOURCE_AUTO
         preferences.overlayTextSizeMode.get() shouldBe "dynamic"
         preferences.globalInstructions.get() shouldBe DEFAULT_TRANSLATION_SYSTEM_PROMPT
@@ -187,10 +188,12 @@ class TranslationCoreTest {
         TranslationJobStatus.PausedQuota.isActiveForDedupe() shouldBe true
         TranslationJobStatus.PausedQuota.isRetryableFromQueue() shouldBe true
         TranslationJobStatus.PausedQuota.canAutoRequeueAfterSetup() shouldBe false
+
+        TranslationJobStatus.ManualRetry.isActiveForDedupe() shouldBe true
     }
 
     @Test
-    fun `retry planner blocks until setup ready and uses replace for manual starts`() {
+    fun `retry planner blocks until setup ready and uses manual retry lane for manual starts`() {
         TranslationRetryPlanner.manualRetry(setupReady = false) shouldBe TranslationRetryDecision(
             allowed = false,
             nextStatus = null,
@@ -200,8 +203,8 @@ class TranslationCoreTest {
 
         TranslationRetryPlanner.manualRetry(setupReady = true) shouldBe TranslationRetryDecision(
             allowed = true,
-            nextStatus = TranslationJobStatus.Queued,
-            startPolicy = TranslationWorkStartPolicy.Replace,
+            nextStatus = TranslationJobStatus.ManualRetry,
+            startPolicy = TranslationWorkStartPolicy.Keep,
             forceOverwrite = true,
         )
 
@@ -219,6 +222,22 @@ class TranslationCoreTest {
             status = TranslationJobStatus.PausedQuota,
             setupReady = true,
         ).allowed shouldBe false
+    }
+
+    @Test
+    fun `manual retry lanes default to one and zero means unlimited`() {
+        TranslationRetryLanePlanner.workerCount(pendingManualRetryJobs = 0, configuredLanes = 1) shouldBe 0
+        TranslationRetryLanePlanner.workerCount(pendingManualRetryJobs = 5, configuredLanes = 1) shouldBe 1
+        TranslationRetryLanePlanner.workerCount(pendingManualRetryJobs = 5, configuredLanes = 2) shouldBe 2
+        TranslationRetryLanePlanner.workerCount(pendingManualRetryJobs = 5, configuredLanes = 0) shouldBe 5
+
+        val preferences = TranslationPreferences(InMemoryPreferenceStore())
+        preferences.parallelRetryLanes.set("-1")
+        preferences.normalizedParallelRetryLanes(pendingManualRetryJobs = 5) shouldBe 1
+        preferences.parallelRetryLanes.set("invalid")
+        preferences.normalizedParallelRetryLanes(pendingManualRetryJobs = 5) shouldBe 1
+        preferences.parallelRetryLanes.set("0")
+        preferences.normalizedParallelRetryLanes(pendingManualRetryJobs = 5) shouldBe 5
     }
 
     @Test
@@ -525,18 +544,19 @@ class TranslationCoreTest {
             queueItem(id = 3, status = TranslationJobStatus.Running.value),
             queueItem(id = 4, status = TranslationJobStatus.PausedAuth.value),
             queueItem(id = 5, status = TranslationJobStatus.Completed.value),
+            queueItem(id = 6, status = TranslationJobStatus.ManualRetry.value),
         )
 
         TranslationQueueUiModel.filterAndGroup(items, filters = emptySet())
             .flatMap { it.items }
-            .map { it.id } shouldContainExactly listOf(1L, 2L, 3L, 4L, 5L)
+            .map { it.id } shouldContainExactly listOf(1L, 2L, 3L, 4L, 5L, 6L)
 
         TranslationQueueUiModel.filterAndGroup(
             items,
             filters = setOf(TranslationQueueTypeFilter.Waiting, TranslationQueueTypeFilter.Paused),
         )
             .flatMap { it.items }
-            .map { it.id } shouldContainExactly listOf(1L, 2L, 4L)
+            .map { it.id } shouldContainExactly listOf(1L, 2L, 4L, 6L)
     }
 
     @Test

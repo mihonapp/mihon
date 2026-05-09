@@ -60,6 +60,7 @@ import eu.kanade.tachiyomi.data.translation.TranslationLogDetailsFormatter
 import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
 import eu.kanade.tachiyomi.data.translation.TranslationLogUiItem
 import eu.kanade.tachiyomi.data.translation.TranslationLogUiModel
+import eu.kanade.tachiyomi.data.translation.TranslationQueueChapterGroup
 import eu.kanade.tachiyomi.data.translation.TranslationQueueGroup
 import eu.kanade.tachiyomi.data.translation.TranslationQueueItem
 import eu.kanade.tachiyomi.data.translation.TranslationQueueTypeFilter
@@ -67,7 +68,7 @@ import eu.kanade.tachiyomi.data.translation.TranslationQueueUiModel
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import eu.kanade.tachiyomi.data.translation.TranslationRetryPlanner
 import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
-import eu.kanade.tachiyomi.data.translation.TranslationWorkStartPolicy
+import eu.kanade.tachiyomi.data.translation.normalizedParallelRetryLanes
 import eu.kanade.tachiyomi.data.translation.isRetryableFromQueue
 import eu.kanade.tachiyomi.data.translation.toJob
 import eu.kanade.tachiyomi.util.system.copyToClipboard
@@ -128,10 +129,16 @@ object TranslationQueueScreen : Screen() {
         val queueGroups by remember(jobs, selectedQueueFilters) {
             derivedStateOf { TranslationQueueUiModel.filterAndGroup(jobs, selectedQueueFilters) }
         }
-        val groupedLogs by remember(logs, levelFilter, tagFilter, jobFilter, searchQuery) {
+        val logItems by remember(logs) {
+            derivedStateOf { logs.map(Translation_logs::toUiItem) }
+        }
+        val groupedLogsByJob by remember(logItems) {
+            derivedStateOf { TranslationQueueUiModel.groupedLogsByJob(logItems) }
+        }
+        val groupedLogs by remember(logItems, levelFilter, tagFilter, jobFilter, searchQuery) {
             derivedStateOf {
                 val query = searchQuery.trim()
-                val filteredLogs = logs.map(Translation_logs::toUiItem).filter { log ->
+                val filteredLogs = logItems.filter { log ->
                     (levelFilter == null || log.level == levelFilter) &&
                         (tagFilter == null || log.tag == tagFilter) &&
                         (jobFilter == null || log.jobId == jobFilter) &&
@@ -298,133 +305,148 @@ object TranslationQueueScreen : Screen() {
 
                 ScrollbarLazyColumn(modifier = Modifier.weight(1f)) {
                     queueGroups.forEach { group ->
-                    val expanded = group.key !in collapsedQueueGroups
-                    stickyHeader(key = "group-${group.key}") {
-                        TranslationQueueGroupHeader(
-                            group = group,
-                            expanded = expanded,
-                            onClick = {
-                                collapsedQueueGroups = if (expanded) {
-                                    collapsedQueueGroups + group.key
-                                } else {
-                                    collapsedQueueGroups - group.key
-                                }
-                            },
-                        )
-                    }
-                    if (expanded) {
-                        items(
-                            count = group.items.size,
-                            key = { index -> group.items[index].id },
-                        ) { index ->
-                            val job = group.items[index]
-                            TranslationJobItem(
-                                job = job,
-                                startAction = queueSwipeStart,
-                                endAction = queueSwipeEnd,
-                                onRetry = { screenModel.retry(context, job.toJob()) },
-                                onCancel = { confirmCancelJob = job },
-                                onViewLogs = {
-                                    inlineLogJobIds = if (job.id in inlineLogJobIds) {
-                                        inlineLogJobIds - job.id
+                        val expanded = group.key !in collapsedQueueGroups
+                        stickyHeader(key = "group-${group.key}") {
+                            TranslationQueueGroupHeader(
+                                group = group,
+                                expanded = expanded,
+                                onClick = {
+                                    collapsedQueueGroups = if (expanded) {
+                                        collapsedQueueGroups + group.key
                                     } else {
-                                        inlineLogJobIds + job.id
+                                        collapsedQueueGroups - group.key
                                     }
                                 },
+                                onRetry = {
+                                    screenModel.retry(
+                                        context = context,
+                                        jobs = TranslationQueueUiModel.retryableItems(group.items).map { it.toJob() },
+                                    )
+                                },
                             )
-                            if (job.id in inlineLogJobIds) {
-                                logs
-                                    .map(Translation_logs::toUiItem)
-                                    .filter { it.jobId == job.id }
-                                    .let(TranslationLogUiModel::groupAdjacent)
-                                    .forEach { log ->
-                                        TranslationLogItem(
-                                            log = log,
-                                            indent = 32.dp,
-                                            startAction = logSwipeStart,
-                                            endAction = logSwipeEnd,
-                                            onClick = { selectedLog = log },
-                                            onCopy = {
-                                                context.copyToClipboard(
-                                                    context.contextStringResource(MR.strings.translation_log_details),
-                                                    formatLogDetails(log),
-                                                )
-                                            },
-                                        )
+                        }
+                        if (expanded) {
+                            group.chapterGroups.forEach { chapterGroup ->
+                                item(key = "chapter-${chapterGroup.key}") {
+                                    TranslationQueueChapterHeader(
+                                        group = chapterGroup,
+                                        onRetry = {
+                                            screenModel.retry(
+                                                context = context,
+                                                jobs = TranslationQueueUiModel.retryableItems(chapterGroup.items).map { it.toJob() },
+                                            )
+                                        },
+                                    )
+                                }
+                                items(
+                                    count = chapterGroup.items.size,
+                                    key = { index -> chapterGroup.items[index].id },
+                                ) { index ->
+                                    val job = chapterGroup.items[index]
+                                    TranslationJobItem(
+                                        job = job,
+                                        startAction = queueSwipeStart,
+                                        endAction = queueSwipeEnd,
+                                        onRetry = { screenModel.retry(context, job.toJob()) },
+                                        onCancel = { confirmCancelJob = job },
+                                        onViewLogs = {
+                                            inlineLogJobIds = if (job.id in inlineLogJobIds) {
+                                                inlineLogJobIds - job.id
+                                            } else {
+                                                inlineLogJobIds + job.id
+                                            }
+                                        },
+                                    )
+                                    if (job.id in inlineLogJobIds) {
+                                        groupedLogsByJob[job.id].orEmpty().forEach { log ->
+                                            TranslationLogItem(
+                                                log = log,
+                                                indent = 32.dp,
+                                                startAction = logSwipeStart,
+                                                endAction = logSwipeEnd,
+                                                onClick = { selectedLog = log },
+                                                onCopy = {
+                                                    context.copyToClipboard(
+                                                        context.contextStringResource(MR.strings.translation_log_details),
+                                                        formatLogDetails(log),
+                                                    )
+                                                },
+                                            )
+                                        }
                                     }
+                                    HorizontalDivider()
+                                }
                             }
-                            HorizontalDivider()
                         }
                     }
-                }
 
                     if (logs.isNotEmpty()) {
-                    item {
-                        ListItem(
-                            headlineContent = { Text(text = stringResource(MR.strings.pref_translation_logs)) },
-                            supportingContent = activeFilterSummary.takeIf { it.isNotBlank() }?.let {
-                                { Text(text = it) }
-                            },
-                            trailingContent = {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    if (activeFilterSummary.isNotBlank()) {
+                        item {
+                            ListItem(
+                                headlineContent = { Text(text = stringResource(MR.strings.pref_translation_logs)) },
+                                supportingContent = activeFilterSummary.takeIf { it.isNotBlank() }?.let {
+                                    { Text(text = it) }
+                                },
+                                trailingContent = {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        if (activeFilterSummary.isNotBlank()) {
+                                            Text(
+                                                text = stringResource(MR.strings.translation_log_filter_all),
+                                                color = MaterialTheme.colorScheme.primary,
+                                                modifier = Modifier
+                                                    .clickable {
+                                                        levelFilter = null
+                                                        tagFilter = null
+                                                        jobFilter = null
+                                                        searchQuery = ""
+                                                    }
+                                                    .padding(horizontal = 8.dp, vertical = 12.dp),
+                                            )
+                                        }
                                         Text(
-                                            text = stringResource(MR.strings.translation_log_filter_all),
+                                            text = stringResource(
+                                                if (logsExpanded) MR.strings.manga_info_collapse else MR.strings.manga_info_expand,
+                                            ),
                                             color = MaterialTheme.colorScheme.primary,
-                                            modifier = Modifier
-                                                .clickable {
-                                                    levelFilter = null
-                                                    tagFilter = null
-                                                    jobFilter = null
-                                                    searchQuery = ""
-                                                }
-                                                .padding(horizontal = 8.dp, vertical = 12.dp),
+                                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 12.dp),
                                         )
                                     }
-                                    Text(
-                                        text = stringResource(
-                                            if (logsExpanded) MR.strings.manga_info_collapse else MR.strings.manga_info_expand,
-                                        ),
-                                        color = MaterialTheme.colorScheme.primary,
-                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 12.dp),
-                                    )
-                                }
-                            },
-                            modifier = Modifier.clickable { logsExpanded = !logsExpanded },
-                        )
-                    }
-                    if (logsExpanded) {
-                        item {
-                            OutlinedTextField(
-                                value = searchQuery,
-                                onValueChange = { searchQuery = it },
-                                label = { Text(text = stringResource(MR.strings.action_search_hint)) },
-                                singleLine = true,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                            )
-                        }
-                        items(
-                            count = groupedLogs.size,
-                            key = { index -> "log-${groupedLogs[index].id}" },
-                        ) { index ->
-                            TranslationLogItem(
-                                log = groupedLogs[index],
-                                indent = 0.dp,
-                                startAction = logSwipeStart,
-                                endAction = logSwipeEnd,
-                                onClick = { selectedLog = groupedLogs[index] },
-                                onCopy = {
-                                    context.copyToClipboard(
-                                        context.contextStringResource(MR.strings.translation_log_details),
-                                        formatLogDetails(groupedLogs[index]),
-                                    )
                                 },
+                                modifier = Modifier.clickable { logsExpanded = !logsExpanded },
                             )
-                            HorizontalDivider()
                         }
-                    }
+                        if (logsExpanded) {
+                            item {
+                                OutlinedTextField(
+                                    value = searchQuery,
+                                    onValueChange = { searchQuery = it },
+                                    label = { Text(text = stringResource(MR.strings.action_search_hint)) },
+                                    singleLine = true,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                                )
+                            }
+                            items(
+                                count = groupedLogs.size,
+                                key = { index -> "log-${groupedLogs[index].id}" },
+                            ) { index ->
+                                TranslationLogItem(
+                                    log = groupedLogs[index],
+                                    indent = 0.dp,
+                                    startAction = logSwipeStart,
+                                    endAction = logSwipeEnd,
+                                    onClick = { selectedLog = groupedLogs[index] },
+                                    onCopy = {
+                                        context.copyToClipboard(
+                                            context.contextStringResource(MR.strings.translation_log_details),
+                                            formatLogDetails(groupedLogs[index]),
+                                        )
+                                    },
+                                )
+                                HorizontalDivider()
+                            }
+                        }
                     }
                 }
             }
@@ -524,6 +546,7 @@ private fun TranslationQueueGroupHeader(
     group: TranslationQueueGroup,
     expanded: Boolean,
     onClick: () -> Unit,
+    onRetry: () -> Unit,
 ) {
     ListItem(
         headlineContent = {
@@ -551,15 +574,72 @@ private fun TranslationQueueGroupHeader(
             )
         },
         trailingContent = {
-            Text(
-                text = stringResource(if (expanded) MR.strings.manga_info_collapse else MR.strings.manga_info_expand),
-                color = MaterialTheme.colorScheme.primary,
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (group.retryableCount > 0) {
+                    Text(
+                        text = stringResource(MR.strings.action_retry),
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .clickable(onClick = onRetry)
+                            .padding(horizontal = 8.dp, vertical = 12.dp),
+                    )
+                }
+                Text(
+                    text = stringResource(if (expanded) MR.strings.manga_info_collapse else MR.strings.manga_info_expand),
+                    color = MaterialTheme.colorScheme.primary,
+                )
+            }
         },
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
             .clickable(onClick = onClick),
+    )
+}
+
+@Composable
+private fun TranslationQueueChapterHeader(
+    group: TranslationQueueChapterGroup,
+    onRetry: () -> Unit,
+) {
+    ListItem(
+        headlineContent = {
+            Text(
+                text = group.title,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.titleSmall,
+            )
+        },
+        supportingContent = {
+            Text(
+                text = buildString {
+                    append("${group.items.size} job(s)")
+                    val statusSummary = group.statusCounts
+                        .toSortedMap()
+                        .entries
+                        .joinToString(" · ") { "${it.key}:${it.value}" }
+                    if (statusSummary.isNotBlank()) {
+                        append(" · ")
+                        append(statusSummary)
+                    }
+                },
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        },
+        trailingContent = {
+            if (group.retryableCount > 0) {
+                Text(
+                    text = stringResource(MR.strings.action_retry),
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .clickable(onClick = onRetry)
+                        .padding(horizontal = 8.dp, vertical = 12.dp),
+                )
+            }
+        },
+        modifier = Modifier.padding(start = 16.dp),
     )
 }
 
@@ -801,6 +881,7 @@ private fun textSwipeAction(
 private class TranslationQueueScreenModel(
     private val repository: TranslationRepository = Injekt.get(),
     private val setupValidator: TranslationSetupValidator = Injekt.get(),
+    private val preferences: TranslationPreferences = Injekt.get(),
 ) : ScreenModel {
 
     val jobs = repository.observeJobsForQueue()
@@ -810,22 +891,28 @@ private class TranslationQueueScreenModel(
         .stateIn(screenModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     fun retry(context: Context, job: Translation_jobs) {
+        retry(context, listOf(job))
+    }
+
+    fun retry(context: Context, jobs: List<Translation_jobs>) {
+        if (jobs.isEmpty()) return
         screenModelScope.launchIO {
             val setup = setupValidator.readiness()
             val decision = TranslationRetryPlanner.manualRetry(setup.ready)
             if (!decision.allowed) {
                 repository.insertLog(
-                    jobId = job._id,
+                    jobId = jobs.firstOrNull()?._id,
                     pageId = null,
                     level = TranslationLogLevel.Warning,
                     tag = "queue",
                     message = "Retry blocked",
                     details = TranslationLogDetailsFormatter.queueState(
                         action = "manual_retry_blocked",
-                        jobId = job._id,
-                        previousStatus = job.status,
-                        nextStatus = job.status,
+                        jobId = jobs.firstOrNull()?._id,
+                        previousStatus = jobs.firstOrNull()?.status,
+                        nextStatus = jobs.firstOrNull()?.status,
                         reason = setup.message,
+                        extra = mapOf("job_count" to jobs.size),
                     ),
                 )
                 withUIContext {
@@ -833,24 +920,30 @@ private class TranslationQueueScreenModel(
                 }
                 return@launchIO
             }
-            repository.retryJob(job, forceOverwrite = decision.forceOverwrite)
+            val retried = repository.retryJobs(jobs, forceOverwrite = decision.forceOverwrite)
             repository.insertLog(
-                jobId = job._id,
+                jobId = jobs.firstOrNull()?._id,
                 pageId = null,
                 level = TranslationLogLevel.Info,
                 tag = "queue",
                 message = "Manually retried translation job",
                 details = TranslationLogDetailsFormatter.queueState(
                     action = "manual_retry",
-                    jobId = job._id,
-                    previousStatus = job.status,
-                    nextStatus = TranslationJobStatus.Queued.value,
-                    extra = mapOf("manual_retry_force_overwrite" to decision.forceOverwrite),
+                    jobId = jobs.firstOrNull()?._id,
+                    previousStatus = jobs.firstOrNull()?.status,
+                    nextStatus = TranslationJobStatus.ManualRetry.value,
+                    extra = mapOf(
+                        "manual_retry_force_overwrite" to decision.forceOverwrite,
+                        "requested_jobs" to jobs.size,
+                        "retried_jobs" to retried,
+                    ),
                 ),
             )
-            TranslationJob.start(
+            val pendingRetryJobs = repository.countPendingManualRetryJobs()
+            val workerCount = preferences.normalizedParallelRetryLanes(pendingRetryJobs)
+            TranslationJob.startManualRetryWorkers(
                 context = context,
-                policy = requireNotNull(decision.startPolicy),
+                workerCount = workerCount,
                 reason = "manual_retry",
             )
         }
@@ -859,8 +952,13 @@ private class TranslationQueueScreenModel(
     fun resume(context: Context) {
         screenModelScope.launchIO {
             val setup = setupValidator.readiness()
-            val requeued = if (setup.ready) {
-                repository.requeuePausedAuthJobs("Queue resume after setup ready")
+            val result = if (setup.ready) {
+                @Suppress("DEPRECATION")
+                val includeRunning = !TranslationJob.isRunning(context)
+                repository.resumeAllJobs(
+                    skipExistingOverlays = true,
+                    includeRunning = includeRunning,
+                )
             } else {
                 repository.insertLog(
                     jobId = null,
@@ -870,36 +968,24 @@ private class TranslationQueueScreenModel(
                     message = "Resume skipped",
                     details = setup.message,
                 )
-                0
+                null
             }
-            if (requeued > 0) {
+            if (result != null && result.requeued > 0) {
                 withUIContext {
-                    context.toast(context.contextStringResource(MR.strings.translation_resume_requeued, requeued))
+                    context.toast(context.contextStringResource(MR.strings.translation_resume_requeued, result.requeued))
                 }
             } else if (!setup.ready) {
                 withUIContext {
                     context.toast(setup.message)
                 }
-            } else if (jobs.value.any { it.status == TranslationJobStatus.PausedQuota.value }) {
-                repository.insertLog(
-                    jobId = null,
-                    pageId = null,
-                    level = TranslationLogLevel.Warning,
-                    tag = "queue",
-                    message = "Resume skipped",
-                    details = "Quota-paused jobs require manual retry",
-                )
+            } else if (result != null) {
                 withUIContext {
-                    context.toast(context.contextStringResource(MR.strings.translation_resume_quota_blocked))
+                    context.toast(context.contextStringResource(MR.strings.translation_nothing_to_queue))
                 }
             }
-            val hasPending = jobs.value.any {
-                it.status == TranslationJobStatus.Queued.value || it.status == TranslationJobStatus.Retrying.value
-            }
-            if (setup.ready && (requeued > 0 || hasPending)) {
+            if (setup.ready && result != null && result.requeued > 0) {
                 TranslationJob.start(
                     context = context,
-                    policy = TranslationWorkStartPolicy.Replace,
                     reason = "queue_resume",
                 )
             }

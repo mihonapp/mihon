@@ -593,6 +593,7 @@
     <string name="pref_translation_system_prompt">System prompt</string>
     <string name="pref_translation_queue">Queue</string>
     <string name="pref_translation_concurrency">Concurrent translation jobs</string>
+    <string name="pref_translation_parallel_retry_lanes">Parallel manual retry lanes</string>
     <string name="pref_translation_max_images_per_batch">Images per translate action</string>
     <string name="pref_translation_reset_max_images_per_batch">Reset image batch limit</string>
     <string name="pref_translation_reset_max_images_per_batch_summary">Restore default: %d images</string>
@@ -611,8 +612,9 @@
     <string name="translation_queue_mixed_summary">Queued %1$d; skipped %2$d already queued</string>
     <string name="translation_already_queued">Already queued</string>
     <string name="translation_nothing_to_queue">No chapters to queue</string>
-    <string name="translation_resume_requeued">Requeued %d paused translation job(s)</string>
+    <string name="translation_resume_requeued">Requeued %d translation job(s)</string>
     <string name="translation_resume_quota_blocked">Quota-paused jobs need manual retry</string>
+    <string name="translation_invalid_number">Enter 0 or a positive number</string>
     <string name="translation_log_details">Translation log details</string>
     <string name="translation_log_filter_all">All logs</string>
     <string name="translation_log_filter_level">Level: %s</string>

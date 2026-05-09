@@ -27,50 +27,92 @@ class TranslationQueueProcessor(
     private val notifier: TranslationNotifier = Injekt.get(),
     private val json: Json = Injekt.get(),
 ) {
-    suspend fun processPending(): TranslationProcessResult = coroutineScope {
-        val pendingJobs = repository.getPendingJobs()
-        if (pendingJobs.isEmpty()) {
-            return@coroutineScope TranslationProcessResult.Idle
-        }
-
+    suspend fun processPending(
+        workKind: TranslationWorkKind = TranslationWorkKind.Normal,
+        laneId: Int = 0,
+    ): TranslationProcessResult = coroutineScope {
         val concurrency = preferences.concurrency.get().coerceIn(1, 4)
-        val groups = TranslationPendingJobBatcher.groupPendingJobs(
-            jobs = pendingJobs,
-            maxImagesPerBatch = preferences.normalizedMaxImagesPerBatch(),
-        )
         var retryLater = false
-        groups.chunked(concurrency).forEach { batch ->
-            val results = batch.map { group -> async { processJobGroup(group) } }.awaitAll()
-            when {
-                TranslationProcessResult.Paused in results -> return@coroutineScope TranslationProcessResult.Paused
-                TranslationProcessResult.RetryLater in results -> retryLater = true
+        var processedAny = false
+        val claimTokenPrefix = "${workKind.value}:$laneId:${System.currentTimeMillis()}"
+
+        while (true) {
+            val pendingJobs = repository.getPendingJobs(workKind)
+            if (pendingJobs.isEmpty()) {
+                break
+            }
+
+            val groups = TranslationPendingJobBatcher.groupPendingJobs(
+                jobs = pendingJobs,
+                maxImagesPerBatch = preferences.normalizedMaxImagesPerBatch(),
+            )
+            var claimedAnyThisLoop = false
+            groups.chunked(concurrency).forEachIndexed { chunkIndex, batch ->
+                val claimedGroups = batch.mapIndexedNotNull { groupIndex, group ->
+                    val claimed = repository.claimJobs(
+                        jobs = group.jobs,
+                        kind = workKind,
+                        claimToken = "$claimTokenPrefix:$chunkIndex:$groupIndex",
+                    )
+                    claimed.takeIf { it.isNotEmpty() }?.let(::TranslationBatchJobGroup)
+                }
+                if (claimedGroups.isEmpty()) {
+                    return@forEachIndexed
+                }
+                claimedAnyThisLoop = true
+                processedAny = true
+                val results = claimedGroups.map { group ->
+                    async { processJobGroup(group, workKind, laneId) }
+                }.awaitAll()
+                when {
+                    TranslationProcessResult.Paused in results -> return@coroutineScope TranslationProcessResult.Paused
+                    TranslationProcessResult.RetryLater in results -> retryLater = true
+                }
+            }
+            if (!claimedAnyThisLoop) {
+                break
+            }
+            if (retryLater) {
+                break
             }
         }
-        if (retryLater) TranslationProcessResult.RetryLater else TranslationProcessResult.Completed
-    }
-
-    private suspend fun processJobGroup(group: TranslationBatchJobGroup): TranslationProcessResult {
-        return if (group.jobs.size > 1 && group.jobs.all { it.scope == TranslationScope.Image.value }) {
-            processImageBatch(group.jobs)
-        } else {
-            processJob(group.first)
+        when {
+            retryLater -> TranslationProcessResult.RetryLater
+            processedAny -> TranslationProcessResult.Completed
+            else -> TranslationProcessResult.Idle
         }
     }
 
-    private suspend fun processJob(job: Translation_jobs): TranslationProcessResult {
-        val runningJob = startJob(job)
+    private suspend fun processJobGroup(
+        group: TranslationBatchJobGroup,
+        workKind: TranslationWorkKind,
+        laneId: Int,
+    ): TranslationProcessResult {
+        return if (group.jobs.size > 1 && group.jobs.all { it.scope == TranslationScope.Image.value }) {
+            processImageBatch(group.jobs, workKind, laneId)
+        } else {
+            processJob(group.first, workKind, laneId)
+        }
+    }
+
+    private suspend fun processJob(
+        runningJob: Translation_jobs,
+        workKind: TranslationWorkKind,
+        laneId: Int,
+    ): TranslationProcessResult {
+        logStartedJob(runningJob, workKind, laneId)
         return try {
-            when (job.scope) {
+            when (runningJob.scope) {
                 TranslationScope.Image.value -> {
-                    val chapterId = requireNotNull(job.chapter_id) { "Image job missing chapter id" }
-                    val pageIndex = requireNotNull(job.page_index) { "Image job missing page index" }.toInt()
+                    val chapterId = requireNotNull(runningJob.chapter_id) { "Image job missing chapter id" }
+                    val pageIndex = requireNotNull(runningJob.page_index) { "Image job missing page index" }.toInt()
                     processPage(runningJob, chapterId, pageIndex, current = 0, total = 1)
                     repository.updateJobProgress(runningJob, current = 1, total = 1)
                     notifier.showJobProgress(runningJob, current = 1, total = 1, status = TranslationJobStatus.Running)
                 }
                 TranslationScope.Chapter.value -> {
-                    val chapterId = requireNotNull(job.chapter_id) { "Chapter job missing chapter id" }
-                    val pageCount = imageResolver.getPageCount(job.manga_id, chapterId)
+                    val chapterId = requireNotNull(runningJob.chapter_id) { "Chapter job missing chapter id" }
+                    val pageCount = imageResolver.getPageCount(runningJob.manga_id, chapterId)
                     repository.updateJobProgress(runningJob, current = 0, total = pageCount.toLong())
                     for (pageIndex in 0 until pageCount) {
                         processPage(runningJob, chapterId, pageIndex, current = pageIndex.toLong(), total = pageCount.toLong())
@@ -83,20 +125,17 @@ class TranslationQueueProcessor(
                         )
                     }
                 }
-                else -> error("Unsupported translation scope: ${job.scope}")
+                else -> error("Unsupported translation scope: ${runningJob.scope}")
             }
             completeJob(runningJob)
             TranslationProcessResult.Completed
         } catch (e: Throwable) {
-            handleFailure(runningJob, e, runningJob.attempts)
+            handleFailure(runningJob, e, runningJob.attempts, workKind)
         }
     }
 
-    private suspend fun startJob(job: Translation_jobs): Translation_jobs {
-        val attempt = job.attempts + 1
-        val runningJob = job.copy(attempts = attempt, status = TranslationJobStatus.Running.value)
-        repository.updateJobStatus(job, TranslationJobStatus.Running, attempts = attempt)
-        notifier.showJobProgress(runningJob, current = 0, total = runningJob.progress_total, status = TranslationJobStatus.Running)
+    private suspend fun logStartedJob(job: Translation_jobs, workKind: TranslationWorkKind, laneId: Int) {
+        notifier.showJobProgress(job, current = 0, total = job.progress_total, status = TranslationJobStatus.Running)
         repository.insertLog(
             jobId = job._id,
             pageId = null,
@@ -112,13 +151,14 @@ class TranslationQueueProcessor(
                     "model" to job.model,
                     "pipeline" to job.pipeline,
                     "mode" to job.mode,
-                    "attempt" to attempt,
+                    "attempt" to job.attempts,
+                    "worker_kind" to workKind.value,
+                    "lane_id" to laneId,
                     "target_language" to job.target_language.ifBlank { "app language" },
                     "source_language" to job.source_language,
                 ),
             ),
         )
-        return runningJob
     }
 
     private suspend fun completeJob(job: Translation_jobs) {
@@ -133,8 +173,12 @@ class TranslationQueueProcessor(
         )
     }
 
-    private suspend fun processImageBatch(jobs: List<Translation_jobs>): TranslationProcessResult {
-        val runningJobs = jobs.map { startJob(it) }
+    private suspend fun processImageBatch(
+        runningJobs: List<Translation_jobs>,
+        workKind: TranslationWorkKind,
+        laneId: Int,
+    ): TranslationProcessResult {
+        runningJobs.forEach { logStartedJob(it, workKind, laneId) }
         repository.insertLog(
             jobId = runningJobs.firstOrNull()?._id,
             pageId = null,
@@ -202,7 +246,7 @@ class TranslationQueueProcessor(
                     targetLanguage = targetLanguage,
                 )
             } catch (e: Throwable) {
-                earlyResults += handleFailure(job, e, job.attempts)
+                earlyResults += handleFailure(job, e, job.attempts, workKind)
             }
         }
 
@@ -213,17 +257,17 @@ class TranslationQueueProcessor(
         val translated = try {
             translatePreparedBatch(prepared)
         } catch (e: Throwable) {
-            val failed = prepared.map { page -> handleFailure(page.job, e, page.job.attempts) }
+            val failed = prepared.map { page -> handleFailure(page.job, e, page.job.attempts, workKind) }
             return mergeResults(earlyResults + failed)
         }
         val batchResults = mutableListOf<TranslationProcessResult>()
         prepared.forEach { page ->
             val overlay = translated[page.job._id]
             if (overlay == null) {
-                batchResults += fallbackSinglePage(page, "batch_missing_page")
+                batchResults += fallbackSinglePage(page, "batch_missing_page", workKind)
                 return@forEach
             }
-            batchResults += savePreparedOverlay(page, overlay)
+            batchResults += savePreparedOverlay(page, overlay, workKind)
         }
 
         val merged = mergeResults(earlyResults + batchResults)
@@ -383,6 +427,7 @@ class TranslationQueueProcessor(
     private suspend fun fallbackSinglePage(
         page: PreparedTranslationPage,
         reason: String,
+        workKind: TranslationWorkKind,
     ): TranslationProcessResult {
         repository.insertLog(
             jobId = page.job._id,
@@ -417,15 +462,16 @@ class TranslationQueueProcessor(
                     jobId = page.job._id,
                 )
             }
-            savePreparedOverlay(page, overlay)
+            savePreparedOverlay(page, overlay, workKind)
         } catch (e: Throwable) {
-            handleFailure(page.job, e, page.job.attempts)
+            handleFailure(page.job, e, page.job.attempts, workKind)
         }
     }
 
     private suspend fun savePreparedOverlay(
         page: PreparedTranslationPage,
         overlay: TranslationOverlayResult,
+        workKind: TranslationWorkKind,
     ): TranslationProcessResult {
         return try {
             saveOverlayForPage(
@@ -442,7 +488,7 @@ class TranslationQueueProcessor(
             completeJob(page.job.copy(progress_current = 1, progress_total = 1))
             TranslationProcessResult.Completed
         } catch (e: Throwable) {
-            handleFailure(page.job, e, page.job.attempts)
+            handleFailure(page.job, e, page.job.attempts, workKind)
         }
     }
 
@@ -704,6 +750,7 @@ class TranslationQueueProcessor(
         job: Translation_jobs,
         error: Throwable,
         attempt: Long,
+        workKind: TranslationWorkKind = TranslationWorkKind.Normal,
     ): TranslationProcessResult {
         val errorBody = (error as? GeminiApiException)?.errorBody
         val message = errorBody ?: error.message ?: error::class.simpleName.orEmpty()
@@ -735,9 +782,14 @@ class TranslationQueueProcessor(
 
         val transient = error is IOException || (error as? GeminiApiException)?.code in TRANSIENT_HTTP_CODES
         val canRetry = transient && attempt < MAX_ATTEMPTS
+        val retryStatus = if (workKind == TranslationWorkKind.ManualRetry) {
+            TranslationJobStatus.ManualRetry
+        } else {
+            TranslationJobStatus.Retrying
+        }
         repository.updateJobStatus(
             job = job,
-            status = if (canRetry) TranslationJobStatus.Retrying else TranslationJobStatus.Failed,
+            status = if (canRetry) retryStatus else TranslationJobStatus.Failed,
             errorMessage = message,
             attempts = attempt,
         )
@@ -745,7 +797,7 @@ class TranslationQueueProcessor(
             job = job,
             current = job.progress_current,
             total = job.progress_total,
-            status = if (canRetry) TranslationJobStatus.Retrying else TranslationJobStatus.Failed,
+            status = if (canRetry) retryStatus else TranslationJobStatus.Failed,
             message = message,
         )
         repository.insertLog(
@@ -758,12 +810,13 @@ class TranslationQueueProcessor(
                 action = if (canRetry) "retry_scheduled" else "fail_job",
                 jobId = job._id,
                 previousStatus = job.status,
-                nextStatus = if (canRetry) TranslationJobStatus.Retrying.value else TranslationJobStatus.Failed.value,
+                nextStatus = if (canRetry) retryStatus.value else TranslationJobStatus.Failed.value,
                 reason = message,
                 extra = errorDetails(error) + mapOf(
                     "attempt" to attempt,
                     "transient" to transient,
                     "http_code" to (error as? GeminiApiException)?.code,
+                    "worker_kind" to workKind.value,
                 ),
             ),
         )

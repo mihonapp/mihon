@@ -14,6 +14,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.setForegroundSafely
 import kotlinx.coroutines.flow.Flow
@@ -43,18 +44,20 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
     }
 
     override suspend fun doWork(): Result {
-        if (repository.getPendingJobs().isEmpty()) {
+        val workKind = TranslationWorkKind.from(inputData.getString(KEY_WORK_KIND))
+        val laneId = inputData.getInt(KEY_LANE_ID, 0)
+        if (repository.getPendingJobs(workKind).isEmpty()) {
             return Result.success()
         }
         val setup = setupValidator.readiness()
         if (!setup.ready) {
-            repository.pausePendingJobsForSetup(setup.message)
+            repository.pausePendingJobsForSetup(workKind, setup.message)
             return Result.success()
         }
 
         setForegroundSafely()
 
-        return when (processor.processPending()) {
+        return when (processor.processPending(workKind, laneId)) {
             TranslationProcessResult.RetryLater -> Result.retry()
             TranslationProcessResult.Idle,
             TranslationProcessResult.Completed,
@@ -65,15 +68,27 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
 
     companion object {
         private const val TAG = "TranslationQueue"
+        private const val NORMAL_WORK_NAME = "TranslationQueue"
+        private const val RETRY_WORK_PREFIX = "TranslationQueueRetry"
+        private const val KEY_WORK_KIND = "translation_work_kind"
+        private const val KEY_LANE_ID = "translation_lane_id"
 
         fun start(
             context: Context,
             policy: TranslationWorkStartPolicy = TranslationWorkStartPolicy.Keep,
             reason: String = "start requested",
+            kind: TranslationWorkKind = TranslationWorkKind.Normal,
+            laneId: Int = 0,
         ) {
             val appContext = context.applicationContext
             val request = OneTimeWorkRequestBuilder<TranslationJob>()
                 .addTag(TAG)
+                .setInputData(
+                    workDataOf(
+                        KEY_WORK_KIND to kind.value,
+                        KEY_LANE_ID to laneId,
+                    ),
+                )
                 .setConstraints(
                     Constraints.Builder()
                         .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -87,7 +102,7 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
             }
             runCatching {
                 WorkManager.getInstance(appContext)
-                    .enqueueUniqueWork(TAG, existingWorkPolicy, request)
+                    .enqueueUniqueWork(workName(kind, laneId), existingWorkPolicy, request)
             }.onSuccess {
                 launchIO {
                     Injekt.get<TranslationRepository>().insertLog(
@@ -102,7 +117,11 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
                             previousStatus = null,
                             nextStatus = null,
                             reason = reason,
-                            extra = mapOf("policy" to policy.name),
+                            extra = mapOf(
+                                "policy" to policy.name,
+                                "worker_kind" to kind.value,
+                                "lane_id" to laneId,
+                            ),
                         ),
                     )
                 }
@@ -120,15 +139,35 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
                             previousStatus = null,
                             nextStatus = null,
                             reason = error.message ?: error::class.simpleName.orEmpty(),
-                            extra = mapOf("policy" to policy.name),
+                            extra = mapOf(
+                                "policy" to policy.name,
+                                "worker_kind" to kind.value,
+                                "lane_id" to laneId,
+                            ),
                         ),
                     )
                 }
             }
         }
 
+        fun startManualRetryWorkers(
+            context: Context,
+            workerCount: Int,
+            reason: String,
+        ) {
+            repeat(workerCount.coerceAtLeast(0)) { index ->
+                start(
+                    context = context,
+                    policy = TranslationWorkStartPolicy.Keep,
+                    reason = reason,
+                    kind = TranslationWorkKind.ManualRetry,
+                    laneId = index + 1,
+                )
+            }
+        }
+
         fun stop(context: Context) {
-            WorkManager.getInstance(context).cancelUniqueWork(TAG)
+            WorkManager.getInstance(context).cancelAllWorkByTag(TAG)
         }
 
         /**
@@ -140,16 +179,23 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
         )
         fun isRunning(context: Context): Boolean {
             return WorkManager.getInstance(context)
-                .getWorkInfosForUniqueWork(TAG)
+                .getWorkInfosByTag(TAG)
                 .get()
                 .any { it.state == WorkInfo.State.RUNNING || it.state == WorkInfo.State.ENQUEUED }
         }
 
         fun isRunningFlow(context: Context): Flow<Boolean> {
             return WorkManager.getInstance(context)
-                .getWorkInfosForUniqueWorkLiveData(TAG)
+                .getWorkInfosByTagLiveData(TAG)
                 .asFlow()
                 .map { list -> list.any { it.state == WorkInfo.State.RUNNING || it.state == WorkInfo.State.ENQUEUED } }
+        }
+
+        private fun workName(kind: TranslationWorkKind, laneId: Int): String {
+            return when (kind) {
+                TranslationWorkKind.Normal -> NORMAL_WORK_NAME
+                TranslationWorkKind.ManualRetry -> "$RETRY_WORK_PREFIX-${laneId.coerceAtLeast(1)}"
+            }
         }
     }
 }

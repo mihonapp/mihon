@@ -82,6 +82,7 @@ object SettingsTranslationScreen : SearchableSettings {
         val topK by preferences.topK.collectAsState()
         val maxOutputTokens by preferences.maxOutputTokens.collectAsState()
         val concurrency by preferences.concurrency.collectAsState()
+        val parallelRetryLanes by preferences.parallelRetryLanes.collectAsState()
         val maxImagesPerBatch by preferences.maxImagesPerBatch.collectAsState()
         val overlayTextSizeMode by preferences.overlayTextSizeMode.collectAsState()
         val overlayTextSizeSp by preferences.overlayTextSizeSp.collectAsState()
@@ -168,7 +169,7 @@ object SettingsTranslationScreen : SearchableSettings {
                     if (requeued > 0) {
                         TranslationJob.start(
                             context = context,
-                            policy = TranslationWorkStartPolicy.Replace,
+                            policy = TranslationWorkStartPolicy.Keep,
                             reason = "setup_test_requeued_auth",
                         )
                         context.toast(context.contextStringResource(MR.strings.translation_resume_requeued, requeued))
@@ -198,6 +199,11 @@ object SettingsTranslationScreen : SearchableSettings {
             stringResource(MR.strings.all)
         } else {
             maxImagesPerBatch.coerceAtLeast(1).toString()
+        }
+        val parallelRetryLanesValueString = when (val parsed = parallelRetryLanes.trim().toIntOrNull()) {
+            0 -> stringResource(MR.strings.all)
+            null -> "1"
+            else -> if (parsed >= 1) parsed.toString() else "1"
         }
 
         if (showClearAllConfirmation) {
@@ -495,6 +501,20 @@ object SettingsTranslationScreen : SearchableSettings {
                         valueRange = 1..4,
                         title = stringResource(MR.strings.pref_translation_concurrency),
                         onValueChanged = { preferences.concurrency.set(it) },
+                    ),
+                    Preference.PreferenceItem.EditTextPreference(
+                        preference = preferences.parallelRetryLanes,
+                        title = stringResource(MR.strings.pref_translation_parallel_retry_lanes),
+                        subtitle = parallelRetryLanesValueString,
+                        onValueChanged = { value ->
+                            val normalized = value.trim().toIntOrNull()
+                            if (normalized == null || normalized < 0) {
+                                context.toast(MR.strings.translation_invalid_number)
+                                false
+                            } else {
+                                true
+                            }
+                        },
                     ),
                     Preference.PreferenceItem.SliderPreference(
                         value = maxImagesPerBatch.coerceIn(0, 100),

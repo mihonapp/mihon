@@ -58,6 +58,24 @@ fun TranslationPreferences.normalizedMaxImagesPerBatch(): Int {
     return if (value == TRANSLATION_BATCH_ALL) TRANSLATION_BATCH_ALL else value.coerceAtLeast(1)
 }
 
+fun TranslationPreferences.normalizedParallelRetryLanes(pendingManualRetryJobs: Int): Int {
+    val parsed = parallelRetryLanes.get().trim().toIntOrNull()
+    val configured = if (parsed != null && parsed >= 0) parsed else 1
+    return TranslationRetryLanePlanner.workerCount(
+        pendingManualRetryJobs = pendingManualRetryJobs,
+        configuredLanes = configured,
+    )
+}
+
+object TranslationRetryLanePlanner {
+    fun workerCount(pendingManualRetryJobs: Int, configuredLanes: Int): Int {
+        val pending = pendingManualRetryJobs.coerceAtLeast(0)
+        if (pending == 0) return 0
+        val lanes = configuredLanes.coerceAtLeast(0)
+        return if (lanes == 0) pending else min(lanes, pending)
+    }
+}
+
 @Serializable
 data class GeminiModel(
     val name: String,
@@ -156,6 +174,18 @@ object TranslationLogRedactor {
 enum class TranslationWorkStartPolicy {
     Keep,
     Replace,
+}
+
+enum class TranslationWorkKind(val value: String) {
+    Normal("normal"),
+    ManualRetry("manual_retry"),
+    ;
+
+    companion object {
+        fun from(value: String?): TranslationWorkKind {
+            return entries.firstOrNull { it.value == value } ?: Normal
+        }
+    }
 }
 
 object TranslationLogDetailsFormatter {
@@ -672,13 +702,19 @@ data class TranslationRetryDecision(
     val forceOverwrite: Boolean = false,
 )
 
+data class TranslationResumeAllResult(
+    val requeued: Int,
+    val skippedExisting: Int,
+    val skippedRunning: Int,
+)
+
 object TranslationRetryPlanner {
     fun manualRetry(setupReady: Boolean): TranslationRetryDecision {
         return if (setupReady) {
             TranslationRetryDecision(
                 allowed = true,
-                nextStatus = TranslationJobStatus.Queued,
-                startPolicy = TranslationWorkStartPolicy.Replace,
+                nextStatus = TranslationJobStatus.ManualRetry,
+                startPolicy = TranslationWorkStartPolicy.Keep,
                 forceOverwrite = true,
             )
         } else {
@@ -741,6 +777,7 @@ private val ACTIVE_TRANSLATION_JOB_STATUSES = setOf(
     TranslationJobStatus.Queued,
     TranslationJobStatus.Running,
     TranslationJobStatus.Retrying,
+    TranslationJobStatus.ManualRetry,
     TranslationJobStatus.PausedAuth,
     TranslationJobStatus.PausedQuota,
 )

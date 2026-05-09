@@ -28,11 +28,21 @@ data class TranslationQueueGroup(
     val key: String,
     val mangaTitle: String,
     val items: List<TranslationQueueItem>,
+    val chapterGroups: List<TranslationQueueChapterGroup>,
     val statusCounts: Map<String, Int>,
+    val retryableCount: Int,
+)
+
+data class TranslationQueueChapterGroup(
+    val key: String,
+    val title: String,
+    val items: List<TranslationQueueItem>,
+    val statusCounts: Map<String, Int>,
+    val retryableCount: Int,
 )
 
 enum class TranslationQueueTypeFilter(val statuses: Set<String>) {
-    Waiting(setOf(TranslationJobStatus.Queued.value, TranslationJobStatus.Retrying.value)),
+    Waiting(setOf(TranslationJobStatus.Queued.value, TranslationJobStatus.Retrying.value, TranslationJobStatus.ManualRetry.value)),
     Translating(setOf(TranslationJobStatus.Running.value)),
     Paused(setOf(TranslationJobStatus.PausedAuth.value, TranslationJobStatus.PausedQuota.value)),
     Error(setOf(TranslationJobStatus.Failed.value)),
@@ -58,15 +68,50 @@ object TranslationQueueUiModel {
             )
             .groupBy { "${it.mangaId}:${it.mangaTitle}" }
             .map { (key, groupItems) ->
+                val chapterGroups = groupItems
+                    .groupBy { "${it.chapterId ?: -1}:${it.chapterName.orEmpty()}" }
+                    .map { (chapterKey, chapterItems) ->
+                        TranslationQueueChapterGroup(
+                            key = "$key:$chapterKey",
+                            title = chapterItems.first().chapterName ?: "Chapter ${chapterItems.first().chapterId ?: "-"}",
+                            items = chapterItems,
+                            statusCounts = chapterItems.groupingBy { it.status }.eachCount(),
+                            retryableCount = chapterItems.count { it.isRetryableQueueItem() },
+                        )
+                    }
                 TranslationQueueGroup(
                     key = key,
                     mangaTitle = groupItems.first().mangaTitle,
                     items = groupItems,
+                    chapterGroups = chapterGroups,
                     statusCounts = groupItems.groupingBy { it.status }.eachCount(),
+                    retryableCount = groupItems.count { it.isRetryableQueueItem() },
                 )
             }
     }
+
+    fun groupedLogsByJob(logs: List<TranslationLogUiItem>): Map<Long, List<GroupedTranslationLog>> {
+        return logs
+            .filter { it.jobId != null }
+            .groupBy { requireNotNull(it.jobId) }
+            .mapValues { (_, jobLogs) -> TranslationLogUiModel.groupAdjacent(jobLogs) }
+    }
+
+    fun retryableItems(items: List<TranslationQueueItem>): List<TranslationQueueItem> {
+        return items.filter { it.isRetryableQueueItem() }
+    }
+
+    private fun TranslationQueueItem.isRetryableQueueItem(): Boolean {
+        val parsedStatus = TranslationJobStatus.entries.firstOrNull { it.value == status }
+        return this.status in FINISHED_QUEUE_STATUSES || parsedStatus?.isRetryableFromQueue() == true
+    }
 }
+
+private val FINISHED_QUEUE_STATUSES = setOf(
+    TranslationJobStatus.Completed.value,
+    TranslationJobStatus.Failed.value,
+    TranslationJobStatus.Cancelled.value,
+)
 
 data class TranslationLogUiItem(
     val id: Long,

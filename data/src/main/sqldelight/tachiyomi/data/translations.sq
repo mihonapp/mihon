@@ -160,17 +160,29 @@ JOIN mangas ON mangas._id = translation_jobs.manga_id
 LEFT JOIN chapters ON chapters._id = translation_jobs.chapter_id
 WHERE translation_jobs._id = :id;
 
-getPendingJobs:
+getNormalPendingJobs:
 SELECT *
 FROM translation_jobs
 WHERE status IN ('queued', 'retrying')
 ORDER BY manga_id ASC, chapter_id ASC, page_index ASC, created_at ASC;
+
+getManualRetryPendingJobs:
+SELECT *
+FROM translation_jobs
+WHERE status = 'manual_retry'
+ORDER BY updated_at DESC, manga_id ASC, chapter_id ASC, page_index ASC, created_at ASC;
 
 getJobsByStatus:
 SELECT *
 FROM translation_jobs
 WHERE status = :status
 ORDER BY created_at ASC;
+
+getResumeCandidateJobs:
+SELECT *
+FROM translation_jobs
+WHERE status IN ('queued', 'retrying', 'running', 'paused_auth', 'paused_quota', 'failed', 'cancelled', 'manual_retry')
+ORDER BY updated_at ASC, manga_id ASC, chapter_id ASC, page_index ASC, created_at ASC;
 
 getActiveMatchingJob:
 SELECT *
@@ -182,7 +194,7 @@ AND scope = :scope
 AND pipeline = :pipeline
 AND mode = :mode
 AND target_language = :targetLanguage
-AND status IN ('queued', 'running', 'retrying', 'paused_auth', 'paused_quota')
+AND status IN ('queued', 'running', 'retrying', 'manual_retry', 'paused_auth', 'paused_quota')
 ORDER BY created_at ASC
 LIMIT 1;
 
@@ -203,13 +215,48 @@ WHERE _id = :id;
 
 retryJob:
 UPDATE translation_jobs
-SET status = 'queued',
+SET status = 'manual_retry',
     overwrite = :overwrite,
     attempts = 0,
     progress_current = 0,
     error_message = NULL,
     updated_at = :updatedAt
 WHERE _id = :id;
+
+resumeJob:
+UPDATE translation_jobs
+SET status = 'queued',
+    attempts = 0,
+    progress_current = 0,
+    error_message = NULL,
+    updated_at = :updatedAt
+WHERE _id = :id;
+
+claimNormalJob:
+UPDATE translation_jobs
+SET status = 'running',
+    attempts = :attempts,
+    error_message = :claimToken,
+    updated_at = :updatedAt
+WHERE _id = :id
+AND status IN ('queued', 'retrying');
+
+claimManualRetryJob:
+UPDATE translation_jobs
+SET status = 'running',
+    attempts = :attempts,
+    error_message = :claimToken,
+    updated_at = :updatedAt
+WHERE _id = :id
+AND status = 'manual_retry';
+
+clearClaimToken:
+UPDATE translation_jobs
+SET error_message = NULL,
+    updated_at = :updatedAt
+WHERE _id = :id
+AND status = 'running'
+AND error_message = :claimToken;
 
 deleteJob:
 DELETE FROM translation_jobs
