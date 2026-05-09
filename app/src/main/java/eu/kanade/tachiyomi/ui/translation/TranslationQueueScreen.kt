@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.translation
 
 import android.content.Context
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -281,25 +282,24 @@ object TranslationQueueScreen : Screen() {
                 return@Scaffold
             }
 
-            ScrollbarLazyColumn(contentPadding = contentPadding) {
+            Column(modifier = Modifier.padding(contentPadding)) {
                 if (jobs.isNotEmpty()) {
-                    item {
-                        TranslationQueueFilterRow(
-                            selectedFilters = selectedQueueFilters,
-                            onToggle = { filter ->
-                                selectedQueueFilters = if (filter in selectedQueueFilters) {
-                                    selectedQueueFilters - filter
-                                } else {
-                                    selectedQueueFilters + filter
-                                }
-                            },
-                        )
-                    }
+                    TranslationQueueFilterRow(
+                        selectedFilters = selectedQueueFilters,
+                        onToggle = { filter ->
+                            selectedQueueFilters = if (filter in selectedQueueFilters) {
+                                selectedQueueFilters - filter
+                            } else {
+                                selectedQueueFilters + filter
+                            }
+                        },
+                    )
                 }
 
-                queueGroups.forEach { group ->
+                ScrollbarLazyColumn(modifier = Modifier.weight(1f)) {
+                    queueGroups.forEach { group ->
                     val expanded = group.key !in collapsedQueueGroups
-                    item(key = "group-${group.key}") {
+                    stickyHeader(key = "group-${group.key}") {
                         TranslationQueueGroupHeader(
                             group = group,
                             expanded = expanded,
@@ -358,7 +358,7 @@ object TranslationQueueScreen : Screen() {
                     }
                 }
 
-                if (logs.isNotEmpty()) {
+                    if (logs.isNotEmpty()) {
                     item {
                         ListItem(
                             headlineContent = { Text(text = stringResource(MR.strings.pref_translation_logs)) },
@@ -424,6 +424,7 @@ object TranslationQueueScreen : Screen() {
                             )
                             HorizontalDivider()
                         }
+                    }
                     }
                 }
             }
@@ -505,6 +506,7 @@ private fun TranslationQueueFilterRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
             .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
         items(TranslationQueueTypeFilter.entries) { filter ->
@@ -532,7 +534,21 @@ private fun TranslationQueueGroupHeader(
             )
         },
         supportingContent = {
-            Text(text = "${group.items.size} job(s)")
+            Text(
+                text = buildString {
+                    append("${group.items.size} job(s)")
+                    val statusSummary = group.statusCounts
+                        .toSortedMap()
+                        .entries
+                        .joinToString(" · ") { "${it.key}:${it.value}" }
+                    if (statusSummary.isNotBlank()) {
+                        append(" · ")
+                        append(statusSummary)
+                    }
+                },
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
         },
         trailingContent = {
             Text(
@@ -540,7 +556,10 @@ private fun TranslationQueueGroupHeader(
                 color = MaterialTheme.colorScheme.primary,
             )
         },
-        modifier = Modifier.clickable(onClick = onClick),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
+            .clickable(onClick = onClick),
     )
 }
 
@@ -814,12 +833,7 @@ private class TranslationQueueScreenModel(
                 }
                 return@launchIO
             }
-            repository.updateJobStatus(
-                job = job,
-                status = requireNotNull(decision.nextStatus),
-                errorMessage = null,
-                attempts = 0,
-            )
+            repository.retryJob(job, forceOverwrite = decision.forceOverwrite)
             repository.insertLog(
                 jobId = job._id,
                 pageId = null,
@@ -831,6 +845,7 @@ private class TranslationQueueScreenModel(
                     jobId = job._id,
                     previousStatus = job.status,
                     nextStatus = TranslationJobStatus.Queued.value,
+                    extra = mapOf("manual_retry_force_overwrite" to decision.forceOverwrite),
                 ),
             )
             TranslationJob.start(

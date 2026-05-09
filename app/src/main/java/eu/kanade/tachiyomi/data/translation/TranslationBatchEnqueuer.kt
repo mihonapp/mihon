@@ -44,22 +44,6 @@ class TranslationBatchEnqueuer(
                         targetLanguage = targetLanguage,
                     ),
                 )
-                if (
-                    maxImages != TRANSLATION_BATCH_ALL &&
-                    TranslationBatchPlanner.pagesToQueue(candidates, overwrite, maxImages).size >= maxImages
-                ) {
-                    return enqueueCandidates(
-                        mangaId = mangaId,
-                        candidates = candidates,
-                        overwrite = overwrite,
-                        maxImages = maxImages,
-                        pipeline = pipeline,
-                        mode = mode,
-                        model = model,
-                        targetLanguage = targetLanguage,
-                        sourceLanguage = sourceLanguage,
-                    )
-                }
             }
         }
 
@@ -93,7 +77,10 @@ class TranslationBatchEnqueuer(
             maxImagesPerBatch = maxImages,
         )
         var queued = 0
+        val skippedExisting = candidates.count { !overwrite && it.hasOverlay }
+        val skippedActive = candidates.count { it.hasActiveJob }
         var skipped = candidates.size - pages.size
+        var skippedRaceDuplicate = 0
         pages.forEach { page ->
             val result = repository.enqueueJob(
                 mangaId = mangaId,
@@ -107,8 +94,38 @@ class TranslationBatchEnqueuer(
                 sourceLanguage = sourceLanguage,
                 overwrite = overwrite,
             )
-            if (result.inserted) queued++ else skipped++
+            if (result.inserted) {
+                queued++
+            } else {
+                skipped++
+                skippedRaceDuplicate++
+            }
         }
+        repository.insertLog(
+            jobId = null,
+            pageId = null,
+            level = TranslationLogLevel.Info,
+            tag = "queue",
+            message = "Queued chapter translation pages",
+            details = TranslationLogDetailsFormatter.queueState(
+                action = "enqueue_all_pages",
+                jobId = null,
+                previousStatus = null,
+                nextStatus = TranslationJobStatus.Queued.value,
+                extra = mapOf(
+                    "manga_id" to mangaId,
+                    "considered" to candidates.size,
+                    "eligible_pages" to pages.size,
+                    "queued" to queued,
+                    "skipped" to skipped,
+                    "skipped_existing" to skippedExisting,
+                    "skipped_active_duplicate" to skippedActive,
+                    "skipped_race_duplicate" to skippedRaceDuplicate,
+                    "worker_batch_size" to maxImages,
+                    "overwrite" to overwrite,
+                ),
+            ),
+        )
         return TranslationBatchEnqueueResult(
             queued = queued,
             skipped = skipped,

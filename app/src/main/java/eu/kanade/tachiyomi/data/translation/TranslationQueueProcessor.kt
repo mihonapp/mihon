@@ -135,6 +135,25 @@ class TranslationQueueProcessor(
 
     private suspend fun processImageBatch(jobs: List<Translation_jobs>): TranslationProcessResult {
         val runningJobs = jobs.map { startJob(it) }
+        repository.insertLog(
+            jobId = runningJobs.firstOrNull()?._id,
+            pageId = null,
+            level = TranslationLogLevel.Info,
+            tag = "queue",
+            message = "Started translation batch",
+            details = TranslationLogDetailsFormatter.queueState(
+                action = "worker_batch_start",
+                jobId = runningJobs.firstOrNull()?._id,
+                previousStatus = TranslationJobStatus.Queued.value,
+                nextStatus = TranslationJobStatus.Running.value,
+                extra = mapOf(
+                    "job_ids" to runningJobs.joinToString { it._id.toString() },
+                    "pages" to runningJobs.joinToString { "${it.chapter_id}:${it.page_index}" },
+                    "batch_size" to runningJobs.size,
+                    "max_images_per_batch" to preferences.normalizedMaxImagesPerBatch(),
+                ),
+            ),
+        )
         val prepared = mutableListOf<PreparedTranslationPage>()
         val earlyResults = mutableListOf<TranslationProcessResult>()
 
@@ -207,7 +226,26 @@ class TranslationQueueProcessor(
             batchResults += savePreparedOverlay(page, overlay)
         }
 
-        return mergeResults(earlyResults + batchResults)
+        val merged = mergeResults(earlyResults + batchResults)
+        repository.insertLog(
+            jobId = runningJobs.firstOrNull()?._id,
+            pageId = null,
+            level = TranslationLogLevel.Info,
+            tag = "queue",
+            message = "Completed translation batch",
+            details = TranslationLogDetailsFormatter.queueState(
+                action = "worker_batch_complete",
+                jobId = runningJobs.firstOrNull()?._id,
+                previousStatus = TranslationJobStatus.Running.value,
+                nextStatus = merged.name,
+                extra = mapOf(
+                    "job_ids" to runningJobs.joinToString { it._id.toString() },
+                    "batch_size" to runningJobs.size,
+                    "result" to merged.name,
+                ),
+            ),
+        )
+        return merged
     }
 
     private suspend fun translatePreparedBatch(
@@ -508,6 +546,8 @@ class TranslationQueueProcessor(
             inpaintImageUri = inpaintUri,
             overlay = sanitizedOverlay,
         )
+        val verifiedPage = repository.getSavedPage(chapterId, pageIndex.toLong(), targetLanguage)
+            ?: throw IOException("Saved translation overlay could not be read back for chapter=$chapterId page=$pageIndex target=$targetLanguage")
 
         repository.insertLog(
             jobId = job._id,
@@ -523,6 +563,27 @@ class TranslationQueueProcessor(
                 appendLine("target_language=${sanitizedOverlay.targetLanguage ?: targetLanguage}")
                 sanitizedOverlay.boxes.forEachIndexed { index, box ->
                     appendLine("${index + 1}. ${box.originalText} => ${box.translatedText}")
+                }
+            },
+        )
+        repository.insertLog(
+            jobId = job._id,
+            pageId = verifiedPage.page._id,
+            level = TranslationLogLevel.Debug,
+            tag = "page",
+            message = "Verified saved translation overlay",
+            details = buildString {
+                appendLine("action=save_verified")
+                appendLine("chapter=$chapterId")
+                appendLine("page=$pageIndex")
+                appendLine("target_language=$targetLanguage")
+                appendLine("saved_page_id=${verifiedPage.page._id}")
+                appendLine("saved_box_count=${verifiedPage.boxes.size}")
+                appendLine("sanitized_box_count=${sanitizedOverlay.boxes.size}")
+                appendLine("dropped_boxes=${overlay.boxes.size - sanitizedOverlay.boxes.size}")
+                appendLine("source_image_key=${image.sourceImageKey}")
+                if (sanitizedOverlay.boxes.isEmpty()) {
+                    appendLine("note=empty_overlay_saved")
                 }
             },
         )

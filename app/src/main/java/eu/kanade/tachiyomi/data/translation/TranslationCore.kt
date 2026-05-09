@@ -405,13 +405,8 @@ object TranslationBatchPlanner {
         overwrite: Boolean,
         maxImagesPerBatch: Int,
     ): List<TranslationPageCandidate> {
-        val eligible = pages.filter { page ->
+        return pages.filter { page ->
             (overwrite || !page.hasOverlay) && !page.hasActiveJob
-        }
-        return if (maxImagesPerBatch == TRANSLATION_BATCH_ALL) {
-            eligible
-        } else {
-            eligible.take(maxImagesPerBatch.coerceAtLeast(1))
         }
     }
 }
@@ -674,6 +669,7 @@ data class TranslationRetryDecision(
     val allowed: Boolean,
     val nextStatus: TranslationJobStatus?,
     val startPolicy: TranslationWorkStartPolicy?,
+    val forceOverwrite: Boolean = false,
 )
 
 object TranslationRetryPlanner {
@@ -683,6 +679,7 @@ object TranslationRetryPlanner {
                 allowed = true,
                 nextStatus = TranslationJobStatus.Queued,
                 startPolicy = TranslationWorkStartPolicy.Replace,
+                forceOverwrite = true,
             )
         } else {
             TranslationRetryDecision(
@@ -709,6 +706,21 @@ object TranslationRetryPlanner {
                 nextStatus = null,
                 startPolicy = null,
             )
+        }
+    }
+}
+
+enum class TranslationOverlayEditAction {
+    ReplaceBoxes,
+    DeletePage,
+}
+
+object TranslationOverlayEditPlanner {
+    fun actionFor(boxCount: Int): TranslationOverlayEditAction {
+        return if (boxCount <= 0) {
+            TranslationOverlayEditAction.DeletePage
+        } else {
+            TranslationOverlayEditAction.ReplaceBoxes
         }
     }
 }

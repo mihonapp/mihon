@@ -164,7 +164,7 @@ getPendingJobs:
 SELECT *
 FROM translation_jobs
 WHERE status IN ('queued', 'retrying')
-ORDER BY created_at ASC;
+ORDER BY manga_id ASC, chapter_id ASC, page_index ASC, created_at ASC;
 
 getJobsByStatus:
 SELECT *
@@ -198,6 +198,16 @@ updateJobProgress:
 UPDATE translation_jobs
 SET progress_current = :progressCurrent,
     progress_total = :progressTotal,
+    updated_at = :updatedAt
+WHERE _id = :id;
+
+retryJob:
+UPDATE translation_jobs
+SET status = 'queued',
+    overwrite = :overwrite,
+    attempts = 0,
+    progress_current = 0,
+    error_message = NULL,
     updated_at = :updatedAt
 WHERE _id = :id;
 
@@ -260,6 +270,10 @@ FROM translation_pages
 WHERE chapter_id = :chapterId
 AND page_index = :pageIndex
 AND target_language = :targetLanguage;
+
+deletePage:
+DELETE FROM translation_pages
+WHERE _id = :id;
 
 getPagesByChapter:
 SELECT *

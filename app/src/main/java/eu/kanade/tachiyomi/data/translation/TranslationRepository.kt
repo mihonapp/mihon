@@ -207,6 +207,14 @@ class TranslationRepository(
         )
     }
 
+    suspend fun retryJob(job: Translation_jobs, forceOverwrite: Boolean) {
+        database.translationsQueries.retryJob(
+            overwrite = if (forceOverwrite) true else job.overwrite,
+            updatedAt = System.currentTimeMillis(),
+            id = job._id,
+        )
+    }
+
     suspend fun deleteJob(id: Long) {
         database.translationsQueries.deleteJob(id)
     }
@@ -228,6 +236,10 @@ class TranslationRepository(
 
     suspend fun clearPages() {
         database.translationsQueries.clearPages()
+    }
+
+    suspend fun deletePage(id: Long) {
+        database.translationsQueries.deletePage(id)
     }
 
     suspend fun requeuePausedAuthJobs(reason: String): Long {

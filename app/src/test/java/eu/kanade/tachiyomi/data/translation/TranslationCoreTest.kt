@@ -195,12 +195,14 @@ class TranslationCoreTest {
             allowed = false,
             nextStatus = null,
             startPolicy = null,
+            forceOverwrite = false,
         )
 
         TranslationRetryPlanner.manualRetry(setupReady = true) shouldBe TranslationRetryDecision(
             allowed = true,
             nextStatus = TranslationJobStatus.Queued,
             startPolicy = TranslationWorkStartPolicy.Replace,
+            forceOverwrite = true,
         )
 
         TranslationRetryPlanner.autoRequeueAfterSetup(
@@ -210,6 +212,7 @@ class TranslationCoreTest {
             allowed = true,
             nextStatus = TranslationJobStatus.Queued,
             startPolicy = TranslationWorkStartPolicy.Replace,
+            forceOverwrite = false,
         )
 
         TranslationRetryPlanner.autoRequeueAfterSetup(
@@ -252,7 +255,7 @@ class TranslationCoreTest {
     }
 
     @Test
-    fun `batch planner caps images and all means uncapped`() {
+    fun `batch enqueue planner queues all eligible pages because worker chunks batches`() {
         val pages = (0 until 50).map { page ->
             TranslationPageCandidate(chapterId = 1, pageIndex = page, hasOverlay = false)
         }
@@ -261,7 +264,7 @@ class TranslationCoreTest {
             pages = pages,
             overwrite = false,
             maxImagesPerBatch = 38,
-        ).map { it.pageIndex } shouldContainExactly (0 until 38).toList()
+        ).map { it.pageIndex } shouldContainExactly (0 until 50).toList()
 
         TranslationBatchPlanner.pagesToQueue(
             pages = pages,
@@ -283,7 +286,22 @@ class TranslationCoreTest {
             pages = pages,
             overwrite = false,
             maxImagesPerBatch = 1,
-        ).map { it.pageIndex } shouldContainExactly listOf(2)
+        ).map { it.pageIndex } shouldContainExactly listOf(2, 3)
+    }
+
+    @Test
+    fun `pending job batcher chunks one hundred images by max images per batch`() {
+        val jobs = (0 until 100).map { index ->
+            translationJob(
+                id = index + 1L,
+                chapterId = 10,
+                pageIndex = index.toLong(),
+            )
+        }
+
+        val groups = TranslationPendingJobBatcher.groupPendingJobs(jobs, maxImagesPerBatch = 38)
+
+        groups.map { it.jobs.size } shouldContainExactly listOf(38, 38, 24)
     }
 
     @Test
@@ -480,6 +498,26 @@ class TranslationCoreTest {
     }
 
     @Test
+    fun `queue group exposes status counts for sticky headers`() {
+        val group = TranslationQueueUiModel.filterAndGroup(
+            items = listOf(
+                queueItem(id = 1, status = TranslationJobStatus.Queued.value),
+                queueItem(id = 2, status = TranslationJobStatus.Running.value),
+                queueItem(id = 3, status = TranslationJobStatus.PausedAuth.value),
+                queueItem(id = 4, status = TranslationJobStatus.PausedQuota.value),
+            ),
+            filters = emptySet(),
+        ).single()
+
+        group.statusCounts shouldBe mapOf(
+            TranslationJobStatus.Queued.value to 1,
+            TranslationJobStatus.Running.value to 1,
+            TranslationJobStatus.PausedAuth.value to 1,
+            TranslationJobStatus.PausedQuota.value to 1,
+        )
+    }
+
+    @Test
     fun `queue type filters are multi select and empty means all`() {
         val items = listOf(
             queueItem(id = 1, status = TranslationJobStatus.Queued.value),
@@ -499,6 +537,12 @@ class TranslationCoreTest {
         )
             .flatMap { it.items }
             .map { it.id } shouldContainExactly listOf(1L, 2L, 4L)
+    }
+
+    @Test
+    fun `overlay edit planner deletes saved page only when user saves zero boxes`() {
+        TranslationOverlayEditPlanner.actionFor(boxCount = 0) shouldBe TranslationOverlayEditAction.DeletePage
+        TranslationOverlayEditPlanner.actionFor(boxCount = 1) shouldBe TranslationOverlayEditAction.ReplaceBoxes
     }
 
     @Test

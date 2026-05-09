@@ -29,6 +29,8 @@ import eu.kanade.tachiyomi.data.translation.TranslationJob
 import eu.kanade.tachiyomi.data.translation.TranslationLogDetailsFormatter
 import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
 import eu.kanade.tachiyomi.data.translation.TranslationMode
+import eu.kanade.tachiyomi.data.translation.TranslationOverlayEditAction
+import eu.kanade.tachiyomi.data.translation.TranslationOverlayEditPlanner
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
 import eu.kanade.tachiyomi.data.translation.TranslationScope
@@ -588,29 +590,65 @@ class ReaderViewModel @JvmOverloads constructor(
         viewModelScope.launchIO {
             try {
                 val targetLanguage = translationTargetLanguage()
-                val savedPage = translationRepository.getSavedPage(
+                val existingPage = translationRepository.getSavedPage(
                     chapterId = chapterId,
                     pageIndex = page.index.toLong(),
                     targetLanguage = targetLanguage,
-                )?.page ?: translationRepository.ensurePage(
-                    mangaId = manga.id,
-                    chapterId = chapterId,
-                    pageIndex = page.index.toLong(),
-                    sourceImageKey = page.imageUrl ?: "${page.chapter.chapter.url}#${page.index}",
-                    model = translationPreferences.geminiModel.get(),
-                    targetLanguage = targetLanguage,
-                    sourceLanguage = TranslationLanguages.sourcePromptLabel(translationPreferences.sourceLanguage.get()),
-                    pipeline = translationPreferences.pipeline.get(),
                 )
-                translationRepository.replaceBoxes(savedPage._id, boxes)
-                translationRepository.insertLog(
-                    jobId = null,
-                    pageId = savedPage._id,
-                    level = TranslationLogLevel.Info,
-                    tag = "editor",
-                    message = "Saved translation overlay edits",
-                    details = "boxes=${boxes.size}",
-                )
+                when (TranslationOverlayEditPlanner.actionFor(boxes.size)) {
+                    TranslationOverlayEditAction.DeletePage -> {
+                        existingPage?.page?.let { savedPage ->
+                            translationRepository.deletePage(savedPage._id)
+                            translationRepository.insertLog(
+                                jobId = null,
+                                pageId = null,
+                                level = TranslationLogLevel.Info,
+                                tag = "editor",
+                                message = "Deleted translation overlay edits",
+                                details = buildString {
+                                    appendLine("chapter_id=$chapterId")
+                                    appendLine("page_index=${page.index}")
+                                    appendLine("target_language=$targetLanguage")
+                                    appendLine("page_id=${savedPage._id}")
+                                },
+                            )
+                        } ?: translationRepository.insertLog(
+                            jobId = null,
+                            pageId = null,
+                            level = TranslationLogLevel.Info,
+                            tag = "editor",
+                            message = "Deleted translation overlay edits",
+                            details = buildString {
+                                appendLine("chapter_id=$chapterId")
+                                appendLine("page_index=${page.index}")
+                                appendLine("target_language=$targetLanguage")
+                                appendLine("page_id=-")
+                                appendLine("reason=no_saved_overlay")
+                            },
+                        )
+                    }
+                    TranslationOverlayEditAction.ReplaceBoxes -> {
+                        val savedPage = existingPage?.page ?: translationRepository.ensurePage(
+                            mangaId = manga.id,
+                            chapterId = chapterId,
+                            pageIndex = page.index.toLong(),
+                            sourceImageKey = page.imageUrl ?: "${page.chapter.chapter.url}#${page.index}",
+                            model = translationPreferences.geminiModel.get(),
+                            targetLanguage = targetLanguage,
+                            sourceLanguage = TranslationLanguages.sourcePromptLabel(translationPreferences.sourceLanguage.get()),
+                            pipeline = translationPreferences.pipeline.get(),
+                        )
+                        translationRepository.replaceBoxes(savedPage._id, boxes)
+                        translationRepository.insertLog(
+                            jobId = null,
+                            pageId = savedPage._id,
+                            level = TranslationLogLevel.Info,
+                            tag = "editor",
+                            message = "Saved translation overlay edits",
+                            details = "boxes=${boxes.size}",
+                        )
+                    }
+                }
                 withUIContext {
                     mutableState.update { it.copy(dialog = null) }
                     eventChannel.send(Event.RefreshTranslationOverlays)

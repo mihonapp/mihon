@@ -319,7 +319,15 @@ class WebtoonPageHolder(
                 level = TranslationLogLevel.Debug,
                 tag = "overlay",
                 message = "Reader translation overlay missing",
-                details = "chapter_id=$chapterId\npage_index=${page.index}\ntarget_language=$targetLanguage",
+                details = buildString {
+                    appendLine("action=reader_overlay_missing")
+                    appendLine("chapter_id=$chapterId")
+                    appendLine("page_index=${page.index}")
+                    appendLine("target_language=$targetLanguage")
+                    appendLine("overlay_visible=${viewer.activity.viewModel.state.value.translationOverlayVisible}")
+                    appendLine("refresh_source=webtoon_visible_page")
+                    appendLine("saved_page=false")
+                },
             )
         }
         withUIContext {

@@ -28,6 +28,7 @@ data class TranslationQueueGroup(
     val key: String,
     val mangaTitle: String,
     val items: List<TranslationQueueItem>,
+    val statusCounts: Map<String, Int>,
 )
 
 enum class TranslationQueueTypeFilter(val statuses: Set<String>) {
@@ -61,6 +62,7 @@ object TranslationQueueUiModel {
                     key = key,
                     mangaTitle = groupItems.first().mangaTitle,
                     items = groupItems,
+                    statusCounts = groupItems.groupingBy { it.status }.eachCount(),
                 )
             }
     }
