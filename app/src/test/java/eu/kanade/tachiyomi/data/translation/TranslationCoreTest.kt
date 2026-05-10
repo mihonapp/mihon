@@ -270,6 +270,205 @@ class TranslationCoreTest {
     }
 
     @Test
+    fun `Gemini batch parser remaps one based pageNumber aliases when expected indexes are zero based`() {
+        val parsed = TranslationOverlayJsonParser.parseBatch(
+            """
+            {
+              "targetLanguage": "en",
+              "pages": [
+                {
+                  "pageNumber": 1,
+                  "boxes": [
+                    {
+                      "x": 0.1,
+                      "y": 0.2,
+                      "width": 0.3,
+                      "height": 0.4,
+                      "originalText": "恭子さん。",
+                      "translatedText": "Kyoko-san."
+                    }
+                  ]
+                },
+                {
+                  "pageNumber": 2,
+                  "boxes": [
+                    {
+                      "x": 0.5,
+                      "y": 0.6,
+                      "width": 0.2,
+                      "height": 0.1,
+                      "originalText": "だめよ。",
+                      "translatedText": "No."
+                    }
+                  ]
+                }
+              ]
+            }
+            """.trimIndent(),
+            expectedPageIndexes = listOf(0, 1),
+        )
+
+        parsed.value.map { it.pageIndex } shouldContainExactly listOf(0, 1)
+        parsed.remappedPages shouldBe 2
+    }
+
+    @Test
+    fun `Gemini batch parser remaps one based pageNumber aliases within later chunks`() {
+        val parsed = TranslationOverlayJsonParser.parseBatch(
+            """
+            {
+              "targetLanguage": "en",
+              "pages": [
+                {
+                  "pageNumber": 1,
+                  "boxes": [
+                    {
+                      "x": 0.1,
+                      "y": 0.2,
+                      "width": 0.3,
+                      "height": 0.4,
+                      "originalText": "ここからは…",
+                      "translatedText": "From here on..."
+                    }
+                  ]
+                },
+                {
+                  "pageNumber": 2,
+                  "boxes": [
+                    {
+                      "x": 0.5,
+                      "y": 0.6,
+                      "width": 0.2,
+                      "height": 0.1,
+                      "originalText": "仰せのままに…",
+                      "translatedText": "As you wish..."
+                    }
+                  ]
+                }
+              ]
+            }
+            """.trimIndent(),
+            expectedPageIndexes = listOf(38, 39),
+        )
+
+        parsed.value.map { it.pageIndex } shouldContainExactly listOf(38, 39)
+        parsed.remappedPages shouldBe 2
+    }
+
+    @Test
+    fun `Gemini batch parser remaps absolute one based pageNumber aliases when expected index is present`() {
+        val parsed = TranslationOverlayJsonParser.parseBatch(
+            """
+            {
+              "targetLanguage": "en",
+              "pages": [
+                {
+                  "pageNumber": 163,
+                  "boxes": [
+                    {
+                      "x": 0.1,
+                      "y": 0.2,
+                      "width": 0.3,
+                      "height": 0.4,
+                      "originalText": "恭子さん。",
+                      "translatedText": "Kyoko-san."
+                    }
+                  ]
+                },
+                {
+                  "pageNumber": 168,
+                  "boxes": [
+                    {
+                      "x": 0.5,
+                      "y": 0.6,
+                      "width": 0.2,
+                      "height": 0.1,
+                      "originalText": "仰せのままに…",
+                      "translatedText": "As you wish..."
+                    }
+                  ]
+                }
+              ]
+            }
+            """.trimIndent(),
+            expectedPageIndexes = listOf(162, 167),
+        )
+
+        parsed.value.map { it.pageIndex } shouldContainExactly listOf(162, 167)
+        parsed.remappedPages shouldBe 2
+    }
+
+    @Test
+    fun `Gemini batch parser remaps page and index aliases when they are local chunk positions`() {
+        val parsed = TranslationOverlayJsonParser.parseBatch(
+            """
+            {
+              "targetLanguage": "en",
+              "pages": [
+                {
+                  "page": 1,
+                  "boxes": [
+                    {
+                      "x": 0.1,
+                      "y": 0.2,
+                      "width": 0.3,
+                      "height": 0.4,
+                      "originalText": "ここからは…",
+                      "translatedText": "From here on..."
+                    }
+                  ]
+                },
+                {
+                  "index": 1,
+                  "boxes": [
+                    {
+                      "x": 0.5,
+                      "y": 0.6,
+                      "width": 0.2,
+                      "height": 0.1,
+                      "originalText": "仰せのままに…",
+                      "translatedText": "As you wish..."
+                    }
+                  ]
+                }
+              ]
+            }
+            """.trimIndent(),
+            expectedPageIndexes = listOf(38, 39),
+        )
+
+        parsed.value.map { it.pageIndex } shouldContainExactly listOf(38, 39)
+        parsed.remappedPages shouldBe 2
+    }
+
+    @Test
+    fun `Gemini text extractor joins split text parts before json parse`() {
+        val text = TranslationGeminiTextParts.join(
+            listOf(
+                """{"sourceLanguage":"ja","targetLanguage":"en","boxes":[""",
+                """{"x":0.1,"y":0.2,"width":0.3,"height":0.4,"originalText":"入口","translatedText":"Entrance"}]}""",
+            ),
+        )
+
+        val parsed = TranslationOverlayJsonParser.parseOverlay(text)
+
+        parsed.value.boxes.single().translatedText shouldBe "Entrance"
+    }
+
+    @Test
+    fun `Gemini text extractor skips blank candidates before parse`() {
+        val text = TranslationGeminiTextParts.firstNonBlankCandidate(
+            listOf(
+                listOf(null, ""),
+                listOf("""{"sourceLanguage":"ja","targetLanguage":"en","boxes":[]}"""),
+            ),
+        )
+
+        text shouldBe """{"sourceLanguage":"ja","targetLanguage":"en","boxes":[]}"""
+        TranslationOverlayJsonParser.parseOverlay(text.orEmpty()).value.boxes shouldBe emptyList()
+    }
+
+    @Test
     fun `Gemini overlay parser fails clearly when no json payload exists`() {
         val error = runCatching {
             TranslationOverlayJsonParser.parseOverlay("No usable overlay today.")
@@ -604,6 +803,8 @@ class TranslationCoreTest {
         pagePrompt shouldContain "Source language: Japanese"
         pagePrompt shouldContain "Do not return pixel coordinates"
         batchPrompt shouldContain "Do not return pixel coordinates"
+        batchPrompt shouldContain "Use only these exact pageIndex values"
+        batchPrompt shouldContain "Do not return pageNumber, page, or local batch positions"
         pagePrompt shouldNotContain "Include dialogue, captions, signs, and sound effects"
     }
 

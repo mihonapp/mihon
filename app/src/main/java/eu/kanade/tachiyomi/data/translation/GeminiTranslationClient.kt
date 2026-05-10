@@ -226,6 +226,7 @@ class GeminiTranslationClient(
             model = model,
             request = request,
             operation = "translatePageImages",
+            expectedPageIndexes = pages.map { it.pageIndex },
             requestSummary = buildString {
                 appendLine("system_prompt:")
                 appendLine(systemPrompt)
@@ -283,6 +284,7 @@ class GeminiTranslationClient(
             model = model,
             request = request,
             operation = "translateOcrBlockBatch",
+            expectedPageIndexes = pages.map { it.pageIndex },
             requestSummary = buildString {
                 appendLine("system_prompt:")
                 appendLine(systemPrompt)
@@ -364,11 +366,11 @@ class GeminiTranslationClient(
         pageId: Long? = null,
     ): TranslationOverlayResult {
         val response = generateContent(apiKey, model, request, operation, requestSummary, jobId, pageId)
-        val text = response.candidates
-            .firstOrNull()
-            ?.content
-            ?.parts
-            ?.firstNotNullOfOrNull { it.text }
+        val text = TranslationGeminiTextParts.firstNonBlankCandidate(
+            response.candidates.map { candidate ->
+                candidate.content?.parts.orEmpty().map { it.text }
+            },
+        )
             ?: error("Gemini response did not include text")
         val parsed = parseOverlayText(
             text = text,
@@ -405,21 +407,23 @@ class GeminiTranslationClient(
         model: String,
         request: GeminiGenerateContentRequest,
         operation: String,
+        expectedPageIndexes: List<Int>,
         requestSummary: String,
         jobId: Long? = null,
         pageId: Long? = null,
     ): List<TranslationBatchOverlayResult> {
         val response = generateContent(apiKey, model, request, operation, requestSummary, jobId, pageId)
-        val text = response.candidates
-            .firstOrNull()
-            ?.content
-            ?.parts
-            ?.firstNotNullOfOrNull { it.text }
+        val text = TranslationGeminiTextParts.firstNonBlankCandidate(
+            response.candidates.map { candidate ->
+                candidate.content?.parts.orEmpty().map { it.text }
+            },
+        )
             ?: error("Gemini batch response did not include text")
         val parsed = parseBatchOverlayText(
             text = text,
             operation = operation,
             model = model,
+            expectedPageIndexes = expectedPageIndexes,
             jobId = jobId,
             pageId = pageId,
         )
@@ -436,6 +440,7 @@ class GeminiTranslationClient(
                 appendLine("parse_recovered=${parsed.recovered}")
                 appendLine("parse_dropped_pages=${parsed.droppedPages}")
                 appendLine("parse_dropped_boxes=${parsed.droppedBoxes}")
+                appendLine("parse_remapped_pages=${parsed.remappedPages}")
                 appendLine("pages=${overlays.size}")
                 overlays.forEach { page ->
                     appendLine("page=${page.pageIndex}, boxes=${page.overlay.boxes.size}")
@@ -483,11 +488,12 @@ class GeminiTranslationClient(
         text: String,
         operation: String,
         model: String,
+        expectedPageIndexes: List<Int>,
         jobId: Long?,
         pageId: Long?,
     ): TranslationOverlayJsonParseResult<List<TranslationBatchOverlayResult>> {
         return try {
-            TranslationOverlayJsonParser.parseBatch(text, json).also { parsed ->
+            TranslationOverlayJsonParser.parseBatch(text, json, expectedPageIndexes).also { parsed ->
                 logJsonParseRecovery(
                     parsed = parsed,
                     operation = operation,

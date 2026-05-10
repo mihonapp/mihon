@@ -392,9 +392,25 @@ data class TranslationOverlayJsonParseResult<T>(
     val recovered: Boolean,
     val droppedBoxes: Int,
     val droppedPages: Int = 0,
+    val remappedPages: Int = 0,
 ) {
     val hasWarnings: Boolean
-        get() = recovered || droppedBoxes > 0 || droppedPages > 0
+        get() = recovered || droppedBoxes > 0 || droppedPages > 0 || remappedPages > 0
+}
+
+object TranslationGeminiTextParts {
+    fun join(parts: List<String?>): String {
+        return parts
+            .filterNot { it.isNullOrBlank() }
+            .joinToString(separator = "") { it.orEmpty() }
+    }
+
+    fun firstNonBlankCandidate(candidates: List<List<String?>>): String? {
+        return candidates
+            .asSequence()
+            .map(::join)
+            .firstOrNull { it.isNotBlank() }
+    }
 }
 
 object TranslationOverlayJsonParser {
@@ -418,9 +434,10 @@ object TranslationOverlayJsonParser {
     fun parseBatch(
         text: String,
         json: Json = Json,
+        expectedPageIndexes: List<Int> = emptyList(),
     ): TranslationOverlayJsonParseResult<List<TranslationBatchOverlayResult>> {
         val (payload, parsed) = parseFirstUsablePayload(text, json) { element ->
-            parseBatchElement(element)
+            parseBatchElement(element, expectedPageIndexes)
         }
         return TranslationOverlayJsonParseResult(
             value = parsed.pages,
@@ -428,10 +445,14 @@ object TranslationOverlayJsonParser {
             recovered = payload.trim() != text.trim(),
             droppedBoxes = parsed.droppedBoxes,
             droppedPages = parsed.droppedPages,
+            remappedPages = parsed.remappedPages,
         )
     }
 
-    private fun parseBatchElement(element: JsonElement): ParsedBatch {
+    private fun parseBatchElement(
+        element: JsonElement,
+        expectedPageIndexes: List<Int>,
+    ): ParsedBatch {
         val topLevel = element as? JsonObject
         val pageElements = when (element) {
             is JsonArray -> element
@@ -443,16 +464,19 @@ object TranslationOverlayJsonParser {
         val targetLanguage = topLevel?.stringValue("targetLanguage")
         var droppedBoxes = 0
         var droppedPages = 0
+        var remappedPages = 0
         val pages = pageElements.mapNotNull { pageElement ->
             val pageObject = pageElement as? JsonObject ?: run {
                 droppedPages++
                 return@mapNotNull null
             }
-            val pageIndex = pageObject.intValue("pageIndex", "page", "pageNumber", "index")
+            val pageIndexResolution = pageObject.pageIndexValue(expectedPageIndexes)
+            val pageIndex = pageIndexResolution?.pageIndex
             if (pageIndex == null) {
                 droppedPages++
                 return@mapNotNull null
             }
+            if (pageIndexResolution.remapped) remappedPages++
             val parsed = parseOverlayObject(
                 obj = pageObject,
                 fallbackSourceLanguage = pageObject.stringValue("sourceLanguage") ?: sourceLanguage,
@@ -471,7 +495,57 @@ object TranslationOverlayJsonParser {
             pages = pages,
             droppedBoxes = droppedBoxes,
             droppedPages = droppedPages,
+            remappedPages = remappedPages,
         )
+    }
+
+    private fun JsonObject.pageIndexValue(expectedPageIndexes: List<Int>): PageIndexResolution? {
+        intValue("pageIndex")?.let { return PageIndexResolution(it) }
+        intValue("page")?.let { return oneBasedPageAliasValue(it, expectedPageIndexes) }
+        intValue("index")?.let { return zeroBasedIndexAliasValue(it, expectedPageIndexes) }
+        intValue("pageNumber")?.let { return oneBasedPageAliasValue(it, expectedPageIndexes) }
+        return null
+    }
+
+    private fun oneBasedPageAliasValue(value: Int, expectedPageIndexes: List<Int>): PageIndexResolution {
+        if (expectedPageIndexes.isEmpty()) return PageIndexResolution(value)
+        if (value in 1..expectedPageIndexes.size) {
+            val localPageIndex = expectedPageIndexes[value - 1]
+            if (localPageIndex != value) {
+                return PageIndexResolution(
+                    pageIndex = localPageIndex,
+                    remapped = true,
+                )
+            }
+        }
+        if (value in expectedPageIndexes) return PageIndexResolution(value)
+        val zeroBasedPageNumber = value - 1
+        if (zeroBasedPageNumber in expectedPageIndexes) {
+            return PageIndexResolution(
+                pageIndex = zeroBasedPageNumber,
+                remapped = true,
+            )
+        }
+        return PageIndexResolution(value)
+    }
+
+    private fun zeroBasedIndexAliasValue(value: Int, expectedPageIndexes: List<Int>): PageIndexResolution {
+        if (expectedPageIndexes.isEmpty()) return PageIndexResolution(value)
+        if (value in expectedPageIndexes) return PageIndexResolution(value)
+        if (value in expectedPageIndexes.indices) {
+            return PageIndexResolution(
+                pageIndex = expectedPageIndexes[value],
+                remapped = true,
+            )
+        }
+        val oneBasedPageNumber = value - 1
+        if (oneBasedPageNumber in expectedPageIndexes) {
+            return PageIndexResolution(
+                pageIndex = oneBasedPageNumber,
+                remapped = true,
+            )
+        }
+        return PageIndexResolution(value)
     }
 
     private fun parseOverlayObject(
@@ -620,6 +694,12 @@ object TranslationOverlayJsonParser {
         val pages: List<TranslationBatchOverlayResult>,
         val droppedBoxes: Int,
         val droppedPages: Int,
+        val remappedPages: Int,
+    )
+
+    private data class PageIndexResolution(
+        val pageIndex: Int,
+        val remapped: Boolean = false,
     )
 }
 
@@ -1029,6 +1109,8 @@ object TranslationPromptPolicy {
             appendLine("Return only JSON matching the schema: an object with a pages array.")
             appendLine("Each page object must include pageIndex and boxes.")
             appendLine("Required pageIndex values: ${pageIndexes.joinToString()}.")
+            appendLine("Use only these exact pageIndex values; do not renumber pages.")
+            appendLine("Do not return pageNumber, page, or local batch positions like 1, 2, 3.")
             appendLine("Coordinates must be normalized 0.0 to 1.0 for each original page.")
             appendLine("Do not return pixel coordinates like 811 or 38; return fractions of each original page width and height.")
             appendLine("Each box needs x, y, width, height, originalText, translatedText, textType, confidence.")
