@@ -143,6 +143,25 @@ object TranslationModelLimits {
     }
 }
 
+object TranslationSetupPingPolicy {
+    const val MAX_OUTPUT_TOKENS = 128
+    const val THINKING_LEVEL = "low"
+    const val REQUEST_SUMMARY = "prompt=Reply with OK.\nconfig=temperature=0,maxOutputTokens=128,thinkingLevel=low"
+
+    fun generationConfig(): JsonElement {
+        return buildJsonObject {
+            put("temperature", 0)
+            put("maxOutputTokens", MAX_OUTPUT_TOKENS)
+            put(
+                "thinkingConfig",
+                buildJsonObject {
+                    put("thinkingLevel", THINKING_LEVEL)
+                },
+            )
+        }
+    }
+}
+
 object TranslationLogRedactor {
     private val apiKeyRegex = Regex("""([?&]key=)[^"&\s]+""", RegexOption.IGNORE_CASE)
     private val sensitiveHeaderJsonRegex = Regex(
@@ -983,6 +1002,14 @@ object TranslationBatchPlanner {
         return pages.filter { page ->
             (overwrite || !page.hasOverlay) && !page.hasActiveJob
         }
+    }
+}
+
+object TranslationBatchFallbackPlanner {
+    fun splitIndexes(size: Int): Pair<IntRange, IntRange>? {
+        if (size <= 1) return null
+        val midpoint = size / 2
+        return (0 until midpoint) to (midpoint until size)
     }
 }
 

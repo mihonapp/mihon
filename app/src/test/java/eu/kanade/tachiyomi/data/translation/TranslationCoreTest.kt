@@ -138,6 +138,19 @@ class TranslationCoreTest {
     }
 
     @Test
+    fun `setup ping config leaves room for Gemini 3 thinking tokens`() {
+        val obj = TranslationSetupPingPolicy.generationConfig().jsonObject
+
+        obj["temperature"].toString() shouldBe "0"
+        obj["maxOutputTokens"].toString() shouldBe "128"
+        obj["thinkingConfig"]!!.jsonObject shouldContain (
+            "thinkingLevel" to Json.parseToJsonElement("\"low\"")
+            )
+        TranslationSetupPingPolicy.REQUEST_SUMMARY shouldContain "maxOutputTokens=128"
+        TranslationSetupPingPolicy.REQUEST_SUMMARY shouldContain "thinkingLevel=low"
+    }
+
+    @Test
     fun `overlay editor geometry clamps page edge boxes without empty ranges`() {
         val geometry = TranslationBoxGeometryNormalizer.normalize(
             x = 0.99f,
@@ -757,6 +770,13 @@ class TranslationCoreTest {
         val groups = TranslationPendingJobBatcher.groupPendingJobs(jobs, maxImagesPerBatch = 38)
 
         groups.map { it.jobs.size } shouldContainExactly listOf(38, 38, 24)
+    }
+
+    @Test
+    fun `batch fallback planner splits malformed all mode batches before single page fallback`() {
+        TranslationBatchFallbackPlanner.splitIndexes(169) shouldBe ((0 until 84) to (84 until 169))
+        TranslationBatchFallbackPlanner.splitIndexes(2) shouldBe ((0 until 1) to (1 until 2))
+        TranslationBatchFallbackPlanner.splitIndexes(1) shouldBe null
     }
 
     @Test

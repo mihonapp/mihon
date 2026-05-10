@@ -56,24 +56,20 @@ class GeminiTranslationClient(
                     parts = listOf(GeminiPart(text = "Reply with OK.")),
                 ),
             ),
-            generationConfig = buildJsonObject {
-                put("temperature", 0)
-                put("maxOutputTokens", 8)
-            },
+            generationConfig = TranslationSetupPingPolicy.generationConfig(),
         )
         val response = generateContent(
             apiKey = apiKey,
             model = model,
             request = request,
             operation = "testGenerateContent",
-            requestSummary = "prompt=Reply with OK.\nconfig=temperature=0,maxOutputTokens=8",
+            requestSummary = TranslationSetupPingPolicy.REQUEST_SUMMARY,
         )
-        val hasText = response.candidates
-            .firstOrNull()
-            ?.content
-            ?.parts
-            ?.any { !it.text.isNullOrBlank() }
-            ?: false
+        val hasText = TranslationGeminiTextParts.firstNonBlankCandidate(
+            response.candidates.map { candidate ->
+                candidate.content?.parts.orEmpty().map { it.text }
+            },
+        ) != null
         check(hasText) { "Gemini model test returned no text" }
     }
 

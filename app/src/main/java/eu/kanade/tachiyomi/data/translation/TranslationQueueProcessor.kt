@@ -323,6 +323,31 @@ class TranslationQueueProcessor(
             if (e is GeminiApiException) {
                 throw e
             }
+            TranslationBatchFallbackPlanner.splitIndexes(pages.size)?.let { (leftRange, rightRange) ->
+                repository.insertLog(
+                    jobId = first.job._id,
+                    pageId = null,
+                    level = TranslationLogLevel.Warning,
+                    tag = "api",
+                    message = "Batch translation parse failed; splitting batch",
+                    details = TranslationLogDetailsFormatter.queueState(
+                        action = "batch_split_parse_failure",
+                        jobId = first.job._id,
+                        previousStatus = TranslationJobStatus.Running.value,
+                        nextStatus = TranslationJobStatus.Running.value,
+                        reason = e.message ?: e::class.simpleName.orEmpty(),
+                        extra = mapOf(
+                            "pages" to pages.joinToString { it.pageIndex.toString() },
+                            "batch_size" to pages.size,
+                            "left_size" to leftRange.count(),
+                            "right_size" to rightRange.count(),
+                            "exception_class" to (e::class.qualifiedName ?: e::class.simpleName.orEmpty()),
+                        ),
+                    ),
+                )
+                return translatePreparedBatch(pages.slice(leftRange)) +
+                    translatePreparedBatch(pages.slice(rightRange))
+            }
             repository.insertLog(
                 jobId = first.job._id,
                 pageId = null,
