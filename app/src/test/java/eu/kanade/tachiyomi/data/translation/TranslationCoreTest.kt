@@ -8,6 +8,7 @@ import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import org.junit.jupiter.api.Test
@@ -15,6 +16,7 @@ import tachiyomi.core.common.preference.InMemoryPreferenceStore
 import tachiyomi.data.Translation_jobs
 import tachiyomi.domain.translation.service.DEFAULT_TRANSLATION_SYSTEM_PROMPT
 import tachiyomi.domain.translation.service.TranslationPreferences
+import java.io.IOException
 
 class TranslationCoreTest {
 
@@ -780,6 +782,85 @@ class TranslationCoreTest {
     }
 
     @Test
+    fun `batch fallback classifier only allows parser shaped failures`() {
+        TranslationBatchFailureClassifier.shouldUseBatchFallback(
+            IllegalArgumentException("Gemini response did not contain usable overlay JSON"),
+        ) shouldBe true
+        TranslationBatchFailureClassifier.shouldUseBatchFallback(
+            IllegalStateException("Gemini batch response did not include text"),
+        ) shouldBe true
+        TranslationBatchFailureClassifier.shouldUseBatchFallback(
+            SerializationException("Unexpected JSON token"),
+        ) shouldBe true
+
+        TranslationBatchFailureClassifier.shouldUseBatchFallback(
+            IOException("Unable to resolve host generativelanguage.googleapis.com"),
+        ) shouldBe false
+        TranslationBatchFailureClassifier.shouldUseBatchFallback(
+            GeminiApiException(503, """{"error":{"message":"unavailable"}}"""),
+        ) shouldBe false
+        TranslationBatchFailureClassifier.shouldUseBatchFallback(
+            IllegalArgumentException("Wrapped transport failure", IOException("dns failed")),
+        ) shouldBe false
+    }
+
+    @Test
+    fun `Gemini client uses long timeouts for large live translation batches`() {
+        TranslationGeminiNetworkPolicy.READ_TIMEOUT_MINUTES shouldBe 10L
+        TranslationGeminiNetworkPolicy.WRITE_TIMEOUT_MINUTES shouldBe 10L
+        TranslationGeminiNetworkPolicy.CALL_TIMEOUT_MINUTES shouldBe 10L
+    }
+
+    @Test
+    fun `translation workers avoid foreground service time limit cancellation`() {
+        TranslationWorkerPolicy.USE_FOREGROUND_SERVICE shouldBe false
+        TranslationWorkerPolicy.BATCH_EXECUTION_TIMEOUT_MS shouldBe 8L * 60L * 1000L
+        TranslationRunningJobPolicy.HEARTBEAT_MS shouldBe 30_000L
+        TranslationRunningJobPolicy.STALE_RUNNING_MS shouldBe
+            TranslationRunningJobPolicy.HEARTBEAT_MS * 3
+    }
+
+    @Test
+    fun `running job policy keeps fresh normal jobs blocking new claims`() {
+        val now = 20_000L + TranslationRunningJobPolicy.STALE_RUNNING_MS
+        val fresh = translationJob(
+            id = 1,
+            chapterId = 10,
+            pageIndex = 0,
+            status = TranslationJobStatus.Running.value,
+            updatedAt = now - TranslationRunningJobPolicy.STALE_RUNNING_MS + 1,
+            errorMessage = "normal:0:123:0:0",
+        )
+        val stale = fresh.copy(
+            _id = 2,
+            updated_at = now - TranslationRunningJobPolicy.STALE_RUNNING_MS,
+        )
+
+        TranslationRunningJobPolicy.matchesKind(fresh, TranslationWorkKind.Normal) shouldBe true
+        TranslationRunningJobPolicy.matchesKind(fresh, TranslationWorkKind.ManualRetry) shouldBe false
+        TranslationRunningJobPolicy.isStale(fresh, now) shouldBe false
+        TranslationRunningJobPolicy.isStale(stale, now) shouldBe true
+        TranslationRunningJobPolicy.requeueStatus(TranslationWorkKind.Normal) shouldBe TranslationJobStatus.Retrying
+    }
+
+    @Test
+    fun `running job policy separates manual retry leases`() {
+        val manual = translationJob(
+            id = 1,
+            chapterId = 10,
+            pageIndex = 0,
+            status = TranslationJobStatus.Running.value,
+            errorMessage = "manual_retry:1:123:0:0",
+        )
+        val legacyNormal = manual.copy(_id = 2, error_message = null)
+
+        TranslationRunningJobPolicy.matchesKind(manual, TranslationWorkKind.ManualRetry) shouldBe true
+        TranslationRunningJobPolicy.matchesKind(manual, TranslationWorkKind.Normal) shouldBe false
+        TranslationRunningJobPolicy.matchesKind(legacyNormal, TranslationWorkKind.Normal) shouldBe true
+        TranslationRunningJobPolicy.requeueStatus(TranslationWorkKind.ManualRetry) shouldBe TranslationJobStatus.ManualRetry
+    }
+
+    @Test
     fun `pending job batcher groups compatible image jobs up to cap`() {
         val jobs = (0 until 5).map { index ->
             translationJob(
@@ -1164,6 +1245,8 @@ class TranslationCoreTest {
         chapterId: Long,
         pageIndex: Long?,
         status: String = TranslationJobStatus.Queued.value,
+        updatedAt: Long = id,
+        errorMessage: String? = null,
     ): Translation_jobs {
         return Translation_jobs(
             _id = id,
@@ -1182,8 +1265,8 @@ class TranslationCoreTest {
             progress_total = 1,
             attempts = 0,
             created_at = id,
-            updated_at = id,
-            error_message = null,
+            updated_at = updatedAt,
+            error_message = errorMessage,
         )
     }
 }

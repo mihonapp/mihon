@@ -1,7 +1,9 @@
 package eu.kanade.tachiyomi.data.translation
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.Json
@@ -15,6 +17,7 @@ import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.put
 import kotlin.math.min
+import java.io.IOException
 import java.util.LinkedHashMap
 import java.util.Locale
 import tachiyomi.data.Translation_jobs
@@ -1010,6 +1013,66 @@ object TranslationBatchFallbackPlanner {
         if (size <= 1) return null
         val midpoint = size / 2
         return (0 until midpoint) to (midpoint until size)
+    }
+}
+
+object TranslationBatchFailureClassifier {
+    fun shouldUseBatchFallback(error: Throwable): Boolean {
+        if (error.hasCause<CancellationException>()) return false
+        if (error.hasCause<IOException>()) return false
+        if (error.hasCause<GeminiApiException>()) return false
+        return when (error) {
+            is IllegalArgumentException -> true
+            is IllegalStateException -> error.message
+                ?.contains("Gemini batch response", ignoreCase = true) == true
+            is SerializationException -> true
+            else -> false
+        }
+    }
+
+    private inline fun <reified T : Throwable> Throwable.hasCause(): Boolean {
+        var current: Throwable? = this
+        while (current != null) {
+            if (current is T) return true
+            current = current.cause
+        }
+        return false
+    }
+}
+
+object TranslationGeminiNetworkPolicy {
+    const val READ_TIMEOUT_MINUTES = 10L
+    const val WRITE_TIMEOUT_MINUTES = 10L
+    const val CALL_TIMEOUT_MINUTES = 10L
+}
+
+object TranslationWorkerPolicy {
+    const val USE_FOREGROUND_SERVICE = false
+    const val BATCH_EXECUTION_TIMEOUT_MS = 8L * 60L * 1000L
+}
+
+object TranslationRunningJobPolicy {
+    const val HEARTBEAT_MS = 30_000L
+    const val STALE_RUNNING_MS = HEARTBEAT_MS * 3
+
+    fun matchesKind(job: Translation_jobs, kind: TranslationWorkKind): Boolean {
+        if (job.status != TranslationJobStatus.Running.value) return false
+        val token = job.error_message
+        return when (kind) {
+            TranslationWorkKind.Normal -> token == null || token.startsWith("${TranslationWorkKind.Normal.value}:")
+            TranslationWorkKind.ManualRetry -> token?.startsWith("${TranslationWorkKind.ManualRetry.value}:") == true
+        }
+    }
+
+    fun isStale(job: Translation_jobs, now: Long): Boolean {
+        return now - job.updated_at >= STALE_RUNNING_MS
+    }
+
+    fun requeueStatus(kind: TranslationWorkKind): TranslationJobStatus {
+        return when (kind) {
+            TranslationWorkKind.Normal -> TranslationJobStatus.Retrying
+            TranslationWorkKind.ManualRetry -> TranslationJobStatus.ManualRetry
+        }
     }
 }
 

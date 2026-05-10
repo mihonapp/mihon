@@ -55,7 +55,28 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
             return Result.success()
         }
 
-        setForegroundSafely()
+        if (TranslationWorkerPolicy.USE_FOREGROUND_SERVICE) {
+            setForegroundSafely()
+        } else {
+            repository.insertLog(
+                jobId = null,
+                pageId = null,
+                level = TranslationLogLevel.Debug,
+                tag = "queue",
+                message = "Translation worker foreground service skipped",
+                details = TranslationLogDetailsFormatter.queueState(
+                    action = "worker_foreground_skipped",
+                    jobId = null,
+                    previousStatus = null,
+                    nextStatus = null,
+                    reason = "Translation queue uses regular WorkManager work to avoid Android dataSync foreground-service time limits",
+                    extra = mapOf(
+                        "worker_kind" to workKind.value,
+                        "lane_id" to laneId,
+                    ),
+                ),
+            )
+        }
 
         return when (processor.processPending(workKind, laneId)) {
             TranslationProcessResult.RetryLater -> Result.retry()

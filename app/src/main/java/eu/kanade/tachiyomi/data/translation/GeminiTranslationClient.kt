@@ -18,9 +18,11 @@ import kotlinx.serialization.json.put
 import okhttp3.Headers.Companion.headersOf
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.logging.HttpLoggingInterceptor
 import tachiyomi.domain.translation.service.TranslationPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.util.concurrent.TimeUnit
 import kotlin.time.TimeSource
 
 private const val LOG_TEXT_EXCERPT_LIMIT = 4_000
@@ -31,6 +33,18 @@ class GeminiTranslationClient(
     private val repository: TranslationRepository = Injekt.get(),
     private val preferences: TranslationPreferences = Injekt.get(),
 ) {
+    private val client by lazy {
+        network.nonCloudflareClient.newBuilder()
+            .apply {
+                interceptors().removeAll { it is HttpLoggingInterceptor }
+                networkInterceptors().removeAll { it is HttpLoggingInterceptor }
+            }
+            .readTimeout(TranslationGeminiNetworkPolicy.READ_TIMEOUT_MINUTES, TimeUnit.MINUTES)
+            .writeTimeout(TranslationGeminiNetworkPolicy.WRITE_TIMEOUT_MINUTES, TimeUnit.MINUTES)
+            .callTimeout(TranslationGeminiNetworkPolicy.CALL_TIMEOUT_MINUTES, TimeUnit.MINUTES)
+            .build()
+    }
+
     suspend fun listModels(apiKey: String): List<GeminiModel> {
         val response = executeGeminiText(
             GET(
@@ -627,7 +641,10 @@ class GeminiTranslationClient(
         pageId: Long?,
     ): String {
         val mark = TimeSource.Monotonic.markNow()
-        val response = network.client.newCall(request).await()
+        val call = client.newCall(request).apply {
+            timeout().timeout(TranslationWorkerPolicy.BATCH_EXECUTION_TIMEOUT_MS, TimeUnit.MILLISECONDS)
+        }
+        val response = call.await()
         val body = response.body.string()
         val elapsedMs = mark.elapsedNow().inWholeMilliseconds
         val endpoint = buildString {

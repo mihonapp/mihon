@@ -258,6 +258,12 @@ WHERE _id = :id
 AND status = 'running'
 AND error_message = :claimToken;
 
+heartbeatRunningJob:
+UPDATE translation_jobs
+SET updated_at = :updatedAt
+WHERE _id = :id
+AND status = 'running';
+
 deleteJob:
 DELETE FROM translation_jobs
 WHERE _id = :id;

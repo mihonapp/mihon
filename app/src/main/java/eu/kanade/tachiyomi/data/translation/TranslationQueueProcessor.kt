@@ -2,9 +2,18 @@ package eu.kanade.tachiyomi.data.translation
 
 import android.app.Application
 import android.graphics.BitmapFactory
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.json.Json
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.data.Translation_jobs
@@ -37,6 +46,36 @@ class TranslationQueueProcessor(
         val claimTokenPrefix = "${workKind.value}:$laneId:${System.currentTimeMillis()}"
 
         while (true) {
+            val staleRecovered = repository.requeueStaleRunningJobs(workKind)
+            val freshRunning = repository.getFreshRunningJobs(workKind)
+            if (freshRunning.isNotEmpty()) {
+                repository.insertLog(
+                    jobId = freshRunning.firstOrNull()?._id,
+                    pageId = null,
+                    level = TranslationLogLevel.Debug,
+                    tag = "queue",
+                    message = "Translation worker waiting for active running jobs",
+                    details = TranslationLogDetailsFormatter.queueState(
+                        action = "worker_wait_active_running",
+                        jobId = freshRunning.firstOrNull()?._id,
+                        previousStatus = TranslationJobStatus.Running.value,
+                        nextStatus = TranslationJobStatus.Running.value,
+                        reason = "Another worker lease is still fresh; not claiming additional jobs",
+                        extra = mapOf(
+                            "worker_kind" to workKind.value,
+                            "lane_id" to laneId,
+                            "running_count" to freshRunning.size,
+                            "recovered_stale_count" to staleRecovered,
+                            "job_ids" to freshRunning.take(50).joinToString { it._id.toString() },
+                            "oldest_age_ms" to freshRunning.minOf { System.currentTimeMillis() - it.updated_at },
+                            "stale_after_ms" to TranslationRunningJobPolicy.STALE_RUNNING_MS,
+                        ),
+                    ),
+                )
+                retryLater = true
+                break
+            }
+
             val pendingJobs = repository.getPendingJobs(workKind)
             if (pendingJobs.isEmpty()) {
                 break
@@ -129,6 +168,11 @@ class TranslationQueueProcessor(
             }
             completeJob(runningJob)
             TranslationProcessResult.Completed
+        } catch (e: CancellationException) {
+            withContext(NonCancellable) {
+                handleFailure(runningJob, e, runningJob.attempts, workKind)
+            }
+            throw e
         } catch (e: Throwable) {
             handleFailure(runningJob, e, runningJob.attempts, workKind)
         }
@@ -255,7 +299,33 @@ class TranslationQueueProcessor(
         }
 
         val translated = try {
-            translatePreparedBatch(prepared)
+            coroutineScope {
+                val heartbeat = launch {
+                    while (isActive) {
+                        delay(TranslationRunningJobPolicy.HEARTBEAT_MS)
+                        repository.heartbeatRunningJobs(prepared.map { it.job })
+                    }
+                }
+                try {
+                    withTimeout(TranslationWorkerPolicy.BATCH_EXECUTION_TIMEOUT_MS) {
+                        translatePreparedBatch(prepared)
+                    }
+                } finally {
+                    heartbeat.cancelAndJoin()
+                }
+            }
+        } catch (e: TimeoutCancellationException) {
+            val failed = prepared.map { page ->
+                handleFailure(page.job, e, page.job.attempts, workKind)
+            }
+            return mergeResults(earlyResults + failed)
+        } catch (e: CancellationException) {
+            withContext(NonCancellable) {
+                prepared.forEach { page ->
+                    handleFailure(page.job, e, page.job.attempts, workKind)
+                }
+            }
+            throw e
         } catch (e: Throwable) {
             val failed = prepared.map { page -> handleFailure(page.job, e, page.job.attempts, workKind) }
             return mergeResults(earlyResults + failed)
@@ -321,6 +391,31 @@ class TranslationQueueProcessor(
             }
         } catch (e: Throwable) {
             if (e is GeminiApiException) {
+                throw e
+            }
+            if (e is CancellationException) {
+                throw e
+            }
+            if (!TranslationBatchFailureClassifier.shouldUseBatchFallback(e)) {
+                repository.insertLog(
+                    jobId = first.job._id,
+                    pageId = null,
+                    level = TranslationLogLevel.Error,
+                    tag = "api",
+                    message = "Batch translation failed before parse fallback",
+                    details = TranslationLogDetailsFormatter.queueState(
+                        action = "batch_non_fallback_failure",
+                        jobId = first.job._id,
+                        previousStatus = TranslationJobStatus.Running.value,
+                        nextStatus = TranslationJobStatus.Running.value,
+                        reason = e.message ?: e::class.simpleName.orEmpty(),
+                        extra = errorDetails(e) + mapOf(
+                            "pages" to pages.joinToString { it.pageIndex.toString() },
+                            "batch_size" to pages.size,
+                            "fallback_allowed" to false,
+                        ),
+                    ),
+                )
                 throw e
             }
             TranslationBatchFallbackPlanner.splitIndexes(pages.size)?.let { (leftRange, rightRange) ->
@@ -886,7 +981,9 @@ class TranslationQueueProcessor(
             return TranslationProcessResult.Paused
         }
 
-        val transient = error is IOException || (error as? GeminiApiException)?.code in TRANSIENT_HTTP_CODES
+        val transient = error is IOException ||
+            error is CancellationException ||
+            (error as? GeminiApiException)?.code in TRANSIENT_HTTP_CODES
         val canRetry = transient && attempt < MAX_ATTEMPTS
         val retryStatus = if (workKind == TranslationWorkKind.ManualRetry) {
             TranslationJobStatus.ManualRetry

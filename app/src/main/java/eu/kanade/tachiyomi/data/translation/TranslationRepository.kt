@@ -54,6 +54,62 @@ class TranslationRepository(
         return getPendingJobs(TranslationWorkKind.ManualRetry).size
     }
 
+    suspend fun getFreshRunningJobs(
+        kind: TranslationWorkKind,
+        now: Long = System.currentTimeMillis(),
+    ): List<Translation_jobs> {
+        return database.translationsQueries.getJobsByStatus(TranslationJobStatus.Running.value)
+            .awaitAsList()
+            .filter { job ->
+                TranslationRunningJobPolicy.matchesKind(job, kind) &&
+                    !TranslationRunningJobPolicy.isStale(job, now)
+            }
+    }
+
+    suspend fun requeueStaleRunningJobs(
+        kind: TranslationWorkKind,
+        now: Long = System.currentTimeMillis(),
+    ): Int {
+        val staleJobs = database.translationsQueries.getJobsByStatus(TranslationJobStatus.Running.value)
+            .awaitAsList()
+            .filter { job ->
+                TranslationRunningJobPolicy.matchesKind(job, kind) &&
+                    TranslationRunningJobPolicy.isStale(job, now)
+            }
+        if (staleJobs.isEmpty()) return 0
+        val nextStatus = TranslationRunningJobPolicy.requeueStatus(kind)
+        database.transaction {
+            staleJobs.forEach { job ->
+                updateJobStatus(
+                    job = job,
+                    status = nextStatus,
+                    errorMessage = null,
+                    attempts = job.attempts,
+                )
+                insertLog(
+                    jobId = job._id,
+                    pageId = null,
+                    level = TranslationLogLevel.Warning,
+                    tag = "queue",
+                    message = "Recovered stale running translation job",
+                    details = TranslationLogDetailsFormatter.queueState(
+                        action = "recover_stale_running",
+                        jobId = job._id,
+                        previousStatus = job.status,
+                        nextStatus = nextStatus.value,
+                        reason = "Running job exceeded worker lease",
+                        extra = mapOf(
+                            "worker_kind" to kind.value,
+                            "age_ms" to (now - job.updated_at),
+                            "stale_after_ms" to TranslationRunningJobPolicy.STALE_RUNNING_MS,
+                        ),
+                    ),
+                )
+            }
+        }
+        return staleJobs.size
+    }
+
     suspend fun getPage(
         chapterId: Long,
         pageIndex: Long,
@@ -214,6 +270,19 @@ class TranslationRepository(
         )
     }
 
+    suspend fun heartbeatRunningJobs(jobs: List<Translation_jobs>) {
+        if (jobs.isEmpty()) return
+        val updatedAt = System.currentTimeMillis()
+        database.transaction {
+            jobs.distinctBy { it._id }.forEach { job ->
+                database.translationsQueries.heartbeatRunningJob(
+                    updatedAt = updatedAt,
+                    id = job._id,
+                )
+            }
+        }
+    }
+
     suspend fun retryJob(job: Translation_jobs, forceOverwrite: Boolean) {
         database.translationsQueries.retryJob(
             overwrite = if (forceOverwrite) true else job.overwrite,
@@ -346,11 +415,6 @@ class TranslationRepository(
                 }
                 val refreshed = database.translationsQueries.getJob(job._id).awaitAsOneOrNull()
                 if (refreshed?.status == TranslationJobStatus.Running.value && refreshed.error_message == claimToken) {
-                    database.translationsQueries.clearClaimToken(
-                        updatedAt = System.currentTimeMillis(),
-                        id = job._id,
-                        claimToken = claimToken,
-                    )
                     claimed += refreshed.copy(error_message = null)
                     insertLog(
                         jobId = job._id,
