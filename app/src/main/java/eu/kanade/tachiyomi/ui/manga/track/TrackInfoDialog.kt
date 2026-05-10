@@ -50,6 +50,7 @@ import eu.kanade.presentation.track.TrackerSearch
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.data.track.DeletableTracker
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
+import eu.kanade.tachiyomi.data.track.EnrichableTracker
 import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
@@ -715,6 +716,21 @@ data class TrackerSearchScreen(
                         queryResult = result,
                         selected = result.getOrNull()?.find { it.tracking_url == currentUrl },
                     )
+                }
+
+                // For trackers that fan out detail calls per result (e.g. Yamtrack),
+                // stream enrichment after the bare list is already on screen so the user
+                // sees titles/covers immediately and metadata fills in as it arrives.
+                val enrichable = tracker as? EnrichableTracker
+                val items = result.getOrNull()
+                if (enrichable != null && !items.isNullOrEmpty()) {
+                    enrichable.enrichSearchResults(items).collect {
+                        mutableState.update { state ->
+                            // New list reference so Compose recomposes the row whose
+                            // TrackSearch was just mutated in place.
+                            state.copy(queryResult = Result.success(items.toList()))
+                        }
+                    }
                 }
             }
         }

@@ -4,7 +4,6 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.data.track.yamtrack.dto.YTMediaItem
 import eu.kanade.tachiyomi.data.track.yamtrack.dto.YTSearchResponse
-import eu.kanade.tachiyomi.data.track.yamtrack.dto.applyDetail
 import eu.kanade.tachiyomi.data.track.yamtrack.dto.toTrackSearch
 import eu.kanade.tachiyomi.network.DELETE
 import eu.kanade.tachiyomi.network.GET
@@ -13,8 +12,6 @@ import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObjectBuilder
 import kotlinx.serialization.json.buildJsonObject
@@ -62,7 +59,7 @@ class YamtrackApi(
         authedClient.newCall(GET(url)).awaitSuccess().close()
     }
 
-    suspend fun search(query: String): List<TrackSearch> = coroutineScope {
+    suspend fun search(query: String): List<TrackSearch> {
         val url = apiUrl("/search/manga/").toHttpUrl().newBuilder()
             .addQueryParameter("search", query)
             .addQueryParameter("limit", "20")
@@ -75,18 +72,12 @@ class YamtrackApi(
         }
 
         val baseUrl = yamtrack.getBaseUrl().trimEnd('/')
-        // The search endpoint only returns id/source/title/image/media_type. To show the
-        // synopsis and source score, fetch each item's detail concurrently.
-        response.results
+        // Return the basic search results immediately. Detail enrichment (synopsis, score,
+        // format, start_date) happens lazily via Yamtrack.enrichSearchResults so the search
+        // list renders fast instead of waiting on N detail-endpoint round-trips.
+        return response.results
             .filter { it.mediaId.isNotBlank() && it.source.isNotBlank() }
-            .map { item ->
-                async {
-                    val base = item.toTrackSearch(yamtrack.id, baseUrl)
-                    val detail = getMediaItem(item.source, item.mediaId)
-                    if (detail != null) base.applyDetail(detail) else base
-                }
-            }
-            .map { it.await() }
+            .map { it.toTrackSearch(yamtrack.id, baseUrl) }
     }
 
     suspend fun getMediaItem(source: String, mediaId: String): YTMediaItem? {
