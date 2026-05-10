@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import eu.kanade.tachiyomi.data.translation.TranslationLanguages
 import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
+import eu.kanade.tachiyomi.data.translation.TranslationReaderOverlayMissingLogDeduper
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
@@ -308,7 +309,15 @@ class PagerPageHolder(
             withUIContext { clearTranslationOverlay() }
             return
         }
-        if (savedPage == null) {
+        if (
+            savedPage == null &&
+            TranslationReaderOverlayMissingLogDeduper.shouldLogMissing(
+                chapterId = chapterId,
+                pageIndex = page.index,
+                targetLanguage = targetLanguage,
+                refreshSource = "pager_visible_page",
+            )
+        ) {
             translationRepository.insertLog(
                 jobId = null,
                 pageId = null,

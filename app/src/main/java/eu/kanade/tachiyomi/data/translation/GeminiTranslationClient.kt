@@ -23,6 +23,8 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import kotlin.time.TimeSource
 
+private const val LOG_TEXT_EXCERPT_LIMIT = 4_000
+
 class GeminiTranslationClient(
     private val network: NetworkHelper = Injekt.get(),
     private val json: Json = Injekt.get(),
@@ -368,7 +370,14 @@ class GeminiTranslationClient(
             ?.parts
             ?.firstNotNullOfOrNull { it.text }
             ?: error("Gemini response did not include text")
-        val overlay = json.decodeFromString<TranslationOverlayResult>(text)
+        val parsed = parseOverlayText(
+            text = text,
+            operation = operation,
+            model = model,
+            jobId = jobId,
+            pageId = pageId,
+        )
+        val overlay = parsed.value
         repository.insertLog(
             jobId = jobId,
             pageId = pageId,
@@ -380,6 +389,8 @@ class GeminiTranslationClient(
                 appendLine("model=$model")
                 appendLine("source_language=${overlay.sourceLanguage ?: "-"}")
                 appendLine("target_language=${overlay.targetLanguage ?: "-"}")
+                appendLine("parse_recovered=${parsed.recovered}")
+                appendLine("parse_dropped_boxes=${parsed.droppedBoxes}")
                 appendLine("boxes=${overlay.boxes.size}")
                 overlay.boxes.forEachIndexed { index, box ->
                     appendLine("${index + 1}. ${box.originalText} => ${box.translatedText}")
@@ -405,17 +416,14 @@ class GeminiTranslationClient(
             ?.parts
             ?.firstNotNullOfOrNull { it.text }
             ?: error("Gemini batch response did not include text")
-        val parsed = json.decodeFromString<GeminiBatchOverlayResponse>(text)
-        val overlays = parsed.pages.map { page ->
-            TranslationBatchOverlayResult(
-                pageIndex = page.pageIndex,
-                overlay = TranslationOverlayResult(
-                    sourceLanguage = page.sourceLanguage ?: parsed.sourceLanguage,
-                    targetLanguage = page.targetLanguage ?: parsed.targetLanguage,
-                    boxes = page.boxes,
-                ),
-            )
-        }
+        val parsed = parseBatchOverlayText(
+            text = text,
+            operation = operation,
+            model = model,
+            jobId = jobId,
+            pageId = pageId,
+        )
+        val overlays = parsed.value
         repository.insertLog(
             jobId = jobId,
             pageId = pageId,
@@ -425,6 +433,9 @@ class GeminiTranslationClient(
             details = buildString {
                 appendLine("operation=$operation")
                 appendLine("model=$model")
+                appendLine("parse_recovered=${parsed.recovered}")
+                appendLine("parse_dropped_pages=${parsed.droppedPages}")
+                appendLine("parse_dropped_boxes=${parsed.droppedBoxes}")
                 appendLine("pages=${overlays.size}")
                 overlays.forEach { page ->
                     appendLine("page=${page.pageIndex}, boxes=${page.overlay.boxes.size}")
@@ -435,6 +446,123 @@ class GeminiTranslationClient(
             },
         )
         return overlays
+    }
+
+    private suspend fun parseOverlayText(
+        text: String,
+        operation: String,
+        model: String,
+        jobId: Long?,
+        pageId: Long?,
+    ): TranslationOverlayJsonParseResult<TranslationOverlayResult> {
+        return try {
+            TranslationOverlayJsonParser.parseOverlay(text, json).also { parsed ->
+                logJsonParseRecovery(
+                    parsed = parsed,
+                    operation = operation,
+                    model = model,
+                    pageCount = null,
+                    jobId = jobId,
+                    pageId = pageId,
+                )
+            }
+        } catch (e: Throwable) {
+            logJsonParseFailure(
+                text = text,
+                operation = operation,
+                model = model,
+                jobId = jobId,
+                pageId = pageId,
+                error = e,
+            )
+            throw e
+        }
+    }
+
+    private suspend fun parseBatchOverlayText(
+        text: String,
+        operation: String,
+        model: String,
+        jobId: Long?,
+        pageId: Long?,
+    ): TranslationOverlayJsonParseResult<List<TranslationBatchOverlayResult>> {
+        return try {
+            TranslationOverlayJsonParser.parseBatch(text, json).also { parsed ->
+                logJsonParseRecovery(
+                    parsed = parsed,
+                    operation = operation,
+                    model = model,
+                    pageCount = parsed.value.size,
+                    jobId = jobId,
+                    pageId = pageId,
+                )
+            }
+        } catch (e: Throwable) {
+            logJsonParseFailure(
+                text = text,
+                operation = operation,
+                model = model,
+                jobId = jobId,
+                pageId = pageId,
+                error = e,
+            )
+            throw e
+        }
+    }
+
+    private suspend fun logJsonParseRecovery(
+        parsed: TranslationOverlayJsonParseResult<*>,
+        operation: String,
+        model: String,
+        pageCount: Int?,
+        jobId: Long?,
+        pageId: Long?,
+    ) {
+        if (!parsed.hasWarnings) return
+        repository.insertLog(
+            jobId = jobId,
+            pageId = pageId,
+            level = TranslationLogLevel.Debug,
+            tag = "api",
+            message = "Recovered Gemini overlay JSON",
+            details = buildString {
+                appendLine("operation=$operation")
+                appendLine("model=$model")
+                appendLine("recovered=${parsed.recovered}")
+                appendLine("dropped_pages=${parsed.droppedPages}")
+                appendLine("dropped_boxes=${parsed.droppedBoxes}")
+                pageCount?.let { appendLine("parsed_pages=$it") }
+                appendLine("json_payload_excerpt:")
+                appendLine(parsed.jsonPayload.take(LOG_TEXT_EXCERPT_LIMIT))
+            },
+        )
+    }
+
+    private suspend fun logJsonParseFailure(
+        text: String,
+        operation: String,
+        model: String,
+        jobId: Long?,
+        pageId: Long?,
+        error: Throwable,
+    ) {
+        repository.insertLog(
+            jobId = jobId,
+            pageId = pageId,
+            level = TranslationLogLevel.Error,
+            tag = "api",
+            message = "Failed to parse Gemini overlay JSON",
+            details = buildString {
+                appendLine("operation=$operation")
+                appendLine("model=$model")
+                appendLine("exception_class=${error::class.qualifiedName ?: error::class.simpleName.orEmpty()}")
+                appendLine("message=${error.message ?: "-"}")
+                appendLine("candidate_text_excerpt:")
+                appendLine(text.take(LOG_TEXT_EXCERPT_LIMIT))
+                appendLine("stack_trace:")
+                appendLine(error.stackTraceToString())
+            },
+        )
     }
 
     private suspend fun generateContent(
@@ -783,21 +911,6 @@ data class TranslationOverlayBox(
     val translatedText: String,
     val textType: String = "dialogue",
     val confidence: Float? = null,
-)
-
-@Serializable
-private data class GeminiBatchOverlayResponse(
-    val sourceLanguage: String? = null,
-    val targetLanguage: String? = null,
-    val pages: List<GeminiBatchOverlayPage> = emptyList(),
-)
-
-@Serializable
-private data class GeminiBatchOverlayPage(
-    val pageIndex: Int,
-    val sourceLanguage: String? = null,
-    val targetLanguage: String? = null,
-    val boxes: List<TranslationOverlayBox> = emptyList(),
 )
 
 data class OcrTextBlock(

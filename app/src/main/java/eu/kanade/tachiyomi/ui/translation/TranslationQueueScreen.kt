@@ -123,18 +123,21 @@ object TranslationQueueScreen : Screen() {
         var inlineLogJobIds by remember { mutableStateOf(emptySet<Long>()) }
         var logsExpanded by rememberSaveable { mutableStateOf(false) }
         var showClearAllConfirmation by remember { mutableStateOf(false) }
-        val activeJobCount by remember(jobs) {
-            derivedStateOf { jobs.count { it.status !in FINISHED_STATUSES } }
-        }
-        val queueGroups by remember(jobs, selectedQueueFilters) {
-            derivedStateOf { TranslationQueueUiModel.filterAndGroup(jobs, selectedQueueFilters) }
-        }
         val logItems by remember(logs) {
             derivedStateOf { logs.map(Translation_logs::toUiItem) }
         }
-        val groupedLogsByJob by remember(logItems) {
-            derivedStateOf { TranslationQueueUiModel.groupedLogsByJob(logItems) }
+        val queueUiState by remember(jobs, logItems, selectedQueueFilters) {
+            derivedStateOf {
+                TranslationQueueUiModel.derive(
+                    items = jobs,
+                    logs = logItems,
+                    filters = selectedQueueFilters,
+                )
+            }
         }
+        val activeJobCount = queueUiState.activeJobCount
+        val queueGroups = queueUiState.queueGroups
+        val groupedLogsByJob = queueUiState.groupedLogsByJob
         val groupedLogs by remember(logItems, levelFilter, tagFilter, jobFilter, searchQuery) {
             derivedStateOf {
                 val query = searchQuery.trim()

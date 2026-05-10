@@ -205,6 +205,80 @@ class TranslationCoreTest {
     }
 
     @Test
+    fun `Gemini overlay parser recovers fenced prose json and numeric string coordinates`() {
+        val parsed = TranslationOverlayJsonParser.parseOverlay(
+            """
+            Sure, here is the overlay for pages [162]:
+            ```json
+            {
+              "sourceLanguage": "ja",
+              "targetLanguage": "en",
+              "boxes": [
+                {
+                  "x": "811",
+                  "y": "38",
+                  "width": "106",
+                  "height": "155",
+                  "confidence": "0.99",
+                  "originalText": "恭子さん。",
+                  "translatedText": "Kyoko-san.",
+                  "textType": "speech"
+                }
+              ]
+            }
+            ```
+            """.trimIndent(),
+        )
+
+        parsed.recovered shouldBe true
+        parsed.value.sourceLanguage shouldBe "ja"
+        parsed.value.boxes.single().x shouldBe 811f
+        parsed.value.boxes.single().confidence shouldBe 0.99f
+    }
+
+    @Test
+    fun `Gemini batch parser accepts page aliases and numeric string geometry`() {
+        val parsed = TranslationOverlayJsonParser.parseBatch(
+            """
+            ```json
+            {
+              "targetLanguage": "en",
+              "pages": [
+                {
+                  "pageNumber": "162",
+                  "boxes": [
+                    {
+                      "x": "0.1",
+                      "y": "0.2",
+                      "width": "0.3",
+                      "height": "0.4",
+                      "originalText": "入口",
+                      "translatedText": "Entrance"
+                    }
+                  ]
+                }
+              ]
+            }
+            ```
+            """.trimIndent(),
+        )
+
+        parsed.recovered shouldBe true
+        parsed.value.single().pageIndex shouldBe 162
+        parsed.value.single().overlay.targetLanguage shouldBe "en"
+        parsed.value.single().overlay.boxes.single().width shouldBe 0.3f
+    }
+
+    @Test
+    fun `Gemini overlay parser fails clearly when no json payload exists`() {
+        val error = runCatching {
+            TranslationOverlayJsonParser.parseOverlay("No usable overlay today.")
+        }.exceptionOrNull()
+
+        error?.message.orEmpty() shouldContain "did not contain JSON"
+    }
+
+    @Test
     fun `normalized Gemini coordinates remain stable`() {
         val overlay = TranslationOverlayResult(
             boxes = listOf(
@@ -292,6 +366,31 @@ class TranslationCoreTest {
 
         result.overlay.boxes shouldBe emptyList()
         result.report.droppedBoxes shouldBe 2
+    }
+
+    @Test
+    fun `overlay persistence guard rejects invalid geometry instead of coercing it visible`() {
+        TranslationOverlayPersistenceGuard.normalizedGeometryOrNull(
+            TranslationOverlayBox(
+                x = 2f,
+                y = 0.1f,
+                width = 0.2f,
+                height = 0.2f,
+                originalText = "bad",
+                translatedText = "bad",
+            ),
+        ) shouldBe null
+
+        TranslationOverlayPersistenceGuard.normalizedGeometryOrNull(
+            TranslationOverlayBox(
+                x = 0.2f,
+                y = 0.1f,
+                width = 0.2f,
+                height = 0.2f,
+                originalText = "ok",
+                translatedText = "ok",
+            ),
+        ) shouldBe TranslationBoxGeometry(0.2f, 0.1f, 0.2f, 0.2f)
     }
 
     @Test
@@ -539,6 +638,30 @@ class TranslationCoreTest {
     }
 
     @Test
+    fun `reader missing overlay diagnostics are deduped by page and refresh source`() {
+        TranslationReaderOverlayMissingLogDeduper.resetForTest()
+
+        TranslationReaderOverlayMissingLogDeduper.shouldLogMissing(
+            chapterId = 1,
+            pageIndex = 10,
+            targetLanguage = "English",
+            refreshSource = "pager_visible_page",
+        ) shouldBe true
+        TranslationReaderOverlayMissingLogDeduper.shouldLogMissing(
+            chapterId = 1,
+            pageIndex = 10,
+            targetLanguage = "English",
+            refreshSource = "pager_visible_page",
+        ) shouldBe false
+        TranslationReaderOverlayMissingLogDeduper.shouldLogMissing(
+            chapterId = 1,
+            pageIndex = 10,
+            targetLanguage = "English",
+            refreshSource = "webtoon_visible_page",
+        ) shouldBe true
+    }
+
+    @Test
     fun `notification formatter includes full state unless content is hidden`() {
         val job = queueItem(id = 1).toJob()
         val item = queueItem(id = 1, mangaTitle = "Manga", chapterName = "Chapter 1")
@@ -678,6 +801,27 @@ class TranslationCoreTest {
     }
 
     @Test
+    fun `queue derived ui state precomputes counts groups and job scoped logs`() {
+        val state = TranslationQueueUiModel.derive(
+            items = listOf(
+                queueItem(id = 1, status = TranslationJobStatus.Queued.value),
+                queueItem(id = 2, status = TranslationJobStatus.Completed.value),
+            ),
+            logs = listOf(
+                logItem(id = 3, jobId = 1, message = "Retry blocked", details = "same"),
+                logItem(id = 2, jobId = 1, message = "Retry blocked", details = "same"),
+                logItem(id = 1, jobId = 2, message = "Queued", details = "other"),
+            ),
+            filters = emptySet(),
+        )
+
+        state.activeJobCount shouldBe 1
+        state.queueGroups.single().items.map { it.id } shouldContainExactly listOf(1L, 2L)
+        state.groupedLogsByJob[1]?.single()?.count shouldBe 2
+        state.groupedLogsByJob[2]?.single()?.count shouldBe 1
+    }
+
+    @Test
     fun `queue type filters are multi select and empty means all`() {
         val items = listOf(
             queueItem(id = 1, status = TranslationJobStatus.Queued.value),
@@ -735,6 +879,13 @@ class TranslationCoreTest {
         TranslationLogUiModel.groupAdjacent(logs).map { it.count } shouldContainExactly listOf(1, 1, 1, 1)
     }
 
+    @Test
+    fun `claim tokens are hidden from user facing queue errors`() {
+        TranslationClaimToken.publicErrorMessage("normal:0:123:0:0") shouldBe null
+        TranslationClaimToken.publicErrorMessage("manual_retry:1:123:0:0") shouldBe null
+        TranslationClaimToken.publicErrorMessage("quota exceeded") shouldBe "quota exceeded"
+    }
+
     private fun queueItem(
         id: Long,
         mangaId: Long = 1,
@@ -770,13 +921,14 @@ class TranslationCoreTest {
 
     private fun logItem(
         id: Long,
+        jobId: Long? = 1,
         createdAt: Long = id,
         message: String,
         details: String?,
     ): TranslationLogUiItem {
         return TranslationLogUiItem(
             id = id,
-            jobId = 1,
+            jobId = jobId,
             pageId = null,
             createdAt = createdAt,
             level = TranslationLogLevel.Warning.value,

@@ -504,13 +504,10 @@ class TranslationRepository(
                 .getPage(chapterId, pageIndex, targetLanguage)
                 .awaitAsOne()
             database.translationsQueries.deleteBoxesForPage(page._id)
-            overlay.boxes.forEachIndexed { index, box ->
-                val geometry = TranslationBoxGeometryNormalizer.normalize(
-                    x = box.x,
-                    y = box.y,
-                    width = box.width,
-                    height = box.height,
-                )
+            overlay.boxes.mapNotNull { box ->
+                TranslationOverlayPersistenceGuard.normalizedGeometryOrNull(box)
+                    ?.let { geometry -> box to geometry }
+            }.forEachIndexed { index, (box, geometry) ->
                 database.translationsQueries.insertBox(
                     pageId = page._id,
                     x = geometry.x.toDouble(),
@@ -691,7 +688,7 @@ private fun GetJobsForQueue.toQueueItem(): TranslationQueueItem {
         attempts = attempts,
         createdAt = created_at,
         updatedAt = updated_at,
-        errorMessage = error_message,
+        errorMessage = TranslationClaimToken.publicErrorMessage(error_message),
     )
 }
 
@@ -717,7 +714,7 @@ private fun GetJobForQueue.toQueueItem(): TranslationQueueItem {
         attempts = attempts,
         createdAt = created_at,
         updatedAt = updated_at,
-        errorMessage = error_message,
+        errorMessage = TranslationClaimToken.publicErrorMessage(error_message),
     )
 }
 

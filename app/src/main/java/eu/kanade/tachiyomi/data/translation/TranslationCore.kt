@@ -3,13 +3,19 @@ package eu.kanade.tachiyomi.data.translation
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.floatOrNull
+import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.put
 import kotlin.math.min
+import java.util.LinkedHashMap
 import java.util.Locale
 import tachiyomi.data.Translation_jobs
 import tachiyomi.domain.translation.service.DEFAULT_TRANSLATION_SYSTEM_PROMPT
@@ -185,6 +191,17 @@ enum class TranslationWorkKind(val value: String) {
         fun from(value: String?): TranslationWorkKind {
             return entries.firstOrNull { it.value == value } ?: Normal
         }
+    }
+}
+
+object TranslationClaimToken {
+    fun isLikelyClaimToken(value: String?): Boolean {
+        val token = value.orEmpty()
+        return TranslationWorkKind.entries.any { token.startsWith("${it.value}:") }
+    }
+
+    fun publicErrorMessage(value: String?): String? {
+        return value.takeUnless(::isLikelyClaimToken)
     }
 }
 
@@ -368,6 +385,289 @@ data class TranslationOverlayCoordinateNormalizationResult(
     val overlay: TranslationOverlayResult,
     val report: TranslationOverlayCoordinateNormalizationReport,
 )
+
+data class TranslationOverlayJsonParseResult<T>(
+    val value: T,
+    val jsonPayload: String,
+    val recovered: Boolean,
+    val droppedBoxes: Int,
+    val droppedPages: Int = 0,
+) {
+    val hasWarnings: Boolean
+        get() = recovered || droppedBoxes > 0 || droppedPages > 0
+}
+
+object TranslationOverlayJsonParser {
+    fun parseOverlay(
+        text: String,
+        json: Json = Json,
+    ): TranslationOverlayJsonParseResult<TranslationOverlayResult> {
+        val (payload, parsed) = parseFirstUsablePayload(text, json) { element ->
+            val obj = element as? JsonObject
+                ?: throw IllegalArgumentException("Gemini overlay JSON must be an object")
+            parseOverlayObject(obj)
+        }
+        return TranslationOverlayJsonParseResult(
+            value = parsed.overlay,
+            jsonPayload = payload,
+            recovered = payload.trim() != text.trim(),
+            droppedBoxes = parsed.droppedBoxes,
+        )
+    }
+
+    fun parseBatch(
+        text: String,
+        json: Json = Json,
+    ): TranslationOverlayJsonParseResult<List<TranslationBatchOverlayResult>> {
+        val (payload, parsed) = parseFirstUsablePayload(text, json) { element ->
+            parseBatchElement(element)
+        }
+        return TranslationOverlayJsonParseResult(
+            value = parsed.pages,
+            jsonPayload = payload,
+            recovered = payload.trim() != text.trim(),
+            droppedBoxes = parsed.droppedBoxes,
+            droppedPages = parsed.droppedPages,
+        )
+    }
+
+    private fun parseBatchElement(element: JsonElement): ParsedBatch {
+        val topLevel = element as? JsonObject
+        val pageElements = when (element) {
+            is JsonArray -> element
+            is JsonObject -> element["pages"] as? JsonArray
+                ?: throw IllegalArgumentException("Gemini batch JSON must include a pages array")
+            else -> throw IllegalArgumentException("Gemini batch JSON must be an object or array")
+        }
+        val sourceLanguage = topLevel?.stringValue("sourceLanguage")
+        val targetLanguage = topLevel?.stringValue("targetLanguage")
+        var droppedBoxes = 0
+        var droppedPages = 0
+        val pages = pageElements.mapNotNull { pageElement ->
+            val pageObject = pageElement as? JsonObject ?: run {
+                droppedPages++
+                return@mapNotNull null
+            }
+            val pageIndex = pageObject.intValue("pageIndex", "page", "pageNumber", "index")
+            if (pageIndex == null) {
+                droppedPages++
+                return@mapNotNull null
+            }
+            val parsed = parseOverlayObject(
+                obj = pageObject,
+                fallbackSourceLanguage = pageObject.stringValue("sourceLanguage") ?: sourceLanguage,
+                fallbackTargetLanguage = pageObject.stringValue("targetLanguage") ?: targetLanguage,
+            )
+            droppedBoxes += parsed.droppedBoxes
+            TranslationBatchOverlayResult(
+                pageIndex = pageIndex,
+                overlay = parsed.overlay,
+            )
+        }
+        if (pages.isEmpty() && pageElements.isNotEmpty()) {
+            throw IllegalArgumentException("Gemini batch JSON contained no valid page objects")
+        }
+        return ParsedBatch(
+            pages = pages,
+            droppedBoxes = droppedBoxes,
+            droppedPages = droppedPages,
+        )
+    }
+
+    private fun parseOverlayObject(
+        obj: JsonObject,
+        fallbackSourceLanguage: String? = null,
+        fallbackTargetLanguage: String? = null,
+    ): ParsedOverlay {
+        var droppedBoxes = 0
+        val boxes = (obj["boxes"] as? JsonArray)
+            .orEmpty()
+            .mapNotNull { element ->
+                parseBox(element as? JsonObject).also { box ->
+                    if (box == null) droppedBoxes++
+                }
+            }
+        return ParsedOverlay(
+            overlay = TranslationOverlayResult(
+                sourceLanguage = obj.stringValue("sourceLanguage") ?: fallbackSourceLanguage,
+                targetLanguage = obj.stringValue("targetLanguage") ?: fallbackTargetLanguage,
+                boxes = boxes,
+            ),
+            droppedBoxes = droppedBoxes,
+        )
+    }
+
+    private fun parseBox(obj: JsonObject?): TranslationOverlayBox? {
+        obj ?: return null
+        val x = obj.floatValue("x") ?: return null
+        val y = obj.floatValue("y") ?: return null
+        val width = obj.floatValue("width", "w") ?: return null
+        val height = obj.floatValue("height", "h") ?: return null
+        val translatedText = obj.stringValue("translatedText", "translation", "text")
+            ?: return null
+        return TranslationOverlayBox(
+            x = x,
+            y = y,
+            width = width,
+            height = height,
+            originalText = obj.stringValue("originalText", "sourceText", "original") ?: "",
+            translatedText = translatedText,
+            textType = obj.stringValue("textType", "type", "kind") ?: "dialogue",
+            confidence = obj.floatValue("confidence"),
+        )
+    }
+
+    private fun <T> parseFirstUsablePayload(
+        text: String,
+        json: Json,
+        parse: (JsonElement) -> T,
+    ): Pair<String, T> {
+        val payloads = extractJsonPayloads(text)
+        var lastError: Throwable? = null
+        payloads.forEach { payload ->
+            try {
+                return payload to parse(json.parseToJsonElement(payload))
+            } catch (e: Throwable) {
+                lastError = e
+            }
+        }
+        throw IllegalArgumentException(
+            "Gemini response did not contain usable overlay JSON",
+            lastError,
+        )
+    }
+
+    private fun extractJsonPayloads(text: String): List<String> {
+        val trimmed = text.trim()
+        if (trimmed.isEmpty()) {
+            throw IllegalArgumentException("Gemini response did not contain JSON")
+        }
+        val payloads = trimmed.indices.mapNotNull { index ->
+            if (trimmed[index] == '{' || trimmed[index] == '[') {
+                balancedPayloadAt(trimmed, index)
+            } else {
+                null
+            }
+        }
+        if (payloads.isEmpty()) {
+            throw IllegalArgumentException("Gemini response did not contain JSON")
+        }
+        return payloads
+    }
+
+    private fun balancedPayloadAt(
+        text: String,
+        start: Int,
+    ): String? {
+        val opening = text[start]
+        val closing = if (opening == '{') '}' else ']'
+        var depth = 0
+        var inString = false
+        var escaped = false
+        for (index in start until text.length) {
+            val char = text[index]
+            when {
+                escaped -> escaped = false
+                inString && char == '\\' -> escaped = true
+                char == '"' -> inString = !inString
+                inString -> Unit
+                char == opening -> depth++
+                char == closing -> {
+                    depth--
+                    if (depth == 0) {
+                        return text.substring(start, index + 1)
+                    }
+                }
+            }
+        }
+        return null
+    }
+
+    private fun JsonObject.stringValue(vararg names: String): String? {
+        return names.firstNotNullOfOrNull { name ->
+            (this[name] as? JsonPrimitive)
+                ?.contentOrNull
+                ?.takeIf { it.isNotBlank() }
+        }
+    }
+
+    private fun JsonObject.floatValue(vararg names: String): Float? {
+        return names.firstNotNullOfOrNull { name ->
+            (this[name] as? JsonPrimitive)?.floatOrStringOrNull()
+        }
+    }
+
+    private fun JsonObject.intValue(vararg names: String): Int? {
+        return names.firstNotNullOfOrNull { name ->
+            (this[name] as? JsonPrimitive)?.intOrStringOrNull()
+        }
+    }
+
+    private fun JsonPrimitive.floatOrStringOrNull(): Float? {
+        return floatOrNull ?: contentOrNull?.toFloatOrNull()
+    }
+
+    private fun JsonPrimitive.intOrStringOrNull(): Int? {
+        return intOrNull ?: contentOrNull?.toIntOrNull()
+    }
+
+    private data class ParsedOverlay(
+        val overlay: TranslationOverlayResult,
+        val droppedBoxes: Int,
+    )
+
+    private data class ParsedBatch(
+        val pages: List<TranslationBatchOverlayResult>,
+        val droppedBoxes: Int,
+        val droppedPages: Int,
+    )
+}
+
+object TranslationOverlayPersistenceGuard {
+    fun normalizedGeometryOrNull(box: TranslationOverlayBox): TranslationBoxGeometry? {
+        val coordinates = listOf(box.x, box.y, box.width, box.height)
+        if (coordinates.any { !it.isFinite() }) return null
+        if (box.x < 0f || box.y < 0f || box.x >= 1f || box.y >= 1f) return null
+        if (box.width <= 0f || box.height <= 0f) return null
+        if (box.width > 1f || box.height > 1f) return null
+        return TranslationBoxGeometryNormalizer.normalize(
+            x = box.x,
+            y = box.y,
+            width = box.width,
+            height = box.height,
+        )
+    }
+}
+
+object TranslationReaderOverlayMissingLogDeduper {
+    private const val MAX_KEYS = 512
+    private val loggedKeys = LinkedHashMap<String, Unit>(MAX_KEYS, 0.75f, true)
+
+    @Synchronized
+    fun shouldLogMissing(
+        chapterId: Long,
+        pageIndex: Int,
+        targetLanguage: String,
+        refreshSource: String,
+    ): Boolean {
+        val key = "$chapterId:$pageIndex:${targetLanguage.lowercase(Locale.ROOT)}:$refreshSource"
+        if (loggedKeys.containsKey(key)) return false
+        loggedKeys[key] = Unit
+        if (loggedKeys.size > MAX_KEYS) {
+            val iterator = loggedKeys.entries.iterator()
+            if (iterator.hasNext()) {
+                iterator.next()
+                iterator.remove()
+            }
+        }
+        return true
+    }
+
+    @Synchronized
+    fun resetForTest() {
+        loggedKeys.clear()
+    }
+}
 
 data class TranslationOverlayCoordinateNormalizationReport(
     val inputBoxes: Int,

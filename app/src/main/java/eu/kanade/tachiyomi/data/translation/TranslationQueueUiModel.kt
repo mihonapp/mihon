@@ -41,6 +41,12 @@ data class TranslationQueueChapterGroup(
     val retryableCount: Int,
 )
 
+data class TranslationQueueDerivedUiState(
+    val activeJobCount: Int,
+    val queueGroups: List<TranslationQueueGroup>,
+    val groupedLogsByJob: Map<Long, List<GroupedTranslationLog>>,
+)
+
 enum class TranslationQueueTypeFilter(val statuses: Set<String>) {
     Waiting(setOf(TranslationJobStatus.Queued.value, TranslationJobStatus.Retrying.value, TranslationJobStatus.ManualRetry.value)),
     Translating(setOf(TranslationJobStatus.Running.value)),
@@ -51,6 +57,18 @@ enum class TranslationQueueTypeFilter(val statuses: Set<String>) {
 }
 
 object TranslationQueueUiModel {
+    fun derive(
+        items: List<TranslationQueueItem>,
+        logs: List<TranslationLogUiItem>,
+        filters: Set<TranslationQueueTypeFilter>,
+    ): TranslationQueueDerivedUiState {
+        return TranslationQueueDerivedUiState(
+            activeJobCount = items.count { it.status !in FINISHED_QUEUE_STATUSES },
+            queueGroups = filterAndGroup(items, filters),
+            groupedLogsByJob = groupedLogsByJob(logs),
+        )
+    }
+
     fun filterAndGroup(
         items: List<TranslationQueueItem>,
         filters: Set<TranslationQueueTypeFilter>,
