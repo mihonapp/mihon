@@ -5,11 +5,16 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.DeletableTracker
+import eu.kanade.tachiyomi.data.track.EnrichableTracker
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import eu.kanade.tachiyomi.data.track.yamtrack.dto.applyDetail
 import eu.kanade.tachiyomi.data.track.yamtrack.dto.copyToTrack
 import eu.kanade.tachiyomi.data.track.yamtrack.dto.resolveTotalChapters
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.launch
 import tachiyomi.i18n.MR
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -18,7 +23,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class Yamtrack(id: Long) : BaseTracker(id, "Yamtrack"), DeletableTracker {
+class Yamtrack(id: Long) : BaseTracker(id, "Yamtrack"), DeletableTracker, EnrichableTracker {
 
     override val supportsReadingDates: Boolean = true
 
@@ -220,6 +225,24 @@ class Yamtrack(id: Long) : BaseTracker(id, "Yamtrack"), DeletableTracker {
             publishing_type = "Manual entry"
         }
         return remoteResults + manualEntry
+    }
+
+    /**
+     * Streams enriched [TrackSearch] entries by hitting Yamtrack's media-detail endpoint
+     * for each search hit in parallel and merging in synopsis/score/format/start_date.
+     * Each item is mutated in place (so the caller can match by `remote_id`) and emitted
+     * as soon as its detail call returns.
+     */
+    override fun enrichSearchResults(items: List<TrackSearch>): Flow<TrackSearch> = channelFlow {
+        items.forEach { item ->
+            launch {
+                val (source, mediaId) = parseTrackingUrl(item.tracking_url) ?: return@launch
+                if (source == SOURCE_MANUAL) return@launch
+                val detail = api.getMediaItem(source, mediaId) ?: return@launch
+                item.applyDetail(detail)
+                send(item)
+            }
+        }
     }
 
     override suspend fun refresh(track: Track): Track {
