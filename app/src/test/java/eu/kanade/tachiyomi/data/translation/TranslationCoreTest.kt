@@ -782,6 +782,36 @@ class TranslationCoreTest {
     }
 
     @Test
+    fun `vision payload policy splits large inline image batches before request construction`() {
+        val twoMiB = 2L * 1024L * 1024L
+        val ranges = TranslationVisionBatchPayloadPolicy.splitByPayload(
+            imageByteSizes = List(38) { twoMiB },
+            maxBytes = 10L * 1024L * 1024L,
+        )
+
+        ranges.map { it.count() } shouldContainExactly listOf(5, 5, 5, 5, 5, 5, 5, 3)
+        ranges.flatMap { it.toList() } shouldContainExactly (0 until 38).toList()
+    }
+
+    @Test
+    fun `vision payload policy bounds prepared image batches before loading all pages`() {
+        val ranges = TranslationVisionBatchPayloadPolicy.splitByPreparedPageCount(169)
+
+        ranges.map { it.count() } shouldContainExactly listOf(38, 38, 38, 38, 17)
+        ranges.flatMap { it.toList() } shouldContainExactly (0 until 169).toList()
+    }
+
+    @Test
+    fun `vision payload policy keeps a single oversized page as one request`() {
+        val ranges = TranslationVisionBatchPayloadPolicy.splitByPayload(
+            imageByteSizes = listOf(20L * 1024L * 1024L),
+            maxBytes = 10L * 1024L * 1024L,
+        )
+
+        ranges shouldContainExactly listOf(0..0)
+    }
+
+    @Test
     fun `batch fallback classifier only allows parser shaped failures`() {
         TranslationBatchFailureClassifier.shouldUseBatchFallback(
             IllegalArgumentException("Gemini response did not contain usable overlay JSON"),
@@ -814,7 +844,7 @@ class TranslationCoreTest {
     @Test
     fun `translation workers avoid foreground service time limit cancellation`() {
         TranslationWorkerPolicy.USE_FOREGROUND_SERVICE shouldBe false
-        TranslationWorkerPolicy.BATCH_EXECUTION_TIMEOUT_MS shouldBe 8L * 60L * 1000L
+        TranslationWorkerPolicy.BATCH_EXECUTION_TIMEOUT_MS shouldBe 30L * 60L * 1000L
         TranslationRunningJobPolicy.HEARTBEAT_MS shouldBe 30_000L
         TranslationRunningJobPolicy.STALE_RUNNING_MS shouldBe
             TranslationRunningJobPolicy.HEARTBEAT_MS * 3
@@ -840,6 +870,11 @@ class TranslationCoreTest {
         TranslationRunningJobPolicy.matchesKind(fresh, TranslationWorkKind.ManualRetry) shouldBe false
         TranslationRunningJobPolicy.isStale(fresh, now) shouldBe false
         TranslationRunningJobPolicy.isStale(stale, now) shouldBe true
+        TranslationRunningJobPolicy.waitMsUntilStale(fresh, now) shouldBe 1_001L
+        TranslationRunningJobPolicy.waitMsUntilStale(
+            fresh.copy(updated_at = now - 1_000L),
+            now,
+        ) shouldBe TranslationRunningJobPolicy.HEARTBEAT_MS
         TranslationRunningJobPolicy.requeueStatus(TranslationWorkKind.Normal) shouldBe TranslationJobStatus.Retrying
     }
 
@@ -858,6 +893,33 @@ class TranslationCoreTest {
         TranslationRunningJobPolicy.matchesKind(manual, TranslationWorkKind.Normal) shouldBe false
         TranslationRunningJobPolicy.matchesKind(legacyNormal, TranslationWorkKind.Normal) shouldBe true
         TranslationRunningJobPolicy.requeueStatus(TranslationWorkKind.ManualRetry) shouldBe TranslationJobStatus.ManualRetry
+    }
+
+    @Test
+    fun `stopped worker recovery keeps normal and manual retry jobs retryable`() {
+        val normal = translationJob(
+            id = 1,
+            chapterId = 10,
+            pageIndex = 0,
+            status = TranslationJobStatus.Running.value,
+            errorMessage = "normal:0:123:0:0",
+        )
+        val manual = normal.copy(
+            _id = 2,
+            error_message = "manual_retry:1:123:0:0",
+        )
+        val legacyNormal = normal.copy(
+            _id = 3,
+            error_message = null,
+        )
+
+        TranslationRunningJobPolicy.kindForClaimToken(normal) shouldBe TranslationWorkKind.Normal
+        TranslationRunningJobPolicy.requeueStatusForStoppedWorker(normal) shouldBe TranslationJobStatus.Retrying
+        TranslationRunningJobPolicy.kindForClaimToken(manual) shouldBe TranslationWorkKind.ManualRetry
+        TranslationRunningJobPolicy.requeueStatusForStoppedWorker(manual) shouldBe TranslationJobStatus.ManualRetry
+        TranslationRunningJobPolicy.kindForClaimToken(legacyNormal) shouldBe TranslationWorkKind.Normal
+        TranslationRunningJobPolicy.requeueStatusForStoppedWorker(legacyNormal) shouldBe TranslationJobStatus.Retrying
+        TranslationClaimToken.publicErrorMessage(manual.error_message) shouldBe null
     }
 
     @Test
@@ -1186,6 +1248,17 @@ class TranslationCoreTest {
         TranslationClaimToken.publicErrorMessage("normal:0:123:0:0") shouldBe null
         TranslationClaimToken.publicErrorMessage("manual_retry:1:123:0:0") shouldBe null
         TranslationClaimToken.publicErrorMessage("quota exceeded") shouldBe "quota exceeded"
+    }
+
+    @Test
+    fun `claim tokens are summarized in logs without exposing raw token`() {
+        val fields = TranslationClaimToken.publicLogFields("manual_retry:2:123456:4:5")
+
+        fields shouldContain ("claim_worker_kind" to "manual_retry")
+        fields shouldContain ("claim_lane_id" to 2)
+        fields shouldContain ("claim_chunk_index" to 4)
+        fields shouldContain ("claim_group_index" to 5)
+        fields.values.joinToString() shouldNotContain "123456"
     }
 
     private fun queueItem(

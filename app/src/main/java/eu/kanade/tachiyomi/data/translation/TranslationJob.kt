@@ -17,8 +17,11 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.setForegroundSafely
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import tachiyomi.core.common.util.lang.launchIO
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -78,12 +81,23 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
             )
         }
 
-        return when (processor.processPending(workKind, laneId)) {
-            TranslationProcessResult.RetryLater -> Result.retry()
-            TranslationProcessResult.Idle,
-            TranslationProcessResult.Completed,
-            TranslationProcessResult.Paused,
-            -> Result.success()
+        return try {
+            when (processor.processPending(workKind, laneId)) {
+                TranslationProcessResult.RetryLater -> Result.retry()
+                TranslationProcessResult.Idle,
+                TranslationProcessResult.Completed,
+                TranslationProcessResult.Paused,
+                -> Result.success()
+            }
+        } catch (e: CancellationException) {
+            withContext(NonCancellable) {
+                repository.requeueRunningJobsForStoppedWorker(
+                    kind = workKind,
+                    reason = e.message ?: "Worker cancelled",
+                    laneId = laneId,
+                )
+            }
+            throw e
         }
     }
 
@@ -187,8 +201,15 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
             }
         }
 
-        fun stop(context: Context) {
-            WorkManager.getInstance(context).cancelAllWorkByTag(TAG)
+        fun stop(
+            context: Context,
+            reason: String = "Translation worker stopped",
+        ) {
+            val appContext = context.applicationContext
+            WorkManager.getInstance(appContext).cancelAllWorkByTag(TAG)
+            launchIO {
+                Injekt.get<TranslationRepository>().requeueRunningJobsForStoppedWorker(reason = reason)
+            }
         }
 
         /**
@@ -202,14 +223,14 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
             return WorkManager.getInstance(context)
                 .getWorkInfosByTag(TAG)
                 .get()
-                .any { it.state == WorkInfo.State.RUNNING || it.state == WorkInfo.State.ENQUEUED }
+                .any { it.state == WorkInfo.State.RUNNING }
         }
 
         fun isRunningFlow(context: Context): Flow<Boolean> {
             return WorkManager.getInstance(context)
                 .getWorkInfosByTagLiveData(TAG)
                 .asFlow()
-                .map { list -> list.any { it.state == WorkInfo.State.RUNNING || it.state == WorkInfo.State.ENQUEUED } }
+                .map { list -> list.any { it.state == WorkInfo.State.RUNNING } }
         }
 
         private fun workName(kind: TranslationWorkKind, laneId: Int): String {

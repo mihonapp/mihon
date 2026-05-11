@@ -216,7 +216,7 @@ object SettingsTranslationScreen : SearchableSettings {
                         onClick = {
                             showClearAllConfirmation = false
                             scope.launch {
-                                TranslationJob.stop(context)
+                                TranslationJob.stop(context, reason = "settings_clear_all")
                                 repository.clearAllJobsAndLogs()
                                 context.toast(MR.strings.pref_translation_clear_queue_logs)
                             }

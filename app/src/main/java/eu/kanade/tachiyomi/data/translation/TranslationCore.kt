@@ -225,6 +225,19 @@ object TranslationClaimToken {
     fun publicErrorMessage(value: String?): String? {
         return value.takeUnless(::isLikelyClaimToken)
     }
+
+    fun publicLogFields(value: String?): Map<String, Any?> {
+        val parts = value.orEmpty().split(":")
+        if (parts.size < 5 || !isLikelyClaimToken(value)) {
+            return emptyMap()
+        }
+        return mapOf(
+            "claim_worker_kind" to parts.getOrNull(0),
+            "claim_lane_id" to parts.getOrNull(1)?.toIntOrNull(),
+            "claim_chunk_index" to parts.getOrNull(3)?.toIntOrNull(),
+            "claim_group_index" to parts.getOrNull(4)?.toIntOrNull(),
+        )
+    }
 }
 
 object TranslationLogDetailsFormatter {
@@ -1016,6 +1029,46 @@ object TranslationBatchFallbackPlanner {
     }
 }
 
+object TranslationVisionBatchPayloadPolicy {
+    const val MAX_PREPARED_IMAGE_BATCH_PAGES = DEFAULT_TRANSLATION_MAX_IMAGES_PER_BATCH
+    const val MAX_INLINE_IMAGE_BATCH_BYTES = 10L * 1024L * 1024L
+
+    fun splitByPreparedPageCount(
+        pageCount: Int,
+        maxPages: Int = MAX_PREPARED_IMAGE_BATCH_PAGES,
+    ): List<IntRange> {
+        if (pageCount <= 0) return emptyList()
+        val limit = maxPages.coerceAtLeast(1)
+        return (0 until pageCount)
+            .chunked(limit)
+            .map { indexes -> indexes.first()..indexes.last() }
+    }
+
+    fun splitByPayload(
+        imageByteSizes: List<Long>,
+        maxBytes: Long = MAX_INLINE_IMAGE_BATCH_BYTES,
+    ): List<IntRange> {
+        if (imageByteSizes.isEmpty()) return emptyList()
+
+        val safeMax = maxBytes.coerceAtLeast(1L)
+        val ranges = mutableListOf<IntRange>()
+        var start = 0
+        var currentBytes = 0L
+
+        imageByteSizes.forEachIndexed { index, rawSize ->
+            val size = rawSize.coerceAtLeast(0L)
+            if (index > start && currentBytes + size > safeMax) {
+                ranges += start until index
+                start = index
+                currentBytes = 0L
+            }
+            currentBytes += size
+        }
+        ranges += start until imageByteSizes.size
+        return ranges
+    }
+}
+
 object TranslationBatchFailureClassifier {
     fun shouldUseBatchFallback(error: Throwable): Boolean {
         if (error.hasCause<CancellationException>()) return false
@@ -1048,19 +1101,26 @@ object TranslationGeminiNetworkPolicy {
 
 object TranslationWorkerPolicy {
     const val USE_FOREGROUND_SERVICE = false
-    const val BATCH_EXECUTION_TIMEOUT_MS = 8L * 60L * 1000L
+    const val BATCH_EXECUTION_TIMEOUT_MS = 30L * 60L * 1000L
 }
 
 object TranslationRunningJobPolicy {
     const val HEARTBEAT_MS = 30_000L
     const val STALE_RUNNING_MS = HEARTBEAT_MS * 3
 
+    fun kindForClaimToken(job: Translation_jobs): TranslationWorkKind {
+        val token = job.error_message
+        return when {
+            token?.startsWith("${TranslationWorkKind.ManualRetry.value}:") == true -> TranslationWorkKind.ManualRetry
+            else -> TranslationWorkKind.Normal
+        }
+    }
+
     fun matchesKind(job: Translation_jobs, kind: TranslationWorkKind): Boolean {
         if (job.status != TranslationJobStatus.Running.value) return false
-        val token = job.error_message
         return when (kind) {
-            TranslationWorkKind.Normal -> token == null || token.startsWith("${TranslationWorkKind.Normal.value}:")
-            TranslationWorkKind.ManualRetry -> token?.startsWith("${TranslationWorkKind.ManualRetry.value}:") == true
+            TranslationWorkKind.Normal -> kindForClaimToken(job) == TranslationWorkKind.Normal
+            TranslationWorkKind.ManualRetry -> kindForClaimToken(job) == TranslationWorkKind.ManualRetry
         }
     }
 
@@ -1068,11 +1128,20 @@ object TranslationRunningJobPolicy {
         return now - job.updated_at >= STALE_RUNNING_MS
     }
 
+    fun waitMsUntilStale(job: Translation_jobs, now: Long): Long {
+        val age = now - job.updated_at
+        return (STALE_RUNNING_MS - age + 1_000L).coerceIn(1_000L, HEARTBEAT_MS)
+    }
+
     fun requeueStatus(kind: TranslationWorkKind): TranslationJobStatus {
         return when (kind) {
             TranslationWorkKind.Normal -> TranslationJobStatus.Retrying
             TranslationWorkKind.ManualRetry -> TranslationJobStatus.ManualRetry
         }
+    }
+
+    fun requeueStatusForStoppedWorker(job: Translation_jobs): TranslationJobStatus {
+        return requeueStatus(kindForClaimToken(job))
     }
 }
 

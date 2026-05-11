@@ -591,6 +591,7 @@ class GeminiTranslationClient(
         pageId: Long? = null,
     ): GeminiGenerateContentResponse {
         val modelId = model.removePrefix("models/")
+        val hasInlineData = request.hasInlineData()
         val requestJson = json.encodeToString(request)
         val response = executeGeminiText(
             POST(
@@ -600,8 +601,12 @@ class GeminiTranslationClient(
             ),
             operation = operation,
             model = modelId,
-            requestJson = requestJson,
-            requestSummary = requestSummary,
+            requestJson = requestJson.takeUnless { hasInlineData },
+            requestSummary = if (hasInlineData) {
+                "$requestSummary\nraw_request_json=omitted_inline_image_payload"
+            } else {
+                requestSummary
+            },
             jobId = jobId,
             pageId = pageId,
         )
@@ -883,6 +888,12 @@ private data class GeminiGenerateContentRequest(
     val contents: List<GeminiContent>,
     val generationConfig: JsonElement? = null,
 )
+
+private fun GeminiGenerateContentRequest.hasInlineData(): Boolean {
+    return contents.any { content ->
+        content.parts.any { it.inlineData?.data != null }
+    }
+}
 
 @Serializable
 private data class GeminiContent(

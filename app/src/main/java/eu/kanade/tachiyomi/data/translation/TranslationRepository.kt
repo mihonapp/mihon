@@ -110,6 +110,49 @@ class TranslationRepository(
         return staleJobs.size
     }
 
+    suspend fun requeueRunningJobsForStoppedWorker(
+        kind: TranslationWorkKind? = null,
+        reason: String,
+        laneId: Int? = null,
+        now: Long = System.currentTimeMillis(),
+    ): Int {
+        val runningJobs = database.translationsQueries.getJobsByStatus(TranslationJobStatus.Running.value)
+            .awaitAsList()
+            .filter { job -> kind == null || TranslationRunningJobPolicy.matchesKind(job, kind) }
+        if (runningJobs.isEmpty()) return 0
+        database.transaction {
+            runningJobs.forEach { job ->
+                val nextStatus = TranslationRunningJobPolicy.requeueStatusForStoppedWorker(job)
+                updateJobStatus(
+                    job = job,
+                    status = nextStatus,
+                    errorMessage = null,
+                    attempts = job.attempts,
+                )
+                insertLog(
+                    jobId = job._id,
+                    pageId = null,
+                    level = TranslationLogLevel.Warning,
+                    tag = "queue",
+                    message = "Recovered stopped translation worker job",
+                    details = TranslationLogDetailsFormatter.queueState(
+                        action = "recover_stopped_worker",
+                        jobId = job._id,
+                        previousStatus = job.status,
+                        nextStatus = nextStatus.value,
+                        reason = reason,
+                        extra = mapOf(
+                            "worker_kind" to TranslationRunningJobPolicy.kindForClaimToken(job).value,
+                            "lane_id" to laneId,
+                            "age_ms" to (now - job.updated_at),
+                        ),
+                    ),
+                )
+            }
+        }
+        return runningJobs.size
+    }
+
     suspend fun getPage(
         chapterId: Long,
         pageIndex: Long,
@@ -429,9 +472,8 @@ class TranslationRepository(
                             nextStatus = TranslationJobStatus.Running.value,
                             extra = mapOf(
                                 "worker_kind" to kind.value,
-                                "claim_token" to claimToken,
                                 "attempt" to nextAttempt,
-                            ),
+                            ) + TranslationClaimToken.publicLogFields(claimToken),
                         ),
                     )
                 } else {

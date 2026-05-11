@@ -49,6 +49,9 @@ class TranslationQueueProcessor(
             val staleRecovered = repository.requeueStaleRunningJobs(workKind)
             val freshRunning = repository.getFreshRunningJobs(workKind)
             if (freshRunning.isNotEmpty()) {
+                val now = System.currentTimeMillis()
+                val oldestAge = freshRunning.minOf { now - it.updated_at }
+                val waitMs = freshRunning.minOf { TranslationRunningJobPolicy.waitMsUntilStale(it, now) }
                 repository.insertLog(
                     jobId = freshRunning.firstOrNull()?._id,
                     pageId = null,
@@ -67,13 +70,14 @@ class TranslationQueueProcessor(
                             "running_count" to freshRunning.size,
                             "recovered_stale_count" to staleRecovered,
                             "job_ids" to freshRunning.take(50).joinToString { it._id.toString() },
-                            "oldest_age_ms" to freshRunning.minOf { System.currentTimeMillis() - it.updated_at },
+                            "oldest_age_ms" to oldestAge,
                             "stale_after_ms" to TranslationRunningJobPolicy.STALE_RUNNING_MS,
+                            "wait_ms" to waitMs,
                         ),
                     ),
                 )
-                retryLater = true
-                break
+                delay(waitMs)
+                continue
             }
 
             val pendingJobs = repository.getPendingJobs(workKind)
@@ -222,6 +226,61 @@ class TranslationQueueProcessor(
         workKind: TranslationWorkKind,
         laneId: Int,
     ): TranslationProcessResult {
+        val preparedRanges = TranslationVisionBatchPayloadPolicy.splitByPreparedPageCount(runningJobs.size)
+        if (preparedRanges.size > 1) {
+            repository.insertLog(
+                jobId = runningJobs.firstOrNull()?._id,
+                pageId = null,
+                level = TranslationLogLevel.Warning,
+                tag = "queue",
+                message = "Translation batch split before image preparation",
+                details = TranslationLogDetailsFormatter.queueState(
+                    action = "worker_batch_split_prepare_guard",
+                    jobId = runningJobs.firstOrNull()?._id,
+                    previousStatus = TranslationJobStatus.Running.value,
+                    nextStatus = TranslationJobStatus.Running.value,
+                    reason = "Preparing every claimed page image at once would exceed the app memory budget",
+                    extra = mapOf(
+                        "job_count" to runningJobs.size,
+                        "max_prepared_image_batch_pages" to TranslationVisionBatchPayloadPolicy.MAX_PREPARED_IMAGE_BATCH_PAGES,
+                        "sub_batch_count" to preparedRanges.size,
+                        "sub_batch_sizes" to preparedRanges.joinToString { it.count().toString() },
+                        "worker_kind" to workKind.value,
+                        "lane_id" to laneId,
+                    ),
+                ),
+            )
+            val results = mutableListOf<TranslationProcessResult>()
+            preparedRanges.forEachIndexed { index, range ->
+                val subBatch = runningJobs.slice(range)
+                repository.insertLog(
+                    jobId = subBatch.firstOrNull()?._id ?: runningJobs.firstOrNull()?._id,
+                    pageId = null,
+                    level = TranslationLogLevel.Info,
+                    tag = "queue",
+                    message = "Processing prepared-image-safe translation sub-batch",
+                    details = TranslationLogDetailsFormatter.queueState(
+                        action = "worker_prepare_guard_sub_batch",
+                        jobId = subBatch.firstOrNull()?._id ?: runningJobs.firstOrNull()?._id,
+                        previousStatus = TranslationJobStatus.Running.value,
+                        nextStatus = TranslationJobStatus.Running.value,
+                        extra = mapOf(
+                            "sub_batch" to "${index + 1}/${preparedRanges.size}",
+                            "job_ids" to subBatch.joinToString { it._id.toString() },
+                            "pages" to subBatch.joinToString { "${it.chapter_id}:${it.page_index}" },
+                            "worker_kind" to workKind.value,
+                            "lane_id" to laneId,
+                        ),
+                    ),
+                )
+                val result = processImageBatch(subBatch, workKind, laneId)
+                results += result
+                if (result != TranslationProcessResult.Completed) {
+                    return mergeResults(results)
+                }
+            }
+            return mergeResults(results)
+        }
         runningJobs.forEach { logStartedJob(it, workKind, laneId) }
         repository.insertLog(
             jobId = runningJobs.firstOrNull()?._id,
@@ -366,6 +425,61 @@ class TranslationQueueProcessor(
         pages: List<PreparedTranslationPage>,
     ): Map<Long, TranslationOverlayResult> {
         val first = pages.first()
+        val payloadRanges = if (first.job.pipeline == "local_ocr_gemini") {
+            listOf(pages.indices)
+        } else {
+            TranslationVisionBatchPayloadPolicy.splitByPayload(
+                imageByteSizes = pages.map { it.image.bytes.size.toLong() },
+            )
+        }
+        if (payloadRanges.size > 1) {
+            repository.insertLog(
+                jobId = first.job._id,
+                pageId = null,
+                level = TranslationLogLevel.Warning,
+                tag = "api",
+                message = "Gemini vision batch split by payload guard",
+                details = TranslationLogDetailsFormatter.queueState(
+                    action = "batch_split_payload_guard",
+                    jobId = first.job._id,
+                    previousStatus = TranslationJobStatus.Running.value,
+                    nextStatus = TranslationJobStatus.Running.value,
+                    reason = "Inline image request would be too large for reliable in-app request construction",
+                    extra = mapOf(
+                        "pages" to pages.joinToString { it.pageIndex.toString() },
+                        "batch_size" to pages.size,
+                        "raw_image_bytes" to pages.sumOf { it.image.bytes.size.toLong() },
+                        "max_inline_image_batch_bytes" to TranslationVisionBatchPayloadPolicy.MAX_INLINE_IMAGE_BATCH_BYTES,
+                        "sub_batch_count" to payloadRanges.size,
+                        "sub_batch_sizes" to payloadRanges.joinToString { it.count().toString() },
+                    ),
+                ),
+            )
+            val combined = mutableMapOf<Long, TranslationOverlayResult>()
+            payloadRanges.forEachIndexed { index, range ->
+                val subBatch = pages.slice(range)
+                repository.insertLog(
+                    jobId = subBatch.firstOrNull()?.job?._id ?: first.job._id,
+                    pageId = null,
+                    level = TranslationLogLevel.Info,
+                    tag = "api",
+                    message = "Processing payload-safe Gemini vision sub-batch",
+                    details = TranslationLogDetailsFormatter.queueState(
+                        action = "batch_payload_guard_sub_batch",
+                        jobId = subBatch.firstOrNull()?.job?._id ?: first.job._id,
+                        previousStatus = TranslationJobStatus.Running.value,
+                        nextStatus = TranslationJobStatus.Running.value,
+                        extra = mapOf(
+                            "sub_batch" to "${index + 1}/${payloadRanges.size}",
+                            "pages" to subBatch.joinToString { it.pageIndex.toString() },
+                            "raw_image_bytes" to subBatch.sumOf { it.image.bytes.size.toLong() },
+                        ),
+                    ),
+                )
+                combined += translatePreparedBatch(subBatch)
+            }
+            return combined
+        }
         val batchResult = try {
             if (first.job.pipeline == "local_ocr_gemini") {
                 translatePreparedOcrBatch(pages)

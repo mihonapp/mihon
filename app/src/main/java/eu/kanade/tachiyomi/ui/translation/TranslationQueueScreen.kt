@@ -68,6 +68,7 @@ import eu.kanade.tachiyomi.data.translation.TranslationQueueUiModel
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import eu.kanade.tachiyomi.data.translation.TranslationRetryPlanner
 import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
+import eu.kanade.tachiyomi.data.translation.TranslationWorkStartPolicy
 import eu.kanade.tachiyomi.data.translation.normalizedParallelRetryLanes
 import eu.kanade.tachiyomi.data.translation.isRetryableFromQueue
 import eu.kanade.tachiyomi.data.translation.toJob
@@ -272,7 +273,7 @@ object TranslationQueueScreen : Screen() {
                     },
                     onClick = {
                         if (isRunning) {
-                            TranslationJob.stop(context)
+                            TranslationJob.stop(context, reason = "queue_pause")
                         } else {
                             screenModel.resume(context)
                         }
@@ -989,6 +990,7 @@ private class TranslationQueueScreenModel(
             if (setup.ready && result != null && result.requeued > 0) {
                 TranslationJob.start(
                     context = context,
+                    policy = TranslationWorkStartPolicy.Replace,
                     reason = "queue_resume",
                 )
             }
@@ -1016,7 +1018,7 @@ private class TranslationQueueScreenModel(
                         errorMessage = null,
                     )
                 }
-            TranslationJob.stop(context)
+            TranslationJob.stop(context, reason = "queue_cancel_all")
         }
     }
 
@@ -1034,7 +1036,7 @@ private class TranslationQueueScreenModel(
 
     fun clearAllQueuesAndLogs(context: Context) {
         screenModelScope.launchIO {
-            TranslationJob.stop(context)
+            TranslationJob.stop(context, reason = "queue_clear_all")
             repository.clearAllJobsAndLogs()
         }
     }
