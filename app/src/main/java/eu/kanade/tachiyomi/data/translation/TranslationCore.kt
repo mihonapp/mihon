@@ -202,6 +202,7 @@ object TranslationLogRedactor {
 enum class TranslationWorkStartPolicy {
     Keep,
     Replace,
+    AppendOrReplace,
 }
 
 enum class TranslationWorkKind(val value: String) {
@@ -865,32 +866,27 @@ object TranslationOverlayCoordinateNormalizer {
             return null
         }
 
-        val pixelCoordinates = coordinates.any { it > 1f }
-        val rawGeometry = if (pixelCoordinates) {
-            val safeWidth = imageWidth?.takeIf { it > 0 }
-            val safeHeight = imageHeight?.takeIf { it > 0 }
-            if (safeWidth == null || safeHeight == null) {
-                entries += box.entry(index, action = "dropped", reason = "pixel_coordinates_without_image_size")
-                return null
-            }
-            if (box.x >= safeWidth || box.y >= safeHeight) {
-                entries += box.entry(index, action = "dropped", reason = "pixel_origin_outside_image")
-                return null
-            }
-            TranslationBoxGeometry(
-                x = box.x / safeWidth.toFloat(),
-                y = box.y / safeHeight.toFloat(),
-                width = box.width / safeWidth.toFloat(),
-                height = box.height / safeHeight.toFloat(),
-            )
-        } else {
-            TranslationBoxGeometry(
-                x = box.x,
-                y = box.y,
-                width = box.width,
-                height = box.height,
-            )
+        val xPixel = box.x > 1f
+        val yPixel = box.y > 1f
+        val widthPixel = box.width > 1f
+        val heightPixel = box.height > 1f
+        val pixelCoordinates = xPixel || yPixel || widthPixel || heightPixel
+        val safeWidth = imageWidth?.takeIf { it > 0 }
+        val safeHeight = imageHeight?.takeIf { it > 0 }
+        if ((xPixel || widthPixel) && safeWidth == null || (yPixel || heightPixel) && safeHeight == null) {
+            entries += box.entry(index, action = "dropped", reason = "pixel_coordinates_without_image_size")
+            return null
         }
+        if (xPixel && box.x >= safeWidth!! || yPixel && box.y >= safeHeight!!) {
+            entries += box.entry(index, action = "dropped", reason = "pixel_origin_outside_image")
+            return null
+        }
+        val rawGeometry = TranslationBoxGeometry(
+            x = if (xPixel) box.x / safeWidth!!.toFloat() else box.x,
+            y = if (yPixel) box.y / safeHeight!!.toFloat() else box.y,
+            width = if (widthPixel) box.width / safeWidth!!.toFloat() else box.width,
+            height = if (heightPixel) box.height / safeHeight!!.toFloat() else box.height,
+        )
 
         if (rawGeometry.width <= 0f || rawGeometry.height <= 0f) {
             entries += box.entry(index, action = "dropped", reason = "non_positive_normalized_size")
@@ -1111,6 +1107,17 @@ object TranslationWorkerPolicy {
     const val BATCH_EXECUTION_TIMEOUT_MS = 30L * 60L * 1000L
 }
 
+object TranslationWorkerContinuationPolicy {
+    const val MAX_GROUPS_PER_WORKER_INVOCATION = 1
+
+    fun shouldYieldAfterGroups(
+        processedGroupCount: Int,
+        hasPendingJobs: Boolean,
+    ): Boolean {
+        return hasPendingJobs && processedGroupCount >= MAX_GROUPS_PER_WORKER_INVOCATION
+    }
+}
+
 object TranslationRunningJobPolicy {
     const val HEARTBEAT_MS = 30_000L
     const val STALE_RUNNING_MS = HEARTBEAT_MS * 3
@@ -1135,9 +1142,37 @@ object TranslationRunningJobPolicy {
         return now - job.updated_at >= STALE_RUNNING_MS
     }
 
+    fun isRecoverableStale(
+        job: Translation_jobs,
+        now: Long,
+        activeJobIds: Set<Long> = emptySet(),
+    ): Boolean {
+        return isStale(job, now) && job._id !in activeJobIds
+    }
+
+    fun blocksNewClaims(
+        job: Translation_jobs,
+        now: Long,
+        activeJobIds: Set<Long> = emptySet(),
+    ): Boolean {
+        return job._id in activeJobIds || !isStale(job, now)
+    }
+
     fun waitMsUntilStale(job: Translation_jobs, now: Long): Long {
         val age = now - job.updated_at
         return (STALE_RUNNING_MS - age + 1_000L).coerceIn(1_000L, HEARTBEAT_MS)
+    }
+
+    fun waitMsUntilClaimMayProceed(
+        job: Translation_jobs,
+        now: Long,
+        activeJobIds: Set<Long> = emptySet(),
+    ): Long {
+        return if (job._id in activeJobIds) {
+            HEARTBEAT_MS
+        } else {
+            waitMsUntilStale(job, now)
+        }
     }
 
     fun requeueStatus(kind: TranslationWorkKind): TranslationJobStatus {
@@ -1149,6 +1184,48 @@ object TranslationRunningJobPolicy {
 
     fun requeueStatusForStoppedWorker(job: Translation_jobs): TranslationJobStatus {
         return requeueStatus(kindForClaimToken(job))
+    }
+}
+
+object TranslationActiveJobRegistry {
+    private val lock = Any()
+    private val activeJobIdsByKind = mutableMapOf<TranslationWorkKind, MutableSet<Long>>()
+
+    fun activeJobIds(kind: TranslationWorkKind): Set<Long> {
+        return synchronized(lock) {
+            activeJobIdsByKind[kind]?.toSet().orEmpty()
+        }
+    }
+
+    suspend fun <T> withActiveJobs(
+        kind: TranslationWorkKind,
+        jobs: List<Translation_jobs>,
+        block: suspend () -> T,
+    ): T {
+        val jobIds = jobs.map { it._id }.distinct()
+        if (jobIds.isEmpty()) return block()
+        register(kind, jobIds)
+        return try {
+            block()
+        } finally {
+            unregister(kind, jobIds)
+        }
+    }
+
+    private fun register(kind: TranslationWorkKind, jobIds: List<Long>) {
+        synchronized(lock) {
+            activeJobIdsByKind.getOrPut(kind) { mutableSetOf() }.addAll(jobIds)
+        }
+    }
+
+    private fun unregister(kind: TranslationWorkKind, jobIds: List<Long>) {
+        synchronized(lock) {
+            val active = activeJobIdsByKind[kind] ?: return
+            active.removeAll(jobIds.toSet())
+            if (active.isEmpty()) {
+                activeJobIdsByKind.remove(kind)
+            }
+        }
     }
 }
 
@@ -1172,7 +1249,14 @@ object TranslationPendingJobBatcher {
                 groups += TranslationBatchJobGroup(listOf(first))
                 continue
             }
-            val limit = if (maxImagesPerBatch == TRANSLATION_BATCH_ALL) Int.MAX_VALUE else maxImagesPerBatch.coerceAtLeast(1)
+            val requestedLimit = if (maxImagesPerBatch == TRANSLATION_BATCH_ALL) {
+                Int.MAX_VALUE
+            } else {
+                maxImagesPerBatch.coerceAtLeast(1)
+            }
+            val limit = requestedLimit
+                .coerceAtMost(TranslationVisionBatchPayloadPolicy.MAX_PREPARED_IMAGE_BATCH_PAGES)
+                .coerceAtLeast(1)
             val batch = mutableListOf(first)
             val iterator = remaining.iterator()
             while (iterator.hasNext() && batch.size < limit) {
@@ -1457,6 +1541,127 @@ object TranslationRetryPlanner {
                 nextStatus = null,
                 startPolicy = null,
             )
+        }
+    }
+}
+
+data class TranslationOverlaySaveVerification(
+    val success: Boolean,
+    val action: String,
+    val expectedState: String,
+    val readBackState: String,
+    val failureReason: String? = null,
+)
+
+object TranslationOverlaySaveVerificationPolicy {
+    fun verifyDelete(readBackPageExists: Boolean): TranslationOverlaySaveVerification {
+        return TranslationOverlaySaveVerification(
+            success = !readBackPageExists,
+            action = "delete",
+            expectedState = "absent",
+            readBackState = if (readBackPageExists) "present" else "absent",
+            failureReason = if (readBackPageExists) "delete_verification_failed:still_exists" else null,
+        )
+    }
+
+    fun verifyReplace(
+        expectedBoxCount: Int,
+        readBackPageExists: Boolean,
+        readBackBoxCount: Int?,
+    ): TranslationOverlaySaveVerification {
+        val readBackState = if (readBackPageExists) {
+            "present:${readBackBoxCount ?: "-"}"
+        } else {
+            "absent"
+        }
+        val failureReason = when {
+            !readBackPageExists -> "replace_verification_failed:missing_page"
+            readBackBoxCount != expectedBoxCount -> "replace_verification_failed:box_count_mismatch"
+            else -> null
+        }
+        return TranslationOverlaySaveVerification(
+            success = failureReason == null,
+            action = "replace",
+            expectedState = "present",
+            readBackState = readBackState,
+            failureReason = failureReason,
+        )
+    }
+
+    fun shouldRemoveUnverifiedSavedPage(verification: TranslationOverlaySaveVerification): Boolean {
+        return !verification.success
+    }
+}
+
+object TranslationSavedOverlayPolicy {
+    fun shouldSkipExistingOverlay(
+        hasSavedPageRow: Boolean,
+        overwrite: Boolean,
+    ): Boolean {
+        return hasSavedPageRow && !overwrite
+    }
+}
+
+enum class TranslationReaderOverlayLoadAction {
+    Show,
+    Clear,
+}
+
+data class TranslationReaderOverlayLoadDecision(
+    val action: TranslationReaderOverlayLoadAction,
+    val clearReason: String?,
+    val shouldLogMissing: Boolean,
+    val targetLanguage: String,
+    val refreshSource: String,
+    val savedBoxCount: Int,
+)
+
+object TranslationReaderOverlayLoadPolicy {
+    fun decision(
+        overlayVisible: Boolean,
+        chapterId: Long?,
+        pageIndex: Int,
+        targetLanguage: String,
+        refreshSource: String,
+        savedPageExists: Boolean,
+        savedBoxCount: Int,
+    ): TranslationReaderOverlayLoadDecision {
+        val clearReason = when {
+            !overlayVisible -> "overlay_hidden"
+            chapterId == null -> "missing_chapter_id"
+            !savedPageExists -> "no_saved_overlay"
+            else -> null
+        }
+        return TranslationReaderOverlayLoadDecision(
+            action = if (clearReason == null) {
+                TranslationReaderOverlayLoadAction.Show
+            } else {
+                TranslationReaderOverlayLoadAction.Clear
+            },
+            clearReason = clearReason,
+            shouldLogMissing = clearReason == "no_saved_overlay",
+            targetLanguage = targetLanguage,
+            refreshSource = refreshSource,
+            savedBoxCount = if (savedPageExists) savedBoxCount.coerceAtLeast(0) else 0,
+        )
+    }
+}
+
+object TranslationOverlayRenderSkipPolicy {
+    fun reason(
+        hasPageView: Boolean,
+        pageViewReady: Boolean,
+        sourceWidth: Int,
+        sourceHeight: Int,
+        rectWidth: Float,
+        rectHeight: Float,
+    ): String? {
+        return when {
+            !hasPageView -> "missing_page_view"
+            !pageViewReady -> "page_view_not_ready"
+            sourceWidth <= 0 || sourceHeight <= 0 -> "invalid_source_dimensions"
+            rectWidth in 0f..1f || rectHeight in 0f..1f -> "rect_too_small"
+            else -> null
         }
     }
 }

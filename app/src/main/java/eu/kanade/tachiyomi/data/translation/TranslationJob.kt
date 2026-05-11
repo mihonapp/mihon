@@ -85,6 +85,16 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
         return try {
             when (processor.processPending(workKind, laneId)) {
                 TranslationProcessResult.RetryLater -> Result.retry()
+                TranslationProcessResult.ContinueLater -> {
+                    start(
+                        context = applicationContext,
+                        policy = TranslationWorkStartPolicy.AppendOrReplace,
+                        reason = "queued continuation after safe worker chunk",
+                        kind = workKind,
+                        laneId = laneId,
+                    )
+                    Result.success()
+                }
                 TranslationProcessResult.Idle,
                 TranslationProcessResult.Completed,
                 TranslationProcessResult.Paused,
@@ -135,6 +145,7 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
             val existingWorkPolicy = when (policy) {
                 TranslationWorkStartPolicy.Keep -> ExistingWorkPolicy.KEEP
                 TranslationWorkStartPolicy.Replace -> ExistingWorkPolicy.REPLACE
+                TranslationWorkStartPolicy.AppendOrReplace -> ExistingWorkPolicy.APPEND_OR_REPLACE
             }
             runCatching {
                 WorkManager.getInstance(appContext)

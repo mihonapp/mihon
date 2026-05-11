@@ -31,6 +31,8 @@ import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
 import eu.kanade.tachiyomi.data.translation.TranslationMode
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayEditAction
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayEditPlanner
+import eu.kanade.tachiyomi.data.translation.TranslationOverlaySaveVerification
+import eu.kanade.tachiyomi.data.translation.TranslationOverlaySaveVerificationPolicy
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
 import eu.kanade.tachiyomi.data.translation.TranslationScope
@@ -100,6 +102,7 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.Instant
 import java.util.Date
+import java.io.IOException
 
 /**
  * Presenter used by the activity to perform background operations.
@@ -597,35 +600,41 @@ class ReaderViewModel @JvmOverloads constructor(
                 )
                 when (TranslationOverlayEditPlanner.actionFor(boxes.size)) {
                     TranslationOverlayEditAction.DeletePage -> {
+                        val savedPageId = existingPage?.page?._id
                         existingPage?.page?.let { savedPage ->
                             translationRepository.deletePage(savedPage._id)
-                            translationRepository.insertLog(
-                                jobId = null,
-                                pageId = null,
-                                level = TranslationLogLevel.Info,
-                                tag = "editor",
-                                message = "Deleted translation overlay edits",
-                                details = buildString {
-                                    appendLine("chapter_id=$chapterId")
-                                    appendLine("page_index=${page.index}")
-                                    appendLine("target_language=$targetLanguage")
-                                    appendLine("page_id=${savedPage._id}")
-                                },
-                            )
-                        } ?: translationRepository.insertLog(
+                        }
+                        val readBack = translationRepository.getSavedPage(
+                            chapterId = chapterId,
+                            pageIndex = page.index.toLong(),
+                            targetLanguage = targetLanguage,
+                        )
+                        val verification = TranslationOverlaySaveVerificationPolicy.verifyDelete(
+                            readBackPageExists = readBack != null,
+                        )
+                        translationRepository.insertLog(
                             jobId = null,
                             pageId = null,
-                            level = TranslationLogLevel.Info,
+                            level = if (verification.success) TranslationLogLevel.Info else TranslationLogLevel.Error,
                             tag = "editor",
-                            message = "Deleted translation overlay edits",
-                            details = buildString {
-                                appendLine("chapter_id=$chapterId")
-                                appendLine("page_index=${page.index}")
-                                appendLine("target_language=$targetLanguage")
-                                appendLine("page_id=-")
-                                appendLine("reason=no_saved_overlay")
+                            message = if (verification.success) {
+                                "Deleted translation overlay edits"
+                            } else {
+                                "Failed to verify deleted translation overlay edits"
                             },
+                            details = overlayEditVerificationDetails(
+                                action = "delete_editor",
+                                page = page,
+                                chapterId = chapterId,
+                                targetLanguage = targetLanguage,
+                                pageId = savedPageId,
+                                boxes = emptyList(),
+                                verification = verification,
+                            ),
                         )
+                        if (!verification.success) {
+                            throw IOException("Translation overlay delete verification failed: ${verification.failureReason}")
+                        }
                     }
                     TranslationOverlayEditAction.ReplaceBoxes -> {
                         val savedPage = existingPage?.page ?: translationRepository.ensurePage(
@@ -639,14 +648,39 @@ class ReaderViewModel @JvmOverloads constructor(
                             pipeline = translationPreferences.pipeline.get(),
                         )
                         translationRepository.replaceBoxes(savedPage._id, boxes)
+                        val readBack = translationRepository.getSavedPage(
+                            chapterId = chapterId,
+                            pageIndex = page.index.toLong(),
+                            targetLanguage = targetLanguage,
+                        )
+                        val verification = TranslationOverlaySaveVerificationPolicy.verifyReplace(
+                            expectedBoxCount = boxes.size,
+                            readBackPageExists = readBack != null,
+                            readBackBoxCount = readBack?.boxes?.size,
+                        )
                         translationRepository.insertLog(
                             jobId = null,
                             pageId = savedPage._id,
-                            level = TranslationLogLevel.Info,
+                            level = if (verification.success) TranslationLogLevel.Info else TranslationLogLevel.Error,
                             tag = "editor",
-                            message = "Saved translation overlay edits",
-                            details = "boxes=${boxes.size}",
+                            message = if (verification.success) {
+                                "Saved translation overlay edits"
+                            } else {
+                                "Failed to verify saved translation overlay edits"
+                            },
+                            details = overlayEditVerificationDetails(
+                                action = "replace_editor",
+                                page = page,
+                                chapterId = chapterId,
+                                targetLanguage = targetLanguage,
+                                pageId = savedPage._id,
+                                boxes = boxes,
+                                verification = verification,
+                            ),
                         )
+                        if (!verification.success) {
+                            throw IOException("Translation overlay save verification failed: ${verification.failureReason}")
+                        }
                     }
                 }
                 withUIContext {
@@ -705,6 +739,34 @@ class ReaderViewModel @JvmOverloads constructor(
             appendLine("exception_class=${error::class.qualifiedName ?: error::class.simpleName.orEmpty()}")
             appendLine("exception_message=${error.message ?: "-"}")
             appendLine("stack_trace=${error.stackTraceToString()}")
+        }.trimEnd()
+    }
+
+    private fun overlayEditVerificationDetails(
+        action: String,
+        page: ReaderPage,
+        chapterId: Long,
+        targetLanguage: String,
+        pageId: Long?,
+        boxes: List<TranslationBoxEdit>,
+        verification: TranslationOverlaySaveVerification,
+    ): String {
+        return buildString {
+            appendLine("action=$action")
+            appendLine("manga_id=${manga?.id ?: "-"}")
+            appendLine("chapter_id=$chapterId")
+            appendLine("page_index=${page.index}")
+            appendLine("page_id=${pageId ?: "-"}")
+            appendLine("target_language=$targetLanguage")
+            appendLine("box_count=${boxes.size}")
+            appendLine("verification_success=${verification.success}")
+            appendLine("verification_action=${verification.action}")
+            appendLine("expected_state=${verification.expectedState}")
+            appendLine("read_back_state=${verification.readBackState}")
+            appendLine("failure_reason=${verification.failureReason ?: "-"}")
+            boxes.forEachIndexed { index, box ->
+                appendLine("box_${index + 1}=x:${box.x},y:${box.y},w:${box.width},h:${box.height},textType:${box.textType}")
+            }
         }.trimEnd()
     }
 

@@ -12,10 +12,8 @@ import androidx.core.view.updateMargins
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
-import eu.kanade.tachiyomi.data.translation.TranslationRepository
-import eu.kanade.tachiyomi.data.translation.TranslationLanguages
-import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
-import eu.kanade.tachiyomi.data.translation.TranslationReaderOverlayMissingLogDeduper
+import eu.kanade.tachiyomi.data.translation.TranslationReaderOverlayLoadAction
+import eu.kanade.tachiyomi.data.translation.TranslationReaderOverlayLoader
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
@@ -36,10 +34,7 @@ import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
-import tachiyomi.domain.translation.service.TranslationPreferences
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 /**
  * Holder of the webtoon reader for a single page of a chapter.
@@ -81,8 +76,7 @@ class WebtoonPageHolder(
     private var page: ReaderPage? = null
 
     private val scope = MainScope()
-    private val translationRepository: TranslationRepository = Injekt.get()
-    private val translationPreferences: TranslationPreferences = Injekt.get()
+    private val translationOverlayLoader = TranslationReaderOverlayLoader()
 
     /**
      * Job for loading the page.
@@ -269,79 +263,18 @@ class WebtoonPageHolder(
     }
 
     private suspend fun setTranslationOverlay(page: ReaderPage?) {
-        if (!viewer.activity.viewModel.state.value.translationOverlayVisible) {
-            withUIContext { frame.clearTranslationOverlay() }
-            return
-        }
-        if (page == null) {
-            withUIContext { frame.clearTranslationOverlay() }
-            return
-        }
-        val chapterId = page.chapter.chapter.id
-        if (chapterId == null) {
-            withUIContext { frame.clearTranslationOverlay() }
-            return
-        }
-        val targetLanguage = translationPreferences.targetLanguage.get()
-            .ifBlank { TranslationLanguages.defaultTargetLanguage() }
-        val savedPage = try {
-            withIOContext {
-                translationRepository.getSavedPage(
-                    chapterId = chapterId,
-                    pageIndex = page.index.toLong(),
-                    targetLanguage = targetLanguage,
-                )
-            }
-        } catch (e: Throwable) {
-            if (e is kotlinx.coroutines.CancellationException) throw e
-            logcat(LogPriority.ERROR, e) { "Failed to load saved translation overlay" }
-            translationRepository.insertLog(
-                jobId = null,
-                pageId = null,
-                level = TranslationLogLevel.Error,
-                tag = "overlay",
-                message = "Failed to load reader translation overlay",
-                details = buildString {
-                    appendLine("chapter_id=$chapterId")
-                    appendLine("page_index=${page.index}")
-                    appendLine("target_language=$targetLanguage")
-                    appendLine("exception_class=${e::class.qualifiedName ?: e::class.simpleName.orEmpty()}")
-                    appendLine("exception_message=${e.message ?: "-"}")
-                    appendLine("stack_trace=${e.stackTraceToString()}")
-                },
-            )
-            withUIContext { frame.clearTranslationOverlay() }
-            return
-        }
-        if (
-            savedPage == null &&
-            TranslationReaderOverlayMissingLogDeduper.shouldLogMissing(
-                chapterId = chapterId,
-                pageIndex = page.index,
-                targetLanguage = targetLanguage,
-                refreshSource = "webtoon_visible_page",
-            )
-        ) {
-            translationRepository.insertLog(
-                jobId = null,
-                pageId = null,
-                level = TranslationLogLevel.Debug,
-                tag = "overlay",
-                message = "Reader translation overlay missing",
-                details = buildString {
-                    appendLine("action=reader_overlay_missing")
-                    appendLine("chapter_id=$chapterId")
-                    appendLine("page_index=${page.index}")
-                    appendLine("target_language=$targetLanguage")
-                    appendLine("overlay_visible=${viewer.activity.viewModel.state.value.translationOverlayVisible}")
-                    appendLine("refresh_source=webtoon_visible_page")
-                    appendLine("saved_page=false")
-                },
-            )
-        }
+        val result = translationOverlayLoader.load(
+            overlayVisible = viewer.activity.viewModel.state.value.translationOverlayVisible,
+            chapterId = page?.chapter?.chapter?.id,
+            pageIndex = page?.index ?: -1,
+            refreshSource = "webtoon_visible_page",
+        )
         withUIContext {
             if (this@WebtoonPageHolder.page == page) {
-                frame.setTranslationOverlay(savedPage?.boxes.orEmpty())
+                when (result.decision.action) {
+                    TranslationReaderOverlayLoadAction.Show -> frame.setTranslationOverlay(result.boxes)
+                    TranslationReaderOverlayLoadAction.Clear -> frame.clearTranslationOverlay()
+                }
             }
         }
     }

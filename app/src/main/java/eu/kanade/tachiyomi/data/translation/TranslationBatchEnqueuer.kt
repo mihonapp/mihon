@@ -29,11 +29,14 @@ class TranslationBatchEnqueuer(
                 candidates += TranslationPageCandidate(
                     chapterId = chapterId,
                     pageIndex = pageIndex,
-                    hasOverlay = !overwrite && repository.getPage(
-                        chapterId = chapterId,
-                        pageIndex = pageIndex.toLong(),
-                        targetLanguage = targetLanguage,
-                    ) != null,
+                    hasOverlay = TranslationSavedOverlayPolicy.shouldSkipExistingOverlay(
+                        hasSavedPageRow = repository.getPage(
+                            chapterId = chapterId,
+                            pageIndex = pageIndex.toLong(),
+                            targetLanguage = targetLanguage,
+                        ) != null,
+                        overwrite = overwrite,
+                    ),
                     hasActiveJob = repository.hasActiveMatchingJob(
                         mangaId = mangaId,
                         chapterId = chapterId,

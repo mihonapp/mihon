@@ -42,16 +42,21 @@ class TranslationQueueProcessor(
     ): TranslationProcessResult = coroutineScope {
         val concurrency = preferences.concurrency.get().coerceIn(1, 4)
         var retryLater = false
+        var continueLater = false
         var processedAny = false
+        var processedGroupCount = 0
         val claimTokenPrefix = "${workKind.value}:$laneId:${System.currentTimeMillis()}"
 
         while (true) {
-            val staleRecovered = repository.requeueStaleRunningJobs(workKind)
-            val freshRunning = repository.getFreshRunningJobs(workKind)
+            val activeJobIds = TranslationActiveJobRegistry.activeJobIds(workKind)
+            val staleRecovered = repository.requeueStaleRunningJobs(workKind, activeJobIds = activeJobIds)
+            val freshRunning = repository.getFreshRunningJobs(workKind, activeJobIds = activeJobIds)
             if (freshRunning.isNotEmpty()) {
                 val now = System.currentTimeMillis()
                 val oldestAge = freshRunning.maxOf { now - it.updated_at }
-                val waitMs = freshRunning.minOf { TranslationRunningJobPolicy.waitMsUntilStale(it, now) }
+                val waitMs = freshRunning.minOf {
+                    TranslationRunningJobPolicy.waitMsUntilClaimMayProceed(it, now, activeJobIds)
+                }
                 repository.insertLog(
                     jobId = freshRunning.firstOrNull()?._id,
                     pageId = null,
@@ -68,6 +73,7 @@ class TranslationQueueProcessor(
                             "worker_kind" to workKind.value,
                             "lane_id" to laneId,
                             "running_count" to freshRunning.size,
+                            "active_running_count" to freshRunning.count { it._id in activeJobIds },
                             "recovered_stale_count" to staleRecovered,
                             "job_ids" to freshRunning.take(50).joinToString { it._id.toString() },
                             "oldest_age_ms" to oldestAge,
@@ -89,8 +95,12 @@ class TranslationQueueProcessor(
                 jobs = pendingJobs,
                 maxImagesPerBatch = preferences.normalizedMaxImagesPerBatch(),
             )
+            val groupsForInvocation = groups.take(TranslationWorkerContinuationPolicy.MAX_GROUPS_PER_WORKER_INVOCATION)
             var claimedAnyThisLoop = false
-            groups.chunked(concurrency).forEachIndexed { chunkIndex, batch ->
+            groupsForInvocation.chunked(concurrency).forEachIndexed { chunkIndex, batch ->
+                if (retryLater || continueLater) {
+                    return@forEachIndexed
+                }
                 val claimedGroups = batch.mapIndexedNotNull { groupIndex, group ->
                     val claimed = repository.claimJobs(
                         jobs = group.jobs,
@@ -107,20 +117,53 @@ class TranslationQueueProcessor(
                 val results = claimedGroups.map { group ->
                     async { processJobGroup(group, workKind, laneId) }
                 }.awaitAll()
+                processedGroupCount += claimedGroups.size
                 when {
                     TranslationProcessResult.Paused in results -> return@coroutineScope TranslationProcessResult.Paused
                     TranslationProcessResult.RetryLater in results -> retryLater = true
+                }
+                if (!retryLater) {
+                    val remainingPendingCount = repository.getPendingJobs(workKind).size
+                    if (
+                        TranslationWorkerContinuationPolicy.shouldYieldAfterGroups(
+                            processedGroupCount = processedGroupCount,
+                            hasPendingJobs = remainingPendingCount > 0,
+                        )
+                    ) {
+                        repository.insertLog(
+                            jobId = null,
+                            pageId = null,
+                            level = TranslationLogLevel.Debug,
+                            tag = "queue",
+                            message = "Translation worker yielding for queued continuation",
+                            details = TranslationLogDetailsFormatter.queueState(
+                                action = "worker_yield_pending_continuation",
+                                jobId = null,
+                                previousStatus = null,
+                                nextStatus = null,
+                                reason = "Worker processed a safe chunk and will let WorkManager start a fresh continuation",
+                                extra = mapOf(
+                                    "worker_kind" to workKind.value,
+                                    "lane_id" to laneId,
+                                    "processed_group_count" to processedGroupCount,
+                                    "remaining_pending_count" to remainingPendingCount,
+                                ),
+                            ),
+                        )
+                        continueLater = true
+                    }
                 }
             }
             if (!claimedAnyThisLoop) {
                 break
             }
-            if (retryLater) {
+            if (retryLater || continueLater) {
                 break
             }
         }
         when {
             retryLater -> TranslationProcessResult.RetryLater
+            continueLater -> TranslationProcessResult.ContinueLater
             processedAny -> TranslationProcessResult.Completed
             else -> TranslationProcessResult.Idle
         }
@@ -131,10 +174,12 @@ class TranslationQueueProcessor(
         workKind: TranslationWorkKind,
         laneId: Int,
     ): TranslationProcessResult {
-        return if (group.jobs.size > 1 && group.jobs.all { it.scope == TranslationScope.Image.value }) {
-            processImageBatch(group.jobs, workKind, laneId)
-        } else {
-            processJob(group.first, workKind, laneId)
+        return TranslationActiveJobRegistry.withActiveJobs(workKind, group.jobs) {
+            if (group.jobs.size > 1 && group.jobs.all { it.scope == TranslationScope.Image.value }) {
+                processImageBatch(group.jobs, workKind, laneId)
+            } else {
+                processJob(group.first, workKind, laneId)
+            }
         }
     }
 
@@ -309,7 +354,12 @@ class TranslationQueueProcessor(
                 val chapterId = requireNotNull(job.chapter_id) { "Image job missing chapter id" }
                 val pageIndex = requireNotNull(job.page_index) { "Image job missing page index" }.toInt()
                 val targetLanguage = job.target_language.ifBlank { TranslationLanguages.defaultTargetLanguage() }
-                if (!job.overwrite && repository.getPage(chapterId, pageIndex.toLong(), targetLanguage) != null) {
+                if (
+                    TranslationSavedOverlayPolicy.shouldSkipExistingOverlay(
+                        hasSavedPageRow = repository.getPage(chapterId, pageIndex.toLong(), targetLanguage) != null,
+                        overwrite = job.overwrite,
+                    )
+                ) {
                     repository.insertLog(
                         jobId = job._id,
                         pageId = null,
@@ -742,7 +792,12 @@ class TranslationQueueProcessor(
         total: Long,
     ) {
         val targetLanguage = job.target_language.ifBlank { TranslationLanguages.defaultTargetLanguage() }
-        if (!job.overwrite && repository.getPage(chapterId, pageIndex.toLong(), targetLanguage) != null) {
+        if (
+            TranslationSavedOverlayPolicy.shouldSkipExistingOverlay(
+                hasSavedPageRow = repository.getPage(chapterId, pageIndex.toLong(), targetLanguage) != null,
+                overwrite = job.overwrite,
+            )
+        ) {
             repository.insertLog(
                 jobId = job._id,
                 pageId = null,
@@ -848,7 +903,15 @@ class TranslationQueueProcessor(
             overlay = sanitizedOverlay,
         )
         val verifiedPage = repository.getSavedPage(chapterId, pageIndex.toLong(), targetLanguage)
-            ?: throw IOException("Saved translation overlay could not be read back for chapter=$chapterId page=$pageIndex target=$targetLanguage")
+        if (verifiedPage == null) {
+            repository.deletePage(savedPage._id)
+            throw IOException("Saved translation overlay could not be read back for chapter=$chapterId page=$pageIndex target=$targetLanguage")
+        }
+        val verification = TranslationOverlaySaveVerificationPolicy.verifyReplace(
+            expectedBoxCount = sanitizedOverlay.boxes.size,
+            readBackPageExists = true,
+            readBackBoxCount = verifiedPage.boxes.size,
+        )
 
         repository.insertLog(
             jobId = job._id,
@@ -875,15 +938,23 @@ class TranslationQueueProcessor(
         repository.insertLog(
             jobId = job._id,
             pageId = verifiedPage.page._id,
-            level = TranslationLogLevel.Debug,
+            level = if (verification.success) TranslationLogLevel.Debug else TranslationLogLevel.Error,
             tag = "page",
-            message = "Verified saved translation overlay",
+            message = if (verification.success) {
+                "Verified saved translation overlay"
+            } else {
+                "Failed to verify saved translation overlay"
+            },
             details = buildString {
                 appendLine("action=save_verified")
                 appendLine("chapter=$chapterId")
                 appendLine("page=$pageIndex")
                 appendLine("target_language=$targetLanguage")
                 appendLine("saved_page_id=${verifiedPage.page._id}")
+                appendLine("verification_success=${verification.success}")
+                appendLine("expected_state=${verification.expectedState}")
+                appendLine("read_back_state=${verification.readBackState}")
+                appendLine("failure_reason=${verification.failureReason ?: "-"}")
                 appendLine("saved_box_count=${verifiedPage.boxes.size}")
                 appendLine("sanitized_box_count=${sanitizedOverlay.boxes.size}")
                 appendLine("input_boxes=${overlay.boxes.size}")
@@ -898,6 +969,12 @@ class TranslationQueueProcessor(
                 }
             },
         )
+        if (!verification.success) {
+            if (TranslationOverlaySaveVerificationPolicy.shouldRemoveUnverifiedSavedPage(verification)) {
+                repository.deletePage(savedPage._id)
+            }
+            throw IOException("Saved translation overlay verification failed: ${verification.failureReason}")
+        }
     }
 
     private fun coordinateNormalizationDetails(
@@ -1186,6 +1263,7 @@ private data class PreparedTranslationPage(
 enum class TranslationProcessResult {
     Idle,
     Completed,
+    ContinueLater,
     RetryLater,
     Paused,
 }

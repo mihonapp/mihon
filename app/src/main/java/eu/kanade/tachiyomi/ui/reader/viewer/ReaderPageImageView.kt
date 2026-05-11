@@ -44,16 +44,25 @@ import com.github.chrisbanes.photoview.PhotoView
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.data.coil.cropBorders
 import eu.kanade.tachiyomi.data.coil.customDecoder
+import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayBoxStyle
+import eu.kanade.tachiyomi.data.translation.TranslationOverlayRenderSkipPolicy
+import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import tachiyomi.domain.translation.service.TranslationPreferences
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonSubsamplingImageView
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import okio.BufferedSource
 import tachiyomi.data.Translation_boxes
 import tachiyomi.core.common.util.system.ImageUtil
+import tachiyomi.core.common.util.lang.withIOContext
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.util.LinkedHashSet
 import java.util.Locale
 
 /**
@@ -478,6 +487,9 @@ open class ReaderPageImageView @JvmOverloads constructor(
 
         private val density = resources.displayMetrics.density
         private val translationPreferences: TranslationPreferences = Injekt.get()
+        private val translationRepository: TranslationRepository = Injekt.get()
+        private var logScope: CoroutineScope? = null
+        private val loggedRenderSkips = LinkedHashSet<String>()
         private val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = Color.argb(210, 255, 255, 255)
             style = Paint.Style.FILL
@@ -495,13 +507,25 @@ open class ReaderPageImageView @JvmOverloads constructor(
             super.onDraw(canvas)
             if (boxes.isEmpty()) return
 
+            val baseStyle = TranslationOverlayBoxStyle.fromPreferences(translationPreferences)
             boxes.forEach { box ->
                 val rect = box.toViewRect() ?: return@forEach
-                if (rect.width() <= 1f || rect.height() <= 1f) return@forEach
+                val sizeSkipReason = TranslationOverlayRenderSkipPolicy.reason(
+                    hasPageView = true,
+                    pageViewReady = true,
+                    sourceWidth = 1,
+                    sourceHeight = 1,
+                    rectWidth = rect.width(),
+                    rectHeight = rect.height(),
+                )
+                if (sizeSkipReason != null) {
+                    box.logRenderSkip(sizeSkipReason)
+                    return@forEach
+                }
 
                 val style = TranslationOverlayBoxStyle
                     .fromJson(box.style_json)
-                    .mergedWith(TranslationOverlayBoxStyle.fromPreferences(translationPreferences))
+                    .mergedWith(baseStyle)
                 val radius = 4f * density
                 fillPaint.color = parseColor(style.fillColor, Color.argb(210, 255, 255, 255))
                 strokePaint.color = parseColor(style.strokeColor, Color.argb(230, 32, 32, 32))
@@ -509,6 +533,19 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 canvas.drawRoundRect(rect, radius, radius, strokePaint)
                 drawText(canvas, rect, box.translated_text, style)
             }
+        }
+
+        override fun onAttachedToWindow() {
+            super.onAttachedToWindow()
+            if (logScope == null) {
+                logScope = MainScope()
+            }
+        }
+
+        override fun onDetachedFromWindow() {
+            logScope?.cancel()
+            logScope = null
+            super.onDetachedFromWindow()
         }
 
         private fun drawText(
@@ -577,22 +614,46 @@ open class ReaderPageImageView @JvmOverloads constructor(
         }
 
         private fun Translation_boxes.toViewRect(): RectF? {
-            val view = pageViewProvider() ?: return null
+            val view = pageViewProvider()
+            if (view == null) {
+                logRenderSkip("missing_page_view")
+                return null
+            }
             return when (view) {
                 is SubsamplingScaleImageView -> toSubsamplingRect(view)
                 is AppCompatImageView -> toImageViewRect(view)
-                else -> null
+                else -> {
+                    logRenderSkip("unsupported_page_view")
+                    null
+                }
             }
         }
 
         private fun Translation_boxes.toSubsamplingRect(view: SubsamplingScaleImageView): RectF? {
-            if (!view.isReady || view.sWidth <= 0 || view.sHeight <= 0) return null
+            val readinessReason = TranslationOverlayRenderSkipPolicy.reason(
+                hasPageView = true,
+                pageViewReady = view.isReady,
+                sourceWidth = view.sWidth,
+                sourceHeight = view.sHeight,
+                rectWidth = 2f,
+                rectHeight = 2f,
+            )
+            if (readinessReason != null) {
+                logRenderSkip(readinessReason)
+                return null
+            }
             val start = view.sourceToViewCoord((x * view.sWidth).toFloat(), (y * view.sHeight).toFloat())
-                ?: return null
+                ?: run {
+                    logRenderSkip("coordinate_mapping_failed")
+                    return null
+                }
             val end = view.sourceToViewCoord(
                 ((x + width) * view.sWidth).toFloat(),
                 ((y + height) * view.sHeight).toFloat(),
-            ) ?: return null
+            ) ?: run {
+                logRenderSkip("coordinate_mapping_failed")
+                return null
+            }
             return RectF(
                 view.left + start.x,
                 view.top + start.y,
@@ -602,7 +663,10 @@ open class ReaderPageImageView @JvmOverloads constructor(
         }
 
         private fun Translation_boxes.toImageViewRect(view: AppCompatImageView): RectF? {
-            val drawable = view.drawable ?: return null
+            val drawable = view.drawable ?: run {
+                logRenderSkip("missing_drawable")
+                return null
+            }
             val imageRect = RectF(
                 0f,
                 0f,
@@ -628,7 +692,43 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 maxOf(top, bottom),
             )
         }
+
+        private fun Translation_boxes.logRenderSkip(reason: String) {
+            val key = "${_id}:$reason"
+            if (!loggedRenderSkips.add(key)) return
+            if (loggedRenderSkips.size > MAX_RENDER_SKIP_LOG_KEYS) {
+                val iterator = loggedRenderSkips.iterator()
+                if (iterator.hasNext()) {
+                    iterator.next()
+                    iterator.remove()
+                }
+            }
+            val scope = logScope ?: MainScope().also { logScope = it }
+            scope.launch {
+                withIOContext {
+                    translationRepository.insertLog(
+                        jobId = null,
+                        pageId = page_id,
+                        level = TranslationLogLevel.Debug,
+                        tag = "overlay",
+                        message = "Skipped rendering translation overlay box",
+                        details = buildString {
+                            appendLine("action=overlay_render_skip")
+                            appendLine("reason=$reason")
+                            appendLine("page_id=$page_id")
+                            appendLine("box_id=$_id")
+                            appendLine("x=$x")
+                            appendLine("y=$y")
+                            appendLine("width=$width")
+                            appendLine("height=$height")
+                            appendLine("text_type=$text_type")
+                        },
+                    )
+                }
+            }
+        }
     }
 }
 
+private const val MAX_RENDER_SKIP_LOG_KEYS = 256
 private const val MAX_ZOOM_SCALE = 5F

@@ -57,24 +57,26 @@ class TranslationRepository(
     suspend fun getFreshRunningJobs(
         kind: TranslationWorkKind,
         now: Long = System.currentTimeMillis(),
+        activeJobIds: Set<Long> = emptySet(),
     ): List<Translation_jobs> {
         return database.translationsQueries.getJobsByStatus(TranslationJobStatus.Running.value)
             .awaitAsList()
             .filter { job ->
                 TranslationRunningJobPolicy.matchesKind(job, kind) &&
-                    !TranslationRunningJobPolicy.isStale(job, now)
+                    TranslationRunningJobPolicy.blocksNewClaims(job, now, activeJobIds)
             }
     }
 
     suspend fun requeueStaleRunningJobs(
         kind: TranslationWorkKind,
         now: Long = System.currentTimeMillis(),
+        activeJobIds: Set<Long> = emptySet(),
     ): Int {
         val staleJobs = database.translationsQueries.getJobsByStatus(TranslationJobStatus.Running.value)
             .awaitAsList()
             .filter { job ->
                 TranslationRunningJobPolicy.matchesKind(job, kind) &&
-                    TranslationRunningJobPolicy.isStale(job, now)
+                    TranslationRunningJobPolicy.isRecoverableStale(job, now, activeJobIds)
             }
         if (staleJobs.isEmpty()) return 0
         val nextStatus = TranslationRunningJobPolicy.requeueStatus(kind)
@@ -519,11 +521,14 @@ class TranslationRepository(
                     chapterId != null &&
                     pageIndex != null
                 ) {
-                    database.translationsQueries.getPage(
-                        chapterId = chapterId,
-                        pageIndex = pageIndex,
-                        targetLanguage = job.target_language.ifBlank { TranslationLanguages.defaultTargetLanguage() },
-                    ).awaitAsOneOrNull() != null
+                    TranslationSavedOverlayPolicy.shouldSkipExistingOverlay(
+                        hasSavedPageRow = database.translationsQueries.getPage(
+                            chapterId = chapterId,
+                            pageIndex = pageIndex,
+                            targetLanguage = job.target_language.ifBlank { TranslationLanguages.defaultTargetLanguage() },
+                        ).awaitAsOneOrNull() != null,
+                        overwrite = job.overwrite,
+                    )
                 } else {
                     false
                 }

@@ -521,6 +521,37 @@ class TranslationCoreTest {
     }
 
     @Test
+    fun `mixed normalized and pixel coordinates convert only pixel fields`() {
+        val overlay = TranslationOverlayResult(
+            boxes = listOf(
+                TranslationOverlayBox(
+                    x = 0.7562f,
+                    y = 639f,
+                    width = 0.1157f,
+                    height = 0.1009f,
+                    originalText = "混在",
+                    translatedText = "Mixed",
+                    textType = "speech",
+                ),
+            ),
+        )
+
+        val result = TranslationOverlayCoordinateNormalizer.normalize(
+            overlay = overlay,
+            imageWidth = 844,
+            imageHeight = 1200,
+        )
+
+        val box = result.overlay.boxes.single()
+        result.report.convertedPixelBoxes shouldBe 1
+        result.report.droppedBoxes shouldBe 0
+        box.x shouldBe 0.7562f
+        box.y shouldBe 0.5325f
+        box.width shouldBe 0.1157f
+        box.height shouldBe 0.1009f
+    }
+
+    @Test
     fun `pixel coordinates without image dimensions are dropped with report`() {
         val overlay = TranslationOverlayResult(
             boxes = listOf(
@@ -775,6 +806,22 @@ class TranslationCoreTest {
     }
 
     @Test
+    fun `pending job batcher caps all mode worker groups to avoid overlong workers`() {
+        val jobs = (0 until 100).map { index ->
+            translationJob(
+                id = index + 1L,
+                chapterId = 10,
+                pageIndex = index.toLong(),
+            )
+        }
+
+        val groups = TranslationPendingJobBatcher.groupPendingJobs(jobs, maxImagesPerBatch = TRANSLATION_BATCH_ALL)
+
+        groups.map { it.jobs.size } shouldContainExactly listOf(38, 38, 24)
+        groups.flatMap { it.jobs }.map { it.page_index?.toInt() } shouldContainExactly (0 until 100).toList()
+    }
+
+    @Test
     fun `batch fallback planner splits malformed all mode batches before single page fallback`() {
         TranslationBatchFallbackPlanner.splitIndexes(169) shouldBe ((0 until 84) to (84 until 169))
         TranslationBatchFallbackPlanner.splitIndexes(2) shouldBe ((0 until 1) to (1 until 2))
@@ -851,6 +898,22 @@ class TranslationCoreTest {
     }
 
     @Test
+    fun `worker continuation policy yields after a processed group when pending work remains`() {
+        TranslationWorkerContinuationPolicy.shouldYieldAfterGroups(
+            processedGroupCount = 0,
+            hasPendingJobs = true,
+        ) shouldBe false
+        TranslationWorkerContinuationPolicy.shouldYieldAfterGroups(
+            processedGroupCount = 1,
+            hasPendingJobs = false,
+        ) shouldBe false
+        TranslationWorkerContinuationPolicy.shouldYieldAfterGroups(
+            processedGroupCount = 1,
+            hasPendingJobs = true,
+        ) shouldBe true
+    }
+
+    @Test
     fun `running job policy keeps fresh normal jobs blocking new claims`() {
         val now = 20_000L + TranslationRunningJobPolicy.STALE_RUNNING_MS
         val fresh = translationJob(
@@ -876,6 +939,35 @@ class TranslationCoreTest {
             now,
         ) shouldBe TranslationRunningJobPolicy.HEARTBEAT_MS
         TranslationRunningJobPolicy.requeueStatus(TranslationWorkKind.Normal) shouldBe TranslationJobStatus.Retrying
+    }
+
+    @Test
+    fun `running job policy does not recover stale jobs owned by active worker`() {
+        val now = 20_000L + TranslationRunningJobPolicy.STALE_RUNNING_MS
+        val stale = translationJob(
+            id = 1,
+            chapterId = 10,
+            pageIndex = 0,
+            status = TranslationJobStatus.Running.value,
+            updatedAt = now - TranslationRunningJobPolicy.STALE_RUNNING_MS,
+            errorMessage = "normal:0:123:0:0",
+        )
+
+        TranslationRunningJobPolicy.isRecoverableStale(
+            job = stale,
+            now = now,
+            activeJobIds = setOf(stale._id),
+        ) shouldBe false
+        TranslationRunningJobPolicy.blocksNewClaims(
+            job = stale,
+            now = now,
+            activeJobIds = setOf(stale._id),
+        ) shouldBe true
+        TranslationRunningJobPolicy.isRecoverableStale(
+            job = stale,
+            now = now,
+            activeJobIds = emptySet(),
+        ) shouldBe true
     }
 
     @Test
@@ -1212,6 +1304,153 @@ class TranslationCoreTest {
     fun `overlay edit planner deletes saved page only when user saves zero boxes`() {
         TranslationOverlayEditPlanner.actionFor(boxCount = 0) shouldBe TranslationOverlayEditAction.DeletePage
         TranslationOverlayEditPlanner.actionFor(boxCount = 1) shouldBe TranslationOverlayEditAction.ReplaceBoxes
+    }
+
+    @Test
+    fun `overlay save verification treats editor delete as verified row absence`() {
+        val verified = TranslationOverlaySaveVerificationPolicy.verifyDelete(readBackPageExists = false)
+        val failed = TranslationOverlaySaveVerificationPolicy.verifyDelete(readBackPageExists = true)
+
+        verified.success shouldBe true
+        verified.expectedState shouldBe "absent"
+        verified.readBackState shouldBe "absent"
+        failed.success shouldBe false
+        failed.failureReason shouldContain "still_exists"
+    }
+
+    @Test
+    fun `overlay save verification preserves generated zero box rows but detects replace mismatch`() {
+        val generatedEmpty = TranslationOverlaySaveVerificationPolicy.verifyReplace(
+            expectedBoxCount = 0,
+            readBackPageExists = true,
+            readBackBoxCount = 0,
+        )
+        val mismatch = TranslationOverlaySaveVerificationPolicy.verifyReplace(
+            expectedBoxCount = 2,
+            readBackPageExists = true,
+            readBackBoxCount = 1,
+        )
+
+        generatedEmpty.success shouldBe true
+        generatedEmpty.expectedState shouldBe "present"
+        generatedEmpty.readBackState shouldBe "present:0"
+        mismatch.success shouldBe false
+        mismatch.failureReason shouldContain "box_count_mismatch"
+    }
+
+    @Test
+    fun `failed overlay save verification requires removing unverified saved page before retry`() {
+        val success = TranslationOverlaySaveVerificationPolicy.verifyReplace(
+            expectedBoxCount = 1,
+            readBackPageExists = true,
+            readBackBoxCount = 1,
+        )
+        val mismatch = TranslationOverlaySaveVerificationPolicy.verifyReplace(
+            expectedBoxCount = 2,
+            readBackPageExists = true,
+            readBackBoxCount = 1,
+        )
+        val missing = TranslationOverlaySaveVerificationPolicy.verifyReplace(
+            expectedBoxCount = 1,
+            readBackPageExists = false,
+            readBackBoxCount = null,
+        )
+
+        TranslationOverlaySaveVerificationPolicy.shouldRemoveUnverifiedSavedPage(success) shouldBe false
+        TranslationOverlaySaveVerificationPolicy.shouldRemoveUnverifiedSavedPage(mismatch) shouldBe true
+        TranslationOverlaySaveVerificationPolicy.shouldRemoveUnverifiedSavedPage(missing) shouldBe true
+    }
+
+    @Test
+    fun `saved overlay skip policy ignores missing deleted rows and overwrite retry`() {
+        TranslationSavedOverlayPolicy.shouldSkipExistingOverlay(
+            hasSavedPageRow = true,
+            overwrite = false,
+        ) shouldBe true
+        TranslationSavedOverlayPolicy.shouldSkipExistingOverlay(
+            hasSavedPageRow = false,
+            overwrite = false,
+        ) shouldBe false
+        TranslationSavedOverlayPolicy.shouldSkipExistingOverlay(
+            hasSavedPageRow = true,
+            overwrite = true,
+        ) shouldBe false
+    }
+
+    @Test
+    fun `reader overlay load policy gives identical clear and show decisions for pager and webtoon`() {
+        val pagerMissing = TranslationReaderOverlayLoadPolicy.decision(
+            overlayVisible = true,
+            chapterId = 10,
+            pageIndex = 4,
+            targetLanguage = "English",
+            refreshSource = "pager_visible_page",
+            savedPageExists = false,
+            savedBoxCount = 0,
+        )
+        val webtoonMissing = TranslationReaderOverlayLoadPolicy.decision(
+            overlayVisible = true,
+            chapterId = 10,
+            pageIndex = 4,
+            targetLanguage = "English",
+            refreshSource = "webtoon_visible_page",
+            savedPageExists = false,
+            savedBoxCount = 0,
+        )
+        val generatedEmpty = TranslationReaderOverlayLoadPolicy.decision(
+            overlayVisible = true,
+            chapterId = 10,
+            pageIndex = 5,
+            targetLanguage = "English",
+            refreshSource = "pager_visible_page",
+            savedPageExists = true,
+            savedBoxCount = 0,
+        )
+
+        pagerMissing.action shouldBe TranslationReaderOverlayLoadAction.Clear
+        pagerMissing.clearReason shouldBe "no_saved_overlay"
+        pagerMissing.shouldLogMissing shouldBe true
+        webtoonMissing.action shouldBe pagerMissing.action
+        webtoonMissing.clearReason shouldBe pagerMissing.clearReason
+        generatedEmpty.action shouldBe TranslationReaderOverlayLoadAction.Show
+        generatedEmpty.clearReason shouldBe null
+        generatedEmpty.shouldLogMissing shouldBe false
+    }
+
+    @Test
+    fun `overlay render skip policy reports user safe reasons`() {
+        TranslationOverlayRenderSkipPolicy.reason(
+            hasPageView = false,
+            pageViewReady = false,
+            sourceWidth = 0,
+            sourceHeight = 0,
+            rectWidth = 0f,
+            rectHeight = 0f,
+        ) shouldBe "missing_page_view"
+        TranslationOverlayRenderSkipPolicy.reason(
+            hasPageView = true,
+            pageViewReady = false,
+            sourceWidth = 844,
+            sourceHeight = 1200,
+            rectWidth = 0f,
+            rectHeight = 0f,
+        ) shouldBe "page_view_not_ready"
+        TranslationOverlayRenderSkipPolicy.reason(
+            hasPageView = true,
+            pageViewReady = true,
+            sourceWidth = 844,
+            sourceHeight = 1200,
+            rectWidth = 0.5f,
+            rectHeight = 4f,
+        ) shouldBe "rect_too_small"
+        TranslationOverlayRenderSkipPolicy.reason(
+            hasPageView = true,
+            pageViewReady = true,
+            sourceWidth = 844,
+            sourceHeight = 1200,
+            rectWidth = 12f,
+            rectHeight = 12f,
+        ) shouldBe null
     }
 
     @Test
