@@ -50,7 +50,7 @@ class TranslationQueueProcessor(
             val freshRunning = repository.getFreshRunningJobs(workKind)
             if (freshRunning.isNotEmpty()) {
                 val now = System.currentTimeMillis()
-                val oldestAge = freshRunning.minOf { now - it.updated_at }
+                val oldestAge = freshRunning.maxOf { now - it.updated_at }
                 val waitMs = freshRunning.minOf { TranslationRunningJobPolicy.waitMsUntilStale(it, now) }
                 repository.insertLog(
                     jobId = freshRunning.firstOrNull()?._id,

@@ -222,6 +222,11 @@ object TranslationClaimToken {
         return TranslationWorkKind.entries.any { token.startsWith("${it.value}:") }
     }
 
+    fun laneId(value: String?): Int? {
+        if (!isLikelyClaimToken(value)) return null
+        return value.orEmpty().split(":").getOrNull(1)?.toIntOrNull()
+    }
+
     fun publicErrorMessage(value: String?): String? {
         return value.takeUnless(::isLikelyClaimToken)
     }
@@ -1032,6 +1037,7 @@ object TranslationBatchFallbackPlanner {
 object TranslationVisionBatchPayloadPolicy {
     const val MAX_PREPARED_IMAGE_BATCH_PAGES = DEFAULT_TRANSLATION_MAX_IMAGES_PER_BATCH
     const val MAX_INLINE_IMAGE_BATCH_BYTES = 10L * 1024L * 1024L
+    const val ESTIMATED_IMAGE_OVERHEAD_BYTES = 512L
 
     fun splitByPreparedPageCount(
         pageCount: Int,
@@ -1056,7 +1062,8 @@ object TranslationVisionBatchPayloadPolicy {
         var currentBytes = 0L
 
         imageByteSizes.forEachIndexed { index, rawSize ->
-            val size = rawSize.coerceAtLeast(0L)
+            val raw = rawSize.coerceAtLeast(0L)
+            val size = ((raw + 2L) / 3L) * 4L + ESTIMATED_IMAGE_OVERHEAD_BYTES
             if (index > start && currentBytes + size > safeMax) {
                 ranges += start until index
                 start = index

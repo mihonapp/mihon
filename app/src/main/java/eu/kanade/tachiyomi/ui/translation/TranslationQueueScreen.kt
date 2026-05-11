@@ -990,7 +990,7 @@ private class TranslationQueueScreenModel(
             if (setup.ready && result != null && result.requeued > 0) {
                 TranslationJob.start(
                     context = context,
-                    policy = TranslationWorkStartPolicy.Replace,
+                    policy = TranslationWorkStartPolicy.Keep,
                     reason = "queue_resume",
                 )
             }

@@ -890,9 +890,14 @@ private data class GeminiGenerateContentRequest(
 )
 
 private fun GeminiGenerateContentRequest.hasInlineData(): Boolean {
-    return contents.any { content ->
-        content.parts.any { it.inlineData?.data != null }
+    fun GeminiContent?.hasInlineParts(): Boolean {
+        return this?.parts?.any { it.inlineData?.data != null } == true
     }
+
+    return systemInstruction.hasInlineParts() ||
+        contents.any { content ->
+            content.parts.any { it.inlineData?.data != null }
+        }
 }
 
 @Serializable

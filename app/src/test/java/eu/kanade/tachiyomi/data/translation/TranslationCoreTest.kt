@@ -789,7 +789,7 @@ class TranslationCoreTest {
             maxBytes = 10L * 1024L * 1024L,
         )
 
-        ranges.map { it.count() } shouldContainExactly listOf(5, 5, 5, 5, 5, 5, 5, 3)
+        ranges.map { it.count() } shouldContainExactly listOf(3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2)
         ranges.flatMap { it.toList() } shouldContainExactly (0 until 38).toList()
     }
 
@@ -1248,6 +1248,8 @@ class TranslationCoreTest {
         TranslationClaimToken.publicErrorMessage("normal:0:123:0:0") shouldBe null
         TranslationClaimToken.publicErrorMessage("manual_retry:1:123:0:0") shouldBe null
         TranslationClaimToken.publicErrorMessage("quota exceeded") shouldBe "quota exceeded"
+        TranslationClaimToken.laneId("normal:7:123:0:0") shouldBe 7
+        TranslationClaimToken.laneId("quota exceeded") shouldBe null
     }
 
     @Test

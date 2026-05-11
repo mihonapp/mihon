@@ -21,6 +21,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.guava.await
 import kotlinx.coroutines.withContext
 import tachiyomi.core.common.util.lang.launchIO
 import uy.kohesive.injekt.Injekt
@@ -206,9 +207,29 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
             reason: String = "Translation worker stopped",
         ) {
             val appContext = context.applicationContext
-            WorkManager.getInstance(appContext).cancelAllWorkByTag(TAG)
+            val cancelOperation = WorkManager.getInstance(appContext).cancelAllWorkByTag(TAG)
             launchIO {
-                Injekt.get<TranslationRepository>().requeueRunningJobsForStoppedWorker(reason = reason)
+                val repository = Injekt.get<TranslationRepository>()
+                runCatching {
+                    cancelOperation.result.await()
+                }.onSuccess {
+                    repository.requeueRunningJobsForStoppedWorker(reason = reason)
+                }.onFailure { error ->
+                    repository.insertLog(
+                        jobId = null,
+                        pageId = null,
+                        level = TranslationLogLevel.Error,
+                        tag = "queue",
+                        message = "Failed to stop translation worker",
+                        details = TranslationLogDetailsFormatter.queueState(
+                            action = "worker_stop_failed",
+                            jobId = null,
+                            previousStatus = null,
+                            nextStatus = null,
+                            reason = error.message ?: error::class.simpleName.orEmpty(),
+                        ),
+                    )
+                }
             }
         }
 

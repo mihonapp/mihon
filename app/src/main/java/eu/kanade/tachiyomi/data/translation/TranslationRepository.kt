@@ -119,6 +119,7 @@ class TranslationRepository(
         val runningJobs = database.translationsQueries.getJobsByStatus(TranslationJobStatus.Running.value)
             .awaitAsList()
             .filter { job -> kind == null || TranslationRunningJobPolicy.matchesKind(job, kind) }
+            .filter { job -> laneId == null || TranslationClaimToken.laneId(job.error_message) == laneId }
         if (runningJobs.isEmpty()) return 0
         database.transaction {
             runningJobs.forEach { job ->
