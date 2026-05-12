@@ -199,6 +199,9 @@ object TranslationLogRedactor {
     private val longDataFieldRegex = Regex(
         """"data"\s*:\s*"[A-Za-z0-9+/=_-]{128,}"""",
     )
+    private val thoughtSignatureRegex = Regex(
+        """"thoughtSignature"\s*:\s*"[A-Za-z0-9+/=_-]{64,}"""",
+    )
 
     fun redact(value: String): String {
         return value
@@ -214,6 +217,9 @@ object TranslationLogRedactor {
             }
             .replace(longDataFieldRegex) {
                 """"data": "<redacted-image>""""
+            }
+            .replace(thoughtSignatureRegex) {
+                """"thoughtSignature": "<redacted>""""
             }
     }
 }
@@ -885,26 +891,24 @@ object TranslationOverlayCoordinateNormalizer {
             return null
         }
 
-        val xPixel = box.x > 1f
-        val yPixel = box.y > 1f
-        val widthPixel = box.width > 1f
-        val heightPixel = box.height > 1f
-        val pixelCoordinates = xPixel || yPixel || widthPixel || heightPixel
         val safeWidth = imageWidth?.takeIf { it > 0 }
         val safeHeight = imageHeight?.takeIf { it > 0 }
-        if ((xPixel || widthPixel) && safeWidth == null || (yPixel || heightPixel) && safeHeight == null) {
+        val xAxis = normalizeAxis(box.x, box.width, safeWidth)
+        val yAxis = normalizeAxis(box.y, box.height, safeHeight)
+        if (xAxis == null || yAxis == null) {
             entries += box.entry(index, action = "dropped", reason = "pixel_coordinates_without_image_size")
             return null
         }
-        if (xPixel && box.x >= safeWidth!! || yPixel && box.y >= safeHeight!!) {
+        if (xAxis.outside || yAxis.outside) {
             entries += box.entry(index, action = "dropped", reason = "pixel_origin_outside_image")
             return null
         }
+        val convertedCoordinates = xAxis.converted || yAxis.converted
         val rawGeometry = TranslationBoxGeometry(
-            x = if (xPixel) box.x / safeWidth!!.toFloat() else box.x,
-            y = if (yPixel) box.y / safeHeight!!.toFloat() else box.y,
-            width = if (widthPixel) box.width / safeWidth!!.toFloat() else box.width,
-            height = if (heightPixel) box.height / safeHeight!!.toFloat() else box.height,
+            x = xAxis.origin,
+            y = yAxis.origin,
+            width = xAxis.extent,
+            height = yAxis.extent,
         )
 
         if (rawGeometry.width <= 0f || rawGeometry.height <= 0f) {
@@ -926,10 +930,10 @@ object TranslationOverlayCoordinateNormalizer {
             height = geometry.height,
         )
         when {
-            pixelCoordinates -> entries += box.entry(
+            convertedCoordinates -> entries += box.entry(
                 index = index,
                 action = "converted_pixel",
-                reason = if (adjusted) "pixel_coordinates_converted_and_clamped" else "pixel_coordinates_converted",
+                reason = conversionReason(xAxis, yAxis, adjusted),
                 normalized = geometry,
             )
             adjusted -> entries += box.entry(
@@ -941,6 +945,72 @@ object TranslationOverlayCoordinateNormalizer {
         }
         return normalizedBox
     }
+
+    private data class NormalizedAxis(
+        val origin: Float,
+        val extent: Float,
+        val converted: Boolean,
+        val outside: Boolean,
+        val source: String,
+    )
+
+    private fun normalizeAxis(origin: Float, extent: Float, imageSize: Int?): NormalizedAxis? {
+        val originRequiresConversion = origin > 1f
+        val extentRequiresConversion = extent > 1f
+        val requiresConversion = originRequiresConversion || extentRequiresConversion
+        if (!requiresConversion) {
+            return NormalizedAxis(
+                origin = origin,
+                extent = extent,
+                converted = false,
+                outside = false,
+                source = "normalized",
+            )
+        }
+        val safeSize = imageSize?.takeIf { it > 0 } ?: return null
+        val denominator = if (originRequiresConversion && extentRequiresConversion &&
+            usesThousandthCoordinates(origin, extent, safeSize)
+        ) {
+            THOUSANDTH_COORDINATE_SIZE
+        } else {
+            safeSize.toFloat()
+        }
+        return NormalizedAxis(
+            origin = if (originRequiresConversion) origin / denominator else origin,
+            extent = if (extentRequiresConversion) extent / denominator else extent,
+            converted = true,
+            outside = originRequiresConversion && origin >= denominator,
+            source = if (denominator == THOUSANDTH_COORDINATE_SIZE) "thousandth" else "pixel",
+        )
+    }
+
+    private fun usesThousandthCoordinates(origin: Float, extent: Float, imageSize: Int): Boolean {
+        return imageSize < THOUSANDTH_COORDINATE_SIZE &&
+            origin <= THOUSANDTH_COORDINATE_SIZE &&
+            extent <= THOUSANDTH_COORDINATE_SIZE &&
+            origin + extent > imageSize &&
+            origin + extent <= THOUSANDTH_COORDINATE_SIZE
+    }
+
+    private fun conversionReason(
+        xAxis: NormalizedAxis,
+        yAxis: NormalizedAxis,
+        adjusted: Boolean,
+    ): String {
+        val sources = listOfNotNull(
+            xAxis.source.takeIf { xAxis.converted }?.let { "x_$it" },
+            yAxis.source.takeIf { yAxis.converted }?.let { "y_$it" },
+        ).joinToString(separator = "_")
+        return buildString {
+            append(sources.ifBlank { "pixel" })
+            append("_coordinates_converted")
+            if (adjusted) {
+                append("_and_clamped")
+            }
+        }
+    }
+
+    private const val THOUSANDTH_COORDINATE_SIZE = 1000f
 
     private fun TranslationOverlayBox.entry(
         index: Int,

@@ -49,6 +49,7 @@ class TranslationCoreTest {
               "authorization": "Bearer secret-token",
               "inlineData": {"mimeType": "image/png", "data": "base64-image"},
               "inline_data": {"mime_type": "image/jpeg", "data": "base64-image"},
+              "thoughtSignature": "${"A".repeat(160)}",
               "text": "translated line"
             }
         """.trimIndent()
@@ -60,6 +61,7 @@ class TranslationCoreTest {
               "authorization": "<redacted>",
               "inlineData": {"mimeType": "image/png", "data": "<redacted-image>"},
               "inline_data": {"mime_type": "image/jpeg", "data": "<redacted-image>"},
+              "thoughtSignature": "<redacted>",
               "text": "translated line"
             }
         """.trimIndent()
@@ -86,7 +88,7 @@ class TranslationCoreTest {
                   "text": "Translate hello"
                 }
             """.trimIndent(),
-            rawResponseJson = """{"error":{"message":"quota exceeded"}}""",
+            rawResponseJson = """{"thoughtSignature":"${"b".repeat(160)}","error":{"message":"quota exceeded"}}""",
         )
 
         details shouldContain "operation=translatePageImage"
@@ -94,9 +96,11 @@ class TranslationCoreTest {
         details shouldContain "Translate hello"
         details shouldContain "quota exceeded"
         details shouldContain "<redacted-image>"
+        details shouldContain "thoughtSignature"
         details shouldContain "x-goog-api-key=<redacted>"
         details shouldNotContain "secret-header"
         details shouldNotContain "aaaaaaaaaaaaaaaa"
+        details shouldNotContain "bbbbbbbbbbbbbbbb"
     }
 
     @Test
@@ -552,6 +556,49 @@ class TranslationCoreTest {
         box.y shouldBe 0.5325f
         box.width shouldBe 0.1157f
         box.height shouldBe 0.1009f
+    }
+
+    @Test
+    fun `thousandth style edge coordinates do not collapse to one percent slivers`() {
+        val overlay = TranslationOverlayResult(
+            boxes = listOf(
+                TranslationOverlayBox(
+                    x = 840f,
+                    y = 349f,
+                    width = 24f,
+                    height = 125f,
+                    originalText = "完全会員制で",
+                    translatedText = "Completely membership-based,",
+                    textType = "caption",
+                ),
+                TranslationOverlayBox(
+                    x = 849f,
+                    y = 93f,
+                    width = 23f,
+                    height = 155f,
+                    originalText = "リッチマンズホテル",
+                    translatedText = "Rich Man's Hotel",
+                    textType = "caption",
+                ),
+            ),
+        )
+
+        val result = TranslationOverlayCoordinateNormalizer.normalize(
+            overlay = overlay,
+            imageWidth = 844,
+            imageHeight = 1200,
+        )
+
+        result.report.convertedPixelBoxes shouldBe 2
+        result.report.droppedBoxes shouldBe 0
+        result.overlay.boxes.map { it.x } shouldContainExactly listOf(0.84f, 0.849f)
+        result.overlay.boxes.map { it.width } shouldContainExactly listOf(0.024f, 0.023f)
+        result.overlay.boxes.map { it.y } shouldContainExactly listOf(349f / 1200f, 93f / 1200f)
+        result.overlay.boxes.map { it.height } shouldContainExactly listOf(125f / 1200f, 155f / 1200f)
+        result.report.entries.map { it.reason } shouldContainExactly listOf(
+            "x_thousandth_y_pixel_coordinates_converted",
+            "x_thousandth_y_pixel_coordinates_converted",
+        )
     }
 
     @Test
