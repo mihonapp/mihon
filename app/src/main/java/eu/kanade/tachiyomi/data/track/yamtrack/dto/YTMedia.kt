@@ -52,6 +52,17 @@ data class YTMediaItem(
     val consumptions: List<YTConsumption> = emptyList(),
 )
 
+/**
+ * Shape of the response Yamtrack returns from `POST /api/v1/media/{type}/`. The `item`
+ * sub-object carries the canonical `media_id` Yamtrack assigned (a UUID for manual
+ * entries) — we need it to rewrite the local tracking URL so future GET/PATCH/DELETE
+ * calls hit the right record.
+ */
+@Serializable
+data class YTCreateResponse(
+    val item: YTMediaItem? = null,
+)
+
 @Serializable
 data class YTConsumption(
     val status: Int? = null,
