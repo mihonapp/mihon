@@ -16,8 +16,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.launch
 import tachiyomi.domain.manga.interactor.GetManga
+import tachiyomi.domain.track.interactor.DeleteTrack
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
+import java.io.IOException
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.text.Normalizer
@@ -159,6 +161,8 @@ class Yamtrack(id: Long) : BaseTracker(id, "Yamtrack"), DeletableTracker, Enrich
 
     private val getManga: GetManga by injectLazy()
 
+    private val deleteTrack: DeleteTrack by injectLazy()
+
     override fun getLogo(): Int = R.drawable.brand_yamtrack
 
     override fun getStatusList(): List<Long> = listOf(PLANNING, READING, PAUSED, COMPLETED, DROPPED)
@@ -286,9 +290,14 @@ class Yamtrack(id: Long) : BaseTracker(id, "Yamtrack"), DeletableTracker, Enrich
     override suspend fun refresh(track: Track): Track {
         val (source, mediaType, mediaId) = parseTrackingUrl(track.tracking_url) ?: return track
         val remote = api.getMediaItem(mediaType, source, mediaId) ?: return track
-        if (remote.tracked) {
-            remote.copyToTrack(track)
+        if (!remote.tracked) {
+            // The user removed this entry from Yamtrack's web UI (or elsewhere) — keep
+            // Mihon in sync by dropping the local track. We throw a sentinel exception
+            // so RefreshTracks short-circuits and doesn't re-insert the stale row.
+            deleteTrack.await(track.manga_id, this.id)
+            throw YamtrackEntryRemovedException()
         }
+        remote.copyToTrack(track)
         return track
     }
 
@@ -322,3 +331,10 @@ class Yamtrack(id: Long) : BaseTracker(id, "Yamtrack"), DeletableTracker, Enrich
         }
     }
 }
+
+/**
+ * Thrown by [Yamtrack.refresh] when the remote entry has been untracked by the user.
+ * The local track is already deleted by the time this is raised — callers should treat
+ * it as a successful sync, not a failure.
+ */
+class YamtrackEntryRemovedException : IOException("Yamtrack entry was removed remotely")
