@@ -104,27 +104,17 @@ class Yamtrack(id: Long) : BaseTracker(id, "Yamtrack"), DeletableTracker, Enrich
         }
 
         /**
-         * Parses a Yamtrack tracking URL and returns the decoded `(source, mediaType, mediaId)`.
-         * Accepts both the current `/details/{source}/{mediaType}/{mediaId}[/{slug}]` format and
-         * the legacy `/media/manga/{source}/{mediaId}` format (saved before media_type support).
+         * Parses a Yamtrack tracking URL of the form `/details/{source}/{mediaType}/{mediaId}[/{slug}]`
+         * and returns the decoded `(source, mediaType, mediaId)`.
          */
         fun parseTrackingUrl(url: String): Triple<String, String, String>? {
             if (url.isBlank()) return null
-            Regex("""/details/([^/]+)/([^/]+)/([^/?#]+)""").find(url)?.let {
-                return Triple(
-                    decodeSegment(it.groupValues[1]),
-                    decodeSegment(it.groupValues[2]),
-                    decodeSegment(it.groupValues[3]),
-                )
-            }
-            Regex("""/media/manga/([^/]+)/([^/?#]+)""").find(url)?.let {
-                return Triple(
-                    decodeSegment(it.groupValues[1]),
-                    MEDIA_TYPE_MANGA,
-                    decodeSegment(it.groupValues[2]),
-                )
-            }
-            return null
+            val match = Regex("""/details/([^/]+)/([^/]+)/([^/?#]+)""").find(url) ?: return null
+            return Triple(
+                decodeSegment(match.groupValues[1]),
+                decodeSegment(match.groupValues[2]),
+                decodeSegment(match.groupValues[3]),
+            )
         }
 
         private fun encodeSegment(value: String): String =
