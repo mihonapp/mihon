@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.data.track.yamtrack
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.data.track.yamtrack.dto.YTMediaItem
+import eu.kanade.tachiyomi.data.track.yamtrack.dto.YTSearchItem
 import eu.kanade.tachiyomi.data.track.yamtrack.dto.YTSearchResponse
 import eu.kanade.tachiyomi.data.track.yamtrack.dto.toTrackSearch
 import eu.kanade.tachiyomi.network.DELETE
@@ -12,6 +13,9 @@ import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObjectBuilder
 import kotlinx.serialization.json.buildJsonObject
@@ -45,8 +49,11 @@ class YamtrackApi(
         return "$base/api/v1$path"
     }
 
-    private fun mediaPath(source: String, mediaId: String): String =
-        "/media/manga/${encodeSegment(source)}/${encodeSegment(mediaId)}/"
+    private fun mediaPath(mediaType: String, source: String, mediaId: String): String =
+        "/media/${encodeSegment(mediaType)}/${encodeSegment(source)}/${encodeSegment(mediaId)}/"
+
+    private fun mediaTypeCollectionPath(mediaType: String): String =
+        "/media/${encodeSegment(mediaType)}/"
 
     suspend fun verifyCredentials(baseUrl: String, token: String) {
         val url = "${baseUrl.trimEnd('/')}/api/v1/statistics/"
@@ -59,31 +66,42 @@ class YamtrackApi(
         authedClient.newCall(GET(url)).awaitSuccess().close()
     }
 
-    suspend fun search(query: String): List<TrackSearch> {
-        val url = apiUrl("/search/manga/").toHttpUrl().newBuilder()
-            .addQueryParameter("search", query)
-            .addQueryParameter("limit", "20")
-            .build()
-
-        val response = with(json) {
-            authClient.newCall(GET(url.toString()))
-                .awaitSuccess()
-                .parseAs<YTSearchResponse>()
-        }
-
+    suspend fun search(query: String): List<TrackSearch> = coroutineScope {
         val baseUrl = yamtrack.getBaseUrl().trimEnd('/')
-        // Return the basic search results immediately. Detail enrichment (synopsis, score,
-        // format, start_date) happens lazily via Yamtrack.enrichSearchResults so the search
-        // list renders fast instead of waiting on N detail-endpoint round-trips.
-        return response.results
-            .filter { it.mediaId.isNotBlank() && it.source.isNotBlank() }
+        // Yamtrack's /api/v1/search/{media_type}/ endpoint is scoped to a single media type,
+        // so we fan out across the supported types (manga + comic) and merge the results.
+        Yamtrack.SUPPORTED_MEDIA_TYPES
+            .map { type -> async { searchByMediaType(type, query) } }
+            .awaitAll()
+            .flatten()
             .map { it.toTrackSearch(yamtrack.id, baseUrl) }
     }
 
-    suspend fun getMediaItem(source: String, mediaId: String): YTMediaItem? {
+    private suspend fun searchByMediaType(mediaType: String, query: String): List<YTSearchItem> {
+        return try {
+            val url = apiUrl("/search/${encodeSegment(mediaType)}/").toHttpUrl().newBuilder()
+                .addQueryParameter("search", query)
+                .addQueryParameter("limit", "20")
+                .build()
+
+            val response = with(json) {
+                authClient.newCall(GET(url.toString()))
+                    .awaitSuccess()
+                    .parseAs<YTSearchResponse>()
+            }
+            response.results
+                .filter { it.mediaId.isNotBlank() && it.source.isNotBlank() }
+                // The search endpoint sometimes omits media_type; backfill from the URL we hit.
+                .map { if (it.mediaType.isNullOrBlank()) it.copy(mediaType = mediaType) else it }
+        } catch (_: Exception) {
+            emptyList()
+        }
+    }
+
+    suspend fun getMediaItem(mediaType: String, source: String, mediaId: String): YTMediaItem? {
         return try {
             with(json) {
-                authClient.newCall(GET(apiUrl(mediaPath(source, mediaId))))
+                authClient.newCall(GET(apiUrl(mediaPath(mediaType, source, mediaId))))
                     .awaitSuccess()
                     .parseAs<YTMediaItem>()
             }
@@ -92,7 +110,7 @@ class YamtrackApi(
         }
     }
 
-    suspend fun addMedia(track: Track, source: String, mediaId: String, title: String? = null) {
+    suspend fun addMedia(track: Track, mediaType: String, source: String, mediaId: String, title: String? = null) {
         val body = buildJsonObject {
             put("source", source)
             if (source == Yamtrack.SOURCE_MANUAL) {
@@ -106,19 +124,19 @@ class YamtrackApi(
         }
         authClient.newCall(
             POST(
-                url = apiUrl("/media/manga/"),
+                url = apiUrl(mediaTypeCollectionPath(mediaType)),
                 body = body.toString().toRequestBody(jsonMime),
             ),
         ).awaitSuccess().close()
     }
 
-    suspend fun updateMedia(track: Track, source: String, mediaId: String) {
+    suspend fun updateMedia(track: Track, mediaType: String, source: String, mediaId: String) {
         val body = buildJsonObject {
             putTrackingFields(track)
         }
         authClient.newCall(
             PATCH(
-                url = apiUrl(mediaPath(source, mediaId)),
+                url = apiUrl(mediaPath(mediaType, source, mediaId)),
                 body = body.toString().toRequestBody(jsonMime),
             ),
         ).awaitSuccess().close()
@@ -135,9 +153,9 @@ class YamtrackApi(
     }
 
     suspend fun deleteMedia(track: DomainTrack) {
-        val (source, mediaId) = Yamtrack.parseTrackingUrl(track.remoteUrl) ?: return
+        val (source, mediaType, mediaId) = Yamtrack.parseTrackingUrl(track.remoteUrl) ?: return
         authClient.newCall(
-            DELETE(url = apiUrl(mediaPath(source, mediaId))),
+            DELETE(url = apiUrl(mediaPath(mediaType, source, mediaId))),
         ).awaitSuccess().close()
     }
 

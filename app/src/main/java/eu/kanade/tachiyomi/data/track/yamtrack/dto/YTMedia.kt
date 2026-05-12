@@ -65,14 +65,15 @@ data class YTConsumption(
 
 fun YTSearchItem.toTrackSearch(trackerId: Long, baseUrl: String): TrackSearch {
     val item = this
+    val mediaType = item.mediaType?.takeIf { it.isNotBlank() } ?: Yamtrack.MEDIA_TYPE_MANGA
     return TrackSearch.create(trackerId).apply {
         remote_id = Yamtrack.buildRemoteId(item.source, item.mediaId)
         title = item.title
         cover_url = item.image.orEmpty()
         summary = item.description?.trim().orEmpty()
         item.score?.takeIf { it > 0.0 }?.let { score = it }
-        tracking_url = Yamtrack.buildTrackingUrl(baseUrl, item.source, item.mediaId, item.title)
-        publishing_type = item.mediaType.orEmpty()
+        tracking_url = Yamtrack.buildTrackingUrl(baseUrl, item.source, mediaType, item.mediaId, item.title)
+        publishing_type = mediaType
     }
 }
 
