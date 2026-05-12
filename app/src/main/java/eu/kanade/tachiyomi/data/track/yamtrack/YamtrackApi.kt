@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.data.track.yamtrack.dto.YTSearchResponse
 import eu.kanade.tachiyomi.data.track.yamtrack.dto.toTrackSearch
 import eu.kanade.tachiyomi.network.DELETE
 import eu.kanade.tachiyomi.network.GET
+import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.network.PATCH
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.awaitSuccess
@@ -170,9 +171,15 @@ class YamtrackApi(
 
     suspend fun deleteMedia(track: DomainTrack) {
         val (source, mediaType, mediaId) = Yamtrack.parseTrackingUrl(track.remoteUrl) ?: return
-        authClient.newCall(
-            DELETE(url = apiUrl(mediaPath(mediaType, source, mediaId))),
-        ).awaitSuccess().close()
+        try {
+            authClient.newCall(
+                DELETE(url = apiUrl(mediaPath(mediaType, source, mediaId))),
+            ).awaitSuccess().close()
+        } catch (e: HttpException) {
+            // 404 means the entry was already removed on Yamtrack (e.g. user deleted it
+            // from the web UI). Treat as success so Mihon still drops the local link.
+            if (e.code != 404) throw e
+        }
     }
 
     companion object {
