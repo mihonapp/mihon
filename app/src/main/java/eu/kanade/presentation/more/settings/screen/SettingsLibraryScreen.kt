@@ -107,6 +107,10 @@ object SettingsLibraryScreen : SearchableSettings {
                         true
                     },
                 ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = libraryPreferences.perSourceDefaultCategory,
+                    title = stringResource(MR.strings.per_source_default_category),
+                ),
             ),
         )
     }

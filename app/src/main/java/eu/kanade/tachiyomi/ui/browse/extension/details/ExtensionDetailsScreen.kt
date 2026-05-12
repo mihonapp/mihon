@@ -40,6 +40,7 @@ data class ExtensionDetailsScreen(
             onClickUninstall = screenModel::uninstallExtension,
             onClickSource = screenModel::toggleSource,
             onClickIncognito = screenModel::toggleIncognito,
+            onSetDefaultCategory = screenModel::setExtensionDefaultCategory,
         )
 
         LaunchedEffect(Unit) {
