@@ -36,6 +36,13 @@ class Yamtrack(id: Long) : BaseTracker(id, "Yamtrack"), DeletableTracker, Enrich
 
         const val SOURCE_MANUAL = "manual"
 
+        // Yamtrack types every media item; we support the two that fit a manga reader.
+        // The detail/PATCH/DELETE URLs include the media_type as a path segment, so we
+        // carry it through tracking URLs and API calls.
+        const val MEDIA_TYPE_MANGA = "manga"
+        const val MEDIA_TYPE_COMIC = "comic"
+        val SUPPORTED_MEDIA_TYPES = listOf(MEDIA_TYPE_MANGA, MEDIA_TYPE_COMIC)
+
         // Yamtrack's API represents statuses as integers (0-4); see MEDIA_STATUS_MAP in api/helpers.py.
         private const val API_STATUS_PLANNING = 0
         private const val API_STATUS_IN_PROGRESS = 1
@@ -77,30 +84,45 @@ class Yamtrack(id: Long) : BaseTracker(id, "Yamtrack"), DeletableTracker, Enrich
             return hash and 0x7fffffffffffffffL
         }
 
-        fun buildTrackingUrl(baseUrl: String, source: String, mediaId: String, title: String? = null): String {
+        fun buildTrackingUrl(
+            baseUrl: String,
+            source: String,
+            mediaType: String,
+            mediaId: String,
+            title: String? = null,
+        ): String {
             val base = baseUrl.trimEnd('/')
             val sourceSeg = encodeSegment(source)
+            val typeSeg = encodeSegment(mediaType.ifBlank { MEDIA_TYPE_MANGA })
             val idSeg = encodeSegment(mediaId)
             val slug = title?.let { slugify(it) }.orEmpty()
             return if (slug.isNotEmpty()) {
-                "$base/details/$sourceSeg/manga/$idSeg/$slug"
+                "$base/details/$sourceSeg/$typeSeg/$idSeg/$slug"
             } else {
-                "$base/details/$sourceSeg/manga/$idSeg"
+                "$base/details/$sourceSeg/$typeSeg/$idSeg"
             }
         }
 
         /**
-         * Parses a Yamtrack tracking URL and returns the decoded `(source, mediaId)`.
-         * Accepts both the current `/details/{source}/manga/{mediaId}[/{slug}]` format and
-         * the legacy `/media/manga/{source}/{mediaId}` format (for tracks saved before the fix).
+         * Parses a Yamtrack tracking URL and returns the decoded `(source, mediaType, mediaId)`.
+         * Accepts both the current `/details/{source}/{mediaType}/{mediaId}[/{slug}]` format and
+         * the legacy `/media/manga/{source}/{mediaId}` format (saved before media_type support).
          */
-        fun parseTrackingUrl(url: String): Pair<String, String>? {
+        fun parseTrackingUrl(url: String): Triple<String, String, String>? {
             if (url.isBlank()) return null
-            Regex("""/details/([^/]+)/manga/([^/?#]+)""").find(url)?.let {
-                return decodeSegment(it.groupValues[1]) to decodeSegment(it.groupValues[2])
+            Regex("""/details/([^/]+)/([^/]+)/([^/?#]+)""").find(url)?.let {
+                return Triple(
+                    decodeSegment(it.groupValues[1]),
+                    decodeSegment(it.groupValues[2]),
+                    decodeSegment(it.groupValues[3]),
+                )
             }
             Regex("""/media/manga/([^/]+)/([^/?#]+)""").find(url)?.let {
-                return decodeSegment(it.groupValues[1]) to decodeSegment(it.groupValues[2])
+                return Triple(
+                    decodeSegment(it.groupValues[1]),
+                    MEDIA_TYPE_MANGA,
+                    decodeSegment(it.groupValues[2]),
+                )
             }
             return null
         }
@@ -180,16 +202,16 @@ class Yamtrack(id: Long) : BaseTracker(id, "Yamtrack"), DeletableTracker, Enrich
                 READING
             }
         }
-        val (source, mediaId) = parseTrackingUrl(track.tracking_url) ?: return track
-        api.updateMedia(track, source, mediaId)
+        val (source, mediaType, mediaId) = parseTrackingUrl(track.tracking_url) ?: return track
+        api.updateMedia(track, mediaType, source, mediaId)
         return track
     }
 
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {
-        val (source, mediaId) = parseTrackingUrl(track.tracking_url)
+        val (source, mediaType, mediaId) = parseTrackingUrl(track.tracking_url)
             ?: throw IllegalStateException("Invalid Yamtrack tracking URL: ${track.tracking_url}")
 
-        val existing = api.getMediaItem(source, mediaId)
+        val existing = api.getMediaItem(mediaType, source, mediaId)
         // Yamtrack's GET endpoint returns 200 with provider metadata even when the user hasn't
         // tracked the item yet; `tracked` tells us whether it's actually in their library.
         return if (existing?.tracked == true) {
@@ -200,7 +222,7 @@ class Yamtrack(id: Long) : BaseTracker(id, "Yamtrack"), DeletableTracker, Enrich
             if (track.status == 0L) {
                 track.status = if (hasReadChapters) READING else PLANNING
             }
-            api.addMedia(track, source, mediaId, track.title)
+            api.addMedia(track, mediaType, source, mediaId, track.title)
             track
         }
     }
@@ -221,7 +243,7 @@ class Yamtrack(id: Long) : BaseTracker(id, "Yamtrack"), DeletableTracker, Enrich
             title = query
             cover_url = ""
             summary = ""
-            tracking_url = buildTrackingUrl(baseUrl, SOURCE_MANUAL, query, query)
+            tracking_url = buildTrackingUrl(baseUrl, SOURCE_MANUAL, MEDIA_TYPE_MANGA, query, query)
             publishing_type = "Manual entry"
         }
         return remoteResults + manualEntry
@@ -236,9 +258,9 @@ class Yamtrack(id: Long) : BaseTracker(id, "Yamtrack"), DeletableTracker, Enrich
     override fun enrichSearchResults(items: List<TrackSearch>): Flow<TrackSearch> = channelFlow {
         items.forEach { item ->
             launch {
-                val (source, mediaId) = parseTrackingUrl(item.tracking_url) ?: return@launch
+                val (source, mediaType, mediaId) = parseTrackingUrl(item.tracking_url) ?: return@launch
                 if (source == SOURCE_MANUAL) return@launch
-                val detail = api.getMediaItem(source, mediaId) ?: return@launch
+                val detail = api.getMediaItem(mediaType, source, mediaId) ?: return@launch
                 item.applyDetail(detail)
                 send(item)
             }
@@ -246,8 +268,8 @@ class Yamtrack(id: Long) : BaseTracker(id, "Yamtrack"), DeletableTracker, Enrich
     }
 
     override suspend fun refresh(track: Track): Track {
-        val (source, mediaId) = parseTrackingUrl(track.tracking_url) ?: return track
-        val remote = api.getMediaItem(source, mediaId) ?: return track
+        val (source, mediaType, mediaId) = parseTrackingUrl(track.tracking_url) ?: return track
+        val remote = api.getMediaItem(mediaType, source, mediaId) ?: return track
         if (remote.tracked) {
             remote.copyToTrack(track)
         }
