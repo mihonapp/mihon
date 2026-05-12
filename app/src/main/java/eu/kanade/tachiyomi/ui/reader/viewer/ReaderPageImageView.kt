@@ -46,7 +46,10 @@ import eu.kanade.tachiyomi.data.coil.cropBorders
 import eu.kanade.tachiyomi.data.coil.customDecoder
 import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayBoxStyle
+import eu.kanade.tachiyomi.data.translation.TranslationOverlayMappedRect
+import eu.kanade.tachiyomi.data.translation.TranslationOverlayRectMapper
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayRenderSkipPolicy
+import eu.kanade.tachiyomi.data.translation.TranslationOverlayTextFitPolicy
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import tachiyomi.domain.translation.service.TranslationPreferences
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonSubsamplingImageView
@@ -503,6 +506,17 @@ open class ReaderPageImageView @JvmOverloads constructor(
             color = Color.BLACK
         }
 
+        private data class FittedTextLayout(
+            val layout: StaticLayout,
+            val textSizePx: Float,
+            val textScaleX: Float,
+            val contentWidth: Int,
+            val contentHeight: Float,
+            val ellipsisCount: Int,
+            val lineCount: Int,
+            val rotated: Boolean,
+        )
+
         override fun onDraw(canvas: Canvas) {
             super.onDraw(canvas)
             if (boxes.isEmpty()) return
@@ -531,7 +545,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 strokePaint.color = parseColor(style.strokeColor, Color.argb(230, 32, 32, 32))
                 canvas.drawRoundRect(rect, radius, radius, fillPaint)
                 canvas.drawRoundRect(rect, radius, radius, strokePaint)
-                drawText(canvas, rect, box.translated_text, style)
+                drawText(canvas, rect, box, style)
             }
         }
 
@@ -551,43 +565,280 @@ open class ReaderPageImageView @JvmOverloads constructor(
         private fun drawText(
             canvas: Canvas,
             rect: RectF,
-            text: String,
+            box: Translation_boxes,
             style: TranslationOverlayBoxStyle,
         ) {
+            val text = box.translated_text
             if (text.isBlank()) return
-            val padding = ((style.paddingDp ?: 4f).coerceIn(0f, 24f) * density)
+            val padding = ((style.paddingDp ?: 0f).coerceIn(0f, 24f) * density)
                 .coerceAtMost(rect.width() / 5f)
                 .coerceAtMost(rect.height() / 5f)
-            val width = (rect.width() - padding * 2).toInt().coerceAtLeast(1)
-            val textPaint = TextPaint(baseTextPaint).apply {
-                color = parseColor(style.textColor, Color.BLACK)
-                typeface = typefaceFor(style.fontFamily)
-                textSize = overlayTextSize(rect, padding)
+            val fitted = fittedTextLayout(text, rect, style, padding)
+
+            if (TranslationOverlayTextFitPolicy.shouldLogTruncation(fitted.ellipsisCount)) {
+                box.logTextFitTruncated(
+                    rect = rect,
+                    text = text,
+                    textSizePx = fitted.textSizePx,
+                    textScaleX = fitted.textScaleX,
+                    contentWidth = fitted.contentWidth,
+                    contentHeight = fitted.contentHeight,
+                    lineCount = fitted.lineCount,
+                    ellipsisCount = fitted.ellipsisCount,
+                    paddingPx = padding,
+                    rotated = fitted.rotated,
+                )
             }
-            val maxLines = ((rect.height() - padding * 2) / textPaint.fontSpacing).toInt().coerceAtLeast(1)
-            val layout = StaticLayout.Builder
-                .obtain(text, 0, text.length, textPaint, width)
-                .setAlignment(alignmentFor(style.textAlign))
-                .setEllipsize(TextUtils.TruncateAt.END)
-                .setMaxLines(maxLines)
-                .build()
 
             canvas.save()
             canvas.clipRect(rect)
-            canvas.translate(rect.left + padding, rect.top + padding)
-            layout.draw(canvas)
+            if (fitted.rotated) {
+                val rotatedWidth = fitted.layout.height.toFloat()
+                val rotatedHeight = fitted.layout.width.toFloat()
+                val left = rect.left + padding + ((fitted.contentWidth - rotatedWidth) / 2f).coerceAtLeast(0f)
+                val top = rect.top + padding + ((fitted.contentHeight - rotatedHeight) / 2f).coerceAtLeast(0f)
+                canvas.translate(left + rotatedWidth, top)
+                canvas.rotate(90f)
+            } else {
+                val verticalOffset = ((fitted.contentHeight - fitted.layout.height) / 2f).coerceAtLeast(0f)
+                canvas.translate(rect.left + padding, rect.top + padding + verticalOffset)
+            }
+            fitted.layout.draw(canvas)
             canvas.restore()
         }
 
-        private fun overlayTextSize(rect: RectF, padding: Float): Float {
-            val scaledDensity = resources.displayMetrics.scaledDensity
-            val selected = when (translationPreferences.overlayTextSizeMode.get()) {
-                "system" -> 14f * scaledDensity
-                "custom" -> translationPreferences.overlayTextSizeSp.get().coerceIn(8, 48) * scaledDensity
-                else -> (rect.height() / 3.2f).coerceIn(10f * density, 20f * density)
+        private fun fittedTextLayout(
+            text: String,
+            rect: RectF,
+            style: TranslationOverlayBoxStyle,
+            padding: Float,
+        ): FittedTextLayout {
+            val width = (rect.width() - padding * 2).toInt().coerceAtLeast(1)
+            val contentHeight = (rect.height() - padding * 2).coerceAtLeast(1f)
+            val range = TranslationOverlayTextFitPolicy.sizeRangePx(
+                mode = translationPreferences.overlayTextSizeMode.get(),
+                customSp = translationPreferences.overlayTextSizeSp.get(),
+                boxHeightPx = rect.height(),
+                density = density,
+                scaledDensity = resources.displayMetrics.scaledDensity,
+                paddingPx = padding,
+            )
+            val textPaint = TextPaint(baseTextPaint).apply {
+                color = parseColor(style.textColor, Color.BLACK)
+                typeface = typefaceFor(style.fontFamily)
             }
-            val maxThatFitsBox = (rect.height() - padding * 2).coerceAtLeast(8f * scaledDensity)
-            return selected.coerceIn(8f * scaledDensity, maxThatFitsBox)
+            val normal = bestTextLayout(
+                text = text,
+                paint = textPaint,
+                width = width,
+                heightLimit = contentHeight,
+                alignment = alignmentFor(style.textAlign),
+                range = range,
+                rotated = false,
+            )
+            val forceRotated = contentHeight >= width * 1.6f && text.length >= 8
+            val rotated = if (shouldTryRotatedText(text, width, contentHeight, normal)) {
+                bestTextLayout(
+                    text = text,
+                    paint = textPaint,
+                    width = contentHeight.toInt().coerceAtLeast(1),
+                    heightLimit = width.toFloat(),
+                    alignment = alignmentFor(style.textAlign),
+                    range = range,
+                    rotated = true,
+                )
+            } else {
+                null
+            }
+            if (forceRotated && rotated != null) return rotated
+            return chooseTextLayout(normal, rotated)
+        }
+
+        private fun bestTextLayout(
+            text: String,
+            paint: TextPaint,
+            width: Int,
+            heightLimit: Float,
+            alignment: Layout.Alignment,
+            range: eu.kanade.tachiyomi.data.translation.TranslationOverlayTextSizeRange,
+            rotated: Boolean,
+        ): FittedTextLayout {
+            var low = range.minPx
+            var high = range.preferredMaxPx.coerceAtLeast(low)
+            var bestSize = low
+            var bestLayout = buildTextLayout(
+                text = text,
+                paint = paint,
+                textSizePx = low,
+                textScaleX = 1f,
+                width = width,
+                alignment = alignment,
+                maxLines = Int.MAX_VALUE,
+                ellipsize = false,
+            )
+            if (layoutFits(bestLayout, width, heightLimit)) {
+                repeat(14) {
+                    val mid = (low + high) / 2f
+                    val candidate = buildTextLayout(
+                        text = text,
+                        paint = paint,
+                        textSizePx = mid,
+                        textScaleX = 1f,
+                        width = width,
+                        alignment = alignment,
+                        maxLines = Int.MAX_VALUE,
+                        ellipsize = false,
+                    )
+                    if (layoutFits(candidate, width, heightLimit)) {
+                        bestSize = mid
+                        bestLayout = candidate
+                        low = mid
+                    } else {
+                        high = mid
+                    }
+                }
+            } else {
+                bestCompressedLayout(
+                    text = text,
+                    paint = paint,
+                    textSizePx = range.minPx,
+                    width = width,
+                    heightLimit = heightLimit,
+                    alignment = alignment,
+                    rotated = rotated,
+                )?.let { return it }
+                paint.textSize = range.minPx
+                paint.textScaleX = MIN_TEXT_SCALE_X
+                val maxLines = (heightLimit / paint.fontSpacing).toInt().coerceAtLeast(1)
+                bestSize = range.minPx
+                bestLayout = buildTextLayout(
+                    text = text,
+                    paint = paint,
+                    textSizePx = range.minPx,
+                    textScaleX = MIN_TEXT_SCALE_X,
+                    width = width,
+                    alignment = alignment,
+                    maxLines = maxLines,
+                    ellipsize = true,
+                )
+            }
+            return FittedTextLayout(
+                layout = bestLayout,
+                textSizePx = bestSize,
+                textScaleX = bestLayout.paint.textScaleX,
+                contentWidth = if (rotated) heightLimit.toInt().coerceAtLeast(1) else width,
+                contentHeight = if (rotated) width.toFloat() else heightLimit,
+                ellipsisCount = bestLayout.totalEllipsisCount(),
+                lineCount = bestLayout.lineCount,
+                rotated = rotated,
+            )
+        }
+
+        private fun bestCompressedLayout(
+            text: String,
+            paint: TextPaint,
+            textSizePx: Float,
+            width: Int,
+            heightLimit: Float,
+            alignment: Layout.Alignment,
+            rotated: Boolean,
+        ): FittedTextLayout? {
+            var scale = 0.95f
+            while (scale >= MIN_TEXT_SCALE_X) {
+                val layout = buildTextLayout(
+                    text = text,
+                    paint = paint,
+                    textSizePx = textSizePx,
+                    textScaleX = scale,
+                    width = width,
+                    alignment = alignment,
+                    maxLines = Int.MAX_VALUE,
+                    ellipsize = false,
+                )
+                if (layoutFits(layout, width, heightLimit)) {
+                    return FittedTextLayout(
+                        layout = layout,
+                        textSizePx = textSizePx,
+                        textScaleX = scale,
+                        contentWidth = if (rotated) heightLimit.toInt().coerceAtLeast(1) else width,
+                        contentHeight = if (rotated) width.toFloat() else heightLimit,
+                        ellipsisCount = layout.totalEllipsisCount(),
+                        lineCount = layout.lineCount,
+                        rotated = rotated,
+                    )
+                }
+                scale -= 0.05f
+            }
+            return null
+        }
+
+        private fun shouldTryRotatedText(
+            text: String,
+            width: Int,
+            contentHeight: Float,
+            normal: FittedTextLayout,
+        ): Boolean {
+            if (text.length < 4) return false
+            if (contentHeight < width * 1.6f) return false
+            if (text.length >= 8) return true
+            return normal.ellipsisCount > 0 || normal.lineCount >= 4
+        }
+
+        private fun chooseTextLayout(
+            normal: FittedTextLayout,
+            rotated: FittedTextLayout?,
+        ): FittedTextLayout {
+            if (rotated == null) return normal
+            if (rotated.ellipsisCount <= normal.ellipsisCount && rotated.lineCount <= normal.lineCount) {
+                return rotated
+            }
+            if (rotated.ellipsisCount <= normal.ellipsisCount && rotated.textSizePx >= normal.textSizePx) {
+                return rotated
+            }
+            if (normal.ellipsisCount > 0 && rotated.ellipsisCount <= normal.ellipsisCount) return rotated
+            if (rotated.ellipsisCount == 0 && normal.lineCount >= 4 && rotated.lineCount < normal.lineCount) {
+                return rotated
+            }
+            if (rotated.ellipsisCount < normal.ellipsisCount) return rotated
+            return normal
+        }
+
+        private fun buildTextLayout(
+            text: String,
+            paint: TextPaint,
+            textSizePx: Float,
+            textScaleX: Float,
+            width: Int,
+            alignment: Layout.Alignment,
+            maxLines: Int,
+            ellipsize: Boolean,
+        ): StaticLayout {
+            paint.textSize = textSizePx
+            paint.textScaleX = textScaleX
+            return StaticLayout.Builder
+                .obtain(text, 0, text.length, paint, width)
+                .setAlignment(alignment)
+                .setIncludePad(false)
+                .setBreakStrategy(Layout.BREAK_STRATEGY_BALANCED)
+                .setHyphenationFrequency(Layout.HYPHENATION_FREQUENCY_NONE)
+                .setMaxLines(maxLines)
+                .also { builder ->
+                    if (ellipsize) {
+                        builder.setEllipsize(TextUtils.TruncateAt.END)
+                    }
+                }
+                .build()
+        }
+
+        private fun layoutFits(layout: StaticLayout, width: Int, height: Float): Boolean {
+            if (layout.height > height + 0.5f) return false
+            return (0 until layout.lineCount).all { line ->
+                layout.getLineWidth(line) <= width + 0.5f
+            }
+        }
+
+        private fun StaticLayout.totalEllipsisCount(): Int {
+            return (0 until lineCount).sumOf { line -> getEllipsisCount(line) }
         }
 
         private fun parseColor(value: String?, fallback: Int): Int {
@@ -601,7 +852,8 @@ open class ReaderPageImageView @JvmOverloads constructor(
             return when (value?.lowercase(Locale.ROOT)) {
                 "serif" -> Typeface.SERIF
                 "monospace" -> Typeface.MONOSPACE
-                else -> Typeface.SANS_SERIF
+                "sans", "sans-serif" -> Typeface.DEFAULT
+                else -> Typeface.DEFAULT
             }
         }
 
@@ -642,24 +894,29 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 logRenderSkip(readinessReason)
                 return null
             }
-            val start = view.sourceToViewCoord((x * view.sWidth).toFloat(), (y * view.sHeight).toFloat())
+            val imageStart = view.sourceToViewCoord(0f, 0f)
                 ?: run {
                     logRenderSkip("coordinate_mapping_failed")
                     return null
                 }
-            val end = view.sourceToViewCoord(
-                ((x + width) * view.sWidth).toFloat(),
-                ((y + height) * view.sHeight).toFloat(),
-            ) ?: run {
+            val imageEnd = view.sourceToViewCoord(view.sWidth.toFloat(), view.sHeight.toFloat()) ?: run {
                 logRenderSkip("coordinate_mapping_failed")
                 return null
             }
-            return RectF(
-                view.left + start.x,
-                view.top + start.y,
-                view.left + end.x,
-                view.top + end.y,
-            ).normalize()
+            val imageLeft = view.left + minOf(imageStart.x, imageEnd.x)
+            val imageTop = view.top + minOf(imageStart.y, imageEnd.y)
+            val imageWidth = kotlin.math.abs(imageEnd.x - imageStart.x)
+            val imageHeight = kotlin.math.abs(imageEnd.y - imageStart.y)
+            return toMappedRect(
+                sourceWidth = view.sWidth,
+                sourceHeight = view.sHeight,
+                imageLeft = imageLeft,
+                imageTop = imageTop,
+                imageWidth = imageWidth,
+                imageHeight = imageHeight,
+                viewWidth = view.width,
+                viewHeight = view.height,
+            )
         }
 
         private fun Translation_boxes.toImageViewRect(view: AppCompatImageView): RectF? {
@@ -675,25 +932,53 @@ open class ReaderPageImageView @JvmOverloads constructor(
             )
             view.imageMatrix.mapRect(imageRect)
             imageRect.offset(view.left.toFloat(), view.top.toFloat())
-            return RectF(
-                imageRect.left + (x * imageRect.width()).toFloat(),
-                imageRect.top + (y * imageRect.height()).toFloat(),
-                imageRect.left + ((x + width) * imageRect.width()).toFloat(),
-                imageRect.top + ((y + height) * imageRect.height()).toFloat(),
-            ).normalize()
-        }
-
-        private fun RectF.normalize(): RectF {
-            if (left <= right && top <= bottom) return this
-            return RectF(
-                minOf(left, right),
-                minOf(top, bottom),
-                maxOf(left, right),
-                maxOf(top, bottom),
+            return toMappedRect(
+                sourceWidth = drawable.intrinsicWidth,
+                sourceHeight = drawable.intrinsicHeight,
+                imageLeft = imageRect.left,
+                imageTop = imageRect.top,
+                imageWidth = imageRect.width(),
+                imageHeight = imageRect.height(),
+                viewWidth = view.width,
+                viewHeight = view.height,
             )
         }
 
-        private fun Translation_boxes.logRenderSkip(reason: String) {
+        private fun Translation_boxes.toMappedRect(
+            sourceWidth: Int,
+            sourceHeight: Int,
+            imageLeft: Float,
+            imageTop: Float,
+            imageWidth: Float,
+            imageHeight: Float,
+            viewWidth: Int,
+            viewHeight: Int,
+        ): RectF? {
+            val mapped = TranslationOverlayRectMapper.map(
+                x = x.toFloat(),
+                y = y.toFloat(),
+                width = width.toFloat(),
+                height = height.toFloat(),
+                sourceWidth = sourceWidth,
+                sourceHeight = sourceHeight,
+                imageLeft = imageLeft,
+                imageTop = imageTop,
+                imageWidth = imageWidth,
+                imageHeight = imageHeight,
+                viewWidth = viewWidth,
+                viewHeight = viewHeight,
+            )
+            mapped.skipReason?.let { reason ->
+                logRenderSkip(reason, mapped)
+                return null
+            }
+            return RectF(mapped.left, mapped.top, mapped.right, mapped.bottom)
+        }
+
+        private fun Translation_boxes.logRenderSkip(
+            reason: String,
+            mapping: TranslationOverlayMappedRect? = null,
+        ) {
             val key = "${_id}:$reason"
             if (!loggedRenderSkips.add(key)) return
             if (loggedRenderSkips.size > MAX_RENDER_SKIP_LOG_KEYS) {
@@ -722,6 +1007,76 @@ open class ReaderPageImageView @JvmOverloads constructor(
                             appendLine("width=$width")
                             appendLine("height=$height")
                             appendLine("text_type=$text_type")
+                            mapping?.let {
+                                appendLine("source_width=${it.sourceWidth}")
+                                appendLine("source_height=${it.sourceHeight}")
+                                appendLine("view_width=${it.viewWidth}")
+                                appendLine("view_height=${it.viewHeight}")
+                                appendLine("image_left=${it.imageLeft}")
+                                appendLine("image_top=${it.imageTop}")
+                                appendLine("image_width=${it.imageWidth}")
+                                appendLine("image_height=${it.imageHeight}")
+                                appendLine("mapped_left=${it.left}")
+                                appendLine("mapped_top=${it.top}")
+                                appendLine("mapped_right=${it.right}")
+                                appendLine("mapped_bottom=${it.bottom}")
+                                appendLine("scale_x=${it.scaleX}")
+                                appendLine("scale_y=${it.scaleY}")
+                            }
+                        },
+                    )
+                }
+            }
+        }
+
+        private fun Translation_boxes.logTextFitTruncated(
+            rect: RectF,
+            text: String,
+            textSizePx: Float,
+            textScaleX: Float,
+            contentWidth: Int,
+            contentHeight: Float,
+            lineCount: Int,
+            ellipsisCount: Int,
+            paddingPx: Float,
+            rotated: Boolean,
+        ) {
+            val key = "text_fit:$_id:${text.length}:$textSizePx:$textScaleX:$lineCount:$ellipsisCount:$rotated"
+            if (!loggedRenderSkips.add(key)) return
+            if (loggedRenderSkips.size > MAX_RENDER_SKIP_LOG_KEYS) {
+                val iterator = loggedRenderSkips.iterator()
+                if (iterator.hasNext()) {
+                    iterator.next()
+                    iterator.remove()
+                }
+            }
+            val scope = logScope ?: MainScope().also { logScope = it }
+            scope.launch {
+                withIOContext {
+                    translationRepository.insertLog(
+                        jobId = null,
+                        pageId = null,
+                        level = TranslationLogLevel.Debug,
+                        tag = "overlay",
+                        message = "Translation overlay text fit truncated",
+                        details = buildString {
+                            appendLine("action=overlay_text_fit_truncated")
+                            appendLine("page_id=$page_id")
+                            appendLine("box_id=$_id")
+                            appendLine("rect_left=${rect.left}")
+                            appendLine("rect_top=${rect.top}")
+                            appendLine("rect_width=${rect.width()}")
+                            appendLine("rect_height=${rect.height()}")
+                            appendLine("content_width=$contentWidth")
+                            appendLine("content_height=$contentHeight")
+                            appendLine("selected_text_size_px=$textSizePx")
+                            appendLine("selected_text_scale_x=$textScaleX")
+                            appendLine("line_count=$lineCount")
+                            appendLine("ellipsis_count=$ellipsisCount")
+                            appendLine("text_length=${text.length}")
+                            appendLine("padding_px=$paddingPx")
+                            appendLine("rotated=$rotated")
+                            appendLine("orientation=${resources.configuration.orientation}")
                         },
                     )
                 }
@@ -731,4 +1086,5 @@ open class ReaderPageImageView @JvmOverloads constructor(
 }
 
 private const val MAX_RENDER_SKIP_LOG_KEYS = 256
+private const val MIN_TEXT_SCALE_X = 0.55f
 private const val MAX_ZOOM_SCALE = 5F

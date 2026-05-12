@@ -54,11 +54,11 @@ class TranslationPreferences(
     val autoShowOverlay: Preference<Boolean> = preferenceStore.getBoolean("translation_auto_show_overlay", true)
     val overlayTextSizeMode: Preference<String> = preferenceStore.getString("translation_overlay_text_size_mode", "dynamic")
     val overlayTextSizeSp: Preference<Int> = preferenceStore.getInt("translation_overlay_text_size_sp", 16)
-    val overlayFontFamily: Preference<String> = preferenceStore.getString("translation_overlay_font_family", "sans")
+    val overlayFontFamily: Preference<String> = preferenceStore.getString("translation_overlay_font_family", "system")
     val overlayTextColor: Preference<String> = preferenceStore.getString("translation_overlay_text_color", "#FF000000")
     val overlayBoxFillColor: Preference<String> = preferenceStore.getString("translation_overlay_box_fill_color", "#D2FFFFFF")
     val overlayBoxStrokeColor: Preference<String> = preferenceStore.getString("translation_overlay_box_stroke_color", "#E6202020")
-    val overlayBoxPaddingDp: Preference<Int> = preferenceStore.getInt("translation_overlay_box_padding_dp", 4)
+    val overlayBoxPaddingDp: Preference<Int> = preferenceStore.getInt("translation_overlay_box_padding_dp", 0)
     val overlayTextAlignment: Preference<String> = preferenceStore.getString("translation_overlay_text_alignment", "center")
     val queueSwipeStartAction: Preference<TranslationQueueSwipeAction> = preferenceStore.getEnum(
         "translation_queue_swipe_start_action",

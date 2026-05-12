@@ -136,6 +136,9 @@ class TranslationCoreTest {
         preferences.parallelRetryLanes.get() shouldBe "1"
         preferences.sourceLanguage.get() shouldBe TranslationLanguages.SOURCE_AUTO
         preferences.overlayTextSizeMode.get() shouldBe "dynamic"
+        preferences.overlayFontFamily.get() shouldBe "system"
+        preferences.overlayBoxPaddingDp.get() shouldBe 0
+        preferences.concurrency.get() shouldBe 1
         preferences.globalInstructions.get() shouldBe DEFAULT_TRANSLATION_SYSTEM_PROMPT
     }
 
@@ -723,6 +726,26 @@ class TranslationCoreTest {
     }
 
     @Test
+    fun `translation concurrency default one accepts eight and zero means unlimited`() {
+        TranslationConcurrencyPlanner.workerCount(
+            configuredConcurrency = 1,
+            pendingGroups = 8,
+        ) shouldBe 1
+        TranslationConcurrencyPlanner.workerCount(
+            configuredConcurrency = 8,
+            pendingGroups = 8,
+        ) shouldBe 8
+        TranslationConcurrencyPlanner.workerCount(
+            configuredConcurrency = 0,
+            pendingGroups = 8,
+        ) shouldBe 8
+        TranslationConcurrencyPlanner.workerCount(
+            configuredConcurrency = -1,
+            pendingGroups = 8,
+        ) shouldBe 1
+    }
+
+    @Test
     fun `active duplicate matching is exact`() {
         val queued = TranslationJobSignature(
             mangaId = 1,
@@ -1076,6 +1099,79 @@ class TranslationCoreTest {
 
         TranslationOverlayBoxStyle.fromJson(style.toJsonOrNull()) shouldBe style
         TranslationOverlayBoxStyle().toJsonOrNull() shouldBe null
+    }
+
+    @Test
+    fun `overlay text fit policy grows short text and shrinks long text within readable bounds`() {
+        val shortText = TranslationOverlayTextFitPolicy.sizeRangePx(
+            mode = "dynamic",
+            customSp = 16,
+            boxHeightPx = 160f,
+            density = 1f,
+            scaledDensity = 1f,
+            paddingPx = 0f,
+        )
+        val longText = TranslationOverlayTextFitPolicy.sizeRangePx(
+            mode = "dynamic",
+            customSp = 16,
+            boxHeightPx = 30f,
+            density = 1f,
+            scaledDensity = 1f,
+            paddingPx = 0f,
+        )
+        val custom = TranslationOverlayTextFitPolicy.sizeRangePx(
+            mode = "custom",
+            customSp = 32,
+            boxHeightPx = 160f,
+            density = 1f,
+            scaledDensity = 1f,
+            paddingPx = 0f,
+        )
+
+        shortText.minPx shouldBe 8f
+        shortText.preferredMaxPx shouldBe 24f
+        longText.preferredMaxPx shouldBe 9.375f
+        custom.preferredMaxPx shouldBe 32f
+        TranslationOverlayTextFitPolicy.shouldLogTruncation(ellipsisCount = 1) shouldBe true
+    }
+
+    @Test
+    fun `overlay rect mapper maps normalized boxes into rendered page bounds`() {
+        val mapped = TranslationOverlayRectMapper.map(
+            x = 0.1f,
+            y = 0.2f,
+            width = 0.3f,
+            height = 0.4f,
+            sourceWidth = 1000,
+            sourceHeight = 2000,
+            imageLeft = 10f,
+            imageTop = 20f,
+            imageWidth = 1000f,
+            imageHeight = 2000f,
+            viewWidth = 1080,
+            viewHeight = 2200,
+        )
+        val offPage = TranslationOverlayRectMapper.map(
+            x = 1.1f,
+            y = 0.2f,
+            width = 0.3f,
+            height = 0.4f,
+            sourceWidth = 1000,
+            sourceHeight = 2000,
+            imageLeft = 10f,
+            imageTop = 20f,
+            imageWidth = 1000f,
+            imageHeight = 2000f,
+            viewWidth = 1080,
+            viewHeight = 2200,
+        )
+
+        mapped.skipReason shouldBe null
+        mapped.left shouldBe 110f
+        mapped.top shouldBe 420f
+        mapped.right shouldBe 410f
+        mapped.bottom shouldBe 1220f
+        offPage.skipReason shouldBe "mapped_rect_off_page"
     }
 
     @Test

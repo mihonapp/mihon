@@ -76,12 +76,31 @@ fun TranslationPreferences.normalizedParallelRetryLanes(pendingManualRetryJobs: 
     )
 }
 
+fun TranslationPreferences.normalizedConcurrency(pendingGroups: Int): Int {
+    return TranslationConcurrencyPlanner.workerCount(
+        configuredConcurrency = concurrency.get(),
+        pendingGroups = pendingGroups,
+    )
+}
+
 object TranslationRetryLanePlanner {
     fun workerCount(pendingManualRetryJobs: Int, configuredLanes: Int): Int {
         val pending = pendingManualRetryJobs.coerceAtLeast(0)
         if (pending == 0) return 0
         val lanes = configuredLanes.coerceAtLeast(0)
         return if (lanes == 0) pending else min(lanes, pending)
+    }
+}
+
+object TranslationConcurrencyPlanner {
+    fun workerCount(configuredConcurrency: Int, pendingGroups: Int): Int {
+        val pending = pendingGroups.coerceAtLeast(0)
+        if (pending == 0) return 1
+        return when {
+            configuredConcurrency == 0 -> pending
+            configuredConcurrency > 0 -> min(configuredConcurrency, pending)
+            else -> 1
+        }
     }
 }
 
@@ -1027,6 +1046,139 @@ object TranslationBatchFallbackPlanner {
         if (size <= 1) return null
         val midpoint = size / 2
         return (0 until midpoint) to (midpoint until size)
+    }
+}
+
+data class TranslationOverlayTextSizeRange(
+    val minPx: Float,
+    val preferredMaxPx: Float,
+)
+
+object TranslationOverlayTextFitPolicy {
+    const val MIN_TEXT_SP = 8f
+    const val SYSTEM_TEXT_SP = 14f
+    const val DYNAMIC_MAX_TEXT_SP = 24f
+
+    fun sizeRangePx(
+        mode: String?,
+        customSp: Int,
+        boxHeightPx: Float,
+        density: Float,
+        scaledDensity: Float,
+        paddingPx: Float,
+    ): TranslationOverlayTextSizeRange {
+        val safeScaledDensity = scaledDensity.takeIf { it.isFinite() && it > 0f } ?: density.coerceAtLeast(1f)
+        val minPx = MIN_TEXT_SP * safeScaledDensity
+        val contentHeight = (boxHeightPx - paddingPx * 2f).takeIf { it.isFinite() }?.coerceAtLeast(minPx) ?: minPx
+        val preferred = when (mode?.lowercase(Locale.ROOT)) {
+            "system" -> SYSTEM_TEXT_SP * safeScaledDensity
+            "custom" -> customSp.coerceIn(8, 48) * safeScaledDensity
+            else -> (contentHeight / 3.2f).coerceIn(minPx, DYNAMIC_MAX_TEXT_SP * safeScaledDensity)
+        }
+        return TranslationOverlayTextSizeRange(
+            minPx = minPx,
+            preferredMaxPx = preferred.coerceAtLeast(minPx),
+        )
+    }
+
+    fun shouldLogTruncation(ellipsisCount: Int): Boolean = ellipsisCount > 0
+}
+
+data class TranslationOverlayMappedRect(
+    val left: Float,
+    val top: Float,
+    val right: Float,
+    val bottom: Float,
+    val sourceWidth: Int,
+    val sourceHeight: Int,
+    val imageLeft: Float,
+    val imageTop: Float,
+    val imageWidth: Float,
+    val imageHeight: Float,
+    val viewWidth: Int,
+    val viewHeight: Int,
+    val scaleX: Float,
+    val scaleY: Float,
+    val skipReason: String? = null,
+) {
+    val width: Float get() = right - left
+    val height: Float get() = bottom - top
+}
+
+object TranslationOverlayRectMapper {
+    fun map(
+        x: Float,
+        y: Float,
+        width: Float,
+        height: Float,
+        sourceWidth: Int,
+        sourceHeight: Int,
+        imageLeft: Float,
+        imageTop: Float,
+        imageWidth: Float,
+        imageHeight: Float,
+        viewWidth: Int,
+        viewHeight: Int,
+    ): TranslationOverlayMappedRect {
+        val scaleX = if (sourceWidth > 0) imageWidth / sourceWidth else 0f
+        val scaleY = if (sourceHeight > 0) imageHeight / sourceHeight else 0f
+        fun result(
+            left: Float = imageLeft,
+            top: Float = imageTop,
+            right: Float = imageLeft,
+            bottom: Float = imageTop,
+            reason: String?,
+        ) = TranslationOverlayMappedRect(
+            left = left,
+            top = top,
+            right = right,
+            bottom = bottom,
+            sourceWidth = sourceWidth,
+            sourceHeight = sourceHeight,
+            imageLeft = imageLeft,
+            imageTop = imageTop,
+            imageWidth = imageWidth,
+            imageHeight = imageHeight,
+            viewWidth = viewWidth,
+            viewHeight = viewHeight,
+            scaleX = scaleX,
+            scaleY = scaleY,
+            skipReason = reason,
+        )
+
+        val values = listOf(x, y, width, height, imageLeft, imageTop, imageWidth, imageHeight)
+        if (values.any { !it.isFinite() }) return result(reason = "non_finite_geometry")
+        if (sourceWidth <= 0 || sourceHeight <= 0) return result(reason = "invalid_source_dimensions")
+        if (imageWidth <= 0f || imageHeight <= 0f || viewWidth <= 0 || viewHeight <= 0) {
+            return result(reason = "invalid_render_dimensions")
+        }
+        if (width <= 0f || height <= 0f) return result(reason = "non_positive_box_size")
+
+        val left = imageLeft + x * imageWidth
+        val top = imageTop + y * imageHeight
+        val right = imageLeft + (x + width) * imageWidth
+        val bottom = imageTop + (y + height) * imageHeight
+        val normalizedLeft = minOf(left, right)
+        val normalizedTop = minOf(top, bottom)
+        val normalizedRight = maxOf(left, right)
+        val normalizedBottom = maxOf(top, bottom)
+        val mappedWidth = normalizedRight - normalizedLeft
+        val mappedHeight = normalizedBottom - normalizedTop
+        val reason = when {
+            mappedWidth <= 1f || mappedHeight <= 1f -> "rect_too_small"
+            normalizedRight <= imageLeft ||
+                normalizedBottom <= imageTop ||
+                normalizedLeft >= imageLeft + imageWidth ||
+                normalizedTop >= imageTop + imageHeight -> "mapped_rect_off_page"
+            else -> null
+        }
+        return result(
+            left = normalizedLeft.coerceIn(imageLeft, imageLeft + imageWidth),
+            top = normalizedTop.coerceIn(imageTop, imageTop + imageHeight),
+            right = normalizedRight.coerceIn(imageLeft, imageLeft + imageWidth),
+            bottom = normalizedBottom.coerceIn(imageTop, imageTop + imageHeight),
+            reason = reason,
+        )
     }
 }
 

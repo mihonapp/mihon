@@ -25,11 +25,11 @@ class TranslationPreferencesTest {
         preferences.overlayTextSizeMode.get() shouldBe "dynamic"
         preferences.overlayTextSizeSp.get() shouldBe 16
         preferences.globalInstructions.get() shouldBe DEFAULT_TRANSLATION_SYSTEM_PROMPT
-        preferences.overlayFontFamily.get() shouldBe "sans"
+        preferences.overlayFontFamily.get() shouldBe "system"
         preferences.overlayTextColor.get() shouldBe "#FF000000"
         preferences.overlayBoxFillColor.get() shouldBe "#D2FFFFFF"
         preferences.overlayBoxStrokeColor.get() shouldBe "#E6202020"
-        preferences.overlayBoxPaddingDp.get() shouldBe 4
+        preferences.overlayBoxPaddingDp.get() shouldBe 0
         preferences.overlayTextAlignment.get() shouldBe "center"
         preferences.queueSwipeStartAction.get() shouldBe TranslationQueueSwipeAction.ViewLogs
         preferences.queueSwipeEndAction.get() shouldBe TranslationQueueSwipeAction.CancelOrDelete

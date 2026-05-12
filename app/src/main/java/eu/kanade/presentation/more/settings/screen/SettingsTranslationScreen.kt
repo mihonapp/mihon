@@ -16,6 +16,12 @@ import androidx.compose.ui.platform.LocalContext
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import tachiyomi.domain.translation.service.TranslationPreferences
 import tachiyomi.domain.translation.service.TranslationLogSwipeAction
@@ -47,6 +53,7 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlinx.serialization.json.Json
+import tachiyomi.core.common.preference.Preference as PreferenceData
 import tachiyomi.core.common.i18n.stringResource as contextStringResource
 import tachiyomi.domain.translation.service.DEFAULT_TRANSLATION_SYSTEM_PROMPT
 
@@ -204,6 +211,11 @@ object SettingsTranslationScreen : SearchableSettings {
             0 -> stringResource(MR.strings.all)
             null -> "1"
             else -> if (parsed >= 1) parsed.toString() else "1"
+        }
+        val concurrencyValueString = if (concurrency == 0) {
+            stringResource(MR.strings.all)
+        } else {
+            concurrency.coerceAtLeast(1).toString()
         }
 
         if (showClearAllConfirmation) {
@@ -394,6 +406,7 @@ object SettingsTranslationScreen : SearchableSettings {
                     Preference.PreferenceItem.ListPreference(
                         preference = preferences.overlayFontFamily,
                         entries = mapOf(
+                            "system" to stringResource(MR.strings.pref_translation_overlay_font_system),
                             "sans" to "Sans",
                             "serif" to "Serif",
                             "monospace" to "Monospace",
@@ -496,11 +509,21 @@ object SettingsTranslationScreen : SearchableSettings {
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.pref_translation_queue),
                 preferenceItems = persistentListOf(
-                    Preference.PreferenceItem.SliderPreference(
-                        value = concurrency,
-                        valueRange = 1..4,
+                    Preference.PreferenceItem.EditTextPreference(
+                        preference = remember(preferences.concurrency) {
+                            IntAsStringPreference(preferences.concurrency)
+                        },
                         title = stringResource(MR.strings.pref_translation_concurrency),
-                        onValueChanged = { preferences.concurrency.set(it) },
+                        subtitle = concurrencyValueString,
+                        onValueChanged = { value ->
+                            val normalized = value.trim().toIntOrNull()
+                            if (normalized == null || normalized < 0) {
+                                context.toast(MR.strings.translation_invalid_number)
+                                false
+                            } else {
+                                true
+                            }
+                        },
                     ),
                     Preference.PreferenceItem.EditTextPreference(
                         preference = preferences.parallelRetryLanes,
@@ -602,6 +625,30 @@ private fun translationLogSwipeEntries() = mapOf(
     TranslationLogSwipeAction.OpenDetails to stringResource(MR.strings.pref_translation_swipe_open_details),
     TranslationLogSwipeAction.CopyDetails to stringResource(MR.strings.pref_translation_swipe_copy_details),
 ).toImmutableMap()
+
+private class IntAsStringPreference(
+    private val delegate: PreferenceData<Int>,
+) : PreferenceData<String> {
+    override fun key(): String = delegate.key()
+
+    override fun get(): String = delegate.get().coerceAtLeast(0).toString()
+
+    override fun set(value: String) {
+        delegate.set(value.trim().toIntOrNull()?.coerceAtLeast(0) ?: delegate.defaultValue())
+    }
+
+    override fun isSet(): Boolean = delegate.isSet()
+
+    override fun delete() = delegate.delete()
+
+    override fun defaultValue(): String = delegate.defaultValue().coerceAtLeast(0).toString()
+
+    override fun changes(): Flow<String> = delegate.changes().map { it.coerceAtLeast(0).toString() }
+
+    override fun stateIn(scope: CoroutineScope): StateFlow<String> {
+        return changes().stateIn(scope, SharingStarted.Eagerly, get())
+    }
+}
 
 private fun clearTranslationFiles(context: Context) {
     File(context.filesDir, "translations").deleteRecursively()

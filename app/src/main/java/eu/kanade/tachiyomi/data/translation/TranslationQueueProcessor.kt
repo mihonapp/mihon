@@ -40,7 +40,6 @@ class TranslationQueueProcessor(
         workKind: TranslationWorkKind = TranslationWorkKind.Normal,
         laneId: Int = 0,
     ): TranslationProcessResult = coroutineScope {
-        val concurrency = preferences.concurrency.get().coerceIn(1, 4)
         var retryLater = false
         var continueLater = false
         var processedAny = false
@@ -96,6 +95,7 @@ class TranslationQueueProcessor(
                 maxImagesPerBatch = preferences.normalizedMaxImagesPerBatch(),
             )
             val groupsForInvocation = groups.take(TranslationWorkerContinuationPolicy.MAX_GROUPS_PER_WORKER_INVOCATION)
+            val concurrency = preferences.normalizedConcurrency(groupsForInvocation.size)
             var claimedAnyThisLoop = false
             groupsForInvocation.chunked(concurrency).forEachIndexed { chunkIndex, batch ->
                 if (retryLater || continueLater) {

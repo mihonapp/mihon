@@ -561,6 +561,7 @@
     <string name="pref_translation_overlay_text_custom_size">Custom overlay text size</string>
     <string name="pref_translation_overlay_style">Overlay style</string>
     <string name="pref_translation_overlay_font_family">Font family</string>
+    <string name="pref_translation_overlay_font_system">System default</string>
     <string name="pref_translation_overlay_text_color">Text color</string>
     <string name="pref_translation_overlay_box_fill_color">Box fill color</string>
     <string name="pref_translation_overlay_box_stroke_color">Box stroke color</string>
