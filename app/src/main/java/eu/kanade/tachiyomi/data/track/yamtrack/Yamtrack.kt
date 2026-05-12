@@ -15,7 +15,9 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.launch
+import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.i18n.MR
+import uy.kohesive.injekt.injectLazy
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.text.Normalizer
@@ -155,6 +157,8 @@ class Yamtrack(id: Long) : BaseTracker(id, "Yamtrack"), DeletableTracker, Enrich
 
     private val api by lazy { YamtrackApi(this, client, interceptor) }
 
+    private val getManga: GetManga by injectLazy()
+
     override fun getLogo(): Int = R.drawable.brand_yamtrack
 
     override fun getStatusList(): List<Long> = listOf(PLANNING, READING, PAUSED, COMPLETED, DROPPED)
@@ -212,7 +216,29 @@ class Yamtrack(id: Long) : BaseTracker(id, "Yamtrack"), DeletableTracker, Enrich
             if (track.status == 0L) {
                 track.status = if (hasReadChapters) READING else PLANNING
             }
-            api.addMedia(track, mediaType, source, mediaId, track.title)
+            // For manual entries Yamtrack accepts an `image` URL; provider-sourced entries
+            // pull their cover from the upstream provider regardless of what we send.
+            val cover = if (source == SOURCE_MANUAL) {
+                getManga.await(track.manga_id)?.thumbnailUrl
+            } else {
+                null
+            }
+            val created = api.addMedia(track, mediaType, source, mediaId, track.title, cover)
+            // Manual entries get a UUID assigned by Yamtrack (Item.generate_manual_id());
+            // the search-query-derived tracking_url won't match it, so subsequent
+            // GET/PATCH/DELETE would 404. Rewrite tracking_url + remote_id with the
+            // server-assigned media_id so the entry stays addressable.
+            val assignedMediaId = created?.item?.mediaId
+            if (source == SOURCE_MANUAL && !assignedMediaId.isNullOrBlank() && assignedMediaId != mediaId) {
+                track.tracking_url = buildTrackingUrl(
+                    getBaseUrl().trimEnd('/'),
+                    source,
+                    mediaType,
+                    assignedMediaId,
+                    track.title,
+                )
+                track.remote_id = buildRemoteId(source, assignedMediaId)
+            }
             track
         }
     }
