@@ -1154,6 +1154,16 @@ object TranslationOverlayTextFitPolicy {
     fun shouldLogTruncation(ellipsisCount: Int): Boolean = ellipsisCount > 0
 }
 
+object TranslationOverlayTextOrientationPolicy {
+    fun shouldRotateTranslatedText(
+        boxWidthPx: Float,
+        boxHeightPx: Float,
+        textLength: Int,
+    ): Boolean {
+        return false
+    }
+}
+
 data class TranslationOverlayMappedRect(
     val left: Float,
     val top: Float,

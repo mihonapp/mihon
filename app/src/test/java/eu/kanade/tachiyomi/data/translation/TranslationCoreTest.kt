@@ -1183,6 +1183,21 @@ class TranslationCoreTest {
     }
 
     @Test
+    fun `overlay text orientation policy keeps tall narrow boxes horizontal`() {
+        TranslationOverlayTextOrientationPolicy.shouldRotateTranslatedText(
+            boxWidthPx = 24f,
+            boxHeightPx = 220f,
+            textLength = 48,
+        ) shouldBe false
+
+        TranslationOverlayTextOrientationPolicy.shouldRotateTranslatedText(
+            boxWidthPx = 180f,
+            boxHeightPx = 80f,
+            textLength = 8,
+        ) shouldBe false
+    }
+
+    @Test
     fun `overlay rect mapper maps normalized boxes into rendered page bounds`() {
         val mapped = TranslationOverlayRectMapper.map(
             x = 0.1f,
@@ -1219,6 +1234,73 @@ class TranslationCoreTest {
         mapped.right shouldBe 410f
         mapped.bottom shouldBe 1220f
         offPage.skipReason shouldBe "mapped_rect_off_page"
+    }
+
+    @Test
+    fun `overlay rect mapper handles portrait and landscape rendered strips with offsets`() {
+        val portrait = TranslationOverlayRectMapper.map(
+            x = 0.2f,
+            y = 0.25f,
+            width = 0.1f,
+            height = 0.15f,
+            sourceWidth = 1000,
+            sourceHeight = 2000,
+            imageLeft = 0f,
+            imageTop = 120f,
+            imageWidth = 1080f,
+            imageHeight = 2160f,
+            viewWidth = 1080,
+            viewHeight = 2400,
+        )
+        val landscape = TranslationOverlayRectMapper.map(
+            x = 0.2f,
+            y = 0.25f,
+            width = 0.1f,
+            height = 0.15f,
+            sourceWidth = 1000,
+            sourceHeight = 2000,
+            imageLeft = 420f,
+            imageTop = 0f,
+            imageWidth = 420f,
+            imageHeight = 840f,
+            viewWidth = 2400,
+            viewHeight = 1080,
+        )
+
+        portrait.skipReason shouldBe null
+        portrait.left shouldBe 216f
+        portrait.top shouldBe 660f
+        portrait.right shouldBe 324f
+        portrait.bottom shouldBe 984f
+        landscape.skipReason shouldBe null
+        landscape.left shouldBe 504f
+        landscape.top shouldBe 210f
+        landscape.right shouldBe 546f
+        landscape.bottom shouldBe 336f
+    }
+
+    @Test
+    fun `translation settings metadata includes descriptions defaults and bounded fields`() {
+        TranslationSettingsMetadata.all.size shouldBe TranslationSettingsMetadata.all.map { it.key }.toSet().size
+
+        TranslationSettingsMetadata.all.forEach { entry ->
+            val subtitle = entry.subtitle()
+            subtitle shouldContain "Description = "
+            subtitle shouldContain "Default = "
+            if (entry.numeric) {
+                subtitle shouldContain "Min = "
+                subtitle shouldContain "Max = "
+                subtitle shouldNotContain "Options = "
+                subtitle shouldNotContain "Format = "
+            } else {
+                val hasOptions = subtitle.contains("Options = ")
+                val hasFormat = subtitle.contains("Format = ")
+                (hasOptions || hasFormat) shouldBe true
+            }
+        }
+
+        TranslationSettingsMetadata.overlayTextSizeSp.subtitle(currentValue = "18 sp") shouldContain "Current = 18 sp"
+        TranslationSettingsMetadata.sourceLanguage.subtitle(currentValue = "Auto") shouldContain "Options = Auto, Japanese, Korean, Chinese"
     }
 
     @Test

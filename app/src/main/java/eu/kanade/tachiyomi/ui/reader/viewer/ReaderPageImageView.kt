@@ -50,6 +50,7 @@ import eu.kanade.tachiyomi.data.translation.TranslationOverlayMappedRect
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayRectMapper
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayRenderSkipPolicy
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayTextFitPolicy
+import eu.kanade.tachiyomi.data.translation.TranslationOverlayTextOrientationPolicy
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import tachiyomi.domain.translation.service.TranslationPreferences
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonSubsamplingImageView
@@ -633,17 +634,8 @@ open class ReaderPageImageView @JvmOverloads constructor(
 
             canvas.save()
             canvas.clipRect(rect)
-            if (fitted.rotated) {
-                val rotatedWidth = fitted.layout.height.toFloat()
-                val rotatedHeight = fitted.layout.width.toFloat()
-                val left = rect.left + padding + ((fitted.contentWidth - rotatedWidth) / 2f).coerceAtLeast(0f)
-                val top = rect.top + padding + ((fitted.contentHeight - rotatedHeight) / 2f).coerceAtLeast(0f)
-                canvas.translate(left + rotatedWidth, top)
-                canvas.rotate(90f)
-            } else {
-                val verticalOffset = ((fitted.contentHeight - fitted.layout.height) / 2f).coerceAtLeast(0f)
-                canvas.translate(rect.left + padding, rect.top + padding + verticalOffset)
-            }
+            val verticalOffset = ((fitted.contentHeight - fitted.layout.height) / 2f).coerceAtLeast(0f)
+            canvas.translate(rect.left + padding, rect.top + padding + verticalOffset)
             fitted.layout.draw(canvas)
             canvas.restore()
         }
@@ -695,24 +687,8 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 heightLimit = contentHeight,
                 alignment = alignmentFor(style.textAlign),
                 range = range,
-                rotated = false,
             )
-            val forceRotated = contentHeight >= width * 1.6f && text.length >= 8
-            val rotated = if (shouldTryRotatedText(text, width, contentHeight, normal)) {
-                bestTextLayout(
-                    text = text,
-                    paint = textPaint,
-                    width = contentHeight.toInt().coerceAtLeast(1),
-                    heightLimit = width.toFloat(),
-                    alignment = alignmentFor(style.textAlign),
-                    range = range,
-                    rotated = true,
-                )
-            } else {
-                null
-            }
-            if (forceRotated && rotated != null) return rotated.also { textLayoutCache[cacheKey] = it }
-            return chooseTextLayout(normal, rotated).also { textLayoutCache[cacheKey] = it }
+            return normal.also { textLayoutCache[cacheKey] = it }
         }
 
         private fun bestTextLayout(
@@ -722,7 +698,6 @@ open class ReaderPageImageView @JvmOverloads constructor(
             heightLimit: Float,
             alignment: Layout.Alignment,
             range: eu.kanade.tachiyomi.data.translation.TranslationOverlayTextSizeRange,
-            rotated: Boolean,
         ): FittedTextLayout {
             var low = range.minPx
             var high = range.preferredMaxPx.coerceAtLeast(low)
@@ -766,7 +741,6 @@ open class ReaderPageImageView @JvmOverloads constructor(
                     width = width,
                     heightLimit = heightLimit,
                     alignment = alignment,
-                    rotated = rotated,
                 )?.let { return it }
                 paint.textSize = range.minPx
                 paint.textScaleX = MIN_TEXT_SCALE_X
@@ -787,11 +761,15 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 layout = bestLayout,
                 textSizePx = bestSize,
                 textScaleX = bestLayout.paint.textScaleX,
-                contentWidth = if (rotated) heightLimit.toInt().coerceAtLeast(1) else width,
-                contentHeight = if (rotated) width.toFloat() else heightLimit,
+                contentWidth = width,
+                contentHeight = heightLimit,
                 ellipsisCount = bestLayout.totalEllipsisCount(),
                 lineCount = bestLayout.lineCount,
-                rotated = rotated,
+                rotated = TranslationOverlayTextOrientationPolicy.shouldRotateTranslatedText(
+                    boxWidthPx = width.toFloat(),
+                    boxHeightPx = heightLimit,
+                    textLength = text.length,
+                ),
             )
         }
 
@@ -802,7 +780,6 @@ open class ReaderPageImageView @JvmOverloads constructor(
             width: Int,
             heightLimit: Float,
             alignment: Layout.Alignment,
-            rotated: Boolean,
         ): FittedTextLayout? {
             var scale = 0.95f
             while (scale >= MIN_TEXT_SCALE_X) {
@@ -821,47 +798,20 @@ open class ReaderPageImageView @JvmOverloads constructor(
                         layout = layout,
                         textSizePx = textSizePx,
                         textScaleX = scale,
-                        contentWidth = if (rotated) heightLimit.toInt().coerceAtLeast(1) else width,
-                        contentHeight = if (rotated) width.toFloat() else heightLimit,
+                        contentWidth = width,
+                        contentHeight = heightLimit,
                         ellipsisCount = layout.totalEllipsisCount(),
                         lineCount = layout.lineCount,
-                        rotated = rotated,
+                        rotated = TranslationOverlayTextOrientationPolicy.shouldRotateTranslatedText(
+                            boxWidthPx = width.toFloat(),
+                            boxHeightPx = heightLimit,
+                            textLength = text.length,
+                        ),
                     )
                 }
                 scale -= 0.05f
             }
             return null
-        }
-
-        private fun shouldTryRotatedText(
-            text: String,
-            width: Int,
-            contentHeight: Float,
-            normal: FittedTextLayout,
-        ): Boolean {
-            if (text.length < 4) return false
-            if (contentHeight < width * 1.6f) return false
-            if (text.length >= 8) return true
-            return normal.ellipsisCount > 0 || normal.lineCount >= 4
-        }
-
-        private fun chooseTextLayout(
-            normal: FittedTextLayout,
-            rotated: FittedTextLayout?,
-        ): FittedTextLayout {
-            if (rotated == null) return normal
-            if (rotated.ellipsisCount <= normal.ellipsisCount && rotated.lineCount <= normal.lineCount) {
-                return rotated
-            }
-            if (rotated.ellipsisCount <= normal.ellipsisCount && rotated.textSizePx >= normal.textSizePx) {
-                return rotated
-            }
-            if (normal.ellipsisCount > 0 && rotated.ellipsisCount <= normal.ellipsisCount) return rotated
-            if (rotated.ellipsisCount == 0 && normal.lineCount >= 4 && rotated.lineCount < normal.lineCount) {
-                return rotated
-            }
-            if (rotated.ellipsisCount < normal.ellipsisCount) return rotated
-            return normal
         }
 
         private fun buildTextLayout(
@@ -1068,6 +1018,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                             appendLine("width=$width")
                             appendLine("height=$height")
                             appendLine("text_type=$text_type")
+                            appendLine("orientation=${resources.configuration.orientation}")
                             mapping?.let {
                                 appendLine("source_width=${it.sourceWidth}")
                                 appendLine("source_height=${it.sourceHeight}")

@@ -45,6 +45,7 @@ import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
 import eu.kanade.tachiyomi.data.translation.TranslationJob
 import eu.kanade.tachiyomi.data.translation.TranslationWorkStartPolicy
 import eu.kanade.tachiyomi.data.translation.TranslationThinkingLevel
+import eu.kanade.tachiyomi.data.translation.TranslationSettingsMetadata
 import eu.kanade.tachiyomi.util.system.toast
 import java.io.File
 import java.text.DateFormat
@@ -72,6 +73,7 @@ object SettingsTranslationScreen : SearchableSettings {
         val repository = remember { Injekt.get<TranslationRepository>() }
         val setupValidator = remember { Injekt.get<TranslationSetupValidator>() }
         val json = remember { Injekt.get<Json>() }
+        val metadata = TranslationSettingsMetadata
 
         val apiKey by preferences.geminiApiKey.collectAsState()
         val selectedModel by preferences.geminiModel.collectAsState()
@@ -261,31 +263,35 @@ object SettingsTranslationScreen : SearchableSettings {
                                     MR.strings.translation_setup_needs_attention
                                 },
                             ),
-                            subtitle = readiness.message + setupLastTested,
+                            subtitle = metadata.setupStatus.subtitle(readiness.message + setupLastTested),
                         ),
                     )
                     add(
                         Preference.PreferenceItem.TextPreference(
                             title = stringResource(MR.strings.pref_translation_gemini_api_key),
-                            subtitle = stringResource(
-                                if (readiness.apiKeyPresent) {
-                                    MR.strings.translation_setup_configured
-                                } else {
-                                    MR.strings.translation_setup_missing
-                                },
+                            subtitle = metadata.setupApiKey.subtitle(
+                                stringResource(
+                                    if (readiness.apiKeyPresent) {
+                                        MR.strings.translation_setup_configured
+                                    } else {
+                                        MR.strings.translation_setup_missing
+                                    },
+                                ),
                             ),
                         ),
                     )
                     add(
                         Preference.PreferenceItem.TextPreference(
                             title = stringResource(MR.strings.pref_translation_model),
-                            subtitle = stringResource(
-                                if (readiness.translationModelReady) {
-                                    MR.strings.translation_setup_model_ready
-                                } else {
-                                    MR.strings.translation_setup_model_needs_test
-                                },
-                                readiness.translationModel,
+                            subtitle = metadata.setupTranslationModel.subtitle(
+                                stringResource(
+                                    if (readiness.translationModelReady) {
+                                        MR.strings.translation_setup_model_ready
+                                    } else {
+                                        MR.strings.translation_setup_model_needs_test
+                                    },
+                                    readiness.translationModel,
+                                ),
                             ),
                         ),
                     )
@@ -293,13 +299,15 @@ object SettingsTranslationScreen : SearchableSettings {
                         add(
                             Preference.PreferenceItem.TextPreference(
                                 title = stringResource(MR.strings.pref_translation_inpaint_model),
-                                subtitle = stringResource(
-                                    if (readiness.inpaintModelReady) {
-                                        MR.strings.translation_setup_model_ready
-                                    } else {
-                                        MR.strings.translation_setup_model_needs_test
-                                    },
-                                    readiness.inpaintModel,
+                                subtitle = metadata.setupInpaintModel.subtitle(
+                                    stringResource(
+                                        if (readiness.inpaintModelReady) {
+                                            MR.strings.translation_setup_model_ready
+                                        } else {
+                                            MR.strings.translation_setup_model_needs_test
+                                        },
+                                        readiness.inpaintModel,
+                                    ),
                                 ),
                             ),
                         )
@@ -307,7 +315,9 @@ object SettingsTranslationScreen : SearchableSettings {
                     add(
                         Preference.PreferenceItem.TextPreference(
                             title = stringResource(MR.strings.translation_setup_test),
-                            subtitle = stringResource(MR.strings.translation_setup_test_summary),
+                            subtitle = metadata.setupTest.subtitle(
+                                stringResource(MR.strings.translation_setup_test_summary),
+                            ),
                             onClick = { runSetupTest() },
                         ),
                     )
@@ -319,29 +329,35 @@ object SettingsTranslationScreen : SearchableSettings {
                     Preference.PreferenceItem.EditTextPreference(
                         preference = preferences.geminiApiKey,
                         title = stringResource(MR.strings.pref_translation_gemini_api_key),
-                        subtitle = stringResource(MR.strings.pref_translation_gemini_api_key_summary),
+                        subtitle = metadata.geminiApiKey.subtitle(
+                            stringResource(MR.strings.pref_translation_gemini_api_key_summary),
+                        ),
                     ),
                     Preference.PreferenceItem.TextPreference(
                         title = stringResource(MR.strings.translation_model_refresh),
-                        subtitle = modelStatus ?: stringResource(MR.strings.translation_model_refresh_summary),
+                        subtitle = metadata.refreshModels.subtitle(
+                            modelStatus ?: stringResource(MR.strings.translation_model_refresh_summary),
+                        ),
                         onClick = { refreshModels(showReadyToast = false) },
                     ),
                     Preference.PreferenceItem.BasicListPreference(
                         value = selectedModel,
                         entries = modelEntries,
                         title = stringResource(MR.strings.pref_translation_model),
+                        subtitle = metadata.translationModel.subtitle(currentValue = "%s"),
                         onValueChanged = { preferences.geminiModel.set(it) },
                     ),
                     Preference.PreferenceItem.BasicListPreference(
                         value = selectedInpaintModel,
                         entries = modelEntries,
                         title = stringResource(MR.strings.pref_translation_inpaint_model),
+                        subtitle = metadata.inpaintModel.subtitle(currentValue = "%s"),
                         onValueChanged = { preferences.geminiInpaintModel.set(it) },
                     ),
                     Preference.PreferenceItem.EditTextPreference(
                         preference = preferences.targetLanguage,
                         title = stringResource(MR.strings.pref_translation_target_language),
-                        subtitle = "%s",
+                        subtitle = metadata.targetLanguage.subtitle(currentValue = "%s"),
                     ),
                     Preference.PreferenceItem.ListPreference(
                         preference = preferences.sourceLanguage,
@@ -352,6 +368,7 @@ object SettingsTranslationScreen : SearchableSettings {
                             TranslationLanguages.SOURCE_CHINESE to stringResource(MR.strings.pref_translation_source_chinese),
                         ).toImmutableMap(),
                         title = stringResource(MR.strings.pref_translation_source_language),
+                        subtitle = metadata.sourceLanguage.subtitle(currentValue = "%s"),
                     ),
                 ),
             ),
@@ -365,6 +382,7 @@ object SettingsTranslationScreen : SearchableSettings {
                             "local_ocr_gemini" to stringResource(MR.strings.pref_translation_pipeline_local_ocr_gemini),
                         ).toImmutableMap(),
                         title = stringResource(MR.strings.pref_translation_pipeline),
+                        subtitle = metadata.pipeline.subtitle(currentValue = "%s"),
                     ),
                     Preference.PreferenceItem.ListPreference(
                         preference = preferences.ocrScript,
@@ -377,14 +395,17 @@ object SettingsTranslationScreen : SearchableSettings {
                             "devanagari" to "Devanagari",
                         ).toImmutableMap(),
                         title = stringResource(MR.strings.pref_translation_ocr_script),
+                        subtitle = metadata.ocrScript.subtitle(currentValue = "%s"),
                     ),
                     Preference.PreferenceItem.SwitchPreference(
                         preference = preferences.skipExistingOverlays,
                         title = stringResource(MR.strings.pref_translation_skip_existing),
+                        subtitle = metadata.skipExistingOverlays.subtitle(),
                     ),
                     Preference.PreferenceItem.SwitchPreference(
                         preference = preferences.autoShowOverlay,
                         title = stringResource(MR.strings.pref_translation_show_overlays),
+                        subtitle = metadata.autoShowOverlay.subtitle(),
                     ),
                     Preference.PreferenceItem.ListPreference(
                         preference = preferences.overlayTextSizeMode,
@@ -394,11 +415,13 @@ object SettingsTranslationScreen : SearchableSettings {
                             "custom" to stringResource(MR.strings.pref_translation_overlay_text_custom),
                         ).toImmutableMap(),
                         title = stringResource(MR.strings.pref_translation_overlay_text_size),
+                        subtitle = metadata.overlayTextSizeMode.subtitle(currentValue = "%s"),
                     ),
                     Preference.PreferenceItem.SliderPreference(
                         value = overlayTextSizeSp.coerceIn(8, 48),
                         valueRange = 8..48,
                         title = stringResource(MR.strings.pref_translation_overlay_text_custom_size),
+                        subtitle = metadata.overlayTextSizeSp.subtitle(currentValue = "$overlayTextSizeSp sp"),
                         valueString = "$overlayTextSizeSp sp",
                         enabled = overlayTextSizeMode == "custom",
                         onValueChanged = { preferences.overlayTextSizeSp.set(it.coerceIn(8, 48)) },
@@ -412,26 +435,30 @@ object SettingsTranslationScreen : SearchableSettings {
                             "monospace" to "Monospace",
                         ).toImmutableMap(),
                         title = stringResource(MR.strings.pref_translation_overlay_font_family),
+                        subtitle = metadata.overlayFontFamily.subtitle(currentValue = "%s"),
                     ),
                     Preference.PreferenceItem.EditTextPreference(
                         preference = preferences.overlayTextColor,
                         title = stringResource(MR.strings.pref_translation_overlay_text_color),
-                        subtitle = "%s",
+                        subtitle = metadata.overlayTextColor.subtitle(currentValue = "%s"),
                     ),
                     Preference.PreferenceItem.EditTextPreference(
                         preference = preferences.overlayBoxFillColor,
                         title = stringResource(MR.strings.pref_translation_overlay_box_fill_color),
-                        subtitle = "%s",
+                        subtitle = metadata.overlayBoxFillColor.subtitle(currentValue = "%s"),
                     ),
                     Preference.PreferenceItem.EditTextPreference(
                         preference = preferences.overlayBoxStrokeColor,
                         title = stringResource(MR.strings.pref_translation_overlay_box_stroke_color),
-                        subtitle = "%s",
+                        subtitle = metadata.overlayBoxStrokeColor.subtitle(currentValue = "%s"),
                     ),
                     Preference.PreferenceItem.SliderPreference(
                         value = preferences.overlayBoxPaddingDp.get().coerceIn(0, 24),
                         valueRange = 0..24,
                         title = stringResource(MR.strings.pref_translation_overlay_box_padding),
+                        subtitle = metadata.overlayBoxPadding.subtitle(
+                            currentValue = "${preferences.overlayBoxPaddingDp.get().coerceIn(0, 24)} dp",
+                        ),
                         valueString = "${preferences.overlayBoxPaddingDp.get().coerceIn(0, 24)} dp",
                         onValueChanged = { preferences.overlayBoxPaddingDp.set(it.coerceIn(0, 24)) },
                     ),
@@ -443,15 +470,19 @@ object SettingsTranslationScreen : SearchableSettings {
                             "end" to "End",
                         ).toImmutableMap(),
                         title = stringResource(MR.strings.pref_translation_overlay_text_alignment),
+                        subtitle = metadata.overlayTextAlignment.subtitle(currentValue = "%s"),
                     ),
                     Preference.PreferenceItem.SwitchPreference(
                         preference = preferences.rawDebugLogging,
                         title = stringResource(MR.strings.pref_translation_raw_debug_logs),
-                        subtitle = stringResource(MR.strings.pref_translation_raw_debug_logs_summary),
+                        subtitle = metadata.rawDebugLogging.subtitle(
+                            stringResource(MR.strings.pref_translation_raw_debug_logs_summary),
+                        ),
                     ),
                     Preference.PreferenceItem.SwitchPreference(
                         preference = preferences.enableInpaint,
                         title = stringResource(MR.strings.pref_translation_enable_inpaint),
+                        subtitle = metadata.enableInpaint.subtitle(),
                     ),
                 ),
             ),
@@ -462,6 +493,7 @@ object SettingsTranslationScreen : SearchableSettings {
                         value = (temperature * 100).roundToInt(),
                         valueRange = 0..200,
                         title = stringResource(MR.strings.pref_translation_temperature),
+                        subtitle = metadata.temperature.subtitle(currentValue = "%.2f".format(temperature)),
                         valueString = "%.2f".format(temperature),
                         onValueChanged = { preferences.temperature.set(it / 100f) },
                     ),
@@ -469,6 +501,7 @@ object SettingsTranslationScreen : SearchableSettings {
                         value = (topP * 100).roundToInt(),
                         valueRange = 0..100,
                         title = stringResource(MR.strings.pref_translation_top_p),
+                        subtitle = metadata.topP.subtitle(currentValue = "%.2f".format(topP)),
                         valueString = "%.2f".format(topP),
                         onValueChanged = { preferences.topP.set(it / 100f) },
                     ),
@@ -476,6 +509,7 @@ object SettingsTranslationScreen : SearchableSettings {
                         value = topK,
                         valueRange = 1..100,
                         title = stringResource(MR.strings.pref_translation_top_k),
+                        subtitle = metadata.topK.subtitle(currentValue = topK.toString()),
                         onValueChanged = { preferences.topK.set(it) },
                     ),
                     Preference.PreferenceItem.SliderPreference(
@@ -483,6 +517,11 @@ object SettingsTranslationScreen : SearchableSettings {
                         valueRange = maxOutputTokenSliderMin..maxOutputTokenSliderMax,
                         steps = maxOutputTokenSliderSteps,
                         title = stringResource(MR.strings.pref_translation_max_tokens),
+                        subtitle = metadata.maxOutputTokens.subtitle(
+                            currentValue = maxOutputTokenSliderValue.toString(),
+                            minOverride = maxOutputTokenSliderMin.toString(),
+                            maxOverride = maxOutputTokenSliderMax.toString(),
+                        ),
                         onValueChanged = { preferences.maxOutputTokens.set(it) },
                     ),
                     Preference.PreferenceItem.ListPreference(
@@ -493,16 +532,17 @@ object SettingsTranslationScreen : SearchableSettings {
                             TranslationThinkingLevel.Low.value to stringResource(MR.strings.pref_translation_thinking_level_low),
                         ).toImmutableMap(),
                         title = stringResource(MR.strings.pref_translation_thinking_level),
+                        subtitle = metadata.thinkingLevel.subtitle(currentValue = "%s"),
                     ),
                     Preference.PreferenceItem.EditTextPreference(
                         preference = preferences.rawJsonOverride,
                         title = stringResource(MR.strings.pref_translation_raw_json_override),
-                        subtitle = "%s",
+                        subtitle = metadata.rawJsonOverride.subtitle(),
                     ),
                     Preference.PreferenceItem.EditTextPreference(
                         preference = preferences.globalInstructions,
                         title = stringResource(MR.strings.pref_translation_system_prompt),
-                        subtitle = "%s",
+                        subtitle = metadata.systemPrompt.subtitle(),
                     ),
                 ),
             ),
@@ -514,7 +554,7 @@ object SettingsTranslationScreen : SearchableSettings {
                             IntAsStringPreference(preferences.concurrency)
                         },
                         title = stringResource(MR.strings.pref_translation_concurrency),
-                        subtitle = concurrencyValueString,
+                        subtitle = metadata.concurrency.subtitle(currentValue = concurrencyValueString),
                         onValueChanged = { value ->
                             val normalized = value.trim().toIntOrNull()
                             if (normalized == null || normalized < 0) {
@@ -528,7 +568,7 @@ object SettingsTranslationScreen : SearchableSettings {
                     Preference.PreferenceItem.EditTextPreference(
                         preference = preferences.parallelRetryLanes,
                         title = stringResource(MR.strings.pref_translation_parallel_retry_lanes),
-                        subtitle = parallelRetryLanesValueString,
+                        subtitle = metadata.parallelRetryLanes.subtitle(currentValue = parallelRetryLanesValueString),
                         onValueChanged = { value ->
                             val normalized = value.trim().toIntOrNull()
                             if (normalized == null || normalized < 0) {
@@ -543,6 +583,7 @@ object SettingsTranslationScreen : SearchableSettings {
                         value = maxImagesPerBatch.coerceIn(0, 100),
                         valueRange = 0..100,
                         title = stringResource(MR.strings.pref_translation_max_images_per_batch),
+                        subtitle = metadata.maxImagesPerBatch.subtitle(currentValue = maxImagesValueString),
                         valueString = maxImagesValueString,
                         onValueChanged = {
                             preferences.maxImagesPerBatch.set(
@@ -556,7 +597,12 @@ object SettingsTranslationScreen : SearchableSettings {
                     ),
                     Preference.PreferenceItem.TextPreference(
                         title = stringResource(MR.strings.pref_translation_reset_max_images_per_batch),
-                        subtitle = stringResource(MR.strings.pref_translation_reset_max_images_per_batch_summary, DEFAULT_TRANSLATION_MAX_IMAGES_PER_BATCH),
+                        subtitle = metadata.resetMaxImagesPerBatch.subtitle(
+                            stringResource(
+                                MR.strings.pref_translation_reset_max_images_per_batch_summary,
+                                DEFAULT_TRANSLATION_MAX_IMAGES_PER_BATCH,
+                            ),
+                        ),
                         onClick = {
                             preferences.maxImagesPerBatch.set(DEFAULT_TRANSLATION_MAX_IMAGES_PER_BATCH)
                         },
@@ -565,24 +611,29 @@ object SettingsTranslationScreen : SearchableSettings {
                         preference = preferences.queueSwipeStartAction,
                         entries = translationQueueSwipeEntries(),
                         title = stringResource(MR.strings.pref_translation_queue_swipe_start),
+                        subtitle = metadata.queueSwipeStart.subtitle(currentValue = "%s"),
                     ),
                     Preference.PreferenceItem.ListPreference(
                         preference = preferences.queueSwipeEndAction,
                         entries = translationQueueSwipeEntries(),
                         title = stringResource(MR.strings.pref_translation_queue_swipe_end),
+                        subtitle = metadata.queueSwipeEnd.subtitle(currentValue = "%s"),
                     ),
                     Preference.PreferenceItem.ListPreference(
                         preference = preferences.logSwipeStartAction,
                         entries = translationLogSwipeEntries(),
                         title = stringResource(MR.strings.pref_translation_log_swipe_start),
+                        subtitle = metadata.logSwipeStart.subtitle(currentValue = "%s"),
                     ),
                     Preference.PreferenceItem.ListPreference(
                         preference = preferences.logSwipeEndAction,
                         entries = translationLogSwipeEntries(),
                         title = stringResource(MR.strings.pref_translation_log_swipe_end),
+                        subtitle = metadata.logSwipeEnd.subtitle(currentValue = "%s"),
                     ),
                     Preference.PreferenceItem.TextPreference(
                         title = stringResource(MR.strings.pref_translation_clear_logs),
+                        subtitle = metadata.clearLogs.subtitle(),
                         onClick = {
                             scope.launch {
                                 repository.clearLogs()
@@ -592,11 +643,14 @@ object SettingsTranslationScreen : SearchableSettings {
                     ),
                     Preference.PreferenceItem.TextPreference(
                         title = stringResource(MR.strings.pref_translation_clear_queue_logs),
-                        subtitle = stringResource(MR.strings.pref_translation_clear_queue_logs_summary),
+                        subtitle = metadata.clearQueueLogs.subtitle(
+                            stringResource(MR.strings.pref_translation_clear_queue_logs_summary),
+                        ),
                         onClick = { showClearAllConfirmation = true },
                     ),
                     Preference.PreferenceItem.TextPreference(
                         title = stringResource(MR.strings.pref_translation_clear_storage),
+                        subtitle = metadata.clearStorage.subtitle(),
                         onClick = {
                             scope.launch {
                                 repository.clearPages()
