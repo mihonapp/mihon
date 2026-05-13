@@ -65,8 +65,10 @@ import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.lang.withIOContext
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.util.LinkedHashMap
 import java.util.LinkedHashSet
 import java.util.Locale
+import kotlin.math.roundToInt
 
 /**
  * A wrapper view for showing page image.
@@ -487,6 +489,12 @@ open class ReaderPageImageView @JvmOverloads constructor(
     ) : View(context) {
 
         var boxes: List<Translation_boxes> = emptyList()
+            set(value) {
+                if (field != value) {
+                    textLayoutCache.clear()
+                }
+                field = value
+            }
 
         private val density = resources.displayMetrics.density
         private val translationPreferences: TranslationPreferences = Injekt.get()
@@ -505,6 +513,15 @@ open class ReaderPageImageView @JvmOverloads constructor(
         private val baseTextPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
             color = Color.BLACK
         }
+        private val textLayoutCache = object : LinkedHashMap<TextLayoutCacheKey, FittedTextLayout>(
+            TEXT_LAYOUT_CACHE_LIMIT,
+            0.75f,
+            true,
+        ) {
+            override fun removeEldestEntry(eldest: MutableMap.MutableEntry<TextLayoutCacheKey, FittedTextLayout>): Boolean {
+                return size > TEXT_LAYOUT_CACHE_LIMIT
+            }
+        }
 
         private data class FittedTextLayout(
             val layout: StaticLayout,
@@ -515,6 +532,22 @@ open class ReaderPageImageView @JvmOverloads constructor(
             val ellipsisCount: Int,
             val lineCount: Int,
             val rotated: Boolean,
+        )
+
+        private data class TextLayoutCacheKey(
+            val boxId: Long,
+            val pageId: Long,
+            val text: String,
+            val width: Int,
+            val contentHeight: Int,
+            val boxHeight: Int,
+            val padding: Int,
+            val textSizeMode: String,
+            val customSizeSp: Int,
+            val scaledDensityBits: Int,
+            val fontFamily: String?,
+            val textColor: String?,
+            val textAlign: String?,
         )
 
         override fun onDraw(canvas: Canvas) {
@@ -559,7 +592,15 @@ open class ReaderPageImageView @JvmOverloads constructor(
         override fun onDetachedFromWindow() {
             logScope?.cancel()
             logScope = null
+            textLayoutCache.clear()
             super.onDetachedFromWindow()
+        }
+
+        override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+            if (w != oldw || h != oldh) {
+                textLayoutCache.clear()
+            }
+            super.onSizeChanged(w, h, oldw, oldh)
         }
 
         private fun drawText(
@@ -573,7 +614,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
             val padding = ((style.paddingDp ?: 0f).coerceIn(0f, 24f) * density)
                 .coerceAtMost(rect.width() / 5f)
                 .coerceAtMost(rect.height() / 5f)
-            val fitted = fittedTextLayout(text, rect, style, padding)
+            val fitted = fittedTextLayout(box, text, rect, style, padding)
 
             if (TranslationOverlayTextFitPolicy.shouldLogTruncation(fitted.ellipsisCount)) {
                 box.logTextFitTruncated(
@@ -608,6 +649,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
         }
 
         private fun fittedTextLayout(
+            box: Translation_boxes,
             text: String,
             rect: RectF,
             style: TranslationOverlayBoxStyle,
@@ -615,12 +657,31 @@ open class ReaderPageImageView @JvmOverloads constructor(
         ): FittedTextLayout {
             val width = (rect.width() - padding * 2).toInt().coerceAtLeast(1)
             val contentHeight = (rect.height() - padding * 2).coerceAtLeast(1f)
+            val textSizeMode = translationPreferences.overlayTextSizeMode.get()
+            val customSizeSp = translationPreferences.overlayTextSizeSp.get()
+            val scaledDensity = resources.configuration.fontScale * density
+            val cacheKey = TextLayoutCacheKey(
+                boxId = box._id,
+                pageId = box.page_id,
+                text = text,
+                width = width,
+                contentHeight = contentHeight.roundToInt(),
+                boxHeight = rect.height().roundToInt(),
+                padding = padding.roundToInt(),
+                textSizeMode = textSizeMode,
+                customSizeSp = customSizeSp,
+                scaledDensityBits = scaledDensity.toBits(),
+                fontFamily = style.fontFamily,
+                textColor = style.textColor,
+                textAlign = style.textAlign,
+            )
+            textLayoutCache[cacheKey]?.let { return it }
             val range = TranslationOverlayTextFitPolicy.sizeRangePx(
-                mode = translationPreferences.overlayTextSizeMode.get(),
-                customSp = translationPreferences.overlayTextSizeSp.get(),
+                mode = textSizeMode,
+                customSp = customSizeSp,
                 boxHeightPx = rect.height(),
                 density = density,
-                scaledDensity = resources.displayMetrics.scaledDensity,
+                scaledDensity = scaledDensity,
                 paddingPx = padding,
             )
             val textPaint = TextPaint(baseTextPaint).apply {
@@ -650,8 +711,8 @@ open class ReaderPageImageView @JvmOverloads constructor(
             } else {
                 null
             }
-            if (forceRotated && rotated != null) return rotated
-            return chooseTextLayout(normal, rotated)
+            if (forceRotated && rotated != null) return rotated.also { textLayoutCache[cacheKey] = it }
+            return chooseTextLayout(normal, rotated).also { textLayoutCache[cacheKey] = it }
         }
 
         private fun bestTextLayout(
@@ -1086,5 +1147,6 @@ open class ReaderPageImageView @JvmOverloads constructor(
 }
 
 private const val MAX_RENDER_SKIP_LOG_KEYS = 256
+private const val TEXT_LAYOUT_CACHE_LIMIT = 256
 private const val MIN_TEXT_SCALE_X = 0.55f
 private const val MAX_ZOOM_SCALE = 5F

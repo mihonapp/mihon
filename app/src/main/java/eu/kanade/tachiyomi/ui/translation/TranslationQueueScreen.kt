@@ -765,7 +765,7 @@ private fun TranslationLogItem(
                     },
                 )
             },
-            supportingContent = item.details?.let {
+            supportingContent = item.detailsPreview?.let {
                 {
                     Text(
                         text = it,

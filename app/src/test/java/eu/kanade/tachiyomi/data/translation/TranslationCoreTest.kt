@@ -1626,6 +1626,16 @@ class TranslationCoreTest {
     }
 
     @Test
+    fun `log details preview is bounded but preserves full details`() {
+        val details = "a".repeat(700)
+        val item = logItem(id = 1, message = "Verbose log", details = details)
+
+        item.details shouldBe details
+        item.detailsPreview?.length shouldBe 604
+        item.detailsPreview?.endsWith("\n...") shouldBe true
+    }
+
+    @Test
     fun `claim tokens are hidden from user facing queue errors`() {
         TranslationClaimToken.publicErrorMessage("normal:0:123:0:0") shouldBe null
         TranslationClaimToken.publicErrorMessage("manual_retry:1:123:0:0") shouldBe null

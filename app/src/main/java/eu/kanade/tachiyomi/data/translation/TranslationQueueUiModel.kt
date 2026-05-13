@@ -140,6 +140,7 @@ data class TranslationLogUiItem(
     val tag: String,
     val message: String,
     val details: String?,
+    val detailsPreview: String? = TranslationLogUiModel.detailsPreview(details),
 )
 
 data class GroupedTranslationLog(
@@ -152,6 +153,12 @@ data class GroupedTranslationLog(
 }
 
 object TranslationLogUiModel {
+    fun detailsPreview(details: String?): String? {
+        val value = details?.takeIf { it.isNotBlank() } ?: return null
+        if (value.length <= LOG_DETAILS_PREVIEW_CHARS) return value
+        return value.take(LOG_DETAILS_PREVIEW_CHARS).trimEnd() + "\n..."
+    }
+
     fun groupAdjacent(logs: List<TranslationLogUiItem>): List<GroupedTranslationLog> {
         if (logs.isEmpty()) return emptyList()
 
@@ -190,3 +197,5 @@ object TranslationLogUiModel {
             left.details == right.details
     }
 }
+
+private const val LOG_DETAILS_PREVIEW_CHARS = 600
