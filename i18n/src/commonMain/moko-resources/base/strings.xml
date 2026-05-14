@@ -112,6 +112,7 @@
     <string name="action_show_manga">Show entry</string>
     <string name="action_copy_to_clipboard">Copy to clipboard</string>
     <string name="action_copy_link">Copy link</string>
+    <string name="action_remove_history">Remove history</string>
     <!-- Do not translate "WebView" -->
     <string name="action_open_in_web_view">Open in WebView</string>
     <string name="action_web_view" translatable="false">WebView</string>
@@ -868,6 +869,9 @@
     <string name="pref_clear_history">Clear history</string>
     <string name="clear_history_completed">History deleted</string>
     <string name="clear_history_confirmation">Are you sure? All history will be lost.</string>
+    <string name="delete_range_last_hour">Last hour</string>
+    <string name="delete_range_today_yesterday">Today and yesterday</string>
+    <string name="delete_range_everything">Everything</string>
 
     <!-- Source Screen -->
     <string name="source_empty_screen">No source found</string>

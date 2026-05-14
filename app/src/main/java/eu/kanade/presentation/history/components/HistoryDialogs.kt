@@ -2,8 +2,13 @@ package eu.kanade.presentation.history.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -11,8 +16,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
+import eu.kanade.tachiyomi.ui.history.HistoryScreenModel.HistoryDeleteTimeRange
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.material.padding
@@ -60,23 +72,61 @@ fun HistoryDeleteDialog(
 }
 
 @Composable
-fun HistoryDeleteAllDialog(
+fun HistoryDeleteTimeRangeDialog(
     onDismissRequest: () -> Unit,
-    onDelete: () -> Unit,
+    onDelete: (HistoryDeleteTimeRange) -> Unit,
 ) {
+    val radioOptions = HistoryDeleteTimeRange.entries.toTypedArray()
+    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
+
     AlertDialog(
+        onDismissRequest = onDismissRequest,
         title = {
-            Text(text = stringResource(MR.strings.action_remove_everything))
+            Text(text = stringResource(MR.strings.action_remove_history))
         },
         text = {
-            Text(text = stringResource(MR.strings.clear_history_confirmation))
+            Column {
+                if (selectedOption == HistoryDeleteTimeRange.EVERYTHING) {
+                    Text(
+                        text = stringResource(MR.strings.clear_history_confirmation),
+                        modifier = Modifier.padding(bottom = 8.dp),
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
+                Column(Modifier.selectableGroup()) {
+                    radioOptions.forEach { option ->
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(56.dp)
+                                .selectable(
+                                    selected = (option == selectedOption),
+                                    onClick = { onOptionSelected(option) },
+                                    role = Role.RadioButton,
+                                ),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            RadioButton(
+                                selected = (option == selectedOption),
+                                onClick = null,
+                            )
+                            Text(
+                                text = stringResource(option.timeRange),
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.padding(start = 16.dp),
+                            )
+                        }
+                    }
+                }
+            }
         },
-        onDismissRequest = onDismissRequest,
         confirmButton = {
-            TextButton(onClick = {
-                onDelete()
-                onDismissRequest()
-            }) {
+            TextButton(
+                onClick = {
+                    onDelete(selectedOption)
+                    onDismissRequest()
+                },
+            ) {
                 Text(text = stringResource(MR.strings.action_ok))
             }
         },
