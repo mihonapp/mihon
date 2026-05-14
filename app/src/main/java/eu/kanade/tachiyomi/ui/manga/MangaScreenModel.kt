@@ -75,6 +75,7 @@ import tachiyomi.domain.chapter.model.ChapterUpdate
 import tachiyomi.domain.chapter.model.NoChaptersException
 import tachiyomi.domain.chapter.service.calculateChapterGap
 import tachiyomi.domain.chapter.service.getChapterSort
+import tachiyomi.domain.library.interactor.GetSourceDefaultCategory
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetMangaWithChapters
@@ -118,6 +119,7 @@ class MangaScreenModel(
     private val getTracks: GetTracks = Injekt.get(),
     private val addTracks: AddTracks = Injekt.get(),
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
+    private val getSourceDefaultCategory: GetSourceDefaultCategory = Injekt.get(),
     private val mangaRepository: MangaRepository = Injekt.get(),
     private val filterChaptersForDownload: FilterChaptersForDownload = Injekt.get(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
@@ -338,7 +340,7 @@ class MangaScreenModel(
 
                 // Now check if user previously set categories, when available
                 val categories = getCategories()
-                val defaultCategoryId = libraryPreferences.defaultCategory.get().toLong()
+                val defaultCategoryId = getSourceDefaultCategory.await(manga.source)
                 val defaultCategory = categories.find { it.id == defaultCategoryId }
                 when {
                     // Default category set

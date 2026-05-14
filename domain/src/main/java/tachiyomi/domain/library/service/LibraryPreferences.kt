@@ -132,6 +132,10 @@ class LibraryPreferences(
 
     val categorizedDisplaySettings: Preference<Boolean> = preferenceStore.getBoolean("categorized_display", false)
 
+    val perSourceDefaultCategory: Preference<Boolean> = preferenceStore.getBoolean("per_source_default_category", false)
+
+    val sourceDefaultCategories: Preference<String> = preferenceStore.getString("source_default_categories", "{}")
+
     val updateCategories: Preference<Set<String>> = preferenceStore.getStringSet(
         LIBRARY_UPDATE_CATEGORIES_PREF_KEY,
         emptySet(),
