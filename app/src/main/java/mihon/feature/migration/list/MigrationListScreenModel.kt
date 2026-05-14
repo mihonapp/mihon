@@ -327,7 +327,7 @@ class MigrationListScreenModel(
     }
 
     private fun removeManga(item: MigratingManga) {
-        mutableState.update { it.copy(items = items.toPersistentList().remove(item)) }
+        mutableState.update { it.copy(items = items.toPersistentList().removing(item)) }
     }
 
     override fun onDispose() {
