@@ -9,6 +9,7 @@ class GetDuplicateLibraryManga(
 ) {
 
     suspend operator fun invoke(manga: Manga): List<MangaWithChapterCount> {
+        if (manga.title.isBlank()) return emptyList()
         return mangaRepository.getDuplicateLibraryManga(manga.id, manga.title.lowercase())
     }
 }
