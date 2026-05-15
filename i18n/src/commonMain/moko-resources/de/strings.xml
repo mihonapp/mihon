@@ -918,7 +918,7 @@
     <string name="donationCampaign.title">Gefällt dir die App?</string>
     <string name="donationCampaign.paragraph1">Hi! Ich bin der Hauptentwickler von Mihon und möchte darum bitten, die Entwicklung finanziell zu unterstützen. Mit genügend Unterstützung werde ich in der Lage sein, in Vollzeit an Mihon zu arbeiten und sowohl langjährige Probleme zu beheben als auch häufig gewünschte Features zu implementieren.</string>
     <string name="donationCampaign.paragraph2">Du kannst entweder mittels Patreon (bevorzugt) oder OpenCollective spenden. Wenn du Fragen hast oder auf anderem Wege die Entwicklung unterstützen möchstest, dann kannst du mich gerne über Mihons Discord-Server erreichen.</string>
-    <string name="donationCampaign.paragraph3">Unabhängig davon wird Mihon weiterhin von mir und anderen Freiwilligen entwickelt werden und bleibt Open-Source-Software.</string>
+    <string name="donationCampaign.paragraph3">Unabhängig davon wird Mihon weiterhin von mir und anderen Freiwilligen entwickelt werden und bleibt open-source.</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="donationCampaign.dismiss">Verwerfen</string>
 </resources>

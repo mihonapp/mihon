@@ -908,4 +908,17 @@
     <string name="action_webview_close_tab">Đóng thẻ</string>
     <string name="action_filter_excluded_scanlators">Lọc nhóm dịch bị loại trừ</string>
     <string name="download_bookmarked">Đã đánh dấu</string>
+    <string name="label_support_us">Hỗ trợ chúng tôi</string>
+    <string name="supportUsScreen.perks">Người bảo trợ có quyền truy cập vào các kênh độc quyền và nhận được nhiều đặc quyền hơn.</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreon (ưu tiên)</string>
+    <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
+    <string name="supportUsScreen.currentlySupportedBy">Mihon hiện được hỗ trợ bởi %d+ người bảo trợ. Chúng tôi muốn cảm ơn từng người và tất cả các bạn. Hãy cùng nhau làm cho Mihon trở nên tốt hơn nữa.</string>
+    <string name="supportUsScreen.contactForDetailsMessage">Để biết các lựa chọn thay thế hoặc bất kỳ câu hỏi liên quan nào, hãy tham gia máy chủ Discord của chúng tôi.</string>
+    <string name="supportUsScreen.contactPlatform">Discord</string>
+    <string name="donationCampaign.title">Bạn thích ứng dụng này?</string>
+    <string name="donationCampaign.paragraph1">Chào! Tôi là nhà phát triển chính đằng sau Mihon và tôi muốn đề nghị bạn xem xét hỗ trợ tài chính cho sự phát triển của nó. Nếu có đủ sự hỗ trợ, tôi sẽ có thể làm việc toàn thời gian trên Mihon và tập trung vào các vấn đề tồn tại lâu dài cũng như các tính năng được yêu cầu cao.</string>
+    <string name="donationCampaign.paragraph2">Bạn có thể quyên góp thông qua Patreon (ưu tiên) hoặc OpenCollective. Nếu bạn có thắc mắc hoặc muốn hỗ trợ bằng các phương pháp thay thế, vui lòng liên hệ với tôi thông qua máy chủ Discord của Mihon.</string>
+    <string name="donationCampaign.paragraph3">Dù thế nào đi nữa, Mihon sẽ tiếp tục được tôi và các tình nguyện viên duy trì và nó sẽ vẫn là nguồn mở.</string>
+    <string name="donationCampaign.contactPlatform">Discord</string>
+    <string name="donationCampaign.dismiss">Miễn nhiệm</string>
 </resources>

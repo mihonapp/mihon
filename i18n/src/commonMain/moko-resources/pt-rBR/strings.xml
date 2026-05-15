@@ -705,7 +705,7 @@
     <string name="syncing_library">Sincronizando a biblioteca</string>
     <string name="library_sync_complete">Sincronização da biblioteca finalizada</string>
     <string name="information_cloudflare_help">Toque aqui para obter ajuda com o Cloudflare</string>
-    <string name="download_cache_invalidated">Índice de downloads invalidado</string>
+    <string name="download_cache_invalidated">Recriando índice de downloads</string>
     <string name="track_activity_name">Login do monitorador</string>
     <string name="create_backup_file_error">Não foi possível criar o arquivo do backup</string>
     <string name="exception_http">HTTP %d, verifique o site na WebView</string>
@@ -907,4 +907,18 @@
     <string name="pref_download_concurrent_pages">Download simultâneo de páginas</string>
     <string name="pref_download_concurrent_pages_summary">Páginas baixadas simultâneamente por fonte</string>
     <string name="action_filter_excluded_scanlators">Filtrar grupo de traduções excluidos</string>
+    <string name="label_support_us">Apoie-nos</string>
+    <string name="pref_download_concurrent_sources">Download simultâneo de fontes</string>
+    <string name="supportUsScreen.perks">Patrons tem acesso a canais exclusivos, com mais recursos por vir.</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreon (preferido)</string>
+    <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
+    <string name="supportUsScreen.currentlySupportedBy">Mihon atualmente conta com o apoio de %d+ patrons. Nós queremos agradecer cada um de vocês. Vamos fazer Mihon ainda melhor juntos.</string>
+    <string name="supportUsScreen.contactForDetailsMessage">Para opções alternativas ou qualquer perguntas relacionadas, se junte ao nosso servidor no Discord.</string>
+    <string name="supportUsScreen.contactPlatform">Discord</string>
+    <string name="donationCampaign.title">Gostando do aplicativo?</string>
+    <string name="donationCampaign.paragraph1">Olá! Eu sou o principal desenvolvedor por trás do Mihon, e eu gostaria de perguntar se você consideraria apoiar o desenvolvimento financeiramente. Com apoio suficiente, eu poderei trabalhar integralmente no Mihon e focar em problemas pendentes tanto quanto em funcionalidades muito solicitadas.</string>
+    <string name="donationCampaign.paragraph2">Você pode doar através do Patreon (preferencialmente) ou OpenCollective. Se você tiver perguntas ou gostaria de apoiar utilizando métodos alternativos, sinta-se livre para se aproximar através do servidor no Discord do Mihon.</string>
+    <string name="donationCampaign.paragraph3">Apesar disso, Mihon continuará a se mantido por mim e pelos voluntários, e se manterá de código aberto.</string>
+    <string name="donationCampaign.contactPlatform">Discord</string>
+    <string name="donationCampaign.dismiss">Ignorar</string>
 </resources>
