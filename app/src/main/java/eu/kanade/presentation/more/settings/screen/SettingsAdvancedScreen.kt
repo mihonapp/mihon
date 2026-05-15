@@ -319,11 +319,6 @@ object SettingsAdvancedScreen : SearchableSettings {
                     },
                 ),
                 Preference.PreferenceItem.SwitchPreference(
-                    preference = libraryPreferences.updateMangaTitles,
-                    title = stringResource(MR.strings.pref_update_library_manga_titles),
-                    subtitle = stringResource(MR.strings.pref_update_library_manga_titles_summary),
-                ),
-                Preference.PreferenceItem.SwitchPreference(
                     preference = libraryPreferences.disallowNonAsciiFilenames,
                     title = stringResource(MR.strings.pref_disallow_non_ascii_filenames),
                     subtitle = stringResource(MR.strings.pref_disallow_non_ascii_filenames_details),

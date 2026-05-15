@@ -208,8 +208,6 @@ class LibraryPreferences(
         ChapterSwipeAction.ToggleRead,
     )
 
-    val updateMangaTitles: Preference<Boolean> = preferenceStore.getBoolean("pref_update_library_manga_titles", false)
-
     val disallowNonAsciiFilenames: Preference<Boolean> = preferenceStore.getBoolean(
         "disallow_non_ascii_filenames",
         false,
