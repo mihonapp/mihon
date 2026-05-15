@@ -908,4 +908,17 @@
     <string name="action_webview_close_tab">Zatvori karticu</string>
     <string name="action_filter_excluded_scanlators">Filtriraj isključene amaterske prevoditelje</string>
     <string name="download_bookmarked">Zabilježeno</string>
+    <string name="label_support_us">Podrži nas</string>
+    <string name="supportUsScreen.perks">Pokrovitelji dobivaju pristup ekskluzivnim kanalima, a uskoro slijede i dodatne pogodnosti.</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreona (preferiran način)</string>
+    <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
+    <string name="supportUsScreen.currentlySupportedBy">Trenutačno više od %d pokrovitelja podržavaju Mihon. Želimo se zahvaliti svakome od vas. Učinimo Mihon zajedno još boljim.</string>
+    <string name="supportUsScreen.contactForDetailsMessage">Za alternativne opcije ili bilo koja srodna pitanja, pridruži se našem Discord serveru.</string>
+    <string name="supportUsScreen.contactPlatform">Discord</string>
+    <string name="donationCampaign.title">Sviđa ti se aplikacija?</string>
+    <string name="donationCampaign.contactPlatform">Discord</string>
+    <string name="donationCampaign.dismiss">Odbaci</string>
+    <string name="donationCampaign.paragraph1">Pozdrav! Ja sam glavni programer Mihona i želim te zamoliti da razmisliš o financijskoj potpori njegovom razvoju. Uz dovoljno podrške, moći ću raditi na Mihonu puno radno vrijeme i usredotočiti se na dugogodišnje probleme, kao i na vrlo tražene funkcije.</string>
+    <string name="donationCampaign.paragraph2">Možeš donirati putem Patreona (preferiran način) ili putem OpenCollective-a. Ako imaš pitanja ili želiš podržati korištenje alternativnih načina, slobodno me kontaktiraj putem Mihonovog Discord servera.</string>
+    <string name="donationCampaign.paragraph3">Bez obzira na to, volonteri i ja ćemo i dalje održavati Mihon, i ostat će otvorenog koda.</string>
 </resources>

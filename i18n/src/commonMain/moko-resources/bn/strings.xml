@@ -841,5 +841,10 @@
     <string name="manga_interval_expected_update_null">এই মাঙ্গাটি সম্পূর্ণ হয়েছে, অথবা পরবর্তী প্রকাশের কোনো সম্ভাব্য তারিখ নেই।</string>
     <string name="pref_reset_user_agent_string">ডিফল্ট ইউজার এজেন্ট স্ট্রিং রিসেট</string>
     <string name="pref_invalidate_download_cache_summary">ডাউনলোড করা অধ্যায়গুলো জোরপূর্বক পুনরায় যাচাই হবে</string>
-    <string name="download_cache_invalidated">ডাউনলোড ইনডেক্স অকার্যকর হয়েছে</string>
+    <string name="download_cache_invalidated">ডাউনলোড ইনডেক্স পুনরায় তৈরী হচ্ছে</string>
+    <string name="label_support_us">আমাদের সহায়তা করুন</string>
+    <string name="clear_database_text">আপনি ডাটাবেইজ থেকে এন্ট্রি রিমুভ করতে যাচ্ছেন</string>
+    <string name="intervals_header">বিরতি</string>
+    <string name="unknown_title">অজানা নাম</string>
+    <string name="copied_to_clipboard_plain">ক্লিপবোর্ডে কপি হয়েছে</string>
 </resources>

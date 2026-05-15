@@ -902,4 +902,20 @@
     <string name="migrationListScreen.matchWithoutChapterToast">Nu s-au găsit capitole, această intrare nu poate fi utilizată pentru migrare</string>
     <string name="pref_disallow_non_ascii_filenames">Nu permiteți nume de fișiere non-ASCII</string>
     <string name="pref_disallow_non_ascii_filenames_details">Asigurți compatibilitatea cu anumite medii de stocare care nu suportă Unicode. Când această opțiune este activată, va trebui să redenumiți manual directoarele sursă și cele de manga, înlocuind caracterele non-ASCII cu reprezentările lor hexadecimale UTF-8 cu litere mici. Fișierele capitolelor nu trebuie redenumite.</string>
+    <string name="label_support_us">Sustineti-ne</string>
+    <string name="action_webview_close_tab">Inchide tab-ul</string>
+    <string name="pref_download_concurrent_pages_summary">Pagini descarcate simultan pe sursa</string>
+    <string name="download_bookmarked">Adaugat la preferate</string>
+    <string name="action_filter_excluded_scanlators">Filtreaza scanatorii exclusi</string>
+    <string name="supportUsScreen.perks">Abonatii au acces la canale exclusive, iar in viitor vor beneficia de si mai multe beneficii.</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreon (preferabil)</string>
+    <string name="supportUsScreen.currentlySupportedBy">Mihon este sustinut de %d+ contribuitori. Va multumim tuturor pentru sustinere. Haideti sa imbunatatim impreuna Mihon.</string>
+    <string name="supportUsScreen.contactForDetailsMessage">Pentru optiuni alternative, sau orice intrebare despre subiect, alatura-te serverului nostru de Discord.</string>
+    <string name="supportUsScreen.contactPlatform">Discord</string>
+    <string name="donationCampaign.title">Iti place aplicatia?</string>
+    <string name="donationCampaign.paragraph1">Salut! Sunt dezvoltatorul principal al Mihon si as dori sa va rog sa luati in considerare sprijinirea financiara a proiectului. Cu un sprijin suficient, voi putea lucra la Mihon cu norma intreaga si ma voi puteam concentra atat pe probleme vechi, cat si pe functii noi solicitatate de comunitate.</string>
+    <string name="donationCampaign.paragraph2">Puteti face o donatie fie prin Patreon (metoda preferata), fie prin OpenCollective. Daca aveti intrebari sau doriti sa ne sprijiniti prin alte metode, nu ezitati sa ma contactati pe serverul de Discord al aplicatie Mihon.</string>
+    <string name="donationCampaign.paragraph3">In orice caz, Mihon va continua sa fie intretinut de mine si de voluntari si va ramane open source.</string>
+    <string name="donationCampaign.contactPlatform">Discord</string>
+    <string name="donationCampaign.dismiss">Ignora</string>
 </resources>

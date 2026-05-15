@@ -5,12 +5,12 @@
         <item quantity="other">অধ্যায় %1$s এবং আরও %2$dটি</item>
     </plurals>
     <plurals name="restore_completed_message">
-        <item quantity="one">%1$s-এ সম্পন্ন হয়েছে, তবে %2$s ত্রুটি ছিল</item>
-        <item quantity="other">%1$s-এ সম্পন্ন হয়েছে, তবে %2$sটি ত্রুটি ছিল</item>
+        <item quantity="one">%1$s - এ সম্পন্ন হয়েছে, তবে %2$s ত্রুটি ছিল</item>
+        <item quantity="other">%1$s - এ সম্পন্ন হয়েছে, তবে %2$s টি ত্রুটি ছিল</item>
     </plurals>
     <plurals name="num_categories">
-        <item quantity="one">%dটি বিভাগ</item>
-        <item quantity="other">%dটি বিভাগসমূহ</item>
+        <item quantity="one">%d টি বিভাগ</item>
+        <item quantity="other">%d টি বিভাগসমূহ</item>
     </plurals>
     <plurals name="lock_after_mins">
         <item quantity="one">%1$s মিনিট পর</item>
@@ -37,12 +37,12 @@
         <item quantity="other">%dটি ট্র্যাকার</item>
     </plurals>
     <plurals name="manga_num_chapters">
-        <item quantity="one">১টি অধ্যায়</item>
-        <item quantity="other">%1$sটি অধ্যায়</item>
+        <item quantity="one">১ টি অধ্যায়</item>
+        <item quantity="other">%1$s টি অধ্যায়</item>
     </plurals>
     <plurals name="download_queue_summary">
-        <item quantity="one">%1$sটি বাকি আছে</item>
-        <item quantity="other">%1$sটি বাকি আছে</item>
+        <item quantity="one">%1$s টি বাকি আছে</item>
+        <item quantity="other">%1$s টি বাকি আছে</item>
     </plurals>
     <plurals name="relative_time">
         <item quantity="one">গতকাল</item>
@@ -57,7 +57,7 @@
         <item quantity="other">পরবর্তী %d অধ্যায়</item>
     </plurals>
     <plurals name="missing_chapters">
-        <item quantity="one">১টি অধ্যায় নেই</item>
+        <item quantity="one">১ টি অধ্যায় নেই</item>
         <item quantity="other">%1$s টি অধ্যায় নেই</item>
     </plurals>
     <plurals name="day">
@@ -70,7 +70,7 @@
     </plurals>
     <plurals name="upcoming_relative_time">
         <item quantity="one">আগামীকাল</item>
-        <item quantity="other">%1$d দিনে</item>
+        <item quantity="other">"%1$d  দিনে"</item>
     </plurals>
     <plurals name="pref_pages">
         <item quantity="one">১ পৃষ্ঠা</item>

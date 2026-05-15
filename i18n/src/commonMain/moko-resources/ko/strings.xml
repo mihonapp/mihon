@@ -908,4 +908,16 @@
     <string name="action_filter_excluded_scanlators">스캔레이터를 제외한 필터</string>
     <string name="download_bookmarked">북마크됨</string>
     <string name="label_support_us">저희를 지원해 주세요</string>
+    <string name="supportUsScreen.perks">후원해 주시는 분들은 더 많은 혜택이 적용될 예정인 독점 채널에 접속할 수 있습니다.</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreon (선호됨)</string>
+    <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
+    <string name="supportUsScreen.currentlySupportedBy">Mihon은 현재 %d+의 후원자 분들의 도움을 받고 있습니다. 모든 분들께 감사를 전하고 싶습니다. 함께 Mihon을 더욱 발전시켜 나갑시다.</string>
+    <string name="supportUsScreen.contactForDetailsMessage">대체 옵션 또는 관련 질문이 있으실 경우, Discord 서버에 방문해 주십시오.</string>
+    <string name="supportUsScreen.contactPlatform">Discord</string>
+    <string name="donationCampaign.title">앱을 즐기고 있으신가요?</string>
+    <string name="donationCampaign.paragraph1">안녕하세요! Mihon 메인 개발자입니다. 귀하께서 이 앱 개발에 대한 재정적 지원을 고려해주셨으면 합니다. 충분한 지원이 있다면 Mihon을 풀 타임으로 작업하여 오랫동안 지속되어 온 이슈와 요청이 많았던 기능들에 집중할 수 있을 것입니다.</string>
+    <string name="donationCampaign.paragraph2">Pateron(선호됨) 또는 OpenCollective를 통해 기부하실 수 있습니다. 질문이 있거나 다른 기부 방법에 대한 지원이 필요하신 경우, 언제든지 Mihon의 Discord 서버를 통해 연락해 주십시오.</string>
+    <string name="donationCampaign.paragraph3">기부 여부와 무관하게, Mihon은 저와 자원봉사자 분들에 의해 계속 유지보수되며 오픈 소스로 남아있을 것입니다.</string>
+    <string name="donationCampaign.contactPlatform">Discord</string>
+    <string name="donationCampaign.dismiss">닫기</string>
 </resources>
