@@ -5,7 +5,10 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalView
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.more.settings.Preference
+import eu.kanade.presentation.more.settings.screen.readingmode.SettingsReadingModeRulesScreen
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
@@ -39,6 +42,7 @@ object SettingsReaderScreen : SearchableSettings {
                     .toImmutableMap(),
                 title = stringResource(MR.strings.pref_viewer_type),
             ),
+            getAutomaticReadingModeGroup(readerPreferences = readerPref),
             Preference.PreferenceItem.ListPreference(
                 preference = readerPref.doubleTapAnimSpeed,
                 entries = persistentMapOf(
@@ -69,6 +73,33 @@ object SettingsReaderScreen : SearchableSettings {
             getWebtoonGroup(readerPreferences = readerPref),
             getNavigationGroup(readerPreferences = readerPref),
             getActionsGroup(readerPreferences = readerPref),
+        )
+    }
+
+    @Composable
+    private fun getAutomaticReadingModeGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup {
+        val navigator = LocalNavigator.currentOrThrow
+        val config by readerPreferences.readingModeAutoRules.collectAsState()
+        val enabledRuleCount = config.rules.count { it.enabled }
+        val subtitle = if (enabledRuleCount == 0) {
+            stringResource(MR.strings.pref_reading_mode_auto_rules_configure_summary)
+        } else {
+            "${stringResource(MR.strings.pref_reading_mode_auto_rules_configure_summary)} ($enabledRuleCount)"
+        }
+        return Preference.PreferenceGroup(
+            title = stringResource(MR.strings.pref_reading_mode_auto_rules_group),
+            preferenceItems = persistentListOf(
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.readingModeAutoRulesEnabled,
+                    title = stringResource(MR.strings.pref_reading_mode_auto_rules_enable),
+                    subtitle = stringResource(MR.strings.pref_reading_mode_auto_rules_enable_summary),
+                ),
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.pref_reading_mode_auto_rules_configure),
+                    subtitle = subtitle,
+                    onClick = { navigator.push(SettingsReadingModeRulesScreen()) },
+                ),
+            ),
         )
     }
 
