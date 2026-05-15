@@ -35,6 +35,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Removed
 - Remove the empty "Updated to X.Y.Z" popup after app update ([@AntsyLich](https://github.com/AntsyLich)) ([#3203](https://github.com/mihonapp/mihon/pull/3203))
 
+### Added
+- Resumable image downloads support ([@xMohnad](https://github.com/xMohnad)) ([#3167](https://github.com/mihonapp/mihon/pull/3167))
+
 ## [v0.19.7] - 2026-03-23
 Same as v0.19.6
 
