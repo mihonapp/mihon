@@ -114,6 +114,11 @@ object SettingsAdvancedScreen : SearchableSettings {
             Preference.PreferenceItem.TextPreference(
                 title = stringResource(MR.strings.pref_onboarding_guide),
                 onClick = { navigator.push(OnboardingScreen()) },
+            ),            
+            Preference.PreferenceItem.SwitchPreference(
+                preference = basePreferences.enableFractionalProgress,
+                title = stringResource(MR.strings.pref_enable_fractional),
+                subtitle = stringResource(MR.strings.pref_enable_fractional_summary),
             ),
             Preference.PreferenceItem.TextPreference(
                 title = stringResource(MR.strings.pref_manage_notifications),
