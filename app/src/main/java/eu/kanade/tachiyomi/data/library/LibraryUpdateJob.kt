@@ -116,9 +116,9 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         libraryPreferences.lastUpdatedTimestamp.set(Instant.now().toEpochMilli())
 
         val categoryId = inputData.getLong(KEY_CATEGORY, -1L)
-        addMangaToQueue(categoryId)
 
         return withIOContext {
+            addMangaToQueue(categoryId)
             try {
                 updateChapterList()
                 Result.success()

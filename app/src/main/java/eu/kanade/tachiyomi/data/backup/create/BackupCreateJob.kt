@@ -24,6 +24,7 @@ import eu.kanade.tachiyomi.util.system.isRunning
 import eu.kanade.tachiyomi.util.system.setForegroundSafely
 import eu.kanade.tachiyomi.util.system.workManager
 import logcat.LogPriority
+import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.storage.service.StorageManager
@@ -50,18 +51,20 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
         val options = inputData.getBooleanArray(OPTIONS_KEY)?.let { BackupOptions.fromBooleanArray(it) }
             ?: BackupOptions()
 
-        return try {
-            val location = BackupCreator(context, isAutoBackup).backup(uri, options)
-            if (!isAutoBackup) {
-                notifier.showBackupComplete(UniFile.fromUri(context, location.toUri())!!)
+        return withIOContext {
+            try {
+                val location = BackupCreator(context, isAutoBackup).backup(uri, options)
+                if (!isAutoBackup) {
+                    notifier.showBackupComplete(UniFile.fromUri(context, location.toUri())!!)
+                }
+                Result.success()
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e)
+                if (!isAutoBackup) notifier.showBackupError(e.message)
+                Result.failure()
+            } finally {
+                context.cancelNotification(Notifications.ID_BACKUP_PROGRESS)
             }
-            Result.success()
-        } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e)
-            if (!isAutoBackup) notifier.showBackupError(e.message)
-            Result.failure()
-        } finally {
-            context.cancelNotification(Notifications.ID_BACKUP_PROGRESS)
         }
     }
 
