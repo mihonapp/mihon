@@ -41,7 +41,20 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
         setForegroundSafely()
 
         return try {
-            BackupRestorer(context, notifier, isSync).restore(uri, options)
+            BackupRestorer(
+                context = context,
+                notifier = notifier,
+                isSync = isSync,
+                onProgressUpdate = { content, progress, maxAmount, sync ->
+                    setForeground(
+                        ForegroundInfo(
+                            Notifications.ID_RESTORE_PROGRESS,
+                            notifier.restoreProgressNotification(content, progress, maxAmount, sync).build(),
+                            foregroundServiceType,
+                        ),
+                    )
+                },
+            ).restore(uri, options)
             Result.success()
         } catch (e: Exception) {
             if (e is CancellationException) {
@@ -60,14 +73,17 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
     override suspend fun getForegroundInfo(): ForegroundInfo {
         return ForegroundInfo(
             Notifications.ID_RESTORE_PROGRESS,
-            notifier.showRestoreProgress().build(),
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
-            } else {
-                0
-            },
+            notifier.restoreProgressNotification().build(),
+            foregroundServiceType,
         )
     }
+
+    private val foregroundServiceType: Int
+        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+        } else {
+            0
+        }
 
     companion object {
         fun isRunning(context: Context): Boolean {
