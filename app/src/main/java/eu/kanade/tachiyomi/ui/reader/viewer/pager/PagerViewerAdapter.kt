@@ -122,11 +122,16 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
 
     /**
      * Creates a new view for the item at the given [position].
+     * Supports video pages via VideoPageHolder when the page URL is a video file.
      */
     override fun createView(container: ViewGroup, position: Int): View {
-        return when (val item = items[position]) {
-            is ReaderPage -> PagerPageHolder(readerThemedContext, viewer, item)
-            is ChapterTransition -> PagerTransitionHolder(readerThemedContext, viewer, item)
+        val item = items[position]
+        return when {
+            item is ReaderPage && item.url.isVideoUrl() -> {
+                VideoPageHolder(readerThemedContext, viewer, item)
+            }
+            item is ReaderPage -> PagerPageHolder(readerThemedContext, viewer, item)
+            item is ChapterTransition -> PagerTransitionHolder(readerThemedContext, viewer, item)
             else -> throw NotImplementedError("Holder for ${item.javaClass} not implemented")
         }
     }
@@ -188,4 +193,14 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     fun refresh() {
         readerThemedContext = viewer.activity.createReaderThemeContext()
     }
+}
+
+/**
+ * Check if a URL string is a video file URL.
+ * Used to determine whether to create a VideoPageHolder or PagerPageHolder.
+ */
+private fun String.isVideoUrl(): Boolean {
+    val lower = lowercase()
+    return lower.endsWith(".mp4") || lower.endsWith(".m3u8") ||
+        lower.endsWith(".ts") || lower.endsWith(".mkv") || lower.endsWith(".webm")
 }
