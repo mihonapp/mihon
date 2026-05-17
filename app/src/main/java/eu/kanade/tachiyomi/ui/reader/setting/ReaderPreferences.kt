@@ -173,6 +173,16 @@ class ReaderPreferences(
 
     // endregion
 
+    // region Image margins
+
+    val pagerMarginTop: Preference<Int> = preferenceStore.getInt("pager_margin_top", 0)
+    val pagerMarginBottom: Preference<Int> = preferenceStore.getInt("pager_margin_bottom", 0)
+    val pagerMarginLeft: Preference<Int> = preferenceStore.getInt("pager_margin_left", 0)
+    val pagerMarginRight: Preference<Int> = preferenceStore.getInt("pager_margin_right", 0)
+    val pagerMarginColor: Preference<Int> = preferenceStore.getInt("pager_margin_color", 0)
+
+    // endregion
+
     enum class FlashColor {
         BLACK,
         WHITE,
@@ -200,6 +210,9 @@ class ReaderPreferences(
     companion object {
         const val WEBTOON_PADDING_MIN = 0
         const val WEBTOON_PADDING_MAX = 25
+
+        const val PAGER_MARGIN_MIN = 0
+        const val PAGER_MARGIN_MAX = 75
 
         const val MILLI_CONVERSION = 100
 
@@ -246,5 +259,13 @@ class ReaderPreferences(
                 )
             }
         }
+
+        // Margin color options
+        val MarginColors = listOf(
+            MR.strings.margin_color_background,
+            MR.strings.margin_color_white,
+            MR.strings.margin_color_black,
+            MR.strings.margin_color_transparent,
+        )
     }
 }
