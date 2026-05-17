@@ -25,16 +25,15 @@ import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.interactor.SyncChapterProgressWithTrack
 import eu.kanade.domain.track.interactor.TrackChapter
-import mihon.data.repository.ExtensionRepoRepositoryImpl
+import mihon.data.extension.repository.ExtensionStoreRepositoryImpl
+import mihon.data.extension.service.ExtensionStoreService
 import mihon.domain.chapter.interactor.FilterChaptersForDownload
-import mihon.domain.extensionrepo.interactor.CreateExtensionRepo
-import mihon.domain.extensionrepo.interactor.DeleteExtensionRepo
-import mihon.domain.extensionrepo.interactor.GetExtensionRepo
-import mihon.domain.extensionrepo.interactor.GetExtensionRepoCount
-import mihon.domain.extensionrepo.interactor.ReplaceExtensionRepo
-import mihon.domain.extensionrepo.interactor.UpdateExtensionRepo
-import mihon.domain.extensionrepo.repository.ExtensionRepoRepository
-import mihon.domain.extensionrepo.service.ExtensionRepoService
+import mihon.domain.extension.interactor.AddExtensionStore
+import mihon.domain.extension.interactor.GetExtensionStoreCountAsFlow
+import mihon.domain.extension.interactor.GetExtensionStores
+import mihon.domain.extension.interactor.RemoveExtensionStore
+import mihon.domain.extension.interactor.UpdateExtensionStores
+import mihon.domain.extension.repository.ExtensionStoreRepository
 import mihon.domain.migration.usecases.MigrateMangaUseCase
 import mihon.domain.upcoming.interactor.GetUpcomingManga
 import tachiyomi.data.category.CategoryRepositoryImpl
@@ -195,14 +194,14 @@ class DomainModule : InjektModule {
         addFactory { ToggleSourcePin(get()) }
         addFactory { TrustExtension(get(), get()) }
 
-        addSingletonFactory<ExtensionRepoRepository> { ExtensionRepoRepositoryImpl(get()) }
-        addFactory { ExtensionRepoService(get(), get()) }
-        addFactory { GetExtensionRepo(get()) }
-        addFactory { GetExtensionRepoCount(get()) }
-        addFactory { CreateExtensionRepo(get(), get()) }
-        addFactory { DeleteExtensionRepo(get()) }
-        addFactory { ReplaceExtensionRepo(get()) }
-        addFactory { UpdateExtensionRepo(get(), get()) }
+        addSingletonFactory { ExtensionStoreService(get(), get(), get()) }
+        addSingletonFactory<ExtensionStoreRepository> { ExtensionStoreRepositoryImpl(get(), get()) }
+        addFactory { AddExtensionStore(get()) }
+        addFactory { GetExtensionStoreCountAsFlow(get()) }
+        addFactory { GetExtensionStores(get()) }
+        addFactory { RemoveExtensionStore(get()) }
+        addFactory { UpdateExtensionStores(get()) }
+
         addFactory { ToggleIncognito(get()) }
         addFactory { GetIncognitoState(get(), get(), get()) }
     }

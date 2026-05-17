@@ -9,11 +9,11 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionRepoConfirmDialog
-import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionRepoConflictDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionRepoCreateDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionRepoDeleteDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionReposScreen
 import eu.kanade.presentation.util.Screen
+import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.toImmutableSet
@@ -46,8 +46,10 @@ class ExtensionReposScreen(
         ExtensionReposScreen(
             state = successState,
             onClickCreate = { screenModel.showDialog(RepoDialog.Create) },
-            onOpenWebsite = { context.openInBrowser(it.website) },
-            onClickDelete = { screenModel.showDialog(RepoDialog.Delete(it)) },
+            onCopy = { context.copyToClipboard(it.indexUrl, it.indexUrl) },
+            onOpenWebsite = { it.contact.website?.let(context::openInBrowser) },
+            onOpenDiscord = { it.contact.discord?.let(context::openInBrowser) },
+            onClickDelete = { screenModel.showDialog(RepoDialog.Delete(it.indexUrl)) },
             onClickRefresh = { screenModel.refreshRepos() },
             navigateUp = navigator::pop,
         )
@@ -58,7 +60,7 @@ class ExtensionReposScreen(
                 ExtensionRepoCreateDialog(
                     onDismissRequest = screenModel::dismissDialog,
                     onCreate = { screenModel.createRepo(it) },
-                    repoUrls = successState.repos.map { it.baseUrl }.toImmutableSet(),
+                    repoUrls = successState.stores.map { it.indexUrl }.toImmutableSet(),
                 )
             }
             is RepoDialog.Delete -> {
@@ -66,14 +68,6 @@ class ExtensionReposScreen(
                     onDismissRequest = screenModel::dismissDialog,
                     onDelete = { screenModel.deleteRepo(dialog.repo) },
                     repo = dialog.repo,
-                )
-            }
-            is RepoDialog.Conflict -> {
-                ExtensionRepoConflictDialog(
-                    onDismissRequest = screenModel::dismissDialog,
-                    onMigrate = { screenModel.replaceRepo(dialog.newRepo) },
-                    oldRepo = dialog.oldRepo,
-                    newRepo = dialog.newRepo,
                 )
             }
             is RepoDialog.Confirm -> {

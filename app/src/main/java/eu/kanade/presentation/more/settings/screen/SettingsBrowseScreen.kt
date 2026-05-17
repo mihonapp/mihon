@@ -14,7 +14,7 @@ import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.browse.ExtensionReposScreen
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
 import kotlinx.collections.immutable.persistentListOf
-import mihon.domain.extensionrepo.interactor.GetExtensionRepoCount
+import mihon.domain.extension.interactor.GetExtensionStoreCountAsFlow
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.pluralStringResource
@@ -34,9 +34,9 @@ object SettingsBrowseScreen : SearchableSettings {
         val navigator = LocalNavigator.currentOrThrow
 
         val sourcePreferences = remember { Injekt.get<SourcePreferences>() }
-        val getExtensionRepoCount = remember { Injekt.get<GetExtensionRepoCount>() }
+        val getExtensionStoreCountAsFlow = remember { Injekt.get<GetExtensionStoreCountAsFlow>() }
 
-        val reposCount by getExtensionRepoCount.subscribe().collectAsState(0)
+        val reposCount by getExtensionStoreCountAsFlow().collectAsState(0)
 
         return listOf(
             Preference.PreferenceGroup(
@@ -48,7 +48,7 @@ object SettingsBrowseScreen : SearchableSettings {
                     ),
                     Preference.PreferenceItem.TextPreference(
                         title = stringResource(MR.strings.label_extension_repos),
-                        subtitle = pluralStringResource(MR.plurals.num_repos, reposCount, reposCount),
+                        subtitle = pluralStringResource(MR.plurals.num_repos, reposCount.toInt(), reposCount),
                         onClick = {
                             navigator.push(ExtensionReposScreen())
                         },
