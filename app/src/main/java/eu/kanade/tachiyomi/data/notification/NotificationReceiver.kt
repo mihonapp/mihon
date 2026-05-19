@@ -17,7 +17,12 @@ import eu.kanade.tachiyomi.util.system.getParcelableExtraCompat
 import eu.kanade.tachiyomi.util.system.notificationManager
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.chapter.interactor.GetChapter
@@ -197,22 +202,27 @@ class NotificationReceiver : BroadcastReceiver() {
         val downloadPreferences: DownloadPreferences = Injekt.get()
         val sourceManager: SourceManager = Injekt.get()
 
-        launchIO {
-            val toUpdate = chapterUrls.mapNotNull { getChapter.await(it, mangaId) }
-                .map {
-                    val chapter = it.copy(read = true)
-                    if (downloadPreferences.removeAfterMarkedAsRead.get()) {
-                        val manga = getManga.await(mangaId)
-                        if (manga != null) {
-                            val source = sourceManager.get(manga.source)
-                            if (source != null) {
-                                downloadManager.deleteChapters(listOf(it), manga, source)
+        val pendingResult = goAsync()
+        ProcessLifecycleOwner.get().lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val toUpdate = chapterUrls.mapNotNull { getChapter.await(it, mangaId) }
+                    .map {
+                        val chapter = it.copy(read = true)
+                        if (downloadPreferences.removeAfterMarkedAsRead.get()) {
+                            val manga = getManga.await(mangaId)
+                            if (manga != null) {
+                                val source = sourceManager.get(manga.source)
+                                if (source != null) {
+                                    downloadManager.deleteChapters(listOf(it), manga, source)
+                                }
                             }
                         }
+                        chapter.toChapterUpdate()
                     }
-                    chapter.toChapterUpdate()
-                }
-            updateChapter.awaitAll(toUpdate)
+                updateChapter.awaitAll(toUpdate)
+            } finally {
+                pendingResult.finish()
+            }
         }
     }
 
@@ -223,10 +233,15 @@ class NotificationReceiver : BroadcastReceiver() {
      * @param mangaId id of manga
      */
     private fun downloadChapters(chapterUrls: Array<String>, mangaId: Long) {
-        launchIO {
-            val manga = getManga.await(mangaId) ?: return@launchIO
-            val chapters = chapterUrls.mapNotNull { getChapter.await(it, mangaId) }
-            downloadManager.downloadChapters(manga, chapters)
+        val pendingResult = goAsync()
+        ProcessLifecycleOwner.get().lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val manga = getManga.await(mangaId) ?: return@launch
+                val chapters = chapterUrls.mapNotNull { getChapter.await(it, mangaId) }
+                downloadManager.downloadChapters(manga, chapters)
+            } finally {
+                pendingResult.finish()
+            }
         }
     }
 
