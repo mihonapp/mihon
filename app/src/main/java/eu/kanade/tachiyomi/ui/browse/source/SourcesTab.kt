@@ -52,6 +52,7 @@ fun Screen.sourcesTab(): TabContent {
                 },
                 onClickPin = screenModel::togglePin,
                 onLongClickItem = screenModel::showSourceDialog,
+                onClickHideLastUsed = screenModel::hideLastUsedSource,
             )
 
             state.dialog?.let { dialog ->

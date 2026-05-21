@@ -17,12 +17,19 @@ class GetEnabledSources(
 
     fun subscribe(): Flow<List<Source>> {
         return combine(
-            preferences.pinnedSources.changes(),
-            preferences.enabledLanguages.changes(),
-            preferences.disabledSources.changes(),
-            preferences.lastUsedSource.changes(),
-            repository.getSources(),
-        ) { pinnedSourceIds, enabledLanguages, disabledSources, lastUsedSource, sources ->
+            combine(
+                preferences.pinnedSources.changes(),
+                preferences.enabledLanguages.changes(),
+                preferences.disabledSources.changes(),
+                ::Triple,
+            ),
+            combine(
+                preferences.lastUsedSource.changes(),
+                preferences.showLastUsedSource.changes(),
+                repository.getSources(),
+                ::Triple,
+            ),
+        ) { (pinnedSourceIds, enabledLanguages, disabledSources), (lastUsedSource, showLastUsedSource, sources) ->
             sources
                 .filter { it.lang in enabledLanguages || it.isLocal() }
                 .filterNot { it.id.toString() in disabledSources }
@@ -31,7 +38,7 @@ class GetEnabledSources(
                     val flag = if ("${it.id}" in pinnedSourceIds) Pins.pinned else Pins.unpinned
                     val source = it.copy(pin = flag)
                     val toFlatten = mutableListOf(source)
-                    if (source.id == lastUsedSource) {
+                    if (showLastUsedSource && source.id == lastUsedSource) {
                         toFlatten.add(source.copy(isUsedLast = true, pin = source.pin - Pin.Actual))
                     }
                     toFlatten
