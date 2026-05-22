@@ -53,18 +53,25 @@ class GetApplicationRelease(
         return if (isPreview) {
             // Preview builds: based on releases in "mihonapp/mihon-preview" repo
             // tagged as something like "r1234"
-            newVersion.toInt() > commitCount
+            newVersion.toIntOrNull()?.let { it > commitCount } ?: false
         } else {
             // Release builds: based on releases in "mihonapp/mihon" repo
             // tagged as something like "v0.1.2"
             val oldVersion = versionName.replace("[^\\d.]".toRegex(), "")
 
-            val newSemVer = newVersion.split(".").map { it.toInt() }
-            val oldSemVer = oldVersion.split(".").map { it.toInt() }
+            val newSemVer = newVersion.split(".").map { it.toIntOrNull() ?: return false }
+            val oldSemVer = oldVersion.split(".").map { it.toIntOrNull() ?: return false }
 
-            oldSemVer.mapIndexed { index, i ->
-                if (newSemVer[index] > i) {
+            val maxLen = maxOf(newSemVer.size, oldSemVer.size)
+            val paddedNew = newSemVer + List(maxLen - newSemVer.size) { 0 }
+            val paddedOld = oldSemVer + List(maxLen - oldSemVer.size) { 0 }
+
+            paddedOld.forEachIndexed { index, i ->
+                if (paddedNew[index] > i) {
                     return true
+                }
+                if (paddedNew[index] < i) {
+                    return false
                 }
             }
 
@@ -84,6 +91,5 @@ class GetApplicationRelease(
     sealed interface Result {
         data class NewUpdate(val release: Release) : Result
         data object NoNewUpdate : Result
-        data object OsTooOld : Result
     }
 }

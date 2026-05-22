@@ -207,8 +207,13 @@ class SyncChaptersWithSource(
             chapterRepository.removeChaptersWithIds(toDeleteIds)
         }
 
+        var addAllSucceeded = false
         if (updatedToAdd.isNotEmpty()) {
-            updatedToAdd = chapterRepository.addAll(updatedToAdd)
+            val added = chapterRepository.addAll(updatedToAdd)
+            if (added.isNotEmpty()) {
+                updatedToAdd = added
+                addAllSucceeded = true
+            }
         }
 
         if (updatedChapters.isNotEmpty()) {
@@ -217,9 +222,11 @@ class SyncChaptersWithSource(
         }
         updateManga.awaitUpdateFetchInterval(manga, now, fetchWindow)
 
-        // Set this manga as updated since chapters were changed
-        // Note that last_update actually represents last time the chapter list changed at all
-        updateManga.awaitUpdateLastUpdate(manga.id)
+        if (addAllSucceeded || removedChapters.isNotEmpty() || updatedChapters.isNotEmpty()) {
+            // Set this manga as updated since chapters were changed
+            // Note that last_update actually represents last time the chapter list changed at all
+            updateManga.awaitUpdateLastUpdate(manga.id)
+        }
 
         val excludedScanlators = getExcludedScanlators.await(manga.id).toHashSet()
 

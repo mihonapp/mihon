@@ -112,7 +112,7 @@ fun TrackInfoDialogHome(
                         .takeIf { supportsScoring },
                     startDate = remember(item.track.startDate) { dateFormat.format(item.track.startDate.toLocalDate()) }
                         .takeIf { supportsReadingDates && item.track.startDate != 0L },
-                    onStartDateClick = { onStartDateEdit(item) } // TODO
+                    onStartDateClick = { onStartDateEdit(item) }
                         .takeIf { supportsReadingDates },
                     endDate = dateFormat.format(item.track.finishDate.toLocalDate())
                         .takeIf { supportsReadingDates && item.track.finishDate != 0L },

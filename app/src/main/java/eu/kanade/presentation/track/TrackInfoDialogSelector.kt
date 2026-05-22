@@ -178,7 +178,7 @@ fun TrackDateSelector(
                     TextButton(onClick = onDismissRequest) {
                         Text(text = stringResource(MR.strings.action_cancel))
                     }
-                    TextButton(onClick = { onConfirm(pickerState.selectedDateMillis!!) }) {
+                    TextButton(onClick = { pickerState.selectedDateMillis?.let(onConfirm) }) {
                         Text(text = stringResource(MR.strings.action_ok))
                     }
                 }

@@ -27,10 +27,8 @@ data class DummyTracker(
     val valScoreList: ImmutableList<String> = (0..10).map(Int::toString).toImmutableList(),
     val val10PointScore: Double = 5.4,
     val valSearchResults: List<TrackSearch> = listOf(),
+    override val client: OkHttpClient = OkHttpClient(),
 ) : Tracker {
-
-    override val client: OkHttpClient
-        get() = TODO("Not yet implemented")
 
     override fun getLogo(): Int = valLogo
 
@@ -56,7 +54,7 @@ data class DummyTracker(
 
     override fun get10PointScore(track: Track): Double = val10PointScore
 
-    override fun indexToScore(index: Int): Double = getScoreList()[index].toDouble()
+    override fun indexToScore(index: Int): Double = getScoreList().getOrElse(index) { "0" }.toDouble()
 
     override fun displayScore(track: Track): String =
         track.score.toString()

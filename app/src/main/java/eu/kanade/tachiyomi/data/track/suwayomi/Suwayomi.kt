@@ -50,7 +50,7 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
     override suspend fun update(track: Track, didReadChapter: Boolean): Track {
         if (track.status != COMPLETED) {
             if (didReadChapter) {
-                if (track.last_chapter_read.toLong() == track.total_chapters && track.total_chapters > 0) {
+                if (track.last_chapter_read >= track.total_chapters.toDouble() && track.total_chapters > 0) {
                     track.status = COMPLETED
                 } else {
                     track.status = READING
@@ -66,7 +66,7 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
     }
 
     override suspend fun search(query: String): List<TrackSearch> {
-        TODO("Not yet implemented")
+        return emptyList()
     }
 
     override suspend fun refresh(track: Track): Track {
@@ -88,7 +88,8 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
 
     override suspend fun match(manga: DomainManga): TrackSearch? =
         try {
-            api.getTrackSearch(manga.url.getMangaId())
+            val mangaId = manga.url.getMangaId() ?: return null
+            api.getTrackSearch(mangaId)
         } catch (e: Exception) {
             null
         }
@@ -103,8 +104,8 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
             null
         }
 
-    private fun String.getMangaId(): Long =
-        this.substringAfterLast('/').toLong()
+    private fun String.getMangaId(): Long? =
+        this.substringAfterLast('/').toLongOrNull()
 
     private fun getPrefTrackerDelete(): Boolean {
         val preferences = api.sourcePreferences()

@@ -131,7 +131,7 @@ class StatsScreenModel(
     }
 
     private fun get10PointScore(track: Track): Double {
-        val service = trackerManager.get(track.trackerId)!!
+        val service = trackerManager.get(track.trackerId) ?: return 0.0
         return service.get10PointScore(track)
     }
 }

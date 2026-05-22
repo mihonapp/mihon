@@ -5,10 +5,10 @@ object ChapterSanitizer {
     fun String.sanitize(title: String): String {
         return trim()
             .removePrefix(title)
-            .trim(*CHAPTER_TRIM_CHARS)
+            .trim { it in CHAPTER_TRIM_CHARS }
     }
 
-    private val CHAPTER_TRIM_CHARS = arrayOf(
+    private val CHAPTER_TRIM_CHARS = setOf(
         // Whitespace
         ' ',
         '\u0009',
@@ -42,5 +42,5 @@ object ChapterSanitizer {
         '_',
         ',',
         ':',
-    ).toCharArray()
+    )
 }

@@ -100,7 +100,7 @@ abstract class BaseTracker(
             track.status = getReadingStatus()
         }
         track.last_chapter_read = chapterNumber.toDouble()
-        if (track.total_chapters != 0L && track.last_chapter_read.toLong() == track.total_chapters) {
+        if (track.total_chapters != 0L && track.last_chapter_read >= track.total_chapters.toDouble()) {
             track.status = getCompletionStatus()
             track.finished_reading_date = System.currentTimeMillis()
         }

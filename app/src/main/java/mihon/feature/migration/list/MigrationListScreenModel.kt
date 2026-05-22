@@ -227,7 +227,7 @@ class MigrationListScreenModel(
             val result = migratingManga.migrationScope.async {
                 val manga = getManga.await(target) ?: return@async null
                 try {
-                    val source = sourceManager.get(manga.source)!!
+                    val source = sourceManager.get(manga.source) ?: return@async null
                     val chapters = source.getChapterList(manga.toSManga())
                     syncChaptersWithSource.await(chapters, manga, source)
                 } catch (_: Exception) {

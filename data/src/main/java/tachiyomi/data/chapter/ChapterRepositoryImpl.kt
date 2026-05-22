@@ -77,11 +77,7 @@ class ChapterRepositoryImpl(
     }
 
     override suspend fun removeChaptersWithIds(chapterIds: List<Long>) {
-        try {
-            database.chaptersQueries.removeChaptersWithIds(chapterIds)
-        } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e)
-        }
+        database.chaptersQueries.removeChaptersWithIds(chapterIds)
     }
 
     override suspend fun getChapterByMangaId(mangaId: Long, applyScanlatorFilter: Boolean): List<Chapter> {

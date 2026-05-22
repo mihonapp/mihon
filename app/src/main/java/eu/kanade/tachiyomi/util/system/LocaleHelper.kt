@@ -70,12 +70,12 @@ object LocaleHelper {
         }
 
         val locale = when (lang) {
-            "" -> LocaleListCompat.getAdjustedDefault()[0]
+            "" -> LocaleListCompat.getAdjustedDefault()[0] ?: Locale.getDefault()
             "zh-CN" -> Locale.forLanguageTag("zh-Hans")
             "zh-TW" -> Locale.forLanguageTag("zh-Hant")
             else -> Locale.forLanguageTag(lang)
         }
-        return locale!!.getDisplayName(locale).replaceFirstChar { it.uppercase(locale) }
+        return locale.getDisplayName(locale).replaceFirstChar { it.uppercase(locale) }
     }
 
     /**

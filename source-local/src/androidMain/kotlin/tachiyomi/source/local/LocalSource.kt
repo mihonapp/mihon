@@ -164,8 +164,8 @@ actual class LocalSource(
                 }
 
                 // Old custom JSON format
-                // TODO: remove support for this entirely after a while
                 legacyJsonDetailsFile != null -> {
+                    logcat(LogPriority.WARN) { "Migrating legacy JSON format to ComicInfo.xml for ${mangaDir.name}" }
                     json.decodeFromStream<MangaDetails>(legacyJsonDetailsFile.openInputStream()).run {
                         title?.let { manga.title = it }
                         author?.let { manga.author = it }
