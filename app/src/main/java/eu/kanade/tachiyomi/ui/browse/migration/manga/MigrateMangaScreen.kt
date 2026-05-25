@@ -23,6 +23,7 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
+import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.manga.components.BaseMangaListItem
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
@@ -47,7 +48,7 @@ data class MigrateMangaScreen(
     override fun Content() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
-        val screenModel = rememberScreenModel { MigrateMangaScreenModel(sourceId) }
+        val screenModel = rememberScreenModel { MigrateMangaScreenModel(context, sourceId) }
 
         val state by screenModel.state.collectAsState()
 
@@ -66,6 +67,7 @@ data class MigrateMangaScreen(
             topBar = { scrollBehavior ->
                 AppBar(
                     title = state.source!!.name,
+                    subtitle = state.selection.size.toString() + '/' + screenModel.maximumMigrationSelection,
                     navigateUp = {
                         if (state.selectionMode) {
                             screenModel.clearSelection()
@@ -108,6 +110,7 @@ data class MigrateMangaScreen(
                 contentPadding = contentPadding,
                 state = state,
                 onClickItem = screenModel::toggleSelection,
+                onLongClickItem = screenModel::toggleRangeSelection,
                 onClickCover = { navigator.push(MangaScreen(it.id)) },
             )
         }
@@ -129,6 +132,7 @@ data class MigrateMangaScreen(
         contentPadding: PaddingValues,
         state: MigrateMangaScreenModel.State,
         onClickItem: (Manga) -> Unit,
+        onLongClickItem: (Manga) -> Unit,
         onClickCover: (Manga) -> Unit,
     ) {
         FastScrollLazyColumn(
@@ -140,6 +144,7 @@ data class MigrateMangaScreen(
                     manga = manga,
                     isSelected = manga.id in state.selection,
                     onClickItem = onClickItem,
+                    onLongClickItem = onLongClickItem,
                     onClickCover = onClickCover,
                 )
             }
@@ -151,6 +156,7 @@ data class MigrateMangaScreen(
         manga: Manga,
         isSelected: Boolean,
         onClickItem: (Manga) -> Unit,
+        onLongClickItem: (Manga) -> Unit,
         onClickCover: (Manga) -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -158,6 +164,7 @@ data class MigrateMangaScreen(
             modifier = modifier.selectedBackground(isSelected),
             manga = manga,
             onClickItem = { onClickItem(manga) },
+            onLongClickItem = { onLongClickItem(manga) },
             onClickCover = { onClickCover(manga) },
         )
     }

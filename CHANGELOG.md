@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Improved
+- Add long click range selection on migrate manga screen ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#3171](https://github.com/mihonapp/mihon/pull/3171))
 
 ## [v0.19.9] - 2026-04-11
 ### Fixed
