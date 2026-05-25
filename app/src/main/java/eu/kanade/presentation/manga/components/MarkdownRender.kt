@@ -223,6 +223,7 @@ private val markdownComponents = markdownComponents(
         if (type in DISALLOWED_MARKDOWN_TYPES) {
             MarkdownText(
                 content = model.content.substring(model.node.startOffset, model.node.endOffset),
+                node = model.node,
                 style = model.typography.text,
             )
         }
