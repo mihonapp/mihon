@@ -95,7 +95,7 @@ androidx-compose-materialIcons = { module = "androidx.compose.material:material-
 androidx-compose-runtime = { module = "androidx.compose.runtime:runtime" }
 androidx-compose-runtimeAnnotation = { module = "androidx.compose.runtime:runtime-annotation" }
 androidx-compose-uiTooling = { module = "androidx.compose.ui:ui-tooling" }
-androidx-compose-uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-compose-uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "androidx-compose-bom" }
 androidx-compose-uiUtil = { module = "androidx.compose.ui:ui-util" }
 androidx-compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics", version.ref = "androidx-compose-alpha" }
 androidx-constraintLayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintLayout" }
@@ -176,7 +176,7 @@ reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reo
 rxJava = { module = "io.reactivex:rxjava", version.ref = "rxJava" }
 shizuku-api = { module = "dev.rikka.shizuku:api", version.ref = "shizuku" }
 shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizuku" }
-spotless-gradle = { id = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
+spotless-gradle = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 sqldelight-androidxDriver = { module = "com.eygraber:sqldelight-androidx-driver", version.ref = "sqldelight-androidx-driver" }
 sqldelight-androidxPaging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqldelight" }
 sqldelight-async = { module = "app.cash.sqldelight:async-extensions", version.ref = "sqldelight" }
@@ -185,29 +185,29 @@ sqldelight-sqliteDialect338 = { module = "app.cash.sqldelight:sqlite-3-38-dialec
 stringSimilarity = { module = "com.aallam.similarity:string-similarity-kotlin", version.ref = "stringSimilarity" }
 subsamplingScaleImageView = { module = "com.github.tachiyomiorg:subsampling-scale-image-view", version.ref = "subsamplingScaleImageView" }
 swipe = { module = "me.saket.swipe:swipe", version.ref = "swipe" }
-tapmoc-gradle = { module = "com.gradleup.tapmoc:tapmoc-gradle-plugin", version.ref = "tapmoc" }
+tapmoc = { module = "com.gradleup.tapmoc:tapmoc-gradle-plugin", version.ref = "tapmoc" }
 unifile = { module = "com.github.tachiyomiorg:unifile", version.ref = "unifile" }
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-screenModel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
-voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
+voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tabnavigator", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
-xmlutil-core = { module = "io.github.pdvrieze.xmlutil:core-android", version.ref = "xmlutil" }
-xmlutil-serialization = { module = "io.github.pdvrieze.xmlutil:serialization", version.ref = "xmlutil" }
+xmlutil = { module = "io.github.pdvrieze.xmlutil:xmlutil", version.ref = "xmlutil" }
+xmlutil-serialization = { module = "io.github.pdvrieze.xmlutil:xmlutil-serialization", version.ref = "xmlutil" }
 
 [plugins]
 aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "aboutLibraries" }
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
 android-test = { id = "com.android.test", version.ref = "android-gradle" }
-android-kmp-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle" }
+android-kmp-library = { id = "com.android.library.multiplatform", version.ref = "android-gradle" }
 android-library = { id = "com.android.library", version.ref = "android-gradle" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-gradle" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-gradle" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin-gradle" }
-kotlin-samWithReceiver = { id = "org.jetbrains.kotlin.plugin.sam.with.receiver", version.ref = "kotlin-gradle" }
+kotlin-samWithReceiver = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-gradle" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-gradle" }
-moko-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko-resources" }
+moko-resources = { id = "dev.icerock.moko.resources", version.ref = "moko-resources" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 
@@ -216,8 +216,8 @@ androidx-lifecycle = ["androidx-lifecycle-common", "androidx-lifecycle-process",
 coil = ["coil-core", "coil-gif", "coil-compose", "coil-network-okhttp"]
 kotlinx-coroutines = ["kotlinx-coroutines-core", "kotlinx-coroutines-android", "kotlinx-coroutines-guava"]
 markdown = ["markdown-core", "markdown-coil"]
-voyager = ["voyager-navigator", "voyager-screenModel", "voyager-tabNavigator", "voyager-transitions"]
+okhttp = ["okhttp-core", "okhttp-logging", "okhttp-brotli", "okhttp-dnsOverHttps"]
 serialization = ["kotlinx-serialization-json", "kotlinx-serialization-jsonOkio", "kotlinx-serialization-protobuf"]
 shizuku = ["shizuku-api", "shizuku-provider"]
 test = ["androidx-test-espresso-core", "androidx-test-junit", "junit-jupiter", "kotest-assertions", "mockk"]
-okhttp = ["okhttp-core", "okhttp-logging", "okhttp-brotli", "okhttp-dnsOverHttps"]
+voyager = ["voyager-navigator", "voyager-screenModel", "voyager-tabNavigator", "voyager-transitions"]
