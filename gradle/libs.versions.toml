@@ -1,5 +1,5 @@
 [versions]
-aboutLibraries = "15.0.0-b02"
+aboutLibraries = "14.2.1"
 android-desugar = "2.1.5"
 android-gradle = "9.3.0-alpha07"
 androidx-activity-compose = "1.13.0"
