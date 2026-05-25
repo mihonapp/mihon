@@ -205,7 +205,7 @@ google-services = { id = "com.google.gms.google-services", version.ref = "google
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-gradle" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-gradle" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin-gradle" }
-kotlin-samWithReceiver = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-gradle" }
+kotlin-samWithReceiver = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-gradle" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-gradle" }
 moko-resources = { id = "dev.icerock.moko.resources", version.ref = "moko-resources" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
