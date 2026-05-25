@@ -161,14 +161,6 @@ kotlin {
     }
 }
 
-composeCompiler {
-    suppressKotlinVersionCompatibilityCheck = "2.1.0-Beta01"
-}
-
-// Tambahkan blok composeCompiler di sini, di luar blok `kotlin` atau `android`
-composeCompiler {
-    suppressKotlinVersionCompatibilityCheck = "2.1.0-Beta01"
-}
 
 dependencies {
     implementation(projects.i18n)
@@ -293,7 +285,7 @@ androidComponents {
         variant ->
             val resSource = variant.sources.res ?: return@onVariants
             val variantName = variant.name.replaceFirstChar { it.uppercase() }
-            val replaceShortcutsPlaceholderTask = tasks.register(
+            val replaceShortcutsPlaceholderTask = tasks.register<ReplaceShortcutsPlaceholderTask>(
                 "replace${variantName}ShortcutPlaceholder",
             ) {
                 applicationId.set(variant.applicationId)
