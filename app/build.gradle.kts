@@ -147,15 +147,14 @@ android {
     }
 }
 
-// Konfigurasi tambahan untuk Compose Compiler
-composeCompiler {
-    // Memaksa compiler tetap berjalan meskipun versi Kotlin tidak dikenal (2.1.0-Beta01)
-    suppressKotlinVersionCompatibilityCheck = "2.1.0-Beta01"
-}
-
+// Perbaikan sintaks untuk Kotlin 2.0+
+// Plugin compose-compiler harus sudah diterapkan di build-logic atau root
+// Jika error "Unresolved reference", pastikan plugin org.jetbrains.kotlin.plugin.compose sudah aktif
+// Kita gunakan cara alternatif melalui compilerOptions jika suppress tidak terbaca langsung
 kotlin {
     compilerOptions {
         freeCompilerArgs.addAll(
+            "-P", "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=2.1.0-Beta01",
             "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
             "-opt-in=androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi",
             "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",

@@ -176,7 +176,7 @@ reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reo
 rxJava = { module = "io.reactivex:rxjava", version.ref = "rxJava" }
 shizuku-api = { module = "dev.rikka.shizuku:api", version.ref = "shizuku" }
 shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizuku" }
-spotless-gradle = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
+spotless-gradle = { id = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 sqldelight-androidxDriver = { module = "com.eygraber:sqldelight-androidx-driver", version.ref = "sqldelight-androidx-driver" }
 sqldelight-androidxPaging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqldelight" }
 sqldelight-async = { module = "app.cash.sqldelight:async-extensions", version.ref = "sqldelight" }
@@ -220,3 +220,4 @@ voyager = ["voyager-navigator", "voyager-screenModel", "voyager-tabNavigator", "
 serialization = ["kotlinx-serialization-json", "kotlinx-serialization-jsonOkio", "kotlinx-serialization-protobuf"]
 shizuku = ["shizuku-api", "shizuku-provider"]
 test = ["androidx-test-espresso-core", "androidx-test-junit", "junit-jupiter", "kotest-assertions", "mockk"]
+okhttp = ["okhttp-core", "okhttp-logging", "okhttp-brotli", "okhttp-dnsOverHttps"]
