@@ -209,7 +209,7 @@ dependencies {
     implementation(libs.androidx.appCompat)
     implementation(libs.androidx.localbroadcastmanager)
     implementation(libs.androidx.graphics.path)
-    implementation(libs.androidx.compose.graphics)
+    implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.biometric)
     implementation(libs.androidx.constraintLayout)
     implementation(libs.androidx.core)

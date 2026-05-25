@@ -8,7 +8,7 @@ androidx-appCompat = "1.7.1"
 androidx-benchmark = "1.4.1"
 androidx-biometric = "1.4.0-alpha07"
 androidx-compose-bom = "2026.05.01"
-androidx-compose-graphics = "1.12.0-alpha01"
+androidx-compose-alpha = "1.12.0-alpha01"
 androidx-constraintLayout = "2.2.1"
 androidx-core = "1.18.0"
 androidx-coreSplashScreen = "1.2.0"
@@ -104,6 +104,7 @@ androidx-glance-appWidget = { module = "androidx.glance:glance-appwidget", versi
 androidx-graphics-core = { module = "androidx.graphics:graphics-core", version.ref = "androidx-graphics-core" }
 androidx-graphics-path = { module = "androidx.graphics:graphics-path", version.ref = "androidx-graphics" }
 androidx-compose-graphics = { module = "androidx.compose.graphics:graphics", version.ref = "androidx-compose-graphics" }
+androidx-compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics", version.ref = "androidx-compose-alpha" }
 androidx-graphics-shapes = { module = "androidx.graphics:graphics-shapes", version.ref = "androidx-graphics" }
 androidx-interpolator = { module = "androidx.interpolator:interpolator", version.ref = "androidx-interpolator" }
 androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common", version.ref = "androidx-lifecycle" }
