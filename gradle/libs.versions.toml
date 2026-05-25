@@ -220,4 +220,5 @@ okhttp = ["okhttp-core", "okhttp-logging", "okhttp-brotli", "okhttp-dnsOverHttps
 serialization = ["kotlinx-serialization-json", "kotlinx-serialization-jsonOkio", "kotlinx-serialization-protobuf"]
 shizuku = ["shizuku-api", "shizuku-provider"]
 test = ["androidx-test-espresso-core", "androidx-test-junit", "junit-jupiter", "kotest-assertions", "mockk"]
+sqldelight = ["sqldelight-async", "sqldelight-coroutines", "sqldelight-androidxDriver", "sqldelight-androidxPaging"]
 voyager = ["voyager-navigator", "voyager-screenModel", "voyager-tabNavigator", "voyager-transitions"]
