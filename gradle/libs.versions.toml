@@ -8,6 +8,7 @@ androidx-appCompat = "1.7.1"
 androidx-benchmark = "1.4.1"
 androidx-biometric = "1.4.0-alpha07"
 androidx-compose-bom = "2026.05.01"
+androidx-compose-alpha = "1.12.0-alpha01"
 androidx-constraintLayout = "2.2.1"
 androidx-core = "1.18.0"
 androidx-coreSplashScreen = "1.2.0"
@@ -96,6 +97,7 @@ androidx-compose-runtimeAnnotation = { module = "androidx.compose.runtime:runtim
 androidx-compose-uiTooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-compose-uiUtil = { module = "androidx.compose.ui:ui-util" }
+androidx-compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics", version.ref = "androidx-compose-alpha" }
 androidx-constraintLayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintLayout" }
 androidx-core = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
 androidx-coreSplashScreen = { module = "androidx.core:core-splashscreen", version.ref = "androidx-coreSplashScreen" }
@@ -214,9 +216,7 @@ androidx-lifecycle = ["androidx-lifecycle-common", "androidx-lifecycle-process",
 coil = ["coil-core", "coil-gif", "coil-compose", "coil-network-okhttp"]
 kotlinx-coroutines = ["kotlinx-coroutines-core", "kotlinx-coroutines-android", "kotlinx-coroutines-guava"]
 markdown = ["markdown-core", "markdown-coil"]
-okhttp = ["okhttp-core", "okhttp-logging", "okhttp-brotli", "okhttp-dnsOverHttps"]
-serialization = ["kotlinx-serialization-json", "kotlinx-serialization-jsonOkio", "kotlinx-serialization-protobuf", "xmlutil-core", "xmlutil-serialization"]
-shizuku = ["shizuku-api", "shizuku-provider"]
-sqldelight = ["sqldelight-androidxDriver", "sqldelight-async", "sqldelight-coroutines", "sqldelight-androidxPaging"]
-test = ["junit-jupiter", "kotest-assertions", "mockk"]
 voyager = ["voyager-navigator", "voyager-screenModel", "voyager-tabNavigator", "voyager-transitions"]
+serialization = ["kotlinx-serialization-json", "kotlinx-serialization-jsonOkio", "kotlinx-serialization-protobuf"]
+shizuku = ["shizuku-api", "shizuku-provider"]
+test = ["androidx-test-espresso-core", "androidx-test-junit", "junit-jupiter", "kotest-assertions", "mockk"]

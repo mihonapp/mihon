@@ -147,6 +147,12 @@ android {
     }
 }
 
+// Konfigurasi tambahan untuk Compose Compiler
+composeCompiler {
+    // Memaksa compiler tetap berjalan meskipun versi Kotlin tidak dikenal (2.1.0-Beta01)
+    suppressKotlinVersionCompatibilityCheck = "2.1.0-Beta01"
+}
+
 kotlin {
     compilerOptions {
         freeCompilerArgs.addAll(
