@@ -162,7 +162,6 @@ kotlin {
             "-opt-in=kotlinx.coroutines.FlowPreview",
             "-opt-in=kotlinx.coroutines.InternalCoroutinesApi",
             "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
-            "-Xannotation-default-target=param-property",
         )
     }
 }
@@ -208,6 +207,7 @@ dependencies {
     // AndroidX libraries
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.appCompat)
+    implementation(libs.androidx.localbroadcastmanager)
     implementation(libs.androidx.biometric)
     implementation(libs.androidx.constraintLayout)
     implementation(libs.androidx.core)

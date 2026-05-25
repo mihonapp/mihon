@@ -14,6 +14,7 @@ androidx-coreSplashScreen = "1.2.0"
 androidx-glance = "1.1.1"
 androidx-interpolator = "1.0.0"
 androidx-lifecycle = "2.10.0"
+androidx-localbroadcastmanager = "1.1.0"
 androidx-paging = "3.4.2"
 androidx-preference = "1.2.1"
 androidx-profileInstaller = "1.4.1"
@@ -100,6 +101,7 @@ androidx-interpolator = { module = "androidx.interpolator:interpolator", version
 androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
+androidx-localbroadcastmanager = { module = "androidx.localbroadcastmanager:localbroadcastmanager", version.ref = "androidx-localbroadcastmanager" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "androidx-paging" }
 androidx-preference = { module = "androidx.preference:preference-ktx", version.ref = "androidx-preference" }
