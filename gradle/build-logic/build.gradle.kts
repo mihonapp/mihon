@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
+    `kotlin-dsl`
     alias(libs.plugins.kotlin.samWithReceiver)
     alias(libs.plugins.spotless)
     `java-gradle-plugin`
