@@ -95,7 +95,7 @@ androidx-compose-materialIcons = { module = "androidx.compose.material:material-
 androidx-compose-runtime = { module = "androidx.compose.runtime:runtime" }
 androidx-compose-runtimeAnnotation = { module = "androidx.compose.runtime:runtime-annotation" }
 androidx-compose-uiTooling = { module = "androidx.compose.ui:ui-tooling" }
-androidx-compose-uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "androidx-compose-bom" }
+androidx-compose-uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-compose-uiUtil = { module = "androidx.compose.ui:ui-util" }
 androidx-compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics", version.ref = "androidx-compose-alpha" }
 androidx-constraintLayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintLayout" }
@@ -217,7 +217,6 @@ coil = ["coil-core", "coil-gif", "coil-compose", "coil-network-okhttp"]
 kotlinx-coroutines = ["kotlinx-coroutines-core", "kotlinx-coroutines-android", "kotlinx-coroutines-guava"]
 markdown = ["markdown-core", "markdown-coil"]
 okhttp = ["okhttp-core", "okhttp-logging", "okhttp-brotli", "okhttp-dnsOverHttps"]
-sqldelight = ["sqldelight-async", "sqldelight-coroutines", "sqldelight-androidxDriver", "sqldelight-androidxPaging"]
 serialization = ["kotlinx-serialization-json", "kotlinx-serialization-jsonOkio", "kotlinx-serialization-protobuf"]
 shizuku = ["shizuku-api", "shizuku-provider"]
 test = ["androidx-test-espresso-core", "androidx-test-junit", "junit-jupiter", "kotest-assertions", "mockk"]
