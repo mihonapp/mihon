@@ -12,6 +12,7 @@ androidx-constraintLayout = "2.2.1"
 androidx-core = "1.18.0"
 androidx-coreSplashScreen = "1.2.0"
 androidx-glance = "1.1.1"
+androidx-graphics-path = "1.0.4"
 androidx-interpolator = "1.0.0"
 androidx-lifecycle = "2.10.0"
 androidx-localbroadcastmanager = "1.1.0"
@@ -97,6 +98,7 @@ androidx-constraintLayout = { module = "androidx.constraintlayout:constraintlayo
 androidx-core = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
 androidx-coreSplashScreen = { module = "androidx.core:core-splashscreen", version.ref = "androidx-coreSplashScreen" }
 androidx-glance-appWidget = { module = "androidx.glance:glance-appwidget", version.ref = "androidx-glance" }
+androidx-graphics-path = { module = "androidx.graphics:graphics-path", version.ref = "androidx-graphics-path" }
 androidx-interpolator = { module = "androidx.interpolator:interpolator", version.ref = "androidx-interpolator" }
 androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "androidx-lifecycle" }

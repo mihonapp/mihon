@@ -208,6 +208,7 @@ dependencies {
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.appCompat)
     implementation(libs.androidx.localbroadcastmanager)
+    implementation(libs.androidx.graphics.path)
     implementation(libs.androidx.biometric)
     implementation(libs.androidx.constraintLayout)
     implementation(libs.androidx.core)
