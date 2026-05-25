@@ -83,7 +83,8 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "androidx-annotation" }
 androidx-appCompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appCompat" }
 androidx-benchmark-macroJunit4 = { module = "androidx.benchmark:benchmark-macro-junit4", version.ref = "androidx-benchmark" }
-androidx-biometric = { module = "androidx.biometric:biometric-ktx", version.ref = "androidx-biometric" }
+androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "androidx-biometric" }
+androidx-biometric-compose = { module = "androidx.biometric:biometric-compose", version.ref = "androidx-biometric" }
 androidx-compose-animation = { module = "androidx.compose.animation:animation" }
 androidx-compose-animationGraphics = { module = "androidx.compose.animation:animation-graphics" }
 androidx-compose-bom = { module = "androidx.compose:compose-bom-alpha", version.ref = "androidx-compose-bom" }
