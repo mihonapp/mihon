@@ -30,11 +30,27 @@ tasks {
 }
 
 val jetbrainsComposeVersion = "1.12.0-alpha01"
+val guavaVersion = "33.6.0-android"
+val mokoGraphicsVersion = "0.10.1"
+val windowManagerVersion = "1.6.0-alpha03"
+val emoji2Version = "1.6.0"
 subprojects {
     configurations.all {
         resolutionStrategy.eachDependency {
             if (requested.group.startsWith("org.jetbrains.compose")) {
                 useVersion(jetbrainsComposeVersion)
+            }
+            if (requested.group == "com.google.guava" && requested.name == "guava") {
+                useVersion(guavaVersion)
+            }
+            if (requested.group == "dev.icerock.moko" && requested.name == "graphics") {
+                useVersion(mokoGraphicsVersion)
+            }
+            if (requested.group == "androidx.window") {
+                useVersion(windowManagerVersion)
+            }
+            if (requested.group == "androidx.emoji2") {
+                useVersion(emoji2Version)
             }
         }
     }

@@ -10,7 +10,7 @@ androidx-biometric = "1.4.0-alpha07"
 androidx-compose-bom = "2026.05.01"
 androidx-compose-alpha = "1.12.0-alpha01"
 androidx-constraintLayout = "2.2.1"
-androidx-core = "1.18.0"
+androidx-core = "1.19.0-rc01"
 androidx-coreSplashScreen = "1.2.0"
 androidx-glance = "1.1.1"
 androidx-graphics = "1.1.0"
@@ -30,7 +30,7 @@ androidx-viewPager = "1.1.0"
 androidx-work = "2.11.2"
 archive = "1.1.6"
 coil = "3.5.0-beta01"
-composeGrid = "1.2.2"
+composeGrid = "2.7.3"
 composeMaterialMotion = "2.0.1"
 composeRichEditor = "1.0.0-rc14"
 composeWebview = "0.33.6"
@@ -126,7 +126,7 @@ coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" 
 coil-core = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
 coil-gif = { module = "io.coil-kt.coil3:coil-gif", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
-composeGrid = { module = "io.woong.compose.grid:grid", version.ref = "composeGrid" }
+composeGrid = { module = "com.cheonjaeung.compose.grid:grid", version.ref = "composeGrid" }
 composeMaterialMotion = { module = "io.github.fornewid:material-motion-compose-core", version.ref = "composeMaterialMotion" }
 composeRichEditor = { module = "com.mohamedrejeb.richeditor:richeditor-compose", version.ref = "composeRichEditor" }
 composeWebview = { module = "io.github.kevinnzou:compose-webview", version.ref = "composeWebview" }
