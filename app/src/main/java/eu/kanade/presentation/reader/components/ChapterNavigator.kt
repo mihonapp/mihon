@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import eu.kanade.presentation.util.isTabletUi
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.components.material.Slider
+import androidx.compose.material3.Slider
 import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
@@ -115,11 +115,13 @@ fun ChapterNavigator(
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(horizontal = 8.dp),
-                            value = currentPage,
-                            valueRange = 1..totalPages,
+                            value = currentPage.toFloat(),
+                            valueRange = 1f..totalPages.toFloat(),
+                            steps = 0,
                             onValueChange = f@{
-                                if (it == currentPage) return@f
-                                onPageIndexChange(it - 1)
+                                val page = it.toInt()
+                                if (page == currentPage) return@f
+                                onPageIndexChange(page - 1)
                             },
                             interactionSource = interactionSource,
                         )
