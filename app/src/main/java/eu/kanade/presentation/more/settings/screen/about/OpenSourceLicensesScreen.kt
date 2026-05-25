@@ -44,6 +44,7 @@ class OpenSourceLicensesScreen : Screen() {
                             license = it.licenses.firstOrNull()?.htmlReadyLicenseContent.orEmpty(),
                         ),
                     )
+                    true
                 },
             )
         }
