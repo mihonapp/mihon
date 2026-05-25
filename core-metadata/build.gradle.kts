@@ -13,4 +13,7 @@ dependencies {
     implementation(projects.sourceApi)
 
     implementation(libs.bundles.serialization)
+
+    implementation(libs.xmlutil)
+    implementation(libs.xmlutil.serialization)
 }
