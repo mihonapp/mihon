@@ -144,7 +144,7 @@ android {
 kotlin {
     compilerOptions {
         freeCompilerArgs.addAll(
-            // Hapus baris ini: 
+            // Hapus baris ini:
             "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
             "-opt-in=androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi",
             "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
@@ -160,7 +160,6 @@ kotlin {
         )
     }
 }
-
 
 dependencies {
     implementation(projects.i18n)
@@ -281,17 +280,16 @@ dependencies {
 }
 
 androidComponents {
-    onVariants {
-        variant ->
-            val resSource = variant.sources.res ?: return@onVariants
-            val variantName = variant.name.replaceFirstChar { it.uppercase() }
-            val replaceShortcutsPlaceholderTask = tasks.register<ReplaceShortcutsPlaceholderTask>(
-                "replace${variantName}ShortcutPlaceholder",
-            ) {
-                applicationId.set(variant.applicationId)
-                shortcutsFile.set(projectDir.resolve("src/main/shortcuts.xml"))
-            }
-            resSource.addGeneratedSourceDirectory(replaceShortcutsPlaceholderTask) { it.outputDir }
+    onVariants { variant ->
+        val resSource = variant.sources.res ?: return@onVariants
+        val variantName = variant.name.replaceFirstChar { it.uppercase() }
+        val replaceShortcutsPlaceholderTask = tasks.register<ReplaceShortcutsPlaceholderTask>(
+            "replace${variantName}ShortcutPlaceholder",
+        ) {
+            applicationId.set(variant.applicationId)
+            shortcutsFile.set(projectDir.resolve("src/main/shortcuts.xml"))
+        }
+        resSource.addGeneratedSourceDirectory(replaceShortcutsPlaceholderTask) { it.outputDir }
     }
     onVariants(selector().withFlavor("default" to "standard")) {
         // Only excluding in standard flavor because this breaks
