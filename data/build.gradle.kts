@@ -8,15 +8,15 @@ plugins {
 
 android {
     namespace = "tachiyomi.data"
+}
 
-    sqldelight {
-        databases {
-            create("Database") {
-                packageName.set("tachiyomi.data")
-                dialect(libs.sqldelight.sqliteDialect338)
-                schemaOutputDirectory.set(project.file("./src/main/sqldelight"))
-                generateAsync.set(true)
-            }
+sqldelight {
+    databases {
+        create("Database") {
+            packageName.set("tachiyomi.data")
+            dialect(libs.sqldelight.sqliteDialect338)
+            schemaOutputDirectory.set(project.file("./src/main/sqldelight"))
+            generateAsync.set(true)
         }
     }
 }
