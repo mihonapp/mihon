@@ -263,6 +263,10 @@ dependencies {
     // Logging
     implementation(libs.logcat)
 
+    // XML
+    implementation(libs.xmlutil)
+    implementation(libs.xmlutil.serialization)
+
     // Shizuku
     implementation(libs.bundles.shizuku)
 
