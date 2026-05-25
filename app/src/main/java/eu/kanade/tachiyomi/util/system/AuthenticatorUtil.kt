@@ -6,8 +6,6 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators
 import androidx.biometric.BiometricPrompt
 import androidx.biometric.BiometricPrompt.AuthenticationError
-import androidx.biometric.auth.AuthPromptCallback
-import androidx.biometric.auth.startClass2BiometricOrCredentialAuthentication
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -38,13 +36,29 @@ object AuthenticatorUtil {
         callback: AuthenticationCallback,
     ) {
         isAuthenticating = true
-        startClass2BiometricOrCredentialAuthentication(
-            title = title,
-            subtitle = subtitle,
-            confirmationRequired = confirmationRequired,
-            executor = ContextCompat.getMainExecutor(this),
-            callback = callback,
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle(title)
+            .apply { subtitle?.let { setSubtitle(it) } }
+            .setConfirmationRequired(confirmationRequired)
+            .setAllowedAuthenticators(Authenticators.BIOMETRIC_WEAK or Authenticators.DEVICE_CREDENTIAL)
+            .build()
+
+        val biometricPrompt = BiometricPrompt(
+            this,
+            ContextCompat.getMainExecutor(this),
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    callback.onAuthenticationError(this@startAuthentication, errorCode, errString)
+                }
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    callback.onAuthenticationSucceeded(this@startAuthentication, result)
+                }
+                override fun onAuthenticationFailed() {
+                    callback.onAuthenticationFailed(this@startAuthentication)
+                }
+            },
         )
+        biometricPrompt.authenticate(promptInfo)
     }
 
     suspend fun FragmentActivity.authenticate(
@@ -90,24 +104,13 @@ object AuthenticatorUtil {
     }
 
     /**
-     * [AuthPromptCallback] with extra check
+     * Custom callback with extra check
      *
      * @see isAuthenticating
      */
-    abstract class AuthenticationCallback : AuthPromptCallback() {
-        /**
-         * Called when an unrecoverable error has been encountered and authentication has stopped.
-         *
-         *
-         * After this method is called, no further events will be sent for the current
-         * authentication session.
-         *
-         * @param activity  The activity that is currently hosting the prompt.
-         * @param errorCode An integer ID associated with the error.
-         * @param errString A human-readable string that describes the error.
-         */
+    abstract class AuthenticationCallback {
         @CallSuper
-        override fun onAuthenticationError(
+        open fun onAuthenticationError(
             activity: FragmentActivity?,
             @AuthenticationError errorCode: Int,
             errString: CharSequence,
@@ -115,22 +118,14 @@ object AuthenticatorUtil {
             isAuthenticating = false
         }
 
-        /**
-         * Called when the user has successfully authenticated.
-         *
-         *
-         * After this method is called, no further events will be sent for the current
-         * authentication session.
-         *
-         * @param activity The activity that is currently hosting the prompt.
-         * @param result   An object containing authentication-related data.
-         */
         @CallSuper
-        override fun onAuthenticationSucceeded(
+        open fun onAuthenticationSucceeded(
             activity: FragmentActivity?,
             result: BiometricPrompt.AuthenticationResult,
         ) {
             isAuthenticating = false
         }
+
+        open fun onAuthenticationFailed(activity: FragmentActivity?) {}
     }
 }
