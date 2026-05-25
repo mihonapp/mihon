@@ -9,12 +9,14 @@ import tachiyomi.core.common.preference.getEnum
 import tachiyomi.i18n.MR
 
 class ReaderPreferences(
-    preferenceStore: PreferenceStore,
+    private val preferenceStore: PreferenceStore,
 ) {
-
     // region General
 
     val pageTransitions: Preference<Boolean> = preferenceStore.getBoolean("pref_enable_transitions_key", true)
+
+    // TachiyomiAT
+    fun showTranslations() = preferenceStore.getBoolean("show_translations", true)
 
     val flashOnPageChange: Preference<Boolean> = preferenceStore.getBoolean("pref_reader_flash", false)
 

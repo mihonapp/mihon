@@ -18,6 +18,7 @@ import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.storage.service.StoragePreferences
 import tachiyomi.domain.updates.service.UpdatesPreferences
+import tachiyomi.domain.translation.TranslationPreferences
 import uy.kohesive.injekt.api.InjektModule
 import uy.kohesive.injekt.api.InjektRegistrar
 import uy.kohesive.injekt.api.addSingletonFactory
@@ -58,6 +59,10 @@ class PreferenceModule(val app: Application) : InjektModule {
         }
         addSingletonFactory {
             DownloadPreferences(get())
+        }
+        // TachiyomiAT
+        addSingletonFactory {
+            TranslationPreferences(get())
         }
         addSingletonFactory {
             BackupPreferences(get())

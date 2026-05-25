@@ -1,0 +1,125 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build app
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@cc4fc85e6b35bafd578d5ffbc76a5518407e1af0 # v4.2.1
+
+      - name: Setup Android SDK
+        run: |
+          ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager "build-tools;29.0.3"
+
+      - name: Set up JDK
+        uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # v4.5.0
+        with:
+          java-version: 17
+          distribution: adopt
+
+      - name: Set up gradle
+        uses: gradle/actions/setup-gradle@cc4fc85e6b35bafd578d5ffbc76a5518407e1af0 # v4.2.1
+
+      - name: Build app and run unit tests
+        run: ./gradlew assembleStandardRelease testReleaseUnitTest testStandardReleaseUnitTest
+
+      - name: Upload APK
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: arm64-v8a-${{ github.sha }}
+          path: app/build/outputs/apk/standard/release/app-standard-arm64-v8a-release-unsigned.apk
+
+      - name: Upload mapping
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: mapping-${{ github.sha }}
+          path: app/build/outputs/mapping/standardRelease
+
+      # Sign APK and create release for tags
+
+      - name: Get tag name
+        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'mannu691/TachiyomiAT'
+        run: |
+          set -x
+          echo "VERSION_TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+
+      - name: Sign APK
+        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'mannu691/TachiyomiAT'
+        uses: r0adkll/sign-android-release@349ebdef58775b1e0d8099458af0816dc79b6407 # v1
+        with:
+          releaseDirectory: app/build/outputs/apk/standard/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Clean up build artifacts
+        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'mannu691/TachiyomiAT'
+        run: |
+          set -e
+
+          mv app/build/outputs/apk/standard/release/app-standard-universal-release-unsigned-signed.apk TachiyomiAT-${{ env.VERSION_TAG }}.apk
+          sha=`sha256sum TachiyomiAT-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
+          echo "APK_UNIVERSAL_SHA=$sha" >> $GITHUB_ENV
+
+          cp app/build/outputs/apk/standard/release/app-standard-arm64-v8a-release-unsigned-signed.apk TachiyomiAT-arm64-v8a-${{ env.VERSION_TAG }}.apk
+          sha=`sha256sum TachiyomiAT-arm64-v8a-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
+          echo "APK_ARM64_V8A_SHA=$sha" >> $GITHUB_ENV
+
+          cp app/build/outputs/apk/standard/release/app-standard-armeabi-v7a-release-unsigned-signed.apk TachiyomiAT-armeabi-v7a-${{ env.VERSION_TAG }}.apk
+          sha=`sha256sum TachiyomiAT-armeabi-v7a-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
+          echo "APK_ARMEABI_V7A_SHA=$sha" >> $GITHUB_ENV
+
+          cp app/build/outputs/apk/standard/release/app-standard-x86-release-unsigned-signed.apk TachiyomiAT-x86-${{ env.VERSION_TAG }}.apk
+          sha=`sha256sum TachiyomiAT-x86-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
+          echo "APK_X86_SHA=$sha" >> $GITHUB_ENV
+          
+          cp app/build/outputs/apk/standard/release/app-standard-x86_64-release-unsigned-signed.apk TachiyomiAT-x86_64-${{ env.VERSION_TAG }}.apk
+          sha=`sha256sum TachiyomiAT-x86_64-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
+          echo "APK_X86_64_SHA=$sha" >> $GITHUB_ENV
+
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'mannu691/TachiyomiAT'
+        uses: softprops/action-gh-release@01570a1f39cb168c169c802c3bceb9e93fb10974 # v2.1.0
+        with:
+          tag_name: ${{ env.VERSION_TAG }}
+          name: TachiyomiAT ${{ env.VERSION_TAG }}
+          body: |
+            ---
+
+            ### Checksums
+
+            | Variant | SHA-256 |
+            | ------- | ------- |
+            | Universal | ${{ env.APK_UNIVERSAL_SHA }}
+            | arm64-v8a | ${{ env.APK_ARM64_V8A_SHA }}
+            | armeabi-v7a | ${{ env.APK_ARMEABI_V7A_SHA }}
+            | x86 | ${{ env.APK_X86_SHA }} |
+            | x86_64 | ${{ env.APK_X86_64_SHA }} |
+            
+            ## If you are unsure which version to choose then go with TachiyomiAT-${{ env.VERSION_TAG }}.apk
+          files: |
+            TachiyomiAT-${{ env.VERSION_TAG }}.apk
+            TachiyomiAT-arm64-v8a-${{ env.VERSION_TAG }}.apk
+            TachiyomiAT-armeabi-v7a-${{ env.VERSION_TAG }}.apk
+            TachiyomiAT-x86-${{ env.VERSION_TAG }}.apk
+            TachiyomiAT-x86_64-${{ env.VERSION_TAG }}.apk
+          draft: true
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

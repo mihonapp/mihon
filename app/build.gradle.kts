@@ -24,7 +24,7 @@ android {
     namespace = "eu.kanade.tachiyomi"
 
     defaultConfig {
-        applicationId = "app.mihon"
+        applicationId = "app.kanade.tachiyomi.at"
 
         versionCode = 22
         versionName = "0.19.9"
@@ -173,6 +173,7 @@ kotlin {
 
 dependencies {
     implementation(projects.i18n)
+    implementation(projects.i18nAt)
     implementation(projects.core.archive)
     implementation(projects.core.common)
     implementation(projects.coreMetadata)
@@ -290,6 +291,14 @@ dependencies {
     implementation(libs.leakCanary.plumber)
 
     testImplementation(libs.kotlinx.coroutines.test)
+
+    // TachiyomiAT
+    implementation(libs.mlkit.text.recognition)
+    implementation(libs.mlkit.text.recognition.japanese)
+    implementation(libs.mlkit.text.recognition.korean)
+    implementation(libs.mlkit.text.recognition.chinese)
+    implementation(libs.mlkit.text.translate)
+    implementation(libs.google.generativeai)
 }
 
 androidComponents {

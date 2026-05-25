@@ -16,6 +16,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import tachiyomi.i18n.MR
+import tachiyomi.i18n.at.ATMR
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
 import tachiyomi.presentation.core.components.SettingsChipRow
@@ -29,6 +30,11 @@ internal fun ColumnScope.ReadingModePage(screenModel: ReaderSettingsScreenModel)
     HeadingItem(MR.strings.pref_category_for_this_series)
     val manga by screenModel.mangaFlow.collectAsState()
 
+    // TachiyomiAT
+    CheckboxItem(
+        label = stringResource(ATMR.strings.pref_show_translations),
+        pref = screenModel.preferences.showTranslations(),
+    )
     val readingMode = remember(manga) { ReadingMode.fromPreference(manga?.readingMode?.toInt()) }
     SettingsChipRow(MR.strings.pref_category_reading_mode) {
         ReadingMode.entries.map {

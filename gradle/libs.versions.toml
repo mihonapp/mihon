@@ -36,6 +36,7 @@ diskLruCache = "2.0.2"
 firebase-bom = "34.12.0"
 firebase-crashlytics = "3.0.7"
 flexibleAdapter = "c8013533"
+google-generativeai = "0.9.0"
 google-services = "4.4.4"
 image-decoder = "41c059e540"
 injekt = "91edab2317"
@@ -52,6 +53,8 @@ logcat = "0.4"
 markdown = "0.39.2"
 material = "1.12.0"
 materialKolor = "5.0.0-alpha07"
+mlkit-text-recognition = "16.0.1"
+mlkit-text-translate = "17.0.3"
 mockk = "1.14.9"
 moko-resources = "0.26.3"
 okhttp = "5.3.2"
@@ -127,6 +130,7 @@ firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 flexibleAdapter = { module = "com.github.arkon.FlexibleAdapter:flexible-adapter", version.ref = "flexibleAdapter" }
+google-generativeai = { module = "com.google.ai.client.generativeai:generativeai", version.ref = "google-generativeai" }
 image-decoder = { module = "com.github.tachiyomiorg:image-decoder", version.ref = "image-decoder" }
 injekt = { module = "com.github.mihonapp:injekt", version.ref = "injekt" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
@@ -152,6 +156,11 @@ markdown-coil = { module = "com.mikepenz:multiplatform-markdown-renderer-coil3",
 markdown-core = { module = "com.mikepenz:multiplatform-markdown-renderer", version.ref = "markdown" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 materialKolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
+mlkit-text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "mlkit-text-recognition" }
+mlkit-text-recognition-chinese = { module = "com.google.mlkit:text-recognition-chinese", version.ref = "mlkit-text-recognition" }
+mlkit-text-recognition-japanese = { module = "com.google.mlkit:text-recognition-japanese", version.ref = "mlkit-text-recognition" }
+mlkit-text-recognition-korean = { module = "com.google.mlkit:text-recognition-korean", version.ref = "mlkit-text-recognition" }
+mlkit-text-translate = { module = "com.google.mlkit:translate", version.ref = "mlkit-text-translate" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
 natural-comparator = { module = "com.github.gpanther:java-nat-sort", version = "natural-comparator-1.1" }

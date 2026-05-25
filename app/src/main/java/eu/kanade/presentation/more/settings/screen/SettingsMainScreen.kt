@@ -19,6 +19,7 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Security
 import androidx.compose.material.icons.outlined.Storage
 import androidx.compose.material.icons.outlined.Sync
+import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
@@ -46,6 +47,7 @@ import eu.kanade.presentation.util.LocalBackPress
 import eu.kanade.presentation.util.Screen
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
+import tachiyomi.i18n.at.ATMR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import cafe.adriel.voyager.core.screen.Screen as VoyagerScreen
@@ -195,6 +197,12 @@ object SettingsMainScreen : Screen() {
             subtitleRes = MR.strings.pref_downloads_summary,
             icon = Icons.Outlined.GetApp,
             screen = SettingsDownloadScreen,
+        ),
+        Item(
+            titleRes = ATMR.strings.pref_category_translations,
+            subtitleRes = ATMR.strings.pref_translation_summary,
+            icon = Icons.Outlined.Translate,
+            screen = SettingsTranslationScreen,
         ),
         Item(
             titleRes = MR.strings.pref_category_tracking,

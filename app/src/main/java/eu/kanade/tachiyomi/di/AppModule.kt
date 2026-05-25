@@ -20,6 +20,8 @@ import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.network.JavaScriptEngine
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.AndroidSourceManager
+import eu.kanade.translation.TranslationManager
+import eu.kanade.translation.data.TranslationProvider
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf
 import nl.adaptivity.xmlutil.XmlDeclMode
@@ -116,6 +118,10 @@ class AppModule(val app: Application) : InjektModule {
         addSingletonFactory { DownloadProvider(app) }
         addSingletonFactory { DownloadManager(app) }
         addSingletonFactory { DownloadCache(app) }
+
+        // TachiyomiAT
+        addSingletonFactory { TranslationProvider(app) }
+        addSingletonFactory { TranslationManager(app) }
 
         addSingletonFactory { TrackerManager() }
         addSingletonFactory { DelayedTrackingStore(app) }

@@ -175,32 +175,22 @@ object AboutScreen : Screen() {
                         LinkIcon(
                             label = stringResource(MR.strings.website),
                             icon = Icons.Outlined.Public,
-                            url = "https://mihon.app",
+                            url = "https://github.com/mannu691",
                         )
                         LinkIcon(
                             label = "Discord",
                             icon = CustomIcons.Discord,
-                            url = Constants.URL_DISCORD,
-                        )
-                        LinkIcon(
-                            label = "X",
-                            icon = CustomIcons.X,
-                            url = "https://x.com/mihonapp",
-                        )
-                        LinkIcon(
-                            label = "Facebook",
-                            icon = CustomIcons.Facebook,
-                            url = "https://facebook.com/mihonapp",
+                            url = "https://discord.com/invite/rkvXfVPRdq",
                         )
                         LinkIcon(
                             label = "Reddit",
                             icon = CustomIcons.Reddit,
-                            url = "https://www.reddit.com/r/mihonapp",
+                            url = "https://www.reddit.com/user/Mannu_Gaming/",
                         )
                         LinkIcon(
                             label = "GitHub",
                             icon = CustomIcons.Github,
-                            url = "https://github.com/mihonapp",
+                            url = "https://github.com/mannu691",
                         )
                     }
                 }

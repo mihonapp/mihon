@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="pref_category_translations">Translations</string>
+    <string name="pref_translation_summary">Automatic Translations</string>
+    <string name="manga_translate">Translate</string>
+    <string name="error_mlkit_language_unsupported">MLKit doesn't support this language</string>
+    <string name="pref_show_translations">Show Translations</string>
+    <string name="pref_translate_after_downloading">Translate After Downloading</string>
+    <string name="pref_reader_font">Reader Font</string>
+    <string name="pref_group_setup">Translation Setup</string>
+    <string name="pref_translate_from">Translate From</string>
+    <string name="pref_translate_to">Translate To</string>
+    <string name="pref_group_engine">Translator</string>
+    <string name="pref_translator_engine">Translator Engine</string>
+    <string name="pref_sub_engine_api_key">Your Secret Key</string>
+    <string name="pref_engine_api_key">LLM Api Key</string>
+    <string name="pref_group_advanced">Advanced Settings</string>
+    <string name="pref_engine_model">LLM Model</string>
+    <string name="pref_engine_temperature">LLM Temperature</string>
+    <string name="pref_engine_max_output">LLM Max Output Token Count</string>
+</resources>
