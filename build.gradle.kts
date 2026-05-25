@@ -28,3 +28,14 @@ tasks {
         }
     }
 }
+
+val jetbrainsComposeVersion = "1.12.0-alpha01"
+subprojects {
+    configurations.all {
+        resolutionStrategy.eachDependency {
+            if (requested.group.startsWith("org.jetbrains.compose")) {
+                useVersion(jetbrainsComposeVersion)
+            }
+        }
+    }
+}
