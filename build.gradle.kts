@@ -56,6 +56,9 @@ subprojects {
             if (requested.group == "androidx.collection") {
                 useVersion(collectionVersion)
             }
+            if (requested.group == "androidx.annotation" && requested.name == "annotation-experimental") {
+                useVersion("1.6.0")
+            }
         }
     }
 }
