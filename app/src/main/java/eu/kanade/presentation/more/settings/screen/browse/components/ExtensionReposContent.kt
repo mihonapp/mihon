@@ -9,9 +9,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
-import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Public
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,20 +21,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import eu.kanade.tachiyomi.util.system.copyToClipboard
-import kotlinx.collections.immutable.ImmutableSet
-import mihon.domain.extensionrepo.model.ExtensionRepo
+import mihon.domain.extension.model.ExtensionStore
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
+import tachiyomi.presentation.core.icons.CustomIcons
+import tachiyomi.presentation.core.icons.Discord
 
 @Composable
 fun ExtensionReposContent(
-    repos: ImmutableSet<ExtensionRepo>,
+    repos: List<ExtensionStore>,
     lazyListState: LazyListState,
     paddingValues: PaddingValues,
-    onOpenWebsite: (ExtensionRepo) -> Unit,
-    onClickDelete: (String) -> Unit,
+    onCopy: (ExtensionStore) -> Unit,
+    onOpenWebsite: (ExtensionStore) -> Unit,
+    onOpenDiscord: (ExtensionStore) -> Unit,
+    onClickDelete: (ExtensionStore) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -47,9 +49,11 @@ fun ExtensionReposContent(
             item {
                 ExtensionRepoListItem(
                     modifier = Modifier.animateItem(),
-                    repo = it,
+                    store = it,
                     onOpenWebsite = { onOpenWebsite(it) },
-                    onDelete = { onClickDelete(it.baseUrl) },
+                    onOpenDiscord = { onOpenDiscord(it) },
+                    onCopy = { onCopy(it) },
+                    onDelete = { onClickDelete(it) },
                 )
             }
         }
@@ -58,8 +62,10 @@ fun ExtensionReposContent(
 
 @Composable
 private fun ExtensionRepoListItem(
-    repo: ExtensionRepo,
+    store: ExtensionStore,
     onOpenWebsite: () -> Unit,
+    onOpenDiscord: () -> Unit,
+    onCopy: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -80,7 +86,7 @@ private fun ExtensionRepoListItem(
         ) {
             Icon(imageVector = Icons.AutoMirrored.Outlined.Label, contentDescription = null)
             Text(
-                text = repo.name,
+                text = store.name,
                 modifier = Modifier.padding(start = MaterialTheme.padding.medium),
                 style = MaterialTheme.typography.titleMedium,
             )
@@ -90,19 +96,25 @@ private fun ExtensionRepoListItem(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End,
         ) {
-            IconButton(onClick = onOpenWebsite) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
-                    contentDescription = stringResource(MR.strings.action_open_in_browser),
-                )
+            if (store.contact.website != null) {
+                IconButton(onClick = onOpenWebsite) {
+                    Icon(
+                        imageVector = Icons.Outlined.Public,
+                        contentDescription = stringResource(MR.strings.action_open_in_browser),
+                    )
+                }
             }
 
-            IconButton(
-                onClick = {
-                    val url = "${repo.baseUrl}/index.min.json"
-                    context.copyToClipboard(url, url)
-                },
-            ) {
+            if (store.contact.discord != null) {
+                IconButton(onClick = onOpenDiscord) {
+                    Icon(
+                        imageVector = CustomIcons.Discord,
+                        contentDescription = null,
+                    )
+                }
+            }
+
+            IconButton(onClick = onCopy) {
                 Icon(
                     imageVector = Icons.Outlined.ContentCopy,
                     contentDescription = stringResource(MR.strings.action_copy_to_clipboard),

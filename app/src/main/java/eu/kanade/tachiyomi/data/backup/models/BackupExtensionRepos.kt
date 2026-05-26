@@ -2,23 +2,27 @@ package eu.kanade.tachiyomi.data.backup.models
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
-import mihon.domain.extensionrepo.model.ExtensionRepo
+import mihon.domain.extension.model.ExtensionStore
 
 @Serializable
 class BackupExtensionRepos(
-    @ProtoNumber(1) var baseUrl: String,
+    @ProtoNumber(1) var indexUrl: String,
     @ProtoNumber(2) var name: String,
-    @ProtoNumber(3) var shortName: String?,
-    @ProtoNumber(4) var website: String,
-    @ProtoNumber(5) var signingKeyFingerprint: String,
+    @ProtoNumber(3) var badgeLabel: String?,
+    @ProtoNumber(5) var signingKey: String,
+    @ProtoNumber(4) var contactWebsite: String?,
+    @ProtoNumber(6) var contactDiscord: String?,
+    @ProtoNumber(7) var isLegacy: Boolean,
 )
 
-val backupExtensionReposMapper = { repo: ExtensionRepo ->
+val backupExtensionReposMapper = { repo: ExtensionStore ->
     BackupExtensionRepos(
-        baseUrl = repo.baseUrl,
+        indexUrl = repo.indexUrl,
         name = repo.name,
-        shortName = repo.shortName,
-        website = repo.website,
-        signingKeyFingerprint = repo.signingKeyFingerprint,
+        badgeLabel = repo.badgeLabel,
+        signingKey = repo.signingKey,
+        contactWebsite = repo.contact.website,
+        contactDiscord = repo.contact.discord,
+        isLegacy = repo.isLegacy,
     )
 }

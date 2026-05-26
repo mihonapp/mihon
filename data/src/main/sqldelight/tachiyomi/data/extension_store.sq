@@ -1,0 +1,42 @@
+import kotlin.Boolean;
+
+CREATE TABLE extension_store(
+    index_url TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    badge_label TEXT NOT NULL,
+    signing_key TEXT NOT NULL,
+    contact_website TEXT NOT NULL,
+    contact_discord TEXT,
+    is_legacy INTEGER AS Boolean NOT NULL
+);
+
+get:
+SELECT *
+FROM extension_store
+WHERE index_url = :indexUrl;
+
+getAll:
+SELECT *
+FROM extension_store;
+
+getCount:
+SELECT COUNT(*)
+FROM extension_store;
+
+upsert:
+INSERT INTO extension_store(index_url, name, badge_label, signing_key, contact_website, contact_discord, is_legacy)
+VALUES (:indexUrl, :name, :badgeLabel, :signingKey, :contactWebsite, :contactDiscord, :isLegacy)
+ON CONFLICT(index_url)
+DO UPDATE
+SET
+    name = :name,
+    badge_label = :badgeLabel,
+    signing_key =: signingKey,
+    contact_website = :contactWebsite,
+    contact_discord = :contactDiscord,
+    is_legacy = :isLegacy
+WHERE index_url = :indexUrl;
+
+delete:
+DELETE FROM extension_store
+WHERE index_url = :indexUrl;

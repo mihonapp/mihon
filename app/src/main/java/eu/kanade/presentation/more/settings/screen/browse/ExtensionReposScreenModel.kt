@@ -5,29 +5,26 @@ import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.extension.ExtensionManager
-import kotlinx.collections.immutable.ImmutableSet
-import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
-import mihon.domain.extensionrepo.interactor.CreateExtensionRepo
-import mihon.domain.extensionrepo.interactor.DeleteExtensionRepo
-import mihon.domain.extensionrepo.interactor.GetExtensionRepo
-import mihon.domain.extensionrepo.interactor.ReplaceExtensionRepo
-import mihon.domain.extensionrepo.interactor.UpdateExtensionRepo
-import mihon.domain.extensionrepo.model.ExtensionRepo
+import kotlinx.coroutines.launch
+import mihon.domain.extension.interactor.AddExtensionStore
+import mihon.domain.extension.interactor.GetExtensionStores
+import mihon.domain.extension.interactor.RemoveExtensionStore
+import mihon.domain.extension.interactor.UpdateExtensionStores
+import mihon.domain.extension.model.ExtensionStore
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class ExtensionReposScreenModel(
-    private val getExtensionRepo: GetExtensionRepo = Injekt.get(),
-    private val createExtensionRepo: CreateExtensionRepo = Injekt.get(),
-    private val deleteExtensionRepo: DeleteExtensionRepo = Injekt.get(),
-    private val replaceExtensionRepo: ReplaceExtensionRepo = Injekt.get(),
-    private val updateExtensionRepo: UpdateExtensionRepo = Injekt.get(),
+    private val getExtensionStores: GetExtensionStores = Injekt.get(),
+    private val addExtensionStore: AddExtensionStore = Injekt.get(),
+    private val removeExtensionStore: RemoveExtensionStore = Injekt.get(),
+    private val updateExtensionStores: UpdateExtensionStores = Injekt.get(),
     private val extensionManager: ExtensionManager = Injekt.get(),
 ) : StateScreenModel<RepoScreenState>(RepoScreenState.Loading) {
 
@@ -36,11 +33,11 @@ class ExtensionReposScreenModel(
 
     init {
         screenModelScope.launchIO {
-            getExtensionRepo.subscribeAll()
-                .collectLatest { repos ->
+            getExtensionStores.subscribe()
+                .collectLatest { stores ->
                     mutableState.update {
                         RepoScreenState.Success(
-                            repos = repos.toImmutableSet(),
+                            stores = stores,
                         )
                     }
                 }
@@ -53,27 +50,11 @@ class ExtensionReposScreenModel(
      * @param baseUrl The baseUrl of the repo to create.
      */
     fun createRepo(baseUrl: String) {
-        screenModelScope.launchIO {
-            when (val result = createExtensionRepo.await(baseUrl)) {
-                CreateExtensionRepo.Result.Success -> extensionManager.findAvailableExtensions()
-                CreateExtensionRepo.Result.InvalidUrl -> _events.send(RepoEvent.InvalidUrl)
-                CreateExtensionRepo.Result.RepoAlreadyExists -> _events.send(RepoEvent.RepoAlreadyExists)
-                is CreateExtensionRepo.Result.DuplicateFingerprint -> {
-                    showDialog(RepoDialog.Conflict(result.oldRepo, result.newRepo))
-                }
-                else -> {}
-            }
-        }
-    }
-
-    /**
-     * Inserts a repo to the database, replace a matching repo with the same signing key fingerprint if found.
-     *
-     * @param newRepo The repo to insert
-     */
-    fun replaceRepo(newRepo: ExtensionRepo) {
-        screenModelScope.launchIO {
-            replaceExtensionRepo.await(newRepo)
+        screenModelScope.launch {
+            addExtensionStore(baseUrl).fold(
+                onSuccess = { extensionManager.findAvailableExtensions() },
+                onFailure = {},
+            )
         }
     }
 
@@ -85,7 +66,7 @@ class ExtensionReposScreenModel(
 
         if (status is RepoScreenState.Success) {
             screenModelScope.launchIO {
-                updateExtensionRepo.awaitAll()
+                updateExtensionStores()
             }
         }
     }
@@ -95,7 +76,7 @@ class ExtensionReposScreenModel(
      */
     fun deleteRepo(baseUrl: String) {
         screenModelScope.launchIO {
-            deleteExtensionRepo.await(baseUrl)
+            removeExtensionStore(baseUrl)
             extensionManager.findAvailableExtensions()
         }
     }
@@ -121,14 +102,12 @@ class ExtensionReposScreenModel(
 
 sealed class RepoEvent {
     sealed class LocalizedMessage(val stringRes: StringResource) : RepoEvent()
-    data object InvalidUrl : LocalizedMessage(MR.strings.invalid_repo_name)
-    data object RepoAlreadyExists : LocalizedMessage(MR.strings.error_repo_exists)
+    data object FailedToAddStore : LocalizedMessage(MR.strings.invalid_repo_name)
 }
 
 sealed class RepoDialog {
     data object Create : RepoDialog()
     data class Delete(val repo: String) : RepoDialog()
-    data class Conflict(val oldRepo: ExtensionRepo, val newRepo: ExtensionRepo) : RepoDialog()
     data class Confirm(val url: String) : RepoDialog()
 }
 
@@ -139,12 +118,11 @@ sealed class RepoScreenState {
 
     @Immutable
     data class Success(
-        val repos: ImmutableSet<ExtensionRepo>,
-        val oldRepos: ImmutableSet<String>? = null,
+        val stores: List<ExtensionStore>,
         val dialog: RepoDialog? = null,
     ) : RepoScreenState() {
 
         val isEmpty: Boolean
-            get() = repos.isEmpty()
+            get() = stores.isEmpty()
     }
 }
