@@ -59,6 +59,9 @@ subprojects {
             if (requested.group == "androidx.annotation" && requested.name == "annotation-experimental") {
                 useVersion("1.6.0")
             }
+            if (requested.group == "androidx.graphics" && requested.name == "graphics-shapes") {
+                useVersion("1.1.0")
+            }
         }
     }
 }
