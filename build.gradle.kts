@@ -34,6 +34,7 @@ val guavaVersion = "33.6.0-android"
 val mokoGraphicsVersion = "0.10.1"
 val windowManagerVersion = "1.6.0-alpha03"
 val emoji2Version = "1.6.0"
+val collectionVersion = "1.6.0"
 subprojects {
     configurations.all {
         resolutionStrategy.eachDependency {
@@ -51,6 +52,9 @@ subprojects {
             }
             if (requested.group == "androidx.emoji2") {
                 useVersion(emoji2Version)
+            }
+            if (requested.group == "androidx.collection") {
+                useVersion(collectionVersion)
             }
         }
     }
