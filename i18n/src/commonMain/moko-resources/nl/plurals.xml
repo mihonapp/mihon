@@ -88,4 +88,8 @@
         <item quantity="one">Een item werd overgeslagen</item>
         <item quantity="other">%1$d items werden overgeslagen</item>
     </plurals>
+    <plurals name="notification_update_error">
+        <item quantity="one">%1$d update mislukt</item>
+        <item quantity="other">%1$d updates mislukt</item>
+    </plurals>
 </resources>

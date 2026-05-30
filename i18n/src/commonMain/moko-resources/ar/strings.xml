@@ -409,7 +409,6 @@
     <string name="unknown_author">مؤلّف غير معروف</string>
     <string name="no_pinned_sources">لا تمتلك أيّة مصادر مثبّتة</string>
     <string name="action_global_search_query">إبحث عن \"%1$s\" بشكلٍ شامل</string>
-    <string name="updated_version">حُدِّث إلى الإصدار v%1$s</string>
     <string name="no_chapters_error">لم يُعثر على فصول</string>
     <string name="share_page_info">%1$s: %2$s, صفحة %3$d</string>
     <string name="chapter_settings_updated">إعدادات الفصل الإفتراضية المُحدثة</string>
@@ -567,7 +566,6 @@
     <string name="error_saving_picture">خطأ أثناء حفظ الصورة</string>
     <string name="disabled_nav">معطل</string>
     <string name="rotation_reverse_portrait">رأسي بالعكس</string>
-    <string name="notification_update_error">فشل %1$d تحديث أو تحديثات</string>
     <string name="learn_more">اضغط لمعرفة المزيد</string>
     <string name="action_move_to_top_all_for_series">نقل سلسلة الفصول للأعلى</string>
     <string name="empty_backup_error">لا توجد مدخلات في المكتبة لإجراء نسخة احتياطي‮‮ة</string>
@@ -852,7 +850,6 @@
     <string name="possible_duplicates_title">التكرارات المحتملة</string>
     <string name="confirm_tracker_update">تحديث المتابعات إلى الفصل %d؟</string>
     <string name="pref_incognito_mode_extension_summary">إيقاف قراءة التاريخ مؤقتًا للتمديد</string>
-    <string name="label_donate">تبرع</string>
     <string name="theme_catppuccin">كاتبوتشين</string>
     <string name="pref_display_images_description">­تقديم الصور في أوصاف المانجا</string>
     <string name="pref_hide_missing_chapter_indicators">إخفاء مؤشرات الفصل المفقودة</string>

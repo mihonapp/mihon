@@ -389,7 +389,6 @@
     <string name="unknown_author">佚名</string>
     <string name="action_global_search_query">在所有範圍內搜尋「%1$s」</string>
     <string name="download_insufficient_space">由於儲存空間不足，無法下載章節</string>
-    <string name="updated_version">已更新至 v%1$s</string>
     <string name="pref_category_reading_mode">閱讀模式</string>
     <string name="pref_category_theme">主題</string>
     <string name="action_sort_date_added">收藏日期</string>
@@ -563,7 +562,6 @@
     <string name="skipped_reason_not_started">由於無已讀章節，因此略過</string>
     <string name="rotation_reverse_portrait">顛倒直向</string>
     <string name="learn_more">瞭解詳情</string>
-    <string name="notification_update_error">%1$d 項更新失敗</string>
     <string name="action_move_to_top_all_for_series">置頂此作品</string>
     <string name="disabled_nav">停用</string>
     <string name="empty_backup_error">書櫃中尚無作品可供備份</string>
@@ -893,7 +891,6 @@
     <string name="migrationListScreen.migrateDialog.migrateLabel">遷移</string>
     <string name="migrationListScreen.matchWithoutChapterToast">找不到章節，此項目無法用於遷移</string>
     <string name="pref_display_images_description">在漫畫描述中顯示圖片</string>
-    <string name="label_donate">捐贈</string>
     <string name="pref_disallow_non_ascii_filenames">禁止使用非 ASCII 檔名</string>
     <string name="pref_disallow_non_ascii_filenames_details">確保與不支援 Unicode 的某些儲存媒體相容，啟用此選項後，你需要手動將來源與漫畫資料夾中的非 ASCII 字元改成對應的小寫 UTF-8 十六進位表示方式，章節檔案則不需要重新命名。</string>
     <string name="pref_download_concurrent_sources">同時下載的來源數目</string>
@@ -902,4 +899,5 @@
     <string name="action_webview_close_tab">關閉頁籤</string>
     <string name="action_filter_excluded_scanlators">篩選排除掃譯者</string>
     <string name="download_bookmarked">已新增書籤</string>
+    <string name="label_support_us">支持我們</string>
 </resources>

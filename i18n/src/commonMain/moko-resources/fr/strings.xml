@@ -394,7 +394,6 @@
     <string name="unknown_status">Statut inconnu</string>
     <string name="unknown_author">Auteur inconnu</string>
     <string name="whats_new">Quoi de neuf</string>
-    <string name="updated_version">Mise à jour de v%1$s</string>
     <string name="download_insufficient_space">Impossible de télécharger les chapitres, l\'espace de stockage est insuffisant</string>
     <string name="action_global_search_query">Rechercher « %1$s » partout</string>
     <string name="action_sort_date_added">Date ajoutée</string>
@@ -565,7 +564,6 @@
     <string name="skipped_reason_not_started">Sauté car aucun chapitre n\'est lu</string>
     <string name="skipped_reason_not_caught_up">Sauté car il y a des chapitres non lus</string>
     <string name="learn_more">Appuyez pour en savoir plus</string>
-    <string name="notification_update_error">Échec de %1$d mise(s) à jour</string>
     <string name="rotation_reverse_portrait">Portrait inversé</string>
     <string name="action_move_to_top_all_for_series">Déplacer la série vers le haut</string>
     <string name="disabled_nav">Désactivé</string>
@@ -901,7 +899,6 @@
     <string name="migrationListScreen.migrateDialog.migrateLabel">Migrer</string>
     <string name="migrationListScreen.migrateDialog.cancelLabel">Annuler</string>
     <string name="migrationListScreen.progressDialog.cancelLabel">Annuler</string>
-    <string name="label_donate">Donation</string>
     <string name="pref_display_images_description">Rendre les images dans les descriptions de mangas</string>
     <string name="action_webview_close_tab">Fermer l\'onglet</string>
     <string name="pref_disallow_non_ascii_filenames">Interdire les noms de fichiers non ASCII</string>

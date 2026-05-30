@@ -391,7 +391,6 @@
     <string name="pref_read_with_tapping_inverted">Balikkan zona ketuk</string>
     <string name="unknown_status">Status tidak diketahui</string>
     <string name="unknown_author">Penulis tidak diketahui</string>
-    <string name="updated_version">Diperbarui ke v%1$s</string>
     <string name="whats_new">Apa yang baru</string>
     <string name="download_insufficient_space">Tidak dapat mengunduh bab karena ruang penyimpanan rendah</string>
     <string name="action_global_search_query">Pencarian untuk \"%1$s\" secara global</string>
@@ -566,7 +565,6 @@
     <string name="pref_navigate_pan">Geser gambar lebar</string>
     <string name="learn_more">Pelajari lebih lanjut</string>
     <string name="rotation_reverse_portrait">Layar tegak terbalik</string>
-    <string name="notification_update_error">%1$d pembaruan gagal</string>
     <string name="action_move_to_top_all_for_series">Pindahkan seri ke atas</string>
     <string name="disabled_nav">Dinonaktifkan</string>
     <string name="error_saving_picture">Gagal menyimpan gambar</string>
@@ -853,7 +851,6 @@
     <string name="pref_mark_duplicate_read_chapter_read_new">Setelah mengambil bab baru</string>
     <string name="pref_hide_missing_chapter_indicators">Sembunyikan indikator bab yang hilang</string>
     <string name="storage_failed_to_create_download_directory">Gagal membuat direktori unduhan</string>
-    <string name="label_donate">Donasi</string>
     <string name="pref_display_images_description">Render gambar dalam deskripsi manga</string>
     <string name="storage_failed_to_create_directory">Gagal membuat direktori: %s</string>
     <string name="clear_database_text">Anda akan menghapus entri dari database</string>

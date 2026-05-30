@@ -26,8 +26,8 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 20
-        versionName = "0.19.7"
+        versionCode = 22
+        versionName = "0.19.9"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getLatestCommitCount()}\"")
         buildConfigField("String", "COMMIT_SHA", "\"${getLatestCommitSha()}\"")
@@ -89,8 +89,8 @@ android {
     }
 
     sourceSets {
-        getByName("preview").res.srcDirs("src/debug/res")
-        getByName("benchmark").res.srcDirs("src/debug/res")
+        getByName("preview").res.directories.add("src/debug/res")
+        getByName("benchmark").res.directories.add("src/debug/res")
     }
 
     splits {
@@ -139,10 +139,6 @@ android {
         viewBinding = true
         buildConfig = true
         aidl = true
-
-        // Disable some unused things
-        renderScript = false
-        shaders = false
     }
 
     lint {
@@ -206,6 +202,8 @@ dependencies {
     implementation(libs.kotlinx.collections.immutable)
 
     implementation(libs.bundles.kotlinx.coroutines)
+
+    implementation(libs.sqldelight.async)
 
     // AndroidX libraries
     implementation(libs.androidx.annotation)
@@ -310,11 +308,5 @@ androidComponents {
         // Only excluding in standard flavor because this breaks
         // Layout Inspector's Compose tree
         it.packaging.resources.excludes.add("META-INF/*.version")
-    }
-}
-
-buildscript {
-    dependencies {
-        classpath(libs.kotlin.gradle)
     }
 }
