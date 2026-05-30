@@ -401,6 +401,12 @@
     <string name="pref_flash_style_white_black">White and Black</string>
     <string name="pref_double_tap_anim_speed">Double tap animation speed</string>
     <string name="pref_show_page_number">Show page number</string>
+    <string name="pref_show_vert_seekbar_landscape">Show vertical seekbar in landscape</string>
+    <string name="pref_show_vert_seekbar_landscape_summary">Enables vertical seekbar when in landscape</string>
+    <string name="pref_left_handed_vertical_seekbar">Left-handed vertical seekbar</string>
+    <string name="pref_left_handed_vertical_seekbar_summary">Switches which side the seekbar is on</string>
+    <string name="pref_force_horz_seekbar">Force horizontal seekbar</string>
+    <string name="pref_force_horz_seekbar_summary">Removes vertical seekbar entirely in favor of horizontal</string>
     <string name="pref_show_reading_mode">Show reading mode</string>
     <string name="pref_show_reading_mode_summary">Briefly show current mode when reader is opened</string>
     <string name="pref_hardware_bitmap_threshold">Custom hardware bitmap threshold</string>

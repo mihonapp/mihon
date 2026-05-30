@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.util.system.hasDisplayCutout
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableMap
+import kotlinx.collections.immutable.toPersistentList
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
@@ -76,44 +77,72 @@ object SettingsReaderScreen : SearchableSettings {
     private fun getDisplayGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup {
         val fullscreenPref = readerPreferences.fullscreen
         val fullscreen by fullscreenPref.collectAsState()
+        val forceHorizontalSeekbar by readerPreferences.forceHorizontalSeekbar.collectAsState()
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_category_display),
-            preferenceItems = persistentListOf(
-                Preference.PreferenceItem.ListPreference(
-                    preference = readerPreferences.defaultOrientationType,
-                    entries = ReaderOrientation.entries.drop(1)
-                        .associate { it.flagValue to stringResource(it.stringRes) }
-                        .toImmutableMap(),
-                    title = stringResource(MR.strings.pref_rotation_type),
-                ),
-                Preference.PreferenceItem.ListPreference(
-                    preference = readerPreferences.readerTheme,
-                    entries = persistentMapOf(
-                        1 to stringResource(MR.strings.black_background),
-                        2 to stringResource(MR.strings.gray_background),
-                        0 to stringResource(MR.strings.white_background),
-                        3 to stringResource(MR.strings.automatic_background),
+            preferenceItems = buildList<Preference.PreferenceItem<out Any, out Any>> {
+                addAll(
+                    listOf(
+                        Preference.PreferenceItem.ListPreference(
+                            preference = readerPreferences.defaultOrientationType,
+                            entries = ReaderOrientation.entries.drop(1)
+                                .associate { it.flagValue to stringResource(it.stringRes) }
+                                .toImmutableMap(),
+                            title = stringResource(MR.strings.pref_rotation_type),
+                        ),
+                        Preference.PreferenceItem.ListPreference(
+                            preference = readerPreferences.readerTheme,
+                            entries = persistentMapOf(
+                                1 to stringResource(MR.strings.black_background),
+                                2 to stringResource(MR.strings.gray_background),
+                                0 to stringResource(MR.strings.white_background),
+                                3 to stringResource(MR.strings.automatic_background),
+                            ),
+                            title = stringResource(MR.strings.pref_reader_theme),
+                        ),
+                        Preference.PreferenceItem.SwitchPreference(
+                            preference = fullscreenPref,
+                            title = stringResource(MR.strings.pref_fullscreen),
+                        ),
+                        Preference.PreferenceItem.SwitchPreference(
+                            preference = readerPreferences.drawUnderCutout,
+                            title = stringResource(MR.strings.pref_cutout_short),
+                            enabled = LocalView.current.hasDisplayCutout() && fullscreen,
+                        ),
+                        Preference.PreferenceItem.SwitchPreference(
+                            preference = readerPreferences.keepScreenOn,
+                            title = stringResource(MR.strings.pref_keep_screen_on),
+                        ),
+                        Preference.PreferenceItem.SwitchPreference(
+                            preference = readerPreferences.showPageNumber,
+                            title = stringResource(MR.strings.pref_show_page_number),
+                        ),
                     ),
-                    title = stringResource(MR.strings.pref_reader_theme),
-                ),
-                Preference.PreferenceItem.SwitchPreference(
-                    preference = fullscreenPref,
-                    title = stringResource(MR.strings.pref_fullscreen),
-                ),
-                Preference.PreferenceItem.SwitchPreference(
-                    preference = readerPreferences.drawUnderCutout,
-                    title = stringResource(MR.strings.pref_cutout_short),
-                    enabled = LocalView.current.hasDisplayCutout() && fullscreen,
-                ),
-                Preference.PreferenceItem.SwitchPreference(
-                    preference = readerPreferences.keepScreenOn,
-                    title = stringResource(MR.strings.pref_keep_screen_on),
-                ),
-                Preference.PreferenceItem.SwitchPreference(
-                    preference = readerPreferences.showPageNumber,
-                    title = stringResource(MR.strings.pref_show_page_number),
-                ),
-            ),
+                )
+                add(
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = readerPreferences.forceHorizontalSeekbar,
+                        title = stringResource(MR.strings.pref_force_horz_seekbar),
+                        subtitle = stringResource(MR.strings.pref_force_horz_seekbar_summary),
+                    ),
+                )
+                if (!forceHorizontalSeekbar) {
+                    add(
+                        Preference.PreferenceItem.SwitchPreference(
+                            preference = readerPreferences.landscapeVerticalSeekbar,
+                            title = stringResource(MR.strings.pref_show_vert_seekbar_landscape),
+                            subtitle = stringResource(MR.strings.pref_show_vert_seekbar_landscape_summary),
+                        ),
+                    )
+                    add(
+                        Preference.PreferenceItem.SwitchPreference(
+                            preference = readerPreferences.leftVerticalSeekbar,
+                            title = stringResource(MR.strings.pref_left_handed_vertical_seekbar),
+                            subtitle = stringResource(MR.strings.pref_left_handed_vertical_seekbar_summary),
+                        ),
+                    )
+                }
+            }.toPersistentList(),
         )
     }
 

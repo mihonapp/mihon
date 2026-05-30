@@ -61,6 +61,24 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
         pref = screenModel.preferences.showPageNumber,
     )
 
+    val forceHorizontalSeekbar by screenModel.preferences.forceHorizontalSeekbar.collectAsState()
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_force_horz_seekbar),
+        pref = screenModel.preferences.forceHorizontalSeekbar,
+    )
+
+    if (!forceHorizontalSeekbar) {
+        CheckboxItem(
+            label = stringResource(MR.strings.pref_show_vert_seekbar_landscape),
+            pref = screenModel.preferences.landscapeVerticalSeekbar,
+        )
+
+        CheckboxItem(
+            label = stringResource(MR.strings.pref_left_handed_vertical_seekbar),
+            pref = screenModel.preferences.leftVerticalSeekbar,
+        )
+    }
+
     CheckboxItem(
         label = stringResource(MR.strings.pref_fullscreen),
         pref = screenModel.preferences.fullscreen,

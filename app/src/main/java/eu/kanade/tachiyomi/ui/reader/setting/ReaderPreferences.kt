@@ -28,6 +28,12 @@ class ReaderPreferences(
 
     val showPageNumber: Preference<Boolean> = preferenceStore.getBoolean("pref_show_page_number_key", true)
 
+    val forceHorizontalSeekbar: Preference<Boolean> = preferenceStore.getBoolean("pref_force_horz_seekbar", false)
+
+    val landscapeVerticalSeekbar: Preference<Boolean> = preferenceStore.getBoolean("pref_show_vert_seekbar_landscape", false)
+
+    val leftVerticalSeekbar: Preference<Boolean> = preferenceStore.getBoolean("pref_left_handed_vertical_seekbar", false)
+
     val showReadingMode: Preference<Boolean> = preferenceStore.getBoolean("pref_show_reading_mode", true)
 
     val fullscreen: Preference<Boolean> = preferenceStore.getBoolean("fullscreen", true)

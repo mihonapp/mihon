@@ -6,6 +6,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
@@ -55,6 +56,7 @@ import eu.kanade.presentation.reader.ReaderContentOverlay
 import eu.kanade.presentation.reader.ReaderPageActionsDialog
 import eu.kanade.presentation.reader.ReaderPageIndicator
 import eu.kanade.presentation.reader.ReadingModeSelectDialog
+import eu.kanade.presentation.reader.appbars.NavBarType
 import eu.kanade.presentation.reader.appbars.ReaderAppBars
 import eu.kanade.presentation.reader.settings.ReaderSettingsDialog
 import eu.kanade.tachiyomi.R
@@ -76,6 +78,8 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.VerticalPagerViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.isNightMode
 import eu.kanade.tachiyomi.util.system.openInBrowser
@@ -457,6 +461,22 @@ class ReaderActivity : BaseActivity() {
         val cropBorderWebtoon by readerPreferences.cropBordersWebtoon.collectAsState()
         val isPagerType = ReadingMode.isPagerType(viewModel.getMangaReadingMode())
         val cropEnabled = if (isPagerType) cropBorderPaged else cropBorderWebtoon
+        val forceHorizontalSeekbar by readerPreferences.forceHorizontalSeekbar.collectAsState()
+        val landscapeVerticalSeekbar by readerPreferences.landscapeVerticalSeekbar.collectAsState()
+        val leftHandedVerticalSeekbar by readerPreferences.leftVerticalSeekbar.collectAsState()
+        val configuration = androidx.compose.ui.platform.LocalConfiguration.current
+        val showVerticalSeekbarInPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+        val showVerticalSeekbarInLandscape =
+            configuration.orientation == Configuration.ORIENTATION_LANDSCAPE && landscapeVerticalSeekbar
+        val viewerIsVertical = state.viewer is WebtoonViewer || state.viewer is VerticalPagerViewer
+        val showVerticalSeekbar = !forceHorizontalSeekbar &&
+            (showVerticalSeekbarInPortrait || showVerticalSeekbarInLandscape) &&
+            viewerIsVertical
+        val navBarType = when {
+            !showVerticalSeekbar -> NavBarType.Bottom
+            leftHandedVerticalSeekbar -> NavBarType.VerticalLeft
+            else -> NavBarType.VerticalRight
+        }
 
         ReaderAppBars(
             visible = state.menuVisible,
@@ -498,6 +518,7 @@ class ReaderActivity : BaseActivity() {
                 menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
             },
             onClickSettings = viewModel::openSettingsDialog,
+            navBarType = navBarType,
         )
     }
 
