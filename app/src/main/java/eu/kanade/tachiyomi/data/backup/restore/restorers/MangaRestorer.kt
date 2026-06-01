@@ -12,6 +12,7 @@ import eu.kanade.tachiyomi.data.backup.models.BackupTracking
 import tachiyomi.data.Database
 import tachiyomi.data.UpdateStrategyColumnAdapter
 import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.interactor.FetchInterval
@@ -45,6 +46,11 @@ class MangaRestorer(
         currentFetchWindow = fetchInterval.getWindow(now)
     }
 
+    suspend fun getCategoriesByName(): Map<String, Category> {
+        val dbCategories = getCategories.await()
+        return dbCategories.associateBy { it.name }
+    }
+
     suspend fun sortByNew(backupMangas: List<BackupManga>): List<BackupManga> {
         val urlsBySource = database.mangasQueries
             .getAllMangaSourceAndUrl()
@@ -60,7 +66,8 @@ class MangaRestorer(
 
     suspend fun restore(
         backupManga: BackupManga,
-        backupCategories: List<BackupCategory>,
+        backupCategoriesByOrder: Map<Long, BackupCategory>,
+        dbCategoriesByName: Map<String, Category>,
     ) {
         database.transaction {
             val dbManga = findExistingManga(backupManga)
@@ -75,7 +82,8 @@ class MangaRestorer(
                 manga = restoredManga,
                 chapters = backupManga.chapters,
                 categories = backupManga.categories,
-                backupCategories = backupCategories,
+                backupCategoriesByOrder = backupCategoriesByOrder,
+                dbCategoriesByName = dbCategoriesByName,
                 history = backupManga.history,
                 tracks = backupManga.tracking,
                 excludedScanlators = backupManga.excludedScanlators,
@@ -271,12 +279,13 @@ class MangaRestorer(
         manga: Manga,
         chapters: List<BackupChapter>,
         categories: List<Long>,
-        backupCategories: List<BackupCategory>,
+        backupCategoriesByOrder: Map<Long, BackupCategory>,
+        dbCategoriesByName: Map<String, Category>,
         history: List<BackupHistory>,
         tracks: List<BackupTracking>,
         excludedScanlators: List<String>,
     ): Manga {
-        restoreCategories(manga, categories, backupCategories)
+        restoreCategories(manga, categories, backupCategoriesByOrder, dbCategoriesByName)
         restoreChapters(manga, chapters)
         restoreTracking(manga, tracks)
         restoreHistory(history)
@@ -294,13 +303,9 @@ class MangaRestorer(
     private suspend fun restoreCategories(
         manga: Manga,
         categories: List<Long>,
-        backupCategories: List<BackupCategory>,
+        backupCategoriesByOrder: Map<Long, BackupCategory>,
+        dbCategoriesByName: Map<String, Category>,
     ) {
-        val dbCategories = getCategories.await()
-        val dbCategoriesByName = dbCategories.associateBy { it.name }
-
-        val backupCategoriesByOrder = backupCategories.associateBy { it.order }
-
         val mangaCategoriesToUpdate = categories.mapNotNull { backupCategoryOrder ->
             backupCategoriesByOrder[backupCategoryOrder]?.let { backupCategory ->
                 dbCategoriesByName[backupCategory.name]?.let { dbCategory ->

@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Improved
+- Reduce repeated work in manga restoration ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#3099](https://github.com/mihonapp/mihon/pull/3099))
 
 ## [v0.19.9] - 2026-04-11
 ### Fixed
