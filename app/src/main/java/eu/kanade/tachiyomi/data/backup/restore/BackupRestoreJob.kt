@@ -20,6 +20,7 @@ import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.CancellationException
 import logcat.LogPriority
 import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
 
@@ -40,20 +41,22 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
 
         setForegroundSafely()
 
-        return try {
-            BackupRestorer(context, notifier, isSync).restore(uri, options)
-            Result.success()
-        } catch (e: Exception) {
-            if (e is CancellationException) {
-                notifier.showRestoreError(context.stringResource(MR.strings.restoring_backup_canceled))
+        return withIOContext {
+            try {
+                BackupRestorer(context, notifier, isSync).restore(uri, options)
                 Result.success()
-            } else {
-                logcat(LogPriority.ERROR, e)
-                notifier.showRestoreError(e.message)
-                Result.failure()
+            } catch (e: Exception) {
+                if (e is CancellationException) {
+                    notifier.showRestoreError(context.stringResource(MR.strings.restoring_backup_canceled))
+                    Result.success()
+                } else {
+                    logcat(LogPriority.ERROR, e)
+                    notifier.showRestoreError(e.message)
+                    Result.failure()
+                }
+            } finally {
+                context.cancelNotification(Notifications.ID_RESTORE_PROGRESS)
             }
-        } finally {
-            context.cancelNotification(Notifications.ID_RESTORE_PROGRESS)
         }
     }
 
