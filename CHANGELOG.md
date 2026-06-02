@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Fixed
+- Add missing `outlineVariant` color to Nord theme ([@CompileConnected](https://github.com/CompileConnected)) ([#3184](https://github.com/mihonapp/mihon/pull/3184))
 
 ## [v0.19.9] - 2026-04-11
 ### Fixed
