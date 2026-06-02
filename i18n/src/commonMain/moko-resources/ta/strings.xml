@@ -575,7 +575,6 @@
     <string name="pref_verbose_logging_summary">கணினி பதிவுக்கு வாய்மொழி பதிவுகளை அச்சிடுக (பயன்பாட்டு செயல்திறனைக் குறைக்கிறது)</string>
     <string name="privacy_policy">தனியுரிமைக் கொள்கை</string>
     <string name="check_for_updates">புதுப்பிப்புகளை சரிபார்க்கவும்</string>
-    <string name="updated_version">V%1$s க்கு புதுப்பிக்கப்பட்டது</string>
     <string name="pref_enable_acra">செயலிழப்பு அறிக்கைகளை அனுப்பவும்</string>
     <string name="pref_acra_summary">எந்த பிழைகளையும் சரிசெய்ய உதவுகிறது. முக்கியமான தரவு எதுவும் அனுப்பப்படாது</string>
     <string name="fdroid_warning">எஃப்-டிராய்டு கட்டடங்கள் அதிகாரப்பூர்வமாக ஆதரிக்கப்படவில்லை.\n மேலும் அறிய தட்டவும்.</string>
@@ -766,7 +765,6 @@
     <string name="notification_chapters_single">அத்தியாயம் %1$s</string>
     <string name="notification_chapters_single_and_more">அத்தியாயம் %1$s மற்றும் %2$d மேலும்</string>
     <string name="notification_chapters_multiple">அத்தியாயங்கள் %1$s</string>
-    <string name="notification_update_error">%1$d புதுப்பிப்பு (கள்) தோல்வியடைந்தது</string>
     <string name="learn_more">மேலும் அறிய தட்டவும்</string>
     <string name="notification_cover_update_failed">அட்டையைப் புதுப்பிக்கத் தவறிவிட்டது</string>
     <string name="notification_first_add_to_library">இதைச் செய்வதற்கு முன் உங்கள் நூலகத்தில் உள்ளீட்டைச் சேர்க்கவும்</string>
@@ -892,7 +890,6 @@
     <string name="author">நூலாசிரியர்</string>
     <string name="storage_failed_to_create_directory">கோப்பகத்தை உருவாக்குவதில் தோல்வி: %s</string>
     <string name="storage_failed_to_create_download_directory">பதிவிறக்க கோப்பகத்தை உருவாக்குவதில் தோல்வி</string>
-    <string name="label_donate">நன்கொடை</string>
     <string name="action_webview_close_tab">தாவலை மூடு</string>
     <string name="pref_display_images_description">மங்கா விளக்கங்களில் படங்களை வழங்கவும்</string>
     <string name="pref_disallow_non_ascii_filenames">ASCII அல்லாத கோப்பு பெயர்களை அனுமதிக்க வேண்டாம்</string>

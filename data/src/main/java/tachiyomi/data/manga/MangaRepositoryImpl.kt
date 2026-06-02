@@ -1,11 +1,17 @@
 package tachiyomi.data.manga
 
+import app.cash.sqldelight.async.coroutines.awaitAsList
+import app.cash.sqldelight.async.coroutines.awaitAsOne
+import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
 import kotlinx.coroutines.flow.Flow
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
-import tachiyomi.data.DatabaseHandler
+import tachiyomi.data.Database
 import tachiyomi.data.StringListColumnAdapter
 import tachiyomi.data.UpdateStrategyColumnAdapter
+import tachiyomi.data.subscribeToList
+import tachiyomi.data.subscribeToOne
+import tachiyomi.data.subscribeToOneOrNull
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
@@ -15,73 +21,79 @@ import java.time.LocalDate
 import java.time.ZoneId
 
 class MangaRepositoryImpl(
-    private val handler: DatabaseHandler,
+    private val database: Database,
 ) : MangaRepository {
 
     override suspend fun getMangaById(id: Long): Manga {
-        return handler.awaitOne { mangasQueries.getMangaById(id, MangaMapper::mapManga) }
+        return database.mangasQueries
+            .getMangaById(id, MangaMapper::mapManga)
+            .awaitAsOne()
     }
 
     override suspend fun getMangaByIdAsFlow(id: Long): Flow<Manga> {
-        return handler.subscribeToOne { mangasQueries.getMangaById(id, MangaMapper::mapManga) }
+        return database.mangasQueries
+            .getMangaById(id, MangaMapper::mapManga)
+            .subscribeToOne()
     }
 
     override suspend fun getMangaByUrlAndSourceId(url: String, sourceId: Long): Manga? {
-        return handler.awaitOneOrNull {
-            mangasQueries.getMangaByUrlAndSource(
-                url,
-                sourceId,
-                MangaMapper::mapManga,
-            )
-        }
+        return database.mangasQueries
+            .getMangaByUrlAndSource(url, sourceId, MangaMapper::mapManga)
+            .awaitAsOneOrNull()
     }
 
     override fun getMangaByUrlAndSourceIdAsFlow(url: String, sourceId: Long): Flow<Manga?> {
-        return handler.subscribeToOneOrNull {
-            mangasQueries.getMangaByUrlAndSource(
-                url,
-                sourceId,
-                MangaMapper::mapManga,
-            )
-        }
+        return database.mangasQueries
+            .getMangaByUrlAndSource(url, sourceId, MangaMapper::mapManga)
+            .subscribeToOneOrNull()
     }
 
     override suspend fun getFavorites(): List<Manga> {
-        return handler.awaitList { mangasQueries.getFavorites(MangaMapper::mapManga) }
+        return database.mangasQueries
+            .getFavorites(MangaMapper::mapManga)
+            .awaitAsList()
     }
 
     override suspend fun getReadMangaNotInLibrary(): List<Manga> {
-        return handler.awaitList { mangasQueries.getReadMangaNotInLibrary(MangaMapper::mapManga) }
+        return database.mangasQueries
+            .getReadMangaNotInLibrary(MangaMapper::mapManga)
+            .awaitAsList()
     }
 
     override suspend fun getLibraryManga(): List<LibraryManga> {
-        return handler.awaitList { libraryViewQueries.library(MangaMapper::mapLibraryManga) }
+        return database.libraryViewQueries
+            .library(MangaMapper::mapLibraryManga)
+            .awaitAsList()
     }
 
     override fun getLibraryMangaAsFlow(): Flow<List<LibraryManga>> {
-        return handler.subscribeToList { libraryViewQueries.library(MangaMapper::mapLibraryManga) }
+        return database.libraryViewQueries
+            .library(MangaMapper::mapLibraryManga)
+            .subscribeToList()
     }
 
     override fun getFavoritesBySourceId(sourceId: Long): Flow<List<Manga>> {
-        return handler.subscribeToList { mangasQueries.getFavoriteBySourceId(sourceId, MangaMapper::mapManga) }
+        return database.mangasQueries
+            .getFavoriteBySourceId(sourceId, MangaMapper::mapManga)
+            .subscribeToList()
     }
 
     override suspend fun getDuplicateLibraryManga(id: Long, title: String): List<MangaWithChapterCount> {
-        return handler.awaitList {
-            mangasQueries.getDuplicateLibraryManga(id, title, MangaMapper::mapMangaWithChapterCount)
-        }
+        return database.mangasQueries
+            .getDuplicateLibraryManga(id, title, MangaMapper::mapMangaWithChapterCount)
+            .awaitAsList()
     }
 
     override suspend fun getUpcomingManga(statuses: Set<Long>): Flow<List<Manga>> {
         val epochMillis = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toEpochSecond() * 1000
-        return handler.subscribeToList {
-            mangasQueries.getUpcomingManga(epochMillis, statuses, MangaMapper::mapManga)
-        }
+        return database.mangasQueries
+            .getUpcomingManga(epochMillis, statuses, MangaMapper::mapManga)
+            .subscribeToList()
     }
 
     override suspend fun resetViewerFlags(): Boolean {
         return try {
-            handler.await { mangasQueries.resetViewerFlags() }
+            database.mangasQueries.resetViewerFlags()
             true
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
@@ -90,10 +102,10 @@ class MangaRepositoryImpl(
     }
 
     override suspend fun setMangaCategories(mangaId: Long, categoryIds: List<Long>) {
-        handler.await(inTransaction = true) {
-            mangas_categoriesQueries.deleteMangaCategoryByMangaId(mangaId)
-            categoryIds.map { categoryId ->
-                mangas_categoriesQueries.insert(mangaId, categoryId)
+        database.transaction {
+            database.mangas_categoriesQueries.deleteMangaCategoryByMangaId(mangaId)
+            categoryIds.forEach { categoryId ->
+                database.mangas_categoriesQueries.insert(mangaId, categoryId)
             }
         }
     }
@@ -119,9 +131,9 @@ class MangaRepositoryImpl(
     }
 
     override suspend fun insertNetworkManga(manga: List<Manga>): List<Manga> {
-        return handler.await(inTransaction = true) {
+        return database.transactionWithResult {
             manga.map {
-                mangasQueries.insertNetworkManga(
+                database.mangasQueries.insertNetworkManga(
                     source = it.source,
                     url = it.url,
                     artist = it.artist,
@@ -147,15 +159,15 @@ class MangaRepositoryImpl(
                     updateDetails = it.initialized,
                     mapper = MangaMapper::mapManga,
                 )
-                    .executeAsOne()
+                    .awaitAsOne()
             }
         }
     }
 
     private suspend fun partialUpdate(vararg mangaUpdates: MangaUpdate) {
-        handler.await(inTransaction = true) {
+        database.transaction {
             mangaUpdates.forEach { value ->
-                mangasQueries.update(
+                database.mangasQueries.update(
                     source = value.source,
                     url = value.url,
                     artist = value.artist,

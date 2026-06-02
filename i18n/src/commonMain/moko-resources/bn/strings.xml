@@ -410,7 +410,6 @@
     <string name="pref_incognito_mode_summary">পড়ার ইতিহাসে বিরতি দেয়</string>
     <string name="pref_incognito_mode">ছদ্মবেশী মোড</string>
     <string name="label_downloaded_only">শুধু ডাউনলোড</string>
-    <string name="updated_version">v%1$s এ আপডেট হয়েছে</string>
     <string name="check_for_updates">সংস্করণ যাচাই</string>
     <string name="licenses">ওপেন সোর্স লাইসেন্স</string>
     <string name="whats_new">নতুন কি</string>
@@ -551,7 +550,6 @@
     <string name="skipped_reason_completed">এড়িয়ে যাওয়া হয়েছে কারণ সিরিজটি সম্পূর্ণ</string>
     <string name="cancelled">বাতিল করা হয়েছে</string>
     <string name="on_hiatus">বিরতিতে রয়েছে</string>
-    <string name="notification_update_error">%1$d আপডেট(গুলি) ব্যর্থ হয়েছে</string>
     <string name="publishing_finished">সম্পূর্ণ প্রকাশিত</string>
     <string name="action_sort_last_manga_update">সর্বশেষ হালনাগাদ চেক</string>
     <string name="delete_category_confirmation">আপনি কি “%s” ক্যাটাগরিটি মুছে ফেলতে চান?</string>
@@ -687,7 +685,6 @@
     <string name="pref_flash_style_white_black">সাদা আর কালো</string>
     <string name="pref_hardware_bitmap_threshold_summary">যদি রিডার একটি ফাঁকা ছবি লোড করে, ধাপে ধাপে থ্রেশহোল্ড কমিয়ে দিন।\nসিলেক্টেড %s</string>
     <string name="pref_always_decode_long_strip_with_ssiv_summary">পারফরম্যান্স অ্যাফেক্ট করবে। ফাঁকা ইমেজ সমস্যা থ্রেশহোল্ড কমিয়ে ঠিক না হলে কেবল এনেবল করবে</string>
-    <string name="label_donate">ডোনেট</string>
     <string name="pref_downloads_summary">অটোমেটিক ডাউনলোড, আগাম ডাউনলোড</string>
     <string name="pref_tracking_summary">ওয়ান-ওয়ে প্রগ্রেস সিঙ্ক, এনহ্যান্সড সিঙ্ক</string>
     <string name="pref_browse_summary">সোর্স, এক্সটেনশন, গ্লোবাল সার্চ</string>

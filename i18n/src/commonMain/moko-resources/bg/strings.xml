@@ -400,7 +400,6 @@
     <string name="unknown_author">Неизвестен автор</string>
     <string name="no_pinned_sources">Нямате отметнати източници</string>
     <string name="action_global_search_query">Търси „%1$s“ глобално</string>
-    <string name="updated_version">Обновена до v%1$s</string>
     <string name="whats_new">Какво е новото</string>
     <string name="backup_restore_missing_trackers">Не сте влезли като потребител в:</string>
     <string name="pref_remove_bookmarked_chapters">Позволи изтриване на отметнати глави</string>
@@ -618,7 +617,6 @@
     <string name="ext_info_version">Версия</string>
     <string name="on_hiatus">В хиатус</string>
     <string name="custom_cover">Корица по избор</string>
-    <string name="notification_update_error">%1$d провалени обновление/я</string>
     <string name="action_search_hint">Търсене…</string>
     <string name="disabled_nav">Деактивирано</string>
     <string name="learn_more">Натисни, за да научиш повече</string>

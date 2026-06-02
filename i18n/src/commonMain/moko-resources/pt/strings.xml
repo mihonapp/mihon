@@ -391,7 +391,6 @@
     <string name="unknown_author">Autor desconhecido</string>
     <string name="requires_app_restart">Requer reinício da app para ter efeito</string>
     <string name="label_network">Rede</string>
-    <string name="updated_version">Atualizado para v%1$s</string>
     <string name="whats_new">Novidades</string>
     <string name="download_insufficient_space">Não foi possível transferir capítulos devido a falta de espaço de armazenamento</string>
     <string name="action_global_search_query">Procurar por \"%1$s\" globalmente</string>
@@ -568,7 +567,6 @@
     <string name="webview_data_deleted">Dados do WebView limpos</string>
     <string name="rotation_reverse_portrait">Vertical invertido</string>
     <string name="source_filter_empty_screen">Nenhuma fonte instalada encontrada</string>
-    <string name="notification_update_error">%1$d actualização(ões) falhada(s)</string>
     <string name="learn_more">Toque para saber mais</string>
     <string name="pref_navigate_pan">Imagens panorâmicas</string>
     <string name="pref_landscape_zoom">Ampliar imagem horizontal</string>
@@ -828,6 +826,5 @@
     <string name="artist">Artista</string>
     <string name="author">Autor</string>
     <string name="scanlator">Equipa de tradução</string>
-    <string name="label_donate">Doar</string>
     <string name="action_display_unread_badge">Capítulos não lidos</string>
 </resources>
