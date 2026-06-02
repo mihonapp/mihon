@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Fixed
+- Invalidate download cache after backup restore ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3096](https://github.com/mihonapp/mihon/pull/3096))
 
 ## [v0.19.9] - 2026-04-11
 ### Fixed
@@ -31,6 +33,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Fixed
 - Fix app trying to split long strip when not needed ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3121](https://github.com/mihonapp/mihon/pull/3121))
+- Fix download cache not invalidating after backup restore ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3096](https://github.com/mihonapp/mihon/pull/3096))
 
 ### Removed
 - Remove the empty "Updated to X.Y.Z" popup after app update ([@AntsyLich](https://github.com/AntsyLich)) ([#3203](https://github.com/mihonapp/mihon/pull/3203))
