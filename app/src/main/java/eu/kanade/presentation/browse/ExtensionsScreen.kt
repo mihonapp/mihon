@@ -47,7 +47,7 @@ import eu.kanade.presentation.browse.components.BaseBrowseItem
 import eu.kanade.presentation.browse.components.ExtensionIcon
 import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.presentation.manga.components.DotSeparatorNoSpaceText
-import eu.kanade.presentation.more.settings.screen.browse.ExtensionReposScreen
+import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresScreen
 import eu.kanade.presentation.util.animateItemFastScroll
 import eu.kanade.presentation.util.rememberRequestPackageInstallsPermissionState
 import eu.kanade.tachiyomi.extension.model.Extension
@@ -106,9 +106,9 @@ fun ExtensionScreen(
                     modifier = Modifier.padding(contentPadding),
                     actions = persistentListOf(
                         EmptyScreenAction(
-                            stringRes = MR.strings.label_extension_repos,
+                            stringRes = MR.strings.extensionStores,
                             icon = Icons.Outlined.Settings,
-                            onClick = { navigator.push(ExtensionReposScreen()) },
+                            onClick = { navigator.push(ExtensionStoresScreen()) },
                         ),
                     ),
                 )
