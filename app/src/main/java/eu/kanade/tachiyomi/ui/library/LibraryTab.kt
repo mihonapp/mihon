@@ -7,8 +7,10 @@ import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -37,6 +39,7 @@ import eu.kanade.presentation.more.onboarding.GETTING_STARTED_URL
 import eu.kanade.presentation.util.Tab
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
+import eu.kanade.tachiyomi.util.system.openExportsDirectory
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.home.HomeScreen
@@ -149,6 +152,7 @@ data object LibraryTab : Tab {
                     onMarkAsUnreadClicked = { screenModel.markReadSelection(false) },
                     onDownloadClicked = screenModel::performDownloadAction
                         .takeIf { state.selectedManga.fastAll { !it.isLocal() } },
+                    onExportClicked = screenModel::performExportAction,
                     onDeleteClicked = screenModel::openDeleteMangaDialog,
                     onMigrateClicked = {
                         val selection = state.selection
@@ -275,6 +279,42 @@ data object LibraryTab : Tab {
         LaunchedEffect(Unit) {
             launch { queryEvent.receiveAsFlow().collect(screenModel::search) }
             launch { requestSettingsSheetEvent.receiveAsFlow().collectLatest { screenModel.showSettingsDialog() } }
+            launch {
+                screenModel.exportEvent.receiveAsFlow().collectLatest { event ->
+                    when (event) {
+                        is LibraryScreenModel.ExportEvent.Success -> {
+                            val message = buildString {
+                                append(context.stringResource(MR.strings.export_bulk_success, event.exportedCount))
+                                if (event.skippedCount > 0) {
+                                    append(", ")
+                                    append(context.stringResource(MR.strings.export_bulk_skipped, event.skippedCount))
+                                }
+                                if (event.failedCount > 0) {
+                                    append(", ")
+                                    append(context.stringResource(MR.strings.export_bulk_failed, event.failedCount))
+                                }
+                            }
+                            val result = snackbarHostState.showSnackbar(
+                                message = message,
+                                actionLabel = context.stringResource(MR.strings.export_open_folder),
+                                withDismissAction = true,
+                                duration = SnackbarDuration.Long,
+                            )
+                            if (result == SnackbarResult.ActionPerformed) {
+                                if (!context.openExportsDirectory()) {
+                                    snackbarHostState.showSnackbar(
+                                        context.stringResource(MR.strings.export_open_folder_error),
+                                    )
+                                }
+                            }
+                        }
+                        LibraryScreenModel.ExportEvent.NothingToExport ->
+                            snackbarHostState.showSnackbar(
+                                context.stringResource(MR.strings.export_no_downloaded_chapters),
+                            )
+                    }
+                }
+            }
         }
     }
 

@@ -1,11 +1,13 @@
 package eu.kanade.presentation.components
 
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpOffset
 import eu.kanade.presentation.manga.DownloadAction
+import eu.kanade.presentation.manga.ExportAction
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.pluralStringResource
@@ -17,6 +19,7 @@ fun DownloadDropdownMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     onDownloadClicked: (DownloadAction) -> Unit,
+    onExportClicked: (ExportAction) -> Unit,
     offset: DpOffset? = null,
 ) {
     if (offset != null) {
@@ -29,6 +32,7 @@ fun DownloadDropdownMenu(
                 DownloadDropdownMenuItems(
                     onDismissRequest = onDismissRequest,
                     onDownloadClicked = onDownloadClicked,
+                    onExportClicked = onExportClicked,
                 )
             },
         )
@@ -41,6 +45,7 @@ fun DownloadDropdownMenu(
                 DownloadDropdownMenuItems(
                     onDismissRequest = onDismissRequest,
                     onDownloadClicked = onDownloadClicked,
+                    onExportClicked = onExportClicked,
                 )
             },
         )
@@ -51,8 +56,9 @@ fun DownloadDropdownMenu(
 private fun DownloadDropdownMenuItems(
     onDismissRequest: () -> Unit,
     onDownloadClicked: (DownloadAction) -> Unit,
+    onExportClicked: (ExportAction) -> Unit,
 ) {
-    val options = persistentListOf(
+    val downloadOptions = persistentListOf(
         DownloadAction.NEXT_1_CHAPTER to pluralStringResource(MR.plurals.download_amount, 1, 1),
         DownloadAction.NEXT_5_CHAPTERS to pluralStringResource(MR.plurals.download_amount, 5, 5),
         DownloadAction.NEXT_10_CHAPTERS to pluralStringResource(MR.plurals.download_amount, 10, 10),
@@ -61,11 +67,27 @@ private fun DownloadDropdownMenuItems(
         DownloadAction.BOOKMARKED_CHAPTERS to stringResource(MR.strings.download_bookmarked),
     )
 
-    options.map { (downloadAction, string) ->
+    downloadOptions.forEach { (downloadAction, label) ->
         DropdownMenuItem(
-            text = { Text(text = string) },
+            text = { Text(text = label) },
             onClick = {
                 onDownloadClicked(downloadAction)
+                onDismissRequest()
+            },
+        )
+    }
+
+    HorizontalDivider()
+
+    val exportOptions = persistentListOf(
+        ExportAction.E_READER to stringResource(MR.strings.export_for_ereader),
+    )
+
+    exportOptions.forEach { (exportAction, label) ->
+        DropdownMenuItem(
+            text = { Text(text = label) },
+            onClick = {
+                onExportClicked(exportAction)
                 onDismissRequest()
             },
         )

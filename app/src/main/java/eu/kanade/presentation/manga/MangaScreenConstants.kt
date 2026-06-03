@@ -9,6 +9,10 @@ enum class DownloadAction {
     BOOKMARKED_CHAPTERS,
 }
 
+enum class ExportAction {
+    E_READER,
+}
+
 enum class EditCoverAction {
     EDIT,
     DELETE,

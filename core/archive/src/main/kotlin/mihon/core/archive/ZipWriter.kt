@@ -29,10 +29,14 @@ class ZipWriter(val context: Context, file: UniFile) : Closeable {
     }
 
     fun write(file: UniFile) {
+        write(file, file.name)
+    }
+
+    fun write(file: UniFile, entryName: String?) {
         file.openFileDescriptor(context, "r").use {
             val fd = it.fileDescriptor
             ArchiveEntry.clear(entry)
-            ArchiveEntry.setPathnameUtf8(entry, file.name)
+            ArchiveEntry.setPathnameUtf8(entry, entryName)
             val stat = Os.fstat(fd)
             ArchiveEntry.setStat(entry, stat.toArchiveStat())
             Archive.writeHeader(archive, entry)

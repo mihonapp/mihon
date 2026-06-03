@@ -9,12 +9,16 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
+import android.provider.DocumentsContract
 import android.provider.Settings
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
 import eu.kanade.domain.ui.UiPreferences
+import tachiyomi.domain.storage.service.StorageManager
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import eu.kanade.domain.ui.model.ThemeMode
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
@@ -161,4 +165,32 @@ fun Context.launchRequestPackageInstallsPermission() {
         data = "package:$packageName".toUri()
         startActivity(this)
     }
+}
+
+/**
+ * Attempts to open [dir] in the system file explorer.
+ *
+ * @return true if an app handled the intent, false if none was found.
+ */
+fun Context.openStorageFolder(dir: UniFile): Boolean {
+    return try {
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(dir.uri, DocumentsContract.Document.MIME_TYPE_DIR)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        startActivity(intent)
+        true
+    } catch (e: Exception) {
+        false
+    }
+}
+
+/**
+ * Attempts to open the exports directory in the system file explorer.
+ *
+ * @return true if an app handled the intent, false if the directory is unavailable or no app was found.
+ */
+fun Context.openExportsDirectory(): Boolean {
+    val dir = Injekt.get<StorageManager>().getExportsDirectory() ?: return false
+    return openStorageFolder(dir)
 }

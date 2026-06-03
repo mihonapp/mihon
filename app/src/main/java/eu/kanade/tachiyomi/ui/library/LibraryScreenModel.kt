@@ -14,10 +14,13 @@ import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.presentation.components.SEARCH_DEBOUNCE_MILLIS
 import eu.kanade.presentation.library.components.LibraryToolbarTitle
+import android.app.Application
 import eu.kanade.presentation.manga.DownloadAction
+import eu.kanade.presentation.manga.ExportAction
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.data.export.EReaderExporter
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -37,6 +40,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.updateAndGet
 import mihon.core.common.utils.mutate
 import tachiyomi.core.common.preference.CheckboxState
@@ -50,6 +54,7 @@ import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.chapter.interactor.GetBookmarkedChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.chapter.service.getChapterSort
 import tachiyomi.domain.history.interactor.GetNextChapters
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibraryManga
@@ -85,7 +90,19 @@ class LibraryScreenModel(
     private val downloadManager: DownloadManager = Injekt.get(),
     private val downloadCache: DownloadCache = Injekt.get(),
     private val trackerManager: TrackerManager = Injekt.get(),
+    private val context: Application = Injekt.get(),
 ) : StateScreenModel<LibraryScreenModel.State>(State()) {
+
+    sealed interface ExportEvent {
+        data class Success(
+            val exportedCount: Int,
+            val skippedCount: Int,
+            val failedCount: Int,
+        ) : ExportEvent
+        data object NothingToExport : ExportEvent
+    }
+
+    val exportEvent: Channel<ExportEvent> = Channel(Channel.UNLIMITED)
 
     init {
         mutableState.update { state ->
@@ -517,6 +534,47 @@ class LibraryScreenModel(
                     }
                 downloadManager.downloadChapters(manga, chapters)
             }
+        }
+    }
+
+    fun performExportAction(action: ExportAction) {
+        val mangas = state.value.selectedManga
+        screenModelScope.launchIO {
+            when (action) {
+                ExportAction.E_READER -> {
+                    val exporter = EReaderExporter(context)
+                    var exportedCount = 0
+                    var skippedCount = 0
+                    var failedCount = 0
+
+                    mangas.forEach { manga ->
+                        val source = sourceManager.getOrStub(manga.source)
+                        val chapters = getChaptersByMangaId.await(manga.id)
+                            .filter {
+                                manga.isLocal() ||
+                                    downloadManager.isChapterDownloaded(it.name, it.scanlator, it.url, manga.title, manga.source)
+                            }
+                            .sortedWith(getChapterSort(manga, sortDescending = false))
+
+                        if (chapters.isEmpty()) {
+                            skippedCount++
+                            return@forEach
+                        }
+
+                        when (exporter.export(manga, source, chapters)) {
+                            is EReaderExporter.Result.Success -> exportedCount++
+                            is EReaderExporter.Result.Error -> failedCount++
+                        }
+                    }
+
+                    if (exportedCount == 0 && failedCount == 0) {
+                        exportEvent.send(ExportEvent.NothingToExport)
+                    } else {
+                        exportEvent.send(ExportEvent.Success(exportedCount, skippedCount, failedCount))
+                    }
+                }
+            }
+            clearSelection()
         }
     }
 
