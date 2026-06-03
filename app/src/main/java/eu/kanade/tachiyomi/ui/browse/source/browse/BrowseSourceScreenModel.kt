@@ -40,6 +40,7 @@ import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.SetMangaCategories
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.chapter.interactor.SetMangaDefaultChapterFlags
+import tachiyomi.domain.library.interactor.GetSourceDefaultCategory
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetManga
@@ -64,6 +65,7 @@ class BrowseSourceScreenModel(
     private val getDuplicateLibraryManga: GetDuplicateLibraryManga = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
+    private val getSourceDefaultCategory: GetSourceDefaultCategory = Injekt.get(),
     private val setMangaDefaultChapterFlags: SetMangaDefaultChapterFlags = Injekt.get(),
     private val getManga: GetManga = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
@@ -241,8 +243,8 @@ class BrowseSourceScreenModel(
     fun addFavorite(manga: Manga) {
         screenModelScope.launch {
             val categories = getCategories()
-            val defaultCategoryId = libraryPreferences.defaultCategory.get()
-            val defaultCategory = categories.find { it.id == defaultCategoryId.toLong() }
+            val defaultCategoryId = getSourceDefaultCategory.await(manga.source)
+            val defaultCategory = categories.find { it.id == defaultCategoryId }
 
             when {
                 // Default category set
@@ -253,7 +255,7 @@ class BrowseSourceScreenModel(
                 }
 
                 // Automatic 'Default' or no categories
-                defaultCategoryId == 0 || categories.isEmpty() -> {
+                defaultCategoryId == 0L || categories.isEmpty() -> {
                     moveMangaToCategories(manga)
 
                     changeMangaFavorite(manga)

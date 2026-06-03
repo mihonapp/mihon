@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.extension.interactor.ExtensionSourceItem
 import eu.kanade.domain.extension.interactor.GetExtensionSources
 import eu.kanade.domain.source.interactor.ToggleIncognito
@@ -21,26 +22,39 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import logcat.LogPriority
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.category.model.Category
+import tachiyomi.domain.library.interactor.SetSourceDefaultCategory
+import tachiyomi.domain.library.service.LibraryPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class ExtensionDetailsScreenModel(
-    pkgName: String,
-    context: Context,
+    private val pkgName: String,
+    private val context: Context,
     private val network: NetworkHelper = Injekt.get(),
     private val extensionManager: ExtensionManager = Injekt.get(),
     private val getExtensionSources: GetExtensionSources = Injekt.get(),
     private val toggleSource: ToggleSource = Injekt.get(),
     private val toggleIncognito: ToggleIncognito = Injekt.get(),
     private val preferences: SourcePreferences = Injekt.get(),
+    private val getCategories: GetCategories = Injekt.get(),
+    private val setSourceDefaultCategory: SetSourceDefaultCategory = Injekt.get(),
+    private val libraryPreferences: LibraryPreferences = Injekt.get(),
+    private val basePreferences: BasePreferences = Injekt.get(),
 ) : StateScreenModel<ExtensionDetailsScreenModel.State>(State()) {
 
     private val _events: Channel<ExtensionDetailsEvent> = Channel()
@@ -60,6 +74,39 @@ class ExtensionDetailsScreenModel(
                             state.copy(extension = extension)
                         }
                     }
+            }
+            launch {
+                libraryPreferences.perSourceDefaultCategory.changes()
+                    .collectLatest { enabled ->
+                        mutableState.update { it.copy(perSourceDefaultCategoryEnabled = enabled) }
+                    }
+            }
+            launch {
+                combine(
+                    getCategories.subscribe(),
+                    libraryPreferences.sourceDefaultCategories.changes(),
+                    libraryPreferences.defaultCategory.changes(),
+                ) { categories, _, globalDefaultId ->
+                    val extension = state.value.extension ?: return@combine
+                    val firstSourceId = extension.sources.firstOrNull()?.id
+                    val sourceSpecificId = firstSourceId?.let { id ->
+                        val json = libraryPreferences.sourceDefaultCategories.get()
+                        try {
+                            val element = Json.parseToJsonElement(json).jsonObject[id.toString()]
+                            element?.jsonPrimitive?.contentOrNull?.toLong()
+                        } catch (e: Exception) {
+                            null
+                        }
+                    }
+                    val defaultCategoryId = sourceSpecificId ?: globalDefaultId.toLong()
+                    val userCategories = categories.filterNot { it.isSystemCategory }
+                    mutableState.update { state ->
+                        state.copy(
+                            extensionDefaultCategory = defaultCategoryId,
+                            allCategories = userCategories.toImmutableList(),
+                        )
+                    }
+                }.collectLatest {}
             }
             launch {
                 state.collectLatest { state ->
@@ -137,11 +184,19 @@ class ExtensionDetailsScreenModel(
             toggleIncognito.await(packageName, enable)
         }
     }
+    fun setExtensionDefaultCategory(categoryId: Long?) {
+        state.value.extension?.sources?.forEach { source ->
+            setSourceDefaultCategory.await(source.id, categoryId)
+        }
+    }
 
     @Immutable
     data class State(
         val extension: Extension.Installed? = null,
         val isIncognito: Boolean = false,
+        val perSourceDefaultCategoryEnabled: Boolean = false,
+        val extensionDefaultCategory: Long? = null,
+        val allCategories: ImmutableList<Category> = persistentListOf(),
         private val _sources: ImmutableList<ExtensionSourceItem>? = null,
     ) {
 
