@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.data.backup.create
 
 import dev.icerock.moko.resources.StringResource
-import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
 
 data class BackupOptions(
@@ -33,7 +32,7 @@ data class BackupOptions(
     fun canCreate() = libraryEntries || categories || appSettings || extensionStores || sourceSettings
 
     companion object {
-        val libraryOptions = persistentListOf(
+        val libraryOptions = listOf(
             Entry(
                 label = MR.strings.manga,
                 getter = BackupOptions::libraryEntries,
@@ -70,7 +69,7 @@ data class BackupOptions(
             ),
         )
 
-        val settingsOptions = persistentListOf(
+        val settingsOptions = listOf(
             Entry(
                 label = MR.strings.app_settings,
                 getter = BackupOptions::appSettings,
