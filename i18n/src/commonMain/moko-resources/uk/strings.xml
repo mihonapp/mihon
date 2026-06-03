@@ -393,7 +393,6 @@
     <string name="unknown_author">Невідомий автор</string>
     <string name="requires_app_restart">Потрібен перезапуск застосунку, щоб зміни вступили в дію</string>
     <string name="label_network">Мережа</string>
-    <string name="updated_version">Оновлено до v%1$s</string>
     <string name="whats_new">Що новенького</string>
     <string name="download_insufficient_space">Не вдалось завантажити розділи через нестачу місця в сховищі</string>
     <string name="action_global_search_query">Шукати \"%1$s\" глобально</string>
@@ -561,7 +560,6 @@
     <string name="pref_update_only_started">Пропустити непочаті глави</string>
     <string name="action_move_to_top_all_for_series">Перемістити серію на початок</string>
     <string name="rotation_reverse_portrait">Портретна навпаки</string>
-    <string name="notification_update_error">%1$d оновлення(нь) не вдалось</string>
     <string name="skipped_reason_completed">Пропущено, оскільки серія завершена</string>
     <string name="skipped_reason_not_caught_up">Пропущено через те, що є непрочитані розділи</string>
     <string name="skipped_reason_not_started">Пропущено, оскільки серія не почата</string>

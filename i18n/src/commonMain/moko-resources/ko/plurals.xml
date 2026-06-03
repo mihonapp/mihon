@@ -66,4 +66,7 @@
     <plurals name="migrationListScreen.migrateDialog.skipText">
         <item quantity="other">%1$d개 항목이 생략되었습니다</item>
     </plurals>
+    <plurals name="notification_update_error">
+        <item quantity="other">%1$d개 업데이트 실패</item>
+    </plurals>
 </resources>

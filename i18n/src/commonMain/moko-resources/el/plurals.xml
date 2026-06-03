@@ -88,4 +88,8 @@
         <item quantity="one">Μια καταχώρηση παραλείφθηκε</item>
         <item quantity="other">%1$d καταχωρήσεις παραλείφθηκαν</item>
     </plurals>
+    <plurals name="notification_update_error">
+        <item quantity="one">%1$d ενημέρωση απέτυχε</item>
+        <item quantity="other">%1$d ενημερώσεις απέτυχαν</item>
+    </plurals>
 </resources>

@@ -2,7 +2,7 @@
 <resources>
     <plurals name="lock_after_mins">
         <item quantity="one">%1$s dakika sonra</item>
-        <item quantity="other">%1$s dakika sonrası</item>
+        <item quantity="other">%1$s dakika sonra</item>
     </plurals>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d yeni bölüm</item>
@@ -41,8 +41,8 @@
         <item quantity="other">%d izleyici</item>
     </plurals>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">%d bölüm atlandı, kaynak mevcut değil veya filtrelendi</item>
-        <item quantity="other">%d bölüm atlandı, kaynak mevcut değil veya filtrelendi</item>
+        <item quantity="one">%d bölüm atlandı, kaynak mevcut değil ya da filtrelendi</item>
+        <item quantity="other">%d bölüm atlandı, kaynak mevcut değil ya da filtrelendi</item>
     </plurals>
     <plurals name="relative_time">
         <item quantity="one">Dün</item>
@@ -70,7 +70,7 @@
     </plurals>
     <plurals name="upcoming_relative_time">
         <item quantity="one">Yarın</item>
-        <item quantity="other">%1$d günleri içinde</item>
+        <item quantity="other">%1$d gün içinde</item>
     </plurals>
     <plurals name="pref_pages">
         <item quantity="one">1 sayfa</item>
@@ -87,5 +87,9 @@
     <plurals name="migrationListScreen.migrateDialog.skipText">
         <item quantity="one">Bir girdi atlandı</item>
         <item quantity="other">%1$d girdi atlandı</item>
+    </plurals>
+    <plurals name="notification_update_error">
+        <item quantity="one">%1$d güncelleme başarısız</item>
+        <item quantity="other">%1$d güncelleme başarısız</item>
     </plurals>
 </resources>

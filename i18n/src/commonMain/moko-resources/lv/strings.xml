@@ -402,7 +402,6 @@
     <string name="website">Tīmekļa vietne</string>
     <string name="version">Versija</string>
     <string name="whats_new">Jaunumi</string>
-    <string name="updated_version">Atjaunināts uz v%1$s</string>
     <string name="licenses">Atvērtā avota licences</string>
     <string name="check_for_updates">Pārbaudīt, vai nav atjauninājumu</string>
     <string name="pref_clear_webview_data">Notīrīt WebView datus</string>
@@ -556,7 +555,6 @@
     <string name="notification_chapters_single">Nodaļa %1$s</string>
     <string name="download_notifier_split_page_not_found">Sadalīšanas laikā netika atrasta lapa %d</string>
     <string name="skipped_reason_not_caught_up">Izlaists, jo ir nelasītas nodaļas</string>
-    <string name="notification_update_error">%1$d atjauninājums(-i) neizdevās</string>
     <string name="learn_more">Pieskarieties, lai uzzinātu vairāk</string>
     <string name="channel_app_updates">Lietotnes atjauninājumi</string>
     <string name="update_check_notification_update_available">Ir pieejama jauna versija!</string>

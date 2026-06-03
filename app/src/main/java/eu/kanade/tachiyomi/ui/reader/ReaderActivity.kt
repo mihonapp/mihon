@@ -56,6 +56,7 @@ import eu.kanade.presentation.reader.ReaderPageActionsDialog
 import eu.kanade.presentation.reader.ReaderPageIndicator
 import eu.kanade.presentation.reader.ReadingModeSelectDialog
 import eu.kanade.presentation.reader.appbars.ReaderAppBars
+import eu.kanade.presentation.reader.components.ChapterNavigatorType
 import eu.kanade.presentation.reader.settings.ReaderSettingsDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.coil.TachiyomiImageDecoder
@@ -76,6 +77,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.isNightMode
 import eu.kanade.tachiyomi.util.system.openInBrowser
@@ -458,6 +460,9 @@ class ReaderActivity : BaseActivity() {
         val isPagerType = ReadingMode.isPagerType(viewModel.getMangaReadingMode())
         val cropEnabled = if (isPagerType) cropBorderPaged else cropBorderWebtoon
 
+        val verticalNavigatorForLongStrip by readerPreferences.verticalNavigatorForLongStrip.collectAsState()
+        val verticalNavigatorOnLeft by readerPreferences.verticalNavigatorOnLeft.collectAsState()
+
         ReaderAppBars(
             visible = state.menuVisible,
 
@@ -471,7 +476,19 @@ class ReaderActivity : BaseActivity() {
             onOpenInBrowser = ::openChapterInBrowser.takeIf { isHttpSource },
             onShare = ::shareChapter.takeIf { isHttpSource },
 
-            viewer = state.viewer,
+            chapterNavigatorType = if (isPagerType || !verticalNavigatorForLongStrip) {
+                if (state.viewer is R2LPagerViewer) {
+                    ChapterNavigatorType.HORIZONTAL_RTL
+                } else {
+                    ChapterNavigatorType.HORIZONTAL_LTR
+                }
+            } else {
+                if (verticalNavigatorOnLeft) {
+                    ChapterNavigatorType.VERTICAL_LEFT
+                } else {
+                    ChapterNavigatorType.VERTICAL_RIGHT
+                }
+            },
             onNextChapter = ::loadNextChapter,
             enabledNext = state.viewerChapters?.nextChapter != null,
             onPreviousChapter = ::loadPreviousChapter,
