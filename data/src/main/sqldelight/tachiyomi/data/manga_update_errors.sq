@@ -1,0 +1,46 @@
+CREATE TABLE manga_update_errors(
+    manga_id INTEGER NOT NULL,
+    error_message TEXT,
+    timestamp INTEGER NOT NULL,
+    PRIMARY KEY(manga_id),
+    FOREIGN KEY(manga_id) REFERENCES mangas(_id) ON DELETE CASCADE
+);
+
+CREATE INDEX manga_update_errors_timestamp_index ON manga_update_errors(timestamp);
+
+getAll:
+SELECT manga_update_errors.*
+FROM manga_update_errors
+JOIN mangas ON manga_update_errors.manga_id = mangas._id
+WHERE mangas.favorite = 1
+ORDER BY manga_update_errors.timestamp DESC;
+
+getByMangaId:
+SELECT *
+FROM manga_update_errors
+WHERE manga_id = :mangaId;
+
+getCount:
+SELECT COUNT(*)
+FROM manga_update_errors
+JOIN mangas ON manga_update_errors.manga_id = mangas._id
+WHERE mangas.favorite = 1;
+
+insert:
+INSERT INTO manga_update_errors(manga_id, error_message, timestamp)
+VALUES (:mangaId, :errorMessage, :timestamp)
+ON CONFLICT(manga_id) DO UPDATE SET
+    error_message = excluded.error_message,
+    timestamp = excluded.timestamp
+WHERE COALESCE(excluded.error_message, '') != COALESCE(error_message, '');
+
+delete:
+DELETE FROM manga_update_errors
+WHERE manga_id = :mangaId;
+
+deleteAll:
+DELETE FROM manga_update_errors;
+
+deleteNonFavorites:
+DELETE FROM manga_update_errors
+WHERE manga_id NOT IN (SELECT _id FROM mangas WHERE favorite = 1);

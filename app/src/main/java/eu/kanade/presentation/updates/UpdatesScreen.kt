@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.FlipToBack
 import androidx.compose.material.icons.outlined.Refresh
@@ -37,6 +38,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.material.PullRefresh
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
@@ -60,6 +62,7 @@ fun UpdateScreen(
     onMultiDeleteClicked: (List<UpdatesItem>) -> Unit,
     onUpdateSelected: (UpdatesItem, Boolean, Boolean) -> Unit,
     onOpenChapter: (UpdatesItem) -> Unit,
+    onFailedUpdatesClicked: () -> Unit,
     onFilterClicked: () -> Unit,
     hasActiveFilters: Boolean,
 ) {
@@ -72,6 +75,8 @@ fun UpdateScreen(
             UpdatesAppBar(
                 onCalendarClicked = { onCalendarClicked() },
                 onUpdateLibrary = { onUpdateLibrary() },
+                onFailedUpdatesClicked = onFailedUpdatesClicked,
+                failedUpdatesCount = state.failedUpdatesCount,
                 onFilterClicked = { onFilterClicked() },
                 hasFilters = hasActiveFilters,
                 actionModeCounter = state.selected.size,
@@ -141,6 +146,8 @@ fun UpdateScreen(
 private fun UpdatesAppBar(
     onCalendarClicked: () -> Unit,
     onUpdateLibrary: () -> Unit,
+    onFailedUpdatesClicked: () -> Unit,
+    failedUpdatesCount: Long,
     onFilterClicked: () -> Unit,
     hasFilters: Boolean,
     // For action mode
@@ -167,6 +174,15 @@ private fun UpdatesAppBar(
                         title = stringResource(MR.strings.action_view_upcoming),
                         icon = Icons.Outlined.CalendarMonth,
                         onClick = onCalendarClicked,
+                    ),
+                    AppBar.Action(
+                        title = pluralStringResource(
+                            MR.plurals.failed_updates,
+                            count = failedUpdatesCount.toInt(),
+                            failedUpdatesCount.toInt(),
+                        ),
+                        icon = Icons.Outlined.Error,
+                        onClick = onFailedUpdatesClicked,
                     ),
                     AppBar.Action(
                         title = stringResource(MR.strings.action_update_library),
