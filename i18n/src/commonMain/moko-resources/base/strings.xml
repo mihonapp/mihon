@@ -375,7 +375,7 @@
     <string name="extensionStoresScreen.addStoreInput.inputLabel">Store index URL</string>
     <string name="extensionStoresScreen.addStoreDeeplink.bodyText">Do you wish to add the extension store below?</string>
     <string name="extensionStoresScreen.deleteStore.title">Remove extension store</string>
-    <string name="extensionStoresScreen.deleteStore.body">Do you wish to remove the extension store \"%s\" (%s)?</string>
+    <string name="extensionStoresScreen.deleteStore.body">Do you wish to remove the extension store \"%1$s\" (%2$s)?</string>
 
       <!-- Reader section -->
     <string name="pref_fullscreen">Fullscreen</string>
