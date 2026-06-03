@@ -54,6 +54,20 @@ enum class ReadingMode(
         Direction.Vertical,
         ViewerType.Webtoon,
     ),
+    WEBTOON_HORIZONTAL_RTL(
+        MR.strings.webtoon_horizontal_rtl_plus_viewer,
+        R.drawable.ic_reader_webtoon_horizontal_rtl_24dp,
+        0x00000006,
+        Direction.Horizontal,
+        ViewerType.Webtoon,
+    ),
+    WEBTOON_HORIZONTAL_LTR(
+        MR.strings.webtoon_horizontal_ltr_plus_viewer,
+        R.drawable.ic_reader_webtoon_horizontal_ltr_24dp,
+        0x00000007,
+        Direction.Horizontal,
+        ViewerType.Webtoon,
+    ),
     ;
 
     companion object {
@@ -72,6 +86,8 @@ enum class ReadingMode(
                 RIGHT_TO_LEFT -> R2LPagerViewer(activity)
                 VERTICAL -> VerticalPagerViewer(activity)
                 WEBTOON -> WebtoonViewer(activity)
+                WEBTOON_HORIZONTAL_RTL -> WebtoonViewer(activity, isHorizontal = true, isRightToLeft = true)
+                WEBTOON_HORIZONTAL_LTR -> WebtoonViewer(activity, isHorizontal = true)
                 CONTINUOUS_VERTICAL -> WebtoonViewer(activity, isContinuous = false)
                 DEFAULT -> throw IllegalStateException("Preference value must be resolved: $preference")
             }

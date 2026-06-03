@@ -31,6 +31,9 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     var originalHeight = 0
         private set
     private var heightSet = false
+    var originalWidth = 0
+        private set
+    private var widthSet = false
     private var firstVisibleItemPosition = 0
     private var lastVisibleItemPosition = 0
     private var currentScale = DEFAULT_RATE
@@ -55,9 +58,15 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     private var isManuallyScrolling = false
     private var tapDuringManualScroll = false
 
+    var isHorizontal = false
+
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
         halfWidth = MeasureSpec.getSize(widthSpec) / 2
         halfHeight = MeasureSpec.getSize(heightSpec) / 2
+        if (!widthSet) {
+            originalWidth = MeasureSpec.getSize(widthSpec)
+            widthSet = true
+        }
         if (!heightSet) {
             originalHeight = MeasureSpec.getSize(heightSpec)
             heightSet = true
@@ -97,7 +106,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
 
     private fun getPositionX(positionX: Float): Float {
         if (currentScale < 1) {
-            return 0f
+           return (originalWidth / 2 - halfWidth).toFloat()
         }
         val maxPositionX = halfWidth * (currentScale - 1)
         return positionX.coerceIn(-maxPositionX, maxPositionX)
@@ -193,11 +202,19 @@ class WebtoonRecyclerView @JvmOverloads constructor(
 
         setScaleRate(currentScale)
 
-        layoutParams.height = if (currentScale < 1) {
-            (originalHeight / currentScale).toInt()
+        if (currentScale < 1) {
+            if (isHorizontal) {
+                layoutParams.width = (originalWidth / currentScale).toInt()
+                layoutParams.height = originalHeight
+            } else {
+                layoutParams.height = (originalHeight / currentScale).toInt()
+                layoutParams.width = originalWidth
+            }
         } else {
-            originalHeight
+            layoutParams.width = originalWidth
+            layoutParams.height = originalHeight
         }
+        halfWidth = layoutParams.width / 2
         halfHeight = layoutParams.height / 2
 
         if (currentScale != DEFAULT_RATE) {
@@ -245,8 +262,10 @@ class WebtoonRecyclerView @JvmOverloads constructor(
             if (!isZooming && doubleTapZoom) {
                 if (scaleX != DEFAULT_RATE) {
                     zoom(currentScale, DEFAULT_RATE, x, 0f, y, 0f)
+                    layoutParams.width = originalWidth
                     layoutParams.height = originalHeight
-                    halfHeight = layoutParams.height / 2
+                    halfWidth = originalWidth / 2
+                    halfHeight = originalHeight / 2
                     requestLayout()
                 } else {
                     val toScale = 2f
