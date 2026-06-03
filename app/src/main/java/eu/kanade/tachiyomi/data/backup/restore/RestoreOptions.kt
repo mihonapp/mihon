@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.data.backup.restore
 
 import dev.icerock.moko.resources.StringResource
-import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
 
 data class RestoreOptions(
@@ -23,7 +22,7 @@ data class RestoreOptions(
     fun canRestore() = libraryEntries || categories || appSettings || extensionStores || sourceSettings
 
     companion object {
-        val options = persistentListOf(
+        val options = listOf(
             Entry(
                 label = MR.strings.label_library,
                 getter = RestoreOptions::libraryEntries,

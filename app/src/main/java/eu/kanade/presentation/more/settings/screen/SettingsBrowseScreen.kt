@@ -13,7 +13,6 @@ import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresScreen
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
-import kotlinx.collections.immutable.persistentListOf
 import mihon.domain.extension.interactor.GetExtensionStoreCountAsFlow
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
@@ -41,7 +40,7 @@ object SettingsBrowseScreen : SearchableSettings {
         return listOf(
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.label_sources),
-                preferenceItems = persistentListOf(
+                preferenceItems = listOf(
                     Preference.PreferenceItem.SwitchPreference(
                         preference = sourcePreferences.hideInLibraryItems,
                         title = stringResource(MR.strings.pref_hide_in_library_items),
@@ -57,7 +56,7 @@ object SettingsBrowseScreen : SearchableSettings {
             ),
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.pref_category_nsfw_content),
-                preferenceItems = persistentListOf(
+                preferenceItems = listOf(
                     Preference.PreferenceItem.SwitchPreference(
                         preference = sourcePreferences.showNsfwSource,
                         title = stringResource(MR.strings.pref_show_nsfw_source),
