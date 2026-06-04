@@ -100,7 +100,7 @@ class LibraryScreenModel(
                 val showSystemCategory = favorites.any { it.libraryManga.categories.contains(0) }
                 val filteredFavorites = favorites
                     .applyFilters(tracksMap, trackingFilters, itemPreferences)
-                    .let { if (searchQuery == null) it else it.filter { m -> m.matches(searchQuery) } }
+                    .let { if (searchQuery == null) it else it.filter { m -> m.matches(searchQuery, sourceManager) } }
 
                 LibraryData(
                     isInitialized = true,
@@ -200,11 +200,7 @@ class LibraryScreenModel(
         val trackFiltersIsIgnored = includedTracks.isEmpty() && excludedTracks.isEmpty()
 
         val filterFnDownloaded: (LibraryItem) -> Boolean = {
-            applyFilter(filterDownloaded) {
-                it.libraryManga.manga.isLocal() ||
-                    it.downloadCount > 0 ||
-                    downloadManager.getDownloadCount(it.libraryManga.manga) > 0
-            }
+            applyFilter(filterDownloaded) { it.isLocal || it.downloadCount > 0 }
         }
 
         val filterFnUnread: (LibraryItem) -> Boolean = {
@@ -390,26 +386,31 @@ class LibraryScreenModel(
             libraryManga.map { manga ->
                 LibraryItem(
                     libraryManga = manga,
-                    downloadCount = if (preferences.downloadBadge) {
-                        downloadManager.getDownloadCount(manga.manga).toLong()
-                    } else {
-                        0
-                    },
-                    unreadCount = if (preferences.unreadBadge) {
-                        manga.unreadCount
-                    } else {
-                        0
-                    },
-                    isLocal = if (preferences.localBadge) {
-                        manga.manga.isLocal()
-                    } else {
-                        false
-                    },
-                    sourceLanguage = if (preferences.languageBadge) {
-                        sourceManager.getOrStub(manga.manga.source).lang
-                    } else {
-                        ""
-                    },
+                    downloadCount = downloadManager.getDownloadCount(manga.manga),
+                    unreadCount = manga.unreadCount,
+                    isLocal = manga.manga.isLocal(),
+                    badges = LibraryItem.Badges(
+                        downloadCount = if (preferences.downloadBadge) {
+                            downloadManager.getDownloadCount(manga.manga)
+                        } else {
+                            0
+                        },
+                        unreadCount = if (preferences.unreadBadge) {
+                            manga.unreadCount
+                        } else {
+                            0
+                        },
+                        isLocal = if (preferences.localBadge) {
+                            manga.manga.isLocal()
+                        } else {
+                            false
+                        },
+                        sourceLanguage = if (preferences.languageBadge) {
+                            sourceManager.getOrStub(manga.manga.source).lang
+                        } else {
+                            ""
+                        },
+                    ),
                 )
             }
         }
