@@ -26,6 +26,9 @@ abstract class ViewerConfig(readerPreferences: ReaderPreferences, private val sc
     var navigationMode = 0
         protected set
 
+    var guidedViewEnabled = false
+        protected set
+
     var forceNavigationOverlay = false
 
     var navigationOverlayOnStart = false
@@ -46,6 +49,12 @@ abstract class ViewerConfig(readerPreferences: ReaderPreferences, private val sc
         protected set
 
     init {
+        readerPreferences.guidedView
+            .register(
+                { guidedViewEnabled = it },
+                { imagePropertyChangedListener?.invoke() }
+            )
+
         readerPreferences.readWithLongTap
             .register({ longTapEnabled = it })
 
