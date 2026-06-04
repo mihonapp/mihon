@@ -9,7 +9,7 @@ androidx-benchmark = "1.4.1"
 androidx-biometric = "1.2.0-alpha05"
 androidx-compose-bom = "2026.05.02"
 androidx-constraintLayout = "2.2.1"
-androidx-core = "1.18.0"
+androidx-core = "1.19.0"
 androidx-coreSplashScreen = "1.2.0"
 androidx-glance = "1.1.1"
 androidx-interpolator = "1.0.0"
@@ -92,7 +92,7 @@ androidx-compose-uiTooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-compose-uiUtil = { module = "androidx.compose.ui:ui-util" }
 androidx-constraintLayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintLayout" }
-androidx-core = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
+androidx-core = { module = "androidx.core:core", version.ref = "androidx-core" }
 androidx-coreSplashScreen = { module = "androidx.core:core-splashscreen", version.ref = "androidx-coreSplashScreen" }
 androidx-glance-appWidget = { module = "androidx.glance:glance-appwidget", version.ref = "androidx-glance" }
 androidx-interpolator = { module = "androidx.interpolator:interpolator", version.ref = "androidx-interpolator" }
