@@ -93,7 +93,7 @@ androidx-compose-uiTooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-compose-uiUtil = { module = "androidx.compose.ui:ui-util" }
 androidx-constraintLayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintLayout" }
-androidx-core = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
+androidx-core = { module = "androidx.core:core", version.ref = "androidx-core" }
 androidx-coreSplashScreen = { module = "androidx.core:core-splashscreen", version.ref = "androidx-coreSplashScreen" }
 androidx-glance-appWidget = { module = "androidx.glance:glance-appwidget", version.ref = "androidx-glance" }
 androidx-interpolator = { module = "androidx.interpolator:interpolator", version.ref = "androidx-interpolator" }
