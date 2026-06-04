@@ -5,8 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
 import eu.kanade.tachiyomi.data.track.Tracker
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.ImmutableMap
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.core.common.preference.Preference as PreferenceData
@@ -69,10 +67,10 @@ sealed class Preference {
         @Suppress("UNCHECKED_CAST")
         data class ListPreference<T>(
             val preference: PreferenceData<T>,
-            val entries: ImmutableMap<T, String>,
+            val entries: Map<T, String>,
             override val title: String,
             override val subtitle: String? = "%s",
-            val subtitleProvider: @Composable (value: T, entries: ImmutableMap<T, String>) -> String? =
+            val subtitleProvider: @Composable (value: T, entries: Map<T, String>) -> String? =
                 { v, e -> subtitle?.format(e[v]) },
             override val icon: ImageVector? = null,
             override val enabled: Boolean = true,
@@ -82,8 +80,8 @@ sealed class Preference {
             internal suspend fun internalOnValueChanged(value: Any) = onValueChanged(value as T)
 
             @Composable
-            internal fun internalSubtitleProvider(value: Any?, entries: ImmutableMap<out Any?, String>) =
-                subtitleProvider(value as T, entries as ImmutableMap<T, String>)
+            internal fun internalSubtitleProvider(value: Any?, entries: Map<out Any?, String>) =
+                subtitleProvider(value as T, entries as Map<T, String>)
         }
 
         /**
@@ -91,10 +89,10 @@ sealed class Preference {
          */
         data class BasicListPreference(
             val value: String,
-            val entries: ImmutableMap<String, String>,
+            val entries: Map<String, String>,
             override val title: String,
             override val subtitle: String? = "%s",
-            val subtitleProvider: @Composable (value: String, entries: ImmutableMap<String, String>) -> String? =
+            val subtitleProvider: @Composable (value: String, entries: Map<String, String>) -> String? =
                 { v, e -> subtitle?.format(e[v]) },
             override val icon: ImageVector? = null,
             override val enabled: Boolean = true,
@@ -107,10 +105,10 @@ sealed class Preference {
          */
         data class MultiSelectListPreference(
             val preference: PreferenceData<Set<String>>,
-            val entries: ImmutableMap<String, String>,
+            val entries: Map<String, String>,
             override val title: String,
             override val subtitle: String? = "%s",
-            val subtitleProvider: @Composable (value: Set<String>, entries: ImmutableMap<String, String>) -> String? =
+            val subtitleProvider: @Composable (value: Set<String>, entries: Map<String, String>) -> String? =
                 { v, e ->
                     val combined = remember(v, e) {
                         v.mapNotNull { e[it] }
@@ -177,6 +175,6 @@ sealed class Preference {
         override val title: String,
         override val enabled: Boolean = true,
 
-        val preferenceItems: ImmutableList<PreferenceItem<out Any, out Any>>,
+        val preferenceItems: List<PreferenceItem<out Any, out Any>>,
     ) : Preference()
 }

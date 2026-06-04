@@ -56,8 +56,6 @@ import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsScreenModel
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.util.system.copyToClipboard
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -80,12 +78,12 @@ fun ExtensionDetailsScreen(
     val uriHandler = LocalUriHandler.current
     val url = remember(state.extension) {
         val regex = """https://raw.githubusercontent.com/(.+?)/(.+?)/.+""".toRegex()
-        regex.find(state.extension?.repoUrl.orEmpty())
+        regex.find(state.extension?.store?.indexUrl.orEmpty())
             ?.let {
                 val (user, repo) = it.destructured
                 "https://github.com/$user/$repo"
             }
-            ?: state.extension?.repoUrl
+            ?: state.extension?.store?.indexUrl
     }
 
     Scaffold(
@@ -95,37 +93,35 @@ fun ExtensionDetailsScreen(
                 navigateUp = navigateUp,
                 actions = {
                     AppBarActions(
-                        actions = persistentListOf<AppBar.AppBarAction>().builder()
-                            .apply {
-                                if (url != null) {
-                                    add(
-                                        AppBar.Action(
-                                            title = stringResource(MR.strings.action_open_repo),
-                                            icon = Icons.AutoMirrored.Outlined.Launch,
-                                            onClick = {
-                                                uriHandler.openUri(url)
-                                            },
-                                        ),
-                                    )
-                                }
-                                addAll(
-                                    listOf(
-                                        AppBar.OverflowAction(
-                                            title = stringResource(MR.strings.action_enable_all),
-                                            onClick = onClickEnableAll,
-                                        ),
-                                        AppBar.OverflowAction(
-                                            title = stringResource(MR.strings.action_disable_all),
-                                            onClick = onClickDisableAll,
-                                        ),
-                                        AppBar.OverflowAction(
-                                            title = stringResource(MR.strings.pref_clear_cookies),
-                                            onClick = onClickClearCookies,
-                                        ),
+                        actions = buildList {
+                            if (url != null) {
+                                add(
+                                    AppBar.Action(
+                                        title = stringResource(MR.strings.action_open_repo),
+                                        icon = Icons.AutoMirrored.Outlined.Launch,
+                                        onClick = {
+                                            uriHandler.openUri(url)
+                                        },
                                     ),
                                 )
                             }
-                            .build(),
+                            addAll(
+                                listOf(
+                                    AppBar.OverflowAction(
+                                        title = stringResource(MR.strings.action_enable_all),
+                                        onClick = onClickEnableAll,
+                                    ),
+                                    AppBar.OverflowAction(
+                                        title = stringResource(MR.strings.action_disable_all),
+                                        onClick = onClickDisableAll,
+                                    ),
+                                    AppBar.OverflowAction(
+                                        title = stringResource(MR.strings.pref_clear_cookies),
+                                        onClick = onClickClearCookies,
+                                    ),
+                                ),
+                            )
+                        },
                     )
                 },
                 scrollBehavior = scrollBehavior,
@@ -157,7 +153,7 @@ fun ExtensionDetailsScreen(
 private fun ExtensionDetails(
     contentPadding: PaddingValues,
     extension: Extension.Installed,
-    sources: ImmutableList<ExtensionSourceItem>,
+    sources: List<ExtensionSourceItem>,
     incognitoMode: Boolean,
     onClickSourcePreferences: (sourceId: Long) -> Unit,
     onClickUninstall: () -> Unit,
@@ -248,14 +244,17 @@ private fun DetailsHeader(
 
                         if (extension is Extension.Installed) {
                             append("\n\n")
-                            append(
+                            appendLine(
                                 """
                                 Update available: ${extension.hasUpdate}
                                 Obsolete: ${extension.isObsolete}
                                 Shared: ${extension.isShared}
-                                Repository: ${extension.repoUrl}
                                 """.trimIndent(),
                             )
+                            val store = extension.store
+                            if (store != null) {
+                                append("Repository: ${store.indexUrl}")
+                            }
                         }
                     }
                     context.copyToClipboard("Extension Debug information", extDebugInfo)
