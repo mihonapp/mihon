@@ -363,20 +363,19 @@
     <string name="ext_revoke_trust">Revoke trusted unknown extensions</string>
 
     <!-- Extension repos -->
-    <string name="label_extension_repos">Extension repos</string>
-    <string name="information_empty_repos">You have no repos set.</string>
-    <string name="action_add_repo">Add repo</string>
-    <string name="label_add_repo_input">Repo URL</string>
-    <string name="action_add_repo_message">Add additional repos to %s. This should be a URL that ends with \"index.min.json\".</string>
-    <string name="error_repo_exists">This repo already exists!</string>
-    <string name="action_delete_repo">Delete repo</string>
-    <string name="invalid_repo_name">Invalid repo URL</string>
-    <string name="delete_repo_confirmation">Do you wish to delete the repo \"%s\"?</string>
-    <string name="add_repo_confirmation">Do you wish to add the repo \"%s\"?</string>
     <string name="action_open_repo">Open source repo</string>
-    <string name="action_replace_repo">Replace</string>
-    <string name="action_replace_repo_title">Signing Key Fingerprint Already Exists</string>
-    <string name="action_replace_repo_message">Repository %1$s has the same Signing Key Fingerprint as %2$s.\nIf this is expected, %2$s will be replaced, otherwise contact your repo maintainer.</string>
+
+    <!-- Extension store -->
+    <string name="extensionStores">Extension stores</string>
+    <string name="action.addExtensionStore">Add extension store</string>
+    <string name="extensionStoresScreen.emptyLabel">You haven\'t added an extension store yet</string>
+    <string name="extensionStoresScreen.addStore.title">Add extension store</string>
+    <string name="extensionStoresScreen.addStore.alreadyExists">This extension store already exists</string>
+    <string name="extensionStoresScreen.addStore.processing">Processing…</string>
+    <string name="extensionStoresScreen.addStoreInput.inputLabel">Store index URL</string>
+    <string name="extensionStoresScreen.addStoreDeeplink.bodyText">Do you wish to add the extension store below?</string>
+    <string name="extensionStoresScreen.deleteStore.title">Remove extension store</string>
+    <string name="extensionStoresScreen.deleteStore.body">Do you wish to remove the extension store \"%1$s\" (%2$s)?</string>
 
       <!-- Reader section -->
     <string name="pref_fullscreen">Fullscreen</string>
@@ -401,6 +400,8 @@
     <string name="pref_flash_style_white_black">White and Black</string>
     <string name="pref_double_tap_anim_speed">Double tap animation speed</string>
     <string name="pref_show_page_number">Show page number</string>
+    <string name="pref_webtoon_vertical_navigator">Use vertical navigator for long strip reading</string>
+    <string name="pref_webtoon_vertical_navigator_on_left">Place vertical navigator on the left side</string>
     <string name="pref_show_reading_mode">Show reading mode</string>
     <string name="pref_show_reading_mode_summary">Briefly show current mode when reader is opened</string>
     <string name="pref_hardware_bitmap_threshold">Custom hardware bitmap threshold</string>
@@ -566,7 +567,6 @@
     <string name="backup_choice">What do you want to backup?</string>
     <string name="app_settings">App settings</string>
     <string name="source_settings">Source settings</string>
-    <string name="extensionRepo_settings">Extension repos</string>
     <string name="private_settings">Include sensitive settings (e.g., tracker login tokens)</string>
     <string name="non_library_settings">All read entries</string>
     <string name="creating_backup">Creating backup</string>
