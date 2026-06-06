@@ -99,3 +99,6 @@
     public <init>();
     public void destroy();
 }
+# webgpu
+-keep interface androidx.webgpu.** { *; }
+-keep class androidx.webgpu.** { *; }
