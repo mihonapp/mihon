@@ -18,12 +18,14 @@ import androidx.annotation.StyleRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.os.postDelayed
 import androidx.core.view.isVisible
+import ca.mpreg.webgpuviewer.WebGpuImageView
 import coil3.BitmapImage
 import coil3.asDrawable
 import coil3.dispose
 import coil3.imageLoader
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
+import coil3.request.allowHardware
 import coil3.request.crossfade
 import coil3.size.Precision
 import coil3.size.ViewSizeResolver
@@ -238,8 +240,13 @@ open class ReaderPageImageView @JvmOverloads constructor(
         pageView = if (isWebtoon) {
             WebtoonSubsamplingImageView(context)
         } else {
-            SubsamplingScaleImageView(context)
-        }.apply {
+            if (Injekt.get<BasePreferences>().highQualityRenderer.get()) {
+                WebGpuImageView(context)
+            } else {
+                SubsamplingScaleImageView(context)
+            }
+        }
+        (pageView as? SubsamplingScaleImageView)?.apply {
             setMaxTileSize(ImageUtil.hardwareBitmapThreshold)
             setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER)
             setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE)
@@ -337,6 +344,44 @@ open class ReaderPageImageView @JvmOverloads constructor(
             }
         }
     }
+        ?: (pageView as? WebGpuImageView)?.apply {
+            when (data) {
+                is BitmapDrawable -> {
+                    init(data.bitmap)
+                    isVisible = true
+                }
+
+                is BufferedSource -> {
+                    ImageRequest.Builder(context)
+                        .data(data)
+                        .memoryCachePolicy(CachePolicy.DISABLED)
+                        .diskCachePolicy(CachePolicy.DISABLED)
+                        .target(
+                            onSuccess = { result ->
+                                val data = result as BitmapImage
+                                init(data.bitmap)
+                                isVisible = true
+                            },
+                        )
+                        .listener(
+                            onError = { _, result ->
+                                onImageLoadError(result.throwable)
+                            },
+                        )
+                        .allowHardware(false)
+                        .precision(Precision.INEXACT)
+                        .cropBorders(config.cropBorders)
+                        .customDecoder(true)
+                        .crossfade(false)
+                        .build()
+                        .let(context.imageLoader::enqueue)
+                }
+
+                else -> {
+                    throw IllegalArgumentException("Not implemented for class ${data::class.simpleName}")
+                }
+            }
+        }
 
     private fun prepareAnimatedImageView() {
         if (pageView is AppCompatImageView) return
