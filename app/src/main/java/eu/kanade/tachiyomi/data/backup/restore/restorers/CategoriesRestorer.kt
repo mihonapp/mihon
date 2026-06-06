@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.backup.restore.restorers
 
-import app.cash.sqldelight.async.coroutines.awaitAsOne
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import tachiyomi.data.Database
 import tachiyomi.domain.category.interactor.GetCategories
@@ -29,7 +28,6 @@ class CategoriesRestorer(
                         val order = nextOrder++
                         database.categoriesQueries
                             .insert(it.name, order, it.flags)
-                            .awaitAsOne()
                             .let { id -> it.toCategory(id).copy(order = order) }
                     }
             }
