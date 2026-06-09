@@ -374,7 +374,7 @@ object SettingsDataScreen : SearchableSettings {
         ) { uri ->
             uri?.let {
                 scope.launch {
-                    LibraryExporter.exportToCsv(
+                    val result = LibraryExporter.exportToCsv(
                         context = context,
                         uri = it,
                         favorites = favorites,
@@ -386,6 +386,15 @@ object SettingsDataScreen : SearchableSettings {
                             }
                         },
                     )
+                    when (result) {
+                        is LibraryExporter.ExportResult.Empty -> {
+                            context.toast(MR.strings.no_results_found)
+                        }
+                        is LibraryExporter.ExportResult.Failure -> {
+                            context.toast(MR.strings.unknown_error)
+                        }
+                        is LibraryExporter.ExportResult.Success -> { /* handled by onExportComplete */ }
+                    }
                 }
             }
         }
@@ -396,7 +405,14 @@ object SettingsDataScreen : SearchableSettings {
                 allCategories = allCategories.filter { it.id in nonEmptyCategoryIds },
                 onConfirm = { options ->
                     exportOptions = options
-                    saveFileLauncher.launch("mihon_library.csv")
+                    scope.launch {
+                        val filtered = LibraryExporter.filtering(favorites, options, getCategories)
+                        if (filtered.isEmpty()) {
+                            context.toast(MR.strings.no_results_found)
+                        } else {
+                            saveFileLauncher.launch("mihon_library.csv")
+                        }
+                    }
                 },
                 onDismissRequest = { showDialog = false },
             )
