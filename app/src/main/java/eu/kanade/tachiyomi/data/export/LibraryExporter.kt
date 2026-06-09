@@ -4,6 +4,8 @@ import android.content.Context
 import android.net.Uri
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.manga.model.Manga
 
 object LibraryExporter {
@@ -12,6 +14,7 @@ object LibraryExporter {
         val includeTitle: Boolean,
         val includeAuthor: Boolean,
         val includeArtist: Boolean,
+        val categories: List<Category> = emptyList(), // default no categories means all entries
     )
 
     suspend fun exportToCsv(
@@ -19,11 +22,12 @@ object LibraryExporter {
         uri: Uri,
         favorites: List<Manga>,
         options: ExportOptions,
+        getCategories: GetCategories,
         onExportComplete: () -> Unit,
     ) {
         withContext(Dispatchers.IO) {
             context.contentResolver.openOutputStream(uri)?.use { outputStream ->
-                val csvData = generateCsvData(favorites, options)
+                val csvData = generateCsvData(favorites, options, getCategories)
                 outputStream.write(csvData.toByteArray())
             }
             onExportComplete()
@@ -32,7 +36,14 @@ object LibraryExporter {
 
     private val escapeRequired = listOf("\r", "\n", "\"", ",")
 
-    private fun generateCsvData(favorites: List<Manga>, options: ExportOptions): String {
+    private suspend fun generateCsvData(favorites: List<Manga>, options: ExportOptions, getCategories: GetCategories): String {
+        val filtered = if(options.categories.isEmpty()){
+            favorites
+        } else {
+            favorites.filter { manga ->
+                getCategories.await(manga.id).any { it in options.categories}
+            }
+        }
         val columnSize = listOf(
             options.includeTitle,
             options.includeAuthor,
@@ -40,8 +51,8 @@ object LibraryExporter {
         )
             .count { it }
 
-        val rows = buildList(favorites.size) {
-            favorites.forEach { manga ->
+        val rows = buildList(filtered.size) {
+            filtered.forEach { manga ->
                 buildList(columnSize) {
                     if (options.includeTitle) add(manga.title)
                     if (options.includeAuthor) add(manga.author)
