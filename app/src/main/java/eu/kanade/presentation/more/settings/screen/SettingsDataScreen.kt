@@ -351,9 +351,22 @@ object SettingsDataScreen : SearchableSettings {
         val getCategories = remember { Injekt.get<GetCategories>() }
         var favorites by remember { mutableStateOf<List<Manga>>(emptyList()) }
         var allCategories by remember { mutableStateOf<List<Category>>(emptyList()) }
+        var nonEmptyCategoryIds by remember { mutableStateOf<Set<Long>>(emptySet()) }
         LaunchedEffect(Unit) {
             favorites = getFavorites.await()
             allCategories = getCategories.await()
+            nonEmptyCategoryIds = buildSet {
+                for (manga in favorites) {
+                    val cats = getCategories.await(manga.id)
+                    if (cats.isEmpty()) {
+                        add(Category.UNCATEGORIZED_ID)
+                    } else {
+                        for (cat in cats) {
+                            add(cat.id)
+                        }
+                    }
+                }
+            }
         }
 
         val saveFileLauncher = rememberLauncherForActivityResult(
@@ -380,7 +393,7 @@ object SettingsDataScreen : SearchableSettings {
         if (showDialog) {
             ColumnSelectionDialog(
                 options = exportOptions,
-                allCategories = allCategories,
+                allCategories = allCategories.filter { it.id in nonEmptyCategoryIds },
                 onConfirm = { options ->
                     exportOptions = options
                     saveFileLauncher.launch("mihon_library.csv")
@@ -421,6 +434,7 @@ object SettingsDataScreen : SearchableSettings {
                 onConfirm = { include, _ ->
                     selectedCategoryIds = include
                 },
+                showEditButton = false,
             )
         }
 
