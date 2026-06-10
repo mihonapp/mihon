@@ -62,7 +62,7 @@ rxJava = "1.3.8"
 shizuku = "13.1.5"
 spotless = "8.6.0"
 sqldelight = "2.3.2"
-sqldelight-androidx-driver = "0.2.0"
+sqldelight-androidx-driver = "0637a964a1"
 stringSimilarity = "0.1.0"
 subsamplingScaleImageView = "66e0db195d"
 swipe = "1.3.0"
@@ -165,7 +165,7 @@ rxJava = { module = "io.reactivex:rxjava", version.ref = "rxJava" }
 shizuku-api = { module = "dev.rikka.shizuku:api", version.ref = "shizuku" }
 shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizuku" }
 spotless-gradle = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
-sqldelight-androidxDriver = { module = "com.eygraber:sqldelight-androidx-driver", version.ref = "sqldelight-androidx-driver" }
+sqldelight-androidxDriver = { module = "com.github.mihon.sqldelight-androidx-driver:sqldelight-androidx-driver", version.ref = "sqldelight-androidx-driver" }
 sqldelight-androidxPaging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqldelight" }
 sqldelight-async = { module = "app.cash.sqldelight:async-extensions", version.ref = "sqldelight" }
 sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
