@@ -286,6 +286,10 @@ object SettingsReaderScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_page_rotate_invert),
                     enabled = rotateToFit,
                 ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.webtoonDoubleTapZoomEnabled,
+                    title = stringResource(MR.strings.pref_double_tap_zoom),
+                ),
             ),
         )
     }

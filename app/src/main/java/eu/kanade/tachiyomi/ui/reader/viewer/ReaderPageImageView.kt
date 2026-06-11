@@ -263,7 +263,16 @@ open class ReaderPageImageView @JvmOverloads constructor(
     private fun SubsamplingScaleImageView.setupZoom(config: Config?) {
         // 5x zoom
         maxScale = scale * MAX_ZOOM_SCALE
-        setDoubleTapZoomScale(scale * 2)
+
+        if (config?.doubleTapZoom ?: false) {
+            setDoubleTapZoomScale(scale * 2)
+        } else {
+            // HACK: There's no function to disable double tap zoom while preserving pinch gesture,
+            // but we can make it feel like nothing is being zoomed.
+            setDoubleTapZoomScale(1.0f)
+            setDoubleTapZoomDuration(0)
+            setQuickScaleEnabled(false)
+        }
 
         when (config?.zoomStartPosition) {
             ZoomStartPosition.LEFT -> setScaleAndCenter(scale, PointF(0F, 0F))
@@ -355,6 +364,9 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 setOnDoubleTapListener(
                     object : GestureDetector.SimpleOnGestureListener() {
                         override fun onDoubleTap(e: MotionEvent): Boolean {
+                            if (config!!.doubleTapZoom) {
+                                return false
+                            }
                             if (scale > 1F) {
                                 setScale(1F, e.x, e.y, true)
                             } else {
@@ -416,11 +428,12 @@ open class ReaderPageImageView @JvmOverloads constructor(
      * All of the config except [zoomDuration] will only be used for non-animated image.
      */
     data class Config(
-        val zoomDuration: Int,
-        val minimumScaleType: Int = SCALE_TYPE_CENTER_INSIDE,
-        val cropBorders: Boolean = false,
-        val zoomStartPosition: ZoomStartPosition = ZoomStartPosition.CENTER,
-        val landscapeZoom: Boolean = false,
+            val zoomDuration: Int,
+            val doubleTapZoom: Boolean,
+            val minimumScaleType: Int = SCALE_TYPE_CENTER_INSIDE,
+            val cropBorders: Boolean = false,
+            val zoomStartPosition: ZoomStartPosition = ZoomStartPosition.CENTER,
+            val landscapeZoom: Boolean = false,
     )
 
     enum class ZoomStartPosition {
