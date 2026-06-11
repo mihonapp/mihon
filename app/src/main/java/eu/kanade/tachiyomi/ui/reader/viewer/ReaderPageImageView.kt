@@ -270,7 +270,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
             // HACK: There's no function to disable double tap zoom while preserving pinch gesture,
             // but we can make it feel like nothing is being zoomed.
             setDoubleTapZoomScale(1.0f)
-            setDoubleTapZoomDuration(0)
+            setDoubleTapZoomDuration(1)
             setQuickScaleEnabled(false)
         }
 
@@ -364,9 +364,6 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 setOnDoubleTapListener(
                     object : GestureDetector.SimpleOnGestureListener() {
                         override fun onDoubleTap(e: MotionEvent): Boolean {
-                            if (config!!.doubleTapZoom) {
-                                return false
-                            }
                             if (scale > 1F) {
                                 setScale(1F, e.x, e.y, true)
                             } else {
