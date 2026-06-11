@@ -425,12 +425,12 @@ open class ReaderPageImageView @JvmOverloads constructor(
      * All of the config except [zoomDuration] will only be used for non-animated image.
      */
     data class Config(
-            val zoomDuration: Int,
-            val doubleTapZoom: Boolean,
-            val minimumScaleType: Int = SCALE_TYPE_CENTER_INSIDE,
-            val cropBorders: Boolean = false,
-            val zoomStartPosition: ZoomStartPosition = ZoomStartPosition.CENTER,
-            val landscapeZoom: Boolean = false,
+        val zoomDuration: Int,
+        val doubleTapZoom: Boolean,
+        val minimumScaleType: Int = SCALE_TYPE_CENTER_INSIDE,
+        val cropBorders: Boolean = false,
+        val zoomStartPosition: ZoomStartPosition = ZoomStartPosition.CENTER,
+        val landscapeZoom: Boolean = false,
     )
 
     enum class ZoomStartPosition {
