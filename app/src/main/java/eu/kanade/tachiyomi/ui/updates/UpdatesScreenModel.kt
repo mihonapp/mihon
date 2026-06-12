@@ -187,6 +187,8 @@ class UpdatesScreenModel(
         return started
     }
 
+    fun cancelLibraryUpdate() = LibraryUpdateJob.stop(Injekt.get<Application>())
+
     /**
      * Update status of chapters.
      *
