@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 import logcat.LogPriority
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -34,9 +35,8 @@ import java.io.File
  */
 internal class ExtensionInstaller(
     private val context: Context,
+    private val scope: CoroutineScope,
 ) {
-
-    private val scope = CoroutineScope(Dispatchers.IO)
     private val activeJobs = mutableMapOf<String, Job>()
     private val activeSteps = mutableMapOf<Long, MutableStateFlow<InstallStep>>()
     private val extensionInstaller = Injekt.get<BasePreferences>().extensionInstaller
@@ -57,7 +57,7 @@ internal class ExtensionInstaller(
         val step = MutableStateFlow(InstallStep.Pending)
         activeSteps[downloadId] = step
 
-        val job = scope.launch {
+        val job = scope.launchIO {
             val tmpFile = File(context.cacheDir, "extension_${extension.pkgName}.apk")
             try {
                 step.value = InstallStep.Downloading
