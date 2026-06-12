@@ -705,6 +705,8 @@
     <string name="chapter_not_found">Chapter not found</string>
     <string name="local_invalid_format">Invalid chapter format</string>
     <string name="local_filter_order_by">Order by</string>
+    <string name="local_filter_tags">Tags</string>
+    <string name="local_filter_status_any">Any status</string>
     <string name="date">Date</string>
 
     <!-- Manga info -->

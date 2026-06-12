@@ -5,6 +5,7 @@ import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.UnmeteredSource
+import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.model.Page
@@ -35,6 +36,8 @@ import tachiyomi.domain.chapter.service.ChapterRecognition
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.source.local.filter.OrderBy
+import tachiyomi.source.local.filter.StatusFilter
+import tachiyomi.source.local.filter.TagGroupFilter
 import tachiyomi.source.local.image.LocalCoverManager
 import tachiyomi.source.local.io.Archive
 import tachiyomi.source.local.io.Format
@@ -83,34 +86,64 @@ actual class LocalSource(
             0L
         }
 
-        var mangaDirs = fileSystem.getFilesInBaseDirectory()
+        val selectedTags = filters
+            .filterIsInstance<TagGroupFilter>()
+            .flatMap { it.state }
+            .filter { it.state }
+            .map { it.name }
+
+        val selectedStatus = filters
+            .filterIsInstance<StatusFilter>()
+            .firstOrNull()
+            ?.selectedStatus
+
+        val needsMetadata = query.isNotBlank() || selectedTags.isNotEmpty() || selectedStatus != null
+
+        var entries = fileSystem.getFilesInBaseDirectory()
             // Filter out files that are hidden and is not a folder
             .filter { it.isDirectory && !it.name.orEmpty().startsWith('.') }
             .distinctBy { it.name }
             .filter {
-                if (lastModifiedLimit == 0L && query.isBlank()) {
+                if (lastModifiedLimit == 0L) {
                     true
-                } else if (lastModifiedLimit == 0L) {
-                    it.name.orEmpty().contains(query, ignoreCase = true)
                 } else {
                     it.lastModified() >= lastModifiedLimit
                 }
+            }
+            .map { mangaDir ->
+                async {
+                    LocalMangaEntry(
+                        directory = mangaDir,
+                        manga = createManga(mangaDir, needsMetadata),
+                    )
+                }
+            }
+            .awaitAll()
+            .filter { entry ->
+                val manga = entry.manga
+                val matchesQuery = query.isBlank() || manga.matchesQuery(query)
+                val matchesTags = selectedTags.all { selectedTag ->
+                    manga.getGenres().orEmpty().any { it.equals(selectedTag, ignoreCase = true) }
+                }
+                val matchesStatus = selectedStatus == null || manga.status == selectedStatus
+
+                matchesQuery && matchesTags && matchesStatus
             }
 
         filters.forEach { filter ->
             when (filter) {
                 is OrderBy.Popular -> {
-                    mangaDirs = if (filter.state!!.ascending) {
-                        mangaDirs.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name.orEmpty() })
+                    entries = if (filter.state!!.ascending) {
+                        entries.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.manga.title })
                     } else {
-                        mangaDirs.sortedWith(compareByDescending(String.CASE_INSENSITIVE_ORDER) { it.name.orEmpty() })
+                        entries.sortedWith(compareByDescending(String.CASE_INSENSITIVE_ORDER) { it.manga.title })
                     }
                 }
                 is OrderBy.Latest -> {
-                    mangaDirs = if (filter.state!!.ascending) {
-                        mangaDirs.sortedBy(UniFile::lastModified)
+                    entries = if (filter.state!!.ascending) {
+                        entries.sortedBy { it.directory.lastModified() }
                     } else {
-                        mangaDirs.sortedByDescending(UniFile::lastModified)
+                        entries.sortedByDescending { it.directory.lastModified() }
                     }
                 }
                 else -> {
@@ -119,23 +152,41 @@ actual class LocalSource(
             }
         }
 
-        val mangas = mangaDirs
-            .map { mangaDir ->
-                async {
-                    SManga.create().apply {
-                        title = mangaDir.name.orEmpty()
-                        url = mangaDir.name.orEmpty()
+        val mangas = entries.map { it.manga }
 
-                        // Try to find the cover
-                        coverManager.find(mangaDir.name.orEmpty())?.let {
-                            thumbnail_url = it.uri.toString()
-                        }
+        MangasPage(mangas, false)
+    }
+
+    private fun createManga(mangaDir: UniFile, includeMetadata: Boolean): SManga {
+        return SManga.create().apply {
+            title = mangaDir.name.orEmpty()
+            url = mangaDir.name.orEmpty()
+
+            coverManager.find(mangaDir.name.orEmpty())?.let {
+                thumbnail_url = it.uri.toString()
+            }
+
+            if (includeMetadata) {
+                try {
+                    setMangaDetailsFromTopLevelMetadata(mangaDir.listFiles().orEmpty(), this)
+                } catch (e: Throwable) {
+                    logcat(LogPriority.ERROR, e) {
+                        "Error reading local metadata for search result ${mangaDir.name.orEmpty()}"
                     }
                 }
             }
-            .awaitAll()
+        }
+    }
 
-        MangasPage(mangas, false)
+    private fun SManga.matchesQuery(query: String): Boolean {
+        return listOfNotNull(
+            title,
+            url,
+            author,
+            artist,
+            description,
+            genre,
+        ).any { it.contains(query, ignoreCase = true) }
     }
 
     // Manga details related
@@ -246,6 +297,35 @@ actual class LocalSource(
         manga.copyFromComicInfo(parseComicInfo(stream))
     }
 
+    private fun setMangaDetailsFromLegacyJsonFile(stream: InputStream, manga: SManga) {
+        json.decodeFromStream<MangaDetails>(stream).run {
+            title?.let { manga.title = it }
+            author?.let { manga.author = it }
+            artist?.let { manga.artist = it }
+            description?.let { manga.description = it }
+            genre?.let { manga.genre = it.joinToString() }
+            status?.let { manga.status = it }
+        }
+    }
+
+    private fun setMangaDetailsFromTopLevelMetadata(mangaDirFiles: Array<out UniFile>, manga: SManga): Boolean {
+        val comicInfoFile = mangaDirFiles
+            .firstOrNull { it.name == COMIC_INFO_FILE }
+        if (comicInfoFile != null) {
+            setMangaDetailsFromComicInfoFile(comicInfoFile.openInputStream(), manga)
+            return true
+        }
+
+        val legacyJsonDetailsFile = mangaDirFiles
+            .firstOrNull { it.extension == "json" }
+        if (legacyJsonDetailsFile != null) {
+            setMangaDetailsFromLegacyJsonFile(legacyJsonDetailsFile.openInputStream(), manga)
+            return true
+        }
+
+        return false
+    }
+
     private fun setChapterDetailsFromComicInfoFile(stream: InputStream, chapter: SChapter) {
         val comicInfo = parseComicInfo(stream)
 
@@ -300,7 +380,40 @@ actual class LocalSource(
     }
 
     // Filters
-    override fun getFilterList() = FilterList(OrderBy.Popular(context))
+    override fun getFilterList(): FilterList {
+        val filters = mutableListOf<Filter<*>>(OrderBy.Popular(context))
+
+        val tags = fileSystem.getFilesInBaseDirectory()
+            .filter { it.isDirectory && !it.name.orEmpty().startsWith('.') }
+            .distinctBy { it.name }
+            .flatMap { mangaDir ->
+                try {
+                    SManga.create()
+                        .apply { setMangaDetailsFromTopLevelMetadata(mangaDir.listFiles().orEmpty(), this) }
+                        .getGenres()
+                        .orEmpty()
+                } catch (e: Throwable) {
+                    logcat(LogPriority.ERROR, e) {
+                        "Error reading local metadata filters for ${mangaDir.name.orEmpty()}"
+                    }
+                    emptyList()
+                }
+            }
+            .distinct()
+            .sortedWith(String.CASE_INSENSITIVE_ORDER)
+
+        if (tags.isNotEmpty()) {
+            filters += TagGroupFilter(context, tags)
+        }
+        filters += StatusFilter(context)
+
+        return FilterList(filters)
+    }
+
+    private data class LocalMangaEntry(
+        val directory: UniFile,
+        val manga: SManga,
+    )
 
     // Unused stuff
     override suspend fun getPageList(chapter: SChapter): List<Page> = throw UnsupportedOperationException("Unused")
