@@ -766,19 +766,10 @@
     <string name="private_settings">Hassas ayarları dahil et (örn. izleyici oturum açma bilgileri)</string>
     <string name="manga_interval_expected_update">Sonraki bölümlerin %1$s içinde yayınlanacağı tahmin ediliyor, her %2$s içinde bir kontrol ediliyor.</string>
     <string name="invalid_backup_file_error">Tüm hata:</string>
-    <string name="information_empty_repos">Hiç depo ayarlamadınız.</string>
     <string name="onboarding_storage_help_action">Depolama kılavuzu</string>
-    <string name="action_add_repo">Depo ekle</string>
-    <string name="label_add_repo_input">Depo bağlantısı</string>
-    <string name="action_add_repo_message">%s\'a ek depolar ekleyin. Bu, \"index.min.json\" ile biten bir bağlantı olmalıdır.</string>
-    <string name="error_repo_exists">Bu depo zaten var!</string>
-    <string name="action_delete_repo">Depoyu sil</string>
-    <string name="invalid_repo_name">Geçersiz depo bağlantısı</string>
-    <string name="delete_repo_confirmation">\"%s\" deposunu silmek istiyor musunuz?</string>
     <string name="manga_interval_custom_amount">Özel güncelleme sıklığı:</string>
     <string name="onboarding_storage_help_info">Eski bir sürümden güncelleme yapıyorsunuz ve neyi seçeceğinizden emin değil misiniz? Daha fazla bilgi için depolama kılavuzuna bakın.</string>
     <string name="pref_library_update_smart_update">Akıllı güncelleme</string>
-    <string name="label_extension_repos">Uzantı depoları</string>
     <string name="theme_nord">Nord</string>
     <string name="ext_revoke_trust">Güvenilmiş bilinmeyen uzantıları geri al</string>
     <string name="manga_interval_expected_update_soon">Yakında</string>
@@ -792,16 +783,11 @@
     <string name="pref_flash_duration_summary">%1$s ms</string>
     <string name="pref_flash_page_interval">Işık çakma aralığı</string>
     <string name="pref_display_profile">Özel görünüm profili</string>
-    <string name="action_replace_repo_message">%1$s deposunun İmzalama Anahtarı Parmak İzi %2$s deposuyla aynı.
-\nEğer böyle olması gerekiyorsa %2$s ile değiştirilecek. Aksi takdirde depo yöneticinize ulaşın.</string>
     <string name="pref_webtoon_disable_zoom_out">Uzaklaştırmayı devre dışı bırak</string>
     <string name="invalid_backup_file_json">JSON yedekleri desteklenmiyor</string>
     <string name="invalid_backup_file_unknown">Yedek dosyası bozuk</string>
     <string name="manga_interval_expected_update_null">Bu manga ya tamamlanmış ya da tahmin edilen yayımlanma tarihi yok.</string>
     <string name="action_add_anyway">Yine de ekle</string>
-    <string name="action_replace_repo">Değiştir</string>
-    <string name="action_replace_repo_title">İmzalama Anahtarı Parmak İzi Zaten Var</string>
-    <string name="extensionRepo_settings">Eklenti depoları</string>
     <string name="file_picker_uri_permission_unsupported">Stabil klasör erişimi sağlanamadı. Uygulama belirsiz çalışabilir.</string>
     <string name="label_upcoming">Takvim</string>
     <string name="action_view_upcoming">Gelecek Güncellemeleri Görüntüle</string>
@@ -809,7 +795,6 @@
     <string name="upcoming_calendar_next">Gelecek Ay</string>
     <string name="upcoming_calendar_prev">Önceki Ay</string>
     <string name="pref_download_new_unread_chapters_only">Yinelenen okunmuş bölümlerin indirilmesini atla</string>
-    <string name="add_repo_confirmation">\"%s\" deposunu eklemek istiyor musunuz?</string>
     <string name="confirm_tracker_update">İzleyicileri %d. bölüme güncelle?</string>
     <string name="onboarding_permission_crashlytics">Çökme kayıtlarını gönder</string>
     <string name="pref_security">Güvenlik</string>

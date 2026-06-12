@@ -620,18 +620,7 @@
     <string name="remove_private_extension_message">«%s» хушмана катертесшӗн-и?</string>
     <string name="ext_permission_install_apps_warning">Хушмасене лартма ирӗксем кирлӗ. Ирӗксене пама кунта пус.</string>
     <string name="ext_revoke_trust">Шанчӑклӑ мар хушмасенчен шанчӑк туртса илмелле</string>
-    <string name="label_extension_repos">Хушмасен ҫӳпҫисем</string>
-    <string name="information_empty_repos">Пӗр хушмасен ҫӳпҫи те ҫук.</string>
-    <string name="action_add_repo">Хушмасен ҫӳпҫи хуш</string>
-    <string name="label_add_repo_input">Хушмасен ҫӳпҫин URL-ӗ</string>
-    <string name="action_add_repo_message">%s-а хушма хушмасен ҫӳпҫи хуш. «index.min.json» тенипе вӗҫленекен URL пулмалла.</string>
-    <string name="error_repo_exists">Ку хушмасен ҫӳпҫи унсӑрах пур!</string>
-    <string name="action_delete_repo">Хушмасен ҫӳпҫине катерт</string>
-    <string name="invalid_repo_name">Хушмасен ҫӳпҫин йӑнӑш URL-ӗ</string>
-    <string name="delete_repo_confirmation">«%s» хушма ҫӳпҫине катертесшӗн-и?</string>
-    <string name="add_repo_confirmation">«%s» хушмасен ҫӳпҫине хушасшӑн-и?</string>
     <string name="action_open_repo">Хушмасен ҫӳпҫин ҫӑл куҫне уҫ</string>
-    <string name="action_replace_repo">Ылмаштар</string>
     <string name="pref_double_tap_zoom">Пысӑклатма икӗ хут пусмалла</string>
     <string name="pref_flash_duration_summary">%1$s мҫ</string>
     <string name="pref_flash_style_black">Хура</string>
@@ -646,7 +635,6 @@
     <string name="invalid_backup_file_error">Тулли йӑнӑш:</string>
     <string name="app_settings">Ап ӗнерӗвӗ</string>
     <string name="source_settings">Ҫӑл куҫ ӗнерӗвӗ</string>
-    <string name="extensionRepo_settings">Хушмасен ҫӳпҫисем</string>
     <string name="non_library_settings">Пур вуланӑ серилӗх</string>
     <string name="library_list">Вулавӑш йат-йышӗ</string>
 </resources>
