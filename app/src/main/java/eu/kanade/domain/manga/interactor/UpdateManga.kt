@@ -42,13 +42,8 @@ class UpdateManga(
             ""
         }
 
-        // if the manga isn't a favorite (or 'update titles' preference is enabled), set its title from source and update in db
-        val title =
-            if (remoteTitle.isNotEmpty() && (!localManga.favorite || libraryPreferences.updateMangaTitles.get())) {
-                remoteTitle
-            } else {
-                null
-            }
+        // Set its title from source and update in db
+        val title = remoteTitle.ifEmpty { null }
 
         val coverLastModified =
             when {
@@ -60,6 +55,7 @@ class UpdateManga(
                     coverCache.deleteFromCache(localManga, false)
                     null
                 }
+
                 else -> {
                     coverCache.deleteFromCache(localManga, false)
                     Instant.now().toEpochMilli()
