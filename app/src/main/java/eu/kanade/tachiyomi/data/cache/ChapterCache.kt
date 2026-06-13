@@ -113,7 +113,13 @@ class ChapterCache(
      */
     fun isImageInCache(imageUrl: String): Boolean {
         return try {
-            diskCache.get(DiskUtil.hashKeyForDisk(imageUrl)).use { it != null }
+            val key = DiskUtil.hashKeyForDisk(imageUrl)
+            val inJournal = diskCache.get(key).use { it != null }
+            val fileExists = getImageFile(imageUrl).exists()
+            if (inJournal && !fileExists) {
+                logcat(LogPriority.WARN) { "Image is in journal but file is missing: $imageUrl" }
+            }
+            inJournal && fileExists
         } catch (_: IOException) {
             false
         }
@@ -204,4 +210,4 @@ private const val PARAMETER_APP_VERSION = 1
 private const val PARAMETER_VALUE_COUNT = 1
 
 /** The maximum number of bytes this cache should use to store.  */
-private const val PARAMETER_CACHE_SIZE = 100L * 1024 * 1024
+private const val PARAMETER_CACHE_SIZE = 200L * 1024 * 1024
