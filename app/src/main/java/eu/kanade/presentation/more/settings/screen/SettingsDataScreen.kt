@@ -21,6 +21,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MultiChoiceSegmentedButtonRow
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -42,6 +43,7 @@ import androidx.core.net.toUri
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.hippo.unifile.UniFile
+import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.data.CreateBackupScreen
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
@@ -64,13 +66,17 @@ import tachiyomi.core.common.storage.displayablePath
 import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.core.common.preference.mapAsCheckboxState
 import tachiyomi.domain.backup.service.BackupPreferences
+import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.storage.service.StoragePreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.TextButton
+import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
@@ -342,9 +348,25 @@ object SettingsDataScreen : SearchableSettings {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
         val getFavorites = remember { Injekt.get<GetFavorites>() }
+        val getCategories = remember { Injekt.get<GetCategories>() }
         var favorites by remember { mutableStateOf<List<Manga>>(emptyList()) }
+        var allCategories by remember { mutableStateOf<List<Category>>(emptyList()) }
+        var nonEmptyCategoryIds by remember { mutableStateOf<Set<Long>>(emptySet()) }
         LaunchedEffect(Unit) {
             favorites = getFavorites.await()
+            allCategories = getCategories.await()
+            nonEmptyCategoryIds = buildSet {
+                for (manga in favorites) {
+                    val cats = getCategories.await(manga.id)
+                    if (cats.isEmpty()) {
+                        add(Category.UNCATEGORIZED_ID)
+                    } else {
+                        for (cat in cats) {
+                            add(cat.id)
+                        }
+                    }
+                }
+            }
         }
 
         val saveFileLauncher = rememberLauncherForActivityResult(
@@ -352,17 +374,27 @@ object SettingsDataScreen : SearchableSettings {
         ) { uri ->
             uri?.let {
                 scope.launch {
-                    LibraryExporter.exportToCsv(
+                    val result = LibraryExporter.exportToCsv(
                         context = context,
                         uri = it,
                         favorites = favorites,
                         options = exportOptions,
+                        getCategories = getCategories,
                         onExportComplete = {
                             scope.launch(Dispatchers.Main) {
                                 context.toast(MR.strings.library_exported)
                             }
                         },
                     )
+                    when (result) {
+                        is LibraryExporter.ExportResult.Empty -> {
+                            context.toast(MR.strings.no_results_found)
+                        }
+                        is LibraryExporter.ExportResult.Failure -> {
+                            context.toast(MR.strings.unknown_error)
+                        }
+                        is LibraryExporter.ExportResult.Success -> { /* handled by onExportComplete */ }
+                    }
                 }
             }
         }
@@ -370,9 +402,17 @@ object SettingsDataScreen : SearchableSettings {
         if (showDialog) {
             ColumnSelectionDialog(
                 options = exportOptions,
+                allCategories = allCategories.filter { it.id in nonEmptyCategoryIds },
                 onConfirm = { options ->
                     exportOptions = options
-                    saveFileLauncher.launch("mihon_library.csv")
+                    scope.launch {
+                        val filtered = LibraryExporter.filtering(favorites, options, getCategories)
+                        if (filtered.isEmpty()) {
+                            context.toast(MR.strings.no_results_found)
+                        } else {
+                            saveFileLauncher.launch("mihon_library.csv")
+                        }
+                    }
                 },
                 onDismissRequest = { showDialog = false },
             )
@@ -392,12 +432,27 @@ object SettingsDataScreen : SearchableSettings {
     @Composable
     private fun ColumnSelectionDialog(
         options: ExportOptions,
+        allCategories: List<Category>,
         onConfirm: (ExportOptions) -> Unit,
         onDismissRequest: () -> Unit,
     ) {
         var titleSelected by remember { mutableStateOf(options.includeTitle) }
         var authorSelected by remember { mutableStateOf(options.includeAuthor) }
         var artistSelected by remember { mutableStateOf(options.includeArtist) }
+        var selectedCategoryIds by remember { mutableStateOf(options.categories.map { it.id }) }
+        var showCategoryDialog by remember { mutableStateOf(false) }
+
+        if (showCategoryDialog) {
+            ChangeCategoryDialog(
+                initialSelection = allCategories.mapAsCheckboxState { it.id in selectedCategoryIds },
+                onDismissRequest = { showCategoryDialog = false },
+                onEditCategories = { showCategoryDialog = false },
+                onConfirm = { include, _ ->
+                    selectedCategoryIds = include
+                },
+                showEditButton = false,
+            )
+        }
 
         AlertDialog(
             onDismissRequest = onDismissRequest,
@@ -437,6 +492,17 @@ object SettingsDataScreen : SearchableSettings {
                         )
                         Text(text = stringResource(MR.strings.artist))
                     }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = MaterialTheme.padding.medium),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        TextButton(onClick = { showCategoryDialog = true }) {
+                            Text(text = stringResource(MR.strings.action_edit_categories))
+                        }
+                    }
                 }
             },
             confirmButton = {
@@ -447,6 +513,7 @@ object SettingsDataScreen : SearchableSettings {
                                 includeTitle = titleSelected,
                                 includeAuthor = authorSelected,
                                 includeArtist = artistSelected,
+                                categories = allCategories.filter { it.id in selectedCategoryIds },
                             ),
                         )
                         onDismissRequest()
