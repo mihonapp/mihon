@@ -143,6 +143,11 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             val showOnStart = config.navigationOverlayOnStart || config.forceNavigationOverlay
             activity.binding.navigationOverlay.setNavigation(config.navigator, showOnStart)
         }
+
+        config.doubleTapZoomChangedListener = {
+            pager.setDoubleTapGestureEnabled(it)
+        }
+
     }
 
     override fun destroy() {

@@ -31,7 +31,26 @@ open class Pager(
      * Gesture listener that implements tap and long tap events.
      */
     private val gestureListener = object : GestureDetectorWithLongTap.Listener() {
+        override fun onSingleTapUp(ev: MotionEvent): Boolean {
+            if (isDoubleTapGestureEnabled) {
+                return false
+            }
+            tapListener?.invoke(ev)
+            return true
+        }
+
+        override fun onDoubleTapEvent(ev: MotionEvent): Boolean {
+            if (isDoubleTapGestureEnabled || ev.actionMasked != MotionEvent.ACTION_UP) {
+                return false
+            }
+            tapListener?.invoke(ev)
+            return true
+        }
+
         override fun onSingleTapConfirmed(ev: MotionEvent): Boolean {
+            if (!isDoubleTapGestureEnabled) {
+                return false
+            }
             tapListener?.invoke(ev)
             return true
         }
@@ -53,6 +72,12 @@ open class Pager(
      * Whether the gesture detector is currently enabled.
      */
     private var isGestureDetectorEnabled = true
+
+    /**
+     * When the double tap is disabled, we can treat double taps as 2 fast single taps,
+     * and also it enables us to fire the handler for just a single tap without delay.
+     */
+    private var isDoubleTapGestureEnabled = true;
 
     /**
      * Dispatches a touch event.
@@ -107,5 +132,12 @@ open class Pager(
      */
     fun setGestureDetectorEnabled(enabled: Boolean) {
         isGestureDetectorEnabled = enabled
+    }
+
+    /**
+     * Enables or disables double-tap gesture.
+     */
+    fun setDoubleTapGestureEnabled(enabled: Boolean) {
+        isDoubleTapGestureEnabled = enabled
     }
 }

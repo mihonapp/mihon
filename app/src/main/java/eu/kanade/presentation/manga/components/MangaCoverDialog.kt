@@ -178,7 +178,7 @@ fun MangaCoverDialog(
                                     ?.copy(Bitmap.Config.HARDWARE, false)
                                     ?.toDrawable(view.context.resources)
                                     ?: drawable
-                                view.setImage(copy, ReaderPageImageView.Config(zoomDuration = 500))
+                                view.setImage(copy, ReaderPageImageView.Config(zoomDuration = 500, doubleTapZoom = true))
                             }
                             .build()
                         view.context.imageLoader.enqueue(request)

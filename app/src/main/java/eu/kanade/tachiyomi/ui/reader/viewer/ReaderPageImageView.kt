@@ -263,7 +263,16 @@ open class ReaderPageImageView @JvmOverloads constructor(
     private fun SubsamplingScaleImageView.setupZoom(config: Config?) {
         // 5x zoom
         maxScale = scale * MAX_ZOOM_SCALE
-        setDoubleTapZoomScale(scale * 2)
+
+        if (config?.doubleTapZoom ?: false) {
+            setDoubleTapZoomScale(scale * 2)
+        } else {
+            // HACK: There's no function to disable double tap zoom while preserving pinch gesture,
+            // but we can make it feel like nothing is being zoomed.
+            setDoubleTapZoomScale(1.0f)
+            setDoubleTapZoomDuration(1)
+            setQuickScaleEnabled(false)
+        }
 
         when (config?.zoomStartPosition) {
             ZoomStartPosition.LEFT -> setScaleAndCenter(scale, PointF(0F, 0F))
@@ -417,6 +426,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
      */
     data class Config(
         val zoomDuration: Int,
+        val doubleTapZoom: Boolean,
         val minimumScaleType: Int = SCALE_TYPE_CENTER_INSIDE,
         val cropBorders: Boolean = false,
         val zoomStartPosition: ZoomStartPosition = ZoomStartPosition.CENTER,
