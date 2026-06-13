@@ -194,6 +194,79 @@ object ImageUtil {
         return output
     }
 
+    /**
+     * Add margins around an image with specified color.
+     *
+     * @param imageSource The source image
+     * @param horizontalMargin Horizontal margin in pixels (applied to both left and right)
+     * @param verticalMargin Vertical margin in pixels (applied to both top and bottom)
+     * @param marginColor The color of the margins (ARGB format)
+     * @return New image with margins
+     */
+    fun addImageMargins(
+        imageSource: BufferedSource,
+        horizontalMargin: Int,
+        verticalMargin: Int,
+        marginColor: Int,
+    ): BufferedSource {
+        return addImageMargins(
+            imageSource = imageSource,
+            marginTop = verticalMargin,
+            marginBottom = verticalMargin,
+            marginLeft = horizontalMargin,
+            marginRight = horizontalMargin,
+            marginColor = marginColor,
+        )
+    }
+
+    /**
+     * Add individual margins around an image with specified color.
+     *
+     * @param imageSource The source image
+     * @param marginTop Top margin in pixels
+     * @param marginBottom Bottom margin in pixels
+     * @param marginLeft Left margin in pixels
+     * @param marginRight Right margin in pixels
+     * @param marginColor The color of the margins (ARGB format)
+     * @return New image with margins
+     */
+    fun addImageMargins(
+        imageSource: BufferedSource,
+        marginTop: Int,
+        marginBottom: Int,
+        marginLeft: Int,
+        marginRight: Int,
+        marginColor: Int,
+    ): BufferedSource {
+        if (marginTop == 0 && marginBottom == 0 && marginLeft == 0 && marginRight == 0) {
+            return imageSource
+        }
+
+        val imageBitmap = ImageDecoder.newInstance(imageSource.inputStream())?.decode()
+            ?: return imageSource
+
+        val originalWidth = imageBitmap.width
+        val originalHeight = imageBitmap.height
+        val newWidth = originalWidth + marginLeft + marginRight
+        val newHeight = originalHeight + marginTop + marginBottom
+
+        val result = createBitmap(newWidth, newHeight)
+        result.eraseColor(marginColor)
+
+        result.applyCanvas {
+            drawBitmap(
+                imageBitmap,
+                Rect(0, 0, originalWidth, originalHeight),
+                Rect(marginLeft, marginTop, marginLeft + originalWidth, marginTop + originalHeight),
+                null,
+            )
+        }
+
+        val output = Buffer()
+        result.compress(Bitmap.CompressFormat.JPEG, 100, output.outputStream())
+        return output
+    }
+
     enum class Side {
         RIGHT,
         LEFT,
