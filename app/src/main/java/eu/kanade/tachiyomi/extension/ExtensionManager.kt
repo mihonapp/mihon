@@ -41,12 +41,10 @@ import java.util.Locale
  */
 class ExtensionManager(
     private val context: Context,
+    private val scope: CoroutineScope,
     private val preferences: SourcePreferences = Injekt.get(),
     private val trustExtension: TrustExtension = Injekt.get(),
 ) {
-
-    val scope = CoroutineScope(SupervisorJob())
-
     private val _isInitialized = MutableStateFlow(false)
     val isInitialized: StateFlow<Boolean> = _isInitialized.asStateFlow()
 
@@ -58,7 +56,7 @@ class ExtensionManager(
     /**
      * The installer which installs, updates and uninstalls the extensions.
      */
-    private val installer by lazy { ExtensionInstaller(context) }
+    private val installer by lazy { ExtensionInstaller(context, scope) }
 
     private val iconMap = mutableMapOf<String, Drawable>()
 

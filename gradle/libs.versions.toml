@@ -25,7 +25,7 @@ androidx-test-uiautomator = "2.3.0"
 androidx-viewPager = "1.1.0"
 androidx-work = "2.11.2"
 archive = "1.1.6"
-coil = "3.4.0"
+coil = "3.5.0"
 composeGrid = "1.2.2"
 composeMaterialMotion = "2.0.1"
 composeRichEditor = "1.0.0-rc14"
@@ -33,7 +33,7 @@ composeWebview = "0.33.6"
 conscrypt = "2.5.3"
 directionalViewPager = "1.0.0"
 diskLruCache = "2.0.2"
-firebase-bom = "34.14.0"
+firebase-bom = "34.14.1"
 firebase-crashlytics = "3.0.7"
 flexibleAdapter = "c8013533"
 google-services = "4.4.4"
@@ -53,7 +53,7 @@ material = "1.12.0"
 materialKolor = "5.0.0-alpha07"
 mockk = "1.14.11"
 moko-resources = "0.26.4"
-okhttp = "5.3.2"
+okhttp = "5.4.0"
 okio = "3.17.0"
 photoView = "2.3.0"
 quickJs = "547f5b1597"
@@ -62,7 +62,7 @@ rxJava = "1.3.8"
 shizuku = "13.1.5"
 spotless = "8.6.0"
 sqldelight = "2.3.2"
-sqldelight-androidx-driver = "0.2.0"
+sqldelight-androidx-driver = "0637a964a1"
 stringSimilarity = "0.1.0"
 subsamplingScaleImageView = "66e0db195d"
 swipe = "1.3.0"
@@ -165,7 +165,7 @@ rxJava = { module = "io.reactivex:rxjava", version.ref = "rxJava" }
 shizuku-api = { module = "dev.rikka.shizuku:api", version.ref = "shizuku" }
 shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizuku" }
 spotless-gradle = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
-sqldelight-androidxDriver = { module = "com.eygraber:sqldelight-androidx-driver", version.ref = "sqldelight-androidx-driver" }
+sqldelight-androidxDriver = { module = "com.github.mihon.sqldelight-androidx-driver:sqldelight-androidx-driver", version.ref = "sqldelight-androidx-driver" }
 sqldelight-androidxPaging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqldelight" }
 sqldelight-async = { module = "app.cash.sqldelight:async-extensions", version.ref = "sqldelight" }
 sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }

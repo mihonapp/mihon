@@ -22,6 +22,10 @@ class ExtensionStoreService(
     private val protoBuf: ProtoBuf,
 ) {
     suspend fun fetch(indexUrl: String): Result<ExtensionStore> {
+        return fetch(indexUrl, forceV2 = false)
+    }
+
+    private suspend fun fetch(indexUrl: String, forceV2: Boolean): Result<ExtensionStore> {
         var updatedIndexUrl: String = indexUrl
         return try {
             val store = network.client.newCall(GET(indexUrl)).awaitSuccess().body.source().use { source ->
@@ -34,10 +38,11 @@ class ExtensionStoreService(
                     try {
                         json.decodeFromBufferedSource<NetworkExtensionStore>(source.peek())
                     } catch (e: IllegalArgumentException) {
+                        if (forceV2) throw e
                         logcat(LogPriority.ERROR, e) {
                             "Failed to add extension store '$updatedIndexUrl'"
                         }
-                        try {
+                        val legacyIndex = try {
                             json.decodeFromBufferedSource<NetworkLegacyExtensionRepo>(source.peek())
                         } catch (e: IllegalArgumentException) {
                             if (!indexUrl.endsWith("/index.min.json")) {
@@ -50,6 +55,12 @@ class ExtensionStoreService(
                             network.client.newCall(GET(updatedIndexUrl)).awaitSuccess().body.source().use {
                                 json.decodeFromBufferedSource<NetworkLegacyExtensionRepo>(it)
                             }
+                        }
+
+                        if (legacyIndex.indexV2 != null) {
+                            return fetch(legacyIndex.indexV2, forceV2 = true)
+                        } else {
+                            legacyIndex
                         }
                     }
                 }

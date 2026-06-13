@@ -286,7 +286,7 @@ class ReaderViewModel @JvmOverloads constructor(
 
                     val context = Injekt.get<Application>()
                     val source = sourceManager.getOrStub(manga.source)
-                    loader = ChapterLoader(context, downloadManager, downloadProvider, manga, source)
+                    loader = ChapterLoader(context, viewModelScope, downloadManager, downloadProvider, manga, source)
 
                     loadChapter(loader!!, chapterList.first { chapterId == it.chapter.id })
                     Result.success(true)
