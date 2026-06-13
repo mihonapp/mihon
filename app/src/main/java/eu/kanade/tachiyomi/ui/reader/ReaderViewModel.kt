@@ -523,7 +523,13 @@ class ReaderViewModel @JvmOverloads constructor(
         chapterToDownload = null
 
         if (chapterToDelete != null) {
-            enqueueDeleteReadChapters(chapterToDelete)
+            val chaptersToDelete = unfilteredChapterList
+                .filter { chapter ->
+                    chapter.read &&
+                        chapter.isRecognizedNumber &&
+                        chapter.chapterNumber.toFloat() == chapterToDelete.chapter.chapter_number
+                }
+            enqueueDeleteReadChapters(chaptersToDelete)
         }
     }
 
@@ -922,15 +928,16 @@ class ReaderViewModel @JvmOverloads constructor(
     }
 
     /**
-     * Enqueues this [chapter] to be deleted when [deletePendingChapters] is called. The download
-     * manager handles persisting it across process deaths.
+     * Enqueues these [chapters] to be deleted when [deletePendingChapters] is called. The download
+     * manager handles persisting them across process deaths.
      */
-    private fun enqueueDeleteReadChapters(chapter: ReaderChapter) {
-        if (!chapter.chapter.read) return
+    private fun enqueueDeleteReadChapters(chapters: List<tachiyomi.domain.chapter.model.Chapter>) {
         val manga = manga ?: return
+        val readChapters = chapters.filter { it.read }
+        if (readChapters.isEmpty()) return
 
         viewModelScope.launchNonCancellable {
-            downloadManager.enqueueChaptersToDelete(listOf(chapter.chapter.toDomainChapter()!!), manga)
+            downloadManager.enqueueChaptersToDelete(readChapters, manga)
         }
     }
 
