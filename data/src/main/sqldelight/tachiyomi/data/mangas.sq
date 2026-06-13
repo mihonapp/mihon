@@ -126,6 +126,7 @@ track_dupes AS (
     AND S1.remote_id = S2.remote_id
     AND S1.manga_id != S2.manga_id
     WHERE S1.manga_id = :id
+    AND EXISTS (SELECT 1 FROM mangas WHERE _id = :id AND favorite = 1)
 ),
 duplicates AS (
     SELECT M.*
