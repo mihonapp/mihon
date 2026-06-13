@@ -766,29 +766,16 @@
 \nVybraná složka: %2$s</string>
     <string name="invalid_backup_file_error">Úplná chyba:</string>
     <string name="pref_library_update_smart_update">Chytrá aktualizace</string>
-    <string name="action_add_repo_message">Přidat další repozitáře do %s. Měli by to být URL končící \"index.min.json\".</string>
-    <string name="error_repo_exists">Tento repozitář již existuje!</string>
-    <string name="action_delete_repo">Odstranit repozitář</string>
-    <string name="invalid_repo_name">Neplatná URL repozitáře</string>
-    <string name="delete_repo_confirmation">Přejete si odstranit repozitář \"%s\"?</string>
     <string name="manga_interval_expected_update">Předpoklad vydání nových kapitol za zhruba %1$s, kontrola co %2$s.</string>
     <string name="manga_interval_custom_amount">Vlastní frekvence aktualizace:</string>
-    <string name="label_extension_repos">Repozitáře rozšíření</string>
-    <string name="label_add_repo_input">URL repozitáře</string>
-    <string name="information_empty_repos">Nemáte nastaveny žádné repozitáře.</string>
     <string name="onboarding_storage_help_action">Průvodce uložištěm</string>
     <string name="theme_nord">Nord</string>
-    <string name="action_add_repo">Přidat repozitář</string>
     <string name="ext_revoke_trust">Zrušit důvěryhodná neznámá rozšíření</string>
     <string name="action_open_repo">Open source repozitář</string>
     <string name="manga_interval_expected_update_soon">Brzy</string>
     <string name="onboarding_storage_help_info">Aktualizujete ze starší verze a nevíte, co vybrat? Další informace naleznete v průvodci úložištěm.</string>
     <string name="action_add_anyway">Přesto přidat</string>
     <string name="pref_webtoon_disable_zoom_out">Zakázat oddálení</string>
-    <string name="action_replace_repo">Nahradit</string>
-    <string name="action_replace_repo_title">Otisk podepisovacího klíče již existuje</string>
-    <string name="action_replace_repo_message">Repozitář %1$s má stejný otisk podepisovacího klíče jako %2$s
-\nPokud to tak je správně, bude%2$s nahrazen, v opačném případě kontaktujte správce repozitáře.</string>
     <string name="pref_flash_duration_summary">%1$s ms</string>
     <string name="pref_flash_style_white">Bílou</string>
     <string name="manga_interval_expected_update_null">Tato manga je buďto dokončená, nebo nemá přibližné datum vydání.</string>
@@ -810,9 +797,7 @@
     <string name="pref_firebase">Analytika a záznamy o pádech</string>
     <string name="firebase_summary">Odesílání záznamů o pádech a analytických dat nám umožní identifikovat a opravit problémy, zlepšit výkon a přizpůsobit budoucí aktualizace vašim potřebám</string>
     <string name="onboarding_permission_analytics">Povolit analytiku</string>
-    <string name="add_repo_confirmation">Chcete přidat repozitář \"%s\"?</string>
     <string name="pref_always_decode_long_strip_with_ssiv_summary">Má dopad na výkon. Povolte pouze pokud snížení limitu bitmapy nespraví problémy s prázdnými obrázky</string>
-    <string name="extensionRepo_settings">Repozitáře rozšíření</string>
     <string name="ext_remove">Odstranit</string>
     <string name="ext_confirm_remove">Odstranit rozšíření?</string>
     <string name="remove_private_extension_message">Opravdu chcete odstranit rozšíření \"%s\"?</string>

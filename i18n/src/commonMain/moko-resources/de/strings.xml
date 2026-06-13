@@ -766,18 +766,9 @@
     <string name="onboarding_permission_action_grant">Zulassen</string>
     <string name="invalid_backup_file_error">Vollständiger Fehler:</string>
     <string name="manga_interval_custom_amount">Benutzerdefinierte Aktualisierungshäufigkeit:</string>
-    <string name="label_extension_repos">Erweiterungs-Repositorys</string>
-    <string name="information_empty_repos">Es wurden noch keine Repositorys festgelegt.</string>
-    <string name="action_add_repo">Repository hinzufügen</string>
-    <string name="error_repo_exists">Dieses Repository existiert bereits!</string>
-    <string name="action_delete_repo">Repository löschen</string>
-    <string name="delete_repo_confirmation">Möchtest du das Repository „%s“ löschen?</string>
     <string name="onboarding_storage_help_info">Du aktualisierst von einer älteren Version und bist dir nicht sicher, was du auswählen sollst? Schau dir den Speicherleitfaden für mehr Informationen an.</string>
     <string name="onboarding_storage_help_action">Speicherleitfaden</string>
     <string name="pref_library_update_smart_update">Intelligentes Aktualisieren</string>
-    <string name="label_add_repo_input">Repository-URL</string>
-    <string name="action_add_repo_message">Füge zusätzliche Repositorys zu %s hinzu. Deren URLs sollten mit „index.min.json“ enden.</string>
-    <string name="invalid_repo_name">Ungültige Repository-URL</string>
     <string name="manga_interval_expected_update">Ca. %1$s bis zur Veröffentlichung neuer Kapitel, wird ca. alle %2$s überprüft.</string>
     <string name="theme_nord">Nord</string>
     <string name="action_open_repo">Open-Source-Repository</string>
@@ -786,10 +777,6 @@
     <string name="pref_webtoon_disable_zoom_out">Rauszoomen deaktivieren</string>
     <string name="pref_display_profile">Benutzerdefiniertes Anzeigeprofil</string>
     <string name="action_add_anyway">Trotzdem hinzufügen</string>
-    <string name="action_replace_repo">Ersetzen</string>
-    <string name="action_replace_repo_title">Signaturschlüssel-Fingerprint existiert bereits</string>
-    <string name="action_replace_repo_message">Repository %1$s hat den gleichen Signaturschlüssel-Fingerprint wie %2$s.
-\nFalls das erwünscht ist, wird %2$s nun ersetzt. Falls nicht, kontaktiere den Repository-Maintainer.</string>
     <string name="upcoming_calendar_next">Nächster Monat</string>
     <string name="upcoming_calendar_prev">Vorheriger Monat</string>
     <string name="label_upcoming">Bevorstehend</string>
@@ -805,11 +792,9 @@
     <string name="pref_flash_duration">Dauer des Leuchtens</string>
     <string name="pref_flash_duration_summary">%1$s ms</string>
     <string name="action_copy_link">Link kopieren</string>
-    <string name="extensionRepo_settings">Erweiterungsrepositorys</string>
     <string name="invalid_backup_file_unknown">Sicherungsdatei ist beschädigt</string>
     <string name="invalid_backup_file_json">JSON-Sicherung wird nicht unterstützt</string>
     <string name="pref_download_new_unread_chapters_only">Herunterladen von doppelten gelesenen Kapiteln überspringen</string>
-    <string name="add_repo_confirmation">Möchtest du das Repository \"%s\" hinzufügen?</string>
     <string name="confirm_tracker_update">Tracker auf Kapitel %d aktualisieren?</string>
     <string name="pref_firebase">Datenerhebung und Absturzprotokolle</string>
     <string name="onboarding_permission_analytics_description">Sende anonymisierte Nutzungsdaten, um App-Funktionen zu verbessern.</string>
@@ -918,7 +903,19 @@
     <string name="donationCampaign.title">Gefällt dir die App?</string>
     <string name="donationCampaign.paragraph1">Hi! Ich bin der Hauptentwickler von Mihon und möchte darum bitten, die Entwicklung finanziell zu unterstützen. Mit genügend Unterstützung werde ich in der Lage sein, in Vollzeit an Mihon zu arbeiten und sowohl langjährige Probleme zu beheben als auch häufig gewünschte Features zu implementieren.</string>
     <string name="donationCampaign.paragraph2">Du kannst entweder mittels Patreon (bevorzugt) oder OpenCollective spenden. Wenn du Fragen hast oder auf anderem Wege die Entwicklung unterstützen möchstest, dann kannst du mich gerne über Mihons Discord-Server erreichen.</string>
-    <string name="donationCampaign.paragraph3">Unabhängig davon wird Mihon weiterhin von mir und anderen Freiwilligen entwickelt werden und bleibt Open-Source-Software.</string>
+    <string name="donationCampaign.paragraph3">Unabhängig davon wird Mihon weiterhin von mir und anderen Freiwilligen entwickelt werden und bleibt open-source.</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="donationCampaign.dismiss">Verwerfen</string>
+    <string name="extensionStores">Erweiterungsdepots</string>
+    <string name="action.addExtensionStore">Erweiterungsdepot hinzufügen</string>
+    <string name="extensionStoresScreen.emptyLabel">Du hast noch kein Erweiterungsdepot hinzugefügt</string>
+    <string name="extensionStoresScreen.addStore.title">Erweiterungsdepot hinzufügen</string>
+    <string name="extensionStoresScreen.addStore.alreadyExists">Dieses Erweiterungsdepot existiert bereits</string>
+    <string name="extensionStoresScreen.addStore.processing">Verarbeite…</string>
+    <string name="extensionStoresScreen.addStoreInput.inputLabel">Depot-Index-URL</string>
+    <string name="extensionStoresScreen.addStoreDeeplink.bodyText">Möchtest du dieses Erweiterungsdepot hinzufügen?</string>
+    <string name="extensionStoresScreen.deleteStore.title">Erweiterungsdepot entfernen</string>
+    <string name="extensionStoresScreen.deleteStore.body">Möchtest du das Erweiterungsdepot \"%1$s\" (%2$s) entfernen?</string>
+    <string name="pref_webtoon_vertical_navigator">Vertikalen Navigatior für das Lesen langer Streifen verwenden</string>
+    <string name="pref_webtoon_vertical_navigator_on_left">Vertikalen Navigator auf der linken Seite platzieren</string>
 </resources>
