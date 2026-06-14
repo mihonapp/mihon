@@ -63,6 +63,7 @@ fun Call.asObservable(): Observable<Response> {
 
 @Deprecated("Use suspend APIs instead")
 fun Call.asObservableSuccess(): Observable<Response> {
+    @Suppress("DEPRECATION")
     return asObservable().doOnNext { response ->
         if (!response.isSuccessful) {
             response.close()
