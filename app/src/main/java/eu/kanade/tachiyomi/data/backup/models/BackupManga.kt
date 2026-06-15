@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.protobuf.ProtoNumber
 import mihon.core.common.extensions.EMPTY
+import mihon.core.common.extensions.JsonObjectEmptyBytes
 import tachiyomi.data.MemoColumnAdapter
 import tachiyomi.domain.manga.model.Manga
 
@@ -46,7 +47,7 @@ class BackupManga(
     @ProtoNumber(109) var version: Long = 0,
     @ProtoNumber(110) var notes: String = "",
     @ProtoNumber(111) var initialized: Boolean = false,
-    @ProtoNumber(112) var memo: ByteArray = byteArrayOf(),
+    @ProtoNumber(112) var memo: ByteArray = JsonObjectEmptyBytes,
 ) {
     fun getMangaImpl(): Manga {
         return Manga.create().copy(
