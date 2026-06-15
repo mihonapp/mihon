@@ -15,7 +15,6 @@ import okhttp3.Headers
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
-import tachiyomi.core.common.util.lang.launchUI
 import tachiyomi.i18n.MR
 import java.util.Locale
 import java.util.concurrent.CountDownLatch
