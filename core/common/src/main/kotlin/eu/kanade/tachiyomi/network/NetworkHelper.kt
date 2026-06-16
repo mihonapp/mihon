@@ -5,6 +5,7 @@ import eu.kanade.tachiyomi.network.interceptor.CloudflareInterceptor
 import eu.kanade.tachiyomi.network.interceptor.IgnoreGzipInterceptor
 import eu.kanade.tachiyomi.network.interceptor.UncaughtExceptionInterceptor
 import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
+import kotlinx.coroutines.CoroutineScope
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.brotli.BrotliInterceptor
@@ -15,6 +16,7 @@ import java.util.concurrent.TimeUnit
 class NetworkHelper(
     private val context: Context,
     private val preferences: NetworkPreferences,
+    scope: CoroutineScope,
 ) {
 
     val cookieJar = AndroidCookieJar()
@@ -60,11 +62,9 @@ class NetworkHelper(
         }
     }
 
-    val nonCloudflareClient = clientBuilder.build()
-
     val client = clientBuilder
         .addInterceptor(
-            CloudflareInterceptor(context, cookieJar, ::defaultUserAgentProvider),
+            CloudflareInterceptor(context, cookieJar, scope, ::defaultUserAgentProvider),
         )
         .build()
 
