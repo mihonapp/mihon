@@ -50,7 +50,7 @@ internal object ExtensionLoader {
     private const val METADATA_SOURCE_FACTORY = "tachiyomi.extension.factory"
     private const val METADATA_NSFW = "tachiyomi.extension.nsfw"
     const val LIB_VERSION_MIN = 1.4
-    const val LIB_VERSION_MAX = 1.5
+    const val LIB_VERSION_MAX = 1.6
 
     @Suppress("DEPRECATION")
     private val PACKAGE_FLAGS = PackageManager.GET_CONFIGURATIONS or
@@ -209,7 +209,7 @@ internal object ExtensionLoader {
                         isShared = true,
                     )
                 }
-        } catch (error: PackageManager.NameNotFoundException) {
+        } catch (_: PackageManager.NameNotFoundException) {
             null
         }
 
@@ -239,13 +239,20 @@ internal object ExtensionLoader {
 
         // Validate lib version
         val libVersion = versionName.substringBeforeLast('.').toDoubleOrNull()
-        if (libVersion == null || libVersion < LIB_VERSION_MIN || libVersion > LIB_VERSION_MAX) {
+        if (libVersion == null || (libVersion != LIB_VERSION_MIN && libVersion != LIB_VERSION_MAX)) {
             logcat(LogPriority.WARN) {
                 "Lib version is $libVersion, while only versions " +
-                    "$LIB_VERSION_MIN to $LIB_VERSION_MAX are allowed"
+                    "$LIB_VERSION_MIN and $LIB_VERSION_MAX is allowed"
             }
             return LoadResult.Error
         }
+//        if (libVersion == null || libVersion < LIB_VERSION_MIN || libVersion > LIB_VERSION_MAX) {
+//            logcat(LogPriority.WARN) {
+//                "Lib version is $libVersion, while only versions " +
+//                    "$LIB_VERSION_MIN or $LIB_VERSION_MAX is allowed"
+//            }
+//            return LoadResult.Error
+//        }
 
         val signatures = getSignatures(pkgInfo)
         if (signatures.isNullOrEmpty()) {
