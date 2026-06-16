@@ -25,11 +25,14 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Collections
 import java.util.Date
 import java.util.Locale
-import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.concurrent.atomics.AtomicInt
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.concurrent.atomics.incrementAndFetch
 
+@OptIn(ExperimentalAtomicApi::class)
 class BackupRestorer(
     private val context: Context,
     private val notifier: BackupNotifier,
@@ -43,8 +46,8 @@ class BackupRestorer(
 ) {
 
     private var restoreAmount = 0
-    private val restoreProgress = AtomicInteger(0)
-    private val errors = Collections.synchronizedList(mutableListOf<Pair<Date, String>>())
+    private val restoreProgress = AtomicInt(0)
+    private val errors = CopyOnWriteArrayList<Pair<Date, String>>()
 
     /**
      * Mapping of source ID to source name from backup data
@@ -117,7 +120,7 @@ class BackupRestorer(
         ensureActive()
         categoriesRestorer(backupCategories)
 
-        val progress = restoreProgress.incrementAndGet()
+        val progress = restoreProgress.incrementAndFetch()
         notifier.showRestoreProgress(
             context.stringResource(MR.strings.categories),
             progress,
@@ -144,10 +147,10 @@ class BackupRestorer(
                             errors.add(Date() to "${it.title} [$sourceName]: ${e.message}")
                         }
 
-                        restoreProgress.incrementAndGet()
+                        restoreProgress.incrementAndFetch()
                     }
                 }
-                notifier.showRestoreProgress(chunk.last().title, restoreProgress.get(), restoreAmount, isSync)
+                notifier.showRestoreProgress(chunk.last().title, restoreProgress.load(), restoreAmount, isSync)
             }
     }
 
@@ -161,7 +164,7 @@ class BackupRestorer(
             categories,
         )
 
-        val progress = restoreProgress.incrementAndGet()
+        val progress = restoreProgress.incrementAndFetch()
         notifier.showRestoreProgress(
             context.stringResource(MR.strings.app_settings),
             progress,
@@ -174,7 +177,7 @@ class BackupRestorer(
         ensureActive()
         preferenceRestorer.restoreSource(preferences)
 
-        val progress = restoreProgress.incrementAndGet()
+        val progress = restoreProgress.incrementAndFetch()
         notifier.showRestoreProgress(
             context.stringResource(MR.strings.source_settings),
             progress,
@@ -199,12 +202,12 @@ class BackupRestorer(
                             errors.add(Date() to "Error Adding Repo: ${it.name} : ${e.message}")
                         }
 
-                        restoreProgress.incrementAndGet()
+                        restoreProgress.incrementAndFetch()
                     }
                 }
                 notifier.showRestoreProgress(
                     context.stringResource(MR.strings.extensionStores),
-                    restoreProgress.get(),
+                    restoreProgress.load(),
                     restoreAmount,
                     isSync,
                 )
