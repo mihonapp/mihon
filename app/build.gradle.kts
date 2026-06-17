@@ -13,6 +13,7 @@ plugins {
     alias(mihonx.plugins.spotless)
 
     alias(libs.plugins.aboutLibraries)
+    alias(libs.plugins.androidx.baselineProfile)
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -82,6 +83,8 @@ android {
 
             signingConfig = debug.signingConfig
 
+            isProfileable = true
+
             proguardFiles("proguard-android-optimize.txt", "proguard-rules.pro")
 
             buildConfigField("String", "BUILD_TIME", "\"${getBuildTime(useLatestCommitTime = true)}\"")
@@ -110,8 +113,6 @@ android {
         create("benchmark") {
             initWith(release)
 
-            isDebuggable = false
-            isProfileable = true
             versionNameSuffix = "-benchmark"
             applicationIdSuffix = ".benchmark"
 
@@ -197,7 +198,14 @@ kotlin {
     }
 }
 
+baselineProfile {
+    baselineProfileOutputDir = "baselineProfiles"
+    mergeIntoMain = true
+}
+
 dependencies {
+    baselineProfile(projects.baselineProfile)
+
     implementation(projects.i18n)
     implementation(projects.core.archive)
     implementation(projects.core.common)

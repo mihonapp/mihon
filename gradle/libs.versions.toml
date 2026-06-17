@@ -5,6 +5,7 @@ android-gradle = "9.2.1"
 androidx-activity-compose = "1.13.0"
 androidx-annotation = "1.10.0"
 androidx-appCompat = "1.7.1"
+androidx-baselineProfile = "1.5.0-alpha06"
 androidx-benchmark = "1.4.1"
 androidx-biometric = "1.2.0-alpha05"
 androidx-compose-bom = "2026.06.00"
@@ -106,7 +107,7 @@ androidx-profileInstaller = { module = "androidx.profileinstaller:profileinstall
 androidx-recyclerView = { module = "androidx.recyclerview:recyclerview", version.ref = "androidx-recyclerView" }
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "androidx-sqlite" }
 androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-test-espresso" }
-androidx-test-junit = { module = "androidx.test.ext:junit-ktx", version.ref = "androidx-test-junit" }
+androidx-test-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-test-junit" }
 androidx-test-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "androidx-test-uiautomator" }
 androidx-viewPager = { module = "androidx.viewpager:viewpager", version.ref = "androidx-viewPager" }
 androidx-work = { module = "androidx.work:work-runtime", version.ref = "androidx-work" }
@@ -185,9 +186,10 @@ xmlutil-serialization = { module = "io.github.pdvrieze.xmlutil:serialization", v
 [plugins]
 aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "aboutLibraries" }
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
-android-test = { id = "com.android.test", version.ref = "android-gradle" }
 android-kmp-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle" }
 android-library = { id = "com.android.library", version.ref = "android-gradle" }
+android-test = { id = "com.android.test", version.ref = "android-gradle" }
+androidx-baselineProfile = { id = "androidx.baselineprofile", version.ref = "androidx-baselineProfile" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-gradle" }
