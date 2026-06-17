@@ -98,7 +98,7 @@ androidx-glance-appWidget = { module = "androidx.glance:glance-appwidget", versi
 androidx-interpolator = { module = "androidx.interpolator:interpolator", version.ref = "androidx-interpolator" }
 androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "androidx-lifecycle" }
-androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime", version.ref = "androidx-lifecycle" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "androidx-paging" }
 androidx-preference = { module = "androidx.preference:preference-ktx", version.ref = "androidx-preference" }
