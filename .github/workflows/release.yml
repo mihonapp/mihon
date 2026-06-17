@@ -4,6 +4,9 @@ on:
     tags:
       - v*
 
+env:
+  MIHON_GITHUB_RELEASE: true
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
