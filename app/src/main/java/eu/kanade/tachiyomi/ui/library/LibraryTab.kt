@@ -92,8 +92,18 @@ data object LibraryTab : Tab {
 
         val snackbarHostState = remember { SnackbarHostState() }
 
-        val onClickRefresh: (Category?) -> Boolean = { category ->
-            val started = LibraryUpdateJob.startNow(context, category)
+        fun shouldScopeUpdateToVisibleItems(): Boolean {
+            return state.hasActiveFilters || !state.searchQuery.isNullOrEmpty()
+        }
+
+        fun onClickRefresh(category: Category?, mangaIds: List<Long>?): Boolean {
+            if (mangaIds?.isEmpty() == true) {
+                scope.launch {
+                    snackbarHostState.showSnackbar(context.stringResource(MR.strings.information_no_entries_found))
+                }
+                return false
+            }
+            val started = LibraryUpdateJob.startNow(context, category, mangaIds)
             scope.launch {
                 val msgRes = when {
                     !started -> MR.strings.update_already_running
@@ -102,7 +112,7 @@ data object LibraryTab : Tab {
                 }
                 snackbarHostState.showSnackbar(context.stringResource(msgRes))
             }
-            started
+            return started
         }
 
         Scaffold(
@@ -120,8 +130,18 @@ data object LibraryTab : Tab {
                     onClickSelectAll = screenModel::selectAll,
                     onClickInvertSelection = screenModel::invertSelection,
                     onClickFilter = screenModel::showSettingsDialog,
-                    onClickRefresh = { onClickRefresh(state.activeCategory) },
-                    onClickGlobalUpdate = { onClickRefresh(null) },
+                    onClickRefresh = {
+                        onClickRefresh(
+                            state.activeCategory,
+                            screenModel.getVisibleMangaIdsForCurrentCategory().takeIf { shouldScopeUpdateToVisibleItems() },
+                        )
+                    },
+                    onClickGlobalUpdate = {
+                        onClickRefresh(
+                            null,
+                            screenModel.getVisibleMangaIdsForLibrary().takeIf { shouldScopeUpdateToVisibleItems() },
+                        )
+                    },
                     onClickOpenRandomManga = {
                         scope.launch {
                             val randomItem = screenModel.getRandomLibraryItemForCurrentCategory()
@@ -205,7 +225,12 @@ data object LibraryTab : Tab {
                             screenModel.toggleRangeSelection(category, manga)
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         },
-                        onRefresh = { onClickRefresh(state.activeCategory) },
+                        onRefresh = {
+                            onClickRefresh(
+                                state.activeCategory,
+                                screenModel.getVisibleMangaIdsForCurrentCategory().takeIf { shouldScopeUpdateToVisibleItems() },
+                            )
+                        },
                         onGlobalSearchClicked = {
                             navigator.push(GlobalSearchScreen(screenModel.state.value.searchQuery ?: ""))
                         },

@@ -596,6 +596,19 @@ class LibraryScreenModel(
             .asState(screenModelScope)
     }
 
+    fun getVisibleMangaIdsForCurrentCategory(): List<Long> {
+        val state = state.value
+        return state.getItemsForCategoryId(state.activeCategory?.id).map { it.id }
+    }
+
+    fun getVisibleMangaIdsForLibrary(): List<Long> {
+        val state = state.value
+        return state.displayedCategories
+            .flatMap { state.getItemsForCategory(it) }
+            .map { it.id }
+            .distinct()
+    }
+
     fun getRandomLibraryItemForCurrentCategory(): LibraryItem? {
         val state = state.value
         return state.getItemsForCategoryId(state.activeCategory?.id).randomOrNull()
