@@ -3,6 +3,9 @@ import mihon.gradle.getBuildTime
 import mihon.gradle.getLatestCommitCount
 import mihon.gradle.getLatestCommitSha
 import mihon.gradle.tasks.ReplaceShortcutsPlaceholderTask
+import java.io.FileInputStream
+import java.util.Properties
+import kotlin.io.encoding.Base64
 
 plugins {
     alias(mihonx.plugins.android.application)
@@ -19,6 +22,8 @@ if (Config.includeTelemetry) {
         apply(libs.plugins.firebase.crashlytics.get().pluginId)
     }
 }
+
+val keystorePropertiesFile = rootProject.file("keystore.properties")
 
 android {
     namespace = "eu.kanade.tachiyomi"
@@ -38,6 +43,33 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    if (System.getenv("MIHON_GITHUB_RELEASE").toBoolean()) {
+        val tempStoreFile = file(System.getenv("RUNNER_TEMP")).resolve("antsy.keystore")
+
+        val storeFileBytes = System.getenv("storeFileBase64").let(Base64::decode)
+        tempStoreFile.outputStream().use { it.write(storeFileBytes) }
+
+        signingConfigs {
+            named("debug") {
+                storeFile = tempStoreFile
+                storePassword = System.getenv("storePassword")
+                keyAlias = System.getenv("keyAlias")
+                keyPassword = System.getenv("keyPassword")
+            }
+        }
+    } else if (keystorePropertiesFile.exists()) {
+        val keystoreProperties = FileInputStream(keystorePropertiesFile).use { Properties().apply { load(it) } }
+
+        signingConfigs {
+            named("debug") {
+                storeFile = file(keystoreProperties.getProperty("storeFile"))
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         val debug by getting {
             applicationIdSuffix = ".dev"
@@ -47,6 +79,8 @@ android {
         val release by getting {
             isMinifyEnabled = Config.enableCodeShrink
             isShrinkResources = Config.enableCodeShrink
+
+            signingConfig = debug.signingConfig
 
             proguardFiles("proguard-android-optimize.txt", "proguard-rules.pro")
 
@@ -68,7 +102,6 @@ android {
             applicationIdSuffix = ".debug"
 
             versionNameSuffix = debug.versionNameSuffix
-            signingConfig = debug.signingConfig
 
             matchingFallbacks.addAll(commonMatchingFallbacks)
 
@@ -81,8 +114,6 @@ android {
             isProfileable = true
             versionNameSuffix = "-benchmark"
             applicationIdSuffix = ".benchmark"
-
-            signingConfig = debug.signingConfig
 
             matchingFallbacks.addAll(commonMatchingFallbacks)
         }

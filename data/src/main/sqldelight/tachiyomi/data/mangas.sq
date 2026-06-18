@@ -1,7 +1,8 @@
 import eu.kanade.tachiyomi.source.model.UpdateStrategy;
-import kotlin.collections.List;
 import kotlin.Boolean;
 import kotlin.String;
+import kotlin.collections.List;
+import kotlinx.serialization.json.JsonObject;
 
 CREATE TABLE mangas(
     _id INTEGER NOT NULL PRIMARY KEY,
@@ -28,7 +29,8 @@ CREATE TABLE mangas(
     favorite_modified_at INTEGER,
     version INTEGER NOT NULL DEFAULT 0,
     is_syncing INTEGER NOT NULL DEFAULT 0,
-    notes TEXT NOT NULL DEFAULT ""
+    notes TEXT NOT NULL DEFAULT "",
+    memo BLOB AS JsonObject NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX library_favorite_index ON mangas(favorite) WHERE favorite = 1;
@@ -194,8 +196,8 @@ AND (
 );
 
 insertReturningId:
-INSERT INTO mangas(source, url, artist, author, description, genre, title, status, thumbnail_url, favorite, last_update, next_update, initialized, viewer, chapter_flags, cover_last_modified, date_added, update_strategy, calculate_interval, last_modified_at, version, notes)
-VALUES (:source, :url, :artist, :author, :description, :genre, :title, :status, :thumbnailUrl, :favorite, :lastUpdate, :nextUpdate, :initialized, :viewerFlags, :chapterFlags, :coverLastModified, :dateAdded, :updateStrategy, :calculateInterval, 0, :version, :notes)
+INSERT INTO mangas(source, url, artist, author, description, genre, title, status, thumbnail_url, favorite, last_update, next_update, initialized, viewer, chapter_flags, cover_last_modified, date_added, update_strategy, calculate_interval, last_modified_at, version, notes, memo)
+VALUES (:source, :url, :artist, :author, :description, :genre, :title, :status, :thumbnailUrl, :favorite, :lastUpdate, :nextUpdate, :initialized, :viewerFlags, :chapterFlags, :coverLastModified, :dateAdded, :updateStrategy, :calculateInterval, 0, :version, :notes, :memo)
 RETURNING _id;
 
 update:
@@ -221,7 +223,8 @@ UPDATE mangas SET
     calculate_interval = coalesce(:calculateInterval, calculate_interval),
     version = coalesce(:version, version),
     is_syncing = coalesce(:isSyncing, is_syncing),
-    notes = coalesce(:notes, notes)
+    notes = coalesce(:notes, notes),
+    memo = coalesce(:memo, memo)
 WHERE _id = :mangaId;
 
 insertNetworkManga {
@@ -229,12 +232,12 @@ insertNetworkManga {
     INSERT INTO mangas(
         source, url, artist, author, description, genre, title, status, thumbnail_url, favorite,
         last_update, next_update, initialized, viewer, chapter_flags, cover_last_modified, date_added,
-        update_strategy, calculate_interval, last_modified_at, version
+        update_strategy, calculate_interval, last_modified_at, version, memo
     )
     SELECT
         :source, :url, :artist, :author, :description, :genre, :title, :status, :thumbnailUrl, :favorite,
         :lastUpdate, :nextUpdate, :initialized, :viewerFlags, :chapterFlags, :coverLastModified, :dateAdded,
-        :updateStrategy, :calculateInterval, 0, :version
+        :updateStrategy, :calculateInterval, 0, :version, :memo
     WHERE NOT EXISTS(SELECT 0 FROM mangas WHERE source = :source AND url = :url);
 
     -- Update the relevant details if applicable and not favorite
@@ -248,7 +251,8 @@ insertNetworkManga {
         genre = CASE WHEN :updateDetails THEN :genre ELSE genre END,
         status = CASE WHEN :updateDetails THEN :status ELSE status END,
         update_strategy = CASE WHEN :updateDetails THEN :updateStrategy ELSE update_strategy END,
-        initialized = :updateDetails
+        initialized = :updateDetails,
+        memo = :memo
     WHERE source = :source
     AND url = :url
     AND favorite = 0;

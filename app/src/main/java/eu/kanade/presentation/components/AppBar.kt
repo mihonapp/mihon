@@ -58,8 +58,6 @@ import tachiyomi.presentation.core.util.runOnEnterKeyPressed
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 import tachiyomi.presentation.core.util.showSoftKeyboard
 
-const val SEARCH_DEBOUNCE_MILLIS = 250L
-
 @Composable
 fun AppBar(
     title: String?,

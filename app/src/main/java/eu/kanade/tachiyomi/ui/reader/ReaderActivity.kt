@@ -105,6 +105,7 @@ import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.ByteArrayOutputStream
+import kotlin.time.Duration.Companion.seconds
 
 class ReaderActivity : BaseActivity() {
 
@@ -947,7 +948,7 @@ class ReaderActivity : BaseActivity() {
         private fun setCustomBrightness(enabled: Boolean) {
             if (enabled) {
                 readerPreferences.customBrightnessValue.changes()
-                    .sample(100)
+                    .sample(0.1.seconds)
                     .onEach(::setCustomBrightnessValue)
                     .launchIn(lifecycleScope)
             } else {
