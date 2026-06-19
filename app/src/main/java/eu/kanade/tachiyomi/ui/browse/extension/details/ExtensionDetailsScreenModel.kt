@@ -146,7 +146,7 @@ class ExtensionDetailsScreenModel(
 
         val urls = extension.sources
             .filterIsInstance<HttpSource>()
-            .flatMap { listOf(it.baseUrl, it.getHomeUrl()) }
+            .map { it.baseUrl }
             .filter { it.isNotEmpty() }
             .distinct()
 

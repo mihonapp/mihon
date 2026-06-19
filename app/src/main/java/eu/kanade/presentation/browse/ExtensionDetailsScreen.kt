@@ -59,6 +59,7 @@ import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsScreenModel
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.util.system.copyToClipboard
+import kotlinx.collections.immutable.toImmutableList
 import tachiyomi.domain.category.model.Category
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
@@ -83,12 +84,12 @@ fun ExtensionDetailsScreen(
     val uriHandler = LocalUriHandler.current
     val url = remember(state.extension) {
         val regex = """https://raw.githubusercontent.com/(.+?)/(.+?)/.+""".toRegex()
-        regex.find(state.extension?.store?.indexUrl.orEmpty())
+        regex.find(state.extension?.repoUrl.orEmpty())
             ?.let {
                 val (user, repo) = it.destructured
                 "https://github.com/$user/$repo"
             }
-            ?: state.extension?.store?.indexUrl
+            ?: state.extension?.repoUrl
     }
 
     Scaffold(
@@ -126,7 +127,7 @@ fun ExtensionDetailsScreen(
                                     ),
                                 ),
                             )
-                        },
+                        }.toImmutableList(),
                     )
                 },
                 scrollBehavior = scrollBehavior,
@@ -272,9 +273,9 @@ private fun DetailsHeader(
                                 Shared: ${extension.isShared}
                                 """.trimIndent(),
                             )
-                            val store = extension.store
-                            if (store != null) {
-                                append("Repository: ${store.indexUrl}")
+                            val repoUrl = extension.repoUrl
+                            if (repoUrl != null) {
+                                append("Repository: $repoUrl")
                             }
                         }
                     }
