@@ -56,6 +56,7 @@ import eu.kanade.presentation.more.settings.widget.TrailingWidgetBuffer
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.source.ConfigurableSource
+import mihon.domain.extension.model.ExtensionStore
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsScreenModel
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.util.system.copyToClipboard
@@ -83,13 +84,19 @@ fun ExtensionDetailsScreen(
 ) {
     val uriHandler = LocalUriHandler.current
     val url = remember(state.extension) {
-        val regex = """https://raw.githubusercontent.com/(.+?)/(.+?)/.+""".toRegex()
-        regex.find(state.extension?.repoUrl.orEmpty())
-            ?.let {
-                val (user, repo) = it.destructured
-                "https://github.com/$user/$repo"
-            }
-            ?: state.extension?.repoUrl
+        val store = state.extension?.store ?: return@remember null
+        val website = store.contact.website
+        if (website.isNotEmpty()) {
+            website
+        } else {
+            val regex = """https://raw.githubusercontent.com/(.+?)/(.+?)/.+""".toRegex()
+            regex.find(store.indexUrl)
+                ?.let {
+                    val (user, repo) = it.destructured
+                    "https://github.com/$user/$repo"
+                }
+                ?: store.indexUrl
+        }
     }
 
     Scaffold(
@@ -273,7 +280,8 @@ private fun DetailsHeader(
                                 Shared: ${extension.isShared}
                                 """.trimIndent(),
                             )
-                            val repoUrl = extension.repoUrl
+                            val repoUrl = extension.store?.contact?.website?.takeIf { it.isNotEmpty() }
+                                ?: extension.store?.indexUrl
                             if (repoUrl != null) {
                                 append("Repository: $repoUrl")
                             }
