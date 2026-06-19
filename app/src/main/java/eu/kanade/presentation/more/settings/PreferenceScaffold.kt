@@ -2,6 +2,7 @@ package eu.kanade.presentation.more.settings
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.vector.ImageVector
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.presentation.components.AppBar
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -12,6 +13,7 @@ fun PreferenceScaffold(
     titleRes: StringResource,
     actions: @Composable RowScope.() -> Unit = {},
     onBackPressed: (() -> Unit)? = null,
+    navigationIcon: ImageVector? = null,
     itemsProvider: @Composable () -> List<Preference>,
 ) {
     Scaffold(
@@ -19,6 +21,7 @@ fun PreferenceScaffold(
             AppBar(
                 title = stringResource(titleRes),
                 navigateUp = onBackPressed,
+                navigationIcon = navigationIcon,
                 actions = actions,
                 scrollBehavior = it,
             )

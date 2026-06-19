@@ -15,6 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 
+/**
+ * Maximum width of the start (first) panel.
+ * Extracted to a val in order to be referenced by SettingsScreen.kt
+ */
+val TwoPanelStartWidth = 450.dp
+
 @Composable
 fun TwoPanelBox(
     startContent: @Composable BoxScope.() -> Unit,
@@ -28,7 +34,7 @@ fun TwoPanelBox(
     val endPadding = padding.calculateEndPadding(direction)
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
         val width = maxWidth - startPadding - endPadding
-        val firstWidth = (width / 2).coerceAtMost(450.dp)
+        val firstWidth = (width / 2).coerceAtMost(TwoPanelStartWidth)
         val secondWidth = width - firstWidth
         Box(
             modifier = Modifier

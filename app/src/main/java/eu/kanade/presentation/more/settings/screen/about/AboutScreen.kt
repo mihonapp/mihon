@@ -28,6 +28,7 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.more.LogoHeader
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.presentation.util.LocalBackPress
+import eu.kanade.presentation.util.LocalSettingsNavIcon
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.updater.AppUpdateChecker
@@ -79,6 +80,7 @@ object AboutScreen : Screen() {
                 AppBar(
                     title = stringResource(MR.strings.pref_category_about),
                     navigateUp = if (handleBack != null) handleBack::invoke else null,
+                    navigationIcon = LocalSettingsNavIcon.current,
                     scrollBehavior = scrollBehavior,
                 )
             },

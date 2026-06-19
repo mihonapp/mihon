@@ -73,7 +73,7 @@ object SettingsMainScreen : Screen() {
     }
 
     @Composable
-    fun Content(twoPane: Boolean) {
+    fun Content(twoPane: Boolean, onItemClick: () -> Unit = {}) {
         val navigator = LocalNavigator.currentOrThrow
         val backPress = LocalBackPress.currentOrThrow
         val containerColor = if (twoPane) getPalerSurface() else MaterialTheme.colorScheme.surface
@@ -91,7 +91,10 @@ object SettingsMainScreen : Screen() {
                                 AppBar.Action(
                                     title = stringResource(MR.strings.action_search),
                                     icon = Icons.Outlined.Search,
-                                    onClick = { navigator.navigate(SettingsSearchScreen(), twoPane) },
+                                    onClick = {
+                                        navigator.navigate(SettingsSearchScreen(), twoPane)
+                                        onItemClick()
+                                    },
                                 ),
                             ),
                         )
@@ -130,7 +133,7 @@ object SettingsMainScreen : Screen() {
                         var contentColor = LocalContentColor.current
                         if (twoPane) {
                             modifier = Modifier
-                                .padding(horizontal = 8.dp)
+                                .padding(all = 8.dp)
                                 .clip(RoundedCornerShape(24.dp))
                                 .then(
                                     if (selected) {
@@ -149,7 +152,10 @@ object SettingsMainScreen : Screen() {
                                 title = stringResource(item.titleRes),
                                 subtitle = item.formatSubtitle(),
                                 icon = item.icon,
-                                onPreferenceClick = { navigator.navigate(item.screen, twoPane) },
+                                onPreferenceClick = {
+                                    navigator.navigate(item.screen, twoPane)
+                                    onItemClick()
+                                },
                             )
                         }
                     }
