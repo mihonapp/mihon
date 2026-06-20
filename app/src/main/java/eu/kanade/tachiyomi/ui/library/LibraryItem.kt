@@ -4,18 +4,15 @@ import eu.kanade.tachiyomi.source.getNameForMangaInfo
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.source.local.LocalSource
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 private const val LOCAL_SOURCE_ID_ALIAS = "local"
 
 data class LibraryItem(
     val libraryManga: LibraryManga,
-    val downloadCount: Long = -1,
-    val unreadCount: Long = -1,
-    val isLocal: Boolean = false,
-    val sourceLanguage: String = "",
-    private val sourceManager: SourceManager = Injekt.get(),
+    val downloadCount: Int,
+    val unreadCount: Long,
+    val isLocal: Boolean,
+    val badges: Badges,
 ) {
     val id: Long = libraryManga.id
 
@@ -25,7 +22,7 @@ data class LibraryItem(
      * @param constraint the query to check.
      * @return true if the manga matches the query, false otherwise.
      */
-    fun matches(constraint: String): Boolean {
+    fun matches(constraint: String, sourceManager: SourceManager): Boolean {
         val source = sourceManager.getOrStub(libraryManga.manga.source)
         val sourceName by lazy { source.getNameForMangaInfo() }
         if (constraint.startsWith("id:", true)) {
@@ -68,4 +65,11 @@ data class LibraryItem(
             predicate(constraint)
         }
     }
+
+    data class Badges(
+        val downloadCount: Int,
+        val unreadCount: Long,
+        val isLocal: Boolean,
+        val sourceLanguage: String,
+    )
 }
