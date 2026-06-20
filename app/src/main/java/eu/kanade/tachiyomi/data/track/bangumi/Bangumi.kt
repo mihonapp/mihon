@@ -6,8 +6,6 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMOAuth
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.json.Json
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
@@ -23,7 +21,7 @@ class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
 
     override val supportsPrivateTracking: Boolean = true
 
-    override fun getScoreList(): ImmutableList<String> = SCORE_LIST
+    override fun getScoreList(): List<String> = SCORE_LIST
 
     override fun displayScore(track: DomainTrack): String {
         return track.score.toInt().toString()
@@ -142,6 +140,5 @@ class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
 
         private val SCORE_LIST = IntRange(0, 10)
             .map(Int::toString)
-            .toImmutableList()
     }
 }
