@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
 import eu.kanade.tachiyomi.ui.updates.UpdatesSettingsScreenModel
-import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.core.common.preference.getAndSet
 import tachiyomi.domain.updates.service.UpdatesPreferences
 import tachiyomi.i18n.MR
@@ -37,7 +36,7 @@ fun UpdatesFilterDialog(
 ) {
     TabbedDialog(
         onDismissRequest = onDismissRequest,
-        tabTitles = persistentListOf(
+        tabTitles = listOf(
             stringResource(MR.strings.action_filter),
         ),
     ) {
