@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import kotlin.time.Duration.Companion.milliseconds
 
 class DownloadQueueScreenModel(
     private val downloadManager: DownloadManager = Injekt.get(),
@@ -212,13 +213,13 @@ class DownloadQueueScreenModel(
     private fun launchProgressJob(download: Download) {
         val job = screenModelScope.launch {
             while (download.pages == null) {
-                delay(50)
+                delay(50.milliseconds)
             }
 
             val progressFlows = download.pages!!.map(Page::progressFlow)
             combine(progressFlows, Array<Int>::sum)
                 .distinctUntilChanged()
-                .debounce(50)
+                .debounce(50.milliseconds)
                 .collectLatest {
                     onUpdateProgress(download)
                 }

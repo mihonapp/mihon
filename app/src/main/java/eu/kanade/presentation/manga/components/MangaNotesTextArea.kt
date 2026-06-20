@@ -55,9 +55,6 @@ import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import kotlin.time.Duration.Companion.seconds
 
-private const val MAX_LENGTH = 250
-private const val MAX_LENGTH_WARN = MAX_LENGTH * 0.9
-
 @Composable
 fun MangaNotesTextArea(
     state: MangaNotesScreen.State,
@@ -102,7 +99,6 @@ fun MangaNotesTextArea(
         RichTextEditor(
             state = richTextState,
             textStyle = MaterialTheme.typography.bodyLarge,
-            maxLength = MAX_LENGTH,
             placeholder = {
                 Text(text = stringResource(MR.strings.notes_placeholder))
             },
@@ -182,12 +178,7 @@ fun MangaNotesTextArea(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = (MAX_LENGTH - textLength).toString(),
-                    color = if (textLength > MAX_LENGTH_WARN) {
-                        MaterialTheme.colorScheme.error
-                    } else {
-                        Color.Unspecified
-                    },
+                    text = textLength.toString(),
                     modifier = Modifier.padding(MaterialTheme.padding.extraSmall),
                 )
             }
