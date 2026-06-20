@@ -3,7 +3,7 @@ package eu.kanade.presentation.browse
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import eu.kanade.presentation.browse.components.GlobalSearchToolbar
-import eu.kanade.tachiyomi.source.CatalogueSource
+import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchScreenModel
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SourceFilter
 import tachiyomi.domain.manga.model.Manga
@@ -19,7 +19,7 @@ fun MigrateSearchScreen(
     onChangeSearchFilter: (SourceFilter) -> Unit,
     onToggleResults: () -> Unit,
     getManga: @Composable (Manga) -> State<Manga>,
-    onClickSource: (CatalogueSource) -> Unit,
+    onClickSource: (Source) -> Unit,
     onClickItem: (Manga) -> Unit,
     onLongClickItem: (Manga) -> Unit,
 ) {

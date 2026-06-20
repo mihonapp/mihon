@@ -28,7 +28,7 @@ class PreferenceBackupCreator(
     }
 
     fun createSource(includePrivatePreferences: Boolean): List<BackupSourcePreferences> {
-        return sourceManager.getCatalogueSources()
+        return sourceManager.getAll()
             .filterIsInstance<ConfigurableSource>()
             .map {
                 BackupSourcePreferences(
