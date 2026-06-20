@@ -43,7 +43,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    if (System.getenv("GITHUB_ACTIONS").toBoolean() && System.getenv("GITHUB_REPOSITORY_OWNER") == "mihonapp") {
+    if (System.getenv("MIHON_GITHUB_RELEASE").toBoolean()) {
         val tempStoreFile = file(System.getenv("RUNNER_TEMP")).resolve("antsy.keystore")
 
         val storeFileBytes = System.getenv("storeFileBase64").let(Base64::decode)

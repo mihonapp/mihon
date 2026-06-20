@@ -10,7 +10,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -18,14 +17,15 @@ import kotlinx.coroutines.flow.shareIn
 
 class StorageManager(
     private val context: Context,
-    scope: CoroutineScope,
     storagePreferences: StoragePreferences,
 ) {
+
+    private val scope = CoroutineScope(Dispatchers.IO)
+
     private var baseDir: UniFile? = getBaseDir(storagePreferences.baseStorageDirectory.get())
 
     private val _changes: Channel<Unit> = Channel(Channel.UNLIMITED)
     val changes = _changes.receiveAsFlow()
-        .flowOn(Dispatchers.IO)
         .shareIn(scope, SharingStarted.Lazily, 1)
 
     init {
@@ -43,7 +43,6 @@ class StorageManager(
                 }
                 _changes.send(Unit)
             }
-            .flowOn(Dispatchers.IO)
             .launchIn(scope)
     }
 
