@@ -43,6 +43,7 @@ import nl.adaptivity.xmlutil.serialization.XML
 import okhttp3.Response
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.extension
+import tachiyomi.core.common.storage.renameToOrCopy
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.launchNow
 import tachiyomi.core.common.util.lang.withIOContext
@@ -410,11 +411,10 @@ class Downloader(
             if (downloadPreferences.saveChaptersAsCBZ.get()) {
                 archiveChapter(mangaDir, chapterDirname, tmpDir)
             } else {
-                tmpDir.renameTo(chapterDirname)
+                val chapterDir = tmpDir.renameToOrCopy(chapterDirname)
+                DiskUtil.createNoMediaFile(chapterDir, context)
             }
             cache.addChapter(chapterDirname, mangaDir, download.manga)
-
-            DiskUtil.createNoMediaFile(tmpDir, context)
 
             download.status = Download.State.DOWNLOADED
         } catch (error: Throwable) {
@@ -490,16 +490,16 @@ class Downloader(
         return flow {
             val response = source.getImage(page)
             val file = tmpDir.createFile("$filename.tmp")!!
-            try {
+            val completedFile = try {
                 response.body.source().saveTo(file.openOutputStream())
                 val extension = getImageExtension(response, file)
-                file.renameTo("$filename.$extension")
+                file.renameToOrCopy("$filename.$extension")
             } catch (e: Exception) {
                 response.close()
                 file.delete()
                 throw e
             }
-            emit(file)
+            emit(completedFile)
         }
             // Retry 3 times, waiting 2, 4 and 8 seconds between attempts.
             .retryWhen { _, attempt ->
@@ -528,9 +528,9 @@ class Downloader(
             }
         }
         val extension = ImageUtil.findImageType(cacheFile.inputStream()) ?: return tmpFile
-        tmpFile.renameTo("$filename.${extension.extension}")
+        val imageFile = tmpFile.renameToOrCopy("$filename.${extension.extension}")
         cacheFile.delete()
-        return tmpFile
+        return imageFile
     }
 
     /**
@@ -608,7 +608,7 @@ class Downloader(
                 writer.write(file)
             }
         }
-        zip.renameTo("$dirname.cbz")
+        zip.renameToOrCopy("$dirname.cbz")
         tmpDir.delete()
     }
 
