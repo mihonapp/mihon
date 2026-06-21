@@ -71,12 +71,12 @@ android {
     }
 
     buildTypes {
-        val debug by getting {
+        val debug = getByName("debug") {
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-${getLatestCommitCount()}"
             isPseudoLocalesEnabled = true
         }
-        val release by getting {
+        val release = getByName("release") {
             isMinifyEnabled = Config.enableCodeShrink
             isShrinkResources = Config.enableCodeShrink
 
