@@ -821,6 +821,7 @@
     <!-- Dialog option with checkbox view -->
     <string name="dialog_with_checkbox_remove_description">This will remove the read date of this chapter. Are you sure?</string>
     <string name="dialog_with_checkbox_reset">Reset all chapters for this entry</string>
+    <string name="history_delete_selected_confirmation">Are you sure you want to remove the selected history entries?</string>
 
     <!-- Image notifier -->
     <string name="picture_saved">Picture saved</string>

@@ -1,6 +1,6 @@
 package eu.kanade.presentation.history.components
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -18,6 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -31,21 +33,34 @@ import tachiyomi.domain.history.model.HistoryWithRelations
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
+import tachiyomi.presentation.core.util.selectedBackground
 
 private val HistoryItemHeight = 96.dp
 
 @Composable
 fun HistoryItem(
     history: HistoryWithRelations,
-    onClickCover: () -> Unit,
+    selected: Boolean,
+    showActions: Boolean,
+    onClickCover: (() -> Unit)?,
     onClickResume: () -> Unit,
+    onLongClick: () -> Unit,
     onClickDelete: () -> Unit,
     onClickFavorite: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val haptic = LocalHapticFeedback.current
+
     Row(
         modifier = modifier
-            .clickable(onClick = onClickResume)
+            .selectedBackground(selected)
+            .combinedClickable(
+                onClick = onClickResume,
+                onLongClick = {
+                    onLongClick()
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                },
+            )
             .height(HistoryItemHeight)
             .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
         verticalAlignment = Alignment.CenterVertically,
@@ -84,7 +99,7 @@ fun HistoryItem(
             )
         }
 
-        if (!history.coverData.isMangaFavorite) {
+        if (showActions && !history.coverData.isMangaFavorite) {
             IconButton(onClick = onClickFavorite) {
                 Icon(
                     imageVector = Icons.Outlined.FavoriteBorder,
@@ -94,12 +109,14 @@ fun HistoryItem(
             }
         }
 
-        IconButton(onClick = onClickDelete) {
-            Icon(
-                imageVector = Icons.Outlined.Delete,
-                contentDescription = stringResource(MR.strings.action_delete),
-                tint = MaterialTheme.colorScheme.onSurface,
-            )
+        if (showActions) {
+            IconButton(onClick = onClickDelete) {
+                Icon(
+                    imageVector = Icons.Outlined.Delete,
+                    contentDescription = stringResource(MR.strings.action_delete),
+                    tint = MaterialTheme.colorScheme.onSurface,
+                )
+            }
         }
     }
 }
@@ -114,8 +131,11 @@ private fun HistoryItemPreviews(
         Surface {
             HistoryItem(
                 history = historyWithRelations,
+                selected = false,
+                showActions = true,
                 onClickCover = {},
                 onClickResume = {},
+                onLongClick = {},
                 onClickDelete = {},
                 onClickFavorite = {},
             )

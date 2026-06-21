@@ -88,6 +88,47 @@ fun HistoryDeleteAllDialog(
     )
 }
 
+@Composable
+fun HistoryDeleteSelectedDialog(
+    onDismissRequest: () -> Unit,
+    onDelete: (Boolean) -> Unit,
+) {
+    var removeEverything by remember { mutableStateOf(false) }
+
+    AlertDialog(
+        title = {
+            Text(text = stringResource(MR.strings.action_remove))
+        },
+        text = {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+            ) {
+                Text(text = stringResource(MR.strings.history_delete_selected_confirmation))
+
+                LabeledCheckbox(
+                    label = stringResource(MR.strings.dialog_with_checkbox_reset),
+                    checked = removeEverything,
+                    onCheckedChange = { removeEverything = it },
+                )
+            }
+        },
+        onDismissRequest = onDismissRequest,
+        confirmButton = {
+            TextButton(onClick = {
+                onDelete(removeEverything)
+                onDismissRequest()
+            }) {
+                Text(text = stringResource(MR.strings.action_remove))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text(text = stringResource(MR.strings.action_cancel))
+            }
+        },
+    )
+}
+
 @PreviewLightDark
 @Composable
 private fun HistoryDeleteDialogPreview() {
