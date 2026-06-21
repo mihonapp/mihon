@@ -13,6 +13,9 @@ import mihon.data.extension.model.NetworkExtensionStore
 import mihon.data.extension.model.NetworkLegacyExtension
 import mihon.data.extension.model.NetworkLegacyExtensionRepo
 import mihon.domain.extension.model.ExtensionStore
+import okio.BufferedSource
+import okio.buffer
+import okio.gzip
 import tachiyomi.core.common.util.system.logcat
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -22,49 +25,35 @@ class ExtensionStoreService(
     private val protoBuf: ProtoBuf,
 ) {
     suspend fun fetch(indexUrl: String): Result<ExtensionStore> {
-        return fetch(indexUrl, forceV2 = false)
-    }
-
-    private suspend fun fetch(indexUrl: String, forceV2: Boolean): Result<ExtensionStore> {
         var updatedIndexUrl: String = indexUrl
         return try {
-            val store = network.client.newCall(GET(indexUrl)).awaitSuccess().body.source().use { source ->
-                try {
-                    protoBuf.decodeFromByteArray<NetworkExtensionStore>(source.peek().readByteArray())
-                } catch (e: IllegalArgumentException) {
-                    logcat(LogPriority.ERROR, e) {
-                        "Failed to add extension store '$updatedIndexUrl'"
-                    }
-                    try {
-                        json.decodeFromBufferedSource<NetworkExtensionStore>(source.peek())
-                    } catch (e: IllegalArgumentException) {
-                        if (forceV2) throw e
-                        logcat(LogPriority.ERROR, e) {
-                            "Failed to add extension store '$updatedIndexUrl'"
+            val response = network.client.newCall(GET(updatedIndexUrl)).awaitSuccess()
+            val store = response.body.source().decompressIfGzipped().use { source ->
+                val networkStore = when (source.peek().readByte()) {
+                    // "[..."
+                    0x5B.toByte() -> run {
+                        if (!indexUrl.endsWith("/index.min.json")) {
+                            throw IllegalArgumentException("Provided legacy store url is not valid")
                         }
-                        val legacyIndex = try {
-                            json.decodeFromBufferedSource<NetworkLegacyExtensionRepo>(source.peek())
-                        } catch (e: IllegalArgumentException) {
-                            if (!indexUrl.endsWith("/index.min.json")) {
-                                throw e
-                            }
-                            logcat(LogPriority.ERROR, e) {
-                                "Failed to add extension store '$updatedIndexUrl'"
-                            }
-                            updatedIndexUrl = indexUrl.replace("/index.min.json", "/repo.json")
-                            network.client.newCall(GET(updatedIndexUrl)).awaitSuccess().body.source().use {
-                                json.decodeFromBufferedSource<NetworkLegacyExtensionRepo>(it)
-                            }
-                        }
-
-                        if (legacyIndex.indexV2 != null) {
-                            return fetch(legacyIndex.indexV2, forceV2 = true)
-                        } else {
-                            legacyIndex
+                        updatedIndexUrl = indexUrl.replace("/index.min.json", "/repo.json")
+                        network.client.newCall(GET(updatedIndexUrl)).awaitSuccess().body.source().use {
+                            json.decodeFromBufferedSource<NetworkLegacyExtensionRepo>(it)
                         }
                     }
+                    // "{..."
+                    0x7B.toByte() -> try {
+                        json.decodeFromBufferedSource<NetworkLegacyExtensionRepo>(source.peek())
+                    } catch (_: IllegalArgumentException) {
+                        json.decodeFromBufferedSource<NetworkExtensionStore>(source)
+                    }
+                    else -> protoBuf.decodeFromByteArray<NetworkExtensionStore>(source.readByteArray())
                 }
-                    .toExtensionStore(updatedIndexUrl)
+
+                if (networkStore is NetworkLegacyExtensionRepo && networkStore.indexV2 != null) {
+                    return fetch(networkStore.indexV2)
+                }
+
+                networkStore.toExtensionStore(updatedIndexUrl)
             }
             Result.success(store)
         } catch (e: CancellationException) {
@@ -81,14 +70,13 @@ class ExtensionStoreService(
         return try {
             val extensions = if (!store.isLegacy) {
                 val response = network.client.newCall(GET(store.indexUrl)).awaitSuccess()
-                response.body.source().use { source ->
-                    try {
-                        protoBuf.decodeFromByteArray<NetworkExtensionStore>(source.peek().readByteArray())
-                            .toAvailableExtensions(store)
-                    } catch (_: IllegalArgumentException) {
-                        json.decodeFromBufferedSource<NetworkExtensionStore>(source.peek())
-                            .toAvailableExtensions(store)
+                response.body.source().decompressIfGzipped().use { source ->
+                    when (source.peek().readByte()) {
+                        // "{..."
+                        0x7B.toByte() -> json.decodeFromBufferedSource<NetworkExtensionStore>(source)
+                        else -> protoBuf.decodeFromByteArray<NetworkExtensionStore>(source.readByteArray())
                     }
+                        .toAvailableExtensions(store)
                 }
             } else {
                 val storeBaseUrl = store.indexUrl.removeSuffix("/repo.json")
@@ -104,5 +92,17 @@ class ExtensionStoreService(
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    private fun BufferedSource.decompressIfGzipped(): BufferedSource {
+        val isGzip = peek().use { peeked ->
+            try {
+                peeked.readShort().toInt() == 0x1f8b
+            } catch (_: Exception) {
+                false
+            }
+        }
+
+        return if (isGzip) gzip().buffer() else this
     }
 }
