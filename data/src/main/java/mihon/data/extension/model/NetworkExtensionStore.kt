@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonNames
 import kotlinx.serialization.protobuf.ProtoNumber
-import mihon.data.extension.model.NetworkExtensionStore.ContentRating
+import mihon.data.extension.model.NetworkExtensionStore.ContentWarning
 import mihon.data.extension.model.NetworkExtensionStore.ExtensionList
 import mihon.domain.extension.model.ExtensionStore
 import eu.kanade.tachiyomi.extension.model.Extension as TachiyomiExtension
@@ -36,7 +36,8 @@ data class NetworkExtensionStore(
         @ProtoNumber(4) val extensionLib: String,
         @ProtoNumber(5) val versionCode: Long,
         @ProtoNumber(6) val versionName: String,
-        @ProtoNumber(7) val sources: List<Source>,
+        @ProtoNumber(7) val contentWarning: ContentWarning = ContentWarning.SAFE,
+        @ProtoNumber(8) val sources: List<Source>,
     )
 
     @Serializable
@@ -52,27 +53,23 @@ data class NetworkExtensionStore(
         @ProtoNumber(3) val language: String,
         @ProtoNumber(4) val homeUrl: String = "",
         @ProtoNumber(5) val mirrorUrls: List<String> = emptyList(),
-        @ProtoNumber(6) val contentRating: ContentRating = ContentRating.SAFE,
+        // @ProtoNumber(6) val contentWarning: ContentWarning = ContentWarning.SAFE,
         @ProtoNumber(7) val message: String? = null,
     )
 
     @Suppress("Unused")
-    enum class ContentRating {
+    enum class ContentWarning {
         @ProtoNumber(0)
-        @JsonNames("CONTENT_RATING_SAFE")
+        @JsonNames("CONTENT_WARNING_SAFE")
         SAFE,
 
         @ProtoNumber(1)
-        @JsonNames("CONTENT_RATING_SUGGESTIVE")
-        SUGGESTIVE,
+        @JsonNames("CONTENT_WARNING_MIXED")
+        MIXED,
 
         @ProtoNumber(2)
-        @JsonNames("CONTENT_RATING_EROTICA")
-        EROTICA,
-
-        @ProtoNumber(3)
-        @JsonNames("CONTENT_RATING_PORNOGRAPHIC")
-        PORNOGRAPHIC,
+        @JsonNames("CONTENT_WARNING_NSFW")
+        NSFW,
     }
 
     override fun toExtensionStore(indexUrl: String): ExtensionStore {
@@ -103,7 +100,7 @@ fun ExtensionList.toAvailableExtensions(store: ExtensionStore): List<TachiyomiEx
             versionCode = extension.versionCode,
             versionName = extension.versionName,
             lang = if (lang.size == 1) lang.first() else "all",
-            isNsfw = extension.sources.maxOfOrNull { it.contentRating } == ContentRating.PORNOGRAPHIC,
+            isNsfw = extension.contentWarning >= ContentWarning.MIXED,
             sources = extension.sources.map { source ->
                 TachiyomiExtension.Available.Source(
                     id = source.id,
