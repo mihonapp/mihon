@@ -12,6 +12,7 @@ import logcat.LogPriority
 import mihon.data.extension.model.NetworkExtensionStore
 import mihon.data.extension.model.NetworkLegacyExtension
 import mihon.data.extension.model.NetworkLegacyExtensionRepo
+import mihon.data.extension.model.toAvailableExtensions
 import mihon.domain.extension.model.ExtensionStore
 import okio.BufferedSource
 import okio.buffer
@@ -68,7 +69,19 @@ class ExtensionStoreService(
 
     suspend fun getExtensions(store: ExtensionStore): Result<List<Extension.Available>> {
         return try {
-            val extensions = if (!store.isLegacy) {
+            val extensions = if (store.extensionListUrl != null) {
+                val response = network.client.newCall(GET(store.extensionListUrl!!)).awaitSuccess()
+                response.body.source().decompressIfGzipped().use { source ->
+                    when (source.peek().readByte()) {
+                        // "{..."
+                        0x7B.toByte() -> json.decodeFromBufferedSource<NetworkExtensionStore.ExtensionList>(source)
+                        else -> protoBuf.decodeFromByteArray<NetworkExtensionStore.ExtensionList>(
+                            source.readByteArray(),
+                        )
+                    }
+                        .toAvailableExtensions(store)
+                }
+            } else if (!store.isLegacy) {
                 val response = network.client.newCall(GET(store.indexUrl)).awaitSuccess()
                 response.body.source().decompressIfGzipped().use { source ->
                     when (source.peek().readByte()) {
@@ -76,6 +89,7 @@ class ExtensionStoreService(
                         0x7B.toByte() -> json.decodeFromBufferedSource<NetworkExtensionStore>(source)
                         else -> protoBuf.decodeFromByteArray<NetworkExtensionStore>(source.readByteArray())
                     }
+                        .extensionList!!
                         .toAvailableExtensions(store)
                 }
             } else {
