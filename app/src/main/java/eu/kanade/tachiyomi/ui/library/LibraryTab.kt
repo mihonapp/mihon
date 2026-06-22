@@ -52,6 +52,7 @@ import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryManga
+import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -59,7 +60,10 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.EmptyScreenAction
 import tachiyomi.presentation.core.screens.LoadingScreen
+import tachiyomi.presentation.core.util.collectAsState
 import tachiyomi.source.local.isLocal
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 data object LibraryTab : Tab {
 
@@ -89,11 +93,13 @@ data object LibraryTab : Tab {
         val screenModel = rememberScreenModel { LibraryScreenModel() }
         val settingsScreenModel = rememberScreenModel { LibrarySettingsScreenModel() }
         val state by screenModel.state.collectAsState()
+        val libraryPreferences = remember { Injekt.get<LibraryPreferences>() }
+        val filterManualUpdates by libraryPreferences.filterManualUpdates.collectAsState()
 
         val snackbarHostState = remember { SnackbarHostState() }
 
         fun shouldScopeUpdateToVisibleItems(): Boolean {
-            return state.hasActiveFilters || !state.searchQuery.isNullOrEmpty()
+            return filterManualUpdates && (state.hasActiveFilters || !state.searchQuery.isNullOrEmpty())
         }
 
         fun onClickRefresh(category: Category?, mangaIds: List<Long>?): Boolean {
@@ -107,6 +113,8 @@ data object LibraryTab : Tab {
             scope.launch {
                 val msgRes = when {
                     !started -> MR.strings.update_already_running
+                    mangaIds != null && category != null -> MR.strings.updating_filtered_category
+                    mangaIds != null -> MR.strings.updating_filtered_library
                     category != null -> MR.strings.updating_category
                     else -> MR.strings.updating_library
                 }

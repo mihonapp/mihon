@@ -56,6 +56,8 @@ class LibraryPreferences(
 
     val autoUpdateMetadata: Preference<Boolean> = preferenceStore.getBoolean("auto_update_metadata", false)
 
+    val filterManualUpdates: Preference<Boolean> = preferenceStore.getBoolean("filter_manual_updates", false)
+
     val showContinueReadingButton: Preference<Boolean> = preferenceStore.getBoolean(
         "display_continue_reading_button",
         false,
