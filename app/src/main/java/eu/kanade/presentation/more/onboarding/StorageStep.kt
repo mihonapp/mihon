@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import eu.kanade.presentation.more.settings.screen.SettingsDataScreen
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.collectLatest
@@ -67,6 +68,25 @@ internal class StorageStep : OnboardingStep {
                 },
             ) {
                 Text(stringResource(MR.strings.onboarding_storage_action_select))
+            }
+
+            // Fallback for devices where the system folder picker won't grant access to any
+            // folder ("Can't use this folder"). The app-specific external storage directory is
+            // always writable without any permission or SAF grant.
+            Text(
+                stringResource(
+                    MR.strings.onboarding_storage_fallback_info,
+                    stringResource(MR.strings.app_name),
+                ),
+            )
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    val defaultDir = context.getExternalFilesDir(null) ?: context.filesDir
+                    storagePref.set(defaultDir.toUri().toString())
+                },
+            ) {
+                Text(stringResource(MR.strings.onboarding_storage_action_use_default))
             }
 
             HorizontalDivider(
