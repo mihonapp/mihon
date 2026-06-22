@@ -726,11 +726,8 @@
     <string name="onboarding_action_next">Następny</string>
     <string name="onboarding_permission_ignore_battery_opts">Zużycie baterii w tle</string>
     <string name="notification_updating_progress">Aktualizowanie biblioteki... (%s)</string>
-    <string name="invalid_repo_name">Nieprawidłowa nazwa repozytorium</string>
     <string name="source_settings">Ustawienia źródła</string>
     <string name="app_settings">Ustawienia aplikacji</string>
-    <string name="action_delete_repo">Usuń repozytorium</string>
-    <string name="action_add_repo">Dodaj repozytorium</string>
     <string name="selected">Zaznaczone</string>
     <string name="action_bar_up_description">Przewiń w górę</string>
     <string name="onboarding_action_finish">Zaczynajmy</string>
@@ -740,8 +737,6 @@
     <string name="onboarding_permission_action_grant">Zezwól</string>
     <string name="onboarding_guides_new_user">Pierwszy raz w %s? Zalecamy zapoznać się z poradnikiem.</string>
     <string name="onboarding_guides_returning_user">Ponowna instalacja %s?</string>
-    <string name="label_extension_repos">Repozytoria rozszerzeń</string>
-    <string name="label_add_repo_input">Link repozytorium</string>
     <string name="pref_storage_usage">Zużycie pamięci</string>
     <string name="manga_interval_custom_amount">Niestandardowa częstotliwość aktualizacji:</string>
     <string name="no_scanlators_found">Nie znaleziono skanlatorów</string>
@@ -766,10 +761,6 @@
 \n
 \nWybrany folder:%2$s</string>
     <string name="ext_revoke_trust">Unieważnij zaufanie nieznanym rozszerzeniom</string>
-    <string name="information_empty_repos">Nie masz ustawionych repozytoriów.</string>
-    <string name="action_add_repo_message">Dodaj repozytoria do %s. Powinien to być link z końcówką \"index.min.json\".</string>
-    <string name="error_repo_exists">To repozytorium jest już dodane!</string>
-    <string name="delete_repo_confirmation">Na pewno chcesz usunąć repozytorium \"%s\"?</string>
     <string name="action_open_repo">Repozytorium open source</string>
     <string name="pref_flash_page_summ">Redukuje ghosting na wyświetlaczach e-ink</string>
     <string name="no_location_set">Brak ustawionej ścieżki pamięci</string>
@@ -789,7 +780,6 @@
     <string name="exclude_scanlators">Wyklucz skanlatorów</string>
     <string name="pref_webtoon_disable_zoom_out">Wyłącz oddalenie</string>
     <string name="action_add_anyway">Dodaj mimo to</string>
-    <string name="action_replace_repo">Zamień</string>
     <string name="action_view_upcoming">Pokaż nadchodzące aktualizacje</string>
     <string name="upcoming_calendar_next">Następny miesiąc</string>
     <string name="upcoming_calendar_prev">Poprzedni miesiąc</string>
@@ -813,21 +803,17 @@
     <string name="onboarding_permission_analytics">Zezwól na analizę danych</string>
     <string name="pref_security">Bezpieczeństwo i prywatność</string>
     <string name="pref_auto_update_manga_on_mark_read">Aktualizuj postęp po oznaczeniu jako przeczytane</string>
-    <string name="extensionRepo_settings">Repozytoria rozszerzeń</string>
     <string name="pref_firebase">Dane użytkownika i dzienniki awarii</string>
     <string name="ext_remove">Usuń</string>
     <string name="ext_confirm_remove">Usunąć Rozszerzenie?</string>
     <string name="remove_private_extension_message">Czy na pewno chcesz usunąć rozszerzenie \"%s\"?</string>
-    <string name="add_repo_confirmation">Czy chciałbyś dodać to repozytorium \"%s\"?</string>
     <string name="firebase_summary">Przesyłanie dzienników awarii i danych użytkowania pozwoli nam na zidentyfikowanie i naprawę błędów, poprawę wydajności oraz dopasowanie przyszłych wersji aplikacji do twoich potrzeb</string>
     <string name="pref_hardware_bitmap_threshold_default">Domyślne (%d)</string>
     <string name="trackers_updated_summary">Śledzenie zaktualizowane do rozdziału %d</string>
     <string name="non_library_settings">Wszystkie przeczytane wpisy</string>
     <string name="pref_hardware_bitmap_threshold_summary">Jeżeli czytnik załaduje pusty obraz, stopniowo zmniejszaj zakres graniczny.\nWybrany: %s</string>
     <string name="confirm_tracker_update">Zaktualizować śledzenie do rozdziału %d?</string>
-    <string name="action_replace_repo_title">Identyfikator Klucza Certyfikatu już istnieje</string>
     <string name="upcoming_guide">Przewodnik nadchodzących aktualizacji</string>
-    <string name="action_replace_repo_message">Repozytorium %1$s posiada taki sam identyfikator certyfikatu jak %2$s.\nJeżeli było to przewidziane, %2$s zostanie zastąpione, w przeciwnym wypadku skontaktuj się z z osobą utrzymującą repozytorium.</string>
     <string name="pref_download_new_unread_chapters_only">Pomiń pobieranie duplikatów przeczytanych już rozdziałów</string>
     <string name="invalid_backup_file_json">Kopia zapasowa JSON nie jest wspierana</string>
     <string name="pref_hardware_bitmap_threshold">Niestandardowy zakres graniczny bitmapy dla urządzenia</string>
