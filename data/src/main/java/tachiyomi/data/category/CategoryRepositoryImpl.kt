@@ -48,6 +48,9 @@ class CategoryRepositoryImpl(
             name = category.name,
             order = category.order,
             flags = category.flags,
+            version = category.version,
+            uid = category.uid,
+            lastModifiedAt = category.lastModifiedAt,
         )
     }
 
@@ -56,6 +59,10 @@ class CategoryRepositoryImpl(
             name = update.name,
             order = update.order,
             flags = update.flags,
+            version = update.version,
+            uid = update.uid,
+            lastModifiedAt = update.lastModifiedAt,
+            isSyncing = null,
             categoryId = update.id,
         )
     }
@@ -79,12 +86,18 @@ class CategoryRepositoryImpl(
         name: String,
         order: Long,
         flags: Long,
+        version: Long,
+        uid: Long,
+        lastModifiedAt: Long,
     ): Category {
         return Category(
             id = id,
             name = name,
             order = order,
             flags = flags,
+            version = version,
+            uid = uid,
+            lastModifiedAt = lastModifiedAt,
         )
     }
 }

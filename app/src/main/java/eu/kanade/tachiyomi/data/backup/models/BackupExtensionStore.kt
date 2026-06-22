@@ -5,7 +5,7 @@ import kotlinx.serialization.protobuf.ProtoNumber
 import mihon.domain.extension.model.ExtensionStore
 
 @Serializable
-class BackupExtensionStore(
+data class BackupExtensionStore(
     @ProtoNumber(1) var indexUrl: String,
     @ProtoNumber(2) var name: String,
     @ProtoNumber(3) var badgeLabel: String?,

@@ -42,10 +42,13 @@ import androidx.core.net.toUri
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.hippo.unifile.UniFile
+import eu.kanade.domain.sync.SyncPreferences
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.data.CreateBackupScreen
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
 import eu.kanade.presentation.more.settings.screen.data.StorageInfo
+import eu.kanade.presentation.more.settings.screen.data.SyncSettingsSelector
+import eu.kanade.presentation.more.settings.screen.data.SyncTriggerOptionsScreen
 import eu.kanade.presentation.more.settings.widget.BasePreferenceWidget
 import eu.kanade.presentation.more.settings.widget.PrefsHorizontalPadding
 import eu.kanade.presentation.util.relativeTimeSpanString
@@ -54,6 +57,8 @@ import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.export.LibraryExporter
 import eu.kanade.tachiyomi.data.export.LibraryExporter.ExportOptions
+import eu.kanade.tachiyomi.data.sync.SyncDataJob
+import eu.kanade.tachiyomi.data.sync.SyncManager
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.Dispatchers
@@ -101,6 +106,9 @@ object SettingsDataScreen : SearchableSettings {
         val backupPreferences = Injekt.get<BackupPreferences>()
         val storagePreferences = Injekt.get<StoragePreferences>()
 
+        val syncPreferences = remember { Injekt.get<SyncPreferences>() }
+        val syncService by syncPreferences.syncService.collectAsState()
+
         return listOf(
             getStorageLocationPref(storagePreferences = storagePreferences),
             Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.pref_storage_location_info)),
@@ -108,7 +116,7 @@ object SettingsDataScreen : SearchableSettings {
             getBackupAndRestoreGroup(backupPreferences = backupPreferences),
             getDataGroup(),
             getExportGroup(),
-        )
+        ) + getSyncPreferences(syncPreferences = syncPreferences, syncService = syncService)
     }
 
     @Composable
@@ -460,6 +468,144 @@ object SettingsDataScreen : SearchableSettings {
                     Text(text = stringResource(MR.strings.action_cancel))
                 }
             },
+        )
+    }
+
+    @Composable
+    private fun getSyncPreferences(syncPreferences: SyncPreferences, syncService: Int): List<Preference> {
+        return listOf(
+            Preference.PreferenceGroup(
+                title = stringResource(MR.strings.pref_sync_service_category),
+                preferenceItems = listOf(
+                    Preference.PreferenceItem.ListPreference(
+                        preference = syncPreferences.syncService,
+                        title = stringResource(MR.strings.pref_sync_service),
+                        entries = mapOf(
+                            SyncManager.SyncService.NONE.value to stringResource(MR.strings.off),
+                            SyncManager.SyncService.SYNCYOMI.value to stringResource(MR.strings.syncyomi),
+                        ),
+                        onValueChanged = { true },
+                    ),
+                ),
+            ),
+        ) + getSyncServicePreferences(syncPreferences, syncService)
+    }
+
+    @Composable
+    private fun getSyncServicePreferences(syncPreferences: SyncPreferences, syncService: Int): List<Preference> {
+        val syncServiceType = SyncManager.SyncService.fromInt(syncService)
+
+        val basePreferences = getBasePreferences(syncServiceType, syncPreferences)
+
+        return if (syncServiceType != SyncManager.SyncService.NONE) {
+            basePreferences + getAdditionalPreferences(syncPreferences)
+        } else {
+            basePreferences
+        }
+    }
+
+    @Composable
+    private fun getBasePreferences(
+        syncServiceType: SyncManager.SyncService,
+        syncPreferences: SyncPreferences,
+    ): List<Preference> {
+        return when (syncServiceType) {
+            SyncManager.SyncService.NONE -> emptyList()
+            SyncManager.SyncService.SYNCYOMI -> getSelfHostPreferences(syncPreferences)
+        }
+    }
+
+    @Composable
+    private fun getAdditionalPreferences(syncPreferences: SyncPreferences): List<Preference> {
+        return listOf(getSyncNowPref(), getAutomaticSyncGroup(syncPreferences))
+    }
+
+    @Composable
+    private fun getSelfHostPreferences(syncPreferences: SyncPreferences): List<Preference> {
+        val scope = rememberCoroutineScope()
+        return listOf(
+            Preference.PreferenceItem.EditTextPreference(
+                title = stringResource(MR.strings.pref_sync_host),
+                subtitle = stringResource(MR.strings.pref_sync_host_summ),
+                preference = syncPreferences.clientHost,
+                onValueChanged = { newValue ->
+                    scope.launch {
+                        // Trim spaces at the beginning and end, then remove trailing slash if present
+                        val trimmedValue = newValue.trim()
+                        val modifiedValue = trimmedValue.trimEnd { it == '/' }
+                        syncPreferences.clientHost.set(modifiedValue)
+                    }
+                    true
+                },
+            ),
+            Preference.PreferenceItem.EditTextPreference(
+                title = stringResource(MR.strings.pref_sync_api_key),
+                subtitle = stringResource(MR.strings.pref_sync_api_key_summ),
+                preference = syncPreferences.clientAPIKey,
+            ),
+        )
+    }
+
+    @Composable
+    private fun getSyncNowPref(): Preference.PreferenceGroup {
+        val navigator = LocalNavigator.currentOrThrow
+        return Preference.PreferenceGroup(
+            title = stringResource(MR.strings.pref_sync_now_group_title),
+            preferenceItems = listOf(
+                getSyncOptionsPref(),
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.pref_sync_now),
+                    subtitle = stringResource(MR.strings.pref_sync_now_subtitle),
+                    onClick = {
+                        navigator.push(SyncSettingsSelector())
+                    },
+                ),
+            ),
+        )
+    }
+
+    @Composable
+    private fun getSyncOptionsPref(): Preference.PreferenceItem.TextPreference {
+        val navigator = LocalNavigator.currentOrThrow
+        return Preference.PreferenceItem.TextPreference(
+            title = stringResource(MR.strings.pref_sync_options),
+            subtitle = stringResource(MR.strings.pref_sync_options_summ),
+            onClick = { navigator.push(SyncTriggerOptionsScreen()) },
+        )
+    }
+
+    @Composable
+    private fun getAutomaticSyncGroup(syncPreferences: SyncPreferences): Preference.PreferenceGroup {
+        val context = LocalContext.current
+        val syncIntervalPref = syncPreferences.syncInterval
+        val lastSync by syncPreferences.lastSyncTimestamp.collectAsState()
+
+        return Preference.PreferenceGroup(
+            title = stringResource(MR.strings.pref_sync_automatic_category),
+            preferenceItems = listOf(
+                Preference.PreferenceItem.ListPreference(
+                    preference = syncIntervalPref,
+                    title = stringResource(MR.strings.pref_sync_interval),
+                    entries = mapOf(
+                        0 to stringResource(MR.strings.off),
+                        30 to stringResource(MR.strings.update_30min),
+                        60 to stringResource(MR.strings.update_1hour),
+                        180 to stringResource(MR.strings.update_3hour),
+                        360 to stringResource(MR.strings.update_6hour),
+                        720 to stringResource(MR.strings.update_12hour),
+                        1440 to stringResource(MR.strings.update_24hour),
+                        2880 to stringResource(MR.strings.update_48hour),
+                        10080 to stringResource(MR.strings.update_weekly),
+                    ),
+                    onValueChanged = {
+                        SyncDataJob.setupTask(context, it)
+                        true
+                    },
+                ),
+                Preference.PreferenceItem.InfoPreference(
+                    stringResource(MR.strings.last_synchronization, relativeTimeSpanString(lastSync)),
+                ),
+            ),
         )
     }
 }

@@ -9,7 +9,7 @@ import tachiyomi.data.MemoColumnAdapter
 import tachiyomi.domain.chapter.model.Chapter
 
 @Serializable
-class BackupChapter(
+data class BackupChapter(
     // in 1.x some of these values have different names
     // url is called key in 1.x
     @ProtoNumber(1) var url: String,

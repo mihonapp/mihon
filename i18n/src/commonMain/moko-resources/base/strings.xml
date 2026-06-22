@@ -1060,4 +1060,35 @@
     <string name="donationCampaign.paragraph3">Regardless, Mihon will continue to be maintained by me and the volunteers, and it will stay open source.</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="donationCampaign.dismiss">Dismiss</string>
+
+    <!-- Sync -->
+    <string name="syncing_library">Syncing library</string>
+    <string name="sync_library">Sync library</string>
+    <string name="sync_error">Syncing library failed</string>
+    <string name="sync_complete">Syncing library complete</string>
+    <string name="sync_in_progress">Sync is already in progress</string>
+    <string name="syncyomi">SyncYomi</string>
+    <string name="pref_sync_service_category">Sync</string>
+    <string name="pref_sync_service">Service</string>
+    <string name="pref_sync_host">Host</string>
+    <string name="pref_sync_host_summ">Enter the host address for synchronizing your library</string>
+    <string name="pref_sync_api_key">API key</string>
+    <string name="pref_sync_api_key_summ">Enter the API key to synchronize your library</string>
+    <string name="pref_sync_now_group_title">Sync actions</string>
+    <string name="pref_sync_now">Sync now</string>
+    <string name="pref_sync_now_subtitle">Initiate immediate synchronization of your data</string>
+    <string name="pref_sync_options">Create sync triggers</string>
+    <string name="pref_sync_options_summ">Can be used to set sync triggers</string>
+    <string name="pref_sync_automatic_category">Automatic synchronization</string>
+    <string name="pref_sync_interval">Synchronization frequency</string>
+    <string name="pref_choose_what_to_sync">Choose what to sync</string>
+    <string name="last_synchronization">Last synchronization: %1$s</string>
+    <string name="label_triggers">Triggers</string>
+    <string name="sync_on_chapter_read">Sync on chapter read</string>
+    <string name="sync_on_chapter_open">Sync on chapter open</string>
+    <string name="sync_on_app_start">Sync on app start</string>
+    <string name="sync_on_app_resume">Sync on app resume</string>
+    <string name="update_30min">Every 30 minutes</string>
+    <string name="update_1hour">Every hour</string>
+    <string name="update_3hour">Every 3 hours</string>
 </resources>
