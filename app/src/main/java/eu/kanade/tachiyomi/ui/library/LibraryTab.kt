@@ -37,6 +37,7 @@ import eu.kanade.presentation.more.onboarding.GETTING_STARTED_URL
 import eu.kanade.presentation.util.Tab
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
+import eu.kanade.tachiyomi.data.sync.SyncDataJob
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.home.HomeScreen
@@ -130,6 +131,17 @@ data object LibraryTab : Tab {
                             } else {
                                 snackbarHostState.showSnackbar(
                                     context.stringResource(MR.strings.information_no_entries_found),
+                                )
+                            }
+                        }
+                    },
+                    onClickSyncNow = {
+                        if (!SyncDataJob.isRunning(context)) {
+                            SyncDataJob.startNow(context)
+                        } else {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    context.stringResource(MR.strings.sync_in_progress),
                                 )
                             }
                         }

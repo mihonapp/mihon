@@ -5,4 +5,7 @@ data class CategoryUpdate(
     val name: String? = null,
     val order: Long? = null,
     val flags: Long? = null,
+    val version: Long? = null,
+    val uid: Long? = null,
+    val lastModifiedAt: Long? = null,
 )

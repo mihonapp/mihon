@@ -25,6 +25,7 @@ import coil3.util.DebugLogger
 import dev.mihon.injekt.patchInjekt
 import eu.kanade.domain.DomainModule
 import eu.kanade.domain.base.BasePreferences
+import eu.kanade.domain.sync.SyncPreferences
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.ui.model.setAppCompatDelegateThemeMode
 import eu.kanade.tachiyomi.core.security.PrivacyPreferences
@@ -36,6 +37,7 @@ import eu.kanade.tachiyomi.data.coil.MangaCoverKeyer
 import eu.kanade.tachiyomi.data.coil.MangaKeyer
 import eu.kanade.tachiyomi.data.coil.TachiyomiImageDecoder
 import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.data.sync.SyncDataJob
 import eu.kanade.tachiyomi.di.AppModule
 import eu.kanade.tachiyomi.di.PreferenceModule
 import eu.kanade.tachiyomi.network.NetworkHelper
@@ -169,6 +171,13 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
         }
 
         initializeMigrator()
+
+        // Schedule periodic sync and trigger sync on app start if enabled
+        val syncPreferences = Injekt.get<SyncPreferences>()
+        SyncDataJob.setupTask(this)
+        if (syncPreferences.isSyncEnabled() && syncPreferences.getSyncTriggerOptions().syncOnAppStart) {
+            SyncDataJob.startNow(this@App)
+        }
     }
 
     private fun initializeMigrator() {
@@ -222,6 +231,11 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
 
     override fun onStart(owner: LifecycleOwner) {
         SecureActivityDelegate.onApplicationStart()
+
+        val syncPreferences = Injekt.get<SyncPreferences>()
+        if (syncPreferences.isSyncEnabled() && syncPreferences.getSyncTriggerOptions().syncOnAppResume) {
+            SyncDataJob.startNow(this@App)
+        }
     }
 
     override fun onStop(owner: LifecycleOwner) {
