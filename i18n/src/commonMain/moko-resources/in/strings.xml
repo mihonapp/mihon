@@ -391,7 +391,6 @@
     <string name="pref_read_with_tapping_inverted">Balikkan zona ketuk</string>
     <string name="unknown_status">Status tidak diketahui</string>
     <string name="unknown_author">Penulis tidak diketahui</string>
-    <string name="updated_version">Diperbarui ke v%1$s</string>
     <string name="whats_new">Apa yang baru</string>
     <string name="download_insufficient_space">Tidak dapat mengunduh bab karena ruang penyimpanan rendah</string>
     <string name="action_global_search_query">Pencarian untuk \"%1$s\" secara global</string>
@@ -566,7 +565,6 @@
     <string name="pref_navigate_pan">Geser gambar lebar</string>
     <string name="learn_more">Pelajari lebih lanjut</string>
     <string name="rotation_reverse_portrait">Layar tegak terbalik</string>
-    <string name="notification_update_error">%1$d pembaruan gagal</string>
     <string name="action_move_to_top_all_for_series">Pindahkan seri ke atas</string>
     <string name="disabled_nav">Dinonaktifkan</string>
     <string name="error_saving_picture">Gagal menyimpan gambar</string>
@@ -766,18 +764,9 @@
     <string name="onboarding_storage_help_action">Panduan penyimpanan</string>
     <string name="pref_library_update_smart_update">Pembauan pintar</string>
     <string name="onboarding_storage_help_info">Memperbarui dari versi lama dan tak yakin harus pilih mana? lihat panduan penyimpanan untuk informasi lebih lanjut.</string>
-    <string name="action_add_repo">Tambahkan repo</string>
-    <string name="action_add_repo_message">Tambahkan repo lain ke %s. Seharusnya URL yang memiliki akhiran \"index.min.json\".</string>
-    <string name="label_extension_repos">Repositori ekstensi</string>
-    <string name="information_empty_repos">Anda tidak memiliki repositori yang ditetapkan.</string>
     <string name="invalid_backup_file_error">Kesalahan penuh:</string>
-    <string name="error_repo_exists">Repositori ini sudah ada!</string>
-    <string name="label_add_repo_input">URL Repo</string>
-    <string name="invalid_repo_name">URL repo tidak valid</string>
     <string name="private_settings">Sertakan pengaturan sensitif (contohnya, token login pelacak)</string>
     <string name="ext_permission_install_apps_warning">Izin diperlukan untuk memasang ekstensi. Klik disini untuk memberi izin.</string>
-    <string name="action_delete_repo">Hapus repo</string>
-    <string name="delete_repo_confirmation">Apa Anda yakin ingin menghapus repo \"%s\"?</string>
     <string name="manga_interval_expected_update">Bab baru diperkirakan akan dirils sekitar %1$s, diperiksa setiap sekitar %2$s.</string>
     <string name="available_disk_space_info">Tersedia:%1$s/Total:%2$s</string>
     <string name="manga_interval_custom_amount">Frekuensi pembaruan khusus:</string>
@@ -787,12 +776,8 @@
     <string name="action_open_repo">Repo sumber terbuka</string>
     <string name="pref_webtoon_disable_zoom_out">Menonaktifkan zoom out</string>
     <string name="label_upcoming">Yang akan datang</string>
-    <string name="action_replace_repo_message">Repositori %1$s memiliki Signing Key Fingerprint yang sama dengan %2$s.
-\nJika hal ini diharapkan, %2$s akan diganti, jika tidak, hubungi pengelola repo Anda.</string>
     <string name="action_add_anyway">Tambahkan saja</string>
     <string name="pref_display_profile">Profil tampilan khusus</string>
-    <string name="action_replace_repo">Ganti</string>
-    <string name="action_replace_repo_title">Signing Key Fingerprint sudah ada</string>
     <string name="action_view_upcoming">Lihat Pembaruan Mendatang</string>
     <string name="upcoming_guide">Panduan Mendatang</string>
     <string name="upcoming_calendar_next">Bulan Depan</string>
@@ -807,10 +792,8 @@
     <string name="pref_flash_style_white">Putih</string>
     <string name="pref_flash_style_white_black">Hitam Putih</string>
     <string name="action_copy_link">Salin link</string>
-    <string name="extensionRepo_settings">Ekstensi Penyimpanan</string>
     <string name="invalid_backup_file_json">Pencadangan JSON tidak didukung</string>
     <string name="invalid_backup_file_unknown">File cadangan rusak</string>
-    <string name="add_repo_confirmation">Apakah Anda ingin menambahkan repo \"%s\"?</string>
     <string name="pref_download_new_unread_chapters_only">Lewati pengunduhan bagian yang sudah dibaca berulang kali</string>
     <string name="confirm_tracker_update">Perbarui pelacak ke bab %d?</string>
     <string name="action_sort_random">Acak</string>
@@ -853,7 +836,6 @@
     <string name="pref_mark_duplicate_read_chapter_read_new">Setelah mengambil bab baru</string>
     <string name="pref_hide_missing_chapter_indicators">Sembunyikan indikator bab yang hilang</string>
     <string name="storage_failed_to_create_download_directory">Gagal membuat direktori unduhan</string>
-    <string name="label_donate">Donasi</string>
     <string name="pref_display_images_description">Render gambar dalam deskripsi manga</string>
     <string name="storage_failed_to_create_directory">Gagal membuat direktori: %s</string>
     <string name="clear_database_text">Anda akan menghapus entri dari database</string>

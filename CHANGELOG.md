@@ -11,11 +11,48 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Added
+- Add support for `tachiyomix` extension index format ([@AntsyLich](https://github.com/AntsyLich)) ([#3349](https://github.com/mihonapp/mihon/pull/3349))
+- Add vertical chapter navigator for long strip mode ([@AntsyLich](https://github.com/AntsyLich)) ([#3377](https://github.com/mihonapp/mihon/pull/3377))
+- Add option to open app settings from system settings ([@JFronny](https://github.com/JFronny)) ([#3180](https://github.com/mihonapp/mihon/pull/3180))
+
+### Changed
+- Change all reference of extension repo to extension store ([@AntsyLich](https://github.com/AntsyLich)) ([#3349](https://github.com/mihonapp/mihon/pull/3349))
+- Change the term "Obsolete" to "Orphaned" for extensions ([@AntsyLich](https://github.com/AntsyLich)) ([#3383](https://github.com/mihonapp/mihon/pull/3383))
+- Remove text limit of manga notes ([@AntsyLich](https://github.com/AntsyLich)) ([#3410](https://github.com/mihonapp/mihon/pull/3410))
+- Tweak Catppuccin color scheme for clarity ([@xenitane](https://github.com/xenitane)) ([#3436](https://github.com/mihonapp/mihon/pull/3436))
+- Update app shortcuts to use app icon color scheme ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2835](https://github.com/mihonapp/mihon/pull/2835))
+
+### Improved
+- Batch database operations during backup restore for improved performance ([@Lolle2000la](https://github.com/Lolle2000la)) ([#3267](https://github.com/mihonapp/mihon/pull/3267))
+
+### Fixed
+- Add missing `outlineVariant` color to Nord theme ([@CompileConnected](https://github.com/CompileConnected)) ([#3184](https://github.com/mihonapp/mihon/pull/3184))
+- Continue reading button missing when unread filter is off ([@AntsyLich](https://github.com/AntsyLich)) ([#3382](https://github.com/mihonapp/mihon/pull/3382))
+- Fix random `FileNotFoundException` when reading chapters ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3154](https://github.com/mihonapp/mihon/pull/3154))
+
+## [v0.19.9] - 2026-04-11
+### Fixed
+- Regression with installing/updating extension ([@AntsyLich](https://github.com/AntsyLich))
+
+## [v0.19.8] - 2026-04-11
+### Added
+- Add dedicated "Support Us" screen ([@AntsyLich](https://github.com/AntsyLich)) ([#3200](https://github.com/mihonapp/mihon/pull/3200))
+- Add a one time popup asking for donation from long time users ([@AntsyLich](https://github.com/AntsyLich)) ([#3203](https://github.com/mihonapp/mihon/pull/3203))
+
 ### Changed
 - Don't prompt users to enable Google Play services if disabled or unavailable ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3152](https://github.com/mihonapp/mihon/pull/3152))
+- Make "Support Us" more prominent in More screen ([@AntsyLich](https://github.com/AntsyLich)) ([#3196](https://github.com/mihonapp/mihon/pull/3196))
 
 ### Improved
 - Show informative error when trying to add unapproved titles to list on MAL ([@MajorTanya](https://github.com/MajorTanya)) ([#3155](https://github.com/mihonapp/mihon/pull/3155))
+- Show AniList publishing type based on country of origin ([@zweimach](https://github.com/zweimach)) ([#3100](https://github.com/mihonapp/mihon/pull/3100))
+
+### Fixed
+- Fix app trying to split long strip when not needed ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3121](https://github.com/mihonapp/mihon/pull/3121))
+
+### Removed
+- Remove the empty "Updated to X.Y.Z" popup after app update ([@AntsyLich](https://github.com/AntsyLich)) ([#3203](https://github.com/mihonapp/mihon/pull/3203))
 
 ### Added
 - Resumable image downloads support ([@xMohnad](https://github.com/xMohnad)) ([#3167](https://github.com/mihonapp/mihon/pull/3167))
@@ -513,7 +550,9 @@ Same as v0.19.6
 - Branding to Mihon ([@AntsyLich](https://github.com/AntsyLich))
 - Minimum supported Android version to 8 ([@AntsyLich](https://github.com/AntsyLich)) ([`dfb3091`](https://github.com/mihonapp/mihon/commit/dfb3091e380dda3e9bfb64bf5c9a685cf3a03d0e))
 
-[unreleased]: https://github.com/mihonapp/mihon/compare/v0.19.7...main
+[unreleased]: https://github.com/mihonapp/mihon/compare/v0.19.9...main
+[v0.19.9]: https://github.com/mihonapp/mihon/compare/v0.19.8...v0.19.9
+[v0.19.8]: https://github.com/mihonapp/mihon/compare/v0.19.7...v0.19.8
 [v0.19.7]: https://github.com/mihonapp/mihon/compare/v0.19.6...v0.19.7
 [v0.19.6]: https://github.com/mihonapp/mihon/compare/v0.19.5...v0.19.6
 [v0.19.5]: https://github.com/mihonapp/mihon/compare/v0.19.4...v0.19.5

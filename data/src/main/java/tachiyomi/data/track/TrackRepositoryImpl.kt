@@ -1,43 +1,46 @@
 package tachiyomi.data.track
 
+import app.cash.sqldelight.async.coroutines.awaitAsList
+import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
 import kotlinx.coroutines.flow.Flow
-import tachiyomi.data.DatabaseHandler
+import tachiyomi.data.Database
+import tachiyomi.data.subscribeToList
 import tachiyomi.domain.track.model.Track
 import tachiyomi.domain.track.repository.TrackRepository
 
 class TrackRepositoryImpl(
-    private val handler: DatabaseHandler,
+    private val database: Database,
 ) : TrackRepository {
 
     override suspend fun getTrackById(id: Long): Track? {
-        return handler.awaitOneOrNull { manga_syncQueries.getTrackById(id, TrackMapper::mapTrack) }
+        return database.manga_syncQueries
+            .getTrackById(id, TrackMapper::mapTrack)
+            .awaitAsOneOrNull()
     }
 
     override suspend fun getTracksByMangaId(mangaId: Long): List<Track> {
-        return handler.awaitList {
-            manga_syncQueries.getTracksByMangaId(mangaId, TrackMapper::mapTrack)
-        }
+        return database.manga_syncQueries
+            .getTracksByMangaId(mangaId, TrackMapper::mapTrack)
+            .awaitAsList()
     }
 
     override fun getTracksAsFlow(): Flow<List<Track>> {
-        return handler.subscribeToList {
-            manga_syncQueries.getTracks(TrackMapper::mapTrack)
-        }
+        return database.manga_syncQueries
+            .getTracks(TrackMapper::mapTrack)
+            .subscribeToList()
     }
 
     override fun getTracksByMangaIdAsFlow(mangaId: Long): Flow<List<Track>> {
-        return handler.subscribeToList {
-            manga_syncQueries.getTracksByMangaId(mangaId, TrackMapper::mapTrack)
-        }
+        return database.manga_syncQueries
+            .getTracksByMangaId(mangaId, TrackMapper::mapTrack)
+            .subscribeToList()
     }
 
     override suspend fun delete(mangaId: Long, trackerId: Long) {
-        handler.await {
-            manga_syncQueries.delete(
-                mangaId = mangaId,
-                syncId = trackerId,
-            )
-        }
+        database.manga_syncQueries.delete(
+            mangaId = mangaId,
+            syncId = trackerId,
+        )
     }
 
     override suspend fun insert(track: Track) {
@@ -49,9 +52,9 @@ class TrackRepositoryImpl(
     }
 
     private suspend fun insertValues(vararg tracks: Track) {
-        handler.await(inTransaction = true) {
+        database.transaction {
             tracks.forEach { mangaTrack ->
-                manga_syncQueries.insert(
+                database.manga_syncQueries.insert(
                     mangaId = mangaTrack.mangaId,
                     syncId = mangaTrack.trackerId,
                     remoteId = mangaTrack.remoteId,
