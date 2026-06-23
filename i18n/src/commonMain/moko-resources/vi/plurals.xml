@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="update_check_notification_ext_updates">
-        <item quantity="other">Có %d bản cập nhật cho các tiện ích mở rộng sẵn sàng</item>
+        <item quantity="other">Có %d bản cập nhật cho phần mở rộng sẵn sàng</item>
     </plurals>
     <plurals name="notification_chapters_generic">
         <item quantity="other">%1$d chương mới có</item>
@@ -65,5 +65,8 @@
     </plurals>
     <plurals name="migrationListScreen.migrateDialog.skipText">
         <item quantity="other">%1$d mục được bỏ qua</item>
+    </plurals>
+    <plurals name="notification_update_error">
+        <item quantity="other">%1$d cập nhật không thành công</item>
     </plurals>
 </resources>

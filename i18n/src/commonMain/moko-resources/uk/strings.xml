@@ -636,7 +636,7 @@
     <string name="action_search_hint">Шукати…</string>
     <string name="invalid_location">Неприпустиме місцезнаходження %s</string>
     <string name="unknown_title">Невідомий тайтл</string>
-    <string name="updates_last_update_info_just_now">Тільки що</string>
+    <string name="updates_last_update_info_just_now">Щойно</string>
     <string name="error_user_agent_string_invalid">Невірне значення user agent</string>
     <string name="action_open_random_manga">Відкрити випадковий запис</string>
     <string name="information_no_entries_found">В цій категорії немає записів</string>
@@ -744,26 +744,17 @@
     <string name="onboarding_permission_notifications">Дозвіл на сповіщення</string>
     <string name="onboarding_permission_notifications_description">Отримувати сповіщення про оновлення бібліотек та інше.</string>
     <string name="pref_library_update_smart_update">Розумні оновлення</string>
-    <string name="information_empty_repos">У вас нема встановлених репозиторіїв.</string>
-    <string name="action_add_repo">Додати репозиторій</string>
-    <string name="label_extension_repos">Репозиторії розширень</string>
-    <string name="error_repo_exists">Цей репозиторій вже існує!</string>
-    <string name="label_add_repo_input">Посилання на репозиторій</string>
-    <string name="action_add_repo_message">Додати додаткові репозиторії до %s. Це повинні бути посилання які закінчуються на \"index.min.json\".</string>
     <string name="manga_interval_expected_update">Нові розділи передбачено будуть випущені приблизно в %1$s, перевіряючи кожні %2$s.</string>
     <string name="onboarding_storage_help_info">Оновлюєтесь з попередньої версії і не впевнені яку обрати? Перегляньте гайд по сховищу для додаткової інформації.</string>
     <string name="onboarding_storage_help_action">Гайд по сховищу</string>
     <string name="manga_interval_custom_amount">Своя частота оновлення:</string>
     <string name="theme_nord">Північ</string>
-    <string name="invalid_repo_name">Недійсне посилання на репозиторій</string>
-    <string name="delete_repo_confirmation">Бажаєте видалити репозиторій \"%s\"?</string>
     <string name="no_location_set">Не встановлено місце сховища</string>
     <string name="pref_storage_location">Місце сховища</string>
     <string name="onboarding_permission_action_grant">Отримати</string>
     <string name="pref_storage_location_info">Використовується для автоматичних бекапів, завантажень розділів, та локальних джерел.</string>
     <string name="manga_interval_expected_update_soon">Незабаром</string>
     <string name="ext_revoke_trust">Скинути довірені невідомі розширення</string>
-    <string name="action_delete_repo">Видалити репозиторій</string>
     <string name="action_open_repo">Репозиторій з відкритим початковим кодом</string>
     <string name="selected">Обрано</string>
     <string name="not_selected">Не обрано</string>
@@ -780,12 +771,8 @@
     <string name="onboarding_description">Давайте для початку налаштуємо дещо. Ви завжди зможете змінити ці налаштування потім.</string>
     <string name="pref_onboarding_guide">Гайд новачка</string>
     <string name="action_add_anyway">Додати у будь-якому разі</string>
-    <string name="action_replace_repo_title">Відбиток пальця для підпису ключа вже існує</string>
-    <string name="action_replace_repo_message">Репозиторій %1$s має такий самий відбиток ключа підпису, як і %2$s.
-\nЯкщо це очікувано, %2$s буде замінено, в іншому випадку зверніться до вашого обслуговуючого репозиторію.</string>
     <string name="action_view_upcoming">Переглянути майбутні оновлення</string>
     <string name="upcoming_calendar_prev">Попередній місяць</string>
-    <string name="action_replace_repo">Замінити</string>
     <string name="pref_display_profile">Власний профіль відображення</string>
     <string name="pref_webtoon_disable_zoom_out">Вимкнути зменшення масштабу</string>
     <string name="label_upcoming">Незабаром</string>
@@ -806,7 +793,6 @@
     <string name="ext_remove">Видалити</string>
     <string name="remove_private_extension_message">Дійсно видалити \"%s\"?</string>
     <string name="pref_download_new_unread_chapters_only">Пропустити завантаження копій прочитаних розділів</string>
-    <string name="add_repo_confirmation">Дійсно додати репозиторій \"%s\"?</string>
     <string name="label_auto">Автоматичний</string>
     <string name="theme_monochrome">Монохромний режим</string>
     <string name="pref_behavior">Поведінка</string>
@@ -837,7 +823,6 @@
     <string name="action_toggle_private_on">Відстежувати приватно</string>
     <string name="file_picker_uri_permission_unsupported">Не вдалося отримати постійний доступ до теки. Програма може поводитися непередбачувано.</string>
     <string name="notes_placeholder">Сподобалась частина, де…</string>
-    <string name="extensionRepo_settings">Репозиторії розширень</string>
     <string name="upcoming_guide">Інструкції до наступних розділів</string>
     <string name="non_library_settings">Всі прочитані записи</string>
     <string name="tracked_privately">Відстежується приватно</string>
@@ -848,4 +833,8 @@
     <string name="library_list">Список бібліотеки</string>
     <string name="possible_duplicates_summary">У вашій бібліотеці є записи зі схожою назвою.\n\nВиберіть запис для перенесення або просто додайте.</string>
     <string name="clear_db_exclude_read">Зберегти записи з прочитаними розділами</string>
+    <string name="label_support_us">Підтримати нас</string>
+    <string name="action_webview_close_tab">Закрити вкладку</string>
+    <string name="theme_catppuccin">Catppuccin</string>
+    <string name="pref_display_images_description">Рендерити зображення в описах манґи</string>
 </resources>
