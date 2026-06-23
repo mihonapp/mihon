@@ -19,16 +19,18 @@ class CategoriesRestorer(
             val dbCategoriesByName = dbCategories.associateBy { it.name }
             var nextOrder = dbCategories.maxOfOrNull { it.order }?.plus(1) ?: 0
 
-            val categories = backupCategories
-                .sortedBy { it.order }
-                .map {
-                    val dbCategory = dbCategoriesByName[it.name]
-                    if (dbCategory != null) return@map dbCategory
-                    val order = nextOrder++
-                    database.categoriesQueries
-                        .insert(it.name, order, it.flags)
-                        .let { id -> it.toCategory(id).copy(order = order) }
-                }
+            val categories = database.transactionWithResult {
+                backupCategories
+                    .sortedBy { it.order }
+                    .map {
+                        val dbCategory = dbCategoriesByName[it.name]
+                        if (dbCategory != null) return@map dbCategory
+                        val order = nextOrder++
+                        database.categoriesQueries
+                            .insert(it.name, order, it.flags)
+                            .let { id -> it.toCategory(id).copy(order = order) }
+                    }
+            }
 
             libraryPreferences.categorizedDisplaySettings.set(
                 (dbCategories + categories)
