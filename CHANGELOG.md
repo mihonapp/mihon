@@ -14,6 +14,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Added
 - Add support for `tachiyomix` extension index format ([@AntsyLich](https://github.com/AntsyLich)) ([#3349](https://github.com/mihonapp/mihon/pull/3349))
 - Add vertical chapter navigator for long strip mode ([@AntsyLich](https://github.com/AntsyLich)) ([#3377](https://github.com/mihonapp/mihon/pull/3377))
+- Add option to open app settings from system settings ([@JFronny](https://github.com/JFronny)) ([#3180](https://github.com/mihonapp/mihon/pull/3180))
 
 ### Changed
 - Change all reference of extension repo to extension store ([@AntsyLich](https://github.com/AntsyLich)) ([#3349](https://github.com/mihonapp/mihon/pull/3349))
