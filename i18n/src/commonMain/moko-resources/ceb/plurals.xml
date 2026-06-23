@@ -20,4 +20,8 @@
         <item quantity="one">%1$s ang nahibilin</item>
         <item quantity="other">%1$s ang nahibilin</item>
     </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Ugma</item>
+        <item quantity="other">Sa %1$d ka adlaw</item>
+    </plurals>
 </resources>

@@ -7,6 +7,7 @@ import androidx.work.WorkManager
 import kotlinx.coroutines.delay
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
+import kotlin.time.Duration.Companion.seconds
 
 val Context.workManager: WorkManager
     get() = WorkManager.getInstance(this)
@@ -28,7 +29,7 @@ fun WorkManager.isRunning(tag: String): Boolean {
 suspend fun CoroutineWorker.setForegroundSafely() {
     try {
         setForeground(getForegroundInfo())
-        delay(500)
+        delay(0.5.seconds)
     } catch (e: IllegalStateException) {
         logcat(LogPriority.ERROR, e) { "Not allowed to set foreground job" }
     }

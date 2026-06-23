@@ -4,8 +4,6 @@ import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import okhttp3.OkHttpClient
@@ -24,7 +22,7 @@ data class DummyTracker(
     val valReadingStatus: Long = 1L,
     val valRereadingStatus: Long = 1L,
     val valCompletionStatus: Long = 2L,
-    val valScoreList: ImmutableList<String> = (0..10).map(Int::toString).toImmutableList(),
+    val valScoreList: List<String> = (0..10).map(Int::toString),
     val val10PointScore: Double = 5.4,
     val valSearchResults: List<TrackSearch> = listOf(),
 ) : Tracker {
@@ -52,7 +50,7 @@ data class DummyTracker(
 
     override fun getCompletionStatus(): Long = valCompletionStatus
 
-    override fun getScoreList(): ImmutableList<String> = valScoreList
+    override fun getScoreList(): List<String> = valScoreList
 
     override fun get10PointScore(track: Track): Double = val10PointScore
 

@@ -20,10 +20,7 @@ import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.domain.source.service.SourceManager
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
-import java.nio.charset.Charset
 import java.security.MessageDigest
 
 class SuwayomiApi(private val trackId: Long) {
@@ -37,17 +34,17 @@ class SuwayomiApi(private val trackId: Long) {
     private val baseUrl: String by lazy { source.baseUrl.trimEnd('/') }
     private val apiUrl: String by lazy { "$baseUrl/api/graphql" }
 
-    public fun sourcePreferences(): SharedPreferences = configurableSource.sourcePreferences()
+    fun sourcePreferences(): SharedPreferences = configurableSource.sourcePreferences()
 
     suspend fun getTrackSearch(mangaId: Long): TrackSearch = withIOContext {
-        val query = """
-        |query GetManga(${'$'}mangaId: Int!) {
-        |    manga(id: ${'$'}mangaId) {
+        val query = $$"""
+        |query GetManga($mangaId: Int!) {
+        |    manga(id: $mangaId) {
         |        ...MangaFragment
         |    }
         |}
         |
-        |$MangaFragment
+        |$$MangaFragment
         """.trimMargin()
         val payload = buildJsonObject {
             put("query", query)
@@ -90,9 +87,9 @@ class SuwayomiApi(private val trackId: Long) {
 
         // TODO: Include a filter on the chapter number here
         // Below, we only consider older chapters; since v2.1.1985 filtering works properly in the query
-        val chaptersQuery = """
-        |query GetMangaUnreadChapters(${'$'}mangaId: Int!) {
-        |  chapters(condition: {mangaId: ${'$'}mangaId, isRead: false}) {
+        val chaptersQuery = $$"""
+        |query GetMangaUnreadChapters($mangaId: Int!) {
+        |  chapters(condition: {mangaId: $mangaId, isRead: false}) {
         |    nodes {
         |      id
         |      chapterNumber
@@ -118,24 +115,24 @@ class SuwayomiApi(private val trackId: Long) {
                 .data
                 .entry
                 .nodes
-                .mapNotNull { n -> n.id.takeIf { n.chapterNumber <= track.last_chapter_read } }
+                .mapNotNull { n -> n.id.takeIf { n.chapterNumber <= track.last_chapter_read + 0.001 } }
         }
 
         val markQuery = if (deleteDownloadsOnServer) {
-            """
-            |mutation MarkChaptersRead(${'$'}chapters: [Int!]!) {
-            |  updateChapters(input: {ids: ${'$'}chapters, patch: {isRead: true}}) {
+            $$"""
+            |mutation MarkChaptersRead($chapters: [Int!]!) {
+            |  updateChapters(input: {ids: $chapters, patch: {isRead: true}}) {
             |    __typename
             |  }
-            |  deleteDownloadedChapters(input: {ids: ${'$'}chapters}) {
+            |  deleteDownloadedChapters(input: {ids: $chapters}) {
             |    __typename
             |  }
             |}
             """.trimMargin()
         } else {
-            """
-            |mutation MarkChaptersRead(${'$'}chapters: [Int!]!) {
-            |  updateChapters(input: {ids: ${'$'}chapters, patch: {isRead: true}}) {
+            $$"""
+            |mutation MarkChaptersRead($chapters: [Int!]!) {
+            |  updateChapters(input: {ids: $chapters, patch: {isRead: true}}) {
             |    __typename
             |  }
             |}
@@ -159,9 +156,9 @@ class SuwayomiApi(private val trackId: Long) {
                 .awaitSuccess()
         }
 
-        val trackQuery = """
-        |mutation TrackManga(${'$'}mangaId: Int!) {
-        |  trackProgress(input: {mangaId: ${'$'}mangaId}) {
+        val trackQuery = $$"""
+        |mutation TrackManga($mangaId: Int!) {
+        |  trackProgress(input: {mangaId: $mangaId}) {
         |    __typename
         |  }
         |}

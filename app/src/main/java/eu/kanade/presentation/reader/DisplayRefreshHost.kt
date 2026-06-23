@@ -24,10 +24,10 @@ class DisplayRefreshHost {
     internal var currentDisplayRefresh by mutableStateOf(false)
     private val readerPreferences = Injekt.get<ReaderPreferences>()
 
-    internal val flashMillis = readerPreferences.flashDurationMillis()
-    internal val flashMode = readerPreferences.flashColor()
+    internal val flashMillis = readerPreferences.flashDurationMillis
+    internal val flashMode = readerPreferences.flashColor
 
-    internal val flashIntervalPref = readerPreferences.flashPageInterval()
+    internal val flashIntervalPref = readerPreferences.flashPageInterval
 
     // Internal State for Flash
     private var flashInterval = flashIntervalPref.get()

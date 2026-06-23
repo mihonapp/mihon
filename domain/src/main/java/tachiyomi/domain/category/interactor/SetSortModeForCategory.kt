@@ -17,9 +17,9 @@ class SetSortModeForCategory(
         val category = categoryId?.let { categoryRepository.get(it) }
         val flags = (category?.flags ?: 0) + type + direction
         if (type == LibrarySort.Type.Random) {
-            preferences.randomSortSeed().set(Random.nextInt())
+            preferences.randomSortSeed.set(Random.nextInt())
         }
-        if (category != null && preferences.categorizedDisplaySettings().get()) {
+        if (category != null && preferences.categorizedDisplaySettings.get()) {
             categoryRepository.updatePartial(
                 CategoryUpdate(
                     id = category.id,
@@ -27,7 +27,7 @@ class SetSortModeForCategory(
                 ),
             )
         } else {
-            preferences.sortingMode().set(LibrarySort(type, direction))
+            preferences.sortingMode.set(LibrarySort(type, direction))
             categoryRepository.updateAllFlags(flags)
         }
     }
