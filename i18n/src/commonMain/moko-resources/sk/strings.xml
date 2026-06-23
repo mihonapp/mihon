@@ -659,7 +659,6 @@
     <string name="action_sort_next_updated">Ďalšia očakávaná aktualizácia</string>
     <string name="onboarding_heading">Vitajte!</string>
     <string name="label_upcoming">Nadchádzajúce</string>
-    <string name="action_replace_repo">Nahradiť</string>
     <string name="action_bar_up_description">Navigovať hore</string>
     <string name="label_auto">Auto</string>
     <string name="action_filter_interval_custom">Vlastná frekvencia aktualizácie</string>
@@ -724,19 +723,7 @@
     <string name="ext_remove">Odstrániť</string>
     <string name="ext_permission_install_apps_warning">Na inštaláciu rozšírení sú potrebné povolenia. Ťuknite sem, aby ste ich udelili.</string>
     <string name="ext_revoke_trust">Odstrániť status \"dôveryhodné\" z neznámych rozšírení</string>
-    <string name="label_extension_repos">Repozitáre rozšírení</string>
-    <string name="information_empty_repos">Nemáte nastavené žiadne repozitáre.</string>
-    <string name="action_add_repo">Pridať repozitár</string>
-    <string name="label_add_repo_input">URL Repozitára</string>
-    <string name="action_add_repo_message">Pridať ďalšie repozitáre do %s. Hodnota by mala byť URL, ktorá končí \"index.min.json\".</string>
-    <string name="error_repo_exists">Tento repozitár už existuje!</string>
-    <string name="action_delete_repo">Odstrániť repozitár</string>
-    <string name="invalid_repo_name">Neplatná URL repozitára</string>
-    <string name="delete_repo_confirmation">Naozaj chcete odstrániť repozitár \"%s\"?</string>
-    <string name="add_repo_confirmation">Chcete pridať repozitár \"%s\"?</string>
     <string name="action_open_repo">Open-source repozitár</string>
-    <string name="action_replace_repo_title">Otlačok podpisového kľúča už existuje</string>
-    <string name="action_replace_repo_message">Repozitár %1$s má rovnaký otlačok podpisového kľúča ako %2$s.\nAk je toto očakávané, %2$s bude nahradený, inak kontaktuje manažéra repozitára.</string>
     <string name="pref_page_rotate">Otočiť široké strany, aby sa zmestili</string>
     <string name="pref_page_rotate_invert">Preklopiť orientáciu otočených širokých strán</string>
     <string name="pref_double_tap_zoom">Dvojťuk pre priblíženie</string>
