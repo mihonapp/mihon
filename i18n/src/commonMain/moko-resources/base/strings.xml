@@ -186,8 +186,8 @@
     <string name="onboarding_storage_info">Select a folder where %1$s will store chapter downloads, backups, and more.\n\nA dedicated folder is recommended.\n\nSelected folder: %2$s</string>
     <string name="onboarding_storage_action_select">Select a folder</string>
     <string name="onboarding_storage_selection_required">A folder must be selected</string>
-    <string name="onboarding_storage_fallback_info">If your device won\'t let you select a folder, you can use %1$s\'s default app storage instead. Note that this data is removed if the app is uninstalled.</string>
-    <string name="onboarding_storage_action_use_default">Use default app storage</string>
+    <string name="onboarding_storage_all_files_info">If your device won\'t let you select a folder, you can grant %1$s all-files access instead. It will then store its data in a folder in your shared storage.</string>
+    <string name="onboarding_storage_action_all_files">Grant all-files access</string>
     <string name="onboarding_storage_help_info">Updating from an older version and not sure what to select? Refer to the storage guide for more information.</string>
     <string name="onboarding_storage_help_action">Storage guide</string>
     <string name="onboarding_permission_install_apps">Install apps permission</string>
