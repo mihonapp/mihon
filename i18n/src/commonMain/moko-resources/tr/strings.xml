@@ -285,8 +285,8 @@
     <string name="action_webview_forward">İleri</string>
     <string name="action_webview_refresh">Yenile</string>
     <string name="pref_category_library">Kitaplık</string>
-    <string name="ext_obsolete">Geçersiz</string>
-    <string name="obsolete_extension_message">Bu uzantı artık kullanılamıyor. Düzgün çalışmayabilir ve uygulamada sorunlara neden olabilir. Kaldırılması önerilir.</string>
+    <string name="ext_obsolete">Kullanılamıyor</string>
+    <string name="obsolete_extension_message">Bu uzantı herhangi bir mağazaya bağlı değil. Yeni güncellemeler almayacak, beklendiği gibi çalışmayabilir ve uygulama içerisinde sorunlara sebep olabilir. Kaldırmanız önerilir.</string>
     <string name="pref_date_format">Tarih biçimi</string>
     <string name="pref_category_library_update">Genel güncelleme</string>
     <string name="logout_title">%1$s \'den çıkılsın mı?</string>
@@ -766,19 +766,10 @@
     <string name="private_settings">Hassas ayarları dahil et (örn. izleyici oturum açma bilgileri)</string>
     <string name="manga_interval_expected_update">Sonraki bölümlerin %1$s içinde yayınlanacağı tahmin ediliyor, her %2$s içinde bir kontrol ediliyor.</string>
     <string name="invalid_backup_file_error">Tüm hata:</string>
-    <string name="information_empty_repos">Hiç depo ayarlamadınız.</string>
     <string name="onboarding_storage_help_action">Depolama kılavuzu</string>
-    <string name="action_add_repo">Depo ekle</string>
-    <string name="label_add_repo_input">Depo bağlantısı</string>
-    <string name="action_add_repo_message">%s\'a ek depolar ekleyin. Bu, \"index.min.json\" ile biten bir bağlantı olmalıdır.</string>
-    <string name="error_repo_exists">Bu depo zaten var!</string>
-    <string name="action_delete_repo">Depoyu sil</string>
-    <string name="invalid_repo_name">Geçersiz depo bağlantısı</string>
-    <string name="delete_repo_confirmation">\"%s\" deposunu silmek istiyor musunuz?</string>
     <string name="manga_interval_custom_amount">Özel güncelleme sıklığı:</string>
     <string name="onboarding_storage_help_info">Eski bir sürümden güncelleme yapıyorsunuz ve neyi seçeceğinizden emin değil misiniz? Daha fazla bilgi için depolama kılavuzuna bakın.</string>
     <string name="pref_library_update_smart_update">Akıllı güncelleme</string>
-    <string name="label_extension_repos">Uzantı depoları</string>
     <string name="theme_nord">Nord</string>
     <string name="ext_revoke_trust">Güvenilmiş bilinmeyen uzantıları geri al</string>
     <string name="manga_interval_expected_update_soon">Yakında</string>
@@ -792,16 +783,11 @@
     <string name="pref_flash_duration_summary">%1$s ms</string>
     <string name="pref_flash_page_interval">Işık çakma aralığı</string>
     <string name="pref_display_profile">Özel görünüm profili</string>
-    <string name="action_replace_repo_message">%1$s deposunun İmzalama Anahtarı Parmak İzi %2$s deposuyla aynı.
-\nEğer böyle olması gerekiyorsa %2$s ile değiştirilecek. Aksi takdirde depo yöneticinize ulaşın.</string>
     <string name="pref_webtoon_disable_zoom_out">Uzaklaştırmayı devre dışı bırak</string>
     <string name="invalid_backup_file_json">JSON yedekleri desteklenmiyor</string>
     <string name="invalid_backup_file_unknown">Yedek dosyası bozuk</string>
     <string name="manga_interval_expected_update_null">Bu manga ya tamamlanmış ya da tahmin edilen yayımlanma tarihi yok.</string>
     <string name="action_add_anyway">Yine de ekle</string>
-    <string name="action_replace_repo">Değiştir</string>
-    <string name="action_replace_repo_title">İmzalama Anahtarı Parmak İzi Zaten Var</string>
-    <string name="extensionRepo_settings">Eklenti depoları</string>
     <string name="file_picker_uri_permission_unsupported">Stabil klasör erişimi sağlanamadı. Uygulama belirsiz çalışabilir.</string>
     <string name="label_upcoming">Takvim</string>
     <string name="action_view_upcoming">Gelecek Güncellemeleri Görüntüle</string>
@@ -809,7 +795,6 @@
     <string name="upcoming_calendar_next">Gelecek Ay</string>
     <string name="upcoming_calendar_prev">Önceki Ay</string>
     <string name="pref_download_new_unread_chapters_only">Yinelenen okunmuş bölümlerin indirilmesini atla</string>
-    <string name="add_repo_confirmation">\"%s\" deposunu eklemek istiyor musunuz?</string>
     <string name="confirm_tracker_update">İzleyicileri %d. bölüme güncelle?</string>
     <string name="onboarding_permission_crashlytics">Çökme kayıtlarını gönder</string>
     <string name="pref_security">Güvenlik</string>
@@ -820,8 +805,8 @@
     <string name="pref_firebase">Kullanım İstatistikleri ve Çökme Kayıtları</string>
     <string name="action_sort_random">Rastgele</string>
     <string name="ext_remove">Kaldır</string>
-    <string name="remove_private_extension_message">\"%s\" eklentisini kaldırmak istediğinize emin misiniz?</string>
-    <string name="ext_confirm_remove">Eklentiyi Kaldır?</string>
+    <string name="remove_private_extension_message">\"%s\" uzantısını kaldırmak istediğinize emin misiniz?</string>
+    <string name="ext_confirm_remove">Uzantıyı Kaldır?</string>
     <string name="non_library_settings">Tüm okunmuş girdiler</string>
     <string name="pref_auto_update_manga_on_mark_read">Okundu olarak işaretlendiğinde ilerlemeyi güncelle</string>
     <string name="trackers_updated_summary">İzleyiciler %d. bölüme güncellendi</string>
@@ -829,7 +814,7 @@
     <string name="pref_hardware_bitmap_threshold_default">Varsayılan (%d)</string>
     <string name="pref_hardware_bitmap_threshold_summary">Eğer okuyucu boş bir görsel yüklerse bu sınırı kademeli olarak azaltın.\nSeçili: %s</string>
     <string name="pref_always_decode_long_strip_with_ssiv_summary">Performansı etkiler. Yalnızca bitmap sınırını düşürmek boş görsel sorunlarını çözmediğinde kullanın</string>
-    <string name="pref_incognito_mode_extension_summary">Eklenti için okuma geçmişini duraklat</string>
+    <string name="pref_incognito_mode_extension_summary">Uzantı için okuma geçmişini duraklat</string>
     <string name="label_auto">Otomatik</string>
     <string name="theme_monochrome">Monokrom</string>
     <string name="tracked_privately">Gizli olarak izlendi</string>
@@ -921,4 +906,16 @@
     <string name="donationCampaign.paragraph3">Ancak ne olursa olsun Mihon, ben ve gönüllü insanlar tarafından geliştirilmeye devam edecek ve açık kaynak kodlu olarak kalacaktır.</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="donationCampaign.dismiss">Kapat</string>
+    <string name="extensionStores">Uzantı mağazaları</string>
+    <string name="action.addExtensionStore">Uzantı mağazası ekle</string>
+    <string name="extensionStoresScreen.emptyLabel">Henüz uzantı mağazası eklemediniz</string>
+    <string name="extensionStoresScreen.addStore.title">Uzantı mağazası ekle</string>
+    <string name="extensionStoresScreen.addStore.alreadyExists">Bu uzantı mağazası zaten mevcut</string>
+    <string name="extensionStoresScreen.addStore.processing">İşleniyor…</string>
+    <string name="extensionStoresScreen.addStoreInput.inputLabel">Mağaza dizini bağlantısı</string>
+    <string name="extensionStoresScreen.addStoreDeeplink.bodyText">Aşağıdaki uzantı mağazasını eklemek istiyor musunuz?</string>
+    <string name="extensionStoresScreen.deleteStore.title">Uzantı mağazasını kaldır</string>
+    <string name="extensionStoresScreen.deleteStore.body">%1$s (%2$s) uzantı mağazasını kaldırmak istiyor musunuz?</string>
+    <string name="pref_webtoon_vertical_navigator">Uzun şerit okuma için dikey gezinti kullan</string>
+    <string name="pref_webtoon_vertical_navigator_on_left">Dikey gezinti bölmesini sol tarafa yerleştir</string>
 </resources>
