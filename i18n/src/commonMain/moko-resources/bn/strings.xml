@@ -702,20 +702,7 @@
     <string name="ext_info_age_rating">বয়স সীমা</string>
     <string name="ext_permission_install_apps_warning">এক্সটেনশন ইনস্টল করতে অনুমতি লাগবে। অনুমতি দিতে এখানে ট্যাপ করুন।</string>
     <string name="ext_revoke_trust">অজানা এক্সটেনশনের ট্রাস্ট বাতিল</string>
-    <string name="label_extension_repos">এক্সটেনশন রিপো</string>
-    <string name="information_empty_repos">আপনার কোনো রিপো সেট করা নেই।</string>
-    <string name="action_add_repo">রিপো অ্যাড করুন</string>
-    <string name="label_add_repo_input">রিপো URL</string>
-    <string name="action_add_repo_message">%s‑এ আরও রিপো যোগ করুন। এটি এমন একটি URL হতে হবে যা \"index.min.json\" দিয়ে শেষ হয়।</string>
-    <string name="error_repo_exists">এই রিপো ইতিমধ্যে আছে!</string>
-    <string name="action_delete_repo">রিপো ডিলিট</string>
-    <string name="invalid_repo_name">ভুল রিপো URL</string>
-    <string name="delete_repo_confirmation">আপনি কি “%s” রিপোটি ডিলিট করতে চান?</string>
-    <string name="add_repo_confirmation">আপনি কি “%s” রিপোটি যোগ করতে চান?</string>
     <string name="action_open_repo">রিপোর সোর্সে যান</string>
-    <string name="action_replace_repo">রিপ্লেস</string>
-    <string name="action_replace_repo_title">সাইনিং কী ফিঙ্গারপ্রিন্ট ইতিমধ্যেই আছে</string>
-    <string name="action_replace_repo_message">রিপোজিটরি %1$s এর সাইনিং কী ফিঙ্গারপ্রিন্ট %2$s এর সাথে একই।\nযদি এটি প্রত্যাশিত হয়, তবে %2$s রিপ্লেস হবে, অন্যথায় আপনার রিপো মেইনটেইনারের সাথে যোগাযোগ করুন।</string>
     <string name="pref_page_rotate">চওড়া পেজ রোটেট করে ফিট হবে</string>
     <string name="pref_page_rotate_invert">রোটেট করা চওড়া পেজের অরিয়েন্টেশন উল্টানো হবে</string>
     <string name="pref_double_tap_zoom">জুম করতে ডাবল ট্যাপ</string>
@@ -779,7 +766,6 @@
     <string name="invalid_backup_file_unknown">ব্যাকআপ ফাইলটি নষ্ট হয়েছে</string>
     <string name="app_settings">অ্যাপ সেটিংস</string>
     <string name="source_settings">সোর্স সেটিংস</string>
-    <string name="extensionRepo_settings">এক্সটেনশন রিপো</string>
     <string name="private_settings">সংবেদনশীল সেটিংস অন্তর্ভুক্ত করুন (যেমন, ট্র্যাকার লগইন টোকেন)</string>
     <string name="non_library_settings">সব পড়া এন্ট্রি</string>
     <string name="missing_storage_permission">স্টোরেজ অনুমতি দেওয়া হয়নি</string>
@@ -841,5 +827,10 @@
     <string name="manga_interval_expected_update_null">এই মাঙ্গাটি সম্পূর্ণ হয়েছে, অথবা পরবর্তী প্রকাশের কোনো সম্ভাব্য তারিখ নেই।</string>
     <string name="pref_reset_user_agent_string">ডিফল্ট ইউজার এজেন্ট স্ট্রিং রিসেট</string>
     <string name="pref_invalidate_download_cache_summary">ডাউনলোড করা অধ্যায়গুলো জোরপূর্বক পুনরায় যাচাই হবে</string>
-    <string name="download_cache_invalidated">ডাউনলোড ইনডেক্স অকার্যকর হয়েছে</string>
+    <string name="download_cache_invalidated">ডাউনলোড ইনডেক্স পুনরায় তৈরী হচ্ছে</string>
+    <string name="label_support_us">আমাদের সহায়তা করুন</string>
+    <string name="clear_database_text">আপনি ডাটাবেইজ থেকে এন্ট্রি রিমুভ করতে যাচ্ছেন</string>
+    <string name="intervals_header">বিরতি</string>
+    <string name="unknown_title">অজানা নাম</string>
+    <string name="copied_to_clipboard_plain">ক্লিপবোর্ডে কপি হয়েছে</string>
 </resources>
