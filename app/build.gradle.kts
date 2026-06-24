@@ -13,6 +13,7 @@ plugins {
     alias(mihonx.plugins.spotless)
 
     alias(libs.plugins.aboutLibraries)
+    alias(libs.plugins.androidx.baselineProfile)
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -31,7 +32,7 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 22
+        versionCode = 23
         versionName = "0.19.9"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getLatestCommitCount()}\"")
@@ -71,16 +72,18 @@ android {
     }
 
     buildTypes {
-        val debug by getting {
+        val debug = getByName("debug") {
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-${getLatestCommitCount()}"
             isPseudoLocalesEnabled = true
         }
-        val release by getting {
+        val release = getByName("release") {
             isMinifyEnabled = Config.enableCodeShrink
             isShrinkResources = Config.enableCodeShrink
 
             signingConfig = debug.signingConfig
+
+            isProfileable = true
 
             proguardFiles("proguard-android-optimize.txt", "proguard-rules.pro")
 
@@ -110,8 +113,6 @@ android {
         create("benchmark") {
             initWith(release)
 
-            isDebuggable = false
-            isProfileable = true
             versionNameSuffix = "-benchmark"
             applicationIdSuffix = ".benchmark"
 
@@ -197,7 +198,14 @@ kotlin {
     }
 }
 
+baselineProfile {
+    baselineProfileOutputDir = "baselineProfiles"
+    mergeIntoMain = true
+}
+
 dependencies {
+    baselineProfile(projects.baselineProfile)
+
     implementation(projects.i18n)
     implementation(projects.core.archive)
     implementation(projects.core.common)
