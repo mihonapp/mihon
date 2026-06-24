@@ -484,11 +484,7 @@ class Downloader(
             val file = tmpDir.findFile("$filename.tmp")
                 ?: tmpDir.createFile("$filename.tmp")!!
 
-            page.imageUrl = page.imageUrl!!.toHttpUrl().newBuilder()
-                .addQueryParameter("existingSize", file.length().toString())
-                .build().toString()
-
-            val response = source.getImage(page)
+            val response = source.getImage(page, file.length())
 
             try {
                 response.body
