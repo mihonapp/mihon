@@ -738,9 +738,6 @@
     <string name="onboarding_guides_new_user">%s मा नयाँ हुनुहुन्छ? हामी स्टार्टिङ गाइड जाँच गर्न सिफारिस गर्छौं।</string>
     <string name="theme_nord">नोर्ड</string>
     <string name="pref_library_update_smart_update">स्मार्ट अपडेट</string>
-    <string name="error_repo_exists">यो रिपो पहिले नै अवस्थित छ!</string>
-    <string name="action_delete_repo">रिपो हटाउनुहोस्</string>
-    <string name="invalid_repo_name">रिपो URL अवैध छ</string>
     <string name="action_bar_up_description">माथि नेभिगेट गर्नुहोस्</string>
     <string name="action_revert_to_default">पूर्वनिर्धारितमा फर्कनुहोस्</string>
     <string name="pref_onboarding_guide">अनबोर्डिङ गाइड</string>
@@ -760,13 +757,7 @@
     <string name="onboarding_guides_returning_user">%s पुन: स्थापना गर्दै हुनुहुन्छ?</string>
     <string name="ext_permission_install_apps_warning">एक्सटेन्शनहरू स्थापना गर्न अनुमति आवश्यक छ। प्रदान गर्न यहाँ ट्याप गर्नुहोस्।</string>
     <string name="ext_revoke_trust">विश्वसनीय अज्ञात एक्सटेन्शनहरू रद्द गर्नुहोस्</string>
-    <string name="information_empty_repos">तपाईंले कुनै पनि रिपो सेट गर्नु भएको छैन।</string>
-    <string name="label_add_repo_input">रिपो URL</string>
-    <string name="label_extension_repos">एक्सटेन्शन रिपो</string>
-    <string name="action_add_repo">रिपो थप्नुहोस्</string>
-    <string name="action_add_repo_message">%s मा अतिरिक्त रिपो थप्नुहोस्। URL को अन्त्यमा \"index.min.json\" हुनुपर्छ।</string>
     <string name="action_apply">अप्लाई</string>
-    <string name="delete_repo_confirmation">के तपाइँ रिपो \"%s\" हटाउन चाहनुहुन्छ?</string>
     <string name="action_open_repo">खुला स्रोत रिपो</string>
     <string name="pref_storage_location">भण्डारण स्थान</string>
     <string name="available_disk_space_info">उपलब्ध: %1$s / कुल: %2$s</string>
@@ -784,10 +775,6 @@
     <string name="pref_webtoon_disable_zoom_out">जूम आउट असक्षम गर्नुहोस्</string>
     <string name="action_add_anyway">जे भए पनि थप्नुहोस्</string>
     <string name="pref_display_profile">कस्टम प्रदर्शन प्रोफाइल</string>
-    <string name="action_replace_repo">रिप्लेस</string>
-    <string name="action_replace_repo_title">साइन गर्ने की फिंगरप्रिन्ट पहिले नै अवस्थित छ</string>
-    <string name="action_replace_repo_message">रिपो %1$s सँग %2$s जस्तै साइन गर्ने की फिंगरप्रिन्ट छ।
-\nयदि यो अपेक्षित छ भने, %2$s प्रतिस्थापन गरिनेछ, अन्यथा आफ्नो रिपो प्रबन्धकलाई सम्पर्क गर्नुहोस्।</string>
     <string name="label_upcoming">आगामी</string>
     <string name="action_view_upcoming">आगामी अपडेट्स हेर्नुहोस्</string>
     <string name="upcoming_guide">आगामी गाइड</string>
@@ -802,11 +789,9 @@
     <string name="pref_flash_page_interval">फ्ल्यास हरेक</string>
     <string name="pref_flash_style_black">कालो</string>
     <string name="manga_interval_expected_update_null">यो माङ्गा या त समाप्त भयो, वा त्यहाँ कुनै अनुमानित रिलीज मिति छैन।</string>
-    <string name="extensionRepo_settings">एक्सटेन्शन रिपो</string>
     <string name="invalid_backup_file_json">JSON ब्याकअप समर्थित छैन</string>
     <string name="invalid_backup_file_unknown">ब्याकअप फाइल बिग्रिएको छ</string>
     <string name="action_copy_link">लिङ्क प्रतिलिपि गर्नुहोस्</string>
-    <string name="add_repo_confirmation">के तपाइँ \"%s\" रिपो थप्न चाहनुहुन्छ?</string>
     <string name="pref_download_new_unread_chapters_only">पढेका डुप्लिकेट अध्यायहरू डाउनलोड गर्न छोड्नुहोस्</string>
     <string name="confirm_tracker_update">ट्र्याकरहरूलाई अध्याय %d मा अपडेट गर्ने हो?</string>
     <string name="action_sort_random">ऱ्याण्डम</string>
