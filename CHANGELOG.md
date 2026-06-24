@@ -14,15 +14,22 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Added
 - Add support for `tachiyomix` extension index format ([@AntsyLich](https://github.com/AntsyLich)) ([#3349](https://github.com/mihonapp/mihon/pull/3349))
 - Add vertical chapter navigator for long strip mode ([@AntsyLich](https://github.com/AntsyLich)) ([#3377](https://github.com/mihonapp/mihon/pull/3377))
+- Add option to open app settings from system settings ([@JFronny](https://github.com/JFronny)) ([#3180](https://github.com/mihonapp/mihon/pull/3180))
 
 ### Changed
 - Change all reference of extension repo to extension store ([@AntsyLich](https://github.com/AntsyLich)) ([#3349](https://github.com/mihonapp/mihon/pull/3349))
 - Change the term "Obsolete" to "Orphaned" for extensions ([@AntsyLich](https://github.com/AntsyLich)) ([#3383](https://github.com/mihonapp/mihon/pull/3383))
 - Remove text limit of manga notes ([@AntsyLich](https://github.com/AntsyLich)) ([#3410](https://github.com/mihonapp/mihon/pull/3410))
+- Tweak Catppuccin color scheme for clarity ([@xenitane](https://github.com/xenitane)) ([#3436](https://github.com/mihonapp/mihon/pull/3436))
+- Update app shortcuts to use app icon color scheme ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2835](https://github.com/mihonapp/mihon/pull/2835))
+
+### Improved
+- Batch database operations during backup restore for improved performance ([@Lolle2000la](https://github.com/Lolle2000la)) ([#3267](https://github.com/mihonapp/mihon/pull/3267))
 
 ### Fixed
 - Add missing `outlineVariant` color to Nord theme ([@CompileConnected](https://github.com/CompileConnected)) ([#3184](https://github.com/mihonapp/mihon/pull/3184))
 - Continue reading button missing when unread filter is off ([@AntsyLich](https://github.com/AntsyLich)) ([#3382](https://github.com/mihonapp/mihon/pull/3382))
+- Fix random `FileNotFoundException` when reading chapters ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3154](https://github.com/mihonapp/mihon/pull/3154))
 
 ## [v0.19.9] - 2026-04-11
 ### Fixed

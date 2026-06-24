@@ -764,20 +764,11 @@
     <string name="theme_nord">Nord</string>
     <string name="ext_permission_install_apps_warning">Za instaliranje proširenja su potrebne dozvole. Dodirni ovdje za odobrenje.</string>
     <string name="invalid_backup_file_error">Potpuna greška:</string>
-    <string name="label_extension_repos">Repozitoriji proširenja</string>
-    <string name="information_empty_repos">Nemaš postavljenih reopzitorija.</string>
     <string name="onboarding_storage_help_info">Aktualiziraš sa starije verzije i ne znaš što odabrati? Potraži informacije u vodiču spremišta.</string>
     <string name="onboarding_storage_help_action">Vodič spremišta</string>
-    <string name="error_repo_exists">Ovaj repozitorij već postoji!</string>
     <string name="manga_interval_custom_amount">Prilagođena učestalost aktualiziranja:</string>
     <string name="pref_library_update_smart_update">Pametno aktualiziranje</string>
-    <string name="action_add_repo">Dodaj repozitorij</string>
-    <string name="action_delete_repo">Izbriši repozitorij</string>
-    <string name="label_add_repo_input">URL repozitorija</string>
-    <string name="action_add_repo_message">Dodaj dodatne repozitorije u %s. To bi trebao biti URL koji završava s „index.min.json”.</string>
-    <string name="invalid_repo_name">Neispravan URL repozitorija</string>
     <string name="ext_revoke_trust">Opozovi pouzdana nepoznata proširenja</string>
-    <string name="delete_repo_confirmation">Želiš li izbrisati repozitorij „%s”?</string>
     <string name="action_open_repo">Otvori repozitorij izvora</string>
     <string name="private_settings">Uključi osjetljive postavke (kao što su tokeni za prijavu za usluge praćenja)</string>
     <string name="manga_interval_expected_update">Predviđa se da će nova poglavlja biti izdana za oko %1$s, provjera se svakih %2$s.</string>
@@ -788,13 +779,9 @@
     <string name="label_upcoming">Predstojeći</string>
     <string name="action_add_anyway">Svejedno dodaj</string>
     <string name="upcoming_calendar_prev">Prethodni mjesec</string>
-    <string name="action_replace_repo">Zamijeni</string>
     <string name="upcoming_calendar_next">Sljedeći mjesec</string>
     <string name="action_view_upcoming">Pogledaj nadolazeća aktualizirane verzije</string>
     <string name="upcoming_guide">Vodič za nadolazeće verzije</string>
-    <string name="action_replace_repo_title">Digitalni otisak prsta za potpisivanje već postoji</string>
-    <string name="action_replace_repo_message">Repozitorij %1$s ima isti digitalni otisak ključa za potpisivanje kao %2$s.
-\nAko se to očekuje, %2$s će se zamijeniti, u suprotnom se obrati svom održavatelju repozitorija.</string>
     <string name="file_picker_uri_permission_unsupported">Neuspjelo dobivanje trajnog pristupa mapi. Aplikacija se može ponašati neočekivano.</string>
     <string name="action_copy_link">Kopiraj poveznicu</string>
     <string name="pref_flash_duration">Trajanje bljeskalice</string>
@@ -806,7 +793,6 @@
     <string name="pref_flash_style_white">Bijela</string>
     <string name="pref_download_new_unread_chapters_only">Preskoči preuzimanje duplih pročitanih poglavlja</string>
     <string name="invalid_backup_file_json">JSON sigurnosna kopija nije podržana</string>
-    <string name="extensionRepo_settings">Repozitoriji proširenja</string>
     <string name="manga_interval_expected_update_null">Ovaj je manga dovršen ili ne postoji procijenjeni datum izdanja.</string>
     <string name="invalid_backup_file_unknown">Sigurnosna kopija je pokvarena</string>
     <string name="non_library_settings">Svi pročitani unosi</string>
@@ -824,7 +810,6 @@
     <string name="ext_remove">Ukloni</string>
     <string name="ext_confirm_remove">Ukloniti proširenje?</string>
     <string name="remove_private_extension_message">Stvarno želiš ukloniti proširenje „%s”?</string>
-    <string name="add_repo_confirmation">Želiš li dodati repozitorij „%s”?</string>
     <string name="pref_hardware_bitmap_threshold_summary">Ako čitač učita praznu sliku, postupno smanji prag.\nOdabrano: %s</string>
     <string name="pref_hardware_bitmap_threshold">Prilagođeni hardverski prag bitmapa</string>
     <string name="pref_hardware_bitmap_threshold_default">Standardno (%d)</string>
@@ -908,4 +893,17 @@
     <string name="action_webview_close_tab">Zatvori karticu</string>
     <string name="action_filter_excluded_scanlators">Filtriraj isključene amaterske prevoditelje</string>
     <string name="download_bookmarked">Zabilježeno</string>
+    <string name="label_support_us">Podrži nas</string>
+    <string name="supportUsScreen.perks">Pokrovitelji dobivaju pristup ekskluzivnim kanalima, a uskoro slijede i dodatne pogodnosti.</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreona (preferiran način)</string>
+    <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
+    <string name="supportUsScreen.currentlySupportedBy">Trenutačno više od %d pokrovitelja podržavaju Mihon. Želimo se zahvaliti svakome od vas. Učinimo Mihon zajedno još boljim.</string>
+    <string name="supportUsScreen.contactForDetailsMessage">Za alternativne opcije ili bilo koja srodna pitanja, pridruži se našem Discord serveru.</string>
+    <string name="supportUsScreen.contactPlatform">Discord</string>
+    <string name="donationCampaign.title">Sviđa ti se aplikacija?</string>
+    <string name="donationCampaign.contactPlatform">Discord</string>
+    <string name="donationCampaign.dismiss">Odbaci</string>
+    <string name="donationCampaign.paragraph1">Pozdrav! Ja sam glavni programer Mihona i želim te zamoliti da razmisliš o financijskoj potpori njegovom razvoju. Uz dovoljno podrške, moći ću raditi na Mihonu puno radno vrijeme i usredotočiti se na dugogodišnje probleme, kao i na vrlo tražene funkcije.</string>
+    <string name="donationCampaign.paragraph2">Možeš donirati putem Patreona (preferiran način) ili putem OpenCollective-a. Ako imaš pitanja ili želiš podržati korištenje alternativnih načina, slobodno me kontaktiraj putem Mihonovog Discord servera.</string>
+    <string name="donationCampaign.paragraph3">Bez obzira na to, volonteri i ja ćemo i dalje održavati Mihon, i ostat će otvorenog koda.</string>
 </resources>

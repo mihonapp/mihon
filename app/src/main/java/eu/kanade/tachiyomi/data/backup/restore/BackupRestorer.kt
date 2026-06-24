@@ -18,20 +18,27 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.data.Database
 import tachiyomi.i18n.MR
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.concurrent.atomics.AtomicInt
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.concurrent.atomics.incrementAndFetch
 
+@OptIn(ExperimentalAtomicApi::class)
 class BackupRestorer(
     private val context: Context,
     private val notifier: BackupNotifier,
     private val isSync: Boolean,
 
+    private val database: Database = Injekt.get(),
     private val categoriesRestorer: CategoriesRestorer = CategoriesRestorer(),
     private val preferenceRestorer: PreferenceRestorer = PreferenceRestorer(context),
     private val extensionStoreRestorer: ExtensionStoreRestorer = ExtensionStoreRestorer(),
@@ -40,10 +47,8 @@ class BackupRestorer(
 ) {
 
     private var restoreAmount = 0
-    private var restoreProgress = 0
-    private val errors = mutableListOf<Pair<Date, String>>()
-    private val restoreProgressMutex = Mutex()
-    private val errorsMutex = Mutex()
+    private val restoreProgress = AtomicInt(0)
+    private val errors = CopyOnWriteArrayList<Pair<Date, String>>()
 
     /**
      * Mapping of source ID to source name from backup data
@@ -124,17 +129,23 @@ class BackupRestorer(
         backupCategories: List<BackupCategory>,
     ) = launch {
         mangaRestorer.sortByNew(backupMangas)
-            .forEach {
-                ensureActive()
+            .chunked(100)
+            .forEach { chunk ->
+                database.transaction {
+                    chunk.forEach {
+                        ensureActive()
 
-                try {
-                    mangaRestorer.restore(it, backupCategories)
-                } catch (e: Exception) {
-                    val sourceName = sourceMapping[it.source] ?: it.source.toString()
-                    addError("${it.title} [$sourceName]: ${e.message}")
+                        try {
+                            mangaRestorer.restore(it, backupCategories)
+                        } catch (e: Exception) {
+                            val sourceName = sourceMapping[it.source] ?: it.source.toString()
+                            addError("${it.title} [$sourceName]: ${e.message}")
+                        }
+
+                        restoreProgress.incrementAndFetch()
+                    }
                 }
-
-                updateRestoreProgress(it.title)
+                updateRestoreProgress(chunk.last().title, restoreProgress.load())
             }
     }
 
@@ -162,33 +173,38 @@ class BackupRestorer(
         backupExtensionStores: List<BackupExtensionStore>,
     ) = launch {
         backupExtensionStores
-            .forEach {
-                ensureActive()
+            .chunked(100)
+            .forEach { chunk ->
+                database.transaction {
+                    chunk.forEach {
+                        ensureActive()
 
-                try {
-                    extensionStoreRestorer(it)
-                } catch (e: Exception) {
-                    addError("Error Adding Repo: ${it.name} : ${e.message}")
+                        try {
+                            extensionStoreRestorer(it)
+                        } catch (e: Exception) {
+                            addError("Error Adding Repo: ${it.name} : ${e.message}")
+                        }
+
+                        restoreProgress.incrementAndFetch()
+                    }
                 }
-
-                updateRestoreProgress(context.stringResource(MR.strings.extensionStores))
+                updateRestoreProgress(
+                    context.stringResource(MR.strings.extensionStores),
+                    restoreProgress.load(),
+                )
             }
     }
 
-    private suspend fun updateRestoreProgress(content: String) {
-        val progress = restoreProgressMutex.withLock {
-            restoreProgress += 1
-            restoreProgress
-        }
-
+    private suspend fun updateRestoreProgress(
+        content: String,
+        progress: Int = restoreProgress.incrementAndFetch(),
+    ) {
         notifier.showRestoreProgress(content, progress, restoreAmount, isSync)
         onProgressUpdate(content, progress, restoreAmount, isSync)
     }
 
-    private suspend fun addError(message: String) {
-        errorsMutex.withLock {
-            errors.add(Date() to message)
-        }
+    private fun addError(message: String) {
+        errors.add(Date() to message)
     }
 
     private fun writeErrorLog(): File {
@@ -204,7 +220,7 @@ class BackupRestorer(
                 }
                 return file
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             // Empty
         }
         return File("")
