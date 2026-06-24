@@ -138,7 +138,7 @@
     <string name="onboarding_permission_notifications">നോട്ടിഫിക്കേഷൻ കാണിക്കാനുള്ള അനുവാദം</string>
     <string name="loading">ലോഡിങ്ങ്…</string>
     <string name="onboarding_storage_selection_required">ഒരു ഫോൾഡർ തിരഞ്ഞെടുക്കണം</string>
-    <string name="action_show_errors">വിശദാംശങ്ങൾ കാണാൻ ടാപ്പുചെയ്യുക</string>
+    <string name="action_show_errors">വിശദാംശങ്ങൾ കാണാൻ തട്ടുക</string>
     <string name="action_close">അടയ്ക്കുക</string>
     <string name="action_display_show_number_of_items">ഇനങ്ങളുടെ എണ്ണം കാണിക്കുക</string>
     <string name="action_revert_to_default">സ്ഥിരസ്ഥിതിയിലേക്ക് മടങ്ങുക</string>
@@ -179,7 +179,7 @@
     <string name="action_copy_link">ലിങ്ക് പകര്‍ത്തുക</string>
     <string name="ext_install_service_notif">വിപുലീകരണം ഇൻസ്റ്റാൾ ചെയ്യുന്നു…</string>
     <string name="ext_permission_install_apps_warning">വിപുലീകരണങ്ങൾ ഇൻസ്റ്റാൾ ചെയ്യാൻ അനുമതികൾ ആവശ്യമാണ്. അനുവദിക്കാൻ ഇവിടെ അടിക്കുക.</string>
-    <string name="action_sort_random">യാദൃച്ഛികം</string>
+    <string name="action_sort_random">ക്രമരഹിതം</string>
     <string name="ext_info_language">ഭാഷ</string>
     <string name="automatic_background">സ്വയമേവ</string>
     <string name="ext_installer_shizuku_stopped">ഷിസുകു പ്രവർത്തനമല്ല</string>
@@ -203,7 +203,7 @@
     <string name="onboarding_action_skip">ഒഴിവാക്കുക</string>
     <string name="onboarding_storage_info">%1$s ചാപ്റ്റർ ഡൗൺലോഡുകൾ, ബാക്കപ്പുകൾ എന്നിവയും മറ്റും സംഭരിക്കുന്ന ഒരു ഫോൾഡർ തിരഞ്ഞെടുക്കുക.\n\nഒരു പ്രത്യേക ഫോൾഡർ ശുപാർശ ചെയ്യുന്നു.\n\nതിരഞ്ഞെടുത്ത ഫോൾഡർ: %2$s</string>
     <string name="onboarding_storage_help_info">പഴയ പതിപ്പിൽ നിന്ന് അപ്ഡേറ്റ് ചെയ്യുകയാണ്, എന്ത് തിരഞ്ഞെടുക്കണമെന്ന് ഉറപ്പില്ലേ? കൂടുതൽ വിവരങ്ങൾക്ക് സ്റ്റോറേജ് ഗൈഡ് കാണുക.</string>
-    <string name="onboarding_permission_install_apps_description">To install source extensions.</string>
+    <string name="onboarding_permission_install_apps_description">ഉത്ഭവ വിപുലീകരണങ്ങൾ ഇൻസ്റ്റോൾ ചെയ്യാൻ</string>
     <string name="onboarding_permission_notifications_description">ലൈബ്രറി അപ്‌ഡേറ്റുകൾക്കും മറ്റും അറിയിപ്പ് നേടുക.</string>
     <string name="onboarding_permission_ignore_battery_opts">പശ്ചാത്തല ബാറ്ററി ഉപയോഗം</string>
     <string name="onboarding_permission_ignore_battery_opts_description">ദീർഘകാല ലൈബ്രറി അപ്‌ഡേറ്റുകൾ, ഡൗൺലോഡ്, ബാക്കപ്പ് പുനഃസ്ഥാപിക്കൽ എന്നിവയ്ക്കുള്ള തടസ്സങ്ങൾ ഒഴിവാക്കുക.</string>
@@ -220,4 +220,25 @@
     <string name="migrationListScreenTitle">സ്ഥലാന്തരീകരണം</string>
     <string name="migrationConfigScreen.continueButtonText">തുടരുക</string>
     <string name="migrationConfigScreen.availableHeader">ലഭ്യം</string>
+    <string name="label_support_us">ഞങ്ങളെ സഹായിക്കു</string>
+    <string name="label_auto">യാന്ത്രികമായ</string>
+    <string name="action_display_unread_badge">വായിച്ചിട്ടിലാത്ത അദ്ധ്യായം</string>
+    <string name="action_move_to_bottom_all_for_series">പരമ്പര അടിത്തട്ടിലേക്ക് നീക്കുക</string>
+    <string name="action_notes">കുറിപ്പുകൾ</string>
+    <string name="action_edit_notes">കുറിപ്പുകൾ തിരുത്തുക</string>
+    <string name="action_webview_refresh">പുതുക്കുക</string>
+    <string name="action_webview_close_tab">ടാബ് അടയ്ക്കുക</string>
+    <string name="action_not_now">ഇപ്പോഴല്ല</string>
+    <string name="action_add_anyway">എങ്കിലും ചേർക്കുക</string>
+    <string name="internal_error">ആന്തരപിഴവ്: കൂടുതൽ വിവരങ്ങൾക്ക് തകർച്ചവിവരപ്പട്ടിക പരിശോധിക്കു</string>
+    <string name="app_not_available">അപ്ലിക്കേഷൻ ലഭ്യമല്ല</string>
+    <string name="pref_onboarding_guide">പ്രവേശകമാതൃക</string>
+    <string name="pref_category_reader">വായനവസ്തു</string>
+    <string name="pref_category_downloads">ഇറക്കിവെച്ചത്</string>
+    <string name="pref_category_advanced">പുരോഗമിച്ച</string>
+    <string name="pref_browse_summary">ഉത്ഭവങ്ങൾ, വിപുലീകരണങ്ങൾ, മുഴുവൻ തിരയുക</string>
+    <string name="pref_behavior">സ്വഭാവം</string>
+    <string name="pref_category_delete_chapters">അദ്ധ്യായം മായ്ച്ചുകളയുക</string>
+    <string name="pref_remove_after_marked_as_read">സ്വന്തമായി വായിച്ചെൻ അടയാളപ്പെടുത്തിയതിൻ ശേഷം</string>
+    <string name="pref_remove_after_read">യാന്ത്രികമായി വായിച്ചെതിനു ശേഷം മായ്ച്ചുകളയുക</string>
 </resources>
