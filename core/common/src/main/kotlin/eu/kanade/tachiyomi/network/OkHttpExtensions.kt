@@ -14,7 +14,6 @@ import okhttp3.Response
 import rx.Observable
 import rx.Producer
 import rx.Subscription
-import java.io.File
 import java.io.IOException
 import kotlin.concurrent.atomics.AtomicBoolean
 import kotlin.concurrent.atomics.ExperimentalAtomicApi

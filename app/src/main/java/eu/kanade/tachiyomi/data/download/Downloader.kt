@@ -40,7 +40,6 @@ import kotlinx.coroutines.supervisorScope
 import logcat.LogPriority
 import mihon.core.archive.ZipWriter
 import nl.adaptivity.xmlutil.serialization.XML
-import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Response
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.extension
