@@ -296,8 +296,7 @@
     <string name="pref_skip_filtered_chapters">Bỏ qua các chương đã lọc</string>
     <string name="filter_mode_screen">Màn hình</string>
     <string name="pref_cutout_short">Hiển thị nội dung ở phần rìa</string>
-    <string name="obsolete_extension_message">Phần mở rộng này không khả dụng. Nó có thể không chạy và có thể gây ra lỗi với Mihon. Kiến nghị nên Gỡ cài đặt.</string>
-    <string name="ext_obsolete">Lỗi thời</string>
+    <string name="obsolete_extension_message">Phần mở rộng này không liên kết với cửa hành nào. Nó có thể không nhận bản cập nhật, có thể không hoạt động đúng cách và có thể gây ra lỗi với Mihon. Kiến nghị nên Gỡ cài đặt.</string>
     <string name="ext_updates_pending">Đang chờ cập nhật</string>
     <string name="pref_category_library_update">Cập nhật toàn bộ</string>
     <string name="pref_category_display">Hiển thị</string>
@@ -771,19 +770,8 @@
     <string name="pref_library_update_smart_update">Tùy chọn bỏ qua cập nhật</string>
     <string name="label_upcoming">Sắp tới</string>
     <string name="onboarding_storage_help_info">Cập nhật từ phiên bản cũ hơn và không biết nên chọn gì? Tham khảo hướng dẫn để biết thêm thông tin.</string>
-    <string name="action_add_repo_message">Thêm nguồn bổ sung vào %s. Địa chỉ URL này cần phải kết thúc với \"index.min.json\".</string>
-    <string name="action_replace_repo_message">Kho lưu trữ %1$s có Dấu vân tay Khóa ký giống hệt như %2$s.
-\nNếu điều này là dự kiến, %2$s sẽ bị thay thế. Nếu không, vui lòng liên hệ với người quản lý kho lưu trữ của bạn.</string>
-    <string name="information_empty_repos">Bạn chưa có nguồn nào.</string>
     <string name="ext_revoke_trust">Thu hồi quyền truy cập của tiện ích không xác định</string>
-    <string name="action_add_repo">Thêm nguồn</string>
-    <string name="error_repo_exists">Nguồn đã có rồi!</string>
-    <string name="action_delete_repo">Xóa nguồn</string>
     <string name="onboarding_storage_help_action">Hướng dẫn</string>
-    <string name="label_extension_repos">Quản lý nguồn</string>
-    <string name="invalid_repo_name">URL nguồn không hợp lệ</string>
-    <string name="label_add_repo_input">URL nguồn</string>
-    <string name="delete_repo_confirmation">Bạn có muốn xóa nguồn \"%s\"?</string>
     <string name="action_open_repo">Mở nguồn</string>
     <string name="manga_interval_expected_update_soon">Sớm</string>
     <string name="manga_interval_custom_amount">Tần suất cập nhật tùy chỉnh:</string>
@@ -793,8 +781,6 @@
     <string name="upcoming_guide">Hướng dẫn sắp tới</string>
     <string name="upcoming_calendar_next">Tháng tiếp theo</string>
     <string name="upcoming_calendar_prev">Tháng trước</string>
-    <string name="action_replace_repo">Thay thế</string>
-    <string name="action_replace_repo_title">Dấu vân tay cho khóa ký đã được tạo trước đó</string>
     <string name="action_copy_link">Sao chép liên kết</string>
     <string name="manga_interval_expected_update_null">Manga này đã hoàn thành hoặc chưa có ngày phát hành dự kiến.</string>
     <string name="pref_flash_duration_summary">%1$s ms</string>
@@ -803,8 +789,6 @@
     <string name="pref_flash_style_black">Nền đen</string>
     <string name="pref_flash_style_white">Nền trắng</string>
     <string name="pref_flash_style_white_black">Nền trắng và Nền đen</string>
-    <string name="extensionRepo_settings">Kho lưu tiện ích mở rộng (repo)</string>
-    <string name="add_repo_confirmation">Bạn có muốn thêm repo \"%s\" không?</string>
     <string name="pref_flash_duration">Độ dài làm mới</string>
     <string name="pref_download_new_unread_chapters_only">Bỏ qua tải xuống các chương đã đọc bị trùng</string>
     <string name="invalid_backup_file_json">Sao lưu JSON không được hỗ trợ</string>
@@ -908,4 +892,24 @@
     <string name="action_webview_close_tab">Đóng thẻ</string>
     <string name="action_filter_excluded_scanlators">Lọc nhóm dịch bị loại trừ</string>
     <string name="download_bookmarked">Đã đánh dấu</string>
+    <string name="label_support_us">Hỗ trợ chúng tôi</string>
+    <string name="supportUsScreen.perks">Người bảo trợ có quyền truy cập vào các kênh độc quyền và nhận được nhiều đặc quyền hơn.</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreon (ưu tiên)</string>
+    <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
+    <string name="supportUsScreen.currentlySupportedBy">Mihon hiện được hỗ trợ bởi %d+ người bảo trợ. Chúng tôi muốn cảm ơn từng người và tất cả các bạn. Hãy cùng nhau làm cho Mihon trở nên tốt hơn nữa.</string>
+    <string name="supportUsScreen.contactForDetailsMessage">Để biết các lựa chọn thay thế hoặc bất kỳ câu hỏi liên quan nào, hãy tham gia máy chủ Discord của chúng tôi.</string>
+    <string name="supportUsScreen.contactPlatform">Discord</string>
+    <string name="donationCampaign.title">Bạn thích ứng dụng này?</string>
+    <string name="donationCampaign.paragraph1">Chào! Tôi là nhà phát triển chính đằng sau Mihon và tôi muốn đề nghị bạn xem xét hỗ trợ tài chính cho sự phát triển của nó. Nếu có đủ sự hỗ trợ, tôi sẽ có thể làm việc toàn thời gian trên Mihon và tập trung vào các vấn đề tồn tại lâu dài cũng như các tính năng được yêu cầu cao.</string>
+    <string name="donationCampaign.paragraph2">Bạn có thể quyên góp thông qua Patreon (ưu tiên) hoặc OpenCollective. Nếu bạn có thắc mắc hoặc muốn hỗ trợ bằng các phương pháp thay thế, vui lòng liên hệ với tôi thông qua máy chủ Discord của Mihon.</string>
+    <string name="donationCampaign.paragraph3">Dù thế nào đi nữa, Mihon sẽ tiếp tục được tôi và các tình nguyện viên duy trì và nó sẽ vẫn là nguồn mở.</string>
+    <string name="donationCampaign.contactPlatform">Discord</string>
+    <string name="donationCampaign.dismiss">Miễn nhiệm</string>
+    <string name="action.addExtensionStore">Thêm cửa hành tiện ích mở rộng</string>
+    <string name="extensionStoresScreen.emptyLabel">Bạn chưa thêm cửa hàng tiện ích mở rộng</string>
+    <string name="extensionStoresScreen.addStore.title">Thêm cửa hàng tiện ích mở rộng</string>
+    <string name="extensionStoresScreen.addStore.alreadyExists">Cửa hàng tiện ích mở rộng này đã tồn tại</string>
+    <string name="extensionStoresScreen.addStore.processing">Đang xử lý…</string>
+    <string name="extensionStoresScreen.addStoreInput.inputLabel">Lưu URL chỉ mục</string>
+    <string name="extensionStoresScreen.addStoreDeeplink.bodyText">Bạn có muốn thêm cửa hàng tiên ích mở rộng bên dưới không ?</string>
 </resources>
