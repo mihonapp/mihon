@@ -18,14 +18,16 @@ import androidx.annotation.StyleRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.os.postDelayed
 import androidx.core.view.isVisible
-import ca.mpreg.webgpuviewer.WebGpuImageView
+import ca.mpreg.imagedecoder.ImageDecoder
+import ca.mpreg.webgpuviewer.Image
+import ca.mpreg.webgpuviewer.Trim
+import ca.mpreg.webgpuviewer.WebGpuImageViewSingle
 import coil3.BitmapImage
 import coil3.asDrawable
 import coil3.dispose
 import coil3.imageLoader
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
-import coil3.request.allowHardware
 import coil3.request.crossfade
 import coil3.size.Precision
 import coil3.size.ViewSizeResolver
@@ -36,11 +38,16 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.EASE_OUT_QU
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE
 import com.github.chrisbanes.photoview.PhotoView
 import eu.kanade.domain.base.BasePreferences
+import eu.kanade.tachiyomi.data.coil.ImageDecoder2
 import eu.kanade.tachiyomi.data.coil.cropBorders
 import eu.kanade.tachiyomi.data.coil.customDecoder
+import eu.kanade.tachiyomi.data.coil.newDecoder
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonSubsamplingImageView
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okio.BufferedSource
 import tachiyomi.core.common.util.system.ImageUtil
 import uy.kohesive.injekt.Injekt
@@ -241,7 +248,9 @@ open class ReaderPageImageView @JvmOverloads constructor(
             WebtoonSubsamplingImageView(context)
         } else {
             if (Injekt.get<BasePreferences>().highQualityRenderer.get()) {
-                WebGpuImageView(context)
+                WebGpuImageViewSingle(context).apply {
+                    state.dpi = resources.displayMetrics.densityDpi / 100f
+                }
             } else {
                 SubsamplingScaleImageView(context)
             }
@@ -307,6 +316,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 setImage(ImageSource.bitmap(data.bitmap))
                 isVisible = true
             }
+
             is BufferedSource -> {
                 if (!isWebtoon || alwaysDecodeLongStripWithSSIV) {
                     setHardwareConfig(ImageUtil.canUseHardwareBitmap(data))
@@ -339,49 +349,54 @@ open class ReaderPageImageView @JvmOverloads constructor(
                     .build()
                     .let(context.imageLoader::enqueue)
             }
+
+            else -> {
+                throw IllegalArgumentException("Not implemented for class ${data::class.simpleName}")
+            }
+        }
+    } ?: (pageView as? WebGpuImageViewSingle)?.apply {
+        when (data) {
+            is BitmapDrawable -> {
+                isVisible = true
+            }
+
+            is BufferedSource -> {
+                ImageRequest.Builder(context)
+                    .data(data)
+                    .memoryCachePolicy(CachePolicy.DISABLED)
+                    .diskCachePolicy(CachePolicy.DISABLED)
+                    .newDecoder(true)
+                    .target(
+                        onSuccess = { result ->
+                            val res = (result as ImageDecoder2.DecodeResultImage).res
+
+                            CoroutineScope(Dispatchers.Default).launch {
+                                val image = Image(res.image, res.width, res.height)
+                                val trim = if (config.cropBorders) Trim.find(image, 1f, 1f, 1f, 10f / 255) else null
+
+                                state.post {
+                                    state.image = image
+                                    state.trim = trim
+                                    state.home()
+                                    state.render()
+                                }
+                            }
+                        },
+                    )
+                    .listener(
+                        onError = { _, result ->
+                            onImageLoadError(result.throwable)
+                        },
+                    )
+                    .build()
+                    .let(context.imageLoader::enqueue)
+            }
+
             else -> {
                 throw IllegalArgumentException("Not implemented for class ${data::class.simpleName}")
             }
         }
     }
-        ?: (pageView as? WebGpuImageView)?.apply {
-            when (data) {
-                is BitmapDrawable -> {
-                    init(data.bitmap)
-                    isVisible = true
-                }
-
-                is BufferedSource -> {
-                    ImageRequest.Builder(context)
-                        .data(data)
-                        .memoryCachePolicy(CachePolicy.DISABLED)
-                        .diskCachePolicy(CachePolicy.DISABLED)
-                        .target(
-                            onSuccess = { result ->
-                                val data = result as BitmapImage
-                                init(data.bitmap)
-                                isVisible = true
-                            },
-                        )
-                        .listener(
-                            onError = { _, result ->
-                                onImageLoadError(result.throwable)
-                            },
-                        )
-                        .allowHardware(false)
-                        .precision(Precision.INEXACT)
-                        .cropBorders(config.cropBorders)
-                        .customDecoder(true)
-                        .crossfade(false)
-                        .build()
-                        .let(context.imageLoader::enqueue)
-                }
-
-                else -> {
-                    throw IllegalArgumentException("Not implemented for class ${data::class.simpleName}")
-                }
-            }
-        }
 
     private fun prepareAnimatedImageView() {
         if (pageView is AppCompatImageView) return

@@ -39,7 +39,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.updatePadding
-import ca.mpreg.webgpuviewer.WebGpuImageViewer
+import ca.mpreg.webgpuviewer.Image
+import ca.mpreg.webgpuviewer.WebGpuImageViewerSingle
+import ca.mpreg.webgpuviewer.WebGpuImageViewerSingleState
 import coil3.asDrawable
 import coil3.imageLoader
 import coil3.request.CachePolicy
@@ -50,6 +52,8 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.manga.EditCoverAction
+import eu.kanade.tachiyomi.data.coil.ImageDecoder2
+import eu.kanade.tachiyomi.data.coil.newDecoder
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
@@ -70,24 +74,7 @@ fun MangaCoverDialog(
     onDismissRequest: () -> Unit,
 ) {
     val useNewRenderer = Injekt.get<BasePreferences>().highQualityRenderer.get()
-
-    var bitmap: Bitmap? by remember { mutableStateOf(null) }
-    if (useNewRenderer) {
-        val view = LocalView.current
-
-        val request = ImageRequest.Builder(view.context)
-            .data(manga)
-            .size(Size.ORIGINAL)
-            .memoryCachePolicy(CachePolicy.DISABLED)
-            .target { image ->
-                val drawable = image.asDrawable(view.context.resources)
-                bitmap = (drawable as? BitmapDrawable)
-                    ?.bitmap
-                    ?.copy(Bitmap.Config.ARGB_8888, false)
-            }
-            .build()
-        view.context.imageLoader.enqueue(request)
-    }
+    val view = LocalView.current
 
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -173,10 +160,30 @@ fun MangaCoverDialog(
                 }
             },
         ) { contentPadding ->
-            bitmap?.let {
-                WebGpuImageViewer(bitmap = it)
-            }
-            if (!useNewRenderer) {
+            if (useNewRenderer) {
+                val state = WebGpuImageViewerSingleState()
+
+                state.dpi = view.resources.displayMetrics.densityDpi / 100f
+
+                ImageRequest.Builder(view.context)
+                    .data(manga)
+                    .size(Size.ORIGINAL)
+                    .memoryCachePolicy(CachePolicy.DISABLED)
+                    .newDecoder(true)
+                    .target { result ->
+                        val res = (result as ImageDecoder2.DecodeResultImage).res
+
+                        state.post {
+                            state.image = Image(res.image, res.width, res.height)
+                            state.home()
+                            state.render()
+                        }
+                    }
+                    .build()
+                    .let(view.context.imageLoader::enqueue)
+
+                WebGpuImageViewerSingle(state = state)
+            } else {
                 val statusBarPaddingPx = with(LocalDensity.current) { contentPadding.calculateTopPadding().roundToPx() }
                 val bottomPaddingPx = with(LocalDensity.current) { contentPadding.calculateBottomPadding().roundToPx() }
 
