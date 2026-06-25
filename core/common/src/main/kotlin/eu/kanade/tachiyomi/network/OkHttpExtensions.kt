@@ -122,13 +122,16 @@ fun OkHttpClient.newCachelessCallWithProgress(request: Request, listener: Progre
     val progressClient = newBuilder()
         .cache(null)
         .addNetworkInterceptor { chain ->
-            var req = chain.request()
-
-            req = req.newBuilder()
-                .apply { if (existingSize > 0 && req.header("Range") == null) header("Range", "bytes=$existingSize-") }
+            val request = chain.request()
+                .newBuilder()
+                .apply {
+                    if (existingSize > 0 && request.header("Range") == null) {
+                        header("Range", "bytes=$existingSize-")
+                    }
+                }
                 .build()
 
-            val originalResponse = chain.proceed(req)
+            val originalResponse = chain.proceed(request)
             originalResponse.newBuilder()
                 .body(ProgressResponseBody(originalResponse.body, listener, existingSize))
                 .build()
