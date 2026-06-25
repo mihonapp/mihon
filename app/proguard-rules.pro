@@ -102,3 +102,4 @@
 # webgpu
 -keep interface androidx.webgpu.** { *; }
 -keep class androidx.webgpu.** { *; }
+-keep class ca.mpreg.** { *; }
