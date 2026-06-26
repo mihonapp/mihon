@@ -46,7 +46,7 @@ data class MangaBakaItem(
         return TITLE_PRIORITIES
             .firstNotNullOfOrNull { bestTitlePerLanguage[it]?.title }
             ?: titles?.firstOrNull()?.title
-            ?: "ID: $id - Could not find name! (report on the Mangabaka Discord)"
+            ?: "ID: $id - Could not find name! (report on the MangaBaka Discord)"
     }
 }
 
