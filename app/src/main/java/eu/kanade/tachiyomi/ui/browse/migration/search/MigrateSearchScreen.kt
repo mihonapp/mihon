@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.browse.migration.search
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.core.model.rememberScreenModel
@@ -12,6 +13,7 @@ import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchScreenModel
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.feature.migration.list.MigrationListScreen
+import tachiyomi.domain.manga.model.Manga
 
 class MigrateSearchScreen(private val mangaId: Long) : Screen() {
 
@@ -21,6 +23,7 @@ class MigrateSearchScreen(private val mangaId: Long) : Screen() {
 
         val screenModel = rememberScreenModel { MigrateSearchScreenModel(mangaId = mangaId) }
         val state by screenModel.state.collectAsState()
+        val chapterCountDeltas by screenModel.chapterCountDeltas.collectAsState()
 
         MigrateSearchScreen(
             state = state,
@@ -45,6 +48,10 @@ class MigrateSearchScreen(private val mangaId: Long) : Screen() {
                 }
             },
             onLongClickItem = { navigator.push(MangaScreen(it.id, true)) },
+            getChapterCountDelta = { manga ->
+                LaunchedEffect(manga.id) { screenModel.loadChapterCountDelta(manga) }
+                chapterCountDeltas[manga.id]
+            },
         )
 
         when (val dialog = state.dialog) {

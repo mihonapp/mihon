@@ -45,6 +45,11 @@ object SettingsBrowseScreen : SearchableSettings {
                         preference = sourcePreferences.hideInLibraryItems,
                         title = stringResource(MR.strings.pref_hide_in_library_items),
                     ),
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = sourcePreferences.migrationShowChapterCountDelta,
+                        title = stringResource(MR.strings.pref_migration_show_chapter_count_delta),
+                        subtitle = stringResource(MR.strings.pref_migration_show_chapter_count_delta_summary),
+                    ),
                     Preference.PreferenceItem.TextPreference(
                         title = stringResource(MR.strings.extensionStores),
                         subtitle = pluralStringResource(MR.plurals.num_repos, reposCount.toInt(), reposCount),

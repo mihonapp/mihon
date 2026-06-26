@@ -69,6 +69,7 @@ internal fun GlobalSearchContent(
     onClickItem: (Manga) -> Unit,
     onLongClickItem: (Manga) -> Unit,
     fromSourceId: Long? = null,
+    getChapterCountDelta: @Composable (Manga) -> Int? = { null },
 ) {
     LazyColumn(
         contentPadding = contentPadding,
@@ -93,6 +94,7 @@ internal fun GlobalSearchContent(
                                 getManga = getManga,
                                 onClick = onClickItem,
                                 onLongClick = onLongClickItem,
+                                getChapterCountDelta = getChapterCountDelta,
                             )
                         }
                         is SearchItemResult.Error -> {
