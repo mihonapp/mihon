@@ -77,14 +77,12 @@ class HistoryRepositoryImpl(
 
     private suspend fun partialUpdate(vararg historyUpdates: HistoryUpdate) {
         try {
-            handler.await(inTransaction = true) {
-                historyUpdates.forEach { historyUpdate ->
-                    database.historyQueries.upsert(
-                        chapterId = historyUpdate.chapterId,
-                        readAt = historyUpdate.readAt,
-                        time_read = historyUpdate.sessionReadDuration,
-                    )
-                }
+            historyUpdates.forEach { historyUpdate ->
+                database.historyQueries.upsert(
+                    chapterId = historyUpdate.chapterId,
+                    readAt = historyUpdate.readAt,
+                    time_read = historyUpdate.sessionReadDuration,
+                )
             }
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, throwable = e)
