@@ -3,6 +3,9 @@ package eu.kanade.tachiyomi.data.track.mangabaka.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+private const val TITLE_FALLBACK = "Could not find name! (report to Mangabaka on Discord)"
+private val TITLE_PRIORITIES = listOf("en", "ja-Latn", "ja", "ko-Latn", "ko", "zh-Latn", "zh")
+
 @Serializable
 data class MangaBakaItemResult(
     val data: MangaBakaItem,
@@ -25,7 +28,28 @@ data class MangaBakaItem(
     val type: String,
     val rating: Double?,
     val titles: List<MangaBakaItemTitle>,
-)
+) {
+    fun chooseBestTitle(): String {
+        // based on https://mangabaka.org/pages/announcements/15-titles-v2#finding-the-title-you-want
+        // extended with zh-Latn and zh
+        val bestTitlePerLanguage = TITLE_PRIORITIES.associateWith { lang ->
+            titles.filter { it.language == lang }
+                .minByOrNull {
+                    when {
+                        it.isPrimary -> 0
+                        "official" in it.traits -> 1
+                        "native" in it.traits -> 2
+                        else -> 3
+                    }
+                }
+        }
+
+        return TITLE_PRIORITIES
+            .firstNotNullOfOrNull { bestTitlePerLanguage[it]?.title }
+            ?: titles.firstOrNull()?.title
+            ?: TITLE_FALLBACK
+    }
+}
 
 @Serializable
 data class MangaBakaCover(
