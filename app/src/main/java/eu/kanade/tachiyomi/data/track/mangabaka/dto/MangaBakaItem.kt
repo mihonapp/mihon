@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.data.track.mangabaka.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-private const val TITLE_FALLBACK = "Could not find name! (report to Mangabaka on Discord)"
 private val TITLE_PRIORITIES = listOf("en", "ja-Latn", "ja", "ko-Latn", "ko", "zh-Latn", "zh")
 
 @Serializable
@@ -47,7 +46,7 @@ data class MangaBakaItem(
         return TITLE_PRIORITIES
             .firstNotNullOfOrNull { bestTitlePerLanguage[it]?.title }
             ?: titles.firstOrNull()?.title
-            ?: TITLE_FALLBACK
+            ?: "ID: $id - Could not find name! (report on the Mangabaka Discord)"
     }
 }
 
