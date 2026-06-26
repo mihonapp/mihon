@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaItem
 import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaItemResult
+import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaItemTitle
 import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaListResult
 import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaOAuth
 import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaSearchResult
@@ -120,7 +121,7 @@ class MangaBakaApi(
 
                     Track.create(TrackerManager.MANGABAKA).apply {
                         remote_id = track.remote_id
-                        title = additionalData.title
+                        title = chooseTitle(additionalData.titles)
                         status = userData.getStatus()
                         score = userData.rating?.toDouble() ?: 0.0
                         started_reading_date = userData.startDate?.let { Instant.parse(it).toEpochMilliseconds() } ?: 0
@@ -197,7 +198,7 @@ class MangaBakaApi(
     private fun parseSearchItem(item: MangaBakaItem): TrackSearch {
         return TrackSearch.create(trackId).apply {
             remote_id = item.id
-            title = item.title
+            title = chooseTitle(item.titles)
             summary = item.description?.trim().orEmpty()
             score = item.rating?.toBigDecimal()?.setScale(2, RoundingMode.HALF_UP)?.toDouble() ?: -1.0
             cover_url = item.cover.x250.x1.orEmpty()
@@ -210,6 +211,27 @@ class MangaBakaApi(
             authors = item.authors.orEmpty()
             artists = item.artists.orEmpty()
         }
+    }
+
+    private fun chooseTitle(titles: List<MangaBakaItemTitle>): String {
+        // based on https://mangabaka.org/pages/announcements/15-titles-v2#finding-the-title-you-want
+        // extended with zh-Latn and zh
+        val bestTitlePerLanguage = TITLE_PRIORITIES.associateWith { lang ->
+            titles.filter { it.language == lang }
+                .minByOrNull {
+                    when {
+                        it.isPrimary -> 0
+                        "official" in it.traits -> 1
+                        "native" in it.traits -> 2
+                        else -> 3
+                    }
+                }
+        }
+
+        return TITLE_PRIORITIES
+            .firstNotNullOfOrNull { bestTitlePerLanguage[it]?.title }
+            ?: titles.firstOrNull()?.title
+            ?: TITLE_FALLBACK
     }
 
     suspend fun getMangaDetails(id: Int): TrackSearch? {
@@ -279,6 +301,9 @@ class MangaBakaApi(
         private const val REDIRECT_URI = "mihon://mangabaka-auth"
 
         private const val APP_JSON = "application/json"
+
+        private const val TITLE_FALLBACK = "Could not find name! (report to Mangabaka on Discord)"
+        private val TITLE_PRIORITIES = listOf("en", "ja-Latn", "ja", "ko-Latn", "ko", "zh-Latn", "zh")
 
         private var codeVerifier: String = ""
         private var oauthStateParam: String = ""
