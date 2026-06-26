@@ -26,14 +26,14 @@ data class MangaBakaItem(
     val status: String,
     val type: String,
     val rating: Double?,
-    val titles: List<MangaBakaItemTitle>,
+    val titles: List<MangaBakaItemTitle>?,
 ) {
     fun chooseBestTitle(): String {
         // based on https://mangabaka.org/pages/announcements/15-titles-v2#finding-the-title-you-want
         // extended with zh-Latn and zh
         val bestTitlePerLanguage = TITLE_PRIORITIES.associateWith { lang ->
-            titles.filter { it.language == lang }
-                .minByOrNull {
+            titles?.filter { it.language == lang }
+                ?.minByOrNull {
                     when {
                         it.isPrimary -> 0
                         "official" in it.traits -> 1
@@ -45,7 +45,7 @@ data class MangaBakaItem(
 
         return TITLE_PRIORITIES
             .firstNotNullOfOrNull { bestTitlePerLanguage[it]?.title }
-            ?: titles.firstOrNull()?.title
+            ?: titles?.firstOrNull()?.title
             ?: "ID: $id - Could not find name! (report on the Mangabaka Discord)"
     }
 }
