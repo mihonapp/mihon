@@ -104,10 +104,10 @@ class DownloadManager(
         return queueState.value.find { it.chapter.id == chapterId }
     }
 
-    suspend fun startDownloadNow(chapterId: Long) {
+    fun startDownloadNow(chapterId: Long) {
         val existingDownload = getQueuedDownloadOrNull(chapterId)
         // If not in queue try to start a new download
-        val toAdd = existingDownload ?: Download.fromChapterId(chapterId) ?: return
+        val toAdd = existingDownload ?: runBlocking { Download.fromChapterId(chapterId) } ?: return
         queueState.value.toMutableList().apply {
             existingDownload?.let { remove(it) }
             add(0, toAdd)
@@ -397,7 +397,7 @@ class DownloadManager(
 
     private suspend fun getChaptersToDelete(chapters: List<Chapter>, manga: Manga): List<Chapter> {
         // Retrieve the categories that are set to exclude from being deleted on read
-        val categoriesToExclude = downloadPreferences.removeExcludeCategories().get().map(String::toLong)
+        val categoriesToExclude = downloadPreferences.removeExcludeCategories.get().map(String::toLong)
 
         val categoriesForManga = getCategories.await(manga.id)
             .map { it.id }
@@ -408,7 +408,7 @@ class DownloadManager(
             chapters
         }
 
-        return if (!downloadPreferences.removeBookmarkedChapters().get()) {
+        return if (!downloadPreferences.removeBookmarkedChapters.get()) {
             filteredCategoryManga.filterNot { it.bookmark }
         } else {
             filteredCategoryManga

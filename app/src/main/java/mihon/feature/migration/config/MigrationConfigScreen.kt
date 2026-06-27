@@ -49,7 +49,6 @@ import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateSearchScreen
 import eu.kanade.tachiyomi.util.system.LocaleHelper
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.update
 import mihon.feature.migration.list.MigrationListScreen
 import sh.calvin.reorderable.ReorderableCollectionItemScope
@@ -118,7 +117,7 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
                     scrollBehavior = it,
                     actions = {
                         AppBarActions(
-                            persistentListOf(
+                            listOf(
                                 AppBar.Action(
                                     title = stringResource(MR.strings.migrationConfigScreen_selectAllLabel),
                                     icon = Icons.Outlined.SelectAll,
@@ -340,12 +339,12 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
         }
 
         private fun initSources() {
-            val languages = sourcePreferences.enabledLanguages().get()
-            val pinnedSources = sourcePreferences.pinnedSources().get().mapNotNull { it.toLongOrNull() }
-            val includedSources = sourcePreferences.migrationSources().get()
-            val disabledSources = sourcePreferences.disabledSources().get()
+            val languages = sourcePreferences.enabledLanguages.get()
+            val pinnedSources = sourcePreferences.pinnedSources.get().mapNotNull { it.toLongOrNull() }
+            val includedSources = sourcePreferences.migrationSources.get()
+            val disabledSources = sourcePreferences.disabledSources.get()
                 .mapNotNull { it.toLongOrNull() }
-            val sources = sourceManager.getCatalogueSources()
+            val sources = sourceManager.getAll()
                 .asSequence()
                 .filterIsInstance<HttpSource>()
                 .filter { it.lang in languages }
@@ -382,8 +381,8 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
         }
 
         fun toggleSelection(config: SelectionConfig) {
-            val pinnedSources = sourcePreferences.pinnedSources().get().mapNotNull { it.toLongOrNull() }
-            val disabledSources = sourcePreferences.disabledSources().get().mapNotNull { it.toLongOrNull() }
+            val pinnedSources = sourcePreferences.pinnedSources.get().mapNotNull { it.toLongOrNull() }
+            val disabledSources = sourcePreferences.disabledSources.get().mapNotNull { it.toLongOrNull() }
             val isSelected: (Long) -> Boolean = {
                 when (config) {
                     SelectionConfig.All -> true
@@ -413,7 +412,7 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
             state.value.sources
                 .filter { source -> source.isSelected }
                 .map { source -> source.source.id }
-                .let { sources -> sourcePreferences.migrationSources().set(sources) }
+                .let { sources -> sourcePreferences.migrationSources.set(sources) }
         }
 
         data class State(

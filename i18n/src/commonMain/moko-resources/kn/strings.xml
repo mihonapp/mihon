@@ -395,7 +395,6 @@
     <string name="unknown_status">ಅಜ್ಞಾತ ಸ್ಥಿತಿ</string>
     <string name="unknown_author">ಅಜ್ಞಾತ ಲೇಖಕ</string>
     <string name="action_global_search_query">\"%1$s\" ಅನ್ನು ಗ್ಲೋಬಲ್ ಸರ್ಚ್ ಮಾಡಿ</string>
-    <string name="updated_version">v%1$s ಗೆ ಅಪ್ಡೇಟ್ ಆಗಿದೆ</string>
     <string name="whats_new">ಹೊಸತೇನಿದೆ</string>
     <string name="requires_app_restart">ಅನ್ವಯಿಸಲು ಅಪ್ಲಿಕೇಶನ್ ಮರುಪ್ರಾರಂಭದ ಅಗತ್ಯವಿದೆ</string>
     <string name="label_network">ಅಡ್ವಾನ್ಸ್ಡ್ ಸೆಕ್ಷನ್</string>

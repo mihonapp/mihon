@@ -110,4 +110,9 @@
         <item quantity="many">%1$d séries ont été ignorées</item>
         <item quantity="other">%1$d séries ont été ignorées</item>
     </plurals>
+    <plurals name="notification_update_error">
+        <item quantity="one">%1$d mise à jour échouée</item>
+        <item quantity="many">%1$d mises à jour échouées</item>
+        <item quantity="other">%1$d mises à jour échouées</item>
+    </plurals>
 </resources>

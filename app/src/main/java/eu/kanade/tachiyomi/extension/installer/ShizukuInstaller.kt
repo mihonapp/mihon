@@ -112,6 +112,7 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
             service.contentResolver.openAssetFileDescriptor(entry.uri, "r").use {
                 shellInterface?.install(it)
             }
+            service.contentResolver.delete(entry.uri, null, null)
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e) { "Failed to install extension ${entry.downloadId} ${entry.uri}" }
             continueQueue(InstallStep.Error)
@@ -144,7 +145,7 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
             service,
             receiver,
             IntentFilter(ACTION_INSTALL_RESULT),
-            ContextCompat.RECEIVER_EXPORTED,
+            ContextCompat.RECEIVER_NOT_EXPORTED,
         )
 
         initShizuku()

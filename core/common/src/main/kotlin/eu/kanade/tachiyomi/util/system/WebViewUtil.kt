@@ -13,6 +13,7 @@ import kotlin.coroutines.resume
 
 object WebViewUtil {
     private const val CHROME_PACKAGE = "com.android.chrome"
+    private const val YOUTUBE_FOR_TV_PACKAGE = "com.google.android.youtube.tv"
     private const val SYSTEM_SETTINGS_PACKAGE = "com.android.settings"
 
     const val MINIMUM_WEBVIEW_VERSION = 118
@@ -56,13 +57,16 @@ object WebViewUtil {
     }
 
     fun spoofedPackageName(context: Context): String {
-        return try {
-            context.packageManager.getPackageInfo(CHROME_PACKAGE, PackageManager.GET_META_DATA)
-
-            CHROME_PACKAGE
-        } catch (_: PackageManager.NameNotFoundException) {
-            SYSTEM_SETTINGS_PACKAGE
-        }
+        return runCatching { context.packageManager.getPackageInfo(CHROME_PACKAGE, 0) }
+            .recoverCatching { context.packageManager.getPackageInfo(SYSTEM_SETTINGS_PACKAGE, 0) }
+            .recoverCatching { context.packageManager.getPackageInfo(YOUTUBE_FOR_TV_PACKAGE, 0) }
+            .fold(
+                onSuccess = { it.packageName },
+                onFailure = {
+                    context.packageManager.getInstalledPackages(0)
+                        .random().packageName
+                },
+            )
     }
 }
 

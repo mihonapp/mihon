@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
 import eu.kanade.tachiyomi.ui.updates.UpdatesSettingsScreenModel
-import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.core.common.preference.getAndSet
 import tachiyomi.domain.updates.service.UpdatesPreferences
 import tachiyomi.i18n.MR
@@ -37,7 +36,7 @@ fun UpdatesFilterDialog(
 ) {
     TabbedDialog(
         onDismissRequest = onDismissRequest,
-        tabTitles = persistentListOf(
+        tabTitles = listOf(
             stringResource(MR.strings.action_filter),
         ),
     ) {
@@ -55,28 +54,28 @@ fun UpdatesFilterDialog(
 private fun ColumnScope.FilterSheet(
     screenModel: UpdatesSettingsScreenModel,
 ) {
-    val filterDownloaded by screenModel.updatesPreferences.filterDownloaded().collectAsState()
+    val filterDownloaded by screenModel.updatesPreferences.filterDownloaded.collectAsState()
     TriStateItem(
         label = stringResource(MR.strings.label_downloaded),
         state = filterDownloaded,
         onClick = { screenModel.toggleFilter(UpdatesPreferences::filterDownloaded) },
     )
 
-    val filterUnread by screenModel.updatesPreferences.filterUnread().collectAsState()
+    val filterUnread by screenModel.updatesPreferences.filterUnread.collectAsState()
     TriStateItem(
         label = stringResource(MR.strings.action_filter_unread),
         state = filterUnread,
         onClick = { screenModel.toggleFilter(UpdatesPreferences::filterUnread) },
     )
 
-    val filterStarted by screenModel.updatesPreferences.filterStarted().collectAsState()
+    val filterStarted by screenModel.updatesPreferences.filterStarted.collectAsState()
     TriStateItem(
         label = stringResource(MR.strings.label_started),
         state = filterStarted,
         onClick = { screenModel.toggleFilter(UpdatesPreferences::filterStarted) },
     )
 
-    val filterBookmarked by screenModel.updatesPreferences.filterBookmarked().collectAsState()
+    val filterBookmarked by screenModel.updatesPreferences.filterBookmarked.collectAsState()
     TriStateItem(
         label = stringResource(MR.strings.action_filter_bookmarked),
         state = filterBookmarked,
@@ -85,9 +84,9 @@ private fun ColumnScope.FilterSheet(
 
     HorizontalDivider(modifier = Modifier.padding(MaterialTheme.padding.small))
 
-    val filterExcludedScanlators by screenModel.updatesPreferences.filterExcludedScanlators().collectAsState()
+    val filterExcludedScanlators by screenModel.updatesPreferences.filterExcludedScanlators.collectAsState()
 
-    fun toggleScanlatorFilter() = screenModel.updatesPreferences.filterExcludedScanlators().getAndSet { !it }
+    fun toggleScanlatorFilter() = screenModel.updatesPreferences.filterExcludedScanlators.getAndSet { !it }
 
     Row(
         modifier = Modifier

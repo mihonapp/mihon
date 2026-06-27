@@ -3,6 +3,8 @@ package eu.kanade.presentation.webview
 import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap
 import android.os.Message
+import android.webkit.JsPromptResult
+import android.webkit.JsResult
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import androidx.activity.compose.BackHandler
@@ -20,6 +22,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -48,7 +51,6 @@ import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.getHtml
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -95,6 +97,11 @@ fun WebViewScreenContent(
 
     var currentUrl by remember { mutableStateOf(url) }
     var showCloudflareHelp by remember { mutableStateOf(false) }
+    var isActive by remember { mutableStateOf(true) }
+
+    DisposableEffect(Unit) {
+        onDispose { isActive = false }
+    }
 
     val webClient = remember {
         object : AccompanistWebViewClient() {
@@ -163,6 +170,36 @@ fun WebViewScreenContent(
                 }
                 return false
             }
+
+            override fun onJsAlert(view: WebView, url: String?, message: String?, result: JsResult): Boolean {
+                if (!isActive) {
+                    result.confirm()
+                    return true
+                }
+                return super.onJsAlert(view, url, message, result)
+            }
+
+            override fun onJsConfirm(view: WebView, url: String?, message: String?, result: JsResult): Boolean {
+                if (!isActive) {
+                    result.cancel()
+                    return true
+                }
+                return super.onJsConfirm(view, url, message, result)
+            }
+
+            override fun onJsPrompt(
+                view: WebView,
+                url: String?,
+                message: String?,
+                defaultValue: String?,
+                result: JsPromptResult,
+            ): Boolean {
+                if (!isActive) {
+                    result.cancel()
+                    return true
+                }
+                return super.onJsPrompt(view, url, message, defaultValue, result)
+            }
         }
     }
 
@@ -196,7 +233,7 @@ fun WebViewScreenContent(
                         navigationIcon = Icons.Outlined.Close,
                         actions = {
                             AppBarActions(
-                                persistentListOf(
+                                listOf(
                                     AppBar.Action(
                                         title = stringResource(MR.strings.action_webview_back),
                                         icon = Icons.AutoMirrored.Outlined.ArrowBack,
@@ -233,7 +270,7 @@ fun WebViewScreenContent(
                                         title = stringResource(MR.strings.pref_clear_cookies),
                                         onClick = { onClearCookies(currentUrl) },
                                     ),
-                                ).builder().apply {
+                                ).toMutableList().apply {
                                     if (windowStack.size > 1) {
                                         add(
                                             0,
@@ -244,7 +281,7 @@ fun WebViewScreenContent(
                                             ),
                                         )
                                     }
-                                }.build(),
+                                },
                             )
                         },
                     )

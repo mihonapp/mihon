@@ -45,39 +45,51 @@
         <item quantity="other">%1$s পৃষ্ঠাসমূহ</item>
     </plurals>
     <plurals name="missing_chapters">
-        <item quantity="one">অপস্থিত %1$s অধ্যায়</item>
-        <item quantity="other">অপস্থিত %1$s অধ্যায়সমূহ</item>
+        <item quantity="one">অপস্থিত %1$s অধ্যায়</item>
+        <item quantity="other">অপস্থিত %1$s অধ্যায়সমূহ</item>
     </plurals>
     <plurals name="manga_num_chapters">
-        <item quantity="one">%1$s অধ্যায়</item>
-        <item quantity="other">%1$s অধ্যায়সমূহ</item>
+        <item quantity="one">%1$s অধ্যায়</item>
+        <item quantity="other">%1$s অধ্যায়সমূহ</item>
     </plurals>
     <plurals name="download_amount">
-        <item quantity="one">পৰৱৰ্তী অধ্যায়</item>
-        <item quantity="other">পৰৱৰ্তী %d অধ্যায়সমূহ</item>
+        <item quantity="one">পৰৱৰ্তী অধ্যায়</item>
+        <item quantity="other">পৰৱৰ্তী %d অধ্যায়সমূহ</item>
     </plurals>
     <plurals name="num_trackers">
         <item quantity="one">%d ট্ৰেকাৰ</item>
         <item quantity="other">%d ট্ৰেকাৰসমূহ</item>
     </plurals>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">%d অধ্যায় স্কিপ কৰা হৈছে, উৎসত নাইবা ফিল্টাৰ কৰি আঁতৰোৱা হৈছে</item>
-        <item quantity="other">%d অধ্যায়সমূহ স্কিপ কৰা হৈছে, উৎসত নাইবা ফিল্টাৰ কৰি আঁতৰোৱা হৈছে</item>
+        <item quantity="one">%d অধ্যায় স্কিপ কৰা হৈছে, উৎসত নাইবা ফিল্টাৰ কৰি আঁতৰোৱা হৈছে</item>
+        <item quantity="other">%d অধ্যায়সমূহ স্কিপ কৰা হৈছে, উৎসত নাইবা ফিল্টাৰ কৰি আঁতৰোৱা হৈছে</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
         <item quantity="one">%d প্ৰৱিষ্টিৰ বাবে</item>
         <item quantity="other">%d প্ৰৱিষ্টিসমূহৰ বাবে</item>
     </plurals>
     <plurals name="notification_chapters_generic">
-        <item quantity="one">%1$d নতুন অধ্যায়</item>
-        <item quantity="other">%1$d নতুন অধ্যায়সমূহ</item>
+        <item quantity="one">%1$d নতুন অধ্যায়</item>
+        <item quantity="other">%1$d নতুন অধ্যায়সমূহ</item>
     </plurals>
     <plurals name="notification_chapters_multiple_and_more">
-        <item quantity="one">অধ্যায়সমূহ %1$s আৰু 1 অধিক</item>
-        <item quantity="other">অধ্যায়সমূহ %1$s আৰু %2$d অধিক</item>
+        <item quantity="one">অধ্যায়সমূহ %1$s আৰু 1 অধিক</item>
+        <item quantity="other">অধ্যায়সমূহ %1$s আৰু %2$d অধিক</item>
     </plurals>
     <plurals name="migrationListScreen.migrateDialog.migrateTitle">
         <item quantity="one">%1$d প্ৰৱেশ প্ৰব্ৰজন কৰক?</item>
-        <item quantity="other">%1$d প্ৰবিষ্টসমূহ প্ৰব্ৰজন কৰক?</item>
+        <item quantity="other">%1$d প্ৰৱিষ্টিসমূহ প্ৰব্ৰজন কৰক?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">%1$d প্ৰৱেশ কপি কৰক?</item>
+        <item quantity="other">%1$d প্ৰৱিষ্টিসমূহ কপি কৰক?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">এটা প্ৰৱেশ স্কিপ কৰা হৈছে</item>
+        <item quantity="other">%1$d প্ৰৱিষ্টিসমূহ স্কিপ কৰা হৈছে</item>
+    </plurals>
+    <plurals name="notification_update_error">
+        <item quantity="one">%1$d আপডেট বিফল হৈছে</item>
+        <item quantity="other">%1$d আপডেটসমূহ বিফল হৈছে</item>
     </plurals>
 </resources>

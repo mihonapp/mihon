@@ -269,7 +269,6 @@
     <string name="version">Биэрсия</string>
     <string name="website">Үөп сир</string>
     <string name="licenses">Аһаҕас төрүттээх лицензиялар</string>
-    <string name="updated_version">v%1$s дылы саҥарданна</string>
     <string name="check_for_updates">Саҥардыы баар буолуутун бэрэбиэркэлээһин</string>
     <string name="action_global_search_hint">Толору көрдөөһүн…</string>
     <string name="pinned_sources">Иҥиннэриллибит</string>

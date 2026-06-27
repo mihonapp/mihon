@@ -18,7 +18,7 @@ SELECT
     mangas.cover_last_modified AS coverLastModified,
     chapters.date_upload AS dateUpload,
     chapters.date_fetch AS datefetch,
-    excluded_scanlators.scanlator as excludedScanlator
+    excluded_scanlators.scanlator AS excludedScanlator
 FROM mangas JOIN chapters
 ON mangas._id = chapters.manga_id
 LEFT JOIN excluded_scanlators
