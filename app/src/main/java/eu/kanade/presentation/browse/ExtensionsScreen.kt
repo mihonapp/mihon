@@ -208,6 +208,7 @@ private fun ExtensionContent(
                         is Extension.Untrusted -> "extension-untrusted-${item.hashCode()}"
                         is Extension.Installed -> "extension-installed-${item.hashCode()}"
                         is Extension.Available -> "extension-available-${item.hashCode()}"
+                        is Extension.NotLoaded -> "extension-not-loaded-${item.hashCode()}"
                     }
                 },
             ) { item ->
@@ -221,6 +222,7 @@ private fun ExtensionContent(
                             is Extension.Untrusted -> {
                                 trustState = it
                             }
+                            is Extension.NotLoaded -> onUninstallExtension(it)
                         }
                     },
                     onLongClickItem = onLongClickItem,
@@ -245,6 +247,7 @@ private fun ExtensionContent(
                             is Extension.Untrusted -> {
                                 trustState = it
                             }
+                            is Extension.NotLoaded -> onUninstallExtension(it)
                         }
                     },
                 )
@@ -384,7 +387,7 @@ private fun ExtensionItemContent(
                         overflow = TextOverflow.Ellipsis,
                     )
                 }
-                if (extension is Extension.Installed && !extension.isShared) {
+                if (extension !is Extension.Available && !extension.isShared) {
                     if (hasAlreadyShownAnElement) DotSeparatorNoSpaceText()
                     Text(
                         text = stringResource(MR.strings.ext_installer_private),
@@ -485,6 +488,7 @@ private fun ExtensionItemActions(
                             )
                         }
                     }
+                    is Extension.NotLoaded -> {}
                 }
             }
         }

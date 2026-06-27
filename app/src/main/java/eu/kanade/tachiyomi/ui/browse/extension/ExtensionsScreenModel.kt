@@ -59,7 +59,7 @@ class ExtensionsScreenModel(
                     .map { searchQueryPredicate(it ?: "") },
                 currentDownloads,
                 getExtensions.subscribe(),
-            ) { predicate, downloads, (_updates, _installed, _available, _untrusted) ->
+            ) { predicate, downloads, (_updates, _installed, _available, _untrusted, _notLoaded) ->
                 buildMap {
                     val updates = _updates.filter(predicate).map(extensionMapper(downloads))
                     if (updates.isNotEmpty()) {
@@ -68,8 +68,12 @@ class ExtensionsScreenModel(
 
                     val installed = _installed.filter(predicate).map(extensionMapper(downloads))
                     val untrusted = _untrusted.filter(predicate).map(extensionMapper(downloads))
-                    if (installed.isNotEmpty() || untrusted.isNotEmpty()) {
-                        put(ExtensionUiModel.Header.Resource(MR.strings.ext_installed), installed + untrusted)
+                    val notLoaded = _notLoaded.filter(predicate).map(extensionMapper(downloads))
+                    if (installed.isNotEmpty() || untrusted.isNotEmpty() || notLoaded.isNotEmpty()) {
+                        put(
+                            ExtensionUiModel.Header.Resource(MR.strings.ext_installed),
+                            installed + untrusted + notLoaded,
+                        )
                     }
 
                     val languagesWithExtensions = _available

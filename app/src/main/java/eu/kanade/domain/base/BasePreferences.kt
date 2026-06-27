@@ -51,4 +51,6 @@ class BasePreferences(
         Preference.appStateKey("donation_campaign_shown"),
         false,
     )
+
+    val safeMode: Preference<Boolean> = preferenceStore.getBoolean(Preference.appStateKey("safe_mode"), false)
 }

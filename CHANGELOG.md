@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Added
+- Add a safe mode to start the app without loading any extensions ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2753](https://github.com/mihonapp/mihon/pull/2753))
 
 ## [v0.20.0] - 2026-06-27
 ### Added
