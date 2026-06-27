@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi.data.coil
 
 import android.graphics.Bitmap
+import coil3.Canvas
+import coil3.Image
 import coil3.ImageLoader
 import coil3.asImage
 import coil3.decode.DecodeResult
@@ -62,7 +64,9 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
     class Factory : Decoder.Factory {
 
         override fun create(result: SourceFetchResult, options: Options, imageLoader: ImageLoader): Decoder? {
-            return if (options.customDecoder || isApplicable(result.source.source())) {
+            return if (options.newDecoder) {
+                ImageDecoder2(result.source, options)
+            } else if (options.customDecoder || isApplicable(result.source.source())) {
                 TachiyomiImageDecoder(result.source, options)
             } else {
                 null
@@ -86,5 +90,29 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
 
     companion object {
         var displayProfile: ByteArray? = null
+    }
+}
+
+class ImageDecoder2(private val resources: ImageSource, private val options: Options) : Decoder {
+
+    class DecodeResultImage(val res: ca.mpreg.imagedecoder.ImageDecoder.DecodeResult) : Image {
+        override val size: Long get() = res.image.capacity().toLong()
+        override val width: Int get() = res.width
+        override val height: Int get() = res.height
+        override val shareable: Boolean get() = true
+        override fun draw(canvas: Canvas) {}
+    }
+
+    override suspend fun decode(): DecodeResult {
+        val source = resources.source()
+
+        val decoder = ca.mpreg.imagedecoder.ImageDecoder.new(source.inputStream())
+
+        val res = decoder.decode()
+
+        return DecodeResult(
+            image = DecodeResultImage(res),
+            isSampled = false,
+        )
     }
 }

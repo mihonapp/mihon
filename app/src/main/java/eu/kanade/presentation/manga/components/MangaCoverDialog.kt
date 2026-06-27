@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -38,21 +39,29 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.updatePadding
+import ca.mpreg.webgpuviewer.Image
+import ca.mpreg.webgpuviewer.WebGpuImageViewerSingle
+import ca.mpreg.webgpuviewer.WebGpuImageViewerSingleState
 import coil3.asDrawable
 import coil3.imageLoader
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.size.Size
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.manga.EditCoverAction
+import eu.kanade.tachiyomi.data.coil.ImageDecoder2
+import eu.kanade.tachiyomi.data.coil.newDecoder
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.clickableNoIndication
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 @Composable
 fun MangaCoverDialog(
@@ -64,6 +73,9 @@ fun MangaCoverDialog(
     onEditClick: ((EditCoverAction) -> Unit)?,
     onDismissRequest: () -> Unit,
 ) {
+    val useNewRenderer = Injekt.get<BasePreferences>().highQualityRenderer.get()
+    val view = LocalView.current
+
     Dialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(
@@ -148,45 +160,70 @@ fun MangaCoverDialog(
                 }
             },
         ) { contentPadding ->
-            val statusBarPaddingPx = with(LocalDensity.current) { contentPadding.calculateTopPadding().roundToPx() }
-            val bottomPaddingPx = with(LocalDensity.current) { contentPadding.calculateBottomPadding().roundToPx() }
+            if (useNewRenderer) {
+                val state = WebGpuImageViewerSingleState()
 
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clickableNoIndication(onClick = onDismissRequest),
-            ) {
-                AndroidView(
-                    factory = {
-                        ReaderPageImageView(it).apply {
-                            onViewClicked = onDismissRequest
-                            clipToPadding = false
-                            clipChildren = false
+                state.dpi = view.resources.displayMetrics.densityDpi / 100f
+
+                ImageRequest.Builder(view.context)
+                    .data(manga)
+                    .size(Size.ORIGINAL)
+                    .memoryCachePolicy(CachePolicy.DISABLED)
+                    .newDecoder(true)
+                    .target { result ->
+                        val res = (result as ImageDecoder2.DecodeResultImage).res
+
+                        state.post {
+                            state.image = Image(res.image, res.width, res.height)
+                            state.home()
+                            state.render()
                         }
-                    },
-                    update = { view ->
-                        val request = ImageRequest.Builder(view.context)
-                            .data(manga)
-                            .size(Size.ORIGINAL)
-                            .memoryCachePolicy(CachePolicy.DISABLED)
-                            .target { image ->
-                                val drawable = image.asDrawable(view.context.resources)
-                                // Copy bitmap in case it came from memory cache
-                                // Because SSIV needs to thoroughly read the image
-                                val copy = (drawable as? BitmapDrawable)
-                                    ?.bitmap
-                                    ?.copy(Bitmap.Config.HARDWARE, false)
-                                    ?.toDrawable(view.context.resources)
-                                    ?: drawable
-                                view.setImage(copy, ReaderPageImageView.Config(zoomDuration = 500))
-                            }
-                            .build()
-                        view.context.imageLoader.enqueue(request)
+                    }
+                    .build()
+                    .let(view.context.imageLoader::enqueue)
 
-                        view.updatePadding(top = statusBarPaddingPx, bottom = bottomPaddingPx)
-                    },
-                    modifier = Modifier.fillMaxSize(),
-                )
+                WebGpuImageViewerSingle(state = state)
+            } else {
+                val statusBarPaddingPx = with(LocalDensity.current) { contentPadding.calculateTopPadding().roundToPx() }
+                val bottomPaddingPx = with(LocalDensity.current) { contentPadding.calculateBottomPadding().roundToPx() }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clickableNoIndication(onClick = onDismissRequest),
+                ) {
+                    AndroidView(
+                        factory = {
+                            ReaderPageImageView(it).apply {
+                                onViewClicked = onDismissRequest
+                                clipToPadding = false
+                                clipChildren = false
+                            }
+                        },
+                        update = { view ->
+                            val request = ImageRequest.Builder(view.context)
+                                .data(manga)
+                                .size(Size.ORIGINAL)
+                                .memoryCachePolicy(CachePolicy.DISABLED)
+                                .target { image ->
+                                    val drawable = image.asDrawable(view.context.resources)
+                                    // Copy bitmap in case it came from memory cache
+                                    // Because SSIV needs to thoroughly read the image
+                                    val copy = (drawable as? BitmapDrawable)
+                                        ?.bitmap
+                                        ?.copy(Bitmap.Config.HARDWARE, false)
+                                        ?.toDrawable(view.context.resources)
+                                        ?: drawable
+                                    view.setImage(copy, ReaderPageImageView.Config(zoomDuration = 500))
+                                }
+                                .build()
+                            view.context.imageLoader.enqueue(request)
+
+                            view.updatePadding(top = statusBarPaddingPx, bottom = bottomPaddingPx)
+                        },
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
             }
         }
     }
