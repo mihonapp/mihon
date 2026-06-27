@@ -139,7 +139,9 @@ jobs:
           tag_name: ${{ needs.get_tag.outputs.tag }}
           name: Mihon ${{ needs.get_tag.outputs.tag }}
           body: |
-            Check out the [past release notes](https://github.com/mihonapp/mihon/releases) if you're upgrading from an earlier version. Consider [becoming a patron](https://www.patreon.com/mihon/membership) to help keep Mihon improving!
+            Consider supporting the development on [Patreon](https://www.patreon.com/mihon/membership) or [OpenCollective](https://opencollective.com/mihon/contribute) to keep Mihon improving!
+
+            Check out the [past release notes](https://github.com/mihonapp/mihon/releases) if you're upgrading from an earlier version.
 
             <!-->
 
