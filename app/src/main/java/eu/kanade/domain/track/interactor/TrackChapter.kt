@@ -5,6 +5,7 @@ import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.domain.track.model.toDomainTrack
 import eu.kanade.domain.track.service.DelayedTrackingUpdateJob
 import eu.kanade.domain.track.store.DelayedTrackingStore
+import eu.kanade.tachiyomi.data.track.PageTracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -48,6 +49,29 @@ class TrackChapter(
                             }
                             throw e
                         }
+                    }
+                }
+            }
+                .awaitAll()
+                .mapNotNull { it.exceptionOrNull() }
+                .forEach { logcat(LogPriority.WARN, it) }
+        }
+    }
+
+    suspend fun reportPageProgress(mangaId: Long, chapterUrl: String, pageIndex: Int) {
+        withNonCancellableContext {
+            val tracks = getTracks.await(mangaId)
+            if (tracks.isEmpty()) return@withNonCancellableContext
+
+            tracks.mapNotNull { track ->
+                val service = trackerManager.get(track.trackerId)
+                if (service == null || !service.isLoggedIn || service !is PageTracker) {
+                    return@mapNotNull null
+                }
+                async {
+                    runCatching {
+                        (service as PageTracker).updatePageProgress(track, pageIndex)
+                        (service as PageTracker).updatePageProgressWithUrl(chapterUrl, pageIndex)
                     }
                 }
             }
