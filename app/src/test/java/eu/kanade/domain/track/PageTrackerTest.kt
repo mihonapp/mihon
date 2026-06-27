@@ -1,6 +1,7 @@
 package eu.kanade.domain.track
 
 import eu.kanade.domain.track.interactor.SyncChapterProgressWithTrack
+import eu.kanade.domain.track.service.TrackPreferences.SyncStrategy
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.ChapterImpl
 import eu.kanade.tachiyomi.data.track.PageTracker
@@ -52,12 +53,10 @@ class PageTrackerTest {
 
     @Test
     fun testSyncStrategies() {
-        testSampleWithStrategy(1)
-        testSampleWithStrategy(2)
-        testSampleWithStrategy(3)
+        SyncStrategy.entries.forEach(::testSampleWithStrategy)
     }
 
-    private fun testSampleWithStrategy(strategy: Int) {
+    private fun testSampleWithStrategy(strategy: SyncStrategy) {
         SyncChapterProgressWithTrack.Companion.syncStrategy = strategy
         val result = SampleSeries.chaptersWithRemoteProgress.entries.groupBy {
             SyncChapterProgressWithTrack.Companion.resolveRemoteProgress(it.key, it.value)

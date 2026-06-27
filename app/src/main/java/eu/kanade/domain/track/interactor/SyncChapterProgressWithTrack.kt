@@ -4,6 +4,7 @@ import android.app.Application
 import com.google.common.annotations.VisibleForTesting
 import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.track.model.toDbTrack
+import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.toDomainChapter
@@ -26,11 +27,10 @@ class SyncChapterProgressWithTrack(
     private val updateChapter: UpdateChapter,
     private val insertTrack: InsertTrack,
     private val getChaptersByMangaId: GetChaptersByMangaId,
+    private val trackPreferences: TrackPreferences,
 ) {
 
     companion object {
-        // Equal compare
-        private const val SYNC_STRATEGY_DEFAULT = 1
         private fun syncStrategyDefault(
             local: PageTracker.ChapterReadProgress,
             remote: PageTracker.ChapterReadProgress,
@@ -42,8 +42,6 @@ class SyncChapterProgressWithTrack(
             }
         }
 
-        // Flush local with remote
-        private const val SYNC_STRATEGY_ACCEPT_ALL = 2
         private fun syncStrategyAcceptAll(
             local: PageTracker.ChapterReadProgress,
             remote: PageTracker.ChapterReadProgress,
@@ -54,9 +52,6 @@ class SyncChapterProgressWithTrack(
                 RemoteProgressResolution.ACCEPT
             }
         }
-
-        // Update remote only when both local and remote are not completed and local page index gt remote
-        private const val SYNC_STRATEGY_ALLOW_REREAD = 3
 
         private fun syncStrategyAllowReread(
             local: PageTracker.ChapterReadProgress,
@@ -70,7 +65,7 @@ class SyncChapterProgressWithTrack(
         }
 
         @VisibleForTesting
-        internal var syncStrategy = SYNC_STRATEGY_ALLOW_REREAD
+        internal var syncStrategy = TrackPreferences.SyncStrategy.ALLOW_REREAD
 
         @VisibleForTesting
         internal fun resolveRemoteProgress(
@@ -79,9 +74,9 @@ class SyncChapterProgressWithTrack(
         ): RemoteProgressResolution {
             val local = PageTracker.ChapterReadProgress(chapter.read, chapter.last_page_read)
             return when (syncStrategy) {
-                SYNC_STRATEGY_ACCEPT_ALL -> syncStrategyAcceptAll(local, remote)
-                SYNC_STRATEGY_ALLOW_REREAD -> syncStrategyAllowReread(local, remote)
-                else -> syncStrategyDefault(local, remote)
+                TrackPreferences.SyncStrategy.ACCEPT_ALL -> syncStrategyAcceptAll(local, remote)
+                TrackPreferences.SyncStrategy.ALLOW_REREAD -> syncStrategyAllowReread(local, remote)
+                TrackPreferences.SyncStrategy.DEFAULT -> syncStrategyDefault(local, remote)
             }
         }
 
@@ -105,6 +100,7 @@ class SyncChapterProgressWithTrack(
         if (tracker !is EnhancedTracker) {
             return
         }
+        syncStrategy = trackPreferences.syncStrategy.get()
 
         val sortedChapters = getChaptersByMangaId.await(mangaId)
             .sortedBy { it.chapterNumber }

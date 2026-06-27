@@ -1,11 +1,13 @@
 package eu.kanade.domain.track.service
 
+import dev.icerock.moko.resources.StringResource
 import eu.kanade.domain.track.model.AutoTrackState
 import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.anilist.Anilist
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.preference.getEnum
+import tachiyomi.i18n.MR
 
 class TrackPreferences(
     private val preferenceStore: PreferenceStore,
@@ -42,4 +44,15 @@ class TrackPreferences(
         "pref_auto_update_manga_on_mark_read",
         AutoTrackState.ALWAYS,
     )
+
+    val syncStrategy: Preference<SyncStrategy> = preferenceStore.getEnum(
+        "pref_tracking_sync_strategy",
+        SyncStrategy.ALLOW_REREAD,
+    )
+
+    enum class SyncStrategy(val titleRes: StringResource) {
+        DEFAULT(MR.strings.pref_tracking_sync_strategy_default),
+        ACCEPT_ALL(MR.strings.pref_tracking_sync_strategy_accept_all),
+        ALLOW_REREAD(MR.strings.pref_tracking_sync_strategy_allow_reread),
+    }
 }
