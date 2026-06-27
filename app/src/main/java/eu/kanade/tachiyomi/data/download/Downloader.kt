@@ -438,10 +438,12 @@ class Downloader(
         val filename = "%0${digitCount}d".format(Locale.ENGLISH, page.number)
 
         // Try to find the image file
-        val imageFile = tmpDir.listFiles()?.firstOrNull {
-            (it.name!!.startsWith("$filename.") || it.name!!.startsWith("${filename}__001")) &&
-                !it.name!!.endsWith(".tmp")
+        val candidateFile = tmpDir.listFiles()?.firstOrNull {
+            it.name!!.startsWith("$filename.") || it.name!!.startsWith("${filename}__001")
         }
+
+        // Only treat as completed if it's not a tmp file
+        val imageFile = candidateFile?.takeIf { !it.name!!.endsWith(".tmp") }
 
         try {
             // If the image is already downloaded, do nothing. Otherwise download from network
