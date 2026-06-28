@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webgpu
 
+import android.util.Log
 import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
@@ -12,6 +13,7 @@ import ca.mpreg.webgpuviewer.WebGpuImageView
 import ca.mpreg.webgpuviewer.WebGpuImageViewerPage
 import ca.mpreg.webgpuviewer.WebGpuRenderer
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
@@ -24,10 +26,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.injectLazy
+import java.io.InputStream
 
 class WebGpuViewer(val activity: ReaderActivity) : Viewer {
 
@@ -62,19 +67,19 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
                 val currentPageIndex = pages.indexOf(currentPage)
 
                 when (index) {
-                    0 -> loadPage(currentPage)
+                    0 -> createPage(currentPage)
 
                     1 -> if (currentPageIndex + 1 < pages.size) {
                         pages[currentPageIndex + 1]
                     } else {
                         nextChapter?.pages?.first()
-                    }?.let { loadPage(it) }
+                    }?.let { createPage(it) }
 
                     -1 -> if (currentPageIndex - 1 >= 0) {
                         pages[currentPageIndex - 1]
                     } else {
                         prevChapter?.pages?.last()
-                    }?.let { loadPage(it) }
+                    }?.let { createPage(it) }
 
                     else -> null
                 }
@@ -157,24 +162,6 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
         }
     }
 
-    private suspend fun createPage(page: ReaderPage): WebGpuImageViewerPage? {
-        val res = withContext(Dispatchers.Default) {
-            page.stream?.invoke()?.let {
-                val dec = ImageDecoder.new(it)
-                dec.decodeNext()
-            }
-        } ?: return null
-
-        return WebGpuImageViewerPage(Image(res.image, res.width, res.height)).apply {
-            trim = Trim.find(image, 1f, 1f, 1f, 10f / 255)
-
-            parent = pager.state
-            x = homeX
-            y = homeY
-            scale = homeScale
-        }
-    }
-
     var currentPage: ReaderPage? = null
 
     val pageCache = mutableMapOf<ReaderPage, WebGpuImageViewerPage?>()
@@ -183,10 +170,42 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
     val decodeQueue = mutableListOf<ReaderPage>()
 
     val preloadCount = 3
+    val cacheSize = 10
 
-    private suspend fun loadPage(page: ReaderPage): WebGpuImageViewerPage? {
-        return pageCache[page] ?: withContext(Dispatchers.Default) {
-            page.stream?.invoke()?.let {
+    private suspend fun loadPage(page: ReaderPage): InputStream? {
+        val loader = page.chapter.pageLoader ?: return null
+
+        CoroutineScope(Dispatchers.IO).launch {
+            loader.loadPage(page)
+        }
+
+        val downloadProgressJob = CoroutineScope(Dispatchers.Default).launch {
+            page.progressFlow.collectLatest { value ->
+                Log.i("WebGpuViewer", "DownloadImage: $value")
+            }
+        }
+
+        page.statusFlow.takeWhile { state ->
+            when (state) {
+                Page.State.Queue -> true
+                Page.State.LoadPage -> true
+                Page.State.DownloadImage -> true
+                Page.State.Ready -> false
+                is Page.State.Error -> {
+                    Log.e("WebGpuViewer", "Error ${state.error}")
+                    false
+                }
+            }
+        }.collectLatest {}
+
+        downloadProgressJob.cancel()
+
+        return page.stream?.invoke()
+    }
+
+    private suspend fun createPage(page: ReaderPage): WebGpuImageViewerPage? {
+        return pageCache[page] ?: loadPage(page)?.let {
+            withContext(Dispatchers.Default) {
                 val dec = ImageDecoder.new(it)
                 dec.decodeNext()
             }
@@ -202,6 +221,9 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
                 }
             }
         }?.also {
+            while (pageCache.size > cacheSize) {
+                pageCache.remove(pageCache.keys.first())
+            }
             pageCache[page] = it
         }
     }
@@ -222,13 +244,13 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
             decodeQueue.add(pages[i])
         }
 
-        prevChapter?.pages?.firstOrNull()?.let { decodeQueue.add(it) }
+        prevChapter?.pages?.lastOrNull()?.let { decodeQueue.add(it) }
         nextChapter?.pages?.firstOrNull()?.let { decodeQueue.add(it) }
 
         decodeJob ?: CoroutineScope(Dispatchers.Default).launch {
             try {
                 while (true) {
-                    decodeQueue.removeFirstOrNull()?.let { loadPage(it) } ?: return@launch
+                    decodeQueue.removeFirstOrNull()?.let { createPage(it) } ?: return@launch
                 }
             } finally {
                 decodeJob = null
@@ -248,7 +270,12 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
 
         if (currentPage == null) {
             currentPage = pages.first()
-            chapters.prevChapter?.let { activity.requestPreloadChapter(it) }
+            prevChapter?.let {
+                CoroutineScope(Dispatchers.Default).launch {
+                    activity.viewModel.preload(it)
+                    currentPage?.let { page -> preloadPages(page) }
+                }
+            }
         }
 
         currentPage?.let { preloadPages(it) }
@@ -295,11 +322,23 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
                     if (currentPageIndex > 0 || prevChapter != null) {
                         haveNext = true
                     }
+
                     if (currentPageIndex == 0) {
-                        prevChapter?.let { activity.requestPreloadChapter(it) }
+                        prevChapter?.let {
+                            CoroutineScope(Dispatchers.Default).launch {
+                                activity.viewModel.preload(it)
+                                preloadPages(newPage)
+                            }
+                        }
                     }
+
                     if (currentPageIndex == pages.size - 1) {
-                        nextChapter?.let { activity.requestPreloadChapter(it) }
+                        nextChapter?.let {
+                            CoroutineScope(Dispatchers.Default).launch {
+                                activity.viewModel.preload(it)
+                                preloadPages(newPage)
+                            }
+                        }
                     }
                     preloadPages(newPage)
                 }
