@@ -290,10 +290,10 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
         pager.state.apply {
             val currentPageIndex = pages.indexOf(currentPage)
             if (currentPageIndex < pages.lastIndex || nextChapter != null) {
-                havePrev = true
+                haveNext = true
             }
             if (currentPageIndex > 0 || chapters.prevChapter != null) {
-                haveNext = true
+                havePrev = true
             }
 
             onPageChange = onPageChange@{ index ->
@@ -324,10 +324,10 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
                     val currentPageIndex = pages.indexOf(newPage)
 
                     if (currentPageIndex < pages.lastIndex || nextChapter != null) {
-                        havePrev = true
+                        haveNext = true
                     }
                     if (currentPageIndex > 0 || prevChapter != null) {
-                        haveNext = true
+                        havePrev = true
                     }
 
                     if (currentPageIndex == 0) {
@@ -370,10 +370,10 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
         val currentPageIndex = pages.indexOf(page)
 
         if (currentPageIndex < pages.lastIndex || nextChapter != null) {
-            pager.state.havePrev = true
+            pager.state.haveNext = true
         }
         if (currentPageIndex > 0 || prevChapter != null) {
-            pager.state.haveNext = true
+            pager.state.havePrev = true
         }
         if (currentPageIndex == 0) {
             prevChapter?.let { activity.requestPreloadChapter(it) }
