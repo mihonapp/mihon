@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.track.suwayomi
 
-import android.graphics.Color
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
@@ -8,8 +7,6 @@ import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.source.Source
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
 import tachiyomi.domain.manga.model.Manga as DomainManga
 import tachiyomi.domain.track.model.Track as DomainTrack
@@ -18,14 +15,15 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
 
     val api by lazy { SuwayomiApi(id) }
 
-    override fun getLogo() = R.drawable.ic_tracker_suwayomi
-
-    override fun getLogoColor() = Color.rgb(255, 35, 35) // TODO
+    override fun getLogo() = R.drawable.brand_suwayomi
 
     companion object {
         const val UNREAD = 1L
         const val READING = 2L
         const val COMPLETED = 3L
+
+        private const val TRACKER_DELETE_KEY = "Tracker Delete"
+        private const val TRACKER_DELETE_DEFAULT = false
     }
 
     override fun getStatusList(): List<Long> = listOf(UNREAD, READING, COMPLETED)
@@ -43,7 +41,7 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
 
     override fun getCompletionStatus(): Long = COMPLETED
 
-    override fun getScoreList(): ImmutableList<String> = persistentListOf()
+    override fun getScoreList(): List<String> = listOf()
 
     override fun displayScore(track: DomainTrack): String = ""
 
@@ -58,7 +56,7 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
             }
         }
 
-        return api.updateProgress(track)
+        return api.updateProgress(track, getPrefTrackerDelete())
     }
 
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {
@@ -105,4 +103,9 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
 
     private fun String.getMangaId(): Long =
         this.substringAfterLast('/').toLong()
+
+    private fun getPrefTrackerDelete(): Boolean {
+        val preferences = api.sourcePreferences()
+        return preferences.getBoolean(TRACKER_DELETE_KEY, TRACKER_DELETE_DEFAULT)
+    }
 }

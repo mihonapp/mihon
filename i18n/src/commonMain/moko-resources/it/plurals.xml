@@ -95,4 +95,19 @@
         <item quantity="many">%1$s pagine</item>
         <item quantity="other">%1$s pagine</item>
     </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">Migrare %1$d voce?</item>
+        <item quantity="many">Migrare %1$d voci?</item>
+        <item quantity="other">Migrare %1$d voci?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">Copia %1$d voce?</item>
+        <item quantity="many">Copia %1$d voci?</item>
+        <item quantity="other">Copia %1$d voci?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">Una voce è stata saltata</item>
+        <item quantity="many">%1$d voci sono state saltate</item>
+        <item quantity="other">%1$d voci sono state saltate</item>
+    </plurals>
 </resources>

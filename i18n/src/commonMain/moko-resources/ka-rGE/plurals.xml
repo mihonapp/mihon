@@ -36,4 +36,44 @@
         <item quantity="one">1 წუთის შემდეგ</item>
         <item quantity="other">%1$s წუთის შემდეგ</item>
     </plurals>
+    <plurals name="relative_time">
+        <item quantity="one">გუშინ</item>
+        <item quantity="other">%1$d დღის წინ</item>
+    </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">ხვალ</item>
+        <item quantity="other">%1$d დღეში</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">შემდეგი წაუკითხავი თავი</item>
+        <item quantity="other">შემდეგი %d წაუკითხავი თავი</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">1 დღე</item>
+        <item quantity="other">%d დღე</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 გვერდი</item>
+        <item quantity="other">%1$s გვერდი</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="one">აკლია %1$s თავი</item>
+        <item quantity="other">აკლია %1$s თავი</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="one">შემდეგი თავი</item>
+        <item quantity="other">შემდეგი %d თავი</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="one">%d ტრეკერი</item>
+        <item quantity="other">%d ტრეკერი</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">გამოტოვებულია %d ტავი. ან წყარო აღმოჩენილი არაა, ან ფილტრში მოჰყვა</item>
+        <item quantity="other">გამოტოვებულია %d ტავი. ან წყარო აღმოჩენილი არაა, ან ფილტრში მოჰყვა</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d რეპო</item>
+        <item quantity="other">%d რეპო</item>
+    </plurals>
 </resources>

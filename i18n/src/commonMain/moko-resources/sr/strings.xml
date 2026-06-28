@@ -325,7 +325,7 @@
     <string name="restore_in_progress">Враћање је већ у току</string>
     <string name="creating_backup_error">Прављење резервне копије није успело</string>
     <string name="backup_in_progress">Прављење резервне копије је већ у току</string>
-    <string name="restore_duration">%02d мин, %02d сек</string>
+    <string name="restore_duration">%1$02d мин, %2$02d сек</string>
     <string name="pref_webtoon_side_padding">Растојање од ивице</string>
     <string name="pref_category_reading">Читање</string>
     <string name="pref_always_show_chapter_transition">Увек прикажи транзицију поглавља</string>
@@ -481,7 +481,6 @@
     <string name="track_finished_reading_date">Датум завршетка</string>
     <string name="automatic_background">Аутоматски</string>
     <string name="licenses">Лиценце отвореног кода</string>
-    <string name="updated_version">Ажурирано на v%1$s</string>
     <string name="error_no_match">Ништа није пронађено</string>
     <string name="pref_dual_page_split">Раздели широке странице</string>
     <string name="none">Ништа</string>
@@ -546,7 +545,7 @@
     <string name="clear_history_completed">Историја је избрисана</string>
     <string name="clear_history_confirmation">Да ли сте сигурни? Цела историја ће бити изгубљена.</string>
     <string name="migration_help_guide">Водич за миграцију извора</string>
-    <string name="download_queue_size_warning">Упозорење: велики број преузимања може довести до успоравања извора и/или блокирања Mihon-а. Додирни да сазнаш више.</string>
+    <string name="download_queue_size_warning">Упозорење: велики број преузимања може довести до успоравања извора и/или блокирања %s-а. Додирни да сазнаш више.</string>
     <string name="notification_size_warning">Велика ажурирања штете изворима и могу довести до споријег ажурирања и повећања потрошње батерије. Кликни да сазнаш више.</string>
     <string name="ext_update_all">Ажурирај све</string>
     <string name="channel_app_updates">Ажурирања апликације</string>
@@ -561,7 +560,6 @@
     <string name="pref_update_only_started">Прескочи уносе који нису започети</string>
     <string name="action_show_manga">Прикажи наслов</string>
     <string name="action_move_to_top_all_for_series">Помакни наслов на врх</string>
-    <string name="notification_update_error">%1$d ажурирање није успело</string>
     <string name="learn_more">Додирните да сазнате више</string>
     <string name="library_errors_help">За помоћ о томе како да поправите грешке у ажурирању колекције, погледајте %1$s</string>
     <string name="skipped_reason_not_started">Прескочено јер ниједно поглавље није прочитано</string>
@@ -724,7 +722,6 @@
     <string name="pref_library_update_smart_update">Паметно ажурирање</string>
     <string name="pref_flash_page">Забљесни приликом листања</string>
     <string name="pref_flash_page_summ">Смањује артефакте на е-инк екранима</string>
-    <string name="label_extension_repos">Репозиторије додатака</string>
     <string name="pref_storage_location">Место складиштења</string>
     <string name="pref_storage_location_info">Користи се за аутоматске резервне копије, преузимаље поглавља и локални извор.</string>
     <string name="ext_revoke_trust">Опозови поверење непознатим екстензијама</string>
@@ -735,13 +732,6 @@
     <string name="manga_interval_expected_update">Предвиђа се да ће нова поглавља изаћи за %1$s, проверава се сваких %2$s.</string>
     <string name="manga_interval_expected_update_soon">Ускоро</string>
     <string name="available_disk_space_info">Доступно: %1$s / Укупно: %2$s</string>
-    <string name="information_empty_repos">Немате додатих репозиторија.</string>
-    <string name="action_add_repo">Додај репозиторију</string>
-    <string name="action_delete_repo">Избриши репозиторију</string>
-    <string name="label_add_repo_input">URL репозиторије</string>
-    <string name="action_add_repo_message">Додај додатне репозиторије у Михон. Треба да буде URL који се завршава са „index.min.json”.</string>
-    <string name="invalid_repo_name">Неисправан URL репозиторије</string>
-    <string name="delete_repo_confirmation">Да ли желиш да избришеш репозиторију „%s”?</string>
     <string name="private_settings">Укључи и осетљива подешавања (нпр. токени за пријаву у пратиоце)</string>
     <string name="onboarding_storage_action_select">Изабери путању</string>
     <string name="onboarding_action_finish">Започни</string>
@@ -771,7 +761,6 @@
     <string name="onboarding_storage_help_action">Водич складиштења</string>
     <string name="ext_permission_install_apps_warning">За инсталацију додатака потребне су дозволе. Додирни овде за одобрење</string>
     <string name="invalid_backup_file_error">Грешка:</string>
-    <string name="error_repo_exists">Ова репозиторија већ постоји</string>
     <string name="manga_interval_custom_amount">Прилагођена учесталост ажурирања:</string>
     <string name="action_open_repo">Отвори репозиторију</string>
     <string name="not_selected">Није одабрано</string>
@@ -792,6 +781,4 @@
     <string name="action_revert_to_default">Врати на подразумевано</string>
     <string name="action_add_anyway">Dodati svejedno</string>
     <string name="label_upcoming">Predstojeći</string>
-    <string name="action_replace_repo">Zameniti</string>
-    <string name="action_replace_repo_title">Otisak prsta za otključavanje već postoji</string>
 </resources>

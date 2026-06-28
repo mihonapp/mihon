@@ -92,8 +92,8 @@
     </plurals>
 
     <plurals name="num_repos">
-        <item quantity="one">%d repo</item>
-        <item quantity="other">%d repos</item>
+        <item quantity="one">%d store</item>
+        <item quantity="other">%d stores</item>
     </plurals>
 
     <!--Migration-->
@@ -108,5 +108,10 @@
     <plurals name="migrationListScreen.migrateDialog.skipText">
         <item quantity="one">An entry was skipped</item>
         <item quantity="other">%1$d entries were skipped</item>
+    </plurals>
+
+    <plurals name="notification_update_error">
+        <item quantity="one">%1$d update failed</item>
+        <item quantity="other">%1$d updates failed</item>
     </plurals>
 </resources>

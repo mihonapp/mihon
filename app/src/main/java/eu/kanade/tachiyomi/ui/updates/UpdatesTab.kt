@@ -17,6 +17,7 @@ import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import eu.kanade.presentation.updates.UpdateScreen
 import eu.kanade.presentation.updates.UpdatesDeleteConfirmationDialog
+import eu.kanade.presentation.updates.UpdatesFilterDialog
 import eu.kanade.presentation.util.Tab
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.download.DownloadQueueScreen
@@ -54,6 +55,7 @@ data object UpdatesTab : Tab {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
         val screenModel = rememberScreenModel { UpdatesScreenModel() }
+        val settingsScreenModel = rememberScreenModel { UpdatesSettingsScreenModel() }
         val state by screenModel.state.collectAsState()
 
         UpdateScreen(
@@ -74,6 +76,8 @@ data object UpdatesTab : Tab {
                 context.startActivity(intent)
             },
             onCalendarClicked = { navigator.push(UpcomingScreen()) },
+            onFilterClicked = screenModel::showFilterDialog,
+            hasActiveFilters = state.hasActiveFilters,
         )
 
         val onDismissDialog = { screenModel.setDialog(null) }
@@ -82,6 +86,12 @@ data object UpdatesTab : Tab {
                 UpdatesDeleteConfirmationDialog(
                     onDismissRequest = onDismissDialog,
                     onConfirm = { screenModel.deleteChapters(dialog.toDelete) },
+                )
+            }
+            is UpdatesScreenModel.Dialog.FilterSheet -> {
+                UpdatesFilterDialog(
+                    onDismissRequest = onDismissDialog,
+                    screenModel = settingsScreenModel,
                 )
             }
             null -> {}

@@ -19,13 +19,13 @@ internal class ThemeStep : OnboardingStep {
 
     @Composable
     override fun Content() {
-        val themeModePref = uiPreferences.themeMode()
+        val themeModePref = uiPreferences.themeMode
         val themeMode by themeModePref.collectAsState()
 
-        val appThemePref = uiPreferences.appTheme()
+        val appThemePref = uiPreferences.appTheme
         val appTheme by appThemePref.collectAsState()
 
-        val amoledPref = uiPreferences.themeDarkAmoled()
+        val amoledPref = uiPreferences.themeDarkAmoled
         val amoled by amoledPref.collectAsState()
 
         Column {

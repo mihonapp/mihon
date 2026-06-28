@@ -111,7 +111,7 @@
     <string name="label_settings">ಸಂಯೋಜನೆಗಳು</string>
     <string name="label_more">ಇನ್ನಷ್ಟು</string>
     <string name="name">ಹೆಸರು</string>
-    <string name="restore_duration">%02d ನಿಮಿಷ, %02d ಸೆಕೆಂಡು</string>
+    <string name="restore_duration">%1$02d ನಿಮಿಷ, %2$02d ಸೆಕೆಂಡು</string>
     <string name="restore_completed">ಮರುಸ್ಥಾಪನೆ ಪೂರ್ಣಗೊಂಡಿದೆ</string>
     <string name="backup_created">ಬ್ಯಾಕಪ್ ರಚಿಸಲಾಗಿದೆ</string>
     <string name="pref_backup_interval">ಬ್ಯಾಕಪ್ ಆವರ್ತನ</string>
@@ -395,7 +395,6 @@
     <string name="unknown_status">ಅಜ್ಞಾತ ಸ್ಥಿತಿ</string>
     <string name="unknown_author">ಅಜ್ಞಾತ ಲೇಖಕ</string>
     <string name="action_global_search_query">\"%1$s\" ಅನ್ನು ಗ್ಲೋಬಲ್ ಸರ್ಚ್ ಮಾಡಿ</string>
-    <string name="updated_version">v%1$s ಗೆ ಅಪ್ಡೇಟ್ ಆಗಿದೆ</string>
     <string name="whats_new">ಹೊಸತೇನಿದೆ</string>
     <string name="requires_app_restart">ಅನ್ವಯಿಸಲು ಅಪ್ಲಿಕೇಶನ್ ಮರುಪ್ರಾರಂಭದ ಅಗತ್ಯವಿದೆ</string>
     <string name="label_network">ಅಡ್ವಾನ್ಸ್ಡ್ ಸೆಕ್ಷನ್</string>

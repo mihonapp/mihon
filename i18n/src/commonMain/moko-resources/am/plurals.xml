@@ -5,7 +5,7 @@
         <item quantity="other">%d ምድቦች</item>
     </plurals>
     <plurals name="lock_after_mins">
-        <item quantity="one">ከ 1 ደቂቃ በኋላ</item>
+        <item quantity="one">ከ %1$s ደቂቃ በኋላ</item>
         <item quantity="other">ከ %1$s ደቂቃዎች በኋላ</item>
     </plurals>
     <plurals name="restore_completed_message">

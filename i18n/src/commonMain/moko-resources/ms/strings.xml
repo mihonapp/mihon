@@ -393,7 +393,6 @@
     <string name="pref_read_with_tapping_inverted">Songsangkan zon ketik</string>
     <string name="unknown_status">Status tidak diketahui</string>
     <string name="unknown_author">Pengarang tidak diketahui</string>
-    <string name="updated_version">Dikemas kini ke v%1$s</string>
     <string name="whats_new">Apa yang terbaharu</string>
     <string name="action_sort_date_added">Tarikh ditambah</string>
     <string name="download_insufficient_space">Memuat turun tidak berjaya kerana kekurangan ruang storan</string>
@@ -542,7 +541,7 @@
     <string name="notification_size_warning">Kemas kini yang besar membahayakan sumber dan mengakibatkan sumber menjadi perlahan dan juga peningkatan penggunaan bateri. Ketik untuk ketahui selebihnya.</string>
     <string name="connected_to_wifi">Hanya menggunakan Wi-Fi</string>
     <string name="update_72hour">Setiap 3 hari</string>
-    <string name="download_queue_size_warning">Amaran: muat turun secara pukal besar boleh menyebabkan sumber menjadi lebih perlahan dan/atau menyekat Mihon %s. Ketik untuk ketahui selebihnya.</string>
+    <string name="download_queue_size_warning">Amaran: muat turun secara pukal besar boleh menyebabkan sumber menjadi lebih perlahan dan/atau menyekat %s. Ketik untuk ketahui selebihnya.</string>
     <string name="ext_update_all">Kemas kini semua</string>
     <string name="channel_app_updates">Kemas kini aplikasi</string>
     <string name="pref_auto_clear_chapter_cache">Hapus cache bab apabila membuka aplikasi</string>
@@ -564,7 +563,6 @@
     <string name="skipped_reason_not_started">Dilangkau kerana tiada bab yang dibaca</string>
     <string name="pref_landscape_zoom">Zum secara automatik pada imej lebar</string>
     <string name="pref_navigate_pan">Panorama imej lebar</string>
-    <string name="notification_update_error">%1$d kemas kini gagal</string>
     <string name="learn_more">Ketik untuk ketahui selebihnya</string>
     <string name="rotation_reverse_portrait">Potret terbalik</string>
     <string name="action_move_to_top_all_for_series">Alih siri ke atas</string>
@@ -745,9 +743,6 @@
     <string name="file_null_uri_error">Tiada fail dipilih</string>
     <string name="onboarding_permission_install_apps">Pasang kebenaran aplikasi</string>
     <string name="onboarding_permission_ignore_battery_opts">Penggunaan bateri latar belakang</string>
-    <string name="action_add_repo">Tambah repositori</string>
-    <string name="action_delete_repo">Padam repositori</string>
-    <string name="invalid_repo_name">Repositori URL tidak sah</string>
     <string name="action_create">Buat</string>
     <string name="pref_storage_usage">Penggunaan storan</string>
     <string name="manga_interval_custom_amount">Kekerapan kemas kini tersuai:</string>
@@ -755,7 +750,6 @@
     <string name="onboarding_storage_help_info">Mengemaskini daripada versi lama dan tidak pasti yang mana nak dipilih? Rujuk pada panduan storan untuk maklumat lanjut.</string>
     <string name="onboarding_permission_notifications">Kebenaran pemberitahuan</string>
     <string name="onboarding_guides_returning_user">Memasang semula %s?</string>
-    <string name="error_repo_exists">Repositori ini sudah wujud!</string>
     <string name="no_location_set">Tiada lokasi storan ditetapkan</string>
     <string name="relative_time_span_never">Tidak pernah</string>
     <string name="onboarding_storage_help_action">Panduan storan</string>
@@ -764,13 +758,8 @@
     <string name="onboarding_permission_action_grant">Benarkan</string>
     <string name="onboarding_permission_notifications_description">Dapatkan pemberitahuan untuk kemas kini pustaka dan banyak lagi.</string>
     <string name="ext_permission_install_apps_warning">Kebenaran diperlukan untuk pasang sambungan. Ketik di sini untuk benarkan.</string>
-    <string name="label_extension_repos">repositori sambungan</string>
-    <string name="label_add_repo_input">URL repositori</string>
-    <string name="delete_repo_confirmation">Adakah anda bersetuju untuk padam repositori \"%s\"?</string>
     <string name="action_sort_tracker_score">Skor penjejak</string>
     <string name="ext_revoke_trust">Batalkan sambungan dipercayakan yang tidak diketahui</string>
-    <string name="information_empty_repos">Anda tidak menetapkan repositori.</string>
-    <string name="action_add_repo_message">Tambah repositori tambahan pada Mihon %s. Ini mestilah URL yang berakhir dengan \"index.min.json\".</string>
     <string name="action_open_repo">Buka sumber repositori</string>
     <string name="manga_interval_expected_update_soon">Tidak lama lagi</string>
     <string name="scanlator">Pemindai</string>
@@ -785,14 +774,12 @@
     <string name="pref_flash_page_summ">Mengurangkan kesan \'ghosting\' pada skrin e-ink</string>
     <string name="last_auto_backup_info">Sandaran automatik terakhir:%s</string>
     <string name="notification_updating_progress">Mengemaskini pustaka… (%s)</string>
-    <string name="action_replace_repo">Ganti</string>
     <string name="label_upcoming">Akan datang</string>
     <string name="pref_webtoon_disable_zoom_out">Lumpuhkan zum keluar</string>
     <string name="action_view_upcoming">Lihat kemas kini yang akan datang</string>
     <string name="upcoming_guide">Panduan yang akan datang</string>
     <string name="upcoming_calendar_next">Bulan depan</string>
     <string name="upcoming_calendar_prev">Bulan sebelumnya</string>
-    <string name="label_donate">Menderma</string>
     <string name="label_auto">Otomatis</string>
     <string name="action_sort_random">Rawak</string>
     <string name="action_copy_link">Pautan salin</string>
@@ -819,9 +806,6 @@
     <string name="ext_remove">Alih keluar</string>
     <string name="ext_confirm_remove">Alih keluar Sambungan?</string>
     <string name="remove_private_extension_message">Adakah anda benar -benar mahu mengeluarkan \"%s\" Lanjutan?</string>
-    <string name="add_repo_confirmation">Adakah anda ingin menambah repo \"%s\"?</string>
-    <string name="action_replace_repo_title">Menandatangani cap jari utama sudah ada</string>
-    <string name="action_replace_repo_message">Repositori %1$s mempunyai cap jari utama yang menandatangani sama seperti %2$s.\nSekiranya ini dijangka, %2$s akan diganti, jika tidak hubungi penyelenggara repo anda.</string>
     <string name="pref_flash_duration">Tempoh kilat</string>
     <string name="pref_flash_duration_summary">%1$s ms</string>
     <string name="pref_flash_page_interval">Flash setiap</string>
@@ -840,7 +824,6 @@
     <string name="pref_auto_update_manga_on_mark_read">Kemas kini kemajuan apabila ditandakan seperti yang dibaca</string>
     <string name="invalid_backup_file_json">Sandaran json tidak disokong</string>
     <string name="invalid_backup_file_unknown">Fail sandaran rosak</string>
-    <string name="extensionRepo_settings">Repos lanjutan</string>
     <string name="non_library_settings">Semua penyertaan membaca</string>
     <string name="export">Eksport</string>
     <string name="library_list">Senarai Perpustakaan</string>
@@ -907,4 +890,5 @@
     <string name="pref_download_concurrent_sources">Muat turun sumber serentak</string>
     <string name="pref_download_concurrent_pages">Muat turun halaman serentak</string>
     <string name="pref_download_concurrent_pages_summary">Halaman yang dimuat turun secara serentak setiap sumber</string>
+    <string name="action_webview_close_tab">Tab Tutup</string>
 </resources>

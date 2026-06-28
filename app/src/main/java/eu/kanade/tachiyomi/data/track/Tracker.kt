@@ -1,12 +1,10 @@
 package eu.kanade.tachiyomi.data.track
 
 import androidx.annotation.CallSuper
-import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 import okhttp3.OkHttpClient
 import tachiyomi.domain.track.model.Track as DomainTrack
@@ -24,9 +22,6 @@ interface Tracker {
 
     val supportsPrivateTracking: Boolean
 
-    @ColorInt
-    fun getLogoColor(): Int
-
     @DrawableRes
     fun getLogo(): Int
 
@@ -40,7 +35,7 @@ interface Tracker {
 
     fun getCompletionStatus(): Long
 
-    fun getScoreList(): ImmutableList<String>
+    fun getScoreList(): List<String>
 
     // TODO: Store all scores as 10 point in the future maybe?
     fun get10PointScore(track: DomainTrack): Double

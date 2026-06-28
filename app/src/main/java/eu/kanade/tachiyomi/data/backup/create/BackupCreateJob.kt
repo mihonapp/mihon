@@ -89,7 +89,7 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
 
         fun setupTask(context: Context, prefInterval: Int? = null) {
             val backupPreferences = Injekt.get<BackupPreferences>()
-            val interval = prefInterval ?: backupPreferences.backupInterval().get()
+            val interval = prefInterval ?: backupPreferences.backupInterval.get()
             if (interval > 0) {
                 val constraints = Constraints(
                     requiresBatteryNotLow = true,

@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.track.anilist
 
-import android.graphics.Color
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.tachiyomi.R
@@ -9,9 +8,6 @@ import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.DeletableTracker
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALOAuth
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.json.Json
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
@@ -44,7 +40,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
 
     override val supportsPrivateTracking: Boolean = true
 
-    private val scorePreference = trackPreferences.anilistScoreType()
+    private val scorePreference = trackPreferences.anilistScoreType
 
     init {
         // If the preference is an int from APIv1, logout user to force using APIv2
@@ -56,9 +52,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
         }
     }
 
-    override fun getLogo() = R.drawable.ic_tracker_anilist
-
-    override fun getLogoColor() = Color.rgb(18, 25, 35)
+    override fun getLogo() = R.drawable.brand_anilist
 
     override fun getStatusList(): List<Long> {
         return listOf(READING, COMPLETED, ON_HOLD, DROPPED, PLAN_TO_READ, REREADING)
@@ -80,18 +74,18 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
 
     override fun getCompletionStatus(): Long = COMPLETED
 
-    override fun getScoreList(): ImmutableList<String> {
+    override fun getScoreList(): List<String> {
         return when (scorePreference.get()) {
             // 10 point
-            POINT_10 -> IntRange(0, 10).map(Int::toString).toImmutableList()
+            POINT_10 -> IntRange(0, 10).map(Int::toString)
             // 100 point
-            POINT_100 -> IntRange(0, 100).map(Int::toString).toImmutableList()
+            POINT_100 -> IntRange(0, 100).map(Int::toString)
             // 5 stars
-            POINT_5 -> IntRange(0, 5).map { "$it ★" }.toImmutableList()
+            POINT_5 -> IntRange(0, 5).map { "$it ★" }
             // Smiley
-            POINT_3 -> persistentListOf("-", "😦", "😐", "😊")
+            POINT_3 -> listOf("-", "😦", "😐", "😊")
             // 10 point decimal
-            POINT_10_DECIMAL -> IntRange(0, 100).map { (it / 10f).toString() }.toImmutableList()
+            POINT_10_DECIMAL -> IntRange(0, 100).map { (it / 10f).toString() }
             else -> throw Exception("Unknown score type")
         }
     }
