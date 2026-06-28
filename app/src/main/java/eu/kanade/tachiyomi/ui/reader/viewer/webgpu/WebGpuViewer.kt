@@ -229,6 +229,11 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
     }
 
     @Synchronized
+    private fun popPreload(): ReaderPage? {
+        return decodeQueue.removeFirstOrNull()
+    }
+
+    @Synchronized
     private fun preloadPages(page: ReaderPage) {
         val pages = page.chapter.pages ?: return
 
@@ -250,7 +255,7 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
         decodeJob ?: CoroutineScope(Dispatchers.Default).launch {
             try {
                 while (true) {
-                    decodeQueue.removeFirstOrNull()?.let { createPage(it) } ?: return@launch
+                    popPreload()?.let { createPage(it) } ?: return@launch
                 }
             } finally {
                 decodeJob = null
