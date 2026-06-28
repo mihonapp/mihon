@@ -5,7 +5,6 @@ import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
-import androidx.compose.ui.util.fastCoerceAtLeast
 import ca.mpreg.imagedecoder.ImageDecoder
 import ca.mpreg.webgpuviewer.Image
 import ca.mpreg.webgpuviewer.Trim
@@ -29,10 +28,14 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.injectLazy
 import java.io.InputStream
+import kotlin.math.max
+import kotlin.math.min
 
 class WebGpuViewer(val activity: ReaderActivity) : Viewer {
 
@@ -64,19 +67,17 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
 
                 val pages = currentPage.chapter.pages ?: return@fetch null
 
-                val currentPageIndex = pages.indexOf(currentPage)
-
                 when (index) {
                     0 -> createPage(currentPage)
 
-                    1 -> if (currentPageIndex + 1 < pages.size) {
-                        pages[currentPageIndex + 1]
+                    1 -> if (currentPage.index + 1 < pages.size) {
+                        pages[currentPage.index + 1]
                     } else {
                         nextChapter?.pages?.first()
                     }?.let { createPage(it) }
 
-                    -1 -> if (currentPageIndex - 1 >= 0) {
-                        pages[currentPageIndex - 1]
+                    -1 -> if (currentPage.index - 1 >= 0) {
+                        pages[currentPage.index - 1]
                     } else {
                         prevChapter?.pages?.last()
                     }?.let { createPage(it) }
@@ -164,18 +165,14 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
 
     var currentPage: ReaderPage? = null
 
+    val preloadCount = 3
     val cacheSize = 10
 
-    val pageCache = object : LinkedHashMap<ReaderPage, WebGpuImageViewerPage?>(16, 0.75f, true) {
-        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<ReaderPage, WebGpuImageViewerPage?>?): Boolean {
-            return size > cacheSize
-        }
-    }
+    val cacheMutex = Mutex()
+    val pageCache = LinkedHashMap<ReaderPage, WebGpuImageViewerPage?>(cacheSize, 0.75f, true)
 
     var decodeJob: Job? = null
     val decodeQueue = mutableListOf<ReaderPage>()
-
-    val preloadCount = 3
 
     private suspend fun loadPage(page: ReaderPage): InputStream? {
         val loader = page.chapter.pageLoader ?: return null
@@ -209,7 +206,8 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
     }
 
     private suspend fun createPage(page: ReaderPage): WebGpuImageViewerPage? {
-        return pageCache[page] ?: loadPage(page)?.use {
+        return cacheMutex.withLock { pageCache[page] } ?: loadPage(page)?.use {
+            Log.i("WebGpuViewer", "createPage: ${page.index} $page")
             withContext(Dispatchers.Default) {
                 val dec = ImageDecoder.new(it)
                 dec.decodeNext()
@@ -226,7 +224,12 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
                 }
             }
         }?.also {
-            pageCache[page] = it
+            cacheMutex.withLock {
+                pageCache[page] = it
+                while (pageCache.size > cacheSize) {
+                    pageCache.remove(pageCache.keys.first())
+                }
+            }
         }
     }
 
@@ -239,20 +242,41 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
     private fun preloadPages(page: ReaderPage) {
         val pages = page.chapter.pages ?: return
 
-        val index = pages.indexOf(page)
-
         decodeQueue.clear()
 
-        for (i in (index..pages.lastIndex).take(preloadCount)) {
+        for (i in page.index until min(page.index + preloadCount, pages.size)) {
             decodeQueue.add(pages[i])
         }
 
-        for (i in ((index - 3).fastCoerceAtLeast(0) until index).take(preloadCount)) {
+        for (i in max(0, page.index - preloadCount) until page.index) {
             decodeQueue.add(pages[i])
         }
 
-        prevChapter?.pages?.lastOrNull()?.let { decodeQueue.add(it) }
-        nextChapter?.pages?.firstOrNull()?.let { decodeQueue.add(it) }
+        if (prevChapter?.state !is ReaderChapter.State.Loaded && page.index - preloadCount < 0) {
+            prevChapter?.let { chapter ->
+                CoroutineScope(Dispatchers.Default).launch {
+                    activity.viewModel.preload(chapter)
+                    preloadPages(page)
+                }
+            }
+        }
+
+        if (nextChapter?.state !is ReaderChapter.State.Loaded && page.index + preloadCount > pages.lastIndex) {
+            nextChapter?.let { chapter ->
+                CoroutineScope(Dispatchers.Default).launch {
+                    activity.viewModel.preload(chapter)
+                    preloadPages(page)
+                }
+            }
+        }
+
+        prevChapter?.pages?.takeLast(max(0, preloadCount - page.index))?.forEach { page ->
+            decodeQueue.add(page)
+        }
+
+        nextChapter?.pages?.take(max(0, preloadCount - (pages.lastIndex - page.index)))?.forEach { page ->
+            decodeQueue.add(page)
+        }
 
         decodeJob ?: CoroutineScope(Dispatchers.Default).launch {
             try {
@@ -288,7 +312,7 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
         currentPage?.let { preloadPages(it) }
 
         pager.state.apply {
-            val currentPageIndex = pages.indexOf(currentPage)
+            val currentPageIndex = currentPage?.index ?: 0
             if (currentPageIndex < pages.lastIndex || nextChapter != null) {
                 haveNext = true
             }
@@ -301,17 +325,15 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
 
                 val pages = currentPage.chapter.pages ?: return@onPageChange
 
-                val currentPageIndex = pages.indexOf(currentPage)
-
                 if (index == 1) {
-                    if (currentPageIndex + 1 < pages.size) {
-                        pages[currentPageIndex + 1]
+                    if (currentPage.index + 1 < pages.size) {
+                        pages[currentPage.index + 1]
                     } else {
                         nextChapter?.pages?.first()
                     }
                 } else {
-                    if (currentPageIndex - 1 >= 0) {
-                        pages[currentPageIndex - 1]
+                    if (currentPage.index - 1 >= 0) {
+                        pages[currentPage.index - 1]
                     } else {
                         prevChapter?.pages?.last()
                     }
@@ -321,31 +343,11 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
                     this@WebGpuViewer.currentPage = newPage
                     activity.onPageSelected(newPage)
 
-                    val currentPageIndex = pages.indexOf(newPage)
-
-                    if (currentPageIndex < pages.lastIndex || nextChapter != null) {
+                    if (newPage.index < pages.lastIndex || nextChapter != null) {
                         haveNext = true
                     }
-                    if (currentPageIndex > 0 || prevChapter != null) {
+                    if (newPage.index > 0 || prevChapter != null) {
                         havePrev = true
-                    }
-
-                    if (currentPageIndex == 0) {
-                        prevChapter?.let {
-                            CoroutineScope(Dispatchers.Default).launch {
-                                activity.viewModel.preload(it)
-                                preloadPages(newPage)
-                            }
-                        }
-                    }
-
-                    if (currentPageIndex == pages.size - 1) {
-                        nextChapter?.let {
-                            CoroutineScope(Dispatchers.Default).launch {
-                                activity.viewModel.preload(it)
-                                preloadPages(newPage)
-                            }
-                        }
                     }
 
                     preloadPages(newPage)
@@ -367,18 +369,16 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
 
         val pages = page.chapter.pages ?: return
 
-        val currentPageIndex = pages.indexOf(page)
-
-        if (currentPageIndex < pages.lastIndex || nextChapter != null) {
+        if (page.index < pages.lastIndex || nextChapter != null) {
             pager.state.haveNext = true
         }
-        if (currentPageIndex > 0 || prevChapter != null) {
+        if (page.index > 0 || prevChapter != null) {
             pager.state.havePrev = true
         }
-        if (currentPageIndex == 0) {
+        if (page.index == 0) {
             prevChapter?.let { activity.requestPreloadChapter(it) }
         }
-        if (currentPageIndex == pages.size - 1) {
+        if (page.index == pages.size - 1) {
             nextChapter?.let { activity.requestPreloadChapter(it) }
         }
 
