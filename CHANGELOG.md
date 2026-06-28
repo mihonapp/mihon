@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Other
+- Correct sort indexing on deleting a category ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#3279](https://github.com/mihonapp/mihon/pull/3279))
 
 ## [v0.20.0] - 2026-06-27
 ### Added
