@@ -164,13 +164,18 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
 
     var currentPage: ReaderPage? = null
 
-    val pageCache = mutableMapOf<ReaderPage, WebGpuImageViewerPage?>()
+    val cacheSize = 10
+
+    val pageCache = object : LinkedHashMap<ReaderPage, WebGpuImageViewerPage?>(16, 0.75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<ReaderPage, WebGpuImageViewerPage?>?): Boolean {
+            return size > cacheSize
+        }
+    }
 
     var decodeJob: Job? = null
     val decodeQueue = mutableListOf<ReaderPage>()
 
     val preloadCount = 3
-    val cacheSize = 10
 
     private suspend fun loadPage(page: ReaderPage): InputStream? {
         val loader = page.chapter.pageLoader ?: return null
@@ -204,7 +209,7 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
     }
 
     private suspend fun createPage(page: ReaderPage): WebGpuImageViewerPage? {
-        return pageCache[page] ?: loadPage(page)?.let {
+        return pageCache[page] ?: loadPage(page)?.use {
             withContext(Dispatchers.Default) {
                 val dec = ImageDecoder.new(it)
                 dec.decodeNext()
@@ -221,9 +226,6 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
                 }
             }
         }?.also {
-            while (pageCache.size > cacheSize) {
-                pageCache.remove(pageCache.keys.first())
-            }
             pageCache[page] = it
         }
     }
@@ -345,6 +347,7 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
                             }
                         }
                     }
+
                     preloadPages(newPage)
                 }
             }
