@@ -8,15 +8,16 @@ import android.view.MotionEvent
 import android.view.View
 import ca.mpreg.imagedecoder.ImageDecoder
 import ca.mpreg.webgpuviewer.Image
-import ca.mpreg.webgpuviewer.ImageShaderBasic
-import ca.mpreg.webgpuviewer.ImageShaderFlipLeft
-import ca.mpreg.webgpuviewer.ImageShaderFlipRight
-import ca.mpreg.webgpuviewer.ImageShaderStackLeft
-import ca.mpreg.webgpuviewer.ImageShaderStackRight
 import ca.mpreg.webgpuviewer.Trim
 import ca.mpreg.webgpuviewer.WebGpuImageView
 import ca.mpreg.webgpuviewer.WebGpuImageViewerPage
 import ca.mpreg.webgpuviewer.WebGpuRenderer
+import ca.mpreg.webgpuviewer.transitions.TransitionBasic
+import ca.mpreg.webgpuviewer.transitions.TransitionFlipLeft
+import ca.mpreg.webgpuviewer.transitions.TransitionFlipRight
+import ca.mpreg.webgpuviewer.transitions.TransitionSphere
+import ca.mpreg.webgpuviewer.transitions.TransitionStackLeft
+import ca.mpreg.webgpuviewer.transitions.TransitionStackRight
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -90,11 +91,12 @@ class WebGpuViewer(val activity: ReaderActivity, val isRTL: Boolean) : Viewer {
     fun updateTransitionAnimation() {
         pager.state.apply {
             transition = when (config.transitionAnimation) {
-                TransitionAnimation.DEFAULT -> ImageShaderBasic::render
-                TransitionAnimation.FLIP_LEFT -> ImageShaderFlipLeft::render
-                TransitionAnimation.FLIP_RIGHT -> ImageShaderFlipRight::render
-                TransitionAnimation.STACK_LEFT -> ImageShaderStackLeft::render
-                TransitionAnimation.STACK_RIGHT -> ImageShaderStackRight::render
+                TransitionAnimation.DEFAULT -> TransitionBasic::render
+                TransitionAnimation.FLIP_LEFT -> TransitionFlipLeft::render
+                TransitionAnimation.FLIP_RIGHT -> TransitionFlipRight::render
+                TransitionAnimation.STACK_LEFT -> TransitionStackLeft::render
+                TransitionAnimation.STACK_RIGHT -> TransitionStackRight::render
+                TransitionAnimation.SPHERE -> TransitionSphere::render
             }
         }
     }

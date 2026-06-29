@@ -226,6 +226,7 @@ class ReaderPreferences(
         FLIP_RIGHT(MR.strings.transition_animation_flip_right),
         STACK_LEFT(MR.strings.transition_animation_stack_left),
         STACK_RIGHT(MR.strings.transition_animation_stack_right),
+        SPHERE(MR.strings.transition_animation_sphere),
     }
 
     companion object {
