@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webgpu
 
+import android.graphics.PointF
 import android.util.Log
 import android.view.InputDevice
 import android.view.KeyEvent
@@ -20,6 +21,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
+import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -57,65 +59,60 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
     var prevChapter: ReaderChapter? = null
     var nextChapter: ReaderChapter? = null
 
-    //
+    val pages: List<ReaderPage>? get() = currentPage?.chapter?.pages
+    val currentPageIndex: Int get() = currentPage?.index ?: 0
+
+    val nextPage: ReaderPage?
+        get() = pages?.let { pages ->
+            if (currentPageIndex + 1 < pages.size) {
+                pages[currentPageIndex + 1]
+            } else {
+                nextChapter?.pages?.first()
+            }
+        }
+
+    val prevPage: ReaderPage?
+        get() = pages?.let { pages ->
+            if (currentPageIndex - 1 >= 0) {
+                pages[currentPageIndex - 1]
+            } else {
+                prevChapter?.pages?.last()
+            }
+        }
+
     init {
         pager.state.apply {
 //            transition = ImageShaderStackRight::render
 
             fetchPage = fetch@{ index ->
-                val currentPage = currentPage ?: return@fetch null
-
-                val pages = currentPage.chapter.pages ?: return@fetch null
-
                 when (index) {
-                    0 -> createPage(currentPage)
-
-                    1 -> if (currentPage.index + 1 < pages.size) {
-                        pages[currentPage.index + 1]
-                    } else {
-                        nextChapter?.pages?.first()
-                    }?.let { createPage(it) }
-
-                    -1 -> if (currentPage.index - 1 >= 0) {
-                        pages[currentPage.index - 1]
-                    } else {
-                        prevChapter?.pages?.last()
-                    }?.let { createPage(it) }
-
+                    0 -> currentPage?.let { createPage(it) }
+                    1 -> nextPage?.let { createPage(it) }
+                    -1 -> prevPage?.let { createPage(it) }
                     else -> null
                 }
             }
+
+            onTap = { offset ->
+                Log.i("WebGpuViewer", "onTap $offset")
+                when (config.navigator.getAction(PointF(offset.x, offset.y))) {
+                    NavigationRegion.MENU -> activity.toggleMenu()
+                    NavigationRegion.NEXT -> moveToNext()
+                    NavigationRegion.PREV -> moveToPrevious()
+                    NavigationRegion.RIGHT -> moveRight()
+                    NavigationRegion.LEFT -> moveLeft()
+                }
+            }
+
+            onLongTap = { offset ->
+                Log.i("WebGpuViewer", "onLongTap $offset")
+                if (activity.viewModel.state.value.menuVisible || config.longTapEnabled) {
+                    currentPage?.let {
+                        activity.onPageLongTap(it)
+                    }
+                }
+            }
         }
-
-//        pager.tapListener = { event ->
-//            val viewPosition = IntArray(2)
-//            pager.getLocationOnScreen(viewPosition)
-//            val viewPositionRelativeToWindow = IntArray(2)
-//            pager.getLocationInWindow(viewPositionRelativeToWindow)
-//            val pos = PointF(
-//                (event.rawX - viewPosition[0] + viewPositionRelativeToWindow[0]) / pager.width,
-//                (event.rawY - viewPosition[1] + viewPositionRelativeToWindow[1]) / pager.height,
-//            )
-
-//        activity.onPageSelected(page)
-//            when (config.navigator.getAction(pos)) {
-//                NavigationRegion.MENU -> activity.toggleMenu()
-//                NavigationRegion.NEXT -> moveToNext()
-//                NavigationRegion.PREV -> moveToPrevious()
-//                NavigationRegion.RIGHT -> moveRight()
-//                NavigationRegion.LEFT -> moveLeft()
-//            }
-//        }
-//        pager.longTapListener = f@{
-//            if (activity.viewModel.state.value.menuVisible || config.longTapEnabled) {
-//                val item = adapter.items.getOrNull(pager.currentItem)
-//                if (item is ReaderPage) {
-//                    activity.onPageLongTap(item)
-//                    return@f true
-//                }
-//            }
-//            false
-//        }
 
 //        config.dualPageSplitChangedListener = { enabled ->
 //            if (!enabled) {
@@ -144,8 +141,6 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
     override fun getView(): View {
         return pager
     }
-
-    var pages: List<ReaderPage>? = null
 
     /**
      * Called when a [ChapterTransition] is marked as active. It request the
@@ -224,9 +219,11 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
                 }
             }
         }?.also {
+            Log.i("WebGpuViewer", "store in cache: ${page.index} $page")
             cacheMutex.withLock {
                 pageCache[page] = it
                 while (pageCache.size > cacheSize) {
+                    Log.i("WebGpuViewer", "remove from cache: ${pageCache.keys.first().index}")
                     pageCache.remove(pageCache.keys.first())
                 }
             }
@@ -307,6 +304,8 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
                     currentPage?.let { page -> preloadPages(page) }
                 }
             }
+
+            currentPage?.let { activity.onPageSelected(it) }
         }
 
         currentPage?.let { preloadPages(it) }
@@ -321,27 +320,17 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
             }
 
             onPageChange = onPageChange@{ index ->
-                val currentPage = currentPage ?: return@onPageChange
-
-                val pages = currentPage.chapter.pages ?: return@onPageChange
-
+                if (!activity.isScrollingThroughPages) {
+                    activity.hideMenu()
+                }
                 if (index == 1) {
-                    if (currentPage.index + 1 < pages.size) {
-                        pages[currentPage.index + 1]
-                    } else {
-                        nextChapter?.pages?.first()
-                    }
+                    nextPage
                 } else {
-                    if (currentPage.index - 1 >= 0) {
-                        pages[currentPage.index - 1]
-                    } else {
-                        prevChapter?.pages?.last()
-                    }
+                    prevPage
                 }?.let { newPage ->
-                    val pages = newPage.chapter.pages ?: return@onPageChange
-
                     this@WebGpuViewer.currentPage = newPage
-                    activity.onPageSelected(newPage)
+
+                    val pages = newPage.chapter.pages ?: return@onPageChange
 
                     if (newPage.index < pages.lastIndex || nextChapter != null) {
                         haveNext = true
@@ -350,6 +339,7 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
                         havePrev = true
                     }
 
+                    activity.onPageSelected(newPage)
                     preloadPages(newPage)
                 }
             }
