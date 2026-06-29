@@ -396,7 +396,7 @@ class WebGpuViewer(val activity: ReaderActivity, val isRTL: Boolean) : Viewer {
             if (isRTL) pager.state.havePrev = true else pager.state.haveNext = true
         }
         if (page.index > 0 || prevChapter != null) {
-            pager.state.havePrev = true
+            if (isRTL) pager.state.haveNext = true else pager.state.havePrev = true
         }
         if (page.index == 0) {
             prevChapter?.let { activity.requestPreloadChapter(it) }
@@ -459,36 +459,21 @@ class WebGpuViewer(val activity: ReaderActivity, val isRTL: Boolean) : Viewer {
         val ctrlPressed = event.metaState.and(KeyEvent.META_CTRL_ON) > 0
         when (event.keyCode) {
             KeyEvent.KEYCODE_VOLUME_DOWN -> {
-                if (isUp) activity.toggleMenu()
+                if (!config.volumeKeysEnabled || activity.viewModel.state.value.menuVisible) {
+                    return false
+                } else if (isUp) {
+                    if (!config.volumeKeysInverted) moveDown() else moveUp()
+                }
             }
-        }
 
+            KeyEvent.KEYCODE_VOLUME_UP -> {
+                if (!config.volumeKeysEnabled || activity.viewModel.state.value.menuVisible) {
+                    return false
+                } else if (isUp) {
+                    if (!config.volumeKeysInverted) moveUp() else moveDown()
+                }
+            }
 
-//        when (event.keyCode) {
-//            KeyEvent.KEYCODE_VOLUME_DOWN -> {
-//                if (!config.volumeKeysEnabled || activity.viewModel.state.value.menuVisible) {
-//                    return false
-//                } else if (isUp) {
-//                    if (!config.volumeKeysInverted) moveDown() else moveUp()
-//                }
-//            }
-//            KeyEvent.KEYCODE_VOLUME_UP -> {
-//                if (!config.volumeKeysEnabled || activity.viewModel.state.value.menuVisible) {
-//                    return false
-//                } else if (isUp) {
-//                    if (!config.volumeKeysInverted) moveUp() else moveDown()
-//                }
-//            }
-//            KeyEvent.KEYCODE_DPAD_RIGHT -> {
-//                if (isUp) {
-//                    if (ctrlPressed) moveToNext() else moveRight()
-//                }
-//            }
-//            KeyEvent.KEYCODE_DPAD_LEFT -> {
-//                if (isUp) {
-//                    if (ctrlPressed) moveToPrevious() else moveLeft()
-//                }
-//            }
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
                 if (isUp) {
                     if (ctrlPressed) moveToNext() else moveRight()
