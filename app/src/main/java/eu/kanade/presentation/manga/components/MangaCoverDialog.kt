@@ -193,47 +193,48 @@ fun MangaCoverDialog(
                     .let(view.context.imageLoader::enqueue)
 
                 WebGpuImageViewer(state = state)
-            } else {
-                val statusBarPaddingPx = with(LocalDensity.current) { contentPadding.calculateTopPadding().roundToPx() }
-                val bottomPaddingPx = with(LocalDensity.current) { contentPadding.calculateBottomPadding().roundToPx() }
+                return@Scaffold
+            }
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clickableNoIndication(onClick = onDismissRequest),
-                ) {
-                    AndroidView(
-                        factory = {
-                            ReaderPageImageView(it).apply {
-                                onViewClicked = onDismissRequest
-                                clipToPadding = false
-                                clipChildren = false
+            val statusBarPaddingPx = with(LocalDensity.current) { contentPadding.calculateTopPadding().roundToPx() }
+            val bottomPaddingPx = with(LocalDensity.current) { contentPadding.calculateBottomPadding().roundToPx() }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickableNoIndication(onClick = onDismissRequest),
+            ) {
+                AndroidView(
+                    factory = {
+                        ReaderPageImageView(it).apply {
+                            onViewClicked = onDismissRequest
+                            clipToPadding = false
+                            clipChildren = false
+                        }
+                    },
+                    update = { view ->
+                        val request = ImageRequest.Builder(view.context)
+                            .data(manga)
+                            .size(Size.ORIGINAL)
+                            .memoryCachePolicy(CachePolicy.DISABLED)
+                            .target { image ->
+                                val drawable = image.asDrawable(view.context.resources)
+                                // Copy bitmap in case it came from memory cache
+                                // Because SSIV needs to thoroughly read the image
+                                val copy = (drawable as? BitmapDrawable)
+                                    ?.bitmap
+                                    ?.copy(Bitmap.Config.HARDWARE, false)
+                                    ?.toDrawable(view.context.resources)
+                                    ?: drawable
+                                view.setImage(copy, ReaderPageImageView.Config(zoomDuration = 500))
                             }
-                        },
-                        update = { view ->
-                            val request = ImageRequest.Builder(view.context)
-                                .data(manga)
-                                .size(Size.ORIGINAL)
-                                .memoryCachePolicy(CachePolicy.DISABLED)
-                                .target { image ->
-                                    val drawable = image.asDrawable(view.context.resources)
-                                    // Copy bitmap in case it came from memory cache
-                                    // Because SSIV needs to thoroughly read the image
-                                    val copy = (drawable as? BitmapDrawable)
-                                        ?.bitmap
-                                        ?.copy(Bitmap.Config.HARDWARE, false)
-                                        ?.toDrawable(view.context.resources)
-                                        ?: drawable
-                                    view.setImage(copy, ReaderPageImageView.Config(zoomDuration = 500))
-                                }
-                                .build()
-                            view.context.imageLoader.enqueue(request)
+                            .build()
+                        view.context.imageLoader.enqueue(request)
 
-                            view.updatePadding(top = statusBarPaddingPx, bottom = bottomPaddingPx)
-                        },
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                }
+                        view.updatePadding(top = statusBarPaddingPx, bottom = bottomPaddingPx)
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
         }
     }
