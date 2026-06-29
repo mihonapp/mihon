@@ -507,6 +507,7 @@
     <string name="transition_animation_flip_right">Page flip (right)</string>
     <string name="transition_animation_stack_left">Stack (left)</string>
     <string name="transition_animation_stack_right">Stack (right)</string>
+    <string name="transition_animation_sphere">Sphere</string>
 
       <!-- Downloads section -->
     <string name="pref_category_delete_chapters">Delete chapters</string>
