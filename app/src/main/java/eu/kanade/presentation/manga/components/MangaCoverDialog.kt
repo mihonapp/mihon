@@ -39,9 +39,10 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.updatePadding
-import ca.mpreg.webgpuviewer.Image
-import ca.mpreg.webgpuviewer.WebGpuImageViewerSingle
-import ca.mpreg.webgpuviewer.WebGpuImageViewerSingleState
+import ca.mpreg.webgpuviewer.renderer.Image
+import ca.mpreg.webgpuviewer.viewer.WebGpuImageViewer
+import ca.mpreg.webgpuviewer.viewer.WebGpuImageViewerPage
+import ca.mpreg.webgpuviewer.viewer.WebGpuImageViewerState
 import coil3.asDrawable
 import coil3.imageLoader
 import coil3.request.CachePolicy
@@ -161,7 +162,7 @@ fun MangaCoverDialog(
             },
         ) { contentPadding ->
             if (useNewRenderer) {
-                val state = WebGpuImageViewerSingleState()
+                val state = WebGpuImageViewerState()
 
                 state.dpi = view.resources.displayMetrics.densityDpi / 100f
 
@@ -173,16 +174,25 @@ fun MangaCoverDialog(
                     .target { result ->
                         val res = (result as ImageDecoder2.DecodeResultImage).res
 
-                        state.post {
-                            state.image = Image(res.image, res.width, res.height)
-                            state.home()
-                            state.render()
+                        var page: WebGpuImageViewerPage? = null
+                        state.apply {
+                            fetchPage = { index ->
+                                page ?: WebGpuImageViewerPage(Image(res.image, res.width, res.height)).apply {
+                                    page = this
+
+                                    parent = state
+                                    x = homeX
+                                    y = homeY
+                                    scale = homeScale
+                                }
+                            }
+                            render()
                         }
                     }
                     .build()
                     .let(view.context.imageLoader::enqueue)
 
-                WebGpuImageViewerSingle(state = state)
+                WebGpuImageViewer(state = state)
             } else {
                 val statusBarPaddingPx = with(LocalDensity.current) { contentPadding.calculateTopPadding().roundToPx() }
                 val bottomPaddingPx = with(LocalDensity.current) { contentPadding.calculateBottomPadding().roundToPx() }
