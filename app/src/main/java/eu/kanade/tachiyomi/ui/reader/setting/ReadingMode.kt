@@ -5,7 +5,6 @@ import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
-import eu.kanade.tachiyomi.ui.reader.viewer.pager.VerticalPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import tachiyomi.i18n.MR
@@ -17,8 +16,7 @@ enum class ReadingMode(
     val direction: Direction? = null,
     val type: ViewerType? = null,
 ) {
-    DEFAULT(MR.strings.label_default, R.drawable.ic_reader_default_24dp, 0x00000000),
-    LEFT_TO_RIGHT(
+    DEFAULT(MR.strings.label_default, R.drawable.ic_reader_default_24dp, 0x00000000), LEFT_TO_RIGHT(
         MR.strings.left_to_right_viewer,
         R.drawable.ic_reader_ltr_24dp,
         0x00000001,
@@ -67,9 +65,9 @@ enum class ReadingMode(
 
         fun toViewer(preference: Int?, activity: ReaderActivity): Viewer {
             return when (fromPreference(preference)) {
-                LEFT_TO_RIGHT -> WebGpuViewer(activity, false)
-                RIGHT_TO_LEFT -> WebGpuViewer(activity, true)
-                VERTICAL -> VerticalPagerViewer(activity)
+                LEFT_TO_RIGHT -> WebGpuViewer(activity, isReversed = false, isVertical = false)
+                RIGHT_TO_LEFT -> WebGpuViewer(activity, isReversed = true, isVertical = false)
+                VERTICAL -> WebGpuViewer(activity, isReversed = false, isVertical = true)
                 WEBTOON -> WebtoonViewer(activity)
                 CONTINUOUS_VERTICAL -> WebtoonViewer(activity, isContinuous = false)
                 DEFAULT -> throw IllegalStateException("Preference value must be resolved: $preference")

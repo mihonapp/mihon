@@ -47,7 +47,7 @@ import java.io.InputStream
 import kotlin.math.max
 import kotlin.math.min
 
-class WebGpuViewer(val activity: ReaderActivity, val isRTL: Boolean) : Viewer {
+class WebGpuViewer(val activity: ReaderActivity, val isReversed: Boolean, val isVertical: Boolean) : Viewer {
 
     val downloadManager: DownloadManager by injectLazy()
 
@@ -57,7 +57,7 @@ class WebGpuViewer(val activity: ReaderActivity, val isRTL: Boolean) : Viewer {
      * View pager used by this viewer. It's abstract to implement L2R, R2L and vertical pagers on
      * top of this class.
      */
-    val pager = WebGpuImageView(activity)
+    val pager = WebGpuImageView(activity, isVertical=isVertical)
 
     /**
      * Configuration used by the pager, like allow taps, scale mode on images, page transitions...
@@ -91,12 +91,12 @@ class WebGpuViewer(val activity: ReaderActivity, val isRTL: Boolean) : Viewer {
     fun updateTransitionAnimation() {
         pager.state.apply {
             transition = when (config.transitionAnimation) {
-                TransitionAnimation.DEFAULT -> TransitionBasic::render
-                TransitionAnimation.FLIP_LEFT -> TransitionFlipLeft::render
-                TransitionAnimation.FLIP_RIGHT -> TransitionFlipRight::render
-                TransitionAnimation.STACK_LEFT -> TransitionStackLeft::render
-                TransitionAnimation.STACK_RIGHT -> TransitionStackRight::render
-                TransitionAnimation.SPHERE -> TransitionSphere::render
+                TransitionAnimation.DEFAULT -> if (isVertical) TransitionBasic.Vertical else TransitionBasic
+                TransitionAnimation.FLIP_LEFT -> TransitionFlipLeft
+                TransitionAnimation.FLIP_RIGHT -> TransitionFlipRight
+                TransitionAnimation.STACK_LEFT -> TransitionStackLeft
+                TransitionAnimation.STACK_RIGHT -> TransitionStackRight
+                TransitionAnimation.SPHERE -> TransitionSphere
             }
         }
     }
@@ -106,7 +106,7 @@ class WebGpuViewer(val activity: ReaderActivity, val isRTL: Boolean) : Viewer {
 
         pager.state.apply {
             fetchPage = fetch@{ index ->
-                val i = if (isRTL) -index else index
+                val i = if (isReversed) -index else index
                 when (i) {
                     0 -> currentPage?.let { createPage(it) }
                     1 -> nextPage?.let { createPage(it) }
@@ -347,14 +347,14 @@ class WebGpuViewer(val activity: ReaderActivity, val isRTL: Boolean) : Viewer {
         pager.state.apply {
             val currentPageIndex = currentPage?.index ?: 0
             if (currentPageIndex < pages.lastIndex || nextChapter != null) {
-                if (isRTL) havePrev = true else haveNext = true
+                if (isReversed) havePrev = true else haveNext = true
             }
             if (currentPageIndex > 0 || chapters.prevChapter != null) {
-                if (isRTL) haveNext = true else havePrev = true
+                if (isReversed) haveNext = true else havePrev = true
             }
 
             onPageChange = onPageChange@{ delta ->
-                val index = if (isRTL) -delta else delta
+                val index = if (isReversed) -delta else delta
                 if (!activity.isScrollingThroughPages) {
                     activity.hideMenu()
                 }
@@ -368,10 +368,10 @@ class WebGpuViewer(val activity: ReaderActivity, val isRTL: Boolean) : Viewer {
                     val pages = newPage.chapter.pages ?: return@onPageChange
 
                     if (newPage.index < pages.lastIndex || nextChapter != null) {
-                        if (isRTL) havePrev = true else haveNext = true
+                        if (isReversed) havePrev = true else haveNext = true
                     }
                     if (newPage.index > 0 || prevChapter != null) {
-                        if (isRTL) haveNext = true else havePrev = true
+                        if (isReversed) haveNext = true else havePrev = true
                     }
 
                     activity.onPageSelected(newPage)
@@ -395,10 +395,10 @@ class WebGpuViewer(val activity: ReaderActivity, val isRTL: Boolean) : Viewer {
         val pages = page.chapter.pages ?: return
 
         if (page.index < pages.lastIndex || nextChapter != null) {
-            if (isRTL) pager.state.havePrev = true else pager.state.haveNext = true
+            if (isReversed) pager.state.havePrev = true else pager.state.haveNext = true
         }
         if (page.index > 0 || prevChapter != null) {
-            if (isRTL) pager.state.haveNext = true else pager.state.havePrev = true
+            if (isReversed) pager.state.haveNext = true else pager.state.havePrev = true
         }
         if (page.index == 0) {
             prevChapter?.let { activity.requestPreloadChapter(it) }
