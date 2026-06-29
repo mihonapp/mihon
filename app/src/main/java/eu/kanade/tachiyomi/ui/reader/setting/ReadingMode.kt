@@ -5,7 +5,9 @@ import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.VerticalPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import tachiyomi.i18n.MR
 
 enum class ReadingMode(
@@ -64,15 +66,14 @@ enum class ReadingMode(
         }
 
         fun toViewer(preference: Int?, activity: ReaderActivity): Viewer {
-            return WebGpuViewer(activity)
-//            return when (fromPreference(preference)) {
-//                LEFT_TO_RIGHT -> L2RPagerViewer(activity)
-//                RIGHT_TO_LEFT -> R2LPagerViewer(activity)
-//                VERTICAL -> VerticalPagerViewer(activity)
-//                WEBTOON -> WebtoonViewer(activity)
-//                CONTINUOUS_VERTICAL -> WebtoonViewer(activity, isContinuous = false)
-//                DEFAULT -> throw IllegalStateException("Preference value must be resolved: $preference")
-//            }
+            return when (fromPreference(preference)) {
+                LEFT_TO_RIGHT -> WebGpuViewer(activity, false)
+                RIGHT_TO_LEFT -> WebGpuViewer(activity, true)
+                VERTICAL -> VerticalPagerViewer(activity)
+                WEBTOON -> WebtoonViewer(activity)
+                CONTINUOUS_VERTICAL -> WebtoonViewer(activity, isContinuous = false)
+                DEFAULT -> throw IllegalStateException("Preference value must be resolved: $preference")
+            }
         }
     }
 

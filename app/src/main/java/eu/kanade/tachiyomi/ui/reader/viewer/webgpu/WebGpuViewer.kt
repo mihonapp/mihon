@@ -8,6 +8,11 @@ import android.view.MotionEvent
 import android.view.View
 import ca.mpreg.imagedecoder.ImageDecoder
 import ca.mpreg.webgpuviewer.Image
+import ca.mpreg.webgpuviewer.ImageShaderBasic
+import ca.mpreg.webgpuviewer.ImageShaderFlipLeft
+import ca.mpreg.webgpuviewer.ImageShaderFlipRight
+import ca.mpreg.webgpuviewer.ImageShaderStackLeft
+import ca.mpreg.webgpuviewer.ImageShaderStackRight
 import ca.mpreg.webgpuviewer.Trim
 import ca.mpreg.webgpuviewer.WebGpuImageView
 import ca.mpreg.webgpuviewer.WebGpuImageViewerPage
@@ -20,6 +25,7 @@ import eu.kanade.tachiyomi.ui.reader.model.InsertPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences.TransitionAnimation
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import kotlinx.coroutines.CoroutineScope
@@ -30,6 +36,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -39,7 +46,7 @@ import java.io.InputStream
 import kotlin.math.max
 import kotlin.math.min
 
-class WebGpuViewer(val activity: ReaderActivity) : Viewer {
+class WebGpuViewer(val activity: ReaderActivity, val isRTL: Boolean) : Viewer {
 
     val downloadManager: DownloadManager by injectLazy()
 
@@ -80,12 +87,25 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
             }
         }
 
-    init {
+    fun updateTransitionAnimation() {
         pager.state.apply {
-//            transition = ImageShaderStackRight::render
+            transition = when (config.transitionAnimation) {
+                TransitionAnimation.DEFAULT -> ImageShaderBasic::render
+                TransitionAnimation.FLIP_LEFT -> ImageShaderFlipLeft::render
+                TransitionAnimation.FLIP_RIGHT -> ImageShaderFlipRight::render
+                TransitionAnimation.STACK_LEFT -> ImageShaderStackLeft::render
+                TransitionAnimation.STACK_RIGHT -> ImageShaderStackRight::render
+            }
+        }
+    }
 
+    init {
+        updateTransitionAnimation()
+
+        pager.state.apply {
             fetchPage = fetch@{ index ->
-                when (index) {
+                val i = if (isRTL) -index else index
+                when (i) {
                     0 -> currentPage?.let { createPage(it) }
                     1 -> nextPage?.let { createPage(it) }
                     -1 -> prevPage?.let { createPage(it) }
@@ -119,11 +139,21 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
 //                cleanupPageSplit()
 //            }
 //        }
-//
-//        config.imagePropertyChangedListener = {
-//            refreshAdapter()
-//        }
-//
+
+        config.imagePropertyChangedListener = {
+            runBlocking {
+                cacheMutex.withLock {
+                    pageCache.clear()
+                }
+            }
+
+            pager.state.post {
+                pager.state.render()
+            }
+
+            updateTransitionAnimation()
+        }
+
         config.navigationModeChangedListener = {
             val showOnStart = config.navigationOverlayOnStart || config.forceNavigationOverlay
             activity.binding.navigationOverlay.setNavigation(config.navigator, showOnStart)
@@ -210,7 +240,9 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
         }?.let {
             withContext(WebGpuRenderer.dispatcher) {
                 WebGpuImageViewerPage(Image(it.image, it.width, it.height)).apply {
-                    trim = Trim.find(image, 1f, 1f, 1f, 10f / 255)
+                    if (config.imageCropBorders) {
+                        trim = Trim.find(image, 1f, 1f, 1f, 10f / 255)
+                    }
 
                     parent = pager.state
                     x = homeX
@@ -313,13 +345,14 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
         pager.state.apply {
             val currentPageIndex = currentPage?.index ?: 0
             if (currentPageIndex < pages.lastIndex || nextChapter != null) {
-                haveNext = true
+                if (isRTL) havePrev = true else haveNext = true
             }
             if (currentPageIndex > 0 || chapters.prevChapter != null) {
-                havePrev = true
+                if (isRTL) haveNext = true else havePrev = true
             }
 
-            onPageChange = onPageChange@{ index ->
+            onPageChange = onPageChange@{ delta ->
+                val index = if (isRTL) -delta else delta
                 if (!activity.isScrollingThroughPages) {
                     activity.hideMenu()
                 }
@@ -333,10 +366,10 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
                     val pages = newPage.chapter.pages ?: return@onPageChange
 
                     if (newPage.index < pages.lastIndex || nextChapter != null) {
-                        haveNext = true
+                        if (isRTL) havePrev = true else haveNext = true
                     }
                     if (newPage.index > 0 || prevChapter != null) {
-                        havePrev = true
+                        if (isRTL) haveNext = true else havePrev = true
                     }
 
                     activity.onPageSelected(newPage)
@@ -360,7 +393,7 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
         val pages = page.chapter.pages ?: return
 
         if (page.index < pages.lastIndex || nextChapter != null) {
-            pager.state.haveNext = true
+            if (isRTL) pager.state.havePrev = true else pager.state.haveNext = true
         }
         if (page.index > 0 || prevChapter != null) {
             pager.state.havePrev = true
@@ -456,13 +489,25 @@ class WebGpuViewer(val activity: ReaderActivity) : Viewer {
 //                    if (ctrlPressed) moveToPrevious() else moveLeft()
 //                }
 //            }
-//            KeyEvent.KEYCODE_DPAD_DOWN -> if (isUp) moveDown()
-//            KeyEvent.KEYCODE_DPAD_UP -> if (isUp) moveUp()
-//            KeyEvent.KEYCODE_PAGE_DOWN -> if (isUp) moveDown()
-//            KeyEvent.KEYCODE_PAGE_UP -> if (isUp) moveUp()
-//            KeyEvent.KEYCODE_MENU -> if (isUp) activity.toggleMenu()
-//            else -> return false
-//        }
+            KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                if (isUp) {
+                    if (ctrlPressed) moveToNext() else moveRight()
+                }
+            }
+
+            KeyEvent.KEYCODE_DPAD_LEFT -> {
+                if (isUp) {
+                    if (ctrlPressed) moveToPrevious() else moveLeft()
+                }
+            }
+
+            KeyEvent.KEYCODE_DPAD_DOWN -> if (isUp) moveDown()
+            KeyEvent.KEYCODE_DPAD_UP -> if (isUp) moveUp()
+            KeyEvent.KEYCODE_PAGE_DOWN -> if (isUp) moveDown()
+            KeyEvent.KEYCODE_PAGE_UP -> if (isUp) moveUp()
+            KeyEvent.KEYCODE_MENU -> if (isUp) activity.toggleMenu()
+            else -> return false
+        }
         return true
     }
 

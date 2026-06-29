@@ -189,6 +189,13 @@ class ReaderPreferences(
 
     // endregion
 
+    // region WebGpu
+
+    val transitionAnimation: Preference<TransitionAnimation> =
+        preferenceStore.getEnum("webgpu_transition_animation", TransitionAnimation.DEFAULT)
+
+    // endregion
+
     enum class FlashColor {
         BLACK,
         WHITE,
@@ -211,6 +218,14 @@ class ReaderPreferences(
         HIGH(13),
         LOW(31),
         LOWEST(47),
+    }
+
+    enum class TransitionAnimation(val titleRes: StringResource) {
+        DEFAULT(MR.strings.transition_animation_default),
+        FLIP_LEFT(MR.strings.transition_animation_flip_left),
+        FLIP_RIGHT(MR.strings.transition_animation_flip_right),
+        STACK_LEFT(MR.strings.transition_animation_stack_left),
+        STACK_RIGHT(MR.strings.transition_animation_stack_right),
     }
 
     companion object {
