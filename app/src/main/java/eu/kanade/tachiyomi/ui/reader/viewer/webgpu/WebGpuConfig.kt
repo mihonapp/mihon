@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webgpu
 
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences.TransitionAnimation
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerConfig
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
@@ -9,10 +10,6 @@ import eu.kanade.tachiyomi.ui.reader.viewer.navigation.EdgeNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.navigation.KindlishNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.navigation.LNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.navigation.RightAndLeftNavigation
-import eu.kanade.tachiyomi.ui.reader.viewer.pager.L2RPagerViewer
-import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer
-import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
-import eu.kanade.tachiyomi.ui.reader.viewer.pager.VerticalPagerViewer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
@@ -50,6 +47,9 @@ class WebGpuConfig(
         private set
 
     var landscapeZoom = false
+        private set
+
+    var transitionAnimation = TransitionAnimation.DEFAULT
         private set
 
     init {
@@ -108,6 +108,12 @@ class WebGpuConfig(
         readerPreferences.dualPageRotateToFitInvert
             .register(
                 { dualPageRotateToFitInvert = it },
+                { imagePropertyChangedListener?.invoke() },
+            )
+
+        readerPreferences.transitionAnimation
+            .register(
+                { transitionAnimation = it },
                 { imagePropertyChangedListener?.invoke() },
             )
     }

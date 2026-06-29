@@ -14,6 +14,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.CheckboxItem
@@ -56,6 +57,9 @@ internal fun ColumnScope.ReadingModePage(viewModel: ReaderSettingsViewModel) {
         WebtoonViewerSettings(viewModel)
     } else {
         PagerViewerSettings(viewModel)
+        if (viewer is WebGpuViewer) {
+            WebGpuViewerSettings(viewModel)
+        }
     }
 }
 
@@ -230,6 +234,22 @@ private fun ColumnScope.TapZonesItems(
                     label = { Text(stringResource(it.titleRes)) },
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun ColumnScope.WebGpuViewerSettings(screenModel: ReaderSettingsScreenModel) {
+    HeadingItem(MR.strings.webgpu_viewer)
+
+    val transitionAnimation by screenModel.preferences.transitionAnimation.collectAsState()
+    SettingsChipRow(MR.strings.pref_transition_animation) {
+        ReaderPreferences.TransitionAnimation.entries.map {
+            FilterChip(
+                selected = it == transitionAnimation,
+                onClick = { screenModel.preferences.transitionAnimation.set(it) },
+                label = { Text(stringResource(it.titleRes)) },
+            )
         }
     }
 }
