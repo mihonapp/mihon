@@ -30,7 +30,6 @@ class StorageManager(
 
     init {
         storagePreferences.baseStorageDirectory.changes()
-            .drop(1)
             .distinctUntilChanged()
             .onEach { uri ->
                 baseDir = getBaseDir(uri)
