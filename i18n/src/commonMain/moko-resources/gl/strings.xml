@@ -701,11 +701,6 @@
     <string name="theme_nord">Nórdico</string>
     <string name="pref_relative_format">Marcas de tempo relativas</string>
     <string name="pref_library_update_smart_update">Actualizacións intelixentes</string>
-    <string name="action_add_repo">Engadir un repositorio</string>
-    <string name="action_add_repo_message">Engade máis repositorios a %s. Debe ser unha dirección URL que remate en \"index.min.json\".</string>
-    <string name="action_delete_repo">Borrar repositorio</string>
-    <string name="invalid_repo_name">A dirección URL do repositorio non é válida</string>
-    <string name="delete_repo_confirmation">Queres eliminar o repositorio \"%s\"?</string>
     <string name="track_activity_name">Iniciar sesión no servizo de seguimento</string>
     <string name="pref_storage_location">Ubicación do almacenamento</string>
     <string name="action_filter_interval_custom">Frecuencia de actualización personalizada</string>
@@ -743,10 +738,6 @@
     <string name="pref_update_only_in_release_period">Predicir cando sae o seguinte capítulo</string>
     <string name="ext_permission_install_apps_warning">Preme aquí para conceder os permisos para instalar extensións.</string>
     <string name="ext_revoke_trust">Revogar as extensións de confianza de orixe descoñecida</string>
-    <string name="label_extension_repos">Repositorios de extensións</string>
-    <string name="information_empty_repos">Aínda non engadiches ningún repositorio.</string>
-    <string name="label_add_repo_input">Dirección URL do repositorio</string>
-    <string name="error_repo_exists">Este repositorio xa existe!</string>
     <string name="action_open_repo">Abrir o repositorio</string>
     <string name="pref_flash_page">Tremelucir ao cambiar de páxina</string>
     <string name="pref_flash_page_summ">Reducir o efecto de retención de imaxe nas pantallas de tinta electrónica</string>
@@ -768,10 +759,6 @@
     <string name="syncing_library">Sincronizando a biblioteca</string>
     <string name="relative_time_span_never">Nunca</string>
     <string name="label_upcoming">Proximamente</string>
-    <string name="action_replace_repo">Substituír</string>
-    <string name="action_replace_repo_title">A impresión dixital da chave da firma xa existe</string>
-    <string name="action_replace_repo_message">O repositorio %1$s ten a misma impresión dixital da chave da firma que %2$s.
-\nSe isto é o comportamento agardado, %2$s substituirase. Se no é así, contacta con quen mantén o repositorio.</string>
     <string name="pref_display_profile">Perfil de visualización personalizado</string>
     <string name="private_settings">Incluír configuracións sensibles (por exemplo, as chaves de inicio de sesión en plataformas de seguimento)</string>
     <string name="action_bar_up_description">Navegar arriba</string>
@@ -808,7 +795,6 @@
     <string name="onboarding_permission_crashlytics">Enviar rexistro de erros</string>
     <string name="non_library_settings">Todas as obras lidas</string>
     <string name="pref_hardware_bitmap_threshold">Elixir un tamaño máximo co que decodificar imáxenes por hardware</string>
-    <string name="add_repo_confirmation">Queres engadir o repositorio \"%s\"?</string>
     <string name="pref_hardware_bitmap_threshold_default">Por defecto (%d)</string>
     <string name="pref_hardware_bitmap_threshold_summary">Se o lector carga unha páxina en branco, recomendámoste reducilo pouco a pouco.\nLímite actual: %s</string>
     <string name="pref_always_decode_long_strip_with_ssiv_summary">Afecta ao rendemento. Recomendámosche activalo só se a imaxe segue sen verse ao reducir o tamaño máximo</string>
@@ -818,7 +804,6 @@
     <string name="pref_flash_duration_summary">%1$s ms</string>
     <string name="invalid_backup_file_json">Copia de seguridade JSON non compatible</string>
     <string name="invalid_backup_file_unknown">O arquivo da copia de seguridade está corrupto</string>
-    <string name="extensionRepo_settings">Repositorios de extensións</string>
     <string name="confirm_tracker_update">Marcar o capítulo %d como lido nos servizos de seguimento?</string>
     <string name="trackers_updated_summary">Servizos de seguimento actualizados ao capítulo %d</string>
     <string name="onboarding_permission_analytics_description">Enviar estatísticas de uso anónimas para mellorar as funcións da aplicación.</string>

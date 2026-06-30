@@ -625,13 +625,6 @@
     <string name="pref_relative_format">زمان بندی های نسبی</string>
     <string name="pref_library_update_smart_update">به روز رسانی هوشمند</string>
     <string name="ext_revoke_trust">لغو اعتماد افزونه های ناشناخته</string>
-    <string name="label_extension_repos">مخازن افزونه ها</string>
-    <string name="action_add_repo">اضافه کردن مخزن</string>
-    <string name="label_add_repo_input">آدرس مخزن</string>
-    <string name="error_repo_exists">این مخزن در حال حاضر وجود دارد!</string>
-    <string name="action_delete_repo">حذف مخزن</string>
-    <string name="invalid_repo_name">آدرس مخزن بی اعتبار است</string>
-    <string name="delete_repo_confirmation">آشا شما میخواهید تا \"%s\" مخزن را حذف کنید؟</string>
     <string name="pref_page_rotate_invert">جهت چرخش صفحات گسترده را برعکس کن</string>
     <string name="no_location_set">مکان ذخیره سازی تنظیم نشده است</string>
     <string name="split_tall_images">عکس های بلند را تقسیم کن</string>
@@ -641,8 +634,6 @@
     <string name="onboarding_action_finish">شروع کنید</string>
     <string name="onboarding_action_skip">پرش</string>
     <string name="ext_permission_install_apps_warning">مجوز برای نصب افزونه ها لازم است. به اینجا ضربه بزنید تا اعطا کنید.</string>
-    <string name="action_add_repo_message">به %s مخازن اضافی اضافه کنید. این باید یک آدرس باشد که با \"index.min.json\" تمام شود.</string>
-    <string name="information_empty_repos">شما هیچ مخزنی برای تنظیم ندارید.</string>
     <string name="action_open_repo">مخزن منبع باز</string>
     <string name="pref_flash_page_summ">مقدار رد باقی مانده در نمایش گر های E-ink کاهش میابد</string>
     <string name="onboarding_storage_action_select">انتخاب یک پوشه</string>
