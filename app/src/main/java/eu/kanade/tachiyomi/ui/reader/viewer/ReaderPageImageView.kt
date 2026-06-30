@@ -31,7 +31,11 @@ import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.EASE_IN_OUT_QUAD
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.EASE_OUT_QUAD
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.SCALE_TYPE_FIT_HEIGHT
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.SCALE_TYPE_FIT_WIDTH
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.SCALE_TYPE_ORIGINAL_SIZE
 import com.github.chrisbanes.photoview.PhotoView
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.data.coil.cropBorders
@@ -178,6 +182,17 @@ open class ReaderPageImageView @JvmOverloads constructor(
     }
 
     /**
+     * Returns the rendered pixel width of the image content, or null if unavailable (animated/not ready).
+     * After the image is ready, this equals sWidth * minScale, which naturally reflects min(dynamic, manual)
+     * when the view was pre-constrained to the manual edge width.
+     */
+    fun getRenderedContentWidth(): Int? {
+        val ssiv = pageView as? SubsamplingScaleImageView ?: return null
+        if (!ssiv.isReady) return null
+        return (ssiv.sWidth * ssiv.minScale).toInt()
+    }
+
+    /**
      * Check if the image can be panned to the left
      */
     fun canPanLeft(): Boolean = canPan { it.left }
@@ -260,15 +275,15 @@ open class ReaderPageImageView @JvmOverloads constructor(
         addView(pageView, MATCH_PARENT, MATCH_PARENT)
     }
 
-    private fun SubsamplingScaleImageView.setupZoom(config: Config?) {
+    private fun SubsamplingScaleImageView.setupZoom(config: Config?, effectiveScale: Float = scale) {
         // 5x zoom
-        maxScale = scale * MAX_ZOOM_SCALE
-        setDoubleTapZoomScale(scale * 2)
+        maxScale = effectiveScale * MAX_ZOOM_SCALE
+        setDoubleTapZoomScale(effectiveScale * 2)
 
         when (config?.zoomStartPosition) {
-            ZoomStartPosition.LEFT -> setScaleAndCenter(scale, PointF(0F, 0F))
-            ZoomStartPosition.RIGHT -> setScaleAndCenter(scale, PointF(sWidth.toFloat(), 0F))
-            ZoomStartPosition.CENTER -> setScaleAndCenter(scale, center)
+            ZoomStartPosition.LEFT -> setScaleAndCenter(effectiveScale, PointF(0F, 0F))
+            ZoomStartPosition.RIGHT -> setScaleAndCenter(effectiveScale, PointF(sWidth.toFloat(), 0F))
+            ZoomStartPosition.CENTER -> setScaleAndCenter(effectiveScale, center)
             null -> {}
         }
     }
@@ -278,13 +293,34 @@ open class ReaderPageImageView @JvmOverloads constructor(
         config: Config,
     ) = (pageView as? SubsamplingScaleImageView)?.apply {
         setDoubleTapZoomDuration(config.zoomDuration.getSystemScaledDuration())
-        setMinimumScaleType(config.minimumScaleType)
+        setMinimumScaleType(if (config.coverMode) SCALE_TYPE_CENTER_CROP else config.minimumScaleType)
         setMinimumDpi(1) // Just so that very small image will be fit for initial load
         setCropBorders(config.cropBorders)
+        setPanEnabled(!config.coverMode)
+        setZoomEnabled(!config.coverMode)
         setOnImageEventListener(
             object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
                 override fun onReady() {
-                    setupZoom(config)
+                    // If cover mode is on but the image already fills the screen height
+                    // with normal scaling (portrait image taller than container aspect ratio),
+                    // cover mode is redundant — revert to normal config.
+                    val heightAlreadyFills = config.coverMode &&
+                        width > 0 && height > 0 &&
+                        sHeight.toFloat() / sWidth >= height.toFloat() / width
+                    if (heightAlreadyFills) {
+                        setMinimumScaleType(config.minimumScaleType)
+                        setPanEnabled(true)
+                        setZoomEnabled(true)
+                        val normalScale = when (config.minimumScaleType) {
+                            SCALE_TYPE_FIT_WIDTH -> width.toFloat() / sWidth
+                            SCALE_TYPE_FIT_HEIGHT -> height.toFloat() / sHeight
+                            SCALE_TYPE_ORIGINAL_SIZE -> 1f
+                            else -> minOf(width.toFloat() / sWidth, height.toFloat() / sHeight)
+                        }
+                        setupZoom(config, effectiveScale = normalScale)
+                    } else {
+                        setupZoom(config)
+                    }
                     if (isVisibleOnScreen()) landscapeZoom(true)
                     this@ReaderPageImageView.onImageLoaded()
                 }
@@ -383,6 +419,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
     ) = (pageView as? AppCompatImageView)?.apply {
         if (this is PhotoView) {
             setZoomTransitionDuration(config.zoomDuration.getSystemScaledDuration())
+            isZoomable = !config.coverMode
         }
 
         val request = ImageRequest.Builder(context)
@@ -421,6 +458,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
         val cropBorders: Boolean = false,
         val zoomStartPosition: ZoomStartPosition = ZoomStartPosition.CENTER,
         val landscapeZoom: Boolean = false,
+        val coverMode: Boolean = false,
     )
 
     enum class ZoomStartPosition {
