@@ -71,6 +71,7 @@ class SetMangaChapterFlags(
 
     suspend fun awaitSetAllFlags(
         mangaId: Long,
+        currentFlags: Long,
         unreadFilter: Long,
         downloadedFilter: Long,
         bookmarkedFilter: Long,
@@ -78,15 +79,21 @@ class SetMangaChapterFlags(
         sortingDirection: Long,
         displayMode: Long,
     ): Boolean {
+        val newFlags = 0L.setFlag(unreadFilter, Manga.CHAPTER_UNREAD_MASK)
+            .setFlag(downloadedFilter, Manga.CHAPTER_DOWNLOADED_MASK)
+            .setFlag(bookmarkedFilter, Manga.CHAPTER_BOOKMARKED_MASK)
+            .setFlag(sortingMode, Manga.CHAPTER_SORTING_MASK)
+            .setFlag(sortingDirection, Manga.CHAPTER_SORT_DIR_MASK)
+            .setFlag(displayMode, Manga.CHAPTER_DISPLAY_MASK)
+        // avoid writing to the mangas DB if unnecessary
+        // debatable whether no-op should be counted as success
+        if (currentFlags == newFlags) {
+            return true
+        }
         return mangaRepository.update(
             MangaUpdate(
                 id = mangaId,
-                chapterFlags = 0L.setFlag(unreadFilter, Manga.CHAPTER_UNREAD_MASK)
-                    .setFlag(downloadedFilter, Manga.CHAPTER_DOWNLOADED_MASK)
-                    .setFlag(bookmarkedFilter, Manga.CHAPTER_BOOKMARKED_MASK)
-                    .setFlag(sortingMode, Manga.CHAPTER_SORTING_MASK)
-                    .setFlag(sortingDirection, Manga.CHAPTER_SORT_DIR_MASK)
-                    .setFlag(displayMode, Manga.CHAPTER_DISPLAY_MASK),
+                chapterFlags = newFlags,
             ),
         )
     }
