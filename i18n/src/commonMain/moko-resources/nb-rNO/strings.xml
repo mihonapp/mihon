@@ -759,24 +759,15 @@
     <string name="onboarding_permission_install_apps">Tillat å installere apper</string>
     <string name="available_disk_space_info">Tilgjengelig: %1$s / Totalt: %2$s</string>
     <string name="manga_interval_custom_amount">Egendefinert oppdateringsfrekvens:</string>
-    <string name="label_add_repo_input">Pakkebrønn URL</string>
     <string name="invalid_backup_file_error">Fullstendig feil:</string>
-    <string name="error_repo_exists">Denne pakkebrønnen finnes allerede!</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Unngå avbrudd i langvarige oppdateringer av biblioteket, nedlastinger og gjenoppretting av sikkerhetskopier.</string>
     <string name="pref_library_update_smart_update">Smart oppdatering</string>
     <string name="onboarding_permission_ignore_battery_opts">Batteribruk i bakgrunnen</string>
     <string name="onboarding_permission_install_apps_description">For å installere kildeutvidelser.</string>
-    <string name="invalid_repo_name">Ugyldig pakkebrønn URL</string>
-    <string name="action_add_repo_message">Legg til ekstra pakkebrønner i %s. URL-en må ende med \"index.min.json\".</string>
     <string name="onboarding_permission_notifications_description">Få varsler for oppdateringer i biblioteket og mer.</string>
     <string name="ext_permission_install_apps_warning">Tillatelse er nødvendig for å installere utvidelser. Trykk her for å tillate.</string>
-    <string name="delete_repo_confirmation">Ønsker du å slette pakkebrønnen \"%s\"?</string>
-    <string name="action_delete_repo">Slett pakkebrønn</string>
-    <string name="action_add_repo">Legg til pakkebrønn</string>
     <string name="private_settings">Inkluder sensitive innstillinger (f.eks., innloggingstoken for sporer)</string>
-    <string name="information_empty_repos">Du har ingen pakkebrønner satt opp.</string>
     <string name="onboarding_permission_action_grant">Tillat</string>
-    <string name="label_extension_repos">Utvidelsepakkebrønner</string>
     <string name="onboarding_storage_help_info">Oppdaterer du fra en eldre versjon og er usikker på hva du skal velge? Sjekk lagringsguiden for mer informasjon.</string>
     <string name="onboarding_storage_help_action">Lagringsguiden</string>
     <string name="theme_nord">Nord</string>
@@ -785,5 +776,4 @@
     <string name="action_open_repo">Åpne pakkebrønnen</string>
     <string name="label_upcoming">Kommende</string>
     <string name="action_add_anyway">Legg til likevel</string>
-    <string name="action_replace_repo">Erstatt</string>
 </resources>

@@ -708,17 +708,14 @@
     <string name="label_stats">Статистики</string>
     <string name="label_downloaded">Изтеглени</string>
     <string name="unlock_app_title">Отключи %s</string>
-    <string name="action_delete_repo">Изтрий хранилище</string>
     <string name="label_upcoming">Предстоящи</string>
     <string name="track_remove_date_conf_title">Премахни дата?</string>
     <string name="syncing_library">Синхронизиране на библиотеката</string>
     <string name="action_ok">ОК</string>
-    <string name="action_add_repo">Добави хрнилише</string>
     <string name="upcoming_calendar_next">Следващ месец</string>
     <string name="label_completed_titles">Завършени манги</string>
     <string name="seconds_short">%dсек</string>
     <string name="exception_offline">Няма връзка с интернет</string>
-    <string name="label_add_repo_input">Линк към хранилището</string>
     <string name="pref_skip_dupe_chapters">Пропусни дублиращи се глави</string>
     <string name="invalid_backup_file_unknown">Резервното копие е повредено</string>
     <string name="label_total_chapters">Общо</string>
@@ -728,7 +725,6 @@
     <string name="label_started">Започнати</string>
     <string name="author">Автор</string>
     <string name="pref_chapter_swipe_end">Глава на дясно плъзгане</string>
-    <string name="action_replace_repo">Заместване</string>
     <string name="pref_double_tap_zoom">Натисни два пъти за увеличение</string>
     <string name="pref_flash_style_black">Черно</string>
     <string name="pref_hardware_bitmap_threshold_default">По подразбиране (%d)</string>
