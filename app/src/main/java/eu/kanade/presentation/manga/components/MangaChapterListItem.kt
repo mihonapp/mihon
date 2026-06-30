@@ -26,11 +26,14 @@ import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
@@ -82,6 +85,9 @@ fun MangaChapterListItem(
         onSwipe = { onChapterSwipe(chapterSwipeEndAction) },
     )
 
+    val isFocused = remember { mutableStateOf(false) }
+    val focusColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
+
     SwipeableActionsBox(
         modifier = Modifier.clipToBounds(),
         startActions = listOfNotNull(start),
@@ -92,6 +98,8 @@ fun MangaChapterListItem(
         Row(
             modifier = modifier
                 .selectedBackground(selected)
+                .drawBehind { if (isFocused.value) drawRect(focusColor) }
+                .onFocusChanged { isFocused.value = it.isFocused }
                 .combinedClickable(
                     onClick = onClick,
                     onLongClick = onLongClick,
