@@ -8,6 +8,7 @@ import dev.icerock.moko.resources.StringResource
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.PreferenceScaffold
 import eu.kanade.presentation.util.LocalBackPress
+import eu.kanade.presentation.util.LocalSettingsNavIcon
 
 interface SearchableSettings : Screen {
 
@@ -28,6 +29,7 @@ interface SearchableSettings : Screen {
         PreferenceScaffold(
             titleRes = getTitleRes(),
             onBackPressed = if (handleBack != null) handleBack::invoke else null,
+            navigationIcon = LocalSettingsNavIcon.current,
             actions = { AppBarAction() },
             itemsProvider = { getPreferences() },
         )
