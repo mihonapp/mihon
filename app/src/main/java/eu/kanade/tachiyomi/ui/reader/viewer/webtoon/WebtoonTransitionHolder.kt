@@ -8,9 +8,9 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isNotEmpty
 import androidx.core.view.isVisible
-import com.google.android.material.progressindicator.CircularProgressIndicator
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
+import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderTransitionView
 import eu.kanade.tachiyomi.util.system.dpToPx
 import kotlinx.coroutines.Job
@@ -102,8 +102,11 @@ class WebtoonTransitionHolder(
      * Sets the loading state on the pages container.
      */
     private fun setLoading() {
-        val progress = CircularProgressIndicator(context)
-        progress.isIndeterminate = true
+        val progress = ReaderProgressIndicator(context).apply {
+            layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
+                gravity = Gravity.CENTER_HORIZONTAL
+            }
+        }
 
         val textView = AppCompatTextView(context).apply {
             wrapContent()
