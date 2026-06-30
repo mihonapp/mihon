@@ -19,7 +19,14 @@ class GlobalSearchScreenModel(
     }
 
     override fun getEnabledSources(): List<Source> {
+        val filter = state.value.sourceFilter
         return super.getEnabledSources()
-            .filter { state.value.sourceFilter != SourceFilter.PinnedOnly || "${it.id}" in pinnedSources }
+            .filter {
+                when (filter) {
+                    SourceFilter.All -> true
+                    SourceFilter.PinnedOnly -> "${it.id}" in pinnedSources
+                    is SourceFilter.Group -> "${it.id}" in sourceGroups.getOrElse(filter.name) { emptySet() }
+                }
+            }
     }
 }

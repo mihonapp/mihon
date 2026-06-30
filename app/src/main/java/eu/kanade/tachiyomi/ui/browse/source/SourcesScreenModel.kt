@@ -3,7 +3,10 @@ package eu.kanade.tachiyomi.ui.browse.source
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import eu.kanade.domain.source.interactor.DeleteSourcePinGroup
 import eu.kanade.domain.source.interactor.GetEnabledSources
+import eu.kanade.domain.source.interactor.GetSourcePinGroups
+import eu.kanade.domain.source.interactor.SetSourcePinGroups
 import eu.kanade.domain.source.interactor.ToggleSource
 import eu.kanade.domain.source.interactor.ToggleSourcePin
 import eu.kanade.presentation.browse.SourceUiModel
@@ -25,6 +28,9 @@ class SourcesScreenModel(
     private val getEnabledSources: GetEnabledSources = Injekt.get(),
     private val toggleSource: ToggleSource = Injekt.get(),
     private val toggleSourcePin: ToggleSourcePin = Injekt.get(),
+    private val setSourcePinGroups: SetSourcePinGroups = Injekt.get(),
+    private val getSourcePinGroups: GetSourcePinGroups = Injekt.get(),
+    private val deleteSourcePinGroup: DeleteSourcePinGroup = Injekt.get(),
 ) : StateScreenModel<SourcesScreenModel.State>(State()) {
 
     private val _events = Channel<Event>(Int.MAX_VALUE)
@@ -63,17 +69,30 @@ class SourcesScreenModel(
                 }
             }
 
+            val groupNames = sources.flatMap { it.pinnedGroups }.distinct().sorted()
+            val groupSections = groupNames.flatMap { group ->
+                listOf<SourceUiModel>(SourceUiModel.Header(group, isGroup = true)) +
+                    sources.filter { !it.isUsedLast && group in it.pinnedGroups }
+                        .map { SourceUiModel.Item(it, sectionKey = group) }
+            }
+
+            val items = buildList {
+                var groupsInserted = false
+                for ((key, value) in byLang) {
+                    val isSpecial = key == LAST_USED_KEY || key == PINNED_KEY
+                    if (!isSpecial && !groupsInserted) {
+                        addAll(groupSections)
+                        groupsInserted = true
+                    }
+                    add(SourceUiModel.Header(key))
+                    value.forEach { add(SourceUiModel.Item(it)) }
+                }
+                if (!groupsInserted) addAll(groupSections)
+            }
+
             state.copy(
                 isLoading = false,
-                items = byLang
-                    .flatMap {
-                        listOf(
-                            SourceUiModel.Header(it.key),
-                            *it.value.map { source ->
-                                SourceUiModel.Item(source)
-                            }.toTypedArray(),
-                        )
-                    },
+                items = items,
             )
         }
     }
@@ -86,8 +105,28 @@ class SourcesScreenModel(
         toggleSourcePin.await(source)
     }
 
+    fun setSourcePinGroups(source: Source, pinGroups: Set<String>) {
+        setSourcePinGroups.await(source, pinGroups)
+    }
+
+    fun removeSourceFromGroup(source: Source, group: String) {
+        setSourcePinGroups.await(source, source.pinnedGroups - group)
+    }
+
+    fun getSourcePinGroups(source: Source): Pair<List<String>, List<Boolean>> {
+        return getSourcePinGroups.execute(source)
+    }
+
+    fun deleteSourcePinGroup(pinGroup: String) {
+        deleteSourcePinGroup.await(pinGroup)
+    }
+
     fun showSourceDialog(source: Source) {
-        mutableState.update { it.copy(dialog = Dialog(source)) }
+        mutableState.update { it.copy(dialog = Dialog.SourceOptions(source)) }
+    }
+
+    fun showPinGroupsDialog(source: Source) {
+        mutableState.update { it.copy(dialog = Dialog.PinGroups(source)) }
     }
 
     fun closeDialog() {
@@ -98,7 +137,10 @@ class SourcesScreenModel(
         data object FailedFetchingSources : Event
     }
 
-    data class Dialog(val source: Source)
+    sealed interface Dialog {
+        data class SourceOptions(val source: Source) : Dialog
+        data class PinGroups(val source: Source) : Dialog
+    }
 
     @Immutable
     data class State(
