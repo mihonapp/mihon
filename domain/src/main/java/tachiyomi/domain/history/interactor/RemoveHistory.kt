@@ -15,6 +15,10 @@ class RemoveHistory(
         repository.resetHistory(history.id)
     }
 
+    suspend fun await(history: List<HistoryWithRelations>) {
+        repository.resetHistory(history.map { it.id })
+    }
+
     suspend fun await(mangaId: Long) {
         repository.resetHistoryByMangaId(mangaId)
     }

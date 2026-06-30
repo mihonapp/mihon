@@ -49,6 +49,14 @@ class HistoryRepositoryImpl(
         }
     }
 
+    override suspend fun resetHistory(historyIds: List<Long>) {
+        try {
+            database.historyQueries.resetHistoryByIds(historyIds)
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, throwable = e)
+        }
+    }
+
     override suspend fun resetHistoryByMangaId(mangaId: Long) {
         try {
             database.historyQueries.resetHistoryByMangaId(mangaId)

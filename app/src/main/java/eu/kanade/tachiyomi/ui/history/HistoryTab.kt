@@ -20,10 +20,12 @@ import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.history.HistoryScreen
 import eu.kanade.presentation.history.components.HistoryDeleteAllDialog
 import eu.kanade.presentation.history.components.HistoryDeleteDialog
+import eu.kanade.presentation.history.components.HistoryDeleteSelectedDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.util.Tab
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
+import eu.kanade.tachiyomi.ui.home.HomeScreen
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -71,6 +73,10 @@ data object HistoryTab : Tab {
             onSearchQueryChange = screenModel::updateSearchQuery,
             onClickCover = { navigator.push(MangaScreen(it)) },
             onClickResume = screenModel::getNextChapterForManga,
+            onSelectAll = screenModel::toggleAllSelection,
+            onInvertSelection = screenModel::invertSelection,
+            onHistorySelected = screenModel::toggleSelection,
+            onAddSelectedToLibrary = screenModel::addFavorites,
             onDialogChange = screenModel::setDialog,
             onClickFavorite = screenModel::addFavorite,
         )
@@ -85,6 +91,18 @@ data object HistoryTab : Tab {
                             screenModel.removeAllFromHistory(dialog.history.mangaId)
                         } else {
                             screenModel.removeFromHistory(dialog.history)
+                        }
+                    },
+                )
+            }
+            is HistoryScreenModel.Dialog.DeleteSelected -> {
+                HistoryDeleteSelectedDialog(
+                    onDismissRequest = onDismissRequest,
+                    onDelete = { all ->
+                        if (all) {
+                            screenModel.removeAllSelectedMangaFromHistory(dialog.history)
+                        } else {
+                            screenModel.removeSelectedFromHistory(dialog.history)
                         }
                     },
                 )
@@ -114,6 +132,16 @@ data object HistoryTab : Tab {
                     },
                 )
             }
+            is HistoryScreenModel.Dialog.ChangeCategoryForSelected -> {
+                ChangeCategoryDialog(
+                    initialSelection = dialog.initialSelection,
+                    onDismissRequest = onDismissRequest,
+                    onEditCategories = { navigator.push(CategoryScreen()) },
+                    onConfirm = { include, _ ->
+                        screenModel.addFavoritesToCategories(dialog.history, include)
+                    },
+                )
+            }
             is HistoryScreenModel.Dialog.Migrate -> {
                 MigrateMangaDialog(
                     current = dialog.current,
@@ -124,6 +152,10 @@ data object HistoryTab : Tab {
                 )
             }
             null -> {}
+        }
+
+        LaunchedEffect(state.selectionMode) {
+            HomeScreen.showBottomNav(!state.selectionMode)
         }
 
         LaunchedEffect(state.list) {
