@@ -1,7 +1,10 @@
 package eu.kanade.presentation.browse
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,7 +19,17 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -45,7 +58,25 @@ fun SourcesScreen(
     onClickItem: (Source, Listing) -> Unit,
     onClickPin: (Source) -> Unit,
     onLongClickItem: (Source) -> Unit,
+    onClickHideLastUsed: () -> Unit,
 ) {
+    var isLastUsedCollapsed by rememberSaveable { mutableStateOf(false) }
+
+    val itemsToDisplay = remember(state.items, isLastUsedCollapsed) {
+        if (!isLastUsedCollapsed) return@remember state.items
+
+        var skipping = false
+        state.items.filter { model ->
+            when (model) {
+                is SourceUiModel.Header -> {
+                    skipping = model.language == SourcesScreenModel.LAST_USED_KEY
+                    true
+                }
+                is SourceUiModel.Item -> !skipping
+            }
+        }
+    }
+
     when {
         state.isLoading -> LoadingScreen(Modifier.padding(contentPadding))
         state.isEmpty -> EmptyScreen(
@@ -57,7 +88,7 @@ fun SourcesScreen(
                 contentPadding = contentPadding + topSmallPaddingValues,
             ) {
                 items(
-                    items = state.items,
+                    items = itemsToDisplay,
                     contentType = {
                         when (it) {
                             is SourceUiModel.Header -> "header"
@@ -76,6 +107,12 @@ fun SourcesScreen(
                             SourceHeader(
                                 modifier = Modifier.animateItem(),
                                 language = model.language,
+                                onClickHideLastUsed = onClickHideLastUsed,
+                                onClickToggleCollapse = {
+                                    if (model.language == SourcesScreenModel.LAST_USED_KEY) {
+                                        isLastUsedCollapsed = !isLastUsedCollapsed
+                                    }
+                                },
                             )
                         }
                         is SourceUiModel.Item -> SourceItem(
@@ -96,14 +133,55 @@ fun SourcesScreen(
 private fun SourceHeader(
     language: String,
     modifier: Modifier = Modifier,
+    onClickHideLastUsed: () -> Unit,
+    onClickToggleCollapse: () -> Unit = {},
 ) {
     val context = LocalContext.current
-    Text(
-        text = LocaleHelper.getSourceDisplayName(language, context),
-        modifier = modifier
-            .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
-        style = MaterialTheme.typography.header,
-    )
+    if (language == SourcesScreenModel.LAST_USED_KEY) {
+        var isMenuExpanded by remember { mutableStateOf(false) }
+
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClickToggleCollapse)
+                .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = LocaleHelper.getSourceDisplayName(language, context),
+                style = MaterialTheme.typography.header,
+            )
+
+            Box {
+                IconButton(onClick = { isMenuExpanded = true }) {
+                    Icon(
+                        imageVector = Icons.Default.MoreHoriz,
+                        contentDescription = stringResource(MR.strings.label_more),
+                    )
+                }
+                DropdownMenu(
+                    expanded = isMenuExpanded,
+                    onDismissRequest = { isMenuExpanded = false },
+                ) {
+                    DropdownMenuItem(
+                        text = { Text(text = stringResource(MR.strings.action_hide)) },
+                        onClick = {
+                            isMenuExpanded = false
+                            onClickHideLastUsed()
+                        },
+                    )
+                }
+            }
+        }
+    } else {
+        Text(
+            text = LocaleHelper.getSourceDisplayName(language, context),
+            modifier = modifier
+                .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
+            style = MaterialTheme.typography.header,
+        )
+    }
 }
 
 @Composable
