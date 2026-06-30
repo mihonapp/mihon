@@ -5,16 +5,19 @@ import androidx.compose.ui.util.fastMapIndexedNotNull
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.core.util.insertSeparatorsReversed
-import eu.kanade.tachiyomi.util.lang.toLocalDate
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.YearMonth
+import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.yearMonth
 import mihon.domain.upcoming.interactor.GetUpcomingManga
 import tachiyomi.domain.manga.model.Manga
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.time.LocalDate
-import java.time.YearMonth
+import kotlin.time.Clock
 
 class UpcomingScreenModel(
     private val getUpcomingManga: GetUpcomingManga = Injekt.get(),
@@ -41,8 +44,14 @@ class UpcomingScreenModel(
             .insertSeparatorsReversed { before, after ->
                 if (after != null) mangaCount++
 
-                val beforeDate = before?.manga?.expectedNextUpdate?.toLocalDate()
-                val afterDate = after?.manga?.expectedNextUpdate?.toLocalDate()
+                val beforeDate = before?.manga
+                    ?.expectedNextUpdate
+                    ?.toLocalDateTime(TimeZone.currentSystemDefault())
+                    ?.date
+                val afterDate = after?.manga
+                    ?.expectedNextUpdate
+                    ?.toLocalDateTime(TimeZone.currentSystemDefault())
+                    ?.date
 
                 if (beforeDate != afterDate && afterDate != null) {
                     UpcomingUIModel.Header(afterDate, mangaCount).also { mangaCount = 0 }
@@ -73,7 +82,10 @@ class UpcomingScreenModel(
     }
 
     data class State(
-        val selectedYearMonth: YearMonth = YearMonth.now(),
+        val selectedYearMonth: YearMonth = Clock.System.now()
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+            .date
+            .yearMonth,
         val items: List<UpcomingUIModel> = listOf(),
         val events: Map<LocalDate, Int> = mapOf(),
         val headerIndexes: Map<LocalDate, Int> = mapOf(),

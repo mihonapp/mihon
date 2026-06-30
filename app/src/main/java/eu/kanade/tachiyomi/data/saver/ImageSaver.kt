@@ -24,7 +24,7 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
-import java.time.Instant
+import kotlin.time.Clock
 
 class ImageSaver(
     val context: Context,
@@ -85,7 +85,7 @@ class ImageSaver(
             MediaStore.MediaColumns.RELATIVE_PATH to relativePath,
             MediaStore.MediaColumns.DISPLAY_NAME to if (isMimeTypeSupported) image.name else filename,
             MediaStore.MediaColumns.MIME_TYPE to type.mime,
-            MediaStore.MediaColumns.DATE_MODIFIED to Instant.now().epochSecond,
+            MediaStore.MediaColumns.DATE_MODIFIED to Clock.System.now().epochSeconds,
         )
 
         val picture = findUriOrDefault(relativePath, filename) {
