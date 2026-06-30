@@ -10,3 +10,15 @@ val ColorScheme.active: Color
     get() {
         return if (isSystemInDarkTheme()) Color(255, 235, 59) else Color(255, 193, 7)
     }
+
+val ColorScheme.positive: Color
+    @Composable
+    get() {
+        return if (isSystemInDarkTheme()) Color(165, 214, 167) else Color(46, 125, 50)
+    }
+
+val ColorScheme.onPositive: Color
+    @Composable
+    get() {
+        return if (isSystemInDarkTheme()) Color(10, 56, 22) else Color(255, 255, 255)
+    }

@@ -86,4 +86,9 @@ class SourcePreferences(
         "migration_hide_without_updates",
         false,
     )
+
+    val migrationShowChapterCountDelta: Preference<Boolean> = preferenceStore.getBoolean(
+        "migration_show_chapter_count_delta",
+        false,
+    )
 }

@@ -22,6 +22,7 @@ fun MigrateSearchScreen(
     onClickSource: (Source) -> Unit,
     onClickItem: (Manga) -> Unit,
     onLongClickItem: (Manga) -> Unit,
+    getChapterCountDelta: @Composable (Manga) -> Int? = { null },
 ) {
     Scaffold(
         topBar = { scrollBehavior ->
@@ -49,6 +50,7 @@ fun MigrateSearchScreen(
             onClickSource = onClickSource,
             onClickItem = onClickItem,
             onLongClickItem = onLongClickItem,
+            getChapterCountDelta = getChapterCountDelta,
         )
     }
 }
