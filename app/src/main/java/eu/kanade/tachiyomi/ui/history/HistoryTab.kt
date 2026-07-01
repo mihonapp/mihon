@@ -18,7 +18,7 @@ import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.history.HistoryScreen
-import eu.kanade.presentation.history.components.HistoryDeleteAllDialog
+import eu.kanade.presentation.history.components.HistoryDeleteTimeRangeDialog
 import eu.kanade.presentation.history.components.HistoryDeleteDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.util.Tab
@@ -89,10 +89,10 @@ data object HistoryTab : Tab {
                     },
                 )
             }
-            is HistoryScreenModel.Dialog.DeleteAll -> {
-                HistoryDeleteAllDialog(
+            is HistoryScreenModel.Dialog.DeleteTimeRange -> {
+                HistoryDeleteTimeRangeDialog(
                     onDismissRequest = onDismissRequest,
-                    onDelete = screenModel::removeAllHistory,
+                    onDelete = screenModel::removeHistoryTimeRange,
                 )
             }
             is HistoryScreenModel.Dialog.DuplicateManga -> {
