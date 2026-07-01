@@ -40,8 +40,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
-import eu.kanade.presentation.components.relativeDateText
 import eu.kanade.presentation.manga.components.MangaCover
+import eu.kanade.presentation.util.relativeTimeSpanString
 import eu.kanade.tachiyomi.ui.failedupdate.FailedUpdatesScreenModel
 import tachiyomi.domain.updates.model.MangaUpdateErrorWithManga
 import tachiyomi.i18n.MR
@@ -289,22 +289,24 @@ private fun FailedUpdateItem(
             Text(
                 text = item.manga.title,
                 style = MaterialTheme.typography.bodyMedium,
-                maxLines = 2,
+                maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
             Text(
                 text = item.error.errorMessage ?: stringResource(MR.strings.unknown_error),
-                modifier = Modifier.padding(top = 4.dp),
+                modifier = Modifier.padding(top = 2.dp),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.error,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
             Text(
-                text = relativeDateText(item.error.timestamp),
+                text = relativeTimeSpanString(item.error.timestamp),
                 modifier = Modifier.padding(top = 2.dp),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
         }
 
