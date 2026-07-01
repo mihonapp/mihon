@@ -27,6 +27,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.library.DeleteLibraryMangaDialog
 import eu.kanade.presentation.library.LibrarySettingsDialog
@@ -60,6 +61,8 @@ import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.EmptyScreenAction
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.source.local.isLocal
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 data object LibraryTab : Tab {
 
@@ -94,6 +97,18 @@ data object LibraryTab : Tab {
 
         val onClickRefresh: (Category?) -> Boolean = { category ->
             val started = LibraryUpdateJob.startNow(context, category)
+            if (started) {
+                val mangaIds = when (category) {
+                    null -> state.libraryData.favorites.map { it.id }
+                    else -> state.getItemsForCategory(category).map { it.id }
+                }
+                scope.launchIO {
+                    val refreshTracks = Injekt.get<RefreshTracks>()
+                    mangaIds.forEach { mangaId ->
+                        refreshTracks.await(mangaId)
+                    }
+                }
+            }
             scope.launch {
                 val msgRes = when {
                     !started -> MR.strings.update_already_running
