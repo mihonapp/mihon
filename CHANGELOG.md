@@ -14,6 +14,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Added
 - Support resumable image downloads if supported by source ([@xMohnad](https://github.com/xMohnad)) ([#3167](https://github.com/mihonapp/mihon/pull/3167))
 
+### Fixed
+- Enqueue duplicate chapters for deletion after marking as read ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3030](https://github.com/mihonapp/mihon/pull/3030))
+
 ## [v0.20.0] - 2026-06-27
 ### Added
 - Add support for `tachiyomix` 1.6 extensions ([@AntsyLich](https://github.com/AntsyLich))
