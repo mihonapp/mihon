@@ -40,9 +40,10 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.updatePadding
 import ca.mpreg.webgpuviewer.renderer.Image
-import ca.mpreg.webgpuviewer.viewer.WebGpuImageViewer
-import ca.mpreg.webgpuviewer.viewer.WebGpuImageViewerPage
-import ca.mpreg.webgpuviewer.viewer.WebGpuImageViewerState
+import ca.mpreg.webgpuviewer.renderer.WebGpuRenderer
+import ca.mpreg.webgpuviewer.viewer.ImagePage
+import ca.mpreg.webgpuviewer.viewer.ImageViewer
+import ca.mpreg.webgpuviewer.viewer.ImageViewerState
 import coil3.asDrawable
 import coil3.imageLoader
 import coil3.request.CachePolicy
@@ -56,6 +57,7 @@ import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.tachiyomi.data.coil.ImageDecoder2
 import eu.kanade.tachiyomi.data.coil.newDecoder
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
+import kotlinx.coroutines.runBlocking
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -162,7 +164,7 @@ fun MangaCoverDialog(
             },
         ) { contentPadding ->
             if (useNewRenderer) {
-                val state = WebGpuImageViewerState()
+                val state = ImageViewerState()
 
                 state.dpi = view.resources.displayMetrics.densityDpi / 100f
 
@@ -173,26 +175,29 @@ fun MangaCoverDialog(
                     .newDecoder(true)
                     .target { result ->
                         val res = (result as ImageDecoder2.DecodeResultImage).res
-
-                        var page: WebGpuImageViewerPage? = null
+                        val page = runBlocking(WebGpuRenderer.dispatcher) {
+                            ImagePage(Image(res.image, res.width, res.height))
+                        }.apply {
+                            parent = state
+                            x = homeX
+                            y = homeY
+                            scale = homeScale
+                        }
                         state.apply {
                             fetchPage = { index ->
-                                page ?: WebGpuImageViewerPage(Image(res.image, res.width, res.height)).apply {
-                                    page = this
-
-                                    parent = state
-                                    x = homeX
-                                    y = homeY
-                                    scale = homeScale
+                                if (index == 0) {
+                                    page
+                                } else {
+                                    null
                                 }
                             }
-                            render()
+                            invalidate()
                         }
                     }
                     .build()
                     .let(view.context.imageLoader::enqueue)
 
-                WebGpuImageViewer(state = state)
+                ImageViewer(state = state)
                 return@Scaffold
             }
 

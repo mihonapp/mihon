@@ -7,17 +7,17 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import ca.mpreg.imagedecoder.ImageDecoder
-import ca.mpreg.webgpuviewer.Image
+import ca.mpreg.webgpuviewer.ImageView
 import ca.mpreg.webgpuviewer.Trim
-import ca.mpreg.webgpuviewer.WebGpuImageView
-import ca.mpreg.webgpuviewer.WebGpuImageViewerPage
-import ca.mpreg.webgpuviewer.WebGpuRenderer
-import ca.mpreg.webgpuviewer.transitions.TransitionBasic
-import ca.mpreg.webgpuviewer.transitions.TransitionFlipLeft
-import ca.mpreg.webgpuviewer.transitions.TransitionFlipRight
-import ca.mpreg.webgpuviewer.transitions.TransitionSphere
-import ca.mpreg.webgpuviewer.transitions.TransitionStackLeft
-import ca.mpreg.webgpuviewer.transitions.TransitionStackRight
+import ca.mpreg.webgpuviewer.renderer.Image
+import ca.mpreg.webgpuviewer.renderer.WebGpuRenderer
+import ca.mpreg.webgpuviewer.transition.TransitionBasic
+import ca.mpreg.webgpuviewer.transition.TransitionFlipLeft
+import ca.mpreg.webgpuviewer.transition.TransitionFlipRight
+import ca.mpreg.webgpuviewer.transition.TransitionSphere
+import ca.mpreg.webgpuviewer.transition.TransitionStackLeft
+import ca.mpreg.webgpuviewer.transition.TransitionStackRight
+import ca.mpreg.webgpuviewer.viewer.ImagePage
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -37,27 +37,25 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.injectLazy
 import java.io.InputStream
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-class WebGpuViewer(val activity: ReaderActivity, val isReversed: Boolean, val isVertical: Boolean) : Viewer {
+open class WebGpuViewer(
+    val activity: ReaderActivity,
+    val isReversed: Boolean,
+    val isVertical: Boolean,
+    val pager: ImageView = ImageView(activity, isVertical = isVertical),
+) : Viewer {
 
     val downloadManager: DownloadManager by injectLazy()
 
     private val scope = MainScope()
-
-    /**
-     * View pager used by this viewer. It's abstract to implement L2R, R2L and vertical pagers on
-     * top of this class.
-     */
-    val pager = WebGpuImageView(activity, isVertical=isVertical)
 
     /**
      * Configuration used by the pager, like allow taps, scale mode on images, page transitions...
@@ -70,25 +68,20 @@ class WebGpuViewer(val activity: ReaderActivity, val isReversed: Boolean, val is
     val pages: List<ReaderPage>? get() = currentPage?.chapter?.pages
     val currentPageIndex: Int get() = currentPage?.index ?: 0
 
-    val nextPage: ReaderPage?
-        get() = pages?.let { pages ->
-            if (currentPageIndex + 1 < pages.size) {
-                pages[currentPageIndex + 1]
+    fun nextPage(count: Int): ReaderPage? {
+        return pages?.let { pages ->
+            val n = currentPageIndex + count
+            if (n >= 0 && n <= pages.lastIndex) {
+                pages[n]
+            } else if (count > 0) {
+                nextChapter?.pages?.get(max(0, count - 1 - (pages.lastIndex - currentPageIndex)))
             } else {
-                nextChapter?.pages?.first()
+                prevChapter?.pages?.takeLast(max(0, abs(currentPageIndex + count)))?.firstOrNull()
             }
         }
+    }
 
-    val prevPage: ReaderPage?
-        get() = pages?.let { pages ->
-            if (currentPageIndex - 1 >= 0) {
-                pages[currentPageIndex - 1]
-            } else {
-                prevChapter?.pages?.last()
-            }
-        }
-
-    fun updateTransitionAnimation() {
+    open fun updateTransitionAnimation() {
         pager.state.apply {
             transition = when (config.transitionAnimation) {
                 TransitionAnimation.DEFAULT -> if (isVertical) TransitionBasic.Vertical else TransitionBasic
@@ -107,11 +100,12 @@ class WebGpuViewer(val activity: ReaderActivity, val isReversed: Boolean, val is
         pager.state.apply {
             fetchPage = fetch@{ index ->
                 val i = if (isReversed) -index else index
-                when (i) {
-                    0 -> currentPage?.let { createPage(it) }
-                    1 -> nextPage?.let { createPage(it) }
-                    -1 -> prevPage?.let { createPage(it) }
-                    else -> null
+                nextPage(i)?.let { page ->
+                    synchronized(pageCache) {
+                        pageCache[page]
+                    } ?: ImagePage.Dummy(400, 400).also {
+                        preloadPages(page)
+                    }
                 }
             }
 
@@ -143,15 +137,11 @@ class WebGpuViewer(val activity: ReaderActivity, val isReversed: Boolean, val is
 //        }
 
         config.imagePropertyChangedListener = {
-            runBlocking {
-                cacheMutex.withLock {
-                    pageCache.clear()
-                }
+            synchronized(pageCache) {
+                pageCache.clear()
             }
 
-            pager.state.post {
-                pager.state.render()
-            }
+            pager.state.invalidate()
 
             updateTransitionAnimation()
         }
@@ -193,10 +183,10 @@ class WebGpuViewer(val activity: ReaderActivity, val isReversed: Boolean, val is
     var currentPage: ReaderPage? = null
 
     val preloadCount = 3
-    val cacheSize = 10
+    val cacheSize = 20
 
     val cacheMutex = Mutex()
-    val pageCache = LinkedHashMap<ReaderPage, WebGpuImageViewerPage?>(cacheSize, 0.75f, true)
+    val pageCache = LinkedHashMap<ReaderPage, ImagePage?>(cacheSize, 0.75f, true)
 
     var decodeJob: Job? = null
     val decodeQueue = mutableListOf<ReaderPage>()
@@ -232,45 +222,13 @@ class WebGpuViewer(val activity: ReaderActivity, val isReversed: Boolean, val is
         return page.stream?.invoke()
     }
 
-    private suspend fun createPage(page: ReaderPage): WebGpuImageViewerPage? {
-        return cacheMutex.withLock { pageCache[page] } ?: loadPage(page)?.use {
-            Log.i("WebGpuViewer", "createPage: ${page.index} $page")
-            withContext(Dispatchers.Default) {
-                val dec = ImageDecoder.new(it)
-                dec.decodeNext()
-            }
-        }?.let {
-            withContext(WebGpuRenderer.dispatcher) {
-                WebGpuImageViewerPage(Image(it.image, it.width, it.height)).apply {
-                    if (config.imageCropBorders) {
-                        trim = Trim.find(image, 1f, 1f, 1f, 10f / 255)
-                    }
-
-                    parent = pager.state
-                    x = homeX
-                    y = homeY
-                    scale = homeScale
-                }
-            }
-        }?.also {
-            Log.i("WebGpuViewer", "store in cache: ${page.index} $page")
-            cacheMutex.withLock {
-                pageCache[page] = it
-                while (pageCache.size > cacheSize) {
-                    Log.i("WebGpuViewer", "remove from cache: ${pageCache.keys.first().index}")
-                    pageCache.remove(pageCache.keys.first())
-                }
-            }
-        }
-    }
-
     @Synchronized
     private fun popPreload(): ReaderPage? {
         return decodeQueue.removeFirstOrNull()
     }
 
     @Synchronized
-    private fun preloadPages(page: ReaderPage) {
+    protected fun preloadPages(page: ReaderPage) {
         val pages = page.chapter.pages ?: return
 
         decodeQueue.clear()
@@ -309,10 +267,45 @@ class WebGpuViewer(val activity: ReaderActivity, val isReversed: Boolean, val is
             decodeQueue.add(page)
         }
 
-        decodeJob ?: CoroutineScope(Dispatchers.Default).launch {
+        decodeJob = decodeJob ?: CoroutineScope(Dispatchers.Default).launch {
             try {
                 while (true) {
-                    popPreload()?.let { createPage(it) } ?: return@launch
+                    popPreload()?.let { page ->
+                        synchronized(pageCache) {
+                            if (pageCache[page] != null) continue
+                        }
+
+                        loadPage(page)?.use {
+                            Log.i("WebGpuViewer", "createPage: ${page.chapter.chapter.id} ${page.index}")
+                            withContext(Dispatchers.Default) {
+                                val dec = ImageDecoder.new(it)
+                                dec.decodeNext()
+                            }
+                        }?.let { res ->
+                            withContext(WebGpuRenderer.dispatcher) {
+                                ImagePage(Image(res.image, res.width, res.height)).apply {
+                                    if (config.imageCropBorders) {
+                                        trim = Trim.find(image!!, 1f, 1f, 1f, 10f / 255)
+                                    }
+
+                                    parent = pager.state
+                                    x = homeX
+                                    y = homeY
+                                    scale = homeScale
+                                }
+                            }.also {
+                                Log.i("WebGpuViewer", "store in cache: ${page.index} $page")
+                                synchronized(pageCache) {
+                                    pageCache[page] = it
+                                    while (pageCache.size > cacheSize) {
+                                        Log.i("WebGpuViewer", "remove from cache: ${pageCache.keys.first()}")
+                                        pageCache.remove(pageCache.keys.first())
+                                    }
+                                }
+                            }
+                            pager.state.invalidate()
+                        }
+                    } ?: return@launch
                 }
             } finally {
                 decodeJob = null
@@ -345,43 +338,22 @@ class WebGpuViewer(val activity: ReaderActivity, val isReversed: Boolean, val is
         currentPage?.let { preloadPages(it) }
 
         pager.state.apply {
-            val currentPageIndex = currentPage?.index ?: 0
-            if (currentPageIndex < pages.lastIndex || nextChapter != null) {
-                if (isReversed) havePrev = true else haveNext = true
-            }
-            if (currentPageIndex > 0 || chapters.prevChapter != null) {
-                if (isReversed) haveNext = true else havePrev = true
-            }
-
             onPageChange = onPageChange@{ delta ->
-                val index = if (isReversed) -delta else delta
                 if (!activity.isScrollingThroughPages) {
                     activity.hideMenu()
                 }
-                if (index == 1) {
-                    nextPage
-                } else {
-                    prevPage
-                }?.let { newPage ->
+
+                val delta = if (isReversed) -delta else delta
+
+                nextPage(delta)?.let { newPage ->
                     this@WebGpuViewer.currentPage = newPage
-
-                    val pages = newPage.chapter.pages ?: return@onPageChange
-
-                    if (newPage.index < pages.lastIndex || nextChapter != null) {
-                        if (isReversed) havePrev = true else haveNext = true
-                    }
-                    if (newPage.index > 0 || prevChapter != null) {
-                        if (isReversed) haveNext = true else havePrev = true
-                    }
 
                     activity.onPageSelected(newPage)
                     preloadPages(newPage)
                 }
             }
 
-            post {
-                render()
-            }
+            invalidate()
         }
     }
 
@@ -394,12 +366,6 @@ class WebGpuViewer(val activity: ReaderActivity, val isReversed: Boolean, val is
 
         val pages = page.chapter.pages ?: return
 
-        if (page.index < pages.lastIndex || nextChapter != null) {
-            if (isReversed) pager.state.havePrev = true else pager.state.haveNext = true
-        }
-        if (page.index > 0 || prevChapter != null) {
-            if (isReversed) pager.state.haveNext = true else pager.state.havePrev = true
-        }
         if (page.index == 0) {
             prevChapter?.let { activity.requestPreloadChapter(it) }
         }
@@ -407,7 +373,7 @@ class WebGpuViewer(val activity: ReaderActivity, val isReversed: Boolean, val is
             nextChapter?.let { activity.requestPreloadChapter(it) }
         }
 
-        pager.state.render()
+        pager.state.invalidate()
 
         preloadPages(page)
     }

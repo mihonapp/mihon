@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuViewerContinuous
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import tachiyomi.i18n.MR
 
@@ -68,7 +69,7 @@ enum class ReadingMode(
                 LEFT_TO_RIGHT -> WebGpuViewer(activity, isReversed = false, isVertical = false)
                 RIGHT_TO_LEFT -> WebGpuViewer(activity, isReversed = true, isVertical = false)
                 VERTICAL -> WebGpuViewer(activity, isReversed = false, isVertical = true)
-                WEBTOON -> WebtoonViewer(activity)
+                WEBTOON -> WebGpuViewerContinuous(activity)
                 CONTINUOUS_VERTICAL -> WebtoonViewer(activity, isContinuous = false)
                 DEFAULT -> throw IllegalStateException("Preference value must be resolved: $preference")
             }
