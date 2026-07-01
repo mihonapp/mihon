@@ -14,6 +14,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Added
 - Support resumable image downloads if supported by source ([@xMohnad](https://github.com/xMohnad)) ([#3167](https://github.com/mihonapp/mihon/pull/3167))
 
+### Fixed
+- Fix blank image on tall webtoons exceeding hardware texture limits ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3190](https://github.com/mihonapp/mihon/pull/3190))
+
 ## [v0.20.0] - 2026-06-27
 ### Added
 - Add support for `tachiyomix` 1.6 extensions ([@AntsyLich](https://github.com/AntsyLich))
@@ -34,7 +37,6 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Fixed
 - Add missing `outlineVariant` color to Nord theme ([@CompileConnected](https://github.com/CompileConnected)) ([#3184](https://github.com/mihonapp/mihon/pull/3184))
 - Continue reading button missing when unread filter is off ([@AntsyLich](https://github.com/AntsyLich)) ([#3382](https://github.com/mihonapp/mihon/pull/3382))
-- Fix blank image on tall webtoons exceeding hardware texture limits ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3190](https://github.com/mihonapp/mihon/pull/3190))
 - Fix random `FileNotFoundException` when reading chapters ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3154](https://github.com/mihonapp/mihon/pull/3154))
 
 ## [v0.19.9] - 2026-04-11
