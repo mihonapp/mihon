@@ -253,6 +253,9 @@ class MangaScreenModel(
                 fetchDetails = true,
                 fetchChapters = true,
             )
+            if (manualFetch && successState?.hasLoggedInTrackers == true) {
+                refreshTrackers()
+            }
             updateSuccessState { it.copy(isRefreshingData = false) }
         }
     }

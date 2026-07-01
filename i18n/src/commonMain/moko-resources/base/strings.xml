@@ -533,6 +533,10 @@
     <string name="tracking_guide">Tracking guide</string>
     <string name="pref_auto_update_manga_sync">Update progress after reading</string>
     <string name="pref_auto_update_manga_on_mark_read">Update progress when marked as read</string>
+    <string name="pref_tracking_sync_strategy">Page progress sync strategy</string>
+    <string name="pref_tracking_sync_strategy_default">Keep furthest progress</string>
+    <string name="pref_tracking_sync_strategy_accept_all">Use tracker progress</string>
+    <string name="pref_tracking_sync_strategy_allow_reread">Allow rereading progress</string>
     <string name="services">Trackers</string>
     <string name="tracking_info">One-way sync to update the chapter progress in external tracker services. Set up tracking for individual entries from their tracking button.</string>
     <string name="enhanced_services">Enhanced trackers</string>
