@@ -154,7 +154,7 @@ class ShikimoriApi(
     )
 
     companion object {
-        const val BASE_URL = "https://shikimori.one"
+        const val BASE_URL = "https://shikimori.io"
         private const val API_URL = "$BASE_URL/api"
         private const val OAUTH_URL = "$BASE_URL/oauth/token"
         private const val LOGIN_URL = "$BASE_URL/oauth/authorize"
