@@ -1,5 +1,0 @@
-Added support for tachiyomix 1.6 extensions and index format (@AntsyLich)
-Added an optional vertical chapter navigator for long strip mode (@AntsyLich)
-Added the ability to open app settings directly from system settings (@JFronny)
-
-See the full changelog at https://mihon.app/changelogs/
