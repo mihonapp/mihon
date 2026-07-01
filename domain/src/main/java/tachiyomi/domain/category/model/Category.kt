@@ -10,8 +10,10 @@ data class Category(
 ) : Serializable {
 
     val isSystemCategory: Boolean = id == UNCATEGORIZED_ID
+    val isIncognito: Boolean = (flags and INCOGNITO_MASK) !=0L
 
     companion object {
         const val UNCATEGORIZED_ID = 0L
+        const val INCOGNITO_MASK = 0x2L
     }
 }

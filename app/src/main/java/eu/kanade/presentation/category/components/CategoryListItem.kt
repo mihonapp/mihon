@@ -8,6 +8,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DragHandle
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,6 +29,7 @@ fun ReorderableCollectionItemScope.CategoryListItem(
     category: Category,
     onRename: () -> Unit,
     onDelete: () -> Unit,
+    onToggleIncognito: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ElevatedCard(modifier = modifier) {
@@ -52,6 +55,13 @@ fun ReorderableCollectionItemScope.CategoryListItem(
                 text = category.name,
                 modifier = Modifier.weight(1f),
             )
+            IconButton(onClick = onToggleIncognito) {
+                Icon(
+                    imageVector = if (category.isIncognito) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
+                    contentDescription = "Toggle Incognito Mode",
+                    tint = if (category.isIncognito) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
             IconButton(onClick = onRename) {
                 Icon(
                     imageVector = Icons.Outlined.Edit,

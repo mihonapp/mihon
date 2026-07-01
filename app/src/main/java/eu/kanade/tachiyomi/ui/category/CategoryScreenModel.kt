@@ -1,5 +1,4 @@
 package eu.kanade.tachiyomi.ui.category
-
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
@@ -14,7 +13,9 @@ import tachiyomi.domain.category.interactor.DeleteCategory
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.RenameCategory
 import tachiyomi.domain.category.interactor.ReorderCategory
+import tachiyomi.domain.category.interactor.UpdateCategory
 import tachiyomi.domain.category.model.Category
+import tachiyomi.domain.category.model.CategoryUpdate
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -25,6 +26,7 @@ class CategoryScreenModel(
     private val deleteCategory: DeleteCategory = Injekt.get(),
     private val reorderCategory: ReorderCategory = Injekt.get(),
     private val renameCategory: RenameCategory = Injekt.get(),
+    private val updateCategory: UpdateCategory = Injekt.get(),
 ) : StateScreenModel<CategoryScreenState>(CategoryScreenState.Loading) {
 
     private val _events: Channel<CategoryEvent> = Channel()
@@ -41,6 +43,18 @@ class CategoryScreenModel(
                         )
                     }
                 }
+        }
+    }
+
+    fun toggleIncognito(category: Category) {
+        screenModelScope.launch {
+            val newFlags = if (category.isIncognito) {
+                category.flags and Category.INCOGNITO_MASK.inv()
+            } else {
+                category.flags or Category.INCOGNITO_MASK
+            }
+
+            updateCategory.await(CategoryUpdate(id = category.id, flags = newFlags))
         }
     }
 
