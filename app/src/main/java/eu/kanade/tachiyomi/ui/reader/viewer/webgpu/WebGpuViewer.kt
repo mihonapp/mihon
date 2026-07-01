@@ -37,7 +37,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withContext
 import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.injectLazy
@@ -101,16 +100,16 @@ open class WebGpuViewer(
             fetchPage = fetch@{ index ->
                 val i = if (isReversed) -index else index
                 nextPage(i)?.let { page ->
+                    val id = ((page.chapter.chapter.id ?: 0) shl 32) + page.index
                     synchronized(pageCache) {
-                        pageCache[page]
+                        pageCache[id]
                     } ?: ImagePage.Dummy(400, 400).also {
-                        preloadPages(page)
+                        preloadPage(page)
                     }
                 }
             }
 
             onTap = { offset ->
-                Log.i("WebGpuViewer", "onTap $offset")
                 when (config.navigator.getAction(PointF(offset.x, offset.y))) {
                     NavigationRegion.MENU -> activity.toggleMenu()
                     NavigationRegion.NEXT -> moveToNext()
@@ -121,7 +120,6 @@ open class WebGpuViewer(
             }
 
             onLongTap = { offset ->
-                Log.i("WebGpuViewer", "onLongTap $offset")
                 if (activity.viewModel.state.value.menuVisible || config.longTapEnabled) {
                     currentPage?.let {
                         activity.onPageLongTap(it)
@@ -185,8 +183,7 @@ open class WebGpuViewer(
     val preloadCount = 3
     val cacheSize = 20
 
-    val cacheMutex = Mutex()
-    val pageCache = LinkedHashMap<ReaderPage, ImagePage?>(cacheSize, 0.75f, true)
+    val pageCache = LinkedHashMap<Long, ImagePage?>(cacheSize, 0.75f, true)
 
     var decodeJob: Job? = null
     val decodeQueue = mutableListOf<ReaderPage>()
@@ -225,6 +222,60 @@ open class WebGpuViewer(
     @Synchronized
     private fun popPreload(): ReaderPage? {
         return decodeQueue.removeFirstOrNull()
+    }
+
+    private fun startDecodeQueue() {
+        decodeJob = decodeJob ?: CoroutineScope(Dispatchers.Default).launch {
+            try {
+                while (true) {
+                    popPreload()?.let { page ->
+                        val id = ((page.chapter.chapter.id ?: 0) shl 32) + page.index
+                        synchronized(pageCache) {
+                            if (pageCache[id] != null) continue
+                        }
+
+                        loadPage(page)?.use {
+                            Log.i("WebGpuViewer", "createPage: ${page.chapter.chapter.id} ${page.index}")
+                            withContext(Dispatchers.Default) {
+                                val dec = ImageDecoder.new(it)
+                                dec.decodeNext()
+                            }
+                        }?.let { res ->
+                            withContext(WebGpuRenderer.dispatcher) {
+                                ImagePage(Image(res.image, res.width, res.height)).apply {
+                                    if (config.imageCropBorders) {
+                                        trim = Trim.find(image!!, 1f, 1f, 1f, 10f / 255)
+                                    }
+
+                                    parent = pager.state
+                                    x = homeX
+                                    y = homeY
+                                    scale = homeScale
+                                }
+                            }.also {
+                                Log.i("WebGpuViewer", "store in cache: ${page.index} $page")
+                                synchronized(pageCache) {
+                                    pageCache[id] = it
+                                    while (pageCache.size > cacheSize) {
+                                        Log.i("WebGpuViewer", "remove from cache: ${pageCache.keys.first()}")
+                                        pageCache.remove(pageCache.keys.first())
+                                    }
+                                }
+                            }
+                            pager.state.invalidate()
+                        }
+                    } ?: return@launch
+                }
+            } finally {
+                decodeJob = null
+            }
+        }
+    }
+
+    @Synchronized
+    protected fun preloadPage(page: ReaderPage) {
+        decodeQueue.add(page)
+        startDecodeQueue()
     }
 
     @Synchronized
@@ -267,50 +318,7 @@ open class WebGpuViewer(
             decodeQueue.add(page)
         }
 
-        decodeJob = decodeJob ?: CoroutineScope(Dispatchers.Default).launch {
-            try {
-                while (true) {
-                    popPreload()?.let { page ->
-                        synchronized(pageCache) {
-                            if (pageCache[page] != null) continue
-                        }
-
-                        loadPage(page)?.use {
-                            Log.i("WebGpuViewer", "createPage: ${page.chapter.chapter.id} ${page.index}")
-                            withContext(Dispatchers.Default) {
-                                val dec = ImageDecoder.new(it)
-                                dec.decodeNext()
-                            }
-                        }?.let { res ->
-                            withContext(WebGpuRenderer.dispatcher) {
-                                ImagePage(Image(res.image, res.width, res.height)).apply {
-                                    if (config.imageCropBorders) {
-                                        trim = Trim.find(image!!, 1f, 1f, 1f, 10f / 255)
-                                    }
-
-                                    parent = pager.state
-                                    x = homeX
-                                    y = homeY
-                                    scale = homeScale
-                                }
-                            }.also {
-                                Log.i("WebGpuViewer", "store in cache: ${page.index} $page")
-                                synchronized(pageCache) {
-                                    pageCache[page] = it
-                                    while (pageCache.size > cacheSize) {
-                                        Log.i("WebGpuViewer", "remove from cache: ${pageCache.keys.first()}")
-                                        pageCache.remove(pageCache.keys.first())
-                                    }
-                                }
-                            }
-                            pager.state.invalidate()
-                        }
-                    } ?: return@launch
-                }
-            } finally {
-                decodeJob = null
-            }
-        }
+        startDecodeQueue()
     }
 
     /**
@@ -318,6 +326,7 @@ open class WebGpuViewer(
      * it sets the chapters immediately, otherwise they are saved and set when it becomes idle.
      */
     override fun setChapters(chapters: ViewerChapters) {
+        Log.i("WebGpuViewer", "setChapters: $chapters")
         val pages = chapters.currChapter.pages ?: return
 
         prevChapter = chapters.prevChapter
@@ -361,6 +370,7 @@ open class WebGpuViewer(
      * Tells this viewer to move to the given [page].
      */
     override fun moveToPage(page: ReaderPage) {
+        Log.i("WebGpuViewer", "moveToPage: $page")
         currentPage = page
         activity.onPageSelected(page)
 
