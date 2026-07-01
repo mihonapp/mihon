@@ -1,13 +1,17 @@
 package eu.kanade.tachiyomi.ui.download
 
+import android.app.Application
 import android.view.MenuItem
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
+import eu.kanade.tachiyomi.data.download.toDownloadNetworkStatus
 import eu.kanade.tachiyomi.databinding.DownloadListBinding
 import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.util.system.activeNetworkState
+import eu.kanade.tachiyomi.util.system.networkStateFlow
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,15 +22,19 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import tachiyomi.domain.download.service.DownloadPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import kotlin.time.Duration.Companion.milliseconds
 
 class DownloadQueueScreenModel(
     private val downloadManager: DownloadManager = Injekt.get(),
+    context: Application = Injekt.get(),
+    downloadPreferences: DownloadPreferences = Injekt.get(),
 ) : ScreenModel {
 
     private val _state = MutableStateFlow(emptyList<DownloadHeaderItem>())
@@ -142,6 +150,21 @@ class DownloadQueueScreenModel(
 
     val isDownloaderRunning = downloadManager.isDownloaderRunning
         .stateIn(screenModelScope, SharingStarted.WhileSubscribed(5000), false)
+
+    internal val networkStatus = combine(
+        context.networkStateFlow()
+            .onStart { emit(context.activeNetworkState()) },
+        downloadPreferences.downloadOnlyOverWifi.changes()
+            .onStart { emit(downloadPreferences.downloadOnlyOverWifi.get()) },
+    ) { networkState, requireWifi ->
+        networkState.toDownloadNetworkStatus(requireWifi)
+    }
+        .distinctUntilChanged()
+        .stateIn(
+            screenModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            context.activeNetworkState().toDownloadNetworkStatus(downloadPreferences.downloadOnlyOverWifi.get()),
+        )
 
     fun getDownloadStatusFlow() = downloadManager.statusFlow()
     fun getDownloadProgressFlow() = downloadManager.progressFlow()
