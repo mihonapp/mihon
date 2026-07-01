@@ -43,8 +43,6 @@ import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.relativeDateText
 import eu.kanade.presentation.manga.components.MangaCover
 import eu.kanade.tachiyomi.ui.failedupdate.FailedUpdatesScreenModel
-import kotlinx.collections.immutable.persistentListOf
-import tachiyomi.domain.manga.model.MangaCover as MangaCoverData
 import tachiyomi.domain.updates.model.MangaUpdateErrorWithManga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
@@ -53,6 +51,7 @@ import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
+import tachiyomi.domain.manga.model.MangaCover as MangaCoverData
 
 @Composable
 fun FailedUpdatesScreen(
@@ -135,7 +134,7 @@ private fun FailedUpdatesAppBar(
         actions = {
             if (actionModeCounter == 0) {
                 AppBarActions(
-                    persistentListOf(
+                    listOf(
                         AppBar.Action(
                             title = stringResource(MR.strings.action_select_all),
                             icon = Icons.Outlined.SelectAll,
@@ -154,7 +153,7 @@ private fun FailedUpdatesAppBar(
         onCancelActionMode = onCancelActionMode,
         actionModeActions = {
             AppBarActions(
-                persistentListOf(
+                listOf(
                     AppBar.Action(
                         title = stringResource(MR.strings.action_select_all),
                         icon = Icons.Outlined.SelectAll,
@@ -193,7 +192,7 @@ private fun FailedUpdatesBottomBar(
         horizontalArrangement = Arrangement.Center,
     ) {
         Button(onClick = onMigrateSelected) {
-            Text(text = stringResource(MR.strings.action_migrate_selected))
+            Text(text = stringResource(MR.strings.action_migrate))
         }
     }
 }

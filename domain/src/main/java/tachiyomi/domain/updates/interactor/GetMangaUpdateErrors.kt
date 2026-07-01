@@ -2,6 +2,7 @@ package tachiyomi.domain.updates.interactor
 
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.domain.updates.model.MangaUpdateError
+import tachiyomi.domain.updates.model.MangaUpdateErrorWithManga
 import tachiyomi.domain.updates.repository.MangaUpdateErrorRepository
 
 class GetMangaUpdateErrors(
@@ -14,5 +15,13 @@ class GetMangaUpdateErrors(
 
     fun subscribe(): Flow<List<MangaUpdateError>> {
         return repository.subscribeAll()
+    }
+
+    fun subscribeCount(): Flow<Long> {
+        return repository.subscribeCount()
+    }
+
+    fun subscribeWithManga(): Flow<List<MangaUpdateErrorWithManga>> {
+        return repository.subscribeWithManga()
     }
 }

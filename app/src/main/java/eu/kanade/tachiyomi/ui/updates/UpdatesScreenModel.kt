@@ -18,10 +18,6 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.util.lang.toLocalDate
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.mutate
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -108,7 +104,6 @@ class UpdatesScreenModel(
                 updates
                     .toUpdateItems()
                     .applyFilters(itemPreferences)
-                    .toPersistentList()
             }
                 .collectLatest { updateItems ->
                     mutableState.update {
@@ -126,12 +121,11 @@ class UpdatesScreenModel(
                 .collect(this@UpdatesScreenModel::updateDownloadState)
         }
 
-        // Subscribe to failed updates count
         screenModelScope.launchIO {
-            getMangaUpdateErrors.subscribe()
+            getMangaUpdateErrors.subscribeCount()
                 .catch { logcat(LogPriority.ERROR, it) }
-                .collectLatest { errors ->
-                    mutableState.update { it.copy(failedUpdatesCount = errors.size.toLong()) }
+                .collectLatest { count ->
+                    mutableState.update { it.copy(failedUpdatesCount = count) }
                 }
         }
         getUpdatesItemPreferenceFlow()
@@ -209,9 +203,9 @@ class UpdatesScreenModel(
      */
     private fun updateDownloadState(download: Download) {
         mutableState.update { state ->
-            val newItems = state.items.mutate { list ->
+            val newItems = state.items.toMutableList().also { list ->
                 val modifiedIndex = list.indexOfFirst { it.update.chapterId == download.chapter.id }
-                if (modifiedIndex < 0) return@mutate
+                if (modifiedIndex < 0) return@also
 
                 val item = list[modifiedIndex]
                 list[modifiedIndex] = item.copy(
@@ -391,7 +385,7 @@ class UpdatesScreenModel(
                     }
                 }
             }
-            state.copy(items = newItems.toPersistentList())
+            state.copy(items = newItems)
         }
     }
 
@@ -401,7 +395,7 @@ class UpdatesScreenModel(
                 selectedChapterIds.addOrRemove(it.update.chapterId, selected)
                 it.copy(selected = selected)
             }
-            state.copy(items = newItems.toPersistentList())
+            state.copy(items = newItems)
         }
 
         selectedPositions[0] = -1
@@ -414,7 +408,7 @@ class UpdatesScreenModel(
                 selectedChapterIds.addOrRemove(it.update.chapterId, !it.selected)
                 it.copy(selected = !it.selected)
             }
-            state.copy(items = newItems.toPersistentList())
+            state.copy(items = newItems)
         }
         selectedPositions[0] = -1
         selectedPositions[1] = -1
@@ -463,7 +457,7 @@ class UpdatesScreenModel(
     data class State(
         val isLoading: Boolean = true,
         val hasActiveFilters: Boolean = false,
-        val items: PersistentList<UpdatesItem> = persistentListOf(),
+        val items: List<UpdatesItem> = listOf(),
         val dialog: Dialog? = null,
         val failedUpdatesCount: Long = 0,
     ) {

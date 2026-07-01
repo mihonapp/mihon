@@ -18,10 +18,6 @@ import androidx.work.WorkInfo
 import androidx.work.WorkQuery
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
-import eu.kanade.domain.manga.interactor.UpdateManga
-import eu.kanade.domain.manga.model.toSManga
-import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.source.model.SManga
@@ -41,6 +37,7 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import logcat.LogPriority
 import mihon.domain.chapter.interactor.FilterChaptersForDownload
+import mihon.domain.source.interactor.UpdateMangaFromRemote
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.getAndSet
 import tachiyomi.core.common.util.lang.withIOContext
@@ -63,9 +60,9 @@ import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.model.SourceNotInstalledException
 import tachiyomi.domain.source.service.SourceManager
-import tachiyomi.i18n.MR
 import tachiyomi.domain.updates.interactor.DeleteMangaUpdateError
 import tachiyomi.domain.updates.interactor.InsertMangaUpdateError
+import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
@@ -85,13 +82,11 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     private val sourceManager: SourceManager = Injekt.get()
     private val libraryPreferences: LibraryPreferences = Injekt.get()
     private val downloadManager: DownloadManager = Injekt.get()
-    private val coverCache: CoverCache = Injekt.get()
     private val getLibraryManga: GetLibraryManga = Injekt.get()
     private val getManga: GetManga = Injekt.get()
-    private val updateManga: UpdateManga = Injekt.get()
-    private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get()
     private val fetchInterval: FetchInterval = Injekt.get()
     private val filterChaptersForDownload: FilterChaptersForDownload = Injekt.get()
+    private val updateMangaFromRemote: UpdateMangaFromRemote = Injekt.get()
     private val insertMangaUpdateError: InsertMangaUpdateError = Injekt.get()
     private val deleteMangaUpdateError: DeleteMangaUpdateError = Injekt.get()
 
@@ -268,11 +263,14 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                         val newChapters = updateManga(manga, fetchWindow)
                                             .sortedByDescending { it.sourceOrder }
 
-                                        // Delete any previous error for this manga since update was successful
                                         try {
                                             deleteMangaUpdateError.await(manga.id)
+                                        } catch (e: CancellationException) {
+                                            throw e
                                         } catch (e: Exception) {
-                                            logcat(LogPriority.ERROR, e) { "Failed to delete update error for manga ${manga.title}" }
+                                            logcat(LogPriority.ERROR, e) {
+                                                "Failed to delete update error for manga ${manga.title}"
+                                            }
                                         }
 
                                         if (newChapters.isNotEmpty()) {
@@ -289,6 +287,10 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                             newUpdates.add(manga to newChapters.toTypedArray())
                                         }
                                     } catch (e: Throwable) {
+                                        if (e is CancellationException) {
+                                            throw e
+                                        }
+
                                         val errorMessage = when (e) {
                                             is NoChaptersException -> context.stringResource(
                                                 MR.strings.no_chapters_error,
@@ -299,7 +301,9 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                             )
                                             else -> e.message
                                         }
-                                        failedUpdates.add(manga to errorMessage)
+                                        if (getManga.await(manga.id)?.favorite == true) {
+                                            failedUpdates.add(manga to errorMessage)
+                                        }
                                     }
                                 }
                             }
@@ -319,10 +323,11 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         }
 
         if (failedUpdates.isNotEmpty()) {
-            // Insert errors into database
             failedUpdates.forEach { (manga, errorMessage) ->
                 try {
                     insertMangaUpdateError.await(manga.id, errorMessage, System.currentTimeMillis())
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
                     logcat(LogPriority.ERROR, e) { "Failed to insert update error for manga ${manga.title}" }
                 }
@@ -352,19 +357,16 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     private suspend fun updateManga(manga: Manga, fetchWindow: Pair<Long, Long>): List<Chapter> {
         val source = sourceManager.getOrStub(manga.source)
 
-        // Update manga metadata if needed
-        if (libraryPreferences.autoUpdateMetadata.get()) {
-            val networkManga = source.getMangaDetails(manga.toSManga())
-            updateManga.awaitUpdateFromSource(manga, networkManga, manualFetch = false, coverCache)
-        }
+        val update = updateMangaFromRemote(
+            source = source,
+            manga = manga,
+            fetchDetails = libraryPreferences.autoUpdateMetadata.get(),
+            fetchChapters = true,
+            fetchWindow = fetchWindow,
+        )
+            .getOrThrow()
 
-        val chapters = source.getChapterList(manga.toSManga())
-
-        // Get manga from database to account for if it was removed during the update and
-        // to get latest data so it doesn't get overwritten later on
-        val dbManga = getManga.await(manga.id)?.takeIf { it.favorite } ?: return emptyList()
-
-        return syncChaptersWithSource.await(chapters, dbManga, source, false, fetchWindow)
+        return if (update.manga.favorite) update.newChapters else emptyList()
     }
 
     private suspend fun withUpdateNotification(

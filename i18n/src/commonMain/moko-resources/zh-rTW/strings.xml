@@ -759,16 +759,7 @@
     <string name="manga_interval_expected_update">預計 %1$s後更新，每 %2$s檢查一次</string>
     <string name="invalid_backup_file_error">完整錯誤訊息：</string>
     <string name="manga_interval_custom_amount">自訂更新頻率：</string>
-    <string name="label_add_repo_input">儲存庫網址</string>
-    <string name="error_repo_exists">已有該儲存庫！</string>
     <string name="pref_library_update_smart_update">智慧更新</string>
-    <string name="invalid_repo_name">無效的儲存庫網址</string>
-    <string name="action_add_repo_message">將額外的擴充套件儲存庫新增至 %s，此處應填入一個結尾為「index.min.json」的網址</string>
-    <string name="delete_repo_confirmation">確定要刪除「%s」儲存庫嗎？</string>
-    <string name="action_delete_repo">刪除儲存庫</string>
-    <string name="action_add_repo">新增儲存庫</string>
-    <string name="information_empty_repos">尚未新增任何儲存庫</string>
-    <string name="label_extension_repos">擴充套件儲存庫</string>
     <string name="onboarding_storage_help_action">儲存空間指南</string>
     <string name="onboarding_storage_help_info">從舊版升級而不確定該如何選擇嗎？請參閱儲存空間指南以取得更多資訊</string>
     <string name="theme_nord">北風</string>
@@ -778,9 +769,6 @@
     <string name="pref_webtoon_disable_zoom_out">停用縮小</string>
     <string name="pref_display_profile">自訂顯示設定檔</string>
     <string name="action_add_anyway">仍要新增</string>
-    <string name="action_replace_repo">取代</string>
-    <string name="action_replace_repo_title">已有相同的簽署金鑰指紋</string>
-    <string name="action_replace_repo_message">「%1$s」儲存庫的簽署金鑰指紋與「%2$s」相同\n若此為預期現象，則「%2$s」將被取代，否則請聯絡該儲存庫的維護者</string>
     <string name="upcoming_guide">即將推出的指南</string>
     <string name="upcoming_calendar_next">下個月</string>
     <string name="upcoming_calendar_prev">上個月</string>
@@ -797,9 +785,7 @@
     <string name="pref_flash_style_black">黑</string>
     <string name="invalid_backup_file_unknown">備份檔案已損壞</string>
     <string name="invalid_backup_file_json">不支援 JSON 備份</string>
-    <string name="extensionRepo_settings">擴充套件儲存庫</string>
     <string name="action_copy_link">複製連結</string>
-    <string name="add_repo_confirmation">您想新增儲存庫\"%s\"嗎？</string>
     <string name="pref_download_new_unread_chapters_only">略過下載重複閱讀的章節</string>
     <string name="confirm_tracker_update">將進度更新到第 %d 章？</string>
     <string name="onboarding_permission_analytics">允許資料分析</string>
@@ -857,7 +843,7 @@
     <string name="migrationConfigScreen.selectNoneLabel">全不選</string>
     <string name="migrationConfigScreen.selectEnabledLabel">選擇已啟用的來源</string>
     <string name="migrationConfigScreen.selectPinnedLabel">選擇已釘選的來源</string>
-    <string name="migrationConfigScreen.continueButtonText">繼续</string>
+    <string name="migrationConfigScreen.continueButtonText">繼續</string>
     <string name="migrationConfigScreen.dataToMigrateHeader">遷移日期</string>
     <string name="pref_hide_missing_chapter_indicators">隱藏缺少章節指示器</string>
     <string name="migrationConfigScreen.removeDownloadsTitle">遷移後刪除目前項目的下載</string>
@@ -900,4 +886,16 @@
     <string name="action_filter_excluded_scanlators">篩選排除掃譯者</string>
     <string name="download_bookmarked">已新增書籤</string>
     <string name="label_support_us">支持我們</string>
+    <string name="supportUsScreen.contactPlatform">Discord</string>
+    <string name="donationCampaign.contactPlatform">Discord</string>
+    <string name="supportUsScreen.perks">贊助者可使用專屬頻道，未來也會提供更多福利。</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreon（建議優先使用）</string>
+    <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
+    <string name="supportUsScreen.currentlySupportedBy">Mihon 目前由 %d 位以上的贊助者支持。感謝每一位的支持，讓我們一起讓 Mihon 變得更好。</string>
+    <string name="supportUsScreen.contactForDetailsMessage">如需其他贊助方式或有相關問題，請加入我們的 Discord 伺服器。</string>
+    <string name="donationCampaign.title">喜歡這個 App 嗎？</string>
+    <string name="donationCampaign.paragraph1">您好！我是 Mihon 的主要開發者，想邀請您考慮以金錢方式支持本專案的開發。若能獲得足夠的支持，將能全職投入 Mihon 的開發，專注解決長期存在的問題，以及實作許多使用者期待已久的功能。</string>
+    <string name="donationCampaign.paragraph2">您可以透過 Patreon（建議優先使用）或 OpenCollective 進行贊助。如果有任何問題，或希望透過其他方式支持，歡迎透過 Mihon 的 Discord 伺服器與我聯繫。</string>
+    <string name="donationCampaign.paragraph3">無論是否贊助，Mihon 都會持續由我與志工維護，並且維持開源。</string>
+    <string name="donationCampaign.dismiss">關閉</string>
 </resources>

@@ -66,7 +66,7 @@
     <string name="action_filter_empty">Tanggalin ang pansala</string>
     <string name="action_filter_unread">Hindi Nabasa</string>
     <string name="action_filter_bookmarked">Na-bookmark</string>
-    <string name="action_filter">Pansala</string>
+    <string name="action_filter">Salain</string>
     <string name="action_menu">Menu</string>
     <string name="action_settings">Mga setting</string>
     <string name="history">Kasaysayan</string>
@@ -157,7 +157,7 @@
     <string name="pref_read_with_volume_keys_inverted">Baligtarin ang pindutan ng volume</string>
     <string name="pref_read_with_volume_keys">Pindutan ng volume</string>
     <string name="pref_reader_navigation">Nabigasyon</string>
-    <string name="pref_skip_filtered_chapters">Laktawan ang mga na-filter na kabanata</string>
+    <string name="pref_skip_filtered_chapters">Laktawan ang mga naisala na kabanata</string>
     <string name="pref_skip_read_chapters">Laktawan ang mga kabanatang nabasa na</string>
     <string name="pref_keep_screen_on">Panatilihing nakabukas ang screen</string>
     <string name="filter_mode_darken">Padilimin (Burn/Darken)</string>
@@ -176,7 +176,7 @@
     <string name="pref_page_transitions">I-animate ang paglipat-pahina</string>
     <string name="pref_cutout_short">Ipakita ang laman sa cutout area</string>
     <string name="pref_fullscreen">Naka-fullscreen</string>
-    <string name="obsolete_extension_message">Hindi na available ang extension na ito. Maaaring hindi ito gumana nang maayos at maaaring magdulot ng mga isyu sa app. Inirerekomenda ang pag-uninstall nito.</string>
+    <string name="obsolete_extension_message">Ang extension na ito ay walang kaugnayan sa anumang store. Hindi ito makatatanggap ng mga update, maaaring hindi gumana nang maayos, at pwedeng magdulot ng problema sa app. Inirerekomendang i-uninstall ito.</string>
     <string name="untrusted_extension_message">Maaaring basahin ng mga mapanganib na extension ang anumang nakatagong kredensyal sa pag-log in o magsagawa ng arbitrary code.
 \n
 \nSa pamamagitan ng pagtitiwala sa extension na ito, tinatanggap mo ang mga panganib na ito.</string>
@@ -189,7 +189,7 @@
     <string name="ext_downloading">Dina-download</string>
     <string name="ext_pending">Nakabinbin</string>
     <string name="ext_install">I-install</string>
-    <string name="ext_obsolete">Di-suportado</string>
+    <string name="ext_obsolete">Naulila</string>
     <string name="ext_update">I-update</string>
     <string name="ext_updates_pending">Nakabinbin ang mga update</string>
     <string name="all">Lahat</string>
@@ -291,7 +291,7 @@
     <string name="chapter_progress">Pahina: %1$d</string>
     <string name="cover_updated">Na-update ang pabalat</string>
     <string name="set_as_cover">Gawin itong pabalat</string>
-    <string name="custom_filter">Custom na filter</string>
+    <string name="custom_filter">Custom na pansala</string>
     <string name="picture_saved">Na-save na ang larawan</string>
     <string name="dialog_with_checkbox_reset">I-reset ang lahat ng kabanata sa entry na ito</string>
     <string name="dialog_with_checkbox_remove_description">Tatanggalin nito ang petsa ng pagbasa sa kabanatang ito. Sigurado ka ba?</string>
@@ -363,7 +363,7 @@
     <string name="email">Email address</string>
     <string name="username">Username (pangalan)</string>
     <string name="login_title">Mag-login sa %1$s</string>
-    <string name="downloaded_only_summary">Pini-filter ang lahat ng mga entry sa iyong akalatan</string>
+    <string name="downloaded_only_summary">Isasala ang lahat ng mga entry sa iyong akalatan</string>
     <string name="label_downloaded_only">Mga na-download lang</string>
     <string name="pref_acra_summary">Nakatutulong sa pag-ayos sa mga bug. Walang sensitibong data ang ipapadala</string>
     <string name="pref_enable_acra">Ipadala ang mga ulat ng pag-crash</string>
@@ -768,27 +768,14 @@
     <string name="private_settings">Kasali ang mga sensitibong setting (hal., mga tracker login token)</string>
     <string name="onboarding_storage_help_info">Nag-a-update mula sa isang mas lumang bersyon at hindi sigurado kung ano ang pipiliin? Sumangguni sa gabay sa storage para sa higit pang impormasyon.</string>
     <string name="pref_library_update_smart_update">Matalas na pag-update</string>
-    <string name="information_empty_repos">Wala kang na-set na repo.</string>
-    <string name="action_add_repo">Magdagdag ng repo</string>
-    <string name="label_extension_repos">Mga repo ng extension</string>
     <string name="onboarding_storage_help_action">Gabay sa storage</string>
-    <string name="error_repo_exists">Umiiral na ang repo na ito!</string>
-    <string name="action_delete_repo">Tanggalin ang repo</string>
-    <string name="label_add_repo_input">URL ng repo</string>
-    <string name="action_add_repo_message">Magdagdag ng mga karagdagang repo sa %s. Dapat ito ay isang URL na nagtatapos sa \"index.min.json\".</string>
-    <string name="invalid_repo_name">Di-wastong URL ng repo</string>
-    <string name="delete_repo_confirmation">Gusto mo bang tanggalin ang repo na \"%s\"?</string>
     <string name="manga_interval_custom_amount">Custom na frequency sa pag-update:</string>
     <string name="theme_nord">Nord</string>
     <string name="manga_interval_expected_update_soon">Malapit na</string>
     <string name="ext_revoke_trust">Bawiin ang mga pinagkakatiwalaang hindi kilalang extension</string>
     <string name="action_open_repo">Open source na repo</string>
     <string name="pref_webtoon_disable_zoom_out">Patayin ang pag-zoom out</string>
-    <string name="action_replace_repo">Palitan</string>
     <string name="action_add_anyway">Idagdag pa rin</string>
-    <string name="action_replace_repo_title">Umiiral na ang Signing Key Fingerprint</string>
-    <string name="action_replace_repo_message">Ang repository na %1$s ay may magkaparehong Signing Key Fingerprint sa %2$s.
-\nKung ito ay inaasahan, %2$s ang papalitan, kung hindi naman ay makipag-ugnayan sa tagapamahala ng iyong repo.</string>
     <string name="pref_display_profile">Custom na profile sa display</string>
     <string name="label_upcoming">Paparating</string>
     <string name="upcoming_guide">Gabay sa Paparating</string>
@@ -806,10 +793,8 @@
     <string name="manga_interval_expected_update_null">Ang manga na ito ay nakumpleto na, o walang nahulaang petsa ng paglabas.</string>
     <string name="invalid_backup_file_json">Hindi suportado ang JSON backup</string>
     <string name="invalid_backup_file_unknown">Na-corrupt ang backup file</string>
-    <string name="extensionRepo_settings">Mga repo ng extension</string>
     <string name="action_copy_link">Kopyahin ang link</string>
     <string name="pref_download_new_unread_chapters_only">Laktawan ang pag-download ng mga duplikadong mga nabasang kabanata</string>
-    <string name="add_repo_confirmation">Gusto mo bang idagdag ang repo na \"%s\"?</string>
     <string name="confirm_tracker_update">I-update ang mga tracker hanggang kabanata %d?</string>
     <string name="onboarding_permission_crashlytics">Magpadala ang mga crash log</string>
     <string name="onboarding_permission_crashlytics_description">Magpadala ng hindi nagpapakilalang mga crash log sa mga developer.</string>
@@ -906,7 +891,7 @@
     <string name="action_webview_close_tab">Isara ang tab</string>
     <string name="theme_catppuccin">Catppuccin</string>
     <string name="migrationConfigScreen.availableHeader">Maaaring Magamit</string>
-    <string name="action_filter_excluded_scanlators">I-filter ang na-ibukod na mga scanlator</string>
+    <string name="action_filter_excluded_scanlators">Isala ang na-ibukod na mga scanlator</string>
     <string name="download_bookmarked">Na-bookmark</string>
     <string name="label_support_us">Suportahan Kami</string>
     <string name="supportUsScreen.perks">Ang mga patron ay may access sa exclusive channels, at marami pang perks ang darating.</string>
@@ -921,4 +906,16 @@
     <string name="donationCampaign.paragraph3">Anuman ang mangyari, patuloy na itataguyod ang Mihon ko at ng mga volunteer, at mananatili itong open source.</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="donationCampaign.dismiss">Alisin</string>
+    <string name="extensionStores">Mga Extension store</string>
+    <string name="action.addExtensionStore">Magdagdag ng extension store</string>
+    <string name="extensionStoresScreen.emptyLabel">Wala ka pang idinagdag na extension store</string>
+    <string name="extensionStoresScreen.addStore.title">Idagdag ang extension store</string>
+    <string name="extensionStoresScreen.addStore.alreadyExists">Ang extension store na ito ay umiiral na</string>
+    <string name="extensionStoresScreen.addStore.processing">Nagpoproseso…</string>
+    <string name="extensionStoresScreen.addStoreInput.inputLabel">URL ng Store index</string>
+    <string name="extensionStoresScreen.addStoreDeeplink.bodyText">Gusto mo bang idagdag ang extension store na nasa ibaba?</string>
+    <string name="extensionStoresScreen.deleteStore.title">Tanggalin ang extension store</string>
+    <string name="extensionStoresScreen.deleteStore.body">Gusto mo bang tanggalin ang extension store na \"%1$s\" (%2$s)?</string>
+    <string name="pref_webtoon_vertical_navigator">Gamitin ang vertical na navigator sa pagbabasa ng long strip</string>
+    <string name="pref_webtoon_vertical_navigator_on_left">Ilagay ang vertical na navigator sa kaliwa</string>
 </resources>

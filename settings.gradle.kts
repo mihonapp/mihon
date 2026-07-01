@@ -14,7 +14,11 @@ dependencyResolutionManagement {
             from(files("gradle/mihon.versions.toml"))
         }
     }
+
+    @Suppress("UnstableApiUsage")
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+
+    @Suppress("UnstableApiUsage")
     repositories {
         google()
         mavenCentral()
@@ -26,13 +30,13 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "Mihon"
 include(":app")
+include(":baseline-profile")
 include(":core-metadata")
 include(":core:archive")
 include(":core:common")
 include(":data")
 include(":domain")
 include(":i18n")
-include(":macrobenchmark")
 include(":presentation-core")
 include(":presentation-widget")
 include(":source-api")

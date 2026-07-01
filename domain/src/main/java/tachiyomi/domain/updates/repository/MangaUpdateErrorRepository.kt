@@ -2,6 +2,7 @@ package tachiyomi.domain.updates.repository
 
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.domain.updates.model.MangaUpdateError
+import tachiyomi.domain.updates.model.MangaUpdateErrorWithManga
 
 interface MangaUpdateErrorRepository {
 
@@ -10,6 +11,10 @@ interface MangaUpdateErrorRepository {
     suspend fun getByMangaId(mangaId: Long): MangaUpdateError?
 
     fun subscribeAll(): Flow<List<MangaUpdateError>>
+
+    fun subscribeCount(): Flow<Long>
+
+    fun subscribeWithManga(): Flow<List<MangaUpdateErrorWithManga>>
 
     suspend fun getCount(): Long
 

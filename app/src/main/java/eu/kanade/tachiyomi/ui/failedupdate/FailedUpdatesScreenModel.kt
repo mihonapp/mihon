@@ -3,15 +3,12 @@ package eu.kanade.tachiyomi.ui.failedupdate
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import logcat.LogPriority
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.system.logcat
-import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.updates.interactor.DeleteMangaUpdateError
 import tachiyomi.domain.updates.interactor.GetMangaUpdateErrors
 import tachiyomi.domain.updates.model.MangaUpdateErrorWithManga
@@ -20,37 +17,27 @@ import uy.kohesive.injekt.api.get
 
 class FailedUpdatesScreenModel(
     private val getMangaUpdateErrors: GetMangaUpdateErrors = Injekt.get(),
-    private val getManga: GetManga = Injekt.get(),
     private val deleteMangaUpdateError: DeleteMangaUpdateError = Injekt.get(),
 ) : StateScreenModel<FailedUpdatesScreenModel.State>(State()) {
 
     private val selectedMangaIds = mutableSetOf<Long>()
 
     init {
-        // Clean up errors for non-favorite manga
         cleanupNonFavorites()
 
         screenModelScope.launchIO {
-            getMangaUpdateErrors.subscribe()
+            getMangaUpdateErrors.subscribeWithManga()
                 .catch {
                     logcat(LogPriority.ERROR, it)
                 }
-                .collectLatest { errors ->
-                    val errorWithManga = errors.mapNotNull { error ->
-                        val manga = getManga.await(error.mangaId) ?: return@mapNotNull null
-                        MangaUpdateErrorWithManga(error, manga)
-                    }
-
-                    // Get current valid manga IDs
+                .collectLatest { errorWithManga ->
                     val validMangaIds = errorWithManga.map { it.manga.id }.toSet()
-
-                    // Remove invalid selections (manga that no longer have errors)
                     selectedMangaIds.retainAll(validMangaIds)
 
                     mutableState.update {
                         it.copy(
                             isLoading = false,
-                            items = errorWithManga.toImmutableList(),
+                            items = errorWithManga,
                             selectedIds = selectedMangaIds.toSet(),
                         )
                     }
@@ -128,7 +115,7 @@ class FailedUpdatesScreenModel(
     @Immutable
     data class State(
         val isLoading: Boolean = true,
-        val items: ImmutableList<MangaUpdateErrorWithManga> = kotlinx.collections.immutable.persistentListOf(),
+        val items: List<MangaUpdateErrorWithManga> = emptyList(),
         val selectedIds: Set<Long> = emptySet(),
         val dialog: Dialog? = null,
     ) {

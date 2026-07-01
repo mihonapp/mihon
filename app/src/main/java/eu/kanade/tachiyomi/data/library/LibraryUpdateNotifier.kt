@@ -44,7 +44,6 @@ import java.text.NumberFormat
 
 class LibraryUpdateNotifier(
     private val context: Context,
-
     private val securityPreferences: SecurityPreferences = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
 ) {
@@ -163,7 +162,7 @@ class LibraryUpdateNotifier(
             // Still add action to view the error log file for advanced users
             addAction(
                 R.drawable.ic_folder_24dp,
-                context.stringResource(MR.strings.action_view_log),
+                context.stringResource(MR.strings.action_open_log),
                 NotificationReceiver.openErrorLogPendingActivity(context, uri),
             )
         }
