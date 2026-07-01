@@ -10,7 +10,6 @@ import ca.mpreg.imagedecoder.ImageDecoder
 import ca.mpreg.webgpuviewer.ImageView
 import ca.mpreg.webgpuviewer.Trim
 import ca.mpreg.webgpuviewer.renderer.Image
-import ca.mpreg.webgpuviewer.renderer.WebGpuRenderer
 import ca.mpreg.webgpuviewer.transition.TransitionBasic
 import ca.mpreg.webgpuviewer.transition.TransitionFlipLeft
 import ca.mpreg.webgpuviewer.transition.TransitionFlipRight
@@ -228,43 +227,42 @@ open class WebGpuViewer(
         decodeJob = decodeJob ?: CoroutineScope(Dispatchers.Default).launch {
             try {
                 while (true) {
-                    popPreload()?.let { page ->
-                        val id = ((page.chapter.chapter.id ?: 0) shl 32) + page.index
-                        synchronized(pageCache) {
-                            if (pageCache[id] != null) continue
-                        }
+                    val page = popPreload() ?: return@launch
 
+                    val id = ((page.chapter.chapter.id ?: 0) shl 32) + page.index
+                    synchronized(pageCache) {
+                        if (pageCache[id] != null) continue
+                    }
+
+                    withContext(Dispatchers.Default) {
                         loadPage(page)?.use {
                             Log.i("WebGpuViewer", "createPage: ${page.chapter.chapter.id} ${page.index}")
-                            withContext(Dispatchers.Default) {
-                                val dec = ImageDecoder.new(it)
-                                dec.decodeNext()
-                            }
-                        }?.let { res ->
-                            withContext(WebGpuRenderer.dispatcher) {
-                                ImagePage(Image(res.image, res.width, res.height)).apply {
-                                    if (config.imageCropBorders) {
-                                        trim = Trim.find(image!!, 1f, 1f, 1f, 10f / 255)
-                                    }
 
-                                    parent = pager.state
-                                    x = homeX
-                                    y = homeY
-                                    scale = homeScale
+                            val dec = ImageDecoder.new(it)
+                            dec.decodeNext()
+                        }?.let { res ->
+                            ImagePage(Image(res.image, res.width, res.height)).apply {
+                                if (config.imageCropBorders) {
+                                    trim = Trim.find(image!!, 1f, 1f, 1f, 10f / 255)
                                 }
-                            }.also {
-                                Log.i("WebGpuViewer", "store in cache: ${page.index} $page")
-                                synchronized(pageCache) {
-                                    pageCache[id] = it
-                                    while (pageCache.size > cacheSize) {
-                                        Log.i("WebGpuViewer", "remove from cache: ${pageCache.keys.first()}")
-                                        pageCache.remove(pageCache.keys.first())
-                                    }
+
+                                parent = pager.state
+                                x = homeX
+                                y = homeY
+                                scale = homeScale
+                            }
+                        }.also {
+                            Log.i("WebGpuViewer", "store in cache: ${page.index} $page")
+                            synchronized(pageCache) {
+                                pageCache[id] = it
+                                while (pageCache.size > cacheSize) {
+                                    Log.i("WebGpuViewer", "remove from cache: ${pageCache.keys.first()}")
+                                    pageCache.remove(pageCache.keys.first())
                                 }
                             }
-                            pager.state.invalidate()
                         }
-                    } ?: return@launch
+                        pager.state.invalidate()
+                    }
                 }
             } finally {
                 decodeJob = null
