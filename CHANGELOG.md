@@ -23,6 +23,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix crash when putting app in background ([@AntsyLich](https://github.com/AntsyLich)) ([#3523](https://github.com/mihonapp/mihon/pull/3523))
 - Fix support for non-system SAF providers ([@AntsyLich](https://github.com/AntsyLich)) ([#3530](https://github.com/mihonapp/mihon/pull/3530))
 
+### Fixed
+- Fix false duplicate popup when re-adding manga from Komga ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3031](https://github.com/mihonapp/mihon/pull/3031))
+
 ## [v0.20.0] - 2026-06-27
 ### Added
 - Add support for `tachiyomix` 1.6 extensions ([@AntsyLich](https://github.com/AntsyLich))
@@ -88,7 +91,6 @@ Same as v0.19.6
 - Fix MangaUpdates HTTP 4XX errors ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3021](https://github.com/mihonapp/mihon/pull/3021))
 - Fix WebView JavaScript dialogs popup after screen is closed ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3041](https://github.com/mihonapp/mihon/pull/3041))
 - Fix extension actions disappearing after installing and uninstalling in same session ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3049](https://github.com/mihonapp/mihon/pull/3049))
-- Fix false duplicate popup when re-adding manga from Komga ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3031](https://github.com/mihonapp/mihon/pull/3031))
 
 ## [v0.19.4] - 2026-02-25
 ### Added
