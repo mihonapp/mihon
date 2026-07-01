@@ -176,6 +176,17 @@ class Downloader(
     }
 
     /**
+     * Pauses active downloads while the worker waits for network recovery.
+     */
+    fun pauseForNetwork(reason: String) {
+        cancelDownloaderJob()
+        queueState.value
+            .filter { it.status == Download.State.DOWNLOADING }
+            .forEach { it.status = Download.State.QUEUE }
+        notifier.onWarning(reason)
+    }
+
+    /**
      * Removes everything from the queue.
      */
     fun clearQueue() {
@@ -439,9 +450,7 @@ class Downloader(
 
         // Try to find the image file
         val imageFile = tmpDir.listFiles()?.firstOrNull {
-            val filename = it.name
-            if (filename == null || filename.endsWith(".tmp")) return@firstOrNull false
-            filename.startsWith("$filename.") || filename.startsWith("${filename}__001")
+            isDownloadedPageImage(it.name, filename)
         }
 
         try {
@@ -580,12 +589,16 @@ class Downloader(
         tmpDir: UniFile,
     ): Boolean {
         // Page list hasn't been initialized
-        val downloadPageCount = download.pages?.size ?: return false
-
-        // Ensure that all pages have been downloaded
-        if (download.downloadedImages != downloadPageCount) {
+        val downloadPageCount = download.pages?.size
+        if (downloadPageCount == null) {
+            logcat(LogPriority.ERROR) {
+                "Download validation failed: page list not initialized for ${download.manga.title} - " +
+                    download.chapter.name
+            }
             return false
         }
+
+        val downloadedImages = download.downloadedImages
 
         // Ensure that the chapter folder has all the pages
         val downloadedImagesCount = tmpDir.listFiles().orEmpty().count {
@@ -598,7 +611,16 @@ class Downloader(
                 else -> true
             }
         }
-        return downloadedImagesCount == downloadPageCount
+
+        val isSuccessful = downloadedImages == downloadPageCount && downloadedImagesCount == downloadPageCount
+        if (!isSuccessful) {
+            logcat(LogPriority.ERROR) {
+                "Download validation failed for ${download.manga.title} - ${download.chapter.name}: " +
+                    "readyPages=$downloadedImages/$downloadPageCount, " +
+                    "files=$downloadedImagesCount/$downloadPageCount"
+            }
+        }
+        return isSuccessful
     }
 
     /**
@@ -737,6 +759,11 @@ class Downloader(
         const val CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD = 15
         private const val DOWNLOADS_QUEUED_WARNING_THRESHOLD = 30
     }
+}
+
+internal fun isDownloadedPageImage(fileName: String?, filenamePrefix: String): Boolean {
+    if (fileName == null || fileName.endsWith(".tmp")) return false
+    return fileName.startsWith("$filenamePrefix.") || fileName.startsWith("${filenamePrefix}__001.")
 }
 
 // Arbitrary minimum required space to start a download: 200 MB
