@@ -60,6 +60,8 @@ import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.model.SourceNotInstalledException
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.domain.updates.interactor.DeleteMangaUpdateError
+import tachiyomi.domain.updates.interactor.InsertMangaUpdateError
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -85,6 +87,8 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     private val fetchInterval: FetchInterval = Injekt.get()
     private val filterChaptersForDownload: FilterChaptersForDownload = Injekt.get()
     private val updateMangaFromRemote: UpdateMangaFromRemote = Injekt.get()
+    private val insertMangaUpdateError: InsertMangaUpdateError = Injekt.get()
+    private val deleteMangaUpdateError: DeleteMangaUpdateError = Injekt.get()
 
     private val notifier = LibraryUpdateNotifier(context)
 
@@ -259,6 +263,16 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                         val newChapters = updateManga(manga, fetchWindow)
                                             .sortedByDescending { it.sourceOrder }
 
+                                        try {
+                                            deleteMangaUpdateError.await(manga.id)
+                                        } catch (e: CancellationException) {
+                                            throw e
+                                        } catch (e: Exception) {
+                                            logcat(LogPriority.ERROR, e) {
+                                                "Failed to delete update error for manga ${manga.title}"
+                                            }
+                                        }
+
                                         if (newChapters.isNotEmpty()) {
                                             val chaptersToDownload = filterChaptersForDownload.await(manga, newChapters)
 
@@ -273,6 +287,10 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                             newUpdates.add(manga to newChapters.toTypedArray())
                                         }
                                     } catch (e: Throwable) {
+                                        if (e is CancellationException) {
+                                            throw e
+                                        }
+
                                         val errorMessage = when (e) {
                                             is NoChaptersException -> context.stringResource(
                                                 MR.strings.no_chapters_error,
@@ -283,7 +301,9 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                             )
                                             else -> e.message
                                         }
-                                        failedUpdates.add(manga to errorMessage)
+                                        if (getManga.await(manga.id)?.favorite == true) {
+                                            failedUpdates.add(manga to errorMessage)
+                                        }
                                     }
                                 }
                             }
@@ -303,6 +323,17 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         }
 
         if (failedUpdates.isNotEmpty()) {
+            failedUpdates.forEach { (manga, errorMessage) ->
+                try {
+                    insertMangaUpdateError.await(manga.id, errorMessage, System.currentTimeMillis())
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    logcat(LogPriority.ERROR, e) { "Failed to insert update error for manga ${manga.title}" }
+                }
+            }
+
+            // Still write error file for backward compatibility
             val errorFile = writeErrorFile(failedUpdates)
             notifier.showUpdateErrorNotification(
                 failedUpdates.size,

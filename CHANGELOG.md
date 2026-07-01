@@ -12,7 +12,11 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ## [Unreleased]
 ### Added
+- Add a database-backed Failed Updates screen for library update errors ([@H1ghSyst3m](https://github.com/H1ghSyst3m)) ([#2714](https://github.com/mihonapp/mihon/pull/2714))
 - Support resumable image downloads if supported by source ([@xMohnad](https://github.com/xMohnad)) ([#3167](https://github.com/mihonapp/mihon/pull/3167))
+
+### Improved
+- Show happy emotes on positive empty screens ([@H1ghSyst3m](https://github.com/H1ghSyst3m)) ([#2714](https://github.com/mihonapp/mihon/pull/2714))
 
 ## [v0.20.0] - 2026-06-27
 ### Added
