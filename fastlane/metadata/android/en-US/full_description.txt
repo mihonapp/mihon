@@ -1,0 +1,13 @@
+Mihon is a full-featured reader for manga, webtoons, comics, and more.
+
+Features:
+* Local reading of content.
+* A configurable reader with multiple viewers, reading directions and other settings.
+* Tracker support: MyAnimeList, AniList, Kitsu, MangaUpdates, Shikimori, and Bangumi support.
+* Categories to organize your library.
+* Light and dark themes.
+* Schedule updating your library for new chapters.
+* Create backups locally to read offline or to your desired cloud service.
+* Plus much more...
+
+The developer(s) of this application does not have any affiliation with the content providers available, and this application hosts zero content.
