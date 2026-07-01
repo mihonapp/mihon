@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="splash">@color/accent_blue</color>
-
     <color name="cover_placeholder">#1F888888</color>
 
     <!-- Default Theme -->
     <color name="divider_default">@color/md_black_1000_12</color>
-
-    <!-- Blue Theme -->
-    <color name="accent_blue">#0058A0</color>
-
-    <color name="icon_background">#FAFAFA</color>
 
     <!-- AMOLED Mode -->
     <color name="amoled_background">#000000</color>
