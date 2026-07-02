@@ -58,7 +58,7 @@ fun ReorderableCollectionItemScope.CategoryListItem(
             IconButton(onClick = onToggleIncognito) {
                 Icon(
                     imageVector = if (category.isIncognito) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
-                    contentDescription = "Toggle Incognito Mode",
+                    contentDescription = stringResource(MR.strings.pref_incognito_mode),
                     tint = if (category.isIncognito) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }

@@ -1,4 +1,5 @@
 package eu.kanade.tachiyomi.ui.category
+
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
@@ -53,8 +54,11 @@ class CategoryScreenModel(
             } else {
                 category.flags or Category.INCOGNITO_MASK
             }
-
-            updateCategory.await(CategoryUpdate(id = category.id, flags = newFlags))
+            try {
+                updateCategory.await(CategoryUpdate(id = category.id, flags = newFlags))
+            } catch (e: Exception) {
+                _events.send(CategoryEvent.InternalError)
+            }
         }
     }
 
