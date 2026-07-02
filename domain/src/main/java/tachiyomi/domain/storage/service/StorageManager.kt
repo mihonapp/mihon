@@ -93,6 +93,13 @@ class StorageManager(
                 output.write(STORAGE_TEST_COMIC_INFO_CONTENT)
             }
 
+            val archiveFile = mangaDir.createFile(STORAGE_TEST_ARCHIVE_FILE_TMP) ?: return false
+            archiveFile.openOutputStream().use { output ->
+                output.write(STORAGE_TEST_CONTENT)
+            }
+            if (!archiveFile.renameTo(STORAGE_TEST_ARCHIVE_FILE)) return false
+            if (mangaDir.findFile(STORAGE_TEST_ARCHIVE_FILE) == null) return false
+
             if (!chapterDir.renameTo(STORAGE_TEST_CHAPTER_DIR)) return false
             chapterDir = mangaDir.findFile(STORAGE_TEST_CHAPTER_DIR) ?: return false
             pageFile = chapterDir.findFile(STORAGE_TEST_PAGE_FILE) ?: return false
@@ -136,6 +143,8 @@ private const val STORAGE_TEST_CHAPTER_DIR = "chapter"
 private const val STORAGE_TEST_PAGE_FILE_TMP = "001.tmp"
 private const val STORAGE_TEST_PAGE_FILE = "001.jpg"
 private const val STORAGE_TEST_COMIC_INFO_FILE = "ComicInfo.xml"
+private const val STORAGE_TEST_ARCHIVE_FILE_TMP = "chapter.cbz_tmp"
+private const val STORAGE_TEST_ARCHIVE_FILE = "chapter.cbz"
 private val STORAGE_TEST_CONTENT = byteArrayOf(0)
 private val STORAGE_TEST_COMIC_INFO_CONTENT = "<ComicInfo />".toByteArray()
 
