@@ -62,21 +62,52 @@ class StorageManager(
         var cleanupSuccessful = false
 
         return try {
-            testDir = baseDir.createDirectory("$STORAGE_TEST_DIR_PREFIX${UUID.randomUUID()}") ?: return false
-            val childDir = testDir.createDirectory(STORAGE_TEST_CHILD_DIR) ?: return false
-            val testFile = childDir.createFile(STORAGE_TEST_FILE) ?: return false
+            val createdTestDir = baseDir.createDirectory("$STORAGE_TEST_DIR_PREFIX${UUID.randomUUID()}") ?: return false
+            testDir = createdTestDir
 
-            testFile.openOutputStream().use { output ->
+            val downloadsDir = createdTestDir.createDirectory(DOWNLOADS_PATH) ?: return false
+            if (createdTestDir.createDirectory(DOWNLOADS_PATH) == null) return false
+
+            val sourceDir = downloadsDir.createDirectory(STORAGE_TEST_SOURCE_DIR) ?: return false
+            if (downloadsDir.createDirectory(STORAGE_TEST_SOURCE_DIR) == null) return false
+
+            val mangaDir = sourceDir.createDirectory(STORAGE_TEST_MANGA_DIR) ?: return false
+            if (sourceDir.createDirectory(STORAGE_TEST_MANGA_DIR) == null) return false
+
+            var chapterDir = mangaDir.createDirectory(STORAGE_TEST_CHAPTER_DIR_TMP) ?: return false
+            var pageFile = chapterDir.createFile(STORAGE_TEST_PAGE_FILE_TMP) ?: return false
+
+            pageFile.openOutputStream().use { output ->
                 output.write(STORAGE_TEST_CONTENT)
             }
 
-            cleanupSuccessful = testFile.delete() && childDir.delete() && testDir.delete()
+            if (!pageFile.renameTo(STORAGE_TEST_PAGE_FILE)) return false
+            pageFile = chapterDir.findFile(STORAGE_TEST_PAGE_FILE) ?: return false
+            pageFile.openInputStream().use { input ->
+                if (input.read() != STORAGE_TEST_CONTENT.first().toInt()) return false
+            }
+            if (chapterDir.listFiles().orEmpty().none { it.name == STORAGE_TEST_PAGE_FILE }) return false
+
+            val comicInfoFile = chapterDir.createFile(STORAGE_TEST_COMIC_INFO_FILE) ?: return false
+            comicInfoFile.openOutputStream().use { output ->
+                output.write(STORAGE_TEST_COMIC_INFO_CONTENT)
+            }
+
+            if (!chapterDir.renameTo(STORAGE_TEST_CHAPTER_DIR)) return false
+            chapterDir = mangaDir.findFile(STORAGE_TEST_CHAPTER_DIR) ?: return false
+            pageFile = chapterDir.findFile(STORAGE_TEST_PAGE_FILE) ?: return false
+            if (chapterDir.findFile(STORAGE_TEST_COMIC_INFO_FILE) == null) return false
+            if (chapterDir.listFiles().orEmpty().none { it.name == pageFile.name }) return false
+
+            DiskUtil.createNoMediaFile(chapterDir, context)
+
+            cleanupSuccessful = createdTestDir.deleteTree()
             cleanupSuccessful
         } catch (_: Throwable) {
             false
         } finally {
             if (!cleanupSuccessful) {
-                testDir?.takeIf { it.exists() }?.delete()
+                testDir?.takeIf { it.exists() }?.deleteTree()
             }
         }
     }
@@ -98,6 +129,30 @@ private const val AUTOMATIC_BACKUPS_PATH = "autobackup"
 private const val DOWNLOADS_PATH = "downloads"
 private const val LOCAL_SOURCE_PATH = "local"
 private const val STORAGE_TEST_DIR_PREFIX = "mihon_storage_test_"
-private const val STORAGE_TEST_CHILD_DIR = "folder"
-private const val STORAGE_TEST_FILE = "file.tmp"
+private const val STORAGE_TEST_SOURCE_DIR = "source"
+private const val STORAGE_TEST_MANGA_DIR = "manga"
+private const val STORAGE_TEST_CHAPTER_DIR_TMP = "chapter_tmp"
+private const val STORAGE_TEST_CHAPTER_DIR = "chapter"
+private const val STORAGE_TEST_PAGE_FILE_TMP = "001.tmp"
+private const val STORAGE_TEST_PAGE_FILE = "001.jpg"
+private const val STORAGE_TEST_COMIC_INFO_FILE = "ComicInfo.xml"
 private val STORAGE_TEST_CONTENT = byteArrayOf(0)
+private val STORAGE_TEST_COMIC_INFO_CONTENT = "<ComicInfo />".toByteArray()
+
+private fun UniFile.deleteTree(): Boolean {
+    var childrenDeleted = true
+    try {
+        listFiles().orEmpty().forEach {
+            childrenDeleted = it.deleteTree() && childrenDeleted
+        }
+    } catch (_: Throwable) {
+        childrenDeleted = false
+    }
+
+    val selfDeleted = try {
+        delete()
+    } catch (_: Throwable) {
+        false
+    }
+    return childrenDeleted && selfDeleted
+}
