@@ -4,6 +4,7 @@ import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.domain.track.model.toDomainTrack
 import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
+import eu.kanade.tachiyomi.data.track.yamtrack.YamtrackEntryRemovedException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.supervisorScope
@@ -30,7 +31,13 @@ class RefreshTracks(
                 .map { (track, service) ->
                     async {
                         return@async try {
-                            val updatedTrack = service!!.refresh(track.toDbTrack()).toDomainTrack()!!
+                            val updatedTrack = try {
+                                service!!.refresh(track.toDbTrack()).toDomainTrack()!!
+                            } catch (_: YamtrackEntryRemovedException) {
+                                // Tracker already cleaned up the local row to mirror the
+                                // remote removal; nothing left to insert or report.
+                                return@async null
+                            }
                             insertTrack.await(updatedTrack)
                             syncChapterProgressWithTrack.await(mangaId, updatedTrack, service)
                             null
