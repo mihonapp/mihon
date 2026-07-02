@@ -439,9 +439,7 @@ class Downloader(
 
         // Try to find the image file
         val imageFile = tmpDir.listFiles()?.firstOrNull {
-            val filename = it.name
-            if (filename == null || filename.endsWith(".tmp")) return@firstOrNull false
-            filename.startsWith("$filename.") || filename.startsWith("${filename}__001")
+            isDownloadedPageImage(it.name ?: return@firstOrNull false, filename)
         }
 
         try {
@@ -600,6 +598,16 @@ class Downloader(
         }
         return downloadedImagesCount == downloadPageCount
     }
+
+    /**
+     * Checks if the file name matches a downloaded page image.
+     *
+     * @param fileName Name of the file to check
+     * @param pagePrefix Expected page prefix (e.g., "001")
+     */
+    private fun isDownloadedPageImage(fileName: String, pagePrefix: String): Boolean =
+        !fileName.endsWith(".tmp") || fileName.startsWith("$pagePrefix.") ||
+            fileName.startsWith("${pagePrefix}__001.")
 
     /**
      * Archive the chapter pages as a CBZ.
