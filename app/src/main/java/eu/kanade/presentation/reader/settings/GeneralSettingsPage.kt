@@ -61,6 +61,19 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
         pref = screenModel.preferences.showPageNumber,
     )
 
+    val verticalNavigatorForLongStrip by screenModel.preferences.verticalNavigatorForLongStrip.collectAsState()
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_webtoon_vertical_navigator),
+        pref = screenModel.preferences.verticalNavigatorForLongStrip,
+    )
+
+    if (verticalNavigatorForLongStrip) {
+        CheckboxItem(
+            label = stringResource(MR.strings.pref_webtoon_vertical_navigator_on_left),
+            pref = screenModel.preferences.verticalNavigatorOnLeft,
+        )
+    }
+
     CheckboxItem(
         label = stringResource(MR.strings.pref_fullscreen),
         pref = screenModel.preferences.fullscreen,
