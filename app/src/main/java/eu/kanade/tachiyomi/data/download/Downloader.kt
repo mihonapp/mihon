@@ -439,7 +439,7 @@ class Downloader(
 
         // Try to find the image file
         val imageFile = tmpDir.listFiles()?.firstOrNull {
-            isDownloadedPageImage(it.name ?: return false, filename)
+            isDownloadedPageImage(it.name ?: return@firstOrNull false, filename)
         }
 
         try {
