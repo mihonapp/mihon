@@ -14,6 +14,13 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Added
 - Add a database-backed Failed Updates screen for library update errors ([@H1ghSyst3m](https://github.com/H1ghSyst3m)) ([#2714](https://github.com/mihonapp/mihon/pull/2714))
 - Support resumable image downloads if supported by source ([@xMohnad](https://github.com/xMohnad)) ([#3167](https://github.com/mihonapp/mihon/pull/3167))
+- Display authors and description in Shikimori search results ([@MajorTanya](https://github.com/MajorTanya)) ([#3499](https://github.com/mihonapp/mihon/pull/3499))
+- Invalidate download cache after backup restore ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3096](https://github.com/mihonapp/mihon/pull/3096))
+
+### Fixed
+- Fix Shikimori tracking not working ([@MajorTanya](https://github.com/MajorTanya)) ([#3497](https://github.com/mihonapp/mihon/pull/3497))
+- Fix crash when putting app in background while on notes screen ([@AntsyLich](https://github.com/AntsyLich)) ([#3515](https://github.com/mihonapp/mihon/pull/3515))
+- Fix crash trying to select text in notes screen ([@AntsyLich](https://github.com/AntsyLich)) ([#3516](https://github.com/mihonapp/mihon/pull/3516))
 
 ### Improved
 - Show happy emotes on positive empty screens ([@H1ghSyst3m](https://github.com/H1ghSyst3m)) ([#2714](https://github.com/mihonapp/mihon/pull/2714))
