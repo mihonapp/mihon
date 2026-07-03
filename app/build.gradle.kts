@@ -81,7 +81,9 @@ android {
             isMinifyEnabled = Config.enableCodeShrink
             isShrinkResources = Config.enableCodeShrink
 
-            signingConfig = debug.signingConfig
+            if (System.getenv("MIHON_GITHUB_RELEASE").toBoolean() || keystorePropertiesFile.exists()) {
+                signingConfig = debug.signingConfig
+            }
 
             isProfileable = true
 
