@@ -450,7 +450,7 @@ class Downloader(
 
         // Try to find the image file
         val imageFile = tmpDir.listFiles()?.firstOrNull {
-            isDownloadedPageImage(it.name, filename)
+            isDownloadedPageImage(it.name ?: return@firstOrNull false, filename)
         }
 
         try {
@@ -624,6 +624,18 @@ class Downloader(
     }
 
     /**
+     * Checks if the file name matches a downloaded page image.
+     *
+     * @param fileName Name of the file to check
+     * @param pagePrefix Expected page prefix (e.g., "001")
+     */
+    private fun isDownloadedPageImage(fileName: String, pagePrefix: String): Boolean =
+        !fileName.endsWith(".tmp") && (
+            fileName.startsWith("$pagePrefix.") ||
+                fileName.startsWith("${pagePrefix}__001.")
+            )
+
+    /**
      * Archive the chapter pages as a CBZ.
      */
     private fun archiveChapter(
@@ -759,11 +771,6 @@ class Downloader(
         const val CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD = 15
         private const val DOWNLOADS_QUEUED_WARNING_THRESHOLD = 30
     }
-}
-
-internal fun isDownloadedPageImage(fileName: String?, filenamePrefix: String): Boolean {
-    if (fileName == null || fileName.endsWith(".tmp")) return false
-    return fileName.startsWith("$filenamePrefix.") || fileName.startsWith("${filenamePrefix}__001.")
 }
 
 // Arbitrary minimum required space to start a download: 200 MB
