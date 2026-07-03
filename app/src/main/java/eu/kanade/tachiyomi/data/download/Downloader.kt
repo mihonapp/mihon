@@ -606,8 +606,10 @@ class Downloader(
      * @param pagePrefix Expected page prefix (e.g., "001")
      */
     private fun isDownloadedPageImage(fileName: String, pagePrefix: String): Boolean =
-        !fileName.endsWith(".tmp") || fileName.startsWith("$pagePrefix.") ||
-            fileName.startsWith("${pagePrefix}__001.")
+        !fileName.endsWith(".tmp") && (
+            fileName.startsWith("$pagePrefix.") ||
+                fileName.startsWith("${pagePrefix}__001.")
+            )
 
     /**
      * Archive the chapter pages as a CBZ.
