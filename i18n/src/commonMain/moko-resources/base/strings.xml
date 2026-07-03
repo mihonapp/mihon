@@ -248,6 +248,8 @@
     <string name="pref_relative_format_summary">\"%1$s\" instead of \"%2$s\"</string>
     <string name="pref_date_format">Date format</string>
     <string name="pref_display_images_description">Render images in manga descriptions</string>
+    <string name="pref_top_bar_scale">Top bar size</string>
+    <string name="pref_bottom_bar_scale">Bottom bar size</string>
 
     <string name="pref_manage_notifications">Manage notifications</string>
     <string name="pref_app_language">App language</string>

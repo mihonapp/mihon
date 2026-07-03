@@ -37,6 +37,10 @@ class UiPreferences(
 
     val imagesInDescription: Preference<Boolean> = preferenceStore.getBoolean("pref_render_images_description", true)
 
+    // Percentage of the bar's natural size, 50..100. 100 = default/unscaled.
+    val topBarScale: Preference<Int> = preferenceStore.getInt("pref_top_bar_scale", 100)
+    val bottomBarScale: Preference<Int> = preferenceStore.getInt("pref_bottom_bar_scale", 100)
+
     companion object {
         fun dateFormat(format: String): DateTimeFormatter = when (format) {
             "" -> DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)

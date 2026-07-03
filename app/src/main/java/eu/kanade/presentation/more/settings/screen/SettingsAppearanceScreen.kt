@@ -106,6 +106,9 @@ object SettingsAppearanceScreen : SearchableSettings {
             UiPreferences.dateFormat(dateFormat).format(now)
         }
 
+        val topBarScale by uiPreferences.topBarScale.collectAsState()
+        val bottomBarScale by uiPreferences.bottomBarScale.collectAsState()
+
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_category_display),
             preferenceItems = listOf(
@@ -144,6 +147,24 @@ object SettingsAppearanceScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = uiPreferences.imagesInDescription,
                     title = stringResource(MR.strings.pref_display_images_description),
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = topBarScale,
+                    title = stringResource(MR.strings.pref_top_bar_scale),
+                    valueRange = 50..100,
+                    valueString = "$topBarScale%",
+                    onValueChanged = {
+                        uiPreferences.topBarScale.set(it)
+                    },
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = bottomBarScale,
+                    title = stringResource(MR.strings.pref_bottom_bar_scale),
+                    valueRange = 50..100,
+                    valueString = "$bottomBarScale%",
+                    onValueChanged = {
+                        uiPreferences.bottomBarScale.set(it)
+                    },
                 ),
             ),
         )
