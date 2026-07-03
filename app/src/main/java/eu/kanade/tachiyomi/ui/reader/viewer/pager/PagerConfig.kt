@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.navigation.EdgeNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.navigation.KindlishNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.navigation.LNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.navigation.RightAndLeftNavigation
+import eu.kanade.tachiyomi.ui.reader.viewer.navigation.RightSplitNavigation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
@@ -83,6 +84,11 @@ class PagerConfig(
             .onEach { navigationModeChangedListener?.invoke() }
             .launchIn(scope)
 
+        readerPreferences.smallerTapZone.changes()
+            .drop(1)
+            .onEach { updateNavigation(navigationMode) }
+            .launchIn(scope)
+
         readerPreferences.dualPageSplitPaged
             .register(
                 { dualPageSplit = it },
@@ -144,7 +150,8 @@ class PagerConfig(
             2 -> KindlishNavigation()
             3 -> EdgeNavigation()
             4 -> RightAndLeftNavigation()
-            5 -> DisabledNavigation()
+            5 -> RightSplitNavigation()
+            6 -> DisabledNavigation()
             else -> defaultNavigation()
         }
         navigationModeChangedListener?.invoke()

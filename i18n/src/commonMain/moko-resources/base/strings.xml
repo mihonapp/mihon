@@ -413,6 +413,7 @@
     <string name="pref_always_decode_long_strip_with_ssiv_summary">Affects performance. Only enable if reducing bitmap threshold doesn\'t fix blank image issues</string>
     <string name="pref_display_profile">Custom display profile</string>
     <string name="pref_crop_borders">Crop borders</string>
+    <string name="pref_viewer_nav_smaller_tap_zone">Smaller tap zones</string>
     <string name="pref_custom_brightness">Custom brightness</string>
     <string name="pref_grayscale">Grayscale</string>
     <string name="pref_inverted_colors">Inverted</string>
@@ -447,6 +448,7 @@
     <string name="pref_viewer_type">Default reading mode</string>
     <string name="l_nav">L shaped</string>
     <string name="kindlish_nav">Kindle-ish</string>
+    <string name="right_split_nav">Split Right</string>
     <string name="edge_nav">Edge</string>
     <string name="right_and_left_nav">Right and Left</string>
     <string name="disabled_nav">Disabled</string>

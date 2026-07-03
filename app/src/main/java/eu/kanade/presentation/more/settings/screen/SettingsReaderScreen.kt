@@ -55,6 +55,10 @@ object SettingsReaderScreen : SearchableSettings {
                 subtitle = stringResource(MR.strings.pref_show_navigation_mode_summary),
             ),
             Preference.PreferenceItem.SwitchPreference(
+                preference = readerPref.smallerTapZone,
+                title = stringResource(MR.strings.pref_viewer_nav_smaller_tap_zone),
+            ),
+            Preference.PreferenceItem.SwitchPreference(
                 preference = readerPref.pageTransitions,
                 title = stringResource(MR.strings.pref_page_transitions),
             ),
@@ -229,7 +233,7 @@ object SettingsReaderScreen : SearchableSettings {
                     )
                         .associateWith { stringResource(it.titleRes) },
                     title = stringResource(MR.strings.pref_read_with_tapping_inverted),
-                    enabled = navMode != 5,
+                    enabled = navMode != 6,
                 ),
                 Preference.PreferenceItem.ListPreference(
                     preference = imageScaleTypePref,
@@ -257,7 +261,7 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.navigateToPan,
                     title = stringResource(MR.strings.pref_navigate_pan),
-                    enabled = navMode != 5,
+                    enabled = navMode != 6,
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     preference = dualPageSplitPref,
@@ -324,7 +328,7 @@ object SettingsReaderScreen : SearchableSettings {
                     )
                         .associateWith { stringResource(it.titleRes) },
                     title = stringResource(MR.strings.pref_read_with_tapping_inverted),
-                    enabled = navMode != 5,
+                    enabled = navMode != 6,
                 ),
                 Preference.PreferenceItem.SliderPreference(
                     value = webtoonSidePadding,

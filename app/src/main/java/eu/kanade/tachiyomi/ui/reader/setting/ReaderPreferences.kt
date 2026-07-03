@@ -74,6 +74,8 @@ class ReaderPreferences(
 
     val cropBorders: Preference<Boolean> = preferenceStore.getBoolean("crop_borders", false)
 
+    val smallerTapZone: Preference<Boolean> = preferenceStore.getBoolean("reader_navigation_smaller_tap_zone", false)
+
     val navigateToPan: Preference<Boolean> = preferenceStore.getBoolean("navigate_pan", true)
 
     val landscapeZoom: Preference<Boolean> = preferenceStore.getBoolean("landscape_zoom", true)

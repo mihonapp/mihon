@@ -17,19 +17,19 @@ open class LNavigation : ViewerNavigation() {
 
     override var regionList: List<Region> = listOf(
         Region(
-            rectF = RectF(0f, 0.33f, 0.33f, 0.66f),
+            rectF = RectF(0f, regionSize1, regionSize1, regionSize2),
             type = NavigationRegion.PREV,
         ),
         Region(
-            rectF = RectF(0f, 0f, 1f, 0.33f),
+            rectF = RectF(0f, 0f, 1f, regionSize1),
             type = NavigationRegion.PREV,
         ),
         Region(
-            rectF = RectF(0.66f, 0.33f, 1f, 0.66f),
+            rectF = RectF(regionSize2, regionSize1, 1f, regionSize2),
             type = NavigationRegion.NEXT,
         ),
         Region(
-            rectF = RectF(0f, 0.66f, 1f, 1f),
+            rectF = RectF(0f, regionSize2, 1f, 1f),
             type = NavigationRegion.NEXT,
         ),
     )

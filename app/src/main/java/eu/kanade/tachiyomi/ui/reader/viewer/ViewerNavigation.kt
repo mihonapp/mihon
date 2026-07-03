@@ -7,6 +7,7 @@ import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.lang.invert
 import tachiyomi.i18n.MR
+import uy.kohesive.injekt.injectLazy
 
 abstract class ViewerNavigation {
 
@@ -35,6 +36,11 @@ abstract class ViewerNavigation {
     var invertMode: ReaderPreferences.TappingInvertMode = ReaderPreferences.TappingInvertMode.NONE
 
     protected abstract var regionList: List<Region>
+
+    private val readerPreferences: ReaderPreferences by injectLazy()
+    protected val regionSize1
+        get() = if (readerPreferences.smallerTapZone.get()) 0.25f else 0.33f
+    protected val regionSize2 = 1f - regionSize1
 
     /** Returns regions with applied inversion. */
     fun getRegions(): List<Region> {

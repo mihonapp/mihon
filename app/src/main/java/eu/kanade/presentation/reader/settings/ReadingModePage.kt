@@ -95,6 +95,11 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
     }
 
     CheckboxItem(
+        label = stringResource(MR.strings.pref_viewer_nav_smaller_tap_zone),
+        pref = screenModel.preferences.smallerTapZone,
+    )
+
+    CheckboxItem(
         label = stringResource(MR.strings.pref_crop_borders),
         pref = screenModel.preferences.cropBorders,
     )
@@ -161,6 +166,11 @@ private fun ColumnScope.WebtoonViewerSettings(screenModel: ReaderSettingsScreenM
             screenModel.preferences.webtoonSidePadding.set(it)
         },
         pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+    )
+
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_viewer_nav_smaller_tap_zone),
+        pref = screenModel.preferences.smallerTapZone,
     )
 
     CheckboxItem(
