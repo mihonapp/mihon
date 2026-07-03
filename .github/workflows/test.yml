@@ -1,7 +1,12 @@
 ---
-name: Release build
+name: Test build
 on:
-  workflow_dispatch: null
+  workflow_dispatch:
+    inputs:
+      custom_notes:
+        description: Release notes
+        required: false
+        default: ''
 permissions:
   contents: write
   id-token: write
@@ -18,11 +23,9 @@ jobs:
         id: version_info
         run: |
           VERSION_NAME=$(grep 'versionName =' app/build.gradle.kts | cut -d '"' -f 2)
-          VERSION_CODE=$(grep 'versionCode =' app/build.gradle.kts | awk '{print $3}')
-          FINAL_TAG="v${VERSION_NAME}"
-          echo "TAG=$FINAL_TAG" >> $GITHUB_OUTPUT
+          SHORT_SHA=$(git rev-parse --short=7 HEAD)
           echo "VERSION=${VERSION_NAME}" >> $GITHUB_OUTPUT
-          echo "VERSION_CODE=${VERSION_CODE}" >> $GITHUB_OUTPUT
+          echo "TAG=v${VERSION_NAME}-test-${SHORT_SHA}" >> $GITHUB_OUTPUT
       - name: Set up JDK 21
         uses: actions/setup-java@v5
         with:
@@ -35,17 +38,15 @@ jobs:
         run: |
           SIGNATURE_HASH=$(keytool -list -v -keystore app/nube.p12 -storepass "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" | grep "SHA256:" | head -n 1 | awk '{print $2}')
           echo "SHA256=${SIGNATURE_HASH}" >> $GITHUB_OUTPUT
-      - name: Prepare release notes file
+      - name: Generate test changelog file
         run: |
-          CHANGELOG_FILE="fastlane/metadata/android/en-US/changelogs/${{ steps.version_info.outputs.VERSION_CODE }}.txt"
-          if [ -f "$CHANGELOG_FILE" ]; then
-            cat "$CHANGELOG_FILE" > release_notes.md
-          else
-            echo "No changelog found for version ${{ steps.version_info.outputs.VERSION_CODE }}" > release_notes.md
-          fi
-          echo "" >> release_notes.md
-          echo "---" >> release_notes.md
-          echo "**Signature SHA-256:** \`${{ steps.hash_info.outputs.SHA256 }}\`" >> release_notes.md
+          echo "> [!WARNING]" > test_notes.md
+          echo "> This is a test version and may be unstable. Use with caution." >> test_notes.md
+          echo "" >> test_notes.md
+          echo "${{ github.event.inputs.custom_notes }}" >> test_notes.md
+          echo "" >> test_notes.md
+          echo "### Signature Fingerprint (SHA-256)" >> test_notes.md
+          echo "\`${{ steps.hash_info.outputs.SHA256 }}\`" >> test_notes.md
       - name: Build release APKs
         run: |
           ./gradlew clean assembleRelease \
@@ -57,15 +58,10 @@ jobs:
       - name: Sign APKs
         run: |
           ANDROID_BUILD_TOOLS="$ANDROID_HOME/build-tools/$(ls $ANDROID_HOME/build-tools | sort -V | tail -n1)"
-          APK_DIR="app/build/outputs/apk/release"
-          for arch in armeabi-v7a arm64-v8a universal; do
-            UNSIGNED=$(ls $APK_DIR/*$arch*-release*.apk 2>/dev/null | head -n 1)
-            if [ "$arch" = "universal" ]; then
-              SIGNED="$APK_DIR/kami-v${{ steps.version_info.outputs.VERSION }}.apk"
-            else
-              SIGNED="$APK_DIR/kami-$arch-v${{ steps.version_info.outputs.VERSION }}.apk"
-            fi
-            if [ -n "$UNSIGNED" ] && [ -f "$UNSIGNED" ]; then
+          for arch in armeabi-v7a arm64-v8a; do
+            UNSIGNED="app/build/outputs/apk/release/app-$arch-release-unsigned.apk"
+            SIGNED="app/build/outputs/apk/release/kami-${{ steps.version_info.outputs.VERSION }}-$arch-test-signed.apk"
+            if [ -f "$UNSIGNED" ]; then
               "$ANDROID_BUILD_TOOLS/apksigner" sign \
                 --ks app/nube.p12 \
                 --ks-key-alias "${{ secrets.RELEASE_KEY_ALIAS }}" \
@@ -76,25 +72,24 @@ jobs:
                 --out "$SIGNED" \
                 "$UNSIGNED"
             else
-              echo "Error: APK for $arch not found in $APK_DIR" >&2
-              ls -la $APK_DIR >&2
+              echo "Error: APK for $arch not found" >&2
               exit 1
             fi
           done
       - name: Attest Build Provenance
         uses: actions/attest-build-provenance@v4.1.1
         with:
-          subject-path: app/build/outputs/apk/release/kami-*.apk
-      - name: Create Immutable Release
+          subject-path: app/build/outputs/apk/release/kami-*-test-signed.apk
+      - name: Create Test Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release create "${{ steps.version_info.outputs.TAG }}" \
-            --title "Kami ${{ steps.version_info.outputs.TAG }}" \
-            --notes-file release_notes.md \
+            --title "Kami Test Build ${{ steps.version_info.outputs.VERSION }} (${{ steps.version_info.outputs.TAG }})" \
+            --notes-file test_notes.md \
             --target "${{ github.sha }}" \
-            --latest \
-            app/build/outputs/apk/release/kami-*.apk
+            --prerelease \
+            app/build/outputs/apk/release/kami-*-test-signed.apk
       - name: Cleanup keystore
         if: always()
         run: rm -f app/nube.p12

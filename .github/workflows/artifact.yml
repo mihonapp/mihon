@@ -1,0 +1,66 @@
+---
+name: Kami artifact
+on:
+  workflow_dispatch: null
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Get version info
+        id: version_info
+        run: |
+          VERSION_NAME=$(grep 'versionName =' app/build.gradle.kts | cut -d '"' -f 2)
+          SHORT_SHA=$(git rev-parse --short=7 HEAD)
+          echo "VERSION=${VERSION_NAME}" >> $GITHUB_OUTPUT
+          echo "TAG=v${VERSION_NAME}-test-${SHORT_SHA}" >> $GITHUB_OUTPUT
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Decode keystore
+        run: echo "${{ secrets.RELEASE_KEYSTORE_B64 }}" | base64 -d > app/nube.p12
+      - name: Build release APKs
+        run: |
+          ./gradlew clean assembleRelease \
+            --no-build-cache \
+            --no-configuration-cache \
+            --no-daemon \
+            --stacktrace \
+            -Porg.gradle.parallel=false
+      - name: Sign APKs
+        run: |
+          ANDROID_BUILD_TOOLS="$ANDROID_HOME/build-tools/$(ls $ANDROID_HOME/build-tools | sort -V | tail -n1)"
+          for arch in universal; do
+            UNSIGNED="app/build/outputs/apk/release/app-$arch-release-unsigned.apk"
+            SIGNED="app/build/outputs/apk/release/kami-${{ steps.version_info.outputs.VERSION }}-$arch-test-signed.apk"
+            if [ -f "$UNSIGNED" ]; then
+              "$ANDROID_BUILD_TOOLS/apksigner" sign \
+                --ks app/nube.p12 \
+                --ks-key-alias "${{ secrets.RELEASE_KEY_ALIAS }}" \
+                --ks-pass pass:"${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" \
+                --key-pass pass:"${{ secrets.RELEASE_KEY_PASSWORD }}" \
+                --v2-signing-enabled true \
+                --v3-signing-enabled true \
+                --out "$SIGNED" \
+                "$UNSIGNED"
+            else
+              echo "Error: APK for $arch not found" >&2
+              exit 1
+            fi
+          done
+      - name: Upload APK artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: kami-test-apks-${{ steps.version_info.outputs.TAG }}
+          path: app/build/outputs/apk/release/kami-*-test-signed.apk
+          if-no-files-found: error
+      - name: Cleanup keystore
+        if: always()
+        run: rm -f app/nube.p12
