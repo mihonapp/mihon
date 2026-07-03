@@ -85,8 +85,9 @@ class HistoryScreenModelStateProvider : PreviewParameterProvider<HistoryScreenMo
             }
         }
 
-        fun randItem(historyBuilder: (HistoryWithRelations) -> HistoryWithRelations = { it }) =
-            HistoryUiModel.Item(
+        fun randItem(historyBuilder: (HistoryWithRelations) -> HistoryWithRelations = { it }): HistoryUiModel.Item {
+            val totalChapters = Random.nextLong(1, 100)
+            return HistoryUiModel.Item(
                 historyBuilder(
                     HistoryWithRelations(
                         id = Random.nextLong(),
@@ -94,6 +95,10 @@ class HistoryScreenModelStateProvider : PreviewParameterProvider<HistoryScreenMo
                         mangaId = Random.nextLong(),
                         title = "Test Title",
                         chapterNumber = Random.nextDouble(),
+                        read = Random.nextBoolean(),
+                        lastPageRead = Random.nextLong(1, 10),
+                        totalChapters = totalChapters,
+                        readCount = Random.nextLong(0, totalChapters + 1),
                         readAt = Date.from(Instant.now()),
                         readDuration = Random.nextLong(),
                         coverData = MangaCover(
@@ -106,5 +111,6 @@ class HistoryScreenModelStateProvider : PreviewParameterProvider<HistoryScreenMo
                     ),
                 ),
             )
+        }
     }
 }
