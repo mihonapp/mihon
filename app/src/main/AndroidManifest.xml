@@ -128,7 +128,6 @@
             android:theme="@android:style/Theme.NoDisplay">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
-                <action android:name="com.google.android.gms.actions.SEARCH_ACTION" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
