@@ -18,6 +18,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Fixed
 - Fix Shikimori tracking not working ([@MajorTanya](https://github.com/MajorTanya)) ([#3497](https://github.com/mihonapp/mihon/pull/3497))
+- Fix crash when putting app in background while on notes screen ([@AntsyLich](https://github.com/AntsyLich)) ([#3515](https://github.com/mihonapp/mihon/pull/3515))
 
 ## [v0.20.0] - 2026-06-27
 ### Added
