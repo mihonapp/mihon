@@ -46,6 +46,9 @@ class PagerConfig(
     var navigateToPan = false
         private set
 
+    var disableSwipe = false
+        private set
+
     var landscapeZoom = false
         private set
 
@@ -70,6 +73,9 @@ class PagerConfig(
 
         readerPreferences.navigateToPan
             .register({ navigateToPan = it })
+
+        readerPreferences.disableSwipeBetweenPages
+            .register({ disableSwipe = it }, { viewer.pager.setSwipeEnabled(!it) })
 
         readerPreferences.landscapeZoom
             .register({ landscapeZoom = it }, { imagePropertyChangedListener?.invoke() })
