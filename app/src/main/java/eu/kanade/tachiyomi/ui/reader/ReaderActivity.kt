@@ -21,20 +21,47 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Brightness7
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.Transparent
+import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
 import androidx.core.graphics.Insets
@@ -105,6 +132,7 @@ import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.ByteArrayOutputStream
+import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.seconds
 
 class ReaderActivity : BaseActivity() {
@@ -272,6 +300,14 @@ class ReaderActivity : BaseActivity() {
             }
 
             ContentOverlay(state = state)
+
+            BrightnessGestureLayer(
+                currentValue = state.brightnessOverlayValue,
+                onValueChange = {
+                    readerPreferences.customBrightness.set(true)
+                    readerPreferences.customBrightnessValue.set(it)
+                },
+            )
 
             AppBars(state = state)
         }
@@ -980,6 +1016,126 @@ class ReaderActivity : BaseActivity() {
         private fun setLayerPaint(grayscale: Boolean, invertedColors: Boolean) {
             val paint = if (grayscale || invertedColors) getCombinedPaint(grayscale, invertedColors) else null
             binding.viewerContainer.setLayerType(LAYER_TYPE_HARDWARE, paint)
+        }
+    }
+}
+
+@Composable
+private fun BrightnessGestureLayer(
+    currentValue: Int,
+    onValueChange: (Int) -> Unit,
+) {
+    var showIndicator by remember { mutableStateOf(false) }
+    var indicatorValue by remember { mutableIntStateOf(currentValue) }
+    val density = LocalDensity.current
+
+    // Lets the long-lived gesture detector below see the latest
+    // `currentValue` (e.g. if brightness was changed by some other means
+    // between drags) without needing to restart the detector itself —
+    // restarting it is exactly what was causing the bug: keying
+    // pointerInput on currentValue meant every onValueChange() call
+    // (which flows back into currentValue on the next recomposition)
+    // cancelled and relaunched detectVerticalDragGestures mid-drag.
+    val latestValue by rememberUpdatedState(currentValue)
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        // Left edge gesture zone
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(48.dp)
+                .background(Transparent)
+                .align(Alignment.CenterStart)
+                .pointerInput(Unit) {
+                    // Plain local vars are fine here (not state) — this
+                    // whole block now only runs once for the lifetime of
+                    // this composable (key = Unit), so they persist
+                    // correctly across all the callbacks of every drag
+                    // gesture without needing to be remembered.
+                    var startingY = 0f
+                    var originalValue = 0
+
+                    detectVerticalDragGestures(
+                        onDragStart = { offset ->
+                            showIndicator = true
+                            startingY = offset.y
+                            originalValue = latestValue
+                            indicatorValue = originalValue
+                        },
+                        onDragEnd = { showIndicator = false },
+                        onDragCancel = { showIndicator = false },
+                        onVerticalDrag = { change, _ ->
+                            // Total distance from where this drag started,
+                            // not an accumulation of per-frame deltas — avoids
+                            // any compounding rounding drift over a long drag.
+                            val sensitivity = 0.1f // brightness units per dp moved
+                            val deltaDp = (startingY - change.position.y) / density.density
+                            val newValue = (originalValue + deltaDp * sensitivity)
+                                .roundToInt()
+                                .coerceIn(0, 100)
+
+                            if (newValue != indicatorValue) {
+                                indicatorValue = newValue
+                                onValueChange(newValue)
+                            }
+                        },
+                    )
+                },
+        )
+
+        AnimatedVisibility(
+            visible = showIndicator,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(start = 32.dp),
+        ) {
+            BrightnessIndicator(value = indicatorValue)
+        }
+    }
+}
+
+@Composable
+private fun BrightnessIndicator(value: Int) {
+    Surface(
+        shape = RoundedCornerShape(16.dp),
+        color = Black.copy(alpha = 0.6f),
+        contentColor = White,
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Icon(
+                imageVector = Icons.Default.Brightness7,
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+            )
+
+            Box(
+                modifier = Modifier
+                    .height(150.dp)
+                    .width(4.dp)
+                    .background(White.copy(alpha = 0.3f), RoundedCornerShape(2.dp)),
+                contentAlignment = Alignment.BottomCenter,
+            ) {
+                val progress = (value) / 100f
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight(progress.coerceIn(0f, 1f))
+                        .fillMaxWidth()
+                        .background(White, RoundedCornerShape(2.dp)),
+                )
+            }
+
+            Text(
+                text = value.toString(),
+                style = MaterialTheme.typography.labelLarge,
+            )
         }
     }
 }

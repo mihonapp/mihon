@@ -235,7 +235,7 @@ private fun ColumnScope.TapZonesItems(
         }
     }
 
-    if (selected != 5) {
+    if (selected != 6) {
         SettingsChipRow(MR.strings.pref_read_with_tapping_inverted) {
             ReaderPreferences.TappingInvertMode.entries.map {
                 FilterChip(
