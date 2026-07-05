@@ -227,6 +227,8 @@ class ReaderPreferences(
         STACK_LEFT(MR.strings.transition_animation_stack_left),
         STACK_RIGHT(MR.strings.transition_animation_stack_right),
         SPHERE(MR.strings.transition_animation_sphere),
+        CUBE_INSIDE(MR.strings.transition_animation_cube_inside),
+        CUBE_OUTSIDE(MR.strings.transition_animation_cube_outside),
     }
 
     companion object {

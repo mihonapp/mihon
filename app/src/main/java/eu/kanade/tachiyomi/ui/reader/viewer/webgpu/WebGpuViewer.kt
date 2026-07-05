@@ -13,6 +13,8 @@ import ca.mpreg.webgpuviewer.renderer.Image
 import ca.mpreg.webgpuviewer.transition.TransitionBasic
 import ca.mpreg.webgpuviewer.transition.TransitionFlipLeft
 import ca.mpreg.webgpuviewer.transition.TransitionFlipRight
+import ca.mpreg.webgpuviewer.transition.TransitionCube
+import ca.mpreg.webgpuviewer.transition.TransitionCubeOuter
 import ca.mpreg.webgpuviewer.transition.TransitionSphere
 import ca.mpreg.webgpuviewer.transition.TransitionStackLeft
 import ca.mpreg.webgpuviewer.transition.TransitionStackRight
@@ -112,6 +114,8 @@ open class WebGpuViewer(
                 TransitionAnimation.STACK_LEFT -> TransitionStackLeft
                 TransitionAnimation.STACK_RIGHT -> TransitionStackRight
                 TransitionAnimation.SPHERE -> TransitionSphere
+                TransitionAnimation.CUBE_INSIDE -> TransitionCube
+                TransitionAnimation.CUBE_OUTSIDE -> TransitionCubeOuter
             }
         }
     }
@@ -205,7 +209,7 @@ open class WebGpuViewer(
     var currentPage: ReaderPage? = null
 
     val preloadCount = 3
-    val cacheSize = 20
+    open val cacheSize = 9
 
     val pageCache = LinkedHashMap<Long, ImagePage?>(cacheSize, 0.75f, true)
 
