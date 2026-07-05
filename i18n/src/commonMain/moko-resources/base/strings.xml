@@ -508,6 +508,8 @@
     <string name="transition_animation_stack_left">Stack (left)</string>
     <string name="transition_animation_stack_right">Stack (right)</string>
     <string name="transition_animation_sphere">Sphere</string>
+    <string name="transition_animation_cube_inside">Cube (Inside)</string>
+    <string name="transition_animation_cube_outside">Cube (Outside)</string>
 
       <!-- Downloads section -->
     <string name="pref_category_delete_chapters">Delete chapters</string>
