@@ -30,8 +30,8 @@ fun BaseMangaListItem(
     Row(
         modifier = modifier
             .clickable(onClick = onClickItem)
-            .height(56.dp)
-            .padding(horizontal = MaterialTheme.padding.medium),
+            .height(76.dp)
+            .padding(horizontal = MaterialTheme.padding.medium, vertical = 3.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         cover()
@@ -41,9 +41,8 @@ fun BaseMangaListItem(
 }
 
 private val defaultCover: @Composable RowScope.(Manga, () -> Unit) -> Unit = { manga, onClick ->
-    MangaCover.Square(
+    MangaCover.Book(
         modifier = Modifier
-            .padding(vertical = MaterialTheme.padding.small)
             .fillMaxHeight(),
         data = manga,
         onClick = onClick,
@@ -57,7 +56,6 @@ private val defaultContent: @Composable RowScope.(Manga) -> Unit = {
             modifier = Modifier
                 .padding(start = MaterialTheme.padding.medium),
             overflow = TextOverflow.Ellipsis,
-            maxLines = 1,
             style = MaterialTheme.typography.bodyMedium,
         )
     }

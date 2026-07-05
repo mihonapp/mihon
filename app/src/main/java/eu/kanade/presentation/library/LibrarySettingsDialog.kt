@@ -229,6 +229,9 @@ private fun ColumnScope.DisplayPage(
     screenModel: LibrarySettingsScreenModel,
 ) {
     val displayMode by screenModel.libraryPreferences.displayMode.collectAsState()
+    val pagedBrowsingPreference = screenModel.libraryPreferences.pagedLibraryBrowsing
+    val pagedBrowsing by pagedBrowsingPreference.collectAsState()
+
     SettingsChipRow(MR.strings.action_display_mode) {
         displayModes.map { (titleRes, mode) ->
             FilterChip(
@@ -239,17 +242,23 @@ private fun ColumnScope.DisplayPage(
         }
     }
 
-    if (displayMode != LibraryDisplayMode.List) {
-        val configuration = LocalConfiguration.current
-        val columnPreference = remember {
-            if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                screenModel.libraryPreferences.landscapeColumns
-            } else {
-                screenModel.libraryPreferences.portraitColumns
-            }
-        }
+    CheckboxItem(
+        label = stringResource(MR.strings.action_display_paged_browsing),
+        pref = pagedBrowsingPreference,
+    )
 
-        val columns by columnPreference.collectAsState()
+    val configuration = LocalConfiguration.current
+    val columnPreference = remember(configuration.orientation) {
+        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            screenModel.libraryPreferences.landscapeColumns
+        } else {
+            screenModel.libraryPreferences.portraitColumns
+        }
+    }
+    val columns by columnPreference.collectAsState()
+
+    // "Items per row" — shown for all three grid modes, E-Ink on or off
+    if (displayMode != LibraryDisplayMode.List) {
         SliderItem(
             value = columns,
             valueRange = 0..10,
@@ -260,6 +269,42 @@ private fun ColumnScope.DisplayPage(
                 stringResource(MR.strings.label_auto)
             },
             onChange = columnPreference::set,
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+        )
+    }
+
+    // "Items per column" — shown for grids when E-Ink is on, AND for list
+    // mode always (controls how many list rows fit on screen / cover size)
+    if (pagedBrowsing && displayMode != LibraryDisplayMode.List) {
+        val rowsPreference = screenModel.libraryPreferences.pagedLibraryRows
+        val rows by rowsPreference.collectAsState()
+        SliderItem(
+            value = rows,
+            valueRange = 0..10,
+            label = stringResource(MR.strings.pref_library_rows_paged),
+            valueString = if (rows > 0) {
+                rows.toString()
+            } else {
+                stringResource(MR.strings.label_auto)
+            },
+            onChange = rowsPreference::set,
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+        )
+    }
+
+    if (displayMode == LibraryDisplayMode.List) {
+        val rowsPreference = screenModel.libraryPreferences.pagedLibraryRows
+        val rows by rowsPreference.collectAsState()
+        SliderItem(
+            value = rows,
+            valueRange = 0..10,
+            label = stringResource(MR.strings.pref_library_rows_paged),
+            valueString = if (rows > 0) {
+                rows.toString()
+            } else {
+                stringResource(MR.strings.label_auto)
+            },
+            onChange = rowsPreference::set,
             pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         )
     }
