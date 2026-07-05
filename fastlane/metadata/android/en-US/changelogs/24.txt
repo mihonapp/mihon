@@ -1,0 +1,24 @@
+- Updated to Mihon v0.20.0.
+- From Kahon
+	•Remove Google proprietary/privacy-unfriendly blobs
+	•Remove productFlavors
+	•Disable showing changelog on app start
+	•Drop support for x86 ABIs
+
+-From Komikuu
+	•Add indicator for un-finished reading & has more un-read chapters
+	•Show reading progress in History screen
+	•Smaller Tap Zone
+
+-PRs and feature requests from Mihon
+	•Add divider & section header
+	•Disable Swipe Between Pages
+	•Paged Library Mode (with Page Turn Button)
+	•Hide smart update icon when disabled
+
+-Original
+	•Scalable Top/Bottom Toolbars
+	•Reader Brightness Gesture
+	•"Split Right" New Tap Zone
+
+Mihon changelog: https://github.com/mihonapp/mihon/blob/main/CHANGELOG.md
