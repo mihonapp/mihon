@@ -1,8 +1,7 @@
 package mihon.telemetry
 
 import android.content.Context
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
+import android.content.pm.PackageManager
 import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -32,13 +31,18 @@ object TelemetryConfig {
         }
     }
 
+    /**
+     * Checks if Google Play Services is installed and enabled.
+     * Uses PackageManager instead of GoogleApiAvailability to avoid loading
+     * any Google Play Services client library classes, which can itself
+     * trigger system notifications on devices where GPS is unavailable.
+     */
     private fun isGooglePlayServicesAvailable(context: Context): Boolean {
         return try {
-            val availability = GoogleApiAvailability.getInstance()
-            val resultCode = availability.isGooglePlayServicesAvailable(context)
-            resultCode == ConnectionResult.SUCCESS
-        } catch (e: Exception) {
-            logcat(LogPriority.WARN, e) { "Unable to check Google Play Services availability" }
+            val pm = context.packageManager
+            val info = pm.getPackageInfo("com.google.android.gms", PackageManager.GET_META_DATA)
+            info.applicationInfo?.enabled == true
+        } catch (e: PackageManager.NameNotFoundException) {
             false
         }
     }
