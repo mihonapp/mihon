@@ -11,13 +11,15 @@ import ca.mpreg.webgpuviewer.ImageView
 import ca.mpreg.webgpuviewer.Trim
 import ca.mpreg.webgpuviewer.renderer.Image
 import ca.mpreg.webgpuviewer.transition.TransitionBasic
-import ca.mpreg.webgpuviewer.transition.TransitionFlipLeft
-import ca.mpreg.webgpuviewer.transition.TransitionFlipRight
 import ca.mpreg.webgpuviewer.transition.TransitionCube
 import ca.mpreg.webgpuviewer.transition.TransitionCubeOuter
+import ca.mpreg.webgpuviewer.transition.TransitionFlipLeft
+import ca.mpreg.webgpuviewer.transition.TransitionFlipRight
 import ca.mpreg.webgpuviewer.transition.TransitionSphere
+import ca.mpreg.webgpuviewer.transition.TransitionStackDown
 import ca.mpreg.webgpuviewer.transition.TransitionStackLeft
 import ca.mpreg.webgpuviewer.transition.TransitionStackRight
+import ca.mpreg.webgpuviewer.transition.TransitionStackUp
 import ca.mpreg.webgpuviewer.viewer.ImagePage
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.model.Page
@@ -113,6 +115,8 @@ open class WebGpuViewer(
                 TransitionAnimation.FLIP_RIGHT -> TransitionFlipRight
                 TransitionAnimation.STACK_LEFT -> TransitionStackLeft
                 TransitionAnimation.STACK_RIGHT -> TransitionStackRight
+                TransitionAnimation.STACK_UP -> TransitionStackUp
+                TransitionAnimation.STACK_DOWN -> TransitionStackDown
                 TransitionAnimation.SPHERE -> TransitionSphere
                 TransitionAnimation.CUBE_INSIDE -> TransitionCube
                 TransitionAnimation.CUBE_OUTSIDE -> TransitionCubeOuter
@@ -401,9 +405,7 @@ open class WebGpuViewer(
      * Tells this viewer to move to the given [page].
      */
     override fun moveToPage(page: ReaderPage) {
-        currentPage = page
-        activity.onPageSelected(page)
-
+        val previousPage = currentPage
         val pages = page.chapter.pages ?: return
 
         if (page.index == 0) {
@@ -413,9 +415,46 @@ open class WebGpuViewer(
             viewerChapters?.nextChapter?.let { activity.requestPreloadChapter(it) }
         }
 
-        pager.state.invalidate()
+        val direction = when {
+            previousPage == null -> 0
+            previousPage.chapter == page.chapter -> (page.index - previousPage.index).coerceIn(-1, 1)
+            else -> {
+                val chapters = viewerChapters
+                when (page.chapter) {
+                    chapters?.nextChapter -> 1
+                    chapters?.prevChapter -> -1
+                    else -> 0
+                }
+            }
+        }
 
+        if (direction == 0) {
+            currentPage = page
+            activity.onPageSelected(page)
+            pager.state.invalidate()
+            preloadPages(page)
+            return
+        }
+
+        currentPage = page
+        activity.onPageSelected(page)
         preloadPages(page)
+
+        val startOffset = if (isReversed) direction.toFloat() else -direction.toFloat()
+        pager.state.animationJob?.cancel()
+        pager.state.animationJob = pager.state.scope?.launch {
+            pager.state.setPageOffsetDirect(startOffset)
+            pager.state.invalidate()
+            val anim = androidx.compose.animation.core.Animatable(startOffset)
+            anim.updateBounds(lowerBound = -1f, upperBound = 1f)
+            anim.animateTo(
+                0f,
+                androidx.compose.animation.core.spring(dampingRatio = 1f, stiffness = 400f),
+            ) {
+                pager.state.setPageOffsetDirect(value)
+                pager.state.invalidate()
+            }
+        }
     }
 
     /**
@@ -436,12 +475,38 @@ open class WebGpuViewer(
      * Moves to the page at the right.
      */
     protected fun moveRight() {
+        pager.state.getPage(0)?.let { page ->
+            if (config.navigateToPan && (!page.atHome)) {
+                val maxX = pager.state.maxX(page.width, page.scale)
+                val c = if (isReversed) -1 else 1
+                val x = (page.x - c / page.scale).coerceIn(-maxX, maxX)
+                if (x != page.x) {
+                    page.animateTo(targetX = x, targetY = page.y)
+                    return
+                }
+            }
+
+            nextPage(1)?.let { page -> moveToPage(page) }
+        }
     }
 
     /**
      * Moves to the page at the left.
      */
     protected fun moveLeft() {
+        pager.state.getPage(0)?.let { page ->
+            if (config.navigateToPan && (!page.atHome)) {
+                val maxX = pager.state.maxX(page.width, page.scale)
+                val c = if (isReversed) -1 else 1
+                val x = (page.x + c / page.scale).coerceIn(-maxX, maxX)
+                if (x != page.x) {
+                    page.animateTo(targetX = x, targetY = page.y)
+                    return
+                }
+            }
+
+            nextPage(-1)?.let { page -> moveToPage(page) }
+        }
     }
 
     /**
