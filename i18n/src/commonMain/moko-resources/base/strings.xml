@@ -507,6 +507,8 @@
     <string name="transition_animation_flip_right">Page flip (right)</string>
     <string name="transition_animation_stack_left">Stack (left)</string>
     <string name="transition_animation_stack_right">Stack (right)</string>
+    <string name="transition_animation_stack_up">Stack (up)</string>
+    <string name="transition_animation_stack_down">Stack (down)</string>
     <string name="transition_animation_sphere">Sphere</string>
     <string name="transition_animation_cube_inside">Cube (Inside)</string>
     <string name="transition_animation_cube_outside">Cube (Outside)</string>

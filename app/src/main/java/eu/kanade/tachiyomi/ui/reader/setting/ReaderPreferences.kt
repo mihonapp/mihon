@@ -226,6 +226,8 @@ class ReaderPreferences(
         FLIP_RIGHT(MR.strings.transition_animation_flip_right),
         STACK_LEFT(MR.strings.transition_animation_stack_left),
         STACK_RIGHT(MR.strings.transition_animation_stack_right),
+        STACK_UP(MR.strings.transition_animation_stack_up),
+        STACK_DOWN(MR.strings.transition_animation_stack_down),
         SPHERE(MR.strings.transition_animation_sphere),
         CUBE_INSIDE(MR.strings.transition_animation_cube_inside),
         CUBE_OUTSIDE(MR.strings.transition_animation_cube_outside),
