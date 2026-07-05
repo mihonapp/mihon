@@ -2,13 +2,19 @@ package eu.kanade.tachiyomi.ui.reader.setting
 
 import androidx.annotation.DrawableRes
 import dev.icerock.moko.resources.StringResource
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.L2RPagerViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.VerticalPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuViewerContinuous
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import tachiyomi.i18n.MR
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 enum class ReadingMode(
     val stringRes: StringResource,
@@ -65,11 +71,21 @@ enum class ReadingMode(
         }
 
         fun toViewer(preference: Int?, activity: ReaderActivity): Viewer {
+            if (Injekt.get<BasePreferences>().highQualityRenderer.get()) {
+                return when (fromPreference(preference)) {
+                    LEFT_TO_RIGHT -> WebGpuViewer(activity, isReversed = false, isVertical = false)
+                    RIGHT_TO_LEFT -> WebGpuViewer(activity, isReversed = true, isVertical = false)
+                    VERTICAL -> WebGpuViewer(activity, isReversed = false, isVertical = true)
+                    WEBTOON -> WebGpuViewerContinuous(activity)
+                    CONTINUOUS_VERTICAL -> WebGpuViewerContinuous(activity)
+                    DEFAULT -> throw IllegalStateException("Preference value must be resolved: $preference")
+                }
+            }
             return when (fromPreference(preference)) {
-                LEFT_TO_RIGHT -> WebGpuViewer(activity, isReversed = false, isVertical = false)
-                RIGHT_TO_LEFT -> WebGpuViewer(activity, isReversed = true, isVertical = false)
-                VERTICAL -> WebGpuViewer(activity, isReversed = false, isVertical = true)
-                WEBTOON -> WebGpuViewerContinuous(activity)
+                LEFT_TO_RIGHT -> L2RPagerViewer(activity)
+                RIGHT_TO_LEFT -> R2LPagerViewer(activity)
+                VERTICAL -> VerticalPagerViewer(activity)
+                WEBTOON -> WebtoonViewer(activity)
                 CONTINUOUS_VERTICAL -> WebtoonViewer(activity, isContinuous = false)
                 DEFAULT -> throw IllegalStateException("Preference value must be resolved: $preference")
             }
