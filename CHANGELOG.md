@@ -20,6 +20,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix Shikimori tracking not working ([@MajorTanya](https://github.com/MajorTanya)) ([#3497](https://github.com/mihonapp/mihon/pull/3497))
 - Fix crash trying to select text in notes screen ([@AntsyLich](https://github.com/AntsyLich)) ([#3516](https://github.com/mihonapp/mihon/pull/3516))
 - Fix crash when putting app in background ([@AntsyLich](https://github.com/AntsyLich)) ([#3523](https://github.com/mihonapp/mihon/pull/3523))
+- Fix support for non-system SAF providers ([@AntsyLich](https://github.com/AntsyLich)) ([#3530](https://github.com/mihonapp/mihon/pull/3530))
 
 ## [v0.20.0] - 2026-06-27
 ### Added
