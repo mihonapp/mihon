@@ -182,10 +182,10 @@ class HikkaApi(
         const val BASE_API_URL = "https://api.hikka.io"
         const val BASE_URL = "https://hikka.io"
         private const val SCOPE = "readlist,read:user-details"
-        private const val CLIENT_REFERENCE = "49eda83d-baa6-45f8-9936-b2a41d944da4"
-        private const val CLIENT_SECRET = "8Zxzs13Pvikx6m_4rwjF7t2BxxnEb0wWtXIRQ_68HyCvmdhGE9hdfz" +
-            "SL1Pas4h927LaV2ocjVoc--S_vmorHEWWh42Z_z70j-wSFYsraQQ98" +
-            "hiOeTH2BaDf77ZcA9W5Z"
+        private const val CLIENT_REFERENCE = "598ef1f5-b9d2-4e66-8b65-06949d5e14fc"
+        private const val CLIENT_SECRET = "OKwzrNOZxq40psFgfcCUYddnvaeZWDnd34rt7fdcB5GmHoBBQuNTWX" +
+            "61sZs8KECEWVXtMUDtq8QC4t9WX4DwWWYLXEVlgnlUXGT1fWCb-18c" +
+            "Zd2m8Co-8HN6JQcjoP-B"
 
         fun authUrl(): Uri = "$BASE_URL/oauth".toUri().buildUpon()
             .appendQueryParameter("reference", CLIENT_REFERENCE)
