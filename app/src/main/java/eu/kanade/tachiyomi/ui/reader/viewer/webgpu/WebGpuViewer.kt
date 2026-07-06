@@ -6,6 +6,9 @@ import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import ca.mpreg.imagedecoder.ImageDecoder
 import ca.mpreg.webgpuviewer.ImageView
 import ca.mpreg.webgpuviewer.Trim
@@ -445,12 +448,9 @@ open class WebGpuViewer(
         pager.state.animationJob = pager.state.scope?.launch {
             pager.state.setPageOffsetDirect(startOffset)
             pager.state.invalidate()
-            val anim = androidx.compose.animation.core.Animatable(startOffset)
+            val anim = Animatable(startOffset)
             anim.updateBounds(lowerBound = -1f, upperBound = 1f)
-            anim.animateTo(
-                0f,
-                androidx.compose.animation.core.spring(dampingRatio = 1f, stiffness = 400f),
-            ) {
+            anim.animateTo(0f, spring(stiffness = Spring.StiffnessMediumLow)) {
                 pager.state.setPageOffsetDirect(value)
                 pager.state.invalidate()
             }
@@ -474,7 +474,7 @@ open class WebGpuViewer(
     /**
      * Moves to the page at the right.
      */
-    protected fun moveRight() {
+    protected open fun moveRight() {
         pager.state.getPage(0)?.let { page ->
             if (config.navigateToPan && (!page.atHome)) {
                 val maxX = pager.state.maxX(page.width, page.scale)
@@ -493,7 +493,7 @@ open class WebGpuViewer(
     /**
      * Moves to the page at the left.
      */
-    protected fun moveLeft() {
+    protected open fun moveLeft() {
         pager.state.getPage(0)?.let { page ->
             if (config.navigateToPan && (!page.atHome)) {
                 val maxX = pager.state.maxX(page.width, page.scale)
