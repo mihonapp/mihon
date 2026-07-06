@@ -139,6 +139,11 @@ object SettingsTrackingScreen : SearchableSettings {
                 title = stringResource(MR.strings.services),
                 preferenceItems = listOf(
                     Preference.PreferenceItem.TrackerPreference(
+                        tracker = trackerManager.mangaBaka,
+                        login = { context.openInBrowser(MangaBakaApi.authUrl(), forceDefaultBrowser = true) },
+                        logout = { dialog = LogoutDialog(trackerManager.mangaBaka) },
+                    ),
+                    Preference.PreferenceItem.TrackerPreference(
                         tracker = trackerManager.myAnimeList,
                         login = { context.openInBrowser(MyAnimeListApi.authUrl(), forceDefaultBrowser = true) },
                         logout = { dialog = LogoutDialog(trackerManager.myAnimeList) },
@@ -172,11 +177,6 @@ object SettingsTrackingScreen : SearchableSettings {
                         tracker = trackerManager.hikka,
                         login = { context.openInBrowser(HikkaApi.authUrl(), forceDefaultBrowser = true) },
                         logout = { dialog = LogoutDialog(trackerManager.hikka) },
-                    ),
-                    Preference.PreferenceItem.TrackerPreference(
-                        tracker = trackerManager.mangaBaka,
-                        login = { context.openInBrowser(MangaBakaApi.authUrl(), forceDefaultBrowser = true) },
-                        logout = { dialog = LogoutDialog(trackerManager.mangaBaka) },
                     ),
                     Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.tracking_info)),
                 ),
