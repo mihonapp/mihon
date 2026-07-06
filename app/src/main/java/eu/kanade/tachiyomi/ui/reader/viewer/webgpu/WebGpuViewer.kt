@@ -371,7 +371,7 @@ open class WebGpuViewer(
         this.viewerChapters = chapters
 
         if (currentPage == null) {
-            currentPage = pages.first()
+            currentPage = pages[min(chapters.currChapter.requestedPage, pages.lastIndex)]
             chapters.prevChapter?.let {
                 CoroutineScope(Dispatchers.Default).launch {
                     activity.viewModel.preload(it)
