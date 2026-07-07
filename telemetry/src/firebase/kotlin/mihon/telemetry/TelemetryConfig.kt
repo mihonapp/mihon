@@ -37,7 +37,6 @@ object TelemetryConfig {
                 .getPackageInfo("com.google.android.gms", PackageManager.GET_META_DATA)
                 .applicationInfo
                 ?.enabled == true
-            info.applicationInfo?.enabled == true
         } catch (e: PackageManager.NameNotFoundException) {
             false
         }
