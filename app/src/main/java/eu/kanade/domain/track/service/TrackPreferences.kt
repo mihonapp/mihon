@@ -16,6 +16,11 @@ class TrackPreferences(
         "",
     )
 
+    fun trackDisplayUsername(tracker: Tracker) = preferenceStore.getString(
+        Preference.privateKey("pref_mangasync_displayname_${tracker.id}"),
+        "",
+    )
+
     fun trackPassword(tracker: Tracker) = preferenceStore.getString(
         Preference.privateKey("pref_mangasync_password_${tracker.id}"),
         "",
