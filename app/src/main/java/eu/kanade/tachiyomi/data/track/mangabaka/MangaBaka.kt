@@ -26,7 +26,7 @@ class MangaBaka(id: Long) : BaseTracker(id, "MangaBaka"), DeletableTracker {
 
     private val scorePreference = trackPreferences.mangabakaScoreType
 
-    override fun getLogo(): Int = R.drawable.ic_tracker_mangabaka
+    override fun getLogo(): Int = R.drawable.brand_mangabaka
 
     override fun getStatusList(): List<Long> {
         return listOf(READING, COMPLETED, PAUSED, DROPPED, PLAN_TO_READ, REREADING, CONSIDERING)
