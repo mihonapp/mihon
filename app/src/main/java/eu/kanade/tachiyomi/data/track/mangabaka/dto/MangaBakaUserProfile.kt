@@ -11,6 +11,10 @@ data class MangaBakaUserProfileResponse(
 @Serializable
 data class MangaBakaUserProfile(
     // incomplete DTO since this is the only part we need
+    val id: String,
     @SerialName("rating_steps")
     val ratingSteps: Int,
+    val nickname: String?,
+    @SerialName("preferred_username")
+    val preferredUsername: String?,
 )
