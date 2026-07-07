@@ -14,6 +14,7 @@ import tachiyomi.domain.category.interactor.DeleteCategory
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.RenameCategory
 import tachiyomi.domain.category.interactor.ReorderCategory
+import tachiyomi.domain.category.interactor.ToggleCategoryLock
 import tachiyomi.domain.category.model.Category
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
@@ -25,6 +26,7 @@ class CategoryScreenModel(
     private val deleteCategory: DeleteCategory = Injekt.get(),
     private val reorderCategory: ReorderCategory = Injekt.get(),
     private val renameCategory: RenameCategory = Injekt.get(),
+    private val toggleCategoryLock: ToggleCategoryLock = Injekt.get(),
 ) : StateScreenModel<CategoryScreenState>(CategoryScreenState.Loading) {
 
     private val _events: Channel<CategoryEvent> = Channel()
@@ -75,6 +77,15 @@ class CategoryScreenModel(
         screenModelScope.launch {
             when (renameCategory.await(category, name)) {
                 is RenameCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
+                else -> {}
+            }
+        }
+    }
+
+    fun toggleLock(category: Category) {
+        screenModelScope.launch {
+            when (toggleCategoryLock.await(category.id, !category.locked)) {
+                is ToggleCategoryLock.Result.InternalError -> _events.send(CategoryEvent.InternalError)
                 else -> {}
             }
         }

@@ -95,9 +95,13 @@
     <string name="action_add_category">Add category</string>
     <string name="action_edit_categories">Edit categories</string>
     <string name="action_rename_category">Rename category</string>
+    <string name="action_lock_category">Lock category</string>
+    <string name="action_unlock_category">Unlock category</string>
     <string name="action_move_category">Set categories</string>
     <string name="delete_category_confirmation">Do you wish to delete the category \"%s\"?</string>
     <string name="delete_category">Delete category</string>
+    <string name="category_locked">Category locked</string>
+    <string name="category_locked_tap_to_unlock">Tap to unlock</string>
     <string name="action_edit_cover">Edit cover</string>
     <string name="action_view_chapters">View chapters</string>
     <string name="action_pause">Pause</string>

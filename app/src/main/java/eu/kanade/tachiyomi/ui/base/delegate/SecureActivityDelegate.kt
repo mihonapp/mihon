@@ -13,6 +13,10 @@ import eu.kanade.tachiyomi.ui.security.UnlockActivity
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.isAuthenticationSupported
 import eu.kanade.tachiyomi.util.view.setSecureScreen
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -31,7 +35,23 @@ interface SecureActivityDelegate {
          */
         var requireUnlock = true
 
+        private val _applicationStoppedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+        val applicationStoppedFlow = _applicationStoppedFlow.asSharedFlow()
+
+        private val _lockedTabsUnlocked = MutableStateFlow(false)
+        val lockedTabsUnlocked = _lockedTabsUnlocked.asStateFlow()
+
+        fun unlockLockedTabs() {
+            _lockedTabsUnlocked.value = true
+        }
+
+        fun lockLockedTabs() {
+            _lockedTabsUnlocked.value = false
+        }
+
         fun onApplicationStopped() {
+            _applicationStoppedFlow.tryEmit(Unit)
+            _lockedTabsUnlocked.value = false
             val preferences = Injekt.get<SecurityPreferences>()
             if (!preferences.useAuthenticator.get()) return
 

@@ -48,6 +48,7 @@ class CategoryRepositoryImpl(
             name = category.name,
             order = category.order,
             flags = category.flags,
+            locked = if (category.locked) 1L else 0L,
         )
     }
 
@@ -56,6 +57,7 @@ class CategoryRepositoryImpl(
             name = update.name,
             order = update.order,
             flags = update.flags,
+            locked = update.locked?.let { if (it) 1L else 0L },
             categoryId = update.id,
         )
     }
@@ -79,12 +81,14 @@ class CategoryRepositoryImpl(
         name: String,
         order: Long,
         flags: Long,
+        locked: Long,
     ): Category {
         return Category(
             id = id,
             name = name,
             order = order,
             flags = flags,
+            locked = locked != 0L,
         )
     }
 }

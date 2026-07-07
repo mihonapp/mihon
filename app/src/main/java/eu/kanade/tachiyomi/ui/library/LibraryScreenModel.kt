@@ -19,6 +19,7 @@ import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.source.model.SManga
+import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegate
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
@@ -176,6 +177,10 @@ class LibraryScreenModel(
                     state.copy(hasActiveFilters = it)
                 }
             }
+            .launchIn(screenModelScope)
+
+        SecureActivityDelegate.applicationStoppedFlow
+            .onEach { lockAllCategories() }
             .launchIn(screenModelScope)
     }
 
@@ -675,13 +680,28 @@ class LibraryScreenModel(
         }
     }
 
+    fun unlockCategory(categoryId: Long) {
+        mutableState.update { state ->
+            state.copy(unlockedCategoryIds = state.unlockedCategoryIds + categoryId)
+        }
+    }
+
+    fun lockAllCategories() {
+        mutableState.update { state ->
+            state.copy(unlockedCategoryIds = emptySet())
+        }
+    }
+
     fun search(query: String?) {
         mutableState.update { it.copy(searchQuery = query) }
     }
 
     fun updateActiveCategoryIndex(index: Int) {
         val newIndex = mutableState.updateAndGet { state ->
-            state.copy(activeCategoryIndex = index)
+            state.copy(
+                activeCategoryIndex = index,
+                unlockedCategoryIds = emptySet(),
+            )
         }
             .coercedActiveCategoryIndex
 
@@ -771,9 +791,14 @@ class LibraryScreenModel(
         val showMangaContinueButton: Boolean = false,
         val dialog: Dialog? = null,
         val libraryData: LibraryData = LibraryData(),
+        val unlockedCategoryIds: Set<Long> = emptySet(),
         private val activeCategoryIndex: Int = 0,
         private val groupedFavorites: Map<Category, List</* LibraryItem */ Long>> = emptyMap(),
     ) {
+
+        fun isCategoryLocked(category: Category): Boolean {
+            return category.locked && category.id !in unlockedCategoryIds
+        }
         val displayedCategories: List<Category> = groupedFavorites.keys.toList()
 
         val coercedActiveCategoryIndex = activeCategoryIndex.coerceIn(

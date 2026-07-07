@@ -3,34 +3,46 @@ package eu.kanade.tachiyomi.ui.updates
 import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentActivity
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import eu.kanade.presentation.library.components.LockedCategoryOverlay
 import eu.kanade.presentation.updates.UpdateScreen
 import eu.kanade.presentation.updates.UpdatesDeleteConfirmationDialog
 import eu.kanade.presentation.updates.UpdatesFilterDialog
 import eu.kanade.presentation.util.Tab
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegate
 import eu.kanade.tachiyomi.ui.download.DownloadQueueScreen
 import eu.kanade.tachiyomi.ui.home.HomeScreen
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.updates.UpdatesScreenModel.Event
+import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import mihon.feature.upcoming.UpcomingScreen
 import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 data object UpdatesTab : Tab {
 
@@ -54,9 +66,37 @@ data object UpdatesTab : Tab {
     override fun Content() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
+        val scope = rememberCoroutineScope()
         val screenModel = rememberScreenModel { UpdatesScreenModel() }
         val settingsScreenModel = rememberScreenModel { UpdatesSettingsScreenModel() }
         val state by screenModel.state.collectAsState()
+
+        val getCategories = remember { Injekt.get<GetCategories>() }
+        val categories by getCategories.subscribe().collectAsState(initial = emptyList())
+        val hasLockedCategories = remember(categories) { categories.any { it.locked } }
+        val isTabUnlocked by SecureActivityDelegate.lockedTabsUnlocked.collectAsState()
+
+        val tabNavigator = LocalTabNavigator.current
+        val isCurrentTab = tabNavigator.current.key == key
+        LaunchedEffect(isCurrentTab) {
+            if (!isCurrentTab) SecureActivityDelegate.lockLockedTabs()
+        }
+
+        if (hasLockedCategories && !isTabUnlocked) {
+            LockedCategoryOverlay(
+                contentPadding = PaddingValues(0.dp),
+                onUnlockRequest = {
+                    scope.launch {
+                        val activity = context as? FragmentActivity ?: return@launch
+                        val success = activity.authenticate(
+                            title = context.stringResource(MR.strings.unlock_app_title, context.stringResource(MR.strings.label_recent_updates)),
+                        )
+                        if (success) SecureActivityDelegate.unlockLockedTabs()
+                    }
+                },
+            )
+            return
+        }
 
         UpdateScreen(
             state = state,

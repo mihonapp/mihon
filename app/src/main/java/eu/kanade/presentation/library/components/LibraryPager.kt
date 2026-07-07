@@ -39,6 +39,8 @@ fun LibraryPager(
     getDisplayMode: (Int) -> PreferenceMutableState<LibraryDisplayMode>,
     getColumnsForOrientation: (Boolean) -> PreferenceMutableState<Int>,
     getItemsForCategory: (Category) -> List<LibraryItem>,
+    isCategoryLocked: (Category) -> Boolean,
+    onUnlockRequest: (Category) -> Unit,
     onClickManga: (Category, LibraryManga) -> Unit,
     onLongClickManga: (Category, LibraryManga) -> Unit,
     onClickContinueReading: ((LibraryManga) -> Unit)?,
@@ -53,6 +55,15 @@ fun LibraryPager(
             return@HorizontalPager
         }
         val category = getCategoryForPage(page)
+
+        if (isCategoryLocked(category)) {
+            LockedCategoryOverlay(
+                contentPadding = contentPadding,
+                onUnlockRequest = { onUnlockRequest(category) },
+            )
+            return@HorizontalPager
+        }
+
         val items = getItemsForCategory(category)
 
         if (items.isEmpty()) {

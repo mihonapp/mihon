@@ -45,6 +45,8 @@ fun LibraryContent(
     getDisplayMode: (Int) -> PreferenceMutableState<LibraryDisplayMode>,
     getColumnsForOrientation: (Boolean) -> PreferenceMutableState<Int>,
     getItemsForCategory: (Category) -> List<LibraryItem>,
+    isCategoryLocked: (Category) -> Boolean,
+    onUnlockRequest: (Category) -> Unit,
 ) {
     Column(
         modifier = Modifier.padding(
@@ -68,6 +70,7 @@ fun LibraryContent(
                 categories = categories,
                 pagerState = pagerState,
                 getItemCountForCategory = getItemCountForCategory,
+                isCategoryLocked = isCategoryLocked,
                 onTabItemClick = {
                     scope.launch {
                         pagerState.animateScrollToPage(it)
@@ -101,6 +104,8 @@ fun LibraryContent(
                 getDisplayMode = getDisplayMode,
                 getColumnsForOrientation = getColumnsForOrientation,
                 getItemsForCategory = getItemsForCategory,
+                isCategoryLocked = isCategoryLocked,
+                onUnlockRequest = onUnlockRequest,
                 onClickManga = { category, manga ->
                     if (selection.isNotEmpty()) {
                         onToggleSelection(category, manga)
