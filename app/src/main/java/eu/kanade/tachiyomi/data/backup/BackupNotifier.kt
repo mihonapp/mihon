@@ -87,19 +87,6 @@ class BackupNotifier(private val context: Context) {
         }
     }
 
-    fun showRestoreProgress(
-        content: String = "",
-        progress: Int = 0,
-        maxAmount: Int = 100,
-        sync: Boolean = false,
-    ): NotificationCompat.Builder {
-        val builder = restoreProgressNotification(content, progress, maxAmount, sync)
-
-        builder.show(Notifications.ID_RESTORE_PROGRESS)
-
-        return builder
-    }
-
     fun restoreProgressNotification(
         content: String = "",
         progress: Int = 0,

@@ -201,7 +201,6 @@ class BackupRestorer(
     private fun updateRestoreProgress(content: String) {
         val progress = restoreProgress.incrementAndFetch()
 
-        notifier.showRestoreProgress(content, progress, restoreAmount, isSync)
         onProgressUpdate(content, progress, restoreAmount, isSync)
     }
 
