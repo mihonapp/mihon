@@ -16,6 +16,38 @@ class ReaderPreferences(
 
     val pageTransitions: Preference<Boolean> = preferenceStore.getBoolean("pref_enable_transitions_key", true)
 
+    val pagerPageTransitionAnimation: Preference<ReaderTransitionAnimation> = preferenceStore.getEnum(
+        "pref_pager_page_transition_animation",
+        ReaderTransitionAnimation.DEFAULT,
+    )
+
+    val webtoonPageTransitionAnimation: Preference<ReaderTransitionAnimation> = preferenceStore.getEnum(
+        "pref_webtoon_page_transition_animation",
+        ReaderTransitionAnimation.DEFAULT,
+    )
+
+    // Per-viewer transition tuning. Durations are in milliseconds and editable for every non-default
+    // option (so preset speed can be tweaked); the curve is fixed for presets and only editable for
+    // CUSTOM, stored as a "x1,y1,x2,y2" Bézier string. All are plain keys, so they back up/restore.
+
+    val pagerTransitionSmoothDuration: Preference<Int> =
+        preferenceStore.getInt("pref_pager_transition_smooth_duration", TRANSITION_SMOOTH_DURATION)
+    val pagerTransitionGentleDuration: Preference<Int> =
+        preferenceStore.getInt("pref_pager_transition_gentle_duration", TRANSITION_GENTLE_DURATION)
+    val pagerTransitionCustomDuration: Preference<Int> =
+        preferenceStore.getInt("pref_pager_transition_custom_duration", TRANSITION_CUSTOM_DURATION)
+    val pagerTransitionCustomCurve: Preference<String> =
+        preferenceStore.getString("pref_pager_transition_custom_curve", TRANSITION_CUSTOM_CURVE)
+
+    val webtoonTransitionSmoothDuration: Preference<Int> =
+        preferenceStore.getInt("pref_webtoon_transition_smooth_duration", TRANSITION_SMOOTH_DURATION)
+    val webtoonTransitionGentleDuration: Preference<Int> =
+        preferenceStore.getInt("pref_webtoon_transition_gentle_duration", TRANSITION_GENTLE_DURATION)
+    val webtoonTransitionCustomDuration: Preference<Int> =
+        preferenceStore.getInt("pref_webtoon_transition_custom_duration", TRANSITION_CUSTOM_DURATION)
+    val webtoonTransitionCustomCurve: Preference<String> =
+        preferenceStore.getString("pref_webtoon_transition_custom_curve", TRANSITION_CUSTOM_CURVE)
+
     val flashOnPageChange: Preference<Boolean> = preferenceStore.getBoolean("pref_reader_flash", false)
 
     val flashDurationMillis: Preference<Int> = preferenceStore.getInt("pref_reader_flash_duration", MILLI_CONVERSION)
@@ -189,6 +221,25 @@ class ReaderPreferences(
         WHITE_BLACK,
     }
 
+    /**
+     * Motion applied when "Animate page transitions" is enabled. Every entry is ultimately a cubic
+     * Bézier curve plus a duration; the curve is fixed for the presets and user-defined for [CUSTOM].
+     * See [eu.kanade.tachiyomi.ui.reader.viewer.ReaderTransitionAnimations] for the resolution.
+     */
+    enum class ReaderTransitionAnimation(val titleRes: StringResource) {
+        // Each viewer's native transition (no custom interpolator/duration).
+        DEFAULT(MR.strings.label_default),
+
+        // Ease-out (decelerate to a stop): responsive start, soft landing.
+        SMOOTH(MR.strings.page_transition_smooth),
+
+        // Ease-in-out: soft start and stop, slower, easiest to follow by eye.
+        GENTLE(MR.strings.page_transition_gentle),
+
+        // User-defined cubic Bézier curve, configured in the Advanced section.
+        CUSTOM(MR.strings.page_transition_custom),
+    }
+
     enum class TappingInvertMode(
         val titleRes: StringResource,
         val shouldInvertHorizontal: Boolean = false,
@@ -212,6 +263,21 @@ class ReaderPreferences(
         const val WEBTOON_PADDING_MAX = 25
 
         const val MILLI_CONVERSION = 100
+
+        // Page-transition animation tuning.
+        const val TRANSITION_SMOOTH_DURATION = 500
+        const val TRANSITION_GENTLE_DURATION = 1000
+        const val TRANSITION_CUSTOM_DURATION = 1000
+        // In-out cubic by default — a recognisable eased S-curve, more demonstrative than linear.
+        const val TRANSITION_CUSTOM_CURVE = "0.66,0,0.34,1"
+        const val TRANSITION_DURATION_MIN = 50
+        const val TRANSITION_DURATION_MAX = 2000
+        const val TRANSITION_DURATION_STEP = 50
+
+        // The Custom option allows free numeric entry, so its duration is effectively uncapped (a
+        // generous ceiling guards against a near-frozen reader). The presets keep the slider range.
+        const val TRANSITION_DURATION_CUSTOM_MIN = 1
+        const val TRANSITION_DURATION_CUSTOM_MAX = 10000
 
         val TapZones = listOf(
             MR.strings.label_default,

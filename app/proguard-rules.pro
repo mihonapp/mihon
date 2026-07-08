@@ -79,6 +79,12 @@
 }
 ##---------------End: proguard configuration for kotlinx.serialization  ----------
 
+# Keep the ViewPager scroller field so the reader can swap it via reflection to customize
+# page-transition animations (see ReaderPagerScroller / Pager.setTransitionAnimation).
+-keepclassmembers class androidx.viewpager.widget.** {
+    android.widget.Scroller mScroller;
+}
+
 # XmlUtil
 -keep public enum nl.adaptivity.xmlutil.EventType { *; }
 
