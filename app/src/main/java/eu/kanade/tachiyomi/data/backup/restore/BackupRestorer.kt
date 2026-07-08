@@ -198,7 +198,7 @@ class BackupRestorer(
             }
     }
 
-    private fun updateRestoreProgress(content: String) {
+    private suspend fun updateRestoreProgress(content: String) {
         val progress = restoreProgress.incrementAndFetch()
 
         onProgressUpdate(content, progress, restoreAmount, isSync)
