@@ -15,4 +15,5 @@ data class SMCurrentUser(
 @Serializable
 data class SMUser(
     val id: String,
+    val nickname: String,
 )
