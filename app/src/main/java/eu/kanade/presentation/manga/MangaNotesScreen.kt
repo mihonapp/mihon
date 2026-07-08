@@ -25,7 +25,7 @@ fun MangaNotesScreen(
                 titleContent = {
                     AppBarTitle(
                         title = stringResource(MR.strings.action_edit_notes),
-                        subtitle = state.mangaTitle,
+                        subtitle = state.manga.title,
                     )
                 },
                 navigateUp = navigateUp,
