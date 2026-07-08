@@ -19,8 +19,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import logcat.LogPriority
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.system.logcat
@@ -32,7 +30,12 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.concurrent.atomics.AtomicInt
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.concurrent.atomics.incrementAndFetch
 
+@OptIn(ExperimentalAtomicApi::class)
 class BackupRestorer(
     private val context: Context,
     private val notifier: BackupNotifier,
@@ -47,10 +50,8 @@ class BackupRestorer(
 ) {
 
     private var restoreAmount = 0
-    private var restoreProgress = 0
-    private val errors = mutableListOf<Pair<Date, String>>()
-    private val restoreProgressMutex = Mutex()
-    private val errorsMutex = Mutex()
+    private val restoreProgress = AtomicInt(0)
+    private val errors = CopyOnWriteArrayList<Pair<Date, String>>()
 
     /**
      * Mapping of source ID to source name from backup data
@@ -197,20 +198,15 @@ class BackupRestorer(
             }
     }
 
-    private suspend fun updateRestoreProgress(content: String) {
-        val progress = restoreProgressMutex.withLock {
-            restoreProgress += 1
-            restoreProgress
-        }
+    private fun updateRestoreProgress(content: String) {
+        val progress = restoreProgress.incrementAndFetch()
 
         notifier.showRestoreProgress(content, progress, restoreAmount, isSync)
         onProgressUpdate(content, progress, restoreAmount, isSync)
     }
 
-    private suspend fun addError(message: String) {
-        errorsMutex.withLock {
-            errors.add(Date() to message)
-        }
+    private fun addError(message: String) {
+        errors.add(Date() to message)
     }
 
     private fun writeErrorLog(): File {
