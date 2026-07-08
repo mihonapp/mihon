@@ -104,7 +104,9 @@ class LibraryScreenModel(
                 val filteredFavorites = favorites
                     .applyFilters(tracksMap, trackingFilters, itemPreferences)
                     .let { libraryItems ->
-                        if (searchQuery == null) libraryItems else {
+                        if (searchQuery == null) {
+                            libraryItems
+                        } else {
                             val query = LibrarySearchParser(LibrarySearchLexer.tokenize(searchQuery)).parse()
                             libraryItems.filter { query.matches(it) }
                         }

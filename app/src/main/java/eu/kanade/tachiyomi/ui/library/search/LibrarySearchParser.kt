@@ -24,7 +24,9 @@ class LibrarySearchParser(private val tokens: List<LibrarySearchLexer.Token>) {
     private fun parseAnd(): QueryNode {
         val nodes = mutableListOf<QueryNode>()
 
-        while (index < tokens.size && peek() !is LibrarySearchLexer.Token.Or && peek() !is LibrarySearchLexer.Token.RParen) {
+        while (index < tokens.size && peek() !is LibrarySearchLexer.Token.Or &&
+            peek() !is LibrarySearchLexer.Token.RParen
+        ) {
             if (peek() is LibrarySearchLexer.Token.And) {
                 advance()
             }

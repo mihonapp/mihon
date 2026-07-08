@@ -14,7 +14,8 @@ enum class MangaField(vararg val aliases: String) {
     ARTIST("artist"),
     DESCRIPTION("description", "desc"),
     GENRE("genre", "tag"),
-    SOURCE("source", "src");
+    SOURCE("source", "src"),
+    ;
 
     companion object {
         private val lookup = entries.flatMap { field ->
@@ -29,7 +30,8 @@ enum class ComparisonField(vararg val aliases: String) {
     DATE_ADDED("added"),
     FETCH_INTERVAL("fetchinterval", "fi"),
     NEXT_UPDATE("nextupdate", "nu"),
-    UNREAD("unread");
+    UNREAD("unread"),
+    ;
 
     companion object {
         private val lookup = entries.flatMap { field ->
@@ -55,7 +57,7 @@ enum class Comparator(val symbol: String) {
     },
     EQ("=") {
         override fun <T : Comparable<T>> apply(a: T, b: T) = a == b
-    };
+    }, ;
 
     abstract fun <T : Comparable<T>> apply(a: T, b: T): Boolean
 
@@ -102,7 +104,7 @@ data class GeneralQueryNode(val value: String, val negated: Boolean) : QueryNode
             manga.description?.contains(value, ignoreCase = true) ?: false ||
             manga.genre?.any { it.contains(value, ignoreCase = true) } ?: false ||
             item.sourceName.contains(value, ignoreCase = true) ||
-            value.equals("local", ignoreCase = true) && manga.source == LocalSource.ID
+            (value.equals("local", ignoreCase = true) && manga.source == LocalSource.ID)
 
         return if (negated) !match else match
     }
@@ -121,7 +123,7 @@ data class FieldQueryNode(val field: MangaField, val value: String, val negated:
             MangaField.GENRE -> manga.genre?.any { it.equals(value, ignoreCase = true) } ?: false
             MangaField.SOURCE -> {
                 item.sourceName.contains(value, ignoreCase = true) ||
-                    value.equals("local", ignoreCase = true) && manga.source == LocalSource.ID
+                    (value.equals("local", ignoreCase = true) && manga.source == LocalSource.ID)
             }
         }
         return if (negated) !match else match
