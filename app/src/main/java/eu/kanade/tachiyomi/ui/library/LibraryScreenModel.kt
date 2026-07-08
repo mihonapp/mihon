@@ -18,8 +18,11 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.track.TrackerManager
+import eu.kanade.tachiyomi.source.getNameForMangaInfo
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.ui.library.search.LibrarySearchLexer
+import eu.kanade.tachiyomi.ui.library.search.LibrarySearchParser
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.coroutines.flow.Flow
@@ -100,7 +103,12 @@ class LibraryScreenModel(
                 val showSystemCategory = favorites.any { it.libraryManga.categories.contains(0) }
                 val filteredFavorites = favorites
                     .applyFilters(tracksMap, trackingFilters, itemPreferences)
-                    .let { if (searchQuery == null) it else it.filter { m -> m.matches(searchQuery, sourceManager) } }
+                    .let { libraryItems ->
+                        if (searchQuery == null) libraryItems else {
+                            val query = LibrarySearchParser(LibrarySearchLexer.tokenize(searchQuery)).parse()
+                            libraryItems.filter { query.matches(it) }
+                        }
+                    }
 
                 LibraryData(
                     isInitialized = true,
@@ -389,6 +397,7 @@ class LibraryScreenModel(
                     downloadCount = downloadManager.getDownloadCount(manga.manga),
                     unreadCount = manga.unreadCount,
                     isLocal = manga.manga.isLocal(),
+                    sourceName = sourceManager.getOrStub(manga.manga.source).getNameForMangaInfo(),
                     badges = LibraryItem.Badges(
                         downloadCount = if (preferences.downloadBadge) {
                             downloadManager.getDownloadCount(manga.manga)
@@ -727,6 +736,7 @@ class LibraryScreenModel(
             val manga: List<Manga>,
             val initialSelection: List<CheckboxState<Category>>,
         ) : Dialog
+
         data class DeleteManga(val manga: List<Manga>) : Dialog
     }
 
