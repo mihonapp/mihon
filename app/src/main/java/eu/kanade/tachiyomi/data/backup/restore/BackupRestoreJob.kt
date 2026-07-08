@@ -46,7 +46,7 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
                 notifier = notifier,
                 isSync = isSync,
                 onProgressUpdate = { content, progress, maxAmount, sync ->
-                    setForeground(
+                    setForegroundSafely(
                         ForegroundInfo(
                             Notifications.ID_RESTORE_PROGRESS,
                             notifier.restoreProgressNotification(content, progress, maxAmount, sync).build(),
