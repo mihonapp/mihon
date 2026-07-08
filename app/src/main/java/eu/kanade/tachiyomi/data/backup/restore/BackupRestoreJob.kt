@@ -54,7 +54,8 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
                         ),
                     )
                 },
-            ).restore(uri, options)
+            )
+                .restore(uri, options)
             Result.success()
         } catch (e: Exception) {
             if (e is CancellationException) {
