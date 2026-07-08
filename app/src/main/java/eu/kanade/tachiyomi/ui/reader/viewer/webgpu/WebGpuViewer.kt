@@ -443,18 +443,7 @@ open class WebGpuViewer(
         activity.onPageSelected(page)
         preloadPages(page)
 
-        val startOffset = if (isReversed) direction.toFloat() else -direction.toFloat()
-        pager.state.animationJob?.cancel()
-        pager.state.animationJob = pager.state.scope?.launch {
-            pager.state.setPageOffsetDirect(startOffset)
-            pager.state.invalidate()
-            val anim = Animatable(startOffset)
-            anim.updateBounds(lowerBound = -1f, upperBound = 1f)
-            anim.animateTo(0f, spring(stiffness = Spring.StiffnessMediumLow)) {
-                pager.state.setPageOffsetDirect(value)
-                pager.state.invalidate()
-            }
-        }
+        pager.state.animatePageTurn(if (isReversed) direction else -direction)
     }
 
     /**
