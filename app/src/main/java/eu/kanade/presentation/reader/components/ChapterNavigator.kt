@@ -24,7 +24,6 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderState
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalSlider
-import androidx.compose.material3.rememberSliderState
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -74,11 +73,13 @@ fun ChapterNavigator(
 ) {
     val haptic = LocalHapticFeedback.current
 
-    val state = rememberSliderState(
-        value = currentPage.toFloat(),
-        steps = totalPages - 2,
-        valueRange = 1f..totalPages.toFloat(),
-    )
+    val state = remember(totalPages) {
+        SliderState(
+            value = currentPage.toFloat(),
+            steps = totalPages - 2,
+            valueRange = 1f..totalPages.toFloat(),
+        )
+    }
     state.value = currentPage.toFloat()
     state.onValueChange = { onPageIndexChange(it.roundToInt() - 1) }
 
