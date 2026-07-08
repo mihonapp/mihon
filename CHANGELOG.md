@@ -13,9 +13,17 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ## [Unreleased]
 ### Added
 - [Hikka](https://hikka.io/) tracker support ([@Lorg0n](https://github.com/Lorg0n)) ([#1386](https://github.com/mihonapp/mihon/pull/1386))
+  - Fix Hikka not defaulting to "Plan to Read" for unread titles ([@MajorTanya](https://github.com/MajorTanya)) ([#3534](https://github.com/mihonapp/mihon/pull/3534))
+- Add support for [MangaBaka](https://mangabaka.org) tracker ([@MajorTanya](https://github.com/MajorTanya)) ([#3047](https://github.com/mihonapp/mihon/pull/3047))
 - Support resumable image downloads if supported by source ([@xMohnad](https://github.com/xMohnad)) ([#3167](https://github.com/mihonapp/mihon/pull/3167))
 - Display authors and description in Shikimori search results ([@MajorTanya](https://github.com/MajorTanya)) ([#3499](https://github.com/mihonapp/mihon/pull/3499))
 - Invalidate download cache after backup restore ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3096](https://github.com/mihonapp/mihon/pull/3096))
+
+### Changed
+- Don't use GMS to detect if GMS is available ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3525](https://github.com/mihonapp/mihon/pull/3525))
+
+### Improved
+- Show usernames in Tracking settings ([@MajorTanya](https://github.com/MajorTanya)) ([#3533](https://github.com/mihonapp/mihon/pull/3533))
 
 ### Fixed
 - Fix blank image on tall webtoons exceeding hardware texture limits ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3190](https://github.com/mihonapp/mihon/pull/3190))
@@ -23,6 +31,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix crash trying to select text in notes screen ([@AntsyLich](https://github.com/AntsyLich)) ([#3516](https://github.com/mihonapp/mihon/pull/3516))
 - Fix crash when putting app in background ([@AntsyLich](https://github.com/AntsyLich)) ([#3523](https://github.com/mihonapp/mihon/pull/3523))
 - Fix support for non-system SAF providers ([@AntsyLich](https://github.com/AntsyLich)) ([#3530](https://github.com/mihonapp/mihon/pull/3530))
+- Fix chapter's `memo` field not being updated for existing chapters ([@cuong-tran](https://github.com/cuong-tran)) ([#3538](https://github.com/mihonapp/mihon/pull/3538))
 
 ## [v0.20.0] - 2026-06-27
 ### Fixed

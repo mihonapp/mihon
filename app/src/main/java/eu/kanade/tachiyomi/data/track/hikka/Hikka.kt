@@ -112,6 +112,7 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
             track.finished_reading_date = (readContent.endDate ?: 0L) * 1000
             update(track)
         } else {
+            track.status = if (hasReadChapters) READING else PLAN_TO_READ
             track.score = 0.0
             update(track)
         }
@@ -143,6 +144,7 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
             val oauth = api.accessToken(reference)
             interceptor.setAuth(oauth)
             val user = api.getCurrentUser()
+            saveDisplayUsername(user.username)
             saveCredentials(user.reference, oauth.accessToken)
         } catch (_: Throwable) {
             logout()
