@@ -55,6 +55,7 @@ import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.library.model.LibrarySort
 import tachiyomi.domain.library.model.sort
+import tachiyomi.domain.library.repository.LibrarySearchRepository
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.manga.model.Manga
@@ -86,6 +87,7 @@ class LibraryScreenModel(
     private val downloadManager: DownloadManager = Injekt.get(),
     private val downloadCache: DownloadCache = Injekt.get(),
     private val trackerManager: TrackerManager = Injekt.get(),
+    private val librarySearchRepository: LibrarySearchRepository = Injekt.get(),
 ) : StateScreenModel<LibraryScreenModel.State>(State()) {
 
     init {
@@ -108,7 +110,8 @@ class LibraryScreenModel(
                             libraryItems
                         } else {
                             val query = LibrarySearchParser(LibrarySearchLexer.tokenize(searchQuery)).parse()
-                            libraryItems.filter { query.matches(it) }
+                            val filteredIds = librarySearchRepository.getFilteredMangaIdsByQuery(query.toSqlQueryPart())
+                            libraryItems.filter { it.id in filteredIds }
                         }
                     }
 

@@ -1,14 +1,11 @@
 package eu.kanade.tachiyomi.ui.library.search
 
-import eu.kanade.tachiyomi.ui.library.LibraryItem
+import tachiyomi.domain.library.repository.SqlQueryPart
 import tachiyomi.source.local.LocalSource
-import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
-import kotlin.math.abs
 
 enum class MangaField(vararg val aliases: String) {
-    ID("id"),
     TITLE("title"),
     AUTHOR("author"),
     ARTIST("artist"),
@@ -27,6 +24,7 @@ enum class MangaField(vararg val aliases: String) {
 }
 
 enum class ComparisonField(vararg val aliases: String) {
+    ID("id"),
     DATE_ADDED("added"),
     FETCH_INTERVAL("fetchinterval", "fi"),
     NEXT_UPDATE("nextupdate", "nu"),
@@ -43,23 +41,12 @@ enum class ComparisonField(vararg val aliases: String) {
 }
 
 enum class Comparator(val symbol: String) {
-    GTE(">=") {
-        override fun <T : Comparable<T>> apply(a: T, b: T) = a >= b
-    },
-    LTE("<=") {
-        override fun <T : Comparable<T>> apply(a: T, b: T) = a <= b
-    },
-    GT(">") {
-        override fun <T : Comparable<T>> apply(a: T, b: T) = a > b
-    },
-    LT("<") {
-        override fun <T : Comparable<T>> apply(a: T, b: T) = a < b
-    },
-    EQ("=") {
-        override fun <T : Comparable<T>> apply(a: T, b: T) = a == b
-    }, ;
-
-    abstract fun <T : Comparable<T>> apply(a: T, b: T): Boolean
+    GTE(">="),
+    LTE("<="),
+    GT(">"),
+    LT("<"),
+    EQ("="),
+    ;
 
     companion object {
         private val lookup = entries.associateBy { it.symbol }
@@ -69,64 +56,90 @@ enum class Comparator(val symbol: String) {
 }
 
 sealed interface QueryNode {
-    fun matches(item: LibraryItem): Boolean
+    fun toSqlQueryPart(): SqlQueryPart
 }
 
 data class AndNode(val children: List<QueryNode>) : QueryNode {
-    override fun matches(item: LibraryItem): Boolean {
-        return children.all { it.matches(item) }
+    override fun toSqlQueryPart(): SqlQueryPart {
+        if (children.isEmpty()) return SqlQueryPart("1=1")
+
+        val parts = children.map { it.toSqlQueryPart() }
+        val combinedSql = parts.joinToString(" AND ") { "(${it.sql})" }
+        val combinedArgs = parts.flatMap { it.args }
+
+        return SqlQueryPart(combinedSql, combinedArgs)
     }
 }
 
 data class OrNode(val children: List<QueryNode>) : QueryNode {
-    override fun matches(item: LibraryItem): Boolean {
-        return children.any { it.matches(item) }
+    override fun toSqlQueryPart(): SqlQueryPart {
+        if (children.isEmpty()) return SqlQueryPart("1=0")
+
+        val parts = children.map { it.toSqlQueryPart() }
+        val combinedSql = parts.joinToString(" OR ") { "(${it.sql})" }
+        val combinedArgs = parts.flatMap { it.args }
+
+        return SqlQueryPart(combinedSql, combinedArgs)
     }
 }
 
 data class NotNode(val child: QueryNode) : QueryNode {
-    override fun matches(item: LibraryItem): Boolean {
-        return !child.matches(item)
+    override fun toSqlQueryPart(): SqlQueryPart {
+        val part = child.toSqlQueryPart()
+        return SqlQueryPart("NOT (${part.sql})", part.args)
     }
 }
 
 object EmptyQueryNode : QueryNode {
-    override fun matches(item: LibraryItem): Boolean = true
+    override fun toSqlQueryPart(): SqlQueryPart {
+        return SqlQueryPart("1=1")
+    }
 }
 
 data class GeneralQueryNode(val value: String, val negated: Boolean) : QueryNode {
-    override fun matches(item: LibraryItem): Boolean {
-        val manga = item.libraryManga.manga
+    override fun toSqlQueryPart(): SqlQueryPart {
+        var sql = """
+            (
+                instr(lower(libraryView.title), ?) > 0
+                OR instr(lower(coalesce(libraryView.author, '')), ?) > 0
+                OR instr(lower(coalesce(libraryView.artist, '')), ?) > 0
+                OR instr(lower(coalesce(libraryView.description, '')), ?) > 0
+                OR instr(lower(coalesce(libraryView.genre, '')), ?) > 0
+                OR instr(lower(sources.name), ?) > 0
+                ${if (value.equals("local", ignoreCase = true)) "OR libraryView.source = ${LocalSource.ID}" else ""}
+            )
+        """.trimIndent()
+        val args = List(MangaField.entries.size) { value.lowercase() }
+        if (negated) sql = "NOT $sql"
 
-        val match = manga.title.contains(value, ignoreCase = true) ||
-            manga.author?.contains(value, ignoreCase = true) ?: false ||
-            manga.artist?.contains(value, ignoreCase = true) ?: false ||
-            manga.description?.contains(value, ignoreCase = true) ?: false ||
-            manga.genre?.any { it.contains(value, ignoreCase = true) } ?: false ||
-            item.sourceName.contains(value, ignoreCase = true) ||
-            (value.equals("local", ignoreCase = true) && manga.source == LocalSource.ID)
-
-        return if (negated) !match else match
+        return SqlQueryPart(sql, args)
     }
 }
 
 data class FieldQueryNode(val field: MangaField, val value: String, val negated: Boolean) : QueryNode {
-    override fun matches(item: LibraryItem): Boolean {
-        val manga = item.libraryManga.manga
-
-        val match = when (field) {
-            MangaField.ID -> item.id == value.toLongOrNull()
-            MangaField.TITLE -> manga.title.contains(value, ignoreCase = true)
-            MangaField.AUTHOR -> manga.author?.contains(value, ignoreCase = true) ?: false
-            MangaField.ARTIST -> manga.artist?.contains(value, ignoreCase = true) ?: false
-            MangaField.DESCRIPTION -> manga.description?.contains(value, ignoreCase = true) ?: false
-            MangaField.GENRE -> manga.genre?.any { it.equals(value, ignoreCase = true) } ?: false
-            MangaField.SOURCE -> {
-                item.sourceName.contains(value, ignoreCase = true) ||
-                    (value.equals("local", ignoreCase = true) && manga.source == LocalSource.ID)
-            }
+    override fun toSqlQueryPart(): SqlQueryPart {
+        if (field == MangaField.SOURCE && value.equals("local", ignoreCase = true)) {
+            var sql = """
+                (
+                    instr(lower(sources.name), 'local') > 0
+                    OR libraryView.source = ${LocalSource.ID}
+                )
+            """.trimIndent()
+            if (negated) sql = "NOT $sql"
+            return SqlQueryPart(sql)
         }
-        return if (negated) !match else match
+
+        val column = when (field) {
+            MangaField.TITLE -> "lower(libraryView.title)"
+            MangaField.AUTHOR -> "lower(coalesce(libraryView.author, ''))"
+            MangaField.ARTIST -> "lower(coalesce(libraryView.artist, ''))"
+            MangaField.DESCRIPTION -> "lower(coalesce(libraryView.description, ''))"
+            MangaField.GENRE -> "lower(coalesce(libraryView.genre, ''))"
+            MangaField.SOURCE -> "lower(sources.name)"
+        }
+        var sql = "instr($column, ?) > 0"
+        if (negated) sql = "NOT $sql"
+        return SqlQueryPart(sql, listOf(value.lowercase()))
     }
 }
 
@@ -136,41 +149,34 @@ data class ComparisonQueryNode(
     val queryComparator: Comparator,
     val negated: Boolean,
 ) : QueryNode {
-    override fun matches(item: LibraryItem): Boolean {
-        val manga = item.libraryManga.manga
-
-        val match = when (field) {
-            ComparisonField.DATE_ADDED -> {
-                runCatching { LocalDate.parse(value) }.getOrNull()?.let { inputDate ->
-                    queryComparator.apply(
-                        Instant.ofEpochMilli(manga.dateAdded).atZone(ZoneId.systemDefault()).toLocalDate(),
-                        inputDate,
-                    )
-                } ?: false
-            }
-
-            ComparisonField.FETCH_INTERVAL -> {
-                value.toIntOrNull()?.let { inputValue ->
-                    queryComparator.apply(abs(manga.fetchInterval), inputValue)
-                } ?: false
-            }
-
-            ComparisonField.NEXT_UPDATE -> {
-                runCatching { LocalDate.parse(value) }.getOrNull()?.let { inputDate ->
-                    queryComparator.apply(
-                        Instant.ofEpochMilli(manga.nextUpdate).atZone(ZoneId.systemDefault()).toLocalDate(),
-                        inputDate,
-                    )
-                } ?: false
-            }
-
-            ComparisonField.UNREAD -> {
-                value.toLongOrNull()?.let { inputUnread ->
-                    queryComparator.apply(item.unreadCount, inputUnread)
-                } ?: false
-            }
+    override fun toSqlQueryPart(): SqlQueryPart {
+        val column = when (field) {
+            ComparisonField.ID -> "libraryView._id"
+            ComparisonField.DATE_ADDED -> "libraryView.date_added"
+            ComparisonField.FETCH_INTERVAL -> "abs(libraryView.calculate_interval)"
+            ComparisonField.NEXT_UPDATE -> "libraryView.next_update"
+            ComparisonField.UNREAD -> "libraryView.totalCount - libraryView.readCount"
         }
 
-        return if (negated) !match else match
+        val arg = when (field) {
+            ComparisonField.ID -> value.toLongOrNull()
+
+            ComparisonField.DATE_ADDED, ComparisonField.NEXT_UPDATE -> {
+                runCatching {
+                    LocalDate.parse(value)
+                        .atStartOfDay(ZoneId.systemDefault())
+                        .toInstant()
+                        .toEpochMilli()
+                }.getOrNull()
+            }
+
+            ComparisonField.FETCH_INTERVAL -> value.toIntOrNull()
+
+            ComparisonField.UNREAD -> value.toLongOrNull()
+        } ?: return SqlQueryPart("1=0")
+
+        var sql = "$column ${queryComparator.symbol} ?"
+        if (negated) sql = "NOT $sql"
+        return SqlQueryPart(sql, listOf(arg))
     }
 }
