@@ -61,6 +61,7 @@ import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.UpdateChapter
 import tachiyomi.domain.chapter.model.ChapterUpdate
@@ -72,12 +73,20 @@ import tachiyomi.domain.history.model.HistoryUpdate
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.reader.service.ReadingModeAutoRulesEvaluator
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.Instant
 import java.util.Date
+
+/** Resolved reading mode for the open manga and optional auto-rule match for UI (e.g. toast). */
+data class ReadingModeToastDetails(
+    val modeFlag: Int,
+    /** 1-based rule index when [modeFlag] came from automatic rules; otherwise null. */
+    val autoRuleNumber: Int?,
+)
 
 /**
  * Presenter used by the activity to perform background operations.
@@ -101,6 +110,7 @@ class ReaderViewModel @JvmOverloads constructor(
     private val setMangaViewerFlags: SetMangaViewerFlags = Injekt.get(),
     private val getIncognitoState: GetIncognitoState = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
+    private val getCategories: GetCategories = Injekt.get(),
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(State())
@@ -281,7 +291,14 @@ class ReaderViewModel @JvmOverloads constructor(
                 val manga = getManga.await(mangaId)
                 if (manga != null) {
                     sourceManager.isInitialized.first { it }
-                    mutableState.update { it.copy(manga = manga) }
+                    val categoryIds = getCategories.await(mangaId).map { it.id }.toSet()
+                    mutableState.update {
+                        it.copy(
+                            manga = manga,
+                            categoryIds = categoryIds,
+                            genreTagsForRules = ReadingModeAutoRulesEvaluator.normalizeMangaGenres(manga.genre),
+                        )
+                    }
                     if (chapterId == -1L) chapterId = initialChapterId
 
                     val context = Injekt.get<Application>()
@@ -662,16 +679,47 @@ class ReaderViewModel @JvmOverloads constructor(
         }
     }
 
+    private data class ResolvedReadingMode(
+        val modeFlag: Int,
+        val autoRuleNumber: Int?,
+    )
+
+    private fun resolveMangaReadingMode(resolveDefault: Boolean): ResolvedReadingMode {
+        val default = readerPreferences.defaultReadingMode.get()
+        val m = manga ?: return ResolvedReadingMode(default, null)
+        val readingMode = ReadingMode.fromPreference(m.readingMode.toInt())
+        return when {
+            resolveDefault && readingMode == ReadingMode.DEFAULT -> {
+                val fromRules = if (readerPreferences.readingModeAutoRulesEnabled.get()) {
+                    ReadingModeAutoRulesEvaluator.evaluate(
+                        rules = readerPreferences.readingModeAutoRules.get().rules,
+                        sourceId = m.source,
+                        genreTags = state.value.genreTagsForRules,
+                        categoryIds = state.value.categoryIds,
+                    )
+                } else {
+                    null
+                }
+                ResolvedReadingMode(
+                    modeFlag = fromRules?.readingModeFlag ?: default,
+                    autoRuleNumber = fromRules?.ruleNumber,
+                )
+            }
+            else -> ResolvedReadingMode(m.readingMode.toInt(), null)
+        }
+    }
+
     /**
      * Returns the viewer position used by this manga or the default one.
      */
     fun getMangaReadingMode(resolveDefault: Boolean = true): Int {
-        val default = readerPreferences.defaultReadingMode.get()
-        val readingMode = ReadingMode.fromPreference(manga?.readingMode?.toInt())
-        return when {
-            resolveDefault && readingMode == ReadingMode.DEFAULT -> default
-            else -> manga?.readingMode?.toInt() ?: default
-        }
+        return resolveMangaReadingMode(resolveDefault).modeFlag
+    }
+
+    /** Reading mode and optional auto-rule index (1-based) for the “show reading mode” toast. */
+    fun getReadingModeToastDetails(): ReadingModeToastDetails {
+        val r = resolveMangaReadingMode(resolveDefault = true)
+        return ReadingModeToastDetails(r.modeFlag, r.autoRuleNumber)
     }
 
     /**
@@ -687,9 +735,11 @@ class ReaderViewModel @JvmOverloads constructor(
                 val currChapter = currChapters.currChapter
                 currChapter.requestedPage = currChapter.chapter.last_page_read
 
+                val updatedManga = getManga.await(manga.id)
                 mutableState.update {
                     it.copy(
-                        manga = getManga.await(manga.id),
+                        manga = updatedManga,
+                        genreTagsForRules = ReadingModeAutoRulesEvaluator.normalizeMangaGenres(updatedManga?.genre),
                         viewerChapters = currChapters,
                     )
                 }
@@ -723,9 +773,11 @@ class ReaderViewModel @JvmOverloads constructor(
                 val currChapter = currChapters.currChapter
                 currChapter.requestedPage = currChapter.chapter.last_page_read
 
+                val updatedManga = getManga.await(manga.id)
                 mutableState.update {
                     it.copy(
-                        manga = getManga.await(manga.id),
+                        manga = updatedManga,
+                        genreTagsForRules = ReadingModeAutoRulesEvaluator.normalizeMangaGenres(updatedManga?.genre),
                         viewerChapters = currChapters,
                     )
                 }
@@ -947,6 +999,8 @@ class ReaderViewModel @JvmOverloads constructor(
     @Immutable
     data class State(
         val manga: Manga? = null,
+        val categoryIds: Set<Long> = emptySet(),
+        val genreTagsForRules: Set<String> = emptySet(),
         val viewerChapters: ViewerChapters? = null,
         val bookmarked: Boolean = false,
         val isLoadingAdjacentChapter: Boolean = false,
