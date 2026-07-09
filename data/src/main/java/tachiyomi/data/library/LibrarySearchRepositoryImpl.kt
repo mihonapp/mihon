@@ -6,7 +6,7 @@ import tachiyomi.domain.library.repository.LibrarySearchRepository
 import tachiyomi.domain.library.repository.SqlQueryPart
 
 class LibrarySearchRepositoryImpl(
-    private val driver: SqlDriver
+    private val driver: SqlDriver,
 ) : LibrarySearchRepository {
     override suspend fun getFilteredMangaIdsByQuery(queryPart: SqlQueryPart): Set<Long> {
         return driver.executeQuery(
