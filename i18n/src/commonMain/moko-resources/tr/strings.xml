@@ -916,6 +916,5 @@
     <string name="extensionStoresScreen.addStoreDeeplink.bodyText">Aşağıdaki uzantı mağazasını eklemek istiyor musunuz?</string>
     <string name="extensionStoresScreen.deleteStore.title">Uzantı mağazasını kaldır</string>
     <string name="extensionStoresScreen.deleteStore.body">%1$s (%2$s) uzantı mağazasını kaldırmak istiyor musunuz?</string>
-    <string name="pref_webtoon_vertical_navigator">Uzun şerit okuma için dikey gezinti kullan</string>
     <string name="pref_webtoon_vertical_navigator_on_left">Dikey gezinti bölmesini sol tarafa yerleştir</string>
 </resources>
