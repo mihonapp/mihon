@@ -24,6 +24,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Changed
 - Don't use GMS to detect if GMS is available ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3525](https://github.com/mihonapp/mihon/pull/3525))
+- Show author and artist icons when identical ([@xMohnad](https://github.com/xMohnad)) ([#3519](https://github.com/mihonapp/mihon/pull/3519))
 
 ### Improved
 - Show usernames in Tracking settings ([@MajorTanya](https://github.com/MajorTanya)) ([#3533](https://github.com/mihonapp/mihon/pull/3533))
@@ -36,9 +37,6 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix chapter's `memo` field not being updated for existing chapters ([@cuong-tran](https://github.com/cuong-tran)) ([#3538](https://github.com/mihonapp/mihon/pull/3538))
 - Fix app not reading `tachiyomix.extensionLib` extension metadata ([@AntsyLich](https://github.com/AntsyLich)) ([#3545](https://github.com/mihonapp/mihon/pull/3545), [#3559](https://github.com/mihonapp/mihon/pull/3559))
 - Fix reader navigator slider steps not updating after changing chapter ([@AntsyLich](https://github.com/AntsyLich)) ([#3549](https://github.com/mihonapp/mihon/pull/3549))
-
-### Changed
-- Show author and artist icons when identical ([@xMohnad](https://github.com/xMohnad)) ([#3519](https://github.com/mihonapp/mihon/pull/3519))
 
 ## [v0.20.0] - 2026-06-27
 ### Added
