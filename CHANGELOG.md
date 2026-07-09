@@ -19,6 +19,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Support resumable image downloads if supported by source ([@xMohnad](https://github.com/xMohnad)) ([#3167](https://github.com/mihonapp/mihon/pull/3167))
 - Display authors and description in Shikimori search results ([@MajorTanya](https://github.com/MajorTanya)) ([#3499](https://github.com/mihonapp/mihon/pull/3499))
 - Invalidate download cache after backup restore ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3096](https://github.com/mihonapp/mihon/pull/3096))
+- Add setting to control vertical chapter navigator height ([@AntsyLich](https://github.com/AntsyLich)) ([#3528](https://github.com/mihonapp/mihon/pull/3528))
+- Add option to set which readers use vertical chapter navigator ([@AntsyLich](https://github.com/AntsyLich)) ([#3528](https://github.com/mihonapp/mihon/pull/3528))
 
 ### Changed
 - Don't use GMS to detect if GMS is available ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3525](https://github.com/mihonapp/mihon/pull/3525))
