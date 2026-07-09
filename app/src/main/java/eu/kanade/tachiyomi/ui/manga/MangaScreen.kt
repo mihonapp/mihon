@@ -161,15 +161,7 @@ class MangaScreen(
             onMigrateClicked = {
                 navigator.push(MigrationConfigScreen(successState.manga.id))
             }.takeIf { successState.manga.favorite },
-            onEditNotesClicked = {
-                navigator.push(
-                    MangaNotesScreen(
-                        mangaId = successState.manga.id,
-                        mangaTitle = successState.manga.title,
-                        mangaNotes = successState.manga.notes,
-                    ),
-                )
-            },
+            onEditNotesClicked = { navigator.push(MangaNotesScreen(manga = successState.manga)) },
             onMultiBookmarkClicked = screenModel::bookmarkChapters,
             onMultiMarkAsReadClicked = screenModel::markChaptersRead,
             onMarkPreviousAsReadClicked = screenModel::markPreviousChapterRead,

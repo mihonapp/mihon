@@ -115,7 +115,7 @@ object SettingsDownloadScreen : SearchableSettings {
     private fun getExcludedCategoriesPreference(
         downloadPreferences: DownloadPreferences,
         categories: () -> List<Category>,
-    ): Preference.PreferenceItem.MultiSelectListPreference {
+    ): Preference.PreferenceItem.MultiSelectListPreference<String> {
         return Preference.PreferenceItem.MultiSelectListPreference(
             preference = downloadPreferences.removeExcludeCategories,
             entries = categories()

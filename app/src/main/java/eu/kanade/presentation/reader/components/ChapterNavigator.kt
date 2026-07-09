@@ -24,7 +24,6 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderState
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalSlider
-import androidx.compose.material3.rememberSliderState
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -71,14 +70,17 @@ fun ChapterNavigator(
     currentPage: Int,
     totalPages: Int,
     onPageIndexChange: (Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val haptic = LocalHapticFeedback.current
 
-    val state = rememberSliderState(
-        value = currentPage.toFloat(),
-        steps = totalPages - 2,
-        valueRange = 1f..totalPages.toFloat(),
-    )
+    val state = remember(totalPages) {
+        SliderState(
+            value = currentPage.toFloat(),
+            steps = totalPages - 2,
+            valueRange = 1f..totalPages.toFloat(),
+        )
+    }
     state.value = currentPage.toFloat()
     state.onValueChange = { onPageIndexChange(it.roundToInt() - 1) }
 
@@ -103,7 +105,7 @@ fun ChapterNavigator(
     )
 
     if (type.isHorizontal()) {
-        ChapterNavigator(
+        HorizontalChapterNavigator(
             isRtl = type == ChapterNavigatorType.HORIZONTAL_RTL,
             state = state,
             onNextChapter = onNextChapter,
@@ -116,6 +118,7 @@ fun ChapterNavigator(
             mainAxisPadding = mainAxisPadding,
             backgroundColor = backgroundColor,
             buttonColor = buttonColor,
+            modifier = modifier,
         )
     } else {
         VerticalChapterNavigator(
@@ -130,12 +133,13 @@ fun ChapterNavigator(
             mainAxisPadding = mainAxisPadding,
             backgroundColor = backgroundColor,
             buttonColor = buttonColor,
+            modifier = modifier,
         )
     }
 }
 
 @Composable
-fun ChapterNavigator(
+fun HorizontalChapterNavigator(
     isRtl: Boolean,
     state: SliderState,
     onNextChapter: () -> Unit,
@@ -148,13 +152,14 @@ fun ChapterNavigator(
     mainAxisPadding: Dp,
     backgroundColor: Color,
     buttonColor: IconButtonColors,
+    modifier: Modifier = Modifier,
 ) {
     val layoutDirection = if (isRtl) LayoutDirection.Rtl else LayoutDirection.Ltr
 
     // We explicitly handle direction based on the reader viewer rather than the system direction
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = mainAxisPadding),
             verticalAlignment = Alignment.CenterVertically,
@@ -232,9 +237,10 @@ fun VerticalChapterNavigator(
     mainAxisPadding: Dp,
     backgroundColor: Color,
     buttonColor: IconButtonColors,
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxHeight()
             .padding(vertical = mainAxisPadding),
         horizontalAlignment = Alignment.CenterHorizontally,
