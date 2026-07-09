@@ -67,7 +67,6 @@ import tachiyomi.domain.chapter.interactor.UpdateChapter
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.model.ChapterUpdate
 import tachiyomi.domain.chapter.model.NoChaptersException
-import tachiyomi.domain.chapter.service.calculateChapterGap
 import tachiyomi.domain.chapter.service.getChapterSort
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
@@ -1124,6 +1123,16 @@ class MangaScreenModel(
                 chapters.fastAny { it.selected }
             }
 
+            // Chapter numbers that actually exist on the source, regardless of the
+            // active read/downloaded/bookmarked view filters. Used so chapters hidden
+            // by those filters aren't mistaken for chapters missing from the source.
+            private val existingChapterNumbers by lazy {
+                chapters
+                    .filter { it.chapter.isRecognizedNumber }
+                    .map { floor(it.chapter.chapterNumber).toInt() }
+                    .toSet()
+            }
+
             val chapterListItems by lazy {
                 if (hideMissingChapters) {
                     return@lazy processedChapters
@@ -1135,16 +1144,18 @@ class MangaScreenModel(
                     } else {
                         before to after
                     }
-                    if (higherChapter == null) return@insertSeparators null
-
-                    if (lowerChapter == null) {
-                        floor(higherChapter.chapter.chapterNumber)
-                            .toInt()
-                            .minus(1)
-                            .coerceAtLeast(0)
-                    } else {
-                        calculateChapterGap(higherChapter.chapter, lowerChapter.chapter)
+                    if (higherChapter == null || !higherChapter.chapter.isRecognizedNumber) {
+                        return@insertSeparators null
                     }
+                    if (lowerChapter != null && !lowerChapter.chapter.isRecognizedNumber) {
+                        return@insertSeparators null
+                    }
+
+                    val lowerBound = lowerChapter?.let { floor(it.chapter.chapterNumber).toInt() } ?: 0
+                    val upperBound = floor(higherChapter.chapter.chapterNumber).toInt()
+
+                    ((lowerBound + 1) until upperBound)
+                        .count { it !in existingChapterNumbers }
                         .takeIf { it > 0 }
                         ?.let { missingCount ->
                             ChapterList.MissingCount(
