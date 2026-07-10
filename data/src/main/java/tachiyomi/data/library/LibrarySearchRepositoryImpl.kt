@@ -96,7 +96,7 @@ class LibrarySearchRepositoryImpl(
                 OR instr(lower(libraryView.notes), ?) > 0
             )
         """.trimIndent()
-        val args = List(MangaField.entries.size) { value.lowercase() }
+        val args = List(MangaField.generalFieldCount) { value.lowercase() }
         if (negated) sql = "NOT $sql"
 
         return SqlQueryPart(sql, args)
@@ -122,6 +122,7 @@ class LibrarySearchRepositoryImpl(
             MangaField.GENRE -> "lower(coalesce(libraryView.genre, ''))"
             MangaField.SOURCE -> "lower(sources.name)"
             MangaField.NOTES -> "lower(libraryView.notes)"
+            MangaField.LANGUAGE -> "lower(sources.lang)"
         }
 
         if (value.isEmpty()) {

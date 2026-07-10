@@ -1,6 +1,6 @@
 package tachiyomi.domain.library.model.search
 
-enum class MangaField(vararg val aliases: String) {
+enum class MangaField(vararg val aliases: String, val fieldOnly: Boolean = false) {
     TITLE("title"),
     AUTHOR("author"),
     ARTIST("artist"),
@@ -8,6 +8,7 @@ enum class MangaField(vararg val aliases: String) {
     GENRE("genre", "tag"),
     SOURCE("source", "src"),
     NOTES("notes", "note"),
+    LANGUAGE("language", "lang", fieldOnly = true),
     ;
 
     companion object {
@@ -16,6 +17,8 @@ enum class MangaField(vararg val aliases: String) {
         }.toMap()
 
         fun fromString(value: String): MangaField? = lookup[value.lowercase()]
+
+        val generalFieldCount = entries.count { !it.fieldOnly }
     }
 }
 
