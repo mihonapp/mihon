@@ -84,20 +84,25 @@ class LibrarySearchRepositoryImpl(
     }
 
     private fun GeneralQueryNode.toSqlQueryPart(): SqlQueryPart {
-        var sql = """
-            (
-                instr(lower(libraryView.title), ?) > 0
-                OR instr(lower(coalesce(libraryView.author, '')), ?) > 0
-                OR instr(lower(coalesce(libraryView.artist, '')), ?) > 0
-                OR instr(lower(coalesce(libraryView.description, '')), ?) > 0
-                OR instr(lower(coalesce(libraryView.genre, '')), ?) > 0
-                OR instr(lower(sources.name), ?) > 0
-                ${if (value.equals("local", ignoreCase = true)) "OR libraryView.source = $LOCAL_SOURCE_ID" else ""}
-                OR instr(lower(libraryView.notes), ?) > 0
-            )
-        """.trimIndent()
-        val args = List(MangaField.generalFieldCount) { value.lowercase() }
+        val clauses = MangaField.entries.mapNotNull { field ->
+                when (field) {
+                    MangaField.TITLE -> "libraryView.title"
+                    MangaField.AUTHOR -> "coalesce(libraryView.author, '')"
+                    MangaField.ARTIST -> "coalesce(libraryView.artist, '')"
+                    MangaField.DESCRIPTION -> "coalesce(libraryView.description, '')"
+                    MangaField.GENRE -> "coalesce(libraryView.genre, '')"
+                    MangaField.SOURCE -> "sources.name"
+                    MangaField.NOTES -> "libraryView.notes"
+
+                    MangaField.LANGUAGE -> null
+                }
+            }.map { "instr(lower($it), ?) > 0" }.toMutableList()
+        if (value.equals("local", ignoreCase = true)) clauses.add("libraryView.source = $LOCAL_SOURCE_ID")
+
+        var sql = clauses.joinToString(separator = " OR ", prefix = "(", postfix = ")")
         if (negated) sql = "NOT $sql"
+
+        val args = List(MangaField.generalFieldCount) { value.lowercase() }
 
         return SqlQueryPart(sql, args)
     }
@@ -115,14 +120,14 @@ class LibrarySearchRepositoryImpl(
         }
 
         val column = when (field) {
-            MangaField.TITLE -> "lower(libraryView.title)"
-            MangaField.AUTHOR -> "lower(coalesce(libraryView.author, ''))"
-            MangaField.ARTIST -> "lower(coalesce(libraryView.artist, ''))"
-            MangaField.DESCRIPTION -> "lower(coalesce(libraryView.description, ''))"
-            MangaField.GENRE -> "lower(coalesce(libraryView.genre, ''))"
-            MangaField.SOURCE -> "lower(sources.name)"
-            MangaField.NOTES -> "lower(libraryView.notes)"
-            MangaField.LANGUAGE -> "lower(sources.lang)"
+            MangaField.TITLE -> "libraryView.title"
+            MangaField.AUTHOR -> "coalesce(libraryView.author, '')"
+            MangaField.ARTIST -> "coalesce(libraryView.artist, '')"
+            MangaField.DESCRIPTION -> "coalesce(libraryView.description, '')"
+            MangaField.GENRE -> "coalesce(libraryView.genre, '')"
+            MangaField.SOURCE -> "sources.name"
+            MangaField.NOTES -> "libraryView.notes"
+            MangaField.LANGUAGE -> "sources.lang"
         }
 
         if (value.isEmpty()) {
@@ -131,7 +136,7 @@ class LibrarySearchRepositoryImpl(
             return SqlQueryPart(sql)
         }
 
-        var sql = "instr($column, ?) > 0"
+        var sql = "instr(lower($column), ?) > 0"
         if (negated) sql = "NOT $sql"
         return SqlQueryPart(sql, listOf(value.lowercase()))
     }
