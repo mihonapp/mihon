@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App-level override for the name supplied by the shared i18n module. -->
+    <string name="app_name" translatable="false">Yomori</string>
+</resources>

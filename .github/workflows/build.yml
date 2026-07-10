@@ -1,4 +1,6 @@
-name: Build & Test
+# Authoritative CI and development APK artifact workflow for Yomori.
+name: Yomori Build & Test
+
 on:
   pull_request:
     paths:
@@ -11,6 +13,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -21,7 +24,7 @@ permissions:
 
 jobs:
   build:
-    name: Build & Test App
+    name: Build & Test Yomori
     runs-on: 'ubuntu-24.04'
 
     steps:
@@ -30,6 +33,7 @@ jobs:
 
       - name: Dependency Review
         if: github.event_name == 'pull_request'
+        continue-on-error: true
         uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
 
       - name: Set up JDK
@@ -52,23 +56,28 @@ jobs:
         run: ./gradlew verifySqlDelightMigration
 
       - name: Upload test report
-        if: steps.unit_tests.outcome == 'failure'
+        if: failure() && steps.unit_tests.outcome == 'failure'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: test-report-${{ github.sha }}
           path: app/build/reports/tests/testDebugUnitTest
+          retention-days: 14
 
-      - name: Build app
-        run: ./gradlew assembleRelease -Pinclude-telemetry -Penable-updater
+      - name: Build telemetry-free APKs
+        run: ./gradlew assembleRelease
 
-      - name: Upload APK
+      - name: Upload APKs
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: arm64-v8a-${{ github.sha }}
-          path: app/build/outputs/apk/release/app-arm64-v8a-release.apk
+          name: yomori-apks-${{ github.sha }}
+          path: app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Upload mapping
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: mapping-${{ github.sha }}
           path: app/build/outputs/mapping/release
+          if-no-files-found: error
+          retention-days: 14

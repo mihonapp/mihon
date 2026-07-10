@@ -1,0 +1,54 @@
+name: Bug report
+description: Report reproducible Yomori behavior
+title: "[Bug] "
+labels: []
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      placeholder: |
+        1. Open ...
+        2. Import ...
+        3. Select ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Yomori version or commit
+    validations:
+      required: true
+  - type: input
+    id: android
+    attributes:
+      label: Android version and device
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - CBL import
+        - Matching
+        - Reading list
+        - Reader
+        - Extensions
+        - Library
+        - Build or installation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs or screenshots
+      description: Remove account details, source credentials, tokens, and private content before attaching anything.

@@ -1,74 +1,69 @@
-<div align="center">
+# Yomori
 
-<a href="https://mihon.app">
-    <img src="./.github/assets/logo.png" alt="Mihon logo" title="Mihon logo" width="80"/>
-</a>
+[![Build](https://img.shields.io/github/actions/workflow/status/Kamui2040/Yomori/build.yml?branch=main&label=build)](https://github.com/Kamui2040/Yomori/actions/workflows/build.yml)
+[![License: Apache-2.0](https://img.shields.io/github/license/Kamui2040/Yomori)](./LICENSE)
 
-# Mihon [App](#)
+Yomori is a source-agnostic Android comic reader focused on imported Comic Book Lover (`.cbl`) reading orders. It is an independent fork of [Mihon](https://github.com/mihonapp/mihon).
 
-### Full-featured reader
-Discover and read manga, webtoons, comics, and more – easier than ever on your Android device.
+Yomori is currently in early development. GitHub Actions builds are development artifacts and are not public releases.
 
-[![Discord server](https://img.shields.io/discord/1195734228319617024.svg?label=&labelColor=6A7EC2&color=7389D8&logo=discord&logoColor=FFFFFF)](https://discord.gg/mihon)
-[![GitHub downloads](https://img.shields.io/github/downloads/mihonapp/mihon/total?label=downloads&labelColor=27303D&color=0D1117&logo=github&logoColor=FFFFFF&style=flat)](https://mihon.app/download)
+## Planned workflow
 
-[![CI](https://img.shields.io/github/actions/workflow/status/mihonapp/mihon/build.yml?labelColor=27303D)](https://github.com/mihonapp/mihon/actions/workflows/build_push.yml)
-[![License: Apache-2.0](https://img.shields.io/github/license/mihonapp/mihon?labelColor=27303D&color=0877d2)](/LICENSE)
-[![Translation status](https://img.shields.io/weblate/progress/mihon?labelColor=27303D&color=946300)](https://hosted.weblate.org/engage/mihon/)
+1. Add user-selected Mihon/Tachiyomi-compatible extension repositories.
+2. Install the extensions the user wants to use.
+3. Import a CBL reading list.
+4. Choose which installed extensions may be searched for that list.
+5. Automatically match clear series and issue results.
+6. Review ambiguous matches using visible confidence scores and candidate details.
+7. Override the source for an entire series or any individual entry.
+8. Read the resolved order continuously across series and sources.
 
-## Download
+## Core principles
 
-[![Mihon Stable](https://img.shields.io/github/release/mihonapp/mihon.svg?maxAge=3600&label=Stable&labelColor=06599d&color=043b69)](https://mihon.app/download)
-[![Mihon Beta](https://img.shields.io/github/v/release/mihonapp/mihon-preview.svg?maxAge=3600&label=Beta&labelColor=2c2c47&color=1c1c39)](https://mihon.app/download)
+- No bundled, hosted, operated, or recommended content sources.
+- Existing compatible extensions remain user-installed and user-controlled.
+- No telemetry in standard Yomori builds.
+- Local-first reading-list metadata, mappings, and progress.
+- User-confirmed matches are never silently replaced.
+- Original CBL metadata is retained so mappings can be repaired.
+- Extension signature verification and trust controls remain in place.
 
-*Requires Android 8.0 or higher.*
+## Current status
 
-## Features
+Repository bootstrap is underway. The first implementation milestone covers:
 
-<div align="left">
+- CBL parsing and validation
+- Reading-list persistence
+- Series-first and issue-level matching
+- Configurable confidence and ambiguity thresholds
+- Manual candidate review
+- List, series, and entry source preferences
+- Cross-series reader navigation
 
-* Local reading of content.
-* A configurable reader with multiple viewers, reading directions and other settings.
-* Tracker support: [MyAnimeList](https://myanimelist.net/), [AniList](https://anilist.co/), [Kitsu](https://kitsu.app/), [MangaUpdates](https://mangaupdates.com), [Shikimori](https://shikimori.one), [Bangumi](https://bgm.tv/) and [Hikka](https://hikka.io/) support.
-* Categories to organize your library.
-* Light and dark themes.
-* Schedule updating your library for new chapters.
-* Create backups locally to read offline or to your desired cloud service.
-* Plus much more...
+See [`PROJECT_CONTEXT.md`](./PROJECT_CONTEXT.md) for current decisions and [`docs/architecture/CBL_MATCHING.md`](./docs/architecture/CBL_MATCHING.md) for the matching design.
 
-</div>
+## Builds
 
-## Contributing
+Pull requests, pushes to `main`, and manual workflow runs execute formatting checks, unit tests, SQLDelight migration verification, and telemetry-free release APK builds. APKs are retained as GitHub Actions artifacts.
 
-[Code of conduct](./CODE_OF_CONDUCT.md) · [Contributing guide](./CONTRIBUTING.md)
+Yomori is not ready for a signed public release. The Android application identity and visual branding must be fully separated from Mihon first.
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+## Content disclaimer
 
-Before reporting a new issue, take a look at the [FAQ](https://mihon.app/docs/faq/general), the [changelog](https://mihon.app/changelogs/) and the already opened [issues](https://github.com/mihonapp/mihon/issues); if you got any questions, join our [Discord server](https://discord.gg/mihon).
+Yomori hosts zero content and has no affiliation with third-party content providers or extension maintainers. Users are responsible for the repositories, extensions, and content services they choose to use and for complying with applicable law and service terms.
 
+## Upstream and attribution
 
-### Repositories
+Yomori is derived from Mihon and the earlier Tachiyomi project. Yomori is independently maintained and is not endorsed by the Mihon project.
 
-[![mihonapp/website - GitHub](https://github-readme-stats.vercel.app/api/pin/?username=mihonapp&repo=website&bg_color=161B22&text_color=c9d1d9&title_color=0877d2&icon_color=0877d2&border_radius=8&hide_border=true&description_lines_count=2)](https://github.com/mihonapp/website/)
-[![mihonapp/bitmap.kt - GitHub](https://github-readme-stats.vercel.app/api/pin/?username=mihonapp&repo=bitmap.kt&bg_color=161B22&text_color=c9d1d9&title_color=0877d2&icon_color=0877d2&border_radius=8&hide_border=true&description_lines_count=2)](https://github.com/mihonapp/bitmap.kt/)
+Upstream project: [mihonapp/mihon](https://github.com/mihonapp/mihon)
 
-### Credits
+## License
 
-Thank you to all the people who have contributed!
-
-<a href="https://github.com/mihonapp/mihon/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=mihonapp/mihon" alt="Mihon app contributors" title="Mihon app contributors" width="800"/>
-</a>
-
-### Disclaimer
-
-The developer(s) of this application does not have any affiliation with the content providers available, and this application hosts zero content.
-
-### License
-
-<pre>
+```text
 Copyright © 2015 Javier Tomás
 Copyright © 2024 Mihon Open Source Project
+Copyright © 2026 Yomori contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -81,6 +76,4 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-</pre>
-
-</div>
+```

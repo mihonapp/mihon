@@ -1,0 +1,35 @@
+name: Feature request
+description: Propose a Yomori feature or improvement
+title: "[Feature] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Yomori does not provide, bundle, or recommend content sources. Requests for specific sources are out of scope.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What user problem should this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Describe the expected workflow and user controls.
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility and privacy impact
+      description: Note extension compatibility, network behavior, stored data, or migration concerns.
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope confirmation
+      options:
+        - label: This request does not ask Yomori to bundle, recommend, or maintain a content source.
+          required: true
