@@ -2,9 +2,11 @@
 
 ## Status
 
-Yomori is in initial repository bootstrap. It is based on the current `main` branch of `mihonapp/mihon` and will remain compatible with the existing user-installed Mihon/Tachiyomi extension ecosystem.
+Yomori is in early implementation. It is based on the current `main` branch of `mihonapp/mihon` and will remain compatible with the existing user-installed Mihon/Tachiyomi extension ecosystem.
 
 GitHub Actions was enabled for the fork on 2026-07-10. Pull requests and `main` builds use GitHub Actions as the authoritative validation and APK artifact environment.
+
+The Android application identity is `io.github.kamui2040.yomori`, with Yomori version line `0.1.0-alpha01`. The Kotlin namespace and extension-facing API packages remain unchanged for compatibility.
 
 The first product milestone is CBL reading-list import and deterministic, user-correctable matching. No public Yomori release is ready yet.
 
@@ -18,6 +20,7 @@ Yomori does not provide, bundle, host, operate, or recommend content sources.
 
 - App and repository name: **Yomori**.
 - Canonical repository: `Kamui2040/Yomori`.
+- Android application ID: `io.github.kamui2040.yomori`.
 - Base project: Mihon under Apache-2.0.
 - Extensions remain separate user-installed APKs.
 - Users add extension repositories and choose which installed extensions a CBL may search.
@@ -29,6 +32,7 @@ Yomori does not provide, bundle, host, operate, or recommend content sources.
 - Original CBL data is retained even after successful matching.
 - Standard Yomori builds do not include telemetry.
 - GitHub Actions is the authoritative APK build environment.
+- Inherited public release automation remains disabled until Yomori signing and release readiness are established.
 
 ## Matching defaults
 
@@ -68,8 +72,8 @@ Planned states:
 
 ## Initial implementation sequence
 
-1. Repository governance and CI adaptation.
-2. Independent application identity and temporary Yomori branding.
+1. Repository governance and CI adaptation. **Complete.**
+2. Independent application identity and temporary Yomori branding. **In progress.**
 3. CBL domain model and parser with fixtures and unit tests.
 4. Reading-list persistence and migrations.
 5. Title and issue normalization.
@@ -90,9 +94,8 @@ Planned states:
 
 Before the first public APK release:
 
-- Change the Android application ID so Yomori can coexist with Mihon.
-- Replace Mihon trademarks and visual branding with Yomori assets.
-- Remove or replace Mihon-specific update, support, and download links.
+- Finalize original Yomori visual branding beyond the temporary launcher mark.
+- Remove or replace inherited Mihon-specific update, support, and download links.
 - Establish Yomori release signing and document key custody.
 - Validate extension loading against representative compatible extensions.
 - Add required attribution and modified-file notices.

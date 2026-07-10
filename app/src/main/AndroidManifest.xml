@@ -38,14 +38,14 @@
         android:allowBackup="false"
         android:enableOnBackInvokedCallback="true"
         android:hardwareAccelerated="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/yomori_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:localeConfig="@xml/locales_config"
         android:networkSecurityConfig="@xml/network_security_config"
         android:preserveLegacyExternalStorage="true"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@mipmap/ic_launcher"
+        android:roundIcon="@drawable/yomori_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.Tachiyomi">
 
@@ -71,7 +71,7 @@
                 <data android:host="add-repo" />
             </intent-filter>
 
-            <!-- Deeplink to add extension store -->
+            <!-- Compatible Mihon deeplink to add extension store -->
             <intent-filter android:label="@string/action_addExtensionStore">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -79,6 +79,17 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="mihon" />
+                <data android:host="extension-store" />
+            </intent-filter>
+
+            <!-- Yomori deeplink to add extension store -->
+            <intent-filter android:label="@string/action_addExtensionStore">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="yomori" />
                 <data android:host="extension-store" />
             </intent-filter>
 
@@ -100,13 +111,13 @@
 
                 See https://stackoverflow.com/a/31028507
                 -->
-                <data android:pathPattern=".*\\.tachibk" />
-                <data android:pathPattern=".*\\..*\\.tachibk" />
-                <data android:pathPattern=".*\\..*\\..*\\.tachibk" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\.tachibk" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.tachibk" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.tachibk" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.tachibk" />
+                <data android:pathPattern=".*\.tachibk" />
+                <data android:pathPattern=".*\..*\.tachibk" />
+                <data android:pathPattern=".*\..*\..*\.tachibk" />
+                <data android:pathPattern=".*\..*\..*\..*\.tachibk" />
+                <data android:pathPattern=".*\..*\..*\..*\..*\.tachibk" />
+                <data android:pathPattern=".*\..*\..*\..*\..*\..*\.tachibk" />
+                <data android:pathPattern=".*\..*\..*\..*\..*\..*\..*\.tachibk" />
             </intent-filter>
 
             <!--suppress AndroidDomInspection -->
@@ -189,6 +200,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
+                <!-- Keep the Mihon scheme for existing tracker OAuth redirect registrations. -->
                 <data android:scheme="mihon" />
 
                 <data android:host="anilist-auth" />
