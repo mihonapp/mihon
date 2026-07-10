@@ -8,7 +8,7 @@ GitHub Actions was enabled for the fork on 2026-07-10. Pull requests and `main` 
 
 The Android application identity is `io.github.kamui2040.yomori`, with Yomori version line `0.1.0-alpha01`. The Kotlin namespace and extension-facing API packages remain unchanged for compatibility.
 
-The first product milestone is CBL reading-list import and deterministic, user-correctable matching. No public Yomori release is ready yet.
+The first product milestone is CBL reading-list import and deterministic, user-correctable matching. The safe, order-preserving CBL domain model and parser core are implemented and covered by unit tests. No public Yomori release is ready yet.
 
 ## Product goal
 
@@ -30,6 +30,7 @@ Yomori does not provide, bundle, host, operate, or recommend content sources.
 - Users may set source preferences globally, per reading list, per series, and per individual entry.
 - User-confirmed mappings override automatic matches and are never silently replaced.
 - Original CBL data is retained even after successful matching.
+- CBL parsing preserves `<Book>` order and rejects DTD/entity declarations, oversized documents, excessive entry counts, malformed structure, and entries without required `Series` or `Number` attributes.
 - Standard Yomori builds do not include telemetry.
 - GitHub Actions is the authoritative APK build environment.
 - Inherited public release automation remains disabled until Yomori signing and release readiness are established.
@@ -73,8 +74,8 @@ Planned states:
 ## Initial implementation sequence
 
 1. Repository governance and CI adaptation. **Complete.**
-2. Independent application identity and temporary Yomori branding. **In progress.**
-3. CBL domain model and parser with fixtures and unit tests.
+2. Independent application identity and temporary Yomori branding. **Complete.**
+3. CBL domain model and parser with fixtures and unit tests. **Complete.**
 4. Reading-list persistence and migrations.
 5. Title and issue normalization.
 6. Confidence scoring and ambiguity rules.
