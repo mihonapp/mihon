@@ -65,6 +65,7 @@ fun ReaderAppBars(
     currentPage: Int,
     totalPages: Int,
     onPageIndexChange: (Int) -> Unit,
+    onPageIndexChangeFinished: () -> Unit,
 
     readingMode: ReadingMode,
     onClickReadingMode: () -> Unit,
@@ -128,6 +129,7 @@ fun ReaderAppBars(
                                     currentPage = currentPage,
                                     totalPages = totalPages,
                                     onPageIndexChange = onPageIndexChange,
+                                    onPageIndexChangeFinished = onPageIndexChangeFinished,
                                 )
                             }
                         }
@@ -155,6 +157,7 @@ fun ReaderAppBars(
                         currentPage = currentPage,
                         totalPages = totalPages,
                         onPageIndexChange = onPageIndexChange,
+                        onPageIndexChangeFinished = onPageIndexChangeFinished,
                     )
                 }
                 ReaderBottomBar(
