@@ -98,22 +98,24 @@ open class WebGpuViewer(
 
         override val prev: ViewerPage?
             get() = page.chapter.pages?.let { pages ->
-                pages.getOrNull(page.index - 1)?.let { ViewerReaderPage(it) }
-                    ?: if (config.alwaysShowChapterTransition) {
+                pages.getOrNull(page.index - 1)?.let { ViewerReaderPage(it) } ?: if (prevChapter != null) {
+                    if (config.alwaysShowChapterTransition) {
                         prevChapter?.let { TransitionPage(it, page.chapter) }
                     } else {
                         prevChapter?.pages?.lastOrNull()?.let { ViewerReaderPage(it) }
                     }
+                } else TransitionPage(null, page.chapter)
             }
 
         override val next: ViewerPage?
             get() = page.chapter.pages?.let { pages ->
-                pages.getOrNull(page.index + 1)?.let { ViewerReaderPage(it) }
-                    ?: if (config.alwaysShowChapterTransition) {
+                pages.getOrNull(page.index + 1)?.let { ViewerReaderPage(it) } ?: if (nextChapter != null) {
+                    if (config.alwaysShowChapterTransition) {
                         nextChapter?.let { TransitionPage(page.chapter, it) }
                     } else {
                         nextChapter?.pages?.firstOrNull()?.let { ViewerReaderPage(it) }
                     }
+                } else TransitionPage(page.chapter, null)
             }
     }
 
@@ -409,9 +411,9 @@ open class WebGpuViewer(
                         }
                     }
 
-                    // TODO: create transition ends
-                    // TODO: if no page and no prevChapter or nextChapter
-                    // activity.showMenu()
+                    if (currentPage is TransitionPage) {
+                        activity.showMenu()
+                    }
                 }
             }
 
