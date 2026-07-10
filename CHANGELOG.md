@@ -18,6 +18,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Changed
 - Use permission check for Shizuku detection instead of hardcoded package name ([@Small-Ku](https://github.com/Small-Ku)) ([#3565](https://github.com/mihonapp/mihon/pull/3565))
 
+### Fixed
+- Fixed app bars remaining visible after changing pages by tapping in the paged reader after using the chapter navigator slider ([@AntsyLich](https://github.com/AntsyLich)) ([#3567](https://github.com/mihonapp/mihon/pull/3567))
+
 ## [v0.20.1] - 2026-07-09
 ### Added
 - [Hikka](https://hikka.io/) tracker support ([@Lorg0n](https://github.com/Lorg0n)) ([#1386](https://github.com/mihonapp/mihon/pull/1386))
