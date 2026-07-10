@@ -123,6 +123,13 @@ class LibrarySearchRepositoryImpl(
             MangaField.SOURCE -> "lower(sources.name)"
             MangaField.NOTES -> "lower(libraryView.notes)"
         }
+
+        if (value.isEmpty()) {
+            var sql = "$column = ''"
+            if (negated) sql = "NOT $sql"
+            return SqlQueryPart(sql)
+        }
+
         var sql = "instr($column, ?) > 0"
         if (negated) sql = "NOT $sql"
         return SqlQueryPart(sql, listOf(value.lowercase()))
