@@ -1,11 +1,15 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webgpu
 
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.PointF
 import android.util.Log
 import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
+import androidx.core.graphics.createBitmap
 import ca.mpreg.imagedecoder.ImageDecoder
 import ca.mpreg.webgpuviewer.ImageView
 import ca.mpreg.webgpuviewer.Trim
@@ -38,9 +42,9 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import uy.kohesive.injekt.injectLazy
 import java.io.InputStream
+import java.nio.ByteBuffer
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -70,6 +74,7 @@ open class WebGpuViewer(
         abstract val nextChapter: ReaderChapter?
         abstract val prev: ViewerPage?
         abstract val next: ViewerPage?
+        abstract val id: String
     }
 
     inner class TransitionPage(override val prevChapter: ReaderChapter?, override val nextChapter: ReaderChapter?) :
@@ -79,6 +84,9 @@ open class WebGpuViewer(
 
         override val next: ViewerPage?
             get() = nextChapter?.pages?.firstOrNull()?.let { ViewerReaderPage(it) }
+
+        override val id: String
+            get() = "${prevChapter?.chapter?.id ?: ""}:${nextChapter?.chapter?.id ?: ""}"
     }
 
     inner class ViewerReaderPage(val page: ReaderPage) : ViewerPage() {
@@ -117,6 +125,9 @@ open class WebGpuViewer(
                     }
                 } else TransitionPage(page.chapter, null)
             }
+
+        override val id: String
+            get() = "${page.chapter.chapter.id ?: ""}:${page.index}"
     }
 
     fun nextPage(count: Int): ViewerPage? {
@@ -150,6 +161,8 @@ open class WebGpuViewer(
         }
     }
 
+    val transitionCache = LinkedHashMap<String, ImagePage?>(2, 0.75f, true)
+
     init {
         updateTransitionAnimation()
 
@@ -158,17 +171,19 @@ open class WebGpuViewer(
                 val i = if (isReversed) -index else index
                 nextPage(i)?.let { viewerPage ->
                     if (viewerPage is ViewerReaderPage) {
-                        viewerPage.page.let { page ->
-                            val id = ((page.chapter.chapter.id ?: 0) shl 32) + page.index
-                            synchronized(pageCache) {
-                                pageCache[id]
-                            } ?: ImagePage.Dummy(400, 400).also {
-                                preloadPage(page)
-                            }
+                        synchronized(pageCache) {
+                            pageCache[viewerPage.id]
+                        } ?: ImagePage.Dummy(400, 400).also {
+                            preloadPage(viewerPage)
                         }
                     } else {
-                        // TODO: create transition page
-                        ImagePage.Dummy(width, height)
+                        synchronized(transitionCache) {
+                            transitionCache[viewerPage.id]
+                        } ?: ImagePage.Dummy(400, 400).also {
+                            CoroutineScope(Dispatchers.Default).launch {
+                                preloadPage(viewerPage)
+                            }
+                        }
                     }
                 }
             }
@@ -230,10 +245,10 @@ open class WebGpuViewer(
     val preloadCount = 3
     open val cacheSize = 9
 
-    val pageCache = LinkedHashMap<Long, ImagePage?>(cacheSize, 0.75f, true)
+    val pageCache = LinkedHashMap<String, ImagePage?>(cacheSize, 0.75f, true)
 
     var decodeJob: Job? = null
-    val decodeQueue = mutableListOf<ReaderPage>()
+    val decodeQueue = mutableListOf<ViewerPage>()
 
     private suspend fun loadPage(page: ReaderPage): InputStream? {
         val loader = page.chapter.pageLoader ?: return null
@@ -266,10 +281,92 @@ open class WebGpuViewer(
         return page.stream?.invoke()
     }
 
-    private fun popPreload(): ReaderPage? {
+    private fun popPreload(): ViewerPage? {
         synchronized(decodeQueue) {
             return decodeQueue.removeFirstOrNull()
         }
+    }
+
+    private suspend fun decodeReaderPage(page: ViewerReaderPage) {
+        synchronized(pageCache) {
+            if (pageCache[page.id] != null) return
+        }
+
+        loadPage(page.page)?.use {
+            Log.i("WebGpuViewer", "create page: ${page.page.chapter.chapter.id} ${page.page.index}")
+
+            val dec = ImageDecoder.new(it)
+            dec.decodeNext()
+        }?.let { res ->
+            ImagePage(Image(res.image, res.width, res.height)).apply {
+                if (config.imageCropBorders) {
+                    trim = Trim.find(image!!, 1f, 1f, 1f, 10f / 255)
+                }
+
+                parent = pager.state
+                x = homeX
+                y = homeY
+                scale = homeScale
+            }
+        }.also {
+            synchronized(pageCache) {
+                pageCache[page.id] = it
+                while (pageCache.size > cacheSize) {
+                    pageCache.remove(pageCache.keys.first())
+                }
+            }
+        }
+        pager.state.invalidate()
+    }
+
+    private suspend fun createTransitionPage(page: TransitionPage) {
+        val bitmap = createBitmap(pager.state.width, pager.state.height)
+
+        val canvas = Canvas(bitmap)
+        canvas.drawColor(Color.BLACK)
+
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.WHITE
+            textSize = 48f
+            textAlign = Paint.Align.CENTER
+        }
+
+        val x = bitmap.width / 2f
+        var y = bitmap.height / 2f
+
+        val lines = mutableListOf<Pair<String, Float>>()
+
+        page.prevChapter?.chapter?.let { chapter ->
+            lines.add(Pair("Previous:", 48f))
+            lines.add(Pair(chapter.name, 48f))
+            page.nextChapter?.chapter?.let { lines.add(Pair("", 48f)) }
+        }
+
+        page.nextChapter?.chapter?.let { chapter ->
+            lines.add(Pair("Next:", 48f))
+            lines.add(Pair(chapter.name, 48f))
+        }
+
+        y -= lines.map { it.second }.sum() / 2
+
+        lines.forEach {
+            canvas.drawText(it.first, x, y + it.second, paint)
+            y += it.second
+        }
+
+        val buf = ByteBuffer.allocateDirect(bitmap.byteCount)
+        bitmap.copyPixelsToBuffer(buf)
+
+        val image = ImagePage(Image(buf, bitmap.width, bitmap.height)).apply {
+            minScale = 1f
+            maxScale = 1f
+        }
+
+        synchronized(transitionCache) {
+            transitionCache[page.id] = image
+        }
+
+        pager.state.invalidate()
     }
 
     private fun startDecodeQueue() {
@@ -277,38 +374,9 @@ open class WebGpuViewer(
             try {
                 while (true) {
                     val page = popPreload() ?: return@launch
-
-                    val id = ((page.chapter.chapter.id ?: 0) shl 32) + page.index
-                    synchronized(pageCache) {
-                        if (pageCache[id] != null) continue
-                    }
-
-                    withContext(Dispatchers.Default) {
-                        loadPage(page)?.use {
-                            Log.i("WebGpuViewer", "create page: ${page.chapter.chapter.id} ${page.index}")
-
-                            val dec = ImageDecoder.new(it)
-                            dec.decodeNext()
-                        }?.let { res ->
-                            ImagePage(Image(res.image, res.width, res.height)).apply {
-                                if (config.imageCropBorders) {
-                                    trim = Trim.find(image!!, 1f, 1f, 1f, 10f / 255)
-                                }
-
-                                parent = pager.state
-                                x = homeX
-                                y = homeY
-                                scale = homeScale
-                            }
-                        }.also {
-                            synchronized(pageCache) {
-                                pageCache[id] = it
-                                while (pageCache.size > cacheSize) {
-                                    pageCache.remove(pageCache.keys.first())
-                                }
-                            }
-                        }
-                        pager.state.invalidate()
+                    when (page) {
+                        is ViewerReaderPage -> decodeReaderPage(page)
+                        is TransitionPage -> createTransitionPage(page)
                     }
                 }
             } finally {
@@ -319,7 +387,7 @@ open class WebGpuViewer(
         }
     }
 
-    protected fun preloadPage(page: ReaderPage) {
+    protected fun preloadPage(page: ViewerPage) {
         synchronized(decodeQueue) {
             decodeQueue.add(page)
             startDecodeQueue()
@@ -336,11 +404,11 @@ open class WebGpuViewer(
             val index = page.page.index
 
             for (i in index until min(index + preloadCount, pages.size)) {
-                decodeQueue.add(pages[i])
+                decodeQueue.add(ViewerReaderPage(pages[i]))
             }
 
             for (i in max(0, index - preloadCount) until index) {
-                decodeQueue.add(pages[i])
+                decodeQueue.add(ViewerReaderPage(pages[i]))
             }
 
             page.prevChapter?.let { prevChapter ->
@@ -366,11 +434,11 @@ open class WebGpuViewer(
             }
 
             page.prevChapter?.pages?.takeLast(max(0, preloadCount - index))?.forEach { page ->
-                decodeQueue.add(page)
+                decodeQueue.add(ViewerReaderPage(page))
             }
 
             page.nextChapter?.pages?.take(max(0, preloadCount - (pages.lastIndex - index)))?.forEach { page ->
-                decodeQueue.add(page)
+                decodeQueue.add(ViewerReaderPage(page))
             }
 
             startDecodeQueue()
@@ -397,9 +465,7 @@ open class WebGpuViewer(
 
         pager.state.apply {
             onPageChange = onPageChange@{ delta ->
-                if (!activity.isScrollingThroughPages) {
-                    activity.hideMenu()
-                }
+                activity.hideMenu()
 
                 val delta = if (isReversed) -delta else delta
 
@@ -411,8 +477,10 @@ open class WebGpuViewer(
                         }
                     }
 
-                    if (currentPage is TransitionPage) {
-                        activity.showMenu()
+                    (currentPage as? TransitionPage)?.let { currentPage ->
+                        if (currentPage.prevChapter == null || currentPage.nextChapter == null) {
+                            activity.showMenu()
+                        }
                     }
                 }
             }
@@ -435,6 +503,12 @@ open class WebGpuViewer(
             (page as? ViewerReaderPage)?.let {
                 activity.onPageSelected(it.page)
                 preloadPages(it)
+            }
+        }
+
+        (currentPage as? TransitionPage)?.let { currentPage ->
+            if (currentPage.prevChapter == null || currentPage.nextChapter == null) {
+                activity.showMenu()
             }
         }
 
