@@ -93,6 +93,7 @@ class LibrarySearchRepositoryImpl(
                 OR instr(lower(coalesce(libraryView.genre, '')), ?) > 0
                 OR instr(lower(sources.name), ?) > 0
                 ${if (value.equals("local", ignoreCase = true)) "OR libraryView.source = $LOCAL_SOURCE_ID" else ""}
+                OR instr(lower(libraryView.notes), ?) > 0
             )
         """.trimIndent()
         val args = List(MangaField.entries.size) { value.lowercase() }
@@ -120,6 +121,7 @@ class LibrarySearchRepositoryImpl(
             MangaField.DESCRIPTION -> "lower(coalesce(libraryView.description, ''))"
             MangaField.GENRE -> "lower(coalesce(libraryView.genre, ''))"
             MangaField.SOURCE -> "lower(sources.name)"
+            MangaField.NOTES -> "lower(libraryView.notes)"
         }
         var sql = "instr($column, ?) > 0"
         if (negated) sql = "NOT $sql"
@@ -133,6 +135,8 @@ class LibrarySearchRepositoryImpl(
             ComparisonField.FETCH_INTERVAL -> "abs(libraryView.calculate_interval)"
             ComparisonField.NEXT_UPDATE -> "libraryView.next_update"
             ComparisonField.UNREAD -> "libraryView.totalCount - libraryView.readCount"
+            ComparisonField.READ -> "libraryView.readCount"
+            ComparisonField.TOTAL -> "libraryView.totalCount"
         }
 
         val arg = when (field) {
@@ -149,7 +153,7 @@ class LibrarySearchRepositoryImpl(
 
             ComparisonField.FETCH_INTERVAL -> value.toIntOrNull()
 
-            ComparisonField.UNREAD -> value.toLongOrNull()
+            ComparisonField.UNREAD, ComparisonField.READ, ComparisonField.TOTAL -> value.toLongOrNull()
         } ?: return SqlQueryPart("1=0")
 
         var sql = "$column ${queryComparator.symbol} ?"

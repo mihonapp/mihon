@@ -7,6 +7,7 @@ enum class MangaField(vararg val aliases: String) {
     DESCRIPTION("description", "desc"),
     GENRE("genre", "tag"),
     SOURCE("source", "src"),
+    NOTES("notes", "note"),
     ;
 
     companion object {
@@ -24,6 +25,8 @@ enum class ComparisonField(vararg val aliases: String) {
     FETCH_INTERVAL("fetchinterval", "fi"),
     NEXT_UPDATE("nextupdate", "nu"),
     UNREAD("unread"),
+    READ("read"),
+    TOTAL("total"),
     ;
 
     companion object {
