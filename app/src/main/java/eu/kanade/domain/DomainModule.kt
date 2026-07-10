@@ -72,6 +72,7 @@ import tachiyomi.domain.history.interactor.GetTotalReadDuration
 import tachiyomi.domain.history.interactor.RemoveHistory
 import tachiyomi.domain.history.interactor.UpsertHistory
 import tachiyomi.domain.history.repository.HistoryRepository
+import tachiyomi.domain.library.interactor.SearchLibrary
 import tachiyomi.domain.library.repository.LibrarySearchRepository
 import tachiyomi.domain.manga.interactor.FetchInterval
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
@@ -211,5 +212,6 @@ class DomainModule : InjektModule {
         addFactory { UpdateMangaFromRemote(get(), get(), get(), get(), get(), get(), get()) }
 
         addSingletonFactory<LibrarySearchRepository> { LibrarySearchRepositoryImpl(get()) }
+        addFactory { SearchLibrary(get()) }
     }
 }

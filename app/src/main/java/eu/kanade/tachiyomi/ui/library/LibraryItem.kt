@@ -7,7 +7,6 @@ data class LibraryItem(
     val downloadCount: Int,
     val unreadCount: Long,
     val isLocal: Boolean,
-    val sourceName: String,
     val badges: Badges,
 ) {
     val id: Long = libraryManga.id

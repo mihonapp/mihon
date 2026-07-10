@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.library.search
+package tachiyomi.domain.library.model.search
 
 class LibrarySearchParser(private val tokens: List<LibrarySearchLexer.Token>) {
     private var index = 0

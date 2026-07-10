@@ -1,7 +1,7 @@
 package tachiyomi.domain.library.repository
 
-interface LibrarySearchRepository {
-    suspend fun getFilteredMangaIdsByQuery(queryPart: SqlQueryPart): Set<Long>
-}
+import tachiyomi.domain.library.model.search.QueryNode
 
-data class SqlQueryPart(val sql: String, val args: List<Any> = emptyList())
+interface LibrarySearchRepository {
+    suspend fun getFilteredMangaIdsByAst(rootNode: QueryNode): Set<Long>
+}

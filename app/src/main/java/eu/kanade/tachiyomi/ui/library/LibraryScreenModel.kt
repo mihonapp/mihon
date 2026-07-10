@@ -18,11 +18,8 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.track.TrackerManager
-import eu.kanade.tachiyomi.source.getNameForMangaInfo
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
-import eu.kanade.tachiyomi.ui.library.search.LibrarySearchLexer
-import eu.kanade.tachiyomi.ui.library.search.LibrarySearchParser
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.coroutines.flow.Flow
@@ -51,11 +48,11 @@ import tachiyomi.domain.chapter.interactor.GetBookmarkedChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.history.interactor.GetNextChapters
+import tachiyomi.domain.library.interactor.SearchLibrary
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.library.model.LibrarySort
 import tachiyomi.domain.library.model.sort
-import tachiyomi.domain.library.repository.LibrarySearchRepository
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.manga.model.Manga
@@ -87,7 +84,7 @@ class LibraryScreenModel(
     private val downloadManager: DownloadManager = Injekt.get(),
     private val downloadCache: DownloadCache = Injekt.get(),
     private val trackerManager: TrackerManager = Injekt.get(),
-    private val librarySearchRepository: LibrarySearchRepository = Injekt.get(),
+    private val searchLibrary: SearchLibrary = Injekt.get(),
 ) : StateScreenModel<LibraryScreenModel.State>(State()) {
 
     init {
@@ -109,8 +106,7 @@ class LibraryScreenModel(
                         if (searchQuery == null) {
                             libraryItems
                         } else {
-                            val query = LibrarySearchParser(LibrarySearchLexer.tokenize(searchQuery)).parse()
-                            val filteredIds = librarySearchRepository.getFilteredMangaIdsByQuery(query.toSqlQueryPart())
+                            val filteredIds = searchLibrary.await(searchQuery)
                             libraryItems.filter { it.id in filteredIds }
                         }
                     }
@@ -402,7 +398,6 @@ class LibraryScreenModel(
                     downloadCount = downloadManager.getDownloadCount(manga.manga),
                     unreadCount = manga.unreadCount,
                     isLocal = manga.manga.isLocal(),
-                    sourceName = sourceManager.getOrStub(manga.manga.source).getNameForMangaInfo(),
                     badges = LibraryItem.Badges(
                         downloadCount = if (preferences.downloadBadge) {
                             downloadManager.getDownloadCount(manga.manga)

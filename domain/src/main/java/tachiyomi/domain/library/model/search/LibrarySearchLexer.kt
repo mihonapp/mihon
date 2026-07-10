@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.library.search
+package tachiyomi.domain.library.model.search
 
 object LibrarySearchLexer {
 
