@@ -85,18 +85,18 @@ class LibrarySearchRepositoryImpl(
 
     private fun GeneralQueryNode.toSqlQueryPart(): SqlQueryPart {
         val clauses = MangaField.entries.mapNotNull { field ->
-                when (field) {
-                    MangaField.TITLE -> "libraryView.title"
-                    MangaField.AUTHOR -> "coalesce(libraryView.author, '')"
-                    MangaField.ARTIST -> "coalesce(libraryView.artist, '')"
-                    MangaField.DESCRIPTION -> "coalesce(libraryView.description, '')"
-                    MangaField.GENRE -> "coalesce(libraryView.genre, '')"
-                    MangaField.SOURCE -> "sources.name"
-                    MangaField.NOTES -> "libraryView.notes"
+            when (field) {
+                MangaField.TITLE -> "libraryView.title"
+                MangaField.AUTHOR -> "coalesce(libraryView.author, '')"
+                MangaField.ARTIST -> "coalesce(libraryView.artist, '')"
+                MangaField.DESCRIPTION -> "coalesce(libraryView.description, '')"
+                MangaField.GENRE -> "coalesce(libraryView.genre, '')"
+                MangaField.SOURCE -> "sources.name"
+                MangaField.NOTES -> "libraryView.notes"
 
-                    MangaField.LANGUAGE -> null
-                }
-            }.map { "instr(lower($it), ?) > 0" }.toMutableList()
+                MangaField.LANGUAGE -> null
+            }
+        }.map { "instr(lower($it), ?) > 0" }.toMutableList()
         if (value.equals("local", ignoreCase = true)) clauses.add("libraryView.source = $LOCAL_SOURCE_ID")
 
         var sql = clauses.joinToString(separator = " OR ", prefix = "(", postfix = ")")
