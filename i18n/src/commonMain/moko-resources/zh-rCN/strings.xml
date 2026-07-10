@@ -916,6 +916,5 @@
     <string name="extensionStoresScreen.addStoreDeeplink.bodyText">是否添加以下插件商店？</string>
     <string name="extensionStoresScreen.deleteStore.title">移除插件商店</string>
     <string name="extensionStoresScreen.deleteStore.body">是否移除插件商店 \"%1$s\" (%2$s)？</string>
-    <string name="pref_webtoon_vertical_navigator">阅读条漫时使用垂直导航栏</string>
     <string name="pref_webtoon_vertical_navigator_on_left">将垂直导航栏放在左侧</string>
 </resources>
