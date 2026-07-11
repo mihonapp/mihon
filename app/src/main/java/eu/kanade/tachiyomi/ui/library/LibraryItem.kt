@@ -71,5 +71,6 @@ data class LibraryItem(
         val unreadCount: Long,
         val isLocal: Boolean,
         val sourceLanguage: String,
+        val trackerScore: Double?,
     )
 }

@@ -282,6 +282,10 @@ private fun ColumnScope.DisplayPage(
         pref = screenModel.libraryPreferences.languageBadge,
     )
     CheckboxItem(
+        label = stringResource(MR.strings.action_display_tracker_score_badge),
+        pref = screenModel.libraryPreferences.trackerScoreBadge,
+    )
+    CheckboxItem(
         label = stringResource(MR.strings.action_display_show_continue_reading_button),
         pref = screenModel.libraryPreferences.showContinueReadingButton,
     )
