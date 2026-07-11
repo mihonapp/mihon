@@ -10,7 +10,7 @@ The Android application identity is `io.github.kamui2040.yomori`, with Yomori ve
 
 Device-test artifacts use the dedicated `io.github.kamui2040.yomori.debug` package and a reproducible public development certificate. This permits direct in-place updates between development APKs downloaded on a phone without requiring local signing setup.
 
-The first product milestone is CBL reading-list import and deterministic, user-correctable matching. The safe parser core, transactional SQLDelight persistence layer, and deterministic title and issue-number normalization are implemented and covered by focused tests. No public Yomori release is ready yet.
+The first product milestone is CBL reading-list import and deterministic, user-correctable matching. The safe parser core, transactional SQLDelight persistence, normalization, and confidence-scoring layers are implemented and covered by focused tests. No public Yomori release is ready yet.
 
 ## Product goal
 
@@ -39,6 +39,11 @@ Yomori does not provide, bundle, host, operate, or recommend content sources.
 - Title normalization produces locale-independent full and edition-free comparison keys while retaining extracted year and volume as separate scoring evidence.
 - Issue-number normalization preserves annual, special, Free Comic Book Day, one-shot, suffix, decimal, fraction, and opaque identifier distinctions.
 - Normalization never replaces the original CBL metadata stored for repair and rematching.
+- Confidence scoring exposes a complete component breakdown for title, issue, year, volume, external identifiers, source preferences, and confirmed history.
+- Automatic matching requires at least 88%, an equivalent issue number, at least 85% title similarity, and a lead of at least 10 percentage points over the runner-up.
+- Scores from 65% through 87.99% require review; scores below 65% remain unresolved.
+- Missing optional metadata is neutral, conflicting metadata is penalized, and supporting evidence cannot bypass title or issue safety gates.
+- Equal high-scoring candidates remain ambiguous rather than being silently selected by source order.
 - Standard Yomori builds do not include telemetry.
 - GitHub Actions is the authoritative APK build environment.
 - Development APK filenames include the Yomori version, workflow build number, short commit SHA, and ABI.
@@ -48,14 +53,15 @@ Yomori does not provide, bundle, host, operate, or recommend content sources.
 
 ## Matching defaults
 
-Initial defaults, subject to testing:
+Initial defaults, subject to testing with real imported lists:
 
 - Automatic acceptance: score at least 88%.
-- Review range: 65% through 87%.
+- Review range: 65% through 87.99%.
 - Unresolved: below 65%.
 - Required lead over the second candidate: 10 percentage points.
+- Minimum title similarity for automatic acceptance: 85%.
 
-The basic score combines normalized series-title similarity, issue-number match, volume/year agreement, available metadata, source-specific evidence, and confirmed user history. The score breakdown must be visible in manual review.
+The basic score combines normalized series-title similarity, issue-number equivalence, volume/year agreement, external identifiers, source preference, and confirmed user history. The complete score breakdown is retained for the manual-review interface.
 
 ## Source preference hierarchy
 
@@ -89,7 +95,7 @@ Persisted states:
 3. CBL domain model and parser with fixtures and unit tests. **Complete.**
 4. Reading-list persistence and migrations. **Complete.**
 5. Title and issue normalization. **Complete.**
-6. Confidence scoring and ambiguity rules.
+6. Confidence scoring and ambiguity rules. **Complete.**
 7. Import and source-selection flow.
 8. Candidate review and manual overrides.
 9. Cross-series reader navigation and progress.
