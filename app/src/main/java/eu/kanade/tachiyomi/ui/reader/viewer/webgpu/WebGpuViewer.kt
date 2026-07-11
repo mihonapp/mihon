@@ -13,6 +13,7 @@ import androidx.core.graphics.createBitmap
 import ca.mpreg.imagedecoder.ImageDecoder
 import ca.mpreg.webgpuviewer.ImageView
 import ca.mpreg.webgpuviewer.Trim
+import ca.mpreg.webgpuviewer.renderer.Image
 import ca.mpreg.webgpuviewer.transition.TransitionBasic
 import ca.mpreg.webgpuviewer.transition.TransitionCube
 import ca.mpreg.webgpuviewer.transition.TransitionCubeOuter
@@ -38,7 +39,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import uy.kohesive.injekt.injectLazy
@@ -46,6 +50,7 @@ import java.io.InputStream
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.time.Duration.Companion.milliseconds
 
 open class WebGpuViewer(
     val activity: ReaderActivity,
@@ -57,6 +62,20 @@ open class WebGpuViewer(
     val downloadManager: DownloadManager by injectLazy()
 
     private val scope = MainScope()
+
+    private val moveToPageFlow = MutableSharedFlow<ViewerPage>(
+        extraBufferCapacity = 1,
+        onBufferOverflow = kotlinx.coroutines.channels.BufferOverflow.DROP_OLDEST,
+    )
+
+    init {
+        scope.launch {
+            moveToPageFlow.conflate().collect { newPage ->
+                executeMoveToPage(newPage)
+                delay(30.milliseconds)
+            }
+        }
+    }
 
     /**
      * Configuration used by the pager, like allow taps, scale mode on images, page transitions...
@@ -213,6 +232,7 @@ open class WebGpuViewer(
 
         config.imagePropertyChangedListener = {
             synchronized(pageCache) {
+                pageCache.forEach { it.value?.cleanup() }
                 pageCache.clear()
             }
 
@@ -229,7 +249,10 @@ open class WebGpuViewer(
 
     override fun destroy() {
         Log.i("WebGpuViewer", "destroy")
-        super.destroy()
+        synchronized(pageCache) {
+            pageCache.forEach { it.value?.cleanup() }
+            pageCache.clear()
+        }
         scope.cancel()
     }
 
@@ -287,16 +310,17 @@ open class WebGpuViewer(
 
     private suspend fun decodeReaderPage(page: ViewerReaderPage) {
         synchronized(pageCache) {
-            if (pageCache[page.id] != null) return
+            if (pageCache.contains(page.id)) return
         }
 
         loadPage(page.page)?.use {
             Log.i("WebGpuViewer", "create page: ${page.page.chapter.chapter.id} ${page.page.index}")
 
             val dec = ImageDecoder.new(it)
-            dec.decodeNext()
+            (0 until dec.pages).map { dec.decodeNext() }
         }?.let { res ->
-            ImagePage(res.image, res.width, res.height).apply {
+            val pages = res.map { page -> Pair(Image(page.image, page.width, page.height), page.duration) }
+            ImagePage(pages[0].first).apply {
                 if (config.imageCropBorders) {
                     trim = Trim.find(image!!, 1f, 1f, 1f, 0.15f)
                 }
@@ -305,19 +329,28 @@ open class WebGpuViewer(
                 x = homeX
                 y = homeY
                 scale = homeScale
+
+                if (pages.size > 1) {
+                    startAnimationLoop(pages, { pager.state.invalidate() })
+                }
             }
         }.also {
             synchronized(pageCache) {
                 pageCache[page.id] = it
                 while (pageCache.size > cacheSize) {
-                    pageCache.remove(pageCache.keys.first())
+                    pageCache.remove(pageCache.keys.first())?.cleanup()
                 }
             }
+
+            pager.state.invalidate()
         }
-        pager.state.invalidate()
     }
 
     private suspend fun createTransitionPage(page: TransitionPage) {
+        synchronized(transitionCache) {
+            if (transitionCache.contains(page.id)) return
+        }
+
         val bitmap = createBitmap(pager.state.width, pager.state.height)
 
         val canvas = Canvas(bitmap)
@@ -492,6 +525,10 @@ open class WebGpuViewer(
     }
 
     fun moveToPage(newPage: ViewerPage) {
+        moveToPageFlow.tryEmit(newPage)
+    }
+
+    private fun executeMoveToPage(newPage: ViewerPage) {
         val previousPage = currentPage
 
         currentPage = newPage.also { page ->
