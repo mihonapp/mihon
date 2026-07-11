@@ -4,6 +4,7 @@ on:
     paths:
       - '**'
       - '!**.md'
+      - '!fastlane/**'
       - '!i18n/src/commonMain/moko-resources/**/strings.xml'
       - '!i18n/src/commonMain/moko-resources/**/plurals.xml'
       - 'i18n/src/commonMain/moko-resources/base/strings.xml'
