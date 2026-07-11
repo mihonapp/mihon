@@ -13,7 +13,6 @@ import androidx.core.graphics.createBitmap
 import ca.mpreg.imagedecoder.ImageDecoder
 import ca.mpreg.webgpuviewer.ImageView
 import ca.mpreg.webgpuviewer.Trim
-import ca.mpreg.webgpuviewer.renderer.Image
 import ca.mpreg.webgpuviewer.transition.TransitionBasic
 import ca.mpreg.webgpuviewer.transition.TransitionCube
 import ca.mpreg.webgpuviewer.transition.TransitionCubeOuter
@@ -44,7 +43,6 @@ import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import uy.kohesive.injekt.injectLazy
 import java.io.InputStream
-import java.nio.ByteBuffer
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -298,9 +296,9 @@ open class WebGpuViewer(
             val dec = ImageDecoder.new(it)
             dec.decodeNext()
         }?.let { res ->
-            ImagePage(Image(res.image, res.width, res.height)).apply {
+            ImagePage(res.image, res.width, res.height).apply {
                 if (config.imageCropBorders) {
-                    trim = Trim.find(image!!, 1f, 1f, 1f, 10f / 255)
+                    trim = Trim.find(image!!, 1f, 1f, 1f, 0.15f)
                 }
 
                 parent = pager.state
@@ -354,10 +352,7 @@ open class WebGpuViewer(
             y += it.second
         }
 
-        val buf = ByteBuffer.allocateDirect(bitmap.byteCount)
-        bitmap.copyPixelsToBuffer(buf)
-
-        val image = ImagePage(Image(buf, bitmap.width, bitmap.height)).apply {
+        val image = ImagePage(bitmap, createMipMaps = false).apply {
             minScale = 1f
             maxScale = 1f
         }
