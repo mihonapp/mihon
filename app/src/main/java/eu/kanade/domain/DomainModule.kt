@@ -41,6 +41,7 @@ import tachiyomi.data.category.CategoryRepositoryImpl
 import tachiyomi.data.chapter.ChapterRepositoryImpl
 import tachiyomi.data.history.HistoryRepositoryImpl
 import tachiyomi.data.manga.MangaRepositoryImpl
+import tachiyomi.data.readinglist.ReadingListRepositoryImpl
 import tachiyomi.data.release.ReleaseServiceImpl
 import tachiyomi.data.source.SourceRepositoryImpl
 import tachiyomi.data.source.StubSourceRepositoryImpl
@@ -83,6 +84,7 @@ import tachiyomi.domain.manga.interactor.ResetViewerFlags
 import tachiyomi.domain.manga.interactor.SetMangaChapterFlags
 import tachiyomi.domain.manga.interactor.UpdateMangaNotes
 import tachiyomi.domain.manga.repository.MangaRepository
+import tachiyomi.domain.readinglist.repository.ReadingListRepository
 import tachiyomi.domain.release.interactor.GetApplicationRelease
 import tachiyomi.domain.release.service.ReleaseService
 import tachiyomi.domain.source.interactor.GetRemoteManga
@@ -115,6 +117,8 @@ class DomainModule : InjektModule {
         addFactory { ReorderCategory(get()) }
         addFactory { UpdateCategory(get()) }
         addFactory { DeleteCategory(get(), get(), get()) }
+
+        addSingletonFactory<ReadingListRepository> { ReadingListRepositoryImpl(get(), get()) }
 
         addSingletonFactory<MangaRepository> { MangaRepositoryImpl(get()) }
         addFactory { GetDuplicateLibraryManga(get()) }

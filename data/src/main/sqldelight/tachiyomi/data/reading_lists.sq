@@ -1,0 +1,229 @@
+import kotlin.Boolean;
+
+CREATE TABLE reading_lists(
+    _id INTEGER NOT NULL PRIMARY KEY,
+    name TEXT,
+    description TEXT,
+    declared_issue_count INTEGER,
+    extra_attributes TEXT NOT NULL,
+    extra_elements TEXT NOT NULL,
+    warnings TEXT NOT NULL,
+    current_position INTEGER,
+    created_at INTEGER NOT NULL,
+    updated_at INTEGER NOT NULL
+);
+
+CREATE TABLE reading_list_entries(
+    _id INTEGER NOT NULL PRIMARY KEY,
+    reading_list_id INTEGER NOT NULL,
+    position INTEGER NOT NULL,
+    series TEXT NOT NULL,
+    number TEXT NOT NULL,
+    volume TEXT,
+    year TEXT,
+    extra_attributes TEXT NOT NULL,
+    extra_elements TEXT NOT NULL,
+    resolution_state TEXT NOT NULL DEFAULT 'UNSEARCHED',
+    matched_source_id INTEGER,
+    matched_manga_url TEXT,
+    matched_chapter_url TEXT,
+    confidence REAL,
+    matcher_version INTEGER,
+    user_confirmed INTEGER AS Boolean NOT NULL DEFAULT 0,
+    skipped INTEGER AS Boolean NOT NULL DEFAULT 0,
+    FOREIGN KEY(reading_list_id) REFERENCES reading_lists(_id) ON DELETE CASCADE,
+    UNIQUE(reading_list_id, position)
+);
+
+CREATE TABLE reading_list_database_references(
+    _id INTEGER NOT NULL PRIMARY KEY,
+    entry_id INTEGER NOT NULL,
+    position INTEGER NOT NULL,
+    name TEXT,
+    series_id TEXT,
+    issue_id TEXT,
+    extra_attributes TEXT NOT NULL,
+    extra_elements TEXT NOT NULL,
+    FOREIGN KEY(entry_id) REFERENCES reading_list_entries(_id) ON DELETE CASCADE,
+    UNIQUE(entry_id, position)
+);
+
+CREATE INDEX reading_list_entries_list_position_index
+ON reading_list_entries(reading_list_id, position);
+
+CREATE INDEX reading_list_database_references_entry_position_index
+ON reading_list_database_references(entry_id, position);
+
+getReadingList:
+SELECT
+    _id AS id,
+    name,
+    description,
+    declared_issue_count AS declaredIssueCount,
+    extra_attributes AS extraAttributes,
+    extra_elements AS extraElements,
+    warnings,
+    current_position AS currentPosition,
+    created_at AS createdAt,
+    updated_at AS updatedAt
+FROM reading_lists
+WHERE _id = :id
+LIMIT 1;
+
+getReadingLists:
+SELECT
+    RL._id AS id,
+    RL.name,
+    count(RLE._id) AS entryCount,
+    RL.current_position AS currentPosition,
+    RL.created_at AS createdAt,
+    RL.updated_at AS updatedAt
+FROM reading_lists RL
+LEFT JOIN reading_list_entries RLE ON RLE.reading_list_id = RL._id
+GROUP BY RL._id
+ORDER BY RL.updated_at DESC, RL._id DESC;
+
+getReadingListEntries:
+SELECT
+    _id AS id,
+    reading_list_id AS readingListId,
+    position,
+    series,
+    number,
+    volume,
+    year,
+    extra_attributes AS extraAttributes,
+    extra_elements AS extraElements,
+    resolution_state AS resolutionState,
+    matched_source_id AS matchedSourceId,
+    matched_manga_url AS matchedMangaUrl,
+    matched_chapter_url AS matchedChapterUrl,
+    confidence,
+    matcher_version AS matcherVersion,
+    user_confirmed AS userConfirmed,
+    skipped
+FROM reading_list_entries
+WHERE reading_list_id = :readingListId
+ORDER BY position;
+
+getDatabaseReferencesByReadingListId:
+SELECT
+    RLR.entry_id AS entryId,
+    RLR.position,
+    RLR.name,
+    RLR.series_id AS seriesId,
+    RLR.issue_id AS issueId,
+    RLR.extra_attributes AS extraAttributes,
+    RLR.extra_elements AS extraElements
+FROM reading_list_database_references RLR
+JOIN reading_list_entries RLE ON RLE._id = RLR.entry_id
+WHERE RLE.reading_list_id = :readingListId
+ORDER BY RLE.position, RLR.position;
+
+insertReadingList:
+INSERT INTO reading_lists(
+    name,
+    description,
+    declared_issue_count,
+    extra_attributes,
+    extra_elements,
+    warnings,
+    current_position,
+    created_at,
+    updated_at
+)
+VALUES (
+    :name,
+    :description,
+    :declaredIssueCount,
+    :extraAttributes,
+    :extraElements,
+    :warnings,
+    NULL,
+    :createdAt,
+    :updatedAt
+);
+
+insertReadingListEntry:
+INSERT INTO reading_list_entries(
+    reading_list_id,
+    position,
+    series,
+    number,
+    volume,
+    year,
+    extra_attributes,
+    extra_elements,
+    resolution_state,
+    matched_source_id,
+    matched_manga_url,
+    matched_chapter_url,
+    confidence,
+    matcher_version,
+    user_confirmed,
+    skipped
+)
+VALUES (
+    :readingListId,
+    :position,
+    :series,
+    :number,
+    :volume,
+    :year,
+    :extraAttributes,
+    :extraElements,
+    :resolutionState,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    0,
+    0
+);
+
+insertDatabaseReference:
+INSERT INTO reading_list_database_references(
+    entry_id,
+    position,
+    name,
+    series_id,
+    issue_id,
+    extra_attributes,
+    extra_elements
+)
+VALUES (
+    :entryId,
+    :position,
+    :name,
+    :seriesId,
+    :issueId,
+    :extraAttributes,
+    :extraElements
+);
+
+lastInsertRowId:
+SELECT last_insert_rowid();
+
+readingListExists:
+SELECT EXISTS(
+    SELECT 1 FROM reading_lists WHERE _id = :id
+) AS Boolean;
+
+entryExistsAtPosition:
+SELECT EXISTS(
+    SELECT 1
+    FROM reading_list_entries
+    WHERE reading_list_id = :readingListId
+      AND position = :position
+) AS Boolean;
+
+updateProgress:
+UPDATE reading_lists
+SET current_position = :currentPosition,
+    updated_at = :updatedAt
+WHERE _id = :id;
+
+deleteReadingList:
+DELETE FROM reading_lists
+WHERE _id = :id;

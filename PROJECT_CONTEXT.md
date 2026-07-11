@@ -10,7 +10,7 @@ The Android application identity is `io.github.kamui2040.yomori`, with Yomori ve
 
 Device-test artifacts use the dedicated `io.github.kamui2040.yomori.debug` package and a reproducible public development certificate. This permits direct in-place updates between development APKs downloaded on a phone without requiring local signing setup.
 
-The first product milestone is CBL reading-list import and deterministic, user-correctable matching. The safe, order-preserving CBL domain model and parser core are implemented and covered by unit tests. No public Yomori release is ready yet.
+The first product milestone is CBL reading-list import and deterministic, user-correctable matching. The safe parser core and transactional SQLDelight persistence layer are implemented and covered by focused tests. No public Yomori release is ready yet.
 
 ## Product goal
 
@@ -34,6 +34,8 @@ Yomori does not provide, bundle, host, operate, or recommend content sources.
 - User-confirmed mappings override automatic matches and are never silently replaced.
 - Original CBL data is retained even after successful matching.
 - CBL parsing preserves `<Book>` order and rejects DTD/entity declarations, oversized documents, excessive entry counts, malformed structure, and entries without required `Series` or `Number` attributes.
+- Imported lists, entries, ordered database references, unknown metadata, warnings, matching state, and reading-list progress are stored in SQLDelight through migration 14.
+- Reading-list insertion is transactional, deletion cascades to owned records, and progress cannot point to a missing entry.
 - Standard Yomori builds do not include telemetry.
 - GitHub Actions is the authoritative APK build environment.
 - Development APK filenames include the Yomori version, workflow build number, short commit SHA, and ABI.
@@ -65,7 +67,7 @@ Only user-selected installed extensions may be queried for a reading list.
 
 ## Resolution states
 
-Planned states:
+Persisted states:
 
 - `UNSEARCHED`
 - `SEARCHING`
@@ -82,7 +84,7 @@ Planned states:
 1. Repository governance and CI adaptation. **Complete.**
 2. Independent application identity and temporary Yomori branding. **Complete.**
 3. CBL domain model and parser with fixtures and unit tests. **Complete.**
-4. Reading-list persistence and migrations.
+4. Reading-list persistence and migrations. **Complete.**
 5. Title and issue normalization.
 6. Confidence scoring and ambiguity rules.
 7. Import and source-selection flow.
