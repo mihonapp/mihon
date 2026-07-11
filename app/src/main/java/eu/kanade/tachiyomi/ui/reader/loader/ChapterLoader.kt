@@ -1,11 +1,13 @@
 package eu.kanade.tachiyomi.ui.reader.loader
 
 import android.content.Context
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
+import eu.kanade.tachiyomi.ui.reader.toReadableReaderError
 import mihon.core.archive.archiveReader
 import mihon.core.archive.epubReader
 import tachiyomi.core.common.i18n.stringResource
@@ -58,9 +60,13 @@ class ChapterLoader(
                 }
 
                 chapter.state = ReaderChapter.State.Loaded(pages)
-            } catch (e: Throwable) {
-                chapter.state = ReaderChapter.State.Error(e)
-                throw e
+            } catch (error: Throwable) {
+                val reportedError = error.toReadableReaderError(
+                    isHttpSource = source is HttpSource,
+                    sourceExtensionMessage = context.getString(R.string.reader_source_extension_error),
+                )
+                chapter.state = ReaderChapter.State.Error(reportedError)
+                throw reportedError
             }
         }
     }

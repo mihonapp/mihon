@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reader_source_extension_error">The source extension could not load this chapter. Update the extension or try another source.</string>
+</resources>

@@ -8,6 +8,8 @@ GitHub Actions was enabled for the fork on 2026-07-10. Pull requests and `main` 
 
 The Android application identity is `io.github.kamui2040.yomori`, with Yomori version line `0.1.0-alpha01`. The Kotlin namespace and extension-facing API packages remain unchanged for compatibility.
 
+Device-test artifacts use the dedicated `io.github.kamui2040.yomori.debug` package and a reproducible public development certificate. This permits direct in-place updates between development APKs downloaded on a phone without requiring local signing setup.
+
 The first product milestone is CBL reading-list import and deterministic, user-correctable matching. The safe, order-preserving CBL domain model and parser core are implemented and covered by unit tests. No public Yomori release is ready yet.
 
 ## Product goal
@@ -21,6 +23,7 @@ Yomori does not provide, bundle, host, operate, or recommend content sources.
 - App and repository name: **Yomori**.
 - Canonical repository: `Kamui2040/Yomori`.
 - Android application ID: `io.github.kamui2040.yomori`.
+- Development application ID: `io.github.kamui2040.yomori.debug`.
 - Base project: Mihon under Apache-2.0.
 - Extensions remain separate user-installed APKs.
 - Users add extension repositories and choose which installed extensions a CBL may search.
@@ -33,7 +36,10 @@ Yomori does not provide, bundle, host, operate, or recommend content sources.
 - CBL parsing preserves `<Book>` order and rejects DTD/entity declarations, oversized documents, excessive entry counts, malformed structure, and entries without required `Series` or `Number` attributes.
 - Standard Yomori builds do not include telemetry.
 - GitHub Actions is the authoritative APK build environment.
-- Inherited public release automation remains disabled until Yomori signing and release readiness are established.
+- Development APK filenames include the Yomori version, workflow build number, short commit SHA, and ABI.
+- Development APKs use a public test certificate that is never used for production releases.
+- Null-pointer failures returned by HTTP source extensions are shown as an actionable update-or-change-source message instead of a raw exception.
+- Inherited public release automation remains disabled until Yomori production signing and release readiness are established.
 
 ## Matching defaults
 
@@ -97,7 +103,7 @@ Before the first public APK release:
 
 - Finalize original Yomori visual branding beyond the temporary launcher mark.
 - Remove or replace inherited Mihon-specific update, support, and download links.
-- Establish Yomori release signing and document key custody.
+- Establish protected Yomori production signing and document key custody.
 - Validate extension loading against representative compatible extensions.
 - Add required attribution and modified-file notices.
 

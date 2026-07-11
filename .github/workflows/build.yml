@@ -30,6 +30,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
 
       - name: Dependency Review
         if: github.event_name == 'pull_request'
@@ -44,6 +46,13 @@ jobs:
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@3f131e8634966bd73d06cc69884922b02e6faf92 # v6.2.0
+
+      - name: Create public development signing key
+        shell: bash
+        run: |
+          set -euo pipefail
+          chmod +x .github/scripts/create-public-dev-keystore.sh
+          .github/scripts/create-public-dev-keystore.sh "$RUNNER_TEMP/yomori-development.p12"
 
       - name: Check code format
         run: ./gradlew spotlessCheck
@@ -63,21 +72,149 @@ jobs:
           path: app/build/reports/tests/testDebugUnitTest
           retention-days: 14
 
-      - name: Build telemetry-free APKs
-        run: ./gradlew assembleRelease
+      - name: Build telemetry-free development APKs
+        run: ./gradlew assemblePreview
 
-      - name: Upload APKs
+      - name: Sign development APKs
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          apksigner="$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -n 1)"
+          zipalign="$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -n 1)"
+
+          if [[ -z "$apksigner" || -z "$zipalign" ]]; then
+            echo "::error::Unable to locate Android signing tools"
+            exit 1
+          fi
+
+          shopt -s nullglob
+          apks=(app/build/outputs/apk/preview/*.apk)
+          if (( ${#apks[@]} == 0 )); then
+            echo "::error::No preview APKs were generated"
+            exit 1
+          fi
+
+          for apk in "${apks[@]}"; do
+            stem="$(basename "${apk%.apk}")"
+            unsigned_apk="$RUNNER_TEMP/${stem}-unsigned.apk"
+            aligned_apk="$RUNNER_TEMP/${stem}-aligned.apk"
+            signed_apk="$RUNNER_TEMP/${stem}-signed.apk"
+
+            cp "$apk" "$unsigned_apk"
+
+            # Remove inherited v1 signature files. Re-aligning also discards any
+            # invalidated APK signing block before the stable test key is applied.
+            zip -q -d "$unsigned_apk" \
+              'META-INF/*.RSA' \
+              'META-INF/*.DSA' \
+              'META-INF/*.EC' \
+              'META-INF/*.SF' \
+              'META-INF/MANIFEST.MF' >/dev/null 2>&1 || true
+
+            "$zipalign" -f -p 4 "$unsigned_apk" "$aligned_apk"
+
+            "$apksigner" sign \
+              --ks "$RUNNER_TEMP/yomori-development.p12" \
+              --ks-type PKCS12 \
+              --ks-key-alias yomori-development \
+              --ks-pass pass:android \
+              --key-pass pass:android \
+              --out "$signed_apk" \
+              "$aligned_apk"
+
+            mv "$signed_apk" "$apk"
+            rm -f "$apk.idsig" "$signed_apk.idsig" "$unsigned_apk" "$aligned_apk"
+          done
+
+      - name: Create versioned APK filenames
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          base_version="$(sed -n 's/^[[:space:]]*versionName = "\([^"]*\)".*/\1/p' app/build.gradle.kts | head -n 1)"
+          short_sha="$(git rev-parse --short=7 HEAD)"
+          output_dir="app/build/outputs/yomori"
+
+          if [[ -z "$base_version" ]]; then
+            echo "::error::Unable to determine Yomori version"
+            exit 1
+          fi
+
+          mkdir -p "$output_dir"
+          rm -f "$output_dir"/*.apk
+
+          shopt -s nullglob
+          apks=(app/build/outputs/apk/preview/*.apk)
+          if (( ${#apks[@]} == 0 )); then
+            echo "::error::No preview APKs were generated"
+            exit 1
+          fi
+
+          for apk in "${apks[@]}"; do
+            filename="$(basename "$apk")"
+            case "$filename" in
+              app-preview.apk)
+                abi="universal"
+                ;;
+              app-*-preview.apk)
+                abi="${filename#app-}"
+                abi="${abi%-preview.apk}"
+                ;;
+              *)
+                echo "::error::Unexpected APK filename: $filename"
+                exit 1
+                ;;
+            esac
+
+            destination="$output_dir/Yomori-v${base_version}-build${GITHUB_RUN_NUMBER}-${short_sha}-${abi}.apk"
+            cp "$apk" "$destination"
+            echo "Prepared $(basename "$destination")"
+          done
+
+          echo "YOMORI_ARTIFACT_NAME=Yomori-v${base_version}-build${GITHUB_RUN_NUMBER}-${short_sha}" >> "$GITHUB_ENV"
+
+      - name: Verify development APK signature
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          expected='08db929c3863a587963a3d72668622c9f464cbb3612cc2f4df29cdcb63750625'
+          apksigner="$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -n 1)"
+
+          if [[ -z "$apksigner" ]]; then
+            echo "::error::Unable to locate apksigner"
+            exit 1
+          fi
+
+          for apk in app/build/outputs/yomori/*.apk; do
+            certificate_output="$("$apksigner" verify --verbose --print-certs "$apk")"
+            normalized_output="$(
+              printf '%s\n' "$certificate_output" |
+                tr -d ':\r' |
+                tr '[:upper:]' '[:lower:]'
+            )"
+
+            if ! grep -q "$expected" <<< "$normalized_output"; then
+              printf '%s\n' "$certificate_output"
+              echo "::error::Expected Yomori development certificate was not found in $(basename "$apk")"
+              echo "Expected digest: $expected"
+              exit 1
+            fi
+          done
+
+      - name: Upload versioned APKs
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: yomori-apks-${{ github.sha }}
-          path: app/build/outputs/apk/release/*.apk
+          name: ${{ env.YOMORI_ARTIFACT_NAME }}
+          path: app/build/outputs/yomori/*.apk
           if-no-files-found: error
           retention-days: 14
 
       - name: Upload mapping
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: mapping-${{ github.sha }}
-          path: app/build/outputs/mapping/release
+          name: mapping-preview-${{ github.sha }}
+          path: app/build/outputs/mapping
           if-no-files-found: error
           retention-days: 14
