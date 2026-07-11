@@ -916,6 +916,5 @@
     <string name="extensionStoresScreen.addStoreDeeplink.bodyText">아래 확장 앱 스토어를 추가하시겠습니까?</string>
     <string name="extensionStoresScreen.deleteStore.title">확장 앱 스토어 제거</string>
     <string name="extensionStoresScreen.deleteStore.body">확장 앱 스토어 \"%1$s\"(%2$s)을(를) 제거하시겠습니까?</string>
-    <string name="pref_webtoon_vertical_navigator">긴 스트립 읽기를 위한 세로 네비게이터 사용</string>
     <string name="pref_webtoon_vertical_navigator_on_left">왼쪽에 세로 네비게이터 배치</string>
 </resources>
