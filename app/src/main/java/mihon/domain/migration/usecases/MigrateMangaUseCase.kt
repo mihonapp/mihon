@@ -84,7 +84,7 @@ class MigrateMangaUseCase(
                             val chapterHasHistory =
                                 mangaChapter.read && targetHistory.find { it.chapterId == mangaChapter.id } != null
 
-                            if (updatedHistory != null && !chapterHasHistory) {
+                            if (!chapterHasHistory && updatedHistory?.readAt != null) {
                                 updatedHistory = updatedHistory.copy(chapterId = updatedChapter.id)
                                 historyUpdates.add(updatedHistory.toHistoryUpdate())
                             }
