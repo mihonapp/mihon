@@ -13,7 +13,11 @@ import androidx.core.graphics.createBitmap
 import ca.mpreg.imagedecoder.ImageDecoder
 import ca.mpreg.webgpuviewer.ImageView
 import ca.mpreg.webgpuviewer.Trim
+import ca.mpreg.webgpuviewer.draw.Draw
+import ca.mpreg.webgpuviewer.draw.clear
+import ca.mpreg.webgpuviewer.draw.line
 import ca.mpreg.webgpuviewer.renderer.Image
+import ca.mpreg.webgpuviewer.renderer.WebGpuRenderer
 import ca.mpreg.webgpuviewer.transition.TransitionBasic
 import ca.mpreg.webgpuviewer.transition.TransitionCube
 import ca.mpreg.webgpuviewer.transition.TransitionCubeOuter
@@ -36,21 +40,20 @@ import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import uy.kohesive.injekt.injectLazy
 import java.io.InputStream
 import kotlin.math.abs
-import kotlin.math.max
 import kotlin.math.min
-import kotlin.time.Duration.Companion.milliseconds
+
+private fun id(page: ReaderPage): String = "${page.chapter.chapter.id ?: ""}:${page.index}"
+
+private fun id(prevChapter: ReaderChapter?, nextChapter: ReaderChapter?): String =
+    "${prevChapter?.chapter?.id ?: ""}:${nextChapter?.chapter?.id ?: ""}"
 
 open class WebGpuViewer(
     val activity: ReaderActivity,
@@ -63,20 +66,6 @@ open class WebGpuViewer(
 
     private val scope = MainScope()
 
-    private val moveToPageFlow = MutableSharedFlow<ViewerPage>(
-        extraBufferCapacity = 1,
-        onBufferOverflow = kotlinx.coroutines.channels.BufferOverflow.DROP_OLDEST,
-    )
-
-    init {
-        scope.launch {
-            moveToPageFlow.conflate().collect { newPage ->
-                executeMoveToPage(newPage)
-                delay(30.milliseconds)
-            }
-        }
-    }
-
     /**
      * Configuration used by the pager, like allow taps, scale mode on images, page transitions...
      */
@@ -86,24 +75,63 @@ open class WebGpuViewer(
 
     val pages: List<ReaderPage>? get() = (currentPage as? ViewerReaderPage)?.page?.chapter?.pages
 
+    var currentPage: ViewerPage? = null
+
+    val preloadCount = 2
+    open val cacheSize = 9
+
+    val pageCache = LinkedHashMap<String, ViewerPage>(cacheSize, 0.75f, true)
+
+    fun getPage(page: ReaderPage): ViewerPage {
+        return synchronized(pageCache) {
+            val r = pageCache.getOrPut(id(page), { ViewerReaderPage(page) })
+
+            // TODO this isn't ordered correctly anymore
+            while (pageCache.size > cacheSize) {
+                pageCache.remove(pageCache.keys.first())?.imagePage?.cleanup()
+            }
+
+            r
+        }
+    }
+
+    fun getPage(prevChapter: ReaderChapter?, nextChapter: ReaderChapter?): ViewerPage {
+        return synchronized(pageCache) {
+            val r = pageCache.getOrPut(id(prevChapter, nextChapter), { TransitionPage(prevChapter, nextChapter) })
+
+            while (pageCache.size > cacheSize) {
+                pageCache.remove(pageCache.keys.first())?.imagePage?.cleanup()
+            }
+
+            r
+        }
+    }
+
     abstract class ViewerPage {
         abstract val prevChapter: ReaderChapter?
         abstract val nextChapter: ReaderChapter?
         abstract val prev: ViewerPage?
         abstract val next: ViewerPage?
         abstract val id: String
+
+        var isProcessing: Boolean = false
+
+        open var imagePage: ImagePage = ImagePage.Dummy(400, 400).apply {
+            minScale = 1f
+            maxScale = 1f
+        }
     }
 
     inner class TransitionPage(override val prevChapter: ReaderChapter?, override val nextChapter: ReaderChapter?) :
         ViewerPage() {
         override val prev: ViewerPage?
-            get() = prevChapter?.pages?.lastOrNull()?.let { ViewerReaderPage(it) }
+            get() = prevChapter?.pages?.lastOrNull()?.let { getPage(it) }
 
         override val next: ViewerPage?
-            get() = nextChapter?.pages?.firstOrNull()?.let { ViewerReaderPage(it) }
+            get() = nextChapter?.pages?.firstOrNull()?.let { getPage(it) }
 
         override val id: String
-            get() = "${prevChapter?.chapter?.id ?: ""}:${nextChapter?.chapter?.id ?: ""}"
+            get() = id(prevChapter, nextChapter)
     }
 
     inner class ViewerReaderPage(val page: ReaderPage) : ViewerPage() {
@@ -123,24 +151,36 @@ open class WebGpuViewer(
 
         override val prev: ViewerPage?
             get() = page.chapter.pages?.let { pages ->
-                pages.getOrNull(page.index - 1)?.let { ViewerReaderPage(it) } ?: if (prevChapter != null) {
-                    if (config.alwaysShowChapterTransition) {
-                        prevChapter?.let { TransitionPage(it, page.chapter) }
-                    } else {
-                        prevChapter?.pages?.lastOrNull()?.let { ViewerReaderPage(it) }
+                pages.getOrNull(page.index - 1)?.let { getPage(it) } ?: prevChapter?.let { prevChapter ->
+                    if (prevChapter.state !is ReaderChapter.State.Loaded) {
+                        CoroutineScope(Dispatchers.Default).launch {
+                            activity.viewModel.preload(prevChapter)
+                            currentPage?.let { preloadPages(it) }
+                        }
                     }
-                } else TransitionPage(null, page.chapter)
+                    if (config.alwaysShowChapterTransition) {
+                        getPage(prevChapter, page.chapter)
+                    } else {
+                        prevChapter.pages?.lastOrNull()?.let { getPage(it) }
+                    }
+                } ?: getPage(null, page.chapter)
             }
 
         override val next: ViewerPage?
             get() = page.chapter.pages?.let { pages ->
-                pages.getOrNull(page.index + 1)?.let { ViewerReaderPage(it) } ?: if (nextChapter != null) {
-                    if (config.alwaysShowChapterTransition) {
-                        nextChapter?.let { TransitionPage(page.chapter, it) }
-                    } else {
-                        nextChapter?.pages?.firstOrNull()?.let { ViewerReaderPage(it) }
+                pages.getOrNull(page.index + 1)?.let { getPage(it) } ?: nextChapter?.let { nextChapter ->
+                    if (nextChapter.state !is ReaderChapter.State.Loaded) {
+                        CoroutineScope(Dispatchers.Default).launch {
+                            activity.viewModel.preload(nextChapter)
+                            currentPage?.let { preloadPages(it) }
+                        }
                     }
-                } else TransitionPage(page.chapter, null)
+                    if (config.alwaysShowChapterTransition) {
+                        getPage(page.chapter, nextChapter)
+                    } else {
+                        nextChapter.pages?.firstOrNull()?.let { getPage(it) }
+                    }
+                } ?: getPage(page.chapter, null)
             }
 
         override val id: String
@@ -178,31 +218,13 @@ open class WebGpuViewer(
         }
     }
 
-    val transitionCache = LinkedHashMap<String, ImagePage?>(2, 0.75f, true)
-
     init {
         updateTransitionAnimation()
 
         pager.state.apply {
             fetchPage = fetch@{ index ->
                 val i = if (isReversed) -index else index
-                nextPage(i)?.let { viewerPage ->
-                    if (viewerPage is ViewerReaderPage) {
-                        synchronized(pageCache) {
-                            pageCache[viewerPage.id]
-                        } ?: ImagePage.Dummy(400, 400).also {
-                            preloadPage(viewerPage)
-                        }
-                    } else {
-                        synchronized(transitionCache) {
-                            transitionCache[viewerPage.id]
-                        } ?: ImagePage.Dummy(400, 400).also {
-                            CoroutineScope(Dispatchers.Default).launch {
-                                preloadPage(viewerPage)
-                            }
-                        }
-                    }
-                }
+                nextPage(i)?.also { preloadPages(it) }?.imagePage
             }
 
             onTap = { offset ->
@@ -217,9 +239,7 @@ open class WebGpuViewer(
 
             onLongTap = { offset ->
                 if (activity.viewModel.state.value.menuVisible || config.longTapEnabled) {
-                    (currentPage as? ViewerReaderPage)?.let {
-                        activity.onPageLongTap(it.page)
-                    }
+                    (currentPage as? ViewerReaderPage)?.let { activity.onPageLongTap(it.page) }
                 }
             }
         }
@@ -232,8 +252,13 @@ open class WebGpuViewer(
 
         config.imagePropertyChangedListener = {
             synchronized(pageCache) {
-                pageCache.forEach { it.value?.cleanup() }
+                pageCache.forEach { it.value.imagePage.cleanup() }
                 pageCache.clear()
+
+                currentPage = (currentPage as? ViewerReaderPage)?.page?.let { getPage(it) }
+                    ?: (currentPage as? TransitionPage)?.let {
+                        getPage(it.prevChapter, it.nextChapter)
+                    }
             }
 
             pager.state.invalidate()
@@ -248,9 +273,8 @@ open class WebGpuViewer(
     }
 
     override fun destroy() {
-        Log.i("WebGpuViewer", "destroy")
         synchronized(pageCache) {
-            pageCache.forEach { it.value?.cleanup() }
+            pageCache.forEach { it.value.imagePage.cleanup() }
             pageCache.clear()
         }
         scope.cancel()
@@ -261,30 +285,47 @@ open class WebGpuViewer(
      */
     override fun getView(): View = pager
 
-    var currentPage: ViewerPage? = null
+    private suspend fun loadPage(page: ViewerReaderPage): InputStream? {
+        val loader = page.page.chapter.pageLoader ?: return null
 
-    val preloadCount = 3
-    open val cacheSize = 9
-
-    val pageCache = LinkedHashMap<String, ImagePage?>(cacheSize, 0.75f, true)
-
-    var decodeJob: Job? = null
-    val decodeQueue = mutableListOf<ViewerPage>()
-
-    private suspend fun loadPage(page: ReaderPage): InputStream? {
-        val loader = page.chapter.pageLoader ?: return null
-
+        // TODO: cancellable/queue
         CoroutineScope(Dispatchers.IO).launch {
-            loader.loadPage(page)
+            loader.loadPage(page.page)
         }
 
         val downloadProgressJob = CoroutineScope(Dispatchers.Default).launch {
-            page.progressFlow.collectLatest { value ->
-//                Log.i("WebGpuViewer", "DownloadImage: $value")
+            page.page.progressFlow.collect { value ->
+                if (page.imagePage.image == null) {
+                    page.imagePage = ImagePage(400, 400).apply {
+                        parent = pager.state
+                        minScale = homeScale
+                        maxScale = homeScale
+                        scale = homeScale
+
+                        WebGpuRenderer.withContext {
+                            (this@apply as ImagePage.Draw).texture?.let { texture ->
+                                Draw.submit { encoder ->
+                                    clear(encoder, texture, 0x00000000)
+                                    line(encoder, texture, 0.1f, 0.5f, 0.9f, 0.5f, 0xFF101010.toInt(), 30f)
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    WebGpuRenderer.withContext {
+                        (page.imagePage as ImagePage.Draw?)?.texture?.let { texture ->
+                            Draw.submit { encoder ->
+                                val x2 = 0.1f + (value / 100f) * 0.8f
+                                line(encoder, texture, 0.1f, 0.5f, x2, 0.5f, 0xFFFFFFFF.toInt(), 20f)
+                            }
+                        }
+                        pager.state.invalidate()
+                    }
+                }
             }
         }
 
-        page.statusFlow.takeWhile { state ->
+        page.page.statusFlow.takeWhile { state ->
             when (state) {
                 Page.State.Queue -> true
                 Page.State.LoadPage -> true
@@ -299,22 +340,18 @@ open class WebGpuViewer(
 
         downloadProgressJob.cancel()
 
-        return page.stream?.invoke()
-    }
-
-    private fun popPreload(): ViewerPage? {
-        synchronized(decodeQueue) {
-            return decodeQueue.removeFirstOrNull()
-        }
+        return page.page.stream?.invoke()
     }
 
     private suspend fun decodeReaderPage(page: ViewerReaderPage) {
-        synchronized(pageCache) {
-            if (pageCache.contains(page.id)) return
+        synchronized(page) {
+            if (page.imagePage !is ImagePage.Dummy) return
+            if (page.isProcessing) return
+            page.isProcessing = true
         }
 
-        loadPage(page.page)?.use {
-            Log.i("WebGpuViewer", "create page: ${page.page.chapter.chapter.id} ${page.page.index}")
+        loadPage(page)?.use {
+            Log.d("WebGpuViewer", "create page: ${page.page.chapter.chapter.id} ${page.page.index}")
 
             val dec = ImageDecoder.new(it)
             (0 until dec.pages).map { dec.decodeNext() }
@@ -334,21 +371,25 @@ open class WebGpuViewer(
                     startAnimationLoop(pages, { pager.state.invalidate() })
                 }
             }
-        }.also {
+        }?.also {
             synchronized(pageCache) {
-                pageCache[page.id] = it
-                while (pageCache.size > cacheSize) {
-                    pageCache.remove(pageCache.keys.first())?.cleanup()
+                if (page.imagePage.destroyed) {
+                    it.cleanup()
+                    return
                 }
+                page.imagePage = it
+                pager.state.invalidate()
             }
-
-            pager.state.invalidate()
         }
+
+        page.isProcessing = false
     }
 
     private suspend fun createTransitionPage(page: TransitionPage) {
-        synchronized(transitionCache) {
-            if (transitionCache.contains(page.id)) return
+        synchronized(page) {
+            if (page.imagePage !is ImagePage.Dummy) return
+            if (page.isProcessing) return
+            page.isProcessing = true
         }
 
         val bitmap = createBitmap(pager.state.width, pager.state.height)
@@ -385,91 +426,51 @@ open class WebGpuViewer(
             y += it.second
         }
 
-        val image = ImagePage(bitmap, createMipMaps = false).apply {
+        val imagePage = ImagePage(bitmap, createMipMaps = false).apply {
             minScale = 1f
             maxScale = 1f
         }
 
-        synchronized(transitionCache) {
-            transitionCache[page.id] = image
-        }
-
-        pager.state.invalidate()
-    }
-
-    private fun startDecodeQueue() {
-        decodeJob = decodeJob ?: CoroutineScope(Dispatchers.Default).launch {
-            try {
-                while (true) {
-                    val page = popPreload() ?: return@launch
-                    when (page) {
-                        is ViewerReaderPage -> decodeReaderPage(page)
-                        is TransitionPage -> createTransitionPage(page)
-                    }
-                }
-            } finally {
-                synchronized(decodeQueue) {
-                    decodeJob = null
-                }
+        synchronized(pageCache) {
+            if (page.imagePage.destroyed) {
+                imagePage.cleanup()
+                return
             }
+            page.imagePage = imagePage
+            pager.state.invalidate()
         }
+
+        page.isProcessing = false
     }
 
     protected fun preloadPage(page: ViewerPage) {
-        synchronized(decodeQueue) {
-            decodeQueue.add(page)
-            startDecodeQueue()
+        CoroutineScope(Dispatchers.Default).launch {
+            when (page) {
+                is ViewerReaderPage -> decodeReaderPage(page)
+                is TransitionPage -> createTransitionPage(page)
+            }
         }
     }
 
     protected fun preloadPages(page: ViewerPage) {
-        val page = page as? ViewerReaderPage ?: return
-        val pages = page.page.chapter.pages ?: return
+        pager.state.post {
+            preloadPage(page)
 
-        synchronized(decodeQueue) {
-            decodeQueue.clear()
-
-            val index = page.page.index
-
-            for (i in index until min(index + preloadCount, pages.size)) {
-                decodeQueue.add(ViewerReaderPage(pages[i]))
+            var p = page
+            for (i in 0 until preloadCount) {
+                p.next?.let {
+                    preloadPage(it)
+                    p = it
+                } ?: break
             }
 
-            for (i in max(0, index - preloadCount) until index) {
-                decodeQueue.add(ViewerReaderPage(pages[i]))
+            p = page
+            for (i in 0 until preloadCount) {
+                p.prev?.let {
+                    preloadPage(it)
+                    p = it
+                } ?: break
             }
-
-            page.prevChapter?.let { prevChapter ->
-                if (prevChapter.state !is ReaderChapter.State.Loaded && index - preloadCount < 0) {
-                    prevChapter.let { chapter ->
-                        CoroutineScope(Dispatchers.Default).launch {
-                            activity.viewModel.preload(chapter)
-                            preloadPages(page)
-                        }
-                    }
-                }
-            }
-
-            page.nextChapter?.let { nextChapter ->
-                if (nextChapter.state !is ReaderChapter.State.Loaded && index + preloadCount > pages.lastIndex) {
-                    nextChapter.let { chapter ->
-                        CoroutineScope(Dispatchers.Default).launch {
-                            activity.viewModel.preload(chapter)
-                            preloadPages(page)
-                        }
-                    }
-                }
-            }
-
-            page.prevChapter?.pages?.takeLast(max(0, preloadCount - index))?.forEach { page ->
-                decodeQueue.add(ViewerReaderPage(page))
-            }
-
-            page.nextChapter?.pages?.take(max(0, preloadCount - (pages.lastIndex - index)))?.forEach { page ->
-                decodeQueue.add(ViewerReaderPage(page))
-            }
-
-            startDecodeQueue()
         }
     }
 
@@ -482,13 +483,11 @@ open class WebGpuViewer(
 
         this.viewerChapters = chapters
 
-        currentPage = (currentPage ?: ViewerReaderPage(
-            pages[min(chapters.currChapter.requestedPage, pages.lastIndex)],
-        )).also { page ->
-            (page as? ViewerReaderPage)?.let {
-                activity.onPageSelected(it.page)
-                preloadPages(it)
-            }
+        val requestedPage = pages[min(chapters.currChapter.requestedPage, pages.lastIndex)]
+
+        currentPage = (currentPage ?: getPage(requestedPage)).also { page ->
+            (page as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
+            preloadPages(page)
         }
 
         pager.state.apply {
@@ -499,10 +498,7 @@ open class WebGpuViewer(
 
                 nextPage(delta)?.let { newPage ->
                     currentPage = newPage.also { page ->
-                        (page as? ViewerReaderPage)?.let {
-                            activity.onPageSelected(it.page)
-                            preloadPages(it)
-                        }
+                        (page as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
                     }
 
                     (currentPage as? TransitionPage)?.let { currentPage ->
@@ -521,21 +517,14 @@ open class WebGpuViewer(
      * Tells this viewer to move to the given [page].
      */
     override fun moveToPage(page: ReaderPage) {
-        moveToPage(ViewerReaderPage(page).also { preloadPages(it) })
+        moveToPage(getPage(page))
     }
 
-    fun moveToPage(newPage: ViewerPage) {
-        moveToPageFlow.tryEmit(newPage)
-    }
-
-    private fun executeMoveToPage(newPage: ViewerPage) {
+    private fun moveToPage(newPage: ViewerPage) {
         val previousPage = currentPage
 
         currentPage = newPage.also { page ->
-            (page as? ViewerReaderPage)?.let {
-                activity.onPageSelected(it.page)
-                preloadPages(it)
-            }
+            (page as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
         }
 
         (currentPage as? TransitionPage)?.let { currentPage ->

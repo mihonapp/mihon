@@ -176,7 +176,7 @@ fun MangaCoverDialog(
                     .target { result ->
                         val res = (result as ImageDecoder2.DecodeResultImage).res
                         val page = runBlocking(WebGpuRenderer.dispatcher) {
-                            ImagePage(Image(res.image, res.width, res.height))
+                            ImagePage(res.image, res.width, res.height)
                         }.apply {
                             parent = state
                             x = homeX
