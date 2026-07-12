@@ -7,7 +7,7 @@ object LibrarySearchLexer {
             # Operators
             (?<LParen> \( )|
             (?<RParen> \) )|
-            (?<NOT> - )|
+            (?<NOT> -(?![\s,]) )|
             (?<OR> \|\| )|
             (?<AND> && )|
 
