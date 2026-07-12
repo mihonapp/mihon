@@ -39,9 +39,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.updatePadding
-import ca.mpreg.webgpuviewer.Image
-import ca.mpreg.webgpuviewer.WebGpuImageViewerSingle
-import ca.mpreg.webgpuviewer.WebGpuImageViewerSingleState
+import ca.mpreg.webgpuviewer.renderer.Image
+import ca.mpreg.webgpuviewer.renderer.WebGpuRenderer
+import ca.mpreg.webgpuviewer.viewer.ImagePage
+import ca.mpreg.webgpuviewer.viewer.ImageViewer
+import ca.mpreg.webgpuviewer.viewer.ImageViewerState
 import coil3.asDrawable
 import coil3.imageLoader
 import coil3.request.CachePolicy
@@ -55,6 +57,7 @@ import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.tachiyomi.data.coil.ImageDecoder2
 import eu.kanade.tachiyomi.data.coil.newDecoder
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
+import kotlinx.coroutines.runBlocking
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -161,7 +164,45 @@ fun MangaCoverDialog(
             },
         ) { contentPadding ->
             if (useNewRenderer) {
-                val state = WebGpuImageViewerSingleState()
+                val state = ImageViewerState()
+
+                state.dpi = view.resources.displayMetrics.densityDpi / 100f
+
+                ImageRequest.Builder(view.context)
+                    .data(manga)
+                    .size(Size.ORIGINAL)
+                    .memoryCachePolicy(CachePolicy.DISABLED)
+                    .newDecoder(true)
+                    .target { result ->
+                        val res = (result as ImageDecoder2.DecodeResultImage).res
+                        val page = runBlocking(WebGpuRenderer.dispatcher) {
+                            ImagePage(Image(res.image, res.width, res.height))
+                        }.apply {
+                            parent = state
+                            x = homeX
+                            y = homeY
+                            scale = homeScale
+                        }
+                        state.apply {
+                            fetchPage = { index ->
+                                if (index == 0) {
+                                    page
+                                } else {
+                                    null
+                                }
+                            }
+                            invalidate()
+                        }
+                    }
+                    .build()
+                    .let(view.context.imageLoader::enqueue)
+
+                ImageViewer(state = state)
+                return@Scaffold
+            }
+
+            val statusBarPaddingPx = with(LocalDensity.current) { contentPadding.calculateTopPadding().roundToPx() }
+            val bottomPaddingPx = with(LocalDensity.current) { contentPadding.calculateBottomPadding().roundToPx() }
 
                 state.dpi = view.resources.displayMetrics.densityDpi / 100f
 

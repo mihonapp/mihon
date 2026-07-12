@@ -6,6 +6,7 @@ import dev.icerock.moko.resources.StringResource
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.preference.getEnum
+import tachiyomi.core.common.preference.getEnumSet
 import tachiyomi.i18n.MR
 
 class ReaderPreferences(
@@ -28,14 +29,19 @@ class ReaderPreferences(
 
     val showPageNumber: Preference<Boolean> = preferenceStore.getBoolean("pref_show_page_number_key", true)
 
-    val verticalNavigatorForLongStrip: Preference<Boolean> = preferenceStore.getBoolean(
-        "pref_webtoon_vertical_navigator",
-        true,
+    val verticalNavigator: Preference<Set<ReadingMode>> = preferenceStore.getEnumSet(
+        "pref_vertical_navigator",
+        emptySet(),
     )
 
     val verticalNavigatorOnLeft: Preference<Boolean> = preferenceStore.getBoolean(
-        "pref_webtoon_vertical_navigator_on_left",
+        "pref_vertical_navigator_on_left",
         false,
+    )
+
+    val verticalNavigatorHeight: Preference<Int> = preferenceStore.getInt(
+        "pref_vertical_navigator_height",
+        65,
     )
 
     val showReadingMode: Preference<Boolean> = preferenceStore.getBoolean("pref_show_reading_mode", true)
@@ -183,6 +189,13 @@ class ReaderPreferences(
 
     // endregion
 
+    // region WebGpu
+
+    val transitionAnimation: Preference<TransitionAnimation> =
+        preferenceStore.getEnum("webgpu_transition_animation", TransitionAnimation.DEFAULT)
+
+    // endregion
+
     enum class FlashColor {
         BLACK,
         WHITE,
@@ -205,6 +218,19 @@ class ReaderPreferences(
         HIGH(13),
         LOW(31),
         LOWEST(47),
+    }
+
+    enum class TransitionAnimation(val titleRes: StringResource) {
+        DEFAULT(MR.strings.transition_animation_default),
+        FLIP_LEFT(MR.strings.transition_animation_flip_left),
+        FLIP_RIGHT(MR.strings.transition_animation_flip_right),
+        STACK_LEFT(MR.strings.transition_animation_stack_left),
+        STACK_RIGHT(MR.strings.transition_animation_stack_right),
+        STACK_UP(MR.strings.transition_animation_stack_up),
+        STACK_DOWN(MR.strings.transition_animation_stack_down),
+        SPHERE(MR.strings.transition_animation_sphere),
+        CUBE_INSIDE(MR.strings.transition_animation_cube_inside),
+        CUBE_OUTSIDE(MR.strings.transition_animation_cube_outside),
     }
 
     companion object {
