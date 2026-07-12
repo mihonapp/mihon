@@ -1,0 +1,11 @@
+CREATE TABLE reading_list_sources(
+    reading_list_id INTEGER NOT NULL,
+    source_id INTEGER NOT NULL,
+    position INTEGER NOT NULL,
+    FOREIGN KEY(reading_list_id) REFERENCES reading_lists(_id) ON DELETE CASCADE,
+    PRIMARY KEY(reading_list_id, source_id),
+    UNIQUE(reading_list_id, position)
+);
+
+CREATE INDEX reading_list_sources_list_position_index
+ON reading_list_sources(reading_list_id, position);

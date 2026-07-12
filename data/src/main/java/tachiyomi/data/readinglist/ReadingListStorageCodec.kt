@@ -67,3 +67,12 @@ internal fun CblReadingList.requireValidPersistenceOrder() {
         }
     }
 }
+
+internal fun List<Long>.requireValidSourceSelection() {
+    require(isNotEmpty()) {
+        "At least one source must be selected for a reading list"
+    }
+    require(size == distinct().size) {
+        "Reading-list source selection contains duplicate source IDs"
+    }
+}

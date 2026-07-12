@@ -10,7 +10,7 @@ The Android application identity is `io.github.kamui2040.yomori`, with Yomori ve
 
 Device-test artifacts use the dedicated `io.github.kamui2040.yomori.debug` package and a reproducible public development certificate. This permits direct in-place updates between development APKs downloaded on a phone without requiring local signing setup.
 
-The first product milestone is CBL reading-list import and deterministic, user-correctable matching. The safe parser core, transactional SQLDelight persistence, normalization, and confidence-scoring layers are implemented and covered by focused tests. No public Yomori release is ready yet.
+The first product milestone is CBL reading-list import and deterministic, user-correctable matching. The safe parser, transactional persistence, normalization, confidence scoring, visible import interface, and per-list source-selection flow are implemented and covered by focused tests. Candidate resolution and manual review are the next product stages. No public Yomori release is ready yet.
 
 ## Product goal
 
@@ -34,8 +34,15 @@ Yomori does not provide, bundle, host, operate, or recommend content sources.
 - User-confirmed mappings override automatic matches and are never silently replaced.
 - Original CBL data is retained even after successful matching.
 - CBL parsing preserves `<Book>` order and rejects DTD/entity declarations, oversized documents, excessive entry counts, malformed structure, and entries without required `Series` or `Number` attributes.
-- Imported lists, entries, ordered database references, unknown metadata, warnings, matching state, and reading-list progress are stored in SQLDelight through migration 14.
+- Imported lists, entries, ordered database references, unknown metadata, warnings, matching state, and reading-list progress are stored in SQLDelight.
+- SQLDelight migration 15 adds ordered per-list source selections without changing extension-facing APIs.
 - Reading-list insertion is transactional, deletion cascades to owned records, and progress cannot point to a missing entry.
+- The primary Reading Lists tab imports local `.cbl` documents through Android's system document picker.
+- Imported files are read with a 16 MiB boundary and support UTF-8, UTF-16 little-endian, and UTF-16 big-endian XML.
+- At least one currently installed online source must be selected before a reading list can be saved.
+- Selected source order is persisted as the list's search-priority order and can be edited later.
+- Missing extension IDs remain visible as unavailable source choices for later repair rather than being silently discarded.
+- No source is bundled, recommended, or selected automatically.
 - Title normalization produces locale-independent full and edition-free comparison keys while retaining extracted year and volume as separate scoring evidence.
 - Issue-number normalization preserves annual, special, Free Comic Book Day, one-shot, suffix, decimal, fraction, and opaque identifier distinctions.
 - Normalization never replaces the original CBL metadata stored for repair and rematching.
@@ -96,7 +103,7 @@ Persisted states:
 4. Reading-list persistence and migrations. **Complete.**
 5. Title and issue normalization. **Complete.**
 6. Confidence scoring and ambiguity rules. **Complete.**
-7. Import and source-selection flow.
+7. Import and source-selection flow. **Complete.**
 8. Candidate review and manual overrides.
 9. Cross-series reader navigation and progress.
 10. Repair and rematching tools.

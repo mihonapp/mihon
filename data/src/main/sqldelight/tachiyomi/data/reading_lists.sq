@@ -48,11 +48,23 @@ CREATE TABLE reading_list_database_references(
     UNIQUE(entry_id, position)
 );
 
+CREATE TABLE reading_list_sources(
+    reading_list_id INTEGER NOT NULL,
+    source_id INTEGER NOT NULL,
+    position INTEGER NOT NULL,
+    FOREIGN KEY(reading_list_id) REFERENCES reading_lists(_id) ON DELETE CASCADE,
+    PRIMARY KEY(reading_list_id, source_id),
+    UNIQUE(reading_list_id, position)
+);
+
 CREATE INDEX reading_list_entries_list_position_index
 ON reading_list_entries(reading_list_id, position);
 
 CREATE INDEX reading_list_database_references_entry_position_index
 ON reading_list_database_references(entry_id, position);
+
+CREATE INDEX reading_list_sources_list_position_index
+ON reading_list_sources(reading_list_id, position);
 
 getReadingList:
 SELECT
@@ -74,13 +86,20 @@ getReadingLists:
 SELECT
     RL._id AS id,
     RL.name,
-    count(RLE._id) AS entryCount,
+    (
+        SELECT count(*)
+        FROM reading_list_entries RLE
+        WHERE RLE.reading_list_id = RL._id
+    ) AS entryCount,
+    (
+        SELECT count(*)
+        FROM reading_list_sources RLS
+        WHERE RLS.reading_list_id = RL._id
+    ) AS sourceCount,
     RL.current_position AS currentPosition,
     RL.created_at AS createdAt,
     RL.updated_at AS updatedAt
 FROM reading_lists RL
-LEFT JOIN reading_list_entries RLE ON RLE.reading_list_id = RL._id
-GROUP BY RL._id
 ORDER BY RL.updated_at DESC, RL._id DESC;
 
 getReadingListEntries:
@@ -119,6 +138,12 @@ FROM reading_list_database_references RLR
 JOIN reading_list_entries RLE ON RLE._id = RLR.entry_id
 WHERE RLE.reading_list_id = :readingListId
 ORDER BY RLE.position, RLR.position;
+
+getReadingListSourceIds:
+SELECT source_id
+FROM reading_list_sources
+WHERE reading_list_id = :readingListId
+ORDER BY position;
 
 insertReadingList:
 INSERT INTO reading_lists(
@@ -202,6 +227,18 @@ VALUES (
     :extraElements
 );
 
+insertReadingListSource:
+INSERT INTO reading_list_sources(
+    reading_list_id,
+    source_id,
+    position
+)
+VALUES (
+    :readingListId,
+    :sourceId,
+    :position
+);
+
 lastInsertRowId:
 SELECT last_insert_rowid();
 
@@ -223,6 +260,15 @@ UPDATE reading_lists
 SET current_position = :currentPosition,
     updated_at = :updatedAt
 WHERE _id = :id;
+
+touchReadingList:
+UPDATE reading_lists
+SET updated_at = :updatedAt
+WHERE _id = :id;
+
+deleteReadingListSources:
+DELETE FROM reading_list_sources
+WHERE reading_list_id = :readingListId;
 
 deleteReadingList:
 DELETE FROM reading_lists

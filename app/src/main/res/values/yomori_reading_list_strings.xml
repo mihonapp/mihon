@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_lists_tab">Lists</string>
+    <string name="reading_lists_title">Reading lists</string>
+    <string name="reading_lists_empty">Import a Comic Book Lover reading list to create an ordered path across series.</string>
+    <string name="reading_list_import_cbl">Import .cbl</string>
+    <string name="reading_list_importing">Importing…</string>
+    <string name="reading_list_untitled">Untitled reading list</string>
+    <string name="reading_list_edit_sources">Edit sources</string>
+    <string name="reading_list_source_dialog_title">Choose sources</string>
+    <string name="reading_list_source_dialog_explanation">Only the installed sources selected here may be searched. Sources are tried in the priority order shown.</string>
+    <string name="reading_list_no_installed_sources">No compatible online sources are installed. Install an extension before importing this list.</string>
+    <string name="reading_list_select_all">Select all</string>
+    <string name="reading_list_clear_selection">Clear</string>
+    <string name="reading_list_import_action">Import</string>
+    <string name="reading_list_save_action">Save</string>
+    <string name="reading_list_cancel_action">Cancel</string>
+    <string name="reading_list_source_priority">Priority %1$d</string>
+    <string name="reading_list_unavailable_source">Unavailable source</string>
+    <string name="reading_list_entries_and_sources">%1$d entries • %2$d sources</string>
+    <string name="reading_list_progress">Next entry: %1$d of %2$d</string>
+    <string name="reading_list_warning_count">%1$d import warnings</string>
+    <string name="reading_list_imported">Imported %1$s</string>
+    <string name="reading_list_sources_updated">Source selection updated</string>
+    <string name="reading_list_select_source_error">Select at least one installed source</string>
+    <string name="reading_list_missing_error">The reading list no longer exists</string>
+    <string name="reading_list_save_error">The reading list could not be saved</string>
+    <string name="reading_list_import_empty_error">The selected document is empty</string>
+    <string name="reading_list_import_too_large_error">The selected reading list is too large</string>
+    <string name="reading_list_import_unsafe_error">The reading list contains unsafe XML declarations</string>
+    <string name="reading_list_import_malformed_error">The selected file is not valid XML</string>
+    <string name="reading_list_import_invalid_error">The selected file is not a valid Comic Book Lover reading list</string>
+    <string name="reading_list_import_no_entries_error">The reading list contains no entries</string>
+    <string name="reading_list_import_open_error">The selected document could not be opened</string>
+    <string name="reading_list_import_unknown_error">The reading list could not be imported</string>
+    <string name="reading_list_move_source_up">Move source up</string>
+    <string name="reading_list_move_source_down">Move source down</string>
+</resources>

@@ -13,7 +13,9 @@ interface ReadingListRepository {
 
     fun getAllAsFlow(): Flow<List<ReadingListSummary>>
 
-    suspend fun insert(readingList: CblReadingList): Long
+    suspend fun insert(readingList: CblReadingList, selectedSourceIds: List<Long>): Long
+
+    suspend fun updateSources(id: Long, selectedSourceIds: List<Long>): Boolean
 
     suspend fun updateProgress(id: Long, currentPosition: Int?): Boolean
 

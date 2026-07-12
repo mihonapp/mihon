@@ -36,6 +36,9 @@ class ReadingListRepositoryImpl(
             .getDatabaseReferencesByReadingListId(id, ::mapDatabaseReferenceRow)
             .awaitAsList()
             .groupBy(DatabaseReferenceRow::entryId)
+        val selectedSourceIds = database.reading_listsQueries
+            .getReadingListSourceIds(id)
+            .awaitAsList()
 
         return ReadingList(
             id = readingList.id,
@@ -72,6 +75,7 @@ class ReadingListRepositoryImpl(
                     skipped = entry.skipped,
                 )
             },
+            selectedSourceIds = selectedSourceIds,
             extraAttributes = codec.decodeAttributes(readingList.extraAttributes),
             extraElements = codec.decodeElements(readingList.extraElements),
             warnings = codec.decodeWarnings(readingList.warnings),
@@ -93,8 +97,12 @@ class ReadingListRepositoryImpl(
             .subscribeToList()
     }
 
-    override suspend fun insert(readingList: CblReadingList): Long {
+    override suspend fun insert(
+        readingList: CblReadingList,
+        selectedSourceIds: List<Long>,
+    ): Long {
         readingList.requireValidPersistenceOrder()
+        selectedSourceIds.requireValidSourceSelection()
         val timestamp = currentTimeMillis()
 
         return database.transactionWithResult {
@@ -137,7 +145,29 @@ class ReadingListRepositoryImpl(
                 }
             }
 
+            insertSources(readingListId, selectedSourceIds)
             readingListId
+        }
+    }
+
+    override suspend fun updateSources(
+        id: Long,
+        selectedSourceIds: List<Long>,
+    ): Boolean {
+        selectedSourceIds.requireValidSourceSelection()
+
+        return database.transactionWithResult {
+            if (!database.reading_listsQueries.readingListExists(id).awaitAsOne()) {
+                return@transactionWithResult false
+            }
+
+            database.reading_listsQueries.deleteReadingListSources(id)
+            insertSources(id, selectedSourceIds)
+            database.reading_listsQueries.touchReadingList(
+                updatedAt = currentTimeMillis(),
+                id = id,
+            )
+            true
         }
     }
 
@@ -170,6 +200,16 @@ class ReadingListRepositoryImpl(
         database.reading_listsQueries.deleteReadingList(id)
     }
 
+    private suspend fun insertSources(readingListId: Long, sourceIds: List<Long>) {
+        sourceIds.forEachIndexed { position, sourceId ->
+            database.reading_listsQueries.insertReadingListSource(
+                readingListId = readingListId,
+                sourceId = sourceId,
+                position = position.toLong(),
+            )
+        }
+    }
+
     private fun mapReadingListRow(
         id: Long,
         name: String?,
@@ -200,6 +240,7 @@ class ReadingListRepositoryImpl(
         id: Long,
         name: String?,
         entryCount: Long,
+        sourceCount: Long,
         currentPosition: Long?,
         createdAt: Long,
         updatedAt: Long,
@@ -208,6 +249,7 @@ class ReadingListRepositoryImpl(
             id = id,
             name = name,
             entryCount = entryCount.toInt(),
+            sourceCount = sourceCount.toInt(),
             currentPosition = currentPosition?.toInt(),
             createdAt = createdAt,
             updatedAt = updatedAt,

@@ -92,6 +92,27 @@ class ReadingListStorageCodecTest {
         }
     }
 
+    @Test
+    fun `accepts ordered unique source IDs including signed IDs`() {
+        assertDoesNotThrow {
+            listOf(-17L, 42L, Long.MIN_VALUE).requireValidSourceSelection()
+        }
+    }
+
+    @Test
+    fun `rejects empty source selections`() {
+        assertThrows(IllegalArgumentException::class.java) {
+            emptyList<Long>().requireValidSourceSelection()
+        }
+    }
+
+    @Test
+    fun `rejects duplicate source IDs`() {
+        assertThrows(IllegalArgumentException::class.java) {
+            listOf(10L, 20L, 10L).requireValidSourceSelection()
+        }
+    }
+
     private fun readingListWithPositions(vararg positions: Int): CblReadingList {
         return CblReadingList(
             name = "Fixture",
