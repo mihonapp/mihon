@@ -17,5 +17,7 @@ class SChapterImpl : SChapter {
 
     override var date_upload: Long = 0
 
+    override var language: String? = null
+
     override var memo: JsonObject = JsonObject.EMPTY
 }

@@ -309,7 +309,7 @@ internal object ExtensionLoader {
                 }
             }
 
-        val langs = sources.map { it.lang }.toSet()
+        val langs = sources.map { it.language }.toSet()
         val lang = when (langs.size) {
             0 -> ""
             1 -> langs.first()

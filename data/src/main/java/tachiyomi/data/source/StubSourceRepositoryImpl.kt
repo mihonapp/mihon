@@ -31,5 +31,5 @@ class StubSourceRepositoryImpl(
         id: Long,
         lang: String,
         name: String,
-    ): StubSource = StubSource(id = id, lang = lang, name = name)
+    ): StubSource = StubSource(id = id, language = lang, name = name)
 }

@@ -344,11 +344,11 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
             val sources = sourceManager.getAll()
                 .asSequence()
                 .filterIsInstance<HttpSource>()
-                .filter { it.lang in languages }
+                .filter { it.language in languages }
                 .map {
                     val source = Source(
                         id = it.id,
-                        lang = it.lang,
+                        lang = it.language,
                         name = it.name,
                         supportsLatest = false,
                         isStub = false,

@@ -35,6 +35,8 @@ class ChapterImpl : Chapter {
 
     override var version: Long = 0
 
+    override var language: String? = null
+
     override var memo: JsonObject = JsonObject.EMPTY
 
     override fun equals(other: Any?): Boolean {
