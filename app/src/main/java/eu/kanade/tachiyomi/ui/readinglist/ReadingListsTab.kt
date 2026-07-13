@@ -20,20 +20,29 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.ArrowDropDown
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.ExpandLess
+import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.List
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -43,7 +52,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -56,6 +68,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.util.Tab
 import eu.kanade.tachiyomi.R
@@ -113,9 +126,10 @@ data object ReadingListsTab : Tab {
                 SourceSelectionDialog(
                     dialog = dialog,
                     isSaving = state.isSaving,
+                    onPreferredLanguageChange = screenModel::setPreferredLanguage,
                     onToggleSource = screenModel::toggleSource,
-                    onToggleSourceGroup = screenModel::toggleSourceGroup,
-                    onSelectAll = screenModel::selectAllInstalledSources,
+                    onToggleSources = screenModel::toggleSources,
+                    onSelectSources = screenModel::selectSources,
                     onClear = screenModel::clearSelectedSources,
                     onMoveSource = screenModel::moveSelectedSource,
                     onConfirm = screenModel::confirmSourceSelection,
@@ -347,14 +361,35 @@ private fun ReadingListItem(
 private fun SourceSelectionDialog(
     dialog: ReadingListsDialog.SourceSelection,
     isSaving: Boolean,
+    onPreferredLanguageChange: (String) -> Unit,
     onToggleSource: (Long) -> Unit,
-    onToggleSourceGroup: (String) -> Unit,
-    onSelectAll: () -> Unit,
+    onToggleSources: (List<Long>) -> Unit,
+    onSelectSources: (List<Long>) -> Unit,
     onClear: () -> Unit,
     onMoveSource: (Long, Int) -> Unit,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
 ) {
+    var searchQuery by remember(dialog.mode) { mutableStateOf("") }
+    var languageMenuExpanded by remember(dialog.mode) { mutableStateOf(false) }
+    val expandedGroups = remember(dialog.mode) { mutableStateMapOf<String, Boolean>() }
+    val availableLanguages = remember(dialog.sourceGroups) {
+        availableReadingListSourceLanguages(dialog.sourceGroups)
+    }
+    val preferredLanguage = dialog.preferredLanguage.takeIf { language ->
+        language == BasePreferences.READING_LIST_ALL_LANGUAGES || language in availableLanguages
+    } ?: BasePreferences.READING_LIST_ALL_LANGUAGES
+    val filteredGroups = remember(dialog.sourceGroups, preferredLanguage, searchQuery) {
+        filterReadingListSourceGroups(
+            groups = dialog.sourceGroups,
+            preferredLanguage = preferredLanguage,
+            query = searchQuery,
+        )
+    }
+    val visibleSourceIds = filteredGroups
+        .flatMap(ReadingListSourceGroup::sources)
+        .filter(ReadingListSourceOption::installed)
+        .map(ReadingListSourceOption::id)
     val selectedPriorities = dialog.selectedSourceIds
         .withIndex()
         .associate { indexedValue -> indexedValue.value to indexedValue.index + 1 }
@@ -375,7 +410,7 @@ private fun SourceSelectionDialog(
             }
         },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(stringResource(R.string.reading_list_source_dialog_explanation))
                 Text(
                     text = stringResource(
@@ -395,6 +430,75 @@ private fun SourceSelectionDialog(
                     )
                 }
 
+                OutlinedTextField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text(stringResource(R.string.reading_list_source_search)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Search,
+                            contentDescription = null,
+                        )
+                    },
+                    trailingIcon = {
+                        if (searchQuery.isNotEmpty()) {
+                            IconButton(onClick = { searchQuery = "" }) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Close,
+                                    contentDescription = stringResource(R.string.reading_list_clear_search),
+                                )
+                            }
+                        }
+                    },
+                    singleLine = true,
+                )
+
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    OutlinedButton(
+                        onClick = { languageMenuExpanded = true },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !isSaving,
+                    ) {
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            horizontalAlignment = Alignment.Start,
+                        ) {
+                            Text(
+                                text = stringResource(R.string.reading_list_default_language),
+                                style = MaterialTheme.typography.labelSmall,
+                            )
+                            Text(languageDisplayName(preferredLanguage))
+                        }
+                        Icon(
+                            imageVector = Icons.Outlined.ArrowDropDown,
+                            contentDescription = null,
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = languageMenuExpanded,
+                        onDismissRequest = { languageMenuExpanded = false },
+                        modifier = Modifier.fillMaxWidth(0.85f),
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.reading_list_all_languages)) },
+                            onClick = {
+                                languageMenuExpanded = false
+                                onPreferredLanguageChange(BasePreferences.READING_LIST_ALL_LANGUAGES)
+                            },
+                        )
+                        availableLanguages.forEach { language ->
+                            DropdownMenuItem(
+                                text = { Text(languageDisplayName(language)) },
+                                onClick = {
+                                    languageMenuExpanded = false
+                                    onPreferredLanguageChange(language)
+                                },
+                            )
+                        }
+                    }
+                }
+
                 if (!dialog.hasInstalledSources) {
                     Text(
                         text = stringResource(R.string.reading_list_no_installed_sources),
@@ -406,10 +510,10 @@ private fun SourceSelectionDialog(
                         horizontalArrangement = Arrangement.End,
                     ) {
                         TextButton(
-                            onClick = onSelectAll,
-                            enabled = !isSaving,
+                            onClick = { onSelectSources(visibleSourceIds) },
+                            enabled = !isSaving && visibleSourceIds.isNotEmpty(),
                         ) {
-                            Text(stringResource(R.string.reading_list_select_all))
+                            Text(stringResource(R.string.reading_list_select_visible))
                         }
                         TextButton(
                             onClick = onClear,
@@ -420,38 +524,59 @@ private fun SourceSelectionDialog(
                     }
                 }
 
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = 420.dp),
-                ) {
-                    dialog.sourceGroups.forEach { group ->
-                        item(key = "group-${group.key}") {
-                            SourceGroupHeader(
-                                group = group,
-                                selectedSourceIds = dialog.selectedSourceIds,
-                                enabled = !isSaving,
-                                onToggle = { onToggleSourceGroup(group.key) },
-                            )
-                        }
-                        items(
-                            items = group.sources,
-                            key = { source -> "${group.key}-${source.id}" },
-                        ) { source ->
-                            val priority = selectedPriorities[source.id]
-                            val selected = priority != null
-                            SourceSelectionRow(
-                                source = source,
-                                selected = selected,
-                                priority = priority,
-                                canMoveUp = priority != null && priority > 1,
-                                canMoveDown = priority != null && priority < dialog.selectedSourceIds.size,
-                                enabled = !isSaving && (source.installed || selected),
-                                modifier = Modifier.padding(start = 24.dp),
-                                onToggle = { onToggleSource(source.id) },
-                                onMoveUp = { onMoveSource(source.id, -1) },
-                                onMoveDown = { onMoveSource(source.id, 1) },
-                            )
+                if (filteredGroups.isEmpty()) {
+                    Text(
+                        text = stringResource(R.string.reading_list_no_matching_sources),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(vertical = 24.dp),
+                    )
+                } else {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(max = 360.dp),
+                    ) {
+                        filteredGroups.forEach { group ->
+                            val collapsible = group.installed && group.sources.size > 1
+                            val expanded = !collapsible || expandedGroups[group.key] == true
+                            item(key = "group-${group.key}") {
+                                SourceGroupHeader(
+                                    group = group,
+                                    selectedSourceIds = dialog.selectedSourceIds,
+                                    selectedPriorities = selectedPriorities,
+                                    expanded = expanded,
+                                    collapsible = collapsible,
+                                    enabled = !isSaving,
+                                    onToggleSource = onToggleSource,
+                                    onToggleSources = onToggleSources,
+                                    onMoveSource = onMoveSource,
+                                    onToggleExpanded = {
+                                        expandedGroups[group.key] = !expanded
+                                    },
+                                )
+                            }
+
+                            if (!group.installed || (collapsible && expanded)) {
+                                items(
+                                    items = group.sources,
+                                    key = { source -> "${group.key}-${source.id}" },
+                                ) { source ->
+                                    val priority = selectedPriorities[source.id]
+                                    val selected = priority != null
+                                    SourceSelectionRow(
+                                        source = source,
+                                        selected = selected,
+                                        priority = priority,
+                                        canMoveUp = priority != null && priority > 1,
+                                        canMoveDown = priority != null && priority < dialog.selectedSourceIds.size,
+                                        enabled = !isSaving && (source.installed || selected),
+                                        modifier = Modifier.padding(start = 24.dp),
+                                        onToggle = { onToggleSource(source.id) },
+                                        onMoveUp = { onMoveSource(source.id, -1) },
+                                        onMoveDown = { onMoveSource(source.id, 1) },
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -494,65 +619,136 @@ private fun SourceSelectionDialog(
 private fun SourceGroupHeader(
     group: ReadingListSourceGroup,
     selectedSourceIds: List<Long>,
+    selectedPriorities: Map<Long, Int>,
+    expanded: Boolean,
+    collapsible: Boolean,
     enabled: Boolean,
-    onToggle: () -> Unit,
+    onToggleSource: (Long) -> Unit,
+    onToggleSources: (List<Long>) -> Unit,
+    onMoveSource: (Long, Int) -> Unit,
+    onToggleExpanded: () -> Unit,
 ) {
-    val installedSourceIds = group.sources
-        .filter(ReadingListSourceOption::installed)
-        .map(ReadingListSourceOption::id)
-    val selectedCount = installedSourceIds.count(selectedSourceIds::contains)
-    val toggleState = when {
-        installedSourceIds.isEmpty() || selectedCount == 0 -> ToggleableState.Off
-        selectedCount == installedSourceIds.size -> ToggleableState.On
-        else -> ToggleableState.Indeterminate
+    if (!group.installed) {
+        Text(
+            text = stringResource(R.string.reading_list_unavailable_sources),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.error,
+            modifier = Modifier.padding(top = 12.dp, bottom = 4.dp),
+        )
+        return
     }
+
+    val sourceIds = group.sources.map(ReadingListSourceOption::id)
+    val selectedCount = sourceIds.count(selectedSourceIds::contains)
     val languages = group.sources
-        .filter(ReadingListSourceOption::installed)
         .map(ReadingListSourceOption::language)
         .filter(String::isNotBlank)
         .distinct()
         .joinToString { language -> language.uppercase(Locale.ROOT) }
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(
-                enabled = enabled && group.installed && installedSourceIds.isNotEmpty(),
-                onClick = onToggle,
+    if (!collapsible) {
+        val source = group.sources.single()
+        val priority = selectedPriorities[source.id]
+        val selected = priority != null
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(enabled = enabled, onClick = { onToggleSource(source.id) })
+                .padding(vertical = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Checkbox(
+                checked = selected,
+                onCheckedChange = { onToggleSource(source.id) },
+                enabled = enabled,
             )
-            .padding(top = 8.dp, bottom = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        TriStateCheckbox(
-            state = toggleState,
-            onClick = onToggle,
-            enabled = enabled && group.installed && installedSourceIds.isNotEmpty(),
-        )
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = if (group.installed) {
-                    group.extensionName
-                } else {
-                    stringResource(R.string.reading_list_unavailable_sources)
-                },
-                style = MaterialTheme.typography.titleSmall,
-                color = if (group.installed) {
-                    MaterialTheme.colorScheme.onSurface
-                } else {
-                    MaterialTheme.colorScheme.error
-                },
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            if (languages.isNotEmpty()) {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = languages,
+                    text = group.extensionName,
+                    style = MaterialTheme.typography.titleSmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    text = if (priority == null) {
+                        source.language.uppercase(Locale.ROOT)
+                    } else {
+                        stringResource(
+                            R.string.reading_list_source_language_and_priority,
+                            source.language.uppercase(Locale.ROOT),
+                            priority,
+                        )
+                    },
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
+            if (selected) {
+                SourcePriorityButtons(
+                    enabled = enabled,
+                    canMoveUp = priority != null && priority > 1,
+                    canMoveDown = priority != null && priority < selectedSourceIds.size,
+                    onMoveUp = { onMoveSource(source.id, -1) },
+                    onMoveDown = { onMoveSource(source.id, 1) },
+                )
+            }
+        }
+        return
+    }
+
+    val toggleState = when {
+        selectedCount == 0 -> ToggleableState.Off
+        selectedCount == sourceIds.size -> ToggleableState.On
+        else -> ToggleableState.Indeterminate
+    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(enabled = enabled, onClick = onToggleExpanded)
+            .padding(vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        TriStateCheckbox(
+            state = toggleState,
+            onClick = { onToggleSources(sourceIds) },
+            enabled = enabled,
+        )
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = group.extensionName,
+                style = MaterialTheme.typography.titleSmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                text = stringResource(
+                    R.string.reading_list_source_group_summary,
+                    selectedCount,
+                    sourceIds.size,
+                    languages,
+                ),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+        IconButton(
+            onClick = onToggleExpanded,
+            enabled = enabled,
+        ) {
+            Icon(
+                imageVector = if (expanded) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
+                contentDescription = stringResource(
+                    if (expanded) {
+                        R.string.reading_list_collapse_source_group
+                    } else {
+                        R.string.reading_list_expand_source_group
+                    },
+                ),
+            )
         }
     }
 }
@@ -612,26 +808,59 @@ private fun SourceSelectionRow(
             )
         }
         if (selected) {
-            IconButton(
-                onClick = onMoveUp,
-                enabled = enabled && canMoveUp,
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.KeyboardArrowUp,
-                    contentDescription = stringResource(R.string.reading_list_move_source_up),
-                )
-            }
-            IconButton(
-                onClick = onMoveDown,
-                enabled = enabled && canMoveDown,
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.KeyboardArrowDown,
-                    contentDescription = stringResource(R.string.reading_list_move_source_down),
-                )
-            }
+            SourcePriorityButtons(
+                enabled = enabled,
+                canMoveUp = canMoveUp,
+                canMoveDown = canMoveDown,
+                onMoveUp = onMoveUp,
+                onMoveDown = onMoveDown,
+            )
         }
     }
+}
+
+@Composable
+private fun SourcePriorityButtons(
+    enabled: Boolean,
+    canMoveUp: Boolean,
+    canMoveDown: Boolean,
+    onMoveUp: () -> Unit,
+    onMoveDown: () -> Unit,
+) {
+    IconButton(
+        onClick = onMoveUp,
+        enabled = enabled && canMoveUp,
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.KeyboardArrowUp,
+            contentDescription = stringResource(R.string.reading_list_move_source_up),
+        )
+    }
+    IconButton(
+        onClick = onMoveDown,
+        enabled = enabled && canMoveDown,
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.KeyboardArrowDown,
+            contentDescription = stringResource(R.string.reading_list_move_source_down),
+        )
+    }
+}
+
+@Composable
+private fun languageDisplayName(language: String): String {
+    if (language == BasePreferences.READING_LIST_ALL_LANGUAGES) {
+        return stringResource(R.string.reading_list_all_languages)
+    }
+
+    val locale = Locale.forLanguageTag(language.replace('_', '-'))
+    val displayName = locale.getDisplayName(Locale.getDefault())
+        .takeIf { name -> name.isNotBlank() && !name.equals(language, ignoreCase = true) }
+        ?.replaceFirstChar { character ->
+            if (character.isLowerCase()) character.titlecase(Locale.getDefault()) else character.toString()
+        }
+    val code = language.uppercase(Locale.ROOT)
+    return if (displayName == null) code else "$displayName ($code)"
 }
 
 @Composable

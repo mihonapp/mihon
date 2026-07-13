@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.online.HttpSource
 import kotlinx.coroutines.channels.Channel
@@ -29,6 +30,7 @@ class ReadingListsScreenModel(
     private val application: Application = Injekt.get(),
     private val repository: ReadingListRepository = Injekt.get(),
     private val extensionManager: ExtensionManager = Injekt.get(),
+    private val basePreferences: BasePreferences = Injekt.get(),
 ) : StateScreenModel<ReadingListsScreenState>(ReadingListsScreenState()) {
 
     private val parser = CblParser()
@@ -73,6 +75,7 @@ class ReadingListsScreenModel(
                             warningCount = readingList.warnings.size,
                             sourceGroups = installedSourceGroups(),
                             selectedSourceIds = emptyList(),
+                            preferredLanguage = basePreferences.readingListSourceLanguage.get(),
                         ),
                     )
                 }
@@ -135,6 +138,7 @@ class ReadingListsScreenModel(
                         warningCount = readingList.warnings.size,
                         sourceGroups = installedGroups + listOfNotNull(unavailableGroup),
                         selectedSourceIds = readingList.selectedSourceIds,
+                        preferredLanguage = basePreferences.readingListSourceLanguage.get(),
                     ),
                 )
             }
@@ -167,6 +171,14 @@ class ReadingListsScreenModel(
         }
     }
 
+    fun setPreferredLanguage(language: String) {
+        val normalizedLanguage = language.trim().lowercase(Locale.ROOT)
+        basePreferences.readingListSourceLanguage.set(normalizedLanguage)
+        updateSourceDialog { dialog ->
+            dialog.copy(preferredLanguage = normalizedLanguage)
+        }
+    }
+
     fun toggleSource(sourceId: Long) {
         updateSourceDialog { dialog ->
             val selected = if (sourceId in dialog.selectedSourceIds) {
@@ -178,35 +190,29 @@ class ReadingListsScreenModel(
         }
     }
 
-    fun toggleSourceGroup(groupKey: String) {
+    fun toggleSources(sourceIds: List<Long>) {
+        if (sourceIds.isEmpty()) return
+
         updateSourceDialog { dialog ->
-            val group = dialog.sourceGroups.firstOrNull { it.key == groupKey }
-                ?: return@updateSourceDialog dialog
-            if (!group.installed) return@updateSourceDialog dialog
-
-            val sourceIds = group.sources
-                .filter(ReadingListSourceOption::installed)
-                .map(ReadingListSourceOption::id)
-            if (sourceIds.isEmpty()) return@updateSourceDialog dialog
-
-            val allSelected = sourceIds.all(dialog.selectedSourceIds::contains)
+            val uniqueSourceIds = sourceIds.distinct()
+            val allSelected = uniqueSourceIds.all(dialog.selectedSourceIds::contains)
             val selected = if (allSelected) {
-                val groupIdSet = sourceIds.toSet()
-                dialog.selectedSourceIds.filterNot(groupIdSet::contains)
+                val sourceIdSet = uniqueSourceIds.toSet()
+                dialog.selectedSourceIds.filterNot(sourceIdSet::contains)
             } else {
-                dialog.selectedSourceIds + sourceIds.filterNot(dialog.selectedSourceIds::contains)
+                dialog.selectedSourceIds + uniqueSourceIds.filterNot(dialog.selectedSourceIds::contains)
             }
             dialog.copy(selectedSourceIds = selected)
         }
     }
 
-    fun selectAllInstalledSources() {
+    fun selectSources(sourceIds: List<Long>) {
+        if (sourceIds.isEmpty()) return
+
         updateSourceDialog { dialog ->
             dialog.copy(
-                selectedSourceIds = dialog.sourceGroups
-                    .flatMap(ReadingListSourceGroup::sources)
-                    .filter(ReadingListSourceOption::installed)
-                    .map(ReadingListSourceOption::id),
+                selectedSourceIds = dialog.selectedSourceIds +
+                    sourceIds.distinct().filterNot(dialog.selectedSourceIds::contains),
             )
         }
     }
@@ -339,6 +345,7 @@ sealed interface ReadingListsDialog {
         val warningCount: Int,
         val sourceGroups: List<ReadingListSourceGroup>,
         val selectedSourceIds: List<Long>,
+        val preferredLanguage: String,
     ) : ReadingListsDialog {
         val hasInstalledSources: Boolean
             get() = sourceGroups

@@ -13,15 +13,21 @@
     <string name="reading_list_deleted">Deleted %1$s</string>
     <string name="reading_list_delete_error">The reading list could not be deleted</string>
     <string name="reading_list_source_dialog_title">Choose sources</string>
-    <string name="reading_list_source_dialog_explanation">Installed extensions are grouped below. Choose the language variants this list may search; selected variants are tried in the priority order shown.</string>
+    <string name="reading_list_source_dialog_explanation">Filter installed extensions, then choose the source variants this list may search. Selected sources are tried in the priority order shown.</string>
     <string name="reading_list_no_installed_sources">No compatible online sources are installed. Install an extension before importing this list.</string>
-    <string name="reading_list_select_all">Select all</string>
+    <string name="reading_list_source_search">Search extensions and sources</string>
+    <string name="reading_list_clear_search">Clear search</string>
+    <string name="reading_list_default_language">Default language</string>
+    <string name="reading_list_all_languages">All languages</string>
+    <string name="reading_list_no_matching_sources">No installed sources match this search and language filter.</string>
+    <string name="reading_list_select_visible">Select visible</string>
     <string name="reading_list_clear_selection">Clear</string>
     <string name="reading_list_import_action">Import</string>
     <string name="reading_list_save_action">Save</string>
     <string name="reading_list_cancel_action">Cancel</string>
     <string name="reading_list_source_priority">Priority %1$d</string>
     <string name="reading_list_source_language_and_priority">%1$s • Priority %2$d</string>
+    <string name="reading_list_source_group_summary">%1$d of %2$d selected • %3$s</string>
     <string name="reading_list_unavailable_source">Unavailable source</string>
     <string name="reading_list_unavailable_sources">Unavailable sources</string>
     <string name="reading_list_entries_and_sources">%1$d entries • %2$d sources</string>
@@ -40,6 +46,8 @@
     <string name="reading_list_import_no_entries_error">The reading list contains no entries</string>
     <string name="reading_list_import_open_error">The selected document could not be opened</string>
     <string name="reading_list_import_unknown_error">The reading list could not be imported</string>
+    <string name="reading_list_expand_source_group">Expand extension languages</string>
+    <string name="reading_list_collapse_source_group">Collapse extension languages</string>
     <string name="reading_list_move_source_up">Move source up</string>
     <string name="reading_list_move_source_down">Move source down</string>
 </resources>

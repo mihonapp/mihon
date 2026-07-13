@@ -9,15 +9,18 @@ The Reading Lists tab is Yomori's entry point for Comic Book Lover (`.cbl`) file
 3. Yomori reads at most 16 MiB and detects UTF-8, UTF-16 little-endian, or UTF-16 big-endian input.
 4. The CBL parser validates XML structure, rejects DTD/entity declarations, preserves book order, and returns typed warnings or failures.
 5. Empty reading lists are rejected rather than stored as unusable records.
-6. Yomori waits for installed-extension discovery, groups online sources by extension package, and shows language-specific variants beneath the owning extension.
-7. The user chooses at least one currently installed source variant and may arrange the global search-priority order.
-8. The reading list, entries, database references, and source order are committed in one SQLDelight transaction.
+6. Yomori waits for installed-extension discovery and groups online sources by extension package.
+7. The user may search installed extensions and sources and apply a remembered default-language filter.
+8. The user chooses at least one currently installed source variant and may arrange the global search-priority order.
+9. The reading list, entries, database references, and source order are committed in one SQLDelight transaction.
 
 No source is bundled, recommended, or selected automatically. Later resolution work may query only the user-selected sources stored for that reading list.
 
 ## Source editing
 
-A reading list's source selection can be changed after import. Multilingual variants remain grouped under one installed extension instead of appearing as unrelated top-level entries. Selecting an extension selects all of its installed variants, while individual variants can still be enabled, disabled, and reordered.
+A reading list's source selection can be changed after import. Single-variant extensions appear as one compact selectable row. Extensions with more than one visible language variant are collapsed by default; their header shows matching languages and selected count, and expanding the group reveals individual source variants and priority controls.
+
+The language filter is a global remembered preference used for later imports and source edits. A specific language displays matching variants plus language-neutral `all` variants. **All languages** removes the language restriction. Search matches extension names, package names, source names, and language codes. **Select visible** affects only the currently filtered results and preserves hidden selections.
 
 Stored source IDs whose extensions are no longer installed remain visible as unavailable entries so the user can restore the extension or remove the stale choice. Saving still requires at least one installed source.
 

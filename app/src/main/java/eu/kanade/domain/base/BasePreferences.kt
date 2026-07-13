@@ -26,6 +26,11 @@ class BasePreferences(
         false,
     )
 
+    val readingListSourceLanguage: Preference<String> = preferenceStore.getString(
+        "reading_list_source_language",
+        READING_LIST_ALL_LANGUAGES,
+    )
+
     enum class ExtensionInstaller(val titleRes: StringResource, val requiresSystemPermission: Boolean) {
         LEGACY(MR.strings.ext_installer_legacy, true),
         PACKAGEINSTALLER(MR.strings.ext_installer_packageinstaller, true),
@@ -51,4 +56,8 @@ class BasePreferences(
         Preference.appStateKey("donation_campaign_shown"),
         false,
     )
+
+    companion object {
+        const val READING_LIST_ALL_LANGUAGES = ""
+    }
 }
