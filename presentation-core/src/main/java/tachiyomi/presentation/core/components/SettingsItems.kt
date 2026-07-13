@@ -3,6 +3,7 @@ package tachiyomi.presentation.core.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.FlowRowScope
@@ -18,6 +19,9 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.CheckBox
 import androidx.compose.material.icons.rounded.CheckBoxOutlineBlank
 import androidx.compose.material.icons.rounded.DisabledByDefault
@@ -325,6 +329,96 @@ fun SelectItem(
                     },
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                 )
+            }
+        }
+    }
+}
+
+/**
+ * Yokai-style spinner: plain row with label on the left, current value
+ * in smaller secondary text on the right, and a chevron. Tapping shows a
+ * [DropdownMenu] with a checkmark next to the selected option — matching
+ * Yokai's [MaterialSpinnerView] / PopupMenu pattern exactly.
+ */
+@Composable
+fun SpinnerItem(
+    label: String,
+    options: Array<out Any?>,
+    selectedIndex: Int,
+    onSelect: (Int) -> Unit,
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { expanded = true }
+            .padding(
+                horizontal = SettingsItemsPaddings.Horizontal,
+                vertical = SettingsItemsPaddings.Vertical,
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(1f),
+        )
+
+        Box {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = options.getOrNull(selectedIndex)?.toString().orEmpty(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = DISABLED_ALPHA),
+                    modifier = Modifier.padding(end = 4.dp),
+                )
+                Icon(
+                    imageVector = if (expanded) {
+                        Icons.Filled.KeyboardArrowUp
+                    } else {
+                        Icons.Filled.KeyboardArrowDown
+                    },
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = DISABLED_ALPHA),
+                    modifier = Modifier.size(16.dp),
+                )
+            }
+
+            androidx.compose.material3.DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+            ) {
+                options.forEachIndexed { index, text ->
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = text.toString(),
+                                color = if (index == selectedIndex) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    MaterialTheme.colorScheme.onSurface
+                                },
+                            )
+                        },
+                        leadingIcon = {
+                            if (index == selectedIndex) {
+                                Icon(
+                                    imageVector = Icons.Filled.Check,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(20.dp),
+                                )
+                            } else {
+                                Spacer(modifier = Modifier.size(20.dp))
+                            }
+                        },
+                        onClick = {
+                            onSelect(index)
+                            expanded = false
+                        },
+                    )
+                }
             }
         }
     }

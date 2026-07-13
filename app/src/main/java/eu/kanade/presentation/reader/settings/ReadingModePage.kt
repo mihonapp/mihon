@@ -1,10 +1,8 @@
 package eu.kanade.presentation.reader.settings
 
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -19,7 +17,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
-import tachiyomi.presentation.core.components.SettingsChipRow
+import tachiyomi.presentation.core.components.SpinnerItem
 import tachiyomi.presentation.core.components.SliderItem
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
@@ -31,26 +29,22 @@ internal fun ColumnScope.ReadingModePage(screenModel: ReaderSettingsScreenModel)
     val manga by screenModel.mangaFlow.collectAsState()
 
     val readingMode = remember(manga) { ReadingMode.fromPreference(manga?.readingMode?.toInt()) }
-    SettingsChipRow(MR.strings.pref_category_reading_mode) {
-        ReadingMode.entries.map {
-            FilterChip(
-                selected = it == readingMode,
-                onClick = { screenModel.onChangeReadingMode(it) },
-                label = { Text(stringResource(it.stringRes)) },
-            )
-        }
-    }
+    val readingModeLabels = ReadingMode.entries.map { stringResource(it.stringRes) }.toTypedArray()
+    SpinnerItem(
+        label = stringResource(MR.strings.pref_category_reading_mode),
+        options = readingModeLabels,
+        selectedIndex = ReadingMode.entries.indexOf(readingMode).coerceAtLeast(0),
+        onSelect = { screenModel.onChangeReadingMode(ReadingMode.entries[it]) },
+    )
 
     val orientation = remember(manga) { ReaderOrientation.fromPreference(manga?.readerOrientation?.toInt()) }
-    SettingsChipRow(MR.strings.rotation_type) {
-        ReaderOrientation.entries.map {
-            FilterChip(
-                selected = it == orientation,
-                onClick = { screenModel.onChangeOrientation(it) },
-                label = { Text(stringResource(it.stringRes)) },
-            )
-        }
-    }
+    val orientationLabels = ReaderOrientation.entries.map { stringResource(it.stringRes) }.toTypedArray()
+    SpinnerItem(
+        label = stringResource(MR.strings.rotation_type),
+        options = orientationLabels,
+        selectedIndex = ReaderOrientation.entries.indexOf(orientation).coerceAtLeast(0),
+        onSelect = { screenModel.onChangeOrientation(ReaderOrientation.entries[it]) },
+    )
 
     HorizontalDivider()
     HeadingItem(MR.strings.app_settings)
@@ -76,27 +70,23 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
         onSelectInvertMode = screenModel.preferences.pagerNavInverted::set,
     )
 
+    val imageScaleTypeLabels = ReaderPreferences.ImageScaleType.map { stringResource(it) }.toTypedArray()
     val imageScaleType by screenModel.preferences.imageScaleType.collectAsState()
-    SettingsChipRow(MR.strings.pref_image_scale_type) {
-        ReaderPreferences.ImageScaleType.mapIndexed { index, it ->
-            FilterChip(
-                selected = imageScaleType == index + 1,
-                onClick = { screenModel.preferences.imageScaleType.set(index + 1) },
-                label = { Text(stringResource(it)) },
-            )
-        }
-    }
+    SpinnerItem(
+        label = stringResource(MR.strings.pref_image_scale_type),
+        options = imageScaleTypeLabels,
+        selectedIndex = (imageScaleType - 1).coerceIn(0, imageScaleTypeLabels.lastIndex),
+        onSelect = { screenModel.preferences.imageScaleType.set(it + 1) },
+    )
 
+    val zoomStartLabels = ReaderPreferences.ZoomStart.map { stringResource(it) }.toTypedArray()
     val zoomStart by screenModel.preferences.zoomStart.collectAsState()
-    SettingsChipRow(MR.strings.pref_zoom_start) {
-        ReaderPreferences.ZoomStart.mapIndexed { index, it ->
-            FilterChip(
-                selected = zoomStart == index + 1,
-                onClick = { screenModel.preferences.zoomStart.set(index + 1) },
-                label = { Text(stringResource(it)) },
-            )
-        }
-    }
+    SpinnerItem(
+        label = stringResource(MR.strings.pref_zoom_start),
+        options = zoomStartLabels,
+        selectedIndex = (zoomStart - 1).coerceIn(0, zoomStartLabels.lastIndex),
+        onSelect = { screenModel.preferences.zoomStart.set(it + 1) },
+    )
 
     CheckboxItem(
         label = stringResource(MR.strings.pref_viewer_nav_smaller_tap_zone),
@@ -225,25 +215,21 @@ private fun ColumnScope.TapZonesItems(
     invertMode: ReaderPreferences.TappingInvertMode,
     onSelectInvertMode: (ReaderPreferences.TappingInvertMode) -> Unit,
 ) {
-    SettingsChipRow(MR.strings.pref_viewer_nav) {
-        ReaderPreferences.TapZones.mapIndexed { index, it ->
-            FilterChip(
-                selected = selected == index,
-                onClick = { onSelect(index) },
-                label = { Text(stringResource(it)) },
-            )
-        }
-    }
+    val tapZoneLabels = ReaderPreferences.TapZones.map { stringResource(it) }.toTypedArray()
+    SpinnerItem(
+        label = stringResource(MR.strings.pref_viewer_nav),
+        options = tapZoneLabels,
+        selectedIndex = selected.coerceIn(0, tapZoneLabels.lastIndex),
+        onSelect = onSelect,
+    )
 
     if (selected != 6) {
-        SettingsChipRow(MR.strings.pref_read_with_tapping_inverted) {
-            ReaderPreferences.TappingInvertMode.entries.map {
-                FilterChip(
-                    selected = it == invertMode,
-                    onClick = { onSelectInvertMode(it) },
-                    label = { Text(stringResource(it.titleRes)) },
-                )
-            }
-        }
+        val invertLabels = ReaderPreferences.TappingInvertMode.entries.map { stringResource(it.titleRes) }.toTypedArray()
+        SpinnerItem(
+            label = stringResource(MR.strings.pref_read_with_tapping_inverted),
+            options = invertLabels,
+            selectedIndex = ReaderPreferences.TappingInvertMode.entries.indexOf(invertMode).coerceAtLeast(0),
+            onSelect = { onSelectInvertMode(ReaderPreferences.TappingInvertMode.entries[it]) },
+        )
     }
 }

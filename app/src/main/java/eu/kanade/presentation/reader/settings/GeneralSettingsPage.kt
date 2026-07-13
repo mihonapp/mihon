@@ -2,17 +2,16 @@ package eu.kanade.presentation.reader.settings
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import eu.kanade.tachiyomi.util.system.hasDisplayCutout
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.CheckboxItem
-import tachiyomi.presentation.core.components.SettingsChipRow
+import tachiyomi.presentation.core.components.SpinnerItem
 import tachiyomi.presentation.core.components.SliderItem
 import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
@@ -46,15 +45,14 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
     val flashColorPref = screenModel.preferences.flashColor
     val flashColor by flashColorPref.collectAsState()
 
-    SettingsChipRow(MR.strings.pref_reader_theme) {
-        themes.map { (labelRes, value) ->
-            FilterChip(
-                selected = readerTheme == value,
-                onClick = { screenModel.preferences.readerTheme.set(value) },
-                label = { Text(stringResource(labelRes)) },
-            )
-        }
-    }
+    val themeLabels = themes.map { stringResource(it.first) }.toTypedArray()
+    val selectedThemeIndex = remember(readerTheme) { themes.indexOfFirst { it.second == readerTheme }.coerceAtLeast(0) }
+    SpinnerItem(
+        label = stringResource(MR.strings.pref_reader_theme),
+        options = themeLabels,
+        selectedIndex = selectedThemeIndex,
+        onSelect = { screenModel.preferences.readerTheme.set(themes[it].second) },
+    )
 
     CheckboxItem(
         label = stringResource(MR.strings.pref_show_page_number),
@@ -134,14 +132,13 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
             },
             pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         )
-        SettingsChipRow(MR.strings.pref_flash_with) {
-            flashColors.map { (labelRes, value) ->
-                FilterChip(
-                    selected = flashColor == value,
-                    onClick = { flashColorPref.set(value) },
-                    label = { Text(stringResource(labelRes)) },
-                )
-            }
-        }
+        val flashColorLabels = flashColors.map { stringResource(it.first) }.toTypedArray()
+        val selectedFlashColorIndex = remember(flashColor) { flashColors.indexOfFirst { it.second == flashColor }.coerceAtLeast(0) }
+        SpinnerItem(
+            label = stringResource(MR.strings.pref_flash_with),
+            options = flashColorLabels,
+            selectedIndex = selectedFlashColorIndex,
+            onSelect = { flashColorPref.set(flashColors[it].second) },
+        )
     }
 }
