@@ -9,14 +9,21 @@ The Reading Lists tab is Yomori's entry point for Comic Book Lover (`.cbl`) file
 3. Yomori reads at most 16 MiB and detects UTF-8, UTF-16 little-endian, or UTF-16 big-endian input.
 4. The CBL parser validates XML structure, rejects DTD/entity declarations, preserves book order, and returns typed warnings or failures.
 5. Empty reading lists are rejected rather than stored as unusable records.
-6. The user chooses at least one currently installed online source and may arrange the search-priority order.
-7. The reading list, entries, database references, and source order are committed in one SQLDelight transaction.
+6. Yomori waits for installed-extension discovery, groups online sources by extension package, and shows language-specific variants beneath the owning extension.
+7. The user chooses at least one currently installed source variant and may arrange the global search-priority order.
+8. The reading list, entries, database references, and source order are committed in one SQLDelight transaction.
 
 No source is bundled, recommended, or selected automatically. Later resolution work may query only the user-selected sources stored for that reading list.
 
 ## Source editing
 
-A reading list's source selection can be changed after import. Stored source IDs whose extensions are no longer installed remain visible as unavailable entries so the user can restore the extension or remove the stale choice. Saving still requires at least one installed source.
+A reading list's source selection can be changed after import. Multilingual variants remain grouped under one installed extension instead of appearing as unrelated top-level entries. Selecting an extension selects all of its installed variants, while individual variants can still be enabled, disabled, and reordered.
+
+Stored source IDs whose extensions are no longer installed remain visible as unavailable entries so the user can restore the extension or remove the stale choice. Saving still requires at least one installed source.
+
+## List deletion
+
+Each reading-list row exposes a delete action. Deletion requires confirmation and uses the existing database cascade to remove the list, ordered entries, database references, source choices, matching state, and list-specific progress together. It does not delete extensions, remote content, or Mihon's shared chapter read state.
 
 ## Import errors
 

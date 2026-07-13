@@ -7,8 +7,13 @@
     <string name="reading_list_importing">Importing…</string>
     <string name="reading_list_untitled">Untitled reading list</string>
     <string name="reading_list_edit_sources">Edit sources</string>
+    <string name="reading_list_delete">Delete</string>
+    <string name="reading_list_delete_title">Delete reading list?</string>
+    <string name="reading_list_delete_message">Delete “%1$s” and its saved mappings and progress? This cannot be undone.</string>
+    <string name="reading_list_deleted">Deleted %1$s</string>
+    <string name="reading_list_delete_error">The reading list could not be deleted</string>
     <string name="reading_list_source_dialog_title">Choose sources</string>
-    <string name="reading_list_source_dialog_explanation">Only the installed sources selected here may be searched. Sources are tried in the priority order shown.</string>
+    <string name="reading_list_source_dialog_explanation">Installed extensions are grouped below. Choose the language variants this list may search; selected variants are tried in the priority order shown.</string>
     <string name="reading_list_no_installed_sources">No compatible online sources are installed. Install an extension before importing this list.</string>
     <string name="reading_list_select_all">Select all</string>
     <string name="reading_list_clear_selection">Clear</string>
@@ -16,7 +21,9 @@
     <string name="reading_list_save_action">Save</string>
     <string name="reading_list_cancel_action">Cancel</string>
     <string name="reading_list_source_priority">Priority %1$d</string>
+    <string name="reading_list_source_language_and_priority">%1$s • Priority %2$d</string>
     <string name="reading_list_unavailable_source">Unavailable source</string>
+    <string name="reading_list_unavailable_sources">Unavailable sources</string>
     <string name="reading_list_entries_and_sources">%1$d entries • %2$d sources</string>
     <string name="reading_list_progress">Next entry: %1$d of %2$d</string>
     <string name="reading_list_warning_count">%1$d import warnings</string>

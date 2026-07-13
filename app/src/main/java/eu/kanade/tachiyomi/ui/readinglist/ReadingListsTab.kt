@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
@@ -37,6 +38,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TriStateCheckbox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -47,6 +49,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -61,6 +64,7 @@ import kotlinx.coroutines.flow.collectLatest
 import tachiyomi.domain.readinglist.model.ReadingListSummary
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.screens.LoadingScreen
+import java.util.Locale
 
 private val CBL_MIME_TYPES = arrayOf(
     "application/xml",
@@ -101,6 +105,7 @@ data object ReadingListsTab : Tab {
             snackbarHostState = snackbarHostState,
             onImport = launchImport,
             onEditSources = screenModel::editSources,
+            onDelete = screenModel::requestDelete,
         )
 
         when (val dialog = state.dialog) {
@@ -109,10 +114,19 @@ data object ReadingListsTab : Tab {
                     dialog = dialog,
                     isSaving = state.isSaving,
                     onToggleSource = screenModel::toggleSource,
+                    onToggleSourceGroup = screenModel::toggleSourceGroup,
                     onSelectAll = screenModel::selectAllInstalledSources,
                     onClear = screenModel::clearSelectedSources,
                     onMoveSource = screenModel::moveSelectedSource,
                     onConfirm = screenModel::confirmSourceSelection,
+                    onDismiss = screenModel::dismissDialog,
+                )
+            }
+            is ReadingListsDialog.DeleteConfirmation -> {
+                DeleteReadingListDialog(
+                    readingList = dialog.readingList,
+                    isDeleting = state.isDeleting,
+                    onConfirm = screenModel::confirmDelete,
                     onDismiss = screenModel::dismissDialog,
                 )
             }
@@ -127,12 +141,17 @@ data object ReadingListsTab : Tab {
                         event.listName ?: context.getString(R.string.reading_list_untitled),
                     )
                     is ReadingListsEvent.ImportFailed -> context.getString(event.failure.stringRes)
+                    is ReadingListsEvent.Deleted -> context.getString(
+                        R.string.reading_list_deleted,
+                        event.listName ?: context.getString(R.string.reading_list_untitled),
+                    )
                     ReadingListsEvent.SourcesUpdated -> context.getString(R.string.reading_list_sources_updated)
                     ReadingListsEvent.SelectInstalledSource -> context.getString(
                         R.string.reading_list_select_source_error,
                     )
                     ReadingListsEvent.ReadingListMissing -> context.getString(R.string.reading_list_missing_error)
                     ReadingListsEvent.SaveFailed -> context.getString(R.string.reading_list_save_error)
+                    ReadingListsEvent.DeleteFailed -> context.getString(R.string.reading_list_delete_error)
                 }
                 snackbarHostState.showSnackbar(message)
             }
@@ -152,6 +171,7 @@ private fun ReadingListsScreen(
     snackbarHostState: SnackbarHostState,
     onImport: () -> Unit,
     onEditSources: (Long) -> Unit,
+    onDelete: (ReadingListSummary) -> Unit,
 ) {
     Scaffold(
         topBar = { scrollBehavior ->
@@ -204,6 +224,7 @@ private fun ReadingListsScreen(
                 readingLists = state.readingLists,
                 contentPadding = paddingValues,
                 onEditSources = onEditSources,
+                onDelete = onDelete,
             )
         }
     }
@@ -248,6 +269,7 @@ private fun ReadingListsContent(
     readingLists: List<ReadingListSummary>,
     contentPadding: PaddingValues,
     onEditSources: (Long) -> Unit,
+    onDelete: (ReadingListSummary) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -260,6 +282,7 @@ private fun ReadingListsContent(
             ReadingListItem(
                 readingList = readingList,
                 onEditSources = { onEditSources(readingList.id) },
+                onDelete = { onDelete(readingList) },
             )
             HorizontalDivider()
         }
@@ -270,6 +293,7 @@ private fun ReadingListsContent(
 private fun ReadingListItem(
     readingList: ReadingListSummary,
     onEditSources: () -> Unit,
+    onDelete: () -> Unit,
 ) {
     ListItem(
         modifier = Modifier.clickable(onClick = onEditSources),
@@ -301,11 +325,19 @@ private fun ReadingListItem(
             }
         },
         trailingContent = {
-            IconButton(onClick = onEditSources) {
-                Icon(
-                    imageVector = Icons.Outlined.Edit,
-                    contentDescription = stringResource(R.string.reading_list_edit_sources),
-                )
+            Row {
+                IconButton(onClick = onEditSources) {
+                    Icon(
+                        imageVector = Icons.Outlined.Edit,
+                        contentDescription = stringResource(R.string.reading_list_edit_sources),
+                    )
+                }
+                IconButton(onClick = onDelete) {
+                    Icon(
+                        imageVector = Icons.Outlined.Delete,
+                        contentDescription = stringResource(R.string.reading_list_delete),
+                    )
+                }
             }
         },
     )
@@ -316,16 +348,16 @@ private fun SourceSelectionDialog(
     dialog: ReadingListsDialog.SourceSelection,
     isSaving: Boolean,
     onToggleSource: (Long) -> Unit,
+    onToggleSourceGroup: (String) -> Unit,
     onSelectAll: () -> Unit,
     onClear: () -> Unit,
     onMoveSource: (Long, Int) -> Unit,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val selectedSources = dialog.selectedSourceIds.mapNotNull { sourceId ->
-        dialog.sources.firstOrNull { source -> source.id == sourceId }
-    }
-    val unselectedSources = dialog.sources.filterNot { source -> source.id in dialog.selectedSourceIds }
+    val selectedPriorities = dialog.selectedSourceIds
+        .withIndex()
+        .associate { indexedValue -> indexedValue.value to indexedValue.index + 1 }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -393,37 +425,34 @@ private fun SourceSelectionDialog(
                         .fillMaxWidth()
                         .heightIn(max = 420.dp),
                 ) {
-                    items(
-                        items = selectedSources,
-                        key = ReadingListSourceOption::id,
-                    ) { source ->
-                        SourceSelectionRow(
-                            source = source,
-                            selected = true,
-                            priority = dialog.selectedSourceIds.indexOf(source.id) + 1,
-                            canMoveUp = dialog.selectedSourceIds.firstOrNull() != source.id,
-                            canMoveDown = dialog.selectedSourceIds.lastOrNull() != source.id,
-                            enabled = !isSaving,
-                            onToggle = { onToggleSource(source.id) },
-                            onMoveUp = { onMoveSource(source.id, -1) },
-                            onMoveDown = { onMoveSource(source.id, 1) },
-                        )
-                    }
-                    items(
-                        items = unselectedSources,
-                        key = ReadingListSourceOption::id,
-                    ) { source ->
-                        SourceSelectionRow(
-                            source = source,
-                            selected = false,
-                            priority = null,
-                            canMoveUp = false,
-                            canMoveDown = false,
-                            enabled = !isSaving && source.installed,
-                            onToggle = { onToggleSource(source.id) },
-                            onMoveUp = {},
-                            onMoveDown = {},
-                        )
+                    dialog.sourceGroups.forEach { group ->
+                        item(key = "group-${group.key}") {
+                            SourceGroupHeader(
+                                group = group,
+                                selectedSourceIds = dialog.selectedSourceIds,
+                                enabled = !isSaving,
+                                onToggle = { onToggleSourceGroup(group.key) },
+                            )
+                        }
+                        items(
+                            items = group.sources,
+                            key = { source -> "${group.key}-${source.id}" },
+                        ) { source ->
+                            val priority = selectedPriorities[source.id]
+                            val selected = priority != null
+                            SourceSelectionRow(
+                                source = source,
+                                selected = selected,
+                                priority = priority,
+                                canMoveUp = priority != null && priority > 1,
+                                canMoveDown = priority != null && priority < dialog.selectedSourceIds.size,
+                                enabled = !isSaving && (source.installed || selected),
+                                modifier = Modifier.padding(start = 24.dp),
+                                onToggle = { onToggleSource(source.id) },
+                                onMoveUp = { onMoveSource(source.id, -1) },
+                                onMoveDown = { onMoveSource(source.id, 1) },
+                            )
+                        }
                     }
                 }
             }
@@ -462,6 +491,73 @@ private fun SourceSelectionDialog(
 }
 
 @Composable
+private fun SourceGroupHeader(
+    group: ReadingListSourceGroup,
+    selectedSourceIds: List<Long>,
+    enabled: Boolean,
+    onToggle: () -> Unit,
+) {
+    val installedSourceIds = group.sources
+        .filter(ReadingListSourceOption::installed)
+        .map(ReadingListSourceOption::id)
+    val selectedCount = installedSourceIds.count(selectedSourceIds::contains)
+    val toggleState = when {
+        installedSourceIds.isEmpty() || selectedCount == 0 -> ToggleableState.Off
+        selectedCount == installedSourceIds.size -> ToggleableState.On
+        else -> ToggleableState.Indeterminate
+    }
+    val languages = group.sources
+        .filter(ReadingListSourceOption::installed)
+        .map(ReadingListSourceOption::language)
+        .filter(String::isNotBlank)
+        .distinct()
+        .joinToString { language -> language.uppercase(Locale.ROOT) }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(
+                enabled = enabled && group.installed && installedSourceIds.isNotEmpty(),
+                onClick = onToggle,
+            )
+            .padding(top = 8.dp, bottom = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        TriStateCheckbox(
+            state = toggleState,
+            onClick = onToggle,
+            enabled = enabled && group.installed && installedSourceIds.isNotEmpty(),
+        )
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = if (group.installed) {
+                    group.extensionName
+                } else {
+                    stringResource(R.string.reading_list_unavailable_sources)
+                },
+                style = MaterialTheme.typography.titleSmall,
+                color = if (group.installed) {
+                    MaterialTheme.colorScheme.onSurface
+                } else {
+                    MaterialTheme.colorScheme.error
+                },
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            if (languages.isNotEmpty()) {
+                Text(
+                    text = languages,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun SourceSelectionRow(
     source: ReadingListSourceOption,
     selected: Boolean,
@@ -469,12 +565,13 @@ private fun SourceSelectionRow(
     canMoveUp: Boolean,
     canMoveDown: Boolean,
     enabled: Boolean,
+    modifier: Modifier = Modifier,
     onToggle: () -> Unit,
     onMoveUp: () -> Unit,
     onMoveDown: () -> Unit,
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clickable(enabled = enabled, onClick = onToggle)
             .padding(vertical = 4.dp),
@@ -499,8 +596,12 @@ private fun SourceSelectionRow(
             )
             val supportingText = when {
                 !source.installed -> stringResource(R.string.reading_list_unavailable_source)
-                priority != null -> stringResource(R.string.reading_list_source_priority, priority)
-                else -> source.language.uppercase()
+                priority != null -> stringResource(
+                    R.string.reading_list_source_language_and_priority,
+                    source.language.uppercase(Locale.ROOT),
+                    priority,
+                )
+                else -> source.language.uppercase(Locale.ROOT)
             }
             Text(
                 text = supportingText,
@@ -531,6 +632,48 @@ private fun SourceSelectionRow(
             }
         }
     }
+}
+
+@Composable
+private fun DeleteReadingListDialog(
+    readingList: ReadingListSummary,
+    isDeleting: Boolean,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val name = readingList.name ?: stringResource(R.string.reading_list_untitled)
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.reading_list_delete_title)) },
+        text = { Text(stringResource(R.string.reading_list_delete_message, name)) },
+        confirmButton = {
+            TextButton(
+                onClick = onConfirm,
+                enabled = !isDeleting,
+            ) {
+                if (isDeleting) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(18.dp),
+                        strokeWidth = 2.dp,
+                    )
+                    Spacer(Modifier.width(8.dp))
+                }
+                Text(
+                    text = stringResource(R.string.reading_list_delete),
+                    color = MaterialTheme.colorScheme.error,
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss,
+                enabled = !isDeleting,
+            ) {
+                Text(stringResource(R.string.reading_list_cancel_action))
+            }
+        },
+    )
 }
 
 private val CblImportFailure.stringRes: Int
