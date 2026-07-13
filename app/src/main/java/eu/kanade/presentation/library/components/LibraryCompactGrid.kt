@@ -29,6 +29,9 @@ internal fun LibraryCompactGrid(
     categoryIndex: Int,
     onSelectCategory: (Int) -> Unit,
     showHopper: Boolean,
+    hopperOffsetX: androidx.compose.animation.core.Animatable<Float, *>,
+    hopperInitialized: Boolean,
+    onHopperInitialized: () -> Unit,
 ) {
     val cell: @Composable (LibraryItem) -> Unit = { libraryItem ->
         val manga = libraryItem.libraryManga.manga
@@ -78,6 +81,9 @@ internal fun LibraryCompactGrid(
             categoryIndex = categoryIndex,
             onSelectCategory = onSelectCategory,
             showHopper = showHopper,
+            hopperOffsetX = hopperOffsetX,
+            hopperInitialized = hopperInitialized,
+            onHopperInitialized = onHopperInitialized,
         )
         return
     }

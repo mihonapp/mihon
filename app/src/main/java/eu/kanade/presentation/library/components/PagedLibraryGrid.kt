@@ -99,6 +99,9 @@ internal fun <T> PagedLibraryGrid(
     categoryIndex: Int,
     onSelectCategory: (Int) -> Unit,
     showHopper: Boolean,
+    hopperOffsetX: Animatable<Float, *>,
+    hopperInitialized: Boolean,
+    onHopperInitialized: () -> Unit,
 ) {
     val layoutDirection = LocalLayoutDirection.current
     val horizontalSpacing = CommonMangaItemDefaults.GridHorizontalSpacer
@@ -253,6 +256,9 @@ internal fun <T> PagedLibraryGrid(
                     containerWidth = this@BoxWithConstraints.maxWidth,
                     containerHeight = this@BoxWithConstraints.maxHeight,
                     contentPadding = contentPadding,
+                    offsetX = hopperOffsetX,
+                    initialized = hopperInitialized,
+                    onInitialized = onHopperInitialized,
                 )
             }
         }
@@ -271,6 +277,9 @@ private fun CategoryHopper(
     containerWidth: Dp,
     containerHeight: Dp,
     contentPadding: PaddingValues,
+    offsetX: Animatable<Float, *>,
+    initialized: Boolean,
+    onInitialized: () -> Unit,
 ) {
     var expanded by remember { mutableStateOf(value = false) }
     val density = LocalDensity.current
@@ -290,18 +299,10 @@ private fun CategoryHopper(
 
     var hopperSizePx by remember { mutableStateOf(IntSize.Zero) }
 
-    // Only the horizontal position is draggable, snapping to one of three
-    // resting spots on release — matching Yokai's hopper. Vertically it
-    // always stays pinned just above the bottom inset.
-    val offsetX = remember { Animatable(0f) }
-    var initialized by remember { mutableStateOf(false) }
+    // offsetX and initialized are hoisted to LibraryPager level so the
+    // position persists across category swipes — each new category page
+    // reuses the same Animatable instead of creating a fresh one.
 
-    // Computed as functions (not plain vals) so they read hopperSizePx
-    // live at call time — the drag callbacks below are set up once
-    // (pointerInput key = Unit) and never recreated, so anything baked in
-    // as an already-evaluated val would stay frozen at whatever
-    // hopperSizePx happened to be on that first frame (likely still
-    // IntSize.Zero, before the real size is measured).
     fun leftX() = (startInsetPx + marginPx).toFloat()
     fun rightX() = (boundsPx.width - endInsetPx - hopperSizePx.width - marginPx).toFloat().coerceAtLeast(leftX())
     fun centerX() = ((boundsPx.width - hopperSizePx.width) / 2f).coerceIn(leftX(), rightX())
@@ -313,7 +314,7 @@ private fun CategoryHopper(
     // Start docked at the right, once we know the hopper's real size.
     LaunchedEffect(hopperSizePx) {
         if (!initialized && hopperSizePx != IntSize.Zero) {
-            initialized = true
+            onInitialized()
             offsetX.snapTo(rightX())
         }
     }
