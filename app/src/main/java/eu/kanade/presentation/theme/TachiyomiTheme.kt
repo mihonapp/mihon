@@ -5,12 +5,15 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.ui.model.AppTheme
 import eu.kanade.presentation.theme.colorscheme.BaseColorScheme
 import eu.kanade.presentation.theme.colorscheme.CatppuccinColorScheme
+import eu.kanade.presentation.theme.colorscheme.CustomColorScheme
 import eu.kanade.presentation.theme.colorscheme.GreenAppleColorScheme
 import eu.kanade.presentation.theme.colorscheme.LavenderColorScheme
 import eu.kanade.presentation.theme.colorscheme.MidnightDuskColorScheme
@@ -24,6 +27,7 @@ import eu.kanade.presentation.theme.colorscheme.TealTurqoiseColorScheme
 import eu.kanade.presentation.theme.colorscheme.TidalWaveColorScheme
 import eu.kanade.presentation.theme.colorscheme.YinYangColorScheme
 import eu.kanade.presentation.theme.colorscheme.YotsubaColorScheme
+import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -56,13 +60,22 @@ private fun BaseTachiyomiTheme(
 ) {
     val context = LocalContext.current
     val isDark = isSystemInDarkTheme()
+    val uiPreferences = remember { Injekt.get<UiPreferences>() }
+
+    val customAccent by uiPreferences.customColorAccent.collectAsState()
+    val customOn by uiPreferences.customColorOn.collectAsState()
+    val customSurface by uiPreferences.customColorSurface.collectAsState()
+
     MaterialExpressiveTheme(
-        colorScheme = remember(appTheme, isDark, isAmoled) {
+        colorScheme = remember(appTheme, isDark, isAmoled, customAccent, customOn, customSurface) {
             getThemeColorScheme(
                 context = context,
                 appTheme = appTheme,
                 isDark = isDark,
                 isAmoled = isAmoled,
+                customAccent = customAccent,
+                customOn = customOn,
+                customSurface = customSurface,
             )
         },
         content = content,
@@ -74,16 +87,25 @@ private fun getThemeColorScheme(
     appTheme: AppTheme,
     isDark: Boolean,
     isAmoled: Boolean,
+    customAccent: Int,
+    customOn: Int,
+    customSurface: Int,
 ): ColorScheme {
-    val colorScheme = if (appTheme == AppTheme.MONET) {
-        MonetColorScheme(context)
-    } else {
-        colorSchemes.getOrDefault(appTheme, TachiyomiColorScheme)
+    val colorScheme = when (appTheme) {
+        AppTheme.MONET -> MonetColorScheme(context)
+        AppTheme.CUSTOM -> {
+            CustomColorScheme(
+                accent = Color(customAccent),
+                on = Color(customOn),
+                surfaceBg = Color(customSurface),
+            )
+        }
+        else -> colorSchemes.getOrDefault(appTheme, TachiyomiColorScheme)
     }
     return colorScheme.getColorScheme(
         isDark = isDark,
         isAmoled = isAmoled,
-        overrideDarkSurfaceContainers = appTheme != AppTheme.MONET,
+        overrideDarkSurfaceContainers = appTheme != AppTheme.MONET && appTheme != AppTheme.CUSTOM,
     )
 }
 

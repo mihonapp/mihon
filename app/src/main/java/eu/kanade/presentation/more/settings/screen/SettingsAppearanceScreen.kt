@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.domain.ui.UiPreferences
+import eu.kanade.domain.ui.model.AppTheme
 import eu.kanade.domain.ui.model.TabletUiMode
 import eu.kanade.domain.ui.model.ThemeMode
 import eu.kanade.domain.ui.model.setAppCompatDelegateThemeMode
@@ -47,6 +48,7 @@ object SettingsAppearanceScreen : SearchableSettings {
         uiPreferences: UiPreferences,
     ): Preference.PreferenceGroup {
         val context = LocalContext.current
+        val navigator = LocalNavigator.currentOrThrow
 
         val themeModePref = uiPreferences.themeMode
         val themeMode by themeModePref.collectAsState()
@@ -59,36 +61,48 @@ object SettingsAppearanceScreen : SearchableSettings {
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_category_theme),
-            preferenceItems = listOf(
-                Preference.PreferenceItem.CustomPreference(
-                    title = stringResource(MR.strings.pref_app_theme),
-                ) {
-                    Column {
-                        AppThemeModePreferenceWidget(
-                            value = themeMode,
-                            onItemClick = {
-                                themeModePref.set(it)
-                                setAppCompatDelegateThemeMode(it)
-                            },
-                        )
+            preferenceItems = buildList {
+                add(
+                    Preference.PreferenceItem.CustomPreference(
+                        title = stringResource(MR.strings.pref_app_theme),
+                    ) {
+                        Column {
+                            AppThemeModePreferenceWidget(
+                                value = themeMode,
+                                onItemClick = {
+                                    themeModePref.set(it)
+                                    setAppCompatDelegateThemeMode(it)
+                                },
+                            )
 
-                        AppThemePreferenceWidget(
-                            value = appTheme,
-                            amoled = amoled,
-                            onItemClick = { appThemePref.set(it) },
-                        )
-                    }
-                },
-                Preference.PreferenceItem.SwitchPreference(
-                    preference = amoledPref,
-                    title = stringResource(MR.strings.pref_dark_theme_pure_black),
-                    enabled = themeMode != ThemeMode.LIGHT,
-                    onValueChanged = {
-                        (context as? Activity)?.let { ActivityCompat.recreate(it) }
-                        true
+                            AppThemePreferenceWidget(
+                                value = appTheme,
+                                amoled = amoled,
+                                onItemClick = { appThemePref.set(it) },
+                            )
+                        }
                     },
-                ),
-            ),
+                )
+                add(
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = amoledPref,
+                        title = stringResource(MR.strings.pref_dark_theme_pure_black),
+                        enabled = themeMode != ThemeMode.LIGHT,
+                        onValueChanged = {
+                            (context as? Activity)?.let { ActivityCompat.recreate(it) }
+                            true
+                        },
+                    ),
+                )
+                if (appTheme == AppTheme.CUSTOM) {
+                    add(
+                        Preference.PreferenceItem.TextPreference(
+                            title = stringResource(MR.strings.theme_custom_editor),
+                            onClick = { navigator.push(CustomThemeEditorScreen()) },
+                        ),
+                    )
+                }
+            },
         )
     }
 

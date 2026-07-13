@@ -243,6 +243,11 @@
     <string name="theme_yinyang">Yin &amp; Yang</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_tidalwave">Tidal Wave</string>
+    <string name="theme_custom">Custom</string>
+    <string name="theme_custom_editor">Palette Personalizer</string>
+    <string name="color_accent">Accent Color</string>
+    <string name="color_on">Content Color (Text/Icons)</string>
+    <string name="color_surface_bg">Background Color</string>
     <string name="pref_dark_theme_pure_black">Pure black dark mode</string>
     <string name="pref_relative_format">Relative timestamps</string>
     <!-- "Today" instead of "2023-12-31" -->

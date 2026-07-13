@@ -29,6 +29,10 @@ class UiPreferences(
 
     val themeDarkAmoled: Preference<Boolean> = preferenceStore.getBoolean("pref_theme_dark_amoled_key", false)
 
+    val customColorAccent: Preference<Int> = preferenceStore.getInt("pref_custom_color_accent", 0xFFB0C6FF.toInt())
+    val customColorOn: Preference<Int> = preferenceStore.getInt("pref_custom_color_on", 0xFFE3E2E6.toInt())
+    val customColorSurface: Preference<Int> = preferenceStore.getInt("pref_custom_color_surface", 0xFF1B1B1F.toInt())
+
     val relativeTime: Preference<Boolean> = preferenceStore.getBoolean("relative_time_v2", true)
 
     val dateFormat: Preference<String> = preferenceStore.getString("app_date_format", "")
