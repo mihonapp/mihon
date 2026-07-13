@@ -859,6 +859,8 @@
     <string name="relative_time_span_never">Never</string>
     <string name="action_view_upcoming">View Upcoming Updates</string>
     <string name="action_filter_excluded_scanlators">Filter excluded scanlators</string>
+    <string name="pref_filter_update_categories_details">Updates in excluded categories will not be shown even if they are also in any included categories.</string>
+    <string name="pref_filter_update_no_categories">You have no categories. Create one for organizing your library in the Settings.</string>
 
     <!-- Upcoming -->
     <string name="upcoming_guide">Upcoming Guide</string>
