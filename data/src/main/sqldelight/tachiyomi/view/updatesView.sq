@@ -32,7 +32,7 @@ WHERE dateUpload > :after
 LIMIT :limit;
 
 getRecentUpdatesWithFilters:
-SELECT *
+SELECT DISTINCT *
 FROM updatesView
 WHERE dateUpload > :after
 AND (:read IS NULL OR read = :read)
@@ -45,6 +45,33 @@ AND (
 AND (:bookmarked IS NULL OR bookmark = :bookmarked)
 AND (
     (excludedScanlator IS NULL OR :hideExcludedScanlators = 0)
+)
+AND (
+    -- includeEmpty being true expresses "don't care" state and bypasses the membership filter
+    :includeEmpty = 1
+    OR EXISTS (
+        SELECT 1 FROM mangas_categories
+        WHERE mangas_categories.manga_id = mangaId
+        AND COALESCE(mangas_categories.category_id, 0) IN :includedCategories
+    )
+    OR (0 IN :includedCategories AND NOT EXISTS (
+        SELECT 1 FROM mangas_categories mc WHERE mc.manga_id = mangaId)
+    )
+)
+AND (
+    -- excludeEmpty being true expresses "don't care" state and bypasses the membership filter
+    :excludeEmpty = 1
+    OR (
+        NOT EXISTS (
+            SELECT 1 FROM mangas_categories
+            WHERE mangas_categories.manga_id = mangaId
+            AND COALESCE(mangas_categories.category_id, 0) IN :excludedCategories
+        )
+        AND (
+            0 NOT IN :excludedCategories
+            OR EXISTS (SELECT 1 FROM mangas_categories WHERE mangas_categories.manga_id = mangaId)
+        )
+    )
 )
 LIMIT :limit;
 

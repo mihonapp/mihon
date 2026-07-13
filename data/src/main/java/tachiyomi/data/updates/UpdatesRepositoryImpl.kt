@@ -35,6 +35,8 @@ class UpdatesRepositoryImpl(
         started: Boolean?,
         bookmarked: Boolean?,
         hideExcludedScanlators: Boolean,
+        includedCategories: List<Long>,
+        excludedCategories: List<Long>,
     ): Flow<List<UpdatesWithRelations>> {
         return database.updatesViewQueries
             .getRecentUpdatesWithFilters(
@@ -44,6 +46,10 @@ class UpdatesRepositoryImpl(
                 started = started?.toLong(),
                 bookmarked = bookmarked,
                 hideExcludedScanlators = hideExcludedScanlators.toLong(),
+                includeEmpty = includedCategories.isEmpty().toLong(),
+                excludeEmpty = excludedCategories.isEmpty().toLong(),
+                includedCategories = includedCategories,
+                excludedCategories = excludedCategories,
                 mapper = ::mapUpdatesWithRelations,
             )
             .subscribeToList()
