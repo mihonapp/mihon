@@ -5,9 +5,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import tachiyomi.presentation.core.components.Badge
+import kotlin.math.roundToInt
 
 @Composable
 internal fun DownloadsBadge(count: Int) {
@@ -25,6 +27,24 @@ internal fun UnreadBadge(count: Long) {
     if (count > 0) {
         Badge(text = "$count")
     }
+}
+
+@Composable
+internal fun TrackerScoreBadge(score: Double?) {
+    if (score == null || score <= 0.0) return
+
+    val scoreInTenths = (score * 10).roundToInt()
+    val text = if (scoreInTenths % 10 == 0) {
+        (scoreInTenths / 10).toString()
+    } else {
+        "${scoreInTenths / 10}.${scoreInTenths % 10}"
+    }
+
+    Badge(
+        text = text,
+        color = Color(0xFFFFB300),
+        textColor = Color.Black,
+    )
 }
 
 @Composable

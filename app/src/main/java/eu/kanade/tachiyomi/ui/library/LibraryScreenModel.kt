@@ -97,10 +97,40 @@ class LibraryScreenModel(
                 combine(getTracksPerManga.subscribe(), getTrackingFiltersFlow(), ::Pair),
                 getLibraryItemPreferencesFlow(),
             ) { searchQuery, categories, favorites, (tracksMap, trackingFilters), itemPreferences ->
-                val showSystemCategory = favorites.any { it.libraryManga.categories.contains(0) }
-                val filteredFavorites = favorites
+                val loggedInTrackerIds = trackingFilters.keys
+
+                val trackerScores = if (itemPreferences.trackerScoreBadge) {
+                    getTrackerScores(tracksMap, loggedInTrackerIds)
+                } else {
+                    emptyMap()
+                }
+
+                val favoritesWithTrackerScores = if (trackerScores.isEmpty()) {
+                    favorites
+                } else {
+                    favorites.map { item ->
+                        item.copy(
+                            badges = item.badges.copy(
+                                trackerScore = trackerScores[item.id]?.takeIf { it > 0.0 },
+                            ),
+                        )
+                    }
+                }
+
+                val showSystemCategory =
+                    favoritesWithTrackerScores.any { it.libraryManga.categories.contains(0) }
+
+                val filteredFavorites = favoritesWithTrackerScores
                     .applyFilters(tracksMap, trackingFilters, itemPreferences)
-                    .let { if (searchQuery == null) it else it.filter { m -> m.matches(searchQuery, sourceManager) } }
+                    .let { favoritesList ->
+                        if (searchQuery == null) {
+                            favoritesList
+                        } else {
+                            favoritesList.filter { manga ->
+                                manga.matches(searchQuery, sourceManager)
+                            }
+                        }
+                    }
 
                 LibraryData(
                     isInitialized = true,
@@ -108,7 +138,7 @@ class LibraryScreenModel(
                     categories = categories,
                     favorites = filteredFavorites,
                     tracksMap = tracksMap,
-                    loggedInTrackerIds = trackingFilters.keys,
+                    loggedInTrackerIds = loggedInTrackerIds,
                 )
             }
                 .distinctUntilChanged()
@@ -249,6 +279,26 @@ class LibraryScreenModel(
         }
     }
 
+    private fun getTrackerScores(
+        trackMap: Map<Long, List<Track>>,
+        loggedInTrackerIds: Set<Long>,
+    ): Map<Long, Double> {
+        val trackersById = trackerManager
+            .getAll(loggedInTrackerIds)
+            .associateBy { it.id }
+
+        return trackMap.mapNotNull { (mangaId, tracks) ->
+            val scores = tracks.mapNotNull { track ->
+                trackersById[track.trackerId]?.get10PointScore(track)
+            }
+
+            scores
+                .takeIf { it.isNotEmpty() }
+                ?.average()
+                ?.let { mangaId to it }
+        }.toMap()
+    }
+
     private fun List<LibraryItem>.applyGrouping(
         categories: List<Category>,
         showSystemCategory: Boolean,
@@ -276,16 +326,7 @@ class LibraryScreenModel(
 
         val defaultTrackerScoreSortValue = -1.0
         val trackerScores by lazy {
-            val trackerMap = trackerManager.getAll(loggedInTrackerIds).associateBy { e -> e.id }
-            trackMap.mapValues { entry ->
-                when {
-                    entry.value.isEmpty() -> null
-                    else ->
-                        entry.value
-                            .mapNotNull { trackerMap[it.trackerId]?.get10PointScore(it) }
-                            .average()
-                }
-            }
+            getTrackerScores(trackMap, loggedInTrackerIds)
         }
 
         fun LibrarySort.comparator(): Comparator<LibraryItem> = Comparator { manga1, manga2 ->
@@ -350,6 +391,7 @@ class LibraryScreenModel(
             libraryPreferences.unreadBadge.changes(),
             libraryPreferences.localBadge.changes(),
             libraryPreferences.languageBadge.changes(),
+            libraryPreferences.trackerScoreBadge.changes(),
             libraryPreferences.autoUpdateMangaRestrictions.changes(),
 
             preferences.downloadedOnly.changes(),
@@ -365,14 +407,15 @@ class LibraryScreenModel(
                 unreadBadge = it[1] as Boolean,
                 localBadge = it[2] as Boolean,
                 languageBadge = it[3] as Boolean,
-                skipOutsideReleasePeriod = LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in (it[4] as Set<*>),
-                globalFilterDownloaded = it[5] as Boolean,
-                filterDownloaded = it[6] as TriState,
-                filterUnread = it[7] as TriState,
-                filterStarted = it[8] as TriState,
-                filterBookmarked = it[9] as TriState,
-                filterCompleted = it[10] as TriState,
-                filterIntervalCustom = it[11] as TriState,
+                trackerScoreBadge = it[4] as Boolean,
+                skipOutsideReleasePeriod = LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in (it[5] as Set<*>),
+                globalFilterDownloaded = it[6] as Boolean,
+                filterDownloaded = it[7] as TriState,
+                filterUnread = it[8] as TriState,
+                filterStarted = it[9] as TriState,
+                filterBookmarked = it[10] as TriState,
+                filterCompleted = it[11] as TriState,
+                filterIntervalCustom = it[12] as TriState,
             )
         }
     }
@@ -410,6 +453,7 @@ class LibraryScreenModel(
                         } else {
                             ""
                         },
+                        trackerScore = null,
                     ),
                 )
             }
@@ -736,6 +780,7 @@ class LibraryScreenModel(
         val unreadBadge: Boolean,
         val localBadge: Boolean,
         val languageBadge: Boolean,
+        val trackerScoreBadge: Boolean,
         val skipOutsideReleasePeriod: Boolean,
 
         val globalFilterDownloaded: Boolean,
