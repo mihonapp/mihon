@@ -33,6 +33,8 @@ class BasePreferences(
         PRIVATE(MR.strings.ext_installer_private, false),
     }
 
+    val highQualityRenderer: Preference<Boolean> = preferenceStore.getBoolean("pref_high_quality_renderer_key", false)
+
     val displayProfile: Preference<String> = preferenceStore.getString("pref_display_profile_key", "")
 
     val hardwareBitmapThreshold: Preference<Int> = preferenceStore.getInt(
