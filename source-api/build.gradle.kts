@@ -12,10 +12,7 @@ kotlin {
     android {
         namespace = "eu.kanade.tachiyomi.source"
         optimization {
-            consumerKeepRules.apply {
-                publish = true
-                file("consumer-proguard.pro")
-            }
+            consumerKeepRules.file("consumer-proguard.pro")
         }
 
         // TODO(antsy): Remove when https://youtrack.jetbrains.com/issue/KT-83319 is resolved
