@@ -6,7 +6,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import cafe.adriel.voyager.core.model.rememberScreenModel
+import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
@@ -28,10 +29,13 @@ class DeepLinkScreen(
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
 
-        val screenModel = rememberScreenModel {
-            DeepLinkScreenModel(query = query)
-        }
-        val state by screenModel.state.collectAsState()
+        val viewModel = viewModel<DeepLinkViewModel>(
+            factory = DeepLinkViewModel.Factory,
+            extras = CreationExtras {
+                set(DeepLinkViewModel.QUERY_KEY, query)
+            },
+        )
+        val state by viewModel.state.collectAsState()
         Scaffold(
             topBar = { scrollBehavior ->
                 AppBar(
@@ -42,14 +46,14 @@ class DeepLinkScreen(
             },
         ) { contentPadding ->
             when (state) {
-                is DeepLinkScreenModel.State.Loading -> {
+                is DeepLinkViewModel.State.Loading -> {
                     LoadingScreen(Modifier.padding(contentPadding))
                 }
-                is DeepLinkScreenModel.State.NoResults -> {
+                is DeepLinkViewModel.State.NoResults -> {
                     navigator.replace(GlobalSearchScreen(query))
                 }
-                is DeepLinkScreenModel.State.Result -> {
-                    val resultState = state as DeepLinkScreenModel.State.Result
+                is DeepLinkViewModel.State.Result -> {
+                    val resultState = state as DeepLinkViewModel.State.Result
                     if (resultState.chapterId == null) {
                         navigator.replace(
                             MangaScreen(

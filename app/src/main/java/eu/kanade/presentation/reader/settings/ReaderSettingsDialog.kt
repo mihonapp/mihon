@@ -14,7 +14,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.window.DialogWindowProvider
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
-import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
@@ -23,7 +23,7 @@ fun ReaderSettingsDialog(
     onDismissRequest: () -> Unit,
     onShowMenus: () -> Unit,
     onHideMenus: () -> Unit,
-    screenModel: ReaderSettingsScreenModel,
+    viewModel: ReaderSettingsViewModel,
 ) {
     val tabTitles = listOf(
         stringResource(MR.strings.pref_category_reading_mode),
@@ -60,9 +60,9 @@ fun ReaderSettingsDialog(
                     .verticalScroll(rememberScrollState()),
             ) {
                 when (page) {
-                    0 -> ReadingModePage(screenModel)
-                    1 -> GeneralPage(screenModel)
-                    2 -> ColorFilterPage(screenModel)
+                    0 -> ReadingModePage(viewModel)
+                    1 -> GeneralPage(viewModel)
+                    2 -> ColorFilterPage(viewModel)
                 }
             }
         }
