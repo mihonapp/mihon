@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import tachiyomi.domain.history.model.History
 import tachiyomi.domain.history.model.HistoryUpdate
 import tachiyomi.domain.history.model.HistoryWithRelations
+import java.util.Date
 
 interface HistoryRepository {
 
@@ -20,6 +21,8 @@ interface HistoryRepository {
     suspend fun resetHistoryByMangaId(mangaId: Long)
 
     suspend fun deleteAllHistory(): Boolean
+
+    suspend fun deleteHistoryInRange(startDate: Date, endDate: Date): Boolean
 
     suspend fun upsertHistory(historyUpdate: HistoryUpdate)
 }

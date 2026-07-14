@@ -55,6 +55,10 @@ WHERE _id IN (
 removeAllHistory:
 DELETE FROM history;
 
+deleteHistoryInRange:
+DELETE FROM history
+WHERE last_read >= :startDate AND last_read <= :endDate;
+
 removeResettedHistory:
 DELETE FROM history
 WHERE last_read = 0;
