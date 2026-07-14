@@ -4,12 +4,17 @@ import android.content.Context
 import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentActivity
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
@@ -20,21 +25,28 @@ import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.history.HistoryScreen
 import eu.kanade.presentation.history.components.HistoryDeleteAllDialog
 import eu.kanade.presentation.history.components.HistoryDeleteDialog
+import eu.kanade.presentation.library.components.LockedCategoryOverlay
 import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.util.Tab
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegate
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
+import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 data object HistoryTab : Tab {
 
@@ -62,8 +74,36 @@ data object HistoryTab : Tab {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val context = LocalContext.current
+        val scope = rememberCoroutineScope()
         val screenModel = rememberScreenModel { HistoryScreenModel() }
         val state by screenModel.state.collectAsState()
+
+        val getCategories = remember { Injekt.get<GetCategories>() }
+        val categories by getCategories.subscribe().collectAsState(initial = emptyList())
+        val hasLockedCategories = remember(categories) { categories.any { it.locked } }
+        val isTabUnlocked by SecureActivityDelegate.lockedTabsUnlocked.collectAsState()
+
+        val tabNavigator = LocalTabNavigator.current
+        val isCurrentTab = tabNavigator.current.key == key
+        LaunchedEffect(isCurrentTab) {
+            if (!isCurrentTab) SecureActivityDelegate.lockLockedTabs()
+        }
+
+        if (hasLockedCategories && !isTabUnlocked) {
+            LockedCategoryOverlay(
+                contentPadding = PaddingValues(0.dp),
+                onUnlockRequest = {
+                    scope.launch {
+                        val activity = context as? FragmentActivity ?: return@launch
+                        val success = activity.authenticate(
+                            title = context.stringResource(MR.strings.unlock_app_title, context.stringResource(MR.strings.label_recent_manga)),
+                        )
+                        if (success) SecureActivityDelegate.unlockLockedTabs()
+                    }
+                },
+            )
+            return
+        }
 
         HistoryScreen(
             state = state,
