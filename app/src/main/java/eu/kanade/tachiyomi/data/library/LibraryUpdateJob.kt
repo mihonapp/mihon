@@ -111,7 +111,8 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         libraryPreferences.lastUpdatedTimestamp.set(Instant.now().toEpochMilli())
 
         val categoryId = inputData.getLong(KEY_CATEGORY, -1L)
-        addMangaToQueue(categoryId)
+        val mangaIds = inputData.getLongArray(KEY_MANGA_IDS)?.toSet()
+        addMangaToQueue(categoryId, mangaIds)
 
         return withIOContext {
             try {
@@ -148,20 +149,24 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
      * Adds list of manga to be updated.
      *
      * @param categoryId the ID of the category to update, or -1 if no category specified.
+     * @param mangaIds the specific manga IDs to update, or null for entire category or library.
      */
-    private suspend fun addMangaToQueue(categoryId: Long) {
+    private suspend fun addMangaToQueue(categoryId: Long, mangaIds: Set<Long>?) {
         val libraryManga = getLibraryManga.await()
 
-        val listToUpdate = if (categoryId != -1L) {
-            libraryManga.filter { categoryId in it.categories }
-        } else {
-            val includedCategories = libraryPreferences.updateCategories.get().map { it.toLong() }
-            val excludedCategories = libraryPreferences.updateCategoriesExclude.get().map { it.toLong() }
+        val listToUpdate = when {
+            mangaIds != null -> libraryManga.filter { it.id in mangaIds }
+            categoryId != -1L -> libraryManga.filter { categoryId in it.categories }
+            else -> {
+                val includedCategories = libraryPreferences.updateCategories.get().map { it.toLong() }
+                val excludedCategories = libraryPreferences.updateCategoriesExclude.get().map { it.toLong() }
 
-            libraryManga.filter {
-                val included = includedCategories.isEmpty() || it.categories.intersect(includedCategories).isNotEmpty()
-                val excluded = it.categories.intersect(excludedCategories).isNotEmpty()
-                included && !excluded
+                libraryManga.filter {
+                    val included =
+                        includedCategories.isEmpty() || it.categories.intersect(includedCategories).isNotEmpty()
+                    val excluded = it.categories.intersect(excludedCategories).isNotEmpty()
+                    included && !excluded
+                }
             }
         }
 
@@ -410,6 +415,11 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
          */
         private const val KEY_CATEGORY = "category"
 
+        /**
+         * Key for manga ids to update.
+         */
+        private const val KEY_MANGA_IDS = "manga_ids"
+
         fun setupTask(
             context: Context,
             prefInterval: Int? = null,
@@ -465,6 +475,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         fun startNow(
             context: Context,
             category: Category? = null,
+            mangaIds: List<Long>? = null,
         ): Boolean {
             val wm = context.workManager
             if (wm.isRunning(TAG)) {
@@ -474,6 +485,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
 
             val inputData = workDataOf(
                 KEY_CATEGORY to category?.id,
+                KEY_MANGA_IDS to mangaIds?.toLongArray(),
             )
             val request = OneTimeWorkRequestBuilder<LibraryUpdateJob>()
                 .addTag(TAG)

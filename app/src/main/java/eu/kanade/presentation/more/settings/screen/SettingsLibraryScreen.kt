@@ -190,6 +190,11 @@ object SettingsLibraryScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_library_update_refresh_metadata),
                     subtitle = stringResource(MR.strings.pref_library_update_refresh_metadata_summary),
                 ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = libraryPreferences.filterManualUpdates,
+                    title = stringResource(MR.strings.pref_library_update_filter_manual_updates),
+                    subtitle = stringResource(MR.strings.pref_library_update_filter_manual_updates_summary),
+                ),
                 Preference.PreferenceItem.MultiSelectListPreference(
                     preference = libraryPreferences.autoUpdateMangaRestrictions,
                     entries = mapOf(

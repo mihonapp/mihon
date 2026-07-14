@@ -278,6 +278,8 @@
     <string name="landscape">Landscape</string>
 
     <string name="pref_category_library_update">Global update</string>
+    <string name="pref_library_update_filter_manual_updates">Filter Manual Updates</string>
+    <string name="pref_library_update_filter_manual_updates_summary">Manually triggered library and category updates respect search and filter options</string>
     <string name="pref_library_update_interval">Automatic updates</string>
     <string name="update_never">Off</string>
     <string name="update_6hour">Every 6 hours</string>
@@ -680,6 +682,7 @@
 
     <!-- Library -->
     <string name="updating_category">Updating category</string>
+    <string name="updating_filtered_category">Updating filtered category</string>
     <string name="manga_from_library">From library</string>
     <string name="downloaded_chapters">Downloaded chapters</string>
     <string name="intervals_header">Intervals</string>
@@ -852,6 +855,7 @@
 
     <!-- Updates -->
     <string name="updating_library">Updating library</string>
+    <string name="updating_filtered_library">Updating filtered library</string>
     <string name="update_already_running">An update is already running</string>
     <string name="cant_open_last_read_chapter">Unable to open last read chapter</string>
     <string name="updates_last_update_info">Library last updated: %s</string>
