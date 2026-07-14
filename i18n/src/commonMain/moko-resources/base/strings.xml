@@ -85,6 +85,7 @@
     <string name="action_bookmark">Bookmark chapter</string>
     <string name="action_remove_bookmark">Unbookmark chapter</string>
     <string name="action_delete">Delete</string>
+    <string name="action_hide">Hide</string>
     <string name="action_update_library">Update library</string>
     <string name="action_enable_all">Enable all</string>
     <string name="action_disable_all">Disable all</string>
@@ -694,6 +695,7 @@
     <string name="local_source">Local source</string>
     <string name="other_source">Other</string>
     <string name="last_used_source">Last used</string>
+    <string name="pref_show_last_used_source">Show "Last used" source</string>
     <string name="pinned_sources">Pinned</string>
     <string name="action_global_search_hint">Global search…</string>
     <string name="action_global_search_query">Search for \"%1$s\" globally</string>
