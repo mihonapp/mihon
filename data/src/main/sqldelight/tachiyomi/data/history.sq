@@ -39,6 +39,11 @@ UPDATE history
 SET last_read = 0
 WHERE _id = :historyId;
 
+resetHistoryByIds:
+UPDATE history
+SET last_read = 0
+WHERE _id IN :historyIds;
+
 resetHistoryByMangaId:
 UPDATE history
 SET last_read = 0

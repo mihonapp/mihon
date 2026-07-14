@@ -4,6 +4,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import eu.kanade.core.util.addOrRemove
 import eu.kanade.core.util.insertSeparators
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.track.interactor.AddTracks
@@ -38,10 +39,12 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.time.Instant
 
 class HistoryScreenModel(
     private val addTracks: AddTracks = Injekt.get(),
@@ -61,6 +64,9 @@ class HistoryScreenModel(
     private val _events: Channel<Event> = Channel(Channel.UNLIMITED)
     val events: Flow<Event> = _events.receiveAsFlow()
 
+    private val selectedPositions: Array<Int> = arrayOf(-1, -1)
+    private val selectedHistoryIds: HashSet<Long> = HashSet()
+
     init {
         screenModelScope.launch {
             state.map { it.searchQuery }
@@ -75,7 +81,11 @@ class HistoryScreenModel(
                         .map { it.toHistoryUiModels() }
                         .flowOn(Dispatchers.IO)
                 }
-                .collect { newList -> mutableState.update { it.copy(list = newList) } }
+                .collect { newList ->
+                    val visibleHistoryIds = newList.asHistoryItems().mapTo(HashSet()) { it.id }
+                    selectedHistoryIds.retainAll(visibleHistoryIds)
+                    mutableState.update { it.copy(list = newList, selection = selectedHistoryIds.toSet()) }
+                }
         }
     }
 
@@ -90,6 +100,10 @@ class HistoryScreenModel(
                     else -> null
                 }
             }
+    }
+
+    private fun List<HistoryUiModel>.asHistoryItems(): List<HistoryWithRelations> {
+        return mapNotNull { (it as? HistoryUiModel.Item)?.item }
     }
 
     suspend fun getNextChapter(): Chapter? {
@@ -119,6 +133,23 @@ class HistoryScreenModel(
         }
     }
 
+    fun removeSelectedFromHistory(history: List<HistoryWithRelations>) {
+        screenModelScope.launchIO {
+            removeHistory.await(history)
+            toggleAllSelection(false)
+        }
+    }
+
+    fun removeAllSelectedMangaFromHistory(history: List<HistoryWithRelations>) {
+        screenModelScope.launchIO {
+            history
+                .map { it.mangaId }
+                .distinct()
+                .forEach { removeHistory.await(it) }
+            toggleAllSelection(false)
+        }
+    }
+
     fun removeAllHistory() {
         screenModelScope.launchIO {
             val result = removeHistory.awaitAll()
@@ -129,6 +160,79 @@ class HistoryScreenModel(
 
     fun updateSearchQuery(query: String?) {
         mutableState.update { it.copy(searchQuery = query) }
+    }
+
+    fun toggleSelection(
+        item: HistoryWithRelations,
+        selected: Boolean,
+        fromLongPress: Boolean = false,
+    ) {
+        val historyItems = state.value.list?.asHistoryItems() ?: return
+        val selectedIndex = historyItems.indexOfFirst { it.id == item.id }
+        if (selectedIndex < 0) return
+
+        if ((item.id in selectedHistoryIds) == selected) return
+
+        val firstSelection = selectedHistoryIds.isEmpty()
+        selectedHistoryIds.addOrRemove(item.id, selected)
+
+        if (selected && fromLongPress) {
+            if (firstSelection) {
+                selectedPositions[0] = selectedIndex
+                selectedPositions[1] = selectedIndex
+            } else {
+                val range = when {
+                    selectedIndex < selectedPositions[0] -> {
+                        (selectedIndex + 1)..<selectedPositions[0]
+                    }
+                    selectedIndex > selectedPositions[1] -> {
+                        (selectedPositions[1] + 1)..<selectedIndex
+                    }
+                    else -> IntRange.EMPTY
+                }
+
+                if (selectedIndex < selectedPositions[0]) {
+                    selectedPositions[0] = selectedIndex
+                } else if (selectedIndex > selectedPositions[1]) {
+                    selectedPositions[1] = selectedIndex
+                }
+
+                range.forEach {
+                    selectedHistoryIds.add(historyItems[it].id)
+                }
+            }
+        } else if (!fromLongPress) {
+            val selectedIndices = historyItems
+                .mapIndexedNotNull { index, history -> index.takeIf { history.id in selectedHistoryIds } }
+            selectedPositions[0] = selectedIndices.firstOrNull() ?: -1
+            selectedPositions[1] = selectedIndices.lastOrNull() ?: -1
+        }
+
+        mutableState.update { it.copy(selection = selectedHistoryIds.toSet()) }
+    }
+
+    fun toggleAllSelection(selected: Boolean) {
+        val historyItems = state.value.list?.asHistoryItems().orEmpty()
+        if (selected) {
+            selectedHistoryIds.addAll(historyItems.map { it.id })
+        } else {
+            selectedHistoryIds.clear()
+        }
+
+        selectedPositions[0] = -1
+        selectedPositions[1] = -1
+        mutableState.update { it.copy(selection = selectedHistoryIds.toSet()) }
+    }
+
+    fun invertSelection() {
+        val historyItems = state.value.list?.asHistoryItems().orEmpty()
+        historyItems.forEach {
+            selectedHistoryIds.addOrRemove(it.id, it.id !in selectedHistoryIds)
+        }
+
+        selectedPositions[0] = -1
+        selectedPositions[1] = -1
+        mutableState.update { it.copy(selection = selectedHistoryIds.toSet()) }
     }
 
     fun setDialog(dialog: Dialog?) {
@@ -214,6 +318,78 @@ class HistoryScreenModel(
         }
     }
 
+    fun addFavorites(history: List<HistoryWithRelations>) {
+        screenModelScope.launchIO {
+            val manga = history
+                .mapNotNull { getManga.await(it.mangaId) }
+                .filterNot { it.favorite }
+                .distinctBy { it.id }
+            if (manga.isEmpty()) {
+                toggleAllSelection(false)
+                return@launchIO
+            }
+
+            manga.firstOrNull { getDuplicateLibraryManga(it).isNotEmpty() }?.let { duplicate ->
+                mutableState.update {
+                    it.copy(dialog = Dialog.DuplicateManga(duplicate, getDuplicateLibraryManga(duplicate)))
+                }
+                return@launchIO
+            }
+
+            val categories = getCategories()
+            val defaultCategoryId = libraryPreferences.defaultCategory.get().toLong()
+            val defaultCategory = categories.find { it.id == defaultCategoryId }
+
+            val categoryIds = when {
+                defaultCategory != null -> listOf(defaultCategory.id)
+                defaultCategoryId == 0L || categories.isEmpty() -> emptyList()
+                else -> {
+                    mutableState.update { currentState ->
+                        currentState.copy(
+                            dialog = Dialog.ChangeCategoryForSelected(
+                                history = history,
+                                initialSelection = categories.mapAsCheckboxState { false },
+                            ),
+                        )
+                    }
+                    return@launchIO
+                }
+            }
+
+            addFavoritesToCategories(manga, categoryIds)
+        }
+    }
+
+    fun addFavoritesToCategories(history: List<HistoryWithRelations>, categoryIds: List<Long>) {
+        screenModelScope.launchIO {
+            val manga = history
+                .mapNotNull { getManga.await(it.mangaId) }
+                .filterNot { it.favorite }
+                .distinctBy { it.id }
+                .filter { getDuplicateLibraryManga(it).isEmpty() }
+            addFavoritesToCategories(manga, categoryIds)
+        }
+    }
+
+    private suspend fun addFavoritesToCategories(manga: List<Manga>, categoryIds: List<Long>) {
+        val now = Instant.now().toEpochMilli()
+        val updates = manga.map {
+            MangaUpdate(
+                id = it.id,
+                favorite = true,
+                dateAdded = now,
+            )
+        }
+        val result = updateManga.awaitAll(updates)
+        if (!result) return
+
+        manga.forEach {
+            setMangaCategories.await(it.id, categoryIds)
+            addTracks.bindEnhancedTrackers(it, sourceManager.getOrStub(it.source))
+        }
+        toggleAllSelection(false)
+    }
+
     fun showMigrateDialog(target: Manga, current: Manga) {
         mutableState.update { currentState ->
             currentState.copy(dialog = Dialog.Migrate(target = target, current = current))
@@ -239,15 +415,28 @@ class HistoryScreenModel(
     data class State(
         val searchQuery: String? = null,
         val list: List<HistoryUiModel>? = null,
+        val selection: Set<Long> = emptySet(),
         val dialog: Dialog? = null,
-    )
+    ) {
+        val selected: List<HistoryWithRelations>
+            get() = list.orEmpty()
+                .mapNotNull { (it as? HistoryUiModel.Item)?.item?.takeIf { item -> item.id in selection } }
+
+        val selectionMode: Boolean
+            get() = selected.isNotEmpty()
+    }
 
     sealed interface Dialog {
         data object DeleteAll : Dialog
         data class Delete(val history: HistoryWithRelations) : Dialog
+        data class DeleteSelected(val history: List<HistoryWithRelations>) : Dialog
         data class DuplicateManga(val manga: Manga, val duplicates: List<MangaWithChapterCount>) : Dialog
         data class ChangeCategory(
             val manga: Manga,
+            val initialSelection: List<CheckboxState<Category>>,
+        ) : Dialog
+        data class ChangeCategoryForSelected(
+            val history: List<HistoryWithRelations>,
             val initialSelection: List<CheckboxState<Category>>,
         ) : Dialog
         data class Migrate(val target: Manga, val current: Manga) : Dialog
