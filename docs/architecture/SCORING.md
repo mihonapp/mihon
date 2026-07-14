@@ -72,6 +72,6 @@ The scorer records a reason suitable for manual review:
 - insufficient lead;
 - automatic acceptance.
 
-The complete component breakdown is retained in the domain result so the later review UI can explain exactly why each candidate received its score.
+The complete component breakdown is retained in the domain result and persisted with each candidate snapshot so the later review UI can explain exactly why each candidate received its score. Persisted summary columns are checked against the serialized breakdown when loaded.
 
 Thresholds and weights are configurable in the domain scorer. User-facing weight customization remains deferred until behavior is validated against real imported lists and representative extension results.

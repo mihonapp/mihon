@@ -11,6 +11,10 @@ import tachiyomi.domain.readinglist.cbl.model.CblBook
 import tachiyomi.domain.readinglist.cbl.model.CblParseWarning
 import tachiyomi.domain.readinglist.cbl.model.CblParseWarningCode
 import tachiyomi.domain.readinglist.cbl.model.CblReadingList
+import tachiyomi.domain.readinglist.matching.ConfirmedHistoryEvidence
+import tachiyomi.domain.readinglist.matching.EvidenceAgreement
+import tachiyomi.domain.readinglist.matching.MatchScoreBreakdown
+import tachiyomi.domain.readinglist.matching.SourcePreferenceLevel
 
 @Execution(ExecutionMode.CONCURRENT)
 class ReadingListStorageCodecTest {
@@ -50,6 +54,29 @@ class ReadingListStorageCodecTest {
         )
 
         codec.decodeWarnings(codec.encodeWarnings(warnings)) shouldBe warnings
+    }
+
+    @Test
+    fun `round trips match score breakdowns`() {
+        val breakdown = MatchScoreBreakdown(
+            titleSimilarity = 0.93,
+            titlePoints = 53.94,
+            issueEquivalent = true,
+            issuePoints = 30.0,
+            yearEvidence = EvidenceAgreement.MISMATCH,
+            yearPoints = -6.0,
+            volumeEvidence = EvidenceAgreement.MATCH,
+            volumePoints = 4.0,
+            externalIdentifierEvidence = EvidenceAgreement.UNKNOWN,
+            externalIdentifierPoints = 0.0,
+            sourcePreference = SourcePreferenceLevel.SERIES,
+            sourcePreferencePoints = 2.0,
+            confirmedHistory = ConfirmedHistoryEvidence.SOURCE,
+            confirmedHistoryPoints = 1.0,
+            total = 84.94,
+        )
+
+        codec.decodeMatchScoreBreakdown(codec.encodeMatchScoreBreakdown(breakdown)) shouldBe breakdown
     }
 
     @Test

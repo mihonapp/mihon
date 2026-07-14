@@ -57,6 +57,65 @@ CREATE TABLE reading_list_sources(
     UNIQUE(reading_list_id, position)
 );
 
+CREATE TABLE reading_list_match_candidates(
+    entry_id INTEGER NOT NULL,
+    source_id INTEGER NOT NULL,
+    candidate_id TEXT NOT NULL,
+    source_name TEXT NOT NULL,
+    source_language TEXT NOT NULL,
+    manga_url TEXT NOT NULL,
+    chapter_url TEXT NOT NULL,
+    series_title TEXT NOT NULL,
+    issue_number TEXT NOT NULL,
+    volume INTEGER,
+    year INTEGER,
+    score REAL NOT NULL,
+    title_similarity REAL NOT NULL,
+    issue_equivalent INTEGER AS Boolean NOT NULL,
+    score_breakdown TEXT NOT NULL,
+    decision_reason TEXT NOT NULL,
+    lead_over_runner_up REAL,
+    matcher_version INTEGER NOT NULL,
+    created_at INTEGER NOT NULL,
+    updated_at INTEGER NOT NULL,
+    FOREIGN KEY(entry_id) REFERENCES reading_list_entries(_id) ON DELETE CASCADE,
+    PRIMARY KEY(entry_id, source_id, candidate_id)
+);
+
+CREATE TABLE reading_list_candidate_rejections(
+    entry_id INTEGER NOT NULL,
+    source_id INTEGER NOT NULL,
+    candidate_id TEXT NOT NULL,
+    manga_url TEXT NOT NULL,
+    chapter_url TEXT NOT NULL,
+    rejected_at INTEGER NOT NULL,
+    FOREIGN KEY(entry_id) REFERENCES reading_list_entries(_id) ON DELETE CASCADE,
+    PRIMARY KEY(entry_id, source_id, candidate_id)
+);
+
+CREATE TABLE reading_list_entry_overrides(
+    entry_id INTEGER NOT NULL PRIMARY KEY,
+    source_id INTEGER NOT NULL,
+    manga_url TEXT,
+    chapter_url TEXT,
+    created_at INTEGER NOT NULL,
+    updated_at INTEGER NOT NULL,
+    FOREIGN KEY(entry_id) REFERENCES reading_list_entries(_id) ON DELETE CASCADE
+);
+
+CREATE TABLE reading_list_series_mappings(
+    reading_list_id INTEGER NOT NULL,
+    series_key TEXT NOT NULL,
+    series_title TEXT NOT NULL,
+    source_id INTEGER NOT NULL,
+    manga_url TEXT NOT NULL,
+    user_confirmed INTEGER AS Boolean NOT NULL DEFAULT 0,
+    created_at INTEGER NOT NULL,
+    updated_at INTEGER NOT NULL,
+    FOREIGN KEY(reading_list_id) REFERENCES reading_lists(_id) ON DELETE CASCADE,
+    PRIMARY KEY(reading_list_id, series_key)
+);
+
 CREATE INDEX reading_list_entries_list_position_index
 ON reading_list_entries(reading_list_id, position);
 
@@ -65,6 +124,15 @@ ON reading_list_database_references(entry_id, position);
 
 CREATE INDEX reading_list_sources_list_position_index
 ON reading_list_sources(reading_list_id, position);
+
+CREATE INDEX reading_list_match_candidates_entry_score_index
+ON reading_list_match_candidates(entry_id, score DESC, source_id, candidate_id);
+
+CREATE INDEX reading_list_candidate_rejections_entry_index
+ON reading_list_candidate_rejections(entry_id);
+
+CREATE INDEX reading_list_series_mappings_list_index
+ON reading_list_series_mappings(reading_list_id);
 
 getReadingList:
 SELECT
@@ -265,6 +333,276 @@ touchReadingList:
 UPDATE reading_lists
 SET updated_at = :updatedAt
 WHERE _id = :id;
+
+getMatchCandidatesByReadingListId:
+SELECT
+    C.entry_id AS entryId,
+    C.source_id AS sourceId,
+    C.candidate_id AS candidateId,
+    C.source_name AS sourceName,
+    C.source_language AS sourceLanguage,
+    C.manga_url AS mangaUrl,
+    C.chapter_url AS chapterUrl,
+    C.series_title AS seriesTitle,
+    C.issue_number AS issueNumber,
+    C.volume,
+    C.year,
+    C.score,
+    C.title_similarity AS titleSimilarity,
+    C.issue_equivalent AS issueEquivalent,
+    C.score_breakdown AS scoreBreakdown,
+    C.decision_reason AS decisionReason,
+    C.lead_over_runner_up AS leadOverRunnerUp,
+    C.matcher_version AS matcherVersion,
+    C.created_at AS createdAt,
+    C.updated_at AS updatedAt
+FROM reading_list_match_candidates C
+JOIN reading_list_entries RLE ON RLE._id = C.entry_id
+WHERE RLE.reading_list_id = :readingListId
+ORDER BY RLE.position, C.score DESC, C.source_id, C.candidate_id;
+
+getCandidateRejectionsByReadingListId:
+SELECT
+    R.entry_id AS entryId,
+    R.source_id AS sourceId,
+    R.candidate_id AS candidateId,
+    R.manga_url AS mangaUrl,
+    R.chapter_url AS chapterUrl,
+    R.rejected_at AS rejectedAt
+FROM reading_list_candidate_rejections R
+JOIN reading_list_entries RLE ON RLE._id = R.entry_id
+WHERE RLE.reading_list_id = :readingListId
+ORDER BY RLE.position, R.rejected_at, R.source_id, R.candidate_id;
+
+getEntryOverridesByReadingListId:
+SELECT
+    O.entry_id AS entryId,
+    O.source_id AS sourceId,
+    O.manga_url AS mangaUrl,
+    O.chapter_url AS chapterUrl,
+    O.created_at AS createdAt,
+    O.updated_at AS updatedAt
+FROM reading_list_entry_overrides O
+JOIN reading_list_entries RLE ON RLE._id = O.entry_id
+WHERE RLE.reading_list_id = :readingListId
+ORDER BY RLE.position;
+
+getSeriesMappingsByReadingListId:
+SELECT
+    reading_list_id AS readingListId,
+    series_key AS seriesKey,
+    series_title AS seriesTitle,
+    source_id AS sourceId,
+    manga_url AS mangaUrl,
+    user_confirmed AS userConfirmed,
+    created_at AS createdAt,
+    updated_at AS updatedAt
+FROM reading_list_series_mappings
+WHERE reading_list_id = :readingListId
+ORDER BY series_key;
+
+getEntryResolutionGuard:
+SELECT
+    reading_list_id AS readingListId,
+    user_confirmed AS userConfirmed
+FROM reading_list_entries
+WHERE _id = :entryId
+LIMIT 1;
+
+deleteMatchCandidatesByEntryId:
+DELETE FROM reading_list_match_candidates
+WHERE entry_id = :entryId;
+
+insertMatchCandidate:
+INSERT INTO reading_list_match_candidates(
+    entry_id,
+    source_id,
+    candidate_id,
+    source_name,
+    source_language,
+    manga_url,
+    chapter_url,
+    series_title,
+    issue_number,
+    volume,
+    year,
+    score,
+    title_similarity,
+    issue_equivalent,
+    score_breakdown,
+    decision_reason,
+    lead_over_runner_up,
+    matcher_version,
+    created_at,
+    updated_at
+)
+VALUES (
+    :entryId,
+    :sourceId,
+    :candidateId,
+    :sourceName,
+    :sourceLanguage,
+    :mangaUrl,
+    :chapterUrl,
+    :seriesTitle,
+    :issueNumber,
+    :volume,
+    :year,
+    :score,
+    :titleSimilarity,
+    :issueEquivalent,
+    :scoreBreakdown,
+    :decisionReason,
+    :leadOverRunnerUp,
+    :matcherVersion,
+    :createdAt,
+    :updatedAt
+);
+
+insertCandidateRejection:
+INSERT OR REPLACE INTO reading_list_candidate_rejections(
+    entry_id,
+    source_id,
+    candidate_id,
+    manga_url,
+    chapter_url,
+    rejected_at
+)
+VALUES (
+    :entryId,
+    :sourceId,
+    :candidateId,
+    :mangaUrl,
+    :chapterUrl,
+    :rejectedAt
+);
+
+deleteCandidateRejection:
+DELETE FROM reading_list_candidate_rejections
+WHERE entry_id = :entryId
+  AND source_id = :sourceId
+  AND candidate_id = :candidateId;
+
+deleteEntryOverride:
+DELETE FROM reading_list_entry_overrides
+WHERE entry_id = :entryId;
+
+upsertEntryOverride:
+INSERT INTO reading_list_entry_overrides(
+    entry_id,
+    source_id,
+    manga_url,
+    chapter_url,
+    created_at,
+    updated_at
+)
+VALUES (
+    :entryId,
+    :sourceId,
+    :mangaUrl,
+    :chapterUrl,
+    :createdAt,
+    :updatedAt
+)
+ON CONFLICT(entry_id) DO UPDATE SET
+    source_id = excluded.source_id,
+    manga_url = excluded.manga_url,
+    chapter_url = excluded.chapter_url,
+    updated_at = excluded.updated_at;
+
+deleteSeriesMapping:
+DELETE FROM reading_list_series_mappings
+WHERE reading_list_id = :readingListId
+  AND series_key = :seriesKey;
+
+applyAutomaticSeriesMapping:
+INSERT INTO reading_list_series_mappings(
+    reading_list_id,
+    series_key,
+    series_title,
+    source_id,
+    manga_url,
+    user_confirmed,
+    created_at,
+    updated_at
+)
+VALUES (
+    :readingListId,
+    :seriesKey,
+    :seriesTitle,
+    :sourceId,
+    :mangaUrl,
+    0,
+    :createdAt,
+    :updatedAt
+)
+ON CONFLICT(reading_list_id, series_key) DO UPDATE SET
+    series_title = excluded.series_title,
+    source_id = excluded.source_id,
+    manga_url = excluded.manga_url,
+    updated_at = excluded.updated_at
+WHERE user_confirmed = 0;
+
+confirmSeriesMapping:
+INSERT INTO reading_list_series_mappings(
+    reading_list_id,
+    series_key,
+    series_title,
+    source_id,
+    manga_url,
+    user_confirmed,
+    created_at,
+    updated_at
+)
+VALUES (
+    :readingListId,
+    :seriesKey,
+    :seriesTitle,
+    :sourceId,
+    :mangaUrl,
+    1,
+    :createdAt,
+    :updatedAt
+)
+ON CONFLICT(reading_list_id, series_key) DO UPDATE SET
+    series_title = excluded.series_title,
+    source_id = excluded.source_id,
+    manga_url = excluded.manga_url,
+    user_confirmed = 1,
+    updated_at = excluded.updated_at;
+
+applyAutomaticResolution:
+UPDATE reading_list_entries
+SET resolution_state = :resolutionState,
+    matched_source_id = :matchedSourceId,
+    matched_manga_url = :matchedMangaUrl,
+    matched_chapter_url = :matchedChapterUrl,
+    confidence = :confidence,
+    matcher_version = :matcherVersion,
+    user_confirmed = 0
+WHERE _id = :entryId
+  AND user_confirmed = 0;
+
+confirmResolution:
+UPDATE reading_list_entries
+SET resolution_state = 'USER_CONFIRMED',
+    matched_source_id = :matchedSourceId,
+    matched_manga_url = :matchedMangaUrl,
+    matched_chapter_url = :matchedChapterUrl,
+    confidence = :confidence,
+    matcher_version = :matcherVersion,
+    user_confirmed = 1,
+    skipped = 0
+WHERE _id = :entryId;
+
+touchReadingListForEntry:
+UPDATE reading_lists
+SET updated_at = :updatedAt
+WHERE _id = (
+    SELECT reading_list_id
+    FROM reading_list_entries
+    WHERE _id = :entryId
+);
 
 deleteReadingListSources:
 DELETE FROM reading_list_sources

@@ -6,6 +6,10 @@ import kotlinx.serialization.json.Json
 import tachiyomi.domain.readinglist.cbl.model.CblParseWarning
 import tachiyomi.domain.readinglist.cbl.model.CblParseWarningCode
 import tachiyomi.domain.readinglist.cbl.model.CblReadingList
+import tachiyomi.domain.readinglist.matching.ConfirmedHistoryEvidence
+import tachiyomi.domain.readinglist.matching.EvidenceAgreement
+import tachiyomi.domain.readinglist.matching.MatchScoreBreakdown
+import tachiyomi.domain.readinglist.matching.SourcePreferenceLevel
 
 internal class ReadingListStorageCodec(
     private val json: Json,
@@ -44,6 +48,75 @@ internal class ReadingListStorageCodec(
                 code = CblParseWarningCode.valueOf(warning.code),
                 message = warning.message,
             )
+        }
+    }
+
+    fun encodeMatchScoreBreakdown(value: MatchScoreBreakdown): String {
+        return json.encodeToString(StoredMatchScoreBreakdown.from(value))
+    }
+
+    fun decodeMatchScoreBreakdown(value: String): MatchScoreBreakdown {
+        return json.decodeFromString<StoredMatchScoreBreakdown>(value).toDomain()
+    }
+
+    @Serializable
+    private data class StoredMatchScoreBreakdown(
+        val titleSimilarity: Double,
+        val titlePoints: Double,
+        val issueEquivalent: Boolean,
+        val issuePoints: Double,
+        val yearEvidence: String,
+        val yearPoints: Double,
+        val volumeEvidence: String,
+        val volumePoints: Double,
+        val externalIdentifierEvidence: String,
+        val externalIdentifierPoints: Double,
+        val sourcePreference: String,
+        val sourcePreferencePoints: Double,
+        val confirmedHistory: String,
+        val confirmedHistoryPoints: Double,
+        val total: Double,
+    ) {
+        fun toDomain(): MatchScoreBreakdown {
+            return MatchScoreBreakdown(
+                titleSimilarity = titleSimilarity,
+                titlePoints = titlePoints,
+                issueEquivalent = issueEquivalent,
+                issuePoints = issuePoints,
+                yearEvidence = EvidenceAgreement.valueOf(yearEvidence),
+                yearPoints = yearPoints,
+                volumeEvidence = EvidenceAgreement.valueOf(volumeEvidence),
+                volumePoints = volumePoints,
+                externalIdentifierEvidence = EvidenceAgreement.valueOf(externalIdentifierEvidence),
+                externalIdentifierPoints = externalIdentifierPoints,
+                sourcePreference = SourcePreferenceLevel.valueOf(sourcePreference),
+                sourcePreferencePoints = sourcePreferencePoints,
+                confirmedHistory = ConfirmedHistoryEvidence.valueOf(confirmedHistory),
+                confirmedHistoryPoints = confirmedHistoryPoints,
+                total = total,
+            )
+        }
+
+        companion object {
+            fun from(value: MatchScoreBreakdown): StoredMatchScoreBreakdown {
+                return StoredMatchScoreBreakdown(
+                    titleSimilarity = value.titleSimilarity,
+                    titlePoints = value.titlePoints,
+                    issueEquivalent = value.issueEquivalent,
+                    issuePoints = value.issuePoints,
+                    yearEvidence = value.yearEvidence.name,
+                    yearPoints = value.yearPoints,
+                    volumeEvidence = value.volumeEvidence.name,
+                    volumePoints = value.volumePoints,
+                    externalIdentifierEvidence = value.externalIdentifierEvidence.name,
+                    externalIdentifierPoints = value.externalIdentifierPoints,
+                    sourcePreference = value.sourcePreference.name,
+                    sourcePreferencePoints = value.sourcePreferencePoints,
+                    confirmedHistory = value.confirmedHistory.name,
+                    confirmedHistoryPoints = value.confirmedHistoryPoints,
+                    total = value.total,
+                )
+            }
         }
     }
 

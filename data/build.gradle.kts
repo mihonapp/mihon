@@ -38,6 +38,8 @@ dependencies {
 
     api(libs.bundles.sqldelight)
 
+    testImplementation(libs.sqldelight.sqliteDriver)
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.bundles.test)
     testRuntimeOnly(libs.junit.platform.launcher)
 }
