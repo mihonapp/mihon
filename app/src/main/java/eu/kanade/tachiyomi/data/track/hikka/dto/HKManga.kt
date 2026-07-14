@@ -16,7 +16,7 @@ data class HKManga(
     @SerialName("title_original")
     val titleOriginal: String,
     @SerialName("media_type")
-    val mediaType: String,
+    val mediaType: String?,
     @SerialName("title_ua")
     val titleUa: String? = null,
     @SerialName("title_en")
@@ -45,7 +45,7 @@ data class HKManga(
             score = this@HKManga.score
             tracking_url = "${HikkaApi.BASE_URL}/manga/${this@HKManga.slug}"
             publishing_status = this@HKManga.status
-            publishing_type = this@HKManga.mediaType
+            publishing_type = this@HKManga.mediaType?.replace("_", " ").orEmpty()
 
             startDate?.takeIf { it != 0L }?.let {
                 val outputDf = SimpleDateFormat("yyyy-MM-dd", Locale.US)

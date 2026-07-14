@@ -400,7 +400,8 @@
     <string name="pref_flash_style_white_black">White and Black</string>
     <string name="pref_double_tap_anim_speed">Double tap animation speed</string>
     <string name="pref_show_page_number">Show page number</string>
-    <string name="pref_webtoon_vertical_navigator">Use vertical navigator for long strip reading</string>
+    <string name="pref_vertical_navigator">Use vertical chapter navigator in</string>
+    <string name="pref_vertical_navigator_height">Vertical navigator height</string>
     <string name="pref_webtoon_vertical_navigator_on_left">Place vertical navigator on the left side</string>
     <string name="pref_show_reading_mode">Show reading mode</string>
     <string name="pref_show_reading_mode_summary">Briefly show current mode when reader is opened</string>

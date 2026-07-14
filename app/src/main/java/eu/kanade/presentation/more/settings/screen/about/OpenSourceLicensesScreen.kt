@@ -8,7 +8,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
-import com.mikepenz.aboutlibraries.ui.compose.util.htmlReadyLicenseContent
+import com.mikepenz.aboutlibraries.ui.compose.variant.LibraryDetailMode
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.R
@@ -36,15 +36,7 @@ class OpenSourceLicensesScreen : Screen() {
                 modifier = Modifier
                     .fillMaxSize(),
                 contentPadding = contentPadding,
-                onLibraryClick = {
-                    navigator.push(
-                        OpenSourceLibraryLicenseScreen(
-                            name = it.name,
-                            website = it.website,
-                            license = it.licenses.firstOrNull()?.htmlReadyLicenseContent.orEmpty(),
-                        ),
-                    )
-                },
+                detailMode = LibraryDetailMode.Sheet,
             )
         }
     }

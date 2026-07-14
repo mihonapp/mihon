@@ -54,8 +54,7 @@ internal object ExtensionLoader {
     private const val METADATA_EXTENSION_LIB = "tachiyomix.extensionLib"
     private const val METADATA_CONTENT_WARNING = "tachiyomix.contentWarning"
 
-    const val LIB_VERSION_MIN = 1.4
-    const val LIB_VERSION_MAX = 1.6
+    private val SUPPORTED_LIB_VERSIONS = listOf(1.4, 1.6)
 
     @Suppress("DEPRECATION")
     private val PACKAGE_FLAGS = PackageManager.GET_CONFIGURATIONS or
@@ -244,22 +243,17 @@ internal object ExtensionLoader {
         }
 
         // Validate lib version
-        val libVersion = appInfo.metaData.getDouble(METADATA_EXTENSION_LIB).takeUnless { it == 0.0 }
+        val libVersion = appInfo.metaData.getFloat(METADATA_EXTENSION_LIB)
+            .takeUnless { it == 0.0f }
+            ?.toString()
+            ?.toDouble()
             ?: versionName.substringBeforeLast('.').toDoubleOrNull()
-        if (libVersion == null || (libVersion != LIB_VERSION_MIN && libVersion != LIB_VERSION_MAX)) {
+        if (libVersion == null || libVersion !in SUPPORTED_LIB_VERSIONS) {
             logcat(LogPriority.WARN) {
-                "Lib version is $libVersion, while only versions " +
-                    "$LIB_VERSION_MIN and $LIB_VERSION_MAX is allowed"
+                "Lib version is $libVersion, while only version(s) ${SUPPORTED_LIB_VERSIONS.joinToString()} are supported"
             }
             return LoadResult.Error
         }
-//        if (libVersion == null || libVersion < LIB_VERSION_MIN || libVersion > LIB_VERSION_MAX) {
-//            logcat(LogPriority.WARN) {
-//                "Lib version is $libVersion, while only versions " +
-//                    "$LIB_VERSION_MIN or $LIB_VERSION_MAX is allowed"
-//            }
-//            return LoadResult.Error
-//        }
 
         val signatures = getSignatures(pkgInfo)
         if (signatures.isNullOrEmpty()) {
