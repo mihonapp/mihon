@@ -51,7 +51,7 @@ class ReadingListResolutionSqlTest {
     }
 
     @Test
-    fun `automatic resolution preserves explicit skipped state`() = runTest {
+    fun `automatic resolution cannot modify an explicitly skipped entry`() = runTest {
         withQueries { driver, queries ->
             val fixture = insertFixture(queries)
             driver.execute(
@@ -70,11 +70,13 @@ class ReadingListResolutionSqlTest {
                 confidence = 40.0,
                 matcherVersion = 2,
                 entryId = fixture.entryId,
-            ) shouldBe 1L
+            ) shouldBe 0L
 
             val entry = queries.getReadingListEntries(fixture.readingListId).awaitAsOne()
             entry.skipped shouldBe true
-            entry.resolutionState shouldBe "UNRESOLVED"
+            entry.resolutionState shouldBe "UNSEARCHED"
+            entry.confidence shouldBe null
+            entry.matcherVersion shouldBe null
         }
     }
 

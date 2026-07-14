@@ -6,6 +6,12 @@
     <string name="reading_list_import_cbl">Import .cbl</string>
     <string name="reading_list_importing">Importing…</string>
     <string name="reading_list_untitled">Untitled reading list</string>
+    <string name="reading_list_search_candidates">Search for matches</string>
+    <string name="reading_list_search_complete">Search finished: %1$d matched • %2$d need review • %3$d unresolved • %4$d source unavailable • %5$d source errors</string>
+    <string name="reading_list_search_complete_update_sources">Search finished: %1$d matched • %2$d need review • %3$d unresolved • %4$d source unavailable • %5$d source errors. Update the affected extensions or choose another source.</string>
+    <string name="reading_list_search_no_installed_sources">None of this list’s selected sources are currently installed</string>
+    <string name="reading_list_search_nothing_to_do">All entries are already confirmed or skipped</string>
+    <string name="reading_list_search_failed">The match search could not be completed</string>
     <string name="reading_list_edit_sources">Edit sources</string>
     <string name="reading_list_delete">Delete</string>
     <string name="reading_list_delete_title">Delete reading list?</string>

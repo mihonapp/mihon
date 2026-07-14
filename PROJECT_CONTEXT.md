@@ -10,7 +10,7 @@ The Android application identity is `io.github.kamui2040.yomori`, with Yomori ve
 
 Device-test artifacts use the dedicated `io.github.kamui2040.yomori.debug` package and a reproducible public development certificate. This permits direct in-place updates between development APKs downloaded on a phone without requiring local signing setup.
 
-The first product milestone is CBL reading-list import and deterministic, user-correctable matching. The safe parser, transactional persistence, normalization, confidence scoring, visible import interface, per-list source-selection flow, candidate-resolution storage, rejection history, entry overrides, series mappings, and confirmation-protected repository operations are implemented and covered by focused tests. Candidate search orchestration and manual-review UI are the next product stages. No public Yomori release is ready yet.
+The first product milestone is CBL reading-list import and deterministic, user-correctable matching. The safe parser, transactional persistence, normalization, confidence scoring, visible import interface, per-list source-selection flow, candidate-resolution storage, rejection history, entry overrides, series mappings, confirmation-protected repository operations, and explicit candidate-search orchestration are implemented and covered by focused tests. The manual-review UI is the next product stage. No public Yomori release is ready yet.
 
 ## Product goal
 
@@ -38,9 +38,15 @@ Yomori does not provide, bundle, host, operate, or recommend content sources.
 - SQLDelight migration 15 adds ordered per-list source selections without changing extension-facing APIs.
 - SQLDelight migration 16 adds ranked candidate snapshots, rejection history, entry overrides, and list-local series mappings without changing extension-facing APIs.
 - Candidate refresh and automatic resolution are transactional and refuse to modify user-confirmed entry mappings.
-- Automatic resolution preserves explicit skipped choices; explicit confirmation may clear a skip when the user selects a match.
+- Candidate refresh and automatic resolution refuse skipped entries; only explicit confirmation may clear a skip when the user selects a match.
 - Automatic series mapping cannot replace a user-confirmed series mapping; only an explicit confirmation or removal may change it.
-- Candidate rejections persist independently from candidate refreshes so rejected results are not silently reintroduced as acceptable choices.
+- Candidate rejections persist independently from candidate refreshes and are excluded from later automatic matching until explicitly cleared or confirmed.
+- Candidate searches run only after an explicit user action and query only the installed online sources selected for that reading list.
+- Search work is grouped by normalized title plus known year and volume, uses one first-page series search per selected source and series, fetches each source/series issue list at most once per operation, shares a three-request concurrency limit across simultaneous list searches, and applies a 30-second timeout to each extension request.
+- Entry overrides constrain candidate search before lower-priority series and reading-list preferences; unavailable override sources are not silently bypassed.
+- Search results are bounded before persistence, are never added to the normal library, and are saved with the existing score breakdown and confirmation protection. Rejected candidates remain persisted for review but do not participate in automatic decisions.
+- Confirmed and skipped entries are not searched automatically; missing selected sources are reported without blocking available selected sources.
+- A user-confirmed series mapping is never bypassed by replacement searches when its selected source is unavailable.
 - Reading-list insertion is transactional, deletion cascades to owned records, and progress cannot point to a missing entry.
 - The primary Reading Lists tab imports local `.cbl` documents through Android's system document picker.
 - Imported files are read with a 16 MiB boundary and support UTF-8, UTF-16 little-endian, and UTF-16 big-endian XML.
@@ -110,9 +116,10 @@ Persisted states:
 6. Confidence scoring and ambiguity rules. **Complete.**
 7. Import and source-selection flow. **Complete.**
 8. Candidate persistence, rejection history, and protected manual overrides. **Complete.**
-9. Candidate search orchestration and manual-review UI.
-10. Cross-series reader navigation and progress.
-11. Repair and rematching tools.
+9. Candidate search orchestration. **Complete.**
+10. Manual-review UI.
+11. Cross-series reader navigation and progress.
+12. Repair and rematching tools.
 
 ## Compatibility invariants
 

@@ -28,8 +28,9 @@ Original CBL attributes, unknown child elements, parser warnings, series names, 
 - Progress may only point to a position that exists in the list.
 - Source mappings are represented independently from Mihon's normal library membership so candidate searches do not add remote results to the library.
 - Candidate replacement is transactional and is refused for an entry whose match is user-confirmed.
-- Candidate rejection records survive candidate refreshes and are cleared only by an explicit user action or confirmation of that candidate.
-- Automatic entry resolution is restricted to `AUTO_MATCHED`, `AMBIGUOUS`, and `UNRESOLVED`, and cannot overwrite a user-confirmed entry.
+- Candidate replacement and its automatic resolution outcome can be committed atomically so an entry never exposes a new candidate set with an old resolution state.
+- Candidate rejection records survive candidate refreshes, are excluded from automatic decisions, and are cleared only by an explicit user action or confirmation of that candidate.
+- Automatic entry resolution is restricted to `AUTO_MATCHED`, `AMBIGUOUS`, `UNRESOLVED`, and `SOURCE_UNAVAILABLE`, and cannot overwrite a user-confirmed or skipped entry.
 - Automatic resolution preserves an explicit skipped choice; only an explicit confirmation clears the skipped state.
 - Automatic series mappings cannot replace a user-confirmed series mapping.
 - Explicit confirmation may replace a previous automatic or confirmed mapping and records the new choice as authoritative.

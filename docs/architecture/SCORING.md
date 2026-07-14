@@ -55,9 +55,10 @@ Candidates are sorted deterministically by:
 3. equivalent issue number;
 4. title similarity;
 5. source-preference level;
-6. stable candidate identifier.
+6. reading-list source order;
+7. source ID and stable candidate identifier.
 
-Equal high-scoring candidates remain ambiguous rather than being selected by source order alone.
+Equal high-scoring candidates remain ambiguous rather than being accepted by source order alone; source order only makes their displayed ranking deterministic. Rejected candidates do not participate in automatic decisions, and confirmed-series history applies only to the same stored manga mapping rather than every title on the same source.
 
 ## Decision reasons
 

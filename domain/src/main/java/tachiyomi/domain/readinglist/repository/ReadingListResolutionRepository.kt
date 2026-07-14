@@ -18,6 +18,12 @@ interface ReadingListResolutionRepository {
         candidates: List<ReadingListMatchCandidateSnapshot>,
     ): ReadingListProtectedWriteResult
 
+    suspend fun replaceMatchCandidatesAndApplyAutomaticResolution(
+        entryId: Long,
+        candidates: List<ReadingListMatchCandidateSnapshot>,
+        update: ReadingListAutomaticResolutionUpdate,
+    ): ReadingListProtectedWriteResult
+
     suspend fun applyAutomaticResolution(
         entryId: Long,
         update: ReadingListAutomaticResolutionUpdate,

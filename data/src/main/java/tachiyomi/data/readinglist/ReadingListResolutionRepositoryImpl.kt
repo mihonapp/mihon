@@ -5,6 +5,7 @@ import app.cash.sqldelight.async.coroutines.awaitAsOne
 import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
 import kotlinx.serialization.json.Json
 import tachiyomi.data.Database
+import tachiyomi.data.Reading_listsQueries
 import tachiyomi.domain.readinglist.matching.MatchDecisionReason
 import tachiyomi.domain.readinglist.model.ReadingListAutomaticResolutionUpdate
 import tachiyomi.domain.readinglist.model.ReadingListCandidateIdentity
@@ -140,34 +141,46 @@ class ReadingListResolutionRepositoryImpl(
         entryId: Long,
         candidates: List<ReadingListMatchCandidateSnapshot>,
     ): ReadingListProtectedWriteResult {
-        require(
-            candidates.map(ReadingListMatchCandidateSnapshot::identity)
-                .distinct()
-                .size == candidates.size,
-        ) {
-            "Reading-list candidate replacement contains duplicate identities"
+        requireValidCandidateReplacement(candidates)
+
+        return database.transactionWithResult {
+            val queries = database.reading_listsQueries
+            val guard = queries.getEntryResolutionGuard(entryId).awaitAsOneOrNull()
+                ?: return@transactionWithResult ReadingListProtectedWriteResult.ENTRY_NOT_FOUND
+            if (guard.userConfirmed) {
+                return@transactionWithResult ReadingListProtectedWriteResult.USER_CONFIRMED
+            }
+            if (guard.skipped) {
+                return@transactionWithResult ReadingListProtectedWriteResult.SKIPPED
+            }
+
+            val timestamp = currentTimeMillis()
+            replaceCandidates(
+                queries = queries,
+                entryId = entryId,
+                candidates = candidates,
+                timestamp = timestamp,
+            )
+            queries.touchReadingList(
+                updatedAt = timestamp,
+                id = guard.readingListId,
+            )
+            ReadingListProtectedWriteResult.APPLIED
         }
-        candidates.firstOrNull()?.let { firstCandidate ->
-            require(
-                candidates.all { candidate ->
-                    candidate.matcherVersion == firstCandidate.matcherVersion
-                },
-            ) {
-                "Candidate replacement must use one matcher version"
-            }
-            require(
-                candidates.all { candidate ->
-                    candidate.decisionReason == firstCandidate.decisionReason
-                },
-            ) {
-                "Candidate replacement must use one decision reason"
-            }
-            require(
-                candidates.all { candidate ->
-                    candidate.leadOverRunnerUp == firstCandidate.leadOverRunnerUp
-                },
-            ) {
-                "Candidate replacement must use one runner-up lead"
+    }
+
+    override suspend fun replaceMatchCandidatesAndApplyAutomaticResolution(
+        entryId: Long,
+        candidates: List<ReadingListMatchCandidateSnapshot>,
+        update: ReadingListAutomaticResolutionUpdate,
+    ): ReadingListProtectedWriteResult {
+        requireValidCandidateReplacement(candidates)
+        require(candidates.all { candidate -> candidate.matcherVersion == update.matcherVersion }) {
+            "Candidate replacement and automatic resolution must use one matcher version"
+        }
+        update.acceptedCandidate?.let { acceptedCandidate ->
+            require(candidates.any { candidate -> candidate == acceptedCandidate }) {
+                "The accepted candidate must exactly match a candidate in the replacement set"
             }
         }
 
@@ -178,33 +191,22 @@ class ReadingListResolutionRepositoryImpl(
             if (guard.userConfirmed) {
                 return@transactionWithResult ReadingListProtectedWriteResult.USER_CONFIRMED
             }
+            if (guard.skipped) {
+                return@transactionWithResult ReadingListProtectedWriteResult.SKIPPED
+            }
 
             val timestamp = currentTimeMillis()
-            queries.deleteMatchCandidatesByEntryId(entryId)
-            candidates.forEach { candidate ->
-                queries.insertMatchCandidate(
-                    entryId = entryId,
-                    sourceId = candidate.identity.sourceId,
-                    candidateId = candidate.identity.candidateId,
-                    sourceName = candidate.sourceName,
-                    sourceLanguage = candidate.sourceLanguage,
-                    mangaUrl = candidate.mangaUrl,
-                    chapterUrl = candidate.chapterUrl,
-                    seriesTitle = candidate.seriesTitle,
-                    issueNumber = candidate.issueNumber,
-                    volume = candidate.volume?.toLong(),
-                    year = candidate.year?.toLong(),
-                    score = candidate.score,
-                    titleSimilarity = candidate.breakdown.titleSimilarity,
-                    issueEquivalent = candidate.breakdown.issueEquivalent,
-                    scoreBreakdown = codec.encodeMatchScoreBreakdown(candidate.breakdown),
-                    decisionReason = candidate.decisionReason.name,
-                    leadOverRunnerUp = candidate.leadOverRunnerUp,
-                    matcherVersion = candidate.matcherVersion,
-                    createdAt = timestamp,
-                    updatedAt = timestamp,
-                )
-            }
+            replaceCandidates(
+                queries = queries,
+                entryId = entryId,
+                candidates = candidates,
+                timestamp = timestamp,
+            )
+            applyAutomaticResolution(
+                queries = queries,
+                entryId = entryId,
+                update = update,
+            )
             queries.touchReadingList(
                 updatedAt = timestamp,
                 id = guard.readingListId,
@@ -224,6 +226,9 @@ class ReadingListResolutionRepositoryImpl(
             if (guard.userConfirmed) {
                 return@transactionWithResult ReadingListProtectedWriteResult.USER_CONFIRMED
             }
+            if (guard.skipped) {
+                return@transactionWithResult ReadingListProtectedWriteResult.SKIPPED
+            }
 
             val acceptedCandidate = update.acceptedCandidate
             val updatedRows = queries.applyAutomaticResolution(
@@ -236,7 +241,13 @@ class ReadingListResolutionRepositoryImpl(
                 entryId = entryId,
             )
             if (updatedRows != 1L) {
-                return@transactionWithResult ReadingListProtectedWriteResult.USER_CONFIRMED
+                val latestGuard = queries.getEntryResolutionGuard(entryId).awaitAsOneOrNull()
+                    ?: return@transactionWithResult ReadingListProtectedWriteResult.ENTRY_NOT_FOUND
+                return@transactionWithResult when {
+                    latestGuard.userConfirmed -> ReadingListProtectedWriteResult.USER_CONFIRMED
+                    latestGuard.skipped -> ReadingListProtectedWriteResult.SKIPPED
+                    else -> error("Automatic reading-list resolution did not update its entry")
+                }
             }
 
             queries.touchReadingList(
@@ -451,6 +462,94 @@ class ReadingListResolutionRepositoryImpl(
                 id = readingListId,
             )
             true
+        }
+    }
+
+    private fun requireValidCandidateReplacement(
+        candidates: List<ReadingListMatchCandidateSnapshot>,
+    ) {
+        require(
+            candidates.map(ReadingListMatchCandidateSnapshot::identity)
+                .distinct()
+                .size == candidates.size,
+        ) {
+            "Reading-list candidate replacement contains duplicate identities"
+        }
+        candidates.firstOrNull()?.let { firstCandidate ->
+            require(
+                candidates.all { candidate ->
+                    candidate.matcherVersion == firstCandidate.matcherVersion
+                },
+            ) {
+                "Candidate replacement must use one matcher version"
+            }
+            require(
+                candidates.all { candidate ->
+                    candidate.decisionReason == firstCandidate.decisionReason
+                },
+            ) {
+                "Candidate replacement must use one decision reason"
+            }
+            require(
+                candidates.all { candidate ->
+                    candidate.leadOverRunnerUp == firstCandidate.leadOverRunnerUp
+                },
+            ) {
+                "Candidate replacement must use one runner-up lead"
+            }
+        }
+    }
+
+    private suspend fun replaceCandidates(
+        queries: Reading_listsQueries,
+        entryId: Long,
+        candidates: List<ReadingListMatchCandidateSnapshot>,
+        timestamp: Long,
+    ) {
+        queries.deleteMatchCandidatesByEntryId(entryId)
+        candidates.forEach { candidate ->
+            queries.insertMatchCandidate(
+                entryId = entryId,
+                sourceId = candidate.identity.sourceId,
+                candidateId = candidate.identity.candidateId,
+                sourceName = candidate.sourceName,
+                sourceLanguage = candidate.sourceLanguage,
+                mangaUrl = candidate.mangaUrl,
+                chapterUrl = candidate.chapterUrl,
+                seriesTitle = candidate.seriesTitle,
+                issueNumber = candidate.issueNumber,
+                volume = candidate.volume?.toLong(),
+                year = candidate.year?.toLong(),
+                score = candidate.score,
+                titleSimilarity = candidate.breakdown.titleSimilarity,
+                issueEquivalent = candidate.breakdown.issueEquivalent,
+                scoreBreakdown = codec.encodeMatchScoreBreakdown(candidate.breakdown),
+                decisionReason = candidate.decisionReason.name,
+                leadOverRunnerUp = candidate.leadOverRunnerUp,
+                matcherVersion = candidate.matcherVersion,
+                createdAt = timestamp,
+                updatedAt = timestamp,
+            )
+        }
+    }
+
+    private suspend fun applyAutomaticResolution(
+        queries: Reading_listsQueries,
+        entryId: Long,
+        update: ReadingListAutomaticResolutionUpdate,
+    ) {
+        val acceptedCandidate = update.acceptedCandidate
+        val updatedRows = queries.applyAutomaticResolution(
+            resolutionState = update.state.name,
+            matchedSourceId = acceptedCandidate?.identity?.sourceId,
+            matchedMangaUrl = acceptedCandidate?.mangaUrl,
+            matchedChapterUrl = acceptedCandidate?.chapterUrl,
+            confidence = update.leadingConfidence,
+            matcherVersion = update.matcherVersion,
+            entryId = entryId,
+        )
+        check(updatedRows == 1L) {
+            "Automatic reading-list resolution did not update its unconfirmed entry"
         }
     }
 

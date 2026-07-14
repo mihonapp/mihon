@@ -20,13 +20,31 @@ data class ReadingListMatchCandidate(
     val sourceId: Long,
     val seriesTitle: String,
     val issueNumber: String,
+    val sourceOrder: Int = Int.MAX_VALUE,
+    val mangaUrl: String? = null,
+    val chapterUrl: String? = null,
     val volume: Int? = null,
     val year: Int? = null,
     val sourcePreference: SourcePreferenceLevel = SourcePreferenceLevel.NONE,
     val externalIdentifierEvidence: EvidenceAgreement = EvidenceAgreement.UNKNOWN,
     val confirmedHistory: ConfirmedHistoryEvidence = ConfirmedHistoryEvidence.NONE,
     val userConfirmed: Boolean = false,
-)
+) {
+    init {
+        require(sourceOrder >= 0) {
+            "Reading-list source order cannot be negative"
+        }
+        require(mangaUrl == null || mangaUrl.isNotBlank()) {
+            "Reading-list candidate manga URL cannot be blank"
+        }
+        require(chapterUrl == null || chapterUrl.isNotBlank()) {
+            "Reading-list candidate chapter URL cannot be blank"
+        }
+        require(chapterUrl == null || mangaUrl != null) {
+            "A reading-list candidate chapter URL requires a manga URL"
+        }
+    }
+}
 
 enum class SourcePreferenceLevel {
     NONE,
@@ -139,6 +157,16 @@ class ReadingListMatchScorer(
     private val config: MatchScoringConfig = MatchScoringConfig(),
 ) {
 
+    fun titleSimilarity(
+        expectedTitle: String,
+        actualTitle: String,
+    ): Double {
+        return calculateTitleSimilarity(
+            expected = TitleNormalizer.normalize(expectedTitle),
+            actual = TitleNormalizer.normalize(actualTitle),
+        ).roundForDisplay()
+    }
+
     fun score(
         query: ReadingListMatchQuery,
         candidate: ReadingListMatchCandidate,
@@ -243,7 +271,7 @@ class ReadingListMatchScorer(
     ): ScoredReadingListMatchCandidate {
         val candidateTitle = TitleNormalizer.normalize(candidate.seriesTitle)
         val candidateIssue = IssueNumberNormalizer.normalize(candidate.issueNumber)
-        val titleSimilarity = titleSimilarity(query.title, candidateTitle).roundForDisplay()
+        val titleSimilarity = calculateTitleSimilarity(query.title, candidateTitle).roundForDisplay()
         val titlePoints = (titleSimilarity * config.titleWeight).roundForDisplay()
         val issueEquivalent = query.issue.isEquivalentTo(candidateIssue)
         val issuePoints = if (issueEquivalent) config.issueWeight else 0.0
@@ -349,6 +377,8 @@ class ReadingListMatchScorer(
             .thenByDescending { it.breakdown.issueEquivalent }
             .thenByDescending { it.breakdown.titleSimilarity }
             .thenByDescending { it.candidate.sourcePreference.ordinal }
+            .thenBy { it.candidate.sourceOrder }
+            .thenBy { it.candidate.sourceId }
             .thenBy { it.candidate.id }
     }
 }
@@ -361,7 +391,7 @@ private fun evidence(expected: Int?, actual: Int?): EvidenceAgreement {
     }
 }
 
-private fun titleSimilarity(
+private fun calculateTitleSimilarity(
     expected: NormalizedTitle,
     actual: NormalizedTitle,
 ): Double {

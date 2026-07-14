@@ -182,6 +182,14 @@ data class ReadingListAutomaticResolutionUpdate(
                     "Unresolved results cannot persist an accepted candidate"
                 }
             }
+            ReadingListEntryResolutionState.SOURCE_UNAVAILABLE -> {
+                require(acceptedCandidate == null) {
+                    "Unavailable-source results cannot persist an accepted candidate"
+                }
+                require(leadingConfidence == null) {
+                    "Unavailable-source results cannot persist a confidence"
+                }
+            }
             else -> {
                 throw IllegalArgumentException(
                     "Automatic resolution cannot write state ${state.name}",
@@ -195,6 +203,7 @@ enum class ReadingListProtectedWriteResult {
     APPLIED,
     ENTRY_NOT_FOUND,
     USER_CONFIRMED,
+    SKIPPED,
 }
 
 enum class ReadingListSeriesMappingWriteResult {

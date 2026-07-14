@@ -117,6 +117,7 @@ data object ReadingListsTab : Tab {
             state = state,
             snackbarHostState = snackbarHostState,
             onImport = launchImport,
+            onSearch = screenModel::searchCandidates,
             onEditSources = screenModel::editSources,
             onDelete = screenModel::requestDelete,
         )
@@ -160,6 +161,27 @@ data object ReadingListsTab : Tab {
                         event.listName ?: context.getString(R.string.reading_list_untitled),
                     )
                     ReadingListsEvent.SourcesUpdated -> context.getString(R.string.reading_list_sources_updated)
+                    is ReadingListsEvent.CandidateSearchCompleted -> context.getString(
+                        if (event.summary.updateRecommendedSourceCount > 0) {
+                            R.string.reading_list_search_complete_update_sources
+                        } else {
+                            R.string.reading_list_search_complete
+                        },
+                        event.summary.autoMatchedEntries,
+                        event.summary.reviewEntries,
+                        event.summary.unresolvedEntries,
+                        event.summary.sourceUnavailableEntries,
+                        event.summary.failedSourceCount,
+                    )
+                    ReadingListsEvent.CandidateSearchNoInstalledSources -> context.getString(
+                        R.string.reading_list_search_no_installed_sources,
+                    )
+                    ReadingListsEvent.CandidateSearchNothingToDo -> context.getString(
+                        R.string.reading_list_search_nothing_to_do,
+                    )
+                    ReadingListsEvent.CandidateSearchFailed -> context.getString(
+                        R.string.reading_list_search_failed,
+                    )
                     ReadingListsEvent.SelectInstalledSource -> context.getString(
                         R.string.reading_list_select_source_error,
                     )
@@ -184,6 +206,7 @@ private fun ReadingListsScreen(
     state: ReadingListsScreenState,
     snackbarHostState: SnackbarHostState,
     onImport: () -> Unit,
+    onSearch: (Long) -> Unit,
     onEditSources: (Long) -> Unit,
     onDelete: (ReadingListSummary) -> Unit,
 ) {
@@ -236,7 +259,9 @@ private fun ReadingListsScreen(
             )
             else -> ReadingListsContent(
                 readingLists = state.readingLists,
+                searchingReadingListIds = state.searchingReadingListIds,
                 contentPadding = paddingValues,
+                onSearch = onSearch,
                 onEditSources = onEditSources,
                 onDelete = onDelete,
             )
@@ -281,7 +306,9 @@ private fun ReadingListsEmptyScreen(
 @Composable
 private fun ReadingListsContent(
     readingLists: List<ReadingListSummary>,
+    searchingReadingListIds: Set<Long>,
     contentPadding: PaddingValues,
+    onSearch: (Long) -> Unit,
     onEditSources: (Long) -> Unit,
     onDelete: (ReadingListSummary) -> Unit,
 ) {
@@ -295,6 +322,8 @@ private fun ReadingListsContent(
         ) { readingList ->
             ReadingListItem(
                 readingList = readingList,
+                isSearching = readingList.id in searchingReadingListIds,
+                onSearch = { onSearch(readingList.id) },
                 onEditSources = { onEditSources(readingList.id) },
                 onDelete = { onDelete(readingList) },
             )
@@ -306,11 +335,13 @@ private fun ReadingListsContent(
 @Composable
 private fun ReadingListItem(
     readingList: ReadingListSummary,
+    isSearching: Boolean,
+    onSearch: () -> Unit,
     onEditSources: () -> Unit,
     onDelete: () -> Unit,
 ) {
     ListItem(
-        modifier = Modifier.clickable(onClick = onEditSources),
+        modifier = Modifier.clickable(enabled = !isSearching, onClick = onEditSources),
         headlineContent = {
             Text(
                 text = readingList.name ?: stringResource(R.string.reading_list_untitled),
@@ -340,13 +371,35 @@ private fun ReadingListItem(
         },
         trailingContent = {
             Row {
-                IconButton(onClick = onEditSources) {
+                IconButton(
+                    onClick = onSearch,
+                    enabled = !isSearching,
+                ) {
+                    if (isSearching) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            strokeWidth = 2.dp,
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Outlined.Search,
+                            contentDescription = stringResource(R.string.reading_list_search_candidates),
+                        )
+                    }
+                }
+                IconButton(
+                    onClick = onEditSources,
+                    enabled = !isSearching,
+                ) {
                     Icon(
                         imageVector = Icons.Outlined.Edit,
                         contentDescription = stringResource(R.string.reading_list_edit_sources),
                     )
                 }
-                IconButton(onClick = onDelete) {
+                IconButton(
+                    onClick = onDelete,
+                    enabled = !isSearching,
+                ) {
                     Icon(
                         imageVector = Icons.Outlined.Delete,
                         contentDescription = stringResource(R.string.reading_list_delete),
@@ -688,8 +741,8 @@ private fun SourceGroupHeader(
             if (selected) {
                 SourcePriorityButtons(
                     enabled = enabled,
-                    canMoveUp = priority != null && priority > 1,
-                    canMoveDown = priority != null && priority < selectedSourceIds.size,
+                    canMoveUp = priority > 1,
+                    canMoveDown = priority < selectedSourceIds.size,
                     onMoveUp = { onMoveSource(source.id, -1) },
                     onMoveDown = { onMoveSource(source.id, 1) },
                 )

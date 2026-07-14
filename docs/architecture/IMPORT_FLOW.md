@@ -43,6 +43,12 @@ Import failures are translated into user-facing categories:
 
 The original file is never modified, and original CBL metadata retained by the parser is persisted unchanged.
 
+## Candidate search
+
+Each reading-list row exposes an explicit match-search action. Yomori searches only the installed online sources selected for that list, preserves their priority order, groups entries by normalized title plus known year and volume so distinct runs are not merged, shares a three-request limit across simultaneous list searches, and applies a 30-second timeout to every extension request. Entry overrides constrain search before series mappings and reading-list source order; an unavailable override is surfaced instead of being bypassed.
+
+Each source/series search reads only the first result page, retains at most ten series results, fetches issue lists for at most the three strongest series results per source, and stores at most twenty-four ranked issue candidates per entry. Search results remain outside the normal library. Rejected candidates remain persisted for review but are excluded from automatic decisions, confirmed and skipped entries are protected again at the transactional write boundary, unavailable confirmed series mappings are not bypassed, and one failing or timed-out source does not erase results from other selected sources.
+
 ## Planned continuation
 
-The next stages resolve distinct series groups through the selected sources, rank issue candidates, present ambiguous or low-confidence matches for review, and save user-confirmed mappings. Resolution must remain resumable after cancellation or source failure without discarding completed confirmations.
+The next stage presents ambiguous or low-confidence matches for review and saves user-confirmed mappings. Resolution must remain resumable after cancellation or source failure without discarding completed confirmations.

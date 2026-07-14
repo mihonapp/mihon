@@ -8,6 +8,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.online.HttpSource
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
@@ -29,6 +30,7 @@ import java.util.Locale
 class ReadingListsScreenModel(
     private val application: Application = Injekt.get(),
     private val repository: ReadingListRepository = Injekt.get(),
+    private val candidateSearch: ReadingListCandidateSearch = Injekt.get(),
     private val extensionManager: ExtensionManager = Injekt.get(),
     private val basePreferences: BasePreferences = Injekt.get(),
 ) : StateScreenModel<ReadingListsScreenState>(ReadingListsScreenState()) {
@@ -141,6 +143,55 @@ class ReadingListsScreenModel(
                         preferredLanguage = basePreferences.readingListSourceLanguage.get(),
                     ),
                 )
+            }
+        }
+    }
+
+    fun searchCandidates(readingListId: Long) {
+        if (readingListId in state.value.searchingReadingListIds) return
+
+        mutableState.update { currentState ->
+            currentState.copy(
+                searchingReadingListIds = currentState.searchingReadingListIds + readingListId,
+            )
+        }
+        screenModelScope.launch {
+            try {
+                when (val result = withIOContext { candidateSearch.search(readingListId) }) {
+                    ReadingListCandidateSearchResult.ReadingListNotFound -> {
+                        _events.send(ReadingListsEvent.ReadingListMissing)
+                    }
+                    is ReadingListCandidateSearchResult.Completed -> {
+                        val summary = result.summary
+                        val missingReadingList =
+                            summary.searchedEntries == 0 && summary.missingEntries > 0
+                        val noInstalledSources =
+                            summary.allSelectedSourcesUnavailable &&
+                                summary.sourceUnavailableEntries > 0 &&
+                                summary.autoMatchedEntries == 0 &&
+                                summary.reviewEntries == 0 &&
+                                summary.unresolvedEntries == 0
+                        _events.send(
+                            when {
+                                missingReadingList -> ReadingListsEvent.ReadingListMissing
+                                summary.searchedEntries == 0 -> ReadingListsEvent.CandidateSearchNothingToDo
+                                noInstalledSources -> ReadingListsEvent.CandidateSearchNoInstalledSources
+                                else -> ReadingListsEvent.CandidateSearchCompleted(summary)
+                            },
+                        )
+                    }
+                }
+            } catch (error: CancellationException) {
+                throw error
+            } catch (_: Exception) {
+                _events.send(ReadingListsEvent.CandidateSearchFailed)
+            } finally {
+                mutableState.update { currentState ->
+                    currentState.copy(
+                        searchingReadingListIds =
+                        currentState.searchingReadingListIds - readingListId,
+                    )
+                }
             }
         }
     }
@@ -333,6 +384,7 @@ data class ReadingListsScreenState(
     val isImporting: Boolean = false,
     val isSaving: Boolean = false,
     val isDeleting: Boolean = false,
+    val searchingReadingListIds: Set<Long> = emptySet(),
     val readingLists: List<ReadingListSummary> = emptyList(),
     val dialog: ReadingListsDialog? = null,
 )
@@ -432,6 +484,12 @@ sealed interface ReadingListsEvent {
     data class ImportFailed(val failure: CblImportFailure) : ReadingListsEvent
     data class Deleted(val listName: String?) : ReadingListsEvent
     data object SourcesUpdated : ReadingListsEvent
+    data class CandidateSearchCompleted(
+        val summary: ReadingListCandidateSearchSummary,
+    ) : ReadingListsEvent
+    data object CandidateSearchNoInstalledSources : ReadingListsEvent
+    data object CandidateSearchNothingToDo : ReadingListsEvent
+    data object CandidateSearchFailed : ReadingListsEvent
     data object SelectInstalledSource : ReadingListsEvent
     data object ReadingListMissing : ReadingListsEvent
     data object SaveFailed : ReadingListsEvent

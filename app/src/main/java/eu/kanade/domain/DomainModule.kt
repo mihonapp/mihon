@@ -25,6 +25,7 @@ import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.interactor.SyncChapterProgressWithTrack
 import eu.kanade.domain.track.interactor.TrackChapter
+import eu.kanade.tachiyomi.ui.readinglist.ReadingListCandidateSearch
 import mihon.data.extension.repository.ExtensionStoreRepositoryImpl
 import mihon.data.extension.service.ExtensionStoreService
 import mihon.domain.chapter.interactor.FilterChaptersForDownload
@@ -124,6 +125,8 @@ class DomainModule : InjektModule {
         addSingletonFactory<ReadingListResolutionRepository> {
             ReadingListResolutionRepositoryImpl(get(), get())
         }
+
+        addSingletonFactory { ReadingListCandidateSearch(get(), get(), get()) }
 
         addSingletonFactory<MangaRepository> { MangaRepositoryImpl(get()) }
         addFactory { GetDuplicateLibraryManga(get()) }

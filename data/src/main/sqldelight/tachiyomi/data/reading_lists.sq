@@ -404,7 +404,8 @@ ORDER BY series_key;
 getEntryResolutionGuard:
 SELECT
     reading_list_id AS readingListId,
-    user_confirmed AS userConfirmed
+    user_confirmed AS userConfirmed,
+    skipped
 FROM reading_list_entries
 WHERE _id = :entryId
 LIMIT 1;
@@ -581,7 +582,8 @@ SET resolution_state = :resolutionState,
     matcher_version = :matcherVersion,
     user_confirmed = 0
 WHERE _id = :entryId
-  AND user_confirmed = 0;
+  AND user_confirmed = 0
+  AND skipped = 0;
 
 confirmResolution:
 UPDATE reading_list_entries
