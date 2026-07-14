@@ -66,7 +66,7 @@ actual class LocalSource(
 
     override val id: Long = ID
 
-    override val lang: String = "other"
+    override val language: String = "und"
 
     override fun toString() = name
 

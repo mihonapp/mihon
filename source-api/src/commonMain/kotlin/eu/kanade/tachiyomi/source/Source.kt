@@ -23,8 +23,30 @@ interface Source {
      */
     val name: String
 
-    val lang: String
-        get() = ""
+    /**
+     * Primary language of the source.
+     *
+     * Expected to be a valid IETF BCP 47 language tag, for example:
+     * * `"en"` → English
+     * * `"en-US"` → English (United States)
+     * * `"zh-Hant"` → Traditional Chinese
+     * * `"es-419"` → Spanish (Latin America)
+     * * `"mul"` → Multiple languages
+     * * `"und"` → Undetermined
+     *
+     * Sources containing multiple languages should use the language tag `"mul"`.
+     * Sources with language-independent content or content without readable text
+     * should use the language tag `"und"`.
+     *
+     * For backward compatibility, the default [CatalogueSource] implementation
+     * normalizes the legacy values `"all"` and `"other"` returned by
+     * [CatalogueSource.lang] to `"mul"` and `"und"`, respectively.
+     *
+     * @see SManga.language
+     * @see SChapter.language
+     * @since tachiyomix 1.7
+     */
+    val language: String
 
     /**
      * Whether the source has support for latest updates.
@@ -34,7 +56,7 @@ interface Source {
     /**
      * Returns the list of filters for the source.
      */
-    fun getFilterList(): FilterList = FilterList()
+    fun getFilterList(): FilterList = throw Exception("Stub!")
 
     /**
      * Get a page with a list of manga.
@@ -70,13 +92,13 @@ interface Source {
      *
      * If a value is not requested, the existing provided value can be returned as-is.
      * The host app may apply any returned updates regardless of the flags,
-     * so care should be taken to only return accurate and intentional changes.
+     * so it’s best to avoid returning unintended or inaccurate data.
      *
      * @since tachiyomix 1.6
      * @param manga The manga to fetch updates for.
      * @param chapters Existing chapters of the manga
-     * @param fetchDetails Whether to fetch updated manga details.
-     * @param fetchChapters Whether to fetch available chapters.
+     * @param fetchDetails Whether to include updated manga details.
+     * @param fetchChapters Whether to include available chapters.
      */
     suspend fun getMangaUpdate(
         manga: SManga,

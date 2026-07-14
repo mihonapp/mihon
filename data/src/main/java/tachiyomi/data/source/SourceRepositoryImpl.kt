@@ -89,7 +89,7 @@ class SourceRepositoryImpl(
 
     private fun mapSourceToDomainSource(source: Source): DomainSource = DomainSource(
         id = source.id,
-        lang = source.lang,
+        lang = source.language,
         name = source.name,
         supportsLatest = false,
         isStub = false,

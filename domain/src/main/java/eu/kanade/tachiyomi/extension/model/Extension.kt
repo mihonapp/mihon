@@ -55,7 +55,7 @@ sealed class Extension {
             fun toStubSource(): StubSource {
                 return StubSource(
                     id = this.id,
-                    lang = this.lang,
+                    language = this.lang,
                     name = this.name,
                 )
             }

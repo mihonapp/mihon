@@ -10,11 +10,11 @@ import eu.kanade.tachiyomi.source.model.SMangaUpdate
 
 class StubSource(
     override val id: Long,
-    override val lang: String,
+    override val language: String,
     override val name: String,
 ) : Source {
 
-    private val isInvalid: Boolean = name.isBlank() || lang.isBlank()
+    private val isInvalid: Boolean = name.isBlank() || language.isBlank()
 
     override val supportsLatest: Boolean = false
 
@@ -36,11 +36,11 @@ class StubSource(
         throw SourceNotInstalledException()
 
     override fun toString(): String =
-        if (!isInvalid) "$name (${lang.uppercase()})" else id.toString()
+        if (!isInvalid) "$name (${language.uppercase()})" else id.toString()
 
     companion object {
         fun from(source: Source): StubSource {
-            return StubSource(id = source.id, lang = source.lang, name = source.name)
+            return StubSource(id = source.id, language = source.language, name = source.name)
         }
     }
 }

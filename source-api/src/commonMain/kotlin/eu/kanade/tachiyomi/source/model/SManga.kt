@@ -2,6 +2,7 @@
 
 package eu.kanade.tachiyomi.source.model
 
+import eu.kanade.tachiyomi.source.Source
 import kotlinx.serialization.json.JsonObject
 import java.io.Serializable
 
@@ -26,6 +27,26 @@ interface SManga : Serializable {
     var update_strategy: UpdateStrategy
 
     var initialized: Boolean
+
+    /**
+     * Primary language of the manga.
+     *
+     * Expected to be a valid IETF BCP 47 language tag, for example:
+     * * `"en"` → English
+     * * `"en-US"` → English (United States)
+     * * `"zh-Hant"` → Traditional Chinese
+     * * `"es-419"` → Spanish (Latin America)
+     * * `"mul"` → Multiple languages
+     * * `"und"` → Undetermined
+     *
+     * If [Source.language] is not `"mul"`, any non-null value must match it.
+     * A `null` value should be treated as [Source.language].
+     *
+     * @see Source.language
+     * @see SChapter.language
+     * @since tachiyomix 1.7
+     */
+    var language: String?
 
     /**
      * Extra metadata associated with the manga.

@@ -2,6 +2,7 @@
 
 package eu.kanade.tachiyomi.source.model
 
+import eu.kanade.tachiyomi.source.Source
 import kotlinx.serialization.json.JsonObject
 import java.io.Serializable
 
@@ -16,6 +17,26 @@ interface SChapter : Serializable {
     var scanlator: String?
 
     var date_upload: Long
+
+    /**
+     * Language of the chapter content.
+     *
+     * Expected to be a valid IETF BCP 47 language tag, for example:
+     * * `"en"` → English
+     * * `"en-US"` → English (United States)
+     * * `"zh-Hant"` → Traditional Chinese
+     * * `"es-419"` → Spanish (Latin America)
+     * * `"mul"` → Multiple languages
+     * * `"und"` → Undetermined
+     *
+     * If [SManga.language] is not inferred as `"mul"`, any non-null value must match it.
+     * A `null` value should be treated as [SManga.language].
+     *
+     * @see Source.language
+     * @see SManga.language
+     * @since tachiyomix 1.7
+     */
+    var language: String?
 
     /**
      * Extra metadata associated with the chapter.

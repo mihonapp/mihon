@@ -406,7 +406,7 @@ class LibraryScreenModel(
                             false
                         },
                         sourceLanguage = if (preferences.languageBadge) {
-                            sourceManager.getOrStub(manga.manga.source).lang
+                            sourceManager.getOrStub(manga.manga.source).language
                         } else {
                             ""
                         },

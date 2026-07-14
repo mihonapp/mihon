@@ -11,12 +11,16 @@ import kotlinx.coroutines.supervisorScope
 import rx.Observable
 import tachiyomi.core.common.util.lang.awaitSingle
 
+@Deprecated("Use Source interface directly", ReplaceWith("Source"))
 interface CatalogueSource : Source {
 
-    /**
-     * An ISO 639-1 compliant language code (two letters in lower case).
-     */
-    override val lang: String
+    @Suppress("DEPRECATION")
+    override val language: String
+        get() = when (lang) {
+            "all" -> "mul"
+            "other" -> "und"
+            else -> lang
+        }
 
     @Suppress("DEPRECATION")
     override suspend fun getPopularManga(page: Int): MangasPage = fetchPopularManga(page).awaitSingle()
@@ -45,6 +49,12 @@ interface CatalogueSource : Source {
 
     @Suppress("DEPRECATION")
     override suspend fun getPageList(chapter: SChapter): List<Page> = fetchPageList(chapter).awaitSingle()
+
+    /**
+     * An ISO 639-1 compliant language code (two letters in lower case).
+     */
+    @Deprecated("Use BCP 47 language tags instead", ReplaceWith("language"))
+    val lang: String
 
     /**
      * Returns an observable containing a page with a list of manga.

@@ -101,7 +101,7 @@ class AndroidSourceManager(
         scope.launch {
             val dbSource = sourceRepository.getStubSource(source.id)
             if (dbSource == source) return@launch
-            sourceRepository.upsertStubSource(source.id, source.lang, source.name)
+            sourceRepository.upsertStubSource(source.id, source.language, source.name)
             if (dbSource != null) {
                 downloadManager.renameSource(dbSource, source)
             }
@@ -116,6 +116,6 @@ class AndroidSourceManager(
             registerStubSource(it)
             return it
         }
-        return StubSource(id = id, lang = "", name = "")
+        return StubSource(id = id, language = "", name = "")
     }
 }

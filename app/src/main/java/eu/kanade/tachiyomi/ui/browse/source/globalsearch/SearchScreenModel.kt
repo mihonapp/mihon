@@ -56,7 +56,7 @@ abstract class SearchScreenModel(
         compareBy<Source>(
             { (map[it] as? SearchItemResult.Success)?.isEmpty ?: true },
             { "${it.id}" !in pinnedSources },
-            { "${it.name.lowercase()} (${it.lang})" },
+            { "${it.name.lowercase()} (${it.language})" },
         )
     }
 
@@ -81,11 +81,11 @@ abstract class SearchScreenModel(
 
     open fun getEnabledSources(): List<Source> {
         return sourceManager.getAll()
-            .filter { it.lang in enabledLanguages && "${it.id}" !in disabledSources }
+            .filter { it.language in enabledLanguages && "${it.id}" !in disabledSources }
             .sortedWith(
                 compareBy(
                     { "${it.id}" !in pinnedSources },
-                    { "${it.name.lowercase()} (${it.lang})" },
+                    { "${it.name.lowercase()} (${it.language})" },
                 ),
             )
     }
