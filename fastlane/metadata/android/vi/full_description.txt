@@ -1,0 +1,9 @@
+Các tính năng:
+* Đọc truyện theo phong cách của bạn với khả năng hiển thị tùy biến như chế độ lướt phải, lướt trái và chế độ dọc cho webtoon.
+* Quản lý thư viện của bạn với các đầu mục tự tùy biến, truyện được hiển thị với huy hiệu riêng biệt và nhận cập nhật tự động khi truyện có chương mới.
+* Tự động đồng bộ tiến trình đọc của bạn với các dịch vụ bên thứ ba phổ biến như MyAnimeList, AniList, Kitsu, MangaBaka và nhiều hơn thế.
+* Tải về các chương truyện để đọc ngoại tuyến, dễ dàng trong việc sao lưu toàn bộ thư viện và cài đặt của bạn để lưu trữ hoặc chuyển sang thiết bị khác.
+* Tận hưởng trải nghiệm sử dụng với giao diện Material You cùng khả năng tùy biến chủ đề đa dạng, bao gồm chế độ True Dark mạnh.
+* Và còn nhiều tính năng hơn thế nữa đang chờ bạn khám phá...
+
+Nhà phát triển của ứng dụng này không liên quan đến bất kỳ bên cung cấp dữ liệu / nội dung có sẵn nào, và ứng dụng này không có sẵn bất kỳ nội dung nào.
