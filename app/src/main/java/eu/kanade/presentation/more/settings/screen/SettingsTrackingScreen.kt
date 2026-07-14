@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.domain.track.model.AutoTrackState
 import eu.kanade.domain.track.service.TrackPreferences
+import eu.kanade.domain.track.service.TrackPreferences.SyncStrategy
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.Tracker
@@ -134,6 +135,12 @@ object SettingsTrackingScreen : SearchableSettings {
                 entries = AutoTrackState.entries
                     .associateWith { stringResource(it.titleRes) },
                 title = stringResource(MR.strings.pref_auto_update_manga_on_mark_read),
+            ),
+            Preference.PreferenceItem.ListPreference(
+                preference = trackPreferences.syncStrategy,
+                entries = SyncStrategy.entries
+                    .associateWith { stringResource(it.titleRes) },
+                title = stringResource(MR.strings.pref_tracking_sync_strategy),
             ),
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.services),

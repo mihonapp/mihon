@@ -539,6 +539,7 @@ class ReaderViewModel @JvmOverloads constructor(
         }
         readerChapter.requestedPage = pageIndex
         chapterPageIndex = pageIndex
+        updatePageReadProgress(readerChapter)
 
         if (!incognitoMode && page.status !is Page.State.Error) {
             readerChapter.chapter.last_page_read = pageIndex
@@ -918,6 +919,16 @@ class ReaderViewModel @JvmOverloads constructor(
 
         viewModelScope.launchNonCancellable {
             trackChapter.await(context, manga.id, readerChapter.chapter.chapter_number.toDouble())
+        }
+    }
+
+    private fun updatePageReadProgress(readerChapter: ReaderChapter) {
+        if (incognitoMode) return
+        if (!trackPreferences.autoUpdateTrack.get()) return
+
+        val manga = manga ?: return
+        viewModelScope.launchNonCancellable {
+            trackChapter.reportPageProgress(manga.id, readerChapter.chapter.url, chapterPageIndex)
         }
     }
 
