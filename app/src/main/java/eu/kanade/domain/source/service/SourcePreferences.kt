@@ -31,6 +31,14 @@ class SourcePreferences(
 
     val pinnedSources: Preference<Set<String>> = preferenceStore.getStringSet("pinned_catalogues", emptySet())
 
+    /**
+     * Format: { "$group_name|$sourceid" }
+     */
+    val groupPinnedSources: Preference<Set<String>> = preferenceStore.getStringSet(
+        "group_pinned_catalogues",
+        emptySet(),
+    )
+
     val lastUsedSource: Preference<Long> = preferenceStore.getLong(
         Preference.appStateKey("last_catalogue_source"),
         -1,

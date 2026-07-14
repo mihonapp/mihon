@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.DoneAll
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.PushPin
@@ -42,6 +43,7 @@ fun GlobalSearchToolbar(
     onSearch: (String) -> Unit,
     hideSourceFilter: Boolean,
     sourceFilter: SourceFilter,
+    pinGroups: List<String> = emptyList(),
     onChangeSearchFilter: (SourceFilter) -> Unit,
     onlyShowHasResults: Boolean,
     onToggleResults: () -> Unit,
@@ -105,6 +107,23 @@ fun GlobalSearchToolbar(
                         Text(text = stringResource(MR.strings.all))
                     },
                 )
+                pinGroups.forEach { group ->
+                    FilterChip(
+                        selected = sourceFilter == SourceFilter.Group(group),
+                        onClick = { onChangeSearchFilter(SourceFilter.Group(group)) },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Outlined.Label,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(FilterChipDefaults.IconSize),
+                            )
+                        },
+                        label = {
+                            Text(text = group)
+                        },
+                    )
+                }
 
                 VerticalDivider()
             }

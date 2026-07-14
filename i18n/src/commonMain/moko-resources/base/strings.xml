@@ -132,6 +132,8 @@
     <string name="action_disable">Disable</string>
     <string name="action_pin">Pin</string>
     <string name="action_unpin">Unpin</string>
+    <string name="action_pin_groups">Source groups</string>
+    <string name="action_add_pin_group">Add source group</string>
     <string name="action_apply">Apply</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_ok">OK</string>

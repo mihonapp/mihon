@@ -42,6 +42,7 @@ fun GlobalSearchScreen(
                 onSearch = onSearch,
                 hideSourceFilter = false,
                 sourceFilter = state.sourceFilter,
+                pinGroups = state.pinGroups,
                 onChangeSearchFilter = onChangeSearchFilter,
                 onlyShowHasResults = state.onlyShowHasResults,
                 onToggleResults = onToggleResults,
