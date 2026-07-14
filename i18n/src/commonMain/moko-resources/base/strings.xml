@@ -543,6 +543,8 @@
 
       <!-- Browse section -->
     <string name="pref_hide_in_library_items">Hide entries already in library</string>
+    <string name="pref_migration_show_chapter_count_delta">Show chapter count difference during migration</string>
+    <string name="pref_migration_show_chapter_count_delta_summary">Compares chapter counts of search results against the current entry. Loads chapters for each result, using extra network data.</string>
 
       <!-- Data and storage section -->
     <string name="pref_storage_location">Storage location</string>
