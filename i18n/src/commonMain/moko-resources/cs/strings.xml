@@ -904,7 +904,6 @@
     <string name="extensionStoresScreen.addStoreDeeplink.bodyText">Chcete přidat níže uvedený obchod s doplňky?</string>
     <string name="extensionStoresScreen.deleteStore.title">Odstranit obchod doplňků</string>
     <string name="extensionStoresScreen.deleteStore.body">Chcete odstranit obchod s doplňky „%1$s“ (%2$s)?</string>
-    <string name="pref_webtoon_vertical_navigator">Pro čtení dlouhých úseků použijte vertikální navigační lištu</string>
     <string name="pref_webtoon_vertical_navigator_on_left">Umístěte svislý navigační panel na levou stranu</string>
     <string name="supportUsScreen.perks">Patronům se otevírá přístup k exkluzivním kanálům a další výhody budou následovat.</string>
     <string name="supportUsScreen.donationPlatform.patreon">Patreon (upřednostňováno)</string>
@@ -918,4 +917,7 @@
     <string name="donationCampaign.paragraph3">Ať už to dopadne jakkoli, o Mihon se budu i nadále starat já spolu s dobrovolníky a zůstane open source.</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="donationCampaign.dismiss">Zavřít</string>
+    <string name="considering">S ohledem na</string>
+    <string name="pref_vertical_navigator">Použijte svislý navigační panel kapitol v</string>
+    <string name="pref_vertical_navigator_height">Vertikální výška navigátoru</string>
 </resources>
