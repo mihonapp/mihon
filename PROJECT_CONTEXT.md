@@ -10,7 +10,7 @@ The Android application identity is `io.github.kamui2040.yomori`, with Yomori ve
 
 Device-test artifacts use the dedicated `io.github.kamui2040.yomori.debug` package and a reproducible public development certificate. This permits direct in-place updates between development APKs downloaded on a phone without requiring local signing setup.
 
-The first product milestone is CBL reading-list import and deterministic, user-correctable matching. The safe parser, transactional persistence, normalization, confidence scoring, visible import interface, per-list source-selection flow, candidate-resolution storage, rejection history, entry overrides, series mappings, confirmation-protected repository operations, and explicit candidate-search orchestration are implemented and covered by focused tests. The manual-review UI is the next product stage. No public Yomori release is ready yet.
+The first product milestone is CBL reading-list import and deterministic, user-correctable matching. The safe parser, transactional persistence, normalization, confidence scoring, visible import interface, per-list source-selection flow, candidate-resolution storage, rejection history, entry overrides, series mappings, confirmation-protected repository operations, explicit candidate-search orchestration, and persisted manual-review interface are implemented and covered by focused tests. Cross-series reader navigation and progress are the next product stage. No public Yomori release is ready yet.
 
 ## Product goal
 
@@ -47,6 +47,11 @@ Yomori does not provide, bundle, host, operate, or recommend content sources.
 - Search results are bounded before persistence, are never added to the normal library, and are saved with the existing score breakdown and confirmation protection. Rejected candidates remain persisted for review but do not participate in automatic decisions.
 - Confirmed and skipped entries are not searched automatically; missing selected sources are reported without blocking available selected sources.
 - A user-confirmed series mapping is never bypassed by replacement searches when its selected source is unavailable.
+- Each reading list exposes a dedicated manual-review screen that reads only persisted list and resolution data. Opening or browsing it performs no source search or extension network request.
+- Manual review preserves original CBL order and keeps ambiguous, unresolved, unavailable, automatically matched, user-confirmed, skipped, and removed-candidate states visible.
+- Candidate review shows confidence, lead, decision reason, source and language, remote identities, complete score evidence, conflicts, rejection state, overrides, and series mappings.
+- Entry confirmation, candidate rejection or restoration, and series-mapping confirmation or removal are separate explicit actions. Each successful action is persisted immediately and the screen reloads repository data.
+- Rejected candidates that are no longer returned by a source remain visible through their persisted rejection record and can be restored explicitly.
 - Reading-list insertion is transactional, deletion cascades to owned records, and progress cannot point to a missing entry.
 - The primary Reading Lists tab imports local `.cbl` documents through Android's system document picker.
 - Imported files are read with a 16 MiB boundary and support UTF-8, UTF-16 little-endian, and UTF-16 big-endian XML.
@@ -117,7 +122,7 @@ Persisted states:
 7. Import and source-selection flow. **Complete.**
 8. Candidate persistence, rejection history, and protected manual overrides. **Complete.**
 9. Candidate search orchestration. **Complete.**
-10. Manual-review UI.
+10. Manual-review UI. **Complete.**
 11. Cross-series reader navigation and progress.
 12. Repair and rematching tools.
 

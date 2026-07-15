@@ -49,6 +49,14 @@ Each reading-list row exposes an explicit match-search action. Yomori searches o
 
 Each source/series search reads only the first result page, retains at most ten series results, fetches issue lists for at most the three strongest series results per source, and stores at most twenty-four ranked issue candidates per entry. Search results remain outside the normal library. Rejected candidates remain persisted for review but are excluded from automatic decisions, confirmed and skipped entries are protected again at the transactional write boundary, unavailable confirmed series mappings are not bypassed, and one failing or timed-out source does not erase results from other selected sources.
 
+## Manual review
+
+Each reading-list row opens a dedicated review screen that loads only the stored reading list and persisted resolution records. Opening, filtering, expanding entries, and browsing candidate evidence perform no extension request or other network activity.
+
+Entries remain in original CBL order and all resolution states stay visible. The screen presents confidence, runner-up lead, decision reason, source and language, remote series and issue identity, complete scoring evidence, conflicts, rejection status, entry overrides, and series mappings. Persisted rejection records remain visible even when a later source refresh no longer returns the corresponding candidate.
+
+Candidate confirmation, rejection, restoration, and series-mapping confirmation or removal are separate explicit actions. Every successful action is committed immediately and the screen reloads repository data, so completed decisions survive navigation, restart, later searches, and unrelated source failures. Review does not add remote series to the normal library.
+
 ## Planned continuation
 
-The next stage presents ambiguous or low-confidence matches for review and saves user-confirmed mappings. Resolution must remain resumable after cancellation or source failure without discarding completed confirmations.
+The next stage adds continuous cross-series reader navigation and list-specific progress while preserving unresolved-entry stop, resolve, and skip choices.

@@ -66,7 +66,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
+import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.components.AppBar
@@ -101,6 +103,7 @@ data object ReadingListsTab : Tab {
     @Composable
     override fun Content() {
         val context = LocalContext.current
+        val navigator = LocalNavigator.currentOrThrow
         val screenModel = rememberScreenModel { ReadingListsScreenModel() }
         val state by screenModel.state.collectAsState()
         val snackbarHostState = remember { SnackbarHostState() }
@@ -117,6 +120,7 @@ data object ReadingListsTab : Tab {
             state = state,
             snackbarHostState = snackbarHostState,
             onImport = launchImport,
+            onReview = { readingListId -> navigator.push(ReadingListReviewScreen(readingListId)) },
             onSearch = screenModel::searchCandidates,
             onEditSources = screenModel::editSources,
             onDelete = screenModel::requestDelete,
@@ -206,6 +210,7 @@ private fun ReadingListsScreen(
     state: ReadingListsScreenState,
     snackbarHostState: SnackbarHostState,
     onImport: () -> Unit,
+    onReview: (Long) -> Unit,
     onSearch: (Long) -> Unit,
     onEditSources: (Long) -> Unit,
     onDelete: (ReadingListSummary) -> Unit,
@@ -261,6 +266,7 @@ private fun ReadingListsScreen(
                 readingLists = state.readingLists,
                 searchingReadingListIds = state.searchingReadingListIds,
                 contentPadding = paddingValues,
+                onReview = onReview,
                 onSearch = onSearch,
                 onEditSources = onEditSources,
                 onDelete = onDelete,
@@ -308,6 +314,7 @@ private fun ReadingListsContent(
     readingLists: List<ReadingListSummary>,
     searchingReadingListIds: Set<Long>,
     contentPadding: PaddingValues,
+    onReview: (Long) -> Unit,
     onSearch: (Long) -> Unit,
     onEditSources: (Long) -> Unit,
     onDelete: (ReadingListSummary) -> Unit,
@@ -323,6 +330,7 @@ private fun ReadingListsContent(
             ReadingListItem(
                 readingList = readingList,
                 isSearching = readingList.id in searchingReadingListIds,
+                onReview = { onReview(readingList.id) },
                 onSearch = { onSearch(readingList.id) },
                 onEditSources = { onEditSources(readingList.id) },
                 onDelete = { onDelete(readingList) },
@@ -336,12 +344,13 @@ private fun ReadingListsContent(
 private fun ReadingListItem(
     readingList: ReadingListSummary,
     isSearching: Boolean,
+    onReview: () -> Unit,
     onSearch: () -> Unit,
     onEditSources: () -> Unit,
     onDelete: () -> Unit,
 ) {
     ListItem(
-        modifier = Modifier.clickable(enabled = !isSearching, onClick = onEditSources),
+        modifier = Modifier.clickable(enabled = !isSearching, onClick = onReview),
         headlineContent = {
             Text(
                 text = readingList.name ?: stringResource(R.string.reading_list_untitled),
@@ -371,6 +380,15 @@ private fun ReadingListItem(
         },
         trailingContent = {
             Row {
+                IconButton(
+                    onClick = onReview,
+                    enabled = !isSearching,
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.List,
+                        contentDescription = stringResource(R.string.reading_list_review),
+                    )
+                }
                 IconButton(
                     onClick = onSearch,
                     enabled = !isSearching,

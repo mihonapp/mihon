@@ -271,13 +271,30 @@ class ReadingListMatchScorer(
     ): ScoredReadingListMatchCandidate {
         val candidateTitle = TitleNormalizer.normalize(candidate.seriesTitle)
         val candidateIssue = IssueNumberNormalizer.normalize(candidate.issueNumber)
+        val candidateVolume = candidate.volume ?: candidateTitle.volume
+        val candidateSeriesYear = candidateTitle.year
+        val titleYearWasStoredAsIssueYear = candidate.year != null && candidate.year == candidateSeriesYear
+        val legacyTitleYearEvidence = query.year == null &&
+            query.seriesYear != null &&
+            candidateSeriesYear == null &&
+            candidate.year != null
+        val candidateIssueYear = candidate.year.takeUnless { titleYearWasStoredAsIssueYear }
         val titleSimilarity = calculateTitleSimilarity(query.title, candidateTitle).roundForDisplay()
         val titlePoints = (titleSimilarity * config.titleWeight).roundForDisplay()
         val issueEquivalent = query.issue.isEquivalentTo(candidateIssue)
         val issuePoints = if (issueEquivalent) config.issueWeight else 0.0
-        val yearEvidence = evidence(query.year, candidate.year)
+        val yearEvidence = if (legacyTitleYearEvidence) {
+            evidence(query.seriesYear, candidate.year)
+        } else {
+            evidence(query.year, candidateIssueYear)
+        }
         val yearPoints = metadataPoints(yearEvidence)
-        val volumeEvidence = evidence(query.volume, candidate.volume)
+        val volumeEvidence = editionEvidence(
+            expectedVolume = query.volume,
+            actualVolume = candidateVolume,
+            expectedSeriesYear = query.seriesYear,
+            actualSeriesYear = candidateSeriesYear,
+        )
         val volumePoints = metadataPoints(volumeEvidence)
         val externalIdentifierPoints = externalIdentifierPoints(candidate.externalIdentifierEvidence)
         val sourcePreferencePoints = sourcePreferencePoints(candidate.sourcePreference)
@@ -355,15 +372,22 @@ class ReadingListMatchScorer(
         val issue: NormalizedIssueNumber,
         val volume: Int?,
         val year: Int?,
+        val seriesYear: Int?,
     ) {
         companion object {
             fun from(query: ReadingListMatchQuery): NormalizedMatchQuery {
                 val normalizedTitle = TitleNormalizer.normalize(query.seriesTitle)
+                val rawVolume = query.volume
                 return NormalizedMatchQuery(
                     title = normalizedTitle,
                     issue = IssueNumberNormalizer.normalize(query.issueNumber),
-                    volume = query.volume ?: normalizedTitle.volume,
-                    year = query.year ?: normalizedTitle.year,
+                    volume = rawVolume
+                        ?.takeUnless { value -> value.isEditionYear() }
+                        ?: normalizedTitle.volume,
+                    year = query.year,
+                    seriesYear = rawVolume
+                        ?.takeIf { value -> value.isEditionYear() }
+                        ?: normalizedTitle.year,
                 )
             }
         }
@@ -390,6 +414,25 @@ private fun evidence(expected: Int?, actual: Int?): EvidenceAgreement {
         else -> EvidenceAgreement.MISMATCH
     }
 }
+
+private fun editionEvidence(
+    expectedVolume: Int?,
+    actualVolume: Int?,
+    expectedSeriesYear: Int?,
+    actualSeriesYear: Int?,
+): EvidenceAgreement {
+    val volumeEvidence = evidence(expectedVolume, actualVolume)
+    val seriesYearEvidence = evidence(expectedSeriesYear, actualSeriesYear)
+    return when {
+        volumeEvidence == EvidenceAgreement.MISMATCH ||
+            seriesYearEvidence == EvidenceAgreement.MISMATCH -> EvidenceAgreement.MISMATCH
+        volumeEvidence == EvidenceAgreement.MATCH ||
+            seriesYearEvidence == EvidenceAgreement.MATCH -> EvidenceAgreement.MATCH
+        else -> EvidenceAgreement.UNKNOWN
+    }
+}
+
+private fun Int.isEditionYear(): Boolean = this in 1800..2199
 
 private fun calculateTitleSimilarity(
     expected: NormalizedTitle,
