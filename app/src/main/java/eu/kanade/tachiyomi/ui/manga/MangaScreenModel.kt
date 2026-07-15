@@ -8,6 +8,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.util.fastAny
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.flowWithLifecycle
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
@@ -21,6 +22,7 @@ import eu.kanade.domain.manga.interactor.SetExcludedScanlators
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.chaptersFiltered
 import eu.kanade.domain.manga.model.downloadedFilter
+import eu.kanade.domain.manga.model.toSManga
 import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.interactor.TrackChapter
@@ -32,6 +34,8 @@ import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
+import eu.kanade.tachiyomi.data.recommendation.MangaRecommendationRepository
+import eu.kanade.tachiyomi.data.recommendation.RecommendationMetadata
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.source.Source
@@ -40,7 +44,12 @@ import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -48,8 +57,11 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import logcat.LogPriority
 import mihon.domain.chapter.interactor.FilterChaptersForDownload
+import mihon.domain.manga.model.toDomainManga
 import mihon.domain.source.interactor.UpdateMangaFromRemote
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.CheckboxState
@@ -72,8 +84,10 @@ import tachiyomi.domain.chapter.service.getChapterSort
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetMangaWithChapters
+import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.manga.interactor.SetMangaChapterFlags
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.manga.repository.MangaRepository
@@ -83,6 +97,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.util.concurrent.atomic.AtomicLong
 import kotlin.math.floor
 
 class MangaScreenModel(
@@ -90,6 +105,9 @@ class MangaScreenModel(
     private val lifecycle: Lifecycle,
     private val mangaId: Long,
     private val isFromSource: Boolean,
+    private val recommendationTrailSourceId: Long? = null,
+    private val recommendationAncestorUrls: List<String> = emptyList(),
+    private val recommendationAncestorWorkKeys: List<String> = emptyList(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
     trackPreferences: TrackPreferences = Injekt.get(),
     readerPreferences: ReaderPreferences = Injekt.get(),
@@ -114,11 +132,39 @@ class MangaScreenModel(
     private val mangaRepository: MangaRepository = Injekt.get(),
     private val filterChaptersForDownload: FilterChaptersForDownload = Injekt.get(),
     private val updateMangaFromRemote: UpdateMangaFromRemote = Injekt.get(),
+    private val networkToLocalManga: NetworkToLocalManga = Injekt.get(),
+    private val recommendationRepository: MangaRecommendationRepository = Injekt.get(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) : StateScreenModel<MangaScreenModel.State>(State.Loading) {
 
     private val successState: State.Success?
         get() = state.value as? State.Success
+
+    private var recommendationJob: Job? = null
+    private var recommendationRetryJob: Job? = null
+    private val recommendationJobLock = Any()
+    private val recommendationRunMutex = Mutex()
+    private var restartRecommendationsOnStart = false
+    private val recommendationGeneration = AtomicLong()
+    private var refreshJob: Job? = null
+    private val refreshJobLock = Any()
+    private val refreshGeneration = AtomicLong()
+    private val recommendationLifecycleObserver = LifecycleEventObserver { _, event ->
+        when (event) {
+            Lifecycle.Event.ON_START -> {
+                val shouldRestart = synchronized(recommendationJobLock) {
+                    restartRecommendationsOnStart.also { restartRecommendationsOnStart = false }
+                }
+                if (shouldRestart) fetchRecommendations()
+            }
+            Lifecycle.Event.ON_STOP -> cancelRecommendationsForLifecycle()
+            Lifecycle.Event.ON_DESTROY -> {
+                cancelRecommendationsForLifecycle(restartOnStart = false)
+                synchronized(refreshJobLock) { refreshJob.also { refreshJob = null } }?.cancel()
+            }
+            else -> Unit
+        }
+    }
 
     val manga: Manga?
         get() = successState?.manga
@@ -160,6 +206,7 @@ class MangaScreenModel(
     }
 
     init {
+        lifecycle.addObserver(recommendationLifecycleObserver)
         screenModelScope.launchIO {
             combine(
                 getMangaAndChapters.subscribe(mangaId, applyScanlatorFilter = true).distinctUntilChanged(),
@@ -232,39 +279,87 @@ class MangaScreenModel(
             observeTrackers()
 
             // Fetch info-chapters when needed
+            var automaticRefreshGeneration: Long? = null
             if ((needRefreshInfo || needRefreshChapter) && screenModelScope.isActive) {
-                fetchAllFromSource(
+                val generation = synchronized(refreshJobLock) { refreshGeneration.incrementAndGet() }
+                automaticRefreshGeneration = generation
+                val refreshedManga = fetchAllFromSource(
                     manualFetch = false,
                     fetchDetails = needRefreshInfo,
                     fetchChapters = needRefreshChapter,
                 )
+                if (generation == refreshGeneration.get()) {
+                    fetchRecommendations(
+                        forceRefresh = needRefreshInfo && refreshedManga != null,
+                        mangaOverride = refreshedManga ?: manga,
+                    )
+                }
+            } else {
+                fetchRecommendations()
             }
 
             // Initial loading finished
-            updateSuccessState { it.copy(isRefreshingData = false) }
+            if (
+                automaticRefreshGeneration == refreshGeneration.get() ||
+                (automaticRefreshGeneration == null && !isManualRefreshActive())
+            ) {
+                updateSuccessState { it.copy(isRefreshingData = false) }
+            }
         }
     }
 
+    override fun onDispose() {
+        lifecycle.removeObserver(recommendationLifecycleObserver)
+        cancelRecommendationsForLifecycle(restartOnStart = false)
+        synchronized(refreshJobLock) { refreshJob.also { refreshJob = null } }?.cancel()
+    }
+
     fun fetchAllFromSource(manualFetch: Boolean = true) {
-        screenModelScope.launch {
+        val generation = synchronized(refreshJobLock) { refreshGeneration.incrementAndGet() }
+        val job = screenModelScope.launch(start = CoroutineStart.LAZY) {
             updateSuccessState { it.copy(isRefreshingData = true) }
-            fetchAllFromSource(
+            val refreshedManga = fetchAllFromSource(
                 manualFetch = manualFetch,
                 fetchDetails = true,
                 fetchChapters = true,
             )
-            updateSuccessState { it.copy(isRefreshingData = false) }
+            synchronized(refreshJobLock) {
+                if (generation == refreshGeneration.get()) {
+                    fetchRecommendations(
+                        forceRefresh = refreshedManga != null,
+                        mangaOverride = refreshedManga ?: successState?.manga,
+                    )
+                    updateSuccessState { it.copy(isRefreshingData = false) }
+                }
+            }
         }
+        val previousJob = synchronized(refreshJobLock) {
+            if (generation != refreshGeneration.get()) {
+                null
+            } else {
+                refreshJob.also { refreshJob = job }
+            }
+        }
+        if (generation != refreshGeneration.get()) {
+            job.cancel()
+        } else {
+            previousJob?.cancel()
+            job.start()
+        }
+    }
+
+    private fun isManualRefreshActive(): Boolean = synchronized(refreshJobLock) {
+        refreshJob?.isActive == true
     }
 
     private suspend fun fetchAllFromSource(
         manualFetch: Boolean,
         fetchDetails: Boolean,
         fetchChapters: Boolean,
-    ) {
-        val state = successState ?: return
+    ): Manga? {
+        val state = successState ?: return null
         try {
-            withUIContext {
+            return withUIContext {
                 val update = updateMangaFromRemote(
                     source = state.source,
                     manga = state.manga,
@@ -277,9 +372,10 @@ class MangaScreenModel(
                 if (manualFetch) {
                     downloadNewChapters(update.newChapters)
                 }
+                update.manga
             }
-        } catch (_: CancellationException) {
-            // ignore
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             val message = if (e is NoChaptersException) {
                 context.stringResource(MR.strings.no_chapters_error)
@@ -291,6 +387,265 @@ class MangaScreenModel(
             screenModelScope.launch {
                 snackbarHostState.showSnackbar(message = message)
             }
+            return null
+        }
+    }
+
+    fun fetchRecommendations(
+        forceRefresh: Boolean = false,
+        mangaOverride: Manga? = null,
+    ) {
+        synchronized(recommendationJobLock) {
+            recommendationRetryJob?.cancel()
+            recommendationRetryJob = null
+        }
+        startRecommendations(forceRefresh, mangaOverride)
+    }
+
+    private fun startRecommendations(
+        forceRefresh: Boolean,
+        mangaOverride: Manga?,
+    ) {
+        val state = successState ?: return
+        if (!lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+            synchronized(recommendationJobLock) { restartRecommendationsOnStart = true }
+            return
+        }
+        val source = state.source
+        val targetManga = mangaOverride ?: state.manga
+        val sessionExcludedUrls = recommendationAncestorUrlsForSource(
+            trailSourceId = recommendationTrailSourceId,
+            ancestorUrls = recommendationAncestorUrls,
+            currentSourceId = source.id,
+        )
+        val sessionExcludedWorkKeys = recommendationAncestorWorkKeysForSource(
+            trailSourceId = recommendationTrailSourceId,
+            ancestorWorkKeys = recommendationAncestorWorkKeys,
+            currentSourceId = source.id,
+        )
+        val generation = synchronized(recommendationJobLock) { recommendationGeneration.incrementAndGet() }
+        // This ScreenModel is already scoped to one manga. Keep its last successful rows while a
+        // refresh is pending; a transient 429/timeout must not turn working recommendations into
+        // an empty page. New manga screens still start hidden and cannot inherit these rows.
+        val job = screenModelScope.launch(Dispatchers.IO, start = CoroutineStart.LAZY) {
+            recommendationRunMutex.withLock {
+                try {
+                    val aniListId = getTracks.await(targetManga.id)
+                        .firstOrNull { it.trackerId == TrackerManager.ANILIST && it.remoteId > 0L }
+                        ?.remoteId
+                    recommendationRepository.observeRecommendations(
+                        source = source,
+                        manga = targetManga.toSManga(),
+                        aniListId = aniListId,
+                        forceRefresh = forceRefresh,
+                        sessionExcludedUrls = sessionExcludedUrls,
+                        sessionExcludedWorkKeys = sessionExcludedWorkKeys,
+                    ).collect { rows ->
+                        val creatorWorks = prepareRecommendations(
+                            rows.creatorWorks.filterNot {
+                                RecommendationMetadata.recommendationUrlKey(it.url) in sessionExcludedUrls
+                            },
+                            source.id,
+                        ).filterNot {
+                            val identity = RecommendationMetadata.identity(source.id, it.toSManga())
+                            identity.canonicalUrl in sessionExcludedUrls ||
+                                identity.exposureKeys.any(sessionExcludedWorkKeys::contains)
+                        }
+                            .distinctRecommendationWorks(source.id)
+                            .take(MAX_RECOMMENDATION_RESULTS)
+                        val creatorIdentities = creatorWorks.map {
+                            RecommendationMetadata.identity(source.id, it.toSManga())
+                        }
+                        val similarManga = prepareRecommendations(
+                            rows.similarManga.filterNot {
+                                RecommendationMetadata.recommendationUrlKey(it.url) in sessionExcludedUrls
+                            },
+                            source.id,
+                        )
+                            .filterNot {
+                                val identity = RecommendationMetadata.identity(source.id, it.toSManga())
+                                identity.canonicalUrl in sessionExcludedUrls ||
+                                    identity.exposureKeys.any(sessionExcludedWorkKeys::contains) ||
+                                    creatorIdentities.any { creatorIdentity ->
+                                        RecommendationMetadata.sameWork(creatorIdentity, identity)
+                                    }
+                            }
+                            .distinctRecommendationWorks(source.id)
+                            .take(MAX_RECOMMENDATION_RESULTS)
+
+                        var accepted = false
+                        synchronized(recommendationJobLock) {
+                            updateSuccessState { current ->
+                                if (
+                                    generation != recommendationGeneration.get() ||
+                                    current.manga.id != targetManga.id ||
+                                    current.source.id != source.id
+                                ) {
+                                    current
+                                } else {
+                                    accepted = true
+                                    current.copy(
+                                        // Replace rows only with fresh cards or an authoritative empty result.
+                                        creatorWorks = resolveRecommendationRow(
+                                            previous = current.creatorWorks,
+                                            fresh = creatorWorks,
+                                            authoritative = rows.creatorAuthoritative,
+                                        ),
+                                        relatedManga = resolveRecommendationRow(
+                                            previous = current.relatedManga,
+                                            fresh = similarManga,
+                                            authoritative = rows.similarAuthoritative,
+                                        ),
+                                    )
+                                }
+                            }
+                        }
+                        if (accepted && rows.isFinal) {
+                            recommendationRepository.recordShown(
+                                sourceId = source.id,
+                                target = targetManga.toSManga(),
+                                manga = (creatorWorks + similarManga).map(Manga::toSManga),
+                            )
+                            scheduleRecommendationRetry(
+                                retryAtMillis = rows.retryAtMillis,
+                                generation = generation,
+                                targetMangaId = targetManga.id,
+                                sourceId = source.id,
+                            )
+                        }
+                    }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    logcat(LogPriority.DEBUG, e) { "Failed to load manga recommendations" }
+                }
+            }
+        }
+        val previousJob = synchronized(recommendationJobLock) {
+            if (generation != recommendationGeneration.get()) {
+                null
+            } else {
+                recommendationJob.also { recommendationJob = job }
+            }
+        }
+        if (generation != recommendationGeneration.get()) {
+            job.cancel()
+        } else {
+            previousJob?.cancel()
+            job.start()
+        }
+    }
+
+    private fun cancelRecommendationsForLifecycle(restartOnStart: Boolean = true) {
+        val jobs = synchronized(recommendationJobLock) {
+            val activeJob = recommendationJob?.takeIf { it.isActive }
+            val activeRetry = recommendationRetryJob?.takeIf { it.isActive }
+            if ((activeJob != null || activeRetry != null) && restartOnStart) {
+                restartRecommendationsOnStart = true
+            }
+            recommendationGeneration.incrementAndGet()
+            recommendationJob = null
+            recommendationRetryJob = null
+            listOfNotNull(activeJob, activeRetry)
+        }
+        jobs.forEach(Job::cancel)
+    }
+
+    private fun scheduleRecommendationRetry(
+        retryAtMillis: Long?,
+        generation: Long,
+        targetMangaId: Long,
+        sourceId: Long,
+    ) {
+        retryAtMillis ?: return
+        synchronized(recommendationJobLock) {
+            if (generation != recommendationGeneration.get()) {
+                return
+            }
+            recommendationRetryJob?.cancel()
+            recommendationRetryJob = screenModelScope.launch {
+                delay((retryAtMillis - System.currentTimeMillis()).coerceAtLeast(MIN_RETRY_DELAY_MILLIS))
+                val shouldRetry = synchronized(recommendationJobLock) {
+                    val current = successState
+                    val valid = generation == recommendationGeneration.get() &&
+                        current != null &&
+                        current.manga.id == targetMangaId &&
+                        current.source.id == sourceId &&
+                        lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
+                    recommendationRetryJob = null
+                    valid
+                }
+                if (shouldRetry) startRecommendations(forceRefresh = false, mangaOverride = null)
+            }
+        }
+    }
+
+    private suspend fun prepareRecommendations(
+        recommendations: List<eu.kanade.tachiyomi.source.model.SManga>,
+        sourceId: Long,
+    ): List<Manga> {
+        val domainManga = recommendations.mapNotNull { recommendation ->
+            try {
+                if (recommendation.url.isBlank() || recommendation.title.isBlank()) return@mapNotNull null
+                recommendation.toDomainManga(sourceId)
+            } catch (_: UninitializedPropertyAccessException) {
+                null
+            }
+        }.distinctBy(Manga::url)
+        if (domainManga.isEmpty()) return emptyList()
+        val existingByUrl = try {
+            mangaRepository.getMangaByUrlsAndSourceId(domainManga.map(Manga::url), sourceId)
+                .associateBy(Manga::url)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            logcat(LogPriority.DEBUG, e) { "Failed to read existing recommendation metadata" }
+            emptyMap()
+        }
+        return domainManga.map { candidate ->
+            existingByUrl[candidate.url]
+                ?.withFreshRecommendationMetadata(candidate)
+                ?: candidate
+        }.filter { it.source == sourceId }
+    }
+
+    private fun List<Manga>.distinctRecommendationWorks(sourceId: Long): List<Manga> {
+        val identities = mutableListOf<eu.kanade.tachiyomi.data.recommendation.RecommendationIdentity>()
+        return filter { manga ->
+            val identity = RecommendationMetadata.identity(sourceId, manga.toSManga())
+            if (identities.any { RecommendationMetadata.sameWork(it, identity) }) {
+                false
+            } else {
+                identities += identity
+                true
+            }
+        }
+    }
+
+    suspend fun persistRecommendationForNavigation(recommendation: Manga): Manga? {
+        val sourceId = successState?.source?.id ?: return null
+        if (recommendation.source != sourceId) {
+            logcat(LogPriority.WARN) {
+                "Ignored cross-source recommendation: expected=$sourceId, actual=${recommendation.source}"
+            }
+            return null
+        }
+        return try {
+            val wasExistingBareRow = recommendation.id > 0L && !recommendation.initialized
+            val persisted = networkToLocalManga(recommendation)
+            if (wasExistingBareRow && !persisted.favorite) {
+                recommendation.toRecommendationMetadataUpdate(persisted.id)?.let { update ->
+                    mangaRepository.update(update)
+                }
+            }
+            persisted
+                .withFreshRecommendationMetadata(recommendation)
+                .takeIf { it.source == sourceId }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Failed to persist selected recommendation" }
+            null
         }
     }
 
@@ -1112,6 +1467,8 @@ class MangaScreenModel(
             val trackingCount: Int = 0,
             val hasLoggedInTrackers: Boolean = false,
             val isRefreshingData: Boolean = false,
+            val creatorWorks: RecommendationRowState = RecommendationRowState.Hidden,
+            val relatedManga: RecommendationRowState = RecommendationRowState.Hidden,
             val dialog: Dialog? = null,
             val hasPromptedToAddBefore: Boolean = false,
             val hideMissingChapters: Boolean = false,
@@ -1199,3 +1556,60 @@ sealed class ChapterList {
         val isDownloaded = downloadState == Download.State.DOWNLOADED
     }
 }
+
+internal fun List<Manga>.toRecommendationState(): RecommendationRowState =
+    take(MAX_RECOMMENDATION_RESULTS)
+        .takeIf(List<Manga>::isNotEmpty)
+        ?.let(RecommendationRowState::Success)
+        ?: RecommendationRowState.Hidden
+
+internal fun resolveRecommendationRow(
+    previous: RecommendationRowState,
+    fresh: List<Manga>,
+    authoritative: Boolean,
+): RecommendationRowState = when {
+    fresh.isNotEmpty() -> fresh.toRecommendationState()
+    authoritative -> RecommendationRowState.Hidden
+    else -> previous
+}
+
+internal fun Manga.withFreshRecommendationMetadata(fresh: Manga): Manga {
+    return copy(
+        url = fresh.url,
+        title = fresh.title,
+        artist = fresh.artist?.takeIf(String::isNotBlank) ?: artist,
+        author = fresh.author?.takeIf(String::isNotBlank) ?: author,
+        description = fresh.description?.takeIf(String::isNotBlank) ?: description,
+        genre = fresh.genre?.takeIf(List<String>::isNotEmpty) ?: genre,
+        status = fresh.status.takeIf { it != eu.kanade.tachiyomi.source.model.SManga.UNKNOWN.toLong() } ?: status,
+        thumbnailUrl = fresh.thumbnailUrl?.takeIf(String::isNotBlank) ?: thumbnailUrl,
+        initialized = initialized || fresh.initialized,
+    )
+}
+
+internal fun Manga.toRecommendationMetadataUpdate(localId: Long): MangaUpdate? {
+    val update = MangaUpdate(
+        id = localId,
+        artist = artist?.takeIf(String::isNotBlank),
+        author = author?.takeIf(String::isNotBlank),
+        description = description?.takeIf(String::isNotBlank),
+        genre = genre?.takeIf(List<String>::isNotEmpty),
+        status = status.takeIf { it != eu.kanade.tachiyomi.source.model.SManga.UNKNOWN.toLong() },
+    )
+    return update.takeIf {
+        it.artist != null ||
+            it.author != null ||
+            it.description != null ||
+            it.genre != null ||
+            it.status != null
+    }
+}
+
+@Immutable
+sealed interface RecommendationRowState {
+    data object Hidden : RecommendationRowState
+    data class Success(val manga: List<Manga>) : RecommendationRowState
+}
+
+private const val MAX_RECOMMENDATION_RESULTS = 10
+private const val MIN_RETRY_DELAY_MILLIS = 1_000L

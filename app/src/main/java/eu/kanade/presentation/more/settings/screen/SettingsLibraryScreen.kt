@@ -56,7 +56,27 @@ object SettingsLibraryScreen : SearchableSettings {
         return listOf(
             getCategoriesGroup(LocalNavigator.currentOrThrow, allCategories, libraryPreferences),
             getGlobalUpdateGroup(allCategories, libraryPreferences),
+            getRecommendationsGroup(libraryPreferences),
             getBehaviorGroup(libraryPreferences),
+        )
+    }
+
+    @Composable
+    private fun getRecommendationsGroup(
+        libraryPreferences: LibraryPreferences,
+    ): Preference.PreferenceGroup {
+        return Preference.PreferenceGroup(
+            title = stringResource(MR.strings.pref_category_recommendations),
+            preferenceItems = listOf(
+                Preference.PreferenceItem.EditTextPreference(
+                    preference = libraryPreferences.recommendationFilterKeywords,
+                    title = stringResource(MR.strings.pref_recommendation_filter_keywords),
+                    subtitle = stringResource(MR.strings.pref_recommendation_filter_keywords_summary),
+                    dialogMessage = stringResource(MR.strings.pref_recommendation_filter_keywords_format),
+                    allowEmpty = true,
+                    singleLine = false,
+                ),
+            ),
         )
     }
 

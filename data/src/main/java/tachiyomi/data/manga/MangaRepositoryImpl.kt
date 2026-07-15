@@ -43,6 +43,13 @@ class MangaRepositoryImpl(
             .awaitAsOneOrNull()
     }
 
+    override suspend fun getMangaByUrlsAndSourceId(urls: List<String>, sourceId: Long): List<Manga> {
+        if (urls.isEmpty()) return emptyList()
+        return database.mangasQueries
+            .getMangasByUrlsAndSource(sourceId, urls, MangaMapper::mapManga)
+            .awaitAsList()
+    }
+
     override fun getMangaByUrlAndSourceIdAsFlow(url: String, sourceId: Long): Flow<Manga?> {
         return database.mangasQueries
             .getMangaByUrlAndSource(url, sourceId, MangaMapper::mapManga)
@@ -77,6 +84,12 @@ class MangaRepositoryImpl(
         return database.mangasQueries
             .getFavoriteBySourceId(sourceId, MangaMapper::mapManga)
             .subscribeToList()
+    }
+
+    override suspend fun getRecommendationCandidates(sourceId: Long, excludedUrl: String): List<Manga> {
+        return database.mangasQueries
+            .getRecommendationCandidates(sourceId, excludedUrl, MangaMapper::mapManga)
+            .awaitAsList()
     }
 
     override suspend fun getDuplicateLibraryManga(id: Long, title: String): List<MangaWithChapterCount> {

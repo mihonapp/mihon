@@ -909,4 +909,10 @@
     <string name="extensionStoresScreen.deleteStore.title">刪除擴充套件商店</string>
     <string name="extensionStoresScreen.deleteStore.body">你是否要刪除擴充套件商店「%1$s」(%2$s)？</string>
     <string name="pref_webtoon_vertical_navigator_on_left">將垂直導航器設於左側</string>
+    <string name="manga_creator_works">同創作者作品</string>
+    <string name="manga_similar_titles">相似漫畫</string>
+    <string name="pref_category_recommendations">推薦</string>
+    <string name="pref_recommendation_filter_keywords">過濾推薦關鍵詞</string>
+    <string name="pref_recommendation_filter_keywords_summary">標題、作者、標籤或簡介包含關鍵詞時不顯示該推薦</string>
+    <string name="pref_recommendation_filter_keywords_format">格式：使用逗號或換行分隔，不區分大小寫。例如：\nAI, AI生成, AI-generated, 3D</string>
 </resources>

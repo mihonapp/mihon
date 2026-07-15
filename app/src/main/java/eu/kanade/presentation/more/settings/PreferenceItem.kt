@@ -161,6 +161,9 @@ internal fun PreferenceItem(
                     subtitle = item.subtitle,
                     icon = item.icon,
                     value = values,
+                    dialogMessage = item.dialogMessage,
+                    allowEmpty = item.allowEmpty,
+                    singleLine = item.singleLine,
                     onConfirm = {
                         val accepted = item.onValueChanged(it)
                         if (accepted) item.preference.set(it)

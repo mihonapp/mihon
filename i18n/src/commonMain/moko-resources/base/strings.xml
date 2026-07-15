@@ -1062,4 +1062,10 @@
     <string name="donationCampaign.paragraph3">Regardless, Mihon will continue to be maintained by me and the volunteers, and it will stay open source.</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="donationCampaign.dismiss">Dismiss</string>
+    <string name="manga_creator_works">More by the same creators</string>
+    <string name="manga_similar_titles">Similar manga</string>
+    <string name="pref_category_recommendations">Recommendations</string>
+    <string name="pref_recommendation_filter_keywords">Filter recommendation keywords</string>
+    <string name="pref_recommendation_filter_keywords_summary">Hide recommendations whose title, creator, tags, or description contain a listed term</string>
+    <string name="pref_recommendation_filter_keywords_format">Format: separate terms with commas or new lines. Matching is case-insensitive. Example:\nAI, AI-generated, AI生成, 3D</string>
 </resources>

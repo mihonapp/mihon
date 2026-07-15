@@ -1,5 +1,7 @@
 package eu.kanade.presentation.more.settings.widget
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
@@ -20,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import kotlinx.coroutines.launch
 import tachiyomi.i18n.MR
@@ -31,6 +34,9 @@ fun EditTextPreferenceWidget(
     subtitle: String?,
     icon: ImageVector?,
     value: String,
+    dialogMessage: String? = null,
+    allowEmpty: Boolean = false,
+    singleLine: Boolean = true,
     onConfirm: suspend (String) -> Boolean,
 ) {
     var isDialogShown by remember { mutableStateOf(false) }
@@ -52,29 +58,34 @@ fun EditTextPreferenceWidget(
             onDismissRequest = onDismissRequest,
             title = { Text(text = title) },
             text = {
-                OutlinedTextField(
-                    value = textFieldValue,
-                    onValueChange = { textFieldValue = it },
-                    trailingIcon = {
-                        if (textFieldValue.text.isBlank()) {
-                            Icon(imageVector = Icons.Filled.Error, contentDescription = null)
-                        } else {
-                            IconButton(onClick = { textFieldValue = TextFieldValue("") }) {
-                                Icon(imageVector = Icons.Filled.Cancel, contentDescription = null)
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    dialogMessage?.let { Text(it) }
+                    OutlinedTextField(
+                        value = textFieldValue,
+                        onValueChange = { textFieldValue = it },
+                        trailingIcon = {
+                            if (textFieldValue.text.isBlank() && !allowEmpty) {
+                                Icon(imageVector = Icons.Filled.Error, contentDescription = null)
+                            } else if (textFieldValue.text.isNotEmpty()) {
+                                IconButton(onClick = { textFieldValue = TextFieldValue("") }) {
+                                    Icon(imageVector = Icons.Filled.Cancel, contentDescription = null)
+                                }
                             }
-                        }
-                    },
-                    isError = textFieldValue.text.isBlank(),
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                        },
+                        isError = textFieldValue.text.isBlank() && !allowEmpty,
+                        singleLine = singleLine,
+                        minLines = if (singleLine) 1 else 2,
+                        maxLines = if (singleLine) 1 else 5,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
             },
             properties = DialogProperties(
                 usePlatformDefaultWidth = true,
             ),
             confirmButton = {
                 TextButton(
-                    enabled = textFieldValue.text != value && textFieldValue.text.isNotBlank(),
+                    enabled = textFieldValue.text != value && (allowEmpty || textFieldValue.text.isNotBlank()),
                     onClick = {
                         scope.launch {
                             if (onConfirm(textFieldValue.text)) {

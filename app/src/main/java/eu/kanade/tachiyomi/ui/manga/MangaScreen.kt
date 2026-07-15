@@ -39,6 +39,7 @@ import eu.kanade.presentation.manga.components.SetIntervalDialog
 import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.util.isTabletUi
+import eu.kanade.tachiyomi.data.recommendation.RecommendationMetadata
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.isLocalOrStub
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -67,6 +68,9 @@ import tachiyomi.presentation.core.screens.LoadingScreen
 class MangaScreen(
     private val mangaId: Long,
     val fromSource: Boolean = false,
+    private val recommendationTrailSourceId: Long? = null,
+    private val recommendationAncestorUrls: List<String> = emptyList(),
+    private val recommendationAncestorWorkKeys: List<String> = emptyList(),
 ) : Screen(), AssistContentScreen {
 
     private var assistUrl: String? = null
@@ -86,7 +90,15 @@ class MangaScreen(
         val scope = rememberCoroutineScope()
         val lifecycleOwner = LocalLifecycleOwner.current
         val screenModel = rememberScreenModel {
-            MangaScreenModel(context, lifecycleOwner.lifecycle, mangaId, fromSource)
+            MangaScreenModel(
+                context = context,
+                lifecycle = lifecycleOwner.lifecycle,
+                mangaId = mangaId,
+                isFromSource = fromSource,
+                recommendationTrailSourceId = recommendationTrailSourceId,
+                recommendationAncestorUrls = recommendationAncestorUrls,
+                recommendationAncestorWorkKeys = recommendationAncestorWorkKeys,
+            )
         }
 
         val state by screenModel.state.collectAsStateWithLifecycle()
@@ -151,6 +163,37 @@ class MangaScreen(
             onRefresh = screenModel::fetchAllFromSource,
             onContinueReading = { continueReading(context, screenModel.getNextUnreadChapter()) },
             onSearch = { query, global -> scope.launch { performSearch(navigator, query, global) } },
+            onRecommendedMangaClicked = { recommended ->
+                scope.launch {
+                    val persisted = screenModel.persistRecommendationForNavigation(recommended)
+                        ?: return@launch
+                    if (persisted.source != successState.source.id) return@launch
+                    val childAncestorUrls = nextRecommendationAncestorUrls(
+                        trailSourceId = recommendationTrailSourceId,
+                        ancestorUrls = recommendationAncestorUrls,
+                        currentSourceId = successState.source.id,
+                        currentUrl = successState.manga.url,
+                    )
+                    val childAncestorWorkKeys = nextRecommendationAncestorWorkKeys(
+                        trailSourceId = recommendationTrailSourceId,
+                        ancestorWorkKeys = recommendationAncestorWorkKeys,
+                        currentSourceId = successState.source.id,
+                        currentWorkKeys = RecommendationMetadata.identity(
+                            successState.source.id,
+                            successState.manga.toSManga(),
+                        ).exposureKeys,
+                    )
+                    navigator.push(
+                        MangaScreen(
+                            mangaId = persisted.id,
+                            fromSource = true,
+                            recommendationTrailSourceId = successState.source.id,
+                            recommendationAncestorUrls = childAncestorUrls,
+                            recommendationAncestorWorkKeys = childAncestorWorkKeys,
+                        ),
+                    )
+                }
+            },
             onCoverClicked = screenModel::showCoverDialog,
             onShareClicked = { shareManga(context, screenModel.manga, screenModel.source) }.takeIf { isHttpSource },
             onDownloadActionClicked = screenModel::runDownloadAction.takeIf { !successState.source.isLocalOrStub() },
@@ -385,3 +428,66 @@ class MangaScreen(
         context.copyToClipboard(url, url)
     }
 }
+
+internal fun nextRecommendationAncestorUrls(
+    trailSourceId: Long?,
+    ancestorUrls: List<String>,
+    currentSourceId: Long,
+    currentUrl: String,
+): List<String> {
+    val inherited = ancestorUrls.takeIf { trailSourceId == currentSourceId }.orEmpty()
+    return normalizeRecommendationAncestorUrls(inherited + currentUrl)
+}
+
+internal fun recommendationAncestorUrlsForSource(
+    trailSourceId: Long?,
+    ancestorUrls: List<String>,
+    currentSourceId: Long,
+): Set<String> {
+    if (trailSourceId != currentSourceId) return emptySet()
+    return normalizeRecommendationAncestorUrls(ancestorUrls).toSet()
+}
+
+internal fun nextRecommendationAncestorWorkKeys(
+    trailSourceId: Long?,
+    ancestorWorkKeys: List<String>,
+    currentSourceId: Long,
+    currentWorkKeys: Set<String>,
+): List<String> {
+    val inherited = ancestorWorkKeys.takeIf { trailSourceId == currentSourceId }.orEmpty()
+    return normalizeRecommendationAncestorWorkKeys(inherited + currentWorkKeys)
+}
+
+internal fun recommendationAncestorWorkKeysForSource(
+    trailSourceId: Long?,
+    ancestorWorkKeys: List<String>,
+    currentSourceId: Long,
+): Set<String> {
+    if (trailSourceId != currentSourceId) return emptySet()
+    return normalizeRecommendationAncestorWorkKeys(ancestorWorkKeys).toSet()
+}
+
+private fun normalizeRecommendationAncestorUrls(urls: List<String>): List<String> {
+    val ordered = linkedSetOf<String>()
+    urls.forEach { url ->
+        val key = RecommendationMetadata.recommendationUrlKey(url)
+        if (key.isBlank()) return@forEach
+        ordered.remove(key)
+        ordered += key
+    }
+    return ordered.toList().takeLast(MAX_RECOMMENDATION_ANCESTORS)
+}
+
+private fun normalizeRecommendationAncestorWorkKeys(keys: Iterable<String>): List<String> {
+    val ordered = linkedSetOf<String>()
+    keys.forEach { key ->
+        val normalized = key.trim()
+        if (normalized.isBlank()) return@forEach
+        ordered.remove(normalized)
+        ordered += normalized
+    }
+    return ordered.toList().takeLast(MAX_RECOMMENDATION_ANCESTOR_WORK_KEYS)
+}
+
+private const val MAX_RECOMMENDATION_ANCESTORS = 8
+private const val MAX_RECOMMENDATION_ANCESTOR_WORK_KEYS = 32

@@ -6,6 +6,8 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALAddMangaResult
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALCurrentUserResult
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALOAuth
+import eu.kanade.tachiyomi.data.track.anilist.dto.ALRecommendation
+import eu.kanade.tachiyomi.data.track.anilist.dto.ALRecommendationsResult
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALSearchResult
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALUserListMangaQueryResult
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALUserViewerData
@@ -35,9 +37,12 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
 
     private val json: Json by injectLazy()
 
-    private val authClient = client.newBuilder()
-        .addInterceptor(interceptor)
+    private val rateLimitedClient = client.newBuilder()
         .rateLimit(permits = 85, period = 1.minutes)
+        .build()
+
+    private val authClient = rateLimitedClient.newBuilder()
+        .addInterceptor(interceptor)
         .build()
 
     suspend fun addLibManga(track: Track): Track {
@@ -197,6 +202,22 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
         }
     }
 
+    suspend fun getRecommendations(mediaId: Long): List<ALRecommendation> {
+        return withIOContext {
+            with(json) {
+                rateLimitedClient.newCall(
+                    POST(
+                        API_URL,
+                        body = buildRecommendationsPayload(mediaId).toString().toRequestBody(jsonMime),
+                    ),
+                )
+                    .awaitSuccess()
+                    .parseAs<ALRecommendationsResult>()
+                    .recommendations()
+            }
+        }
+    }
+
     suspend fun findLibManga(track: Track, userid: Int): Track? {
         return withIOContext {
             val query = $$"""
@@ -348,5 +369,44 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
             .appendQueryParameter("client_id", CLIENT_ID)
             .appendQueryParameter("response_type", "token")
             .build()
+    }
+}
+
+internal fun buildRecommendationsPayload(mediaId: Long): JsonObject {
+    val query = $$"""
+    |query MangaRecommendations($mediaId: Int!) {
+        |Media(id: $mediaId, type: MANGA) {
+            |recommendations(page: 1, perPage: 4, sort: RATING_DESC) {
+                |edges {
+                    |node {
+                        |rating
+                        |mediaRecommendation {
+                            |id
+                            |type
+                            |title {
+                                |userPreferred
+                                |romaji
+                                |english
+                                |native
+                            |}
+                            |synonyms
+                            |genres
+                            |tags {
+                                |name
+                                |rank
+                            |}
+                        |}
+                    |}
+                |}
+            |}
+        |}
+    |}
+    |
+    """.trimMargin()
+    return buildJsonObject {
+        put("query", query)
+        putJsonObject("variables") {
+            put("mediaId", mediaId)
+        }
     }
 }

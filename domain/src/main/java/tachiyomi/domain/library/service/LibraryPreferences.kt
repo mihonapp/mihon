@@ -61,6 +61,11 @@ class LibraryPreferences(
         false,
     )
 
+    val recommendationFilterKeywords: Preference<String> = preferenceStore.getString(
+        "recommendation_filter_keywords",
+        "",
+    )
+
     val markDuplicateReadChapterAsRead: Preference<Set<String>> = preferenceStore.getStringSet(
         "mark_duplicate_read_chapter_read",
         emptySet(),

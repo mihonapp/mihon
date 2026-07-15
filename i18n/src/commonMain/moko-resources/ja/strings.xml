@@ -860,4 +860,10 @@
     <string name="download_bookmarked">ブックマーク済み</string>
     <string name="migrationConfigScreen.continueButtonText">移行</string>
     <string name="migrationConfigScreen.removeDownloadsTitle">移行後に既存のダウンロード済みデータを削除する</string>
+    <string name="manga_creator_works">同じクリエイターの作品</string>
+    <string name="manga_similar_titles">類似作品</string>
+    <string name="pref_category_recommendations">おすすめ</string>
+    <string name="pref_recommendation_filter_keywords">おすすめの除外キーワード</string>
+    <string name="pref_recommendation_filter_keywords_summary">タイトル、作者、タグ、説明にキーワードが含まれる作品を非表示にします</string>
+    <string name="pref_recommendation_filter_keywords_format">形式：カンマまたは改行で区切ります。大文字と小文字は区別しません。例：\nAI, AI生成, AI-generated, 3D</string>
 </resources>

@@ -77,6 +77,12 @@ WHERE url = :url
 AND source = :source
 LIMIT 1;
 
+getMangasByUrlsAndSource:
+SELECT *
+FROM mangas
+WHERE source = :source
+AND url IN :urls;
+
 getFavorites:
 SELECT *
 FROM mangas
@@ -117,6 +123,23 @@ SELECT *
 FROM mangas
 WHERE favorite = 1
 AND source = :sourceId;
+
+getRecommendationCandidates:
+SELECT *
+FROM mangas
+WHERE source = :sourceId
+AND initialized = 1
+AND url != :excludedUrl
+AND (
+    favorite = 1
+    OR EXISTS (
+        SELECT 1
+        FROM chapters
+        WHERE chapters.manga_id = mangas._id
+    )
+)
+ORDER BY favorite DESC, last_modified_at DESC, date_added DESC, _id DESC
+LIMIT 200;
 
 getDuplicateLibraryManga:
 WITH

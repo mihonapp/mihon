@@ -917,4 +917,10 @@
     <string name="extensionStoresScreen.deleteStore.title">移除插件商店</string>
     <string name="extensionStoresScreen.deleteStore.body">是否移除插件商店 \"%1$s\" (%2$s)？</string>
     <string name="pref_webtoon_vertical_navigator_on_left">将垂直导航栏放在左侧</string>
+    <string name="manga_creator_works">同创作者作品</string>
+    <string name="manga_similar_titles">相似漫画</string>
+    <string name="pref_category_recommendations">推荐</string>
+    <string name="pref_recommendation_filter_keywords">过滤推荐关键词</string>
+    <string name="pref_recommendation_filter_keywords_summary">标题、作者、标签或简介包含关键词时不显示该推荐</string>
+    <string name="pref_recommendation_filter_keywords_format">格式：使用逗号或换行分隔，不区分大小写。例如：\nAI, AI生成, AI-generated, 3D</string>
 </resources>
