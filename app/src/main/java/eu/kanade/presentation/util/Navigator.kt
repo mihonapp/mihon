@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.ScreenModelStore
 import cafe.adriel.voyager.core.screen.Screen
@@ -29,6 +30,12 @@ import soup.compose.material.motion.animation.rememberSlideDistance
  * For invoking back press to the parent activity
  */
 val LocalBackPress: ProvidableCompositionLocal<(() -> Unit)?> = staticCompositionLocalOf { null }
+
+/**
+ * Navigation icon used by root settings screens. Set to a menu icon when the settings
+ * sidebar is shown as an overlay drawer; null falls back to the up arrow.
+ */
+val LocalSettingsNavIcon: ProvidableCompositionLocal<ImageVector?> = staticCompositionLocalOf { null }
 
 interface Tab : cafe.adriel.voyager.navigator.tab.Tab {
     suspend fun onReselect(navigator: Navigator) {}
