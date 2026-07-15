@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import cafe.adriel.voyager.core.model.rememberScreenModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -19,12 +19,12 @@ data object FailedUpdatesTab : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val screenModel = rememberScreenModel { FailedUpdatesScreenModel() }
-        val state by screenModel.state.collectAsState()
+        val viewModel = viewModel<FailedUpdatesViewModel>()
+        val state by viewModel.state.collectAsState()
 
         // Clean up non-favorite errors when screen is opened
         LaunchedEffect(Unit) {
-            screenModel.cleanupNonFavorites()
+            viewModel.cleanupNonFavorites()
         }
 
         FailedUpdatesScreen(
@@ -35,45 +35,45 @@ data object FailedUpdatesTab : Screen {
                 navigator.push(MigrationConfigScreen(item.manga.id))
             },
             onClickMigrate = {
-                val selectedIds = screenModel.getSelectedMangaIds()
+                val selectedIds = viewModel.getSelectedMangaIds()
                 if (selectedIds.isNotEmpty()) {
-                    screenModel.setDialog(FailedUpdatesScreenModel.Dialog.MigrateSelected(selectedIds))
+                    viewModel.setDialog(FailedUpdatesViewModel.Dialog.MigrateSelected(selectedIds))
                 }
             },
             onClearAll = {
-                screenModel.setDialog(FailedUpdatesScreenModel.Dialog.ClearAllConfirmation)
+                viewModel.setDialog(FailedUpdatesViewModel.Dialog.ClearAllConfirmation)
             },
             onDeleteSelected = {
-                screenModel.setDialog(FailedUpdatesScreenModel.Dialog.DeleteSelectedConfirmation)
+                viewModel.setDialog(FailedUpdatesViewModel.Dialog.DeleteSelectedConfirmation)
             },
             onClearError = { mangaId ->
-                screenModel.clearError(mangaId)
+                viewModel.clearError(mangaId)
             },
-            onSelectAll = screenModel::toggleAllSelection,
-            onInvertSelection = screenModel::invertSelection,
-            onToggleSelection = screenModel::toggleSelection,
+            onSelectAll = viewModel::toggleAllSelection,
+            onInvertSelection = viewModel::invertSelection,
+            onToggleSelection = viewModel::toggleSelection,
             navigateUp = navigator::pop,
         )
 
-        val onDismissDialog = { screenModel.setDialog(null) }
+        val onDismissDialog = { viewModel.setDialog(null) }
         when (val dialog = state.dialog) {
-            is FailedUpdatesScreenModel.Dialog.ClearAllConfirmation -> {
+            is FailedUpdatesViewModel.Dialog.ClearAllConfirmation -> {
                 FailedUpdatesClearAllDialog(
                     onDismissRequest = onDismissDialog,
                     onConfirm = {
-                        screenModel.clearAllErrors()
+                        viewModel.clearAllErrors()
                     },
                 )
             }
-            is FailedUpdatesScreenModel.Dialog.DeleteSelectedConfirmation -> {
+            is FailedUpdatesViewModel.Dialog.DeleteSelectedConfirmation -> {
                 FailedUpdatesDeleteSelectedDialog(
                     onDismissRequest = onDismissDialog,
                     onConfirm = {
-                        screenModel.clearSelectedErrors()
+                        viewModel.clearSelectedErrors()
                     },
                 )
             }
-            is FailedUpdatesScreenModel.Dialog.MigrateSelected -> {
+            is FailedUpdatesViewModel.Dialog.MigrateSelected -> {
                 // Navigate to migration config screen to select sources, then to migration list
                 navigator.push(MigrationConfigScreen(dialog.mangaIds))
                 onDismissDialog()

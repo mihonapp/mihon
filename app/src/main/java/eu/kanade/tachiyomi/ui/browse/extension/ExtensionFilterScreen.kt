@@ -5,7 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import cafe.adriel.voyager.core.model.rememberScreenModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.browse.ExtensionFilterScreen
@@ -21,8 +21,8 @@ class ExtensionFilterScreen : Screen() {
     override fun Content() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
-        val screenModel = rememberScreenModel { ExtensionFilterScreenModel() }
-        val state by screenModel.state.collectAsState()
+        val viewModel = viewModel<ExtensionFilterViewModel>()
+        val state by viewModel.state.collectAsState()
 
         if (state is ExtensionFilterState.Loading) {
             LoadingScreen()
@@ -34,11 +34,11 @@ class ExtensionFilterScreen : Screen() {
         ExtensionFilterScreen(
             navigateUp = navigator::pop,
             state = successState,
-            onClickToggle = screenModel::toggle,
+            onClickToggle = viewModel::toggle,
         )
 
         LaunchedEffect(Unit) {
-            screenModel.events.collectLatest {
+            viewModel.events.collectLatest {
                 when (it) {
                     ExtensionFilterEvent.FailedFetchingLanguages -> {
                         context.stringResource(MR.strings.internal_error)

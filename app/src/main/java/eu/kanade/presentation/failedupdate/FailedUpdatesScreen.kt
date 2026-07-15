@@ -42,7 +42,7 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.manga.components.MangaCover
 import eu.kanade.presentation.util.relativeTimeSpanString
-import eu.kanade.tachiyomi.ui.failedupdate.FailedUpdatesScreenModel
+import eu.kanade.tachiyomi.ui.failedupdate.FailedUpdatesViewModel
 import tachiyomi.domain.updates.model.MangaUpdateErrorWithManga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
@@ -55,7 +55,7 @@ import tachiyomi.domain.manga.model.MangaCover as MangaCoverData
 
 @Composable
 fun FailedUpdatesScreen(
-    state: FailedUpdatesScreenModel.State,
+    state: FailedUpdatesViewModel.State,
     onClickCover: (MangaUpdateErrorWithManga) -> Unit,
     onClickItem: (MangaUpdateErrorWithManga) -> Unit,
     onClickMigrate: () -> Unit,
