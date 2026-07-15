@@ -24,7 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import eu.kanade.domain.source.interactor.SetMigrateSorting
 import eu.kanade.presentation.browse.components.BaseSourceItem
 import eu.kanade.presentation.browse.components.SourceIcon
-import eu.kanade.tachiyomi.ui.browse.migration.sources.MigrateSourceScreenModel
+import eu.kanade.tachiyomi.ui.browse.migration.sources.MigrateSourceViewModel
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import tachiyomi.domain.source.model.Source
 import tachiyomi.i18n.MR
@@ -43,7 +43,7 @@ import tachiyomi.presentation.core.util.secondaryItemAlpha
 
 @Composable
 fun MigrateSourceScreen(
-    state: MigrateSourceScreenModel.State,
+    state: MigrateSourceViewModel.State,
     contentPadding: PaddingValues,
     onClickItem: (Source) -> Unit,
     onToggleSortingDirection: () -> Unit,

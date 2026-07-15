@@ -26,12 +26,12 @@ import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun extensionsTab(
-    extensionsScreenModel: ExtensionsScreenModel,
+    extensionsViewModel: ExtensionsViewModel,
 ): TabContent {
     val navigator = LocalNavigator.currentOrThrow
     val context = LocalContext.current
 
-    val state by extensionsScreenModel.state.collectAsState()
+    val state by extensionsViewModel.state.collectAsState()
     var privateExtensionToUninstall by remember { mutableStateOf<Extension?>(null) }
 
     return TabContent(
@@ -50,7 +50,7 @@ fun extensionsTab(
         ),
         content = { contentPadding, _ ->
             BackHandler(enabled = state.searchQuery != null) {
-                extensionsScreenModel.search(null)
+                extensionsViewModel.search(null)
             }
 
             ExtensionScreen(
@@ -59,18 +59,18 @@ fun extensionsTab(
                 searchQuery = state.searchQuery,
                 onLongClickItem = { extension ->
                     when (extension) {
-                        is Extension.Available -> extensionsScreenModel.installExtension(extension)
+                        is Extension.Available -> extensionsViewModel.installExtension(extension)
                         else -> {
                             if (context.isPackageInstalled(extension.pkgName)) {
-                                extensionsScreenModel.uninstallExtension(extension)
+                                extensionsViewModel.uninstallExtension(extension)
                             } else {
                                 privateExtensionToUninstall = extension
                             }
                         }
                     }
                 },
-                onClickItemCancel = extensionsScreenModel::cancelInstallUpdateExtension,
-                onClickUpdateAll = extensionsScreenModel::updateAllExtensions,
+                onClickItemCancel = extensionsViewModel::cancelInstallUpdateExtension,
+                onClickUpdateAll = extensionsViewModel::updateAllExtensions,
                 onOpenWebView = { extension ->
                     extension.sources.getOrNull(0)?.let {
                         navigator.push(
@@ -82,19 +82,19 @@ fun extensionsTab(
                         )
                     }
                 },
-                onInstallExtension = extensionsScreenModel::installExtension,
+                onInstallExtension = extensionsViewModel::installExtension,
                 onOpenExtension = { navigator.push(ExtensionDetailsScreen(it.pkgName)) },
-                onTrustExtension = { extensionsScreenModel.trustExtension(it) },
-                onUninstallExtension = { extensionsScreenModel.uninstallExtension(it) },
-                onUpdateExtension = extensionsScreenModel::updateExtension,
-                onRefresh = extensionsScreenModel::findAvailableExtensions,
+                onTrustExtension = { extensionsViewModel.trustExtension(it) },
+                onUninstallExtension = { extensionsViewModel.uninstallExtension(it) },
+                onUpdateExtension = extensionsViewModel::updateExtension,
+                onRefresh = extensionsViewModel::findAvailableExtensions,
             )
 
             privateExtensionToUninstall?.let { extension ->
                 ExtensionUninstallConfirmation(
                     extensionName = extension.name,
                     onClickConfirm = {
-                        extensionsScreenModel.uninstallExtension(extension)
+                        extensionsViewModel.uninstallExtension(extension)
                     },
                     onDismissRequest = {
                         privateExtensionToUninstall = null

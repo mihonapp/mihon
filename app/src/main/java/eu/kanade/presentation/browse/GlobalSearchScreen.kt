@@ -12,7 +12,7 @@ import eu.kanade.presentation.browse.components.GlobalSearchResultItem
 import eu.kanade.presentation.browse.components.GlobalSearchToolbar
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchItemResult
-import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchScreenModel
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchViewModel
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SourceFilter
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import tachiyomi.domain.manga.model.Manga
@@ -20,7 +20,7 @@ import tachiyomi.presentation.core.components.material.Scaffold
 
 @Composable
 fun GlobalSearchScreen(
-    state: SearchScreenModel.State,
+    state: SearchViewModel.State,
     navigateUp: () -> Unit,
     onChangeSearchQuery: (String?) -> Unit,
     onSearch: (String) -> Unit,
