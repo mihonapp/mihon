@@ -916,6 +916,5 @@
     <string name="extensionStoresScreen.addStoreDeeplink.bodyText">Möchtest du dieses Erweiterungsdepot hinzufügen?</string>
     <string name="extensionStoresScreen.deleteStore.title">Erweiterungsdepot entfernen</string>
     <string name="extensionStoresScreen.deleteStore.body">Möchtest du das Erweiterungsdepot \"%1$s\" (%2$s) entfernen?</string>
-    <string name="pref_webtoon_vertical_navigator">Vertikalen Navigatior für das Lesen langer Streifen verwenden</string>
     <string name="pref_webtoon_vertical_navigator_on_left">Vertikalen Navigator auf der linken Seite platzieren</string>
 </resources>

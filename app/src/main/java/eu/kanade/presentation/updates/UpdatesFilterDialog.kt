@@ -19,7 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
-import eu.kanade.tachiyomi.ui.updates.UpdatesSettingsScreenModel
+import eu.kanade.tachiyomi.ui.updates.UpdatesSettingsViewModel
 import tachiyomi.core.common.preference.getAndSet
 import tachiyomi.domain.updates.service.UpdatesPreferences
 import tachiyomi.i18n.MR
@@ -32,7 +32,7 @@ import tachiyomi.presentation.core.util.collectAsState
 @Composable
 fun UpdatesFilterDialog(
     onDismissRequest: () -> Unit,
-    screenModel: UpdatesSettingsScreenModel,
+    viewModel: UpdatesSettingsViewModel,
 ) {
     TabbedDialog(
         onDismissRequest = onDismissRequest,
@@ -45,48 +45,48 @@ fun UpdatesFilterDialog(
                 .padding(vertical = TabbedDialogPaddings.Vertical)
                 .verticalScroll(rememberScrollState()),
         ) {
-            FilterSheet(screenModel = screenModel)
+            FilterSheet(viewModel = viewModel)
         }
     }
 }
 
 @Composable
 private fun ColumnScope.FilterSheet(
-    screenModel: UpdatesSettingsScreenModel,
+    viewModel: UpdatesSettingsViewModel,
 ) {
-    val filterDownloaded by screenModel.updatesPreferences.filterDownloaded.collectAsState()
+    val filterDownloaded by viewModel.updatesPreferences.filterDownloaded.collectAsState()
     TriStateItem(
         label = stringResource(MR.strings.label_downloaded),
         state = filterDownloaded,
-        onClick = { screenModel.toggleFilter(UpdatesPreferences::filterDownloaded) },
+        onClick = { viewModel.toggleFilter(UpdatesPreferences::filterDownloaded) },
     )
 
-    val filterUnread by screenModel.updatesPreferences.filterUnread.collectAsState()
+    val filterUnread by viewModel.updatesPreferences.filterUnread.collectAsState()
     TriStateItem(
         label = stringResource(MR.strings.action_filter_unread),
         state = filterUnread,
-        onClick = { screenModel.toggleFilter(UpdatesPreferences::filterUnread) },
+        onClick = { viewModel.toggleFilter(UpdatesPreferences::filterUnread) },
     )
 
-    val filterStarted by screenModel.updatesPreferences.filterStarted.collectAsState()
+    val filterStarted by viewModel.updatesPreferences.filterStarted.collectAsState()
     TriStateItem(
         label = stringResource(MR.strings.label_started),
         state = filterStarted,
-        onClick = { screenModel.toggleFilter(UpdatesPreferences::filterStarted) },
+        onClick = { viewModel.toggleFilter(UpdatesPreferences::filterStarted) },
     )
 
-    val filterBookmarked by screenModel.updatesPreferences.filterBookmarked.collectAsState()
+    val filterBookmarked by viewModel.updatesPreferences.filterBookmarked.collectAsState()
     TriStateItem(
         label = stringResource(MR.strings.action_filter_bookmarked),
         state = filterBookmarked,
-        onClick = { screenModel.toggleFilter(UpdatesPreferences::filterBookmarked) },
+        onClick = { viewModel.toggleFilter(UpdatesPreferences::filterBookmarked) },
     )
 
     HorizontalDivider(modifier = Modifier.padding(MaterialTheme.padding.small))
 
-    val filterExcludedScanlators by screenModel.updatesPreferences.filterExcludedScanlators.collectAsState()
+    val filterExcludedScanlators by viewModel.updatesPreferences.filterExcludedScanlators.collectAsState()
 
-    fun toggleScanlatorFilter() = screenModel.updatesPreferences.filterExcludedScanlators.getAndSet { !it }
+    fun toggleScanlatorFilter() = viewModel.updatesPreferences.filterExcludedScanlators.getAndSet { !it }
 
     Row(
         modifier = Modifier
