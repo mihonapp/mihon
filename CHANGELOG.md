@@ -24,6 +24,10 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Improved
 - Show usernames in Tracking settings ([@MajorTanya](https://github.com/MajorTanya)) ([#3533](https://github.com/mihonapp/mihon/pull/3533))
+- Library search ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#3554](https://github.com/mihonapp/mihon/pull/3554))
+  - Support logical operators (`&&`, `||`, `-`), implicit `AND` separators, and nested expressions with `()`
+  - Add comparison operators (`>`, `>=`, `<`, `<=`, `=`) for `id`, `added`, `fetchinterval` / `fi`, `nextupdate` / `nu`, `unread`, `read`, and `total` (Uses `yyyy-MM-dd` dates for `added` and `nextupdate`)
+  - Support field-specific prefixes (`title`, `author`, `artist`, `description` / `desc`, `genre` / `tag`, `source` / `src`, `notes` / `note`, `language` / `lang`) and empty field matching (`""`, `''`)
 
 ### Fixed
 - Fix Shikimori tracking not working ([@MajorTanya](https://github.com/MajorTanya)) ([#3497](https://github.com/mihonapp/mihon/pull/3497))
