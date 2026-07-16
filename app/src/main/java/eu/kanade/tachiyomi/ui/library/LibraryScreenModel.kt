@@ -13,6 +13,7 @@ import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.presentation.library.components.LibraryToolbarTitle
+import eu.kanade.presentation.library.matches
 import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
@@ -48,10 +49,10 @@ import tachiyomi.domain.chapter.interactor.GetBookmarkedChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.history.interactor.GetNextChapters
-import tachiyomi.domain.library.interactor.SearchLibrary
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.library.model.LibrarySort
+import tachiyomi.domain.library.model.search.QueryNode
 import tachiyomi.domain.library.model.sort
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetLibraryManga
@@ -84,7 +85,6 @@ class LibraryScreenModel(
     private val downloadManager: DownloadManager = Injekt.get(),
     private val downloadCache: DownloadCache = Injekt.get(),
     private val trackerManager: TrackerManager = Injekt.get(),
-    private val searchLibrary: SearchLibrary = Injekt.get(),
 ) : StateScreenModel<LibraryScreenModel.State>(State()) {
 
     init {
@@ -103,11 +103,11 @@ class LibraryScreenModel(
                 val filteredFavorites = favorites
                     .applyFilters(tracksMap, trackingFilters, itemPreferences)
                     .let { libraryItems ->
-                        if (searchQuery == null) {
+                        if (searchQuery.isNullOrEmpty()) {
                             libraryItems
                         } else {
-                            val filteredIds = searchLibrary.await(searchQuery)
-                            libraryItems.filter { it.id in filteredIds }
+                            val queryNode = QueryNode.from(searchQuery)
+                            libraryItems.filter { queryNode.matches(it) }
                         }
                     }
 
@@ -398,6 +398,8 @@ class LibraryScreenModel(
                     downloadCount = downloadManager.getDownloadCount(manga.manga),
                     unreadCount = manga.unreadCount,
                     isLocal = manga.manga.isLocal(),
+                    sourceName = sourceManager.getOrStub(manga.manga.source).name.lowercase(),
+                    sourceLanguage = sourceManager.getOrStub(manga.manga.source).lang,
                     badges = LibraryItem.Badges(
                         downloadCount = if (preferences.downloadBadge) {
                             downloadManager.getDownloadCount(manga.manga)

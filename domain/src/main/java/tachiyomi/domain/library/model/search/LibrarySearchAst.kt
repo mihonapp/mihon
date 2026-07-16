@@ -17,8 +17,6 @@ enum class MangaField(vararg val aliases: String, val fieldOnly: Boolean = false
         }.toMap()
 
         fun fromString(value: String): MangaField? = lookup[value.lowercase()]
-
-        val generalFieldCount = entries.count { !it.fieldOnly }
     }
 }
 
@@ -49,6 +47,14 @@ enum class Comparator(val symbol: String) {
     EQ("="),
     ;
 
+    fun <T : Comparable<T>> apply(a: T, b: T): Boolean = when (this) {
+        GTE -> a >= b
+        LTE -> a <= b
+        GT -> a > b
+        LT -> a < b
+        EQ -> a == b
+    }
+
     companion object {
         private val lookup = entries.associateBy { it.symbol }
 
@@ -56,7 +62,14 @@ enum class Comparator(val symbol: String) {
     }
 }
 
-sealed interface QueryNode
+sealed interface QueryNode {
+    companion object {
+        fun from(query: String): QueryNode {
+            val tokens = LibrarySearchLexer.tokenize(query)
+            return LibrarySearchParser(tokens).parse()
+        }
+    }
+}
 
 data class AndNode(val children: List<QueryNode>) : QueryNode
 
