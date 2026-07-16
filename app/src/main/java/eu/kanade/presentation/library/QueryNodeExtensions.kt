@@ -67,18 +67,26 @@ private fun FieldQueryNode.matches(item: LibraryItem): Boolean {
             }
         }
 
+        MangaField.SOURCE -> {
+            if (value.isEmpty()) {
+                item.sourceName.isEmpty()
+            } else {
+                item.sourceName.contains(value, ignoreCase = true) ||
+                    (value.equals("local", ignoreCase = true) && manga.source == LocalSource.ID)
+            }
+        }
+
         else -> {
             val text = when (field) {
                 MangaField.TITLE -> manga.title
                 MangaField.AUTHOR -> manga.author
                 MangaField.ARTIST -> manga.artist
                 MangaField.DESCRIPTION -> manga.description
-                MangaField.SOURCE -> item.sourceName
                 MangaField.NOTES -> manga.notes
                 MangaField.LANGUAGE -> item.sourceLanguage
 
                 // unreachable; added here to make `when` exhaustive
-                MangaField.GENRE -> error("How did we get here?")
+                MangaField.GENRE, MangaField.SOURCE -> error("How did we get here?")
             }
 
             if (value.isEmpty()) {
