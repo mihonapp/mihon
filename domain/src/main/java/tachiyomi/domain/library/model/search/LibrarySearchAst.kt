@@ -9,6 +9,7 @@ enum class MangaField(vararg val aliases: String, val fieldOnly: Boolean = false
     SOURCE("source", "src"),
     NOTES("notes", "note"),
     LANGUAGE("language", "lang", fieldOnly = true),
+    SOURCE_ID("source_id", "sourceid", "src_id", "srcid", fieldOnly = true),
     ;
 
     companion object {

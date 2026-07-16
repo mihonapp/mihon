@@ -49,7 +49,7 @@ private fun GeneralQueryNode.matches(item: LibraryItem): Boolean {
             MangaField.NOTES -> manga.notes.contains(value, ignoreCase = true)
 
             // field-only queries; unreachable; added here to make `when` exhaustive
-            MangaField.LANGUAGE -> error("How did we get here?")
+            MangaField.LANGUAGE, MangaField.SOURCE_ID -> error("How did we get here?")
         }
     }
     return if (negated) !match else match
@@ -76,6 +76,10 @@ private fun FieldQueryNode.matches(item: LibraryItem): Boolean {
             }
         }
 
+        MangaField.SOURCE_ID -> {
+            value.toLongOrNull()?.let { it == manga.source } ?: false
+        }
+
         else -> {
             val text = when (field) {
                 MangaField.TITLE -> manga.title
@@ -86,7 +90,7 @@ private fun FieldQueryNode.matches(item: LibraryItem): Boolean {
                 MangaField.LANGUAGE -> item.sourceLanguage
 
                 // unreachable; added here to make `when` exhaustive
-                MangaField.GENRE, MangaField.SOURCE -> error("How did we get here?")
+                MangaField.GENRE, MangaField.SOURCE, MangaField.SOURCE_ID -> error("How did we get here?")
             }
 
             if (value.isEmpty()) {
