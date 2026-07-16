@@ -16,7 +16,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
   - Fix HTTP Error 416 not being handled properly ([@AntsyLich](https://github.com/AntsyLich)) ([#3563](https://github.com/mihonapp/mihon/pull/3563))
 
 ### Changed
-- Use permission check for Shizuku detection instead of hardcoded package name ([@Small-Ku](https://github.com/Small-Ku)) ([#3565](https://github.com/mihonapp/mihon/pull/3565))
+- Detect Shizuku with permission check ([@Small-Ku](https://github.com/Small-Ku)) ([#3565](https://github.com/mihonapp/mihon/pull/3565))
 
 ### Fixed
 - Fixed app bars remaining visible after changing pages by tapping in the paged reader after using the chapter navigator slider ([@AntsyLich](https://github.com/AntsyLich)) ([#3567](https://github.com/mihonapp/mihon/pull/3567))
