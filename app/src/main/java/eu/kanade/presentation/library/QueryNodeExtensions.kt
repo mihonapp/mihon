@@ -41,7 +41,7 @@ private fun GeneralQueryNode.matches(item: LibraryItem): Boolean {
             MangaField.AUTHOR -> manga.author?.contains(value, ignoreCase = true) ?: false
             MangaField.ARTIST -> manga.artist?.contains(value, ignoreCase = true) ?: false
             MangaField.DESCRIPTION -> manga.description?.contains(value, ignoreCase = true) ?: false
-            MangaField.GENRE -> manga.genre?.any { it.equals(value, ignoreCase = true) } ?: false
+            MangaField.GENRE -> manga.genre?.any { it.contains(value, ignoreCase = true) } ?: false
             MangaField.SOURCE -> {
                 item.sourceName.contains(value, ignoreCase = true) ||
                     (value.equals("local", ignoreCase = true) && manga.source == LocalSource.ID)
