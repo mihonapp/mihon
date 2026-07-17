@@ -9,26 +9,31 @@ import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.repository.SourcePagingSource
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 class SourceSearchPagingSource(
     source: Source,
     private val query: String,
     private val filters: FilterList,
-) : BaseSourcePagingSource(source) {
+    networkToLocalManga: NetworkToLocalManga
+) : BaseSourcePagingSource(source, networkToLocalManga) {
     override suspend fun requestNextPage(currentPage: Int): MangasPage {
         return source.getSearchManga(currentPage, query, filters)
     }
 }
 
-class SourcePopularPagingSource(source: Source) : BaseSourcePagingSource(source) {
+class SourcePopularPagingSource(
+    source: Source,
+    networkToLocalManga: NetworkToLocalManga
+) : BaseSourcePagingSource(source, networkToLocalManga) {
     override suspend fun requestNextPage(currentPage: Int): MangasPage {
         return source.getPopularManga(currentPage)
     }
 }
 
-class SourceLatestPagingSource(source: Source) : BaseSourcePagingSource(source) {
+class SourceLatestPagingSource(
+    source: Source,
+    networkToLocalManga: NetworkToLocalManga
+) : BaseSourcePagingSource(source, networkToLocalManga) {
     override suspend fun requestNextPage(currentPage: Int): MangasPage {
         return source.getLatestUpdates(currentPage)
     }
@@ -36,7 +41,7 @@ class SourceLatestPagingSource(source: Source) : BaseSourcePagingSource(source) 
 
 abstract class BaseSourcePagingSource(
     protected val source: Source,
-    private val networkToLocalManga: NetworkToLocalManga = Injekt.get(),
+    private val networkToLocalManga: NetworkToLocalManga,
 ) : SourcePagingSource() {
 
     private val seenManga = hashSetOf<String>()

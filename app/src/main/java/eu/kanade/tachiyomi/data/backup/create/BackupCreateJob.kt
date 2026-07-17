@@ -16,6 +16,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.hippo.unifile.UniFile
+import dev.zacsweers.metro.Inject
 import eu.kanade.tachiyomi.data.backup.BackupNotifier
 import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
 import eu.kanade.tachiyomi.data.notification.Notifications
@@ -24,6 +25,8 @@ import eu.kanade.tachiyomi.util.system.isRunning
 import eu.kanade.tachiyomi.util.system.setForegroundSafely
 import eu.kanade.tachiyomi.util.system.workManager
 import logcat.LogPriority
+import mihon.app.di.AppGraph
+import mihon.core.metro.metroGraph
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.storage.service.StorageManager
@@ -34,12 +37,19 @@ import java.util.concurrent.TimeUnit
 class BackupCreateJob(private val context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams) {
 
+    private val graph: AppGraph = context.metroGraph()
+
+    @Inject
+    private lateinit var backupCreatorFactory: BackupCreator.Factory
+
     private val notifier = BackupNotifier(context)
 
     override suspend fun doWork(): Result {
+        graph.inject(this)
+
         val isAutoBackup = inputData.getBoolean(IS_AUTO_BACKUP_KEY, true)
 
-        if (isAutoBackup && BackupRestoreJob.isRunning(context)) return Result.retry()
+        if (isAutoBackup && BackupRestoreJob.isRunning(context.workManager)) return Result.retry()
 
         val uri = inputData.getString(LOCATION_URI_KEY)?.toUri()
             ?: getAutomaticBackupLocation()
@@ -51,7 +61,7 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
             ?: BackupOptions()
 
         return try {
-            val location = BackupCreator(context, isAutoBackup).backup(uri, options)
+            val location = backupCreatorFactory.create(isAutoBackup = isAutoBackup).backup(uri, options)
             if (!isAutoBackup) {
                 notifier.showBackupComplete(UniFile.fromUri(context, location.toUri())!!)
             }

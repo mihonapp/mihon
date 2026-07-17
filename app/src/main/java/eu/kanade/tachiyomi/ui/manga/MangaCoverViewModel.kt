@@ -35,16 +35,16 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
+import tachiyomi.source.local.image.LocalCoverManager
 
 @AssistedInject
 class MangaCoverViewModel(
     @Assisted private val mangaId: Long,
-    private val getManga: GetManga = Injekt.get(),
-    private val imageSaver: ImageSaver = Injekt.get(),
-    private val coverCache: CoverCache = Injekt.get(),
-    private val updateManga: UpdateManga = Injekt.get(),
+    private val getManga: GetManga,
+    private val imageSaver: ImageSaver,
+    private val coverCache: CoverCache,
+    private val updateManga: UpdateManga,
+    private val coverManager: LocalCoverManager,
 ) : StateViewModel<Manga?>(null) {
 
     @AssistedFactory
@@ -137,7 +137,7 @@ class MangaCoverViewModel(
         viewModelScope.launchIO {
             context.contentResolver.openInputStream(data)?.use {
                 try {
-                    manga.editCover(Injekt.get(), it, updateManga, coverCache)
+                    manga.editCover(coverManager, it, updateManga, coverCache)
                     notifyCoverUpdated(context)
                 } catch (e: Exception) {
                     notifyFailedCoverUpdate(context, e)
