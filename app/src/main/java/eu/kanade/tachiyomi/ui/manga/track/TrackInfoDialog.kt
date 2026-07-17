@@ -297,13 +297,7 @@ private data class TrackStatusSelectorScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = viewModel<Model>(
-            factory = Model.Factory,
-            extras = CreationExtras {
-                set(Model.TRACK_KEY, track)
-                set(Model.TRACKER_KEY, Injekt.get<TrackerManager>().get(serviceId)!!)
-            },
-        )
+        val viewModel = assistedMetroViewModel<Model, Model.Factory> { create(track = track, trackerId = serviceId) }
         val state by viewModel.state.collectAsState()
         TrackStatusSelector(
             selection = state.selection,
@@ -317,24 +311,21 @@ private data class TrackStatusSelectorScreen(
         )
     }
 
+    @AssistedInject
     class Model(
-        private val track: Track,
-        private val tracker: Tracker,
+        @Assisted private val track: Track,
+        @Assisted private val trackerId: Long,
+        trackerManager: TrackerManager,
     ) : StateViewModel<Model.State>(State(track.status)) {
 
-        companion object {
-            val TRACK_KEY = CreationExtras.Key<Track>()
-            val TRACKER_KEY = CreationExtras.Key<Tracker>()
-
-            val Factory = viewModelFactory {
-                initializer {
-                    Model(
-                        track = get(TRACK_KEY)!!,
-                        tracker = get(TRACKER_KEY)!!,
-                    )
-                }
-            }
+        @AssistedFactory
+        @ManualViewModelAssistedFactoryKey
+        @ContributesIntoMap(AppScope::class)
+        interface Factory : ManualViewModelAssistedFactory {
+            fun create(track: Track, trackerId: Long): Model
         }
+
+        val tracker = trackerManager.get(trackerId)!!
 
         fun getSelections(): Map<Long, StringResource?> {
             return tracker.getStatusList().associateWith { tracker.getStatus(it) }
@@ -365,13 +356,7 @@ private data class TrackChapterSelectorScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = viewModel<Model>(
-            factory = Model.Factory,
-            extras = CreationExtras {
-                set(Model.TRACK_KEY, track)
-                set(Model.TRACKER_KEY, Injekt.get<TrackerManager>().get(serviceId)!!)
-            },
-        )
+        val viewModel = assistedMetroViewModel<Model, Model.Factory> { create(track = track, trackerId = serviceId) }
         val state by viewModel.state.collectAsState()
 
         TrackChapterSelector(
@@ -386,24 +371,21 @@ private data class TrackChapterSelectorScreen(
         )
     }
 
+    @AssistedInject
     class Model(
-        private val track: Track,
-        private val tracker: Tracker,
+        @Assisted private val track: Track,
+        @Assisted private val trackerId: Long,
+        trackerManager: TrackerManager,
     ) : StateViewModel<Model.State>(State(track.lastChapterRead.toInt())) {
 
-        companion object {
-            val TRACK_KEY = CreationExtras.Key<Track>()
-            val TRACKER_KEY = CreationExtras.Key<Tracker>()
-
-            val Factory = viewModelFactory {
-                initializer {
-                    Model(
-                        track = get(TRACK_KEY)!!,
-                        tracker = get(TRACKER_KEY)!!,
-                    )
-                }
-            }
+        @AssistedFactory
+        @ManualViewModelAssistedFactoryKey
+        @ContributesIntoMap(AppScope::class)
+        interface Factory : ManualViewModelAssistedFactory {
+            fun create(track: Track, trackerId: Long): Model
         }
+
+        val tracker = trackerManager.get(trackerId)!!
 
         fun getRange(): Iterable<Int> {
             val endRange = if (track.totalChapters > 0) {
@@ -439,13 +421,7 @@ private data class TrackScoreSelectorScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = viewModel<Model>(
-            factory = Model.Factory,
-            extras = CreationExtras {
-                set(Model.TRACK_KEY, track)
-                set(Model.TRACKER_KEY, Injekt.get<TrackerManager>().get(serviceId)!!)
-            },
-        )
+        val viewModel = assistedMetroViewModel<Model, Model.Factory> { create(track = track, trackerId = serviceId) }
         val state by viewModel.state.collectAsState()
 
         TrackScoreSelector(
@@ -460,23 +436,24 @@ private data class TrackScoreSelectorScreen(
         )
     }
 
+    @AssistedInject
     class Model(
-        private val track: Track,
-        private val tracker: Tracker,
-    ) : StateViewModel<Model.State>(State(tracker.displayScore(track))) {
+        @Assisted private val track: Track,
+        @Assisted private val trackerId: Long,
+        trackerManager: TrackerManager,
+    ) : StateViewModel<Model.State>(State("")) {
 
-        companion object {
-            val TRACK_KEY = CreationExtras.Key<Track>()
-            val TRACKER_KEY = CreationExtras.Key<Tracker>()
+        @AssistedFactory
+        @ManualViewModelAssistedFactoryKey
+        @ContributesIntoMap(AppScope::class)
+        interface Factory : ManualViewModelAssistedFactory {
+            fun create(track: Track, trackerId: Long): Model
+        }
 
-            val Factory = viewModelFactory {
-                initializer {
-                    Model(
-                        track = get(TRACK_KEY)!!,
-                        tracker = get(TRACKER_KEY)!!,
-                    )
-                }
-            }
+        val tracker = trackerManager.get(trackerId)!!
+
+        init {
+            tracker.displayScore(track).let(::setSelection)
         }
 
         fun getSelections(): List<String> {

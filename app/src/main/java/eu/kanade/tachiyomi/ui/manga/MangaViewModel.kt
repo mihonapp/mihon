@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.manga
 
-import android.app.Application
 import android.content.Context
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -9,9 +8,13 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.util.fastAny
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import eu.kanade.core.preference.asState
 import eu.kanade.core.util.addOrRemove
 import eu.kanade.core.util.insertSeparators
@@ -87,10 +90,11 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import kotlin.math.floor
 
+@AssistedInject
 class MangaViewModel(
+    @Assisted private val mangaId: Long,
+    @Assisted private val isFromSource: Boolean,
     private val context: Context,
-    private val mangaId: Long,
-    private val isFromSource: Boolean,
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
     trackPreferences: TrackPreferences = Injekt.get(),
     readerPreferences: ReaderPreferences = Injekt.get(),
@@ -118,20 +122,11 @@ class MangaViewModel(
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) : StateViewModel<MangaViewModel.State>(State.Loading) {
 
-    companion object {
-        val MANGA_ID_KEY = CreationExtras.Key<Long>()
-
-        val IS_FROM_SOURCE_KEY = CreationExtras.Key<Boolean>()
-
-        val Factory = viewModelFactory {
-            initializer {
-                MangaViewModel(
-                    context = Injekt.get<Application>(),
-                    mangaId = get(MANGA_ID_KEY)!!,
-                    isFromSource = get(IS_FROM_SOURCE_KEY)!!,
-                )
-            }
-        }
+    @AssistedFactory
+    @ManualViewModelAssistedFactoryKey
+    @ContributesIntoMap(AppScope::class)
+    interface Factory : ManualViewModelAssistedFactory {
+        fun create(mangaId: Long, isFromSource: Boolean): MangaViewModel
     }
 
     private val successState: State.Success?
