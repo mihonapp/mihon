@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.browse
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
@@ -8,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.Navigator
@@ -26,6 +28,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
@@ -56,6 +59,7 @@ data object BrowseTab : Tab {
     @Composable
     override fun Content() {
         val context = LocalContext.current
+        val scope = rememberCoroutineScope()
 
         // Hoisted for extensions tab's search bar
         val extensionsViewModel = viewModel<ExtensionsViewModel>()
@@ -76,6 +80,20 @@ data object BrowseTab : Tab {
             searchQuery = extensionsState.searchQuery,
             onChangeSearchQuery = extensionsViewModel::search,
         )
+
+        BackHandler(enabled = extensionsState.searchQuery != null && state.currentPage == 1) {
+            extensionsScreenModel.search(null)
+        }
+
+        BackHandler(
+            enabled = state.currentPage > 0 && 
+                !(state.currentPage == 1 && extensionsState.searchQuery != null),
+        ) {
+            scope.launch {
+                state.animateScrollToPage(0)
+            }
+        }
+
         LaunchedEffect(Unit) {
             switchToExtensionTabChannel.receiveAsFlow()
                 .collectLatest { state.scrollToPage(1) }
