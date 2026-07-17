@@ -170,7 +170,7 @@ class RestoreBackupScreen(
 }
 
 @AssistedInject
-private class RestoreBackupViewModel(
+class RestoreBackupViewModel(
     @Assisted private val uri: String,
     private val context: Context,
 ) : StateViewModel<RestoreBackupViewModel.State>(State()) {

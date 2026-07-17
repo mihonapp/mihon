@@ -41,7 +41,7 @@ class MangaNotesScreen(
     }
 
     @AssistedInject
-    private class Model(
+    class Model(
         @Assisted private val manga: Manga,
         private val updateMangaNotes: UpdateMangaNotes,
     ) : StateViewModel<State>(State(manga, manga.notes)) {
