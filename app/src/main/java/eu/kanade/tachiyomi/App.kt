@@ -23,6 +23,8 @@ import coil3.request.allowRgb565
 import coil3.request.crossfade
 import coil3.util.DebugLogger
 import dev.mihon.injekt.patchInjekt
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.createGraphFactory
 import eu.kanade.domain.DomainModule
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.ui.UiPreferences
@@ -53,6 +55,8 @@ import kotlinx.coroutines.flow.onEach
 import logcat.AndroidLogcatLogger
 import logcat.LogPriority
 import logcat.LogcatLogger
+import mihon.app.di.AppGraph
+import mihon.core.metro.GraphProvider
 import mihon.core.migration.Migrator
 import mihon.core.migration.migrations.migrations
 import mihon.telemetry.TelemetryConfig
@@ -69,9 +73,12 @@ import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.security.Security
 
-class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factory {
+class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factory, GraphProvider<AppGraph> {
 
-    private val basePreferences: BasePreferences by injectLazy()
+    override val graph: AppGraph by lazy { createGraphFactory<AppGraph.Factory>().create(this) }
+
+    @Inject
+    private lateinit var basePreferences: BasePreferences
     private val privacyPreferences: PrivacyPreferences by injectLazy()
     private val networkPreferences: NetworkPreferences by injectLazy()
 
@@ -80,6 +87,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
     @SuppressLint("LaunchActivityFromNotification")
     override fun onCreate() {
         super<Application>.onCreate()
+        graph.inject(this)
         patchInjekt()
         TelemetryConfig.init(applicationContext)
 
