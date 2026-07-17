@@ -29,8 +29,10 @@ import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.ui.model.setAppCompatDelegateThemeMode
 import eu.kanade.tachiyomi.core.security.PrivacyPreferences
+import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.crash.CrashActivity
 import eu.kanade.tachiyomi.crash.GlobalExceptionHandler
+import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.coil.BufferedSourceFetcher
 import eu.kanade.tachiyomi.data.coil.MangaCoverFetcher
 import eu.kanade.tachiyomi.data.coil.MangaCoverKeyer
@@ -65,6 +67,7 @@ import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.updates.interactor.GetUpdates
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.widget.WidgetManager
 import uy.kohesive.injekt.Injekt
@@ -79,6 +82,10 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
     @Inject private lateinit var privacyPreferences: PrivacyPreferences
     @Inject private lateinit var networkPreferences: NetworkPreferences
     @Inject private lateinit var uiPreferences: UiPreferences
+    @Inject private lateinit var securityPreferences: SecurityPreferences
+    @Inject private lateinit var coverCache: CoverCache
+    @Inject private lateinit var networkHelper: NetworkHelper
+    @Inject private lateinit var getUpdates: GetUpdates
 
     private val disableIncognitoReceiver = DisableIncognitoReceiver()
 
@@ -161,7 +168,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
         setAppCompatDelegateThemeMode(uiPreferences.themeMode.get())
 
         // Updates widget update
-        WidgetManager(Injekt.get(), Injekt.get()).apply { init(scope) }
+        WidgetManager(getUpdates = getUpdates, securityPreferences = securityPreferences).apply { init(scope) }
 
         if (!LogcatLogger.isInstalled) {
             val minLogPriority = when {
@@ -193,7 +200,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
 
     override fun newImageLoader(context: Context): ImageLoader {
         return ImageLoader.Builder(this).apply {
-            val callFactoryLazy = lazy { Injekt.get<NetworkHelper>().client }
+            val callFactoryLazy = lazy { networkHelper.client }
             components {
                 // NetworkFetcher.Factory
                 add(OkHttpNetworkFetcherFactory(callFactoryLazy::value))
@@ -204,7 +211,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
                 add(MangaCoverFetcher.MangaCoverFactory(callFactoryLazy))
                 add(MangaCoverFetcher.MangaFactory(callFactoryLazy))
                 // Keyer
-                add(MangaCoverKeyer())
+                add(MangaCoverKeyer(coverCache))
                 add(MangaKeyer())
             }
 

@@ -56,6 +56,7 @@ import eu.kanade.tachiyomi.data.export.LibraryExporter
 import eu.kanade.tachiyomi.data.export.LibraryExporter.ExportOptions
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import logcat.LogPriority
@@ -230,7 +231,7 @@ object SettingsDataScreen : SearchableSettings {
                                     modifier = Modifier.fillMaxHeight(),
                                     checked = false,
                                     onCheckedChange = {
-                                        if (!BackupRestoreJob.isRunning(context)) {
+                                        if (!BackupRestoreJob.isRunning(context.workManager)) {
                                             if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
                                                 context.toast(MR.strings.restore_miui_warning)
                                             }

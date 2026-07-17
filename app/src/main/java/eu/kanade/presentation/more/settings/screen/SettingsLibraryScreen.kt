@@ -20,6 +20,7 @@ import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.widget.TriStateListDialog
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
+import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.launch
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.ResetCategoryFlags
@@ -156,7 +157,7 @@ object SettingsLibraryScreen : SearchableSettings {
                     ),
                     title = stringResource(MR.strings.pref_library_update_interval),
                     onValueChanged = {
-                        LibraryUpdateJob.setupTask(context, it)
+                        LibraryUpdateJob.setupTask(context.workManager, it)
                         true
                     },
                 ),
@@ -172,7 +173,7 @@ object SettingsLibraryScreen : SearchableSettings {
                     enabled = autoUpdateInterval > 0,
                     onValueChanged = {
                         // Post to event looper to allow the preference to be updated.
-                        ContextCompat.getMainExecutor(context).execute { LibraryUpdateJob.setupTask(context) }
+                        ContextCompat.getMainExecutor(context).execute { LibraryUpdateJob.setupTask(context.workManager) }
                         true
                     },
                 ),

@@ -11,6 +11,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import dev.zacsweers.metro.Inject
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.NetworkState
@@ -24,9 +25,9 @@ import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import mihon.app.di.AppGraph
+import mihon.core.metro.metroGraph
 import tachiyomi.domain.download.service.DownloadPreferences
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 /**
  * This worker is used to manage the downloader. The system can decide to stop the worker, in
@@ -34,10 +35,14 @@ import uy.kohesive.injekt.api.get
  */
 class DownloadJob(context: Context, workerParams: WorkerParameters) : CoroutineWorker(context, workerParams) {
 
-    private val downloadManager: DownloadManager = Injekt.get()
-    private val downloadPreferences: DownloadPreferences = Injekt.get()
+    private val graph: AppGraph = context.metroGraph()
+
+    @Inject private lateinit var downloadManager: DownloadManager
+    @Inject private lateinit var downloadPreferences: DownloadPreferences
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
+        graph.inject(this)
+
         val notification = applicationContext.notificationBuilder(Notifications.CHANNEL_DOWNLOADER_PROGRESS) {
             setContentTitle(applicationContext.getString(R.string.download_notifier_downloader_title))
             setSmallIcon(android.R.drawable.stat_sys_download)

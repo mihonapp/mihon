@@ -7,13 +7,12 @@ import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.ForegroundInfo
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkInfo
-import androidx.work.WorkQuery
+import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import dev.zacsweers.metro.Inject
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.isRunning
 import eu.kanade.tachiyomi.util.system.setForegroundSafely
-import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -22,6 +21,8 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import logcat.LogPriority
+import mihon.app.di.AppGraph
+import mihon.core.metro.metroGraph
 import mihon.domain.source.interactor.UpdateMangaFromRemote
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
@@ -29,8 +30,6 @@ import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.concurrent.atomics.AtomicInt
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
@@ -40,15 +39,18 @@ import kotlin.concurrent.atomics.fetchAndIncrement
 class MetadataUpdateJob(private val context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams) {
 
-    private val sourceManager: SourceManager = Injekt.get()
-    private val getLibraryManga: GetLibraryManga = Injekt.get()
-    private val updateMangaFromRemote: UpdateMangaFromRemote = Injekt.get()
+    private val graph: AppGraph = context.metroGraph()
 
-    private val notifier = LibraryUpdateNotifier(context)
+    @Inject private lateinit var sourceManager: SourceManager
+    @Inject private lateinit var getLibraryManga: GetLibraryManga
+    @Inject private lateinit var updateMangaFromRemote: UpdateMangaFromRemote
+    @Inject private lateinit var notifier: LibraryUpdateNotifier
 
     private var mangaToUpdate: List<LibraryManga> = mutableListOf()
 
     override suspend fun doWork(): Result {
+        graph.inject(this)
+
         setForegroundSafely()
 
         addMangaToQueue()
@@ -72,7 +74,6 @@ class MetadataUpdateJob(private val context: Context, workerParams: WorkerParame
     }
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
-        val notifier = LibraryUpdateNotifier(context)
         return ForegroundInfo(
             Notifications.ID_LIBRARY_PROGRESS,
             notifier.progressNotificationBuilder.build(),
@@ -168,9 +169,8 @@ class MetadataUpdateJob(private val context: Context, workerParams: WorkerParame
 
         private const val MANGA_PER_SOURCE_QUEUE_WARNING_THRESHOLD = 60
 
-        fun startNow(context: Context): Boolean {
-            val wm = context.workManager
-            if (wm.isRunning(TAG)) {
+        fun startNow(workManager: WorkManager): Boolean {
+            if (workManager.isRunning(TAG)) {
                 // Already running either as a scheduled or manual job
                 return false
             }
@@ -178,21 +178,9 @@ class MetadataUpdateJob(private val context: Context, workerParams: WorkerParame
                 .addTag(TAG)
                 .addTag(WORK_NAME_MANUAL)
                 .build()
-            wm.enqueueUniqueWork(WORK_NAME_MANUAL, ExistingWorkPolicy.KEEP, request)
+            workManager.enqueueUniqueWork(WORK_NAME_MANUAL, ExistingWorkPolicy.KEEP, request)
 
             return true
-        }
-
-        fun stop(context: Context) {
-            val wm = context.workManager
-            val workQuery = WorkQuery.Builder.fromTags(listOf(TAG))
-                .addStates(listOf(WorkInfo.State.RUNNING))
-                .build()
-            wm.getWorkInfos(workQuery).get()
-                // Should only return one work but just in case
-                .forEach {
-                    wm.cancelWorkById(it.id)
-                }
         }
     }
 }

@@ -53,6 +53,7 @@ import eu.kanade.tachiyomi.util.system.isShizukuInstalled
 import eu.kanade.tachiyomi.util.system.powerManager
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
 import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import okhttp3.Headers
@@ -296,7 +297,7 @@ object SettingsAdvancedScreen : SearchableSettings {
             preferenceItems = listOf(
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.pref_refresh_library_covers),
-                    onClick = { MetadataUpdateJob.startNow(context) },
+                    onClick = { MetadataUpdateJob.startNow(context.workManager) },
                 ),
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.pref_reset_viewer_flags),

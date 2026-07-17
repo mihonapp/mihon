@@ -23,6 +23,7 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.util.lang.toLocalDate
+import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -189,7 +190,7 @@ class UpdatesViewModel(
     }
 
     fun updateLibrary(): Boolean {
-        val started = LibraryUpdateJob.startNow(context)
+        val started = LibraryUpdateJob.startNow(context.workManager)
         viewModelScope.launch {
             _events.send(Event.LibraryUpdateTriggered(started))
         }

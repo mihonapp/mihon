@@ -19,11 +19,13 @@ import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactoryKey
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.manga.interactor.SetMangaViewerFlags
+import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.readerOrientation
 import eu.kanade.domain.manga.model.readingMode
 import eu.kanade.domain.source.interactor.GetIncognitoState
 import eu.kanade.domain.track.interactor.TrackChapter
 import eu.kanade.domain.track.service.TrackPreferences
+import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
@@ -82,9 +84,8 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.source.local.image.LocalCoverManager
 import tachiyomi.source.local.isLocal
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.time.Instant
 import java.util.Date
 
@@ -112,6 +113,9 @@ class ReaderViewModel(
     private val setMangaViewerFlags: SetMangaViewerFlags,
     private val getIncognitoState: GetIncognitoState,
     private val libraryPreferences: LibraryPreferences,
+    private val coverManager: LocalCoverManager,
+    private val updateManga: UpdateManga,
+    private val coverCache: CoverCache,
 ) : ViewModel() {
 
     @AssistedFactory
@@ -900,7 +904,7 @@ class ReaderViewModel(
 
         viewModelScope.launchNonCancellable {
             val result = try {
-                manga.editCover(Injekt.get(), stream())
+                manga.editCover(coverManager, stream(), updateManga, coverCache)
                 if (manga.isLocal() || manga.favorite) {
                     SetAsCoverResult.Success
                 } else {

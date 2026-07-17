@@ -36,6 +36,7 @@ import eu.kanade.tachiyomi.data.backup.BackupFileValidator
 import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
 import eu.kanade.tachiyomi.data.backup.restore.RestoreOptions
 import eu.kanade.tachiyomi.util.system.DeviceUtil
+import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.flow.update
 import mihon.core.viewmodel.StateViewModel
 import tachiyomi.i18n.MR
@@ -172,6 +173,7 @@ class RestoreBackupScreen(
 @AssistedInject
 class RestoreBackupViewModel(
     @Assisted private val uri: String,
+    private val backupFileValidator: BackupFileValidator,
     private val context: Context,
 ) : StateViewModel<RestoreBackupViewModel.State>(State()) {
 
@@ -196,7 +198,7 @@ class RestoreBackupViewModel(
 
     fun startRestore() {
         BackupRestoreJob.start(
-            context = context,
+            workManager = context.workManager,
             uri = uri.toUri(),
             options = state.value.options,
         )
@@ -204,7 +206,7 @@ class RestoreBackupViewModel(
 
     private fun validate(uri: Uri) {
         val results = try {
-            BackupFileValidator(context).validate(uri)
+            backupFileValidator.validate(uri)
         } catch (e: Exception) {
             setError(
                 error = InvalidRestore(uri, e.message.toString()),

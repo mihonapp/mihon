@@ -64,8 +64,6 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.util.selectedBackground
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 class ClearDatabaseScreen : Screen() {
 
@@ -229,9 +227,11 @@ class ClearDatabaseScreen : Screen() {
 @Inject
 @ViewModelKey
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
-class ClearDatabaseViewModel : StateViewModel<ClearDatabaseViewModel.State>(State.Loading) {
-    private val getSourcesWithNonLibraryManga: GetSourcesWithNonLibraryManga = Injekt.get()
-    private val database: Database = Injekt.get()
+class ClearDatabaseViewModel(
+    private val database: Database,
+    private val getSourcesWithNonLibraryManga: GetSourcesWithNonLibraryManga,
+) : StateViewModel<ClearDatabaseViewModel.State>(State.Loading) {
+
 
     init {
         viewModelScope.launchIO {
