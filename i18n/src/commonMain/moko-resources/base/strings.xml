@@ -864,6 +864,7 @@
     <string name="upcoming_guide">Upcoming Guide</string>
     <string name="upcoming_calendar_next">Next Month</string>
     <string name="upcoming_calendar_prev">Previous Month</string>
+    <string name="pref_filter_upcoming_categories_details">Titles in excluded categories are not shown, even if they are also in any of the included categories.</string>
 
     <!-- History -->
     <string name="recent_manga_time">Ch. %1$s - %2$s</string>

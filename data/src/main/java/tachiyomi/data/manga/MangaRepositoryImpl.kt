@@ -5,6 +5,7 @@ import app.cash.sqldelight.async.coroutines.awaitAsOne
 import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
 import kotlinx.coroutines.flow.Flow
 import logcat.LogPriority
+import tachiyomi.core.common.util.lang.toLong
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.data.Database
 import tachiyomi.data.MemoColumnAdapter
@@ -85,10 +86,22 @@ class MangaRepositoryImpl(
             .awaitAsList()
     }
 
-    override suspend fun getUpcomingManga(statuses: Set<Long>): Flow<List<Manga>> {
+    override suspend fun getUpcomingManga(
+        statuses: Set<Long>,
+        excludedCategories: List<Long>,
+        includedCategories: List<Long>,
+    ): Flow<List<Manga>> {
         val epochMillis = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toEpochSecond() * 1000
         return database.mangasQueries
-            .getUpcomingManga(epochMillis, statuses, MangaMapper::mapManga)
+            .getUpcomingManga(
+                startOfDay = epochMillis,
+                statuses = statuses,
+                includedEmpty = includedCategories.isEmpty().toLong(),
+                includedCategories = includedCategories,
+                excludedEmpty = excludedCategories.isEmpty().toLong(),
+                excludedCategories = excludedCategories,
+                mapper = MangaMapper::mapManga,
+            )
             .subscribeToList()
     }
 
