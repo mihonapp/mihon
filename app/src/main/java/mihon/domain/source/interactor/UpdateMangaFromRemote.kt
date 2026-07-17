@@ -1,5 +1,6 @@
 package mihon.domain.source.interactor
 
+import dev.zacsweers.metro.Inject
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.chapter.model.toSChapter
 import eu.kanade.domain.manga.model.hasCustomCover
@@ -22,6 +23,7 @@ import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.source.local.isLocal
 import java.time.Instant
 
+@Inject
 class UpdateMangaFromRemote(
     private val sourceManager: SourceManager,
     private val chapterRepository: ChapterRepository,

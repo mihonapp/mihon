@@ -40,6 +40,14 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.StringResource
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.domain.ui.UiPreferences
@@ -99,13 +107,7 @@ data class TrackInfoDialogHomeScreen(
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val context = LocalContext.current
-        val viewModel = viewModel<Model>(
-            factory = Model.Factory,
-            extras = CreationExtras {
-                set(Model.MANGA_ID_KEY, mangaId)
-                set(Model.SOURCE_ID_KEY, sourceId)
-            },
-        )
+        val viewModel = assistedMetroViewModel<Model, Model.Factory> { create(mangaId = mangaId, sourceId = sourceId) }
 
         val dateFormat = remember { UiPreferences.dateFormat(Injekt.get<UiPreferences>().dateFormat.get()) }
         val state by viewModel.state.collectAsState()
@@ -201,24 +203,18 @@ data class TrackInfoDialogHomeScreen(
         }
     }
 
+    @AssistedInject
     class Model(
-        private val mangaId: Long,
-        private val sourceId: Long,
-        private val getTracks: GetTracks = Injekt.get(),
+        @Assisted private val mangaId: Long,
+        @Assisted private val sourceId: Long,
+        private val getTracks: GetTracks,
     ) : StateViewModel<Model.State>(State()) {
 
-        companion object {
-            val MANGA_ID_KEY = CreationExtras.Key<Long>()
-            val SOURCE_ID_KEY = CreationExtras.Key<Long>()
-
-            val Factory = viewModelFactory {
-                initializer {
-                    Model(
-                        mangaId = get(MANGA_ID_KEY)!!,
-                        sourceId = get(SOURCE_ID_KEY)!!,
-                    )
-                }
-            }
+        @AssistedFactory
+        @ManualViewModelAssistedFactoryKey
+        @ContributesIntoMap(AppScope::class)
+        interface Factory : ManualViewModelAssistedFactory {
+            fun create(mangaId: Long, sourceId: Long): Model
         }
 
         init {
