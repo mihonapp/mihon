@@ -48,6 +48,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix app not reading `tachiyomix.extensionLib` extension metadata ([@AntsyLich](https://github.com/AntsyLich)) ([#3545](https://github.com/mihonapp/mihon/pull/3545), [#3559](https://github.com/mihonapp/mihon/pull/3559))
 - Fix reader navigator slider steps not updating after changing chapter ([@AntsyLich](https://github.com/AntsyLich)) ([#3549](https://github.com/mihonapp/mihon/pull/3549))
 
+### Fixed
+- Enqueue duplicate chapters for deletion after marking as read ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3030](https://github.com/mihonapp/mihon/pull/3030))
+
 ## [v0.20.0] - 2026-06-27
 ### Added
 - Add support for `tachiyomix` 1.6 extensions ([@AntsyLich](https://github.com/AntsyLich))
