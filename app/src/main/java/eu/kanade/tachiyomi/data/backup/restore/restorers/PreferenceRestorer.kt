@@ -45,7 +45,7 @@ class PreferenceRestorer(
 
     suspend fun restoreSource(preferences: List<BackupSourcePreferences>) {
         preferences.forEach {
-            val sourcePrefs = AndroidPreferenceStore(context, sourcePreferences(it.sourceKey))
+            val sourcePrefs = AndroidPreferenceStore(sourcePreferences(it.sourceKey))
             restorePreferences(it.prefs, sourcePrefs)
         }
     }
