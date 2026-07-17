@@ -5,6 +5,7 @@ import androidx.core.net.toUri
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
@@ -20,6 +21,7 @@ import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.service.SourceManager
 
+@AssistedInject
 class WebViewViewModel(
     @Assisted val sourceId: Long?,
     private val sourceManager: SourceManager,

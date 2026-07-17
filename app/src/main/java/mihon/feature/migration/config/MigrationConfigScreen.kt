@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -315,7 +316,7 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
     class Model(
         val sourcePreferences: SourcePreferences,
         private val sourceManager: SourceManager,
-    ) : StateViewModel<ViewModel.State>(State()) {
+    ) : StateViewModel<Model.State>(State()) {
 
         private val sourcesComparator = { includedSources: List<Long> ->
             compareBy<MigrationSource>(

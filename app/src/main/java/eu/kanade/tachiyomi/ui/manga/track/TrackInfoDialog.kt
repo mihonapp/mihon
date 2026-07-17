@@ -32,10 +32,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -60,7 +56,6 @@ import eu.kanade.presentation.track.TrackerSearch
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.data.track.DeletableTracker
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
-import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.util.lang.convertEpochMillisZone
@@ -289,7 +284,7 @@ data class TrackInfoDialogHomeScreen(
     }
 }
 
-private data class TrackStatusSelectorScreen(
+data class TrackStatusSelectorScreen(
     private val track: Track,
     private val serviceId: Long,
 ) : Screen() {
@@ -348,7 +343,7 @@ private data class TrackStatusSelectorScreen(
     }
 }
 
-private data class TrackChapterSelectorScreen(
+data class TrackChapterSelectorScreen(
     private val track: Track,
     private val serviceId: Long,
 ) : Screen() {
@@ -413,7 +408,7 @@ private data class TrackChapterSelectorScreen(
     }
 }
 
-private data class TrackScoreSelectorScreen(
+data class TrackScoreSelectorScreen(
     private val track: Track,
     private val serviceId: Long,
 ) : Screen() {
@@ -477,7 +472,7 @@ private data class TrackScoreSelectorScreen(
     }
 }
 
-private data class TrackDateSelectorScreen(
+data class TrackDateSelectorScreen(
     private val track: Track,
     private val serviceId: Long,
     private val start: Boolean,
@@ -533,14 +528,9 @@ private data class TrackDateSelectorScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = viewModel<Model>(
-            factory = Model.Factory,
-            extras = CreationExtras {
-                set(Model.TRACK_KEY, track)
-                set(Model.TRACKER_KEY, Injekt.get<TrackerManager>().get(serviceId)!!)
-                set(Model.START_KEY, start)
-            },
-        )
+        val viewModel = assistedMetroViewModel<Model, Model.Factory> {
+            create(track = track, trackerId = serviceId, start = start)
+        }
 
         val canRemove = if (start) {
             track.startDate > 0
@@ -564,27 +554,22 @@ private data class TrackDateSelectorScreen(
         )
     }
 
+    @AssistedInject
     class Model(
-        private val track: Track,
-        private val tracker: Tracker,
-        private val start: Boolean,
+        @Assisted private val track: Track,
+        @Assisted private val trackerId: Long,
+        @Assisted private val start: Boolean,
+        trackerManager: TrackerManager,
     ) : ViewModel() {
 
-        companion object {
-            val TRACK_KEY = CreationExtras.Key<Track>()
-            val TRACKER_KEY = CreationExtras.Key<Tracker>()
-            val START_KEY = CreationExtras.Key<Boolean>()
-
-            val Factory = viewModelFactory {
-                initializer {
-                    Model(
-                        track = get(TRACK_KEY) as Track,
-                        tracker = get(TRACKER_KEY) as Tracker,
-                        start = get(START_KEY) as Boolean,
-                    )
-                }
-            }
+        @AssistedFactory
+        @ManualViewModelAssistedFactoryKey
+        @ContributesIntoMap(AppScope::class)
+        interface Factory : ManualViewModelAssistedFactory {
+            fun create(track: Track, trackerId: Long, start: Boolean): Model
         }
+
+        private val tracker = trackerManager.get(trackerId)!!
 
         // In UTC
         val initialSelection: Long
@@ -614,7 +599,7 @@ private data class TrackDateSelectorScreen(
     }
 }
 
-private data class TrackDateRemoverScreen(
+data class TrackDateRemoverScreen(
     private val track: Track,
     private val serviceId: Long,
     private val start: Boolean,
@@ -623,14 +608,9 @@ private data class TrackDateRemoverScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = viewModel<Model>(
-            factory = Model.Factory,
-            extras = CreationExtras {
-                set(Model.TRACK_KEY, track)
-                set(Model.TRACKER_KEY, Injekt.get<TrackerManager>().get(serviceId)!!)
-                set(Model.START_KEY, start)
-            },
-        )
+        val viewModel = assistedMetroViewModel<Model, Model.Factory> {
+            create(track = track, trackerId = serviceId, start = start)
+        }
         AlertDialogContent(
             modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
             icon = {
@@ -680,27 +660,22 @@ private data class TrackDateRemoverScreen(
         )
     }
 
+    @AssistedInject
     class Model(
-        private val track: Track,
-        private val tracker: Tracker,
-        private val start: Boolean,
+        @Assisted private val track: Track,
+        @Assisted private val trackerId: Long,
+        @Assisted private val start: Boolean,
+        trackerManager: TrackerManager,
     ) : ViewModel() {
 
-        companion object {
-            val TRACK_KEY = CreationExtras.Key<Track>()
-            val TRACKER_KEY = CreationExtras.Key<Tracker>()
-            val START_KEY = CreationExtras.Key<Boolean>()
-
-            val Factory = viewModelFactory {
-                initializer {
-                    Model(
-                        track = get(TRACK_KEY) as Track,
-                        tracker = get(TRACKER_KEY) as Tracker,
-                        start = get(START_KEY) as Boolean,
-                    )
-                }
-            }
+        @AssistedFactory
+        @ManualViewModelAssistedFactoryKey
+        @ContributesIntoMap(AppScope::class)
+        interface Factory : ManualViewModelAssistedFactory {
+            fun create(track: Track, trackerId: Long, start: Boolean): Model
         }
+
+        private val tracker = trackerManager.get(trackerId)!!
 
         fun getServiceName() = tracker.name
 
@@ -726,15 +701,14 @@ data class TrackerSearchScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = viewModel<Model>(
-            factory = Model.Factory,
-            extras = CreationExtras {
-                set(Model.MANGA_ID_KEY, mangaId)
-                set(Model.CURRENT_URL_KEY, currentUrl)
-                set(Model.INITIAL_QUERY_KEY, initialQuery)
-                set(Model.TRACKER_KEY, Injekt.get<TrackerManager>().get(serviceId)!!)
-            },
-        )
+        val viewModel = assistedMetroViewModel<Model, Model.Factory> {
+            create(
+                mangaId = mangaId,
+                currentUrl = currentUrl,
+                initialQuery = initialQuery,
+                trackerId = serviceId,
+            )
+        }
 
         val state by viewModel.state.collectAsState()
 
@@ -756,30 +730,28 @@ data class TrackerSearchScreen(
         )
     }
 
+    @AssistedInject
     class Model(
-        private val mangaId: Long,
-        private val currentUrl: String?,
-        initialQuery: String,
-        private val tracker: Tracker,
+        @Assisted private val mangaId: Long,
+        @Assisted private val currentUrl: String?,
+        @Assisted initialQuery: String,
+        @Assisted private val trackerId: Long,
+        trackerManager: TrackerManager,
     ) : StateViewModel<Model.State>(State()) {
 
-        companion object {
-            val MANGA_ID_KEY = CreationExtras.Key<Long>()
-            val CURRENT_URL_KEY = CreationExtras.Key<String?>()
-            val INITIAL_QUERY_KEY = CreationExtras.Key<String>()
-            val TRACKER_KEY = CreationExtras.Key<Tracker>()
-
-            val Factory = viewModelFactory {
-                initializer {
-                    Model(
-                        mangaId = get(MANGA_ID_KEY)!!,
-                        currentUrl = get(CURRENT_URL_KEY),
-                        initialQuery = get(INITIAL_QUERY_KEY)!!,
-                        tracker = get(TRACKER_KEY)!!,
-                    )
-                }
-            }
+        @AssistedFactory
+        @ManualViewModelAssistedFactoryKey
+        @ContributesIntoMap(AppScope::class)
+        interface Factory : ManualViewModelAssistedFactory {
+            fun create(
+                mangaId: Long,
+                currentUrl: String?,
+                initialQuery: String,
+                trackerId: Long,
+            ): Model
         }
+
+        private val tracker = trackerManager.get(trackerId)!!
 
         val supportsPrivateTracking = tracker.supportsPrivateTracking
 
@@ -828,7 +800,7 @@ data class TrackerSearchScreen(
     }
 }
 
-private data class TrackerRemoveScreen(
+data class TrackerRemoveScreen(
     private val mangaId: Long,
     private val track: Track,
     private val serviceId: Long,
@@ -837,14 +809,9 @@ private data class TrackerRemoveScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = viewModel<Model>(
-            factory = Model.Factory,
-            extras = CreationExtras {
-                set(Model.MANGA_ID_KEY, mangaId)
-                set(Model.TRACK_KEY, track)
-                set(Model.TRACKER_KEY, Injekt.get<TrackerManager>().get(serviceId)!!)
-            },
-        )
+        val viewModel = assistedMetroViewModel<Model, Model.Factory> {
+            create(mangaId = mangaId, track = track, trackerId = serviceId)
+        }
         val serviceName = viewModel.getName()
         var removeRemoteTrack by remember { mutableStateOf(false) }
         AlertDialogContent(
@@ -907,28 +874,23 @@ private data class TrackerRemoveScreen(
         )
     }
 
+    @AssistedInject
     class Model(
-        private val mangaId: Long,
-        private val track: Track,
-        private val tracker: Tracker,
-        private val deleteTrack: DeleteTrack = Injekt.get(),
+        @Assisted private val mangaId: Long,
+        @Assisted private val track: Track,
+        @Assisted private val trackerId: Long,
+        private val deleteTrack: DeleteTrack,
+        trackerManager: TrackerManager,
     ) : ViewModel() {
 
-        companion object {
-            val MANGA_ID_KEY = CreationExtras.Key<Long>()
-            val TRACK_KEY = CreationExtras.Key<Track>()
-            val TRACKER_KEY = CreationExtras.Key<Tracker>()
-
-            val Factory = viewModelFactory {
-                initializer {
-                    Model(
-                        mangaId = get(MANGA_ID_KEY) as Long,
-                        track = get(TRACK_KEY) as Track,
-                        tracker = get(TRACKER_KEY) as Tracker,
-                    )
-                }
-            }
+        @AssistedFactory
+        @ManualViewModelAssistedFactoryKey
+        @ContributesIntoMap(AppScope::class)
+        interface Factory : ManualViewModelAssistedFactory {
+            fun create(mangaId: Long, track: Track, trackerId: Long): Model
         }
+
+        private val tracker = trackerManager.get(trackerId)!!
 
         fun getName() = tracker.name
 

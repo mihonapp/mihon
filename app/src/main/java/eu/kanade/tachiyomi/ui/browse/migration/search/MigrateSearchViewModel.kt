@@ -23,11 +23,11 @@ import tachiyomi.domain.source.service.SourceManager
 class MigrateSearchViewModel(
     @Assisted val mangaId: Long,
     sourcePreferences: SourcePreferences,
-    sourceManager: SourceManager,
     extensionManager: ExtensionManager,
     networkToLocalManga: NetworkToLocalManga,
     getManga: GetManga,
     preferences: SourcePreferences,
+    private val sourceManager: SourceManager,
 ) : SearchViewModel(
     sourcePreferences = sourcePreferences,
     sourceManager = sourceManager,
