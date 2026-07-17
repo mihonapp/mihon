@@ -78,6 +78,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
     @Inject private lateinit var basePreferences: BasePreferences
     @Inject private lateinit var privacyPreferences: PrivacyPreferences
     @Inject private lateinit var networkPreferences: NetworkPreferences
+    @Inject private lateinit var uiPreferences: UiPreferences
 
     private val disableIncognitoReceiver = DisableIncognitoReceiver()
 
@@ -157,7 +158,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
             .onEach { ImageUtil.hardwareBitmapThreshold = it }
             .launchIn(scope)
 
-        setAppCompatDelegateThemeMode(Injekt.get<UiPreferences>().themeMode.get())
+        setAppCompatDelegateThemeMode(uiPreferences.themeMode.get())
 
         // Updates widget update
         WidgetManager(Injekt.get(), Injekt.get()).apply { init(scope) }

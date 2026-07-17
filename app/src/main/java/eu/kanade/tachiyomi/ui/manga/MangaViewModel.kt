@@ -119,6 +119,7 @@ class MangaViewModel(
     private val mangaRepository: MangaRepository = Injekt.get(),
     private val filterChaptersForDownload: FilterChaptersForDownload = Injekt.get(),
     private val updateMangaFromRemote: UpdateMangaFromRemote = Injekt.get(),
+    private val sourceManager: SourceManager,
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) : StateViewModel<MangaViewModel.State>(State.Loading) {
 
@@ -226,7 +227,7 @@ class MangaViewModel(
             mutableState.update {
                 State.Success(
                     manga = manga,
-                    source = Injekt.get<SourceManager>().getOrStub(manga.source),
+                    source = sourceManager.getOrStub(manga.source),
                     isFromSource = isFromSource,
                     chapters = chapters,
                     availableScanlators = getAvailableScanlators.await(mangaId),

@@ -1,6 +1,6 @@
 package eu.kanade.tachiyomi.ui.updates
 
-import android.app.Application
+import android.content.Context
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
@@ -53,14 +53,13 @@ import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.updates.interactor.GetUpdates
 import tachiyomi.domain.updates.model.UpdatesWithRelations
 import tachiyomi.domain.updates.service.UpdatesPreferences
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.time.ZonedDateTime
 
 @Inject
 @ViewModelKey
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class UpdatesViewModel(
+    private val context: Context,
     private val sourceManager: SourceManager,
     private val downloadManager: DownloadManager,
     private val downloadCache: DownloadCache,
@@ -190,7 +189,7 @@ class UpdatesViewModel(
     }
 
     fun updateLibrary(): Boolean {
-        val started = LibraryUpdateJob.startNow(Injekt.get<Application>())
+        val started = LibraryUpdateJob.startNow(context)
         viewModelScope.launch {
             _events.send(Event.LibraryUpdateTriggered(started))
         }
