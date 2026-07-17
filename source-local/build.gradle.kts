@@ -3,6 +3,8 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 plugins {
     alias(mihonx.plugins.kotlin.multiplatform)
     alias(mihonx.plugins.spotless)
+
+    alias(libs.plugins.metro)
 }
 
 kotlin {
@@ -19,6 +21,8 @@ kotlin {
         api(projects.i18n)
 
         implementation(libs.unifile)
+
+        implementation(libs.metro.runtime)
     }
 
     sourceSets {

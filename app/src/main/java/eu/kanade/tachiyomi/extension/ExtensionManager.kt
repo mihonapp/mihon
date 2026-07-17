@@ -2,6 +2,9 @@ package eu.kanade.tachiyomi.extension
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.domain.extension.interactor.TrustExtension
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.api.ExtensionApi
@@ -28,8 +31,6 @@ import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.util.Locale
 
 /**
@@ -39,10 +40,12 @@ import java.util.Locale
  * signature is trusted, otherwise the user will be prompted with a warning to trust it before being
  * loaded.
  */
+@Inject
+@SingleIn(AppScope::class)
 class ExtensionManager(
     private val context: Context,
-    private val preferences: SourcePreferences = Injekt.get(),
-    private val trustExtension: TrustExtension = Injekt.get(),
+    private val preferences: SourcePreferences,
+    private val trustExtension: TrustExtension,
 ) {
 
     val scope = CoroutineScope(SupervisorJob())

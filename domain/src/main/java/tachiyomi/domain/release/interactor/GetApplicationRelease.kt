@@ -1,5 +1,6 @@
 package tachiyomi.domain.release.interactor
 
+import dev.zacsweers.metro.Inject
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.domain.release.model.Release
@@ -7,6 +8,7 @@ import tachiyomi.domain.release.service.ReleaseService
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
+@Inject
 class GetApplicationRelease(
     private val service: ReleaseService,
     private val preferenceStore: PreferenceStore,
