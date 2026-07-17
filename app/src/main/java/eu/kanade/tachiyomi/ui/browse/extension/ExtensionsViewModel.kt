@@ -1,6 +1,6 @@
 package eu.kanade.tachiyomi.ui.browse.extension
 
-import android.app.Application
+import android.content.Context
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -36,14 +36,13 @@ import kotlinx.coroutines.launch
 import mihon.core.viewmodel.StateViewModel
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import kotlin.time.Duration.Companion.seconds
 
 @Inject
 @ViewModelKey
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class ExtensionsViewModel(
+    context: Context,
     preferences: SourcePreferences,
     basePreferences: BasePreferences,
     private val extensionManager: ExtensionManager,
@@ -53,7 +52,6 @@ class ExtensionsViewModel(
     private val currentDownloads = MutableStateFlow<Map<String, InstallStep>>(hashMapOf())
 
     init {
-        val context = Injekt.get<Application>()
         val extensionMapper: (Map<String, InstallStep>) -> ((Extension) -> ExtensionUiModel.Item) = { map ->
             {
                 ExtensionUiModel.Item(it, map[it.pkgName] ?: InstallStep.Idle)

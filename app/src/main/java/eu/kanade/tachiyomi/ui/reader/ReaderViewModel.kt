@@ -1,6 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader
 
-import android.app.Application
+import android.content.Context
 import android.net.Uri
 import androidx.annotation.IntRange
 import androidx.compose.runtime.Immutable
@@ -94,6 +94,7 @@ import java.util.Date
 @AssistedInject
 class ReaderViewModel(
     @Assisted private val savedState: SavedStateHandle,
+    private val context: Context,
     private val sourceManager: SourceManager,
     private val downloadManager: DownloadManager,
     private val downloadProvider: DownloadProvider,
@@ -305,7 +306,6 @@ class ReaderViewModel(
                     mutableState.update { it.copy(manga = manga) }
                     if (chapterId == -1L) chapterId = initialChapterId
 
-                    val context = Injekt.get<Application>()
                     val source = sourceManager.getOrStub(manga.source)
                     loader = ChapterLoader(context, downloadManager, downloadProvider, manga, source)
 
@@ -821,7 +821,6 @@ class ReaderViewModel(
         if (page?.status != Page.State.Ready) return
         val manga = manga ?: return
 
-        val context = Injekt.get<Application>()
         val notifier = SaveImageNotifier(context)
         notifier.onClear()
 
@@ -869,7 +868,6 @@ class ReaderViewModel(
         if (page?.status != Page.State.Ready) return
         val manga = manga ?: return
 
-        val context = Injekt.get<Application>()
         val destDir = context.cacheImageDir
 
         val filename = generateFilename(manga, page)
@@ -935,7 +933,6 @@ class ReaderViewModel(
         if (!trackPreferences.autoUpdateTrack.get()) return
 
         val manga = manga ?: return
-        val context = Injekt.get<Application>()
 
         viewModelScope.launchNonCancellable {
             trackChapter.await(context, manga.id, readerChapter.chapter.chapter_number.toDouble())
