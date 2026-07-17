@@ -1,7 +1,13 @@
 package eu.kanade.presentation.more.settings.screen.browse
 
 import androidx.compose.runtime.Immutable
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
@@ -13,15 +19,16 @@ import mihon.domain.extension.interactor.RemoveExtensionStore
 import mihon.domain.extension.interactor.UpdateExtensionStores
 import mihon.domain.extension.model.ExtensionStore
 import tachiyomi.core.common.util.lang.launchIO
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class ExtensionStoresViewModel(
-    private val getExtensionStores: GetExtensionStores = Injekt.get(),
-    private val addExtensionStore: AddExtensionStore = Injekt.get(),
-    private val removeExtensionStore: RemoveExtensionStore = Injekt.get(),
-    private val updateExtensionStores: UpdateExtensionStores = Injekt.get(),
-    private val extensionManager: ExtensionManager = Injekt.get(),
+    private val getExtensionStores: GetExtensionStores,
+    private val addExtensionStore: AddExtensionStore,
+    private val removeExtensionStore: RemoveExtensionStore,
+    private val updateExtensionStores: UpdateExtensionStores,
+    private val extensionManager: ExtensionManager,
 ) : StateViewModel<ExtensionStoreScreenState>(ExtensionStoreScreenState.Loading) {
 
     private inline fun updateSuccessState(

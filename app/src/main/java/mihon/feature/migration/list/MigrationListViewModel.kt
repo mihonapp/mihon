@@ -2,9 +2,13 @@ package mihon.feature.migration.list
 
 import androidx.annotation.FloatRange
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.getNameForMangaInfo
@@ -36,34 +40,25 @@ import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
+@AssistedInject
 class MigrationListViewModel(
-    mangaIds: Collection<Long>,
-    extraSearchQuery: String?,
-    private val preferences: SourcePreferences = Injekt.get(),
-    private val sourceManager: SourceManager = Injekt.get(),
-    private val getManga: GetManga = Injekt.get(),
-    private val networkToLocalManga: NetworkToLocalManga = Injekt.get(),
-    private val getChaptersByMangaId: GetChaptersByMangaId = Injekt.get(),
-    private val migrateManga: MigrateMangaUseCase = Injekt.get(),
-    private val updateMangaFromRemote: UpdateMangaFromRemote = Injekt.get(),
+    @Assisted mangaIds: Collection<Long>,
+    @Assisted extraSearchQuery: String?,
+    private val preferences: SourcePreferences,
+    private val sourceManager: SourceManager,
+    private val getManga: GetManga,
+    private val networkToLocalManga: NetworkToLocalManga,
+    private val getChaptersByMangaId: GetChaptersByMangaId,
+    private val migrateManga: MigrateMangaUseCase,
+    private val updateMangaFromRemote: UpdateMangaFromRemote,
 ) : StateViewModel<MigrationListViewModel.State>(State()) {
 
-    companion object {
-        val MANGA_IDS_KEY = CreationExtras.Key<Collection<Long>>()
-
-        val EXTRA_SEARCH_QUERY_KEY = CreationExtras.Key<String?>()
-
-        val Factory = viewModelFactory {
-            initializer {
-                MigrationListViewModel(
-                    mangaIds = get(MANGA_IDS_KEY)!!,
-                    extraSearchQuery = get(EXTRA_SEARCH_QUERY_KEY),
-                )
-            }
-        }
+    @AssistedFactory
+    @ManualViewModelAssistedFactoryKey
+    @ContributesIntoMap(AppScope::class)
+    interface Factory : ManualViewModelAssistedFactory {
+        fun create(mangaIds: Collection<Long>, extraSearchQuery: String?,): MigrationListViewModel
     }
 
     private val smartSearchEngine = SmartSourceSearchEngine(extraSearchQuery)

@@ -2,9 +2,12 @@ package eu.kanade.tachiyomi.ui.webview
 
 import android.content.Context
 import androidx.core.net.toUri
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import eu.kanade.presentation.more.stats.StatsScreenState
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -16,25 +19,18 @@ import mihon.core.viewmodel.StateViewModel
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.service.SourceManager
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 class WebViewViewModel(
-    val sourceId: Long?,
-    private val sourceManager: SourceManager = Injekt.get(),
-    private val network: NetworkHelper = Injekt.get(),
+    @Assisted val sourceId: Long?,
+    private val sourceManager: SourceManager,
+    private val network: NetworkHelper,
 ) : StateViewModel<StatsScreenState>(StatsScreenState.Loading) {
 
-    companion object {
-        val SOURCE_ID_KEY = CreationExtras.Key<Long?>()
-
-        val Factory = viewModelFactory {
-            initializer {
-                WebViewViewModel(
-                    sourceId = get(SOURCE_ID_KEY),
-                )
-            }
-        }
+    @AssistedFactory
+    @ManualViewModelAssistedFactoryKey
+    @ContributesIntoMap(AppScope::class)
+    interface Factory : ManualViewModelAssistedFactory {
+        fun create(sourceId: Long?): WebViewViewModel
     }
 
     var headers = emptyMap<String, String>()
