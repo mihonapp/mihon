@@ -33,7 +33,7 @@ class PreferenceBackupCreator(
             .map {
                 BackupSourcePreferences(
                     it.preferenceKey(),
-                    it.sourcePreferences().all().toBackupPreferences()
+                    it.sourcePreferences().all.toBackupPreferences()
                         .withPrivatePreferences(includePrivatePreferences),
                 )
             }
