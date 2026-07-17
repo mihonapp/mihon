@@ -16,7 +16,7 @@ interface ConfigurableSource : Source {
     fun getSourcePreferences(): SharedPreferences =
         Injekt.get<Application>().getSharedPreferences(preferenceKey(), Context.MODE_PRIVATE)
 
-    fun setupPreferenceScreen(screen: PreferenceScreen)
+    fun setupPreferenceScreen(screen: androidx.preference.PreferenceScreen)
 }
 
 fun ConfigurableSource.preferenceKey(): String = "source_$id"

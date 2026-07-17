@@ -29,7 +29,6 @@ import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.ui.model.setAppCompatDelegateThemeMode
 import eu.kanade.tachiyomi.core.security.PrivacyPreferences
-import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.crash.CrashActivity
 import eu.kanade.tachiyomi.crash.GlobalExceptionHandler
 import eu.kanade.tachiyomi.data.cache.CoverCache
@@ -67,25 +66,22 @@ import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
-import tachiyomi.domain.updates.interactor.GetUpdates
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.widget.WidgetManager
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.security.Security
 
 class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factory, GraphProvider<AppGraph> {
 
     override val graph: AppGraph by lazy { createGraphFactory<AppGraph.Factory>().create(this) }
 
+    @Inject private lateinit var preferenceStore: PreferenceStore
     @Inject private lateinit var basePreferences: BasePreferences
     @Inject private lateinit var privacyPreferences: PrivacyPreferences
     @Inject private lateinit var networkPreferences: NetworkPreferences
     @Inject private lateinit var uiPreferences: UiPreferences
-    @Inject private lateinit var securityPreferences: SecurityPreferences
     @Inject private lateinit var coverCache: CoverCache
     @Inject private lateinit var networkHelper: NetworkHelper
-    @Inject private lateinit var getUpdates: GetUpdates
+    @Inject private lateinit var widgetManager: WidgetManager
 
     private val disableIncognitoReceiver = DisableIncognitoReceiver()
 
@@ -168,7 +164,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
         setAppCompatDelegateThemeMode(uiPreferences.themeMode.get())
 
         // Updates widget update
-        WidgetManager(getUpdates = getUpdates, securityPreferences = securityPreferences).apply { init(scope) }
+        widgetManager.init(scope)
 
         if (!LogcatLogger.isInstalled) {
             val minLogPriority = when {
@@ -184,7 +180,6 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
     }
 
     private fun initializeMigrator() {
-        val preferenceStore = Injekt.get<PreferenceStore>()
         val preference = preferenceStore.getInt(Preference.appStateKey("last_version_code"), 0)
         logcat { "Migration from ${preference.get()} to ${BuildConfig.VERSION_CODE}" }
         Migrator.initialize(

@@ -6,6 +6,8 @@ import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import dev.zacsweers.metrox.viewmodel.ViewModelGraph
+import eu.kanade.domain.track.service.DelayedTrackingUpdateJob
+import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
 import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
@@ -15,12 +17,13 @@ import eu.kanade.tachiyomi.data.library.MetadataUpdateJob
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
+import mihon.presentation.widget.di.PresentationWidgetGraph
 
 @DependencyGraph(
     scope = AppScope::class,
     bindingContainers = [AppBindings::class],
 )
-interface AppGraph : ViewModelGraph {
+interface AppGraph : ViewModelGraph, PresentationWidgetGraph {
     fun inject(app: App)
     fun inject(mainActivity: MainActivity)
     fun inject(readerActivity: ReaderActivity)
@@ -28,10 +31,13 @@ interface AppGraph : ViewModelGraph {
     fun inject(metadataUpdateJob: MetadataUpdateJob)
     fun inject(backupRestoreJob: BackupRestoreJob)
     fun inject(backupCreateJob: BackupCreateJob)
+    fun inject(delayedTrackingUpdateJob: DelayedTrackingUpdateJob)
     fun inject(downloadJob: DownloadJob)
     fun inject(notificationReceiver: NotificationReceiver)
 
     val viewModelFactory: MetroViewModelFactory
+
+    val uiPreferences: UiPreferences
 
     @DependencyGraph.Factory
     fun interface Factory {
