@@ -46,6 +46,7 @@ class BackupRestorer(
     private val preferenceRestorer: PreferenceRestorer = PreferenceRestorer(context),
     private val extensionStoreRestorer: ExtensionStoreRestorer = ExtensionStoreRestorer(),
     private val mangaRestorer: MangaRestorer = MangaRestorer(),
+    private val onProgressUpdate: suspend (String, Int, Int, Boolean) -> Unit = { _, _, _, _ -> },
 ) {
 
     private var restoreAmount = 0
@@ -132,13 +133,7 @@ class BackupRestorer(
         ensureActive()
         categoriesRestorer(backupCategories)
 
-        val progress = restoreProgress.incrementAndFetch()
-        notifier.showRestoreProgress(
-            context.stringResource(MR.strings.categories),
-            progress,
-            restoreAmount,
-            isSync,
-        )
+        updateRestoreProgress(context.stringResource(MR.strings.categories))
     }
 
     private fun CoroutineScope.restoreManga(
@@ -151,18 +146,15 @@ class BackupRestorer(
                 database.transaction {
                     chunk.forEach {
                         ensureActive()
-
                         try {
                             mangaRestorer.restore(it, backupCategories)
                         } catch (e: Exception) {
                             val sourceName = sourceMapping[it.source] ?: it.source.toString()
-                            errors.add(Date() to "${it.title} [$sourceName]: ${e.message}")
+                            addError("${it.title} [$sourceName]: ${e.message}")
                         }
-
-                        restoreProgress.incrementAndFetch()
+                        updateRestoreProgress(it.title)
                     }
                 }
-                notifier.showRestoreProgress(chunk.last().title, restoreProgress.load(), restoreAmount, isSync)
             }
     }
 
@@ -176,26 +168,14 @@ class BackupRestorer(
             categories,
         )
 
-        val progress = restoreProgress.incrementAndFetch()
-        notifier.showRestoreProgress(
-            context.stringResource(MR.strings.app_settings),
-            progress,
-            restoreAmount,
-            isSync,
-        )
+        updateRestoreProgress(context.stringResource(MR.strings.app_settings))
     }
 
     private fun CoroutineScope.restoreSourcePreferences(preferences: List<BackupSourcePreferences>) = launch {
         ensureActive()
         preferenceRestorer.restoreSource(preferences)
 
-        val progress = restoreProgress.incrementAndFetch()
-        notifier.showRestoreProgress(
-            context.stringResource(MR.strings.source_settings),
-            progress,
-            restoreAmount,
-            isSync,
-        )
+        updateRestoreProgress(context.stringResource(MR.strings.source_settings))
     }
 
     private fun CoroutineScope.restoreExtensionStores(
@@ -207,23 +187,25 @@ class BackupRestorer(
                 database.transaction {
                     chunk.forEach {
                         ensureActive()
-
                         try {
                             extensionStoreRestorer(it)
                         } catch (e: Exception) {
-                            errors.add(Date() to "Error Adding Repo: ${it.name} : ${e.message}")
+                            addError("Error Adding Repo: ${it.name} : ${e.message}")
                         }
-
-                        restoreProgress.incrementAndFetch()
+                        updateRestoreProgress(context.stringResource(MR.strings.extensionStores))
                     }
                 }
-                notifier.showRestoreProgress(
-                    context.stringResource(MR.strings.extensionStores),
-                    restoreProgress.load(),
-                    restoreAmount,
-                    isSync,
-                )
             }
+    }
+
+    private suspend fun updateRestoreProgress(content: String) {
+        val progress = restoreProgress.incrementAndFetch()
+
+        onProgressUpdate(content, progress, restoreAmount, isSync)
+    }
+
+    private fun addError(message: String) {
+        errors.add(Date() to message)
     }
 
     private fun writeErrorLog(): File {

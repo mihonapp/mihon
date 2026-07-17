@@ -87,13 +87,13 @@ class BackupNotifier(private val context: Context) {
         }
     }
 
-    fun showRestoreProgress(
+    fun restoreProgressNotification(
         content: String = "",
         progress: Int = 0,
         maxAmount: Int = 100,
         sync: Boolean = false,
     ): NotificationCompat.Builder {
-        val builder = with(progressNotificationBuilder) {
+        return with(progressNotificationBuilder) {
             val contentTitle = if (sync) {
                 context.stringResource(MR.strings.syncing_library)
             } else {
@@ -115,10 +115,6 @@ class BackupNotifier(private val context: Context) {
                 NotificationReceiver.cancelRestorePendingBroadcast(context, Notifications.ID_RESTORE_PROGRESS),
             )
         }
-
-        builder.show(Notifications.ID_RESTORE_PROGRESS)
-
-        return builder
     }
 
     fun showRestoreError(error: String?) {

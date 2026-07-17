@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.util.system
 
 import android.content.Context
 import androidx.work.CoroutineWorker
+import androidx.work.ForegroundInfo
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import kotlinx.coroutines.delay
@@ -27,8 +28,12 @@ fun WorkManager.isRunning(tag: String): Boolean {
  * allowing Service.startForeground() to be called and avoiding system crash.
  */
 suspend fun CoroutineWorker.setForegroundSafely() {
+    setForegroundSafely(getForegroundInfo())
+}
+
+suspend fun CoroutineWorker.setForegroundSafely(info: ForegroundInfo) {
     try {
-        setForeground(getForegroundInfo())
+        setForeground(info)
         delay(0.5.seconds)
     } catch (e: IllegalStateException) {
         logcat(LogPriority.ERROR, e) { "Not allowed to set foreground job" }
