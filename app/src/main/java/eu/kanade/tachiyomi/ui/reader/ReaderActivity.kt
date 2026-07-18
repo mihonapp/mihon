@@ -180,7 +180,7 @@ class ReaderActivity : BaseActivity() {
             }
             NotificationReceiver.dismissNotification(this, manga.hashCode(), Notifications.ID_NEW_CHAPTERS)
 
-            lifecycleScope.launchNonCancellable {
+            lifecycleScope.launch {
                 val initResult = viewModel.init(manga, chapter)
                 if (!initResult.getOrDefault(false)) {
                     val exception = initResult.exceptionOrNull() ?: IllegalStateException("Unknown err")
