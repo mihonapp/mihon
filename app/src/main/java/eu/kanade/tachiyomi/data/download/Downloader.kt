@@ -82,17 +82,13 @@ class Downloader(
     private val getCategories: GetCategories,
     private val getTracks: GetTracks,
     private val store: DownloadStore,
+    private val notifier: DownloadNotifier,
 ) {
     /**
      * Queue where active downloads are kept.
      */
     private val _queueState = MutableStateFlow<List<Download>>(emptyList())
     val queueState = _queueState.asStateFlow()
-
-    /**
-     * Notifier for the downloader state and progress.
-     */
-    private val notifier by lazy { DownloadNotifier(context) }
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var downloaderJob: Job? = null

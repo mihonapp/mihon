@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import dev.zacsweers.metro.Inject
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.ui.security.UnlockActivity
@@ -16,9 +17,10 @@ import eu.kanade.tachiyomi.util.view.setSecureScreen
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import mihon.app.di.AppGraph
+import mihon.core.metro.metroGraph
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import uy.kohesive.injekt.injectLazy
 
 interface SecureActivityDelegate {
     fun registerSecureActivity(activity: AppCompatActivity)
@@ -76,11 +78,12 @@ class SecureActivityDelegateImpl : SecureActivityDelegate, DefaultLifecycleObser
 
     private lateinit var activity: AppCompatActivity
 
-    private val preferences: BasePreferences by injectLazy()
-    private val securityPreferences: SecurityPreferences by injectLazy()
+    @Inject private lateinit var preferences: BasePreferences
+    @Inject private lateinit var securityPreferences: SecurityPreferences
 
     override fun registerSecureActivity(activity: AppCompatActivity) {
         this.activity = activity
+        activity.metroGraph<AppGraph>().inject(this)
         activity.lifecycle.addObserver(this)
     }
 

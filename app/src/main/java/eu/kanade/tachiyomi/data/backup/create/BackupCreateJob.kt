@@ -41,6 +41,8 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
 
     @Inject
     private lateinit var backupCreatorFactory: BackupCreator.Factory
+    @Inject
+    private lateinit var storageManager: StorageManager
 
     private val notifier = BackupNotifier(context)
 
@@ -88,7 +90,6 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
     }
 
     private fun getAutomaticBackupLocation(): Uri? {
-        val storageManager = Injekt.get<StorageManager>()
         return storageManager.getAutomaticBackupsDirectory()?.uri
     }
 
