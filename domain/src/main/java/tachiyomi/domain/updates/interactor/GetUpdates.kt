@@ -19,6 +19,8 @@ class GetUpdates(
         started: Boolean?,
         bookmarked: Boolean?,
         hideExcludedScanlators: Boolean,
+        includedCategories: List<Long>,
+        excludedCategories: List<Long>,
     ): Flow<List<UpdatesWithRelations>> {
         return repository.subscribeAll(
             instant.toEpochMilli(),
@@ -27,6 +29,8 @@ class GetUpdates(
             started = started,
             bookmarked = bookmarked,
             hideExcludedScanlators = hideExcludedScanlators,
+            includedCategories = includedCategories,
+            excludedCategories = excludedCategories,
         )
     }
 
