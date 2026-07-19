@@ -173,7 +173,7 @@ class RestoreBackupScreen(
     }
 }
 
-private class RestoreBackupViewModel(
+class RestoreBackupViewModel(
     private val context: Context,
     private val uri: String,
 ) : StateViewModel<RestoreBackupViewModel.State>(State()) {
