@@ -14,8 +14,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
+import mihon.app.di.AppGraph
+import mihon.core.metro.metroGraph
 
 /**
  * A custom [TextInputEditText] that sets [EditorInfoCompat.IME_FLAG_NO_PERSONALIZED_LEARNING] to imeOptions
@@ -34,7 +34,8 @@ class TachiyomiTextInputEditText @JvmOverloads constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-        setIncognito(scope!!)
+        val basePreferences = context.metroGraph<AppGraph>().basePreferences
+        setIncognito(basePreferences, scope!!)
     }
 
     override fun onDetachedFromWindow() {
@@ -48,8 +49,8 @@ class TachiyomiTextInputEditText @JvmOverloads constructor(
          * Sets Flow to this [EditText] that sets [EditorInfoCompat.IME_FLAG_NO_PERSONALIZED_LEARNING] to imeOptions
          * if [BasePreferences.incognitoMode] is true. Some IMEs may not respect this flag.
          */
-        fun EditText.setIncognito(viewScope: CoroutineScope) {
-            Injekt.get<BasePreferences>().incognitoMode.changes()
+        fun EditText.setIncognito(basePreferences: BasePreferences, viewScope: CoroutineScope) {
+            basePreferences.incognitoMode.changes()
                 .onEach {
                     imeOptions = if (it) {
                         imeOptions or EditorInfoCompat.IME_FLAG_NO_PERSONALIZED_LEARNING

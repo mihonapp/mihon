@@ -9,14 +9,16 @@ import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
-import eu.kanade.tachiyomi.util.CrashLogUtil
 import kotlinx.coroutines.launch
+import mihon.app.di.AppGraph
+import mihon.core.metro.metroGraph
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
@@ -29,6 +31,7 @@ fun CrashScreen(
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val crashLogUtil = remember { context.metroGraph<AppGraph>().crashLogUtil }
 
     InfoScreen(
         icon = Icons.Outlined.BugReport,
@@ -37,7 +40,7 @@ fun CrashScreen(
         acceptText = stringResource(MR.strings.pref_dump_crash_logs),
         onAcceptClick = {
             scope.launch {
-                CrashLogUtil(context).dumpLogs(exception)
+                crashLogUtil.dumpLogs(exception)
             }
         },
         rejectText = stringResource(MR.strings.crash_screen_restart_application),
