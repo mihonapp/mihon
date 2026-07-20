@@ -33,4 +33,9 @@ class UpdatesPreferences(
         "pref_filter_updates_hide_excluded_scanlators",
         false,
     )
+
+    val groupChapters: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_display_updates_group_chapters",
+        false,
+    )
 }

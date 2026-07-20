@@ -859,6 +859,7 @@
     <string name="relative_time_span_never">Never</string>
     <string name="action_view_upcoming">View Upcoming Updates</string>
     <string name="action_filter_excluded_scanlators">Filter excluded scanlators</string>
+    <string name="action_group_chapter_updates">Group chapters by entry</string>
 
     <!-- Upcoming -->
     <string name="upcoming_guide">Upcoming Guide</string>
