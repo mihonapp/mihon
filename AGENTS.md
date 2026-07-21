@@ -78,13 +78,15 @@ Yomori must not:
 * bundle comic or manga content sources;
 * host or operate extension repositories;
 * recommend sources or repositories;
-* preselect a source;
+* select a source without an explicit user action;
 * automatically install an extension;
 * automatically trust an extension or signing identity;
-* silently change a user’s selected source;
+* silently change a user’s effective source set or priority;
 * market itself as endorsed by Mihon.
 
 Extensions remain separate user-installed Mihon/Tachiyomi-compatible APKs. Extension repository and source choices remain user-controlled.
+
+Explicitly assigning a user-configured reading-list category may visibly prefill that category’s ordered source defaults. The resulting effective source set must remain visible and editable before save or search. This does not authorize hidden selection, recommendation, installation, trust, or querying.
 
 ## Extension security and compatibility
 
@@ -96,7 +98,7 @@ Preserve:
 * explicit trust decisions;
 * visible network activity;
 * bounded concurrency and timeouts;
-* user-selected source scope;
+* user-controlled source scope;
 * actionable extension failure reporting;
 * extension-facing binary compatibility.
 
@@ -127,24 +129,25 @@ CBL import must:
 * maintain safe deletion cascades;
 * prevent progress from referencing missing entries.
 
-At least one currently installed online source must be explicitly selected before a reading list is saved.
+Before a reading list is saved, its visible effective source set must contain at least one currently installed online source. Direct source selection or explicit assignment of a user-configured category may populate that set, but the resulting ordered sources must be visible and editable before save.
 
-Persist the user’s source order as list priority. Retain unavailable selected source IDs visibly for later repair. Never silently discard, replace, recommend, or auto-select a source.
+Persist list-specific source order as the list’s priority. Retain unavailable selected or inherited source IDs visibly for later repair. Never silently discard, replace, recommend, or add a source.
 
 ## Matching and search rules
 
 Resolve series first, then issues.
 
-Query only installed online sources explicitly selected for the reading list. A search must follow an explicit user action or another clearly disclosed operation already authorized by the product flow.
+Query only installed online sources in the reading list’s visible effective source set. That set may contain directly selected sources or sources visibly inherited through an explicitly assigned user-configured category. Never query a hidden, merely available, recommended, or unconfirmed source. A search must follow an explicit user action or another clearly disclosed operation already authorized by the product flow.
 
 Preference order, highest to lowest:
 
 1. Entry-specific confirmed match or source override.
 2. Series-specific confirmed mapping or source preference.
 3. Reading-list source order.
-4. Global source preference.
+4. Assigned-category default source order.
+5. Global source preference.
 
-Preserve unavailable entry overrides and confirmed mappings visibly. Do not bypass them silently with a lower-priority source.
+List-specific source order overrides category defaults. Preserve unavailable overrides, mappings, direct selections, and inherited source IDs visibly. Do not bypass a higher-priority unavailable choice silently with a lower-priority source.
 
 Within one operation:
 
@@ -186,20 +189,27 @@ Issue normalization must preserve meaningful distinctions, including:
 
 Do not guess that distinct issue forms are equivalent without an explicit normalization rule and tests.
 
-Automatic acceptance requires all of the following:
+Automatic acceptance must satisfy every current safety gate documented in `PROJECT_CONTEXT.md` and the scoring architecture, including:
 
-* total score at least 88%;
-* title similarity at least 85%;
-* equivalent issue number;
-* lead of at least 10 percentage points over the second-best candidate.
+* the current automatic confidence threshold;
+* the current minimum title-similarity threshold;
+* equivalent issue identity;
+* no conflicting user-confirmed entry or series mapping;
+* membership in the reading list’s visible effective source set.
 
-Scores from 65% through 87.99% require review. Scores below 65% remain unresolved.
+Among candidates that satisfy every automatic safety gate, choose deterministically by:
 
-Equal high-scoring candidates remain ambiguous.
+1. highest final confidence;
+2. effective source priority;
+3. stable candidate identity or persisted rank.
 
-Missing optional evidence is neutral. Conflicting evidence is penalized. External identifiers, source preference, history, or other evidence must not bypass title or issue safety gates.
+Do not use raw extension return order as the primary decision rule. Several qualifying candidates do not by themselves require review, and an exact score tie is not automatically ambiguous when the documented deterministic tie-breakers can resolve it safely.
 
-Persist the confidence, runner-up lead, decision reason, component breakdown, conflicts, source, language, remote identity, and matcher version needed for review.
+Candidates that fail a safety gate, fall below the documented thresholds, or conflict with confirmed identity remain unresolved or require review as documented. Missing optional evidence is neutral. Conflicting evidence is penalized. External identifiers, source preference, history, or other evidence must not bypass title or issue safety gates.
+
+Persist the confidence, runner-up evidence, decision reason, component breakdown, conflicts, source, language, remote identity, effective priority, and matcher version needed for review.
+
+Exact thresholds and scoring weights belong in `PROJECT_CONTEXT.md` and the scoring architecture documents rather than being duplicated here.
 
 ## Confirmation, rejection, and skip protection
 
@@ -311,7 +321,13 @@ Add or update focused tests where applicable for:
 * parser safety, encoding, limits, and exact order;
 * title and issue normalization;
 * annual, special, FCBD, one-shot, zero, negative, decimal, fraction, suffix, and opaque issue handling;
-* scoring thresholds, safety gates, margins, and equal-score ambiguity;
+* scoring thresholds and safety gates;
+* strongest-candidate selection and deterministic exact ties;
+* effective source-priority and stable-identity tie-breakers;
+* runner-up evidence retention;
+* direct and category-inherited source scope;
+* category persistence, assignment, source defaults, and list overrides;
+* unavailable inherited source visibility;
 * source-preference hierarchy;
 * unavailable overrides and mappings;
 * confirmation protection;
@@ -331,7 +347,7 @@ Add or update focused tests where applicable for:
 
 Keep stable policy in `AGENTS.md`.
 
-Keep current project status, completed milestones, active migrations, defaults, confirmed decisions, known blockers, and next implementation stages in `PROJECT_CONTEXT.md`.
+Keep current project status, completed milestones, active migrations, defaults, confirmed decisions, known blockers, next implementation stages, numeric thresholds, and scoring weights in `PROJECT_CONTEXT.md`.
 
 Keep detailed architecture and feature behavior in focused documents under `docs/`.
 
@@ -371,7 +387,8 @@ Physical-device installation and representative device QA are performed by the u
 
 Stop and correct the work if it would introduce any of the following:
 
-* bundled, recommended, preselected, or auto-trusted sources;
+* bundled, recommended, hidden, or auto-trusted sources;
+* querying a source outside the visible effective source set;
 * extension API namespace breakage;
 * unsafe XML processing;
 * unbounded input or extension requests;
