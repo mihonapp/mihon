@@ -14,6 +14,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Added
 - Support resumable image downloads if supported by source ([@xMohnad](https://github.com/xMohnad)) ([#3167](https://github.com/mihonapp/mihon/pull/3167))
   - Fix HTTP Error 416 not being handled properly ([@AntsyLich](https://github.com/AntsyLich)) ([#3563](https://github.com/mihonapp/mihon/pull/3563))
+  - Fix incorrect progress when resuming downloads ([@xMohnad](https://github.com/xMohnad)) ([#3616](https://github.com/mihonapp/mihon/pull/3616))
 
 ### Changed
 - Detect Shizuku with permission check ([@Small-Ku](https://github.com/Small-Ku)) ([#3565](https://github.com/mihonapp/mihon/pull/3565))
