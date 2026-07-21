@@ -1,16 +1,16 @@
-package eu.kanade.presentation.library
+package mihon.feature.library
 
 import eu.kanade.tachiyomi.ui.library.LibraryItem
-import tachiyomi.domain.library.model.search.AndNode
-import tachiyomi.domain.library.model.search.ComparisonField
-import tachiyomi.domain.library.model.search.ComparisonQueryNode
-import tachiyomi.domain.library.model.search.EmptyQueryNode
-import tachiyomi.domain.library.model.search.FieldQueryNode
-import tachiyomi.domain.library.model.search.GeneralQueryNode
-import tachiyomi.domain.library.model.search.MangaField
-import tachiyomi.domain.library.model.search.NotNode
-import tachiyomi.domain.library.model.search.OrNode
-import tachiyomi.domain.library.model.search.QueryNode
+import mihon.domain.library.model.search.AndNode
+import mihon.domain.library.model.search.ComparisonField
+import mihon.domain.library.model.search.ComparisonQueryNode
+import mihon.domain.library.model.search.EmptyQueryNode
+import mihon.domain.library.model.search.FieldQueryNode
+import mihon.domain.library.model.search.GeneralQueryNode
+import mihon.domain.library.model.search.MangaField
+import mihon.domain.library.model.search.NotNode
+import mihon.domain.library.model.search.OrNode
+import mihon.domain.library.model.search.QueryNode
 import tachiyomi.source.local.LocalSource
 import java.time.Instant
 import java.time.LocalDate

@@ -1,4 +1,4 @@
-package tachiyomi.domain.library.model.search
+package mihon.domain.library.model.search
 
 class LibrarySearchParser(private val tokens: List<LibrarySearchLexer.Token>) {
     private var index = 0

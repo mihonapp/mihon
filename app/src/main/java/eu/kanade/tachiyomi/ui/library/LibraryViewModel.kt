@@ -12,7 +12,6 @@ import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.presentation.library.components.LibraryToolbarTitle
-import eu.kanade.presentation.library.matches
 import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
@@ -37,6 +36,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
 import mihon.core.common.utils.mutate
 import mihon.core.viewmodel.StateViewModel
+import mihon.domain.library.model.search.QueryNode
+import mihon.feature.library.matches
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.core.common.util.lang.compareToWithCollator
@@ -52,7 +53,6 @@ import tachiyomi.domain.history.interactor.GetNextChapters
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.library.model.LibrarySort
-import tachiyomi.domain.library.model.search.QueryNode
 import tachiyomi.domain.library.model.sort
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetLibraryManga

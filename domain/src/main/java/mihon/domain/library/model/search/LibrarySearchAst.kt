@@ -1,4 +1,4 @@
-package tachiyomi.domain.library.model.search
+package mihon.domain.library.model.search
 
 enum class MangaField(vararg val aliases: String, val fieldOnly: Boolean = false) {
     TITLE("title"),
