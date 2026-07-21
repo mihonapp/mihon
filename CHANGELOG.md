@@ -19,6 +19,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Changed
 - Detect Shizuku with permission check ([@Small-Ku](https://github.com/Small-Ku)) ([#3565](https://github.com/mihonapp/mihon/pull/3565))
 
+### Improved
+- Always use Private installer to update privately installed extensions ([@MajorTanya](https://github.com/MajorTanya)) ([#3614](https://github.com/mihonapp/mihon/pull/3614))
+
 ### Fixed
 - Fixed app bars remaining visible after changing pages by tapping in the paged reader after using the chapter navigator slider ([@AntsyLich](https://github.com/AntsyLich)) ([#3567](https://github.com/mihonapp/mihon/pull/3567))
 - Fixed MangaBaka User Agent string ([@MajorTanya](https://github.com/MajorTanya)) ([#3578](https://github.com/mihonapp/mihon/pull/3578))

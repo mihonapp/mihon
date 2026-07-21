@@ -240,7 +240,8 @@ class ExtensionManager(
      */
     fun updateExtension(extension: Extension.Installed): Flow<InstallStep> {
         val availableExt = availableExtensionMapFlow.value[extension.pkgName] ?: return emptyFlow()
-        return installExtension(availableExt)
+        val isUpdateForPrivatelyInstalled = !extension.isShared
+        return installer.downloadAndInstall(availableExt.apkUrl, availableExt, isUpdateForPrivatelyInstalled)
     }
 
     fun cancelInstallUpdateExtension(extension: Extension) {
