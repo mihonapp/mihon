@@ -9,5 +9,18 @@ import okhttp3.Response
  * @see Response.isSuccessful
  * @since tachiyomix 1.6
  * @param code [Int] the HTTP status code
+ * @param retryAfter raw Retry-After response header, when available
  */
-class HttpException(val code: Int) : IllegalStateException("HTTP error $code")
+class HttpException : IllegalStateException {
+
+    val code: Int
+    val retryAfter: String?
+
+    /** Kept as a real one-argument constructor for binary compatibility with installed sources. */
+    constructor(code: Int) : this(code, null)
+
+    constructor(code: Int, retryAfter: String?) : super("HTTP error $code") {
+        this.code = code
+        this.retryAfter = retryAfter
+    }
+}

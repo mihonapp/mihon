@@ -118,6 +118,15 @@ FROM mangas
 WHERE favorite = 1
 AND source = :sourceId;
 
+getRecommendationCandidates:
+SELECT *
+FROM mangas
+WHERE source = :sourceId
+AND initialized = 1
+AND url != :excludedUrl
+ORDER BY favorite DESC, last_modified_at DESC, date_added DESC, _id DESC
+LIMIT 200;
+
 getDuplicateLibraryManga:
 WITH
 track_dupes AS (
