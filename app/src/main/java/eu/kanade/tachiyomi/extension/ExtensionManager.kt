@@ -46,17 +46,14 @@ class ExtensionManager(
     private val context: Context,
     private val preferences: SourcePreferences,
     private val trustExtension: TrustExtension,
+    private val api: ExtensionApi,
+    private val extensionUpdateNotifier: ExtensionUpdateNotifier,
 ) {
 
     val scope = CoroutineScope(SupervisorJob())
 
     private val _isInitialized = MutableStateFlow(false)
     val isInitialized: StateFlow<Boolean> = _isInitialized.asStateFlow()
-
-    /**
-     * API where all the available extensions can be found.
-     */
-    private val api = ExtensionApi()
 
     /**
      * The installer which installs, updates and uninstalls the extensions.
@@ -372,7 +369,7 @@ class ExtensionManager(
         val pendingUpdateCount = installedExtensionMapFlow.value.values.count { it.hasUpdate }
         preferences.extensionUpdatesCount.set(pendingUpdateCount)
         if (pendingUpdateCount == 0) {
-            ExtensionUpdateNotifier(context).dismiss()
+            extensionUpdateNotifier.dismiss()
         }
     }
 

@@ -139,6 +139,8 @@ class MainActivity : BaseActivity() {
 
     @Inject private lateinit var getIncognitoState: GetIncognitoState
 
+    @Inject private lateinit var extensionApi: ExtensionApi
+
     // To be checked by splash screen. If true then splash screen will be removed.
     var ready = false
 
@@ -336,7 +338,7 @@ class MainActivity : BaseActivity() {
         // Extensions updates
         LaunchedEffect(Unit) {
             try {
-                ExtensionApi().checkForUpdates(context)
+                extensionApi.checkForUpdates(context)
             } catch (e: Exception) {
                 logcat(LogPriority.ERROR, e)
             }
