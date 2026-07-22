@@ -39,6 +39,7 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import logcat.LogPriority
 import mihon.app.di.AppGraph
+import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import mihon.domain.chapter.interactor.FilterChaptersForDownload
 import mihon.domain.source.interactor.UpdateMangaFromRemote
@@ -65,8 +66,6 @@ import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.model.SourceNotInstalledException
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.io.File
 import java.time.Instant
 import java.time.ZonedDateTime
@@ -108,8 +107,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
 
         if (tags.contains(WORK_NAME_AUTO)) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-                val preferences = Injekt.get<LibraryPreferences>()
-                val restrictions = preferences.autoUpdateDeviceRestrictions.get()
+                val restrictions = libraryPreferences.autoUpdateDeviceRestrictions.get()
                 if ((DEVICE_ONLY_ON_WIFI in restrictions) && !context.isConnectedToWifi()) {
                     return Result.retry()
                 }
@@ -425,10 +423,10 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         private const val KEY_CATEGORY = "category"
 
         fun setupTask(
-            workManager: WorkManager,
+            context: Context,
             prefInterval: Int? = null,
         ) {
-            val preferences = Injekt.get<LibraryPreferences>()
+            val preferences = context.appGraph.libraryPreferences
             val interval = prefInterval ?: preferences.autoUpdateInterval.get()
             if (interval > 0) {
                 val restrictions = preferences.autoUpdateDeviceRestrictions.get()
@@ -466,13 +464,13 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                     .setBackoffCriteria(BackoffPolicy.LINEAR, 10, TimeUnit.MINUTES)
                     .build()
 
-                workManager.enqueueUniquePeriodicWork(
+                context.workManager.enqueueUniquePeriodicWork(
                     WORK_NAME_AUTO,
                     ExistingPeriodicWorkPolicy.UPDATE,
                     request,
                 )
             } else {
-                workManager.cancelUniqueWork(WORK_NAME_AUTO)
+                context.workManager.cancelUniqueWork(WORK_NAME_AUTO)
             }
         }
 
@@ -498,7 +496,8 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             return true
         }
 
-        fun stop(workManager: WorkManager) {
+        fun stop(context: Context) {
+            val workManager = context.workManager
             val workQuery = WorkQuery.Builder.fromTags(listOf(TAG))
                 .addStates(listOf(WorkInfo.State.RUNNING))
                 .build()
@@ -509,7 +508,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
 
                     // Re-enqueue cancelled scheduled work
                     if (it.tags.contains(WORK_NAME_AUTO)) {
-                        setupTask(workManager)
+                        setupTask(context)
                     }
                 }
         }

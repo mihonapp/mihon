@@ -28,6 +28,7 @@ import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.models.toDomainChapter
+import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -118,6 +119,7 @@ class ReaderViewModel(
     private val updateManga: UpdateManga,
     private val coverCache: CoverCache,
     private val chapterCache: ChapterCache,
+    private val downloadCache: DownloadCache,
 ) : ViewModel() {
 
     @AssistedFactory
@@ -244,7 +246,7 @@ class ReaderViewModel(
             }
             .run {
                 if (basePreferences.downloadedOnly.get()) {
-                    filterDownloaded(manga)
+                    filterDownloaded(manga, downloadCache)
                 } else {
                     this
                 }
