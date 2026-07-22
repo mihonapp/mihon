@@ -14,6 +14,7 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
+import eu.kanade.tachiyomi.data.recommendation.MangaRecommendationRepository
 import eu.kanade.tachiyomi.data.saver.ImageSaver
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.extension.ExtensionManager
@@ -36,6 +37,7 @@ import tachiyomi.data.Mangas
 import tachiyomi.data.MemoColumnAdapter
 import tachiyomi.data.StringListColumnAdapter
 import tachiyomi.data.UpdateStrategyColumnAdapter
+import tachiyomi.domain.manga.interactor.GetMangaRecommendationCandidates
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.storage.service.StorageManager
 import tachiyomi.source.local.image.LocalCoverManager
@@ -123,6 +125,13 @@ class AppModule(val app: Application) : InjektModule {
         addSingletonFactory { DownloadCache(app) }
 
         addSingletonFactory { TrackerManager() }
+        addSingletonFactory {
+            val trackerManager = get<TrackerManager>()
+            MangaRecommendationRepository(
+                localCandidateLoader = get<GetMangaRecommendationCandidates>()::await,
+                aniListLoader = trackerManager.aniList::getRecommendations,
+            )
+        }
         addSingletonFactory { DelayedTrackingStore(app) }
 
         addSingletonFactory { ImageSaver(app) }
