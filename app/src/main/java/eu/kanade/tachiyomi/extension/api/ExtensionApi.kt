@@ -1,6 +1,9 @@
 package eu.kanade.tachiyomi.extension.api
 
 import android.content.Context
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.LoadResult
@@ -10,17 +13,18 @@ import mihon.domain.extension.repository.ExtensionStoreRepository
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.util.lang.withIOContext
-import uy.kohesive.injekt.injectLazy
 import java.time.Instant
 import kotlin.time.Duration.Companion.days
 
-internal class ExtensionApi {
-
-    private val repository: ExtensionStoreRepository by injectLazy()
-
-    private val preferenceStore: PreferenceStore by injectLazy()
-    private val updateExtensionStores: UpdateExtensionStores by injectLazy()
-    private val extensionManager: ExtensionManager by injectLazy()
+@Inject
+@SingleIn(AppScope::class)
+class ExtensionApi(
+    private val repository: ExtensionStoreRepository,
+    private val preferenceStore: PreferenceStore,
+    private val updateExtensionStores: UpdateExtensionStores,
+    private val extensionManager: () -> ExtensionManager,
+    private val extensionUpdateNotifier: ExtensionUpdateNotifier,
+) {
 
     private val lastExtCheck: Preference<Long> by lazy {
         preferenceStore.getLong(Preference.appStateKey("last_ext_check"), 0)
@@ -44,7 +48,7 @@ internal class ExtensionApi {
         updateExtensionStores()
 
         val extensions = if (fromAvailableExtensionList) {
-            extensionManager.availableExtensionsFlow.value
+            extensionManager().availableExtensionsFlow.value
         } else {
             findExtensions().also { lastExtCheck.set(Instant.now().toEpochMilli()) }
         }
@@ -66,7 +70,7 @@ internal class ExtensionApi {
         }
 
         if (extensionsWithUpdate.isNotEmpty()) {
-            ExtensionUpdateNotifier(context).promptUpdates(extensionsWithUpdate.map { it.name })
+            extensionUpdateNotifier.promptUpdates(extensionsWithUpdate.map { it.name })
         }
 
         return extensionsWithUpdate
