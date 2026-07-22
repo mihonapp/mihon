@@ -19,7 +19,6 @@ import tachiyomi.core.common.preference.AndroidPreference.ObjectSetAsStringSet
 import tachiyomi.core.common.preference.AndroidPreference.StringPrimitive
 import tachiyomi.core.common.preference.AndroidPreference.StringSetPrimitive
 
-
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
 class AndroidPreferenceStore(private val sharedPreferences: SharedPreferences) : PreferenceStore {

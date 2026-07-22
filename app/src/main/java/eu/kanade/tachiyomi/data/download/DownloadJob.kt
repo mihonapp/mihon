@@ -38,6 +38,7 @@ class DownloadJob(context: Context, workerParams: WorkerParameters) : CoroutineW
     private val graph: AppGraph = context.metroGraph()
 
     @Inject private lateinit var downloadManager: DownloadManager
+
     @Inject private lateinit var downloadPreferences: DownloadPreferences
 
     override suspend fun getForegroundInfo(): ForegroundInfo {

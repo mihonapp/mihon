@@ -41,8 +41,10 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
 
     @Inject
     private lateinit var backupCreatorFactory: BackupCreator.Factory
+
     @Inject
     private lateinit var storageManager: StorageManager
+
     @Inject private lateinit var notifier: BackupNotifier
 
     override suspend fun doWork(): Result {

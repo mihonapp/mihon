@@ -14,7 +14,7 @@ class SourceSearchPagingSource(
     source: Source,
     private val query: String,
     private val filters: FilterList,
-    networkToLocalManga: NetworkToLocalManga
+    networkToLocalManga: NetworkToLocalManga,
 ) : BaseSourcePagingSource(source, networkToLocalManga) {
     override suspend fun requestNextPage(currentPage: Int): MangasPage {
         return source.getSearchManga(currentPage, query, filters)
@@ -23,7 +23,7 @@ class SourceSearchPagingSource(
 
 class SourcePopularPagingSource(
     source: Source,
-    networkToLocalManga: NetworkToLocalManga
+    networkToLocalManga: NetworkToLocalManga,
 ) : BaseSourcePagingSource(source, networkToLocalManga) {
     override suspend fun requestNextPage(currentPage: Int): MangasPage {
         return source.getPopularManga(currentPage)
@@ -32,7 +32,7 @@ class SourcePopularPagingSource(
 
 class SourceLatestPagingSource(
     source: Source,
-    networkToLocalManga: NetworkToLocalManga
+    networkToLocalManga: NetworkToLocalManga,
 ) : BaseSourcePagingSource(source, networkToLocalManga) {
     override suspend fun requestNextPage(currentPage: Int): MangasPage {
         return source.getLatestUpdates(currentPage)

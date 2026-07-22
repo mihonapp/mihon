@@ -19,7 +19,8 @@ class MigrateSearchScreen(private val mangaId: Long) : Screen() {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
-        val viewModel = assistedMetroViewModel<MigrateSearchViewModel, MigrateSearchViewModel.Factory> { create(mangaId = mangaId) }
+        val viewModel =
+            assistedMetroViewModel<MigrateSearchViewModel, MigrateSearchViewModel.Factory> { create(mangaId = mangaId) }
         val state by viewModel.state.collectAsState()
 
         MigrateSearchScreen(

@@ -83,7 +83,10 @@ class MangaScreen(
         val context = LocalContext.current
         val haptic = LocalHapticFeedback.current
         val scope = rememberCoroutineScope()
-        val viewModel = assistedMetroViewModel<MangaViewModel, MangaViewModel.Factory> { create(mangaId = mangaId, isFromSource = fromSource) }
+        val viewModel =
+            assistedMetroViewModel<MangaViewModel, MangaViewModel.Factory> {
+                create(mangaId = mangaId, isFromSource = fromSource)
+            }
 
         val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -237,7 +240,10 @@ class MangaScreen(
                 )
             }
             MangaViewModel.Dialog.FullCover -> {
-                val vm = assistedMetroViewModel<MangaCoverViewModel, MangaCoverViewModel.Factory> { create(mangaId = mangaId) }
+                val vm =
+                    assistedMetroViewModel<MangaCoverViewModel, MangaCoverViewModel.Factory> {
+                        create(mangaId = mangaId)
+                    }
                 val manga by vm.state.collectAsState()
                 if (manga != null) {
                     val getContent = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {

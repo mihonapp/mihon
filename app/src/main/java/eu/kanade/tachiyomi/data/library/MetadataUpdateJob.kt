@@ -42,8 +42,11 @@ class MetadataUpdateJob(private val context: Context, workerParams: WorkerParame
     private val graph: AppGraph = context.metroGraph()
 
     @Inject private lateinit var sourceManager: SourceManager
+
     @Inject private lateinit var getLibraryManga: GetLibraryManga
+
     @Inject private lateinit var updateMangaFromRemote: UpdateMangaFromRemote
+
     @Inject private lateinit var notifier: LibraryUpdateNotifier
 
     private var mangaToUpdate: List<LibraryManga> = mutableListOf()

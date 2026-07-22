@@ -43,10 +43,15 @@ import eu.kanade.tachiyomi.BuildConfig.APPLICATION_ID as ID
 class NotificationReceiver : BroadcastReceiver() {
 
     @Inject private lateinit var getManga: GetManga
+
     @Inject private lateinit var getChapter: GetChapter
+
     @Inject private lateinit var updateChapter: UpdateChapter
+
     @Inject private lateinit var downloadManager: DownloadManager
+
     @Inject private lateinit var downloadPreferences: DownloadPreferences
+
     @Inject private lateinit var sourceManager: SourceManager
 
     override fun onReceive(context: Context, intent: Intent) {

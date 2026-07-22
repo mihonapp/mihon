@@ -26,7 +26,9 @@ class DelayedTrackingUpdateJob(private val context: Context, workerParams: Worke
     private val graph: AppGraph = context.metroGraph()
 
     @Inject lateinit var getTracks: GetTracks
+
     @Inject lateinit var trackChapter: TrackChapter
+
     @Inject lateinit var delayedTrackingStore: DelayedTrackingStore
 
     override suspend fun doWork(): Result {

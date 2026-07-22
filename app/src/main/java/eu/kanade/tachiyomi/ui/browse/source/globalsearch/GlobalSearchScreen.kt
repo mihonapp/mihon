@@ -31,7 +31,10 @@ class GlobalSearchScreen(
 
         val navigator = LocalNavigator.currentOrThrow
 
-        val viewModel = assistedMetroViewModel<GlobalSearchViewModel, GlobalSearchViewModel.Factory> { create(initialQuery = searchQuery, initialExtensionFilter = extensionFilter) }
+        val viewModel =
+            assistedMetroViewModel<GlobalSearchViewModel, GlobalSearchViewModel.Factory> {
+                create(initialQuery = searchQuery, initialExtensionFilter = extensionFilter)
+            }
         val state by viewModel.state.collectAsState()
         var showSingleLoadingScreen by remember {
             mutableStateOf(searchQuery.isNotEmpty() && !extensionFilter.isNullOrEmpty() && state.total == 1)

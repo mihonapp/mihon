@@ -12,7 +12,7 @@ import kotlin.uuid.ExperimentalUuidApi
 @Inject
 @ContributesIntoSet(AppScope::class)
 class InstallationIdMigration(
-    private val basePreferences: BasePreferences
+    private val basePreferences: BasePreferences,
 ) : Migration {
     override val version: Float = Migration.ALWAYS
 

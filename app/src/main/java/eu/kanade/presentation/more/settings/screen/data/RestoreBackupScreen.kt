@@ -54,7 +54,8 @@ class RestoreBackupScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = assistedMetroViewModel<RestoreBackupViewModel, RestoreBackupViewModel.Factory> { create(uri = uri) }
+        val viewModel =
+            assistedMetroViewModel<RestoreBackupViewModel, RestoreBackupViewModel.Factory> { create(uri = uri) }
         val state by viewModel.state.collectAsState()
 
         Scaffold(
@@ -181,7 +182,7 @@ class RestoreBackupViewModel(
     @ManualViewModelAssistedFactoryKey
     @ContributesIntoMap(AppScope::class)
     interface Factory : ManualViewModelAssistedFactory {
-        fun create(uri: String,): RestoreBackupViewModel
+        fun create(uri: String): RestoreBackupViewModel
     }
 
     init {

@@ -8,7 +8,6 @@ import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
 import mihon.core.migration.Migration
 import mihon.core.migration.MigrationContext
 
-
 @Inject
 @ContributesIntoSet(AppScope::class)
 class SetupBackupCreateMigration(

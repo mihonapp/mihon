@@ -51,7 +51,7 @@ class MangaCoverViewModel(
     @ManualViewModelAssistedFactoryKey
     @ContributesIntoMap(AppScope::class)
     interface Factory : ManualViewModelAssistedFactory {
-        fun create(mangaId: Long,): MangaCoverViewModel
+        fun create(mangaId: Long): MangaCoverViewModel
     }
 
     val snackbarHostState: SnackbarHostState = SnackbarHostState()

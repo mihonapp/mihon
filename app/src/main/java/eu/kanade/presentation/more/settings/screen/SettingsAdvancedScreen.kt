@@ -89,7 +89,6 @@ object SettingsAdvancedScreen : SearchableSettings {
         val libraryPreferences = remember { graph.libraryPreferences }
         val crashLogUtil = remember { graph.crashLogUtil }
 
-
         return listOf(
             Preference.PreferenceItem.TextPreference(
                 title = stringResource(MR.strings.pref_dump_crash_logs),

@@ -30,7 +30,10 @@ class MigrationListScreen(private val mangaIds: Collection<Long>, private val ex
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = assistedMetroViewModel<MigrationListViewModel, MigrationListViewModel.Factory> { create(mangaIds = mangaIds, extraSearchQuery = extraSearchQuery) }
+        val viewModel =
+            assistedMetroViewModel<MigrationListViewModel, MigrationListViewModel.Factory> {
+                create(mangaIds = mangaIds, extraSearchQuery = extraSearchQuery)
+            }
         val state by viewModel.state.collectAsState()
         val context = LocalContext.current
 

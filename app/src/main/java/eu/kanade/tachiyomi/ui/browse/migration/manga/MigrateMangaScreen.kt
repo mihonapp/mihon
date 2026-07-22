@@ -47,7 +47,8 @@ data class MigrateMangaScreen(
     override fun Content() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = assistedMetroViewModel<MigrateMangaViewModel, MigrateMangaViewModel.Factory> { create(sourceId = sourceId) }
+        val viewModel =
+            assistedMetroViewModel<MigrateMangaViewModel, MigrateMangaViewModel.Factory> { create(sourceId = sourceId) }
 
         val state by viewModel.state.collectAsState()
 

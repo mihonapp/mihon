@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 
-
 @Inject
 @SingleIn(AppScope::class)
 class StorageManager(
