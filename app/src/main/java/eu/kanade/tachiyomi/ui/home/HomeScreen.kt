@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
@@ -48,6 +49,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import mihon.app.di.appGraph
 import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
 import tachiyomi.domain.library.service.LibraryPreferences
@@ -235,6 +237,7 @@ object HomeScreen : Screen() {
 
     @Composable
     private fun NavigationIconItem(tab: eu.kanade.presentation.util.Tab) {
+        val context = LocalContext.current
         BadgedBox(
             badge = {
                 when {
@@ -263,7 +266,7 @@ object HomeScreen : Screen() {
                     }
                     BrowseTab::class.isInstance(tab) -> {
                         val count by produceState(initialValue = 0) {
-                            Injekt.get<SourcePreferences>().extensionUpdatesCount.changes()
+                            context.appGraph.sourcePreferences.extensionUpdatesCount.changes()
                                 .collectLatest { value = it }
                         }
                         if (count > 0) {

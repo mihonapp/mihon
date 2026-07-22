@@ -38,8 +38,7 @@ import eu.kanade.tachiyomi.data.coil.customDecoder
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonSubsamplingImageView
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
-import mihon.app.di.AppGraph
-import mihon.core.metro.metroGraph
+import mihon.app.di.appGraph
 import okio.BufferedSource
 import tachiyomi.core.common.util.system.ImageUtil
 
@@ -60,7 +59,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttrs, defStyleRes) {
 
     private val alwaysDecodeLongStripWithSSIV by lazy {
-        context.metroGraph<AppGraph>().basePreferences.alwaysDecodeLongStripWithSSIV.get()
+        context.appGraph.basePreferences.alwaysDecodeLongStripWithSSIV.get()
     }
 
     private var pageView: View? = null

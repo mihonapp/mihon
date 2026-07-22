@@ -7,6 +7,8 @@ import dev.zacsweers.metro.Provides
 import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import dev.zacsweers.metrox.viewmodel.ViewModelGraph
 import eu.kanade.domain.base.BasePreferences
+import eu.kanade.domain.extension.interactor.TrustExtension
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.service.DelayedTrackingUpdateJob
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.tachiyomi.App
@@ -57,12 +59,15 @@ interface AppGraph : ViewModelGraph, PresentationWidgetGraph {
     val readerPreferences: ReaderPreferences
     val networkPreferences: NetworkPreferences
     val libraryPreferences: LibraryPreferences
+    val sourcePreferences: SourcePreferences
 
     val crashLogUtil: CrashLogUtil
 
     val downloadManager: DownloadManager
 
     val updateChecker: AppUpdateChecker
+
+    val trustExtension: TrustExtension
 
     @DependencyGraph.Factory
     fun interface Factory {

@@ -19,8 +19,7 @@ import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setComposeContent
 import logcat.LogPriority
-import mihon.app.di.AppGraph
-import mihon.core.metro.metroGraph
+import mihon.app.di.appGraph
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.service.SourceManager
@@ -50,7 +49,7 @@ class WebViewActivity : BaseActivity() {
             overridePendingTransition(R.anim.shared_axis_x_push_enter, R.anim.shared_axis_x_push_exit)
         }
         super.onCreate(savedInstanceState)
-        metroGraph<AppGraph>().inject(this)
+        appGraph.inject(this)
 
         if (!WebViewUtil.supportsWebView(this)) {
             toast(MR.strings.information_webview_required, Toast.LENGTH_LONG)

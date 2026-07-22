@@ -20,6 +20,7 @@ import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
 import eu.kanade.tachiyomi.util.lang.truncateCenter
 import logcat.LogPriority
 import mihon.app.di.AppGraph
+import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import rikka.shizuku.ShizukuProvider
 import tachiyomi.core.common.i18n.stringResource
@@ -103,7 +104,7 @@ fun Context.createFileInCacheDir(name: String): File {
  * https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:appcompat/appcompat/src/main/java/androidx/appcompat/app/AppCompatDelegateImpl.java;l=348;drc=e28752c96fc3fb4d3354781469a1af3dbded4898
  */
 fun Context.createReaderThemeContext(): Context {
-    val graph = metroGraph<AppGraph>()
+    val graph = appGraph
     val preferences = graph.uiPreferences
     val readerPreferences = graph.readerPreferences
     val themeMode = preferences.themeMode.get()

@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.util.system.hasMiuiPackageInstaller
 import eu.kanade.tachiyomi.util.system.toast
 import mihon.app.di.AppGraph
+import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import kotlin.time.Duration.Companion.seconds
 
@@ -27,7 +28,7 @@ class ExtensionInstallActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        metroGraph<AppGraph>().inject(this)
+        appGraph.inject(this)
 
         @Suppress("DEPRECATION")
         val installIntent = Intent(Intent.ACTION_INSTALL_PACKAGE)
