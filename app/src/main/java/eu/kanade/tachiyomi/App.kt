@@ -78,15 +78,25 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
     override val graph: AppGraph by lazy { createGraphFactory<AppGraph.Factory>().create(this) }
 
     @Inject private lateinit var preferenceStore: PreferenceStore
+
     @Inject private lateinit var basePreferences: BasePreferences
+
     @Inject private lateinit var privacyPreferences: PrivacyPreferences
+
     @Inject private lateinit var networkPreferences: NetworkPreferences
+
     @Inject private lateinit var uiPreferences: UiPreferences
+
     @Inject private lateinit var coverCache: CoverCache
+
     @Inject private lateinit var networkHelper: NetworkHelper
+
     @Inject private lateinit var sourceManager: SourceManager
+
     @Inject private lateinit var widgetManager: WidgetManager
+
     @Inject private lateinit var injektMetroInteropModuleFactory: MetroInteropModule.Factory
+
     @Inject private lateinit var migrations: Set<Migration>
 
     private val disableIncognitoReceiver = DisableIncognitoReceiver()
@@ -95,7 +105,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
     override fun onCreate() {
         super<Application>.onCreate()
         FeatureFlags.init(
-            verboseLoggingDefault = isDebugBuildType
+            verboseLoggingDefault = isDebugBuildType,
         )
         graph.inject(this)
         patchInjekt()

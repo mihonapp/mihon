@@ -123,6 +123,7 @@ class ReaderActivity : BaseActivity() {
     }
 
     @Inject private lateinit var readerPreferences: ReaderPreferences
+
     @Inject private lateinit var preferences: BasePreferences
 
     lateinit var binding: ReaderActivityBinding

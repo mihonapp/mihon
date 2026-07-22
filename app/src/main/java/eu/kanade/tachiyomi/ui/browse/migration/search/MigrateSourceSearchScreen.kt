@@ -59,7 +59,10 @@ data class MigrateSourceSearchScreen(
         val navigator = LocalNavigator.currentOrThrow
         val scope = rememberCoroutineScope()
 
-        val viewModel = assistedMetroViewModel<BrowseSourceViewModel, BrowseSourceViewModel.Factory> { create(sourceId = sourceId, listingQuery = query) }
+        val viewModel =
+            assistedMetroViewModel<BrowseSourceViewModel, BrowseSourceViewModel.Factory> {
+                create(sourceId = sourceId, listingQuery = query)
+            }
         val state by viewModel.state.collectAsState()
 
         val snackbarHostState = remember { SnackbarHostState() }

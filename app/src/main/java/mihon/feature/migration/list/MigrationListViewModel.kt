@@ -58,7 +58,7 @@ class MigrationListViewModel(
     @ManualViewModelAssistedFactoryKey
     @ContributesIntoMap(AppScope::class)
     interface Factory : ManualViewModelAssistedFactory {
-        fun create(mangaIds: Collection<Long>, extraSearchQuery: String?,): MigrationListViewModel
+        fun create(mangaIds: Collection<Long>, extraSearchQuery: String?): MigrationListViewModel
     }
 
     private val smartSearchEngine = SmartSourceSearchEngine(extraSearchQuery)

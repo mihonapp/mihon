@@ -11,7 +11,10 @@ import tachiyomi.core.common.preference.PreferenceStore
 @SingleIn(AppScope::class)
 class NetworkPreferences(preferenceStore: PreferenceStore) {
 
-    val verboseLogging: Preference<Boolean> = preferenceStore.getBoolean("verbose_logging", FeatureFlags.verboseLoggingDefault)
+    val verboseLogging: Preference<Boolean> = preferenceStore.getBoolean(
+        "verbose_logging",
+        FeatureFlags.verboseLoggingDefault,
+    )
 
     val dohProvider: Preference<Int> = preferenceStore.getInt("doh_provider", -1)
 

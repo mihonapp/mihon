@@ -79,6 +79,7 @@ class SecureActivityDelegateImpl : SecureActivityDelegate, DefaultLifecycleObser
     private lateinit var activity: AppCompatActivity
 
     @Inject private lateinit var preferences: BasePreferences
+
     @Inject private lateinit var securityPreferences: SecurityPreferences
 
     override fun registerSecureActivity(activity: AppCompatActivity) {

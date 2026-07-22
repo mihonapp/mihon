@@ -54,8 +54,8 @@ import java.time.ZonedDateTime
 abstract class BaseUpdatesGridGlanceWidget : GlanceAppWidget() {
 
     @Inject private lateinit var getUpdates: GetUpdates
-    @Inject private lateinit var preferences: SecurityPreferences
 
+    @Inject private lateinit var preferences: SecurityPreferences
 
     override val sizeMode = SizeMode.Exact
 

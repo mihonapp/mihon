@@ -84,13 +84,21 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     private val graph: AppGraph = context.metroGraph()
 
     @Inject private lateinit var sourceManager: SourceManager
+
     @Inject private lateinit var libraryPreferences: LibraryPreferences
+
     @Inject private lateinit var downloadManager: DownloadManager
+
     @Inject private lateinit var getLibraryManga: GetLibraryManga
+
     @Inject private lateinit var getManga: GetManga
+
     @Inject private lateinit var fetchInterval: FetchInterval
+
     @Inject private lateinit var filterChaptersForDownload: FilterChaptersForDownload
+
     @Inject private lateinit var updateMangaFromRemote: UpdateMangaFromRemote
+
     @Inject private lateinit var notifier: LibraryUpdateNotifier
 
     private var mangaToUpdate: List<LibraryManga> = mutableListOf()

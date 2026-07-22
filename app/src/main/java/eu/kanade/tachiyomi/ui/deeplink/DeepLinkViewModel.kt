@@ -37,7 +37,7 @@ class DeepLinkViewModel(
     @ManualViewModelAssistedFactoryKey
     @ContributesIntoMap(AppScope::class)
     interface Factory : ManualViewModelAssistedFactory {
-        fun create(query: String,): DeepLinkViewModel
+        fun create(query: String): DeepLinkViewModel
     }
 
     init {

@@ -29,6 +29,7 @@ import tachiyomi.i18n.MR
 class WebViewActivity : BaseActivity() {
 
     @Inject private lateinit var sourceManager: SourceManager
+
     @Inject private lateinit var network: NetworkHelper
 
     private var assistUrl: String? = null

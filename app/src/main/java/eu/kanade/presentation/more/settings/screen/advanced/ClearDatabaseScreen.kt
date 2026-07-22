@@ -232,7 +232,6 @@ class ClearDatabaseViewModel(
     private val getSourcesWithNonLibraryManga: GetSourcesWithNonLibraryManga,
 ) : StateViewModel<ClearDatabaseViewModel.State>(State.Loading) {
 
-
     init {
         viewModelScope.launchIO {
             getSourcesWithNonLibraryManga.subscribe()

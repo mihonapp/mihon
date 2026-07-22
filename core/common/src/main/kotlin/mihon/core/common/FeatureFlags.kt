@@ -15,7 +15,7 @@ object FeatureFlags {
     }
 
     fun init(
-        verboseLoggingDefault: Boolean
+        verboseLoggingDefault: Boolean,
     ) {
         this.verboseLoggingDefault = verboseLoggingDefault
     }

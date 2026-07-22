@@ -130,9 +130,11 @@ class MainActivity : BaseActivity() {
     private val graph: AppGraph by lazy { metroGraph() }
 
     @Inject private lateinit var libraryPreferences: LibraryPreferences
+
     @Inject private lateinit var preferences: BasePreferences
 
     @Inject private lateinit var downloadCache: DownloadCache
+
     @Inject private lateinit var chapterCache: ChapterCache
 
     @Inject private lateinit var getIncognitoState: GetIncognitoState

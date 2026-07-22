@@ -37,7 +37,7 @@ class MigrateMangaViewModel(
     @ManualViewModelAssistedFactoryKey
     @ContributesIntoMap(AppScope::class)
     interface Factory : ManualViewModelAssistedFactory {
-        fun create(sourceId: Long,): MigrateMangaViewModel
+        fun create(sourceId: Long): MigrateMangaViewModel
     }
 
     private val _events: Channel<MigrationMangaEvent> = Channel()

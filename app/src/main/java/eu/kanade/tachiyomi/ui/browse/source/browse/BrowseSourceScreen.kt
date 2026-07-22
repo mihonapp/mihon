@@ -81,7 +81,10 @@ data class BrowseSourceScreen(
             return
         }
 
-        val viewModel = assistedMetroViewModel<BrowseSourceViewModel, BrowseSourceViewModel.Factory> { create(sourceId = sourceId, listingQuery = listingQuery) }
+        val viewModel =
+            assistedMetroViewModel<BrowseSourceViewModel, BrowseSourceViewModel.Factory> {
+                create(sourceId = sourceId, listingQuery = listingQuery)
+            }
         val state by viewModel.state.collectAsState()
 
         val navigator = LocalNavigator.currentOrThrow

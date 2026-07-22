@@ -53,7 +53,7 @@ class MetroInteropModule(
     private val insertTracksProvider: () -> InsertTrack,
     private val updateExtensionStoreProvider: () -> UpdateExtensionStores,
     private val trustExtensionProvider: () -> TrustExtension,
-): InjektModule {
+) : InjektModule {
 
     @AssistedFactory
     interface Factory {

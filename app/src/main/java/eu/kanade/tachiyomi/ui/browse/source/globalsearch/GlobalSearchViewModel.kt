@@ -38,7 +38,7 @@ class GlobalSearchViewModel(
     @ManualViewModelAssistedFactoryKey
     @ContributesIntoMap(AppScope::class)
     interface Factory : ManualViewModelAssistedFactory {
-        fun create(initialQuery: String, initialExtensionFilter: String?,): GlobalSearchViewModel
+        fun create(initialQuery: String, initialExtensionFilter: String?): GlobalSearchViewModel
     }
 
     init {
