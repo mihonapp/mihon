@@ -1,6 +1,9 @@
 package eu.kanade.tachiyomi.network
 
 import android.content.Context
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.network.interceptor.CloudflareInterceptor
 import eu.kanade.tachiyomi.network.interceptor.UncaughtExceptionInterceptor
 import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
@@ -10,6 +13,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 import java.io.File
 import java.util.concurrent.TimeUnit
 
+@Inject
+@SingleIn(AppScope::class)
 class NetworkHelper(
     private val context: Context,
     private val preferences: NetworkPreferences,

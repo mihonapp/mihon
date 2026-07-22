@@ -1,5 +1,6 @@
 package eu.kanade.domain.chapter.interactor
 
+import dev.zacsweers.metro.Inject
 import eu.kanade.domain.download.interactor.DeleteDownload
 import logcat.LogPriority
 import tachiyomi.core.common.util.lang.withNonCancellableContext
@@ -11,6 +12,7 @@ import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.repository.MangaRepository
 
+@Inject
 class SetReadStatus(
     private val downloadPreferences: DownloadPreferences,
     private val deleteDownload: DeleteDownload,

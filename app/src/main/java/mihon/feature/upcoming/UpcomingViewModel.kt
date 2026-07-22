@@ -2,7 +2,13 @@ package mihon.feature.upcoming
 
 import androidx.compose.ui.util.fastMap
 import androidx.compose.ui.util.fastMapIndexedNotNull
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import eu.kanade.core.util.insertSeparatorsReversed
 import eu.kanade.tachiyomi.util.lang.toLocalDate
 import kotlinx.coroutines.flow.collectLatest
@@ -11,13 +17,14 @@ import kotlinx.coroutines.launch
 import mihon.core.viewmodel.StateViewModel
 import mihon.domain.upcoming.interactor.GetUpcomingManga
 import tachiyomi.domain.manga.model.Manga
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.time.LocalDate
 import java.time.YearMonth
 
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class UpcomingViewModel(
-    private val getUpcomingManga: GetUpcomingManga = Injekt.get(),
+    private val getUpcomingManga: GetUpcomingManga,
 ) : StateViewModel<UpcomingViewModel.State>(State()) {
 
     init {

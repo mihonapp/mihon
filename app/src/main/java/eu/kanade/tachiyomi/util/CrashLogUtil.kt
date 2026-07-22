@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.util
 
 import android.content.Context
 import android.os.Build
+import dev.zacsweers.metro.Inject
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.extension.ExtensionManager
@@ -12,15 +13,14 @@ import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import tachiyomi.core.common.util.lang.withNonCancellableContext
 import tachiyomi.core.common.util.lang.withUIContext
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.time.OffsetDateTime
 import java.time.ZoneId
 
+@Inject
 class CrashLogUtil(
     private val context: Context,
-    private val extensionManager: ExtensionManager = Injekt.get(),
-    private val preferences: BasePreferences = Injekt.get(),
+    private val extensionManager: ExtensionManager,
+    private val preferences: BasePreferences,
 ) {
 
     suspend fun dumpLogs(exception: Throwable? = null) = withNonCancellableContext {
@@ -35,7 +35,7 @@ class CrashLogUtil(
 
             val uri = file.getUriCompat(context)
             context.startActivity(uri.toShareIntent(context, "text/plain"))
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             withUIContext { context.toast("Failed to get logs") }
         }
     }

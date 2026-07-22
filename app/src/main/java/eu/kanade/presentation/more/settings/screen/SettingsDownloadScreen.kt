@@ -9,9 +9,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.util.fastMap
+import androidx.compose.ui.platform.LocalContext
 import eu.kanade.presentation.category.visualName
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.widget.TriStateListDialog
+import mihon.app.di.appGraph
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.download.service.DownloadPreferences
@@ -19,8 +21,6 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 object SettingsDownloadScreen : SearchableSettings {
 
@@ -30,10 +30,11 @@ object SettingsDownloadScreen : SearchableSettings {
 
     @Composable
     override fun getPreferences(): List<Preference> {
-        val getCategories = remember { Injekt.get<GetCategories>() }
+        val context = LocalContext.current
+        val getCategories = remember { context.appGraph.getCategories }
         val allCategories by getCategories.subscribe().collectAsState(initial = emptyList())
 
-        val downloadPreferences = remember { Injekt.get<DownloadPreferences>() }
+        val downloadPreferences = remember { context.appGraph.downloadPreferences }
         val parallelSourceLimit by downloadPreferences.parallelSourceLimit.collectAsState()
         val parallelPageLimit by downloadPreferences.parallelPageLimit.collectAsState()
         return listOf(

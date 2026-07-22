@@ -3,6 +3,7 @@ plugins {
     alias(mihonx.plugins.spotless)
 
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.metro)
 }
 
 android {
@@ -19,6 +20,7 @@ dependencies {
     implementation(projects.sourceApi)
     implementation(projects.core.common)
 
+    implementation(libs.metro.runtime)
     implementation(libs.bundles.kotlinx.coroutines)
     implementation(libs.bundles.serialization)
 

@@ -1,5 +1,8 @@
 package eu.kanade.domain.track.service
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.domain.track.model.AutoTrackState
 import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.anilist.Anilist
@@ -8,6 +11,8 @@ import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.preference.getEnum
 
+@Inject
+@SingleIn(AppScope::class)
 class TrackPreferences(
     private val preferenceStore: PreferenceStore,
 ) {

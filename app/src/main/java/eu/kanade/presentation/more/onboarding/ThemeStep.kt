@@ -3,22 +3,23 @@ package eu.kanade.presentation.more.onboarding
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.ui.model.setAppCompatDelegateThemeMode
 import eu.kanade.presentation.more.settings.widget.AppThemeModePreferenceWidget
 import eu.kanade.presentation.more.settings.widget.AppThemePreferenceWidget
+import mihon.app.di.appGraph
 import tachiyomi.presentation.core.util.collectAsState
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 internal class ThemeStep : OnboardingStep {
 
     override val isComplete: Boolean = true
 
-    private val uiPreferences: UiPreferences = Injekt.get()
-
     @Composable
     override fun Content() {
+        val context = LocalContext.current
+        val uiPreferences = remember { context.appGraph.uiPreferences }
         val themeModePref = uiPreferences.themeMode
         val themeMode by themeModePref.collectAsState()
 

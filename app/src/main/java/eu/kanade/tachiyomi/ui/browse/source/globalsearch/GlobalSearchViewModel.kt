@@ -1,27 +1,44 @@
 package eu.kanade.tachiyomi.ui.browse.source.globalsearch
 
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
+import eu.kanade.domain.source.service.SourcePreferences
+import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
+import tachiyomi.domain.manga.interactor.GetManga
+import tachiyomi.domain.manga.interactor.NetworkToLocalManga
+import tachiyomi.domain.source.service.SourceManager
 
+@AssistedInject
 class GlobalSearchViewModel(
-    initialQuery: String,
-    initialExtensionFilter: String?,
-) : SearchViewModel(State(searchQuery = initialQuery)) {
+    @Assisted initialQuery: String,
+    @Assisted initialExtensionFilter: String?,
+    sourcePreferences: SourcePreferences,
+    sourceManager: SourceManager,
+    extensionManager: ExtensionManager,
+    networkToLocalManga: NetworkToLocalManga,
+    getManga: GetManga,
+    preferences: SourcePreferences,
+) : SearchViewModel(
+    initialState = State(searchQuery = initialQuery),
+    sourcePreferences = sourcePreferences,
+    sourceManager = sourceManager,
+    extensionManager = extensionManager,
+    networkToLocalManga = networkToLocalManga,
+    getManga = getManga,
+    preferences = preferences,
+) {
 
-    companion object {
-        val INITIAL_QUERY_KEY = CreationExtras.Key<String>()
-        val INITIAL_EXTENSION_FILTER_KEY = CreationExtras.Key<String?>()
-
-        val Factory = viewModelFactory {
-            initializer {
-                GlobalSearchViewModel(
-                    initialQuery = get(INITIAL_QUERY_KEY)!!,
-                    initialExtensionFilter = get(INITIAL_EXTENSION_FILTER_KEY),
-                )
-            }
-        }
+    @AssistedFactory
+    @ManualViewModelAssistedFactoryKey
+    @ContributesIntoMap(AppScope::class)
+    interface Factory : ManualViewModelAssistedFactory {
+        fun create(initialQuery: String, initialExtensionFilter: String?): GlobalSearchViewModel
     }
 
     init {

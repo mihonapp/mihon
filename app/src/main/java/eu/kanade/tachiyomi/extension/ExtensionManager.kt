@@ -2,6 +2,9 @@ package eu.kanade.tachiyomi.extension
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.domain.extension.interactor.TrustExtension
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.api.ExtensionApi
@@ -28,8 +31,6 @@ import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.util.Locale
 
 /**
@@ -39,26 +40,21 @@ import java.util.Locale
  * signature is trusted, otherwise the user will be prompted with a warning to trust it before being
  * loaded.
  */
+@Inject
+@SingleIn(AppScope::class)
 class ExtensionManager(
     private val context: Context,
-    private val preferences: SourcePreferences = Injekt.get(),
-    private val trustExtension: TrustExtension = Injekt.get(),
+    private val preferences: SourcePreferences,
+    private val trustExtension: TrustExtension,
+    private val api: ExtensionApi,
+    private val installer: ExtensionInstaller,
+    private val extensionUpdateNotifier: ExtensionUpdateNotifier,
 ) {
 
     val scope = CoroutineScope(SupervisorJob())
 
     private val _isInitialized = MutableStateFlow(false)
     val isInitialized: StateFlow<Boolean> = _isInitialized.asStateFlow()
-
-    /**
-     * API where all the available extensions can be found.
-     */
-    private val api = ExtensionApi()
-
-    /**
-     * The installer which installs, updates and uninstalls the extensions.
-     */
-    private val installer by lazy { ExtensionInstaller(context) }
 
     private val iconMap = mutableMapOf<String, Drawable>()
 
@@ -369,7 +365,7 @@ class ExtensionManager(
         val pendingUpdateCount = installedExtensionMapFlow.value.values.count { it.hasUpdate }
         preferences.extensionUpdatesCount.set(pendingUpdateCount)
         if (pendingUpdateCount == 0) {
-            ExtensionUpdateNotifier(context).dismiss()
+            extensionUpdateNotifier.dismiss()
         }
     }
 

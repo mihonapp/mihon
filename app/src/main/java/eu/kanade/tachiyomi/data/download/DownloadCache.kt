@@ -1,9 +1,11 @@
 package eu.kanade.tachiyomi.data.download
 
-import android.app.Application
 import android.content.Context
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
 import kotlinx.coroutines.CancellationException
@@ -61,12 +63,14 @@ import kotlin.time.Duration.Companion.seconds
  * defined in [renewInterval] as we don't have any control over the filesystem and the user can
  * delete the folders at any time without the app noticing.
  */
+@Inject
+@SingleIn(AppScope::class)
 class DownloadCache(
     private val context: Context,
-    private val provider: DownloadProvider = Injekt.get(),
-    private val sourceManager: SourceManager = Injekt.get(),
-    private val extensionManager: ExtensionManager = Injekt.get(),
-    private val storageManager: StorageManager = Injekt.get(),
+    private val provider: DownloadProvider,
+    private val sourceManager: SourceManager,
+    private val extensionManager: ExtensionManager,
+    private val storageManager: StorageManager,
 ) {
 
     private val scope = CoroutineScope(Dispatchers.IO)
@@ -492,7 +496,7 @@ private object UniFileAsStringSerializer : KSerializer<UniFile?> {
 
     override fun deserialize(decoder: Decoder): UniFile? {
         return if (decoder.decodeNotNullMark()) {
-            UniFile.fromUri(Injekt.get<Application>(), decoder.decodeString().toUri())
+            UniFile.fromUri(Injekt.get<Context>(), decoder.decodeString().toUri())
         } else {
             decoder.decodeNull()
         }

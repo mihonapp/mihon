@@ -5,9 +5,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoreConfirmDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoreCreateDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoreDeleteDialog
@@ -26,7 +26,7 @@ class ExtensionStoresScreen(
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
 
-        val viewModel = viewModel<ExtensionStoresViewModel>()
+        val viewModel = metroViewModel<ExtensionStoresViewModel>()
         val state by viewModel.state.collectAsState()
 
         LaunchedEffect(url) {
