@@ -36,5 +36,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.jsonOkio)
     implementation(libs.kotlinx.serialization.protobuf)
 
+    implementation(libs.kotlinx.datetime)
+
     api(libs.bundles.sqldelight)
 }
