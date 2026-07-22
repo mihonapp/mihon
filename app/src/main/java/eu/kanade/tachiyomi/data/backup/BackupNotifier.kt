@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
 import com.hippo.unifile.UniFile
+import dev.zacsweers.metro.Inject
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
@@ -16,14 +17,14 @@ import tachiyomi.core.common.i18n.pluralStringResource
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.displayablePath
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.util.concurrent.TimeUnit
 
-class BackupNotifier(private val context: Context) {
-
-    private val preferences: SecurityPreferences by injectLazy()
-
+@Inject
+class BackupNotifier(
+    private val context: Context,
+    private val preferences: SecurityPreferences,
+) {
     private val progressNotificationBuilder = context.notificationBuilder(
         Notifications.CHANNEL_BACKUP_RESTORE_PROGRESS,
     ) {

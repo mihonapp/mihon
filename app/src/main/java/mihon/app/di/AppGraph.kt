@@ -13,15 +13,19 @@ import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
 import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
 import eu.kanade.tachiyomi.data.download.DownloadJob
+import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.library.MetadataUpdateJob
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
+import eu.kanade.tachiyomi.data.updater.AppUpdateChecker
 import eu.kanade.tachiyomi.extension.util.ExtensionInstallActivity
 import eu.kanade.tachiyomi.network.NetworkPreferences
 import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegateImpl
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
+import eu.kanade.tachiyomi.ui.setting.track.BaseOAuthLoginActivity
+import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.CrashLogUtil
 import mihon.presentation.widget.di.PresentationWidgetGraph
 import tachiyomi.domain.library.service.LibraryPreferences
@@ -34,6 +38,8 @@ interface AppGraph : ViewModelGraph, PresentationWidgetGraph {
     fun inject(app: App)
     fun inject(mainActivity: MainActivity)
     fun inject(readerActivity: ReaderActivity)
+    fun inject(webViewActivity: WebViewActivity)
+    fun inject(baseOAuthLoginActivity: BaseOAuthLoginActivity)
     fun inject(libraryUpdateJob: LibraryUpdateJob)
     fun inject(metadataUpdateJob: MetadataUpdateJob)
     fun inject(backupRestoreJob: BackupRestoreJob)
@@ -53,6 +59,10 @@ interface AppGraph : ViewModelGraph, PresentationWidgetGraph {
     val libraryPreferences: LibraryPreferences
 
     val crashLogUtil: CrashLogUtil
+
+    val downloadManager: DownloadManager
+
+    val updateChecker: AppUpdateChecker
 
     @DependencyGraph.Factory
     fun interface Factory {

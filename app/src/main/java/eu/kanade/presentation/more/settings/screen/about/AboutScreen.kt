@@ -218,10 +218,10 @@ object AboutScreen : Screen() {
         onAvailableUpdate: (GetApplicationRelease.Result.NewUpdate) -> Unit,
         onFinish: () -> Unit,
     ) {
-        val updateChecker = AppUpdateChecker()
+        val updateChecker = context.metroGraph<AppGraph>().updateChecker
         withUIContext {
             try {
-                when (val result = withIOContext { updateChecker.checkForUpdate(context, forceCheck = true) }) {
+                when (val result = withIOContext { updateChecker.checkForUpdate(forceCheck = true) }) {
                     is GetApplicationRelease.Result.NewUpdate -> {
                         onAvailableUpdate(result)
                     }

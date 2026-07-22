@@ -82,7 +82,6 @@ import eu.kanade.presentation.util.DefaultNavigatorScreenTransition
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
-import eu.kanade.tachiyomi.data.updater.AppUpdateChecker
 import eu.kanade.tachiyomi.extension.api.ExtensionApi
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
@@ -316,7 +315,7 @@ class MainActivity : BaseActivity() {
         LaunchedEffect(Unit) {
             if (updaterEnabled) {
                 try {
-                    val result = AppUpdateChecker().checkForUpdate(context)
+                    val result = context.metroGraph<AppGraph>().updateChecker.checkForUpdate()
                     if (result is GetApplicationRelease.Result.NewUpdate) {
                         val updateScreen = NewUpdateScreen(
                             versionName = result.release.version,

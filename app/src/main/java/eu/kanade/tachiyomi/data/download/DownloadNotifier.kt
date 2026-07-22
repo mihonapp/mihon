@@ -25,7 +25,7 @@ import java.util.regex.Pattern
  * @param context context of application
  */
 @Inject
-internal class DownloadNotifier(
+class DownloadNotifier(
     private val context: Context,
     private val preferences: SecurityPreferences,
 ) {
