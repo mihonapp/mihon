@@ -49,8 +49,13 @@ internal class ExtensionInstaller(
      *
      * @param url The url of the apk.
      * @param extension The extension to install.
+     * @param isUpdateForPrivatelyInstalled If this is an update for a privately installed extension
      */
-    fun downloadAndInstall(url: String, extension: Extension): Flow<InstallStep> {
+    fun downloadAndInstall(
+        url: String,
+        extension: Extension,
+        isUpdateForPrivatelyInstalled: Boolean = false,
+    ): Flow<InstallStep> {
         val downloadId = extension.pkgName.hashCode().toLong()
         cancelInstall(extension.pkgName)
 
@@ -74,7 +79,7 @@ internal class ExtensionInstaller(
                 }
 
                 step.value = InstallStep.Installing
-                installApk(downloadId, tmpFile)
+                installApk(downloadId, tmpFile, isUpdateForPrivatelyInstalled)
             } catch (e: Exception) {
                 if (e is InterruptedException) {
                     // Canceled
@@ -99,8 +104,14 @@ internal class ExtensionInstaller(
      * Starts an intent to install the extension at the given uri.
      *
      * @param tempFile The file of the extension to install. Delete after use.
+     * @param isUpdateForPrivatelyInstalled If this install is an update for a privately installed extension
      */
-    private fun installApk(downloadId: Long, tempFile: File) {
+    private fun installApk(downloadId: Long, tempFile: File, isUpdateForPrivatelyInstalled: Boolean = false) {
+        if (isUpdateForPrivatelyInstalled) {
+            installApkPrivately(downloadId, tempFile)
+            return
+        }
+
         when (val installer = extensionInstaller.get()) {
             BasePreferences.ExtensionInstaller.LEGACY -> {
                 val intent = Intent(context, ExtensionInstallActivity::class.java)
@@ -110,20 +121,11 @@ internal class ExtensionInstaller(
 
                 context.startActivity(intent)
             }
-            BasePreferences.ExtensionInstaller.PRIVATE -> {
-                try {
-                    if (ExtensionLoader.installPrivateExtensionFile(context, tempFile)) {
-                        updateInstallStep(downloadId, InstallStep.Installed)
-                    } else {
-                        updateInstallStep(downloadId, InstallStep.Error)
-                    }
-                } catch (e: Exception) {
-                    logcat(LogPriority.ERROR, e) { "Failed to read downloaded extension file." }
-                    updateInstallStep(downloadId, InstallStep.Error)
-                }
 
-                tempFile.delete()
+            BasePreferences.ExtensionInstaller.PRIVATE -> {
+                installApkPrivately(downloadId, tempFile)
             }
+
             else -> {
                 val intent = ExtensionInstallService.getIntent(
                     context,
@@ -134,6 +136,21 @@ internal class ExtensionInstaller(
                 ContextCompat.startForegroundService(context, intent)
             }
         }
+    }
+
+    private fun installApkPrivately(downloadId: Long, tempFile: File) {
+        try {
+            if (ExtensionLoader.installPrivateExtensionFile(context, tempFile)) {
+                updateInstallStep(downloadId, InstallStep.Installed)
+            } else {
+                updateInstallStep(downloadId, InstallStep.Error)
+            }
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Failed to read downloaded extension file." }
+            updateInstallStep(downloadId, InstallStep.Error)
+        }
+
+        tempFile.delete()
     }
 
     /**
