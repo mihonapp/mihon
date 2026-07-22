@@ -43,8 +43,7 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
     private lateinit var backupCreatorFactory: BackupCreator.Factory
     @Inject
     private lateinit var storageManager: StorageManager
-
-    private val notifier = BackupNotifier(context)
+    @Inject private lateinit var notifier: BackupNotifier
 
     override suspend fun doWork(): Result {
         graph.inject(this)

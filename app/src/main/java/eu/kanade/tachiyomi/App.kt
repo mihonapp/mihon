@@ -55,10 +55,11 @@ import logcat.AndroidLogcatLogger
 import logcat.LogPriority
 import logcat.LogcatLogger
 import mihon.app.di.AppGraph
+import mihon.app.di.injekt.MetroInteropModule
 import mihon.core.common.FeatureFlags
 import mihon.core.metro.GraphProvider
+import mihon.core.migration.Migration
 import mihon.core.migration.Migrator
-import mihon.core.migration.migrations.migrations
 import mihon.telemetry.TelemetryConfig
 import org.conscrypt.Conscrypt
 import tachiyomi.core.common.i18n.stringResource
@@ -66,8 +67,10 @@ import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.widget.WidgetManager
+import uy.kohesive.injekt.Injekt
 import java.security.Security
 
 class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factory, GraphProvider<AppGraph> {
@@ -81,7 +84,10 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
     @Inject private lateinit var uiPreferences: UiPreferences
     @Inject private lateinit var coverCache: CoverCache
     @Inject private lateinit var networkHelper: NetworkHelper
+    @Inject private lateinit var sourceManager: SourceManager
     @Inject private lateinit var widgetManager: WidgetManager
+    @Inject private lateinit var injektMetroInteropModuleFactory: MetroInteropModule.Factory
+    @Inject private lateinit var migrations: Set<Migration>
 
     private val disableIncognitoReceiver = DisableIncognitoReceiver()
 
@@ -93,6 +99,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
         )
         graph.inject(this)
         patchInjekt()
+        Injekt.importModule(injektMetroInteropModuleFactory.create(this))
         TelemetryConfig.init(applicationContext)
 
         GlobalExceptionHandler.initialize(applicationContext, CrashActivity::class.java)
@@ -185,7 +192,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
         Migrator.initialize(
             old = preference.get(),
             new = BuildConfig.VERSION_CODE,
-            migrations = migrations,
+            migrations = migrations.toList(),
             onMigrationComplete = {
                 logcat { "Updating last version to ${BuildConfig.VERSION_CODE}" }
                 preference.set(BuildConfig.VERSION_CODE)
@@ -203,8 +210,8 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
                 add(TachiyomiImageDecoder.Factory())
                 // Fetcher.Factory
                 add(BufferedSourceFetcher.Factory())
-                add(MangaCoverFetcher.MangaCoverFactory(callFactoryLazy))
-                add(MangaCoverFetcher.MangaFactory(callFactoryLazy))
+                add(MangaCoverFetcher.MangaCoverFactory(callFactoryLazy, coverCache, sourceManager))
+                add(MangaCoverFetcher.MangaFactory(callFactoryLazy, coverCache, sourceManager))
                 // Keyer
                 add(MangaCoverKeyer(coverCache))
                 add(MangaKeyer())

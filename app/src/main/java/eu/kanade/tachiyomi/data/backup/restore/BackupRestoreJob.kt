@@ -32,8 +32,7 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
     private val graph: AppGraph = context.metroGraph()
 
     @Inject private lateinit var backupRestorerFactory: BackupRestorer.Factory
-
-    private val notifier = BackupNotifier(context)
+    @Inject private lateinit var notifier: BackupNotifier
 
     override suspend fun doWork(): Result {
         graph.inject(this)
