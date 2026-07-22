@@ -26,6 +26,13 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
   - Support field-specific prefixes (`title`, `author`, `artist`, `description` / `desc`, `genre` / `tag`, `source` / `src`, `source_id` / `src_id`, `notes` / `note`, `language` / `lang`) and empty field matching (`""`, `''`)
 - Always use Private installer to update privately installed extensions ([@MajorTanya](https://github.com/MajorTanya)) ([#3614](https://github.com/mihonapp/mihon/pull/3614))
 
+### Changed
+- Library updates and swipe refresh now always refresh manga metadata ([@AntsyLich](https://github.com/AntsyLich)) ([#3246](https://github.com/mihonapp/mihon/pull/3246))
+
+### Removed
+- Advanced option to run a metadata-only library update ([@AntsyLich](https://github.com/AntsyLich)) ([#3246](https://github.com/mihonapp/mihon/pull/3246))
+- Settings that allowed disabling metadata updates during library updates ([@AntsyLich](https://github.com/AntsyLich)) ([#3246](https://github.com/mihonapp/mihon/pull/3246))
+
 ### Fixed
 - Fixed app bars remaining visible after changing pages by tapping in the paged reader after using the chapter navigator slider ([@AntsyLich](https://github.com/AntsyLich)) ([#3567](https://github.com/mihonapp/mihon/pull/3567))
 - Fixed MangaBaka User Agent string ([@MajorTanya](https://github.com/MajorTanya)) ([#3578](https://github.com/mihonapp/mihon/pull/3578))
