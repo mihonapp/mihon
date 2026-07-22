@@ -36,6 +36,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
 import mihon.core.common.utils.mutate
 import mihon.core.viewmodel.StateViewModel
+import mihon.domain.library.model.search.QueryNode
+import mihon.feature.library.matches
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.core.common.util.lang.compareToWithCollator
@@ -100,7 +102,14 @@ class LibraryViewModel(
                 val showSystemCategory = favorites.any { it.libraryManga.categories.contains(0) }
                 val filteredFavorites = favorites
                     .applyFilters(tracksMap, trackingFilters, itemPreferences)
-                    .let { if (searchQuery == null) it else it.filter { m -> m.matches(searchQuery, sourceManager) } }
+                    .let { libraryItems ->
+                        if (searchQuery.isNullOrEmpty()) {
+                            libraryItems
+                        } else {
+                            val queryNode = QueryNode.from(searchQuery)
+                            libraryItems.filter { queryNode.matches(it) }
+                        }
+                    }
 
                 LibraryData(
                     isInitialized = true,
@@ -389,6 +398,8 @@ class LibraryViewModel(
                     downloadCount = downloadManager.getDownloadCount(manga.manga),
                     unreadCount = manga.unreadCount,
                     isLocal = manga.manga.isLocal(),
+                    sourceName = sourceManager.getOrStub(manga.manga.source).name.lowercase(),
+                    sourceLanguage = sourceManager.getOrStub(manga.manga.source).lang,
                     badges = LibraryItem.Badges(
                         downloadCount = if (preferences.downloadBadge) {
                             downloadManager.getDownloadCount(manga.manga)
@@ -727,6 +738,7 @@ class LibraryViewModel(
             val manga: List<Manga>,
             val initialSelection: List<CheckboxState<Category>>,
         ) : Dialog
+
         data class DeleteManga(val manga: List<Manga>) : Dialog
     }
 
