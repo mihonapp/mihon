@@ -120,7 +120,7 @@ class WorkerInfoScreen : Screen() {
         )
     }
 
-    private class WorkerInfoViewModel(
+    class WorkerInfoViewModel(
         context: Context,
     ) : ViewModel() {
 
