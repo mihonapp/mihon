@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.manga.track
 
-import android.app.Application
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -70,6 +69,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import logcat.LogPriority
+import mihon.app.di.appGraph
 import mihon.core.viewmodel.StateViewModel
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchNonCancellable
@@ -86,8 +86,6 @@ import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.material.AlertDialogContent
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -104,7 +102,7 @@ data class TrackInfoDialogHomeScreen(
         val context = LocalContext.current
         val viewModel = assistedMetroViewModel<Model, Model.Factory> { create(mangaId = mangaId, sourceId = sourceId) }
 
-        val dateFormat = remember { UiPreferences.dateFormat(Injekt.get<UiPreferences>().dateFormat.get()) }
+        val dateFormat = remember { UiPreferences.dateFormat(context.appGraph.uiPreferences.dateFormat.get()) }
         val state by viewModel.state.collectAsState()
 
         TrackInfoDialogHome(
@@ -202,7 +200,12 @@ data class TrackInfoDialogHomeScreen(
     class Model(
         @Assisted private val mangaId: Long,
         @Assisted private val sourceId: Long,
+        private val context: Context,
         private val getTracks: GetTracks,
+        private val getManga: GetManga,
+        private val trackerManager: TrackerManager,
+        private val sourceManager: SourceManager,
+        private val refreshTracks: RefreshTracks,
     ) : StateViewModel<Model.State>(State()) {
 
         @AssistedFactory
@@ -229,20 +232,19 @@ data class TrackInfoDialogHomeScreen(
         fun registerEnhancedTracking(item: TrackItem) {
             item.tracker as EnhancedTracker
             viewModelScope.launchNonCancellable {
-                val manga = Injekt.get<GetManga>().await(mangaId) ?: return@launchNonCancellable
+                val manga = getManga.await(mangaId) ?: return@launchNonCancellable
                 try {
                     val matchResult = item.tracker.match(manga) ?: throw Exception()
                     item.tracker.register(matchResult, mangaId)
                 } catch (_: Exception) {
-                    withUIContext { Injekt.get<Application>().toast(MR.strings.error_no_match) }
+                    withUIContext {
+                        context.toast(MR.strings.error_no_match)
+                    }
                 }
             }
         }
 
         private suspend fun refreshTrackers() {
-            val refreshTracks = Injekt.get<RefreshTracks>()
-            val context = Injekt.get<Application>()
-
             refreshTracks.await(mangaId)
                 .filter { it.first != null }
                 .forEach { (track, e) ->
@@ -268,8 +270,8 @@ data class TrackInfoDialogHomeScreen(
         }
 
         private fun List<Track>.mapToTrackItem(): List<TrackItem> {
-            val loggedInTrackers = Injekt.get<TrackerManager>().loggedInTrackers()
-            val source = Injekt.get<SourceManager>().getOrStub(sourceId)
+            val loggedInTrackers = trackerManager.loggedInTrackers()
+            val source = sourceManager.getOrStub(sourceId)
             return loggedInTrackers
                 // Map to TrackItem
                 .map { service -> TrackItem(find { it.trackerId == service.id }, service) }

@@ -71,6 +71,7 @@ import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.widget.WidgetManager
 import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.addSingleton
 import java.security.Security
 
 class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factory, GraphProvider<AppGraph> {
@@ -95,7 +96,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
 
     @Inject private lateinit var widgetManager: WidgetManager
 
-    @Inject private lateinit var injektMetroInteropModuleFactory: MetroInteropModule.Factory
+    @Inject private lateinit var injektMetroInteropModule: MetroInteropModule
 
     @Inject private lateinit var migrations: Set<Migration>
 
@@ -108,8 +109,8 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
             verboseLoggingDefault = isDebugBuildType,
         )
         graph.inject(this)
-        patchInjekt()
-        Injekt.importModule(injektMetroInteropModuleFactory.create(this))
+        setupInjekt()
+
         TelemetryConfig.init(applicationContext)
 
         GlobalExceptionHandler.initialize(applicationContext, CrashActivity::class.java)
@@ -196,9 +197,16 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
         initializeMigrator()
     }
 
+    private fun setupInjekt() {
+        patchInjekt()
+        Injekt.addSingleton<Application>(this)
+        Injekt.addSingleton<Context>(this)
+        Injekt.importModule(injektMetroInteropModule)
+    }
+
     private fun initializeMigrator() {
         val preference = preferenceStore.getInt(Preference.appStateKey("last_version_code"), 0)
-        logcat { "Migration from ${preference.get()} to ${BuildConfig.VERSION_CODE}" }
+        logcat { "Migration from ${preference.get()} to ${BuildConfig.VERSION_CODE} with ${migrations.size} migration(s)" }
         Migrator.initialize(
             old = preference.get(),
             new = BuildConfig.VERSION_CODE,
@@ -245,11 +253,11 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
     }
 
     override fun onStart(owner: LifecycleOwner) {
-        SecureActivityDelegate.onApplicationStart()
+        SecureActivityDelegate.onApplicationStart(this)
     }
 
     override fun onStop(owner: LifecycleOwner) {
-        SecureActivityDelegate.onApplicationStopped()
+        SecureActivityDelegate.onApplicationStopped(this)
     }
 
     override fun getPackageName(): String {

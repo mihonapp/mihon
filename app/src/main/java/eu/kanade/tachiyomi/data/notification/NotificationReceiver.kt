@@ -20,9 +20,7 @@ import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.runBlocking
-import mihon.app.di.AppGraph
 import mihon.app.di.appGraph
-import mihon.core.metro.metroGraph
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.chapter.interactor.GetChapter
@@ -186,7 +184,7 @@ class NotificationReceiver : BroadcastReceiver() {
      * @param context context of application
      */
     private fun cancelLibraryUpdate(context: Context) {
-        LibraryUpdateJob.stop(context.workManager)
+        LibraryUpdateJob.stop(context)
     }
 
     private fun startDownloadAppUpdate(context: Context, intent: Intent) {

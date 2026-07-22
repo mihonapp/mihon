@@ -39,6 +39,7 @@ import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import mihon.app.di.appGraph
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
@@ -125,7 +126,7 @@ class WorkerInfoScreen : Screen() {
     @ViewModelKey
     @ContributesIntoMap(AppScope::class)
     class WorkerInfoViewModel(
-        context: Context,
+        private val context: Context,
     ) : ViewModel() {
 
         private val workManager = context.workManager
@@ -165,7 +166,7 @@ class WorkerInfoScreen : Screen() {
                         )
                             .toDateTimestampString(
                                 UiPreferences.dateFormat(
-                                    Injekt.get<UiPreferences>().dateFormat.get(),
+                                    context.appGraph.uiPreferences.dateFormat.get(),
                                 ),
                             )
                         appendLine("Next scheduled run: $timestamp")

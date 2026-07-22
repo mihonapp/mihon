@@ -9,6 +9,8 @@ import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
 import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegateImpl
 import eu.kanade.tachiyomi.util.system.prepareTabletUiContext
 import mihon.app.di.appGraph
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 open class BaseActivity :
     AppCompatActivity(),
@@ -16,7 +18,7 @@ open class BaseActivity :
     ThemingDelegate by ThemingDelegateImpl() {
 
     override fun attachBaseContext(newBase: Context) {
-        val uiPreferences = appGraph.uiPreferences
+        val uiPreferences = Injekt.get<Context>().appGraph.uiPreferences
         super.attachBaseContext(newBase.prepareTabletUiContext(uiPreferences))
     }
 

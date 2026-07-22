@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.download
 
-import android.app.Application
 import android.content.Context
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
@@ -497,7 +496,7 @@ private object UniFileAsStringSerializer : KSerializer<UniFile?> {
 
     override fun deserialize(decoder: Decoder): UniFile? {
         return if (decoder.decodeNotNullMark()) {
-            UniFile.fromUri(Injekt.get<Application>(), decoder.decodeString().toUri())
+            UniFile.fromUri(Injekt.get<Context>(), decoder.decodeString().toUri())
         } else {
             decoder.decodeNull()
         }

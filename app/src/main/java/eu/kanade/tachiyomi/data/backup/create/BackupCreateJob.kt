@@ -26,6 +26,7 @@ import eu.kanade.tachiyomi.util.system.setForegroundSafely
 import eu.kanade.tachiyomi.util.system.workManager
 import logcat.LogPriority
 import mihon.app.di.AppGraph
+import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.backup.service.BackupPreferences
@@ -100,7 +101,7 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
         }
 
         fun setupTask(context: Context, prefInterval: Int? = null) {
-            val backupPreferences = Injekt.get<BackupPreferences>()
+            val backupPreferences = context.appGraph.backupPreferences
             val interval = prefInterval ?: backupPreferences.backupInterval.get()
             if (interval > 0) {
                 val constraints = Constraints(

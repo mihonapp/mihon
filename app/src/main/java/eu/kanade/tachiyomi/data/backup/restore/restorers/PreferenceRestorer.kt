@@ -15,7 +15,6 @@ import eu.kanade.tachiyomi.data.backup.models.StringPreferenceValue
 import eu.kanade.tachiyomi.data.backup.models.StringSetPreferenceValue
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.source.sourcePreferences
-import eu.kanade.tachiyomi.util.system.workManager
 import tachiyomi.core.common.preference.AndroidPreferenceStore
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.preference.plusAssign
@@ -40,7 +39,7 @@ class PreferenceRestorer(
             backupCategories,
         )
 
-        LibraryUpdateJob.setupTask(context.workManager)
+        LibraryUpdateJob.setupTask(context)
         BackupCreateJob.setupTask(context)
     }
 

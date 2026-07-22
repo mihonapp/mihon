@@ -47,6 +47,7 @@ class ExtensionManager(
     private val preferences: SourcePreferences,
     private val trustExtension: TrustExtension,
     private val api: ExtensionApi,
+    private val installer: ExtensionInstaller,
     private val extensionUpdateNotifier: ExtensionUpdateNotifier,
 ) {
 
@@ -54,11 +55,6 @@ class ExtensionManager(
 
     private val _isInitialized = MutableStateFlow(false)
     val isInitialized: StateFlow<Boolean> = _isInitialized.asStateFlow()
-
-    /**
-     * The installer which installs, updates and uninstalls the extensions.
-     */
-    private val installer by lazy { ExtensionInstaller(context) }
 
     private val iconMap = mutableMapOf<String, Drawable>()
 

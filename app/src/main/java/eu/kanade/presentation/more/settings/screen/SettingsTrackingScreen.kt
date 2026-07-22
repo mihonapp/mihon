@@ -63,8 +63,7 @@ import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
+import mihon.app.di.appGraph
 
 object SettingsTrackingScreen : SearchableSettings {
 
@@ -86,9 +85,9 @@ object SettingsTrackingScreen : SearchableSettings {
     @Composable
     override fun getPreferences(): List<Preference> {
         val context = LocalContext.current
-        val trackPreferences = remember { Injekt.get<TrackPreferences>() }
-        val trackerManager = remember { Injekt.get<TrackerManager>() }
-        val sourceManager = remember { Injekt.get<SourceManager>() }
+        val trackPreferences = remember { context.appGraph.trackPreferences }
+        val trackerManager = remember { context.appGraph.trackerManager }
+        val sourceManager = remember { context.appGraph.sourceManager }
 
         var dialog by remember { mutableStateOf<Any?>(null) }
         dialog?.run {

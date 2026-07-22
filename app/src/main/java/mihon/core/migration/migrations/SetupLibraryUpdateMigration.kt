@@ -5,7 +5,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
 import dev.zacsweers.metro.Inject
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
-import eu.kanade.tachiyomi.util.system.workManager
 import mihon.core.migration.Migration
 import mihon.core.migration.MigrationContext
 
@@ -17,7 +16,7 @@ class SetupLibraryUpdateMigration(
     override val version: Float = Migration.ALWAYS
 
     override suspend fun invoke(migrationContext: MigrationContext): Boolean {
-        LibraryUpdateJob.setupTask(context.workManager)
+        LibraryUpdateJob.setupTask(context)
         return true
     }
 }
