@@ -83,7 +83,6 @@ class MetroInteropModule(
     private val addTracksProvider: () -> AddTracks,
     private val insertTracksProvider: () -> InsertTrack,
     private val updateExtensionStoreProvider: () -> UpdateExtensionStores,
-    private val trustExtensionProvider: () -> TrustExtension,
     private val resetViewerFlagsProvider: () -> ResetViewerFlags,
     private val getExtensionStoreCountAsFlowProvider: () -> GetExtensionStoreCountAsFlow,
     private val getFavoritesProvider: () -> GetFavorites,
@@ -113,7 +112,6 @@ class MetroInteropModule(
         addSingleton(basePreferences)
         addSingleton(privacyPreferences)
         addSingleton(trackPreferences)
-        addSingleton(sourcePreferences)
         addSingleton(uiPreferences)
         addSingleton(libraryPreferences)
         addSingleton(storagePreferences)
@@ -134,10 +132,6 @@ class MetroInteropModule(
 
         addSingleton(extensionStoreRepository)
 
-        addFactory(addTracksProvider)
-        addFactory(insertTracksProvider)
-        addFactory(updateExtensionStoreProvider)
-        addFactory(trustExtensionProvider)
         addFactory<AddTracks>(addTracksProvider)
         addFactory<InsertTrack>(insertTracksProvider)
         addFactory<UpdateExtensionStores>(updateExtensionStoreProvider)
