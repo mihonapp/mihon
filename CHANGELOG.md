@@ -13,10 +13,12 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ## [Unreleased]
 ### Added
 - Add option to group chapters in updates tab ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#3617](https://github.com/mihonapp/mihon/pull/3617))
+  - Add scanlator name to chapters
 - Support resumable image downloads if supported by source ([@xMohnad](https://github.com/xMohnad)) ([#3167](https://github.com/mihonapp/mihon/pull/3167))
   - Fix HTTP Error 416 not being handled properly ([@AntsyLich](https://github.com/AntsyLich)) ([#3563](https://github.com/mihonapp/mihon/pull/3563))
 
 ### Changed
+- Redesign UI for chapters in updates tab ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#3617](https://github.com/mihonapp/mihon/pull/3617))
 - Detect Shizuku with permission check ([@Small-Ku](https://github.com/Small-Ku)) ([#3565](https://github.com/mihonapp/mihon/pull/3565))
 
 ### Fixed
