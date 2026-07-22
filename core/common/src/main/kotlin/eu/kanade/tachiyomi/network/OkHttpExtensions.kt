@@ -66,8 +66,9 @@ fun Call.asObservableSuccess(): Observable<Response> {
     @Suppress("DEPRECATION")
     return asObservable().doOnNext { response ->
         if (!response.isSuccessful) {
+            val exception = response.toHttpException()
             response.close()
-            throw HttpException(response.code)
+            throw exception
         }
     }
 }
@@ -112,11 +113,17 @@ suspend fun Call.awaitSuccess(): Response {
     val callStack = Exception().stackTrace.run { copyOfRange(1, size) }
     val response = await(callStack)
     if (!response.isSuccessful) {
+        val exception = response.toHttpException()
         response.close()
-        throw HttpException(response.code).apply { stackTrace = callStack }
+        throw exception.apply { stackTrace = callStack }
     }
     return response
 }
+
+internal fun Response.toHttpException(): HttpException = HttpException(
+    code = code,
+    retryAfter = header("Retry-After"),
+)
 
 fun OkHttpClient.newCachelessCallWithProgress(
     request: Request,
