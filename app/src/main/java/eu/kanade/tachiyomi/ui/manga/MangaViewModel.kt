@@ -22,6 +22,8 @@ import eu.kanade.domain.manga.interactor.SetExcludedScanlators
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.chaptersFiltered
 import eu.kanade.domain.manga.model.downloadedFilter
+import eu.kanade.domain.manga.model.toSManga
+import eu.kanade.domain.recommendation.service.RecommendationPreferences
 import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.interactor.TrackChapter
@@ -33,6 +35,10 @@ import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
+import eu.kanade.tachiyomi.data.recommendation.MangaRecommendationRepository
+import eu.kanade.tachiyomi.data.recommendation.RecommendationCard
+import eu.kanade.tachiyomi.data.recommendation.RecommendationMetadata
+import eu.kanade.tachiyomi.data.recommendation.RecommendationRows
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.source.Source
@@ -41,6 +47,7 @@ import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -52,6 +59,7 @@ import kotlinx.coroutines.launch
 import logcat.LogPriority
 import mihon.core.viewmodel.StateViewModel
 import mihon.domain.chapter.interactor.FilterChaptersForDownload
+import mihon.domain.manga.model.toDomainManga
 import mihon.domain.source.interactor.UpdateMangaFromRemote
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.CheckboxState
@@ -74,6 +82,7 @@ import tachiyomi.domain.chapter.service.getChapterSort
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetMangaWithChapters
+import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.manga.interactor.SetMangaChapterFlags
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
@@ -163,6 +172,11 @@ class MangaViewModel(
 
     private val selectedPositions: Array<Int> = arrayOf(-1, -1) // first and last selected index in list
     private val selectedChapterIds: HashSet<Long> = HashSet()
+    private val recommendationPreferences: RecommendationPreferences = Injekt.get()
+    private val recommendationRepository: MangaRecommendationRepository = Injekt.get()
+    private val networkToLocalManga: NetworkToLocalManga = Injekt.get()
+    private var recommendationJob: Job? = null
+    private var recommendationGeneration = 0L
 
     /**
      * Helper function to update the UI state only if it's currently in success state
@@ -241,17 +255,19 @@ class MangaViewModel(
                     hideMissingChapters = libraryPreferences.hideMissingChapters.get(),
                 )
             }
+            startRecommendations()
 
             // Start observe tracking since it only needs mangaId
             observeTrackers()
 
             // Fetch info-chapters when needed
             if ((needRefreshInfo || needRefreshChapter) && viewModelScope.isActive) {
-                fetchAllFromSource(
+                val refreshed = fetchAllFromSource(
                     manualFetch = false,
                     fetchDetails = needRefreshInfo,
                     fetchChapters = needRefreshChapter,
                 )
+                if (refreshed) startRecommendations()
             }
 
             // Initial loading finished
@@ -262,11 +278,14 @@ class MangaViewModel(
     fun fetchAllFromSource(manualFetch: Boolean = true) {
         viewModelScope.launch {
             updateSuccessState { it.copy(isRefreshingData = true) }
-            fetchAllFromSource(
+            val refreshed = fetchAllFromSource(
                 manualFetch = manualFetch,
                 fetchDetails = true,
                 fetchChapters = true,
             )
+            if (refreshed) {
+                startRecommendations(clearExisting = true, invalidate = true)
+            }
             updateSuccessState { it.copy(isRefreshingData = false) }
         }
     }
@@ -275,8 +294,8 @@ class MangaViewModel(
         manualFetch: Boolean,
         fetchDetails: Boolean,
         fetchChapters: Boolean,
-    ) {
-        val state = successState ?: return
+    ): Boolean {
+        val state = successState ?: return false
         try {
             withUIContext {
                 val update = updateMangaFromRemote(
@@ -292,8 +311,10 @@ class MangaViewModel(
                     downloadNewChapters(update.newChapters)
                 }
             }
+            return true
         } catch (_: CancellationException) {
             // ignore
+            return false
         } catch (e: Exception) {
             val message = if (e is NoChaptersException) {
                 context.stringResource(MR.strings.no_chapters_error)
@@ -305,7 +326,77 @@ class MangaViewModel(
             viewModelScope.launch {
                 snackbarHostState.showSnackbar(message = message)
             }
+            return false
         }
+    }
+
+    private fun startRecommendations(
+        clearExisting: Boolean = false,
+        invalidate: Boolean = false,
+    ) {
+        val state = successState ?: return
+        val sourceId = state.source.id
+        val targetIdentity = RecommendationMetadata.identity(sourceId, state.manga.toSManga())
+        val generation = ++recommendationGeneration
+        recommendationJob?.cancel()
+
+        if (clearExisting) {
+            updateSuccessState { it.copy(recommendations = RecommendationRows()) }
+        }
+        if (invalidate) {
+            recommendationRepository.invalidate(sourceId, targetIdentity.exposureKey)
+        }
+
+        val excludedKeys = RecommendationNavigationTrail.snapshot(sourceId)
+        recommendationJob = viewModelScope.launchIO {
+            val aniListId = getTracks.await(state.manga.id)
+                .firstOrNull { it.trackerId == TrackerManager.ANILIST }
+                ?.remoteId
+                ?.takeIf { it > 0L }
+            recommendationPreferences.networkEnabled(sourceId).changes().collectLatest { allowNetwork ->
+                recommendationRepository.observe(
+                    source = state.source,
+                    manga = state.manga.toSManga(),
+                    aniListId = aniListId,
+                    allowNetwork = allowNetwork,
+                    excludedKeys = excludedKeys,
+                ).collectLatest { rows ->
+                    if (generation != recommendationGeneration) return@collectLatest
+                    updateSuccessState { current ->
+                        if (current.manga.id != state.manga.id || current.source.id != sourceId) {
+                            current
+                        } else {
+                            current.copy(recommendations = current.recommendations.append(rows))
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun persistRecommendation(card: RecommendationCard): Long? {
+        val state = successState ?: return null
+        if (card.sourceId != state.source.id) {
+            logcat(LogPriority.WARN) { "Ignoring a recommendation from a different source" }
+            return null
+        }
+        return try {
+            val local = networkToLocalManga(card.manga.copy().toDomainManga(state.source.id))
+            val currentIdentity = RecommendationMetadata.identity(state.source.id, state.manga.toSManga())
+            RecommendationNavigationTrail.record(state.source.id, currentIdentity.exposureKeys)
+            local.id
+        } catch (error: CancellationException) {
+            throw error
+        } catch (error: Exception) {
+            logcat(LogPriority.ERROR, error) { "Unable to persist recommendation" }
+            null
+        }
+    }
+
+    fun stopRecommendations() {
+        recommendationGeneration += 1
+        recommendationJob?.cancel()
+        recommendationJob = null
     }
 
     // Manga info - start
@@ -1126,6 +1217,7 @@ class MangaViewModel(
             val dialog: Dialog? = null,
             val hasPromptedToAddBefore: Boolean = false,
             val hideMissingChapters: Boolean = false,
+            val recommendations: RecommendationRows = RecommendationRows(),
         ) : State {
             val processedChapters by lazy {
                 chapters.applyFilters(manga).toList()
@@ -1190,6 +1282,49 @@ class MangaViewModel(
         }
     }
 }
+
+private fun RecommendationRows.append(update: RecommendationRows): RecommendationRows {
+    val creators = creatorWorks.appendDistinct(update.creatorWorks)
+    val similar = similarManga.appendDistinct(update.similarManga)
+        .filterNot { similarCard ->
+            creators.any { creatorCard ->
+                RecommendationMetadata.sameWork(similarCard.identity, creatorCard.identity)
+            }
+        }
+        .take(MAX_RECOMMENDATIONS_PER_ROW)
+    return RecommendationRows(creatorWorks = creators, similarManga = similar)
+}
+
+private fun List<RecommendationCard>.appendDistinct(update: List<RecommendationCard>): List<RecommendationCard> {
+    val result = toMutableList()
+    update.forEach { candidate ->
+        if (result.none { RecommendationMetadata.sameWork(it.identity, candidate.identity) }) {
+            result += candidate
+        }
+    }
+    return result.take(MAX_RECOMMENDATIONS_PER_ROW)
+}
+
+private object RecommendationNavigationTrail {
+    private const val CAPACITY = 8
+    private val history = mutableMapOf<Long, ArrayDeque<Set<String>>>()
+
+    @Synchronized
+    fun record(sourceId: Long, identityKeys: Set<String>) {
+        if (identityKeys.isEmpty()) return
+        val sourceHistory = history.getOrPut(sourceId, ::ArrayDeque)
+        sourceHistory.removeAll { existing -> existing.any(identityKeys::contains) }
+        sourceHistory.addLast(identityKeys)
+        while (sourceHistory.size > CAPACITY) sourceHistory.removeFirst()
+    }
+
+    @Synchronized
+    fun snapshot(sourceId: Long): Set<String> {
+        return history[sourceId].orEmpty().flatten().toSet()
+    }
+}
+
+private const val MAX_RECOMMENDATIONS_PER_ROW = 10
 
 @Immutable
 sealed class ChapterList {

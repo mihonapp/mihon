@@ -54,10 +54,12 @@ import eu.kanade.presentation.manga.components.MangaActionRow
 import eu.kanade.presentation.manga.components.MangaBottomActionMenu
 import eu.kanade.presentation.manga.components.MangaChapterListItem
 import eu.kanade.presentation.manga.components.MangaInfoBox
+import eu.kanade.presentation.manga.components.MangaRecommendationRow
 import eu.kanade.presentation.manga.components.MangaToolbar
 import eu.kanade.presentation.manga.components.MissingChapterCountListItem
 import eu.kanade.presentation.util.formatChapterNumber
 import eu.kanade.tachiyomi.data.download.model.Download
+import eu.kanade.tachiyomi.data.recommendation.RecommendationCard
 import eu.kanade.tachiyomi.source.getNameForMangaInfo
 import eu.kanade.tachiyomi.ui.manga.ChapterList
 import eu.kanade.tachiyomi.ui.manga.MangaViewModel
@@ -99,6 +101,7 @@ fun MangaScreen(
     onFilterButtonClicked: () -> Unit,
     onRefresh: () -> Unit,
     onContinueReading: () -> Unit,
+    onRecommendationClick: (RecommendationCard) -> Unit,
     onSearch: (query: String, global: Boolean) -> Unit,
 
     // For cover dialog
@@ -152,6 +155,7 @@ fun MangaScreen(
             onFilterClicked = onFilterButtonClicked,
             onRefresh = onRefresh,
             onContinueReading = onContinueReading,
+            onRecommendationClick = onRecommendationClick,
             onSearch = onSearch,
             onCoverClicked = onCoverClicked,
             onShareClicked = onShareClicked,
@@ -188,6 +192,7 @@ fun MangaScreen(
             onFilterButtonClicked = onFilterButtonClicked,
             onRefresh = onRefresh,
             onContinueReading = onContinueReading,
+            onRecommendationClick = onRecommendationClick,
             onSearch = onSearch,
             onCoverClicked = onCoverClicked,
             onShareClicked = onShareClicked,
@@ -230,6 +235,7 @@ private fun MangaScreenSmallImpl(
     onFilterClicked: () -> Unit,
     onRefresh: () -> Unit,
     onContinueReading: () -> Unit,
+    onRecommendationClick: (RecommendationCard) -> Unit,
     onSearch: (query: String, global: Boolean) -> Unit,
 
     // For cover dialog
@@ -418,6 +424,32 @@ private fun MangaScreenSmallImpl(
                         )
                     }
 
+                    if (state.recommendations.creatorWorks.isNotEmpty()) {
+                        item(
+                            key = MangaScreenItem.CREATOR_RECOMMENDATIONS,
+                            contentType = MangaScreenItem.CREATOR_RECOMMENDATIONS,
+                        ) {
+                            MangaRecommendationRow(
+                                title = stringResource(MR.strings.more_by_this_creator),
+                                recommendations = state.recommendations.creatorWorks,
+                                onRecommendationClick = onRecommendationClick,
+                            )
+                        }
+                    }
+
+                    if (state.recommendations.similarManga.isNotEmpty()) {
+                        item(
+                            key = MangaScreenItem.SIMILAR_RECOMMENDATIONS,
+                            contentType = MangaScreenItem.SIMILAR_RECOMMENDATIONS,
+                        ) {
+                            MangaRecommendationRow(
+                                title = stringResource(MR.strings.similar_manga),
+                                recommendations = state.recommendations.similarManga,
+                                onRecommendationClick = onRecommendationClick,
+                            )
+                        }
+                    }
+
                     item(
                         key = MangaScreenItem.CHAPTER_HEADER,
                         contentType = MangaScreenItem.CHAPTER_HEADER,
@@ -472,6 +504,7 @@ fun MangaScreenLargeImpl(
     onFilterButtonClicked: () -> Unit,
     onRefresh: () -> Unit,
     onContinueReading: () -> Unit,
+    onRecommendationClick: (RecommendationCard) -> Unit,
     onSearch: (query: String, global: Boolean) -> Unit,
 
     // For cover dialog
@@ -655,6 +688,32 @@ fun MangaScreenLargeImpl(
                                 bottom = contentPadding.calculateBottomPadding(),
                             ),
                         ) {
+                            if (state.recommendations.creatorWorks.isNotEmpty()) {
+                                item(
+                                    key = MangaScreenItem.CREATOR_RECOMMENDATIONS,
+                                    contentType = MangaScreenItem.CREATOR_RECOMMENDATIONS,
+                                ) {
+                                    MangaRecommendationRow(
+                                        title = stringResource(MR.strings.more_by_this_creator),
+                                        recommendations = state.recommendations.creatorWorks,
+                                        onRecommendationClick = onRecommendationClick,
+                                    )
+                                }
+                            }
+
+                            if (state.recommendations.similarManga.isNotEmpty()) {
+                                item(
+                                    key = MangaScreenItem.SIMILAR_RECOMMENDATIONS,
+                                    contentType = MangaScreenItem.SIMILAR_RECOMMENDATIONS,
+                                ) {
+                                    MangaRecommendationRow(
+                                        title = stringResource(MR.strings.similar_manga),
+                                        recommendations = state.recommendations.similarManga,
+                                        onRecommendationClick = onRecommendationClick,
+                                    )
+                                }
+                            }
+
                             item(
                                 key = MangaScreenItem.CHAPTER_HEADER,
                                 contentType = MangaScreenItem.CHAPTER_HEADER,
