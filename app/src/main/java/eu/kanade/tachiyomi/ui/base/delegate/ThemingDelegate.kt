@@ -4,6 +4,7 @@ import android.app.Activity
 import eu.kanade.domain.ui.model.AppTheme
 import eu.kanade.tachiyomi.R
 import mihon.app.di.AppGraph
+import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 
 interface ThemingDelegate {
@@ -21,7 +22,7 @@ interface ThemingDelegate {
 
 class ThemingDelegateImpl : ThemingDelegate {
     override fun applyAppTheme(activity: Activity) {
-        val uiPreferences = activity.metroGraph<AppGraph>().uiPreferences
+        val uiPreferences = activity.appGraph.uiPreferences
         ThemingDelegate.getThemeResIds(uiPreferences.appTheme.get(), uiPreferences.themeDarkAmoled.get())
             .forEach(activity::setTheme)
     }

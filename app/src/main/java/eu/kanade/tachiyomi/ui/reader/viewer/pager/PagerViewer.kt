@@ -21,6 +21,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import mihon.app.di.AppGraph
+import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import tachiyomi.core.common.util.system.logcat
 import kotlin.math.min
@@ -31,7 +32,7 @@ import kotlin.math.min
 @Suppress("LeakingThis")
 abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
 
-    val graph by lazy { activity.metroGraph<AppGraph>() }
+    val graph by lazy { activity.appGraph }
     val downloadManager by lazy { graph.downloadManager }
     val readerPreferences by lazy { graph.readerPreferences }
 

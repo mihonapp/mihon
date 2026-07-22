@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import mihon.app.di.AppGraph
+import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -84,7 +85,7 @@ class SecureActivityDelegateImpl : SecureActivityDelegate, DefaultLifecycleObser
 
     override fun registerSecureActivity(activity: AppCompatActivity) {
         this.activity = activity
-        activity.metroGraph<AppGraph>().inject(this)
+        activity.appGraph.inject(this)
         activity.lifecycle.addObserver(this)
     }
 

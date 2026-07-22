@@ -14,8 +14,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import mihon.app.di.AppGraph
-import mihon.core.metro.metroGraph
+import mihon.app.di.appGraph
 
 /**
  * A custom [TextInputEditText] that sets [EditorInfoCompat.IME_FLAG_NO_PERSONALIZED_LEARNING] to imeOptions
@@ -34,7 +33,7 @@ class TachiyomiTextInputEditText @JvmOverloads constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-        val basePreferences = context.metroGraph<AppGraph>().basePreferences
+        val basePreferences = context.appGraph.basePreferences
         setIncognito(basePreferences, scope!!)
     }
 

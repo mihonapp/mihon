@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import kotlinx.coroutines.launch
 import mihon.app.di.AppGraph
+import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
@@ -31,7 +32,7 @@ fun CrashScreen(
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val crashLogUtil = remember { context.metroGraph<AppGraph>().crashLogUtil }
+    val crashLogUtil = remember { context.appGraph.crashLogUtil }
 
     InfoScreen(
         icon = Icons.Outlined.BugReport,

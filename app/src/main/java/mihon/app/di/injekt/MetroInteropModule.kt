@@ -6,8 +6,6 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import eu.kanade.domain.base.BasePreferences
-import eu.kanade.domain.extension.interactor.TrustExtension
-import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.service.TrackPreferences
@@ -62,7 +60,6 @@ class MetroInteropModule(
     private val basePreferences: BasePreferences,
     private val privacyPreferences: PrivacyPreferences,
     private val trackPreferences: TrackPreferences,
-    private val sourcePreferences: SourcePreferences,
     private val uiPreferences: UiPreferences,
     private val libraryPreferences: LibraryPreferences,
     private val storagePreferences: StoragePreferences,
@@ -141,12 +138,15 @@ class MetroInteropModule(
         addFactory(insertTracksProvider)
         addFactory(updateExtensionStoreProvider)
         addFactory(trustExtensionProvider)
-        addFactory(resetViewerFlagsProvider)
-        addFactory(getExtensionStoreCountAsFlowProvider)
-        addFactory(getFavoritesProvider)
-        addFactory(getCategoriesProvider)
-        addFactory(resetCategoryFlagsProvider)
-        addFactory(getMangaProvider)
-        addFactory(refreshTracksProvider)
+        addFactory<AddTracks>(addTracksProvider)
+        addFactory<InsertTrack>(insertTracksProvider)
+        addFactory<UpdateExtensionStores>(updateExtensionStoreProvider)
+        addFactory<ResetViewerFlags>(resetViewerFlagsProvider)
+        addFactory<GetExtensionStoreCountAsFlow>(getExtensionStoreCountAsFlowProvider)
+        addFactory<GetFavorites>(getFavoritesProvider)
+        addFactory<GetCategories>(getCategoriesProvider)
+        addFactory<ResetCategoryFlags>(resetCategoryFlagsProvider)
+        addFactory<GetManga>(getMangaProvider)
+        addFactory<RefreshTracks>(refreshTracksProvider)
     }
 }

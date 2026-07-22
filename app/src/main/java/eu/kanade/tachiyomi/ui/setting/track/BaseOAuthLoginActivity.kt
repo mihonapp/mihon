@@ -9,8 +9,7 @@ import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.view.setComposeContent
-import mihon.app.di.AppGraph
-import mihon.core.metro.metroGraph
+import mihon.app.di.appGraph
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 @HasMemberInjections
@@ -22,7 +21,7 @@ abstract class BaseOAuthLoginActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        metroGraph<AppGraph>().inject(this)
+        appGraph.inject(this)
 
         setComposeContent {
             LoadingScreen()

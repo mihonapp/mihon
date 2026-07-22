@@ -21,6 +21,7 @@ import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.runBlocking
 import mihon.app.di.AppGraph
+import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.util.lang.launchIO
@@ -55,7 +56,7 @@ class NotificationReceiver : BroadcastReceiver() {
     @Inject private lateinit var sourceManager: SourceManager
 
     override fun onReceive(context: Context, intent: Intent) {
-        context.metroGraph<AppGraph>().inject(this)
+        context.appGraph.inject(this)
 
         when (intent.action) {
             // Dismiss notification

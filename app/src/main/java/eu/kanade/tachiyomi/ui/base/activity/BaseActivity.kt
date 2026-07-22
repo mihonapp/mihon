@@ -8,8 +8,7 @@ import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegateImpl
 import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
 import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegateImpl
 import eu.kanade.tachiyomi.util.system.prepareTabletUiContext
-import mihon.app.di.AppGraph
-import mihon.core.metro.metroGraph
+import mihon.app.di.appGraph
 
 open class BaseActivity :
     AppCompatActivity(),
@@ -17,7 +16,7 @@ open class BaseActivity :
     ThemingDelegate by ThemingDelegateImpl() {
 
     override fun attachBaseContext(newBase: Context) {
-        val uiPreferences = newBase.metroGraph<AppGraph>().uiPreferences
+        val uiPreferences = appGraph.uiPreferences
         super.attachBaseContext(newBase.prepareTabletUiContext(uiPreferences))
     }
 

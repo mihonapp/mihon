@@ -20,6 +20,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import mihon.app.di.AppGraph
+import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import tachiyomi.core.common.util.system.logcat
 import kotlin.math.max
@@ -30,7 +31,7 @@ import kotlin.math.min
  */
 class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = true) : Viewer {
 
-    val graph by lazy { activity.metroGraph<AppGraph>() }
+    val graph by lazy { activity.appGraph }
     val downloadManager by lazy { graph.downloadManager }
     val readerPreferences by lazy { graph.readerPreferences }
 

@@ -41,6 +41,7 @@ import eu.kanade.tachiyomi.util.system.updaterEnabled
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import mihon.app.di.AppGraph
+import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.util.lang.withIOContext
@@ -74,7 +75,7 @@ object AboutScreen : Screen() {
         val handleBack = LocalBackPress.current
         val navigator = LocalNavigator.currentOrThrow
         var isCheckingUpdates by remember { mutableStateOf(false) }
-        val crashLogUtil = remember { context.metroGraph<AppGraph>().crashLogUtil }
+        val crashLogUtil = remember { context.appGraph.crashLogUtil }
 
         Scaffold(
             topBar = { scrollBehavior ->
@@ -218,7 +219,7 @@ object AboutScreen : Screen() {
         onAvailableUpdate: (GetApplicationRelease.Result.NewUpdate) -> Unit,
         onFinish: () -> Unit,
     ) {
-        val updateChecker = context.metroGraph<AppGraph>().updateChecker
+        val updateChecker = context.appGraph.updateChecker
         withUIContext {
             try {
                 when (val result = withIOContext { updateChecker.checkForUpdate(forceCheck = true) }) {
