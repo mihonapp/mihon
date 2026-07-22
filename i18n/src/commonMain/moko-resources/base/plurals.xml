@@ -114,9 +114,4 @@
         <item quantity="one">%1$d update failed</item>
         <item quantity="other">%1$d updates failed</item>
     </plurals>
-
-    <plurals name="updates_collapsed_chapters">
-        <item quantity="one">%1$d more chapter</item>
-        <item quantity="other">%1$d more chapters</item>
-    </plurals>
 </resources>
