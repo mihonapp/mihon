@@ -17,6 +17,7 @@ data class DuplicateEntry(
     val chapterCount: Long,
     val readChapterCount: Long,
     val isAlive: Boolean,
+    val isOrphaned: Boolean = false,
     val isSuggested: Boolean,
 )
 
@@ -30,7 +31,17 @@ class FindDuplicates(
     private val mangaRepository: MangaRepository,
     private val getChaptersByMangaId: GetChaptersByMangaId,
     private val sourceManager: SourceManager,
+    private val isSourceOrphaned: (Long) -> Boolean = { false },
 ) {
+    private data class ProbedInfo(
+        val manga: Manga,
+        val chapterCount: Long,
+        val readCount: Long,
+        val isAlive: Boolean,
+        val isOrphaned: Boolean,
+        val score: Long,
+    )
+
     suspend fun await(
         mode: DuplicateSearchMode,
         threshold: Float,
@@ -65,27 +76,44 @@ class FindDuplicates(
                 val probedEntries = currentMatches.map { manga ->
                     val source = sourceManager.get(manga.source)
                     val isAlive = source != null && source !is StubSource
+                    val isOrphaned = isSourceOrphaned(manga.source)
                     val chapters = getChaptersByMangaId.await(manga.id)
                     val count = chapters.size.toLong()
                     val readCount = chapters.count { it.read }.toLong()
-                    val score = (if (isAlive) 1_000_000L else 0L) +
+
+                    val aliveTierScore = when {
+                        !isAlive -> 0L
+                        isOrphaned -> 100_000L
+                        else -> 2_000_000L
+                    }
+
+                    val score = aliveTierScore +
                         count * 1_000L +
                         readCount * 100L +
                         (if (manga.favorite) 10L else 0L)
-                    Triple(manga, Pair(count, readCount), Pair(isAlive, score))
+
+                    ProbedInfo(
+                        manga = manga,
+                        chapterCount = count,
+                        readCount = readCount,
+                        isAlive = isAlive,
+                        isOrphaned = isOrphaned,
+                        score = score,
+                    )
                 }
 
-                val maxScore = probedEntries.maxOf { it.third.second }
+                val maxScore = probedEntries.maxOf { it.score }
                 var suggestedChosen = false
 
-                val duplicateEntries = probedEntries.map { (manga, counts, aliveScore) ->
-                    val isSuggested = !suggestedChosen && aliveScore.second == maxScore
+                val duplicateEntries = probedEntries.map { info ->
+                    val isSuggested = !suggestedChosen && info.score == maxScore
                     if (isSuggested) suggestedChosen = true
                     DuplicateEntry(
-                        manga = manga,
-                        chapterCount = counts.first,
-                        readChapterCount = counts.second,
-                        isAlive = aliveScore.first,
+                        manga = info.manga,
+                        chapterCount = info.chapterCount,
+                        readChapterCount = info.readCount,
+                        isAlive = info.isAlive,
+                        isOrphaned = info.isOrphaned,
                         isSuggested = isSuggested,
                     )
                 }

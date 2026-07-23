@@ -129,6 +129,7 @@ class DuplicatesFinderScreen : Screen() {
                                 groups = currentStep.groups,
                                 onSelectEntry = viewModel::selectEntryForGroup,
                                 onResolveGroup = viewModel::resolveGroup,
+                                onIgnoreGroup = viewModel::ignoreGroup,
                                 onResolveAll = { showResolveAllDialog = true },
                                 onCancel = navigator::pop,
                             )
@@ -357,9 +358,12 @@ class DuplicatesFinderScreen : Screen() {
         groups: List<DuplicateGroup>,
         onSelectEntry: (groupIndex: Int, selectedId: Long) -> Unit,
         onResolveGroup: (group: DuplicateGroup) -> Unit,
+        onIgnoreGroup: (group: DuplicateGroup) -> Unit,
         onResolveAll: () -> Unit,
         onCancel: () -> Unit,
     ) {
+        val totalGroups = remember(groups) { groups.size }
+
         Column(modifier = Modifier.fillMaxSize()) {
             Row(
                 modifier = Modifier
@@ -391,8 +395,11 @@ class DuplicatesFinderScreen : Screen() {
                     val groupIndex = groups.indexOf(group)
                     DuplicateGroupCard(
                         group = group,
+                        groupIndex = groupIndex,
+                        totalGroups = totalGroups,
                         onSelect = { selectedId -> onSelectEntry(groupIndex, selectedId) },
                         onResolve = { onResolveGroup(group) },
+                        onIgnore = { onIgnoreGroup(group) },
                     )
                 }
             }
@@ -413,14 +420,29 @@ class DuplicatesFinderScreen : Screen() {
     @Composable
     private fun DuplicateGroupCard(
         group: DuplicateGroup,
+        groupIndex: Int,
+        totalGroups: Int,
         onSelect: (selectedId: Long) -> Unit,
         onResolve: () -> Unit,
+        onIgnore: () -> Unit,
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         ) {
             Column(modifier = Modifier.padding(MaterialTheme.padding.medium)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Badge(
+                        text = stringResource(MR.strings.duplicate_group_index, groupIndex + 1, totalGroups),
+                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        textColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    )
+                }
+                Spacer(modifier = Modifier.height(MaterialTheme.padding.extraSmall))
                 Text(
                     text = group.mainTitle,
                     style = MaterialTheme.typography.titleMedium,
@@ -442,7 +464,12 @@ class DuplicatesFinderScreen : Screen() {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
+                    OutlinedButton(onClick = onIgnore) {
+                        Text(text = stringResource(MR.strings.action_ignore_title))
+                    }
+                    Spacer(modifier = Modifier.width(MaterialTheme.padding.small))
                     Button(onClick = onResolve) {
                         Text(text = stringResource(MR.strings.action_keep_selected))
                     }
@@ -501,7 +528,13 @@ class DuplicatesFinderScreen : Screen() {
                             textColor = MaterialTheme.colorScheme.onPrimary,
                         )
                     }
-                    if (entry.isAlive) {
+                    if (entry.isOrphaned) {
+                        Badge(
+                            text = stringResource(MR.strings.ext_obsolete),
+                            color = MaterialTheme.colorScheme.errorContainer,
+                            textColor = MaterialTheme.colorScheme.onErrorContainer,
+                        )
+                    } else if (entry.isAlive) {
                         Badge(
                             text = stringResource(MR.strings.duplicate_status_alive),
                             color = MaterialTheme.colorScheme.tertiaryContainer,
@@ -587,6 +620,12 @@ class DuplicatesFinderViewModel : StateViewModel<DuplicatesFinderViewModel.State
             updatedGroups[groupIndex] = group.copy(selectedId = selectedId)
             mutableState.update { it.copy(step = Step.Results(groups = updatedGroups)) }
         }
+    }
+
+    fun ignoreGroup(group: DuplicateGroup) {
+        val currentResults = state.value.step as? Step.Results ?: return
+        val remainingGroups = currentResults.groups.filterNot { it.mainTitle == group.mainTitle }
+        mutableState.update { it.copy(step = Step.Results(groups = remainingGroups)) }
     }
 
     fun resolveGroup(group: DuplicateGroup) {
