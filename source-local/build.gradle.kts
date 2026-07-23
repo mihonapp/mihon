@@ -32,6 +32,9 @@ kotlin {
                 implementation(projects.domain)
 
                 implementation(libs.bundles.serialization)
+
+                implementation(libs.injekt)
+                implementation(libs.jsoup)
             }
         }
     }
