@@ -30,9 +30,12 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -40,6 +43,7 @@ import androidx.core.content.getSystemService
 import androidx.core.graphics.Insets
 import androidx.core.net.toUri
 import androidx.core.transition.doOnEnd
+import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -256,6 +260,17 @@ class ReaderActivity : BaseActivity() {
         val showClock by readerPreferences.showClock.collectAsState()
         val showBattery by readerPreferences.showBattery.collectAsState()
         val fullscreen by readerPreferences.fullscreen.collectAsState()
+        var systemStatusBarVisible by remember { mutableStateOf(false) }
+        DisposableEffect(Unit) {
+            val listener = OnApplyWindowInsetsListener { _, windowInsets ->
+                systemStatusBarVisible = windowInsets.isVisible(WindowInsetsCompat.Type.statusBars())
+                windowInsets
+            }
+            ViewCompat.setOnApplyWindowInsetsListener(window.decorView, listener)
+            onDispose {
+                ViewCompat.setOnApplyWindowInsetsListener(window.decorView, null)
+            }
+        }
         val settingsviewModel = remember {
             ReaderSettingsViewModel(
                 readerState = viewModel.state,
@@ -276,7 +291,7 @@ class ReaderActivity : BaseActivity() {
             }
 
             ReaderImmersiveStatusBar(
-                visible = fullscreen && !state.menuVisible,
+                visible = fullscreen && !state.menuVisible && !systemStatusBarVisible,
                 showClock = showClock,
                 showBattery = showBattery,
                 modifier = Modifier.align(Alignment.TopCenter),

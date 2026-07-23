@@ -15,6 +15,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.displayCutoutPadding
@@ -37,9 +38,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -82,7 +84,6 @@ fun ReaderImmersiveStatusBar(
         color = Color.White,
         fontSize = MaterialTheme.typography.labelMedium.fontSize,
         fontWeight = FontWeight.SemiBold,
-        shadow = Shadow(color = Color.Black.copy(alpha = 0.7f), blurRadius = 6f),
     )
 
     Row(
@@ -95,7 +96,7 @@ fun ReaderImmersiveStatusBar(
     ) {
         if (showClock) {
             val time by rememberCurrentTime(context)
-            Text(text = time, style = textStyle)
+            OutlinedText(text = time, style = textStyle)
         } else {
             Spacer(modifier = Modifier)
         }
@@ -116,7 +117,7 @@ fun ReaderImmersiveStatusBar(
                 if (battery.isPowerSaveMode) {
                     PowerSaveGlyph()
                 }
-                Text(text = "${battery.percentage}%", style = textStyle)
+                OutlinedText(text = "${battery.percentage}%", style = textStyle)
                 BatteryGlyph(
                     percentage = battery.percentage,
                     isCharging = battery.isCharging,
@@ -125,6 +126,26 @@ fun ReaderImmersiveStatusBar(
                 )
             }
         }
+    }
+}
+
+/**
+ * Text with a hairline outline in the inverse of [style]'s color, so it stays legible over any
+ * page background (white, black, or busy artwork) without needing a heavy stroke or blur.
+ */
+@Composable
+private fun OutlinedText(text: String, style: TextStyle, modifier: Modifier = Modifier) {
+    val outlineWidthPx = with(LocalDensity.current) { 0.5.dp.toPx() }
+    val outlineColor = if (style.color.luminance() > 0.5f) Color.Black else Color.White
+    Box(modifier = modifier) {
+        Text(
+            text = text,
+            style = style.copy(
+                color = outlineColor,
+                drawStyle = Stroke(width = outlineWidthPx),
+            ),
+        )
+        Text(text = text, style = style)
     }
 }
 
