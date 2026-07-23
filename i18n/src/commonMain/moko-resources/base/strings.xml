@@ -1062,4 +1062,27 @@
     <string name="donationCampaign.paragraph3">Regardless, Mihon will continue to be maintained by me and the volunteers, and it will stay open source.</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="donationCampaign.dismiss">Dismiss</string>
+
+    <!-- Duplicates Finder -->
+    <string name="pref_duplicate_finder_title">Duplicates finder</string>
+    <string name="pref_duplicate_finder_summary">Find and resolve duplicate manga entries in library</string>
+    <string name="duplicate_search_options">Duplicate Search Options</string>
+    <string name="duplicate_search_type_exact">Exact match</string>
+    <string name="duplicate_search_type_exact_summary">Search by exact title match</string>
+    <string name="duplicate_search_type_fuzzy">Fuzzy match</string>
+    <string name="duplicate_search_type_fuzzy_summary">Search by title similarity and description alternative titles</string>
+    <string name="duplicate_search_tolerance">Similarity threshold: %d%%</string>
+    <string name="duplicate_search_option_merge">Merge history, bookmarks, and trackers</string>
+    <string name="duplicate_search_option_delete_downloads">Delete downloaded chapters of discarded duplicates</string>
+    <string name="duplicate_search_in_progress">Searching for duplicates...</string>
+    <string name="duplicate_search_progress_count">Processed %1$d of %2$d titles...</string>
+    <string name="duplicate_search_no_duplicates">No duplicate manga entries found</string>
+    <string name="duplicate_search_found_groups">Found %d duplicate groups</string>
+    <string name="duplicate_suggested_preserve">Suggested copy</string>
+    <string name="duplicate_status_alive">Alive</string>
+    <string name="duplicate_status_dead">Offline / Unknown source</string>
+    <string name="duplicate_chapters_count">%d chapters</string>
+    <string name="action_keep_selected">Keep selected</string>
+    <string name="action_resolve_all_suggested">Resolve all suggested</string>
+    <string name="duplicate_resolve_all_confirm">Are you sure you want to resolve all %d duplicate groups using the suggested copies?</string>
 </resources>

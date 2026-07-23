@@ -72,6 +72,7 @@ import tachiyomi.domain.history.interactor.RemoveHistory
 import tachiyomi.domain.history.interactor.UpsertHistory
 import tachiyomi.domain.history.repository.HistoryRepository
 import tachiyomi.domain.manga.interactor.FetchInterval
+import tachiyomi.domain.manga.interactor.FindDuplicates
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.manga.interactor.GetLibraryManga
@@ -117,6 +118,7 @@ class DomainModule : InjektModule {
         addFactory { DeleteCategory(get(), get(), get()) }
 
         addSingletonFactory<MangaRepository> { MangaRepositoryImpl(get()) }
+        addFactory { FindDuplicates(get(), get(), get()) }
         addFactory { GetDuplicateLibraryManga(get()) }
         addFactory { GetFavorites(get()) }
         addFactory { GetLibraryManga(get()) }
