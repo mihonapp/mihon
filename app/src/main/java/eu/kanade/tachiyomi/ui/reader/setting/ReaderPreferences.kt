@@ -29,6 +29,10 @@ class ReaderPreferences(
 
     val showPageNumber: Preference<Boolean> = preferenceStore.getBoolean("pref_show_page_number_key", true)
 
+    val showClock: Preference<Boolean> = preferenceStore.getBoolean("pref_show_clock_key", true)
+
+    val showBattery: Preference<Boolean> = preferenceStore.getBoolean("pref_show_battery_key", true)
+
     val verticalNavigator: Preference<Set<ReadingMode>> = preferenceStore.getEnumSet(
         "pref_vertical_navigator",
         emptySet(),
