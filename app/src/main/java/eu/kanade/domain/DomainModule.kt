@@ -8,7 +8,6 @@ import eu.kanade.domain.extension.interactor.GetExtensionLanguages
 import eu.kanade.domain.extension.interactor.GetExtensionSources
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
 import eu.kanade.domain.extension.interactor.TrustExtension
-import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.domain.manga.interactor.GetExcludedScanlators
 import eu.kanade.domain.manga.interactor.SetExcludedScanlators
 import eu.kanade.domain.manga.interactor.SetMangaViewerFlags
@@ -26,6 +25,7 @@ import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.interactor.SyncChapterProgressWithTrack
 import eu.kanade.domain.track.interactor.TrackChapter
+import eu.kanade.tachiyomi.extension.ExtensionManager
 import mihon.data.extension.repository.ExtensionStoreRepositoryImpl
 import mihon.data.extension.service.ExtensionStoreService
 import mihon.domain.chapter.interactor.FilterChaptersForDownload
