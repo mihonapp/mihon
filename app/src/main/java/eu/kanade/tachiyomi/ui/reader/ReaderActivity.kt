@@ -52,6 +52,7 @@ import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.reader.DisplayRefreshHost
 import eu.kanade.presentation.reader.OrientationSelectDialog
 import eu.kanade.presentation.reader.ReaderContentOverlay
+import eu.kanade.presentation.reader.ReaderImmersiveStatusBar
 import eu.kanade.presentation.reader.ReaderPageActionsDialog
 import eu.kanade.presentation.reader.ReaderPageIndicator
 import eu.kanade.presentation.reader.ReadingModeSelectDialog
@@ -252,6 +253,8 @@ class ReaderActivity : BaseActivity() {
     private fun ReaderActivityBinding.setComposeOverlay(): Unit = composeOverlay.setComposeContent {
         val state by viewModel.state.collectAsState()
         val showPageNumber by readerPreferences.showPageNumber.collectAsState()
+        val showStatusBar by readerPreferences.showStatusBar.collectAsState()
+        val fullscreen by readerPreferences.fullscreen.collectAsState()
         val settingsviewModel = remember {
             ReaderSettingsViewModel(
                 readerState = viewModel.state,
@@ -270,6 +273,11 @@ class ReaderActivity : BaseActivity() {
                         .navigationBarsPadding(),
                 )
             }
+
+            ReaderImmersiveStatusBar(
+                visible = fullscreen && !state.menuVisible && showStatusBar,
+                modifier = Modifier.align(Alignment.TopCenter),
+            )
 
             ContentOverlay(state = state)
 

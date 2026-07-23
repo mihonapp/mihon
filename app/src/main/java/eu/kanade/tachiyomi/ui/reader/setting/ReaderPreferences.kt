@@ -29,6 +29,8 @@ class ReaderPreferences(
 
     val showPageNumber: Preference<Boolean> = preferenceStore.getBoolean("pref_show_page_number_key", true)
 
+    val showStatusBar: Preference<Boolean> = preferenceStore.getBoolean("pref_show_status_bar_key", true)
+
     val verticalNavigator: Preference<Set<ReadingMode>> = preferenceStore.getEnumSet(
         "pref_vertical_navigator",
         emptySet(),

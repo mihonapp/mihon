@@ -107,6 +107,12 @@ object SettingsReaderScreen : SearchableSettings {
                     preference = readerPreferences.showPageNumber,
                     title = stringResource(MR.strings.pref_show_page_number),
                 ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.showStatusBar,
+                    title = stringResource(MR.strings.pref_show_status_bar),
+                    subtitle = stringResource(MR.strings.pref_show_status_bar_summary),
+                    enabled = fullscreen,
+                ),
             ),
         )
     }
