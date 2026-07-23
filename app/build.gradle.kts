@@ -118,11 +118,22 @@ android {
 
             matchingFallbacks.addAll(commonMatchingFallbacks)
         }
+        create("nightly") {
+            initWith(release)
+
+            applicationIdSuffix = ".nightly"
+            versionNameSuffix = "-nightly-${getLatestCommitCount()}"
+
+            matchingFallbacks.addAll(commonMatchingFallbacks)
+
+            buildConfigField("String", "BUILD_TIME", "\"${getBuildTime(useLatestCommitTime = false)}\"")
+        }
     }
 
     sourceSets {
         getByName("preview").res.directories.add("src/debug/res")
         getByName("benchmark").res.directories.add("src/debug/res")
+        getByName("nightly").res.directories.add("src/debug/res")
     }
 
     splits {
