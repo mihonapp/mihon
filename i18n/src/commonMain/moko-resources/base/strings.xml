@@ -311,6 +311,14 @@
     <string name="include">Include: %s</string>
     <string name="exclude">Exclude: %s</string>
 
+    <string name="pref_category_recommendations">Recommendations</string>
+    <string name="pref_source_recommendation_settings">Source recommendation settings</string>
+    <string name="pref_source_recommendation_settings_summary">Choose which sources may make network requests for recommendations</string>
+    <string name="pref_source_recommendation_info">Network recommendations are off by default. Enabling a source allows extra searches only while loading recommendations. Browsing, chapters, and reading are unaffected.</string>
+    <string name="pref_source_recommendation_no_sources">No installed online sources are available.</string>
+    <string name="more_by_this_creator">More by this creator</string>
+    <string name="similar_manga">Similar manga</string>
+
     <string name="pref_behavior">Behavior</string>
     <!-- This should be to the left for RTL locales -->
     <string name="pref_chapter_swipe_end">Chapter on swipe to right</string>

@@ -51,10 +51,12 @@ object SettingsLibraryScreen : SearchableSettings {
     override fun getPreferences(): List<Preference> {
         val getCategories = remember { Injekt.get<GetCategories>() }
         val libraryPreferences = remember { Injekt.get<LibraryPreferences>() }
+        val navigator = LocalNavigator.currentOrThrow
         val allCategories by getCategories.subscribe().collectAsState(initial = emptyList())
 
         return listOf(
-            getCategoriesGroup(LocalNavigator.currentOrThrow, allCategories, libraryPreferences),
+            getCategoriesGroup(navigator, allCategories, libraryPreferences),
+            getRecommendationsGroup(navigator),
             getGlobalUpdateGroup(allCategories, libraryPreferences),
             getBehaviorGroup(libraryPreferences),
         )
@@ -203,6 +205,22 @@ object SettingsLibraryScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = libraryPreferences.newShowUpdatesCount,
                     title = stringResource(MR.strings.pref_library_update_show_tab_badge),
+                ),
+            ),
+        )
+    }
+
+    @Composable
+    private fun getRecommendationsGroup(
+        navigator: Navigator,
+    ): Preference.PreferenceGroup {
+        return Preference.PreferenceGroup(
+            title = stringResource(MR.strings.pref_category_recommendations),
+            preferenceItems = listOf(
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.pref_source_recommendation_settings),
+                    subtitle = stringResource(MR.strings.pref_source_recommendation_settings_summary),
+                    onClick = { navigator.push(RecommendationSourceSettingsScreen) },
                 ),
             ),
         )
