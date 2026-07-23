@@ -24,7 +24,3 @@ val isFossBuildType: Boolean
 
 val isBenchmarkBuildType: Boolean
     inline get() = BuildConfig.BUILD_TYPE.contains("nonMinified") || BuildConfig.BUILD_TYPE.contains("benchmark")
-
-val isNightlyBuildType: Boolean
-    inline get() = BuildConfig.BUILD_TYPE == "nightly"
-
