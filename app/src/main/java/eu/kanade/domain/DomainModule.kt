@@ -8,6 +8,7 @@ import eu.kanade.domain.extension.interactor.GetExtensionLanguages
 import eu.kanade.domain.extension.interactor.GetExtensionSources
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
 import eu.kanade.domain.extension.interactor.TrustExtension
+import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.domain.manga.interactor.GetExcludedScanlators
 import eu.kanade.domain.manga.interactor.SetExcludedScanlators
 import eu.kanade.domain.manga.interactor.SetMangaViewerFlags
@@ -118,7 +119,19 @@ class DomainModule : InjektModule {
         addFactory { DeleteCategory(get(), get(), get()) }
 
         addSingletonFactory<MangaRepository> { MangaRepositoryImpl(get()) }
-        addFactory { FindDuplicates(get(), get(), get()) }
+        addFactory {
+            val extensionManager = get<ExtensionManager>()
+            FindDuplicates(
+                mangaRepository = get(),
+                getChaptersByMangaId = get(),
+                sourceManager = get(),
+                isSourceOrphaned = { sourceId ->
+                    extensionManager.installedExtensionsFlow.value
+                        .find { ext -> ext.sources.any { s -> s.id == sourceId } }
+                        ?.isObsolete == true
+                },
+            )
+        }
         addFactory { GetDuplicateLibraryManga(get()) }
         addFactory { GetFavorites(get()) }
         addFactory { GetLibraryManga(get()) }

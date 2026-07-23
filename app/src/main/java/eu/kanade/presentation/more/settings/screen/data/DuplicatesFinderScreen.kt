@@ -82,7 +82,8 @@ class DuplicatesFinderScreen : Screen() {
         val viewModel = viewModel<DuplicatesFinderViewModel>()
         val state by viewModel.state.collectAsState()
 
-        var showResolveAllDialog by remember { mutableStateOf(false) }
+        var showResolveAllSuggestedDialog by remember { mutableStateOf(false) }
+        var showKeepAllSelectedDialog by remember { mutableStateOf(false) }
 
         Scaffold(
             topBar = {
@@ -129,7 +130,9 @@ class DuplicatesFinderScreen : Screen() {
                                 groups = currentStep.groups,
                                 onSelectEntry = viewModel::selectEntryForGroup,
                                 onResolveGroup = viewModel::resolveGroup,
-                                onResolveAll = { showResolveAllDialog = true },
+                                onIgnoreGroup = viewModel::ignoreGroup,
+                                onResolveAllSuggested = { showResolveAllSuggestedDialog = true },
+                                onKeepAllSelected = { showKeepAllSelectedDialog = true },
                                 onCancel = navigator::pop,
                             )
                         }
@@ -137,24 +140,48 @@ class DuplicatesFinderScreen : Screen() {
                 }
             }
 
-            if (showResolveAllDialog) {
+            if (showResolveAllSuggestedDialog) {
                 val groupsCount = (state.step as? DuplicatesFinderViewModel.Step.Results)?.groups?.size ?: 0
                 AlertDialog(
-                    onDismissRequest = { showResolveAllDialog = false },
+                    onDismissRequest = { showResolveAllSuggestedDialog = false },
                     title = { Text(text = stringResource(MR.strings.action_resolve_all_suggested)) },
                     text = { Text(text = stringResource(MR.strings.duplicate_resolve_all_confirm, groupsCount)) },
                     confirmButton = {
                         TextButton(
                             onClick = {
-                                showResolveAllDialog = false
-                                viewModel.resolveAllGroups()
+                                showResolveAllSuggestedDialog = false
+                                viewModel.resolveAllSuggestedGroups()
                             },
                         ) {
                             Text(text = stringResource(MR.strings.action_resolve_all_suggested))
                         }
                     },
                     dismissButton = {
-                        TextButton(onClick = { showResolveAllDialog = false }) {
+                        TextButton(onClick = { showResolveAllSuggestedDialog = false }) {
+                            Text(text = stringResource(MR.strings.action_cancel))
+                        }
+                    },
+                )
+            }
+
+            if (showKeepAllSelectedDialog) {
+                val groupsCount = (state.step as? DuplicatesFinderViewModel.Step.Results)?.groups?.size ?: 0
+                AlertDialog(
+                    onDismissRequest = { showKeepAllSelectedDialog = false },
+                    title = { Text(text = stringResource(MR.strings.action_keep_all_selected)) },
+                    text = { Text(text = stringResource(MR.strings.duplicate_keep_all_selected_confirm, groupsCount)) },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                showKeepAllSelectedDialog = false
+                                viewModel.resolveAllSelectedGroups()
+                            },
+                        ) {
+                            Text(text = stringResource(MR.strings.action_keep_all_selected))
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showKeepAllSelectedDialog = false }) {
                             Text(text = stringResource(MR.strings.action_cancel))
                         }
                     },
@@ -357,24 +384,49 @@ class DuplicatesFinderScreen : Screen() {
         groups: List<DuplicateGroup>,
         onSelectEntry: (groupIndex: Int, selectedId: Long) -> Unit,
         onResolveGroup: (group: DuplicateGroup) -> Unit,
-        onResolveAll: () -> Unit,
+        onIgnoreGroup: (group: DuplicateGroup) -> Unit,
+        onResolveAllSuggested: () -> Unit,
+        onKeepAllSelected: () -> Unit,
         onCancel: () -> Unit,
     ) {
+        val totalGroups = remember(groups) { groups.size }
+
         Column(modifier = Modifier.fillMaxSize()) {
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = stringResource(MR.strings.duplicate_search_found_groups, groups.size),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                 )
-                Button(onClick = onResolveAll) {
-                    Text(text = stringResource(MR.strings.action_resolve_all_suggested))
+                Spacer(modifier = Modifier.height(MaterialTheme.padding.small))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+                ) {
+                    OutlinedButton(
+                        onClick = onResolveAllSuggested,
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        Text(
+                            text = stringResource(MR.strings.action_resolve_all_suggested),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                    Button(
+                        onClick = onKeepAllSelected,
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        Text(
+                            text = stringResource(MR.strings.action_keep_all_selected),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
                 }
             }
 
@@ -391,8 +443,11 @@ class DuplicatesFinderScreen : Screen() {
                     val groupIndex = groups.indexOf(group)
                     DuplicateGroupCard(
                         group = group,
+                        groupIndex = groupIndex,
+                        totalGroups = totalGroups,
                         onSelect = { selectedId -> onSelectEntry(groupIndex, selectedId) },
                         onResolve = { onResolveGroup(group) },
+                        onIgnore = { onIgnoreGroup(group) },
                     )
                 }
             }
@@ -413,14 +468,29 @@ class DuplicatesFinderScreen : Screen() {
     @Composable
     private fun DuplicateGroupCard(
         group: DuplicateGroup,
+        groupIndex: Int,
+        totalGroups: Int,
         onSelect: (selectedId: Long) -> Unit,
         onResolve: () -> Unit,
+        onIgnore: () -> Unit,
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         ) {
             Column(modifier = Modifier.padding(MaterialTheme.padding.medium)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Badge(
+                        text = stringResource(MR.strings.duplicate_group_index, groupIndex + 1, totalGroups),
+                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        textColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    )
+                }
+                Spacer(modifier = Modifier.height(MaterialTheme.padding.extraSmall))
                 Text(
                     text = group.mainTitle,
                     style = MaterialTheme.typography.titleMedium,
@@ -442,7 +512,12 @@ class DuplicatesFinderScreen : Screen() {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
+                    OutlinedButton(onClick = onIgnore) {
+                        Text(text = stringResource(MR.strings.action_ignore_title))
+                    }
+                    Spacer(modifier = Modifier.width(MaterialTheme.padding.small))
                     Button(onClick = onResolve) {
                         Text(text = stringResource(MR.strings.action_keep_selected))
                     }
@@ -501,7 +576,13 @@ class DuplicatesFinderScreen : Screen() {
                             textColor = MaterialTheme.colorScheme.onPrimary,
                         )
                     }
-                    if (entry.isAlive) {
+                    if (entry.isOrphaned) {
+                        Badge(
+                            text = stringResource(MR.strings.ext_obsolete),
+                            color = MaterialTheme.colorScheme.errorContainer,
+                            textColor = MaterialTheme.colorScheme.onErrorContainer,
+                        )
+                    } else if (entry.isAlive) {
                         Badge(
                             text = stringResource(MR.strings.duplicate_status_alive),
                             color = MaterialTheme.colorScheme.tertiaryContainer,
@@ -589,6 +670,12 @@ class DuplicatesFinderViewModel : StateViewModel<DuplicatesFinderViewModel.State
         }
     }
 
+    fun ignoreGroup(group: DuplicateGroup) {
+        val currentResults = state.value.step as? Step.Results ?: return
+        val remainingGroups = currentResults.groups.filterNot { it.mainTitle == group.mainTitle }
+        mutableState.update { it.copy(step = Step.Results(groups = remainingGroups)) }
+    }
+
     fun resolveGroup(group: DuplicateGroup) {
         viewModelScope.launchIO {
             executeResolveGroup(group)
@@ -598,13 +685,26 @@ class DuplicatesFinderViewModel : StateViewModel<DuplicatesFinderViewModel.State
         }
     }
 
-    fun resolveAllGroups() {
+    fun resolveAllSelectedGroups() {
         val currentResults = state.value.step as? Step.Results ?: return
         val groupsToResolve = currentResults.groups.toList()
 
         viewModelScope.launchIO {
             for (group in groupsToResolve) {
                 executeResolveGroup(group)
+            }
+            mutableState.update { it.copy(step = Step.Results(groups = emptyList())) }
+        }
+    }
+
+    fun resolveAllSuggestedGroups() {
+        val currentResults = state.value.step as? Step.Results ?: return
+        val groupsToResolve = currentResults.groups.toList()
+
+        viewModelScope.launchIO {
+            for (group in groupsToResolve) {
+                val suggestedId = group.entries.firstOrNull { it.isSuggested }?.manga?.id ?: group.selectedId
+                executeResolveGroup(group.copy(selectedId = suggestedId))
             }
             mutableState.update { it.copy(step = Step.Results(groups = emptyList())) }
         }

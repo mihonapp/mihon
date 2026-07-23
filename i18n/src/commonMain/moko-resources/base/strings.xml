@@ -1083,6 +1083,10 @@
     <string name="duplicate_status_dead">Offline / Unknown source</string>
     <string name="duplicate_chapters_count">%d chapters</string>
     <string name="action_keep_selected">Keep selected</string>
+    <string name="action_keep_all_selected">Keep all selected</string>
+    <string name="action_ignore_title">Ignore title</string>
+    <string name="duplicate_group_index">#%1$d of %2$d</string>
     <string name="action_resolve_all_suggested">Resolve all suggested</string>
     <string name="duplicate_resolve_all_confirm">Are you sure you want to resolve all %d duplicate groups using the suggested copies?</string>
+    <string name="duplicate_keep_all_selected_confirm">Are you sure you want to resolve all %d duplicate groups using your currently selected choices?</string>
 </resources>
