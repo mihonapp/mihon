@@ -16,6 +16,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -69,20 +70,13 @@ private data class BatteryUiState(
 @Composable
 fun ReaderImmersiveStatusBar(
     visible: Boolean,
+    showClock: Boolean,
+    showBattery: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    if (!visible) return
+    if (!visible || (!showClock && !showBattery)) return
 
     val context = LocalContext.current
-    val time by rememberCurrentTime(context)
-    val battery by rememberBatteryState(context)
-
-    val batteryColor = when {
-        battery.percentage < CRITICAL_BATTERY_THRESHOLD -> criticalBatteryColor
-        battery.percentage < LOW_BATTERY_THRESHOLD -> warnBatteryColor
-        else -> normalBatteryColor
-    }
-    val isCritical = battery.percentage < CRITICAL_BATTERY_THRESHOLD
 
     val textStyle = TextStyle(
         color = Color.White,
@@ -99,22 +93,37 @@ fun ReaderImmersiveStatusBar(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(text = time, style = textStyle)
+        if (showClock) {
+            val time by rememberCurrentTime(context)
+            Text(text = time, style = textStyle)
+        } else {
+            Spacer(modifier = Modifier)
+        }
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-            if (battery.isPowerSaveMode) {
-                PowerSaveGlyph()
+        if (showBattery) {
+            val battery by rememberBatteryState(context)
+            val batteryColor = when {
+                battery.percentage < CRITICAL_BATTERY_THRESHOLD -> criticalBatteryColor
+                battery.percentage < LOW_BATTERY_THRESHOLD -> warnBatteryColor
+                else -> normalBatteryColor
             }
-            Text(text = "${battery.percentage}%", style = textStyle)
-            BatteryGlyph(
-                percentage = battery.percentage,
-                isCharging = battery.isCharging,
-                blink = isCritical,
-                color = batteryColor,
-            )
+            val isCritical = battery.percentage < CRITICAL_BATTERY_THRESHOLD
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                if (battery.isPowerSaveMode) {
+                    PowerSaveGlyph()
+                }
+                Text(text = "${battery.percentage}%", style = textStyle)
+                BatteryGlyph(
+                    percentage = battery.percentage,
+                    isCharging = battery.isCharging,
+                    blink = isCritical,
+                    color = batteryColor,
+                )
+            }
         }
     }
 }
@@ -283,6 +292,6 @@ private fun PowerSaveGlyph(modifier: Modifier = Modifier) {
 @Composable
 private fun ReaderImmersiveStatusBarPreview() {
     TachiyomiPreviewTheme {
-        ReaderImmersiveStatusBar(visible = true)
+        ReaderImmersiveStatusBar(visible = true, showClock = true, showBattery = true)
     }
 }

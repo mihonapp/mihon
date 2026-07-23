@@ -253,7 +253,8 @@ class ReaderActivity : BaseActivity() {
     private fun ReaderActivityBinding.setComposeOverlay(): Unit = composeOverlay.setComposeContent {
         val state by viewModel.state.collectAsState()
         val showPageNumber by readerPreferences.showPageNumber.collectAsState()
-        val showStatusBar by readerPreferences.showStatusBar.collectAsState()
+        val showClock by readerPreferences.showClock.collectAsState()
+        val showBattery by readerPreferences.showBattery.collectAsState()
         val fullscreen by readerPreferences.fullscreen.collectAsState()
         val settingsviewModel = remember {
             ReaderSettingsViewModel(
@@ -275,7 +276,9 @@ class ReaderActivity : BaseActivity() {
             }
 
             ReaderImmersiveStatusBar(
-                visible = fullscreen && !state.menuVisible && showStatusBar,
+                visible = fullscreen && !state.menuVisible,
+                showClock = showClock,
+                showBattery = showBattery,
                 modifier = Modifier.align(Alignment.TopCenter),
             )
 

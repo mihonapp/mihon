@@ -63,8 +63,13 @@ internal fun ColumnScope.GeneralPage(viewModel: ReaderSettingsViewModel) {
     )
 
     CheckboxItem(
-        label = stringResource(MR.strings.pref_show_status_bar),
-        pref = viewModel.preferences.showStatusBar,
+        label = stringResource(MR.strings.pref_show_clock),
+        pref = viewModel.preferences.showClock,
+    )
+
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_show_battery),
+        pref = viewModel.preferences.showBattery,
     )
 
     val verticalNavigatorModes by viewModel.preferences.verticalNavigator.collectAsState()
