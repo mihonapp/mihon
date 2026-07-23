@@ -4,8 +4,6 @@ import app.cash.sqldelight.ColumnAdapter
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.encodeToJsonElement
-import kotlinx.serialization.json.jsonObject
 import java.util.Date
 
 object DateColumnAdapter : ColumnAdapter<Date, Long> {

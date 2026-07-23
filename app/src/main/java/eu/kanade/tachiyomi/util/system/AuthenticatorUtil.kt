@@ -92,7 +92,7 @@ object AuthenticatorUtil {
     /**
      * [AuthPromptCallback] with extra check
      *
-     * @see isAuthenticating
+     * @see AuthenticatorUtil.isAuthenticating
      */
     abstract class AuthenticationCallback : AuthPromptCallback() {
         /**
