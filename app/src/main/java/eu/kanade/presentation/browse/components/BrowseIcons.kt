@@ -13,12 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
@@ -26,9 +28,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import coil3.compose.AsyncImage
+import eu.kanade.domain.source.model.hasSharedExtensionIcon
 import eu.kanade.domain.source.model.icon
 import eu.kanade.presentation.util.rememberResourceBitmapPainter
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.coil.SourceFavicon
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.util.ExtensionLoader
 import tachiyomi.core.common.util.lang.withIOContext
@@ -55,13 +59,6 @@ fun SourceIcon(
                 modifier = modifier.then(defaultModifier),
             )
         }
-        icon != null -> {
-            Image(
-                bitmap = icon,
-                contentDescription = null,
-                modifier = modifier.then(defaultModifier),
-            )
-        }
         source.isLocal() -> {
             Image(
                 painter = painterResource(R.mipmap.ic_local_source),
@@ -69,10 +66,28 @@ fun SourceIcon(
                 modifier = modifier.then(defaultModifier),
             )
         }
-        else -> {
+        // A single-source extension's app icon already identifies the source, so keep it.
+        icon != null && !source.hasSharedExtensionIcon -> {
             Image(
-                painter = painterResource(R.mipmap.ic_default_source),
+                bitmap = icon,
                 contentDescription = null,
+                modifier = modifier.then(defaultModifier),
+            )
+        }
+        else -> {
+            // Multi-source extensions share one icon across all sources, so fetch a per-source
+            // favicon, falling back to the shared app icon then the generic source icon.
+            val fallback = if (icon != null) {
+                remember(icon) { BitmapPainter(icon) }
+            } else {
+                painterResource(R.mipmap.ic_default_source)
+            }
+            AsyncImage(
+                model = SourceFavicon(source.id),
+                contentDescription = null,
+                placeholder = fallback,
+                error = fallback,
+                fallback = fallback,
                 modifier = modifier.then(defaultModifier),
             )
         }

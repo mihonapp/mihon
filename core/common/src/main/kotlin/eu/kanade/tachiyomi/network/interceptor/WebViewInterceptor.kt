@@ -84,10 +84,21 @@ abstract class WebViewInterceptor(
         return WebView(context).apply {
             setDefaultSettings()
             // Avoid sending empty User-Agent, Chromium WebView will reset to default if empty
-            settings.userAgentString = request.header("User-Agent") ?: defaultUserAgentProvider()
+            settings.userAgentString =
+                (request.header("User-Agent") ?: defaultUserAgentProvider()).stripWebViewMarkers()
         }
     }
 }
+
+/**
+ * Removes the WebView's `; wv` / `Version/x.y` UA markers so the `cf_clearance` it earns is valid
+ * for the OkHttp client (which sends the clean default UA), and so sites that reject `wv` behave.
+ */
+internal fun String.stripWebViewMarkers(): String =
+    replace(Regex(";?\\s*\\bwv\\b"), "")
+        .replace(Regex("Version/\\d+(\\.\\d+)*\\s*"), "")
+        .replace(Regex("\\s{2,}"), " ")
+        .trim()
 
 // Based on [IsRequestHeaderSafe] in
 // https://source.chromium.org/chromium/chromium/src/+/main:services/network/public/cpp/header_util.cc
