@@ -10,6 +10,7 @@ import androidx.biometric.auth.AuthPromptCallback
 import androidx.biometric.auth.startClass2BiometricOrCredentialAuthentication
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.isAuthenticating
 import kotlinx.coroutines.suspendCancellableCoroutine
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
