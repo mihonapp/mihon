@@ -117,7 +117,9 @@ abstract class Installer(private val service: Service) {
         LocalBroadcastManager.getInstance(service).unregisterReceiver(cancelReceiver)
         queue.forEach { extensionManager.updateInstallStep(it.downloadId, InstallStep.Error) }
         queue.clear()
-        waitingInstall.store(null)
+        waitingInstall.exchange(null)?.let { entry ->
+            extensionManager.updateInstallStep(entry.downloadId, InstallStep.Error)
+        }
     }
 
     protected fun getActiveEntry(): Entry? = waitingInstall.load()
