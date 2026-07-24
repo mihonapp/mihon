@@ -30,6 +30,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed app bars remaining visible after changing pages by tapping in the paged reader after using the chapter navigator slider ([@AntsyLich](https://github.com/AntsyLich)) ([#3567](https://github.com/mihonapp/mihon/pull/3567))
 - Fixed MangaBaka User Agent string ([@MajorTanya](https://github.com/MajorTanya)) ([#3578](https://github.com/mihonapp/mihon/pull/3578))
 
+### Changed
+- Show author and artist icons when identical ([@xMohnad](https://github.com/xMohnad)) ([#3519](https://github.com/mihonapp/mihon/pull/3519))
+
 ## [v0.20.1] - 2026-07-09
 ### Added
 - [Hikka](https://hikka.io/) tracker support ([@Lorg0n](https://github.com/Lorg0n)) ([#1386](https://github.com/mihonapp/mihon/pull/1386))
