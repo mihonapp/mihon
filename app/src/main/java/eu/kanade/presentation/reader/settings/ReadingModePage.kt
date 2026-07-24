@@ -134,6 +134,58 @@ private fun ColumnScope.PagerViewerSettings(viewModel: ReaderSettingsViewModel) 
             pref = viewModel.preferences.dualPageRotateToFitInvert,
         )
     }
+
+    // Image margins
+    val pagerMarginTop by screenModel.preferences.pagerMarginTop.collectAsState()
+    SliderItem(
+        value = pagerMarginTop,
+        valueRange = ReaderPreferences.PAGER_MARGIN_MIN..ReaderPreferences.PAGER_MARGIN_MAX,
+        label = stringResource(MR.strings.top_margin),
+        valueString = "${pagerMarginTop}${stringResource(MR.strings.pixels)}",
+        onChange = { screenModel.preferences.pagerMarginTop.set(it) },
+        pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+    )
+
+    val pagerMarginBottom by screenModel.preferences.pagerMarginBottom.collectAsState()
+    SliderItem(
+        value = pagerMarginBottom,
+        valueRange = ReaderPreferences.PAGER_MARGIN_MIN..ReaderPreferences.PAGER_MARGIN_MAX,
+        label = stringResource(MR.strings.bottom_margin),
+        valueString = "${pagerMarginBottom}${stringResource(MR.strings.pixels)}",
+        onChange = { screenModel.preferences.pagerMarginBottom.set(it) },
+        pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+    )
+
+    val pagerMarginLeft by screenModel.preferences.pagerMarginLeft.collectAsState()
+    SliderItem(
+        value = pagerMarginLeft,
+        valueRange = ReaderPreferences.PAGER_MARGIN_MIN..ReaderPreferences.PAGER_MARGIN_MAX,
+        label = stringResource(MR.strings.left_margin),
+        valueString = "${pagerMarginLeft}${stringResource(MR.strings.pixels)}",
+        onChange = { screenModel.preferences.pagerMarginLeft.set(it) },
+        pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+    )
+
+    val pagerMarginRight by screenModel.preferences.pagerMarginRight.collectAsState()
+    SliderItem(
+        value = pagerMarginRight,
+        valueRange = ReaderPreferences.PAGER_MARGIN_MIN..ReaderPreferences.PAGER_MARGIN_MAX,
+        label = stringResource(MR.strings.right_margin),
+        valueString = "${pagerMarginRight}${stringResource(MR.strings.pixels)}",
+        onChange = { screenModel.preferences.pagerMarginRight.set(it) },
+        pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+    )
+
+    val pagerMarginColor by screenModel.preferences.pagerMarginColor.collectAsState()
+    SettingsChipRow(MR.strings.margin_color) {
+        ReaderPreferences.MarginColors.mapIndexed { index, it ->
+            FilterChip(
+                selected = pagerMarginColor == index,
+                onClick = { screenModel.preferences.pagerMarginColor.set(index) },
+                label = { Text(stringResource(it)) },
+            )
+        }
+    }
 }
 
 @Composable
