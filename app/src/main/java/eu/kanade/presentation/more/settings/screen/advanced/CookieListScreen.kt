@@ -429,7 +429,10 @@ private fun Cookie.conflicts(targetDomain: String, targetPath: String): Boolean 
         targetDomain.isNotEmpty() && domain.isNotEmpty() &&
             (targetDomain.endsWith(domain) || domain.endsWith(targetDomain))
         )
-    val pathConflict = targetPath.startsWith(path) || path.startsWith(targetPath)
+
+    val pathA = if (path.endsWith('/')) path else "$path/"
+    val pathB = if (targetPath.endsWith('/')) targetPath else "$targetPath/"
+    val pathConflict = pathA.startsWith(pathB) || pathB.startsWith(pathA)
 
     return domainConflict && pathConflict
 }
