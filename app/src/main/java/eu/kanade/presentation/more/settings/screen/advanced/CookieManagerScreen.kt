@@ -29,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -134,13 +133,17 @@ class CookieManagerScreen : Screen() {
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .clickable(onClick = { navigator.push(CookieListScreen(host)) })
-                                        .padding(start = 48.dp, top = 8.dp, bottom = 8.dp),
+                                        .padding(
+                                            horizontal = MaterialTheme.padding.medium,
+                                            vertical = MaterialTheme.padding.small,
+                                        ),
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Text(
                                         text = host,
                                         style = MaterialTheme.typography.bodyLarge,
-                                        modifier = Modifier.weight(1f),
+                                        modifier = Modifier
+                                            .weight(1f),
                                     )
                                     IconButton(
                                         onClick = { model.deleteHost(host) },

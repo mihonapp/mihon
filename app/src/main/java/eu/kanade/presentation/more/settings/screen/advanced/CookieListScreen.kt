@@ -48,6 +48,7 @@ import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
@@ -229,7 +230,7 @@ class CookieListScreen(val host: String) : Screen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(onClick = onClick)
-                .padding(start = 48.dp, top = 8.dp, bottom = 8.dp),
+                .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(
