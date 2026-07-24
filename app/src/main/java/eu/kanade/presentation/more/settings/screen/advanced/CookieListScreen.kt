@@ -21,11 +21,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -72,6 +75,11 @@ class CookieListScreen(val host: String) : Screen() {
                     val domainState = rememberTextFieldState(dialog.domain)
                     val pathState = rememberTextFieldState(dialog.path)
 
+                    val focusRequester = remember { FocusRequester() }
+                    LaunchedEffect(focusRequester) {
+                        focusRequester.requestFocus()
+                    }
+
                     AlertDialog(
                         onDismissRequest = { model.setDialog(null) },
                         title = {
@@ -90,13 +98,31 @@ class CookieListScreen(val host: String) : Screen() {
                                 OutlinedTextField(
                                     state = keyState,
                                     label = { Text(stringResource(MR.strings.cookie_key)) },
-                                    modifier = Modifier.fillMaxWidth(),
+                                    modifier = Modifier.fillMaxWidth()
+                                        .then(
+                                            if (dialog.key.isEmpty()) {
+                                                Modifier.focusRequester(
+                                                    focusRequester,
+                                                )
+                                            } else {
+                                                Modifier
+                                            },
+                                        ),
                                     enabled = dialog.key.isEmpty(),
                                 )
                                 OutlinedTextField(
                                     state = valueState,
                                     label = { Text(stringResource(MR.strings.cookie_value)) },
-                                    modifier = Modifier.fillMaxWidth(),
+                                    modifier = Modifier.fillMaxWidth()
+                                        .then(
+                                            if (dialog.key.isNotEmpty()) {
+                                                Modifier.focusRequester(
+                                                    focusRequester,
+                                                )
+                                            } else {
+                                                Modifier
+                                            },
+                                        ),
                                 )
                                 OutlinedTextField(
                                     state = domainState,

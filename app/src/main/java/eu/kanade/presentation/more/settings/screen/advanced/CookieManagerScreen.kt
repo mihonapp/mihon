@@ -21,10 +21,14 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -62,13 +66,19 @@ class CookieManagerScreen : Screen() {
             is CookieManagerViewModel.State.Ready -> {
                 if (s.showAddHostDialog) {
                     val textFieldState = rememberTextFieldState()
+
+                    val focusRequester = remember { FocusRequester() }
+                    LaunchedEffect(focusRequester) {
+                        focusRequester.requestFocus()
+                    }
+
                     AlertDialog(
                         title = { Text(stringResource(MR.strings.action_add_host)) },
                         text = {
                             Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small)) {
                                 OutlinedTextField(
                                     state = textFieldState,
-                                    modifier = Modifier.fillMaxWidth(),
+                                    modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
                                     lineLimits = TextFieldLineLimits.SingleLine,
                                 )
                             }
