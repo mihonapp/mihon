@@ -180,7 +180,7 @@
     <string name="completed">Abgeschlossen</string>
     <string name="dropped">Abgebrochen</string>
     <string name="on_hold">Pausiert</string>
-    <string name="plan_to_read">Plane ich zu Lesen</string>
+    <string name="plan_to_read">Plane ich zu lesen</string>
     <string name="score">Bewertung</string>
     <string name="title">Titel</string>
     <string name="status">Status</string>
@@ -285,8 +285,8 @@
     <string name="action_webview_forward">Vorwärts</string>
     <string name="action_webview_refresh">Aktualisieren</string>
     <string name="pref_category_library">Bibliothek</string>
-    <string name="ext_obsolete">Veraltet</string>
-    <string name="obsolete_extension_message">Diese Erweiterung ist nicht länger verfügbar. Sie funktioniert möglicherweise nicht mehr ordnungsgemäß und kann Probleme mit der App verursachen. Es wird empfohlen, sie zu deinstallieren.</string>
+    <string name="ext_obsolete">Verwaist</string>
+    <string name="obsolete_extension_message">Diese Erweiterung ist mit keinem Store verknüpft. Sie erhält keine Updates, funktioniert möglicherweise nicht mehr ordnungsgemäß und kann Probleme mit der App verursachen. Es wird empfohlen, sie zu deinstallieren.</string>
     <string name="pref_date_format">Datumsformat</string>
     <string name="pref_category_library_update">Globale Aktualisierung</string>
     <string name="logout_title">Aus %1$s abmelden?</string>
@@ -917,4 +917,7 @@
     <string name="extensionStoresScreen.deleteStore.title">Erweiterungsdepot entfernen</string>
     <string name="extensionStoresScreen.deleteStore.body">Möchtest du das Erweiterungsdepot \"%1$s\" (%2$s) entfernen?</string>
     <string name="pref_webtoon_vertical_navigator_on_left">Vertikalen Navigator auf der linken Seite platzieren</string>
+    <string name="pref_vertical_navigator">Verwende vertikalen Kapitelnavigator in</string>
+    <string name="pref_vertical_navigator_height">Höhe des vertikalen Navigators</string>
+    <string name="considering">Überlege ich zu lesen</string>
 </resources>

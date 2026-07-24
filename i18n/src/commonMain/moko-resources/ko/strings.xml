@@ -917,4 +917,7 @@
     <string name="extensionStoresScreen.deleteStore.title">확장 앱 스토어 제거</string>
     <string name="extensionStoresScreen.deleteStore.body">확장 앱 스토어 \"%1$s\"(%2$s)을(를) 제거하시겠습니까?</string>
     <string name="pref_webtoon_vertical_navigator_on_left">왼쪽에 세로 네비게이터 배치</string>
+    <string name="pref_vertical_navigator">세로 챕터 탐색기 사용</string>
+    <string name="pref_vertical_navigator_height">세로 탐색기 높이</string>
+    <string name="considering">고려 중</string>
 </resources>

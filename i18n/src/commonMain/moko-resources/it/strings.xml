@@ -590,8 +590,8 @@
     <string name="ext_info_language">Lingua</string>
     <string name="on_hold_list">In Pausa</string>
     <string name="reading_list">Lista di lettura</string>
-    <string name="wish_list">Da Leggere</string>
-    <string name="complete_list">Completati</string>
+    <string name="wish_list">Lista dei desideri</string>
+    <string name="complete_list">Lista completata</string>
     <string name="unfinished_list">Non Completati</string>
     <string name="network_not_metered">Solo su rete non a consumo</string>
     <string name="custom_cover">Copertina personalizzata</string>
@@ -893,4 +893,5 @@
     <string name="migrationListScreen.matchWithoutChapterToast">Nessun capitolo trovato, questa voce non può essere utilizzata per la migrazione</string>
     <string name="download_bookmarked">Segnato</string>
     <string name="action_filter_excluded_scanlators">Filtrare i scanlator esclusi</string>
+    <string name="considering">Considerando</string>
 </resources>

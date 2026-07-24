@@ -917,4 +917,7 @@
     <string name="extensionStoresScreen.deleteStore.title">移除插件商店</string>
     <string name="extensionStoresScreen.deleteStore.body">是否移除插件商店 \"%1$s\" (%2$s)？</string>
     <string name="pref_webtoon_vertical_navigator_on_left">将垂直导航栏放在左侧</string>
+    <string name="pref_vertical_navigator">使用垂直章节导航</string>
+    <string name="pref_vertical_navigator_height">垂直导航栏高度</string>
+    <string name="considering">考虑到</string>
 </resources>
