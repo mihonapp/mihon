@@ -40,9 +40,6 @@
 package mihon.app.shizuku
 
 import android.annotation.SuppressLint
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageInstaller
 import android.content.res.AssetFileDescriptor
@@ -51,21 +48,18 @@ import android.os.IBinder
 import android.os.ParcelFileDescriptor
 import android.os.UserHandle
 import eu.kanade.tachiyomi.BuildConfig
-import eu.kanade.tachiyomi.extension.installer.ACTION_INSTALL_RESULT
 import rikka.shizuku.SystemServiceHelper
 import java.io.OutputStream
 import kotlin.system.exitProcess
 
 class ShellInterface : IShellInterface.Stub() {
-
-    private val context = createContext()
     private val userId = UserHandle::class.java
         .getMethod("myUserId")
         .invoke(null) as Int
     private val packageName = BuildConfig.APPLICATION_ID
 
     @SuppressLint("PrivateApi")
-    override fun install(apk: AssetFileDescriptor) {
+    override fun install(apk: AssetFileDescriptor, intentSender: IntentSender) {
         val pmInterface = Class.forName($$"android.content.pm.IPackageManager$Stub")
             .getMethod("asInterface", IBinder::class.java)
             .invoke(null, SystemServiceHelper.getSystemService("package"))
@@ -136,49 +130,17 @@ class ShellInterface : IShellInterface.Stub() {
                 apk.createInputStream().use { input -> input.copyTo(output) }
             }
 
-        val statusIntent = PendingIntent.getBroadcast(
-            context,
-            0,
-            Intent(ACTION_INSTALL_RESULT).setPackage(packageName),
-            PendingIntent.FLAG_MUTABLE,
-        )
-
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
             session::class.java.getMethod("commit", IntentSender::class.java, Boolean::class.java)
-                .invoke(session, statusIntent.intentSender, false)
+                .invoke(session, intentSender, false)
         } else {
             session::class.java.getMethod("commit", IntentSender::class.java)
-                .invoke(session, statusIntent.intentSender)
+                .invoke(session, intentSender)
         }
     }
 
     override fun destroy() {
         exitProcess(0)
-    }
-
-    @SuppressLint("PrivateApi")
-    private fun createContext(): Context {
-        val activityThread = Class.forName("android.app.ActivityThread")
-        val systemMain = activityThread.getMethod("systemMain").invoke(null)
-        val systemContext = activityThread.getMethod("getSystemContext").invoke(systemMain) as Context
-
-        val shellUserHandle = UserHandle::class.java
-            .getConstructor(Int::class.java)
-            .newInstance(userId)
-
-        val shellContext = systemContext::class.java.getMethod(
-            "createPackageContextAsUser",
-            String::class.java,
-            Int::class.java,
-            UserHandle::class.java,
-        ).invoke(
-            systemContext,
-            "com.android.shell",
-            Context.CONTEXT_INCLUDE_CODE or Context.CONTEXT_IGNORE_SECURITY,
-            shellUserHandle,
-        ) as Context
-
-        return shellContext.createPackageContext("com.android.shell", 0)
     }
 }
 
