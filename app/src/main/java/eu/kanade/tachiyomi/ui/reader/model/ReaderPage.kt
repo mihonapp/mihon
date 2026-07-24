@@ -11,4 +11,7 @@ open class ReaderPage(
 ) : Page(index, url, imageUrl, null) {
 
     open lateinit var chapter: ReaderChapter
+
+    var panels: List<eu.kanade.tachiyomi.ui.reader.viewer.pager.PanelDetector.Panel>? = null
+    var currentPanelIndex: Int = -1
 }

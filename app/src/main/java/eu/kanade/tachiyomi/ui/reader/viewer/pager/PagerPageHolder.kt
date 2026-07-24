@@ -2,6 +2,8 @@ package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import androidx.core.view.isVisible
 import eu.kanade.presentation.util.formattedMessage
@@ -158,6 +160,22 @@ class PagerPageHolder(
                 } else {
                     null
                 }
+                if (!isAnimated && viewer.config.guidedViewEnabled) {
+                    try {
+                        val detector = PanelDetector()
+                        val options = BitmapFactory.Options().apply {
+                            inSampleSize = 4
+                        }
+                        val bitmap = BitmapFactory.decodeStream(source.peek().inputStream(), null, options)
+                        if (bitmap != null) {
+                            val isRTL = viewer is R2LPagerViewer
+                            item.panels = detector.detectPanels(bitmap, isRTL)
+                            bitmap.recycle()
+                        }
+                    } catch (e: Throwable) {
+                        logcat(LogPriority.ERROR, e) { "Failed to detect panels for page ${item.number}" }
+                    }
+                }
                 Triple(source, isAnimated, background)
             }
             withUIContext {
@@ -170,6 +188,7 @@ class PagerPageHolder(
                         cropBorders = viewer.config.imageCropBorders,
                         zoomStartPosition = viewer.config.imageZoomType,
                         landscapeZoom = viewer.config.landscapeZoom,
+                        guidedViewEnabled = viewer.config.guidedViewEnabled,
                     ),
                 )
                 if (!isAnimated) {
