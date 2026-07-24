@@ -547,6 +547,8 @@
       <!-- Data and storage section -->
     <string name="pref_storage_location">Storage location</string>
     <string name="pref_storage_location_info">Used for automatic backups, chapter downloads, and local source.</string>
+    <string name="storage_location_unavailable">Storage location unavailable</string>
+    <string name="storage_location_unavailable_message">The selected folder can\'t be used. Choose a different storage location.</string>
     <string name="pref_create_backup">Create backup</string>
     <string name="pref_create_backup_summ">Can be used to restore current library</string>
     <string name="pref_restore_backup">Restore backup</string>
