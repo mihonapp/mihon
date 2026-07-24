@@ -17,16 +17,22 @@ import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.data.saver.ImageSaver
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.extension.ExtensionManager
+import eu.kanade.tachiyomi.network.CookieIndexListener
 import eu.kanade.tachiyomi.network.JavaScriptEngine
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.AndroidSourceManager
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf
+import mihon.data.network.CookieIndexListenerImpl
+import mihon.data.network.CookieIndexRepositoryImpl
+import mihon.domain.network.CookieIndexRepository
 import nl.adaptivity.xmlutil.XmlDeclMode
 import nl.adaptivity.xmlutil.core.XmlVersion
 import nl.adaptivity.xmlutil.serialization.XML
 import tachiyomi.core.common.storage.AndroidStorageFolderProvider
 import tachiyomi.data.Chapters
+import tachiyomi.data.CookieIndexColumnAdapter
+import tachiyomi.data.Cookie_indices
 import tachiyomi.data.Database
 import tachiyomi.data.DateColumnAdapter
 import tachiyomi.data.History
@@ -83,6 +89,9 @@ class AppModule(val app: Application) : InjektModule {
                 chaptersAdapter = Chapters.Adapter(
                     memoAdapter = MemoColumnAdapter,
                 ),
+                cookie_indicesAdapter = Cookie_indices.Adapter(
+                    domainPathsAdapter = CookieIndexColumnAdapter,
+                ),
             )
         }
 
@@ -110,7 +119,10 @@ class AppModule(val app: Application) : InjektModule {
         addSingletonFactory { ChapterCache(app, get()) }
         addSingletonFactory { CoverCache(app) }
 
-        addSingletonFactory { NetworkHelper(app, get()) }
+        addSingletonFactory<CookieIndexRepository> { CookieIndexRepositoryImpl(get()) }
+        addSingletonFactory<CookieIndexListener> { CookieIndexListenerImpl(get()) }
+
+        addSingletonFactory { NetworkHelper(app, get(), get()) }
         addSingletonFactory { JavaScriptEngine(app) }
 
         addSingletonFactory<SourceManager> { AndroidSourceManager(app, get(), get()) }

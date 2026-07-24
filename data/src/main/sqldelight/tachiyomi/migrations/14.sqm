@@ -1,0 +1,7 @@
+import kotlin.collections.List;
+import mihon.domain.network.CookieIndex;
+
+CREATE TABLE cookie_indices(
+    host TEXT NOT NULL PRIMARY KEY,
+    domainPaths TEXT AS List<CookieIndex> NOT NULL DEFAULT '[]'
+);

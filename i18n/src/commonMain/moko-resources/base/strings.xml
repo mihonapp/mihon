@@ -601,6 +601,7 @@
       <!-- Advanced section -->
     <string name="label_network">Networking</string>
     <string name="pref_clear_cookies">Clear cookies</string>
+    <string name="pref_cookie_manager">Cookie manager</string>
     <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
     <string name="pref_user_agent_string">Default user agent string</string>
     <string name="error_user_agent_string_blank">User agent string can not be blank</string>
@@ -640,6 +641,17 @@
     <string name="pref_debug_info">Debug info</string>
     <string name="pref_update_library_manga_titles">Update library manga titles to match source</string>
     <string name="pref_update_library_manga_titles_summary">Warning: if a manga is renamed, it will be removed from the download queue (if present).</string>
+
+        <!-- Cookie manager screen -->
+    <string name="action_add_host">Add host</string>
+    <string name="no_hosts_indexed">No hosts indexed</string>
+    <string name="action_add_cookie">Add cookie</string>
+    <string name="action_edit_cookie">Edit cookie</string>
+    <string name="no_cookies_indexed">No cookies indexed</string>
+    <string name="cookie_key">Key</string>
+    <string name="cookie_value">Value</string>
+    <string name="cookie_domain">Domain</string>
+    <string name="cookie_path">Path</string>
 
       <!-- About section -->
     <string name="website">Website</string>
