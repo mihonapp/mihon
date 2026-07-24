@@ -298,6 +298,15 @@ class CookieListViewModel(
             append("; Path=${cookie.path}")
         }
         cookieManager.setCookie(urlString, cookieString)
+
+        viewModelScope.launchIO {
+            cookieIndexRepository.updateCookieIndex(
+                host,
+                null,
+                listOf(CookieIndex(cookie.key, cookie.domain, cookie.path)),
+            )
+        }
+
         state.copy(cookies = state.cookies.filterNot { it.id == id })
     }
 

@@ -15,10 +15,10 @@ class CookieIndexRepositoryImpl(
         database.cookie_indicesQueries.insertHost(host)
     }
 
-    override suspend fun updateCookieIndex(host: String, cookieIndex: CookieIndex, toRemove: List<CookieIndex>) {
+    override suspend fun updateCookieIndex(host: String, cookieIndex: CookieIndex?, toRemove: List<CookieIndex>) {
         database.transaction {
             val currentList = database.cookie_indicesQueries.getCookieIndex(host).awaitAsOneOrNull() ?: emptyList()
-            val updatedList = (currentList + cookieIndex)
+            val updatedList = (currentList + listOfNotNull(cookieIndex))
                 .distinct()
                 .filterNot { it in toRemove }
 
