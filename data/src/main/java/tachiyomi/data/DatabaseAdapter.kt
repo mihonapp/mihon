@@ -4,6 +4,7 @@ import app.cash.sqldelight.ColumnAdapter
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
+import mihon.domain.network.CookieIndex
 import java.util.Date
 
 object DateColumnAdapter : ColumnAdapter<Date, Long> {
@@ -37,5 +38,19 @@ object MemoColumnAdapter : ColumnAdapter<JsonObject, ByteArray> {
 
     override fun encode(value: JsonObject): ByteArray {
         return value.toString().encodeToByteArray()
+    }
+}
+
+object CookieIndexColumnAdapter : ColumnAdapter<List<CookieIndex>, String> {
+    override fun decode(databaseValue: String): List<CookieIndex> {
+        return if (databaseValue.isEmpty()) {
+            emptyList()
+        } else {
+            Json.decodeFromString(databaseValue)
+        }
+    }
+
+    override fun encode(value: List<CookieIndex>): String {
+        return Json.encodeToString(value)
     }
 }
