@@ -4,8 +4,13 @@ import android.content.Context
 import android.view.HapticFeedbackConstants
 import android.view.KeyEvent
 import android.view.MotionEvent
+import android.view.animation.Interpolator
+import android.widget.Scroller
 import androidx.viewpager.widget.DirectionalViewPager
 import eu.kanade.tachiyomi.ui.reader.viewer.GestureDetectorWithLongTap
+import logcat.LogPriority
+import tachiyomi.core.common.util.system.logcat
+import java.lang.reflect.Field
 
 /**
  * Pager implementation that listens for tap and long tap and allows temporarily disabling touch
@@ -107,5 +112,43 @@ open class Pager(
      */
     fun setGestureDetectorEnabled(enabled: Boolean) {
         isGestureDetectorEnabled = enabled
+    }
+
+    /**
+     * The ViewPager's private [Scroller] field, looked up once across the class hierarchy so the
+     * page-transition animation can be swapped at runtime.
+     */
+    private val scrollerField: Field? by lazy {
+        generateSequence<Class<*>>(javaClass) { it.superclass }
+            .mapNotNull { runCatching { it.getDeclaredField("mScroller") }.getOrNull() }
+            .firstOrNull()
+            ?.apply { isAccessible = true }
+    }
+
+    /**
+     * The original scroller, cached so a `null` interpolator restores native behavior.
+     */
+    private var originalScroller: Scroller? = null
+
+    /**
+     * Swaps the scroller used to settle page transitions. A `null` [interpolator] restores the
+     * ViewPager's native scroller; otherwise the chosen curve runs over a fixed [durationMs]. Falls
+     * back silently to the default behavior if the internal scroller can't be accessed.
+     */
+    fun setTransitionAnimation(interpolator: Interpolator?, durationMs: Int) {
+        val field = scrollerField ?: return
+        try {
+            if (originalScroller == null) {
+                originalScroller = field.get(this) as? Scroller
+            }
+            val scroller = if (interpolator == null) {
+                originalScroller
+            } else {
+                ReaderPagerScroller(context, interpolator, durationMs)
+            }
+            field.set(this, scroller)
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Failed to apply reader page transition animation" }
+        }
     }
 }
