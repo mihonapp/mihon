@@ -10,7 +10,7 @@ import tachiyomi.data.subscribeToOne
 
 class CookieIndexRepositoryImpl(
     private val database: Database,
-): CookieIndexRepository {
+) : CookieIndexRepository {
     override suspend fun insertHost(host: String) {
         database.cookie_indicesQueries.insertHost(host)
     }

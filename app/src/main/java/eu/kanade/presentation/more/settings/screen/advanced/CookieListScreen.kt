@@ -76,7 +76,13 @@ class CookieListScreen(val host: String) : Screen() {
                         onDismissRequest = { model.setDialog(null) },
                         title = {
                             Text(
-                                text = stringResource(if (dialog.key.isEmpty()) MR.strings.action_add_cookie else MR.strings.action_edit_cookie),
+                                text = stringResource(
+                                    if (dialog.key.isEmpty()) {
+                                        MR.strings.action_add_cookie
+                                    } else {
+                                        MR.strings.action_edit_cookie
+                                    },
+                                ),
                             )
                         },
                         text = {
@@ -209,16 +215,14 @@ class CookieListScreen(val host: String) : Screen() {
                 )
 
                 Text(
-                    text = "Domain = $domain",
-                    modifier = Modifier
-                        .secondaryItemAlpha(),
+                    text = "${stringResource(MR.strings.cookie_domain)} = $domain",
+                    modifier = Modifier.secondaryItemAlpha(),
                     style = MaterialTheme.typography.bodySmall,
                 )
 
                 Text(
-                    text = "Path = $path",
-                    modifier = Modifier
-                        .secondaryItemAlpha(),
+                    text = "${stringResource(MR.strings.cookie_path)} = $path",
+                    modifier = Modifier.secondaryItemAlpha(),
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
@@ -233,7 +237,6 @@ class CookieListScreen(val host: String) : Screen() {
             }
         }
     }
-
 }
 
 class CookieListViewModel(
@@ -326,8 +329,7 @@ class CookieListViewModel(
             if (oldCookie.domain == targetDomain || oldCookie.path == targetPath) {
                 cookieToOverwrite = oldCookie
             } else {
-                if (cookiesToRemove.none { it.id == oldCookie.id })
-                    cookiesToRemove.add(oldCookie)
+                if (cookiesToRemove.none { it.id == oldCookie.id }) cookiesToRemove.add(oldCookie)
             }
         }
 
@@ -402,7 +404,6 @@ class CookieListViewModel(
                 }
         }
     }
-
 }
 
 data class Cookie(
@@ -415,9 +416,10 @@ data class Cookie(
 }
 
 private fun Cookie.conflicts(targetDomain: String, targetPath: String): Boolean {
-    val domainConflict = targetDomain.isEmpty() && domain.isEmpty() ||
+    val domainConflict = (targetDomain.isEmpty() && domain.isEmpty()) || (
         targetDomain.isNotEmpty() && domain.isNotEmpty() &&
-        (targetDomain.endsWith(domain) || domain.endsWith(targetDomain))
+            (targetDomain.endsWith(domain) || domain.endsWith(targetDomain))
+        )
     val pathConflict = targetPath.startsWith(path) || path.startsWith(targetPath)
 
     return domainConflict && pathConflict

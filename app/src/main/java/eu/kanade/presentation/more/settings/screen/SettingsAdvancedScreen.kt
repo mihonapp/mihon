@@ -217,7 +217,7 @@ object SettingsAdvancedScreen : SearchableSettings {
                     },
                 ),
                 Preference.PreferenceItem.TextPreference(
-                  title = stringResource(MR.strings.pref_cookie_manager),
+                    title = stringResource(MR.strings.pref_cookie_manager),
                     onClick = { navigator.push(CookieManagerScreen()) },
                 ),
                 Preference.PreferenceItem.TextPreference(
