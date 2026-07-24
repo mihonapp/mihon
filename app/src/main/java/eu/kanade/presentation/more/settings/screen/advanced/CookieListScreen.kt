@@ -142,7 +142,7 @@ class CookieListScreen(val host: String) : Screen() {
                                 AppBarActions(
                                     actions = listOf(
                                         AppBar.Action(
-                                            title = "Add host",
+                                            title = stringResource(MR.strings.action_add_host),
                                             icon = Icons.Outlined.AddCircleOutline,
                                             onClick = {
                                                 model.setDialog(CookieListViewModel.Dialog())
