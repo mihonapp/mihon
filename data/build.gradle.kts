@@ -17,6 +17,13 @@ android {
                 schemaOutputDirectory.set(project.file("./src/main/sqldelight"))
                 generateAsync.set(true)
             }
+
+            create("CookiesDatabase") {
+                packageName.set("mihon.data")
+                dialect(libs.sqldelight.sqliteDialect338)
+                srcDirs("./src/main/sqldelight_cookies")
+                generateAsync.set(true)
+            }
         }
     }
 }
@@ -35,6 +42,8 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.serialization.jsonOkio)
     implementation(libs.kotlinx.serialization.protobuf)
+
+    implementation(libs.androidx.sqlite.bundled)
 
     implementation(libs.injekt)
 

@@ -1,7 +1,5 @@
 package eu.kanade.presentation.more.settings.screen.advanced
 
-import android.webkit.CookieManager
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,10 +11,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddCircleOutline
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -24,9 +24,12 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
@@ -42,8 +45,8 @@ import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.presentation.util.Screen
 import kotlinx.coroutines.flow.update
 import mihon.core.viewmodel.StateViewModel
-import mihon.domain.network.CookieIndex
-import mihon.domain.network.CookieIndexRepository
+import mihon.domain.network.Cookie
+import mihon.domain.network.CookieRepository
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
@@ -52,6 +55,7 @@ import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
+import tachiyomi.presentation.core.util.clickableNoIndication
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -71,10 +75,10 @@ class CookieListScreen(val host: String) : Screen() {
             is CookieListViewModel.State.Loading -> LoadingScreen()
             is CookieListViewModel.State.Ready -> {
                 s.dialog?.let { dialog ->
-                    val keyState = rememberTextFieldState(dialog.key)
+                    val keyState = rememberTextFieldState(dialog.name)
                     val valueState = rememberTextFieldState(dialog.value)
-                    val domainState = rememberTextFieldState(dialog.domain)
                     val pathState = rememberTextFieldState(dialog.path)
+                    var hostOnly by remember { mutableStateOf(dialog.hostOnly) }
 
                     val focusRequester = remember { FocusRequester() }
                     LaunchedEffect(focusRequester) {
@@ -86,7 +90,7 @@ class CookieListScreen(val host: String) : Screen() {
                         title = {
                             Text(
                                 text = stringResource(
-                                    if (dialog.key.isEmpty()) {
+                                    if (dialog.name.isEmpty()) {
                                         MR.strings.action_add_cookie
                                     } else {
                                         MR.strings.action_edit_cookie
@@ -98,10 +102,11 @@ class CookieListScreen(val host: String) : Screen() {
                             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                                 OutlinedTextField(
                                     state = keyState,
-                                    label = { Text(stringResource(MR.strings.cookie_key)) },
-                                    modifier = Modifier.fillMaxWidth()
+                                    label = { Text(stringResource(MR.strings.cookie_name)) },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
                                         .then(
-                                            if (dialog.key.isEmpty()) {
+                                            if (dialog.name.isEmpty()) {
                                                 Modifier.focusRequester(
                                                     focusRequester,
                                                 )
@@ -109,14 +114,15 @@ class CookieListScreen(val host: String) : Screen() {
                                                 Modifier
                                             },
                                         ),
-                                    enabled = dialog.key.isEmpty(),
+                                    enabled = dialog.name.isEmpty(),
                                 )
                                 OutlinedTextField(
                                     state = valueState,
                                     label = { Text(stringResource(MR.strings.cookie_value)) },
-                                    modifier = Modifier.fillMaxWidth()
+                                    modifier = Modifier
+                                        .fillMaxWidth()
                                         .then(
-                                            if (dialog.key.isNotEmpty()) {
+                                            if (dialog.name.isNotEmpty()) {
                                                 Modifier.focusRequester(
                                                     focusRequester,
                                                 )
@@ -124,27 +130,41 @@ class CookieListScreen(val host: String) : Screen() {
                                                 Modifier
                                             },
                                         ),
-                                )
-                                OutlinedTextField(
-                                    state = domainState,
-                                    label = { Text(stringResource(MR.strings.cookie_domain)) },
-                                    modifier = Modifier.fillMaxWidth(),
                                 )
                                 OutlinedTextField(
                                     state = pathState,
                                     label = { Text(stringResource(MR.strings.cookie_path)) },
                                     modifier = Modifier.fillMaxWidth(),
                                 )
+                                Row(
+                                    modifier = Modifier
+                                        .clickableNoIndication { hostOnly = !hostOnly }
+                                        .fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                ) {
+                                    Text(
+                                        text = "Host only",
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                    )
+                                    Switch(
+                                        checked = hostOnly,
+                                        onCheckedChange = { hostOnly = !hostOnly },
+                                    )
+                                }
                             }
                         },
                         confirmButton = {
                             TextButton(
                                 onClick = {
                                     model.addOrUpdate(
-                                        key = keyState.text.toString(),
-                                        value = valueState.text.toString(),
-                                        domain = domainState.text.toString(),
-                                        path = pathState.text.toString(),
+                                        Cookie(
+                                            name = keyState.text.toString(),
+                                            value = valueState.text.toString(),
+                                            path = pathState.text.toString(),
+                                            hostOnly = hostOnly,
+                                        ),
                                     )
                                     model.setDialog(null)
                                 },
@@ -191,23 +211,23 @@ class CookieListScreen(val host: String) : Screen() {
                         ScrollbarLazyColumn(
                             contentPadding = contentPadding,
                         ) {
-                            items(s.filteredCookies, key = { it.id }) {
+                            items(s.filteredCookies, key = { "${it.path}$${it.name}$${it.hostOnly}" }) {
                                 CookieItem(
-                                    key = it.key,
+                                    name = it.name,
                                     value = it.value,
-                                    domain = it.domain,
                                     path = it.path,
+                                    hostOnly = it.hostOnly,
                                     onClick = {
                                         model.setDialog(
                                             CookieListViewModel.Dialog(
-                                                key = it.key,
+                                                name = it.name,
                                                 value = it.value,
-                                                domain = it.domain,
                                                 path = it.path,
+                                                hostOnly = it.hostOnly,
                                             ),
                                         )
                                     },
-                                    onClickDelete = { model.delete(it.id) },
+                                    onClickDelete = { model.delete(it) },
                                 )
                             }
                         }
@@ -219,48 +239,54 @@ class CookieListScreen(val host: String) : Screen() {
 
     @Composable
     private fun CookieItem(
-        key: String,
+        name: String,
         value: String,
-        domain: String,
         path: String,
+        hostOnly: Boolean,
         onClick: () -> Unit,
         onClickDelete: () -> Unit,
     ) {
-        Row(
+        ElevatedCard(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(onClick = onClick)
-                .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
-            verticalAlignment = Alignment.CenterVertically,
+                .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.extraSmall),
+            onClick = onClick,
         ) {
-            Column(
-                modifier = Modifier.weight(1f),
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(MaterialTheme.padding.medium),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(
-                    text = "$key = $value",
-                    style = MaterialTheme.typography.bodyLarge,
-                )
+                Column(
+                    modifier = Modifier.weight(1f),
+                ) {
+                    Text(
+                        text = "$name = $value",
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
 
-                Text(
-                    text = "${stringResource(MR.strings.cookie_domain)} = $domain",
-                    modifier = Modifier.secondaryItemAlpha(),
-                    style = MaterialTheme.typography.bodySmall,
-                )
+                    Text(
+                        text = "${stringResource(MR.strings.cookie_path)} = $path",
+                        modifier = Modifier.secondaryItemAlpha(),
+                        style = MaterialTheme.typography.bodySmall,
+                    )
 
-                Text(
-                    text = "${stringResource(MR.strings.cookie_path)} = $path",
-                    modifier = Modifier.secondaryItemAlpha(),
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            }
+                    Text(
+                        text = stringResource(MR.strings.cookie_host_only),
+                        modifier = Modifier.alpha(if (hostOnly) 1f else 0f),
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                }
 
-            IconButton(
-                onClick = onClickDelete,
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Delete,
-                    contentDescription = stringResource(MR.strings.action_delete),
-                )
+                IconButton(
+                    onClick = onClickDelete,
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Delete,
+                        contentDescription = stringResource(MR.strings.action_delete),
+                    )
+                }
             }
         }
     }
@@ -268,35 +294,21 @@ class CookieListScreen(val host: String) : Screen() {
 
 class CookieListViewModel(
     private val host: String,
-    private val cookieIndexRepository: CookieIndexRepository = Injekt.get(),
+    private val cookieRepository: CookieRepository = Injekt.get(),
 ) : StateViewModel<CookieListViewModel.State>(State.Loading) {
-
-    private val cookieManager = CookieManager.getInstance()
 
     init {
         viewModelScope.launchIO {
-            cookieIndexRepository.getCookieIndex(host).collect { cookieIndices ->
-                val cookies = cookieIndices.mapNotNull { cookieIndex ->
-                    val domain = cookieIndex.domain.ifEmpty { host }
-                    val urlString = "https://$domain${cookieIndex.path}"
-                    val cookies = cookieManager.getCookie(urlString) ?: return@mapNotNull null
-                    val targetCookie = cookies.split(";")
-                        .map { it.trim() }
-                        .firstOrNull { it.startsWith("${cookieIndex.key}=") } ?: return@mapNotNull null
-                    val value = targetCookie.substringAfter("=", "").trim()
-                    Cookie(
-                        cookieIndex.key,
-                        value,
-                        cookieIndex.domain,
-                        cookieIndex.path,
-                    )
-                }
+            fetchCookies()
+        }
+    }
 
-                mutableState.update {
-                    when (it) {
-                        is State.Ready -> it.copy(cookies = cookies)
-                        is State.Loading -> State.Ready(cookies = cookies)
-                    }
+    private suspend fun fetchCookies() {
+        cookieRepository.getCookiesForHost(host).let { cookies ->
+            mutableState.update {
+                when (it) {
+                    is State.Ready -> it.copy(cookies = cookies)
+                    is State.Loading -> State.Ready(cookies = cookies)
                 }
             }
         }
@@ -312,114 +324,46 @@ class CookieListViewModel(
         state.copy(dialog = dialog)
     }
 
-    fun delete(id: String) = mutableState.update { state ->
-        if (state !is State.Ready) return@update state
-
-        val cookie = state.cookies.firstOrNull { it.id == id } ?: return@update state
-        val domain = cookie.domain.ifEmpty { host }
-        val urlString = "https://$domain${cookie.path}"
-
-        val cookieString = buildString {
-            append("${cookie.key}=; Max-Age=0")
-            if (cookie.domain.isNotEmpty()) append("; Domain=${cookie.domain}")
-            append("; Path=${cookie.path}")
-        }
-        cookieManager.setCookie(urlString, cookieString)
-
+    fun delete(cookie: Cookie) {
         viewModelScope.launchIO {
-            cookieIndexRepository.updateCookieIndex(
-                host,
-                null,
-                listOf(CookieIndex(cookie.key, cookie.domain, cookie.path)),
-            )
+            cookieRepository.deleteCookie(host, cookie)
+            fetchCookies()
         }
-
-        state.copy(cookies = state.cookies.filterNot { it.id == id })
     }
 
-    fun addOrUpdate(key: String, value: String, domain: String, path: String) = mutableState.update { state ->
-        if (state !is State.Ready) return@update state
-        if (key.isBlank() || value.isBlank()) return@update state
+    fun addOrUpdate(cookie: Cookie) {
+        val state = state.value
 
-        val targetDomain = domain.trim()
-        val targetPath = if (path.isBlank()) "/" else "/${path.trim().removePrefix("/")}"
+        if (state !is State.Ready) return
+        val dialog = state.dialog
+        if (cookie.name.isBlank() || cookie.value.isBlank()) return
 
-        val oldCookie = state.dialog?.takeIf { it.key.isNotBlank() }?.let { "${it.domain}${it.path}$${it.key}" }
-            ?.let { id -> state.cookies.firstOrNull { it.id == id } }
-
-        var cookieToOverwrite: Cookie? = null
-        val cookiesToRemove = mutableListOf<Cookie>()
-
-        for (cookie in state.cookies) {
-            if (cookie.key != key) continue
-            if (!cookie.conflicts(targetDomain, targetPath)) continue
-
-            if (cookie.domain == targetDomain && cookie.path == targetPath) {
-                cookieToOverwrite = cookie
-            } else {
-                cookiesToRemove.add(cookie)
-            }
-        }
-
-        if (cookieToOverwrite == null && oldCookie != null) {
-            if (oldCookie.domain == targetDomain || oldCookie.path == targetPath) {
-                cookieToOverwrite = oldCookie
-            } else {
-                if (cookiesToRemove.none { it.id == oldCookie.id }) cookiesToRemove.add(oldCookie)
-            }
-        }
-
-        val finalCookie = Cookie(
-            key = key,
-            value = value,
-            domain = targetDomain,
-            path = targetPath,
-        )
-
-        val updatedCookies = state.cookies
-            .filterNot { cookie -> cookiesToRemove.any { it.id == cookie.id } }
-            .toMutableList()
-
-        cookieToOverwrite?.let { existing ->
-            updatedCookies[updatedCookies.indexOfFirst { it.id == existing.id }] = finalCookie
-        } ?: updatedCookies.add(finalCookie)
-
-        cookiesToRemove.forEach { rm ->
-            val rmUrl = "https://${rm.domain.ifEmpty { host }}${rm.path}"
-            val expireString = buildString {
-                append("${rm.key}=; Max-Age=0")
-                if (rm.domain.isNotEmpty()) append("; Domain=${rm.domain}")
-                append("; Path=${rm.path}")
-            }
-            cookieManager.setCookie(rmUrl, expireString)
-        }
-
-        val finalUrl = "https://${targetDomain.ifEmpty { host }}$targetPath"
-        val finalCookieString = buildString {
-            append("${finalCookie.key}=${finalCookie.value}")
-            if (targetDomain.isNotEmpty()) append("; Domain=$targetDomain")
-            append("; Path=$targetPath")
-        }
-        cookieManager.setCookie(finalUrl, finalCookieString)
-
+        val path = if (cookie.path.startsWith("/")) cookie.path else "/${cookie.path}"
         viewModelScope.launchIO {
-            cookieIndexRepository.updateCookieIndex(
-                host,
-                CookieIndex(finalCookie.key, finalCookie.domain, finalCookie.path),
-                cookiesToRemove.map {
-                    CookieIndex(it.key, it.domain, it.path)
-                },
-            )
-        }
+            if (dialog != null && dialog.name.isNotBlank()) {
+                if (dialog.path != path || dialog.hostOnly != cookie.hostOnly) {
+                    cookieRepository.deleteCookie(
+                        host = host,
+                        cookie = Cookie(
+                            name = dialog.name,
+                            value = dialog.value,
+                            path = path,
+                            hostOnly = dialog.hostOnly,
+                        ),
+                    )
+                }
+            }
 
-        state.copy(cookies = updatedCookies)
+            cookieRepository.addOrUpdateCookie(host, cookie)
+            fetchCookies()
+        }
     }
 
     data class Dialog(
-        val key: String = "",
+        val name: String = "",
         val value: String = "",
-        val domain: String = "",
         val path: String = "",
+        val hostOnly: Boolean = false,
     )
 
     sealed interface State {
@@ -436,30 +380,8 @@ class CookieListViewModel(
                 get() = if (query.isNullOrBlank()) {
                     cookies
                 } else {
-                    cookies.filter { it.key.contains(query, ignoreCase = true) }
+                    cookies.filter { it.name.contains(query, ignoreCase = true) }
                 }
         }
     }
-}
-
-data class Cookie(
-    val key: String,
-    val value: String,
-    val domain: String,
-    val path: String,
-) {
-    val id get() = "$domain$path$$key"
-}
-
-private fun Cookie.conflicts(targetDomain: String, targetPath: String): Boolean {
-    val domainConflict = (targetDomain.isEmpty() && domain.isEmpty()) || (
-        targetDomain.isNotEmpty() && domain.isNotEmpty() &&
-            (targetDomain.endsWith(domain) || domain.endsWith(targetDomain))
-        )
-
-    val pathA = if (path.endsWith('/')) path else "$path/"
-    val pathB = if (targetPath.endsWith('/')) targetPath else "$targetPath/"
-    val pathConflict = pathA.startsWith(pathB) || pathB.startsWith(pathA)
-
-    return domainConflict && pathConflict
 }

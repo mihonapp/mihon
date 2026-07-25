@@ -1,6 +1,5 @@
 package eu.kanade.presentation.more.settings.screen.advanced
 
-import android.webkit.CookieManager
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,10 +35,9 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.util.Screen
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import mihon.core.viewmodel.StateViewModel
-import mihon.domain.network.CookieIndexRepository
+import mihon.domain.network.CookieRepository
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
@@ -164,14 +162,12 @@ class CookieManagerScreen : Screen() {
 }
 
 class CookieManagerViewModel(
-    private val cookieIndexRepository: CookieIndexRepository = Injekt.get(),
+    private val cookieRepository: CookieRepository = Injekt.get(),
 ) : StateViewModel<CookieManagerViewModel.State>(State.Loading) {
-
-    private val cookieManager = CookieManager.getInstance()
 
     init {
         viewModelScope.launchIO {
-            cookieIndexRepository.getHosts().collect { hosts ->
+            cookieRepository.getAllHosts().let { hosts ->
                 mutableState.update {
                     val sorted = hosts.sortedWith(String.CASE_INSENSITIVE_ORDER)
                     when (it) {
@@ -191,27 +187,24 @@ class CookieManagerViewModel(
     fun addHost(host: String) {
         viewModelScope.launchIO {
             if (host.isBlank()) return@launchIO
-            cookieIndexRepository.insertHost(host)
+            mutableState.update { state ->
+                if (state !is State.Ready) return@update state
+
+                val hosts = (state.hosts + host.lowercase()).distinct()
+                state.copy(hosts = hosts)
+            }
         }
     }
 
     fun deleteHost(host: String) {
         viewModelScope.launchIO {
-            val cookieIndices = cookieIndexRepository.getCookieIndex(host).first()
+            cookieRepository.deleteHost(host)
+            mutableState.update { state ->
+                if (state !is State.Ready) return@update state
 
-            for (cookieIndex in cookieIndices) {
-                val domain = cookieIndex.domain.ifEmpty { host }
-                val urlString = "https://$domain${cookieIndex.path}"
-                val cookieString = buildString {
-                    append("${cookieIndex.key}=; Max-Age=0")
-                    if (domain.isNotEmpty()) append("; Domain=$domain")
-                    append("; Path=${cookieIndex.path}")
-                }
-                cookieManager.setCookie(urlString, cookieString)
+                val hosts = state.hosts.filterNot { it == host }
+                state.copy(hosts = hosts)
             }
-
-            cookieManager.flush()
-            cookieIndexRepository.deleteHost(host)
         }
     }
 

@@ -648,10 +648,10 @@
     <string name="action_add_cookie">Add cookie</string>
     <string name="action_edit_cookie">Edit cookie</string>
     <string name="no_cookies_indexed">No cookies indexed</string>
-    <string name="cookie_key">Key</string>
+    <string name="cookie_name">Name</string>
     <string name="cookie_value">Value</string>
-    <string name="cookie_domain">Domain</string>
     <string name="cookie_path">Path</string>
+    <string name="cookie_host_only">Host only</string>
 
       <!-- About section -->
     <string name="website">Website</string>

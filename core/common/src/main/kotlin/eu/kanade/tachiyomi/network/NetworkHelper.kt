@@ -13,10 +13,9 @@ import java.util.concurrent.TimeUnit
 class NetworkHelper(
     private val context: Context,
     private val preferences: NetworkPreferences,
-    cookieIndexListener: CookieIndexListener,
 ) {
 
-    val cookieJar = AndroidCookieJar(cookieIndexListener)
+    val cookieJar = AndroidCookieJar()
 
     private val clientBuilder: OkHttpClient.Builder = run {
         val builder = OkHttpClient.Builder()

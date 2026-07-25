@@ -1,16 +1,11 @@
 package eu.kanade.tachiyomi.network
 
 import android.webkit.CookieManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.HttpUrl
 
-class AndroidCookieJar(
-    private val cookieIndexListener: CookieIndexListener,
-) : CookieJar {
+class AndroidCookieJar : CookieJar {
 
     private val manager = CookieManager.getInstance()
 
@@ -19,10 +14,6 @@ class AndroidCookieJar(
 
         cookies.forEach {
             manager.setCookie(urlString, it.toString())
-            CoroutineScope(Dispatchers.IO).launch {
-                val domain = if (!it.hostOnly) it.domain.removePrefix(".") else ""
-                cookieIndexListener.saveCookieIndex(url.host, it.name, domain, it.path)
-            }
         }
     }
 
