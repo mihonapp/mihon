@@ -6,6 +6,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
@@ -77,6 +78,8 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerConfig
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.isNightMode
@@ -564,6 +567,10 @@ class ReaderActivity : BaseActivity() {
         updateViewerInset(readerPreferences.fullscreen.get(), readerPreferences.drawUnderCutout.get())
         binding.viewerContainer.addView(newViewer.getView())
 
+        if (newViewer is PagerViewer && readerPreferences.pageLayout.get() == PagerConfig.PageLayout.AUTOMATIC) {
+            setDoublePageMode(newViewer)
+        }
+
         if (readerPreferences.showReadingMode.get()) {
             showReadingModeToast(viewModel.getMangaReadingMode())
         }
@@ -716,6 +723,26 @@ class ReaderActivity : BaseActivity() {
     }
 
     /**
+     * Reloads (re-pairs) the current chapters in the pager viewer to apply the double-page layout.
+     * Invoked by [PagerConfig.reloadChapterListener] when a double-page preference changes.
+     */
+    fun reloadChapters(doublePages: Boolean) {
+        val viewer = viewModel.state.value.viewer as? PagerViewer ?: return
+        if (viewer.config.autoDoublePages) {
+            setDoublePageMode(viewer)
+        } else {
+            viewer.config.doublePages = doublePages
+        }
+        viewModel.state.value.viewerChapters?.let {
+            viewer.setChapters(it)
+        }
+    }
+
+    private fun setDoublePageMode(viewer: PagerViewer) {
+        viewer.config.doublePages = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    }
+
+    /**
      * Called from the viewer to toggle the visibility of the menu. It's implemented on the
      * viewer because each one implements its own touch and key events.
      */
@@ -859,22 +886,13 @@ class ReaderActivity : BaseActivity() {
             }
         }
 
-        private val grayBackgroundColor = Color.rgb(0x20, 0x21, 0x25)
-
         /*
          * Initializes the reader subscriptions.
          */
         init {
             readerPreferences.readerTheme.changes()
                 .onEach { theme ->
-                    binding.readerContainer.setBackgroundColor(
-                        when (theme) {
-                            0 -> Color.WHITE
-                            2 -> grayBackgroundColor
-                            3 -> automaticBackgroundColor()
-                            else -> Color.BLACK
-                        },
-                    )
+                    binding.readerContainer.setBackgroundColor(readerBackgroundColor(baseContext, theme))
                 }
                 .launchIn(lifecycleScope)
 
@@ -907,17 +925,6 @@ class ReaderActivity : BaseActivity() {
                     updateViewerInset(fullscreen, drawUnderCutout)
                 }
                 .launchIn(lifecycleScope)
-        }
-
-        /**
-         * Picks background color for [ReaderActivity] based on light/dark theme preference
-         */
-        private fun automaticBackgroundColor(): Int {
-            return if (baseContext.isNightMode()) {
-                grayBackgroundColor
-            } else {
-                Color.WHITE
-            }
         }
 
         /**
@@ -990,4 +997,18 @@ class ReaderActivity : BaseActivity() {
             binding.viewerContainer.setLayerType(LAYER_TYPE_HARDWARE, paint)
         }
     }
+}
+
+private val readerGrayBackgroundColor = Color.rgb(0x20, 0x21, 0x25)
+
+/**
+ * Maps the reader background [theme] preference (white=0, black=1, gray=2, automatic=3) to its fill
+ * colour. Shared by the reader container background and the double-page spread letterbox so the two
+ * never drift apart. [context] is only consulted for the night-mode-dependent Automatic theme.
+ */
+internal fun readerBackgroundColor(context: Context, theme: Int): Int = when (theme) {
+    0 -> Color.WHITE
+    2 -> readerGrayBackgroundColor
+    3 -> if (context.isNightMode()) readerGrayBackgroundColor else Color.WHITE
+    else -> Color.BLACK
 }

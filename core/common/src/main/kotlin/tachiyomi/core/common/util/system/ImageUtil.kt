@@ -6,6 +6,7 @@ import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.BitmapRegionDecoder
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Rect
@@ -197,6 +198,102 @@ object ImageUtil {
         RIGHT,
         LEFT,
     }
+
+    /**
+     * Adds a horizontal center margin to a wide (double-page) image by splitting it down the
+     * middle and inserting padding scaled relative to the height of the display view to
+     * compensate for scaling. Used to visually separate the two halves of a wide page.
+     */
+    fun addHorizontalCenterMargin(
+        imageSource: BufferedSource,
+        viewHeight: Int,
+        backgroundContext: Context,
+    ): BufferedSource {
+        // Native decoder can fail where BitmapFactory's header read (isWideImage) succeeded; skip the
+        // margin and show the page as-is rather than aborting the whole page. Source is only peeked.
+        val imageBitmap = ImageDecoder.newInstance(imageSource.peek().inputStream())?.decode()
+            ?: return imageSource
+        val height = imageBitmap.height
+        val width = imageBitmap.width
+
+        val centerPadding = 96 / (max(1, viewHeight) / height).coerceAtLeast(1)
+
+        val leftSourcePart = Rect(0, 0, width / 2, height)
+        val rightSourcePart = Rect(width / 2, 0, width, height)
+        val leftTargetPart = Rect(0, 0, width / 2, height)
+        val rightTargetPart = Rect(width / 2 + centerPadding, 0, width + centerPadding, height)
+
+        val bgColor = chooseBackground(backgroundContext, imageSource.peek().inputStream())
+        bgColor.setBounds(width / 2, 0, width / 2 + centerPadding, height)
+        val result = createBitmap(width + centerPadding, height)
+
+        result.applyCanvas {
+            drawBitmap(imageBitmap, leftSourcePart, leftTargetPart, null)
+            drawBitmap(imageBitmap, rightSourcePart, rightTargetPart, null)
+            bgColor.draw(this)
+        }
+
+        val output = Buffer()
+        result.compress(Bitmap.CompressFormat.JPEG, 100, output.outputStream())
+        imageBitmap.recycle()
+        result.recycle()
+        return output
+    }
+
+    /**
+     * Combines two [Bitmap]s side-by-side into a single spread image, ordered by [isLTR],
+     * with an optional [centerMargin] gap and [background] fill behind unequal-height pages.
+     */
+    fun mergeBitmaps(
+        imageBitmap: Bitmap,
+        imageBitmap2: Bitmap,
+        isLTR: Boolean,
+        centerMargin: Int,
+        @ColorInt background: Int = Color.WHITE,
+        progressCallback: ((Int) -> Unit)? = null,
+    ): BufferedSource {
+        val height = imageBitmap.height
+        val width = imageBitmap.width
+        val height2 = imageBitmap2.height
+        val width2 = imageBitmap2.width
+
+        val maxHeight = max(height, height2)
+
+        val result = Bitmap.createBitmap(width + width2 + centerMargin, maxHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(result)
+        canvas.drawColor(background)
+        val upperPart = Rect(
+            if (isLTR) 0 else width2 + centerMargin,
+            (maxHeight - height) / 2,
+            (if (isLTR) 0 else width2 + centerMargin) + width,
+            height + (maxHeight - height) / 2,
+        )
+
+        canvas.drawBitmap(imageBitmap, imageBitmap.rect, upperPart, null)
+        progressCallback?.invoke(98)
+        val bottomPart = Rect(
+            if (!isLTR) 0 else width + centerMargin,
+            (maxHeight - height2) / 2,
+            (if (!isLTR) 0 else width + centerMargin) + width2,
+            height2 + (maxHeight - height2) / 2,
+        )
+
+        canvas.drawBitmap(imageBitmap2, imageBitmap2.rect, bottomPart, null)
+        progressCallback?.invoke(99)
+
+        val output = Buffer()
+        result.compress(Bitmap.CompressFormat.JPEG, 100, output.outputStream())
+        progressCallback?.invoke(100)
+
+        // Free the two source pages and the composited result now that the spread is encoded.
+        imageBitmap.recycle()
+        imageBitmap2.recycle()
+        result.recycle()
+        return output
+    }
+
+    private val Bitmap.rect: Rect
+        get() = Rect(0, 0, width, height)
 
     /**
      * Check whether the image is considered a tall image.
