@@ -12,8 +12,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import eu.kanade.core.preference.PreferenceMutableState
 import eu.kanade.tachiyomi.ui.library.LibraryItem
@@ -22,6 +25,7 @@ import kotlinx.coroutines.launch
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibraryManga
+import tachiyomi.domain.manga.model.MangaCover
 import tachiyomi.presentation.core.components.material.PullRefresh
 import kotlin.time.Duration.Companion.seconds
 
@@ -46,6 +50,9 @@ fun LibraryContent(
     getColumnsForOrientation: (Boolean) -> PreferenceMutableState<Int>,
     getItemsForCategory: (Category) -> List<LibraryItem>,
 ) {
+    var showCategoryOverlay by rememberSaveable { mutableStateOf(false) }
+    val haptic = LocalHapticFeedback.current
+
     Column(
         modifier = Modifier.padding(
             top = contentPadding.calculateTopPadding(),
@@ -72,6 +79,10 @@ fun LibraryContent(
                     scope.launch {
                         pagerState.animateScrollToPage(it)
                     }
+                },
+                onLongPress = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    showCategoryOverlay = true
                 },
             )
         }
@@ -116,5 +127,31 @@ fun LibraryContent(
         LaunchedEffect(pagerState.currentPage) {
             onChangeCurrentPage(pagerState.currentPage)
         }
+
+        CategoryOverlayDialog(
+            visible = showCategoryOverlay,
+            categories = categories,
+            currentCategoryIndex = pagerState.currentPage,
+            getItemCountForCategory = getItemCountForCategory,
+            getFirstMangaCoverForCategory = { category ->
+                val items = getItemsForCategory(category)
+                items.firstOrNull()?.let { item ->
+                    val manga = item.libraryManga.manga
+                    MangaCover(
+                        mangaId = manga.id,
+                        sourceId = manga.source,
+                        isMangaFavorite = manga.favorite,
+                        url = manga.thumbnailUrl,
+                        lastModified = manga.coverLastModified,
+                    )
+                }
+            },
+            onCategorySelected = { index ->
+                scope.launch {
+                    pagerState.animateScrollToPage(index)
+                }
+            },
+            onDismiss = { showCategoryOverlay = false },
+        )
     }
 }
