@@ -21,11 +21,16 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Detect Shizuku with permission check ([@Small-Ku](https://github.com/Small-Ku)) ([#3565](https://github.com/mihonapp/mihon/pull/3565))
 
 ### Improved
+- Library search ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#3554](https://github.com/mihonapp/mihon/pull/3554))
+  - Support logical operators (`&&`, `||`, `-`), implicit `AND` separators, and nested expressions with `()`
+  - Add comparison operators (`>`, `>=`, `<`, `<=`, `=`) for `id`, `added`, `fetchinterval` / `fi`, `nextupdate` / `nu`, `unread`, `read`, and `total` (Uses `yyyy-MM-dd` dates for `added` and `nextupdate`)
+  - Support field-specific prefixes (`title`, `author`, `artist`, `description` / `desc`, `genre` / `tag`, `source` / `src`, `source_id` / `src_id`, `notes` / `note`, `language` / `lang`) and empty field matching (`""`, `''`)
 - Always use Private installer to update privately installed extensions ([@MajorTanya](https://github.com/MajorTanya)) ([#3614](https://github.com/mihonapp/mihon/pull/3614))
 
 ### Fixed
 - Fixed app bars remaining visible after changing pages by tapping in the paged reader after using the chapter navigator slider ([@AntsyLich](https://github.com/AntsyLich)) ([#3567](https://github.com/mihonapp/mihon/pull/3567))
 - Fixed MangaBaka User Agent string ([@MajorTanya](https://github.com/MajorTanya)) ([#3578](https://github.com/mihonapp/mihon/pull/3578))
+- Fixed extension installation with shizuku installer ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#3630](https://github.com/mihonapp/mihon/pull/3630))
 
 ## [v0.20.1] - 2026-07-09
 ### Added
