@@ -8,7 +8,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import logcat.LogPriority
-import tachiyomi.core.common.util.lang.toLong
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.data.Database
 import tachiyomi.data.MemoColumnAdapter
@@ -100,9 +99,9 @@ class MangaRepositoryImpl(
             .getUpcomingManga(
                 startOfDay = epochMillis,
                 statuses = statuses,
-                includedEmpty = includedCategories.isEmpty().toLong(),
+                includedEmpty = includedCategories.isEmpty(),
                 includedCategories = includedCategories,
-                excludedEmpty = excludedCategories.isEmpty().toLong(),
+                excludedEmpty = excludedCategories.isEmpty(),
                 excludedCategories = excludedCategories,
                 mapper = MangaMapper::mapManga,
             )

@@ -166,7 +166,7 @@ AND favorite = 1
 AND status IN :statuses
 AND (
     -- includedEmpty being true expresses "don't care" state and bypasses the membership filter
-    :includedEmpty = 1
+    :includedEmpty
     OR EXISTS (
         SELECT 1 FROM mangas_categories
         WHERE mangas_categories.manga_id = mangas._id
@@ -178,7 +178,7 @@ AND (
 )
 AND (
     -- excludedEmpty being true expresses "don't care" state and bypasses the membership filter
-    :excludedEmpty = 1
+    :excludedEmpty
     OR (
         NOT EXISTS (
             SELECT 1 FROM mangas_categories
