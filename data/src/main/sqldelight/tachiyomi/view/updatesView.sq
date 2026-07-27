@@ -48,7 +48,7 @@ AND (
 )
 AND (
     -- includeEmpty being true expresses "don't care" state and bypasses the membership filter
-    :includeEmpty = 1
+    :includeEmpty
     OR EXISTS (
         SELECT 1 FROM mangas_categories
         WHERE mangas_categories.manga_id = mangaId
@@ -60,7 +60,7 @@ AND (
 )
 AND (
     -- excludeEmpty being true expresses "don't care" state and bypasses the membership filter
-    :excludeEmpty = 1
+    :excludeEmpty
     OR (
         NOT EXISTS (
             SELECT 1 FROM mangas_categories
