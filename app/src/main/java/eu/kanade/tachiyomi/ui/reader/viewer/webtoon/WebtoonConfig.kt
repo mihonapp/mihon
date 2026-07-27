@@ -40,6 +40,11 @@ class WebtoonConfig(
     var doubleTapZoom = true
         private set
 
+    var suppressTapOnFling = false
+        private set
+
+    var suppressTapOnFlingChangedListener: ((Boolean) -> Unit)? = null
+
     var doubleTapZoomChangedListener: ((Boolean) -> Unit)? = null
 
     val theme = readerPreferences.readerTheme.get()
@@ -83,6 +88,12 @@ class WebtoonConfig(
             .register(
                 { zoomOutDisabled = it },
                 { zoomPropertyChangedListener?.invoke(it) },
+            )
+
+        readerPreferences.webtoonSuppressTapOnFling
+            .register(
+                { suppressTapOnFling = it },
+                { suppressTapOnFlingChangedListener?.invoke(it) },
             )
 
         readerPreferences.webtoonDoubleTapZoomEnabled

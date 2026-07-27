@@ -92,6 +92,8 @@ class WebtoonFrame(context: Context) : FrameLayout(context) {
     /**
      * Fling listener used to delegate events to the recycler view.
      */
+    var suppressTapOnFling = false
+
     inner class FlingListener : GestureDetector.SimpleOnGestureListener() {
         override fun onDown(e: MotionEvent): Boolean {
             return true
@@ -103,6 +105,9 @@ class WebtoonFrame(context: Context) : FrameLayout(context) {
             velocityX: Float,
             velocityY: Float,
         ): Boolean {
+            if (suppressTapOnFling) {
+                recycler?.onManualScroll()
+            }
             return recycler?.zoomFling(velocityX.toInt(), velocityY.toInt()) ?: false
         }
     }
