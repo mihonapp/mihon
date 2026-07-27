@@ -40,15 +40,9 @@ class MangaRestorer(
     fetchInterval: FetchInterval = Injekt.get(),
 ) {
 
-    private var timeZone = TimeZone.currentSystemDefault()
-    private var now = Clock.System.now().toLocalDateTime(timeZone)
-    private var currentFetchWindow = fetchInterval.getWindow(now.date, timeZone)
-
-    init {
-        timeZone = TimeZone.currentSystemDefault()
-        now = Clock.System.now().toLocalDateTime(timeZone)
-        currentFetchWindow = fetchInterval.getWindow(now.date, timeZone)
-    }
+    private val timeZone = TimeZone.currentSystemDefault()
+    private val now = Clock.System.now().toLocalDateTime(timeZone)
+    private val currentFetchWindow = fetchInterval.getWindow(now.date, timeZone)
 
     suspend fun sortByNew(backupMangas: List<BackupManga>): List<BackupManga> {
         val urlsBySource = database.mangasQueries
