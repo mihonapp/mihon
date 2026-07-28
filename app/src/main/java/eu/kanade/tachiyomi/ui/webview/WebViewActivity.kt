@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.webview
 
-import android.app.Activity
 import android.app.assist.AssistContent
 import android.content.Context
 import android.content.Intent

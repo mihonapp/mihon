@@ -904,7 +904,6 @@
     <string name="extensionStoresScreen.addStoreDeeplink.bodyText">Θέλετε να προσθέσετε το παρακάτω κατάστημα επεκτάσεων;</string>
     <string name="extensionStoresScreen.deleteStore.title">Κατάργηση καταστήματος επεκτάσεων</string>
     <string name="extensionStoresScreen.deleteStore.body">Θέλετε να καταργήσετε το κατάστημα επεκτάσεων \"%1$s\" (%2$s);</string>
-    <string name="pref_webtoon_vertical_navigator">Χρησιμοποιήστε τον κάθετο πλοηγό για ανάγνωση μεγάλων λωρίδων</string>
     <string name="pref_webtoon_vertical_navigator_on_left">Τοποθέτηση του κάθετου πλοηγού στην αριστερή πλευρά</string>
     <string name="supportUsScreen.perks">Οι Patrons έχουν πρόσβαση σε αποκλειστικά κανάλια, ενώ θα ακολουθήσουν και άλλα προνόμια.</string>
     <string name="supportUsScreen.donationPlatform.patreon">Patreon (προτιμάται)</string>

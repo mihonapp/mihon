@@ -282,8 +282,8 @@
     <string name="action_webview_forward">下一頁</string>
     <string name="action_webview_refresh">重新整理</string>
     <string name="pref_category_library">書櫃</string>
-    <string name="ext_obsolete">過舊</string>
-    <string name="obsolete_extension_message">這個擴充套件已無法使用，其可能無法正確運作或導致本程式發生問題，建議解除安裝</string>
+    <string name="ext_obsolete">無來源</string>
+    <string name="obsolete_extension_message">此擴充套件未與任何商店關聯，將無法取得更新。其可能無法正常運作，甚至導致應用程式發生問題，建議解除安裝。</string>
     <string name="theme_light">淺色</string>
     <string name="theme_system">系統</string>
     <string name="theme_dark">深色</string>
@@ -898,4 +898,15 @@
     <string name="donationCampaign.paragraph2">您可以透過 Patreon（建議優先使用）或 OpenCollective 進行贊助。如果有任何問題，或希望透過其他方式支持，歡迎透過 Mihon 的 Discord 伺服器與我聯繫。</string>
     <string name="donationCampaign.paragraph3">無論是否贊助，Mihon 都會持續由我與志工維護，並且維持開源。</string>
     <string name="donationCampaign.dismiss">關閉</string>
+    <string name="extensionStores">擴充套件商店</string>
+    <string name="action.addExtensionStore">新增擴充套件商店</string>
+    <string name="extensionStoresScreen.emptyLabel">你尚未新增任何擴充套件商店</string>
+    <string name="extensionStoresScreen.addStore.title">新增擴充套件商店</string>
+    <string name="extensionStoresScreen.addStore.alreadyExists">此擴充套件商店已存在</string>
+    <string name="extensionStoresScreen.addStore.processing">正在處理…</string>
+    <string name="extensionStoresScreen.addStoreInput.inputLabel">商店索引網址</string>
+    <string name="extensionStoresScreen.addStoreDeeplink.bodyText">你是否要新增下方的擴充套件商店？</string>
+    <string name="extensionStoresScreen.deleteStore.title">刪除擴充套件商店</string>
+    <string name="extensionStoresScreen.deleteStore.body">你是否要刪除擴充套件商店「%1$s」(%2$s)？</string>
+    <string name="pref_webtoon_vertical_navigator_on_left">將垂直導航器設於左側</string>
 </resources>

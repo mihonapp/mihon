@@ -19,7 +19,7 @@ import eu.kanade.domain.manga.model.readingMode
 import eu.kanade.presentation.components.AdaptiveSheet
 import eu.kanade.presentation.reader.components.ModeSelectionDialog
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
-import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.SettingsIconGrid
@@ -31,17 +31,17 @@ private val ReadingModesWithoutDefault = ReadingMode.entries - ReadingMode.DEFAU
 @Composable
 fun ReadingModeSelectDialog(
     onDismissRequest: () -> Unit,
-    screenModel: ReaderSettingsScreenModel,
+    viewModel: ReaderSettingsViewModel,
     onChange: (StringResource) -> Unit,
 ) {
-    val manga by screenModel.mangaFlow.collectAsState()
+    val manga by viewModel.mangaFlow.collectAsState()
     val readingMode = remember(manga) { ReadingMode.fromPreference(manga?.readingMode?.toInt()) }
 
     AdaptiveSheet(onDismissRequest = onDismissRequest) {
         DialogContent(
             readingMode = readingMode,
             onChangeReadingMode = {
-                screenModel.onChangeReadingMode(it)
+                viewModel.onChangeReadingMode(it)
                 onChange(it.stringRes)
                 onDismissRequest()
             },

@@ -915,7 +915,6 @@
     <string name="extensionStoresScreen.addStoreInput.inputLabel">URL do índice de loja</string>
     <string name="extensionStoresScreen.addStoreDeeplink.bodyText">Você deseja adicionar essa loja de extensões abaixo?</string>
     <string name="extensionStoresScreen.deleteStore.title">Remover loja de extensões</string>
-    <string name="pref_webtoon_vertical_navigator">Use o navegador vertical para leitura de tiras longas</string>
     <string name="pref_webtoon_vertical_navigator_on_left">Coloque o navegador vertical no lado esquerdo</string>
     <string name="extensionStoresScreen.deleteStore.body">Você deseja remover a loja de extensões \"%1$s\" (%2$s)?</string>
 </resources>

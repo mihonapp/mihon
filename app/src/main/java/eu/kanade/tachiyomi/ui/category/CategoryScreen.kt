@@ -6,7 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.util.fastMap
-import cafe.adriel.voyager.core.model.rememberScreenModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.category.CategoryScreen
@@ -24,9 +24,9 @@ class CategoryScreen : Screen() {
     override fun Content() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
-        val screenModel = rememberScreenModel { CategoryScreenModel() }
+        val viewModel = viewModel<CategoryViewModel>()
 
-        val state by screenModel.state.collectAsState()
+        val state by viewModel.state.collectAsState()
 
         if (state is CategoryScreenState.Loading) {
             LoadingScreen()
@@ -37,10 +37,10 @@ class CategoryScreen : Screen() {
 
         CategoryScreen(
             state = successState,
-            onClickCreate = { screenModel.showDialog(CategoryDialog.Create) },
-            onClickRename = { screenModel.showDialog(CategoryDialog.Rename(it)) },
-            onClickDelete = { screenModel.showDialog(CategoryDialog.Delete(it)) },
-            onChangeOrder = screenModel::changeOrder,
+            onClickCreate = { viewModel.showDialog(CategoryDialog.Create) },
+            onClickRename = { viewModel.showDialog(CategoryDialog.Rename(it)) },
+            onClickDelete = { viewModel.showDialog(CategoryDialog.Delete(it)) },
+            onChangeOrder = viewModel::changeOrder,
             navigateUp = navigator::pop,
         )
 
@@ -48,30 +48,30 @@ class CategoryScreen : Screen() {
             null -> {}
             CategoryDialog.Create -> {
                 CategoryCreateDialog(
-                    onDismissRequest = screenModel::dismissDialog,
-                    onCreate = screenModel::createCategory,
+                    onDismissRequest = viewModel::dismissDialog,
+                    onCreate = viewModel::createCategory,
                     categories = successState.categories.fastMap { it.name },
                 )
             }
             is CategoryDialog.Rename -> {
                 CategoryRenameDialog(
-                    onDismissRequest = screenModel::dismissDialog,
-                    onRename = { screenModel.renameCategory(dialog.category, it) },
+                    onDismissRequest = viewModel::dismissDialog,
+                    onRename = { viewModel.renameCategory(dialog.category, it) },
                     categories = successState.categories.fastMap { it.name },
                     category = dialog.category.name,
                 )
             }
             is CategoryDialog.Delete -> {
                 CategoryDeleteDialog(
-                    onDismissRequest = screenModel::dismissDialog,
-                    onDelete = { screenModel.deleteCategory(dialog.category.id) },
+                    onDismissRequest = viewModel::dismissDialog,
+                    onDelete = { viewModel.deleteCategory(dialog.category.id) },
                     category = dialog.category.name,
                 )
             }
         }
 
         LaunchedEffect(Unit) {
-            screenModel.events.collectLatest { event ->
+            viewModel.events.collectLatest { event ->
                 if (event is CategoryEvent.LocalizedMessage) {
                     context.toast(event.stringRes)
                 }

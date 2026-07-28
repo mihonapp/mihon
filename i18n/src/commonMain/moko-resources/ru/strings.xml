@@ -906,7 +906,6 @@
     <string name="donationCampaign.paragraph3">Независимо от поддержки, Mihon останется с открытым исходным кодом, и я с волонтёрами будем и дальше его поддерживать.</string>
     <string name="donationCampaign.dismiss">Отклонить</string>
     <string name="supportUsScreen.contactForDetailsMessage">Если у вас есть другие способы поддержки или вопросы по этому поводу, можете присоединиться к нашему Discord-серверу.</string>
-    <string name="pref_webtoon_vertical_navigator">Использовать вертикальную навигацию для читалки с длинными страницами</string>
     <string name="extensionStores">Хранилище расширений</string>
     <string name="action.addExtensionStore">Добавить хранилище расширений</string>
     <string name="extensionStoresScreen.emptyLabel">Вы ещё не добавляли хранилище расширений</string>
@@ -918,4 +917,5 @@
     <string name="extensionStoresScreen.deleteStore.title">Удалить хранилище расширений</string>
     <string name="extensionStoresScreen.deleteStore.body">Вы хотите удалить хранилище расширений \"%1$s\" (%2$s)?</string>
     <string name="pref_webtoon_vertical_navigator_on_left">Разместить вертикальную навигацию с левой стороны</string>
+    <string name="considering">Рассматривается</string>
 </resources>

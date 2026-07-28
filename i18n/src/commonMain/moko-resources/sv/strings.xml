@@ -916,6 +916,5 @@
     <string name="extensionStoresScreen.addStoreDeeplink.bodyText">Vill du lägga till nedan tilläggsdepå?</string>
     <string name="extensionStoresScreen.deleteStore.title">Ta bort tilläggsdepå</string>
     <string name="extensionStoresScreen.deleteStore.body">Vill du ta bort följande tilläggsdepå: \"%1$s\" (%2$s)?</string>
-    <string name="pref_webtoon_vertical_navigator">Använd vertikal navigator för långremsläsning</string>
     <string name="pref_webtoon_vertical_navigator_on_left">Placera navigatorn på vänster sida</string>
 </resources>

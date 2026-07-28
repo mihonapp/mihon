@@ -916,6 +916,5 @@
     <string name="extensionStoresScreen.addStoreDeeplink.bodyText">Gusto mo bang idagdag ang extension store na nasa ibaba?</string>
     <string name="extensionStoresScreen.deleteStore.title">Tanggalin ang extension store</string>
     <string name="extensionStoresScreen.deleteStore.body">Gusto mo bang tanggalin ang extension store na \"%1$s\" (%2$s)?</string>
-    <string name="pref_webtoon_vertical_navigator">Gamitin ang vertical na navigator sa pagbabasa ng long strip</string>
     <string name="pref_webtoon_vertical_navigator_on_left">Ilagay ang vertical na navigator sa kaliwa</string>
 </resources>

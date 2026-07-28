@@ -8,6 +8,7 @@ import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateNotifier
 import eu.kanade.tachiyomi.data.notification.NotificationHandler
+import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.source.UnmeteredSource
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -42,7 +43,6 @@ import mihon.core.archive.ZipWriter
 import nl.adaptivity.xmlutil.serialization.XML
 import okhttp3.Response
 import tachiyomi.core.common.i18n.stringResource
-import tachiyomi.core.common.storage.extension
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.launchNow
 import tachiyomi.core.common.util.lang.withIOContext
@@ -362,11 +362,6 @@ class Downloader(
                 reIndexedPages
             }
 
-            // Delete all temporary (unfinished) files
-            tmpDir.listFiles()
-                ?.filter { it.extension == "tmp" }
-                ?.forEach { it.delete() }
-
             download.status = Download.State.DOWNLOADING
 
             // Start downloading images, consider we can have downloaded images already
@@ -441,14 +436,10 @@ class Downloader(
 
         val digitCount = (download.pages?.size ?: 0).toString().length.coerceAtLeast(3)
         val filename = "%0${digitCount}d".format(Locale.ENGLISH, page.number)
-        val tmpFile = tmpDir.findFile("$filename.tmp")
-
-        // Delete temp file if it exists
-        tmpFile?.delete()
 
         // Try to find the image file
         val imageFile = tmpDir.listFiles()?.firstOrNull {
-            it.name!!.startsWith("$filename.") || it.name!!.startsWith("${filename}__001")
+            isDownloadedPageImage(it.name ?: return@firstOrNull false, filename)
         }
 
         try {
@@ -488,15 +479,24 @@ class Downloader(
         page.status = Page.State.DownloadImage
         page.progress = 0
         return flow {
-            val response = source.getImage(page)
-            val file = tmpDir.createFile("$filename.tmp")!!
+            val file = tmpDir.findFile("$filename.tmp")
+                ?: tmpDir.createFile("$filename.tmp")!!
+
             try {
-                response.body.source().saveTo(file.openOutputStream())
-                val extension = getImageExtension(response, file)
-                file.renameTo("$filename.$extension")
-            } catch (e: Exception) {
-                response.close()
-                file.delete()
+                source.getImage(page, file.length()).use {
+                    it.body.source().saveTo(
+                        // If the server supports partial downloads (HTTP 206),
+                        // append to the existing file.
+                        // Otherwise, start from scratch and overwrite the file.
+                        stream = file.openOutputStream(it.code == 206),
+                    )
+                    val extension = getImageExtension(it, file)
+                    file.renameTo("$filename.$extension")
+                }
+            } catch (e: HttpException) {
+                if (e.code == 416) {
+                    file.delete()
+                }
                 throw e
             }
             emit(file)
@@ -521,6 +521,8 @@ class Downloader(
      * @param filename the filename of the image.
      */
     private fun copyImageFromCache(cacheFile: File, tmpDir: UniFile, filename: String): UniFile {
+        // Delete temp file if it exists
+        tmpDir.findFile("$filename.tmp")?.delete()
         val tmpFile = tmpDir.createFile("$filename.tmp")!!
         cacheFile.inputStream().use { input ->
             tmpFile.openOutputStream().use { output ->
@@ -593,6 +595,18 @@ class Downloader(
         }
         return downloadedImagesCount == downloadPageCount
     }
+
+    /**
+     * Checks if the file name matches a downloaded page image.
+     *
+     * @param fileName Name of the file to check
+     * @param pagePrefix Expected page prefix (e.g., "001")
+     */
+    private fun isDownloadedPageImage(fileName: String, pagePrefix: String): Boolean =
+        !fileName.endsWith(".tmp") && (
+            fileName.startsWith("$pagePrefix.") ||
+                fileName.startsWith("${pagePrefix}__001.")
+            )
 
     /**
      * Archive the chapter pages as a CBZ.

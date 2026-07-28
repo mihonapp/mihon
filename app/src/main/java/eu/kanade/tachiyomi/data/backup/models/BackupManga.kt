@@ -2,9 +2,7 @@ package eu.kanade.tachiyomi.data.backup.models
 
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.protobuf.ProtoNumber
-import mihon.core.common.extensions.EMPTY
 import mihon.core.common.extensions.JsonObjectEmptyBytes
 import tachiyomi.data.MemoColumnAdapter
 import tachiyomi.domain.manga.model.Manga

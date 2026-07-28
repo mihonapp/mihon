@@ -1,14 +1,20 @@
 package tachiyomi.domain.manga.model
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Immutable
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import mihon.core.common.extensions.EMPTY
 import tachiyomi.core.common.preference.TriState
-import java.io.Serializable
+import java.io.ObjectStreamException
 import java.time.Instant
+import java.io.Serializable as JavaSerializable
 
+@SuppressLint("UnsafeOptInUsageError")
+@Serializable
 @Immutable
 data class Manga(
     val id: Long,
@@ -36,7 +42,7 @@ data class Manga(
     val version: Long,
     val notes: String,
     val memo: JsonObject,
-) : Serializable {
+) : JavaSerializable {
 
     val expectedNextUpdate: Instant?
         get() = nextUpdate
@@ -133,5 +139,18 @@ data class Manga(
             notes = "",
             memo = JsonObject.EMPTY,
         )
+    }
+
+    @Throws(ObjectStreamException::class)
+    private fun writeReplace(): Any {
+        return JavaToKotlinXSerializable(Json.encodeToString<Manga>(this))
+    }
+
+    class JavaToKotlinXSerializable(private val data: String) : JavaSerializable {
+
+        @Throws(ObjectStreamException::class)
+        private fun readResolve(): Any {
+            return Json.decodeFromString<Manga>(data)
+        }
     }
 }
