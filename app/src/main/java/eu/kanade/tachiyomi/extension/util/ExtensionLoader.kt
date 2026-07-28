@@ -268,6 +268,7 @@ internal object ExtensionLoader {
                 versionCode = versionCode,
                 libVersion = libVersion,
                 isShared = extensionInfo.isShared,
+                reason = Extension.NotLoaded.Reason.SAFE_MODE,
             )
             return LoadResult.NotLoaded(extension)
         }

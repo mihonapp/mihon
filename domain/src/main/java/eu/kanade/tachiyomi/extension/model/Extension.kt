@@ -86,5 +86,10 @@ sealed class Extension {
         override val lang: String? = null,
         override val isNsfw: Boolean = false,
         override val isShared: Boolean,
-    ) : Extension()
+        val reason: Reason,
+    ) : Extension() {
+        enum class Reason {
+            SAFE_MODE,
+        }
+    }
 }

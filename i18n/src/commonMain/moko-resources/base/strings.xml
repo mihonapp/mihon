@@ -363,6 +363,10 @@
     <string name="ext_installer_shizuku_unavailable_dialog">Install and start Shizuku to use Shizuku as extension installer.</string>
     <string name="ext_revoke_trust">Revoke trusted unknown extensions</string>
 
+    <!-- Extension not loaded reasons -->
+    <string name="ext_not_loaded">Extension not loaded</string>
+    <string name="ext_not_loaded_reason_safe_mode">%1$s is not loaded because the app is running in safe mode.</string>
+
     <!-- Extension repos -->
     <string name="action_open_repo">Open source repo</string>
 
