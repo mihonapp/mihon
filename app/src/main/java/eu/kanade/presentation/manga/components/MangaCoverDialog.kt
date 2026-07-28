@@ -68,7 +68,7 @@ fun MangaCoverDialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(
             usePlatformDefaultWidth = false,
-            decorFitsSystemWindows = false, // Doesn't work https://issuetracker.google.com/issues/246909281
+            decorFitsSystemWindows = false,
         ),
     ) {
         Scaffold(
