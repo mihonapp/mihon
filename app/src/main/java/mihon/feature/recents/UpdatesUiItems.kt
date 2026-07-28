@@ -148,7 +148,7 @@ fun UpdatesUiItem(
                         Text(
                             text = update.chapterName,
                             maxLines = 1,
-                            style = MaterialTheme.typography.bodySmall,
+                            style = MaterialTheme.typography.bodyMedium,
                             color = LocalContentColor.current.copy(alpha = textAlpha),
                             overflow = TextOverflow.Ellipsis,
                             onTextLayout = { textHeight = it.size.height },
@@ -415,7 +415,6 @@ private fun GroupedChapterItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp)
             .selectedBackground(selected)
             .combinedClickable(
                 onClick = onClick,
@@ -424,7 +423,7 @@ private fun GroupedChapterItem(
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 },
             )
-            .padding(horizontal = 4.dp),
+            .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(
@@ -460,7 +459,7 @@ private fun GroupedChapterItem(
                     Text(
                         text = update.chapterName,
                         maxLines = 1,
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MaterialTheme.typography.bodyMedium,
                         color = LocalContentColor.current.copy(alpha = textAlpha),
                         overflow = TextOverflow.Ellipsis,
                         onTextLayout = { textHeight = it.size.height },
