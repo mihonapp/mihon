@@ -1,0 +1,504 @@
+package mihon.feature.recents
+
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.graphics.res.animatedVectorResource
+import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
+import androidx.compose.animation.graphics.vector.AnimatedImageVector
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.Circle
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
+import eu.kanade.presentation.components.relativeDateText
+import eu.kanade.presentation.manga.components.ChapterDownloadAction
+import eu.kanade.presentation.manga.components.ChapterDownloadIndicator
+import eu.kanade.presentation.manga.components.DotSeparatorText
+import eu.kanade.presentation.manga.components.MangaCover
+import eu.kanade.presentation.updates.UpdatesUiModel
+import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.download.model.Download
+import eu.kanade.tachiyomi.ui.updates.UpdatesItem
+import tachiyomi.domain.updates.model.UpdatesWithRelations
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.material.DISABLED_ALPHA
+import tachiyomi.presentation.core.components.material.SECONDARY_ALPHA
+import tachiyomi.presentation.core.components.material.padding
+import tachiyomi.presentation.core.i18n.stringResource
+import tachiyomi.presentation.core.util.clickableNoIndication
+import tachiyomi.presentation.core.util.selectedBackground
+
+@Composable
+fun UpdatesUiItem(
+    update: UpdatesWithRelations,
+    selected: Boolean,
+    readProgress: String?,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
+    onClickCover: (() -> Unit)?,
+    onDownloadChapter: ((ChapterDownloadAction) -> Unit)?,
+    // Download Indicator
+    downloadStateProvider: () -> Download.State,
+    downloadProgressProvider: () -> Int,
+    modifier: Modifier = Modifier,
+) {
+    val haptic = LocalHapticFeedback.current
+    val textAlpha = if (update.read) DISABLED_ALPHA else 1f
+    val secondaryTextAlpha = textAlpha.coerceAtMost(SECONDARY_ALPHA)
+
+    ElevatedCard(
+        modifier = modifier
+            .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small)
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = {
+                    onLongClick()
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                },
+            ),
+    ) {
+        Row(
+            modifier = Modifier
+                .selectedBackground(selected)
+                .padding(MaterialTheme.padding.medium),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            MangaCover.Book(
+                modifier = Modifier.width(40.dp),
+                data = update.coverData,
+                onClick = onClickCover,
+            )
+
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = MaterialTheme.padding.medium)
+                    .weight(1f),
+            ) {
+                Text(
+                    text = update.mangaTitle,
+                    maxLines = 1,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = LocalContentColor.current.copy(alpha = textAlpha),
+                    overflow = TextOverflow.Ellipsis,
+                )
+
+                Column {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        var textHeight by remember { mutableIntStateOf(0) }
+                        if (!update.read) {
+                            Icon(
+                                imageVector = Icons.Filled.Circle,
+                                contentDescription = stringResource(MR.strings.unread),
+                                modifier = Modifier
+                                    .height(8.dp)
+                                    .padding(end = 4.dp),
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                        }
+                        if (update.bookmark) {
+                            Icon(
+                                imageVector = Icons.Filled.Bookmark,
+                                contentDescription = stringResource(MR.strings.action_filter_bookmarked),
+                                modifier = Modifier.sizeIn(
+                                    maxHeight = with(LocalDensity.current) {
+                                        textHeight.toDp() - 2.dp
+                                    },
+                                ),
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                            Spacer(modifier = Modifier.width(2.dp))
+                        }
+                        Text(
+                            text = update.chapterName,
+                            maxLines = 1,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = LocalContentColor.current.copy(alpha = textAlpha),
+                            overflow = TextOverflow.Ellipsis,
+                            onTextLayout = { textHeight = it.size.height },
+                            modifier = Modifier.weight(weight = 1f, fill = false),
+                        )
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = relativeDateText(update.dateUpload),
+                            maxLines = 1,
+                            color = LocalContentColor.current.copy(alpha = secondaryTextAlpha),
+                        )
+                        if (readProgress != null) {
+                            DotSeparatorText(modifier = Modifier.alpha(secondaryTextAlpha))
+                            Text(
+                                text = readProgress,
+                                maxLines = 1,
+                                color = LocalContentColor.current.copy(alpha = DISABLED_ALPHA),
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
+                        update.scanlator?.let {
+                            DotSeparatorText(modifier = Modifier.alpha(secondaryTextAlpha))
+                            Text(
+                                text = it,
+                                maxLines = 1,
+                                color = LocalContentColor.current.copy(alpha = secondaryTextAlpha),
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
+                    }
+                }
+            }
+
+            ChapterDownloadIndicator(
+                enabled = onDownloadChapter != null,
+                modifier = Modifier.padding(start = 4.dp),
+                downloadStateProvider = downloadStateProvider,
+                downloadProgressProvider = downloadProgressProvider,
+                onClick = { onDownloadChapter?.invoke(it) },
+            )
+        }
+    }
+}
+
+@Composable
+fun GroupedUpdatesUiItem(
+    modifier: Modifier = Modifier,
+    updateModelItems: List<UpdatesUiModel.Item>,
+    selectionMode: Boolean,
+    onUpdateSelected: (UpdatesItem, Boolean, Boolean) -> Unit,
+    onClickCover: (() -> Unit)?,
+    onClickUpdate: (UpdatesItem) -> Unit,
+    onDownloadChapter: (List<UpdatesItem>, ChapterDownloadAction) -> Unit,
+) {
+    val haptic = LocalHapticFeedback.current
+    val textAlpha = if (updateModelItems.all { it.item.update.read }) DISABLED_ALPHA else 1f
+
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    val isExpandable = updateModelItems.size > 2
+
+    val firstItem = updateModelItems.first().item
+    val firstUpdate = firstItem.update
+
+    val chapterItem: @Composable (UpdatesUiModel.Item) -> Unit = { modelItem ->
+        val item = modelItem.item
+        GroupedChapterItem(
+            update = item.update,
+            selected = item.selected,
+            readProgress = item.update.lastPageRead.takeIf { !item.update.read && it > 0L }
+                ?.let { stringResource(MR.strings.chapter_progress, it + 1) },
+            onClick = {
+                when {
+                    selectionMode -> onUpdateSelected(item, !item.selected, false)
+                    else -> onClickUpdate(item)
+                }
+            },
+            onLongClick = { onUpdateSelected(item, !item.selected, true) },
+            onDownloadChapter = { action: ChapterDownloadAction ->
+                onDownloadChapter(listOf(item), action)
+            }.takeIf { !selectionMode },
+            downloadStateProvider = item.downloadStateProvider,
+            downloadProgressProvider = item.downloadProgressProvider,
+        )
+    }
+
+    val divider: @Composable (Dp) -> Unit = { padding ->
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = padding),
+            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = SECONDARY_ALPHA),
+        )
+    }
+
+    ElevatedCard(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small)
+            .combinedClickable(
+                onClick = { if (isExpandable) expanded = !expanded },
+                onLongClick = {
+                    updateModelItems.forEach {
+                        onUpdateSelected(it.item, !it.item.selected, true)
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    }
+                    if (isExpandable) expanded = true
+                },
+            ),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = MaterialTheme.padding.medium, bottom = MaterialTheme.padding.small),
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.padding.medium),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                MangaCover.Book(
+                    modifier = Modifier.width(40.dp),
+                    data = firstUpdate.coverData,
+                    onClick = onClickCover,
+                )
+                Column(
+                    modifier = Modifier
+                        .padding(start = MaterialTheme.padding.medium)
+                        .weight(1f),
+                ) {
+                    Text(
+                        text = firstUpdate.mangaTitle,
+                        maxLines = 1,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = LocalContentColor.current.copy(alpha = textAlpha),
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    Text(
+                        text = stringResource(MR.strings.new_chapters_count, updateModelItems.size),
+                        maxLines = 1,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = LocalContentColor.current.copy(alpha = textAlpha.coerceAtMost(SECONDARY_ALPHA)),
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(MaterialTheme.padding.small))
+            chapterItem(updateModelItems.first())
+
+            val remainingItems = updateModelItems.drop(1)
+            if (remainingItems.size > 1) {
+                AnimatedContent(
+                    targetState = expanded,
+                    transitionSpec = {
+                        if (targetState) {
+                            (fadeIn() + expandVertically()) togetherWith (fadeOut())
+                        } else {
+                            fadeIn() togetherWith (fadeOut() + shrinkVertically())
+                        } using SizeTransform(clip = false)
+                    },
+                ) { isExpanded ->
+                    if (isExpanded) {
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            remainingItems.forEach {
+                                divider(12.dp)
+                                chapterItem(it)
+                            }
+
+                            divider(0.dp)
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        horizontal = MaterialTheme.padding.medium,
+                                        vertical = MaterialTheme.padding.small,
+                                    )
+                                    .clickableNoIndication { expanded = false },
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                val offset by animateDpAsState(
+                                    targetValue = (-4).dp,
+                                )
+                                val painter = rememberAnimatedVectorPainter(
+                                    AnimatedImageVector.animatedVectorResource(R.drawable.anim_caret_down),
+                                    false,
+                                )
+                                Icon(
+                                    painter = painter,
+                                    tint = MaterialTheme.colorScheme.primary.copy(alpha = SECONDARY_ALPHA),
+                                    contentDescription = stringResource(MR.strings.action_collapse),
+                                    modifier = Modifier.offset { IntOffset(x = 0, y = offset.roundToPx()) },
+                                )
+                                Spacer(modifier = Modifier.width(MaterialTheme.padding.extraSmall))
+                                Text(
+                                    text = stringResource(MR.strings.action_collapse),
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.primary.copy(
+                                        alpha = SECONDARY_ALPHA,
+                                    ),
+                                )
+                            }
+                        }
+                    } else {
+                        divider(0.dp)
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    horizontal = MaterialTheme.padding.medium,
+                                    vertical = MaterialTheme.padding.small,
+                                )
+                                .clickableNoIndication { expanded = true },
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            val offset by animateDpAsState(
+                                targetValue = 0.dp,
+                            )
+                            val painter = rememberAnimatedVectorPainter(
+                                AnimatedImageVector.animatedVectorResource(R.drawable.anim_caret_down),
+                                true,
+                            )
+                            Icon(
+                                painter = painter,
+                                tint = MaterialTheme.colorScheme.primary.copy(alpha = SECONDARY_ALPHA),
+                                contentDescription = stringResource(MR.strings.action_expand),
+                                modifier = Modifier.offset { IntOffset(x = 0, y = offset.roundToPx()) },
+                            )
+                            Spacer(modifier = Modifier.width(MaterialTheme.padding.extraSmall))
+                            Text(
+                                text = stringResource(MR.strings.action_expand),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.primary.copy(
+                                    alpha = SECONDARY_ALPHA,
+                                ),
+                            )
+                        }
+                    }
+                }
+            } else {
+                remainingItems.first().let {
+                    divider(12.dp)
+                    chapterItem(it)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun GroupedChapterItem(
+    update: UpdatesWithRelations,
+    selected: Boolean,
+    readProgress: String?,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
+    onDownloadChapter: ((ChapterDownloadAction) -> Unit)?,
+    // Download Indicator
+    downloadStateProvider: () -> Download.State,
+    downloadProgressProvider: () -> Int,
+    modifier: Modifier = Modifier,
+) {
+    val haptic = LocalHapticFeedback.current
+    val textAlpha = if (update.read) DISABLED_ALPHA else 1f
+    val secondaryTextAlpha = textAlpha.coerceAtMost(SECONDARY_ALPHA)
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp)
+            .selectedBackground(selected)
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = {
+                    onLongClick()
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                },
+            )
+            .padding(horizontal = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    var textHeight by remember { mutableIntStateOf(0) }
+                    if (!update.read) {
+                        Icon(
+                            imageVector = Icons.Filled.Circle,
+                            contentDescription = stringResource(MR.strings.unread),
+                            modifier = Modifier
+                                .height(8.dp)
+                                .padding(end = 4.dp),
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+                    if (update.bookmark) {
+                        Icon(
+                            imageVector = Icons.Filled.Bookmark,
+                            contentDescription = stringResource(MR.strings.action_filter_bookmarked),
+                            modifier = Modifier.sizeIn(
+                                maxHeight = with(LocalDensity.current) {
+                                    textHeight.toDp() - 2.dp
+                                },
+                            ),
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                        Spacer(modifier = Modifier.width(2.dp))
+                    }
+                    Text(
+                        text = update.chapterName,
+                        maxLines = 1,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = LocalContentColor.current.copy(alpha = textAlpha),
+                        overflow = TextOverflow.Ellipsis,
+                        onTextLayout = { textHeight = it.size.height },
+                        modifier = Modifier.weight(weight = 1f, fill = false),
+                    )
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = relativeDateText(update.dateUpload),
+                        maxLines = 1,
+                        color = LocalContentColor.current.copy(alpha = secondaryTextAlpha),
+                    )
+                    if (readProgress != null) {
+                        DotSeparatorText(modifier = Modifier.alpha(secondaryTextAlpha))
+                        Text(
+                            text = readProgress,
+                            maxLines = 1,
+                            color = LocalContentColor.current.copy(alpha = DISABLED_ALPHA),
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                    update.scanlator?.let {
+                        DotSeparatorText(modifier = Modifier.alpha(secondaryTextAlpha))
+                        Text(
+                            text = it,
+                            maxLines = 1,
+                            color = LocalContentColor.current.copy(alpha = secondaryTextAlpha),
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                }
+            }
+        }
+        ChapterDownloadIndicator(
+            enabled = onDownloadChapter != null,
+            downloadStateProvider = downloadStateProvider,
+            downloadProgressProvider = downloadProgressProvider,
+            onClick = { onDownloadChapter?.invoke(it) },
+        )
+    }
+}
