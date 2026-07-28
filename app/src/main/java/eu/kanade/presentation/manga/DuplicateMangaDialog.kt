@@ -63,6 +63,7 @@ import eu.kanade.presentation.more.settings.LocalPreferenceMinHeight
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SManga
+import mihon.app.di.appGraph
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.source.model.StubSource
@@ -74,7 +75,6 @@ import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.secondaryItemAlpha
-import mihon.app.di.appGraph
 
 @Composable
 fun DuplicateMangaDialog(

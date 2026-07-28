@@ -12,12 +12,12 @@ import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.isAuthenticationSupported
 import eu.kanade.tachiyomi.util.system.telemetryIncluded
+import mihon.app.di.appGraph
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
-import mihon.app.di.appGraph
 
 object SettingsSecurityScreen : SearchableSettings {
 

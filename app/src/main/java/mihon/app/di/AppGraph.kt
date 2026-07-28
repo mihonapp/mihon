@@ -39,6 +39,7 @@ import eu.kanade.tachiyomi.ui.setting.track.BaseOAuthLoginActivity
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.CrashLogUtil
 import kotlinx.serialization.json.Json
+import mihon.core.metro.IsDebugBuild
 import mihon.domain.extension.interactor.GetExtensionStoreCountAsFlow
 import mihon.presentation.widget.di.PresentationWidgetGraph
 import tachiyomi.domain.backup.service.BackupPreferences
@@ -117,6 +118,6 @@ interface AppGraph : ViewModelGraph, PresentationWidgetGraph {
 
     @DependencyGraph.Factory
     fun interface Factory {
-        fun create(@Provides context: Context): AppGraph
+        fun create(@Provides context: Context, @Provides @IsDebugBuild isDebugBuild: Boolean): AppGraph
     }
 }

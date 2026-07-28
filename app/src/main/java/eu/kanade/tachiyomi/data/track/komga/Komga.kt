@@ -27,7 +27,6 @@ class Komga(id: Long) : BaseTracker(id, "Komga"), EnhancedTracker {
             .build()
     }
 
-
     val api by lazy { KomgaApi(id, client) }
 
     override fun getLogo() = R.drawable.brand_komga

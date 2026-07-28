@@ -56,7 +56,6 @@ import logcat.LogPriority
 import logcat.LogcatLogger
 import mihon.app.di.AppGraph
 import mihon.app.di.injekt.MetroInteropModule
-import mihon.core.common.FeatureFlags
 import mihon.core.metro.GraphProvider
 import mihon.core.migration.Migration
 import mihon.core.migration.Migrator
@@ -76,7 +75,9 @@ import java.security.Security
 
 class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factory, GraphProvider<AppGraph> {
 
-    override val graph: AppGraph by lazy { createGraphFactory<AppGraph.Factory>().create(this) }
+    override val graph: AppGraph by lazy {
+        createGraphFactory<AppGraph.Factory>().create(context = this, isDebugBuild = isDebugBuildType)
+    }
 
     @Inject private lateinit var preferenceStore: PreferenceStore
 
@@ -105,9 +106,6 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
     @SuppressLint("LaunchActivityFromNotification")
     override fun onCreate() {
         super<Application>.onCreate()
-        FeatureFlags.init(
-            verboseLoggingDefault = isDebugBuildType,
-        )
         graph.inject(this)
         setupInjekt()
 
@@ -206,7 +204,9 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
 
     private fun initializeMigrator() {
         val preference = preferenceStore.getInt(Preference.appStateKey("last_version_code"), 0)
-        logcat { "Migration from ${preference.get()} to ${BuildConfig.VERSION_CODE} with ${migrations.size} migration(s)" }
+        logcat {
+            "Migration from ${preference.get()} to ${BuildConfig.VERSION_CODE} with ${migrations.size} migration(s)"
+        }
         Migrator.initialize(
             old = preference.get(),
             new = BuildConfig.VERSION_CODE,
