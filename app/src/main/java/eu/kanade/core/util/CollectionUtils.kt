@@ -46,6 +46,26 @@ fun <E> HashSet<E>.addOrRemove(value: E, shouldAdd: Boolean) {
     }
 }
 
+fun <T> List<T>.chunkConsecutive(predicate: (T, T) -> Boolean): List<List<T>> {
+    if (isEmpty()) return emptyList()
+
+    val result = mutableListOf<List<T>>()
+    var currentGroup = mutableListOf(this[0])
+    result.add(currentGroup)
+
+    for (i in 1..lastIndex) {
+        val previous = this[i - 1]
+        val current = this[i]
+        if (predicate(previous, current)) {
+            currentGroup.add(current)
+        } else {
+            currentGroup = mutableListOf(current)
+            result.add(currentGroup)
+        }
+    }
+    return result
+}
+
 /**
  * Returns a list containing all elements not matching the given [predicate].
  *

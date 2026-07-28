@@ -8,6 +8,7 @@ import androidx.compose.ui.util.fastFilter
 import androidx.lifecycle.viewModelScope
 import eu.kanade.core.preference.asState
 import eu.kanade.core.util.addOrRemove
+import eu.kanade.core.util.chunkConsecutive
 import eu.kanade.core.util.insertSeparators
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.presentation.manga.components.ChapterDownloadAction
@@ -63,7 +64,7 @@ class UpdatesViewModel(
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
     private val updatesPreferences: UpdatesPreferences = Injekt.get(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
-) : StateViewModel<UpdatesViewModel.State>(State()) {
+) : StateViewModel<UpdatesViewModel.State>(State(groupChapters = updatesPreferences.groupChapters.get())) {
 
     private val _events: Channel<Event> = Channel(Int.MAX_VALUE)
     val events: Flow<Event> = _events.receiveAsFlow()
@@ -136,6 +137,13 @@ class UpdatesViewModel(
                 }
             }
             .launchIn(viewModelScope)
+
+        updatesPreferences.groupChapters.changes()
+            .onEach {
+                mutableState.update { state ->
+                    state.copy(groupChapters = it)
+                }
+            }.launchIn(viewModelScope)
     }
 
     private fun List<UpdatesItem>.applyFilters(
@@ -450,12 +458,13 @@ class UpdatesViewModel(
         val hasActiveFilters: Boolean = false,
         val items: List<UpdatesItem> = listOf(),
         val dialog: Dialog? = null,
+        val groupChapters: Boolean,
     ) {
         val selected = items.filter { it.selected }
         val selectionMode = selected.isNotEmpty()
 
         fun getUiModel(): List<UpdatesUiModel> {
-            return items
+            val uiModel = items
                 .map { UpdatesUiModel.Item(it) }
                 .insertSeparators { before, after ->
                     val beforeDate = before?.item?.update?.dateFetch?.toLocalDate()
@@ -466,6 +475,20 @@ class UpdatesViewModel(
                         else -> null
                     }
                 }
+            if (!groupChapters) return uiModel
+            return uiModel.chunkConsecutive { a, b ->
+                a is UpdatesUiModel.Item && b is UpdatesUiModel.Item &&
+                    a.item.update.mangaId == b.item.update.mangaId
+            }.map {
+                val firstItem = it.first()
+                if (firstItem is UpdatesUiModel.Item && it.size != 1) {
+                    val items = it.filterIsInstance<UpdatesUiModel.Item>().reversed()
+                    val groupDate = firstItem.item.update.dateFetch.toLocalDate()
+                    UpdatesUiModel.Group(firstItem.item.update.mangaId, items, groupDate)
+                } else {
+                    firstItem
+                }
+            }
         }
     }
 

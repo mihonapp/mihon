@@ -93,6 +93,7 @@ class UpdatesRepositoryImpl(
         bookmark = bookmark,
         lastPageRead = lastPageRead,
         sourceId = sourceId,
+        dateUpload = dateUpload,
         dateFetch = dateFetch,
         coverData = MangaCover(
             mangaId = mangaId,
