@@ -44,6 +44,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.SpreadShift
 import eu.kanade.tachiyomi.ui.reader.setting.SpreadSoloPage
 import eu.kanade.tachiyomi.ui.reader.setting.SpreadVerticalFit
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.SpreadShiftResolver
 import eu.kanade.tachiyomi.util.chapter.filterDownloaded
 import eu.kanade.tachiyomi.util.chapter.removeDuplicates
 import eu.kanade.tachiyomi.util.editCover
@@ -119,6 +120,19 @@ class ReaderViewModel @JvmOverloads constructor(
 
     private val eventChannel = Channel<Event>()
     val eventFlow = eventChannel.receiveAsFlow()
+
+    /**
+     * Session-scoped decision cache for the spread page-offset. Lives at reader-session lifetime (so
+     * it survives the viewer being rebuilt on any flag change) and is read by the pager viewer; a
+     * settled decision fires a viewer reload that picks it up. Cancelled with [viewModelScope] on
+     * close. See [SpreadShiftResolver].
+     */
+    val spreadShiftResolver = SpreadShiftResolver(
+        scope = viewModelScope,
+        // A settled decision must reach the viewer: a dropped reload for the current chapter would
+        // leave its first layout held (blank) forever, so send rather than trySend.
+        onSettled = { viewModelScope.launch { eventChannel.send(Event.ReloadViewerChapters) } },
+    )
 
     private val _spreadShiftForce = MutableStateFlow(SpreadShift.DEFAULT)
 

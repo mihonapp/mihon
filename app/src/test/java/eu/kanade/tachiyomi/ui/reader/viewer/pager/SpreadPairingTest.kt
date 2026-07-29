@@ -291,37 +291,47 @@ class SpreadPairingTest {
         assertEquals(7, SpreadPairing.pairingColumnIndex(emptyList(), page(7)))
     }
 
-    // --- resolveShift: which shift a chapter pairs by (manual > per-series force > default) ---
+    // --- resolveShift: which shift a chapter pairs by (manual > per-series force > detected > default) ---
 
     @Test
     fun `resolveShift lets a remembered manual shift win over everything`() {
-        // A per-chapter toggle wins against a per-series force and the default.
+        // A per-chapter toggle wins against a per-series force, a detection, and the default.
         assertTrue(
-            SpreadPairing.resolveShift(remembered = true, perMangaForce = false, default = false),
+            SpreadPairing.resolveShift(remembered = true, perMangaForce = false, detected = false, default = false),
         )
         assertFalse(
-            SpreadPairing.resolveShift(remembered = false, perMangaForce = true, default = true),
+            SpreadPairing.resolveShift(remembered = false, perMangaForce = true, detected = true, default = true),
         )
     }
 
     @Test
-    fun `resolveShift lets a per-series force win over the default`() {
-        // A deliberate per-series override outranks the default (but not a manual toggle).
+    fun `resolveShift lets a per-series force win over detection and the default`() {
+        // A deliberate per-series override outranks the detection and the default (but not a manual toggle).
         assertTrue(
-            SpreadPairing.resolveShift(remembered = null, perMangaForce = true, default = false),
+            SpreadPairing.resolveShift(remembered = null, perMangaForce = true, detected = false, default = false),
         )
         assertFalse(
-            SpreadPairing.resolveShift(remembered = null, perMangaForce = false, default = true),
+            SpreadPairing.resolveShift(remembered = null, perMangaForce = false, detected = true, default = true),
+        )
+    }
+
+    @Test
+    fun `resolveShift falls to the detected shift when nothing outranks it`() {
+        assertTrue(
+            SpreadPairing.resolveShift(remembered = null, perMangaForce = null, detected = true, default = false),
+        )
+        assertFalse(
+            SpreadPairing.resolveShift(remembered = null, perMangaForce = null, detected = false, default = true),
         )
     }
 
     @Test
     fun `resolveShift falls to the default when nothing else is known`() {
         assertTrue(
-            SpreadPairing.resolveShift(remembered = null, perMangaForce = null, default = true),
+            SpreadPairing.resolveShift(remembered = null, perMangaForce = null, detected = null, default = true),
         )
         assertFalse(
-            SpreadPairing.resolveShift(remembered = null, perMangaForce = null, default = false),
+            SpreadPairing.resolveShift(remembered = null, perMangaForce = null, detected = null, default = false),
         )
     }
 

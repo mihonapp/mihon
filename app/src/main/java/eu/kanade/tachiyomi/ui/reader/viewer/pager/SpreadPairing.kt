@@ -21,16 +21,18 @@ object SpreadPairing {
     /**
      * The pairing shift to use for a chapter, by precedence: a [remembered] manual shift wins (the
      * reader's deliberate correction, including a deliberate "off"); else a [perMangaForce] the reader
-     * set for this series; else the [default] baseline (a global preference). [remembered] is the
-     * chapter's persisted `spread_shift` decoded to a parity (null when its DEFAULT: never toggled, or
-     * cleared by a per-series change; see [SpreadShift.rememberedShift]); [perMangaForce] is the series'
-     * explicit override (null when it inherits [default]).
+     * set for this series; else the settled classifier verdict [detected]; else the [default] baseline
+     * (a global preference). [remembered] is the chapter's persisted `spread_shift` decoded to a parity
+     * (null when its DEFAULT: never toggled, or cleared by a per-series change; see
+     * [SpreadShift.rememberedShift]); [perMangaForce] is the series' explicit override (null when it
+     * inherits [default]); [detected] is the resolver's settled decision (null while still pending).
      */
     fun resolveShift(
         remembered: Boolean?,
         perMangaForce: Boolean?,
+        detected: Boolean?,
         default: Boolean,
-    ): Boolean = remembered ?: perMangaForce ?: default
+    ): Boolean = remembered ?: perMangaForce ?: detected ?: default
 
     /**
      * Pairs a flat, display-ordered run of a single chapter's pages into [PageSpread]s by a single running

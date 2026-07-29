@@ -291,6 +291,12 @@ object SettingsReaderScreen : SearchableSettings {
                     subtitle = stringResource(MR.strings.pref_spread_summary),
                 ),
                 Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.spreadAutoDetectOffset,
+                    title = stringResource(MR.strings.pref_spread_auto_detect_offset),
+                    subtitle = stringResource(MR.strings.pref_spread_auto_detect_offset_summary),
+                    enabled = spread,
+                ),
+                Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.defaultSpreadForcePairing,
                     title = stringResource(MR.strings.pref_spread_force_pairing),
                     subtitle = stringResource(MR.strings.pref_spread_force_pairing_summary),

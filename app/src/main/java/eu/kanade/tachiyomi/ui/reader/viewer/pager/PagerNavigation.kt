@@ -70,4 +70,22 @@ object PagerNavigation {
         cameFromPrevTransition && current != null -> false
         else -> true
     }
+
+    /** What the viewer does with its pager after a chapter-window (re)build. */
+    enum class LayoutAction { HOLD, LAYOUT_FIRST, RELOCATE }
+
+    /**
+     * Decides that action from the two facts that matter, so the rule is checkable without a live
+     * pager: **HOLD**: keep the pager hidden (the reader's loading state) whenever the current
+     * chapter's spread offset is still being detected, on any entry path (fresh open, boundary
+     * cross, chapter-forward), so a chapter is never displayed at a pairing that would then reflow;
+     * otherwise **LAYOUT_FIRST** for a fresh (gone) window, or **RELOCATE** to follow the anchor on a
+     * live rebuild. The hold precedes the gone/live split deliberately: a chapter reached by
+     * chapter-forward arrives on the live path, and must hold there just the same.
+     */
+    fun layoutAction(isGone: Boolean, isAwaitingDetection: Boolean): LayoutAction = when {
+        isAwaitingDetection -> LayoutAction.HOLD
+        isGone -> LayoutAction.LAYOUT_FIRST
+        else -> LayoutAction.RELOCATE
+    }
 }

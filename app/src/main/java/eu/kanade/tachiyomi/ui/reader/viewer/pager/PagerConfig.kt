@@ -62,6 +62,10 @@ class PagerConfig(
 
     val spreadSoloPage = viewer.activity.viewModel.getMangaSpreadSoloPage()
 
+    // Global (not per-manga), resolved once like the flags above: whether to auto-detect the
+    // pairing shift for a chapter from its page margins.
+    val spreadAutoDetectOffset = readerPreferences.spreadAutoDetectOffset.get()
+
     init {
         readerPreferences.readerTheme
             .register(

@@ -159,4 +159,32 @@ class PagerNavigationTest {
         assertFalse(PagerNavigation.isForwardTurn(previous = null, current = page(0), cameFromPrevTransition = true))
         assertTrue(PagerNavigation.isForwardTurn(previous = null, current = page(0), cameFromPrevTransition = false))
     }
+
+    // --- layoutAction: decide-before-display for the whole window build ---
+
+    @Test
+    fun `layoutAction holds whenever detection is pending, on any pager state`() {
+        // The crux: an awaiting current chapter holds even on the live (not-gone) path (a chapter
+        // reached by chapter-forward), so it is never displayed at a default pairing that then reflows.
+        assertEquals(
+            PagerNavigation.LayoutAction.HOLD,
+            PagerNavigation.layoutAction(isGone = true, isAwaitingDetection = true),
+        )
+        assertEquals(
+            PagerNavigation.LayoutAction.HOLD,
+            PagerNavigation.layoutAction(isGone = false, isAwaitingDetection = true),
+        )
+    }
+
+    @Test
+    fun `layoutAction lays out a fresh window and relocates a live one once decided`() {
+        assertEquals(
+            PagerNavigation.LayoutAction.LAYOUT_FIRST,
+            PagerNavigation.layoutAction(isGone = true, isAwaitingDetection = false),
+        )
+        assertEquals(
+            PagerNavigation.LayoutAction.RELOCATE,
+            PagerNavigation.layoutAction(isGone = false, isAwaitingDetection = false),
+        )
+    }
 }

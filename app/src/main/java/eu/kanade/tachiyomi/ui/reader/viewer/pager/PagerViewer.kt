@@ -376,13 +376,37 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
         adapter.setChapters(chapters, forceTransition)
 
         // Layout the pager once a chapter is being set.
-        if (pager.isGone) {
-            logcat { "Pager first layout" }
-            val pages = chapters.currChapter.pages ?: return
-            moveToPage(pages[min(chapters.currChapter.requestedPage, pages.lastIndex)])
-            pager.isVisible = true
-        } else {
-            relocateTo(anchor)
+        when (PagerNavigation.layoutAction(pager.isGone, adapter.isAwaitingDetection())) {
+            // Decide before display: keep the pager hidden (the reader's loading state) until the
+            // current chapter's spread offset settles, on ANY entry path, not only a gone first
+            // layout. A chapter reached by chapter-forward arrives on the live path and must hold there
+            // just the same, or it lays out at a default pairing that then reflows. The settle fires a
+            // reload that re-enters here decided; nothing racy runs under a live pager.
+            PagerNavigation.LayoutAction.HOLD -> {
+                logcat { "Holding layout: awaiting spread offset detection" }
+                pager.isVisible = false
+                return
+            }
+            PagerNavigation.LayoutAction.LAYOUT_FIRST -> {
+                val pages = chapters.currChapter.pages ?: return
+                val requested = chapters.currChapter.requestedPage
+                if (requested !in pages.indices) {
+                    // requestedPage is the source of truth for where a chapter opens and should always be
+                    // a valid page index; out of range means a stale/corrupt value reached here and the
+                    // clamp below is silently absorbing it. Not fatal, but worth a breadcrumb.
+                    logcat(LogPriority.WARN) {
+                        "First layout: requestedPage $requested out of bounds for ${pages.size} pages; clamping"
+                    }
+                }
+                val landing = min(requested, pages.lastIndex)
+                // The landing index is the whole point of the decide-before-display path; log it so a
+                // wrong one (e.g. mid-chapter right after a chapter-forward) is visible in logcat.
+                logcat { "Pager first layout: landing on page index $landing of ${pages.size}" }
+                // Jump instantly, not smooth-scroll: a chapter open shouldn't animate to the requested page.
+                jumpToPage(pages[landing], smooth = false)
+                pager.isVisible = true
+            }
+            PagerNavigation.LayoutAction.RELOCATE -> relocateTo(anchor)
         }
 
         pager.addOnPageChangeListener(pagerListener)

@@ -162,6 +162,14 @@ class ReaderPreferences(
         false,
     )
 
+    // Global-only (no per-manga counterpart): auto-detect the correct pairing offset from
+    // page margins when a chapter is read as a spread. Default on, but only ever acts in
+    // spread mode, which is itself off by default.
+    val spreadAutoDetectOffset: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_spread_auto_detect_offset",
+        true,
+    )
+
     // endregion
 
     // region Color filter

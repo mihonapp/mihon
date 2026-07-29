@@ -35,9 +35,9 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     var nextTransition: ChapterTransition.Next? = null
         private set
 
-    // The chapter currently centred on. Its pairing shift ([spreadShifted]) is (re)computed on every
-    // rebuild in [setChapters]: a remembered manual shift wins, else a per-series force, else the global
-    // default, so it needs no custom setter.
+    // The chapter currently centred on. Its pairing shift ([spreadShifted]) is (re)computed from the
+    // session resolver on every rebuild in [setChapters]: a remembered manual shift wins, else a
+    // per-series force, else the resolver's decision, else the global default, so it needs no custom setter.
     var currentChapter: ReaderChapter? = null
         private set
 
@@ -74,23 +74,44 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     // [destroyView] recycles torn-down halves instead of pooling them, so nothing is reused stale.
     private var salvaging = true
 
+    // The pairing-shift decisions live in the reader session (survive viewer rebuilds), not on this
+    // disposable adapter; this adapter only reads them and asks for detection to be run. See
+    // [SpreadShiftResolver].
+    private val resolver get() = viewer.activity.viewModel.spreadShiftResolver
+
+    private val leftToRight get() = viewer is L2RPagerViewer
+
+    /**
+     * The resolver's detected shift for [chapter] in the current direction, or null if not yet settled,
+     * the detector abstained, or gutter auto-detect is off; either way [SpreadPairing.resolveShift] then
+     * falls through to the per-manga force / global default rather than being pinned to a spurious `false`.
+     */
+    private fun decidedShift(chapter: ReaderChapter?): Boolean? {
+        if (!viewer.config.spreadAutoDetectOffset) return null
+        val id = chapter?.chapter?.id ?: return null
+        return (resolver.decisionFor(id, leftToRight) as? SpreadShiftResolver.Decision.Decided)?.shift
+    }
+
     // The (chapterId, shift, source) [logShiftDecision] last emitted; setChapters rebuilds on every page
     // turn, so the decision is logged only when this changes.
     private var lastShiftLog: Triple<Long?, Boolean, String>? = null
 
     /**
      * Logs the effective pairing shift and which input won it, by the precedence [SpreadPairing.resolveShift]
-     * applies: a remembered manual toggle, else a per-series force, else the global default. Logged once per
-     * change so a rebuild doesn't spam.
+     * applies: a remembered manual toggle, else a per-series force, else the classifier, else the global
+     * default. Logged once per change so a rebuild doesn't spam; complements the resolver's scan line, which
+     * logs the classifier's raw verdict before these overrides apply.
      */
     private fun logShiftDecision(
         chapter: ReaderChapter,
         remembered: Boolean?,
         perSeries: Boolean?,
+        classifier: Boolean?,
     ) {
         val source = when {
             remembered != null -> "manual"
             perSeries != null -> "per-series"
+            classifier != null -> "classifier"
             else -> "default"
         }
         val entry = Triple(chapter.chapter.id, spreadShifted, source)
@@ -111,15 +132,21 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         val prevHasMissingChapters = calculateChapterGap(chapters.currChapter, chapters.prevChapter) > 0
         val nextHasMissingChapters = calculateChapterGap(chapters.nextChapter, chapters.currChapter) > 0
 
-        // Add previous chapter pages and transition.
-        chapters.prevChapter?.pages?.let {
-            newItems.addAll(pairPages(it, shifted = shiftForChapter(chapters.prevChapter)))
+        // Add previous chapter pages and transition. A spread-eligible neighbour still being detected
+        // is not ready to display (like an unloaded one): withhold its pages and keep the boundary
+        // transition, so a crossing holds at the transition until its pairing is decided rather than
+        // showing a default pairing that then reflows. Its pages join on the resolver's settle reload.
+        if (!awaitingDetection(chapters.prevChapter)) {
+            chapters.prevChapter?.pages?.let {
+                newItems.addAll(pairPages(it, shifted = shiftForChapter(chapters.prevChapter)))
+            }
         }
 
         // Skip transition page if the chapter is loaded & current page is not a transition page
         if (prevHasMissingChapters ||
             forceTransition ||
-            chapters.prevChapter?.state !is ReaderChapter.State.Loaded
+            chapters.prevChapter?.state !is ReaderChapter.State.Loaded ||
+            awaitingDetection(chapters.prevChapter)
         ) {
             newItems.add(ChapterTransition.Prev(chapters.currChapter, chapters.prevChapter))
         }
@@ -130,18 +157,21 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         // pair below: spreadShifted caches currentChapter's shift, and shiftForChapter() reuses it for the
         // neighbour that equals currentChapter (resolving the rest), so the two must stay consistent; the
         // previous-chapter preview above pairs first, while both still describe the outgoing chapter.
-        // Recompute every rebuild, not just on a chapter change: remembered manual shift, else per-series
-        // force, else the global default.
+        // Recompute every rebuild, not just on a chapter change, so a detection that settles after the
+        // first layout (a same-chapter reload) is picked up: remembered manual shift, else per-series
+        // force, else the resolver, else the global default.
         currentChapter = chapters.currChapter
         val rememberedShift = SpreadShift.rememberedShift(chapters.currChapter.chapter.spread_shift)
         val perSeriesShift = viewer.activity.viewModel.getMangaSpreadShiftForce()
+        val classifierShift = decidedShift(chapters.currChapter)
         val defaultShift = viewer.activity.viewModel.readerPreferences.defaultSpreadShift.get()
         spreadShifted = SpreadPairing.resolveShift(
             remembered = rememberedShift,
             perMangaForce = perSeriesShift,
+            detected = classifierShift,
             default = defaultShift,
         )
-        logShiftDecision(chapters.currChapter, rememberedShift, perSeriesShift)
+        logShiftDecision(chapters.currChapter, rememberedShift, perSeriesShift, classifierShift)
 
         // Add current chapter.
         val currPages = chapters.currChapter.pages
@@ -162,20 +192,24 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
             newItems.addAll(pairPages(pages, shifted = spreadShifted))
         }
 
-        // Add next chapter transition and pages.
+        // Add next chapter transition and pages (withholding the pages of a still-detecting neighbour
+        // and keeping its transition, symmetric with the previous-chapter side above).
         nextTransition = ChapterTransition.Next(chapters.currChapter, chapters.nextChapter)
             .also {
                 if (
                     nextHasMissingChapters ||
                     forceTransition ||
-                    chapters.nextChapter?.state !is ReaderChapter.State.Loaded
+                    chapters.nextChapter?.state !is ReaderChapter.State.Loaded ||
+                    awaitingDetection(chapters.nextChapter)
                 ) {
                     newItems.add(it)
                 }
             }
 
-        chapters.nextChapter?.pages?.let {
-            newItems.addAll(pairPages(it, shifted = shiftForChapter(chapters.nextChapter)))
+        if (!awaitingDetection(chapters.nextChapter)) {
+            chapters.nextChapter?.pages?.let {
+                newItems.addAll(pairPages(it, shifted = shiftForChapter(chapters.nextChapter)))
+            }
         }
 
         // Resets dual-page splits, else insert pages get misplaced
@@ -193,7 +227,60 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         if (insertPageLastPage != null) {
             viewer.moveToPage(insertPageLastPage)
         }
+
+        // Ask the session resolver to decide the current chapter and its preloaded neighbours (once
+        // each, session-wide). It reads back through [shiftForChapter] on the next rebuild. The
+        // current chapter's layout is held until its decision lands (the viewer's isAwaitingDetection
+        // gate), and a neighbour's decision fires a reload that re-pairs its preview before the reader
+        // crosses in. So no chapter is ever displayed at a pairing that will then reflow.
+        triggerDetection(chapters)
     }
+
+    /**
+     * Runs the session resolver's up-front gutter scan for the current chapter and each preloaded
+     * neighbour, when auto-detect is on.
+     */
+    private fun triggerDetection(chapters: ViewerChapters) {
+        if (viewer !is L2RPagerViewer && viewer !is R2LPagerViewer) return
+        if (!viewer.config.spread) return
+        if (!viewer.config.spreadAutoDetectOffset) return
+        listOfNotNull(chapters.currChapter, chapters.prevChapter, chapters.nextChapter).forEach {
+            if (eligibleForDetect(it)) resolver.ensureDetected(it)
+        }
+    }
+
+    /**
+     * Whether the resolver should scan [chapter]: a local/on-disk source with pages in hand, whose shift
+     * the user hasn't already fixed. Remote sources are excluded: their pages load unpredictably, so
+     * scanning would stall or reflow mid-read.
+     */
+    private fun eligibleForDetect(chapter: ReaderChapter): Boolean {
+        if (!autoDetectSupportsSource(chapter)) return false
+        if (chapter.pages == null) return false
+        return SpreadShift.rememberedShift(chapter.chapter.spread_shift) == null
+    }
+
+    /**
+     * Whether [chapter] is a spread chapter whose scan hasn't settled yet, so its pages are not ready
+     * to display and are withheld (decide before display). False when scanning doesn't apply (not a
+     * horizontal pager, spread off, auto-detect off, remote source, or a remembered manual shift) or it
+     * has already settled.
+     */
+    private fun awaitingDetection(chapter: ReaderChapter?): Boolean {
+        if (viewer !is L2RPagerViewer && viewer !is R2LPagerViewer) return false
+        if (!viewer.config.spread) return false
+        if (!viewer.config.spreadAutoDetectOffset) return false
+        chapter ?: return false
+        if (!eligibleForDetect(chapter)) return false
+        val id = chapter.chapter.id ?: return false
+        return resolver.decisionFor(id, leftToRight) is SpreadShiftResolver.Decision.Pending
+    }
+
+    /**
+     * Whether the current chapter is being auto-detected but hasn't settled yet: the signal the
+     * viewer uses to hold its first layout (decide before display).
+     */
+    fun isAwaitingDetection(): Boolean = awaitingDetection(currentChapter)
 
     /**
      * Pairs up consecutive pages of a single chapter into [PageSpread]s when spread mode is
@@ -397,9 +484,10 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
 
     /**
      * The pairing shift known for [chapter] right now. The live [spreadShifted] for the current
-     * chapter (which reflects a manual toggle made this session); a stored value or the global default
-     * for any other. Lets every chapter's run (the current one and each neighbour preview) pair by its
-     * own shift, so crossing into a shifted chapter doesn't reshape its opening pairing at the boundary.
+     * chapter (which reflects a manual toggle made this session); a stored value for any other; else
+     * the session resolver's decision if it has settled (the default while pending). Lets every
+     * chapter's run (the current one and each neighbour preview) pair by its own shift, so crossing
+     * into a shifted chapter doesn't reshape its opening pairing at the boundary.
      */
     private fun shiftForChapter(chapter: ReaderChapter?): Boolean {
         if (chapter == null) return false
@@ -407,6 +495,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         return SpreadPairing.resolveShift(
             remembered = SpreadShift.rememberedShift(chapter.chapter.spread_shift),
             perMangaForce = viewer.activity.viewModel.getMangaSpreadShiftForce(),
+            detected = decidedShift(chapter),
             default = viewer.activity.viewModel.readerPreferences.defaultSpreadShift.get(),
         )
     }
@@ -428,7 +517,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         notifyDataSetChanged()
 
         // Remember the deliberate choice: update the in-memory chapter (so it takes precedence over
-        // the global default on every later rebuild, via [shiftForChapter], with no DB read) and persist
+        // the resolver on every later rebuild, via [shiftForChapter], with no DB read) and persist
         // it so it survives navigation and restart.
         val choice = if (spreadShifted) SpreadShift.SHIFTED else SpreadShift.UNSHIFTED
         chapter.chapter.spread_shift = choice.flagValue.toLong()
@@ -456,6 +545,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         val resolved = SpreadPairing.resolveShift(
             remembered = SpreadShift.rememberedShift(chapter.chapter.spread_shift),
             perMangaForce = viewer.activity.viewModel.getMangaSpreadShiftForce(),
+            detected = decidedShift(chapter),
             default = viewer.activity.viewModel.readerPreferences.defaultSpreadShift.get(),
         )
         if (resolved == spreadShifted) return
@@ -463,6 +553,15 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         items = regroupChapterAware(items)
         notifyDataSetChanged()
     }
+
+    /**
+     * Whether shift auto-detection should run for [chapter]'s source. Restricted to local/on-disk
+     * sources: local files, imports, epubs, and downloaded chapters, which have every page readable
+     * up front. A streamed remote source loads pages slowly and unpredictably, so detecting there
+     * would either stall or, worse, reflow the pairing at some arbitrary moment after the reader has
+     * already started reading. Leaving remote browsing untouched is the least-surprising behaviour.
+     */
+    private fun autoDetectSupportsSource(chapter: ReaderChapter): Boolean = chapter.pageLoader?.isLocal == true
 
     fun refresh() {
         readerThemedContext = viewer.activity.createReaderThemeContext()
