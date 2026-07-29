@@ -25,6 +25,8 @@ interface Chapter : SChapter, Serializable {
     var last_modified: Long
 
     var version: Long
+
+    var spread_shift: Long
 }
 
 val Chapter.isRecognizedNumber: Boolean
@@ -48,5 +50,6 @@ fun Chapter.toDomainChapter(): DomainChapter? {
         lastModifiedAt = last_modified,
         version = version,
         memo = memo,
+        spreadShift = spread_shift,
     )
 }

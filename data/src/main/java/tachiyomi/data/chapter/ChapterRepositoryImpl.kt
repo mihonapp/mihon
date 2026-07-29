@@ -75,6 +75,7 @@ class ChapterRepositoryImpl(
                     version = chapterUpdate.version,
                     isSyncing = 0,
                     memo = chapterUpdate.memo?.let(MemoColumnAdapter::encode),
+                    spreadShift = chapterUpdate.spreadShift,
                 )
             }
         }
@@ -148,6 +149,7 @@ class ChapterRepositoryImpl(
         version: Long,
         isSyncing: Long,
         memo: JsonObject,
+        spreadShift: Long,
     ): Chapter = Chapter(
         id = id,
         mangaId = mangaId,
@@ -164,5 +166,6 @@ class ChapterRepositoryImpl(
         lastModifiedAt = lastModifiedAt,
         version = version,
         memo = memo,
+        spreadShift = spreadShift,
     )
 }

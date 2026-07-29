@@ -134,6 +134,36 @@ class ReaderPreferences(
 
     // endregion
 
+    // region Spread
+
+    val defaultSpread: Preference<Boolean> = preferenceStore.getBoolean("pref_spread", false)
+
+    // The baseline pairing parity when neither a manual per-chapter shift nor auto-detect decides:
+    // true = leave the first page solo and pair from the second (a cover-first archive). Default true
+    // because most chapters open with the cover as page 0, so shifting keeps the interior spreads
+    // aligned; a modest prior, fully user-overridable (globally here, per-manga via Manga.spreadShift).
+    val defaultSpreadShift: Preference<Boolean> = preferenceStore.getBoolean("pref_spread_shift", true)
+
+    val defaultSpreadForcePairing: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_spread_force_pairing",
+        false,
+    )
+
+    // How size-mismatched page pairs are reconciled vertically: MATCH scales the shorter half up to
+    // the taller's height; TOP/CENTER keep native sizes and align the shorter half. Default MATCH:
+    // equal-height facing pages is what mainstream readers produce (e.g. Komga's fit-to-height).
+    val defaultSpreadVerticalFit: Preference<SpreadVerticalFit> = preferenceStore.getEnum(
+        "pref_spread_vertical_fit",
+        SpreadVerticalFit.MATCH,
+    )
+
+    val defaultSpreadSoloPageJustify: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_spread_solo_page_justify",
+        false,
+    )
+
+    // endregion
+
     // region Color filter
 
     val customBrightness: Preference<Boolean> = preferenceStore.getBoolean("pref_custom_brightness_key", false)
