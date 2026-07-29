@@ -71,12 +71,39 @@ open class ReaderPageImageView @JvmOverloads constructor(
     var onImageLoaded: (() -> Unit)? = null
     var onImageLoadError: ((Throwable?) -> Unit)? = null
     var onScaleChanged: ((newScale: Float) -> Unit)? = null
+    var onCenterChanged: ((newCenter: PointF?) -> Unit)? = null
     var onViewClicked: (() -> Unit)? = null
 
     /**
      * For automatic background. Will be set as background color when [onImageLoaded] is called.
      */
     var pageBackground: Drawable? = null
+
+    /**
+     * When set via [deferInitialReveal], the decoded image is kept INVISIBLE once it's ready instead
+     * of painting immediately. A coordinated spread uses this to hold both halves back until it has
+     * computed the joint scale, then reveals them together via [revealDeferredImage], removing the
+     * otherwise-visible solo-fit → joint-fit reflow. INVISIBLE (not GONE) keeps the view measured and
+     * laid out, which the joint-scale computation depends on.
+     */
+    private var deferReveal = false
+
+    fun deferInitialReveal() {
+        deferReveal = true
+    }
+
+    fun revealDeferredImage() {
+        deferReveal = false
+        pageView?.visibility = View.VISIBLE
+    }
+
+    /** Hide an already-decoded image immediately (unlike [deferInitialReveal], which only takes
+     *  effect at the next onReady). Used when a loaded spread half is reused for a new pairing, so it
+     *  doesn't flash at its previous scale before the coordinator re-applies the new joint scale. */
+    fun hideImageForReuse() {
+        deferReveal = true
+        pageView?.visibility = View.INVISIBLE
+    }
 
     @CallSuper
     open fun onImageLoaded() {
@@ -95,6 +122,11 @@ open class ReaderPageImageView @JvmOverloads constructor(
     }
 
     @CallSuper
+    open fun onCenterChanged(newCenter: PointF?) {
+        onCenterChanged?.invoke(newCenter)
+    }
+
+    @CallSuper
     open fun onViewClicked() {
         onViewClicked?.invoke()
     }
@@ -108,6 +140,12 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 setOnImageEventListener(
                     object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
                         override fun onReady() {
+                            // Selecting a half before it finishes decoding replaces setImage()'s own
+                            // onReady (where the deferReveal hold normally lives), so re-assert it here.
+                            // Without this a spread half selected mid-decode (routine under rapid nav)
+                            // paints at its solo fit and then visibly jumps when the coordinator applies
+                            // the joint scale a beat later. A no-op for a normal single page.
+                            if (deferReveal) pageView?.visibility = View.INVISIBLE
                             setupZoom(config)
                             landscapeZoom(forward)
                             this@ReaderPageImageView.onImageLoaded()
@@ -167,6 +205,45 @@ open class ReaderPageImageView @JvmOverloads constructor(
             prepareNonAnimatedImageView()
             setNonAnimatedImage(source, config)
         }
+    }
+
+    /**
+     * The decoded image's native source width/height, or 0 if not yet known. Used to jointly
+     * size a spread's two halves against their combined shape.
+     */
+    val sWidth: Int
+        get() = (pageView as? SubsamplingScaleImageView)?.sWidth ?: 0
+
+    val sHeight: Int
+        get() = (pageView as? SubsamplingScaleImageView)?.sHeight ?: 0
+
+    /**
+     * The image's current live scale/center, e.g. for a spread half to mirror onto its sibling
+     * as the user pans/zooms it. Null/0 before the image is ready.
+     */
+    val currentScale: Float
+        get() = (pageView as? SubsamplingScaleImageView)?.scale ?: 0f
+
+    val currentCenter: PointF?
+        get() = (pageView as? SubsamplingScaleImageView)?.center
+
+    /**
+     * Overrides the scale/center the initial auto-fit already applied, e.g. once a spread's two
+     * halves are both ready and a scale computed jointly against their combined shape is known.
+     */
+    fun setSpreadScaleAndCenter(scale: Float, center: PointF) {
+        (pageView as? SubsamplingScaleImageView)?.setScaleAndCenter(scale, center)
+    }
+
+    /**
+     * Biases which edge [SubsamplingScaleImageView] centers an undersized image against (see its
+     * own asymmetric-padding-ratio centering behavior), used both to keep a spread half's
+     * rendered content abutting its sibling at the seam regardless of leftover width, and to
+     * align a half that renders shorter than its sibling against the sibling's own edge rather
+     * than centering it on its own.
+     */
+    fun setSpreadPadding(left: Int, top: Int, right: Int, bottom: Int) {
+        pageView?.setPadding(left, top, right, bottom)
     }
 
     fun recycle() = pageView?.let {
@@ -251,7 +328,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                     }
 
                     override fun onCenterChanged(newCenter: PointF?, origin: Int) {
-                        // Not used
+                        this@ReaderPageImageView.onCenterChanged(newCenter)
                     }
                 },
             )
@@ -284,6 +361,9 @@ open class ReaderPageImageView @JvmOverloads constructor(
         setOnImageEventListener(
             object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
                 override fun onReady() {
+                    // Hold this half back from painting at its solo fit; the spread coordinator
+                    // reveals it once the joint scale is known (see deferReveal).
+                    if (deferReveal) pageView?.visibility = View.INVISIBLE
                     setupZoom(config)
                     if (isVisibleOnScreen()) landscapeZoom(true)
                     this@ReaderPageImageView.onImageLoaded()
