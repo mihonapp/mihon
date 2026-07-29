@@ -11,6 +11,9 @@ import android.webkit.MimeTypeMap
 import androidx.annotation.RequiresApi
 import androidx.core.content.contentValuesOf
 import androidx.core.net.toUri
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.cacheImageDir
 import eu.kanade.tachiyomi.util.storage.getUriCompat
@@ -26,6 +29,8 @@ import java.io.File
 import java.io.InputStream
 import java.time.Instant
 
+@Inject
+@SingleIn(AppScope::class)
 class ImageSaver(
     val context: Context,
 ) {

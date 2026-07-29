@@ -10,7 +10,6 @@ import eu.kanade.tachiyomi.data.track.anilist.dto.ALOAuth
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.serialization.json.Json
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
 
 class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
@@ -30,7 +29,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
         const val POINT_3 = "POINT_3"
     }
 
-    private val json: Json by injectLazy()
+    private val json: Json by lazy { appGraph.json }
 
     private val interceptor by lazy { AnilistInterceptor(this, getPassword()) }
 
@@ -40,17 +39,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
 
     override val supportsPrivateTracking: Boolean = true
 
-    private val scorePreference = trackPreferences.anilistScoreType
-
-    init {
-        // If the preference is an int from APIv1, logout user to force using APIv2
-        try {
-            scorePreference.get()
-        } catch (e: ClassCastException) {
-            logout()
-            scorePreference.delete()
-        }
-    }
+    private val scorePreference by lazy { trackPreferences.anilistScoreType }
 
     override fun getLogo() = R.drawable.brand_anilist
 
@@ -133,7 +122,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
                 else -> "😊"
             }
 
-            else -> track.toApiScore()
+            else -> track.toApiScore(appGraph.trackPreferences)
         }
     }
 

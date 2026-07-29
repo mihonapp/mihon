@@ -1,8 +1,14 @@
 package eu.kanade.tachiyomi.ui.category
 
 import androidx.compose.runtime.Immutable
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.icerock.moko.resources.StringResource
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -16,15 +22,16 @@ import tachiyomi.domain.category.interactor.RenameCategory
 import tachiyomi.domain.category.interactor.ReorderCategory
 import tachiyomi.domain.category.model.Category
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class CategoryViewModel(
-    private val getCategories: GetCategories = Injekt.get(),
-    private val createCategoryWithName: CreateCategoryWithName = Injekt.get(),
-    private val deleteCategory: DeleteCategory = Injekt.get(),
-    private val reorderCategory: ReorderCategory = Injekt.get(),
-    private val renameCategory: RenameCategory = Injekt.get(),
+    private val getCategories: GetCategories,
+    private val createCategoryWithName: CreateCategoryWithName,
+    private val deleteCategory: DeleteCategory,
+    private val reorderCategory: ReorderCategory,
+    private val renameCategory: RenameCategory,
 ) : StateViewModel<CategoryScreenState>(CategoryScreenState.Loading) {
 
     private val _events: Channel<CategoryEvent> = Channel()

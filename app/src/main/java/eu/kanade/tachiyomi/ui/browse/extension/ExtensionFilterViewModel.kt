@@ -1,7 +1,13 @@
 package eu.kanade.tachiyomi.ui.browse.extension
 
 import androidx.compose.runtime.Immutable
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import eu.kanade.domain.extension.interactor.GetExtensionLanguages
 import eu.kanade.domain.source.interactor.ToggleLanguage
 import eu.kanade.domain.source.service.SourcePreferences
@@ -16,13 +22,14 @@ import kotlinx.coroutines.launch
 import logcat.LogPriority
 import mihon.core.viewmodel.StateViewModel
 import tachiyomi.core.common.util.system.logcat
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class ExtensionFilterViewModel(
-    private val preferences: SourcePreferences = Injekt.get(),
-    private val getExtensionLanguages: GetExtensionLanguages = Injekt.get(),
-    private val toggleLanguage: ToggleLanguage = Injekt.get(),
+    private val preferences: SourcePreferences,
+    private val getExtensionLanguages: GetExtensionLanguages,
+    private val toggleLanguage: ToggleLanguage,
 ) : StateViewModel<ExtensionFilterState>(ExtensionFilterState.Loading) {
 
     private val _events: Channel<ExtensionFilterEvent> = Channel()

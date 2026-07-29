@@ -36,10 +36,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.presentation.browse.components.SourceIcon
 import eu.kanade.presentation.components.AppBar
@@ -66,8 +72,6 @@ import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.util.shouldExpandFAB
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
 
@@ -77,7 +81,7 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
-        val viewModel = viewModel<Model>()
+        val viewModel = metroViewModel<Model>()
         val state by viewModel.state.collectAsState()
 
         var migrationSheetOpen by rememberSaveable { mutableStateOf(false) }
@@ -306,9 +310,12 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
         }
     }
 
+    @Inject
+    @ViewModelKey
+    @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
     class Model(
-        val sourcePreferences: SourcePreferences = Injekt.get(),
-        private val sourceManager: SourceManager = Injekt.get(),
+        val sourcePreferences: SourcePreferences,
+        private val sourceManager: SourceManager,
     ) : StateViewModel<Model.State>(State()) {
 
         private val sourcesComparator = { includedSources: List<Long> ->

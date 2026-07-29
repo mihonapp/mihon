@@ -3,6 +3,7 @@ package tachiyomi.presentation.widget
 import android.content.Context
 import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.LifecycleCoroutineScope
+import dev.zacsweers.metro.Inject
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
@@ -14,12 +15,14 @@ import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.updates.interactor.GetUpdates
 
+@Inject
 class WidgetManager(
     private val getUpdates: GetUpdates,
     private val securityPreferences: SecurityPreferences,
 ) {
 
-    fun Context.init(scope: LifecycleCoroutineScope) {
+    context(context: Context)
+    fun init(scope: LifecycleCoroutineScope) {
         combine(
             getUpdates.subscribe(read = false, after = BaseUpdatesGridGlanceWidget.DateLimit.toEpochMilli()),
             securityPreferences.useAuthenticator.changes(),
@@ -31,10 +34,10 @@ class WidgetManager(
             }
             .onEach {
                 try {
-                    UpdatesGridGlanceWidget().updateAll(this)
-                    UpdatesGridCoverScreenGlanceWidget().updateAll(this)
+                    UpdatesGridGlanceWidget().updateAll(context)
+                    UpdatesGridCoverScreenGlanceWidget().updateAll(context)
                 } catch (e: Exception) {
-                    logcat(LogPriority.ERROR, e) { "Failed to update widget" }
+                    this.logcat(LogPriority.ERROR, e) { "Failed to update widget" }
                 }
             }
             .flowOn(Dispatchers.Default)

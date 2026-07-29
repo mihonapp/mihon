@@ -1,12 +1,12 @@
 package eu.kanade.tachiyomi.data.backup.restore.restorers
 
+import dev.zacsweers.metro.Inject
 import eu.kanade.tachiyomi.data.backup.models.BackupExtensionStore
 import tachiyomi.data.Database
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
+@Inject
 class ExtensionStoreRestorer(
-    private val database: Database = Injekt.get(),
+    private val database: Database,
 ) {
 
     suspend operator fun invoke(

@@ -30,10 +30,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastMap
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.browse.components.SourceIcon
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
@@ -58,8 +64,6 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.util.selectedBackground
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 class ClearDatabaseScreen : Screen() {
 
@@ -67,7 +71,7 @@ class ClearDatabaseScreen : Screen() {
     override fun Content() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = viewModel<ClearDatabaseViewModel>()
+        val viewModel = metroViewModel<ClearDatabaseViewModel>()
         val state by viewModel.state.collectAsState()
         val scope = rememberCoroutineScope()
 
@@ -220,9 +224,13 @@ class ClearDatabaseScreen : Screen() {
     }
 }
 
-class ClearDatabaseViewModel : StateViewModel<ClearDatabaseViewModel.State>(State.Loading) {
-    private val getSourcesWithNonLibraryManga: GetSourcesWithNonLibraryManga = Injekt.get()
-    private val database: Database = Injekt.get()
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+class ClearDatabaseViewModel(
+    private val database: Database,
+    private val getSourcesWithNonLibraryManga: GetSourcesWithNonLibraryManga,
+) : StateViewModel<ClearDatabaseViewModel.State>(State.Loading) {
 
     init {
         viewModelScope.launchIO {

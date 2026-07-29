@@ -2,9 +2,13 @@ package eu.kanade.tachiyomi.ui.browse.migration.manga
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import eu.kanade.tachiyomi.source.Source
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -21,25 +25,19 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
+@AssistedInject
 class MigrateMangaViewModel(
-    private val sourceId: Long,
-    private val sourceManager: SourceManager = Injekt.get(),
-    private val getFavorites: GetFavorites = Injekt.get(),
+    @Assisted private val sourceId: Long,
+    private val sourceManager: SourceManager,
+    private val getFavorites: GetFavorites,
 ) : StateViewModel<MigrateMangaViewModel.State>(State()) {
 
-    companion object {
-        val SOURCE_ID_KEY = CreationExtras.Key<Long>()
-
-        val Factory = viewModelFactory {
-            initializer {
-                MigrateMangaViewModel(
-                    sourceId = get(SOURCE_ID_KEY)!!,
-                )
-            }
-        }
+    @AssistedFactory
+    @ManualViewModelAssistedFactoryKey
+    @ContributesIntoMap(AppScope::class)
+    interface Factory : ManualViewModelAssistedFactory {
+        fun create(sourceId: Long): MigrateMangaViewModel
     }
 
     private val _events: Channel<MigrationMangaEvent> = Channel()

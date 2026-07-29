@@ -1,9 +1,11 @@
 package mihon.domain.extension.interactor
 
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 import mihon.domain.extension.model.ExtensionStore
 import mihon.domain.extension.repository.ExtensionStoreRepository
 
+@Inject
 class GetExtensionStores(
     private val repository: ExtensionStoreRepository,
 ) {

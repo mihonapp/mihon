@@ -18,8 +18,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.util.fastForEach
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.ViewModel
 import cafe.adriel.voyager.core.screen.Screen
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.data.cache.CoverCache
@@ -37,8 +43,6 @@ import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 @Composable
 internal fun Screen.MigrateMangaDialog(
@@ -50,7 +54,7 @@ internal fun Screen.MigrateMangaDialog(
 ) {
     val scope = rememberCoroutineScope()
 
-    val viewModel = viewModel<MigrateDialogViewModel>()
+    val viewModel = metroViewModel<MigrateDialogViewModel>()
     LaunchedEffect(current, target) {
         viewModel.init(current, target)
     }
@@ -123,11 +127,14 @@ internal fun Screen.MigrateMangaDialog(
     )
 }
 
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class MigrateDialogViewModel(
-    private val sourcePreference: SourcePreferences = Injekt.get(),
-    private val coverCache: CoverCache = Injekt.get(),
-    private val downloadManager: DownloadManager = Injekt.get(),
-    private val migrateManga: MigrateMangaUseCase = Injekt.get(),
+    private val sourcePreference: SourcePreferences,
+    private val coverCache: CoverCache,
+    private val downloadManager: DownloadManager,
+    private val migrateManga: MigrateMangaUseCase,
 ) : StateViewModel<MigrateDialogViewModel.State>(State()) {
 
     fun init(current: Manga, target: Manga) {
