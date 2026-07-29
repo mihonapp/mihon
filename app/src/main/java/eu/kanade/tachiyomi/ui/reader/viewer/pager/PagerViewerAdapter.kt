@@ -85,11 +85,34 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
      * The resolver's detected shift for [chapter] in the current direction, or null if not yet settled,
      * the detector abstained, or gutter auto-detect is off; either way [SpreadPairing.resolveShift] then
      * falls through to the per-manga force / global default rather than being pinned to a spurious `false`.
+     * Gated on the auto-detect setting even though the scan may have run for "treat wide pages as spreads":
+     * that feature uses the scan's wide pages, not its gutter vote.
      */
     private fun decidedShift(chapter: ReaderChapter?): Boolean? {
         if (!viewer.config.spreadAutoDetectOffset) return null
         val id = chapter?.chapter?.id ?: return null
         return (resolver.decisionFor(id, leftToRight) as? SpreadShiftResolver.Decision.Decided)?.shift
+    }
+
+    // True for a page the "treat wide pages as spreads" pairing should treat as a two-page spread: on
+    // when the setting is enabled and the up-front scan flagged the page wide. Off ⇒ never wide, so the
+    // pairing is unchanged. Chapter-aware (each page against its own chapter's scan) so it works across
+    // the mixed prev/curr/next item list too.
+    private val isWidePage: (ReaderPage) -> Boolean = { page ->
+        viewer.config.spreadWidePairing &&
+            page.chapter.chapter.id?.let { page.index in resolver.wideIndicesFor(it) } == true
+    }
+
+    /**
+     * The shift a wide two-page spread pins [chapter] to, the automatic stage of
+     * [SpreadPairing.resolveShift], outranking the classifier but yielding to a deliberate user choice
+     * (a per-chapter manual toggle or a per-series force), so the manual toggle stays a live override on a
+     * wide-governed chapter. Null when "treat wide pages as spreads" is off or the chapter has no interior wide.
+     */
+    private fun decisiveWideShift(chapter: ReaderChapter?): Boolean? {
+        if (!viewer.config.spreadWidePairing) return null
+        val pages = chapter?.pages ?: return null
+        return SpreadPairing.decisiveShiftFromWides(pages, isWidePage)
     }
 
     // The (chapterId, shift, source) [logShiftDecision] last emitted; setChapters rebuilds on every page
@@ -98,12 +121,13 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
 
     /**
      * Logs the effective pairing shift and which input won it, by the precedence [SpreadPairing.resolveShift]
-     * applies: a remembered manual toggle, else a per-series force, else the classifier, else the global
-     * default. Logged once per change so a rebuild doesn't spam; complements the resolver's scan line, which
-     * logs the classifier's raw verdict before these overrides apply.
+     * applies: a remembered manual toggle, else a per-series force, else a decisive interior wide, else the
+     * classifier, else the global default. Logged once per change so a rebuild doesn't spam; complements the
+     * resolver's scan line, which logs the classifier's raw verdict before these overrides apply.
      */
     private fun logShiftDecision(
         chapter: ReaderChapter,
+        decisive: Boolean?,
         remembered: Boolean?,
         perSeries: Boolean?,
         classifier: Boolean?,
@@ -111,6 +135,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         val source = when {
             remembered != null -> "manual"
             perSeries != null -> "per-series"
+            decisive != null -> "wide-spread"
             classifier != null -> "classifier"
             else -> "default"
         }
@@ -161,6 +186,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         // first layout (a same-chapter reload) is picked up: remembered manual shift, else per-series
         // force, else the resolver, else the global default.
         currentChapter = chapters.currChapter
+        val decisiveShift = decisiveWideShift(chapters.currChapter)
         val rememberedShift = SpreadShift.rememberedShift(chapters.currChapter.chapter.spread_shift)
         val perSeriesShift = viewer.activity.viewModel.getMangaSpreadShiftForce()
         val classifierShift = decidedShift(chapters.currChapter)
@@ -168,10 +194,11 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         spreadShifted = SpreadPairing.resolveShift(
             remembered = rememberedShift,
             perMangaForce = perSeriesShift,
+            decisiveWide = decisiveShift,
             detected = classifierShift,
             default = defaultShift,
         )
-        logShiftDecision(chapters.currChapter, rememberedShift, perSeriesShift, classifierShift)
+        logShiftDecision(chapters.currChapter, decisiveShift, rememberedShift, perSeriesShift, classifierShift)
 
         // Add current chapter.
         val currPages = chapters.currChapter.pages
@@ -237,39 +264,42 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     }
 
     /**
-     * Runs the session resolver's up-front gutter scan for the current chapter and each preloaded
-     * neighbour, when auto-detect is on.
+     * Runs the session resolver's up-front scan for the current chapter and each preloaded neighbour.
+     * Runs when gutter auto-detect or "treat wide pages as spreads" is on: the one pass produces both
+     * the gutter decision and the wide pages; each feature reads the part it needs.
      */
     private fun triggerDetection(chapters: ViewerChapters) {
         if (viewer !is L2RPagerViewer && viewer !is R2LPagerViewer) return
         if (!viewer.config.spread) return
-        if (!viewer.config.spreadAutoDetectOffset) return
+        if (!viewer.config.spreadAutoDetectOffset && !viewer.config.spreadWidePairing) return
         listOfNotNull(chapters.currChapter, chapters.prevChapter, chapters.nextChapter).forEach {
-            if (eligibleForDetect(it)) resolver.ensureDetected(it)
+            if (eligibleForDetect(it)) resolver.ensureDetected(it, viewer.config.spreadWidePairing)
         }
     }
 
     /**
-     * Whether the resolver should scan [chapter]: a local/on-disk source with pages in hand, whose shift
-     * the user hasn't already fixed. Remote sources are excluded: their pages load unpredictably, so
-     * scanning would stall or reflow mid-read.
+     * Whether the resolver should scan [chapter]: a local/on-disk source with pages in hand. Remote
+     * sources are excluded: their pages load unpredictably, so scanning would stall or reflow mid-read.
+     * Gutter auto-detect additionally skips a chapter whose shift the user already fixed; "treat wide
+     * pages as spreads" still scans it, since a wide overrides a remembered shift.
      */
     private fun eligibleForDetect(chapter: ReaderChapter): Boolean {
         if (!autoDetectSupportsSource(chapter)) return false
         if (chapter.pages == null) return false
+        if (viewer.config.spreadWidePairing) return true
         return SpreadShift.rememberedShift(chapter.chapter.spread_shift) == null
     }
 
     /**
      * Whether [chapter] is a spread chapter whose scan hasn't settled yet, so its pages are not ready
      * to display and are withheld (decide before display). False when scanning doesn't apply (not a
-     * horizontal pager, spread off, auto-detect off, remote source, or a remembered manual shift) or it
-     * has already settled.
+     * horizontal pager, spread off, neither gutter auto-detect nor wide-pairing on, remote source, or a
+     * remembered manual shift with only auto-detect on) or it has already settled.
      */
     private fun awaitingDetection(chapter: ReaderChapter?): Boolean {
         if (viewer !is L2RPagerViewer && viewer !is R2LPagerViewer) return false
         if (!viewer.config.spread) return false
-        if (!viewer.config.spreadAutoDetectOffset) return false
+        if (!viewer.config.spreadAutoDetectOffset && !viewer.config.spreadWidePairing) return false
         chapter ?: return false
         if (!eligibleForDetect(chapter)) return false
         val id = chapter.chapter.id ?: return false
@@ -299,7 +329,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     private fun pairPages(pages: List<ReaderPage>, shifted: Boolean = false): List<Any> {
         if (viewer !is L2RPagerViewer && viewer !is R2LPagerViewer) return pages
         if (!viewer.config.spread) return pages
-        return SpreadPairing.pairFlat(pages, shifted)
+        return SpreadPairing.pairFlat(pages, shifted, isWidePage)
     }
 
     /**
@@ -395,13 +425,13 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
      * half to justify it to (true = left); null when centring applies (the default), the pager isn't
      * horizontal, or spread mode is off. Uses the page's own chapter's shift ([shiftForChapter]) so a
      * neighbour preview's justified page sits on the same side it will once the chapter is current, and
-     * its pairing column (not the raw source index) so it stays aligned with the pairing's parity; see
-     * [SpreadPairing.pairingColumnIndex].
+     * its pairing column (not the raw source index) so it stays aligned with the pairing's parity, wides
+     * counted in; see [SpreadPairing.pairingColumnIndex].
      */
     private fun soloJustifySideFor(page: ReaderPage): Boolean? {
         if (viewer !is L2RPagerViewer && viewer !is R2LPagerViewer) return null
         if (!viewer.config.spread || viewer.config.spreadSoloPage != SpreadSoloPage.JUSTIFY) return null
-        val column = SpreadPairing.pairingColumnIndex(items, page)
+        val column = SpreadPairing.pairingColumnIndex(items, page, isWidePage)
         return SpreadPairing.soloSideIsLeft(column, shiftForChapter(page.chapter), viewer is R2LPagerViewer)
     }
 
@@ -480,6 +510,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
             source = source,
             isR2L = viewer is R2LPagerViewer,
             shiftFor = ::shiftForChapter,
+            isWide = isWidePage,
         )
 
     /**
@@ -495,6 +526,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         return SpreadPairing.resolveShift(
             remembered = SpreadShift.rememberedShift(chapter.chapter.spread_shift),
             perMangaForce = viewer.activity.viewModel.getMangaSpreadShiftForce(),
+            decisiveWide = decisiveWideShift(chapter),
             detected = decidedShift(chapter),
             default = viewer.activity.viewModel.readerPreferences.defaultSpreadShift.get(),
         )
@@ -545,6 +577,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         val resolved = SpreadPairing.resolveShift(
             remembered = SpreadShift.rememberedShift(chapter.chapter.spread_shift),
             perMangaForce = viewer.activity.viewModel.getMangaSpreadShiftForce(),
+            decisiveWide = decisiveWideShift(chapter),
             detected = decidedShift(chapter),
             default = viewer.activity.viewModel.readerPreferences.defaultSpreadShift.get(),
         )

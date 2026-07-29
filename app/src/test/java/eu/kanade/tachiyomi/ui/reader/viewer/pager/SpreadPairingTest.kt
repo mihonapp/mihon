@@ -71,6 +71,146 @@ class SpreadPairingTest {
         assertFalse(r.any { it is PageSpread })
     }
 
+    // --- wide pages as run boundaries ("treat wide pages as spreads") ---
+
+    @Test
+    fun `pairFlat keeps the run after a wide paired at the pinned shift`() {
+        // cover, 1, 2, [W = facing spread of 3-4], 5, 6: W at index 3 pins shift-1 (cover solo).
+        val p = List(6) { page(it) }
+        val wide = p[3]
+        val r = SpreadPairing.pairFlat(p, shifted = true, isWide = { it === wide })
+        assertEquals(4, r.size)
+        assertSame(p[0], r[0]) // cover solo
+        assertSpread(r[1], p[1], p[2]) // (1,2)
+        assertSame(wide, r[2]) // wide shown solo (whole)
+        assertSpread(r[3], p[4], p[5]) // (5,6): the parity flows across the wide, so this stays paired
+    }
+
+    @Test
+    fun `pairFlat flows the shift across a wide so the run after it re-pairs too`() {
+        val p = List(10) { page(it) }
+        val wide = p[5]
+        // Pinned shift (true): 0 solo, (1,2), (3,4), W, (6,7), (8,9): clean, post-wide paired.
+        val pinned = SpreadPairing.pairFlat(p, shifted = true, isWide = { it === wide })
+        assertSame(p[0], pinned[0])
+        assertSpread(pinned[4], p[6], p[7])
+        // Flipped (false): (0,1), (2,3), 4, W, 6, (7,8), 9: the run AFTER the wide flips too.
+        val flipped = SpreadPairing.pairFlat(p, shifted = false, isWide = { it === wide })
+        assertEquals(7, flipped.size)
+        assertSpread(flipped[0], p[0], p[1])
+        assertSpread(flipped[1], p[2], p[3])
+        assertSame(p[4], flipped[2])
+        assertSame(wide, flipped[3])
+        assertSame(p[6], flipped[4]) // paired in the default; solo now, the shift reached across the wide
+        assertSpread(flipped[5], p[7], p[8])
+        assertSame(p[9], flipped[6])
+    }
+
+    @Test
+    fun `pairFlat leaves the inconsistency's lone page and flows on without re-aligning`() {
+        // Two wides with an ODD run of singles between them (indices 4,5,6): the wide-regular-wide
+        // structural inconsistency. No single shift aligns both wides, so one page is unavoidably lone.
+        // The parity flows past it uninterrupted; it does NOT reset at the second wide to re-pair the
+        // tail, so the run after the inconsistency reads as it would with the feature off. Pinning this
+        // keeps a future refactor from silently switching to a re-aligning (run-reset) tail.
+        val p = List(14) { page(it) }
+        val wides = setOf(p[3], p[7])
+        // The first interior wide (index 3) pins shift-1.
+        val shift = SpreadPairing.decisiveShiftFromWides(p, isWide = { it in wides })
+        assertEquals(true, shift)
+
+        val r = SpreadPairing.pairFlat(p, shifted = shift!!, isWide = { it in wides })
+        assertSame(p[0], r[0]) // solo (shift)
+        assertSpread(r[1], p[1], p[2])
+        assertSame(p[3], r[2]) // wide
+        assertSpread(r[3], p[4], p[5])
+        assertSame(p[6], r[4]) // the unavoidable lone page of the odd run
+        assertSame(p[7], r[5]) // wide
+        assertSame(p[8], r[6]) // tail flows on: lone, not re-aligned to pair with p9
+        assertSpread(r[7], p[9], p[10])
+        assertSpread(r[8], p[11], p[12])
+        assertSame(p[13], r[9])
+        assertEquals(10, r.size)
+    }
+
+    @Test
+    fun `pairFlat with the default never-wide predicate is unchanged`() {
+        val p = List(6) { page(it) }
+        assertEquals(
+            SpreadPairing.pairFlat(p, shifted = false),
+            SpreadPairing.pairFlat(p, shifted = false, isWide = {
+                false
+            }),
+        )
+    }
+
+    // --- decisiveShiftFromWides ---
+
+    @Test
+    fun `decisiveShiftFromWides pins the shift from the first interior wide's parity`() {
+        val p = List(6) { page(it) }
+        // wide at an odd index -> shift-1; at an even index -> shift-0.
+        assertEquals(true, SpreadPairing.decisiveShiftFromWides(p, isWide = { it === p[3] }))
+        assertEquals(false, SpreadPairing.decisiveShiftFromWides(p, isWide = { it === p[2] }))
+    }
+
+    @Test
+    fun `decisiveShiftFromWides pins a lone cover wide unshifted and is null with no wide`() {
+        val p = List(6) { page(it) }
+        // A lone cover wide pins false: it occupies a column the parity crosses, so the run after it pairs
+        // cleanly only unshifted (post-cover pages pair from page 1, matching feature-off).
+        assertEquals(false, SpreadPairing.decisiveShiftFromWides(p, isWide = { it === p[0] }))
+        assertEquals(null, SpreadPairing.decisiveShiftFromWides(p, isWide = { false })) // no wide at all
+        // A cover wide occupies a column, so the interior wide at 3 pins shift-0 (its column is 3 + 1).
+        assertEquals(false, SpreadPairing.decisiveShiftFromWides(p, isWide = { it === p[0] || it === p[3] }))
+    }
+
+    @Test
+    fun `a lone cover wide's pinned shift outranks the classifier`() {
+        // A lone cover pins unshifted (decisiveShiftFromWides -> false); that decisive-wide parity sits above
+        // the classifier's verdict in the ladder, so even a classifier that says "shift" can't offset the
+        // post-cover pairing. Pins the precedence against a refactor quietly reordering the rungs.
+        val p = List(4) { page(it) }
+        val coverShift = SpreadPairing.decisiveShiftFromWides(p, isWide = { it === p[0] })
+        assertEquals(false, coverShift)
+        assertEquals(
+            false,
+            SpreadPairing.resolveShift(
+                remembered = null,
+                perMangaForce = null,
+                decisiveWide = coverShift,
+                detected = true, // classifier says shift
+                default = true,
+            ),
+        )
+    }
+
+    @Test
+    fun `pairFlat pairs a cover-only chapter from the first page, not soloing page 1`() {
+        // A wide cover with no interior wide: the shift must not double-apply (the cover already is the lone
+        // first slot). decisiveShiftFromWides pins it unshifted, so the pages after the cover pair from 1,
+        // matching feature-off.
+        val p = List(6) { page(it) }
+        val cover = p[0]
+        val shift = SpreadPairing.decisiveShiftFromWides(p, isWide = { it === cover })
+        assertEquals(false, shift)
+        val r = SpreadPairing.pairFlat(p, shifted = shift!!, isWide = { it === cover })
+        assertEquals(4, r.size)
+        assertSame(cover, r[0]) // wide cover, solo
+        assertSpread(r[1], p[1], p[2])
+        assertSpread(r[2], p[3], p[4])
+        assertSame(p[5], r[3]) // trailing odd page
+    }
+
+    @Test
+    fun `pairingColumnIndex counts a wide as two columns, not a run break`() {
+        val p = List(5) { page(it) }
+        val items = listOf<Any>(PageSpread(p[0], p[1]), p[2], p[3], p[4]) // p2 is the wide (solo)
+        // Wide-blind, p4's column is its index (4); wide-aware, the spread at p2 adds a column -> 5.
+        assertEquals(4, SpreadPairing.pairingColumnIndex(items, p[4]))
+        assertEquals(5, SpreadPairing.pairingColumnIndex(items, p[4], isWide = { it === p[2] }))
+    }
+
     // --- pairInStoryOrder ---
 
     @Test
@@ -291,47 +431,120 @@ class SpreadPairingTest {
         assertEquals(7, SpreadPairing.pairingColumnIndex(emptyList(), page(7)))
     }
 
-    // --- resolveShift: which shift a chapter pairs by (manual > per-series force > detected > default) ---
+    // --- resolveShift: which shift a chapter pairs by
+    //     (manual > per-series force > decisive wide > detected > default) ---
 
     @Test
     fun `resolveShift lets a remembered manual shift win over everything`() {
-        // A per-chapter toggle wins against a per-series force, a detection, and the default.
+        // A per-chapter toggle wins against a per-series force, a decisive wide, a detection, and the default.
         assertTrue(
-            SpreadPairing.resolveShift(remembered = true, perMangaForce = false, detected = false, default = false),
+            SpreadPairing.resolveShift(
+                remembered = true,
+                perMangaForce = false,
+                decisiveWide = false,
+                detected = false,
+                default = false,
+            ),
         )
         assertFalse(
-            SpreadPairing.resolveShift(remembered = false, perMangaForce = true, detected = true, default = true),
+            SpreadPairing.resolveShift(
+                remembered = false,
+                perMangaForce = true,
+                decisiveWide = true,
+                detected = true,
+                default = true,
+            ),
         )
     }
 
     @Test
-    fun `resolveShift lets a per-series force win over detection and the default`() {
-        // A deliberate per-series override outranks the detection and the default (but not a manual toggle).
+    fun `resolveShift lets a per-series force win over the wide, detection and the default`() {
+        // A deliberate per-series override outranks the whole automatic stage (but not a manual toggle).
         assertTrue(
-            SpreadPairing.resolveShift(remembered = null, perMangaForce = true, detected = false, default = false),
+            SpreadPairing.resolveShift(
+                remembered = null,
+                perMangaForce = true,
+                decisiveWide = false,
+                detected = false,
+                default = false,
+            ),
         )
         assertFalse(
-            SpreadPairing.resolveShift(remembered = null, perMangaForce = false, detected = true, default = true),
+            SpreadPairing.resolveShift(
+                remembered = null,
+                perMangaForce = false,
+                decisiveWide = true,
+                detected = true,
+                default = true,
+            ),
+        )
+    }
+
+    @Test
+    fun `resolveShift lets a decisive wide win over detection and the default`() {
+        // Within the automatic stage a genuine spread outranks the classifier's cue read; it yields to a
+        // deliberate user choice, which is why the manual toggle stays a live override on a wide-governed chapter.
+        assertTrue(
+            SpreadPairing.resolveShift(
+                remembered = null,
+                perMangaForce = null,
+                decisiveWide = true,
+                detected = false,
+                default = false,
+            ),
+        )
+        assertFalse(
+            SpreadPairing.resolveShift(
+                remembered = null,
+                perMangaForce = null,
+                decisiveWide = false,
+                detected = true,
+                default = true,
+            ),
         )
     }
 
     @Test
     fun `resolveShift falls to the detected shift when nothing outranks it`() {
         assertTrue(
-            SpreadPairing.resolveShift(remembered = null, perMangaForce = null, detected = true, default = false),
+            SpreadPairing.resolveShift(
+                remembered = null,
+                perMangaForce = null,
+                decisiveWide = null,
+                detected = true,
+                default = false,
+            ),
         )
         assertFalse(
-            SpreadPairing.resolveShift(remembered = null, perMangaForce = null, detected = false, default = true),
+            SpreadPairing.resolveShift(
+                remembered = null,
+                perMangaForce = null,
+                decisiveWide = null,
+                detected = false,
+                default = true,
+            ),
         )
     }
 
     @Test
     fun `resolveShift falls to the default when nothing else is known`() {
         assertTrue(
-            SpreadPairing.resolveShift(remembered = null, perMangaForce = null, detected = null, default = true),
+            SpreadPairing.resolveShift(
+                remembered = null,
+                perMangaForce = null,
+                decisiveWide = null,
+                detected = null,
+                default = true,
+            ),
         )
         assertFalse(
-            SpreadPairing.resolveShift(remembered = null, perMangaForce = null, detected = null, default = false),
+            SpreadPairing.resolveShift(
+                remembered = null,
+                perMangaForce = null,
+                decisiveWide = null,
+                detected = null,
+                default = false,
+            ),
         )
     }
 
@@ -343,7 +556,8 @@ class SpreadPairingTest {
         // R2L; toggleSpreadShift reflows the current *display* list with regroupChapterAware. For the
         // same chapter and shift the two routes must produce the same grouping, or toggling and then
         // any later rebuild (a routine preload reload) would visibly reshuffle the pages under the
-        // reader. Spread mode never splits a page, so the reachable domain is a single insert-free chapter.
+        // reader. Spread mode shows wide pages whole and never splits one, so the reachable domain is
+        // a single insert-free chapter.
         val rnd = Random(7)
         repeat(2000) {
             val story = List(rnd.nextInt(0, 12)) { page(it) }

@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.SpreadForcePairing
 import eu.kanade.tachiyomi.ui.reader.setting.SpreadShift
 import eu.kanade.tachiyomi.ui.reader.setting.SpreadSoloPage
 import eu.kanade.tachiyomi.ui.reader.setting.SpreadVerticalFit
+import eu.kanade.tachiyomi.ui.reader.setting.SpreadWidePairing
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.core.metadata.comicinfo.ComicInfo
 import tachiyomi.core.metadata.comicinfo.ComicInfoPublishingStatus
@@ -39,6 +40,9 @@ val Manga.spreadSoloPage: Long
 
 val Manga.spreadShift: Long
     get() = viewerFlags and SpreadShift.MASK.toLong()
+
+val Manga.spreadWidePairing: Long
+    get() = viewerFlags and SpreadWidePairing.MASK.toLong()
 
 val Manga.downloadedFilter: TriState
     get() {

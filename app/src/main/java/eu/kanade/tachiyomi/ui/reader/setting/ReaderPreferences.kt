@@ -149,6 +149,15 @@ class ReaderPreferences(
         false,
     )
 
+    // Content-dependent, so a per-series opt-in (default off): treat a wide page as the two-page spread
+    // it is, anchoring the pairing around it so the rest of the chapter stays aligned. This suits
+    // chapters whose embedded wide pages are themselves facing spreads, but can throw the pairing off by
+    // one where that doesn't hold.
+    val defaultSpreadWidePairing: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_spread_wide_pairing",
+        false,
+    )
+
     // How size-mismatched page pairs are reconciled vertically: MATCH scales the shorter half up to
     // the taller's height; TOP/CENTER keep native sizes and align the shorter half. Default MATCH:
     // equal-height facing pages is what mainstream readers produce (e.g. Komga's fit-to-height).

@@ -395,6 +395,8 @@
     <string name="pref_spread_auto_detect_offset_summary">Detects whether the first page should stand alone, so facing pages line up. Applies to downloaded and local chapters.</string>
     <string name="pref_spread_force_pairing">Always pair pages regardless of size</string>
     <string name="pref_spread_force_pairing_summary">Pair even wide pages that would otherwise show alone</string>
+    <string name="pref_spread_wide_pairing">Treat wide pages as spreads</string>
+    <string name="pref_spread_wide_pairing_summary">For series whose wide pages are themselves two-page spreads, so later pages stay paired correctly. Applies to downloaded and local chapters.</string>
     <string name="pref_spread_shift">Leave first page unpaired</string>
     <string name="pref_spread_shift_summary">Start spreads from the second page, so the first page shows alone. Used when auto-detect is off or can\'t tell.</string>
     <string name="pref_spread_shift_series">First page</string>

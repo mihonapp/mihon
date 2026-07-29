@@ -30,8 +30,8 @@ import java.io.ByteArrayInputStream
  * decide-before-display. These pin that contract without a live pager. Chapters with no decodable pages
  * settle to an abstain (`Decided(shift = null)`), standing in for a no-signal detection without a real
  * bitmap decode; the decodable-chapter tests stub the classifier ([Spreadfit]) and sampler so they pin
- * the resolver's own contract: caching the analysis, resolving per direction, and invalidating on
- * [SpreadShiftResolver.forget], while the classifier's accuracy stays the concern of
+ * the resolver's own contract: caching the analysis, resolving per direction, unioning the wide scans,
+ * and invalidating on [SpreadShiftResolver.forget], while the classifier's accuracy stays the concern of
  * spreadfit's own tests. A `null` shift means "no opinion": the caller then falls back to its own default
  * (see the abstain-honours-default test).
  */
@@ -72,7 +72,7 @@ class SpreadShiftResolverTest {
             // Before detection runs, an unknown chapter is Pending: the signal to hold its layout.
             assertEquals(SpreadShiftResolver.Decision.Pending, resolver.decisionFor(1L, leftToRight = true))
 
-            resolver.ensureDetected(chapter(1L, emptyList()))
+            resolver.ensureDetected(chapter(1L, emptyList()), scanAllForWides = false)
             advanceUntilIdle()
 
             // No signal settles to an abstain (null shift, so the caller's default applies), and fires
@@ -99,9 +99,9 @@ class SpreadShiftResolverTest {
                 samplingDispatcher = dispatcher,
             )
 
-            resolver.ensureDetected(chapter(2L, emptyList()))
+            resolver.ensureDetected(chapter(2L, emptyList()), scanAllForWides = false)
             advanceUntilIdle()
-            resolver.ensureDetected(chapter(2L, emptyList()))
+            resolver.ensureDetected(chapter(2L, emptyList()), scanAllForWides = false)
             advanceUntilIdle()
 
             assertEquals(1, settledCount, "a settled chapter must not detect again")
@@ -116,7 +116,7 @@ class SpreadShiftResolverTest {
         Dispatchers.setMain(dispatcher)
         try {
             val resolver = SpreadShiftResolver(scope = this, onSettled = {}, samplingDispatcher = dispatcher)
-            resolver.ensureDetected(chapter(3L, emptyList()))
+            resolver.ensureDetected(chapter(3L, emptyList()), scanAllForWides = false)
             advanceUntilIdle()
 
             // An abstain is null (no opinion) whichever way it's read, stable across direction.
@@ -149,7 +149,7 @@ class SpreadShiftResolverTest {
                 samplingDispatcher = dispatcher,
             )
 
-            resolver.ensureDetected(chapter(9L, listOf(page)))
+            resolver.ensureDetected(chapter(9L, listOf(page)), scanAllForWides = false)
             advanceUntilIdle()
 
             assertEquals(
@@ -170,7 +170,7 @@ class SpreadShiftResolverTest {
         try {
             val resolver = SpreadShiftResolver(scope = this, onSettled = {}, samplingDispatcher = dispatcher)
             // no pages -> settles as an abstain
-            resolver.ensureDetected(chapter(4L, emptyList()))
+            resolver.ensureDetected(chapter(4L, emptyList()), scanAllForWides = false)
             advanceUntilIdle()
 
             // Read the detected shift exactly as PagerViewerAdapter.decidedShift does.
@@ -185,6 +185,7 @@ class SpreadShiftResolverTest {
                 SpreadPairing.resolveShift(
                     remembered = null,
                     perMangaForce = null,
+                    decisiveWide = null,
                     detected = detected,
                     default = true,
                 ),
@@ -195,6 +196,7 @@ class SpreadShiftResolverTest {
                 SpreadPairing.resolveShift(
                     remembered = null,
                     perMangaForce = null,
+                    decisiveWide = null,
                     detected = detected,
                     default = false,
                 ),
@@ -205,16 +207,17 @@ class SpreadShiftResolverTest {
     }
 
     @Test
-    fun `a decodable chapter reports the classifier's verdict per direction`() = runTest {
+    fun `a decodable chapter reports the classifier's verdict per direction and its wide pages`() = runTest {
         val dispatcher = UnconfinedTestDispatcher(testScheduler)
         Dispatchers.setMain(dispatcher)
         mockkObject(SpreadOffsetSampler, Spreadfit)
         try {
             // Two Ready pages the sampler reads; the classifier is stubbed to a definite, direction-split
             // verdict so this pins the resolver's own contract (cache the analysis once, resolve per
-            // direction), not the classifier's accuracy (spreadfit's own tests cover that).
+            // direction, union the wides), not the classifier's accuracy (spreadfit's own tests cover that).
             val pages = listOf(readyPage(0), readyPage(1))
-            every { SpreadOffsetSampler.sample(any()) } returns null
+            every { SpreadOffsetSampler.sample(any()) } returns SpreadOffsetSampler.Sampled(luma = null, isWide = false)
+            every { SpreadOffsetSampler.isWidePage(any()) } returns true
             val analysis = mockk<Analysis> {
                 every { shifted(true) } returns true
                 every { shifted(false) } returns false
@@ -222,7 +225,7 @@ class SpreadShiftResolverTest {
             every { Spreadfit.analyze(any()) } returns analysis
 
             val resolver = SpreadShiftResolver(scope = this, onSettled = {}, samplingDispatcher = dispatcher)
-            resolver.ensureDetected(chapter(1L, pages))
+            resolver.ensureDetected(chapter(1L, pages), scanAllForWides = true)
             advanceUntilIdle()
 
             // One cached analysis, resolved each way without re-scanning.
@@ -234,6 +237,34 @@ class SpreadShiftResolverTest {
                 SpreadShiftResolver.Decision.Decided(shift = false),
                 resolver.decisionFor(1L, leftToRight = false),
             )
+            // The whole-chapter wide scan is unioned into the wide set.
+            assertEquals(setOf(0, 1), resolver.wideIndicesFor(1L))
+        } finally {
+            unmockkObject(SpreadOffsetSampler, Spreadfit)
+            Dispatchers.resetMain()
+        }
+    }
+
+    @Test
+    fun `the gutter sample's own wide flags reach the wide set (the union's reliable half)`() = runTest {
+        val dispatcher = UnconfinedTestDispatcher(testScheduler)
+        Dispatchers.setMain(dispatcher)
+        mockkObject(SpreadOffsetSampler, Spreadfit)
+        try {
+            // Complements the test above: there the whole-chapter header scan supplied the wides and the
+            // gutter sample none; here only the full-decode gutter pass flags them (the header scan finds
+            // none). Both must reach the wide set, or the union in analyse() drops the reliable half, so a
+            // page the classifier's own decode saw as wide would be paired as a single page.
+            val pages = listOf(readyPage(0), readyPage(1))
+            every { SpreadOffsetSampler.sample(any()) } returns SpreadOffsetSampler.Sampled(luma = null, isWide = true)
+            every { SpreadOffsetSampler.isWidePage(any()) } returns false
+            every { Spreadfit.analyze(any()) } returns mockk<Analysis> { every { shifted(any()) } returns null }
+
+            val resolver = SpreadShiftResolver(scope = this, onSettled = {}, samplingDispatcher = dispatcher)
+            resolver.ensureDetected(chapter(1L, pages), scanAllForWides = true)
+            advanceUntilIdle()
+
+            assertEquals(setOf(0, 1), resolver.wideIndicesFor(1L))
         } finally {
             unmockkObject(SpreadOffsetSampler, Spreadfit)
             Dispatchers.resetMain()
@@ -262,7 +293,7 @@ class SpreadShiftResolverTest {
                 samplingDispatcher = dispatcher,
             )
 
-            resolver.ensureDetected(chapter(1L, listOf(neverReady)))
+            resolver.ensureDetected(chapter(1L, listOf(neverReady)), scanAllForWides = false)
             resolverScope.cancel() // the reader closes before the sample completes
             advanceUntilIdle()
 
@@ -280,24 +311,27 @@ class SpreadShiftResolverTest {
         mockkObject(SpreadOffsetSampler, Spreadfit)
         try {
             val pages = listOf(readyPage(0), readyPage(1))
-            every { SpreadOffsetSampler.sample(any()) } returns null
+            every { SpreadOffsetSampler.sample(any()) } returns SpreadOffsetSampler.Sampled(luma = null, isWide = false)
+            every { SpreadOffsetSampler.isWidePage(any()) } returns true
             every { Spreadfit.analyze(any()) } returns mockk<Analysis> { every { shifted(any()) } returns true }
 
             val resolver = SpreadShiftResolver(scope = this, onSettled = {}, samplingDispatcher = dispatcher)
-            resolver.ensureDetected(chapter(1L, pages))
+            resolver.ensureDetected(chapter(1L, pages), scanAllForWides = true)
             advanceUntilIdle()
             assertEquals(
                 SpreadShiftResolver.Decision.Decided(shift = true),
                 resolver.decisionFor(1L, leftToRight = true),
             )
+            assertEquals(setOf(0, 1), resolver.wideIndicesFor(1L))
 
-            // forget clears the per-chapter cache: back to Pending.
+            // forget clears every per-chapter cache: back to Pending, no remembered wides.
             resolver.forget(1L)
             assertEquals(SpreadShiftResolver.Decision.Pending, resolver.decisionFor(1L, leftToRight = true))
+            assertEquals(emptySet<Int>(), resolver.wideIndicesFor(1L))
 
             // The re-scan actually re-runs (a fresh verdict, not the stale cache served back).
             every { Spreadfit.analyze(any()) } returns mockk<Analysis> { every { shifted(any()) } returns false }
-            resolver.ensureDetected(chapter(1L, pages))
+            resolver.ensureDetected(chapter(1L, pages), scanAllForWides = true)
             advanceUntilIdle()
             assertEquals(
                 SpreadShiftResolver.Decision.Decided(shift = false),

@@ -266,6 +266,7 @@ class ReaderActivity : BaseActivity() {
                 onChangeOrientation = viewModel::setMangaOrientationType,
                 onChangeSpread = viewModel::setMangaSpread,
                 onChangeSpreadForcePairing = viewModel::setMangaSpreadForcePairing,
+                onChangeSpreadWidePairing = viewModel::setMangaSpreadWidePairing,
                 onChangeSpreadShift = viewModel::setMangaSpreadShift,
                 onChangeSpreadVerticalFit = viewModel::setMangaSpreadVerticalFit,
                 onChangeSpreadSoloPage = viewModel::setMangaSpreadSoloPage,

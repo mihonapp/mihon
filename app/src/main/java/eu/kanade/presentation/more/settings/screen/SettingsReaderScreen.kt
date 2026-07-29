@@ -303,6 +303,12 @@ object SettingsReaderScreen : SearchableSettings {
                     enabled = spread,
                 ),
                 Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.defaultSpreadWidePairing,
+                    title = stringResource(MR.strings.pref_spread_wide_pairing),
+                    subtitle = stringResource(MR.strings.pref_spread_wide_pairing_summary),
+                    enabled = spread,
+                ),
+                Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.defaultSpreadShift,
                     title = stringResource(MR.strings.pref_spread_shift),
                     subtitle = stringResource(MR.strings.pref_spread_shift_summary),

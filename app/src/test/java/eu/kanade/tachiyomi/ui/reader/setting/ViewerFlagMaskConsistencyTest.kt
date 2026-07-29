@@ -21,6 +21,7 @@ class ViewerFlagMaskConsistencyTest {
         Triple("SpreadVerticalFit", SpreadVerticalFit.MASK, SpreadVerticalFit.entries.map { it.flagValue }),
         Triple("SpreadShift", SpreadShift.MASK, SpreadShift.entries.map { it.flagValue }),
         Triple("SpreadSoloPage", SpreadSoloPage.MASK, SpreadSoloPage.entries.map { it.flagValue }),
+        Triple("SpreadWidePairing", SpreadWidePairing.MASK, SpreadWidePairing.entries.map { it.flagValue }),
     )
 
     private fun hex(v: Int) = "0x" + v.toString(16)

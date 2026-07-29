@@ -17,6 +17,7 @@ class ReaderSettingsViewModel(
     val onChangeOrientation: (ReaderOrientation) -> Unit,
     val onChangeSpread: (Spread) -> Unit,
     val onChangeSpreadForcePairing: (SpreadForcePairing) -> Unit,
+    val onChangeSpreadWidePairing: (SpreadWidePairing) -> Unit,
     val onChangeSpreadShift: (SpreadShift) -> Unit,
     val onChangeSpreadVerticalFit: (SpreadVerticalFit) -> Unit,
     val onChangeSpreadSoloPage: (SpreadSoloPage) -> Unit,

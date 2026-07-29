@@ -16,6 +16,7 @@ import eu.kanade.domain.manga.model.spreadForcePairing
 import eu.kanade.domain.manga.model.spreadShift
 import eu.kanade.domain.manga.model.spreadSoloPage
 import eu.kanade.domain.manga.model.spreadVerticalFit
+import eu.kanade.domain.manga.model.spreadWidePairing
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
@@ -25,6 +26,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.SpreadForcePairing
 import eu.kanade.tachiyomi.ui.reader.setting.SpreadShift
 import eu.kanade.tachiyomi.ui.reader.setting.SpreadSoloPage
 import eu.kanade.tachiyomi.ui.reader.setting.SpreadVerticalFit
+import eu.kanade.tachiyomi.ui.reader.setting.SpreadWidePairing
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.L2RPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
@@ -90,6 +92,8 @@ internal fun ColumnScope.ReadingModePage(viewModel: ReaderSettingsViewModel) {
         if (spreadEffective) {
             val spreadForcePairing =
                 remember(manga) { SpreadForcePairing.fromPreference(manga?.spreadForcePairing?.toInt()) }
+            val spreadWidePairing =
+                remember(manga) { SpreadWidePairing.fromPreference(manga?.spreadWidePairing?.toInt()) }
             val spreadVerticalFit = remember(manga) {
                 SpreadVerticalFit.fromPreference(manga?.spreadVerticalFit?.toInt())
             }
@@ -114,6 +118,26 @@ internal fun ColumnScope.ReadingModePage(viewModel: ReaderSettingsViewModel) {
                                                 SpreadForcePairing.DEFAULT -> MR.strings.label_default
                                                 SpreadForcePairing.ENABLED -> MR.strings.on
                                                 SpreadForcePairing.DISABLED -> MR.strings.off
+                                            },
+                                        ),
+                                    )
+                                },
+                            )
+                        }
+                    }
+
+                    SettingsChipRow(MR.strings.pref_spread_wide_pairing) {
+                        SpreadWidePairing.entries.map {
+                            FilterChip(
+                                selected = it == spreadWidePairing,
+                                onClick = { viewModel.onChangeSpreadWidePairing(it) },
+                                label = {
+                                    Text(
+                                        stringResource(
+                                            when (it) {
+                                                SpreadWidePairing.DEFAULT -> MR.strings.label_default
+                                                SpreadWidePairing.ENABLED -> MR.strings.on
+                                                SpreadWidePairing.DISABLED -> MR.strings.off
                                             },
                                         ),
                                     )

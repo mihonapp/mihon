@@ -12,6 +12,7 @@ class SpreadFlagsTest {
         SpreadVerticalFit.entries.forEach { assertEquals(it, SpreadVerticalFit.fromPreference(it.flagValue)) }
         SpreadShift.entries.forEach { assertEquals(it, SpreadShift.fromPreference(it.flagValue)) }
         SpreadSoloPage.entries.forEach { assertEquals(it, SpreadSoloPage.fromPreference(it.flagValue)) }
+        SpreadWidePairing.entries.forEach { assertEquals(it, SpreadWidePairing.fromPreference(it.flagValue)) }
     }
 
     @Test
@@ -30,6 +31,7 @@ class SpreadFlagsTest {
         SpreadVerticalFit.entries.forEach { assertEquals(it.flagValue, it.flagValue and SpreadVerticalFit.MASK) }
         SpreadShift.entries.forEach { assertEquals(it.flagValue, it.flagValue and SpreadShift.MASK) }
         SpreadSoloPage.entries.forEach { assertEquals(it.flagValue, it.flagValue and SpreadSoloPage.MASK) }
+        SpreadWidePairing.entries.forEach { assertEquals(it.flagValue, it.flagValue and SpreadWidePairing.MASK) }
     }
 
     @Test
@@ -40,6 +42,7 @@ class SpreadFlagsTest {
             "VerticalFit" to SpreadVerticalFit.MASK,
             "Shift" to SpreadShift.MASK,
             "SoloPage" to SpreadSoloPage.MASK,
+            "WidePairing" to SpreadWidePairing.MASK,
             "ReadingMode" to ReadingMode.MASK,
             "Orientation" to ReaderOrientation.MASK,
         )
@@ -62,12 +65,14 @@ class SpreadFlagsTest {
             SpreadForcePairing.DISABLED.flagValue or
             SpreadVerticalFit.TOP.flagValue or
             SpreadShift.SHIFTED.flagValue or
-            SpreadSoloPage.JUSTIFY.flagValue
+            SpreadSoloPage.JUSTIFY.flagValue or
+            SpreadWidePairing.ENABLED.flagValue
 
         assertEquals(Spread.ENABLED, Spread.fromPreference(flags and Spread.MASK))
         assertEquals(SpreadForcePairing.DISABLED, SpreadForcePairing.fromPreference(flags and SpreadForcePairing.MASK))
         assertEquals(SpreadVerticalFit.TOP, SpreadVerticalFit.fromPreference(flags and SpreadVerticalFit.MASK))
         assertEquals(SpreadShift.SHIFTED, SpreadShift.fromPreference(flags and SpreadShift.MASK))
         assertEquals(SpreadSoloPage.JUSTIFY, SpreadSoloPage.fromPreference(flags and SpreadSoloPage.MASK))
+        assertEquals(SpreadWidePairing.ENABLED, SpreadWidePairing.fromPreference(flags and SpreadWidePairing.MASK))
     }
 }

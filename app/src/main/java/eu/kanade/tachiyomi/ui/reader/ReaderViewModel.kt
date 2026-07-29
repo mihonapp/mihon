@@ -17,6 +17,7 @@ import eu.kanade.domain.manga.model.spreadForcePairing
 import eu.kanade.domain.manga.model.spreadShift
 import eu.kanade.domain.manga.model.spreadSoloPage
 import eu.kanade.domain.manga.model.spreadVerticalFit
+import eu.kanade.domain.manga.model.spreadWidePairing
 import eu.kanade.domain.source.interactor.GetIncognitoState
 import eu.kanade.domain.track.interactor.TrackChapter
 import eu.kanade.domain.track.service.TrackPreferences
@@ -43,6 +44,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.SpreadForcePairing
 import eu.kanade.tachiyomi.ui.reader.setting.SpreadShift
 import eu.kanade.tachiyomi.ui.reader.setting.SpreadSoloPage
 import eu.kanade.tachiyomi.ui.reader.setting.SpreadVerticalFit
+import eu.kanade.tachiyomi.ui.reader.setting.SpreadWidePairing
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.SpreadShiftResolver
 import eu.kanade.tachiyomi.util.chapter.filterDownloaded
@@ -869,6 +871,51 @@ class ReaderViewModel @JvmOverloads constructor(
         // reconfigures the current viewer, exactly as setMangaOrientationType/setMangaSpread already do.
         viewModelScope.launchIO {
             setMangaViewerFlags.awaitSetSpreadForcePairing(manga.id, spreadForcePairing.flagValue.toLong())
+            val currChapters = state.value.viewerChapters
+            if (currChapters != null) {
+                val currChapter = currChapters.currChapter
+                currChapter.requestedPage = currChapter.chapter.last_page_read
+
+                mutableState.update {
+                    it.copy(
+                        manga = getManga.await(manga.id),
+                        viewerChapters = currChapters,
+                    )
+                }
+                eventChannel.send(Event.ReloadViewerChapters)
+            }
+        }
+    }
+
+    /**
+     * Whether wide pages are treated as two-page spreads (the pairing is anchored around them) for this
+     * manga, resolving the per-series flag against the global default. Off by default; this is a
+     * content-dependent per-series opt-in.
+     */
+    fun getMangaSpreadWidePairing(resolveDefault: Boolean = true): Boolean {
+        val spreadWidePairing = SpreadWidePairing.fromPreference(manga?.spreadWidePairing?.toInt())
+        return when {
+            resolveDefault && spreadWidePairing == SpreadWidePairing.DEFAULT ->
+                readerPreferences.defaultSpreadWidePairing.get()
+            else -> spreadWidePairing == SpreadWidePairing.ENABLED
+        }
+    }
+
+    /**
+     * Updates the per-manga "treat wide pages as spreads" override. Reloads the viewer so the wide-scan
+     * and pairing re-run, since the change reshapes how a chapter is paired.
+     */
+    fun setMangaSpreadWidePairing(spreadWidePairing: SpreadWidePairing) {
+        val manga = manga ?: return
+        // Drop the loaded chapters' cached detection so the reload below re-scans them under the new
+        // setting: enabling wide pairing needs the whole-chapter wide scan an autodetect-only scan
+        // skipped. On the main thread (the resolver is main-thread only), before the IO block.
+        state.value.viewerChapters?.run {
+            listOfNotNull(prevChapter, currChapter, nextChapter)
+                .forEach { chapter -> chapter.chapter.id?.let(spreadShiftResolver::forget) }
+        }
+        viewModelScope.launchIO {
+            setMangaViewerFlags.awaitSetSpreadWidePairing(manga.id, spreadWidePairing.flagValue.toLong())
             val currChapters = state.value.viewerChapters
             if (currChapters != null) {
                 val currChapter = currChapters.currChapter

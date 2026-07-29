@@ -58,6 +58,8 @@ class PagerConfig(
 
     val spreadForcePairing = viewer.activity.viewModel.getMangaSpreadForcePairing()
 
+    val spreadWidePairing = viewer.activity.viewModel.getMangaSpreadWidePairing()
+
     val spreadVerticalFit = viewer.activity.viewModel.getMangaSpreadVerticalFit()
 
     val spreadSoloPage = viewer.activity.viewModel.getMangaSpreadSoloPage()
