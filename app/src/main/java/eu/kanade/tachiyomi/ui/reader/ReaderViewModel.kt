@@ -12,6 +12,11 @@ import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.manga.interactor.SetMangaViewerFlags
 import eu.kanade.domain.manga.model.readerOrientation
 import eu.kanade.domain.manga.model.readingMode
+import eu.kanade.domain.manga.model.spread
+import eu.kanade.domain.manga.model.spreadForcePairing
+import eu.kanade.domain.manga.model.spreadShift
+import eu.kanade.domain.manga.model.spreadSoloPage
+import eu.kanade.domain.manga.model.spreadVerticalFit
 import eu.kanade.domain.source.interactor.GetIncognitoState
 import eu.kanade.domain.track.interactor.TrackChapter
 import eu.kanade.domain.track.service.TrackPreferences
@@ -33,6 +38,11 @@ import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import eu.kanade.tachiyomi.ui.reader.setting.Spread
+import eu.kanade.tachiyomi.ui.reader.setting.SpreadForcePairing
+import eu.kanade.tachiyomi.ui.reader.setting.SpreadShift
+import eu.kanade.tachiyomi.ui.reader.setting.SpreadSoloPage
+import eu.kanade.tachiyomi.ui.reader.setting.SpreadVerticalFit
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.util.chapter.filterDownloaded
 import eu.kanade.tachiyomi.util.chapter.removeDuplicates
@@ -53,6 +63,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import tachiyomi.core.common.preference.toggle
@@ -108,6 +119,17 @@ class ReaderViewModel @JvmOverloads constructor(
 
     private val eventChannel = Channel<Event>()
     val eventFlow = eventChannel.receiveAsFlow()
+
+    private val _spreadShiftForce = MutableStateFlow(SpreadShift.DEFAULT)
+
+    /**
+     * The per-manga spread-shift override (the pairing baseline the user picked for this series). Held at
+     * session scope, not in [state]'s manga: a shift change needs only an in-place re-pair, but mutating
+     * manga in [state] would trigger a full viewer rebuild and strand the reflow on an empty viewer. Read
+     * on every re-pair via [getMangaSpreadShiftForce]; drives the settings chip; initialised from the
+     * persisted flag and persisted for next session by [setMangaSpreadShift].
+     */
+    val spreadShiftForce = _spreadShiftForce.asStateFlow()
 
     /**
      * The manga loaded in the reader. It can be null when instantiated for a short time.
@@ -282,6 +304,7 @@ class ReaderViewModel @JvmOverloads constructor(
                 if (manga != null) {
                     sourceManager.isInitialized.first { it }
                     mutableState.update { it.copy(manga = manga) }
+                    _spreadShiftForce.value = SpreadShift.fromPreference(manga.spreadShift.toInt())
                     if (chapterId == -1L) chapterId = initialChapterId
 
                     val context = Injekt.get<Application>()
@@ -436,7 +459,7 @@ class ReaderViewModel @JvmOverloads constructor(
      * read, update tracking services, enqueue downloaded chapter deletion, and updating the active chapter if this
      * [page]'s chapter is different from the currently active.
      */
-    fun onPageSelected(page: ReaderPage) {
+    fun onPageSelected(page: ReaderPage, displayPage: ReaderPage = page) {
         // InsertPage doesn't change page progress
         if (page is InsertPage) {
             return
@@ -447,7 +470,7 @@ class ReaderViewModel @JvmOverloads constructor(
 
         // Save last page read and mark as read if needed
         viewModelScope.launchNonCancellable {
-            updateChapterProgress(selectedChapter, page)
+            updateChapterProgress(selectedChapter, page, displayPage.index)
         }
 
         if (selectedChapter != getCurrentChapter()) {
@@ -531,11 +554,17 @@ class ReaderViewModel @JvmOverloads constructor(
      * Saves the chapter progress (last read page and whether it's read)
      * if incognito mode isn't on.
      */
-    private suspend fun updateChapterProgress(readerChapter: ReaderChapter, page: Page) {
+    private suspend fun updateChapterProgress(
+        readerChapter: ReaderChapter,
+        page: Page,
+        displayIndex: Int = page.index,
+    ) {
         val pageIndex = page.index
 
         mutableState.update {
-            it.copy(currentPage = pageIndex + 1)
+            // For a spread, [page] is the further (second) page and [displayIndex] the nearer
+            // (first) one, so this yields the pair's range; for a single page the two coincide.
+            it.copy(currentPage = displayIndex + 1, currentPageEnd = page.index + 1)
         }
         readerChapter.requestedPage = pageIndex
         chapterPageIndex = pageIndex
@@ -579,6 +608,21 @@ class ReaderViewModel @JvmOverloads constructor(
                 }
             }
         updateChapter.awaitAll(duplicateUnreadChapters)
+    }
+
+    /**
+     * Persists the per-chapter spread pairing override [spreadShift] the user just chose for
+     * [readerChapter] so it is restored on later visits: SHIFTED/UNSHIFTED stand in for a manual toggle
+     * (so auto-detect defers to them), while DEFAULT clears the override (written as 0, which survives the
+     * coalesce update). The in-memory chapter is updated by the caller; this only writes it through.
+     * Skipped in incognito mode, which leaves no reading-state trace.
+     */
+    fun persistSpreadShift(readerChapter: ReaderChapter, spreadShift: SpreadShift) {
+        if (incognitoMode) return
+        val chapterId = readerChapter.chapter.id ?: return
+        viewModelScope.launchNonCancellable {
+            updateChapter.await(ChapterUpdate(id = chapterId, spreadShift = spreadShift.flagValue.toLong()))
+        }
     }
 
     fun restartReadTimer() {
@@ -733,6 +777,201 @@ class ReaderViewModel @JvmOverloads constructor(
                 eventChannel.send(Event.ReloadViewerChapters)
             }
         }
+    }
+
+    /**
+     * Returns whether spread mode is effectively on for this manga (or the global default).
+     */
+    fun getMangaSpread(resolveDefault: Boolean = true): Boolean {
+        val spread = Spread.fromPreference(manga?.spread?.toInt())
+        return when {
+            resolveDefault && spread == Spread.DEFAULT -> readerPreferences.defaultSpread.get()
+            else -> spread == Spread.ENABLED
+        }
+    }
+
+    /**
+     * Updates spread mode for the open manga.
+     */
+    fun setMangaSpread(spread: Spread) {
+        val manga = manga ?: return
+        // Off the UI thread: the spread toggle has a repeatable key shortcut (D), so a blocking write
+        // here can stall input dispatch.
+        viewModelScope.launchIO {
+            setMangaViewerFlags.awaitSetSpread(manga.id, spread.flagValue.toLong())
+            val currChapters = state.value.viewerChapters
+            if (currChapters != null) {
+                // Reopen on the leading page of the current view (the page the nav shows), not the
+                // further page progress tracks. So collapsing a 1-2 spread to single pages keeps the
+                // reader on page one (able to read from the start), not page two; enabling spread from
+                // a single page is unchanged (the two coincide there). Fall back to saved progress
+                // before any page has been selected.
+                val currChapter = currChapters.currChapter
+                currChapter.requestedPage =
+                    if (state.value.currentPage >=
+                        1
+                    ) {
+                        state.value.currentPage - 1
+                    } else {
+                        currChapter.chapter.last_page_read
+                    }
+
+                mutableState.update {
+                    it.copy(
+                        manga = getManga.await(manga.id),
+                        viewerChapters = currChapters,
+                    )
+                }
+                eventChannel.send(Event.ReloadViewerChapters)
+            }
+        }
+    }
+
+    /**
+     * Returns whether dissimilarly sized page pairs are force-paired for this manga (or the global default).
+     */
+    fun getMangaSpreadForcePairing(resolveDefault: Boolean = true): Boolean {
+        val spreadForcePairing = SpreadForcePairing.fromPreference(manga?.spreadForcePairing?.toInt())
+        return when {
+            resolveDefault && spreadForcePairing == SpreadForcePairing.DEFAULT ->
+                readerPreferences.defaultSpreadForcePairing.get()
+            else -> spreadForcePairing == SpreadForcePairing.ENABLED
+        }
+    }
+
+    /**
+     * The per-manga spread-shift override, as a force that outranks auto-detect: null = inherit the
+     * global default baseline, true = leave the first page solo, false = pair from the first page.
+     */
+    fun getMangaSpreadShiftForce(): Boolean? = spreadShiftForce.value.asShiftOrNull()
+
+    /**
+     * Updates force-pairing of dissimilarly sized pages for the open manga.
+     */
+    fun setMangaSpreadForcePairing(spreadForcePairing: SpreadForcePairing) {
+        val manga = manga ?: return
+        // Off the UI thread: this runs from a Compose chip tap, so a blocking DB write would jank input.
+        // Safe async here (unlike a reading-mode change, which swaps the viewer type): this only
+        // reconfigures the current viewer, exactly as setMangaOrientationType/setMangaSpread already do.
+        viewModelScope.launchIO {
+            setMangaViewerFlags.awaitSetSpreadForcePairing(manga.id, spreadForcePairing.flagValue.toLong())
+            val currChapters = state.value.viewerChapters
+            if (currChapters != null) {
+                val currChapter = currChapters.currChapter
+                currChapter.requestedPage = currChapter.chapter.last_page_read
+
+                mutableState.update {
+                    it.copy(
+                        manga = getManga.await(manga.id),
+                        viewerChapters = currChapters,
+                    )
+                }
+                eventChannel.send(Event.ReloadViewerChapters)
+            }
+        }
+    }
+
+    /**
+     * Updates the per-manga spread-shift override (the pairing baseline) for the open manga.
+     */
+    fun setMangaSpreadShift(spreadShift: SpreadShift) {
+        val manga = manga ?: return
+        // Update the session holder (not state.manga) so getMangaSpreadShiftForce() reads the new value,
+        // then re-pair in place (anchored) via ReapplyShift. Two constraints: don't mutate state.manga,
+        // which rebuilds the viewer (ReaderActivity.updateViewer) and strands the in-place reflow on an
+        // empty viewer; and don't reload by requestedPage: restoring a parity change by raw page index
+        // walks the reader forward. The flag is persisted for next session, off the UI path.
+        _spreadShiftForce.value = spreadShift
+        viewModelScope.launchNonCancellable {
+            setMangaViewerFlags.awaitSetSpreadShift(manga.id, spreadShift.flagValue.toLong())
+        }
+        viewModelScope.launch { eventChannel.send(Event.ReapplyShift) }
+    }
+
+    /**
+     * Returns how size-mismatched page pairs are fitted vertically for this manga (or the global
+     * default): [SpreadVerticalFit.MATCH] scales the shorter half up to the taller's height, while
+     * [SpreadVerticalFit.TOP]/[SpreadVerticalFit.CENTER] keep native sizes and align the shorter half.
+     */
+    fun getMangaSpreadVerticalFit(resolveDefault: Boolean = true): SpreadVerticalFit {
+        val spreadVerticalFit = SpreadVerticalFit.fromPreference(manga?.spreadVerticalFit?.toInt())
+        return when {
+            resolveDefault && spreadVerticalFit == SpreadVerticalFit.DEFAULT ->
+                readerPreferences.defaultSpreadVerticalFit.get()
+            else -> spreadVerticalFit
+        }
+    }
+
+    /**
+     * Updates the vertical fit of size-mismatched page pairs for the open manga.
+     */
+    fun setMangaSpreadVerticalFit(spreadVerticalFit: SpreadVerticalFit) {
+        val manga = manga ?: return
+        viewModelScope.launchIO {
+            setMangaViewerFlags.awaitSetSpreadVerticalFit(manga.id, spreadVerticalFit.flagValue.toLong())
+            val currChapters = state.value.viewerChapters
+            if (currChapters != null) {
+                val currChapter = currChapters.currChapter
+                currChapter.requestedPage = currChapter.chapter.last_page_read
+
+                mutableState.update {
+                    it.copy(
+                        manga = getManga.await(manga.id),
+                        viewerChapters = currChapters,
+                    )
+                }
+                eventChannel.send(Event.ReloadViewerChapters)
+            }
+        }
+    }
+
+    /**
+     * Returns how a lone (unpaired) page is positioned in spread mode for this manga (or the global
+     * default): centred in the viewport, or justified to its binding side like a physical book.
+     */
+    fun getMangaSpreadSoloPage(resolveDefault: Boolean = true): SpreadSoloPage {
+        val spreadSoloPage = SpreadSoloPage.fromPreference(manga?.spreadSoloPage?.toInt())
+        return when {
+            resolveDefault && spreadSoloPage == SpreadSoloPage.DEFAULT ->
+                if (readerPreferences.defaultSpreadSoloPageJustify.get()) {
+                    SpreadSoloPage.JUSTIFY
+                } else {
+                    SpreadSoloPage.CENTER
+                }
+            else -> spreadSoloPage
+        }
+    }
+
+    /**
+     * Updates how lone pages are positioned in spread mode for the open manga.
+     */
+    fun setMangaSpreadSoloPage(spreadSoloPage: SpreadSoloPage) {
+        val manga = manga ?: return
+        viewModelScope.launchIO {
+            setMangaViewerFlags.awaitSetSpreadSoloPage(manga.id, spreadSoloPage.flagValue.toLong())
+            val currChapters = state.value.viewerChapters
+            if (currChapters != null) {
+                val currChapter = currChapters.currChapter
+                currChapter.requestedPage = currChapter.chapter.last_page_read
+
+                mutableState.update {
+                    it.copy(
+                        manga = getManga.await(manga.id),
+                        viewerChapters = currChapters,
+                    )
+                }
+                eventChannel.send(Event.ReloadViewerChapters)
+            }
+        }
+    }
+
+    /**
+     * Toggles spread mode for the open manga on/off (never lands on the default sentinel).
+     */
+    fun toggleSpread(): Boolean {
+        val enabled = !getMangaSpread()
+        setMangaSpread(if (enabled) Spread.ENABLED else Spread.DISABLED)
+        return enabled
     }
 
     fun toggleCropBorders(): Boolean {
@@ -953,6 +1192,13 @@ class ReaderViewModel @JvmOverloads constructor(
         val currentPage: Int = -1,
 
         /**
+         * Last page number of the currently-visible unit. Equals [currentPage] for a single page;
+         * for a two-page spread it's the further page's number, letting the indicator show a range
+         * (e.g. "2-3 / 20") instead of only the nearer page.
+         */
+        val currentPageEnd: Int = -1,
+
+        /**
          * Viewer used to display the pages (pager, webtoon, ...).
          */
         val viewer: Viewer? = null,
@@ -977,6 +1223,7 @@ class ReaderViewModel @JvmOverloads constructor(
 
     sealed interface Event {
         data object ReloadViewerChapters : Event
+        data object ReapplyShift : Event
         data object PageChanged : Event
         data class SetOrientation(val orientation: Int) : Event
         data class SetCoverResult(val result: SetAsCoverResult) : Event

@@ -4,12 +4,16 @@ import android.view.View
 import android.view.ViewGroup
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
+import eu.kanade.tachiyomi.ui.reader.model.PageSpread
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
+import eu.kanade.tachiyomi.ui.reader.setting.SpreadShift
+import eu.kanade.tachiyomi.ui.reader.setting.SpreadSoloPage
 import eu.kanade.tachiyomi.ui.reader.viewer.calculateChapterGap
 import eu.kanade.tachiyomi.util.system.createReaderThemeContext
 import eu.kanade.tachiyomi.widget.ViewPagerAdapter
+import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
 
 /**
@@ -31,13 +35,69 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     var nextTransition: ChapterTransition.Next? = null
         private set
 
+    // The chapter currently centred on. Its pairing shift ([spreadShifted]) is (re)computed on every
+    // rebuild in [setChapters]: a remembered manual shift wins, else a per-series force, else the global
+    // default, so it needs no custom setter.
     var currentChapter: ReaderChapter? = null
+        private set
+
+    /**
+     * Whether spread pairing for [currentChapter] starts with its first page standing alone (so spreads
+     * are (2,3), (4,5)...) rather than the default (1,2), (3,4)... Caches the current chapter's shift;
+     * recomputed for it on every [setChapters] rebuild. Toggled by [toggleSpreadShift], which also
+     * persists the new value.
+     */
+    var spreadShifted = false
+        private set
 
     /**
      * Context that has been wrapped to use the correct theme values based on the
      * current app theme and reader background color
      */
     private var readerThemedContext = viewer.activity.createReaderThemeContext()
+
+    /**
+     * Small pool of already-decoded spread halves, keyed by their page. A shift/reload re-pairs the
+     * *same* pages, so [destroyView] salvages loaded halves here and [createView] reuses them instead
+     * of tearing them down and re-decoding (the expensive part of a re-pairing, since the halves were all
+     * decoded a moment earlier in the same window). Insertion-ordered and bounded, so the oldest is
+     * evicted (and recycled) first.
+     *
+     * Reuse is valid only while a half's decode config (crop borders, scale type, …) still matches the
+     * live one; a reused half keeps its bitmap, never re-decoding. A config-changing rebuild must
+     * therefore not reuse: [PagerViewer.refreshAdapter] runs under [withoutSalvaging]. (Shift/reload
+     * keeps the config, so it reuses freely.)
+     */
+    private val holderPool = LinkedHashMap<ReaderPage, PagerPageHolder>()
+
+    // Off only during a config-changing rebuild (see the pool's reuse invariant above): while false,
+    // [destroyView] recycles torn-down halves instead of pooling them, so nothing is reused stale.
+    private var salvaging = true
+
+    // The (chapterId, shift, source) [logShiftDecision] last emitted; setChapters rebuilds on every page
+    // turn, so the decision is logged only when this changes.
+    private var lastShiftLog: Triple<Long?, Boolean, String>? = null
+
+    /**
+     * Logs the effective pairing shift and which input won it, by the precedence [SpreadPairing.resolveShift]
+     * applies: a remembered manual toggle, else a per-series force, else the global default. Logged once per
+     * change so a rebuild doesn't spam.
+     */
+    private fun logShiftDecision(
+        chapter: ReaderChapter,
+        remembered: Boolean?,
+        perSeries: Boolean?,
+    ) {
+        val source = when {
+            remembered != null -> "manual"
+            perSeries != null -> "per-series"
+            else -> "default"
+        }
+        val entry = Triple(chapter.chapter.id, spreadShifted, source)
+        if (entry == lastShiftLog) return
+        lastShiftLog = entry
+        logcat { "Spread shift: shifted=$spreadShifted (via $source)" }
+    }
 
     /**
      * Updates this adapter with the given [chapters]. It handles setting a few pages of the
@@ -51,15 +111,37 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         val prevHasMissingChapters = calculateChapterGap(chapters.currChapter, chapters.prevChapter) > 0
         val nextHasMissingChapters = calculateChapterGap(chapters.nextChapter, chapters.currChapter) > 0
 
-        // Add previous chapter pages and transition
-        chapters.prevChapter?.pages?.let(newItems::addAll)
+        // Add previous chapter pages and transition.
+        chapters.prevChapter?.pages?.let {
+            newItems.addAll(pairPages(it, shifted = shiftForChapter(chapters.prevChapter)))
+        }
 
         // Skip transition page if the chapter is loaded & current page is not a transition page
-        if (prevHasMissingChapters || forceTransition || chapters.prevChapter?.state !is ReaderChapter.State.Loaded) {
+        if (prevHasMissingChapters ||
+            forceTransition ||
+            chapters.prevChapter?.state !is ReaderChapter.State.Loaded
+        ) {
             newItems.add(ChapterTransition.Prev(chapters.currChapter, chapters.prevChapter))
         }
 
         var insertPageLastPage: InsertPage? = null
+
+        // currentChapter and spreadShifted advance together here, before the current and next chapters
+        // pair below: spreadShifted caches currentChapter's shift, and shiftForChapter() reuses it for the
+        // neighbour that equals currentChapter (resolving the rest), so the two must stay consistent; the
+        // previous-chapter preview above pairs first, while both still describe the outgoing chapter.
+        // Recompute every rebuild, not just on a chapter change: remembered manual shift, else per-series
+        // force, else the global default.
+        currentChapter = chapters.currChapter
+        val rememberedShift = SpreadShift.rememberedShift(chapters.currChapter.chapter.spread_shift)
+        val perSeriesShift = viewer.activity.viewModel.getMangaSpreadShiftForce()
+        val defaultShift = viewer.activity.viewModel.readerPreferences.defaultSpreadShift.get()
+        spreadShifted = SpreadPairing.resolveShift(
+            remembered = rememberedShift,
+            perMangaForce = perSeriesShift,
+            default = defaultShift,
+        )
+        logShiftDecision(chapters.currChapter, rememberedShift, perSeriesShift)
 
         // Add current chapter.
         val currPages = chapters.currChapter.pages
@@ -77,10 +159,8 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
                     preprocessed[key]?.let { pages.add(key + 1, it) }
                 }
 
-            newItems.addAll(pages)
+            newItems.addAll(pairPages(pages, shifted = spreadShifted))
         }
-
-        currentChapter = chapters.currChapter
 
         // Add next chapter transition and pages.
         nextTransition = ChapterTransition.Next(chapters.currChapter, chapters.nextChapter)
@@ -94,9 +174,11 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
                 }
             }
 
-        chapters.nextChapter?.pages?.let(newItems::addAll)
+        chapters.nextChapter?.pages?.let {
+            newItems.addAll(pairPages(it, shifted = shiftForChapter(chapters.nextChapter)))
+        }
 
-        // Resets double-page splits, else insert pages get misplaced
+        // Resets dual-page splits, else insert pages get misplaced
         items.filterIsInstance<InsertPage>().also { items.removeAll(it) }
 
         if (viewer is R2LPagerViewer) {
@@ -114,6 +196,26 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     }
 
     /**
+     * Pairs up consecutive pages of a single chapter into [PageSpread]s when spread mode is
+     * on. Only applies to the horizontal pagers; a no-op otherwise.
+     *
+     * [shifted] is the run's own pairing shift, supplied per chapter by [setChapters] via
+     * [shiftForChapter]: the current chapter's live [spreadShifted] for its own pages, each
+     * neighbour's known shift for its preview. This is the other place pairing happens (alongside
+     * [regroupChapterAware]), called by every [setChapters] rebuild rather than only an explicit
+     * [toggleSpreadShift]. Without honoring the shift here, a rebuild unrelated to pairing (e.g.
+     * [ReaderViewModel.preload]'s `Event.ReloadViewerChapters`, which fires as soon as background
+     * preloading of the next chapter completes, routine while reading near the end of the current
+     * one) would silently revert a chapter to its default pairing, leaving [spreadShifted] (and the
+     * bottom-bar icon reflecting it) still showing shifted even though the actual pages no longer are.
+     */
+    private fun pairPages(pages: List<ReaderPage>, shifted: Boolean = false): List<Any> {
+        if (viewer !is L2RPagerViewer && viewer !is R2LPagerViewer) return pages
+        if (!viewer.config.spread) return pages
+        return SpreadPairing.pairFlat(pages, shifted)
+    }
+
+    /**
      * Returns the amount of items of the adapter.
      */
     override fun getCount(): Int {
@@ -125,10 +227,95 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
      */
     override fun createView(container: ViewGroup, position: Int): View {
         return when (val item = items[position]) {
-            is ReaderPage -> PagerPageHolder(readerThemedContext, viewer, item)
+            is PageSpread -> PagerSpreadHolder(readerThemedContext, viewer, item, reuse = ::reusePooledHalf)
+            is ReaderPage -> PagerPageHolder(
+                readerThemedContext,
+                viewer,
+                item,
+                soloJustifyIsLeft = soloJustifySideFor(item),
+            )
             is ChapterTransition -> PagerTransitionHolder(readerThemedContext, viewer, item)
             else -> throw NotImplementedError("Holder for ${item.javaClass} not implemented")
         }
+    }
+
+    /**
+     * When a spread is torn down (e.g. by a shift/reload re-pairing), keep its already-decoded halves
+     * in [holderPool] so [createView] can reuse them for their new pairing instead of re-decoding.
+     */
+    override fun destroyView(container: ViewGroup, position: Int, view: View) {
+        if (view is PagerSpreadHolder) {
+            view.detach()
+            if (salvaging) {
+                salvage(view, view.leftHolder)
+                salvage(view, view.rightHolder)
+            } else {
+                view.leftHolder.recycle()
+                view.rightHolder.recycle()
+            }
+        }
+    }
+
+    /**
+     * Runs [block] with pooling off (halves torn down during it are recycled, not salvaged), so a
+     * config-changing rebuild re-decodes rather than reusing a stale bitmap. The adapter reset destroys
+     * synchronously, so this only needs to span [block]; re-instantiation then finds an empty pool.
+     */
+    fun withoutSalvaging(block: () -> Unit) {
+        salvaging = false
+        try {
+            block()
+        } finally {
+            salvaging = true
+        }
+    }
+
+    private fun salvage(spread: PagerSpreadHolder, holder: PagerPageHolder) {
+        if (!holder.hasLoadedImage) return
+        spread.removeView(holder)
+        holderPool[holder.page] = holder
+        while (holderPool.size > MAX_POOLED_HOLDERS) {
+            val eldest = holderPool.keys.first()
+            holderPool.remove(eldest)?.recycle()
+        }
+    }
+
+    /** Frees every pooled half. Called when the viewer is torn down so decoded bitmaps aren't held. */
+    fun recyclePool() {
+        holderPool.values.forEach { it.recycle() }
+        holderPool.clear()
+    }
+
+    /**
+     * Takes a decoded half from [holderPool] for reuse, enforcing the pool's reuse invariant at the
+     * boundary: its decode config must still match the live one. A mismatch means a config-changing
+     * rebuild didn't invalidate the pool, a developer warning, since [PagerViewer.refreshAdapter] makes
+     * it never fire in normal use; it guards a future rebuild that forgets to.
+     */
+    private fun reusePooledHalf(page: ReaderPage): PagerPageHolder? {
+        val holder = holderPool.remove(page) ?: return null
+        if (holder.decodedCropBorders != viewer.config.imageCropBorders) {
+            logcat(LogPriority.WARN) {
+                "INVARIANT: reusing a spread half decoded with a stale crop-borders setting; a rebuild " +
+                    "changed the decode config without invalidating the pool (PagerViewerAdapter.holderPool)"
+            }
+        }
+        return holder
+    }
+
+    /**
+     * For a top-level (lone) [ReaderPage] in spread mode with [SpreadSoloPage.JUSTIFY], which screen
+     * half to justify it to (true = left); null when centring applies (the default), the pager isn't
+     * horizontal, or spread mode is off. Uses the page's own chapter's shift ([shiftForChapter]) so a
+     * neighbour preview's justified page sits on the same side it will once the chapter is current, and
+     * its pairing column (not the raw source index) so it stays aligned with the pairing's parity; see
+     * [SpreadPairing.pairingColumnIndex].
+     */
+    private fun soloJustifySideFor(page: ReaderPage): Boolean? {
+        if (viewer !is L2RPagerViewer && viewer !is R2LPagerViewer) return null
+        if (!viewer.config.spread || viewer.config.spreadSoloPage != SpreadSoloPage.JUSTIFY) return null
+        val column = SpreadPairing.pairingColumnIndex(items, page)
+        return SpreadPairing.soloSideIsLeft(column, shiftForChapter(page.chapter), viewer is R2LPagerViewer)
     }
 
     /**
@@ -185,7 +372,103 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         notifyDataSetChanged()
     }
 
+    /**
+     * Breaks a single spread apart because [widePage] turned out to be a wide image that
+     * shouldn't be paired. Local to this spread only; doesn't re-pair the rest of the chapter.
+     */
+    fun breakSpread(spread: PageSpread) {
+        val index = items.indexOf(spread)
+        if (index == -1) return
+        val (atIndex, atNext) = spreadOrderFor(spread)
+        items[index] = atIndex
+        items.add(index + 1, atNext)
+        notifyDataSetChanged()
+    }
+
+    private fun spreadOrderFor(spread: PageSpread): Pair<ReaderPage, ReaderPage> =
+        SpreadPairing.spreadOrder(spread, viewer is R2LPagerViewer)
+
+    private fun regroupChapterAware(source: List<Any>): MutableList<Any> =
+        SpreadPairing.regroupChapterAware(
+            source = source,
+            isR2L = viewer is R2LPagerViewer,
+            shiftFor = ::shiftForChapter,
+        )
+
+    /**
+     * The pairing shift known for [chapter] right now. The live [spreadShifted] for the current
+     * chapter (which reflects a manual toggle made this session); a stored value or the global default
+     * for any other. Lets every chapter's run (the current one and each neighbour preview) pair by its
+     * own shift, so crossing into a shifted chapter doesn't reshape its opening pairing at the boundary.
+     */
+    private fun shiftForChapter(chapter: ReaderChapter?): Boolean {
+        if (chapter == null) return false
+        if (chapter == currentChapter) return spreadShifted
+        return SpreadPairing.resolveShift(
+            remembered = SpreadShift.rememberedShift(chapter.chapter.spread_shift),
+            perMangaForce = viewer.activity.viewModel.getMangaSpreadShiftForce(),
+            default = viewer.activity.viewModel.readerPreferences.defaultSpreadShift.get(),
+        )
+    }
+
+    /**
+     * Toggles whether [currentChapter]'s spreads start pairing from its first page (default) or
+     * its second page (leaving the first page standing alone), then reflows the entire chapter
+     * to match, not just from wherever the reader currently is. Any trailing unpaired page (odd
+     * page count) always renders solo in either state. Ephemeral: resets when [currentChapter]
+     * changes. Used to correct scan misalignment (some files start spreads on the "wrong" page).
+     */
+    fun toggleSpreadShift() {
+        if (viewer !is L2RPagerViewer && viewer !is R2LPagerViewer) return
+        if (!viewer.config.spread) return
+        val chapter = currentChapter ?: return
+
+        spreadShifted = !spreadShifted
+        items = regroupChapterAware(items)
+        notifyDataSetChanged()
+
+        // Remember the deliberate choice: update the in-memory chapter (so it takes precedence over
+        // the global default on every later rebuild, via [shiftForChapter], with no DB read) and persist
+        // it so it survives navigation and restart.
+        val choice = if (spreadShifted) SpreadShift.SHIFTED else SpreadShift.UNSHIFTED
+        chapter.chapter.spread_shift = choice.flagValue.toLong()
+        viewer.activity.viewModel.persistSpreadShift(chapter, choice)
+    }
+
+    /**
+     * Re-resolves [currentChapter]'s shift and reflows its pairing in place (via
+     * [PagerViewer.reapplyShift]'s anchored path, not a raw-index reload, which would walk the reader
+     * across the parity flip). No-op when the resolved shift already matches. First clears any per-chapter
+     * manual (O-key) override: a per-series choice supersedes the ad-hoc one, which would otherwise shadow
+     * it in [SpreadPairing.resolveShift] (remembered ?: perMangaForce ?: …) and make the chip a no-op.
+     * Only the current chapter's override is cleared; other chapters keep their explicit per-chapter shift
+     * (which still outranks the per-series force by precedence). The asymmetry is deliberate, so the chip
+     * takes effect where the reader is looking without silently wiping deliberate corrections elsewhere.
+     */
+    fun reapplyShift() {
+        if (viewer !is L2RPagerViewer && viewer !is R2LPagerViewer) return
+        if (!viewer.config.spread) return
+        val chapter = currentChapter ?: return
+        if (SpreadShift.rememberedShift(chapter.chapter.spread_shift) != null) {
+            chapter.chapter.spread_shift = SpreadShift.DEFAULT.flagValue.toLong()
+            viewer.activity.viewModel.persistSpreadShift(chapter, SpreadShift.DEFAULT)
+        }
+        val resolved = SpreadPairing.resolveShift(
+            remembered = SpreadShift.rememberedShift(chapter.chapter.spread_shift),
+            perMangaForce = viewer.activity.viewModel.getMangaSpreadShiftForce(),
+            default = viewer.activity.viewModel.readerPreferences.defaultSpreadShift.get(),
+        )
+        if (resolved == spreadShifted) return
+        spreadShifted = resolved
+        items = regroupChapterAware(items)
+        notifyDataSetChanged()
+    }
+
     fun refresh() {
         readerThemedContext = viewer.activity.createReaderThemeContext()
     }
 }
+
+// The reuse pool only needs to span the instantiated window (~3 spreads = 6 halves) plus a little
+// slack; anything older than that has scrolled well away and is recycled.
+private const val MAX_POOLED_HOLDERS = 8
