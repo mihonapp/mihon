@@ -303,9 +303,11 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     ) {
         val pages = page.chapter.pages ?: return
         logcat { "onReaderPageSelected: ${page.number}/${pages.size}" }
-        // Track/persist progress against the later page actually reached, so a chapter that ends on
-        // a full spread still hits the exact last-page-index match that marks it read.
-        activity.onPageSelected(page)
+        // Track/persist progress against the later page actually reached (page), so a chapter
+        // that ends on a full spread still hits the exact last-page-index match that marks it
+        // read, but show the spread's earlier page number on screen (extraHolderPage), which
+        // matches what other readers do and reads more naturally as "the page I turned to."
+        activity.onPageSelected(page, displayPage = extraHolderPage ?: page)
 
         // Notify holder of page change
         getPageHolder(page)?.onPageSelected(forward)
@@ -569,6 +571,14 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             KeyEvent.KEYCODE_PAGE_DOWN -> if (isUp) moveDown()
             KeyEvent.KEYCODE_PAGE_UP -> if (isUp) moveUp()
             KeyEvent.KEYCODE_MENU -> if (isUp) activity.toggleMenu()
+            KeyEvent.KEYCODE_D -> {
+                if (this is VerticalPagerViewer) return false
+                if (isUp) activity.toggleSpread()
+            }
+            KeyEvent.KEYCODE_O -> {
+                if (this is VerticalPagerViewer || !config.spread) return false
+                if (isUp) shiftSpreadPairing()
+            }
             else -> return false
         }
         return true

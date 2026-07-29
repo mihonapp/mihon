@@ -15,6 +15,14 @@ class ReaderSettingsViewModel(
     readerState: StateFlow<ReaderViewModel.State>,
     val onChangeReadingMode: (ReadingMode) -> Unit,
     val onChangeOrientation: (ReaderOrientation) -> Unit,
+    val onChangeSpread: (Spread) -> Unit,
+    val onChangeSpreadForcePairing: (SpreadForcePairing) -> Unit,
+    val onChangeSpreadShift: (SpreadShift) -> Unit,
+    val onChangeSpreadVerticalFit: (SpreadVerticalFit) -> Unit,
+    val onChangeSpreadSoloPage: (SpreadSoloPage) -> Unit,
+    // The per-manga shift override, held at reader-session scope in ReaderViewModel (not in State's manga,
+    // which would rebuild the viewer on change); the chip reads its selection from here.
+    val spreadShiftForce: StateFlow<SpreadShift>,
     val preferences: ReaderPreferences = Injekt.get(),
 ) : ViewModel() {
 
