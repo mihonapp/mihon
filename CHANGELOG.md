@@ -19,6 +19,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Changed
 - Detect Shizuku with permission check ([@Small-Ku](https://github.com/Small-Ku)) ([#3565](https://github.com/mihonapp/mihon/pull/3565))
+- Check for app and extension update on every cold start ([@AntsyLich](https://github.com/AntsyLich)) ([#3658](https://github.com/mihonapp/mihon/pull/3658))
 
 ### Improved
 - Library search ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#3554](https://github.com/mihonapp/mihon/pull/3554))
