@@ -462,6 +462,13 @@ private fun ColumnScope.MangaContentInfo(
             contentDescription = null,
             modifier = Modifier.size(16.dp),
         )
+        if (!artist.isNullOrBlank() && author == artist) {
+            Icon(
+                imageVector = Icons.Filled.Brush,
+                contentDescription = null,
+                modifier = Modifier.size(16.dp),
+            )
+        }
         Text(
             text = author?.takeIf { it.isNotBlank() }
                 ?: stringResource(MR.strings.unknown_author),
