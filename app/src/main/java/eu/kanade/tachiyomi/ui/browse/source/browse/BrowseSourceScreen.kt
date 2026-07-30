@@ -1,5 +1,7 @@
 package eu.kanade.tachiyomi.ui.browse.source.browse
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -40,6 +42,7 @@ import eu.kanade.core.util.ifSourcesLoaded
 import eu.kanade.presentation.browse.BrowseSourceContent
 import eu.kanade.presentation.browse.MissingSourceScreen
 import eu.kanade.presentation.browse.components.BrowseSourceToolbar
+import eu.kanade.presentation.browse.components.LocalSourceImportDialog
 import eu.kanade.presentation.browse.components.RemoveMangaDialog
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
@@ -112,6 +115,12 @@ data class BrowseSourceScreen(
         val uriHandler = LocalUriHandler.current
         val snackbarHostState = remember { SnackbarHostState() }
 
+        val pickFiles = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.OpenMultipleDocuments(),
+        ) { uris ->
+            viewModel.onFilesSelected(uris)
+        }
+
         val onHelpClick = { uriHandler.openUri(LocalSource.HELP_URL) }
         val onWebViewClick = f@{
             val source = viewModel.source as? HttpSource ?: return@f
@@ -146,6 +155,21 @@ data class BrowseSourceScreen(
                         onHelpClick = onHelpClick,
                         onSettingsClick = { navigator.push(SourcePreferencesScreen(sourceId)) },
                         onSearch = viewModel::search,
+                        onImportClick = {
+                            pickFiles.launch(
+                                arrayOf(
+                                    "application/zip",
+                                    "application/x-cbz",
+                                    "application/x-rar-compressed",
+                                    "application/x-cbr",
+                                    "application/x-7z-compressed",
+                                    "application/x-cb7",
+                                    "application/x-tar",
+                                    "application/x-cbt",
+                                    "application/epub+zip",
+                                ),
+                            )
+                        },
                     )
 
                     Row(
@@ -235,6 +259,7 @@ data class BrowseSourceScreen(
                             duplicates.isNotEmpty() -> viewModel.setDialog(
                                 BrowseSourceViewModel.Dialog.AddDuplicateManga(manga, duplicates),
                             )
+
                             else -> viewModel.addFavorite(manga)
                         }
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -254,6 +279,7 @@ data class BrowseSourceScreen(
                     onUpdate = viewModel::setFilters,
                 )
             }
+
             is BrowseSourceViewModel.Dialog.AddDuplicateManga -> {
                 DuplicateMangaDialog(
                     duplicates = dialog.duplicates,
@@ -273,6 +299,7 @@ data class BrowseSourceScreen(
                     onDismissRequest = onDismissRequest,
                 )
             }
+
             is BrowseSourceViewModel.Dialog.RemoveManga -> {
                 RemoveMangaDialog(
                     onDismissRequest = onDismissRequest,
@@ -282,6 +309,7 @@ data class BrowseSourceScreen(
                     mangaToRemove = dialog.manga,
                 )
             }
+
             is BrowseSourceViewModel.Dialog.ChangeMangaCategory -> {
                 ChangeCategoryDialog(
                     initialSelection = dialog.initialSelection,
@@ -293,6 +321,17 @@ data class BrowseSourceScreen(
                     },
                 )
             }
+
+            is BrowseSourceViewModel.Dialog.Import -> {
+                LocalSourceImportDialog(
+                    onDismissRequest = onDismissRequest,
+                    onImport = { folderName ->
+                        viewModel.importFiles(dialog.uris, folderName)
+                    },
+                    initialName = dialog.defaultName,
+                )
+            }
+
             else -> {}
         }
 
