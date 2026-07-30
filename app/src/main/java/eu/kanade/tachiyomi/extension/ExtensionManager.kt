@@ -32,7 +32,6 @@ import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.Locale
-import kotlin.collections.plus
 
 /**
  * The manager of extensions installed as another apk which extend the available sources. It handles
@@ -144,6 +143,8 @@ class ExtensionManager(
 
         _isInitialized.value = true
     }
+
+    fun reloadExtensions() = initExtensions()
 
     /**
      * Finds the available extensions in the [api] and updates [availableExtensionMapFlow].

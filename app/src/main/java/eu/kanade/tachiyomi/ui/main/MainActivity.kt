@@ -84,6 +84,7 @@ import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.updater.AppUpdateChecker
+import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.api.ExtensionApi
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
@@ -134,6 +135,7 @@ class MainActivity : BaseActivity() {
 
     private val downloadCache: DownloadCache by injectLazy()
     private val chapterCache: ChapterCache by injectLazy()
+    private val extensionManager: ExtensionManager by injectLazy()
 
     private val getIncognitoState: GetIncognitoState by injectLazy()
 
@@ -165,7 +167,10 @@ class MainActivity : BaseActivity() {
         val safeMode = intent.getBooleanExtra("safeMode", false)
         if (isLaunch) {
             preferences.safeMode.set(safeMode)
-            if (safeMode) toast(MR.strings.safe_mode_summary, Toast.LENGTH_LONG)
+            if (safeMode) {
+                toast(MR.strings.safe_mode_summary, Toast.LENGTH_LONG)
+                if (extensionManager.isInitialized.value) extensionManager.reloadExtensions()
+            }
         }
 
         setComposeContent {
