@@ -15,30 +15,26 @@ import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.ProgressListener
-import eu.kanade.tachiyomi.network.await
+import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.newCachelessCallWithProgress
-import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.storage.saveTo
+import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.setForegroundSafely
 import eu.kanade.tachiyomi.util.system.workManager
-import okhttp3.internal.http2.ErrorCode
-import okhttp3.internal.http2.StreamResetException
+import kotlinx.coroutines.CancellationException
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
 import java.io.File
-import kotlin.coroutines.cancellation.CancellationException
 
 class AppUpdateDownloadJob(private val context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams) {
 
-    private val notifier = AppUpdateNotifier(context)
     private val network: NetworkHelper by injectLazy()
 
     override suspend fun doWork(): Result {
         val url = inputData.getString(EXTRA_DOWNLOAD_URL)
-        val title = inputData.getString(EXTRA_DOWNLOAD_TITLE) ?: context.stringResource(MR.strings.app_name)
 
         if (url.isNullOrEmpty()) {
             return Result.failure()
@@ -46,17 +42,27 @@ class AppUpdateDownloadJob(private val context: Context, workerParams: WorkerPar
 
         setForegroundSafely()
 
-        withIOContext {
-            downloadApk(title, url)
+        return try {
+            withIOContext { downloadApk(url) }
+            Result.success(workDataOf(PROGRESS to 100, EXTRA_DOWNLOAD_URL to url))
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            Result.failure()
         }
-
-        return Result.success()
     }
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
+        val notification = context.notificationBuilder(Notifications.CHANNEL_APP_UPDATE)
+            .setContentTitle(context.stringResource(MR.strings.update_check_notification_update_available))
+            .setContentText(context.stringResource(MR.strings.update_check_notification_download_in_progress))
+            .setSmallIcon(android.R.drawable.stat_sys_download)
+            .setOngoing(true)
+            .build()
+
         return ForegroundInfo(
             Notifications.ID_APP_UPDATER,
-            notifier.onDownloadStarted().build(),
+            notification,
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
             } else {
@@ -70,10 +76,7 @@ class AppUpdateDownloadJob(private val context: Context, workerParams: WorkerPar
      *
      * @param url url location of file
      */
-    private suspend fun downloadApk(title: String, url: String) {
-        // Show notification download starting.
-        notifier.onDownloadStarted(title)
-
+    private suspend fun downloadApk(url: String) {
         val progressListener = object : ProgressListener {
             // Progress of the download
             var savedProgress = 0
@@ -87,45 +90,27 @@ class AppUpdateDownloadJob(private val context: Context, workerParams: WorkerPar
                 if (progress > savedProgress && currentTime - 200 > lastTick) {
                     savedProgress = progress
                     lastTick = currentTime
-                    notifier.onProgressChange(progress)
+                    setProgressAsync(workDataOf(PROGRESS to progress, EXTRA_DOWNLOAD_URL to url))
                 }
             }
         }
 
-        try {
-            // Download the new update.
-            val response = network.client.newCachelessCallWithProgress(GET(url), progressListener)
-                .await()
+        val response = network.client.newCachelessCallWithProgress(GET(url), progressListener).awaitSuccess()
 
-            // File where the apk will be saved.
-            val apkFile = File(context.externalCacheDir, "update.apk")
-
-            if (response.isSuccessful) {
-                response.body.source().saveTo(apkFile)
-            } else {
-                response.close()
-                throw Exception("Unsuccessful response")
-            }
-            notifier.cancel()
-            notifier.promptInstall(apkFile.getUriCompat(context))
-        } catch (e: Exception) {
-            val shouldCancel = e is CancellationException ||
-                (e is StreamResetException && e.errorCode == ErrorCode.CANCEL)
-            if (shouldCancel) {
-                notifier.cancel()
-            } else {
-                notifier.onDownloadError(url)
-            }
-        }
+        val apkFile = updateApk(context)
+        response.body.source().saveTo(apkFile)
     }
 
     companion object {
-        private const val TAG = "AppUpdateDownload"
+        const val TAG = "AppUpdateDownload"
+
+        const val PROGRESS = "progress"
 
         const val EXTRA_DOWNLOAD_URL = "DOWNLOAD_URL"
-        const val EXTRA_DOWNLOAD_TITLE = "DOWNLOAD_TITLE"
 
-        fun start(context: Context, url: String, title: String? = null) {
+        fun updateApk(context: Context): File = File(context.externalCacheDir, "update.apk")
+
+        fun start(context: Context, url: String) {
             val constraints = Constraints(
                 requiredNetworkType = NetworkType.CONNECTED,
             )
@@ -133,12 +118,7 @@ class AppUpdateDownloadJob(private val context: Context, workerParams: WorkerPar
             val request = OneTimeWorkRequestBuilder<AppUpdateDownloadJob>()
                 .setConstraints(constraints)
                 .addTag(TAG)
-                .setInputData(
-                    workDataOf(
-                        EXTRA_DOWNLOAD_URL to url,
-                        EXTRA_DOWNLOAD_TITLE to title,
-                    ),
-                )
+                .setInputData(workDataOf(EXTRA_DOWNLOAD_URL to url))
                 .build()
 
             context.workManager.enqueueUniqueWork(TAG, ExistingWorkPolicy.REPLACE, request)
