@@ -23,5 +23,6 @@ class DownloadAdapter(val downloadItemListener: DownloadItemListener) : Flexible
     interface DownloadItemListener {
         fun onItemReleased(position: Int)
         fun onMenuItemClick(position: Int, menuItem: MenuItem)
+        fun onItemClick(position: Int)
     }
 }
