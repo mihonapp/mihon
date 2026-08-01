@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+
+## [v0.20.2] - 2026-08-01
 ### Added
 - Support resumable image downloads if supported by source ([@xMohnad](https://github.com/xMohnad)) ([#3167](https://github.com/mihonapp/mihon/pull/3167))
   - Fix HTTP Error 416 not being handled properly ([@AntsyLich](https://github.com/AntsyLich)) ([#3563](https://github.com/mihonapp/mihon/pull/3563))
@@ -599,7 +601,8 @@ Same as v0.19.6
 - Branding to Mihon ([@AntsyLich](https://github.com/AntsyLich))
 - Minimum supported Android version to 8 ([@AntsyLich](https://github.com/AntsyLich)) ([`dfb3091`](https://github.com/mihonapp/mihon/commit/dfb3091e380dda3e9bfb64bf5c9a685cf3a03d0e))
 
-[unreleased]: https://github.com/mihonapp/mihon/compare/v0.20.1...main
+[unreleased]: https://github.com/mihonapp/mihon/compare/v0.20.2...main
+[v0.20.2]: https://github.com/mihonapp/mihon/compare/v0.20.1...v0.20.2
 [v0.20.1]: https://github.com/mihonapp/mihon/compare/v0.20.0...v0.20.1
 [v0.20.0]: https://github.com/mihonapp/mihon/compare/v0.19.9...v0.20.0
 [v0.19.9]: https://github.com/mihonapp/mihon/compare/v0.19.8...v0.19.9
