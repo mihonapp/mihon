@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Fixed
+- Fix MAL error for list entries with partial start/finish reading dates by setting those dates to Jan 1st / 1st of the month ([@MajorTanya](https://github.com/MajorTanya)) ([#3573](https://github.com/mihonapp/mihon/pull/3573))
 
 ## [v0.20.2] - 2026-08-01
 ### Added
@@ -36,7 +38,6 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed MangaBaka User Agent string ([@MajorTanya](https://github.com/MajorTanya)) ([#3578](https://github.com/mihonapp/mihon/pull/3578))
 - Fixed extension installation with shizuku installer ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#3630](https://github.com/mihonapp/mihon/pull/3630))
 - Fixed backup restore dropping library entries when the backup contains duplicate chapters ([@na-ji](https://github.com/na-ji)) ([#3667](https://github.com/mihonapp/mihon/pull/3667))
-- Fix MAL error for list entries with partial start/finish reading dates by setting those dates to Jan 1st / 1st of the month ([@MajorTanya](https://github.com/MajorTanya)) ([#3573](https://github.com/mihonapp/mihon/pull/3573))
 
 ## [v0.20.1] - 2026-07-09
 ### Added
