@@ -260,8 +260,6 @@
     <string name="file_select_backup">Velg sikkerhetskopifil</string>
     <string name="update_check_no_new_updates">Ingen nye oppdateringer tilgjengelige</string>
     <string name="update_check_notification_download_in_progress">Laster ned…</string>
-    <string name="update_check_notification_download_complete">Trykk for å installere oppdatering</string>
-    <string name="update_check_notification_download_error">Feil ved nedlasting</string>
     <string name="update_check_notification_update_available">Ny versjon tilgjengelig!</string>
     <string name="information_no_downloads">Ingen nedlastinger</string>
     <string name="information_no_recent">Ingen nylige oppdateringer</string>

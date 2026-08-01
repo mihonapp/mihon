@@ -770,8 +770,6 @@
     <string name="update_check_eol">இந்த ஆண்ட்ராய்டு பதிப்பு இனி ஆதரிக்கப்படாது</string>
     <string name="update_check_no_new_updates">புதிய புதுப்பிப்புகள் எதுவும் கிடைக்கவில்லை</string>
     <string name="update_check_notification_download_in_progress">பதிவிறக்கம்…</string>
-    <string name="update_check_notification_download_complete">புதுப்பிப்பை நிறுவ தட்டவும்</string>
-    <string name="update_check_notification_download_error">பிழையைப் பதிவிறக்கவும்</string>
     <string name="update_check_notification_update_available">புதிய பதிப்பு கிடைக்கிறது!</string>
     <string name="information_no_downloads">பதிவிறக்கங்கள் இல்லை</string>
     <string name="information_no_recent">அண்மைக் கால புதுப்பிப்புகள் இல்லை</string>

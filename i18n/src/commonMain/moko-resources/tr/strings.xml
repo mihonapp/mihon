@@ -246,8 +246,6 @@
     <string name="update_check_confirm">İndir</string>
     <string name="update_check_no_new_updates">Yeni güncelleme yok</string>
     <string name="update_check_notification_download_in_progress">İndiriliyor…</string>
-    <string name="update_check_notification_download_complete">Güncellemeyi yüklemek için dokunun</string>
-    <string name="update_check_notification_download_error">İndirme hatası</string>
     <string name="update_check_notification_update_available">Yeni sürüm var!</string>
     <string name="information_no_downloads">İndirme yok</string>
     <string name="information_no_recent">Yeni güncelleme yok</string>
@@ -917,4 +915,9 @@
     <string name="extensionStoresScreen.deleteStore.title">Uzantı mağazasını kaldır</string>
     <string name="extensionStoresScreen.deleteStore.body">%1$s (%2$s) uzantı mağazasını kaldırmak istiyor musunuz?</string>
     <string name="pref_webtoon_vertical_navigator_on_left">Dikey gezinti bölmesini sol tarafa yerleştir</string>
+    <string name="pref_vertical_navigator">Dikey bölüm gezintisi kullan</string>
+    <string name="pref_vertical_navigator_height">Dikey gezinti göstergesi yüksekliği</string>
+    <string name="considering">Düşünülüyor</string>
+    <string name="theme_tokyonight">Tokyo Gecesi</string>
+    <string name="downloading_with_progress">İndiriliyor… (%d%%)</string>
 </resources>

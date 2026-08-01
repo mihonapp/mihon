@@ -85,8 +85,6 @@
     <string name="update_check_confirm">Pobierz</string>
     <string name="update_check_no_new_updates">Brak nowych aktualizacji</string>
     <string name="update_check_notification_download_in_progress">Pobieranie…</string>
-    <string name="update_check_notification_download_complete">Naciśnij, by zaktualizować</string>
-    <string name="update_check_notification_download_error">Błąd pobierania</string>
     <string name="update_check_notification_update_available">Dostępna nowa wersja!</string>
     <string name="information_empty_library">Twoja biblioteka jest pusta</string>
     <string name="download_notifier_title_error">Błąd</string>

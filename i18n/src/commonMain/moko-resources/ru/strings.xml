@@ -175,8 +175,6 @@
     <string name="update_6hour">Каждые 6 часов</string>
     <string name="update_check_confirm">Загрузить</string>
     <string name="update_check_no_new_updates">Нет обновлений</string>
-    <string name="update_check_notification_download_complete">Нажмите для установки обновления</string>
-    <string name="update_check_notification_download_error">Ошибка загрузки</string>
     <string name="update_check_notification_download_in_progress">Загрузка…</string>
     <string name="update_check_notification_update_available">Доступно обновление!</string>
     <string name="update_never">Выключено</string>
@@ -918,4 +916,8 @@
     <string name="extensionStoresScreen.deleteStore.body">Вы хотите удалить хранилище расширений \"%1$s\" (%2$s)?</string>
     <string name="pref_webtoon_vertical_navigator_on_left">Разместить вертикальную навигацию с левой стороны</string>
     <string name="considering">Рассматривается</string>
+    <string name="pref_vertical_navigator">Использовать вертикальную навигацию главы в</string>
+    <string name="pref_vertical_navigator_height">Высота вертикальной навигации</string>
+    <string name="downloading_with_progress">Загружается... (%d%%)</string>
+    <string name="theme_tokyonight">Токийская Ночь</string>
 </resources>
