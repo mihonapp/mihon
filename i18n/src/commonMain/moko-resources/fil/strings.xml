@@ -252,8 +252,6 @@
     <string name="information_webview_required">Kinakailangan ng app ang WebView upang gumana ito</string>
     <string name="information_cloudflare_bypass_failure">Bigong ma-bypass ang Cloudflare</string>
     <string name="update_check_notification_update_available">May bagong bersyon!</string>
-    <string name="update_check_notification_download_error">Nagka-error sa pag-download</string>
-    <string name="update_check_notification_download_complete">I-tap upang ma-install ang update</string>
     <string name="update_check_notification_download_in_progress">Dina-download…</string>
     <string name="update_check_no_new_updates">Walang bagong update</string>
     <string name="update_check_confirm">I-download</string>
@@ -917,4 +915,7 @@
     <string name="extensionStoresScreen.deleteStore.title">Tanggalin ang extension store</string>
     <string name="extensionStoresScreen.deleteStore.body">Gusto mo bang tanggalin ang extension store na \"%1$s\" (%2$s)?</string>
     <string name="pref_webtoon_vertical_navigator_on_left">Ilagay ang vertical na navigator sa kaliwa</string>
+    <string name="pref_vertical_navigator">Gamitin ang vertical na navigator sa</string>
+    <string name="pref_vertical_navigator_height">Taas ng vertical na navigator</string>
+    <string name="considering">Pinag-iisipan</string>
 </resources>

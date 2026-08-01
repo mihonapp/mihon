@@ -134,8 +134,6 @@
     <string name="file_select_backup">Vybrat záložní soubor</string>
     <string name="update_check_confirm">Stáhnout</string>
     <string name="update_check_no_new_updates">Žádné nové aktualizace</string>
-    <string name="update_check_notification_download_complete">Klepnutím nainstalujte aktualizaci</string>
-    <string name="update_check_notification_download_error">Chyba při stahování</string>
     <string name="update_check_notification_update_available">Dostupná aktualizace!</string>
     <string name="information_no_recent">Žádné nedávné aktualizace</string>
     <string name="information_no_recent_manga">Nic nedávno čtené</string>
@@ -892,7 +890,7 @@
     <string name="migrationConfigScreen.prioritizeByChaptersTitle">Shoda podle čísla kapitoly</string>
     <string name="migrationConfigScreen.prioritizeByChaptersSubtitle">Je-li povoleno, vybere shodu, která je nejdále. V opačném případě vybere první shodu podle priority zdroje.</string>
     <string name="pref_display_images_description">Zobrazovat obrázky v popisu mangy</string>
-    <string name="clear_database_history_warning">Přečtené kapitoly a postup u položek mimo knihovnu budou ztraceny</string>
+    <string name="clear_database_history_warning">Přečtené kapitoly a postup u položek mimo knihovnu bude ztracen</string>
     <string name="label_support_us">Podpořte nás</string>
     <string name="extensionStores">Obchody s doplňky</string>
     <string name="action.addExtensionStore">Přidat obchod s doplňky</string>
@@ -920,4 +918,6 @@
     <string name="considering">S ohledem na</string>
     <string name="pref_vertical_navigator">Použijte svislý navigační panel kapitol v</string>
     <string name="pref_vertical_navigator_height">Vertikální výška navigátoru</string>
+    <string name="theme_tokyonight">Tokijská noc</string>
+    <string name="downloading_with_progress">Stahování… (%d%%)</string>
 </resources>

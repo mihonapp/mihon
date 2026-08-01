@@ -214,8 +214,6 @@
     <string name="update_check_confirm">Muat turun</string>
     <string name="update_check_no_new_updates">Tiada versi baharu tersedia</string>
     <string name="update_check_notification_download_in_progress">Memuat turun…</string>
-    <string name="update_check_notification_download_complete">Ketik untuk memasang kemas kini</string>
-    <string name="update_check_notification_download_error">Ralat muat turun</string>
     <string name="update_check_notification_update_available">Versi baharu boleh didapati!</string>
     <string name="information_no_downloads">Tiada muat turun</string>
     <string name="information_no_recent">Tiada kemas kini terkini</string>

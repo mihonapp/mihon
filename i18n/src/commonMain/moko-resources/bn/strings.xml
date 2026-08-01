@@ -214,8 +214,6 @@
     <string name="update_check_confirm">ডাউনলোড</string>
     <string name="update_check_no_new_updates">নতুন কোন হালনাগাদ নেই</string>
     <string name="update_check_notification_download_in_progress">ডাউনলোড হচ্ছে…</string>
-    <string name="update_check_notification_download_complete">ডাউনলোড সম্পন্ন হয়ে গেছে</string>
-    <string name="update_check_notification_download_error">ডাউনলোড ত্রুটি দেখা গিয়েছে</string>
     <string name="update_check_notification_update_available">নতুন সংস্করণ উপলভ্য!</string>
     <string name="information_no_downloads">ডাউনলোড নেই</string>
     <string name="information_no_recent">কোন নতুন হালনাগাদ নেই</string>

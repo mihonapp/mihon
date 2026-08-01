@@ -14,8 +14,6 @@
     <string name="information_empty_library">הספרייה שלך ריקה</string>
     <string name="information_no_downloads">אין הורדות</string>
     <string name="update_check_notification_update_available">גרסה חדשה זמינה!</string>
-    <string name="update_check_notification_download_error">שגיאה בהורדה</string>
-    <string name="update_check_notification_download_complete">לחץ כדי להתקין עדכון</string>
     <string name="update_check_notification_download_in_progress">מוריד…</string>
     <string name="update_check_no_new_updates">אין עדכונים חדשים זמינים</string>
     <string name="update_check_confirm">הורדה</string>
