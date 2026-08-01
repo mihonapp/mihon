@@ -47,8 +47,8 @@ AND (
     (excludedScanlator IS NULL OR :hideExcludedScanlators = 0)
 )
 AND (
-    -- includeEmpty being true expresses "don't care" state and bypasses the membership filter
-    :includeEmpty
+    -- includedEmpty being true expresses "don't care" state and bypasses the membership filter
+    :includedEmpty
     OR EXISTS (
         SELECT 1 FROM mangas_categories
         WHERE mangas_categories.manga_id = mangaId
@@ -59,8 +59,8 @@ AND (
     )
 )
 AND (
-    -- excludeEmpty being true expresses "don't care" state and bypasses the membership filter
-    :excludeEmpty
+    -- excludedEmpty being true expresses "don't care" state and bypasses the membership filter
+    :excludedEmpty
     OR (
         NOT EXISTS (
             SELECT 1 FROM mangas_categories
