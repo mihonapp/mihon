@@ -15,7 +15,6 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add Category filtering for the Updates tab ([@MajorTanya](https://github.com/MajorTanya)) ([#3589](https://github.com/mihonapp/mihon/pull/3589))
 
 ### Changed
-- Raise minimum supported WebView version to 138 ([@AntsyLich](https://github.com/AntsyLich)) ([#3678](https://github.com/mihonapp/mihon/pull/3678))
 - Update default user agent to Chrome 149 ([@AntsyLich](https://github.com/AntsyLich)) ([#3678](https://github.com/mihonapp/mihon/pull/3678))
 
 ### Improved

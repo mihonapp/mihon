@@ -19,7 +19,7 @@ object WebViewUtil {
     private const val YOUTUBE_FOR_TV_PACKAGE = "com.google.android.youtube.tv"
     private const val SYSTEM_SETTINGS_PACKAGE = "com.android.settings"
 
-    const val MINIMUM_WEBVIEW_VERSION = 138
+    const val MINIMUM_WEBVIEW_VERSION = 118
 
     /**
      * Uses the WebView's user agent string to create something similar to what Chrome on Android
