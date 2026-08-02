@@ -34,6 +34,9 @@ import coil3.transform.RoundedCornersTransformation
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.util.system.dpToPx
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.domain.manga.model.MangaCover
 import tachiyomi.domain.updates.interactor.GetUpdates
@@ -46,8 +49,8 @@ import tachiyomi.presentation.widget.util.appWidgetBackgroundRadius
 import tachiyomi.presentation.widget.util.calculateRowAndColumnCount
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.time.Instant
-import java.time.ZonedDateTime
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 abstract class BaseUpdatesGridGlanceWidget(
     private val context: Context = Injekt.get<Application>(),
@@ -90,7 +93,7 @@ abstract class BaseUpdatesGridGlanceWidget(
 
             val flow = remember {
                 getUpdates
-                    .subscribe(false, DateLimit.toEpochMilli())
+                    .subscribe(false, DateLimit.toEpochMilliseconds())
                     .map { rawData ->
                         rawData.prepareData(rowCount, columnCount)
                     }
@@ -153,6 +156,6 @@ abstract class BaseUpdatesGridGlanceWidget(
 
     companion object {
         val DateLimit: Instant
-            get() = ZonedDateTime.now().minusMonths(3).toInstant()
+            get() = Clock.System.now().minus(3, DateTimeUnit.MONTH, TimeZone.currentSystemDefault())
     }
 }

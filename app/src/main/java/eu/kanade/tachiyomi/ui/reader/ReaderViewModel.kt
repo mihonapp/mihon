@@ -76,8 +76,9 @@ import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.time.Instant
 import java.util.Date
+import kotlin.getValue
+import kotlin.time.Clock
 
 /**
  * Presenter used by the activity to perform background operations.
@@ -582,7 +583,7 @@ class ReaderViewModel @JvmOverloads constructor(
     }
 
     fun restartReadTimer() {
-        chapterReadStartTime = Instant.now().toEpochMilli()
+        chapterReadStartTime = Clock.System.now().toEpochMilliseconds()
     }
 
     /**

@@ -1,6 +1,9 @@
 package mihon.feature.library
 
 import eu.kanade.tachiyomi.ui.library.LibraryItem
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import mihon.domain.library.model.search.AndNode
 import mihon.domain.library.model.search.ComparisonField
 import mihon.domain.library.model.search.ComparisonQueryNode
@@ -12,10 +15,8 @@ import mihon.domain.library.model.search.NotNode
 import mihon.domain.library.model.search.OrNode
 import mihon.domain.library.model.search.QueryNode
 import tachiyomi.source.local.LocalSource
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
 import kotlin.math.abs
+import kotlin.time.Instant
 
 fun QueryNode.matches(item: LibraryItem): Boolean {
     return when (this) {
@@ -109,7 +110,7 @@ private fun ComparisonQueryNode.matches(item: LibraryItem): Boolean {
 
     fun compareDates(timestamp: Long, value: String): Boolean? {
         val inputDate = runCatching { LocalDate.parse(value) }.getOrNull() ?: return null
-        val mangaDate = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate()
+        val mangaDate = Instant.fromEpochMilliseconds(timestamp).toLocalDateTime(TimeZone.currentSystemDefault()).date
         return queryComparator.apply(mangaDate, inputDate)
     }
 
