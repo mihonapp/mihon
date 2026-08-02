@@ -94,6 +94,12 @@ class ExtensionManager(
         }
     }
 
+    /** Whether [sourceId]'s extension provides more than one source (so they share its app icon). */
+    fun sharesAppIconWithSiblings(sourceId: Long): Boolean {
+        val extension = installedExtensionsFlow.value.find { ext -> ext.sources.any { it.id == sourceId } }
+        return (extension?.sources?.size ?: 0) > 1
+    }
+
     fun getAppIconForSource(sourceId: Long): Drawable? {
         val pkgName = getExtensionPackage(sourceId) ?: return null
 

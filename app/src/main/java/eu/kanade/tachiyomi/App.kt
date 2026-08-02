@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Application
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -8,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
+import android.os.Bundle
 import android.os.Looper
 import android.webkit.WebView
 import androidx.core.content.ContextCompat
@@ -34,6 +36,8 @@ import eu.kanade.tachiyomi.data.coil.BufferedSourceFetcher
 import eu.kanade.tachiyomi.data.coil.MangaCoverFetcher
 import eu.kanade.tachiyomi.data.coil.MangaCoverKeyer
 import eu.kanade.tachiyomi.data.coil.MangaKeyer
+import eu.kanade.tachiyomi.data.coil.SourceFaviconFetcher
+import eu.kanade.tachiyomi.data.coil.SourceFaviconKeyer
 import eu.kanade.tachiyomi.data.coil.TachiyomiImageDecoder
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.di.AppModule
@@ -42,6 +46,7 @@ import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.NetworkPreferences
 import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegate
 import eu.kanade.tachiyomi.util.system.DeviceUtil
+import eu.kanade.tachiyomi.util.system.ForegroundActivityHolder
 import eu.kanade.tachiyomi.util.system.GLUtil
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
@@ -101,6 +106,26 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
         Injekt.importModule(DomainModule())
 
         setupNotificationChannels()
+
+        // Lets the Cloudflare solver attach its WebView to a real window (managed challenges only
+        // run their JS when rendered).
+        registerActivityLifecycleCallbacks(
+            object : ActivityLifecycleCallbacks {
+                override fun onActivityResumed(activity: Activity) {
+                    ForegroundActivityHolder.activity = activity
+                }
+
+                override fun onActivityPaused(activity: Activity) {
+                    if (ForegroundActivityHolder.activity === activity) ForegroundActivityHolder.activity = null
+                }
+
+                override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = Unit
+                override fun onActivityStarted(activity: Activity) = Unit
+                override fun onActivityStopped(activity: Activity) = Unit
+                override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
+                override fun onActivityDestroyed(activity: Activity) = Unit
+            },
+        )
 
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 
@@ -198,9 +223,11 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
                 add(BufferedSourceFetcher.Factory())
                 add(MangaCoverFetcher.MangaCoverFactory(callFactoryLazy))
                 add(MangaCoverFetcher.MangaFactory(callFactoryLazy))
+                add(SourceFaviconFetcher.Factory())
                 // Keyer
                 add(MangaCoverKeyer())
                 add(MangaKeyer())
+                add(SourceFaviconKeyer())
             }
 
             memoryCache(

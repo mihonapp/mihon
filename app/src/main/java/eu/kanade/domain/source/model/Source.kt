@@ -14,3 +14,7 @@ val Source.icon: ImageBitmap?
             ?.toBitmap()
             ?.asImageBitmap()
     }
+
+/** True when this source shares its extension's app icon with sibling sources (multi-source extension). */
+val Source.hasSharedExtensionIcon: Boolean
+    get() = Injekt.get<ExtensionManager>().sharesAppIconWithSiblings(id)
