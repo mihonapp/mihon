@@ -14,8 +14,15 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Added
 - Add Category filtering for the Updates tab ([@MajorTanya](https://github.com/MajorTanya)) ([#3589](https://github.com/mihonapp/mihon/pull/3589))
 
+### Changed
+- Update default user agent to Chrome 149 ([@AntsyLich](https://github.com/AntsyLich)) ([#3678](https://github.com/mihonapp/mihon/pull/3678))
+
+### Improved
+- Spoof `Sec-CH-UA` client hints in WebView to match the user agent ([@AntsyLich](https://github.com/AntsyLich)) ([#3678](https://github.com/mihonapp/mihon/pull/3678))
+
 ### Fixed
 - Fixed extension installation with shizuku installer ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#3676](https://github.com/mihonapp/mihon/pull/3676))
+- Fixed `X-Requested-With` spoofing leaking to unrelated callers ([@AntsyLich](https://github.com/AntsyLich)) ([#3678](https://github.com/mihonapp/mihon/pull/3678))
 
 ## [v0.20.2] - 2026-08-01
 ### Added
