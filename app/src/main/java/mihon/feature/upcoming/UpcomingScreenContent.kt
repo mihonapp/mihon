@@ -40,8 +40,6 @@ import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.theme.active
-import java.time.LocalDate
-import java.time.YearMonth
 
 @Composable
 fun UpcomingScreenContent(
@@ -194,6 +192,7 @@ private fun UpcomingScreenSmallImpl(
                         onClick = { onClickUpcoming(item.manga) },
                     )
                 }
+
                 is UpcomingUIModel.Header -> {
                     DateHeading(
                         date = item.date,
@@ -245,6 +244,7 @@ private fun UpcomingScreenLargeImpl(
                                 onClick = { onClickUpcoming(item.manga) },
                             )
                         }
+
                         is UpcomingUIModel.Header -> {
                             DateHeading(
                                 date = item.date,
