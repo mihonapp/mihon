@@ -590,6 +590,8 @@ class Downloader(
                 fileName.endsWith(".tmp") -> false
                 // Only count the first split page and not the others
                 fileName.contains("__") && !fileName.endsWith("__001.jpg") -> false
+                // Ignore SAF collision copies like "001 (1).jpg"
+                fileName.contains(" (") -> false
                 else -> true
             }
         }
