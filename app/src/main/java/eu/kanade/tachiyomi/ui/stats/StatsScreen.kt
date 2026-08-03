@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.ui.stats
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import cafe.adriel.voyager.core.model.rememberScreenModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
@@ -21,8 +21,8 @@ class StatsScreen : Screen() {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
-        val screenModel = rememberScreenModel { StatsScreenModel() }
-        val state by screenModel.state.collectAsState()
+        val viewModel = viewModel<StatsViewModel>()
+        val state by viewModel.state.collectAsState()
 
         Scaffold(
             topBar = { scrollBehavior ->

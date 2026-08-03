@@ -88,4 +88,8 @@
         <item quantity="one">Ein Eintrag wurde übersprungen</item>
         <item quantity="other">%1$d Einträge wurden übersprungen</item>
     </plurals>
+    <plurals name="notification_update_error">
+        <item quantity="one">%1$d Aktualisierung ist fehlgeschlagen</item>
+        <item quantity="other">%1$d Aktualisierungen sind fehlgeschlagen</item>
+    </plurals>
 </resources>

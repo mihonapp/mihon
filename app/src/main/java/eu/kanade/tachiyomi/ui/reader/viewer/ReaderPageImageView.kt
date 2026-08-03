@@ -61,7 +61,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttrs, defStyleRes) {
 
     private val alwaysDecodeLongStripWithSSIV by lazy {
-        Injekt.get<BasePreferences>().alwaysDecodeLongStripWithSSIV().get()
+        Injekt.get<BasePreferences>().alwaysDecodeLongStripWithSSIV.get()
     }
 
     private var pageView: View? = null

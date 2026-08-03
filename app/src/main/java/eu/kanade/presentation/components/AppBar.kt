@@ -51,15 +51,12 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.collections.immutable.ImmutableList
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.clearFocusOnSoftKeyboardHide
 import tachiyomi.presentation.core.util.runOnEnterKeyPressed
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 import tachiyomi.presentation.core.util.showSoftKeyboard
-
-const val SEARCH_DEBOUNCE_MILLIS = 250L
 
 @Composable
 fun AppBar(
@@ -190,7 +187,7 @@ fun AppBarTitle(
 
 @Composable
 fun AppBarActions(
-    actions: ImmutableList<AppBar.AppBarAction>,
+    actions: List<AppBar.AppBarAction>,
 ) {
     var showMenu by remember { mutableStateOf(false) }
 

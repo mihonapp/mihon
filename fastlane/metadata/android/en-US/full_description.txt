@@ -1,0 +1,9 @@
+Features:
+* Read your way with customizable viewing modes, including traditional right-to-left, left-to-right, and long strip for webtoons.
+* Organize your collection into custom categories, see unread badges, and get automatic updates when new chapters drop.
+* Sync your reading progress automatically with popular services like MyAnimeList, AniList, Kitsu, MangaBaka, and more.
+* Download chapters for offline reading and easily back up your entire library and settings for safe keeping or device migration.
+* Enjoy a beautiful Material You interface with full theme customization, including a strict True Dark mode.
+* And much more...
+
+The developer of this application does not have any affiliation with the content providers available, and this application hosts zero content.

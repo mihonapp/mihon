@@ -4,6 +4,7 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.mangaupdates.MangaUpdates.Companion.READING_LIST
 import eu.kanade.tachiyomi.data.track.mangaupdates.MangaUpdates.Companion.WISH_LIST
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.MUContext
+import eu.kanade.tachiyomi.data.track.mangaupdates.dto.MUCurrentUser
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.MUListItem
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.MULoginResponse
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.MURating
@@ -172,7 +173,7 @@ class MangaUpdatesApi(
         }
     }
 
-    suspend fun authenticate(username: String, password: String): MUContext? {
+    suspend fun authenticate(username: String, password: String): MUContext {
         val body = buildJsonObject {
             put("username", username)
             put("password", password)
@@ -190,9 +191,17 @@ class MangaUpdatesApi(
         }
     }
 
+    suspend fun getCurrentUser(): MUCurrentUser {
+        return with(json) {
+            authClient.newCall(GET("$BASE_URL/v1/account/profile"))
+                .awaitSuccess()
+                .parseAs<MUCurrentUser>()
+        }
+    }
+
     companion object {
         private const val BASE_URL = "https://api.mangaupdates.com"
 
-        private val CONTENT_TYPE = "application/vnd.api+json".toMediaType()
+        private val CONTENT_TYPE = "application/json".toMediaType()
     }
 }

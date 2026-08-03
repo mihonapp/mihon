@@ -1,47 +1,28 @@
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-
 plugins {
-    id("mihon.library")
-    kotlin("multiplatform")
-    kotlin("plugin.serialization")
-}
+    alias(mihonx.plugins.android.library)
+    alias(mihonx.plugins.spotless)
 
-kotlin {
-    androidTarget()
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(kotlinx.serialization.json)
-                api(libs.injekt)
-                api(libs.rxjava)
-                api(libs.jsoup)
-
-                implementation(project.dependencies.platform(compose.bom))
-                implementation(compose.runtime)
-            }
-        }
-        val androidMain by getting {
-            dependencies {
-                implementation(projects.core.common)
-                api(libs.preferencektx)
-
-                // Workaround for https://youtrack.jetbrains.com/issue/KT-57605
-                implementation(kotlinx.coroutines.android)
-                implementation(project.dependencies.platform(kotlinx.coroutines.bom))
-            }
-        }
-    }
-
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    compilerOptions {
-        freeCompilerArgs.add("-Xexpect-actual-classes")
-    }
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
     namespace = "eu.kanade.tachiyomi.source"
 
     defaultConfig {
-        consumerProguardFile("consumer-proguard.pro")
+        consumerProguardFiles("consumer-proguard.pro")
     }
+}
+
+dependencies {
+    implementation(projects.core.common)
+
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.injekt)
+    implementation(libs.rxJava)
+    implementation(libs.jsoup)
+
+    implementation(libs.androidx.preference)
+
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.runtime)
 }

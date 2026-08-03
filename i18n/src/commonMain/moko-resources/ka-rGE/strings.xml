@@ -317,8 +317,6 @@
     <string name="update_check_confirm">გადმოწერა</string>
     <string name="update_check_no_new_updates">განახლება ვერ მოიძებნა</string>
     <string name="update_check_notification_download_in_progress">გადმოწერა…</string>
-    <string name="update_check_notification_download_complete">განახლების დასაყენებლად დაატყაპუნეთ</string>
-    <string name="update_check_notification_download_error">გადმოწერის შეცდომა</string>
     <string name="update_check_notification_update_available">ხელმისაწვდომია ახალი ვერსია!</string>
     <string name="information_no_downloads">გადმოწერები არ არის</string>
     <string name="information_no_recent">განახლებები არ არის</string>
@@ -393,7 +391,6 @@
     <string name="unknown_status">უცნობი სტატუსი</string>
     <string name="unknown_author">უცნობი ავტორი</string>
     <string name="action_global_search_query">მოიძებნოს \"%1$s\"-თვის გლობალურად</string>
-    <string name="updated_version">განახლებულია v%1$s-მდე</string>
     <string name="whats_new">რა არის ახალი</string>
     <string name="requires_app_restart">ასამოქმედებლად საჭიროა აპლიკაციის გადატვირთვა</string>
     <string name="label_network">ქსელი</string>

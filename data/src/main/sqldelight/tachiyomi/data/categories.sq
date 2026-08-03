@@ -60,6 +60,3 @@ WHERE _id = :categoryId;
 updateAllFlags:
 UPDATE categories SET
 flags = coalesce(?, flags);
-
-selectLastInsertedRowId:
-SELECT last_insert_rowid();

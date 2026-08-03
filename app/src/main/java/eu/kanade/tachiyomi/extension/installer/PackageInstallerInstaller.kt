@@ -106,8 +106,13 @@ class PackageInstallerInstaller(private val service: Service) : Installer(servic
     override fun cancelEntry(entry: Entry): Boolean {
         activeSession?.let { (activeEntry, sessionId) ->
             if (activeEntry == entry) {
-                packageInstaller.abandonSession(sessionId)
-                return false
+                return try {
+                    packageInstaller.abandonSession(sessionId)
+                    false
+                } catch (_: SecurityException) {
+                    // Highly likely the session has succeeded
+                    true
+                }
             }
         }
         return true

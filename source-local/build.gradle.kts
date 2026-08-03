@@ -1,49 +1,30 @@
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-
 plugins {
-    id("mihon.library")
-    kotlin("multiplatform")
-}
-
-kotlin {
-    androidTarget()
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(projects.sourceApi)
-                api(projects.i18n)
-
-                implementation(libs.unifile)
-            }
-        }
-        val androidMain by getting {
-            dependencies {
-                implementation(projects.core.archive)
-                implementation(projects.core.common)
-                implementation(projects.coreMetadata)
-
-                // Move ChapterRecognition to separate module?
-                implementation(projects.domain)
-
-                implementation(kotlinx.bundles.serialization)
-            }
-        }
-    }
-
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    compilerOptions {
-        freeCompilerArgs.addAll(
-            "-Xexpect-actual-classes",
-            "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
-        )
-    }
+    alias(mihonx.plugins.android.library)
+    alias(mihonx.plugins.spotless)
 }
 
 android {
     namespace = "tachiyomi.source.local"
+}
 
-    defaultConfig {
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
+kotlin {
+    compilerOptions {
+        optIn.add("kotlinx.serialization.ExperimentalSerializationApi")
     }
+}
+
+dependencies {
+    implementation(projects.sourceApi)
+    implementation(projects.i18n)
+
+    implementation(projects.core.archive)
+    implementation(projects.core.common)
+    implementation(projects.coreMetadata)
+    implementation(projects.domain)
+
+    implementation(libs.unifile)
+    implementation(libs.bundles.serialization)
+
+    implementation(libs.injekt)
+    implementation(libs.jsoup)
 }

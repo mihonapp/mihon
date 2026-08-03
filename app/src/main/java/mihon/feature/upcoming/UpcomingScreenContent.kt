@@ -25,9 +25,9 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.relativeDateText
 import eu.kanade.presentation.util.isTabletUi
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.YearMonth
 import mihon.feature.upcoming.components.UpcomingItem
 import mihon.feature.upcoming.components.calendar.Calendar
 import tachiyomi.core.common.Constants
@@ -38,12 +38,10 @@ import tachiyomi.presentation.core.components.TwoPanelBox
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
-import java.time.LocalDate
-import java.time.YearMonth
 
 @Composable
 fun UpcomingScreenContent(
-    state: UpcomingScreenModel.State,
+    state: UpcomingViewModel.State,
     setSelectedYearMonth: (YearMonth) -> Unit,
     onClickUpcoming: (manga: Manga) -> Unit,
     modifier: Modifier = Modifier,
@@ -136,8 +134,8 @@ private fun DateHeading(
 @Composable
 private fun UpcomingScreenSmallImpl(
     listState: LazyListState,
-    items: ImmutableList<UpcomingUIModel>,
-    events: ImmutableMap<LocalDate, Int>,
+    items: List<UpcomingUIModel>,
+    events: Map<LocalDate, Int>,
     paddingValues: PaddingValues,
     selectedYearMonth: YearMonth,
     setSelectedYearMonth: (YearMonth) -> Unit,
@@ -187,8 +185,8 @@ private fun UpcomingScreenSmallImpl(
 @Composable
 private fun UpcomingScreenLargeImpl(
     listState: LazyListState,
-    items: ImmutableList<UpcomingUIModel>,
-    events: ImmutableMap<LocalDate, Int>,
+    items: List<UpcomingUIModel>,
+    events: Map<LocalDate, Int>,
     paddingValues: PaddingValues,
     selectedYearMonth: YearMonth,
     setSelectedYearMonth: (YearMonth) -> Unit,

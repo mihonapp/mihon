@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import dev.icerock.moko.resources.StringResource
-import kotlinx.collections.immutable.ImmutableList
 import tachiyomi.presentation.core.components.ActionButton
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
@@ -39,7 +38,7 @@ data class EmptyScreenAction(
 fun EmptyScreen(
     stringRes: StringResource,
     modifier: Modifier = Modifier,
-    actions: ImmutableList<EmptyScreenAction>? = null,
+    actions: List<EmptyScreenAction>? = null,
 ) {
     EmptyScreen(
         message = stringResource(stringRes),
@@ -52,7 +51,7 @@ fun EmptyScreen(
 fun EmptyScreen(
     message: String,
     modifier: Modifier = Modifier,
-    actions: ImmutableList<EmptyScreenAction>? = null,
+    actions: List<EmptyScreenAction>? = null,
 ) {
     val face = remember { getRandomErrorFace() }
     Column(

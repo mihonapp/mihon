@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.webview
 
-import android.app.Activity
 import android.app.assist.AssistContent
 import android.content.Context
 import android.content.Intent
@@ -39,7 +38,7 @@ class WebViewActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             overrideActivityTransition(
-                Activity.OVERRIDE_TRANSITION_OPEN,
+                OVERRIDE_TRANSITION_OPEN,
                 R.anim.shared_axis_x_push_enter,
                 R.anim.shared_axis_x_push_exit,
             )
@@ -73,6 +72,7 @@ class WebViewActivity : BaseActivity() {
                 initialTitle = intent.extras?.getString(TITLE_KEY),
                 url = url,
                 headers = headers,
+                defaultUserAgentProvider = network::defaultUserAgentProvider,
                 onUrlChange = { assistUrl = it },
                 onShare = this::shareWebpage,
                 onOpenInBrowser = this::openInBrowser,
@@ -90,7 +90,7 @@ class WebViewActivity : BaseActivity() {
         super.finish()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             overrideActivityTransition(
-                Activity.OVERRIDE_TRANSITION_CLOSE,
+                OVERRIDE_TRANSITION_CLOSE,
                 R.anim.shared_axis_x_pop_enter,
                 R.anim.shared_axis_x_pop_exit,
             )

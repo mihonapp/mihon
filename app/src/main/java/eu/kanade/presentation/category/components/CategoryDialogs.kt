@@ -27,21 +27,17 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import eu.kanade.core.preference.asToggleableState
 import eu.kanade.presentation.category.visualName
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.delay
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.domain.category.model.Category
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
-import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun CategoryCreateDialog(
     onDismissRequest: () -> Unit,
     onCreate: (String) -> Unit,
-    categories: ImmutableList<String>,
+    categories: List<String>,
 ) {
     var name by remember { mutableStateOf("") }
 
@@ -93,8 +89,6 @@ fun CategoryCreateDialog(
     )
 
     LaunchedEffect(focusRequester) {
-        // TODO: https://issuetracker.google.com/issues/204502668
-        delay(0.1.seconds)
         focusRequester.requestFocus()
     }
 }
@@ -103,7 +97,7 @@ fun CategoryCreateDialog(
 fun CategoryRenameDialog(
     onDismissRequest: () -> Unit,
     onRename: (String) -> Unit,
-    categories: ImmutableList<String>,
+    categories: List<String>,
     category: String,
 ) {
     var name by remember { mutableStateOf(category) }
@@ -157,8 +151,6 @@ fun CategoryRenameDialog(
     )
 
     LaunchedEffect(focusRequester) {
-        // TODO: https://issuetracker.google.com/issues/204502668
-        delay(0.1.seconds)
         focusRequester.requestFocus()
     }
 }
@@ -195,7 +187,7 @@ fun CategoryDeleteDialog(
 
 @Composable
 fun ChangeCategoryDialog(
-    initialSelection: ImmutableList<CheckboxState<Category>>,
+    initialSelection: List<CheckboxState<Category>>,
     onDismissRequest: () -> Unit,
     onEditCategories: () -> Unit,
     onConfirm: (List<Long>, List<Long>) -> Unit,
@@ -267,7 +259,7 @@ fun ChangeCategoryDialog(
                         if (index != -1) {
                             val mutableList = selection.toMutableList()
                             mutableList[index] = it.next()
-                            selection = mutableList.toList().toImmutableList()
+                            selection = mutableList.toList()
                         }
                     }
                     Row(

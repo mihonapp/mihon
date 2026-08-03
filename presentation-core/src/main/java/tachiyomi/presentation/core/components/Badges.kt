@@ -21,7 +21,6 @@ import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.persistentMapOf
 
 @Composable
 fun BadgeGroup(
@@ -67,7 +66,7 @@ fun Badge(
     val text = buildAnnotatedString {
         appendInlineContent(iconContentPlaceholder)
     }
-    val inlineContent = persistentMapOf(
+    val inlineContent = mapOf(
         Pair(
             iconContentPlaceholder,
             InlineTextContent(

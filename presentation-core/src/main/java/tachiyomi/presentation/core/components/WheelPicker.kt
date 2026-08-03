@@ -43,7 +43,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -56,7 +55,7 @@ import kotlin.math.absoluteValue
 
 @Composable
 fun WheelNumberPicker(
-    items: ImmutableList<Number>,
+    items: List<Number>,
     modifier: Modifier = Modifier,
     startIndex: Int = 0,
     size: DpSize = DpSize(128.dp, 128.dp),
@@ -80,7 +79,7 @@ fun WheelNumberPicker(
 
 @Composable
 fun WheelTextPicker(
-    items: ImmutableList<String>,
+    items: List<String>,
     modifier: Modifier = Modifier,
     startIndex: Int = 0,
     size: DpSize = DpSize(128.dp, 128.dp),
@@ -103,7 +102,7 @@ fun WheelTextPicker(
 
 @Composable
 private fun <T> WheelPicker(
-    items: ImmutableList<T>,
+    items: List<T>,
     modifier: Modifier = Modifier,
     startIndex: Int = 0,
     size: DpSize = DpSize(128.dp, 128.dp),

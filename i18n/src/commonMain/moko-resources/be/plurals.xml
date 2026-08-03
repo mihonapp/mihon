@@ -7,10 +7,10 @@
         <item quantity="other">%d катэгорый</item>
     </plurals>
     <plurals name="lock_after_mins">
-        <item quantity="one">Пасля %1$s хвіліны</item>
-        <item quantity="few">Пасля %1$s хвілін</item>
-        <item quantity="many">Пасля %1$s хвілін</item>
-        <item quantity="other">Пасля %1$s хвілін</item>
+        <item quantity="one">Праз %1$s хвіліну</item>
+        <item quantity="few">Праз %1$s хвіліны</item>
+        <item quantity="many">Праз %1$s хвілін</item>
+        <item quantity="other">Праз %1$s хвілін</item>
     </plurals>
     <plurals name="relative_time">
         <item quantity="one">Учора</item>
@@ -19,9 +19,117 @@
         <item quantity="other">%1$d дзён таму</item>
     </plurals>
     <plurals name="next_unread_chapters">
-        <item quantity="one">Наступная непрачытаная глава</item>
-        <item quantity="few">Наступныя %d непрачытаныя главы</item>
-        <item quantity="many">Наступныя %d непрачытаных глав</item>
-        <item quantity="other">Наступныя %d непрачытаных глав</item>
+        <item quantity="one">Наступны непрачытаная раздзел</item>
+        <item quantity="few">Наступныя %d непрачытаныя раздзелы</item>
+        <item quantity="many">Наступныя %d непрачытаных раздзелаў</item>
+        <item quantity="other">Наступныя %d непрачытаных раздзелаў</item>
+    </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Заўтра</item>
+        <item quantity="few">Праз %1$d дні</item>
+        <item quantity="many">Праз %1$d дзён</item>
+        <item quantity="other">Праз %1$d дзён</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="one">Выканана за %1$s з %2$s памылкай</item>
+        <item quantity="few">Выканана за %1$s з %2$s памылкамі</item>
+        <item quantity="many">Выканана за %1$s з %2$s памылкамі</item>
+        <item quantity="other">Выканана за %1$s з %2$s памылкамі</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="one">Застаўся %1$s</item>
+        <item quantity="few">Засталося %1$s</item>
+        <item quantity="many">Засталося %1$s</item>
+        <item quantity="other">Засталося %1$s</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">%d дзень</item>
+        <item quantity="few">%d дні</item>
+        <item quantity="many">%d дзён</item>
+        <item quantity="other">%d дзён</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">%1$s старонка</item>
+        <item quantity="few">%1$s старонкі</item>
+        <item quantity="many">%1$s старонак</item>
+        <item quantity="other">%1$s старонак</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="one">Адсутнічае %1$s раздзел</item>
+        <item quantity="few">Адсутнічаюць %1$s раздзелы</item>
+        <item quantity="many">Адсутнічаюць %1$s раздзелаў</item>
+        <item quantity="other">Адсутнічаюць %1$s раздзелаў</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="one">%1$s раздзел</item>
+        <item quantity="few">%1$s раздзелы</item>
+        <item quantity="many">%1$s раздзелаў</item>
+        <item quantity="other">%1$s раздзелаў</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="one">Наступны раздзел</item>
+        <item quantity="few">Наступныя %d раздзелы</item>
+        <item quantity="many">Наступныя %d раздзелаў</item>
+        <item quantity="other">Наступныя %d раздзелаў</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="one">%d трэкер</item>
+        <item quantity="few">%d трэкеры</item>
+        <item quantity="many">%d трэкераў</item>
+        <item quantity="other">%d трэкераў</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">Прапускаецца %d раздзел: адсутнічае ў крыніцы або адфільтраваны</item>
+        <item quantity="few">Прапускаюцца %d раздзелы: адсутнічаюць у крыніцы або адфільтраваныя</item>
+        <item quantity="many">Прапускаецца %d раздзелаў: адсутнічаюць у крыніцы або адфільтраваныя</item>
+        <item quantity="other">Прапускаецца %d раздзелаў: адсутнічаюць у крыніцы або адфільтраваныя</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">Для %d твора</item>
+        <item quantity="few">Для %d твораў</item>
+        <item quantity="many">Для %d твораў</item>
+        <item quantity="other">Для %d твораў</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">%1$d новы раздзел</item>
+        <item quantity="few">%1$d новыя раздзелы</item>
+        <item quantity="many">%1$d новых раздзелаў</item>
+        <item quantity="other">%1$d новых раздзелаў</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">%1$d твор быў прапушчаны</item>
+        <item quantity="few">%1$d творы былі прапушчаны</item>
+        <item quantity="many">%1$d твораў было прапушчана</item>
+        <item quantity="other">%1$d твораў было прапушчана</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">Раздзелы %1$s і яшчэ адзін</item>
+        <item quantity="few">Раздзелы %1$s і яшчэ %2$d</item>
+        <item quantity="many">Раздзелы %1$s і яшчэ %2$d</item>
+        <item quantity="other">Раздзелы %1$s і яшчэ %2$d</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">Даступна абнаўленне пашырэння</item>
+        <item quantity="few">Даступна %d абнаўленні пашырэнняў</item>
+        <item quantity="many">Даступна %d абнаўленняў пашырэнняў</item>
+        <item quantity="other">Даступна %d абнаўленняў пашырэнняў</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d рэпазіторый</item>
+        <item quantity="few">%d рэпазіторыі</item>
+        <item quantity="many">%d рэпазіторыяў</item>
+        <item quantity="other">%d рэпазіторыяў</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">Перанесці %1$d твор?</item>
+        <item quantity="few">Перанесці %1$d творы?</item>
+        <item quantity="many">Перанесці %1$d твораў?</item>
+        <item quantity="other">Перанесці %1$d твораў?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">Скапіяваць %1$d твор?</item>
+        <item quantity="few">Скапіяваць %1$d творы?</item>
+        <item quantity="many">Скапіяваць %1$d твораў?</item>
+        <item quantity="other">Скапіяваць %1$d твораў?</item>
     </plurals>
 </resources>

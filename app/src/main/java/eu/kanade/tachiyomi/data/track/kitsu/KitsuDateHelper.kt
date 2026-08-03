@@ -20,6 +20,6 @@ object KitsuDateHelper {
 
         val dateValue = formatter.parse(dateString)
 
-        return dateValue?.time ?: return 0
+        return dateValue?.time ?: 0
     }
 }

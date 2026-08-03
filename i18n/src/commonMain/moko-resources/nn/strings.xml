@@ -205,7 +205,6 @@
     <string name="help_translate">Hjelp med å omsetje</string>
     <string name="privacy_policy">Personvernerklæring</string>
     <string name="check_for_updates">Sjå etter oppdateringar</string>
-    <string name="updated_version">Oppdatert til v%1$s</string>
     <string name="pref_incognito_mode">Inkognitomodus</string>
     <string name="username">Brukarnamn</string>
     <string name="email">E-postadresse</string>
