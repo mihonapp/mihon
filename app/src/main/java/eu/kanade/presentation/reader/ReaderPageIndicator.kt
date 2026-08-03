@@ -19,11 +19,17 @@ import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 fun ReaderPageIndicator(
     currentPage: Int,
     totalPages: Int,
+    endPage: Int = currentPage,
     modifier: Modifier = Modifier,
 ) {
     if (currentPage <= 0 || totalPages <= 0) return
 
-    val text = "$currentPage / $totalPages"
+    // A spread shows two pages at once, so report the range it covers (e.g. "2-3 / 20").
+    val text = if (endPage > currentPage) {
+        "$currentPage-$endPage / $totalPages"
+    } else {
+        "$currentPage / $totalPages"
+    }
 
     val style = TextStyle(
         color = Color(235, 235, 235),
@@ -56,7 +62,7 @@ fun ReaderPageIndicator(
 private fun ReaderPageIndicatorPreview() {
     TachiyomiPreviewTheme {
         Surface {
-            ReaderPageIndicator(currentPage = 10, totalPages = 69)
+            ReaderPageIndicator(currentPage = 10, endPage = 11, totalPages = 69)
         }
     }
 }

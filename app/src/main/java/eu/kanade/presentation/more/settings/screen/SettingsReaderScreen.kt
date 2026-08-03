@@ -9,6 +9,7 @@ import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import eu.kanade.tachiyomi.ui.reader.setting.SpreadVerticalFit
 import eu.kanade.tachiyomi.util.system.hasDisplayCutout
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.pluralStringResource
@@ -193,11 +194,13 @@ object SettingsReaderScreen : SearchableSettings {
         val imageScaleTypePref = readerPreferences.imageScaleType
         val dualPageSplitPref = readerPreferences.dualPageSplitPaged
         val rotateToFitPref = readerPreferences.dualPageRotateToFit
+        val spreadPref = readerPreferences.defaultSpread
 
         val navMode by navModePref.collectAsState()
         val imageScaleType by imageScaleTypePref.collectAsState()
         val dualPageSplit by dualPageSplitPref.collectAsState()
         val rotateToFit by rotateToFitPref.collectAsState()
+        val spread by spreadPref.collectAsState()
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pager_viewer),
@@ -252,6 +255,9 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = dualPageSplitPref,
                     title = stringResource(MR.strings.pref_dual_page_split),
+                    // Still applies to spread-off series, so the supersession is surfaced via the subtitle
+                    // rather than by disabling this (the per-series page disables it, keyed on effective spread).
+                    subtitle = stringResource(MR.strings.pref_no_effect_in_spread_summary),
                     onValueChanged = {
                         rotateToFitPref.set(false)
                         true
@@ -266,6 +272,9 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = rotateToFitPref,
                     title = stringResource(MR.strings.pref_page_rotate),
+                    // Still applies to spread-off series, so the supersession is surfaced via the subtitle
+                    // rather than by disabling this (the per-series page disables it, keyed on effective spread).
+                    subtitle = stringResource(MR.strings.pref_no_effect_in_spread_summary),
                     onValueChanged = {
                         dualPageSplitPref.set(false)
                         true
@@ -275,6 +284,54 @@ object SettingsReaderScreen : SearchableSettings {
                     preference = readerPreferences.dualPageRotateToFitInvert,
                     title = stringResource(MR.strings.pref_page_rotate_invert),
                     enabled = rotateToFit,
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = spreadPref,
+                    title = stringResource(MR.strings.pref_spread),
+                    subtitle = stringResource(MR.strings.pref_spread_summary),
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.spreadAutoDetectOffset,
+                    title = stringResource(MR.strings.pref_spread_auto_detect_offset),
+                    subtitle = stringResource(MR.strings.pref_spread_auto_detect_offset_summary),
+                    enabled = spread,
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.defaultSpreadForcePairing,
+                    title = stringResource(MR.strings.pref_spread_force_pairing),
+                    subtitle = stringResource(MR.strings.pref_spread_force_pairing_summary),
+                    enabled = spread,
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.defaultSpreadWidePairing,
+                    title = stringResource(MR.strings.pref_spread_wide_pairing),
+                    subtitle = stringResource(MR.strings.pref_spread_wide_pairing_summary),
+                    enabled = spread,
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.defaultSpreadShift,
+                    title = stringResource(MR.strings.pref_spread_shift),
+                    subtitle = stringResource(MR.strings.pref_spread_shift_summary),
+                    enabled = spread,
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    preference = readerPreferences.defaultSpreadVerticalFit,
+                    entries = mapOf(
+                        SpreadVerticalFit.MATCH to stringResource(MR.strings.spread_vertical_fit_match),
+                        SpreadVerticalFit.CENTER to stringResource(MR.strings.spread_vertical_fit_center),
+                        SpreadVerticalFit.TOP to stringResource(MR.strings.spread_vertical_fit_top),
+                    ),
+                    title = stringResource(MR.strings.pref_spread_vertical_fit),
+                    enabled = spread,
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    preference = readerPreferences.defaultSpreadSoloPageJustify,
+                    entries = mapOf(
+                        false to stringResource(MR.strings.spread_solo_page_center),
+                        true to stringResource(MR.strings.spread_solo_page_justify),
+                    ),
+                    title = stringResource(MR.strings.pref_spread_solo_page),
+                    enabled = spread,
                 ),
             ),
         )

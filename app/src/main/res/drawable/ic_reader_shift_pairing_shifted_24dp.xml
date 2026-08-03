@@ -1,0 +1,20 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- The page standing alone -->
+    <path
+        android:fillColor="#000"
+        android:pathData="M2.2,5 h3.6 a1.2,1.2 0 0 1 1.2,1.2 v11.6 a1.2,1.2 0 0 1 -1.2,1.2 h-3.6 a1.2,1.2 0 0 1 -1.2,-1.2 v-11.6 a1.2,1.2 0 0 1 1.2,-1.2 z" />
+    <!-- Two-page spread (framed pair) with its centre gutter -->
+    <path
+        android:strokeColor="#000"
+        android:strokeWidth="1.6"
+        android:pathData="M11.8,5 h9.4 a1.8,1.8 0 0 1 1.8,1.8 v10.4 a1.8,1.8 0 0 1 -1.8,1.8 h-9.4 a1.8,1.8 0 0 1 -1.8,-1.8 v-10.4 a1.8,1.8 0 0 1 1.8,-1.8 z" />
+    <path
+        android:strokeColor="#000"
+        android:strokeWidth="1.4"
+        android:strokeLineCap="round"
+        android:pathData="M16.5,5.9 V18.1" />
+</vector>

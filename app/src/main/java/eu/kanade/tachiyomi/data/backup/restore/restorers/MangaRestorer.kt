@@ -232,6 +232,7 @@ class MangaRestorer(
                     version = chapter.version,
                     isSyncing = 0,
                     memo = chapter.memo.let(MemoColumnAdapter::encode),
+                    spreadShift = 0,
                 )
             }
         }

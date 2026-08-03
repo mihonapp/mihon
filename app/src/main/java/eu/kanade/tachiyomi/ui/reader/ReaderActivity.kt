@@ -32,7 +32,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -77,6 +79,8 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.L2RPagerViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.isNightMode
@@ -226,6 +230,9 @@ class ReaderActivity : BaseActivity() {
                     ReaderViewModel.Event.ReloadViewerChapters -> {
                         viewModel.state.value.viewerChapters?.let(::setChapters)
                     }
+                    ReaderViewModel.Event.ReapplyShift -> {
+                        (viewModel.state.value.viewer as? PagerViewer)?.reapplyShift()
+                    }
                     ReaderViewModel.Event.PageChanged -> {
                         displayRefreshHost.flash()
                     }
@@ -257,6 +264,13 @@ class ReaderActivity : BaseActivity() {
                 readerState = viewModel.state,
                 onChangeReadingMode = viewModel::setMangaReadingMode,
                 onChangeOrientation = viewModel::setMangaOrientationType,
+                onChangeSpread = viewModel::setMangaSpread,
+                onChangeSpreadForcePairing = viewModel::setMangaSpreadForcePairing,
+                onChangeSpreadWidePairing = viewModel::setMangaSpreadWidePairing,
+                onChangeSpreadShift = viewModel::setMangaSpreadShift,
+                onChangeSpreadVerticalFit = viewModel::setMangaSpreadVerticalFit,
+                onChangeSpreadSoloPage = viewModel::setMangaSpreadSoloPage,
+                spreadShiftForce = viewModel.spreadShiftForce,
             )
         }
 
@@ -265,6 +279,7 @@ class ReaderActivity : BaseActivity() {
                 ReaderPageIndicator(
                     currentPage = state.currentPage,
                     totalPages = state.totalPages,
+                    endPage = state.currentPageEnd,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .navigationBarsPadding(),
@@ -468,6 +483,13 @@ class ReaderActivity : BaseActivity() {
         val verticalNavigatorOnLeft by readerPreferences.verticalNavigatorOnLeft.collectAsState()
         val verticalNavigatorHeight by readerPreferences.verticalNavigatorHeight.collectAsState()
 
+        // PagerViewer.spreadShifted is a plain mutable field on a stable object, not part
+        // of ReaderViewModel.State, so shiftSpreadPairing() mutating it doesn't by itself trigger
+        // a recomposition here. Bump this after every click so the read below is forced to run
+        // again; a chapter turn doesn't need this, since state.currentChapter changing already
+        // recomposes this whole function.
+        var shiftPairingTrigger by remember { mutableIntStateOf(0) }
+
         ReaderAppBars(
             visible = state.menuVisible,
 
@@ -523,6 +545,17 @@ class ReaderActivity : BaseActivity() {
                 menuToggleToast?.cancel()
                 menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
             },
+            showShiftPairing =
+            viewModel.getMangaSpread() && (state.viewer is L2RPagerViewer || state.viewer is R2LPagerViewer),
+            spreadShifted = run {
+                shiftPairingTrigger
+                (state.viewer as? PagerViewer)?.spreadShifted == true
+            },
+            isRightToLeft = state.viewer is R2LPagerViewer,
+            onClickShiftPairing = {
+                (state.viewer as? PagerViewer)?.shiftSpreadPairing()
+                shiftPairingTrigger++
+            },
             onClickSettings = viewModel::openSettingsDialog,
         )
     }
@@ -540,7 +573,9 @@ class ReaderActivity : BaseActivity() {
     }
 
     /**
-     * Called from the presenter when a manga is ready. Used to instantiate the appropriate viewer.
+     * (Re)builds the viewer for the current manga, destroying the previous one. Runs on any change to the
+     * manga in state, so a per-manga setting that only needs an in-place update must not mutate state.manga
+     * (that would rebuild the viewer). See [ReaderViewModel.spreadShiftForce] for that pattern.
      */
     private fun updateViewer() {
         val prevViewer = viewModel.state.value.viewer
@@ -695,8 +730,8 @@ class ReaderActivity : BaseActivity() {
      * Called from the viewer whenever a [page] is marked as active. It updates the values of the
      * bottom menu and delegates the change to the presenter.
      */
-    fun onPageSelected(page: ReaderPage) {
-        viewModel.onPageSelected(page)
+    fun onPageSelected(page: ReaderPage, displayPage: ReaderPage = page) {
+        viewModel.onPageSelected(page, displayPage)
     }
 
     /**
@@ -721,6 +756,20 @@ class ReaderActivity : BaseActivity() {
      */
     fun toggleMenu() {
         setMenuVisibility(!viewModel.state.value.menuVisible)
+    }
+
+    /**
+     * Called from the viewer (the "D" key shortcut) to toggle spread mode for the current
+     * manga. Unlike onClickCropBorder's checkbox toggle (which shows a bare On/Off next to the
+     * labelled menu row the user just tapped), this fires from a keyboard shortcut with no menu
+     * visible, so the toast names the feature to say what the On/Off refers to. Kept to a short
+     * label rather than the full settings-sheet phrasing so the toast stays a single line on a phone.
+     */
+    fun toggleSpread() {
+        val enabled = viewModel.toggleSpread()
+        menuToggleToast?.cancel()
+        val state = stringResource(if (enabled) MR.strings.on else MR.strings.off)
+        menuToggleToast = toast("${stringResource(MR.strings.spread_short)}: $state")
     }
 
     /**

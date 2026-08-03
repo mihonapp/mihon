@@ -63,6 +63,7 @@ val backupChapterMapper = {
         version: Long,
         _: Long,
         memo: JsonObject,
+        _: Long, // spread_shift: local reading-UI state, deliberately not backed up
     ->
     BackupChapter(
         url = url,

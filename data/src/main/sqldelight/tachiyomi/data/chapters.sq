@@ -18,6 +18,9 @@ CREATE TABLE chapters(
     version INTEGER NOT NULL DEFAULT 0,
     is_syncing INTEGER NOT NULL DEFAULT 0,
     memo BLOB AS JsonObject NOT NULL DEFAULT '{}',
+    -- Plain INTEGER decoded to the reader's SpreadShift enum, not an `AS SpreadShift` adapter: that
+    -- enum is in the app/UI layer, which this schema module can't depend on.
+    spread_shift INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY(manga_id) REFERENCES mangas (_id)
     ON DELETE CASCADE
 );
@@ -124,5 +127,6 @@ SET manga_id = coalesce(:mangaId, manga_id),
     date_upload = coalesce(:dateUpload, date_upload),
     version = coalesce(:version, version),
     is_syncing = coalesce(:isSyncing, is_syncing),
-    memo = coalesce(:memo, memo)
+    memo = coalesce(:memo, memo),
+    spread_shift = coalesce(:spreadShift, spread_shift)
 WHERE _id = :chapterId;

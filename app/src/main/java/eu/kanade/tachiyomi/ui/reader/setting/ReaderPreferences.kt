@@ -134,6 +134,53 @@ class ReaderPreferences(
 
     // endregion
 
+    // region Spread
+
+    val defaultSpread: Preference<Boolean> = preferenceStore.getBoolean("pref_spread", false)
+
+    // The baseline pairing parity when neither a manual per-chapter shift nor auto-detect decides:
+    // true = leave the first page solo and pair from the second (a cover-first archive). Default true
+    // because most chapters open with the cover as page 0, so shifting keeps the interior spreads
+    // aligned; a modest prior, fully user-overridable (globally here, per-manga via Manga.spreadShift).
+    val defaultSpreadShift: Preference<Boolean> = preferenceStore.getBoolean("pref_spread_shift", true)
+
+    val defaultSpreadForcePairing: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_spread_force_pairing",
+        false,
+    )
+
+    // Content-dependent, so a per-series opt-in (default off): treat a wide page as the two-page spread
+    // it is, anchoring the pairing around it so the rest of the chapter stays aligned. This suits
+    // chapters whose embedded wide pages are themselves facing spreads, but can throw the pairing off by
+    // one where that doesn't hold.
+    val defaultSpreadWidePairing: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_spread_wide_pairing",
+        false,
+    )
+
+    // How size-mismatched page pairs are reconciled vertically: MATCH scales the shorter half up to
+    // the taller's height; TOP/CENTER keep native sizes and align the shorter half. Default MATCH:
+    // equal-height facing pages is what mainstream readers produce (e.g. Komga's fit-to-height).
+    val defaultSpreadVerticalFit: Preference<SpreadVerticalFit> = preferenceStore.getEnum(
+        "pref_spread_vertical_fit",
+        SpreadVerticalFit.MATCH,
+    )
+
+    val defaultSpreadSoloPageJustify: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_spread_solo_page_justify",
+        false,
+    )
+
+    // Global-only (no per-manga counterpart): auto-detect the correct pairing offset from
+    // page margins when a chapter is read as a spread. Default on, but only ever acts in
+    // spread mode, which is itself off by default.
+    val spreadAutoDetectOffset: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_spread_auto_detect_offset",
+        true,
+    )
+
+    // endregion
+
     // region Color filter
 
     val customBrightness: Preference<Boolean> = preferenceStore.getBoolean("pref_custom_brightness_key", false)

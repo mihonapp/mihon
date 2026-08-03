@@ -204,6 +204,8 @@ baselineProfile {
 }
 
 dependencies {
+    // Pairing / spread-offset classifier, extracted into its own MIT library.
+    implementation(libs.spreadfit)
     baselineProfile(projects.baselineProfile)
 
     implementation(projects.i18n)

@@ -5,6 +5,12 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import eu.kanade.tachiyomi.ui.reader.setting.Spread
+import eu.kanade.tachiyomi.ui.reader.setting.SpreadForcePairing
+import eu.kanade.tachiyomi.ui.reader.setting.SpreadShift
+import eu.kanade.tachiyomi.ui.reader.setting.SpreadSoloPage
+import eu.kanade.tachiyomi.ui.reader.setting.SpreadVerticalFit
+import eu.kanade.tachiyomi.ui.reader.setting.SpreadWidePairing
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.core.metadata.comicinfo.ComicInfo
 import tachiyomi.core.metadata.comicinfo.ComicInfoPublishingStatus
@@ -19,6 +25,24 @@ val Manga.readingMode: Long
 
 val Manga.readerOrientation: Long
     get() = viewerFlags and ReaderOrientation.MASK.toLong()
+
+val Manga.spread: Long
+    get() = viewerFlags and Spread.MASK.toLong()
+
+val Manga.spreadForcePairing: Long
+    get() = viewerFlags and SpreadForcePairing.MASK.toLong()
+
+val Manga.spreadVerticalFit: Long
+    get() = viewerFlags and SpreadVerticalFit.MASK.toLong()
+
+val Manga.spreadSoloPage: Long
+    get() = viewerFlags and SpreadSoloPage.MASK.toLong()
+
+val Manga.spreadShift: Long
+    get() = viewerFlags and SpreadShift.MASK.toLong()
+
+val Manga.spreadWidePairing: Long
+    get() = viewerFlags and SpreadWidePairing.MASK.toLong()
 
 val Manga.downloadedFilter: TriState
     get() {

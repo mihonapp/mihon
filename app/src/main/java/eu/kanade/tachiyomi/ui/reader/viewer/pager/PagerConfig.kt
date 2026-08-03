@@ -48,6 +48,26 @@ class PagerConfig(
     var landscapeZoom = false
         private set
 
+    // Per-manga, resolved once at construction (like theme above) rather than observed live: a
+    // change always goes through ReaderViewModel.setMangaSpread, which persists the change
+    // and updates state.manga, which triggers a full Viewer/PagerConfig reconstruction (see
+    // ReaderActivity.updateViewer), the same mechanism that already rebuilds the viewer when
+    // switching reading mode. There's nothing left to react to live within a single PagerConfig's
+    // lifetime.
+    val spread = viewer.activity.viewModel.getMangaSpread()
+
+    val spreadForcePairing = viewer.activity.viewModel.getMangaSpreadForcePairing()
+
+    val spreadWidePairing = viewer.activity.viewModel.getMangaSpreadWidePairing()
+
+    val spreadVerticalFit = viewer.activity.viewModel.getMangaSpreadVerticalFit()
+
+    val spreadSoloPage = viewer.activity.viewModel.getMangaSpreadSoloPage()
+
+    // Global (not per-manga), resolved once like the flags above: whether to auto-detect the
+    // pairing shift for a chapter from its page margins.
+    val spreadAutoDetectOffset = readerPreferences.spreadAutoDetectOffset.get()
+
     init {
         readerPreferences.readerTheme
             .register(

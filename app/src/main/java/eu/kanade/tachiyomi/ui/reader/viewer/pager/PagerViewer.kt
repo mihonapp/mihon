@@ -15,12 +15,14 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
+import eu.kanade.tachiyomi.ui.reader.model.PageSpread
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.injectLazy
 import kotlin.math.min
@@ -33,7 +35,8 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
 
     val downloadManager: DownloadManager by injectLazy()
 
-    private val scope = MainScope()
+    // Non-private so the adapter's one-shot offset auto-detect can run on the viewer's lifecycle.
+    internal val scope = MainScope()
 
     /**
      * View pager used by this viewer. It's abstract to implement L2R, R2L and vertical pagers on
@@ -55,6 +58,21 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
      * Currently active item. It can be a chapter page or a chapter transition.
      */
     private var currentPage: Any? = null
+
+    /**
+     * Set to the chapter transition a navigation press was stranded on because its destination
+     * chapter hadn't loaded yet (see [onEdgeTransition]); consumed by [setChaptersInternal] once that
+     * chapter loads, so the dropped press is honored. Cleared whenever the reader lands back on a page.
+     */
+    private var pendingChapterCross: ChapterTransition? = null
+
+    /**
+     * The item shiftSpreadPairing is currently anchored on, kept across a single toggle so a
+     * second toggle right after the first lands back where it started. Either a ReaderPage (see
+     * asComparablePage) or, while sitting on a chapter-transition screen, that same
+     * ChapterTransition instance; see shiftSpreadPairing.
+     */
+    private var spreadShiftAnchor: Any? = null
 
     /**
      * Viewer chapters to set when the pager enters idle mode. Otherwise, if the view was settling
@@ -118,11 +136,11 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
                 NavigationRegion.LEFT -> moveLeft()
             }
         }
-        pager.longTapListener = f@{
+        pager.longTapListener = f@{ event ->
             if (activity.viewModel.state.value.menuVisible || config.longTapEnabled) {
-                val item = adapter.items.getOrNull(pager.currentItem)
-                if (item is ReaderPage) {
-                    activity.onPageLongTap(item)
+                val page = pressedPage(adapter.items.getOrNull(pager.currentItem), event)
+                if (page != null) {
+                    activity.onPageLongTap(page)
                     return@f true
                 }
             }
@@ -148,6 +166,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     override fun destroy() {
         super.destroy()
         scope.cancel()
+        adapter.recyclePool()
     }
 
     /**
@@ -167,33 +186,87 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
      */
     private fun getPageHolder(page: ReaderPage): PagerPageHolder? =
         pager.children
+            .flatMap { if (it is PagerSpreadHolder) listOf(it.leftHolder, it.rightHolder) else listOf(it) }
             .filterIsInstance(PagerPageHolder::class.java)
             .firstOrNull { it.item == page }
 
     /**
-     * Called when a new page (either a [ReaderPage] or [ChapterTransition]) is marked as active
+     * A [PageSpread] is compared/tracked by its later, higher-index page: reaching a spread
+     * means the reader has effectively reached that page.
+     */
+    private fun Any.asComparablePage(): ReaderPage? = PagerNavigation.comparablePage(this)
+
+    /**
+     * The page a long-tap acts on. A spread resolves to the pressed half so either page is reachable
+     * and the action hits the one under the finger; a lone page resolves to itself. Distinct from
+     * [asComparablePage], which reduces a spread to its later page for progress tracking; a per-page
+     * action must instead target exactly the page pressed. Falls back to the tracked page if the
+     * spread's view isn't attached (it always is for the current item; defensive only).
+     */
+    private fun pressedPage(item: Any?, event: MotionEvent): ReaderPage? = when (item) {
+        is PageSpread ->
+            pager.children.filterIsInstance<PagerSpreadHolder>()
+                .firstOrNull { it.item == item }
+                ?.pageAt(event.rawX)
+                ?: item.secondPage
+        else -> item?.asComparablePage()
+    }
+
+    /**
+     * The anchor for relocating the reader after the item list is rebuilt under a fixed numeric index
+     * (a chapter-window rebuild or a pairing change). A [ChapterTransition] anchors on itself (a rebuild
+     * constructs a fresh instance its own `equals` re-finds); anything else anchors on the leading
+     * page of the current spread, not the later one, because a shape change at the reading position can
+     * leave the leading page solo, and anchoring on the later page would skip past it onto the next
+     * spread. When the shape is unchanged, both resolve to the same spread.
+     */
+    private fun Any.asShiftAnchor(): Any? = this as? ChapterTransition ?: PagerNavigation.leadingPage(this)
+
+    /**
+     * Finds [anchor] in the adapter's current items and moves the pager there if found; a
+     * no-op if [anchor] is null or no longer present. [ChapterTransition] is matched structurally
+     * (its own `equals`, since a rebuild always constructs fresh instances); a page is matched by
+     * reference, either standalone or as either half of a [PageSpread] (which pairing may have
+     * regrouped it into or out of since [anchor] was captured).
+     */
+    private fun relocateTo(anchor: Any?) {
+        if (anchor == null) return
+        val position = PagerNavigation.positionOfAnchor(adapter.items, anchor)
+        if (position != -1) {
+            pager.setCurrentItem(position, false)
+        }
+    }
+
+    /**
+     * Called when a new page (a [ReaderPage], [PageSpread] or [ChapterTransition]) is marked as active
      */
     private fun onPageChange(position: Int) {
+        // Invalidate any pending spread-shift anchor on every position change; shiftSpreadPairing
+        // restores it immediately afterward when it's the one calling this, so it only actually
+        // stays cleared when some *other* navigation happened. See shiftSpreadPairing for why.
+        spreadShiftAnchor = null
         val page = adapter.items.getOrNull(position)
+        // Back on real content: any stranded-cross intent is moot (a turn away from the transition,
+        // or the successful cross itself).
+        if (page is ReaderPage) pendingChapterCross = null
         if (page != null && currentPage != page) {
-            val allowPreload = checkAllowPreload(page as? ReaderPage)
-            val forward = when {
-                currentPage is ReaderPage && page is ReaderPage -> {
-                    // if both pages have the same number, it's a split page with an InsertPage
-                    if (page.number == (currentPage as ReaderPage).number) {
-                        // the InsertPage is always the second in the reading direction
-                        page is InsertPage
-                    } else {
-                        page.number > (currentPage as ReaderPage).number
-                    }
-                }
-                currentPage is ChapterTransition.Prev && page is ReaderPage ->
-                    false
-                else -> true
-            }
+            val comparablePage = page.asComparablePage()
+            val previousComparablePage = currentPage?.asComparablePage()
+            val allowPreload = checkAllowPreload(comparablePage)
+            val forward = PagerNavigation.isForwardTurn(
+                previous = previousComparablePage,
+                current = comparablePage,
+                cameFromPrevTransition = currentPage is ChapterTransition.Prev,
+            )
             currentPage = page
             when (page) {
                 is ReaderPage -> onReaderPageSelected(page, allowPreload, forward)
+                is PageSpread -> onReaderPageSelected(
+                    page.secondPage,
+                    allowPreload,
+                    forward,
+                    extraHolderPage = page.firstPage,
+                )
                 is ChapterTransition -> onTransitionSelected(page)
             }
         }
@@ -222,13 +295,23 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
      * Called when a [ReaderPage] is marked as active. It notifies the
      * activity of the change and requests the preload of the next chapter if this is the last page.
      */
-    private fun onReaderPageSelected(page: ReaderPage, allowPreload: Boolean, forward: Boolean) {
+    private fun onReaderPageSelected(
+        page: ReaderPage,
+        allowPreload: Boolean,
+        forward: Boolean,
+        extraHolderPage: ReaderPage? = null,
+    ) {
         val pages = page.chapter.pages ?: return
         logcat { "onReaderPageSelected: ${page.number}/${pages.size}" }
-        activity.onPageSelected(page)
+        // Track/persist progress against the later page actually reached (page), so a chapter
+        // that ends on a full spread still hits the exact last-page-index match that marks it
+        // read, but show the spread's earlier page number on screen (extraHolderPage), which
+        // matches what other readers do and reads more naturally as "the page I turned to."
+        activity.onPageSelected(page, displayPage = extraHolderPage ?: page)
 
         // Notify holder of page change
         getPageHolder(page)?.onPageSelected(forward)
+        extraHolderPage?.let { getPageHolder(it)?.onPageSelected(forward) }
 
         // Skip preload on inserts it causes unwanted page jumping
         if (page is InsertPage) {
@@ -278,31 +361,98 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
         // Remove listener so the change in item doesn't trigger it
         pager.removeOnPageChangeListener(pagerListener)
 
-        val forceTransition = config.alwaysShowChapterTransition ||
-            adapter.items.getOrNull(pager.currentItem) is ChapterTransition
+        val currentItem = adapter.items.getOrNull(pager.currentItem)
+        val forceTransition = config.alwaysShowChapterTransition || currentItem is ChapterTransition
+        // adapter.setChapters() rebuilds the item list, which can change how many items precede
+        // whatever's currently on screen, e.g. a transition only included here because
+        // forceTransition is currently true stops being included once the read position moves off
+        // it, shifting every later index back by one. Value equality on the item types
+        // (ChapterTransition, PageSpread) normally lets ViewPager's own dataSetChanged() find the
+        // current item's new position and retarget pager.currentItem to follow it. This anchor is
+        // a belt-and-suspenders relocate for the one case that can't: an item that changed
+        // shape across the rebuild (a page that went solo <-> paired), which no longer
+        // compares equal to anything, so ViewPager would clamp the stale index instead.
+        val anchor = currentItem?.asShiftAnchor()
         adapter.setChapters(chapters, forceTransition)
 
-        // Layout the pager once a chapter is being set
-        if (pager.isGone) {
-            logcat { "Pager first layout" }
-            val pages = chapters.currChapter.pages ?: return
-            moveToPage(pages[min(chapters.currChapter.requestedPage, pages.lastIndex)])
-            pager.isVisible = true
+        // Layout the pager once a chapter is being set.
+        when (PagerNavigation.layoutAction(pager.isGone, adapter.isAwaitingDetection())) {
+            // Decide before display: keep the pager hidden (the reader's loading state) until the
+            // current chapter's spread offset settles, on ANY entry path, not only a gone first
+            // layout. A chapter reached by chapter-forward arrives on the live path and must hold there
+            // just the same, or it lays out at a default pairing that then reflows. The settle fires a
+            // reload that re-enters here decided; nothing racy runs under a live pager.
+            PagerNavigation.LayoutAction.HOLD -> {
+                logcat { "Holding layout: awaiting spread offset detection" }
+                pager.isVisible = false
+                return
+            }
+            PagerNavigation.LayoutAction.LAYOUT_FIRST -> {
+                val pages = chapters.currChapter.pages ?: return
+                val requested = chapters.currChapter.requestedPage
+                if (requested !in pages.indices) {
+                    // requestedPage is the source of truth for where a chapter opens and should always be
+                    // a valid page index; out of range means a stale/corrupt value reached here and the
+                    // clamp below is silently absorbing it. Not fatal, but worth a breadcrumb.
+                    logcat(LogPriority.WARN) {
+                        "First layout: requestedPage $requested out of bounds for ${pages.size} pages; clamping"
+                    }
+                }
+                val landing = min(requested, pages.lastIndex)
+                // The landing index is the whole point of the decide-before-display path; log it so a
+                // wrong one (e.g. mid-chapter right after a chapter-forward) is visible in logcat.
+                logcat { "Pager first layout: landing on page index $landing of ${pages.size}" }
+                // Jump instantly, not smooth-scroll: a chapter open shouldn't animate to the requested page.
+                jumpToPage(pages[landing], smooth = false)
+                pager.isVisible = true
+            }
+            PagerNavigation.LayoutAction.RELOCATE -> relocateTo(anchor)
         }
 
         pager.addOnPageChangeListener(pagerListener)
         // Manually call onPageChange to update the UI
         onPageChange(pager.currentItem)
+
+        // A press stranded on a chapter transition whose chapter hadn't loaded yet was remembered;
+        // that chapter has now arrived and the transition is no longer the terminal item, so carry
+        // the reader on across the boundary, honoring the dropped press instead of leaving the
+        // reader parked on the transition needing another press.
+        val position = pager.currentItem
+        val item = adapter.items.getOrNull(position)
+        if (pendingChapterCross != null && item is ChapterTransition &&
+            position != 0 && position != adapter.count - 1
+        ) {
+            pendingChapterCross = null
+            when (item) {
+                is ChapterTransition.Next -> moveToNext()
+                is ChapterTransition.Prev -> moveToPrevious()
+            }
+        }
     }
 
     /**
      * Tells this viewer to move to the given [page].
      */
     override fun moveToPage(page: ReaderPage) {
-        val position = adapter.items.indexOf(page)
+        // Record the navigation target as the chapter's requestedPage, the single source of truth for
+        // where a chapter lays out. During a decide-before-display hold the page-change listener is
+        // detached, so this direct write is the only signal that survives; without it a chapter reached
+        // mid-hold (e.g. chapter-forward into a still-detecting spread) lays out on a stale requestedPage
+        // when detection settles, landing on the wrong page.
+        page.chapter.requestedPage = page.index
+        jumpToPage(page, smooth = true)
+    }
+
+    /**
+     * Moves the pager to [page] (wrapped in a [PageSpread] or standalone). [smooth] animates the
+     * scroll; pass false to jump instantly, used for the first layout of a chapter, where an
+     * animation is wrong for a chapter open.
+     */
+    private fun jumpToPage(page: ReaderPage, smooth: Boolean) {
+        val position = PagerNavigation.positionOfPage(adapter.items, page)
         if (position != -1) {
             val currentPosition = pager.currentItem
-            pager.setCurrentItem(position, true)
+            pager.setCurrentItem(position, smooth)
             // manually call onPageChange since ViewPager listener is not triggered in this case
             if (currentPosition == position) {
                 onPageChange(position)
@@ -337,6 +487,8 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             } else {
                 pager.setCurrentItem(pager.currentItem + 1, config.usePageTransitions)
             }
+        } else {
+            onEdgeTransition()
         }
     }
 
@@ -351,7 +503,27 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             } else {
                 pager.setCurrentItem(pager.currentItem - 1, config.usePageTransitions)
             }
+        } else {
+            onEdgeTransition()
         }
+    }
+
+    /**
+     * A navigation press (key or tap) landed on the terminal pager item and can't scroll further. If
+     * that item is a chapter transition whose destination chapter simply hasn't loaded yet (the
+     * boundary was reached faster than the preload completed), the press would otherwise be silently
+     * dropped and the reader appears stuck on the transition, needing an extra press to cross once the
+     * chapter arrives. This is symmetric at either end (a forward [ChapterTransition.Next] or a
+     * backward [ChapterTransition.Prev]). Instead, make sure the load is running and remember the
+     * intent; [setChaptersInternal] carries the reader across the boundary as soon as the chapter
+     * lands, so the press isn't lost. A transition with no destination (the first or last chapter) is
+     * a genuine content edge and stays a no-op.
+     */
+    private fun onEdgeTransition() {
+        val transition = adapter.items.getOrNull(pager.currentItem) as? ChapterTransition ?: return
+        val to = transition.to ?: return
+        pendingChapterCross = transition
+        activity.requestPreloadChapter(to)
     }
 
     /**
@@ -375,7 +547,13 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     private fun refreshAdapter() {
         val currentItem = pager.currentItem
         adapter.refresh()
-        pager.adapter = adapter
+        // A display property changed (crop borders, scale type, …), so pooled halves are decoded under a
+        // config that no longer applies. Drop them and don't re-pool the torn-down ones, so every spread
+        // re-decodes with the new config (as a single page already does). See holderPool's reuse invariant.
+        adapter.recyclePool()
+        adapter.withoutSalvaging {
+            pager.adapter = adapter
+        }
         pager.setCurrentItem(currentItem, false)
     }
 
@@ -417,6 +595,14 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             KeyEvent.KEYCODE_PAGE_DOWN -> if (isUp) moveDown()
             KeyEvent.KEYCODE_PAGE_UP -> if (isUp) moveUp()
             KeyEvent.KEYCODE_MENU -> if (isUp) activity.toggleMenu()
+            KeyEvent.KEYCODE_D -> {
+                if (this is VerticalPagerViewer) return false
+                if (isUp) activity.toggleSpread()
+            }
+            KeyEvent.KEYCODE_O -> {
+                if (this is VerticalPagerViewer || !config.spread) return false
+                if (isUp) shiftSpreadPairing()
+            }
             else -> return false
         }
         return true
@@ -440,6 +626,63 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             }
         }
         return false
+    }
+
+    fun onSpreadPageWide(spread: PageSpread) {
+        activity.runOnUiThread {
+            // breakSpread reshapes the item list in place, so re-anchor to the leading page of the
+            // current view; the raw index would otherwise land on the ex-partner half. The same
+            // relocate-by-anchor the shift reflow uses; a no-op unless the broken spread is current.
+            val anchor = currentPage?.asShiftAnchor()
+            adapter.breakSpread(spread)
+            relocateTo(anchor)
+            // The item at the current position changed shape without a pager scroll event, so progress
+            // tracking needs to be told explicitly.
+            onPageChange(pager.currentItem)
+        }
+    }
+
+    /**
+     * Whether the current chapter's spreads are paired starting from its second page rather than
+     * its first (see [shiftSpreadPairing]). Drives which of the two shift-pairing icon states the
+     * bottom bar shows.
+     */
+    val spreadShifted: Boolean
+        get() = adapter.spreadShifted
+
+    /**
+     * Toggles whether the current chapter's spreads pair starting from its first page or its second
+     * (leaving the first page standing alone), to correct scans that start their spreads on the
+     * "wrong" page. Goes through [withShiftAnchor], the single anchored path for a parity change.
+     */
+    fun shiftSpreadPairing() = withShiftAnchor { adapter.toggleSpreadShift() }
+
+    /**
+     * Re-applies a settings-driven per-manga shift change to the current chapter (see
+     * [PagerViewerAdapter.reapplyShift]) through the same anchored path as the manual
+     * [shiftSpreadPairing], so a parity change from the settings sheet reflows in place instead of
+     * restoring by raw page index (which walks the reader forward).
+     */
+    fun reapplyShift() = withShiftAnchor { adapter.reapplyShift() }
+
+    /**
+     * The single anchored reflow for a parity change; [shiftSpreadPairing] and [reapplyShift] both
+     * route through here. A parity change reflows the whole chapter, so the position is restored by
+     * relocating to a captured anchor, not a numeric index. Across immediately consecutive calls the
+     * same anchor is reused, so a second change right after the first lands back on the page the first
+     * started from (re-deriving from where the pager landed would drift off it). The anchor may be a
+     * [ChapterTransition] (see [asShiftAnchor]); not persisted: any other navigation or a chapter
+     * change clears it.
+     */
+    private fun withShiftAnchor(mutate: () -> Unit) {
+        val anchor = spreadShiftAnchor ?: currentPage?.asShiftAnchor()
+        mutate()
+        relocateTo(anchor)
+        // Same as onSpreadPageWide: the item at the current position changed shape without a pager
+        // scroll event, so progress tracking needs to be told explicitly. This also clears
+        // spreadShiftAnchor as a side effect (see onPageChange), so it's restored right after.
+        onPageChange(pager.currentItem)
+        spreadShiftAnchor = anchor
     }
 
     fun onPageSplit(currentPage: ReaderPage, newPage: InsertPage) {

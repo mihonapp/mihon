@@ -25,6 +25,10 @@ fun ReaderBottomBar(
     onClickOrientation: () -> Unit,
     cropEnabled: Boolean,
     onClickCropBorder: () -> Unit,
+    showShiftPairing: Boolean,
+    spreadShifted: Boolean,
+    isRightToLeft: Boolean,
+    onClickShiftPairing: () -> Unit,
     onClickSettings: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -53,6 +57,27 @@ fun ReaderBottomBar(
                 painter = painterResource(if (cropEnabled) R.drawable.ic_crop_24dp else R.drawable.ic_crop_off_24dp),
                 contentDescription = stringResource(MR.strings.pref_crop_borders),
             )
+        }
+
+        if (showShiftPairing) {
+            // The icon's solid block is the page standing alone (the framed pair is the spread). That
+            // lone page sits at the end of reading order by default and at the start once shifted,
+            // and reading order's start/end is a different physical side per direction (start is the
+            // left in L2R, the right in R2L). The two drawables are fixed left/right shapes, so which
+            // one means "shifted" swaps when reading direction flips.
+            val showShiftedIcon = spreadShifted != isRightToLeft
+            IconButton(onClick = onClickShiftPairing) {
+                Icon(
+                    painter = painterResource(
+                        if (showShiftedIcon) {
+                            R.drawable.ic_reader_shift_pairing_shifted_24dp
+                        } else {
+                            R.drawable.ic_reader_shift_pairing_24dp
+                        },
+                    ),
+                    contentDescription = stringResource(MR.strings.action_shift_page_pairing),
+                )
+            }
         }
 
         IconButton(onClick = onClickSettings) {
