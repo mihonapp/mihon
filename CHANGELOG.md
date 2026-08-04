@@ -11,8 +11,21 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Added
+- Add Category filtering for the Updates tab ([@MajorTanya](https://github.com/MajorTanya)) ([#3589](https://github.com/mihonapp/mihon/pull/3589))
+- Add Category filtering for the Upcoming calendar ([@MajorTanya](https://github.com/MajorTanya)) ([#3607](https://github.com/mihonapp/mihon/pull/3607))
+
+### Changed
+- Update default user agent to Chrome 149 ([@AntsyLich](https://github.com/AntsyLich)) ([#3678](https://github.com/mihonapp/mihon/pull/3678))
+
+### Improved
+- Spoof `Sec-CH-UA` client hints in WebView to match the user agent ([@AntsyLich](https://github.com/AntsyLich)) ([#3678](https://github.com/mihonapp/mihon/pull/3678))
+
 ### Fixed
-- Fix MAL error for list entries with partial start/finish reading dates by setting those dates to Jan 1st / 1st of the month ([@MajorTanya](https://github.com/MajorTanya)) ([#3573](https://github.com/mihonapp/mihon/pull/3573))
+- Fixed extension installation with shizuku installer ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#3676](https://github.com/mihonapp/mihon/pull/3676))
+- Fixed `X-Requested-With` spoofing leaking to unrelated callers ([@AntsyLich](https://github.com/AntsyLich)) ([#3678](https://github.com/mihonapp/mihon/pull/3678))
+- Fixed reader loading indefinitely in some scenarios ([@AntsyLich](https://github.com/AntsyLich)) ([#3686](https://github.com/mihonapp/mihon/pull/3686))
+- Fix MyAnimeList error for list entries with partial start/finish reading dates by setting those dates to rither Jan 1st or 1st of the month ([@MajorTanya](https://github.com/MajorTanya)) ([#3573](https://github.com/mihonapp/mihon/pull/3573))
 
 ## [v0.20.2] - 2026-08-01
 ### Added

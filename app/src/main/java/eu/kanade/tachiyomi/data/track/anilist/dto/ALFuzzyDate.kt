@@ -1,8 +1,9 @@
 package eu.kanade.tachiyomi.data.track.anilist.dto
 
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.serialization.Serializable
-import java.time.LocalDate
-import java.time.ZoneId
 
 @Serializable
 data class ALFuzzyDate(
@@ -11,10 +12,9 @@ data class ALFuzzyDate(
     val day: Int?,
 ) {
     fun toEpochMilli(): Long = try {
-        LocalDate.of(year!!, month!!, day!!)
-            .atStartOfDay(ZoneId.systemDefault())
-            .toInstant()
-            .toEpochMilli()
+        LocalDate(year!!, month!!, day!!)
+            .atStartOfDayIn(TimeZone.currentSystemDefault())
+            .toEpochMilliseconds()
     } catch (_: Exception) {
         0L
     }

@@ -20,7 +20,7 @@ import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.source.local.isLocal
-import java.time.Instant
+import kotlin.time.Clock
 
 class UpdateMangaFromRemote(
     private val sourceManager: SourceManager,
@@ -107,14 +107,14 @@ class UpdateMangaFromRemote(
             // Never refresh covers if the url is empty to avoid "losing" existing covers
             remoteManga.thumbnail_url.isNullOrEmpty() -> null
             !manualFetch && localManga.thumbnailUrl == remoteManga.thumbnail_url -> null
-            localManga.isLocal() -> Instant.now().toEpochMilli()
+            localManga.isLocal() -> Clock.System.now().toEpochMilliseconds()
             localManga.hasCustomCover(coverCache) -> {
                 coverCache.deleteFromCache(localManga, false)
                 null
             }
             else -> {
                 coverCache.deleteFromCache(localManga, false)
-                Instant.now().toEpochMilli()
+                Clock.System.now().toEpochMilliseconds()
             }
         }
 
