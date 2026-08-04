@@ -157,6 +157,12 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
             frame.zoomOutDisabled = it
         }
 
+        config.suppressTapOnFlingChangedListener = {
+            frame.suppressTapOnFling = it
+        }
+
+        frame.suppressTapOnFling = config.suppressTapOnFling
+
         config.navigationModeChangedListener = {
             val showOnStart = config.navigationOverlayOnStart || config.forceNavigationOverlay
             activity.binding.navigationOverlay.setNavigation(config.navigator, showOnStart)

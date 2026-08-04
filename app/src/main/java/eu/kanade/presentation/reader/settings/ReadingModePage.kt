@@ -199,6 +199,10 @@ private fun ColumnScope.WebtoonViewerSettings(viewModel: ReaderSettingsViewModel
         pref = viewModel.preferences.webtoonDoubleTapZoomEnabled,
     )
     CheckboxItem(
+        label = stringResource(MR.strings.pref_webtoon_suppress_tap_on_fling),
+        pref = viewModel.preferences.webtoonSuppressTapOnFling,
+    )
+    CheckboxItem(
         label = stringResource(MR.strings.pref_webtoon_disable_zoom_out),
         pref = viewModel.preferences.webtoonDisableZoomOut,
     )
