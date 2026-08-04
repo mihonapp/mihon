@@ -8,13 +8,13 @@ import android.widget.Toast
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
+import eu.kanade.tachiyomi.util.system.setUserAgent
 import eu.kanade.tachiyomi.util.system.toast
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import okhttp3.Headers
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
+import tachiyomi.core.common.util.lang.launchUI
 import tachiyomi.i18n.MR
 import java.util.Locale
 import java.util.concurrent.CountDownLatch
@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit
 
 abstract class WebViewInterceptor(
     private val context: Context,
-    private val scope: CoroutineScope,
     private val defaultUserAgentProvider: () -> String,
 ) : Interceptor {
 
@@ -58,7 +57,7 @@ abstract class WebViewInterceptor(
         }
 
         if (!WebViewUtil.supportsWebView(context)) {
-            scope.launch {
+            launchUI {
                 context.toast(MR.strings.information_webview_required, Toast.LENGTH_LONG)
             }
             return response
@@ -86,7 +85,7 @@ abstract class WebViewInterceptor(
         return WebView(context).apply {
             setDefaultSettings()
             // Avoid sending empty User-Agent, Chromium WebView will reset to default if empty
-            settings.userAgentString = request.header("User-Agent") ?: defaultUserAgentProvider()
+            setUserAgent(request.header("User-Agent") ?: defaultUserAgentProvider())
         }
     }
 }

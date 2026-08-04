@@ -31,6 +31,7 @@ data class NetworkLegacyExtensionRepo(
                 discord = null,
             ),
             isLegacy = true,
+            extensionListUrl = null,
         )
     }
 }

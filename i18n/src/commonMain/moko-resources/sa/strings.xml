@@ -392,7 +392,6 @@
     <string name="display_mode_chapter">अध्यायः %1$s</string>
     <string name="chapter_downloading_progress">अवारोपयति (%1$d/%2$d)</string>
     <string name="sort_by_source">मूलेन</string>
-    <string name="update_check_notification_download_complete">अवारोपणं समाप्तम्</string>
     <string name="download_notifier_title_error">दोषः</string>
     <string name="spen_previous_page">पूर्वपुटः</string>
     <string name="spen_next_page">अग्रिमपुटः</string>
@@ -455,7 +454,6 @@
     <string name="clear_history_completed">चरित्रं नाशितम्</string>
     <string name="notification_chapters_single">अध्यायः %1$s</string>
     <string name="notification_chapters_multiple">अध्यायाः %1$s</string>
-    <string name="update_check_notification_download_error">अवारोपणदोषः</string>
     <string name="channel_complete">पूर्णम्</string>
     <string name="channel_new_chapters">अध्यायनवीकरणानि</string>
     <string name="channel_app_updates">अनुप्रयोगनवीकरणानि</string>

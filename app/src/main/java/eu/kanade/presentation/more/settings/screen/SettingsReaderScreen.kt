@@ -71,7 +71,6 @@ object SettingsReaderScreen : SearchableSettings {
     @Composable
     private fun getDisplayGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup {
         val fullscreen by readerPreferences.fullscreen.collectAsState()
-        val verticalNavigatorForLongStrip by readerPreferences.verticalNavigatorForLongStrip.collectAsState()
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_category_display),
             preferenceItems = listOf(
@@ -107,15 +106,6 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.showPageNumber,
                     title = stringResource(MR.strings.pref_show_page_number),
-                ),
-                Preference.PreferenceItem.SwitchPreference(
-                    preference = readerPreferences.verticalNavigatorForLongStrip,
-                    title = stringResource(MR.strings.pref_webtoon_vertical_navigator),
-                ),
-                Preference.PreferenceItem.SwitchPreference(
-                    preference = readerPreferences.verticalNavigatorOnLeft,
-                    title = stringResource(MR.strings.pref_webtoon_vertical_navigator_on_left),
-                    enabled = verticalNavigatorForLongStrip,
                 ),
             ),
         )
@@ -392,6 +382,11 @@ object SettingsReaderScreen : SearchableSettings {
     private fun getNavigationGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup {
         val readWithVolumeKeysPref = readerPreferences.readWithVolumeKeys
         val readWithVolumeKeys by readWithVolumeKeysPref.collectAsState()
+
+        val verticalNavigator by readerPreferences.verticalNavigator.collectAsState()
+        val verticalNavigatorHeightPref = readerPreferences.verticalNavigatorHeight
+        val verticalNavigatorHeight by verticalNavigatorHeightPref.collectAsState()
+
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_reader_navigation),
             preferenceItems = listOf(
@@ -403,6 +398,25 @@ object SettingsReaderScreen : SearchableSettings {
                     preference = readerPreferences.readWithVolumeKeysInverted,
                     title = stringResource(MR.strings.pref_read_with_volume_keys_inverted),
                     enabled = readWithVolumeKeys,
+                ),
+                Preference.PreferenceItem.MultiSelectListPreference(
+                    preference = readerPreferences.verticalNavigator,
+                    entries = ReadingMode.entries.filter { it != ReadingMode.DEFAULT }
+                        .associate { it to stringResource(it.stringRes) },
+                    title = stringResource(MR.strings.pref_vertical_navigator),
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.verticalNavigatorOnLeft,
+                    title = stringResource(MR.strings.pref_webtoon_vertical_navigator_on_left),
+                    enabled = verticalNavigator.isNotEmpty(),
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = verticalNavigatorHeight,
+                    valueRange = 65..100,
+                    steps = 6,
+                    title = stringResource(MR.strings.pref_vertical_navigator_height),
+                    onValueChanged = { verticalNavigatorHeightPref.set(it) },
+                    enabled = verticalNavigator.isNotEmpty(),
                 ),
             ),
         )

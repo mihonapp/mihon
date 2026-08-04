@@ -71,12 +71,6 @@ class AppLanguageScreen : Screen() {
                         modifier = Modifier.clickable {
                             currentLanguage = it.langTag
                         },
-                        headlineContent = { Text(it.displayName) },
-                        supportingContent = {
-                            it.localizedDisplayName?.let {
-                                Text(it)
-                            }
-                        },
                         trailingContent = {
                             if (currentLanguage == it.langTag) {
                                 Icon(
@@ -86,6 +80,12 @@ class AppLanguageScreen : Screen() {
                                 )
                             }
                         },
+                        supportingContent = {
+                            it.localizedDisplayName?.let {
+                                Text(it)
+                            }
+                        },
+                        content = { Text(it.displayName) },
                     )
                 }
             }
