@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+
+## [v0.20.3] - 2026-08-04
 ### Added
 - Add Category filtering for the Updates tab ([@MajorTanya](https://github.com/MajorTanya)) ([#3589](https://github.com/mihonapp/mihon/pull/3589))
 - Add Category filtering for the Upcoming calendar ([@MajorTanya](https://github.com/MajorTanya)) ([#3607](https://github.com/mihonapp/mihon/pull/3607))
@@ -616,7 +618,8 @@ Same as v0.19.6
 - Branding to Mihon ([@AntsyLich](https://github.com/AntsyLich))
 - Minimum supported Android version to 8 ([@AntsyLich](https://github.com/AntsyLich)) ([`dfb3091`](https://github.com/mihonapp/mihon/commit/dfb3091e380dda3e9bfb64bf5c9a685cf3a03d0e))
 
-[unreleased]: https://github.com/mihonapp/mihon/compare/v0.20.2...main
+[unreleased]: https://github.com/mihonapp/mihon/compare/v0.20.3...main
+[v0.20.3]: https://github.com/mihonapp/mihon/compare/v0.20.2...v0.20.3
 [v0.20.2]: https://github.com/mihonapp/mihon/compare/v0.20.1...v0.20.2
 [v0.20.1]: https://github.com/mihonapp/mihon/compare/v0.20.0...v0.20.1
 [v0.20.0]: https://github.com/mihonapp/mihon/compare/v0.19.9...v0.20.0
