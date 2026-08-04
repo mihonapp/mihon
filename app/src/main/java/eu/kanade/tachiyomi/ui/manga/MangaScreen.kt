@@ -173,6 +173,14 @@ class MangaScreen(
             onChapterSelected = viewModel::toggleSelection,
             onAllChapterSelected = viewModel::toggleAllSelection,
             onInvertSelection = viewModel::invertSelection,
+            onRecommendationClick = { recommendation ->
+                scope.launch {
+                    viewModel.persistRecommendation(recommendation)?.let { localId ->
+                        viewModel.stopRecommendations()
+                        navigator.push(MangaScreen(localId, true))
+                    }
+                }
+            },
         )
 
         var showScanlatorsDialog by remember { mutableStateOf(false) }
