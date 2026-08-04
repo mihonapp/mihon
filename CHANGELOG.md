@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Fixed
+- Fixed some dates being wrongly shown as "Today" or otherwise closer in time ([@MajorTanya](https://github.com/MajorTanya)) ([#3696](https://github.com/mihonapp/mihon/pull/3696))
 
 ## [v0.20.3] - 2026-08-04
 ### Added
