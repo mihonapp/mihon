@@ -4,6 +4,7 @@ import eu.kanade.domain.chapter.interactor.GetAvailableScanlators
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.download.interactor.DeleteDownload
+import eu.kanade.domain.download.interactor.DeleteReadDownloads
 import eu.kanade.domain.extension.interactor.GetExtensionLanguages
 import eu.kanade.domain.extension.interactor.GetExtensionSources
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
@@ -172,6 +173,7 @@ class DomainModule : InjektModule {
         addFactory { GetTotalReadDuration(get()) }
 
         addFactory { DeleteDownload(get(), get()) }
+        addFactory { DeleteReadDownloads(get(), get(), get(), get()) }
 
         addFactory { GetExtensionsByType(get(), get()) }
         addFactory { GetExtensionSources(get()) }

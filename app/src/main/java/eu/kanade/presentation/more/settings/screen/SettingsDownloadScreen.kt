@@ -1,21 +1,31 @@
 package eu.kanade.presentation.more.settings.screen
 
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.util.fastMap
+import eu.kanade.domain.download.interactor.DeleteReadDownloads
 import eu.kanade.presentation.category.visualName
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.widget.TriStateListDialog
+import eu.kanade.tachiyomi.util.system.toast
+import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.core.common.util.lang.launchNonCancellable
+import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.material.TextButton
 import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
@@ -80,6 +90,41 @@ object SettingsDownloadScreen : SearchableSettings {
         downloadPreferences: DownloadPreferences,
         categories: List<Category>,
     ): Preference.PreferenceGroup {
+        val context = LocalContext.current
+        val scope = rememberCoroutineScope()
+        val deleteReadDownloads = remember { Injekt.get<DeleteReadDownloads>() }
+        var showDeleteReadConfirm by rememberSaveable { mutableStateOf(false) }
+
+        if (showDeleteReadConfirm) {
+            AlertDialog(
+                onDismissRequest = { showDeleteReadConfirm = false },
+                title = { Text(text = stringResource(MR.strings.are_you_sure)) },
+                text = { Text(text = stringResource(MR.strings.pref_delete_read_chapters_confirm)) },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showDeleteReadConfirm = false
+                            scope.launchNonCancellable {
+                                val deletedCount = deleteReadDownloads.await()
+                                withUIContext {
+                                    context.toast(
+                                        context.stringResource(MR.strings.delete_read_chapters_done, deletedCount),
+                                    )
+                                }
+                            }
+                        },
+                    ) {
+                        Text(text = stringResource(MR.strings.action_ok))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showDeleteReadConfirm = false }) {
+                        Text(text = stringResource(MR.strings.action_cancel))
+                    }
+                },
+            )
+        }
+
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_category_delete_chapters),
             preferenceItems = listOf(
@@ -106,6 +151,11 @@ object SettingsDownloadScreen : SearchableSettings {
                 getExcludedCategoriesPreference(
                     downloadPreferences = downloadPreferences,
                     categories = { categories },
+                ),
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.pref_delete_read_chapters),
+                    subtitle = stringResource(MR.strings.pref_delete_read_chapters_summary),
+                    onClick = { showDeleteReadConfirm = true },
                 ),
             ),
         )
