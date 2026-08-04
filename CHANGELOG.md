@@ -25,6 +25,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed extension installation with shizuku installer ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#3676](https://github.com/mihonapp/mihon/pull/3676))
 - Fixed `X-Requested-With` spoofing leaking to unrelated callers ([@AntsyLich](https://github.com/AntsyLich)) ([#3678](https://github.com/mihonapp/mihon/pull/3678))
 - Fixed reader loading indefinitely in some scenarios ([@AntsyLich](https://github.com/AntsyLich)) ([#3686](https://github.com/mihonapp/mihon/pull/3686))
+- Fix MyAnimeList error for list entries with partial start/finish reading dates by setting those dates to either Jan 1st or 1st of the month ([@MajorTanya](https://github.com/MajorTanya)) ([#3573](https://github.com/mihonapp/mihon/pull/3573))
 
 ## [v0.20.2] - 2026-08-01
 ### Added
