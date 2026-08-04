@@ -6,7 +6,6 @@ import logcat.LogPriority
 import tachiyomi.core.common.util.lang.withNonCancellableContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.model.Category
-import tachiyomi.domain.category.model.CategoryUpdate
 import tachiyomi.domain.category.repository.CategoryRepository
 
 class ReorderCategory(
@@ -28,14 +27,7 @@ class ReorderCategory(
             try {
                 categories.add(newIndex, categories.removeAt(currentIndex))
 
-                val updates = categories.mapIndexed { index, category ->
-                    CategoryUpdate(
-                        id = category.id,
-                        order = index.toLong(),
-                    )
-                }
-
-                categoryRepository.updatePartial(updates)
+                categoryRepository.updateAllOrders(orderedIds = categories.map { it.id })
                 Result.Success
             } catch (e: Exception) {
                 logcat(LogPriority.ERROR, e)
