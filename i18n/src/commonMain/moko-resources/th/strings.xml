@@ -263,8 +263,6 @@
     <string name="update_check_confirm">ดาวน์โหลด</string>
     <string name="update_check_no_new_updates">ไม่มีการอัปเดตใหม่</string>
     <string name="update_check_notification_download_in_progress">กำลังดาวน์โหลด…</string>
-    <string name="update_check_notification_download_complete">แตะเพื่อติดตั้งการอัปเดต</string>
-    <string name="update_check_notification_download_error">เกิดข้อผิดพลาดในการดาวน์โหลด</string>
     <string name="update_check_notification_update_available">มีเวอร์ชั่นใหม่!</string>
     <string name="information_no_downloads">ไม่มีการดาวน์โหลด</string>
     <string name="information_no_recent">ไม่มีอัปเดตล่าสุด</string>

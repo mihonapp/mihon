@@ -747,8 +747,6 @@
     <string name="file_null_uri_error">কোনো ফাইল বাছনি কৰা হোৱা নাই</string>
     <string name="update_check_confirm">ডাউনলোড</string>
     <string name="update_check_eol">এই Android সংস্কৰণ আৰু সমৰ্থিত নহয়</string>
-    <string name="update_check_notification_download_complete">আপডেট ইন্সটল কৰিবলৈ টাপ কৰক</string>
-    <string name="update_check_notification_download_error">ডাউনলোড ত্ৰুটি</string>
     <string name="update_check_no_new_updates">কোনো নতুন আপডেট উপলব্ধ নহয়</string>
     <string name="update_check_notification_download_in_progress">ডাউনলোড কৰি আছে…</string>
     <string name="update_check_notification_update_available">নতুন সংস্কৰণ উপলব্ধ!</string>

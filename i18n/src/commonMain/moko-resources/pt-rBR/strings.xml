@@ -208,8 +208,6 @@
     <string name="update_check_confirm">Fazer download</string>
     <string name="update_check_no_new_updates">Sem atualizações disponíveis</string>
     <string name="update_check_notification_download_in_progress">Fazendo download…</string>
-    <string name="update_check_notification_download_complete">Toque para instalar a atualização</string>
-    <string name="update_check_notification_download_error">Erro ao fazer download</string>
     <string name="update_check_notification_update_available">Nova versão disponível!</string>
     <string name="information_no_downloads">Nenhum download</string>
     <string name="information_no_recent">Sem atualizações recentes</string>
@@ -916,5 +914,9 @@
     <string name="extensionStoresScreen.addStoreDeeplink.bodyText">Você deseja adicionar essa loja de extensões abaixo?</string>
     <string name="extensionStoresScreen.deleteStore.title">Remover loja de extensões</string>
     <string name="pref_webtoon_vertical_navigator_on_left">Coloque o navegador vertical no lado esquerdo</string>
-    <string name="extensionStoresScreen.deleteStore.body">Você deseja remover a loja de extensões \"%1$s\" (%2$s)?</string>
+    <string name="extensionStoresScreen.deleteStore.body">Deseja remover a loja de extensões \"%1$s\" (%2$s)?</string>
+    <string name="pref_vertical_navigator">Usar o navegador de capítulos vertical em</string>
+    <string name="pref_vertical_navigator_height">Altura do navegador vertical</string>
+    <string name="considering">Considerando</string>
+    <string name="theme_tokyonight">Noite em Tóquio</string>
 </resources>

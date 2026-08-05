@@ -74,7 +74,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
-import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
@@ -98,7 +98,6 @@ import tachiyomi.core.common.Constants
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.launchNonCancellable
-import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.util.collectAsState
@@ -171,25 +170,16 @@ class ReaderActivity : BaseActivity() {
         setContentView(binding.root)
         binding.setComposeOverlay()
 
-        if (viewModel.needsInit()) {
-            val manga = intent.extras?.getLong("manga", -1) ?: -1L
-            val chapter = intent.extras?.getLong("chapter", -1) ?: -1L
-            if (manga == -1L || chapter == -1L) {
-                finish()
-                return
-            }
-            NotificationReceiver.dismissNotification(this, manga.hashCode(), Notifications.ID_NEW_CHAPTERS)
-
-            lifecycleScope.launchNonCancellable {
-                val initResult = viewModel.init(manga, chapter)
-                if (!initResult.getOrDefault(false)) {
-                    val exception = initResult.exceptionOrNull() ?: IllegalStateException("Unknown err")
-                    withUIContext {
-                        setInitialChapterError(exception)
-                    }
-                }
-            }
+        if (!viewModel.hasValidArgs) {
+            finish()
+            return
         }
+
+        NotificationReceiver.dismissNotification(
+            this,
+            viewModel.mangaId.hashCode(),
+            Notifications.ID_NEW_CHAPTERS,
+        )
 
         config = ReaderConfig()
         setMenuVisibility(viewModel.state.value.menuVisible)
@@ -198,6 +188,13 @@ class ReaderActivity : BaseActivity() {
         preferences.incognitoMode.changes()
             .drop(1)
             .onEach { if (!it) finish() }
+            .launchIn(lifecycleScope)
+
+        viewModel.state
+            .map { it.initError }
+            .distinctUntilChanged()
+            .filterNotNull()
+            .onEach(::setInitialChapterError)
             .launchIn(lifecycleScope)
 
         viewModel.state
@@ -252,8 +249,8 @@ class ReaderActivity : BaseActivity() {
     private fun ReaderActivityBinding.setComposeOverlay(): Unit = composeOverlay.setComposeContent {
         val state by viewModel.state.collectAsState()
         val showPageNumber by readerPreferences.showPageNumber.collectAsState()
-        val settingsScreenModel = remember {
-            ReaderSettingsScreenModel(
+        val settingsviewModel = remember {
+            ReaderSettingsViewModel(
                 readerState = viewModel.state,
                 onChangeReadingMode = viewModel::setMangaReadingMode,
                 onChangeOrientation = viewModel::setMangaOrientationType,
@@ -298,13 +295,13 @@ class ReaderActivity : BaseActivity() {
                     onDismissRequest = onDismissRequest,
                     onShowMenus = { setMenuVisibility(true) },
                     onHideMenus = { setMenuVisibility(false) },
-                    screenModel = settingsScreenModel,
+                    viewModel = settingsviewModel,
                 )
             }
             is ReaderViewModel.Dialog.ReadingModeSelect -> {
                 ReadingModeSelectDialog(
                     onDismissRequest = onDismissRequest,
-                    screenModel = settingsScreenModel,
+                    viewModel = settingsviewModel,
                     onChange = { stringRes ->
                         menuToggleToast?.cancel()
                         if (!readerPreferences.showReadingMode.get()) {
@@ -316,7 +313,7 @@ class ReaderActivity : BaseActivity() {
             is ReaderViewModel.Dialog.OrientationModeSelect -> {
                 OrientationSelectDialog(
                     onDismissRequest = onDismissRequest,
-                    screenModel = settingsScreenModel,
+                    viewModel = settingsviewModel,
                     onChange = { stringRes ->
                         menuToggleToast?.cancel()
                         menuToggleToast = toast(stringRes)

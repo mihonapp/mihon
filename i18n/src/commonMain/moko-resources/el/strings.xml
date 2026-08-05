@@ -254,8 +254,6 @@
     <string name="update_check_confirm">Λήψη</string>
     <string name="update_check_no_new_updates">Δεν υπάρχουν διαθέσιμες νέες ενημερώσεις</string>
     <string name="update_check_notification_download_in_progress">Γίνεται λήψη…</string>
-    <string name="update_check_notification_download_complete">Πατήστε για να εγκαταστήσετε την ενημέρωση</string>
-    <string name="update_check_notification_download_error">Σφάλμα λήψης</string>
     <string name="update_check_notification_update_available">Υπάρχει διαθέσιμη ενημέρωση!</string>
     <string name="information_no_downloads">Δεν υπάρχουν λήψεις</string>
     <string name="information_no_recent">Δεν υπάρχουν πρόσφατες ενημερώσεις</string>

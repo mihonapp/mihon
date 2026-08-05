@@ -18,7 +18,7 @@ import tachiyomi.core.common.storage.displayablePath
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
 import java.io.File
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.milliseconds
 
 class BackupNotifier(private val context: Context) {
 
@@ -87,6 +87,7 @@ class BackupNotifier(private val context: Context) {
         }
     }
 
+    // Existing method retained for backward compatibility
     fun restoreProgressNotification(
         content: String = "",
         progress: Int = 0,
@@ -117,6 +118,39 @@ class BackupNotifier(private val context: Context) {
         }
     }
 
+    // New method introduced in upstream to show restore progress notification directly
+    fun showRestoreProgress(
+        content: String = "",
+        progress: Int = 0,
+        maxAmount: Int = 100,
+        sync: Boolean = false,
+    ): NotificationCompat.Builder {
+        val builder = with(progressNotificationBuilder) {
+            val contentTitle = if (sync) {
+                context.stringResource(MR.strings.syncing_library)
+            } else {
+                context.stringResource(MR.strings.restoring_backup)
+            }
+            setContentTitle(contentTitle)
+
+            if (!preferences.hideNotificationContent.get()) {
+                setContentText(content)
+            }
+
+            setProgress(maxAmount, progress, false)
+            setOnlyAlertOnce(true)
+
+            clearActions()
+            addAction(
+                R.drawable.ic_close_24dp,
+                context.stringResource(MR.strings.action_cancel),
+                NotificationReceiver.cancelRestorePendingBroadcast(context, Notifications.ID_RESTORE_PROGRESS),
+            )
+        }
+        builder.show(Notifications.ID_RESTORE_PROGRESS)
+        return builder
+    }
+
     fun showRestoreError(error: String?) {
         context.cancelNotification(Notifications.ID_RESTORE_PROGRESS)
 
@@ -145,10 +179,8 @@ class BackupNotifier(private val context: Context) {
 
         val timeString = context.stringResource(
             MR.strings.restore_duration,
-            TimeUnit.MILLISECONDS.toMinutes(time),
-            TimeUnit.MILLISECONDS.toSeconds(time) - TimeUnit.MINUTES.toSeconds(
-                TimeUnit.MILLISECONDS.toMinutes(time),
-            ),
+            time.milliseconds.inWholeMinutes,
+            time.milliseconds.inWholeSeconds - (time.milliseconds.inWholeMinutes * 60),
         )
 
         with(completeNotificationBuilder) {

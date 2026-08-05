@@ -231,6 +231,7 @@
     <string name="theme_dark">Dark</string>
     <string name="theme_monet">Dynamic</string>
     <string name="theme_catppuccin">Catppuccin</string>
+    <string name="theme_tokyonight">Tokyo Night</string>
     <string name="theme_greenapple">Green Apple</string>
     <string name="theme_lavender">Lavender</string>
     <string name="theme_midnightdusk">Midnight Dusk</string>
@@ -361,6 +362,7 @@
     <string name="ext_installer_shizuku_stopped">Shizuku is not running</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Install and start Shizuku to use Shizuku as extension installer.</string>
     <string name="ext_revoke_trust">Revoke trusted unknown extensions</string>
+    <string name="downloading_with_progress">Downloading… (%d%%)</string>
 
     <!-- Extension repos -->
     <string name="action_open_repo">Open source repo</string>
@@ -859,11 +861,13 @@
     <string name="relative_time_span_never">Never</string>
     <string name="action_view_upcoming">View Upcoming Updates</string>
     <string name="action_filter_excluded_scanlators">Filter excluded scanlators</string>
+    <string name="pref_filter_update_categories_details">Updates in excluded categories will not be shown even if they are also in any included categories.</string>
 
     <!-- Upcoming -->
     <string name="upcoming_guide">Upcoming Guide</string>
     <string name="upcoming_calendar_next">Next Month</string>
     <string name="upcoming_calendar_prev">Previous Month</string>
+    <string name="pref_filter_upcoming_categories_details">Titles in excluded categories are not shown, even if they are also in any of the included categories.</string>
 
     <!-- History -->
     <string name="recent_manga_time">Ch. %1$s - %2$s</string>
@@ -948,8 +952,6 @@
 
     <!--UpdateCheck Notifications-->
     <string name="update_check_notification_download_in_progress">Downloading…</string>
-    <string name="update_check_notification_download_complete">Tap to install update</string>
-    <string name="update_check_notification_download_error">Download error</string>
     <string name="update_check_notification_update_available">New version available!</string>
 
     <!-- Information Text -->

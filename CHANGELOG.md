@@ -11,12 +11,48 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+
+## [v0.20.3] - 2026-08-04
+### Added
+- Add Category filtering for the Updates tab ([@MajorTanya](https://github.com/MajorTanya)) ([#3589](https://github.com/mihonapp/mihon/pull/3589))
+- Add Category filtering for the Upcoming calendar ([@MajorTanya](https://github.com/MajorTanya)) ([#3607](https://github.com/mihonapp/mihon/pull/3607))
+
+### Changed
+- Update default user agent to Chrome 149 ([@AntsyLich](https://github.com/AntsyLich)) ([#3678](https://github.com/mihonapp/mihon/pull/3678))
+
+### Improved
+- Spoof `Sec-CH-UA` client hints in WebView to match the user agent ([@AntsyLich](https://github.com/AntsyLich)) ([#3678](https://github.com/mihonapp/mihon/pull/3678))
+
+### Fixed
+- Fixed extension installation with shizuku installer ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#3676](https://github.com/mihonapp/mihon/pull/3676))
+- Fixed `X-Requested-With` spoofing leaking to unrelated callers ([@AntsyLich](https://github.com/AntsyLich)) ([#3678](https://github.com/mihonapp/mihon/pull/3678))
+- Fixed reader loading indefinitely in some scenarios ([@AntsyLich](https://github.com/AntsyLich)) ([#3686](https://github.com/mihonapp/mihon/pull/3686))
+- Fix MyAnimeList error for list entries with partial start/finish reading dates by setting those dates to either Jan 1st or 1st of the month ([@MajorTanya](https://github.com/MajorTanya)) ([#3573](https://github.com/mihonapp/mihon/pull/3573))
+
+## [v0.20.2] - 2026-08-01
 ### Added
 - Support resumable image downloads if supported by source ([@xMohnad](https://github.com/xMohnad)) ([#3167](https://github.com/mihonapp/mihon/pull/3167))
   - Fix HTTP Error 416 not being handled properly ([@AntsyLich](https://github.com/AntsyLich)) ([#3563](https://github.com/mihonapp/mihon/pull/3563))
+  - Fix incorrect progress when resuming downloads ([@xMohnad](https://github.com/xMohnad)) ([#3616](https://github.com/mihonapp/mihon/pull/3616))
+- Add Tokyo Night Theme ([@xMohnad](https://github.com/xMohnad)) ([#3502](https://github.com/mihonapp/mihon/pull/3502))
+
+### Changed
+- Detect Shizuku with permission check ([@Small-Ku](https://github.com/Small-Ku)) ([#3565](https://github.com/mihonapp/mihon/pull/3565))
+- Check for app and extension update on every cold start ([@AntsyLich](https://github.com/AntsyLich)) ([#3658](https://github.com/mihonapp/mihon/pull/3658))
+
+### Improved
+- Library search ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#3554](https://github.com/mihonapp/mihon/pull/3554))
+  - Support logical operators (`&&`, `||`, `-`), implicit `AND` separators, and nested expressions with `()`
+  - Add comparison operators (`>`, `>=`, `<`, `<=`, `=`) for `id`, `added`, `fetchinterval` / `fi`, `nextupdate` / `nu`, `unread`, `read`, and `total` (Uses `yyyy-MM-dd` dates for `added` and `nextupdate`)
+  - Support field-specific prefixes (`title`, `author`, `artist`, `description` / `desc`, `genre` / `tag`, `source` / `src`, `source_id` / `src_id`, `notes` / `note`, `language` / `lang`) and empty field matching (`""`, `''`)
+- Always use Private installer to update privately installed extensions ([@MajorTanya](https://github.com/MajorTanya)) ([#3614](https://github.com/mihonapp/mihon/pull/3614))
+- App update prompt flow experience ([@AntsyLich](https://github.com/AntsyLich)) ([#3669](https://github.com/mihonapp/mihon/pull/3669))
 
 ### Fixed
 - Fixed app bars remaining visible after changing pages by tapping in the paged reader after using the chapter navigator slider ([@AntsyLich](https://github.com/AntsyLich)) ([#3567](https://github.com/mihonapp/mihon/pull/3567))
+- Fixed MangaBaka User Agent string ([@MajorTanya](https://github.com/MajorTanya)) ([#3578](https://github.com/mihonapp/mihon/pull/3578))
+- Fixed extension installation with shizuku installer ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#3630](https://github.com/mihonapp/mihon/pull/3630))
+- Fixed backup restore dropping library entries when the backup contains duplicate chapters ([@na-ji](https://github.com/na-ji)) ([#3667](https://github.com/mihonapp/mihon/pull/3667))
 
 ## [v0.20.1] - 2026-07-09
 ### Added
@@ -582,7 +618,9 @@ Same as v0.19.6
 - Branding to Mihon ([@AntsyLich](https://github.com/AntsyLich))
 - Minimum supported Android version to 8 ([@AntsyLich](https://github.com/AntsyLich)) ([`dfb3091`](https://github.com/mihonapp/mihon/commit/dfb3091e380dda3e9bfb64bf5c9a685cf3a03d0e))
 
-[unreleased]: https://github.com/mihonapp/mihon/compare/v0.20.1...main
+[unreleased]: https://github.com/mihonapp/mihon/compare/v0.20.3...main
+[v0.20.3]: https://github.com/mihonapp/mihon/compare/v0.20.2...v0.20.3
+[v0.20.2]: https://github.com/mihonapp/mihon/compare/v0.20.1...v0.20.2
 [v0.20.1]: https://github.com/mihonapp/mihon/compare/v0.20.0...v0.20.1
 [v0.20.0]: https://github.com/mihonapp/mihon/compare/v0.19.9...v0.20.0
 [v0.19.9]: https://github.com/mihonapp/mihon/compare/v0.19.8...v0.19.9

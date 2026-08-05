@@ -143,18 +143,38 @@ class BackupRestorer(
         mangaRestorer.sortByNew(backupMangas)
             .chunked(100)
             .forEach { chunk ->
-                database.transaction {
+                val restoredAsBatch = try {
+                    database.transaction {
+                        chunk.forEach {
+                            ensureActive()
+                            mangaRestorer.restore(it, backupCategories)
+                        }
+                    }
+                    true
+                } catch (e: Exception) {
+                    ensureActive()
+                    logcat(LogPriority.WARN, e) { "Batch restore failed, retrying entry by entry" }
+                    false
+                }
+
+                if (restoredAsBatch) {
+                    restoreProgress.addAndFetch(chunk.size)
+                } else {
                     chunk.forEach {
                         ensureActive()
                         try {
                             mangaRestorer.restore(it, backupCategories)
                         } catch (e: Exception) {
+                            ensureActive()
                             val sourceName = sourceMapping[it.source] ?: it.source.toString()
                             addError("${it.title} [$sourceName]: ${e.message}")
                         }
                         updateRestoreProgress(it.title)
                     }
                 }
+                // Update notification progress for the current chunk
+                notifier.showRestoreProgress(chunk.last().title, restoreProgress.load(), restoreAmount, isSync)
+                updateRestoreProgress(chunk.last().title)
             }
     }
 
