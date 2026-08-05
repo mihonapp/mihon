@@ -920,4 +920,6 @@
     <string name="pref_vertical_navigator_height">Vertikální výška navigátoru</string>
     <string name="theme_tokyonight">Tokijská noc</string>
     <string name="downloading_with_progress">Stahování… (%d%%)</string>
+    <string name="pref_filter_update_categories_details">Aktualizace v kategoriích, které byly vyloučeny, se nezobrazí, i když se zároveň nacházejí v některé ze zahrnutých kategorií.</string>
+    <string name="pref_filter_upcoming_categories_details">Položky ve vyloučených kategoriích se nezobrazují, i když patří také do některé ze zahrnutých kategorií.</string>
 </resources>

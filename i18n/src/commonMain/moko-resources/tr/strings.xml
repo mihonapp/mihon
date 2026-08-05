@@ -920,4 +920,5 @@
     <string name="considering">Düşünülüyor</string>
     <string name="theme_tokyonight">Tokyo Gecesi</string>
     <string name="downloading_with_progress">İndiriliyor… (%d%%)</string>
+    <string name="pref_filter_update_categories_details">Hariç tutulan kategorilerdeki güncellemeler, dahil edilen kategorilerde olsalar bile gösterilmeyecektir.</string>
 </resources>

@@ -916,4 +916,7 @@
     <string name="pref_vertical_navigator_height">Chiều cao thanh điều hướng dọc</string>
     <string name="considering">Đang cân nhắc</string>
     <string name="theme_tokyonight">Đêm Tokyo</string>
+    <string name="downloading_with_progress">Đang tải xuống… (%d%%)</string>
+    <string name="pref_filter_update_categories_details">Các cập nhật trong các danh mục bị loại trừ sẽ không được hiển thị ngay cả khi chúng cũng nằm trong bất kỳ danh mục nào được bao gồm.</string>
+    <string name="pref_filter_upcoming_categories_details">Các tựa sách thuộc các danh mục bị loại trừ sẽ không được hiển thị, ngay cả khi chúng cũng nằm trong bất kỳ danh mục nào được bao gồm.</string>
 </resources>
