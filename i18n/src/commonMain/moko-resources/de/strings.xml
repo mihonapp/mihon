@@ -919,4 +919,7 @@
     <string name="pref_vertical_navigator_height">Höhe des vertikalen Navigators</string>
     <string name="considering">Überlege ich zu lesen</string>
     <string name="theme_tokyonight">Tokyo Night</string>
+    <string name="downloading_with_progress">Wird heruntergeladen… (%d%%)</string>
+    <string name="pref_filter_update_categories_details">Aktualisierungen in ausgeschlossen Kategorien werden nicht angezeigt, selbst wenn sie in eingeschlossenen Kategorien vorkommen.</string>
+    <string name="pref_filter_upcoming_categories_details">Titel in ausgeschlossen Kategorien werden nicht angezeigt, selbst wenn sie in eingeschlossenen Kategorien vorkommen.</string>
 </resources>

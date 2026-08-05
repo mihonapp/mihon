@@ -919,4 +919,6 @@
     <string name="pref_vertical_navigator_height">세로 탐색기 높이</string>
     <string name="considering">고려 중</string>
     <string name="theme_tokyonight">도쿄 나이트</string>
+    <string name="downloading_with_progress">다운로드 중… (%d%%)</string>
+    <string name="pref_filter_update_categories_details">제외된 카테고리 업데이트는 포함되는 카테고리가 있어도 표시되지 않습니다.</string>
 </resources>

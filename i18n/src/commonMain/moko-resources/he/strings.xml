@@ -289,8 +289,8 @@
     <string name="action_menu">תפריט</string>
     <string name="action_settings">הגדרות</string>
     <string name="label_help">עזרה</string>
-    <string name="label_extension_info">פרטי הרחבה</string>
-    <string name="label_extensions">הרחבות</string>
+    <string name="label_extension_info">פרטי התוסף</string>
+    <string name="label_extensions">תוספים</string>
     <string name="label_migration">העברה</string>
     <string name="label_backup">גיבוי ושחזור</string>
     <string name="label_sources">מקורות</string>
@@ -301,7 +301,7 @@
     <string name="label_settings">הגדרות</string>
     <string name="history">היסטוריה</string>
     <string name="chapters">פרקים</string>
-    <string name="manga">פריטים בספריה</string>
+    <string name="manga">פריטי הספרייה</string>
     <string name="categories">קטגוריות</string>
     <string name="name">שם</string>
     <string name="information_no_recent_manga">שום דבר לא נקרא לאחרונה</string>
@@ -585,7 +585,7 @@
     <string name="chapter_settings_updated">הגדרות פרק דיפולטי עודכנו</string>
     <string name="action_not_now">לא עכשיו</string>
     <string name="download_notifier_cache_renewal">בודק הורדות</string>
-    <string name="delete_downloaded">מחק הורדות</string>
+    <string name="delete_downloaded">מחיקת פרקים שהורדו</string>
     <string name="action_sort_next_updated">העדכון הצפוי הבא</string>
     <string name="pref_advanced_summary">הורד קבצי קריסה, אופטימיזציה לסוללה</string>
     <string name="theme_lavender">לבנדר</string>
@@ -735,7 +735,7 @@
     <string name="theme_nord">נורד</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">לאחר קריאת פרק</string>
     <string name="ext_remove">הסר</string>
-    <string name="selected">נבחר</string>
+    <string name="selected">נבחרים</string>
     <string name="not_selected">לא נבחר</string>
     <string name="action_menu_overflow_description">אפשרויות נוספות</string>
     <string name="label_data_storage">נתונים ואחסון</string>
@@ -753,4 +753,12 @@
     <string name="onboarding_action_next">הבא</string>
     <string name="onboarding_permission_crashlytics">שלח דוחות קריסה</string>
     <string name="scanlator">קבוצת תרגום</string>
+    <string name="migrationConfigScreen.selectedHeader">נבחרים</string>
+    <string name="label_upcoming">עדכונים צפויים</string>
+    <string name="action_view_upcoming">הצגת עדכונים צפויים</string>
+    <string name="upcoming_guide">מדריך עדכונים צפויים</string>
+    <string name="upcoming_calendar_next">החודש הבא</string>
+    <string name="upcoming_calendar_prev">החודש שעבר</string>
+    <string name="pref_filter_upcoming_categories_details">פריטים בקטגוריות מוחרגות לא יוצגו, גם אם הם מופיעים בקטגוריות נבחרות.</string>
+    <string name="label_support_us">תמיכה ב־Mihon</string>
 </resources>
