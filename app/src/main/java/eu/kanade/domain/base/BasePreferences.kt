@@ -51,4 +51,10 @@ class BasePreferences(
         Preference.appStateKey("donation_campaign_shown"),
         false,
     )
+
+    val enableFractionalProgress: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_enable_fractional",
+        false,
+    )
+    
 }
