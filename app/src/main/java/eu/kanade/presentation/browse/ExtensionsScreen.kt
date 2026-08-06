@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.GetApp
 import androidx.compose.material.icons.outlined.Public
 import androidx.compose.material.icons.outlined.Refresh
@@ -22,6 +24,7 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.VerifiedUser
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -111,6 +114,7 @@ fun ExtensionScreen(
                     ),
                 )
             }
+
             else -> {
                 ExtensionContent(
                     state = state,
@@ -147,6 +151,8 @@ private fun ExtensionContent(
     val context = LocalContext.current
     var trustState by remember { mutableStateOf<Extension.Untrusted?>(null) }
     val installGranted = rememberRequestPackageInstallsPermissionState(initialValue = true)
+
+    var notLoadedState by remember { mutableStateOf<Extension.NotLoaded?>(null) }
 
     FastScrollLazyColumn(
         contentPadding = contentPadding + topSmallPaddingValues,
@@ -190,6 +196,7 @@ private fun ExtensionContent(
                             action = action,
                         )
                     }
+
                     is ExtensionUiModel.Header.Text -> {
                         ExtensionHeader(
                             text = header.text,
@@ -207,6 +214,7 @@ private fun ExtensionContent(
                         is Extension.Untrusted -> "extension-untrusted-${item.hashCode()}"
                         is Extension.Installed -> "extension-installed-${item.hashCode()}"
                         is Extension.Available -> "extension-available-${item.hashCode()}"
+                        is Extension.NotLoaded -> "extension-not-loaded-${item.hashCode()}"
                     }
                 },
             ) { item ->
@@ -219,6 +227,10 @@ private fun ExtensionContent(
                             is Extension.Installed -> onOpenExtension(it)
                             is Extension.Untrusted -> {
                                 trustState = it
+                            }
+
+                            is Extension.NotLoaded -> {
+                                notLoadedState = it
                             }
                         }
                     },
@@ -241,9 +253,12 @@ private fun ExtensionContent(
                                     onOpenExtension(it)
                                 }
                             }
+
                             is Extension.Untrusted -> {
                                 trustState = it
                             }
+
+                            is Extension.NotLoaded -> onUninstallExtension(it)
                         }
                     },
                 )
@@ -262,6 +277,20 @@ private fun ExtensionContent(
             },
             onDismissRequest = {
                 trustState = null
+            },
+        )
+    }
+
+    notLoadedState?.let {
+        ExtensionNotLoadedReasonDialog(
+            name = it.name,
+            reason = it.reason,
+            onClickConfirm = {
+                onUninstallExtension(it)
+                notLoadedState = null
+            },
+            onDismiss = {
+                notLoadedState = null
             },
         )
     }
@@ -383,7 +412,7 @@ private fun ExtensionItemContent(
                         overflow = TextOverflow.Ellipsis,
                     )
                 }
-                if (extension is Extension.Installed && !extension.isShared) {
+                if (extension !is Extension.Available && !extension.isShared) {
                     if (hasAlreadyShownAnElement) DotSeparatorNoSpaceText()
                     Text(
                         text = stringResource(MR.strings.ext_installer_private),
@@ -484,6 +513,14 @@ private fun ExtensionItemActions(
                             )
                         }
                     }
+                    is Extension.NotLoaded -> {
+                        IconButton(onClick = { onClickItemAction(extension) }) {
+                            Icon(
+                                imageVector = Icons.Outlined.Delete,
+                                contentDescription = stringResource(MR.strings.ext_uninstall),
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -548,5 +585,46 @@ private fun ExtensionTrustDialog(
             }
         },
         onDismissRequest = onDismissRequest,
+    )
+}
+
+@Composable
+private fun ExtensionNotLoadedReasonDialog(
+    name: String,
+    reason: Extension.NotLoaded.Reason,
+    onClickConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        icon = {
+            Icon(
+                imageVector = Icons.Filled.Warning,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.error,
+            )
+        },
+        title = {
+            Text(text = stringResource(MR.strings.ext_not_loaded))
+        },
+        text = {
+            val reasonResource = when (reason) {
+                Extension.NotLoaded.Reason.SAFE_MODE -> MR.strings.ext_not_loaded_reason_safe_mode
+            }
+            Text(text = stringResource(reasonResource, name))
+        },
+        confirmButton = {
+            TextButton(
+                onClick = onClickConfirm,
+                colors = ButtonDefaults.textButtonColors().copy(contentColor = MaterialTheme.colorScheme.error),
+            ) {
+                Text(text = stringResource(MR.strings.ext_uninstall))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(MR.strings.action_close))
+            }
+        },
+        onDismissRequest = onDismiss,
     )
 }

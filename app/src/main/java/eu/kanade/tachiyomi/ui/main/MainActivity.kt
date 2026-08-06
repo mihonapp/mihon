@@ -10,6 +10,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
@@ -74,6 +75,7 @@ import eu.kanade.presentation.components.AppStateBanners
 import eu.kanade.presentation.components.DownloadedOnlyBannerBackgroundColor
 import eu.kanade.presentation.components.IncognitoModeBannerBackgroundColor
 import eu.kanade.presentation.components.IndexingBannerBackgroundColor
+import eu.kanade.presentation.components.SafeModeBannerBackgroundColor
 import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresScreen
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
 import eu.kanade.presentation.util.AssistContentScreen
@@ -82,6 +84,7 @@ import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.updater.AppUpdateChecker
+import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.api.ExtensionApi
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
@@ -95,6 +98,7 @@ import eu.kanade.tachiyomi.ui.setting.SettingsScreen
 import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.util.system.isBenchmarkBuildType
 import eu.kanade.tachiyomi.util.system.isNavigationBarNeedsScrim
+import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.system.updaterEnabled
 import eu.kanade.tachiyomi.util.view.setComposeContent
 import kotlinx.coroutines.channels.awaitClose
@@ -131,6 +135,7 @@ class MainActivity : BaseActivity() {
 
     private val downloadCache: DownloadCache by injectLazy()
     private val chapterCache: ChapterCache by injectLazy()
+    private val extensionManager: ExtensionManager by injectLazy()
 
     private val getIncognitoState: GetIncognitoState by injectLazy()
 
@@ -159,6 +164,15 @@ class MainActivity : BaseActivity() {
             return
         }
 
+        val safeMode = intent.getBooleanExtra("safeMode", false)
+        if (isLaunch) {
+            preferences.safeMode.set(safeMode)
+            if (safeMode) {
+                toast(MR.strings.safe_mode_summary, Toast.LENGTH_LONG)
+                if (extensionManager.isInitialized.value) extensionManager.reloadExtensions()
+            }
+        }
+
         setComposeContent {
             val context = LocalContext.current
 
@@ -171,6 +185,7 @@ class MainActivity : BaseActivity() {
                 indexing -> IndexingBannerBackgroundColor
                 downloadOnly -> DownloadedOnlyBannerBackgroundColor
                 incognito -> IncognitoModeBannerBackgroundColor
+                safeMode -> SafeModeBannerBackgroundColor
                 else -> MaterialTheme.colorScheme.surface
             }
             LaunchedEffect(isSystemInDarkTheme, statusBarBackgroundColor) {
@@ -211,6 +226,7 @@ class MainActivity : BaseActivity() {
                             downloadedOnlyMode = downloadOnly,
                             incognitoMode = incognito,
                             indexing = indexing,
+                            safeMode = safeMode,
                             modifier = Modifier.windowInsetsPadding(scaffoldInsets),
                         )
                     },
