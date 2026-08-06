@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Fixed
+- Fixed app and extension update check running again on configuration change ([@AntsyLich](https://github.com/AntsyLich)) ([#3708](https://github.com/mihonapp/mihon/pull/3708))
 
 ## [v0.20.4] - 2026-08-05
 ### Fixed
