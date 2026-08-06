@@ -67,6 +67,11 @@ class ReaderPreferences(
         true,
     )
 
+    val pref_enable_double_tap_zoom_pager: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_enable_double_tap_zoom_pager",
+        true,
+    )
+
     val imageScaleType: Preference<Int> = preferenceStore.getInt("pref_image_scale_type_key", 1)
 
     val zoomStart: Preference<Int> = preferenceStore.getInt("pref_zoom_start_key", 1)
