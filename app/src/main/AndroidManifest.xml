@@ -11,6 +11,13 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
+    <!-- Optional escape hatch for devices where the SAF folder picker refuses to grant access
+         to any folder ("Can't use this folder, to protect your privacy"). Lets the user opt in to
+         writing the storage folder directly to shared storage. Only requested explicitly from the
+         onboarding storage step. -->
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
 
     <!-- For background jobs -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
