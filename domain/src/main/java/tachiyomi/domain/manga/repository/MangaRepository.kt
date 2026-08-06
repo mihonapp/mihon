@@ -10,7 +10,7 @@ interface MangaRepository {
 
     suspend fun getMangaById(id: Long): Manga
 
-    suspend fun getMangaByIdAsFlow(id: Long): Flow<Manga>
+    fun getMangaByIdAsFlow(id: Long): Flow<Manga>
 
     suspend fun getMangaByUrlAndSourceId(url: String, sourceId: Long): Manga?
 
