@@ -68,6 +68,10 @@ abstract class BaseTracker(
 
     override fun getUsername() = trackPreferences.trackUsername(this).get()
 
+    override fun getDisplayUsername(): String = trackPreferences.trackDisplayUsername(this).get()
+
+    override fun saveDisplayUsername(displayName: String) = trackPreferences.trackDisplayUsername(this).set(displayName)
+
     override fun getPassword() = trackPreferences.trackPassword(this).get()
 
     override fun saveCredentials(username: String, password: String) {

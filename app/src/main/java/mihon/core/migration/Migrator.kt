@@ -19,7 +19,7 @@ object Migrator {
         dryrun: Boolean = false,
         onMigrationComplete: () -> Unit,
     ) {
-        val migrationContext = MigrationContext(dryrun)
+        val migrationContext = MigrationContext(dryrun, old)
         val migrationJobFactory = MigrationJobFactory(migrationContext, scope)
         val migrationStrategyFactory = MigrationStrategyFactory(migrationJobFactory, onMigrationComplete)
         val strategy = migrationStrategyFactory.create(old, new)
@@ -35,7 +35,7 @@ object Migrator {
         result = null
     }
 
-    suspend fun awaitAndRelease(): Boolean {
-        return await().also { release() }
+    fun awaitAndRelease(): Boolean = runBlocking {
+        await().also { release() }
     }
 }

@@ -20,10 +20,7 @@ import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.domain.source.service.SourceManager
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
-import java.nio.charset.Charset
 import java.security.MessageDigest
 
 class SuwayomiApi(private val trackId: Long) {
@@ -37,7 +34,7 @@ class SuwayomiApi(private val trackId: Long) {
     private val baseUrl: String by lazy { source.baseUrl.trimEnd('/') }
     private val apiUrl: String by lazy { "$baseUrl/api/graphql" }
 
-    public fun sourcePreferences(): SharedPreferences = configurableSource.sourcePreferences()
+    fun sourcePreferences(): SharedPreferences = configurableSource.sourcePreferences()
 
     suspend fun getTrackSearch(mangaId: Long): TrackSearch = withIOContext {
         val query = $$"""

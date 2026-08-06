@@ -21,7 +21,6 @@ import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.AppBarTitle
 import eu.kanade.presentation.components.DownloadDropdownMenu
 import eu.kanade.presentation.manga.DownloadAction
-import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.theme.active
@@ -76,7 +75,7 @@ fun MangaToolbar(
 
             val filterTint = if (hasFilters) MaterialTheme.colorScheme.active else LocalContentColor.current
             AppBarActions(
-                actions = persistentListOf<AppBar.AppBarAction>().builder().apply {
+                actions = buildList {
                     if (isActionMode) {
                         add(
                             AppBar.Action(
@@ -92,7 +91,7 @@ fun MangaToolbar(
                                 onClick = onInvertSelection,
                             ),
                         )
-                        return@apply
+                        return@buildList
                     }
                     if (onClickDownload != null) {
                         add(
@@ -147,8 +146,7 @@ fun MangaToolbar(
                             onClick = onClickEditNotes,
                         ),
                     )
-                }
-                    .build(),
+                },
             )
         },
         isActionMode = isActionMode,

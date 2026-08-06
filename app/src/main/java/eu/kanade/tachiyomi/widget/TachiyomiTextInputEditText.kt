@@ -49,7 +49,7 @@ class TachiyomiTextInputEditText @JvmOverloads constructor(
          * if [BasePreferences.incognitoMode] is true. Some IMEs may not respect this flag.
          */
         fun EditText.setIncognito(viewScope: CoroutineScope) {
-            Injekt.get<BasePreferences>().incognitoMode().changes()
+            Injekt.get<BasePreferences>().incognitoMode.changes()
                 .onEach {
                     imeOptions = if (it) {
                         imeOptions or EditorInfoCompat.IME_FLAG_NO_PERSONALIZED_LEARNING

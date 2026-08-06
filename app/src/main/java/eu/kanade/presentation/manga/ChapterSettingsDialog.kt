@@ -31,7 +31,6 @@ import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.manga.model.downloadedFilter
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
-import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
@@ -66,11 +65,11 @@ fun ChapterSettingsDialog(
         )
     }
 
-    val downloadedOnly = remember { Injekt.get<BasePreferences>().downloadedOnly().get() }
+    val downloadedOnly = remember { Injekt.get<BasePreferences>().downloadedOnly.get() }
 
     TabbedDialog(
         onDismissRequest = onDismissRequest,
-        tabTitles = persistentListOf(
+        tabTitles = listOf(
             stringResource(MR.strings.action_filter),
             stringResource(MR.strings.action_sort),
             stringResource(MR.strings.action_display),

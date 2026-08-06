@@ -18,7 +18,7 @@ import eu.kanade.presentation.components.AdaptiveSheet
 import eu.kanade.presentation.reader.components.ModeSelectionDialog
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
-import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.SettingsIconGrid
 import tachiyomi.presentation.core.components.material.IconToggleButton
@@ -29,17 +29,17 @@ private val ReaderOrientationsWithoutDefault = ReaderOrientation.entries - Reade
 @Composable
 fun OrientationSelectDialog(
     onDismissRequest: () -> Unit,
-    screenModel: ReaderSettingsScreenModel,
+    viewModel: ReaderSettingsViewModel,
     onChange: (StringResource) -> Unit,
 ) {
-    val manga by screenModel.mangaFlow.collectAsState()
+    val manga by viewModel.mangaFlow.collectAsState()
     val orientation = remember(manga) { ReaderOrientation.fromPreference(manga?.readerOrientation?.toInt()) }
 
     AdaptiveSheet(onDismissRequest = onDismissRequest) {
         DialogContent(
             orientation = orientation,
             onChangeOrientation = {
-                screenModel.onChangeOrientation(it)
+                viewModel.onChangeOrientation(it)
                 onChange(it.stringRes)
                 onDismissRequest()
             },

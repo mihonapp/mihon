@@ -46,7 +46,7 @@ class SetReadStatus(
             return@withNonCancellableContext Result.InternalError(e)
         }
 
-        if (read && downloadPreferences.removeAfterMarkedAsRead().get()) {
+        if (read && downloadPreferences.removeAfterMarkedAsRead.get()) {
             chaptersToUpdate
                 .groupBy { it.mangaId }
                 .forEach { (mangaId, chapters) ->

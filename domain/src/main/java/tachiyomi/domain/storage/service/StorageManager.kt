@@ -22,14 +22,14 @@ class StorageManager(
 
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    private var baseDir: UniFile? = getBaseDir(storagePreferences.baseStorageDirectory().get())
+    private var baseDir: UniFile? = getBaseDir(storagePreferences.baseStorageDirectory.get())
 
     private val _changes: Channel<Unit> = Channel(Channel.UNLIMITED)
     val changes = _changes.receiveAsFlow()
         .shareIn(scope, SharingStarted.Lazily, 1)
 
     init {
-        storagePreferences.baseStorageDirectory().changes()
+        storagePreferences.baseStorageDirectory.changes()
             .drop(1)
             .distinctUntilChanged()
             .onEach { uri ->

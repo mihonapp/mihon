@@ -42,56 +42,56 @@ class WebtoonConfig(
 
     var doubleTapZoomChangedListener: ((Boolean) -> Unit)? = null
 
-    val theme = readerPreferences.readerTheme().get()
+    val theme = readerPreferences.readerTheme.get()
 
     init {
-        readerPreferences.cropBordersWebtoon()
+        readerPreferences.cropBordersWebtoon
             .register({ imageCropBorders = it }, { imagePropertyChangedListener?.invoke() })
 
-        readerPreferences.webtoonSidePadding()
+        readerPreferences.webtoonSidePadding
             .register({ sidePadding = it }, { imagePropertyChangedListener?.invoke() })
 
-        readerPreferences.navigationModeWebtoon()
+        readerPreferences.navigationModeWebtoon
             .register({ navigationMode = it }, { updateNavigation(it) })
 
-        readerPreferences.webtoonNavInverted()
+        readerPreferences.webtoonNavInverted
             .register({ tappingInverted = it }, { navigator.invertMode = it })
-        readerPreferences.webtoonNavInverted().changes()
+        readerPreferences.webtoonNavInverted.changes()
             .drop(1)
             .onEach { navigationModeChangedListener?.invoke() }
             .launchIn(scope)
 
-        readerPreferences.dualPageSplitWebtoon()
+        readerPreferences.dualPageSplitWebtoon
             .register({ dualPageSplit = it }, { imagePropertyChangedListener?.invoke() })
 
-        readerPreferences.dualPageInvertWebtoon()
+        readerPreferences.dualPageInvertWebtoon
             .register({ dualPageInvert = it }, { imagePropertyChangedListener?.invoke() })
 
-        readerPreferences.dualPageRotateToFitWebtoon()
+        readerPreferences.dualPageRotateToFitWebtoon
             .register(
                 { dualPageRotateToFit = it },
                 { imagePropertyChangedListener?.invoke() },
             )
 
-        readerPreferences.dualPageRotateToFitInvertWebtoon()
+        readerPreferences.dualPageRotateToFitInvertWebtoon
             .register(
                 { dualPageRotateToFitInvert = it },
                 { imagePropertyChangedListener?.invoke() },
             )
 
-        readerPreferences.webtoonDisableZoomOut()
+        readerPreferences.webtoonDisableZoomOut
             .register(
                 { zoomOutDisabled = it },
                 { zoomPropertyChangedListener?.invoke(it) },
             )
 
-        readerPreferences.webtoonDoubleTapZoomEnabled()
+        readerPreferences.webtoonDoubleTapZoomEnabled
             .register(
                 { doubleTapZoom = it },
                 { doubleTapZoomChangedListener?.invoke(it) },
             )
 
-        readerPreferences.readerTheme().changes()
+        readerPreferences.readerTheme.changes()
             .drop(1)
             .distinctUntilChanged()
             .onEach { themeChangedListener?.invoke() }

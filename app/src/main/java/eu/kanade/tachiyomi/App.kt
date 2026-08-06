@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
-import android.os.Looper
 import android.webkit.WebView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -107,7 +106,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
         val scope = ProcessLifecycleOwner.get().lifecycleScope
 
         // Show notification to disable Incognito Mode when it's enabled
-        basePreferences.incognitoMode().changes()
+        basePreferences.incognitoMode.changes()
             .onEach { enabled ->
                 if (enabled) {
                     disableIncognitoReceiver.register()
@@ -135,32 +134,32 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
             }
             .launchIn(scope)
 
-        privacyPreferences.analytics()
+        privacyPreferences.analytics
             .changes()
             .onEach(TelemetryConfig::setAnalyticsEnabled)
             .launchIn(scope)
 
-        privacyPreferences.crashlytics()
+        privacyPreferences.crashlytics
             .changes()
             .onEach(TelemetryConfig::setCrashlyticsEnabled)
             .launchIn(scope)
 
-        basePreferences.hardwareBitmapThreshold().let { preference ->
+        basePreferences.hardwareBitmapThreshold.let { preference ->
             if (!preference.isSet()) preference.set(GLUtil.DEVICE_TEXTURE_LIMIT)
         }
 
-        basePreferences.hardwareBitmapThreshold().changes()
+        basePreferences.hardwareBitmapThreshold.changes()
             .onEach { ImageUtil.hardwareBitmapThreshold = it }
             .launchIn(scope)
 
-        setAppCompatDelegateThemeMode(Injekt.get<UiPreferences>().themeMode().get())
+        setAppCompatDelegateThemeMode(Injekt.get<UiPreferences>().themeMode.get())
 
         // Updates widget update
         WidgetManager(Injekt.get(), Injekt.get()).apply { init(scope) }
 
         if (!LogcatLogger.isInstalled) {
             val minLogPriority = when {
-                networkPreferences.verboseLogging().get() -> LogPriority.VERBOSE
+                networkPreferences.verboseLogging.get() -> LogPriority.VERBOSE
                 BuildConfig.DEBUG -> LogPriority.DEBUG
                 else -> LogPriority.INFO
             }
@@ -211,7 +210,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
 
             crossfade((300 * this@App.animatorDurationScale).toInt())
             allowRgb565(DeviceUtil.isLowRamDevice(this@App))
-            if (networkPreferences.verboseLogging().get()) logger(DebugLogger())
+            if (networkPreferences.verboseLogging.get()) logger(DebugLogger())
 
             // Coil spawns a new thread for every image load by default
             fetcherCoroutineContext(Dispatchers.IO.limitedParallelism(8))
@@ -231,7 +230,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
     override fun getPackageName(): String {
         try {
             // Override the value passed as X-Requested-With in WebView requests
-            val stackTrace = Looper.getMainLooper().thread.stackTrace
+            val stackTrace = Thread.currentThread().stackTrace
             val isChromiumCall = stackTrace.any { trace ->
                 trace.className.lowercase() in setOf("org.chromium.base.buildinfo", "org.chromium.base.apkinfo") &&
                     trace.methodName.lowercase() in setOf("getall", "getpackagename", "<init>")
@@ -256,7 +255,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
         private var registered = false
 
         override fun onReceive(context: Context, intent: Intent) {
-            basePreferences.incognitoMode().set(false)
+            basePreferences.incognitoMode.set(false)
         }
 
         fun register() {

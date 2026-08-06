@@ -5,6 +5,7 @@ import eu.kanade.domain.ui.model.TabletUiMode
 import eu.kanade.domain.ui.model.ThemeMode
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.isDynamicColorAvailable
+import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.preference.getEnum
 import java.time.format.DateTimeFormatter
@@ -12,12 +13,12 @@ import java.time.format.FormatStyle
 import java.util.Locale
 
 class UiPreferences(
-    private val preferenceStore: PreferenceStore,
+    preferenceStore: PreferenceStore,
 ) {
 
-    fun themeMode() = preferenceStore.getEnum("pref_theme_mode_key", ThemeMode.SYSTEM)
+    val themeMode: Preference<ThemeMode> = preferenceStore.getEnum("pref_theme_mode_key", ThemeMode.SYSTEM)
 
-    fun appTheme() = preferenceStore.getEnum(
+    val appTheme: Preference<AppTheme> = preferenceStore.getEnum(
         "pref_app_theme",
         if (DeviceUtil.isDynamicColorAvailable) {
             AppTheme.MONET
@@ -26,15 +27,15 @@ class UiPreferences(
         },
     )
 
-    fun themeDarkAmoled() = preferenceStore.getBoolean("pref_theme_dark_amoled_key", false)
+    val themeDarkAmoled: Preference<Boolean> = preferenceStore.getBoolean("pref_theme_dark_amoled_key", false)
 
-    fun relativeTime() = preferenceStore.getBoolean("relative_time_v2", true)
+    val relativeTime: Preference<Boolean> = preferenceStore.getBoolean("relative_time_v2", true)
 
-    fun dateFormat() = preferenceStore.getString("app_date_format", "")
+    val dateFormat: Preference<String> = preferenceStore.getString("app_date_format", "")
 
-    fun tabletUiMode() = preferenceStore.getEnum("tablet_ui_mode", TabletUiMode.AUTOMATIC)
+    val tabletUiMode: Preference<TabletUiMode> = preferenceStore.getEnum("tablet_ui_mode", TabletUiMode.AUTOMATIC)
 
-    fun imagesInDescription() = preferenceStore.getBoolean("pref_render_images_description", true)
+    val imagesInDescription: Preference<Boolean> = preferenceStore.getBoolean("pref_render_images_description", true)
 
     companion object {
         fun dateFormat(format: String): DateTimeFormatter = when (format) {

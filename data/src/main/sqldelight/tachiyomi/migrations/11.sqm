@@ -1,0 +1,16 @@
+import kotlin.Boolean;
+
+CREATE TABLE extension_store(
+    index_url TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    badge_label TEXT NOT NULL,
+    signing_key TEXT NOT NULL,
+    contact_website TEXT NOT NULL,
+    contact_discord TEXT,
+    is_legacy INTEGER AS Boolean NOT NULL
+);
+
+INSERT INTO extension_store(index_url, name, badge_label, signing_key, contact_website, contact_discord, is_legacy)
+SELECT base_url || '/repo.json', name, coalesce(short_name, name), signing_key_fingerprint, website, NULL, 1 FROM extension_repos;
+
+DROP TABLE extension_repos;

@@ -52,7 +52,7 @@ import kotlin.math.roundToInt
 @Composable
 fun AdaptiveSheet(
     isTabletUi: Boolean,
-    enableSwipeDismiss: Boolean,
+    enableImplicitDismiss: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
@@ -77,6 +77,7 @@ fun AdaptiveSheet(
                 .clickable(
                     interactionSource = null,
                     indication = null,
+                    enabled = enableImplicitDismiss,
                     onClick = internalOnDismissRequest,
                 )
                 .fillMaxSize()
@@ -98,7 +99,7 @@ fun AdaptiveSheet(
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 content = {
                     BackHandler(
-                        enabled = remember { derivedStateOf { alpha > 0f } }.value,
+                        enabled = enableImplicitDismiss && remember { derivedStateOf { alpha > 0f } }.value,
                         onBack = internalOnDismissRequest,
                     )
                     content()
@@ -149,7 +150,7 @@ fun AdaptiveSheet(
                         onClick = {},
                     )
                     .then(
-                        if (enableSwipeDismiss) {
+                        if (enableImplicitDismiss) {
                             Modifier.nestedScroll(
                                 remember(anchoredDraggableState) {
                                     anchoredDraggableState.preUpPostDownNestedScrollConnection {
@@ -174,7 +175,7 @@ fun AdaptiveSheet(
                     .anchoredDraggable(
                         state = anchoredDraggableState,
                         orientation = Orientation.Vertical,
-                        enabled = enableSwipeDismiss,
+                        enabled = enableImplicitDismiss,
                         flingBehavior = flingBehavior,
                     )
                     .navigationBarsPadding()
@@ -183,7 +184,7 @@ fun AdaptiveSheet(
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 content = {
                     BackHandler(
-                        enabled = anchoredDraggableState.targetValue == 0,
+                        enabled = enableImplicitDismiss && anchoredDraggableState.targetValue == 0,
                         onBack = internalOnDismissRequest,
                     )
                     content()

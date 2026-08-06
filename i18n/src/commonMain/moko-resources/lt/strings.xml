@@ -206,7 +206,6 @@
     <string name="none">Nėra</string>
     <string name="all">Visi</string>
     <string name="pref_library_update_categories_details">Įrašai, kurie yra įtraukti į neįtraukiamas kategorijas, nebus atnaujinami, net jei yra įtraukti į įtrauktąsias kategorijas.</string>
-    <string name="update_check_notification_download_error">Atsiuntimo klaida</string>
     <string name="update_check_notification_update_available">Nauja versija pasiekiama!</string>
     <string name="scale_type_fit_height">Pagal aukštį talpinimas</string>
     <string name="white_background">Balta</string>
@@ -347,7 +346,6 @@
     <string name="pref_category_for_this_series">Priskirti šiai serijai</string>
     <string name="transition_finished">Baigta:</string>
     <string name="transition_current">Dabartinis:</string>
-    <string name="notification_update_error">Nepavyko atnaujinti %1$d</string>
     <string name="notification_first_add_to_library">Prieš atlikdami šį veiksmą, pridėkite įrašą į savo biblioteką</string>
     <string name="skipped_reason_not_started">Praleista, nes nėra perskaitytų skyrių</string>
     <string name="information_cloudflare_bypass_failure">Nepavyko apeiti \"Cloudflare\"</string>
@@ -360,7 +358,6 @@
     <string name="transition_pages_error">Nepavyko įkelti puslapių: %1$s</string>
     <string name="transition_previous">Ankstesnis:</string>
     <string name="update_check_confirm">Parsisiųsti</string>
-    <string name="update_check_notification_download_complete">Bakstelėkite, kad įdiegtumėte atnaujinimą</string>
     <string name="update_check_eol">Ši \"Android\" versija nebepalaikoma</string>
     <string name="update_check_no_new_updates">Naujų atnaujinimų nėra</string>
     <string name="migration_dialog_what_to_include">Pasirinkite duomenis, kuriuos norite įtraukti</string>
@@ -536,7 +533,6 @@
     <string name="manga_download">Atsisiųsti</string>
     <string name="date">Data</string>
     <string name="updating_category">Kategorijos atnaujinimas</string>
-    <string name="updated_version">Atnaujinta į v%1$s</string>
     <string name="login_title">Prisijunkite prie %1$s</string>
     <string name="no_results_found">Rezultatų nerasta</string>
     <string name="ongoing">Vykdoma</string>

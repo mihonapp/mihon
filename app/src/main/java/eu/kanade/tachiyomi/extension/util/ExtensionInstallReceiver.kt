@@ -106,7 +106,7 @@ internal class ExtensionInstallReceiver(private val listener: Listener) : Broadc
      * Returns the package name of the installed, updated or removed application.
      */
     private fun getPackageNameFromIntent(intent: Intent?): String? {
-        return intent?.data?.encodedSchemeSpecificPart ?: return null
+        return intent?.data?.encodedSchemeSpecificPart
     }
 
     /**

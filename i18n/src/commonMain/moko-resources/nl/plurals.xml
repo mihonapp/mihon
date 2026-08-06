@@ -73,8 +73,8 @@
         <item quantity="other">%1$s pagina\'s</item>
     </plurals>
     <plurals name="num_repos">
-        <item quantity="one">%d repo</item>
-        <item quantity="other">%d repo\'s</item>
+        <item quantity="one">%d winkel</item>
+        <item quantity="other">%d winkels</item>
     </plurals>
     <plurals name="migrationListScreen.migrateDialog.migrateTitle">
         <item quantity="one">%1$d item migreren?</item>
@@ -87,5 +87,9 @@
     <plurals name="migrationListScreen.migrateDialog.skipText">
         <item quantity="one">Een item werd overgeslagen</item>
         <item quantity="other">%1$d items werden overgeslagen</item>
+    </plurals>
+    <plurals name="notification_update_error">
+        <item quantity="one">%1$d update mislukt</item>
+        <item quantity="other">%1$d updates mislukt</item>
     </plurals>
 </resources>

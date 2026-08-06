@@ -17,10 +17,10 @@ class GetEnabledSources(
 
     fun subscribe(): Flow<List<Source>> {
         return combine(
-            preferences.pinnedSources().changes(),
-            preferences.enabledLanguages().changes(),
-            preferences.disabledSources().changes(),
-            preferences.lastUsedSource().changes(),
+            preferences.pinnedSources.changes(),
+            preferences.enabledLanguages.changes(),
+            preferences.disabledSources.changes(),
+            preferences.lastUsedSource.changes(),
             repository.getSources(),
         ) { pinnedSourceIds, enabledLanguages, disabledSources, lastUsedSource, sources ->
             sources

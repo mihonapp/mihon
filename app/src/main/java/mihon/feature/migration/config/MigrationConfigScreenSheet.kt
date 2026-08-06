@@ -53,7 +53,7 @@ fun MigrationConfigScreenSheet(
     onStartMigration: (extraSearchQuery: String?) -> Unit,
 ) {
     var extraSearchQuery by rememberSaveable { mutableStateOf("") }
-    val migrationFlags by preferences.migrationFlags().collectAsState()
+    val migrationFlags by preferences.migrationFlags.collectAsState()
     AdaptiveSheet(onDismissRequest = onDismissRequest) {
         Column(modifier = Modifier.fillMaxWidth()) {
             Column(
@@ -86,7 +86,7 @@ fun MigrationConfigScreenSheet(
                             FilterChip(
                                 selected = selected,
                                 onClick = {
-                                    preferences.migrationFlags().getAndSet { currentFlags ->
+                                    preferences.migrationFlags.getAndSet { currentFlags ->
                                         if (flag in currentFlags) {
                                             currentFlags - flag
                                         } else {
@@ -112,7 +112,7 @@ fun MigrationConfigScreenSheet(
                     subtitle = null,
                     checked = removeDownloads,
                     onClick = {
-                        preferences.migrationFlags().getAndSet {
+                        preferences.migrationFlags.getAndSet {
                             if (removeDownloads) {
                                 it - MigrationFlag.REMOVE_DOWNLOAD
                             } else {
@@ -140,24 +140,24 @@ fun MigrationConfigScreenSheet(
                 MigrationSheetSwitchItem(
                     title = stringResource(MR.strings.migrationConfigScreen_hideUnmatchedTitle),
                     subtitle = null,
-                    preference = preferences.migrationHideUnmatched(),
+                    preference = preferences.migrationHideUnmatched,
                 )
                 MigrationSheetSwitchItem(
                     title = stringResource(MR.strings.migrationConfigScreen_hideWithoutUpdatesTitle),
                     subtitle = stringResource(MR.strings.migrationConfigScreen_hideWithoutUpdatesSubtitle),
-                    preference = preferences.migrationHideWithoutUpdates(),
+                    preference = preferences.migrationHideWithoutUpdates,
                 )
                 MigrationSheetDividerItem()
                 MigrationSheetWarningItem(stringResource(MR.strings.migrationConfigScreen_enhancedOptionsWarning))
                 MigrationSheetSwitchItem(
                     title = stringResource(MR.strings.migrationConfigScreen_deepSearchModeTitle),
                     subtitle = stringResource(MR.strings.migrationConfigScreen_deepSearchModeSubtitle),
-                    preference = preferences.migrationDeepSearchMode(),
+                    preference = preferences.migrationDeepSearchMode,
                 )
                 MigrationSheetSwitchItem(
                     title = stringResource(MR.strings.migrationConfigScreen_prioritizeByChaptersTitle),
                     subtitle = stringResource(MR.strings.migrationConfigScreen_prioritizeByChaptersSubtitle),
-                    preference = preferences.migrationPrioritizeByChapters(),
+                    preference = preferences.migrationPrioritizeByChapters,
                 )
             }
             HorizontalDivider()
@@ -201,16 +201,16 @@ private fun MigrationSheetSwitchItem(
     onClick: () -> Unit,
 ) {
     ListItem(
-        headlineContent = { Text(text = title) },
-        supportingContent = subtitle?.let { { Text(text = subtitle) } },
+        modifier = Modifier.clickable(onClick = onClick),
         trailingContent = {
             Switch(
                 checked = checked,
                 onCheckedChange = null,
             )
         },
+        supportingContent = subtitle?.let { { Text(text = subtitle) } },
         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-        modifier = Modifier.clickable(onClick = onClick),
+        content = { Text(text = title) },
     )
 }
 
@@ -231,13 +231,12 @@ private fun MigrationSheetWarningItem(
                 tint = MaterialTheme.colorScheme.active,
             )
         },
-        headlineContent = {
-            Text(
-                text = text,
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier,
-            )
-        },
         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-    )
+    ) {
+        Text(
+            text = text,
+            color = MaterialTheme.colorScheme.error,
+            modifier = Modifier,
+        )
+    }
 }

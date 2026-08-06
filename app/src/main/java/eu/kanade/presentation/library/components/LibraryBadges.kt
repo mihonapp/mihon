@@ -10,7 +10,7 @@ import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import tachiyomi.presentation.core.components.Badge
 
 @Composable
-internal fun DownloadsBadge(count: Long) {
+internal fun DownloadsBadge(count: Int) {
     if (count > 0) {
         Badge(
             text = "$count",
