@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
+import android.view.animation.Interpolator
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
+import eu.kanade.tachiyomi.ui.reader.viewer.ReaderTransitionAnimations
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerConfig
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.navigation.DisabledNavigation
@@ -12,6 +14,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -41,6 +45,12 @@ class WebtoonConfig(
         private set
 
     var doubleTapZoomChangedListener: ((Boolean) -> Unit)? = null
+
+    // Resolved transition for the webtoon viewer; null interpolator keeps the native smooth scroll.
+    var transitionInterpolator: Interpolator? = null
+        private set
+    var transitionDurationMs: Int = 0
+        private set
 
     val theme = readerPreferences.readerTheme.get()
 
@@ -90,6 +100,28 @@ class WebtoonConfig(
                 { doubleTapZoom = it },
                 { doubleTapZoomChangedListener?.invoke(it) },
             )
+
+        // Recompute the resolved interpolator + duration whenever any relevant pref changes. The
+        // master toggle gating happens in WebtoonViewer (it only animates when usePageTransitions).
+        merge(
+            readerPreferences.webtoonPageTransitionAnimation.changes().map {},
+            readerPreferences.webtoonTransitionSmoothDuration.changes().map {},
+            readerPreferences.webtoonTransitionGentleDuration.changes().map {},
+            readerPreferences.webtoonTransitionCustomDuration.changes().map {},
+            readerPreferences.webtoonTransitionCustomCurve.changes().map {},
+        )
+            .onEach {
+                val resolved = ReaderTransitionAnimations.resolve(
+                    animation = readerPreferences.webtoonPageTransitionAnimation.get(),
+                    smoothDurationMs = readerPreferences.webtoonTransitionSmoothDuration.get(),
+                    gentleDurationMs = readerPreferences.webtoonTransitionGentleDuration.get(),
+                    customDurationMs = readerPreferences.webtoonTransitionCustomDuration.get(),
+                    customCurve = readerPreferences.webtoonTransitionCustomCurve.get(),
+                )
+                transitionInterpolator = resolved.interpolator
+                transitionDurationMs = resolved.durationMs
+            }
+            .launchIn(scope)
 
         readerPreferences.readerTheme.changes()
             .drop(1)

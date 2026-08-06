@@ -1,7 +1,9 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences.ReaderTransitionAnimation
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
+import eu.kanade.tachiyomi.ui.reader.viewer.ReaderTransitionAnimations
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerConfig
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.navigation.DisabledNavigation
@@ -12,6 +14,8 @@ import eu.kanade.tachiyomi.ui.reader.viewer.navigation.RightAndLeftNavigation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -106,6 +110,33 @@ class PagerConfig(
                 { dualPageRotateToFitInvert = it },
                 { imagePropertyChangedListener?.invoke() },
             )
+
+        // Reapply the scroller whenever the master toggle, the selected option, any duration, or the
+        // custom curve changes. Recomputed from current values so the relevant prefs stay in sync.
+        merge(
+            readerPreferences.pageTransitions.changes().map {},
+            readerPreferences.pagerPageTransitionAnimation.changes().map {},
+            readerPreferences.pagerTransitionSmoothDuration.changes().map {},
+            readerPreferences.pagerTransitionGentleDuration.changes().map {},
+            readerPreferences.pagerTransitionCustomDuration.changes().map {},
+            readerPreferences.pagerTransitionCustomCurve.changes().map {},
+        )
+            .onEach {
+                val animation = if (readerPreferences.pageTransitions.get()) {
+                    readerPreferences.pagerPageTransitionAnimation.get()
+                } else {
+                    ReaderTransitionAnimation.DEFAULT
+                }
+                val resolved = ReaderTransitionAnimations.resolve(
+                    animation = animation,
+                    smoothDurationMs = readerPreferences.pagerTransitionSmoothDuration.get(),
+                    gentleDurationMs = readerPreferences.pagerTransitionGentleDuration.get(),
+                    customDurationMs = readerPreferences.pagerTransitionCustomDuration.get(),
+                    customCurve = readerPreferences.pagerTransitionCustomCurve.get(),
+                )
+                viewer.pager.setTransitionAnimation(resolved.interpolator, resolved.durationMs)
+            }
+            .launchIn(scope)
     }
 
     private fun zoomTypeFromPreference(value: Int) {
