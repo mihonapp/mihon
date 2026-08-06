@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.more
 import android.content.Context
 import android.content.Intent
 import androidx.compose.runtime.Immutable
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
@@ -17,10 +18,11 @@ import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.storage.saveTo
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import logcat.LogPriority
-import mihon.core.viewmodel.StateViewModel
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.Injekt
@@ -32,7 +34,10 @@ class NewUpdateScreenModel(
     private val downloadLink: String,
     private val context: Context = Injekt.get(),
     private val network: NetworkHelper = Injekt.get(),
-) : StateViewModel<NewUpdateScreenModel.State>(State(changelogInfo = changelogInfo)) {
+) : ViewModel() {
+
+    val state: StateFlow<NewUpdateScreenModel.State>
+        field = MutableStateFlow<NewUpdateScreenModel.State>(State(changelogInfo = changelogInfo))
 
     private val apkFile: File
         get() = File(context.externalCacheDir, "update.apk")
@@ -43,16 +48,16 @@ class NewUpdateScreenModel(
         if (downloadJob?.isActive == true) return
 
         downloadJob = viewModelScope.launch {
-            mutableState.update { it.copy(downloadProgress = 0, stage = Stage.Downloading) }
+            state.update { it.copy(downloadProgress = 0, stage = Stage.Downloading) }
             try {
                 withIOContext { downloadApk() }
-                mutableState.update { it.copy(downloadProgress = 100, stage = Stage.Downloaded) }
+                state.update { it.copy(downloadProgress = 100, stage = Stage.Downloaded) }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 logcat(LogPriority.ERROR, e)
                 apkFile.delete()
-                mutableState.update { it.copy(stage = Stage.Failed) }
+                state.update { it.copy(stage = Stage.Failed) }
             }
         }
     }
@@ -71,7 +76,7 @@ class NewUpdateScreenModel(
                 if (progress > savedProgress && currentTime - 200 > lastTick) {
                     savedProgress = progress
                     lastTick = currentTime
-                    mutableState.update { it.copy(downloadProgress = progress) }
+                    state.update { it.copy(downloadProgress = progress) }
                 }
             }
         }

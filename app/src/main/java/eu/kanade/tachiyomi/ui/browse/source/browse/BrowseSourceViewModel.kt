@@ -6,6 +6,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
@@ -23,7 +24,9 @@ import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.util.removeCovers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.firstOrNull
@@ -31,7 +34,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import mihon.core.viewmodel.StateViewModel
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.mapAsCheckboxState
 import tachiyomi.core.common.util.lang.launchIO
@@ -68,7 +70,10 @@ class BrowseSourceViewModel(
     private val updateManga: UpdateManga = Injekt.get(),
     private val addTracks: AddTracks = Injekt.get(),
     getIncognitoState: GetIncognitoState = Injekt.get(),
-) : StateViewModel<BrowseSourceViewModel.State>(State(Listing.valueOf(listingQuery))) {
+) : ViewModel() {
+
+    val state: StateFlow<BrowseSourceViewModel.State>
+        field = MutableStateFlow<BrowseSourceViewModel.State>(State(Listing.valueOf(listingQuery)))
 
     companion object {
         val SOURCE_ID_KEY = CreationExtras.Key<Long>()
@@ -89,7 +94,7 @@ class BrowseSourceViewModel(
     val source = sourceManager.getOrStub(sourceId)
 
     init {
-        mutableState.update {
+        state.update {
             var query: String? = null
             var listing = it.listing
 
@@ -142,15 +147,15 @@ class BrowseSourceViewModel(
     }
 
     fun resetFilters() {
-        mutableState.update { it.copy(filters = source.getFilterList()) }
+        state.update { it.copy(filters = source.getFilterList()) }
     }
 
     fun setListing(listing: Listing) {
-        mutableState.update { it.copy(listing = listing, toolbarQuery = null) }
+        state.update { it.copy(listing = listing, toolbarQuery = null) }
     }
 
     fun setFilters(filters: FilterList) {
-        mutableState.update {
+        state.update {
             it.copy(
                 filters = filters,
             )
@@ -161,7 +166,7 @@ class BrowseSourceViewModel(
         val input = state.value.listing as? Listing.Search
             ?: Listing.Search(query = null, filters = source.getFilterList())
 
-        mutableState.update {
+        state.update {
             it.copy(
                 listing = input.copy(
                     query = query ?: input.query,
@@ -201,7 +206,7 @@ class BrowseSourceViewModel(
             }
         }
 
-        mutableState.update {
+        state.update {
             val listing = if (genreExists) {
                 Listing.Search(query = null, filters = defaultFilters)
             } else {
@@ -310,11 +315,11 @@ class BrowseSourceViewModel(
     }
 
     fun setDialog(dialog: Dialog?) {
-        mutableState.update { it.copy(dialog = dialog) }
+        state.update { it.copy(dialog = dialog) }
     }
 
     fun setToolbarQuery(query: String?) {
-        mutableState.update { it.copy(toolbarQuery = query) }
+        state.update { it.copy(toolbarQuery = query) }
     }
 
     sealed class Listing(open val query: String?, open val filters: FilterList) {

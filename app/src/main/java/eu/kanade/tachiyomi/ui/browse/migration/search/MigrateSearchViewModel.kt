@@ -8,7 +8,6 @@ import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchItemResult
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchViewModel
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.source.service.SourceManager
@@ -46,7 +45,7 @@ class MigrateSearchViewModel(
     init {
         viewModelScope.launch {
             val manga = getManga.await(mangaId)!!
-            mutableState.update {
+            updateState {
                 it.copy(
                     from = manga,
                     searchQuery = manga.title,

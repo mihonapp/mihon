@@ -8,6 +8,7 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.util.fastAny
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
@@ -41,6 +42,8 @@ import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -50,7 +53,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import logcat.LogPriority
-import mihon.core.viewmodel.StateViewModel
 import mihon.domain.chapter.interactor.FilterChaptersForDownload
 import mihon.domain.source.interactor.UpdateMangaFromRemote
 import tachiyomi.core.common.i18n.stringResource
@@ -116,7 +118,10 @@ class MangaViewModel(
     private val filterChaptersForDownload: FilterChaptersForDownload = Injekt.get(),
     private val updateMangaFromRemote: UpdateMangaFromRemote = Injekt.get(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
-) : StateViewModel<MangaViewModel.State>(State.Loading) {
+) : ViewModel() {
+
+    val state: StateFlow<State>
+        field = MutableStateFlow<State>(State.Loading)
 
     companion object {
         val MANGA_ID_KEY = CreationExtras.Key<Long>()
@@ -168,7 +173,7 @@ class MangaViewModel(
      * Helper function to update the UI state only if it's currently in success state
      */
     private inline fun updateSuccessState(func: (State.Success) -> State.Success) {
-        mutableState.update {
+        state.update {
             when (it) {
                 State.Loading -> it
                 is State.Success -> func(it)
@@ -228,7 +233,7 @@ class MangaViewModel(
             val needRefreshChapter = chapters.isEmpty()
 
             // Show what we have earlier
-            mutableState.update {
+            state.update {
                 State.Success(
                     manga = manga,
                     source = Injekt.get<SourceManager>().getOrStub(manga.source),
