@@ -61,6 +61,7 @@ class DownloadManager(
     // For use by DownloadService only
     fun downloaderStart() = downloader.start()
     fun downloaderStop(reason: String? = null) = downloader.stop(reason)
+    fun downloaderPauseForNetwork(reason: String) = downloader.pauseForNetwork(reason)
 
     val isDownloaderRunning
         get() = DownloadJob.isRunningFlow(context)
