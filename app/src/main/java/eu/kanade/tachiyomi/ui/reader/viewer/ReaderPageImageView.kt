@@ -41,6 +41,7 @@ import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
 import okio.BufferedSource
 import tachiyomi.core.common.util.system.ImageUtil
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerPageHolder
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -102,14 +103,27 @@ open class ReaderPageImageView @JvmOverloads constructor(
     open fun onPageSelected(forward: Boolean) {
         with(pageView as? SubsamplingScaleImageView) {
             if (this == null) return
+            val holder = this@ReaderPageImageView as? PagerPageHolder
+            val panels = holder?.page?.panels
+            val currentPanelIndex = holder?.page?.currentPanelIndex ?: -1
+            val guidedViewEnabled = config?.guidedViewEnabled == true && panels != null && panels.isNotEmpty() && currentPanelIndex != -1
+
             if (isReady) {
-                landscapeZoom(forward)
+                if (guidedViewEnabled) {
+                    zoomToPanel(panels!![currentPanelIndex].rect, duration = 0)
+                } else {
+                    landscapeZoom(forward)
+                }
             } else {
                 setOnImageEventListener(
                     object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
                         override fun onReady() {
                             setupZoom(config)
-                            landscapeZoom(forward)
+                            if (guidedViewEnabled) {
+                                zoomToPanel(panels!![currentPanelIndex].rect, duration = 0)
+                            } else {
+                                landscapeZoom(forward)
+                            }
                             this@ReaderPageImageView.onImageLoaded()
                         }
 
@@ -229,6 +243,50 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 .withInterruptible(true)
                 .start()
         }
+    }
+
+    fun zoomToPanel(rect: RectF, duration: Int = 300) {
+        val view = pageView as? SubsamplingScaleImageView ?: return
+        if (!view.isReady) return
+
+        val sWidth = view.sWidth
+        val sHeight = view.sHeight
+        val viewWidth = view.width
+        val viewHeight = view.height
+
+        // Calculate panel dimensions in source image pixels
+        val panelLeft = rect.left * sWidth
+        val panelTop = rect.top * sHeight
+        val panelWidth = rect.width() * sWidth
+        val panelHeight = rect.height() * sHeight
+
+        // Calculate target scale to fit the panel inside the screen
+        // We add some padding (e.g. 10% padding around the panel)
+        val paddingFactor = 0.90f
+        val scaleX = (viewWidth * paddingFactor) / panelWidth
+        val scaleY = (viewHeight * paddingFactor) / panelHeight
+        val targetScale = minOf(scaleX, scaleY).coerceIn(view.minScale, view.maxScale)
+
+        // Center on the panel's center
+        val centerX = panelLeft + panelWidth / 2f
+        val centerY = panelTop + panelHeight / 2f
+        val center = PointF(centerX, centerY)
+
+        view.animateScaleAndCenter(targetScale, center)!!
+            .withDuration(duration.toLong())
+            .withEasing(SubsamplingScaleImageView.EASE_OUT_QUAD)
+            .withInterruptible(true)
+            .start()
+    }
+
+    fun zoomToFit(duration: Int = 300) {
+        val view = pageView as? SubsamplingScaleImageView ?: return
+        if (!view.isReady) return
+        view.animateScaleAndCenter(view.minScale, view.center)!!
+            .withDuration(duration.toLong())
+            .withEasing(SubsamplingScaleImageView.EASE_OUT_QUAD)
+            .withInterruptible(true)
+            .start()
     }
 
     private fun prepareNonAnimatedImageView() {
@@ -421,6 +479,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
         val cropBorders: Boolean = false,
         val zoomStartPosition: ZoomStartPosition = ZoomStartPosition.CENTER,
         val landscapeZoom: Boolean = false,
+        val guidedViewEnabled: Boolean = false,
     )
 
     enum class ZoomStartPosition {
