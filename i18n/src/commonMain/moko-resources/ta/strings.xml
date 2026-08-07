@@ -769,7 +769,6 @@
     <string name="update_check_open">கிட்அப்பில் திறந்திருக்கும்</string>
     <string name="update_check_eol">இந்த ஆண்ட்ராய்டு பதிப்பு இனி ஆதரிக்கப்படாது</string>
     <string name="update_check_no_new_updates">புதிய புதுப்பிப்புகள் எதுவும் கிடைக்கவில்லை</string>
-    <string name="update_check_notification_download_in_progress">பதிவிறக்கம்…</string>
     <string name="update_check_notification_update_available">புதிய பதிப்பு கிடைக்கிறது!</string>
     <string name="information_no_downloads">பதிவிறக்கங்கள் இல்லை</string>
     <string name="information_no_recent">அண்மைக் கால புதுப்பிப்புகள் இல்லை</string>
@@ -800,7 +799,6 @@
     <string name="channel_complete">முழுமையானது</string>
     <string name="channel_errors">பிழைகள்</string>
     <string name="channel_new_chapters">அத்தியாயம் புதுப்பிப்புகள்</string>
-    <string name="channel_app_updates">பயன்பாட்டு புதுப்பிப்புகள்</string>
     <string name="channel_ext_updates">நீட்டிப்பு புதுப்பிப்புகள்</string>
     <string name="spen_previous_page">முந்தைய பக்கம்</string>
     <string name="spen_next_page">அடுத்த பக்கம்</string>

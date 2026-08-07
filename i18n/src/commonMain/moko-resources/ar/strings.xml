@@ -212,7 +212,6 @@
     <string name="file_select_backup">اختر ملف النسخة الاحتياطية</string>
     <string name="update_check_confirm">تنزيل</string>
     <string name="update_check_no_new_updates">لا تتوفر تحديثات جديدة</string>
-    <string name="update_check_notification_download_in_progress">جار التنزيل…</string>
     <string name="update_check_notification_update_available">نسخة جديدة متوفرة!</string>
     <string name="information_no_downloads">لا توجد تنزيلات</string>
     <string name="information_no_recent">لا توجد تحديثات جديدة</string>
@@ -532,7 +531,6 @@
     <string name="ext_app_info">معلومات التطبيق</string>
     <string name="ext_install_service_notif">جارٍ تثبيت الإضافة …</string>
     <string name="pref_verbose_logging_summary">طباعة السجلات المطولة في سجل النظام (يقلل من أداء التطبيق)</string>
-    <string name="channel_app_updates">تحديثات التطبيق</string>
     <string name="ext_update_all">تحديث الكل</string>
     <string name="update_72hour">كل ثلاثة ايام</string>
     <string name="connected_to_wifi">فقط على شبكة Wi-Fi</string>

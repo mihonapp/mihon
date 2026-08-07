@@ -748,7 +748,6 @@
     <string name="update_check_confirm">ডাউনলোড</string>
     <string name="update_check_eol">এই Android সংস্কৰণ আৰু সমৰ্থিত নহয়</string>
     <string name="update_check_no_new_updates">কোনো নতুন আপডেট উপলব্ধ নহয়</string>
-    <string name="update_check_notification_download_in_progress">ডাউনলোড কৰি আছে…</string>
     <string name="update_check_notification_update_available">নতুন সংস্কৰণ উপলব্ধ!</string>
     <string name="information_no_recent">কোনো সাম্প্ৰতিক আপডেট নাই</string>
     <string name="information_no_recent_manga">শেহতীয়াকৈ একো পঢ়া হোৱা নাই</string>
@@ -776,7 +775,6 @@
     <string name="channel_common">সাধাৰণ</string>
     <string name="channel_progress">অগ্ৰগতি</string>
     <string name="channel_complete">সম্পূৰ্ণ</string>
-    <string name="channel_app_updates">এপ আপডেট</string>
     <string name="channel_ext_updates">এক্সটেনশ্বন আপডেট</string>
     <string name="spen_previous_page">পূৰ্বৰ পৃষ্ঠা</string>
     <string name="appwidget_updates_description">আপোনাৰ শেহতীয়াকৈ আপডেট কৰা পুথিভঁৰাল প্ৰৱিষ্টি চাওক</string>

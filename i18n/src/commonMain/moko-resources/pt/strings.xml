@@ -150,7 +150,6 @@
     <string name="file_select_backup">Selecionar ficheiro de cópia de segurança</string>
     <string name="update_check_confirm">Transferir</string>
     <string name="update_check_no_new_updates">Sem atualizações disponíveis</string>
-    <string name="update_check_notification_download_in_progress">A transferir…</string>
     <string name="update_check_notification_update_available">Nova versão disponível!</string>
     <string name="information_no_downloads">Sem transferências</string>
     <string name="information_no_recent">Sem atualizações recentes</string>
@@ -535,7 +534,6 @@
     <string name="pref_lowest">Mais baixa</string>
     <string name="pref_remove_exclude_categories">Categorias excluídas</string>
     <string name="label_background_activity">Atividade em segundo plano</string>
-    <string name="channel_app_updates">Atualizações da app</string>
     <string name="pref_inverted_colors">Invertido</string>
     <string name="backup_info">Deve manter cópias em outros locais também.</string>
     <string name="pref_tablet_ui_mode">Interface de tablet</string>

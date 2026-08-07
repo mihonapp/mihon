@@ -357,7 +357,6 @@
     <string name="label_data">डेटा</string>
     <string name="cache_delete_error">खाली गर्दा त्रुटि भयो</string>
     <string name="status">स्थिति</string>
-    <string name="update_check_notification_download_in_progress">डाउनलोड गर्दै…</string>
     <string name="download_notifier_unknown_error">अप्रत्याशित त्रुटिका कारण अध्याय डाउनलोड गर्न सकिएन</string>
     <string name="notification_chapters_single">अध्याय %1$s</string>
     <string name="scale_type_original_size">मूल आकार</string>
@@ -545,7 +544,6 @@
     <string name="spen_next_page">अर्को पृष्ठ</string>
     <string name="channel_progress">प्रगति</string>
     <string name="channel_complete">पूरा</string>
-    <string name="channel_app_updates">एप अपडेट्स</string>
     <string name="channel_errors">त्रुटिहरू</string>
     <string name="skipped_reason_not_started">कुनै अध्याय नपढेकाले छोडियो</string>
     <string name="notification_size_warning">ठूला अपडेटले स्रोतहरूलाई हानि पुर्‍याउँछ र यसले ढिलो अपडेट्स निम्त्याउन सक्छ र ब्याट्रीको प्रयोग पनि बढाउँछ। थप जान्न ट्याप गर्नुहोस्।</string>

@@ -506,7 +506,6 @@
     <string name="update_check_confirm">Letöltés</string>
     <string name="update_check_open">Megnyitás GitHub-on</string>
     <string name="update_check_eol">Ez az Android verzió már nem támogatott</string>
-    <string name="channel_app_updates">Alkalmazás frissítések</string>
     <string name="cant_open_last_read_chapter">Nem sikerült megnyitni az utoljára olvasott fejezetet</string>
     <string name="pref_navigate_pan">Széles képek pásztázása</string>
     <string name="save_chapter_as_cbz">Mentés CBZ archívumkén</string>
@@ -524,7 +523,6 @@
     <string name="migration_dialog_what_to_include">Válaszon beletartozó adatokat</string>
     <string name="chapter_settings_updated">Fejezet beállításai frissültek</string>
     <string name="download_notifier_downloader_title">Letöltő</string>
-    <string name="update_check_notification_download_in_progress">Letöltés…</string>
     <string name="source_filter_empty_screen">Nincs telepített forrás</string>
     <string name="migration_help_guide">Forrás imortálási útmutató</string>
     <string name="picture_saved">Kép elmentve</string>

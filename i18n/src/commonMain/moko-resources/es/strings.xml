@@ -145,7 +145,6 @@
     <string name="file_select_backup">Elige una copia de respaldo</string>
     <string name="update_check_confirm">Descargar</string>
     <string name="update_check_no_new_updates">Ya estás usando la última versión disponible</string>
-    <string name="update_check_notification_download_in_progress">Descargando…</string>
     <string name="update_check_notification_update_available">¡Hay una nueva versión!</string>
     <string name="information_no_downloads">No hay descargas</string>
     <string name="information_no_recent">No hay actualizaciones recientes</string>
@@ -539,7 +538,6 @@
     <string name="update_72hour">Cada 3 días</string>
     <string name="download_queue_size_warning">Advertencia: Las descargas grandes pueden llevar a que las fuentes se vuelvan cada vez más lentas y en casos extremos que los servidores limiten o impidan el acceso a %s. Toca aquí para más información.</string>
     <string name="ext_update_all">Actualizar todas</string>
-    <string name="channel_app_updates">Actualizaciones de la aplicación</string>
     <string name="pref_auto_clear_chapter_cache">Limpiar la caché de capítulos al abrir la aplicación</string>
     <string name="database_clean">Base de datos limpia</string>
     <string name="clear_database_source_item_count">%1$d títulos que no pertenecen a la biblioteca en la base de datos</string>
