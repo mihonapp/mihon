@@ -63,6 +63,12 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     private var awaitingIdleViewerChapters: ViewerChapters? = null
 
     /**
+     * The last background color calculated by the [PagerPageHolder].
+     * Used to predict the background color of the next page to minimize flashing.
+     */
+    var lastAutomaticBackground: Int? = null
+
+    /**
      * Whether the view pager is currently in idle mode. It sets the awaiting chapters if setting
      * this field to true.
      */
