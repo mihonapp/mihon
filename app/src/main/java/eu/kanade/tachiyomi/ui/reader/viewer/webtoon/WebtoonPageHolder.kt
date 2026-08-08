@@ -14,6 +14,9 @@ import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
 import eu.kanade.tachiyomi.data.translation.TranslationReaderOverlayLoadAction
 import eu.kanade.tachiyomi.data.translation.TranslationReaderOverlayLoader
+import eu.kanade.tachiyomi.data.translation.TranslationOverlayDisplayTransform
+import eu.kanade.tachiyomi.data.translation.TranslationOverlayDisplayTransformResolver
+import eu.kanade.tachiyomi.data.translation.TranslationOverlayRotation
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
@@ -77,6 +80,7 @@ class WebtoonPageHolder(
 
     private val scope = MainScope()
     private val translationOverlayLoader = TranslationReaderOverlayLoader()
+    private var translationOverlayDisplayTransform = TranslationOverlayDisplayTransform.Identity
 
     /**
      * Job for loading the page.
@@ -96,6 +100,7 @@ class WebtoonPageHolder(
      */
     fun bind(page: ReaderPage) {
         this.page = page
+        translationOverlayDisplayTransform = TranslationOverlayDisplayTransform.Identity
         loadJob?.cancel()
         loadJob = scope.launch { loadPageAndProcessStatus() }
         refreshLayoutParams()
@@ -127,6 +132,7 @@ class WebtoonPageHolder(
         removeErrorLayout()
         frame.recycle()
         frame.clearTranslationOverlay()
+        translationOverlayDisplayTransform = TranslationOverlayDisplayTransform.Identity
         progressIndicator.setProgress(0)
         progressContainer.isVisible = true
     }
@@ -228,28 +234,31 @@ class WebtoonPageHolder(
     }
 
     private fun process(imageSource: BufferedSource): BufferedSource {
-        if (viewer.config.dualPageRotateToFit) {
-            return rotateDualPage(imageSource)
-        }
+        val needsWideImageCheck = viewer.config.dualPageRotateToFit || viewer.config.dualPageSplit
+        val isWideImage = needsWideImageCheck && ImageUtil.isWideImage(imageSource)
+        translationOverlayDisplayTransform = TranslationOverlayDisplayTransformResolver.forWebtoon(
+            isWideImage = isWideImage,
+            rotateToFit = viewer.config.dualPageRotateToFit,
+            rotateToFitInverted = viewer.config.dualPageRotateToFitInvert,
+            splitDoublePage = viewer.config.dualPageSplit,
+            splitDoublePageInverted = viewer.config.dualPageInvert,
+        )
 
-        if (viewer.config.dualPageSplit) {
-            val isDoublePage = ImageUtil.isWideImage(imageSource)
-            if (isDoublePage) {
-                val upperSide = if (viewer.config.dualPageInvert) ImageUtil.Side.LEFT else ImageUtil.Side.RIGHT
-                return ImageUtil.splitAndMerge(imageSource, upperSide)
+        return when (translationOverlayDisplayTransform.rotation) {
+            TranslationOverlayRotation.Clockwise90 -> {
+                ImageUtil.rotateImage(imageSource, 90f)
             }
-        }
-
-        return imageSource
-    }
-
-    private fun rotateDualPage(imageSource: BufferedSource): BufferedSource {
-        val isDoublePage = ImageUtil.isWideImage(imageSource)
-        return if (isDoublePage) {
-            val rotation = if (viewer.config.dualPageRotateToFitInvert) -90f else 90f
-            ImageUtil.rotateImage(imageSource, rotation)
-        } else {
-            imageSource
+            TranslationOverlayRotation.CounterClockwise90 -> {
+                ImageUtil.rotateImage(imageSource, -90f)
+            }
+            TranslationOverlayRotation.None -> {
+                if (translationOverlayDisplayTransform.reflowTopSourceHalf != null) {
+                    val upperSide = if (viewer.config.dualPageInvert) ImageUtil.Side.LEFT else ImageUtil.Side.RIGHT
+                    ImageUtil.splitAndMerge(imageSource, upperSide)
+                } else {
+                    imageSource
+                }
+            }
         }
     }
 
@@ -263,16 +272,21 @@ class WebtoonPageHolder(
     }
 
     private suspend fun setTranslationOverlay(page: ReaderPage?) {
+        val displayTransform = translationOverlayDisplayTransform
         val result = translationOverlayLoader.load(
             overlayVisible = viewer.activity.viewModel.state.value.translationOverlayVisible,
             chapterId = page?.chapter?.chapter?.id,
             pageIndex = page?.index ?: -1,
             refreshSource = "webtoon_visible_page",
+            displayTransform = displayTransform,
         )
         withUIContext {
             if (this@WebtoonPageHolder.page == page) {
                 when (result.decision.action) {
-                    TranslationReaderOverlayLoadAction.Show -> frame.setTranslationOverlay(result.boxes)
+                    TranslationReaderOverlayLoadAction.Show -> frame.setTranslationOverlay(
+                        boxes = result.boxes,
+                        displayTransform = result.displayTransform,
+                    )
                     TranslationReaderOverlayLoadAction.Clear -> frame.clearTranslationOverlay()
                 }
             }

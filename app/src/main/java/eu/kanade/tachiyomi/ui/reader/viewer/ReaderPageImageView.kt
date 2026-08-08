@@ -44,9 +44,13 @@ import com.github.chrisbanes.photoview.PhotoView
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.data.coil.cropBorders
 import eu.kanade.tachiyomi.data.coil.customDecoder
+import eu.kanade.tachiyomi.data.translation.TranslationOverlayDisplayBox
+import eu.kanade.tachiyomi.data.translation.TranslationOverlayDisplayTransform
+import eu.kanade.tachiyomi.data.translation.TranslationOverlayDisplayTransformer
 import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayBoxStyle
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayMappedRect
+import eu.kanade.tachiyomi.data.translation.TranslationOverlayRenderCacheKey
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayRectMapper
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayRenderSkipPolicy
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayTextFitPolicy
@@ -110,6 +114,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
     open fun onImageLoaded() {
         onImageLoaded?.invoke()
         background = pageBackground
+        translationOverlayView?.invalidateOverlayMapping()
     }
 
     @CallSuper
@@ -119,7 +124,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
 
     @CallSuper
     open fun onScaleChanged(newScale: Float) {
-        translationOverlayView?.invalidate()
+        translationOverlayView?.invalidateOverlayMapping()
         onScaleChanged?.invoke(newScale)
     }
 
@@ -207,7 +212,10 @@ open class ReaderPageImageView @JvmOverloads constructor(
         it.isVisible = false
     }
 
-    fun setTranslationOverlay(boxes: List<Translation_boxes>) {
+    fun setTranslationOverlay(
+        boxes: List<Translation_boxes>,
+        displayTransform: TranslationOverlayDisplayTransform = TranslationOverlayDisplayTransform.Identity,
+    ) {
         if (boxes.isEmpty()) {
             clearTranslationOverlay()
             return
@@ -216,7 +224,13 @@ open class ReaderPageImageView @JvmOverloads constructor(
             translationOverlayView = it
             addView(it, MATCH_PARENT, MATCH_PARENT)
         }
-        overlay.boxes = boxes
+        overlay.setBoxes(
+            displayBoxes = TranslationOverlayDisplayTransformer.fromPersisted(
+                boxes = boxes,
+                transform = displayTransform,
+            ),
+            displayTransform = displayTransform,
+        )
         overlay.isVisible = true
         overlay.bringToFront()
         overlay.invalidate()
@@ -224,9 +238,19 @@ open class ReaderPageImageView @JvmOverloads constructor(
 
     fun clearTranslationOverlay() {
         translationOverlayView?.let {
-            it.boxes = emptyList()
+            it.setBoxes(
+                displayBoxes = emptyList(),
+                displayTransform = TranslationOverlayDisplayTransform.Identity,
+            )
             it.isVisible = false
-            it.invalidate()
+            it.invalidateOverlayMapping()
+        }
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        if (w != oldw || h != oldh) {
+            translationOverlayView?.invalidateOverlayMapping()
         }
     }
 
@@ -304,7 +328,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                     }
 
                     override fun onCenterChanged(newCenter: PointF?, origin: Int) {
-                        translationOverlayView?.invalidate()
+                        translationOverlayView?.invalidateOverlayMapping()
                     }
                 },
             )
@@ -489,13 +513,10 @@ open class ReaderPageImageView @JvmOverloads constructor(
         private val pageViewProvider: () -> View?,
     ) : View(context) {
 
-        var boxes: List<Translation_boxes> = emptyList()
-            set(value) {
-                if (field != value) {
-                    textLayoutCache.clear()
-                }
-                field = value
-            }
+        private var displayBoxes: List<TranslationOverlayDisplayBox> = emptyList()
+        private var displayTransform: TranslationOverlayDisplayTransform = TranslationOverlayDisplayTransform.Identity
+        private var mappedRectCacheKey: TranslationOverlayRenderCacheKey? = null
+        private var mappedRectCache: Map<String, RectF?> = emptyMap()
 
         private val density = resources.displayMetrics.density
         private val translationPreferences: TranslationPreferences = Injekt.get()
@@ -538,6 +559,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
         private data class TextLayoutCacheKey(
             val boxId: Long,
             val pageId: Long,
+            val fragmentOrdinal: Int,
             val text: String,
             val width: Int,
             val contentHeight: Int,
@@ -551,13 +573,32 @@ open class ReaderPageImageView @JvmOverloads constructor(
             val textAlign: String?,
         )
 
+        fun setBoxes(
+            displayBoxes: List<TranslationOverlayDisplayBox>,
+            displayTransform: TranslationOverlayDisplayTransform,
+        ) {
+            if (this.displayBoxes != displayBoxes || this.displayTransform != displayTransform) {
+                textLayoutCache.clear()
+            }
+            this.displayBoxes = displayBoxes
+            this.displayTransform = displayTransform
+            invalidateOverlayMapping()
+        }
+
+        fun invalidateOverlayMapping() {
+            mappedRectCacheKey = null
+            mappedRectCache = emptyMap()
+            invalidate()
+        }
+
         override fun onDraw(canvas: Canvas) {
             super.onDraw(canvas)
-            if (boxes.isEmpty()) return
+            if (displayBoxes.isEmpty()) return
 
             val baseStyle = TranslationOverlayBoxStyle.fromPreferences(translationPreferences)
-            boxes.forEach { box ->
-                val rect = box.toViewRect() ?: return@forEach
+            val mappedRects = mappedRects()
+            displayBoxes.forEach { box ->
+                val rect = mappedRects[box.cacheKey()] ?: return@forEach
                 val sizeSkipReason = TranslationOverlayRenderSkipPolicy.reason(
                     hasPageView = true,
                     pageViewReady = true,
@@ -572,14 +613,16 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 }
 
                 val style = TranslationOverlayBoxStyle
-                    .fromJson(box.style_json)
+                    .fromJson(box.styleJson)
                     .mergedWith(baseStyle)
                 val radius = 4f * density
                 fillPaint.color = parseColor(style.fillColor, Color.argb(210, 255, 255, 255))
                 strokePaint.color = parseColor(style.strokeColor, Color.argb(230, 32, 32, 32))
                 canvas.drawRoundRect(rect, radius, radius, fillPaint)
                 canvas.drawRoundRect(rect, radius, radius, strokePaint)
-                drawText(canvas, rect, box, style)
+                if (box.drawTranslatedText) {
+                    drawText(canvas, rect, box, style)
+                }
             }
         }
 
@@ -594,12 +637,15 @@ open class ReaderPageImageView @JvmOverloads constructor(
             logScope?.cancel()
             logScope = null
             textLayoutCache.clear()
+            mappedRectCache = emptyMap()
+            mappedRectCacheKey = null
             super.onDetachedFromWindow()
         }
 
         override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
             if (w != oldw || h != oldh) {
                 textLayoutCache.clear()
+                invalidateOverlayMapping()
             }
             super.onSizeChanged(w, h, oldw, oldh)
         }
@@ -607,10 +653,10 @@ open class ReaderPageImageView @JvmOverloads constructor(
         private fun drawText(
             canvas: Canvas,
             rect: RectF,
-            box: Translation_boxes,
+            box: TranslationOverlayDisplayBox,
             style: TranslationOverlayBoxStyle,
         ) {
-            val text = box.translated_text
+            val text = box.translatedText
             if (text.isBlank()) return
             val padding = ((style.paddingDp ?: 0f).coerceIn(0f, 24f) * density)
                 .coerceAtMost(rect.width() / 5f)
@@ -641,7 +687,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
         }
 
         private fun fittedTextLayout(
-            box: Translation_boxes,
+            box: TranslationOverlayDisplayBox,
             text: String,
             rect: RectF,
             style: TranslationOverlayBoxStyle,
@@ -653,8 +699,9 @@ open class ReaderPageImageView @JvmOverloads constructor(
             val customSizeSp = translationPreferences.overlayTextSizeSp.get()
             val scaledDensity = resources.configuration.fontScale * density
             val cacheKey = TextLayoutCacheKey(
-                boxId = box._id,
-                pageId = box.page_id,
+                boxId = box.sourceBoxId,
+                pageId = box.sourcePageId,
+                fragmentOrdinal = box.fragmentOrdinal,
                 text = text,
                 width = width,
                 contentHeight = contentHeight.roundToInt(),
@@ -876,23 +923,23 @@ open class ReaderPageImageView @JvmOverloads constructor(
             }
         }
 
-        private fun Translation_boxes.toViewRect(): RectF? {
+        private fun mappedRects(): Map<String, RectF?> {
             val view = pageViewProvider()
             if (view == null) {
-                logRenderSkip("missing_page_view")
-                return null
+                displayBoxes.forEach { it.logRenderSkip("missing_page_view") }
+                return emptyMap()
             }
             return when (view) {
-                is SubsamplingScaleImageView -> toSubsamplingRect(view)
-                is AppCompatImageView -> toImageViewRect(view)
+                is SubsamplingScaleImageView -> mappedRectsForSubsamplingView(view)
+                is AppCompatImageView -> mappedRectsForImageView(view)
                 else -> {
-                    logRenderSkip("unsupported_page_view")
-                    null
+                    displayBoxes.forEach { it.logRenderSkip("unsupported_page_view") }
+                    emptyMap()
                 }
             }
         }
 
-        private fun Translation_boxes.toSubsamplingRect(view: SubsamplingScaleImageView): RectF? {
+        private fun mappedRectsForSubsamplingView(view: SubsamplingScaleImageView): Map<String, RectF?> {
             val readinessReason = TranslationOverlayRenderSkipPolicy.reason(
                 hasPageView = true,
                 pageViewReady = view.isReady,
@@ -902,23 +949,26 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 rectHeight = 2f,
             )
             if (readinessReason != null) {
-                logRenderSkip(readinessReason)
-                return null
+                displayBoxes.forEach { it.logRenderSkip(readinessReason) }
+                return emptyMap()
             }
             val imageStart = view.sourceToViewCoord(0f, 0f)
                 ?: run {
-                    logRenderSkip("coordinate_mapping_failed")
-                    return null
+                    displayBoxes.forEach { it.logRenderSkip("coordinate_mapping_failed") }
+                    return emptyMap()
                 }
             val imageEnd = view.sourceToViewCoord(view.sWidth.toFloat(), view.sHeight.toFloat()) ?: run {
-                logRenderSkip("coordinate_mapping_failed")
-                return null
+                displayBoxes.forEach { it.logRenderSkip("coordinate_mapping_failed") }
+                return emptyMap()
             }
             val imageLeft = view.left + minOf(imageStart.x, imageEnd.x)
             val imageTop = view.top + minOf(imageStart.y, imageEnd.y)
             val imageWidth = kotlin.math.abs(imageEnd.x - imageStart.x)
             val imageHeight = kotlin.math.abs(imageEnd.y - imageStart.y)
-            return toMappedRect(
+            val cacheKey = TranslationOverlayRenderCacheKey.create(
+                displayBoxes = displayBoxes,
+                displayTransform = displayTransform,
+                pageViewReady = view.isReady,
                 sourceWidth = view.sWidth,
                 sourceHeight = view.sHeight,
                 imageLeft = imageLeft,
@@ -928,12 +978,28 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 viewWidth = view.width,
                 viewHeight = view.height,
             )
+            if (mappedRectCacheKey == cacheKey) return mappedRectCache
+            return displayBoxes.associate { box ->
+                box.cacheKey() to box.toMappedRect(
+                    sourceWidth = view.sWidth,
+                    sourceHeight = view.sHeight,
+                    imageLeft = imageLeft,
+                    imageTop = imageTop,
+                    imageWidth = imageWidth,
+                    imageHeight = imageHeight,
+                    viewWidth = view.width,
+                    viewHeight = view.height,
+                )
+            }.also {
+                mappedRectCacheKey = cacheKey
+                mappedRectCache = it
+            }
         }
 
-        private fun Translation_boxes.toImageViewRect(view: AppCompatImageView): RectF? {
+        private fun mappedRectsForImageView(view: AppCompatImageView): Map<String, RectF?> {
             val drawable = view.drawable ?: run {
-                logRenderSkip("missing_drawable")
-                return null
+                displayBoxes.forEach { it.logRenderSkip("missing_drawable") }
+                return emptyMap()
             }
             val imageRect = RectF(
                 0f,
@@ -943,7 +1009,10 @@ open class ReaderPageImageView @JvmOverloads constructor(
             )
             view.imageMatrix.mapRect(imageRect)
             imageRect.offset(view.left.toFloat(), view.top.toFloat())
-            return toMappedRect(
+            val cacheKey = TranslationOverlayRenderCacheKey.create(
+                displayBoxes = displayBoxes,
+                displayTransform = displayTransform,
+                pageViewReady = true,
                 sourceWidth = drawable.intrinsicWidth,
                 sourceHeight = drawable.intrinsicHeight,
                 imageLeft = imageRect.left,
@@ -953,9 +1022,25 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 viewWidth = view.width,
                 viewHeight = view.height,
             )
+            if (mappedRectCacheKey == cacheKey) return mappedRectCache
+            return displayBoxes.associate { box ->
+                box.cacheKey() to box.toMappedRect(
+                    sourceWidth = drawable.intrinsicWidth,
+                    sourceHeight = drawable.intrinsicHeight,
+                    imageLeft = imageRect.left,
+                    imageTop = imageRect.top,
+                    imageWidth = imageRect.width(),
+                    imageHeight = imageRect.height(),
+                    viewWidth = view.width,
+                    viewHeight = view.height,
+                )
+            }.also {
+                mappedRectCacheKey = cacheKey
+                mappedRectCache = it
+            }
         }
 
-        private fun Translation_boxes.toMappedRect(
+        private fun TranslationOverlayDisplayBox.toMappedRect(
             sourceWidth: Int,
             sourceHeight: Int,
             imageLeft: Float,
@@ -966,10 +1051,10 @@ open class ReaderPageImageView @JvmOverloads constructor(
             viewHeight: Int,
         ): RectF? {
             val mapped = TranslationOverlayRectMapper.map(
-                x = x.toFloat(),
-                y = y.toFloat(),
-                width = width.toFloat(),
-                height = height.toFloat(),
+                x = displayX,
+                y = displayY,
+                width = displayWidth,
+                height = displayHeight,
                 sourceWidth = sourceWidth,
                 sourceHeight = sourceHeight,
                 imageLeft = imageLeft,
@@ -986,11 +1071,11 @@ open class ReaderPageImageView @JvmOverloads constructor(
             return RectF(mapped.left, mapped.top, mapped.right, mapped.bottom)
         }
 
-        private fun Translation_boxes.logRenderSkip(
+        private fun TranslationOverlayDisplayBox.logRenderSkip(
             reason: String,
             mapping: TranslationOverlayMappedRect? = null,
         ) {
-            val key = "${_id}:$reason"
+            val key = "${sourceBoxId}:${fragmentOrdinal}:$reason"
             if (!loggedRenderSkips.add(key)) return
             if (loggedRenderSkips.size > MAX_RENDER_SKIP_LOG_KEYS) {
                 val iterator = loggedRenderSkips.iterator()
@@ -1004,21 +1089,28 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 withIOContext {
                     translationRepository.insertLog(
                         jobId = null,
-                        pageId = page_id,
+                        pageId = sourcePageId,
                         level = TranslationLogLevel.Debug,
                         tag = "overlay",
                         message = "Skipped rendering translation overlay box",
                         details = buildString {
                             appendLine("action=overlay_render_skip")
                             appendLine("reason=$reason")
-                            appendLine("page_id=$page_id")
-                            appendLine("box_id=$_id")
-                            appendLine("x=$x")
-                            appendLine("y=$y")
-                            appendLine("width=$width")
-                            appendLine("height=$height")
-                            appendLine("text_type=$text_type")
+                            appendLine("page_id=$sourcePageId")
+                            appendLine("box_id=$sourceBoxId")
+                            appendLine("fragment_ordinal=$fragmentOrdinal")
+                            appendLine("fragment_count=$fragmentCount")
+                            appendLine("source_x=$sourceX")
+                            appendLine("source_y=$sourceY")
+                            appendLine("source_width=$sourceWidth")
+                            appendLine("source_height=$sourceHeight")
+                            appendLine("display_x=$displayX")
+                            appendLine("display_y=$displayY")
+                            appendLine("display_width=$displayWidth")
+                            appendLine("display_height=$displayHeight")
+                            appendLine("text_type=$textType")
                             appendLine("orientation=${resources.configuration.orientation}")
+                            appendLine("display_transform=$displayTransform")
                             mapping?.let {
                                 appendLine("source_width=${it.sourceWidth}")
                                 appendLine("source_height=${it.sourceHeight}")
@@ -1041,7 +1133,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
             }
         }
 
-        private fun Translation_boxes.logTextFitTruncated(
+        private fun TranslationOverlayDisplayBox.logTextFitTruncated(
             rect: RectF,
             text: String,
             textSizePx: Float,
@@ -1053,7 +1145,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
             paddingPx: Float,
             rotated: Boolean,
         ) {
-            val key = "text_fit:$_id:${text.length}:$textSizePx:$textScaleX:$lineCount:$ellipsisCount:$rotated"
+            val key = "text_fit:$sourceBoxId:$fragmentOrdinal:${text.length}:$textSizePx:$textScaleX:$lineCount:$ellipsisCount:$rotated"
             if (!loggedRenderSkips.add(key)) return
             if (loggedRenderSkips.size > MAX_RENDER_SKIP_LOG_KEYS) {
                 val iterator = loggedRenderSkips.iterator()
@@ -1073,8 +1165,9 @@ open class ReaderPageImageView @JvmOverloads constructor(
                         message = "Translation overlay text fit truncated",
                         details = buildString {
                             appendLine("action=overlay_text_fit_truncated")
-                            appendLine("page_id=$page_id")
-                            appendLine("box_id=$_id")
+                            appendLine("page_id=$sourcePageId")
+                            appendLine("box_id=$sourceBoxId")
+                            appendLine("fragment_ordinal=$fragmentOrdinal")
                             appendLine("rect_left=${rect.left}")
                             appendLine("rect_top=${rect.top}")
                             appendLine("rect_width=${rect.width()}")
@@ -1089,10 +1182,15 @@ open class ReaderPageImageView @JvmOverloads constructor(
                             appendLine("padding_px=$paddingPx")
                             appendLine("rotated=$rotated")
                             appendLine("orientation=${resources.configuration.orientation}")
+                            appendLine("display_transform=$displayTransform")
                         },
                     )
                 }
             }
+        }
+
+        private fun TranslationOverlayDisplayBox.cacheKey(): String {
+            return "$sourceBoxId:$fragmentOrdinal"
         }
     }
 }

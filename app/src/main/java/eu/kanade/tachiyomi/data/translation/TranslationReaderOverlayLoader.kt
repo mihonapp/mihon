@@ -12,6 +12,7 @@ import uy.kohesive.injekt.api.get
 data class TranslationReaderOverlayLoadResult(
     val decision: TranslationReaderOverlayLoadDecision,
     val boxes: List<Translation_boxes>,
+    val displayTransform: TranslationOverlayDisplayTransform,
 )
 
 class TranslationReaderOverlayLoader(
@@ -23,6 +24,7 @@ class TranslationReaderOverlayLoader(
         chapterId: Long?,
         pageIndex: Int,
         refreshSource: String,
+        displayTransform: TranslationOverlayDisplayTransform = TranslationOverlayDisplayTransform.Identity,
     ): TranslationReaderOverlayLoadResult {
         val targetLanguage = preferences.resolvedTargetLanguage()
         if (!overlayVisible || chapterId == null) {
@@ -37,6 +39,7 @@ class TranslationReaderOverlayLoader(
                     savedBoxCount = 0,
                 ),
                 boxes = emptyList(),
+                displayTransform = displayTransform,
             )
         }
 
@@ -75,6 +78,7 @@ class TranslationReaderOverlayLoader(
                     savedBoxCount = 0,
                 ),
                 boxes = emptyList(),
+                displayTransform = displayTransform,
             )
         }
 
@@ -117,6 +121,7 @@ class TranslationReaderOverlayLoader(
         return TranslationReaderOverlayLoadResult(
             decision = decision,
             boxes = savedPage?.boxes.orEmpty(),
+            displayTransform = displayTransform,
         )
     }
 

@@ -4,6 +4,7 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.maps.shouldContain
 import io.kotest.matchers.maps.shouldNotContainKey
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
 import kotlinx.coroutines.test.runTest
@@ -13,10 +14,12 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import org.junit.jupiter.api.Test
 import tachiyomi.core.common.preference.InMemoryPreferenceStore
+import tachiyomi.data.Translation_boxes
 import tachiyomi.data.Translation_jobs
 import tachiyomi.domain.translation.service.DEFAULT_TRANSLATION_SYSTEM_PROMPT
 import tachiyomi.domain.translation.service.TranslationPreferences
 import java.io.IOException
+import kotlin.math.abs
 
 class TranslationCoreTest {
 
@@ -1198,6 +1201,191 @@ class TranslationCoreTest {
     }
 
     @Test
+    fun `overlay display transform preserves identity boxes and text on single fragment`() {
+        val source = overlaySourceBox(
+            x = 0.1f,
+            y = 0.2f,
+            width = 0.3f,
+            height = 0.4f,
+            translatedText = "Hello there",
+        )
+
+        val display = TranslationOverlayDisplayTransformer.transform(
+            boxes = listOf(source),
+            transform = TranslationOverlayDisplayTransform.Identity,
+        )
+
+        source.x shouldBe 0.1f
+        source.y shouldBe 0.2f
+        display.single().displayX shouldBeCloseTo 0.1f
+        display.single().displayY shouldBeCloseTo 0.2f
+        display.single().displayWidth shouldBeCloseTo 0.3f
+        display.single().displayHeight shouldBeCloseTo 0.4f
+        display.single().drawTranslatedText shouldBe true
+    }
+
+    @Test
+    fun `display transformation never mutates persisted source boxes`() {
+        val persisted = translationBox(
+            x = 0.4,
+            y = 0.2,
+            width = 0.3,
+            height = 0.2,
+        )
+        val original = persisted.copy()
+
+        val display = TranslationOverlayDisplayTransformer.fromPersisted(
+            boxes = listOf(persisted),
+            transform = TranslationOverlayDisplayTransform.reflowed(TranslationOverlaySourceHalf.Right),
+        )
+
+        persisted shouldBe original
+        display.map { it.sourceX } shouldContainExactly listOf(persisted.x.toFloat(), persisted.x.toFloat())
+        display.map { it.displayY } shouldContainExactlyCloseTo listOf(0.6f, 0.1f)
+    }
+
+    @Test
+    fun `overlay display transform rotates boxes clockwise and counter clockwise`() {
+        val source = overlaySourceBox(
+            x = 0.1f,
+            y = 0.2f,
+            width = 0.3f,
+            height = 0.4f,
+        )
+
+        val clockwise = TranslationOverlayDisplayTransformer.transform(
+            boxes = listOf(source),
+            transform = TranslationOverlayDisplayTransform.Clockwise90,
+        ).single()
+        val counterClockwise = TranslationOverlayDisplayTransformer.transform(
+            boxes = listOf(source),
+            transform = TranslationOverlayDisplayTransform.CounterClockwise90,
+        ).single()
+
+        clockwise.displayX shouldBeCloseTo 0.4f
+        clockwise.displayY shouldBeCloseTo 0.1f
+        clockwise.displayWidth shouldBeCloseTo 0.4f
+        clockwise.displayHeight shouldBeCloseTo 0.3f
+        counterClockwise.displayX shouldBeCloseTo 0.2f
+        counterClockwise.displayY shouldBeCloseTo 0.6f
+        counterClockwise.displayWidth shouldBeCloseTo 0.4f
+        counterClockwise.displayHeight shouldBeCloseTo 0.3f
+    }
+
+    @Test
+    fun `overlay display transform reflows both seam orders and splits seam crossing boxes`() {
+        val source = overlaySourceBox(
+            x = 0.4f,
+            y = 0.2f,
+            width = 0.3f,
+            height = 0.2f,
+            translatedText = "Across seam",
+        )
+
+        val leftTop = TranslationOverlayDisplayTransformer.transform(
+            boxes = listOf(source),
+            transform = TranslationOverlayDisplayTransform.reflowed(topSourceHalf = TranslationOverlaySourceHalf.Left),
+        )
+        val rightTop = TranslationOverlayDisplayTransformer.transform(
+            boxes = listOf(source),
+            transform = TranslationOverlayDisplayTransform.reflowed(topSourceHalf = TranslationOverlaySourceHalf.Right),
+        )
+
+        leftTop.map { it.displayX } shouldContainExactlyCloseTo listOf(0.8f, 0f)
+        leftTop.map { it.displayY } shouldContainExactlyCloseTo listOf(0.1f, 0.6f)
+        leftTop.map { it.displayWidth } shouldContainExactlyCloseTo listOf(0.2f, 0.4f)
+        leftTop.map { it.displayHeight } shouldContainExactlyCloseTo listOf(0.1f, 0.1f)
+        leftTop.map { it.drawTranslatedText } shouldContainExactly listOf(false, true)
+
+        rightTop.map { it.displayX } shouldContainExactlyCloseTo listOf(0.8f, 0f)
+        rightTop.map { it.displayY } shouldContainExactlyCloseTo listOf(0.6f, 0.1f)
+        rightTop.map { it.displayWidth } shouldContainExactlyCloseTo listOf(0.2f, 0.4f)
+        rightTop.map { it.displayHeight } shouldContainExactlyCloseTo listOf(0.1f, 0.1f)
+        rightTop.map { it.drawTranslatedText } shouldContainExactly listOf(false, true)
+    }
+
+    @Test
+    fun `overlay display transform clamps rotated fragments into display bounds`() {
+        val source = overlaySourceBox(
+            x = 0.9f,
+            y = 0.8f,
+            width = 0.3f,
+            height = 0.4f,
+        )
+
+        val display = TranslationOverlayDisplayTransformer.transform(
+            boxes = listOf(source),
+            transform = TranslationOverlayDisplayTransform.Clockwise90,
+        ).single()
+
+        display.displayX shouldBeCloseTo 0f
+        display.displayY shouldBeCloseTo 0.9f
+        display.displayWidth shouldBeCloseTo 0.2f
+        display.displayHeight shouldBeCloseTo 0.1f
+    }
+
+    @Test
+    fun `identity transform clamps partial boxes and drops fully off page boxes`() {
+        val partial = TranslationOverlayDisplayTransformer.transform(
+            boxes = listOf(overlaySourceBox(x = -0.1f, y = 0.9f, width = 0.3f, height = 0.3f)),
+            transform = TranslationOverlayDisplayTransform.Identity,
+        ).single()
+        val offPage = TranslationOverlayDisplayTransformer.transform(
+            boxes = listOf(overlaySourceBox(x = 1.1f, y = 0.2f, width = 0.2f, height = 0.2f)),
+            transform = TranslationOverlayDisplayTransform.Identity,
+        )
+
+        partial.displayX shouldBeCloseTo 0f
+        partial.displayY shouldBeCloseTo 0.9f
+        partial.displayWidth shouldBeCloseTo 0.2f
+        partial.displayHeight shouldBeCloseTo 0.1f
+        offPage shouldBe emptyList()
+    }
+
+    @Test
+    fun `webtoon display transform follows wide page rotate and reflow processing`() {
+        TranslationOverlayDisplayTransformResolver.forWebtoon(
+            isWideImage = false,
+            rotateToFit = true,
+            rotateToFitInverted = false,
+            splitDoublePage = true,
+            splitDoublePageInverted = false,
+        ) shouldBe TranslationOverlayDisplayTransform.Identity
+
+        TranslationOverlayDisplayTransformResolver.forWebtoon(
+            isWideImage = true,
+            rotateToFit = true,
+            rotateToFitInverted = false,
+            splitDoublePage = true,
+            splitDoublePageInverted = true,
+        ) shouldBe TranslationOverlayDisplayTransform.Clockwise90
+
+        TranslationOverlayDisplayTransformResolver.forWebtoon(
+            isWideImage = true,
+            rotateToFit = true,
+            rotateToFitInverted = true,
+            splitDoublePage = false,
+            splitDoublePageInverted = false,
+        ) shouldBe TranslationOverlayDisplayTransform.CounterClockwise90
+
+        TranslationOverlayDisplayTransformResolver.forWebtoon(
+            isWideImage = true,
+            rotateToFit = false,
+            rotateToFitInverted = false,
+            splitDoublePage = true,
+            splitDoublePageInverted = false,
+        ) shouldBe TranslationOverlayDisplayTransform.reflowed(TranslationOverlaySourceHalf.Right)
+
+        TranslationOverlayDisplayTransformResolver.forWebtoon(
+            isWideImage = true,
+            rotateToFit = false,
+            rotateToFitInverted = false,
+            splitDoublePage = true,
+            splitDoublePageInverted = true,
+        ) shouldBe TranslationOverlayDisplayTransform.reflowed(TranslationOverlaySourceHalf.Left)
+    }
+
+    @Test
     fun `overlay rect mapper maps normalized boxes into rendered page bounds`() {
         val mapped = TranslationOverlayRectMapper.map(
             x = 0.1f,
@@ -1277,6 +1465,174 @@ class TranslationCoreTest {
         landscape.top shouldBe 210f
         landscape.right shouldBe 546f
         landscape.bottom shouldBe 336f
+    }
+
+    @Test
+    fun `overlay rect mapper follows zoomed and panned image bounds`() {
+        val mapped = TranslationOverlayRectMapper.map(
+            x = 0.2f,
+            y = 0.25f,
+            width = 0.1f,
+            height = 0.15f,
+            sourceWidth = 1000,
+            sourceHeight = 2000,
+            imageLeft = -100f,
+            imageTop = -250f,
+            imageWidth = 1500f,
+            imageHeight = 3000f,
+            viewWidth = 1080,
+            viewHeight = 2200,
+        )
+
+        mapped.skipReason shouldBe null
+        mapped.left shouldBeCloseTo 200f
+        mapped.top shouldBeCloseTo 500f
+        mapped.right shouldBeCloseTo 350f
+        mapped.bottom shouldBeCloseTo 950f
+    }
+
+    @Test
+    fun `overlay render cache key invalidates on readiness resize rotation pan zoom and box changes`() {
+        val boxes = listOf(
+            overlayDisplayBox(
+                displayX = 0.1f,
+                displayY = 0.2f,
+                displayWidth = 0.3f,
+                displayHeight = 0.4f,
+            ),
+        )
+        val base = TranslationOverlayRenderCacheKey.create(
+            displayBoxes = boxes,
+            displayTransform = TranslationOverlayDisplayTransform.Identity,
+            pageViewReady = false,
+            sourceWidth = 1000,
+            sourceHeight = 2000,
+            imageLeft = 10f,
+            imageTop = 20f,
+            imageWidth = 1000f,
+            imageHeight = 2000f,
+            viewWidth = 1080,
+            viewHeight = 2200,
+        )
+
+        base shouldBe TranslationOverlayRenderCacheKey.create(
+            displayBoxes = boxes,
+            displayTransform = TranslationOverlayDisplayTransform.Identity,
+            pageViewReady = false,
+            sourceWidth = 1000,
+            sourceHeight = 2000,
+            imageLeft = 10f,
+            imageTop = 20f,
+            imageWidth = 1000f,
+            imageHeight = 2000f,
+            viewWidth = 1080,
+            viewHeight = 2200,
+        )
+        TranslationOverlayRenderCacheKey.create(
+            displayBoxes = boxes,
+            displayTransform = TranslationOverlayDisplayTransform.Identity,
+            pageViewReady = true,
+            sourceWidth = 1000,
+            sourceHeight = 2000,
+            imageLeft = 10f,
+            imageTop = 20f,
+            imageWidth = 1000f,
+            imageHeight = 2000f,
+            viewWidth = 1080,
+            viewHeight = 2200,
+        ) shouldBe base.copy(pageViewReady = true)
+        TranslationOverlayRenderCacheKey.create(
+            displayBoxes = boxes,
+            displayTransform = TranslationOverlayDisplayTransform.Identity,
+            pageViewReady = false,
+            sourceWidth = 1000,
+            sourceHeight = 2000,
+            imageLeft = 10f,
+            imageTop = 20f,
+            imageWidth = 1000f,
+            imageHeight = 2000f,
+            viewWidth = 2200,
+            viewHeight = 1080,
+        ) shouldBe base.copy(viewWidth = 2200, viewHeight = 1080)
+
+        TranslationOverlayRenderCacheKey.create(
+            displayBoxes = boxes,
+            displayTransform = TranslationOverlayDisplayTransform.Clockwise90,
+            pageViewReady = false,
+            sourceWidth = 1000,
+            sourceHeight = 2000,
+            imageLeft = 10f,
+            imageTop = 20f,
+            imageWidth = 1000f,
+            imageHeight = 2000f,
+            viewWidth = 1080,
+            viewHeight = 2200,
+        ) shouldBe base.copy(displayTransform = TranslationOverlayDisplayTransform.Clockwise90)
+        TranslationOverlayRenderCacheKey.create(
+            displayBoxes = boxes,
+            displayTransform = TranslationOverlayDisplayTransform.Identity,
+            pageViewReady = false,
+            sourceWidth = 1000,
+            sourceHeight = 2000,
+            imageLeft = 30f,
+            imageTop = 60f,
+            imageWidth = 1500f,
+            imageHeight = 3000f,
+            viewWidth = 1080,
+            viewHeight = 2200,
+        ) shouldBe base.copy(
+            imageLeftBits = 30f.toBits(),
+            imageTopBits = 60f.toBits(),
+            imageWidthBits = 1500f.toBits(),
+            imageHeightBits = 3000f.toBits(),
+        )
+        TranslationOverlayRenderCacheKey.create(
+            displayBoxes = boxes + overlayDisplayBox(sourceBoxId = 2),
+            displayTransform = TranslationOverlayDisplayTransform.Identity,
+            pageViewReady = false,
+            sourceWidth = 1000,
+            sourceHeight = 2000,
+            imageLeft = 10f,
+            imageTop = 20f,
+            imageWidth = 1000f,
+            imageHeight = 2000f,
+            viewWidth = 1080,
+            viewHeight = 2200,
+        ).displayBoxesHash shouldBe (boxes + overlayDisplayBox(sourceBoxId = 2)).hashCode()
+    }
+
+    @Test
+    fun `overlay render cache key distinguishes boxes whose hashes collide`() {
+        val first = TranslationOverlayRenderCacheKey.create(
+            displayBoxes = listOf(overlayDisplayBox(sourceBoxId = 1)),
+            displayTransform = TranslationOverlayDisplayTransform.Identity,
+            pageViewReady = true,
+            sourceWidth = 1000,
+            sourceHeight = 2000,
+            imageLeft = 0f,
+            imageTop = 0f,
+            imageWidth = 1000f,
+            imageHeight = 2000f,
+            viewWidth = 1000,
+            viewHeight = 2000,
+        )
+        val collidingId = 1L shl Int.SIZE_BITS
+        val second = TranslationOverlayRenderCacheKey.create(
+            displayBoxes = listOf(overlayDisplayBox(sourceBoxId = collidingId)),
+            displayTransform = TranslationOverlayDisplayTransform.Identity,
+            pageViewReady = true,
+            sourceWidth = 1000,
+            sourceHeight = 2000,
+            imageLeft = 0f,
+            imageTop = 0f,
+            imageWidth = 1000f,
+            imageHeight = 2000f,
+            viewWidth = 1000,
+            viewHeight = 2000,
+        )
+
+        first.displayBoxesHash shouldBe second.displayBoxesHash
+        first shouldNotBe second
     }
 
     @Test
@@ -1817,5 +2173,89 @@ class TranslationCoreTest {
             updated_at = updatedAt,
             error_message = errorMessage,
         )
+    }
+
+    private fun overlaySourceBox(
+        sourceBoxId: Long = 1,
+        sourcePageId: Long = 10,
+        x: Float = 0.1f,
+        y: Float = 0.2f,
+        width: Float = 0.3f,
+        height: Float = 0.4f,
+        translatedText: String = "Translated",
+    ): TranslationOverlaySourceBox {
+        return TranslationOverlaySourceBox(
+            sourceBoxId = sourceBoxId,
+            sourcePageId = sourcePageId,
+            x = x,
+            y = y,
+            width = width,
+            height = height,
+            originalText = "Original",
+            translatedText = translatedText,
+            textType = "dialogue",
+            confidence = 0.99,
+            styleJson = null,
+        )
+    }
+
+    private fun translationBox(
+        x: Double,
+        y: Double,
+        width: Double,
+        height: Double,
+    ): Translation_boxes {
+        return Translation_boxes(
+            _id = 1,
+            page_id = 10,
+            x = x,
+            y = y,
+            width = width,
+            height = height,
+            original_text = "Original",
+            translated_text = "Translated",
+            text_type = "dialogue",
+            confidence = 0.99,
+            style_json = null,
+            sort_order = 0,
+        )
+    }
+
+    private fun overlayDisplayBox(
+        sourceBoxId: Long = 1,
+        sourcePageId: Long = 10,
+        displayX: Float = 0.1f,
+        displayY: Float = 0.2f,
+        displayWidth: Float = 0.3f,
+        displayHeight: Float = 0.4f,
+    ): TranslationOverlayDisplayBox {
+        return TranslationOverlayDisplayBox(
+            sourceBoxId = sourceBoxId,
+            sourcePageId = sourcePageId,
+            sourceX = displayX,
+            sourceY = displayY,
+            sourceWidth = displayWidth,
+            sourceHeight = displayHeight,
+            displayX = displayX,
+            displayY = displayY,
+            displayWidth = displayWidth,
+            displayHeight = displayHeight,
+            originalText = "Original",
+            translatedText = "Translated",
+            textType = "dialogue",
+            confidence = 0.99,
+            styleJson = null,
+        )
+    }
+
+    private infix fun Float.shouldBeCloseTo(expected: Float) {
+        (abs(this - expected) <= 0.0001f) shouldBe true
+    }
+
+    private infix fun List<Float>.shouldContainExactlyCloseTo(expected: List<Float>) {
+        size shouldBe expected.size
+        zip(expected).forEach { (actual, expectedValue) ->
+            actual shouldBeCloseTo expectedValue
+        }
     }
 }
