@@ -57,6 +57,13 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     private var currentPage: Any? = null
 
     /**
+     * Set to the chapter transition a navigation press was stranded on because its destination
+     * chapter hadn't loaded yet (see [onEdgeTransition]); consumed by [setChaptersInternal] once that
+     * chapter loads, so the dropped press is honored. Cleared whenever the reader lands back on a page.
+     */
+    private var pendingChapterCross: ChapterTransition? = null
+
+    /**
      * Viewer chapters to set when the pager enters idle mode. Otherwise, if the view was settling
      * or dragging, there'd be a noticeable and annoying jump.
      */
@@ -175,6 +182,9 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
      */
     private fun onPageChange(position: Int) {
         val page = adapter.items.getOrNull(position)
+        // Back on real content: any stranded-cross intent is moot (a turn away from the transition,
+        // or the successful cross itself).
+        if (page is ReaderPage) pendingChapterCross = null
         if (page != null && currentPage != page) {
             val allowPreload = checkAllowPreload(page as? ReaderPage)
             val forward = when {
@@ -293,6 +303,22 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
         pager.addOnPageChangeListener(pagerListener)
         // Manually call onPageChange to update the UI
         onPageChange(pager.currentItem)
+
+        // A press stranded on a chapter transition whose chapter hadn't loaded yet was remembered;
+        // that chapter has now arrived and the transition is no longer the terminal item, so carry
+        // the reader on across the boundary, honoring the dropped press instead of leaving the
+        // reader parked on the transition needing another press.
+        val position = pager.currentItem
+        val item = adapter.items.getOrNull(position)
+        if (pendingChapterCross != null && item is ChapterTransition &&
+            position != 0 && position != adapter.count - 1
+        ) {
+            pendingChapterCross = null
+            when (item) {
+                is ChapterTransition.Next -> moveToNext()
+                is ChapterTransition.Prev -> moveToPrevious()
+            }
+        }
     }
 
     /**
@@ -337,6 +363,8 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             } else {
                 pager.setCurrentItem(pager.currentItem + 1, config.usePageTransitions)
             }
+        } else {
+            onEdgeTransition()
         }
     }
 
@@ -351,7 +379,27 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             } else {
                 pager.setCurrentItem(pager.currentItem - 1, config.usePageTransitions)
             }
+        } else {
+            onEdgeTransition()
         }
+    }
+
+    /**
+     * A navigation press (key or tap) landed on the terminal pager item and can't scroll further. If
+     * that item is a chapter transition whose destination chapter simply hasn't loaded yet (the
+     * boundary was reached faster than the preload completed), the press would otherwise be silently
+     * dropped and the reader appears stuck on the transition, needing an extra press to cross once the
+     * chapter arrives. This is symmetric at either end (a forward [ChapterTransition.Next] or a
+     * backward [ChapterTransition.Prev]). Instead, make sure the load is running and remember the
+     * intent; [setChaptersInternal] carries the reader across the boundary as soon as the chapter
+     * lands, so the press isn't lost. A transition with no destination (the first or last chapter) is
+     * a genuine content edge and stays a no-op.
+     */
+    private fun onEdgeTransition() {
+        val transition = adapter.items.getOrNull(pager.currentItem) as? ChapterTransition ?: return
+        val to = transition.to ?: return
+        pendingChapterCross = transition
+        activity.requestPreloadChapter(to)
     }
 
     /**
