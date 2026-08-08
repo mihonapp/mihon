@@ -54,7 +54,10 @@ import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.export.LibraryExporter
 import eu.kanade.tachiyomi.data.export.LibraryExporter.ExportOptions
+import eu.kanade.tachiyomi.data.sync.SyncJob
+import eu.kanade.tachiyomi.data.sync.service.GoogleDriveAuthenticator
 import eu.kanade.tachiyomi.util.system.DeviceUtil
+import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -69,6 +72,7 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.storage.service.StoragePreferences
+import tachiyomi.domain.sync.service.SyncPreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.TextButton
 import tachiyomi.presentation.core.i18n.stringResource
@@ -80,6 +84,7 @@ object SettingsDataScreen : SearchableSettings {
 
     val restorePreferenceKeyString = MR.strings.label_backup
     const val HELP_URL = "https://mihon.app/docs/faq/storage"
+    const val SYNC_SETUP_URL = "https://github.com/nkoziel/mihon/blob/main/docs/google-drive-sync.md"
 
     @ReadOnlyComposable
     @Composable
@@ -100,12 +105,14 @@ object SettingsDataScreen : SearchableSettings {
     override fun getPreferences(): List<Preference> {
         val backupPreferences = Injekt.get<BackupPreferences>()
         val storagePreferences = Injekt.get<StoragePreferences>()
+        val syncPreferences = Injekt.get<SyncPreferences>()
 
         return listOf(
             getStorageLocationPref(storagePreferences = storagePreferences),
             Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.pref_storage_location_info)),
 
             getBackupAndRestoreGroup(backupPreferences = backupPreferences),
+            getSyncGroup(syncPreferences = syncPreferences),
             getDataGroup(),
             getExportGroup(),
         )
@@ -270,6 +277,108 @@ object SettingsDataScreen : SearchableSettings {
                 Preference.PreferenceItem.InfoPreference(
                     stringResource(MR.strings.backup_info) + "\n\n" +
                         stringResource(MR.strings.last_auto_backup_info, relativeTimeSpanString(lastAutoBackup)),
+                ),
+            ),
+        )
+    }
+
+    @Composable
+    private fun getSyncGroup(syncPreferences: SyncPreferences): Preference.PreferenceGroup {
+        val context = LocalContext.current
+        val scope = rememberCoroutineScope()
+
+        val lastSync by syncPreferences.lastSyncTimestamp.collectAsState()
+        val refreshToken by syncPreferences.googleDriveRefreshToken.collectAsState()
+        val clientId by syncPreferences.googleDriveClientId.collectAsState()
+        val clientSecret by syncPreferences.googleDriveClientSecret.collectAsState()
+
+        val loggedIn = refreshToken.isNotBlank()
+        val hasCredentials = clientId.isNotBlank() && clientSecret.isNotBlank()
+
+        val accountPref = if (loggedIn) {
+            Preference.PreferenceItem.TextPreference(
+                title = stringResource(MR.strings.pref_sync_google_drive_logout),
+                onClick = {
+                    syncPreferences.logoutGoogleDrive()
+                    SyncJob.setupTask(context, 0)
+                },
+            )
+        } else {
+            Preference.PreferenceItem.TextPreference(
+                title = stringResource(MR.strings.pref_sync_google_drive_login),
+                subtitle = stringResource(MR.strings.pref_sync_google_drive_login_summary),
+                enabled = hasCredentials,
+                onClick = {
+                    scope.launch {
+                        try {
+                            GoogleDriveAuthenticator(context).signIn()
+                            withUIContext { context.toast(MR.strings.sync_login_success) }
+                        } catch (e: Exception) {
+                            logcat(LogPriority.ERROR, e)
+                            withUIContext { context.toast(MR.strings.sync_login_failed) }
+                        }
+                    }
+                },
+            )
+        }
+
+        return Preference.PreferenceGroup(
+            title = stringResource(MR.strings.pref_sync),
+            preferenceItems = listOf(
+                Preference.PreferenceItem.EditTextPreference(
+                    preference = syncPreferences.googleDriveClientId,
+                    title = stringResource(MR.strings.pref_sync_client_id),
+                    subtitle = clientId.ifBlank { stringResource(MR.strings.pref_sync_credential_unset) },
+                    enabled = !loggedIn,
+                ),
+                Preference.PreferenceItem.EditTextPreference(
+                    preference = syncPreferences.googleDriveClientSecret,
+                    title = stringResource(MR.strings.pref_sync_client_secret),
+                    subtitle = if (clientSecret.isBlank()) {
+                        stringResource(MR.strings.pref_sync_credential_unset)
+                    } else {
+                        stringResource(MR.strings.pref_sync_credential_set)
+                    },
+                    enabled = !loggedIn,
+                ),
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.pref_sync_setup_guide),
+                    subtitle = stringResource(MR.strings.pref_sync_setup_guide_summary),
+                    onClick = { context.openInBrowser(SYNC_SETUP_URL) },
+                ),
+                accountPref,
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.pref_sync_now),
+                    enabled = loggedIn,
+                    onClick = {
+                        if (SyncJob.isRunning(context)) {
+                            context.toast(MR.strings.sync_in_progress)
+                        } else {
+                            SyncJob.startNow(context)
+                            context.toast(MR.strings.sync_started)
+                        }
+                    },
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    preference = syncPreferences.syncInterval,
+                    entries = mapOf(
+                        0 to stringResource(MR.strings.off),
+                        6 to stringResource(MR.strings.update_6hour),
+                        12 to stringResource(MR.strings.update_12hour),
+                        24 to stringResource(MR.strings.update_24hour),
+                        48 to stringResource(MR.strings.update_48hour),
+                        168 to stringResource(MR.strings.update_weekly),
+                    ),
+                    title = stringResource(MR.strings.pref_sync_interval),
+                    enabled = loggedIn,
+                    onValueChanged = {
+                        SyncJob.setupTask(context, it)
+                        true
+                    },
+                ),
+                Preference.PreferenceItem.InfoPreference(
+                    stringResource(MR.strings.sync_info) + "\n\n" +
+                        stringResource(MR.strings.last_sync_info, relativeTimeSpanString(lastSync)),
                 ),
             ),
         )

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Mihon</string>
+    <string name="app_name" translatable="false">Mihon Sync</string>
 
     <!-- Generic strings -->
     <string name="on">On</string>
@@ -584,6 +584,27 @@
     <string name="restoring_backup_canceled">Canceled restore</string>
     <string name="backup_info">You should keep copies of backups in other places as well. Backups may contain sensitive data including any stored passwords; be careful if sharing.</string>
     <string name="last_auto_backup_info">Last automatically backed up: %s</string>
+
+    <!-- Cross-device sync -->
+    <string name="pref_sync">Sync</string>
+    <string name="pref_sync_client_id">OAuth client ID</string>
+    <string name="pref_sync_client_secret">OAuth client secret</string>
+    <string name="pref_sync_credential_unset">Not set</string>
+    <string name="pref_sync_credential_set">Set</string>
+    <string name="pref_sync_setup_guide">How to get these</string>
+    <string name="pref_sync_setup_guide_summary">Create a "Desktop app" OAuth client in the Google Cloud console. One client works on all your devices.</string>
+    <string name="pref_sync_google_drive_login">Connect Google Drive</string>
+    <string name="pref_sync_google_drive_login_summary">Opens the Google consent screen in your browser</string>
+    <string name="pref_sync_google_drive_logout">Disconnect Google Drive</string>
+    <string name="pref_sync_now">Sync now</string>
+    <string name="pref_sync_interval">Automatic sync frequency</string>
+    <string name="sync_info">Merges your library, categories, reading progress, history and tracking with your other devices through a private folder in your Google Drive. App and source settings stay on this device.</string>
+    <string name="last_sync_info">Last synced: %s</string>
+    <string name="sync_login_success">Connected to Google Drive</string>
+    <string name="sync_login_failed">Could not connect to Google Drive</string>
+    <string name="sync_in_progress">Sync is already in progress</string>
+    <string name="sync_started">Sync started</string>
+
     <string name="label_data">Data</string>
     <string name="pref_storage_usage">Storage usage</string>
     <string name="available_disk_space_info">Available: %1$s / Total: %2$s</string>

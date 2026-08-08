@@ -30,7 +30,8 @@ android {
     namespace = "eu.kanade.tachiyomi"
 
     defaultConfig {
-        applicationId = "app.mihon"
+        // Distinct from upstream Mihon so both apps can be installed side by side
+        applicationId = "app.mihon.sync"
 
         versionCode = 29
         versionName = "0.20.4"

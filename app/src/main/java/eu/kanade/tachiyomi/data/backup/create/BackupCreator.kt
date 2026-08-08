@@ -77,17 +77,7 @@ class BackupCreator(
                 throw IllegalStateException(context.stringResource(MR.strings.create_backup_file_error))
             }
 
-            val nonFavoriteManga = if (options.readEntries) mangaRepository.getReadMangaNotInLibrary() else emptyList()
-            val backupManga = backupMangas(getFavorites.await() + nonFavoriteManga, options)
-
-            val backup = Backup(
-                backupManga = backupManga,
-                backupCategories = backupCategories(options),
-                backupSources = backupSources(backupManga),
-                backupPreferences = backupAppPreferences(options),
-                backupExtensionStores = backupExtensionStores(options),
-                backupSourcePreferences = backupSourcePreferences(options),
-            )
+            val backup = createBackup(options)
 
             val byteArray = parser.encodeToByteArray(Backup.serializer(), backup)
             if (byteArray.isEmpty()) {
@@ -117,6 +107,24 @@ class BackupCreator(
             file?.delete()
             throw e
         }
+    }
+
+    /**
+     * Builds an in-memory snapshot of the library. Used by [backup] and by sync, which needs the
+     * model rather than a file so it can be merged with a remote snapshot.
+     */
+    suspend fun createBackup(options: BackupOptions): Backup {
+        val nonFavoriteManga = if (options.readEntries) mangaRepository.getReadMangaNotInLibrary() else emptyList()
+        val backupManga = backupMangas(getFavorites.await() + nonFavoriteManga, options)
+
+        return Backup(
+            backupManga = backupManga,
+            backupCategories = backupCategories(options),
+            backupSources = backupSources(backupManga),
+            backupPreferences = backupAppPreferences(options),
+            backupExtensionStores = backupExtensionStores(options),
+            backupSourcePreferences = backupSourcePreferences(options),
+        )
     }
 
     private suspend fun backupCategories(options: BackupOptions): List<BackupCategory> {
