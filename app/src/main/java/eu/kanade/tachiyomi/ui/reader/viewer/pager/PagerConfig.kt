@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
+import android.graphics.Color
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerConfig
@@ -46,6 +47,18 @@ class PagerConfig(
         private set
 
     var landscapeZoom = false
+        private set
+
+    // Image margins
+    var pagerMarginTop = 0
+        private set
+    var pagerMarginBottom = 0
+        private set
+    var pagerMarginLeft = 0
+        private set
+    var pagerMarginRight = 0
+        private set
+    var pagerMarginColorIndex = 0
         private set
 
     init {
@@ -106,6 +119,18 @@ class PagerConfig(
                 { dualPageRotateToFitInvert = it },
                 { imagePropertyChangedListener?.invoke() },
             )
+
+        // Image margin preferences
+        readerPreferences.pagerMarginTop
+            .register({ pagerMarginTop = it }, { imagePropertyChangedListener?.invoke() })
+        readerPreferences.pagerMarginBottom
+            .register({ pagerMarginBottom = it }, { imagePropertyChangedListener?.invoke() })
+        readerPreferences.pagerMarginLeft
+            .register({ pagerMarginLeft = it }, { imagePropertyChangedListener?.invoke() })
+        readerPreferences.pagerMarginRight
+            .register({ pagerMarginRight = it }, { imagePropertyChangedListener?.invoke() })
+        readerPreferences.pagerMarginColor
+            .register({ pagerMarginColorIndex = it }, { imagePropertyChangedListener?.invoke() })
     }
 
     private fun zoomTypeFromPreference(value: Int) {
@@ -148,5 +173,24 @@ class PagerConfig(
             else -> defaultNavigation()
         }
         navigationModeChangedListener?.invoke()
+    }
+
+    fun pageCanvasColor(): Int {
+        return when (theme) {
+            0 -> Color.WHITE
+            1 -> Color.BLACK
+            2 -> Color.GRAY
+            else -> Color.WHITE
+        }
+    }
+
+    fun pagerMarginColor(marginColorIndex: Int): Int {
+        return when (marginColorIndex) {
+            0 -> pageCanvasColor() // Background color
+            1 -> Color.WHITE // White
+            2 -> Color.BLACK // Black
+            3 -> Color.TRANSPARENT // Transparent
+            else -> pageCanvasColor() // Default to background color
+        }
     }
 }

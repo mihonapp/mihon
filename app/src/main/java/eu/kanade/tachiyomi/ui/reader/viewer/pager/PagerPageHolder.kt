@@ -153,12 +153,13 @@ class PagerPageHolder(
             val (source, isAnimated, background) = withIOContext {
                 val source = streamFn().use { process(item, Buffer().readFrom(it)) }
                 val isAnimated = ImageUtil.isAnimatedAndSupported(source)
+                val itemSourceMargins = if (!isAnimated) applyMargins(source) else source
                 val background = if (!isAnimated && viewer.config.automaticBackground) {
-                    ImageUtil.chooseBackground(context, source.peek().inputStream())
+                    ImageUtil.chooseBackground(context, itemSourceMargins.peek().inputStream())
                 } else {
                     null
                 }
-                Triple(source, isAnimated, background)
+                Triple(itemSourceMargins, isAnimated, background)
             }
             withUIContext {
                 setImage(
@@ -240,6 +241,24 @@ class PagerPageHolder(
     private fun onPageSplit(page: ReaderPage) {
         val newPage = InsertPage(page)
         viewer.onPageSplit(page, newPage)
+    }
+
+    private fun applyMargins(imageSource: BufferedSource): BufferedSource {
+        val config = viewer.config
+        if (config.pagerMarginTop == 0 && config.pagerMarginBottom == 0 &&
+            config.pagerMarginLeft == 0 && config.pagerMarginRight == 0
+        ) {
+            return imageSource
+        }
+
+        return ImageUtil.addImageMargins(
+            imageSource = imageSource,
+            marginTop = config.pagerMarginTop,
+            marginBottom = config.pagerMarginBottom,
+            marginLeft = config.pagerMarginLeft,
+            marginRight = config.pagerMarginRight,
+            marginColor = config.pagerMarginColor(config.pagerMarginColorIndex),
+        )
     }
 
     /**
