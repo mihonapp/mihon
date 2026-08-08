@@ -23,6 +23,9 @@ class DownloadHolder(private val view: View, val adapter: DownloadAdapter) :
     init {
         setDragHandleView(binding.reorder)
         binding.menu.setOnClickListener { it.post { showPopupMenu(it) } }
+        binding.container.setOnClickListener {
+            adapter.downloadItemListener.onItemClick(bindingAdapterPosition)
+        }
     }
 
     private lateinit var download: Download

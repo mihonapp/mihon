@@ -9,7 +9,9 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.databinding.DownloadListBinding
 import eu.kanade.tachiyomi.source.model.Page
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,6 +20,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -31,6 +34,9 @@ class DownloadQueueViewModel(
 
     private val _state = MutableStateFlow(emptyList<DownloadHeaderItem>())
     val state = _state.asStateFlow()
+
+    private val _events: Channel<Event> = Channel(Channel.UNLIMITED)
+    val events: Flow<Event> = _events.receiveAsFlow()
 
     lateinit var controllerBinding: DownloadListBinding
 
@@ -58,6 +64,16 @@ class DownloadQueueViewModel(
                 }
             }
             reorder(downloads)
+        }
+
+        /**
+         * Called when a download is tapped.
+         *
+         * @param position The position of the item
+         */
+        override fun onItemClick(position: Int) {
+            val item = adapter?.getItem(position) as? DownloadItem ?: return
+            viewModelScope.launch { _events.send(Event.OpenManga(item.download.manga.id)) }
         }
 
         /**
@@ -266,5 +282,9 @@ class DownloadQueueViewModel(
      */
     private fun getHolder(download: Download): DownloadHolder? {
         return controllerBinding.root.findViewHolderForItemId(download.chapter.id) as? DownloadHolder
+    }
+
+    sealed interface Event {
+        data class OpenManga(val mangaId: Long) : Event
     }
 }

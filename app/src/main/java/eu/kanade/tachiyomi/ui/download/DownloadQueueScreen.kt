@@ -19,6 +19,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -51,6 +52,8 @@ import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.components.NestedMenuItem
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.databinding.DownloadListBinding
+import eu.kanade.tachiyomi.ui.manga.MangaScreen
+import kotlinx.coroutines.flow.collectLatest
 import tachiyomi.core.common.util.lang.launchUI
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.Pill
@@ -69,6 +72,14 @@ object DownloadQueueScreen : Screen() {
         val downloadList by viewModel.state.collectAsState()
         val downloadCount by remember {
             derivedStateOf { downloadList.sumOf { it.subItems.size } }
+        }
+
+        LaunchedEffect(Unit) {
+            viewModel.events.collectLatest { event ->
+                when (event) {
+                    is DownloadQueueViewModel.Event.OpenManga -> navigator.push(MangaScreen(event.mangaId))
+                }
+            }
         }
 
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
