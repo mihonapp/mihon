@@ -2,9 +2,9 @@ package eu.kanade.tachiyomi.ui.browse.source
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -20,7 +20,7 @@ class SourcesFilterScreen : Screen() {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val viewModel = viewModel<SourcesFilterViewModel>()
-        val state by viewModel.state.collectAsState()
+        val state by viewModel.state.collectAsStateWithLifecycle()
 
         if (state is SourcesFilterViewModel.State.Loading) {
             LoadingScreen()
