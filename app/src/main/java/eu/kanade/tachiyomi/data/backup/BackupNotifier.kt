@@ -87,6 +87,38 @@ class BackupNotifier(private val context: Context) {
         }
     }
 
+    // Existing method retained for backward compatibility
+    fun restoreProgressNotification(
+        content: String = "",
+        progress: Int = 0,
+        maxAmount: Int = 100,
+        sync: Boolean = false,
+    ): NotificationCompat.Builder {
+        return with(progressNotificationBuilder) {
+            val contentTitle = if (sync) {
+                context.stringResource(MR.strings.syncing_library)
+            } else {
+                context.stringResource(MR.strings.restoring_backup)
+            }
+            setContentTitle(contentTitle)
+
+            if (!preferences.hideNotificationContent.get()) {
+                setContentText(content)
+            }
+
+            setProgress(maxAmount, progress, false)
+            setOnlyAlertOnce(true)
+
+            clearActions()
+            addAction(
+                R.drawable.ic_close_24dp,
+                context.stringResource(MR.strings.action_cancel),
+                NotificationReceiver.cancelRestorePendingBroadcast(context, Notifications.ID_RESTORE_PROGRESS),
+            )
+        }
+    }
+
+    // New method introduced in upstream to show restore progress notification directly
     fun showRestoreProgress(
         content: String = "",
         progress: Int = 0,
@@ -115,9 +147,7 @@ class BackupNotifier(private val context: Context) {
                 NotificationReceiver.cancelRestorePendingBroadcast(context, Notifications.ID_RESTORE_PROGRESS),
             )
         }
-
         builder.show(Notifications.ID_RESTORE_PROGRESS)
-
         return builder
     }
 
