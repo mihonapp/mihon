@@ -213,7 +213,6 @@
     <string name="file_select_backup">ব্যাকআপ ফাইল নির্বাচন করুন</string>
     <string name="update_check_confirm">ডাউনলোড</string>
     <string name="update_check_no_new_updates">নতুন কোন হালনাগাদ নেই</string>
-    <string name="update_check_notification_download_in_progress">ডাউনলোড হচ্ছে…</string>
     <string name="update_check_notification_update_available">নতুন সংস্করণ উপলভ্য!</string>
     <string name="information_no_downloads">ডাউনলোড নেই</string>
     <string name="information_no_recent">কোন নতুন হালনাগাদ নেই</string>
@@ -523,7 +522,6 @@
     <string name="ext_update_all">শব উপদাতে কর</string>
     <string name="backup_info">স্বয়ংক্রিয় ব্যাকআপ অত্যন্ত সুপারিশময়. আপনি অন্যান্য জায়গায়ও কপি রাখা উচিত।</string>
     <string name="getting_started_guide">শুরু হওয়ার গাইড</string>
-    <string name="channel_app_updates">অ্যাপ আপডেট</string>
     <string name="ext_installer_pref">ইন্সটলআর</string>
     <string name="ext_installer_legacy">লেগাছি</string>
     <string name="ext_installer_shizuku_stopped">শিজুকু চলছে না</string>

@@ -207,7 +207,6 @@
     <string name="channel_progress">Progreso</string>
     <string name="download_notifier_title_error">Eraro</string>
     <string name="update_check_notification_update_available">Nova versio disponebla!</string>
-    <string name="update_check_notification_download_in_progress">Elŝutado…</string>
     <string name="update_check_no_new_updates">Sen novaj ĝisdatigoj disponeblaj</string>
     <string name="update_check_confirm">Elŝuti</string>
     <string name="file_select_backup">Elekti savkopian dosieron</string>
@@ -826,7 +825,6 @@
     <string name="download_notifier_no_network">Neniu retkonekto disponebla</string>
     <string name="download_notifier_split_page_not_found">Paĝo %d netrovita dum dividado</string>
     <string name="download_notifier_cache_renewal">Kontrolado de elŝutoj</string>
-    <string name="channel_app_updates">Apaj ĝisdatigoj</string>
     <string name="appwidget_updates_description">Vidi vian laste ĝisdatigitaj elementoj</string>
     <string name="appwidget_unavailable_locked">Fenestraĵo nedisponebla kiam apa ŝloso estas ŝaltita</string>
     <string name="remove_manga">Vi forigos \"%s\" el via biblioteko</string>

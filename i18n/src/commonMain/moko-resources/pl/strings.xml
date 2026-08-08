@@ -84,7 +84,6 @@
     <string name="file_select_cover">Wybierz okładkę</string>
     <string name="update_check_confirm">Pobierz</string>
     <string name="update_check_no_new_updates">Brak nowych aktualizacji</string>
-    <string name="update_check_notification_download_in_progress">Pobieranie…</string>
     <string name="update_check_notification_update_available">Dostępna nowa wersja!</string>
     <string name="information_empty_library">Twoja biblioteka jest pusta</string>
     <string name="download_notifier_title_error">Błąd</string>
@@ -543,7 +542,6 @@
     <string name="connected_to_wifi">Tylko przez Wi-Fi</string>
     <string name="enhanced_tracking_info">Usługi dostarczania ulepszonych funkcji dla niektórych źródeł. Mangi po dodaniu do biblioteki są automatycznie śledzone.</string>
     <string name="enhanced_services">Ulepszone usługi śledzenia</string>
-    <string name="channel_app_updates">Aktualizacje aplikacji</string>
     <string name="ext_update_all">Zaktualizuj wszystko</string>
     <string name="ext_installer_legacy">Przestarzały</string>
     <string name="pref_auto_clear_chapter_cache">Wyczyść cache rozdziałów przy uruchamianiu aplikacji</string>

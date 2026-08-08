@@ -219,7 +219,6 @@
     <string name="pref_skip_filtered_chapters">Preskoči filtrirana poglavlja</string>
     <string name="pref_skip_read_chapters">Preskoči pročitana poglavlja</string>
     <string name="update_check_notification_update_available">Dostupna je nova verzija!</string>
-    <string name="update_check_notification_download_in_progress">Preuzimanje …</string>
     <string name="update_check_no_new_updates">Nema novih verzija</string>
     <string name="update_check_confirm">Preuzmi</string>
     <string name="file_select_backup">Odaberi datoteku sigurnosne kopije</string>
@@ -534,7 +533,6 @@
     <string name="label_background_activity">Aktivnost u pozadini</string>
     <string name="pref_hide_threshold">Osjetljivost za skrivanje izbornika pri listanju</string>
     <string name="pref_auto_clear_chapter_cache">Izbriši predmemoriju poglavlja tijekom pokretanja aplikacije</string>
-    <string name="channel_app_updates">Aktualiziranja aplikacije</string>
     <string name="database_clean">Nema se što raščistiti</string>
     <string name="pref_update_only_completely_read">Preskoči unose s nepročitanim poglavljima</string>
     <string name="enhanced_services">Poboljšane usluge praćenja</string>

@@ -382,7 +382,6 @@
     <string name="migrate">स्थानान्तरगमनम्</string>
     <string name="copy">प्रतिलेखं करोतु</string>
     <string name="update_check_confirm">अवतारयतु</string>
-    <string name="update_check_notification_download_in_progress">अवारोपयामि…</string>
     <string name="local_source_help_guide">स्थानीयमूलमार्गदर्शनम्</string>
     <string name="action_global_search_hint">सार्वत्रिकान्वेषणम्…</string>
     <string name="chapter_not_found">अध्यायः न लभ्यः</string>
@@ -456,7 +455,6 @@
     <string name="notification_chapters_multiple">अध्यायाः %1$s</string>
     <string name="channel_complete">पूर्णम्</string>
     <string name="channel_new_chapters">अध्यायनवीकरणानि</string>
-    <string name="channel_app_updates">अनुप्रयोगनवीकरणानि</string>
     <string name="channel_ext_updates">विस्तारनवीकरणानि</string>
     <string name="pref_dns_over_https">HTTPS उपरि DNS (DoH)</string>
     <string name="getting_started_guide">प्रारम्भिकमार्गदर्शनम्</string>
