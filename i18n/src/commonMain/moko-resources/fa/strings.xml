@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="update_check_notification_update_available">نسخه جدید موجود است!</string>
-    <string name="update_check_notification_download_error">خطا در دانلود</string>
-    <string name="update_check_notification_download_complete">دانلود کامل شد</string>
     <string name="update_check_notification_download_in_progress">در حال دانلود…</string>
     <string name="update_check_no_new_updates">آپدیت جدیدی موجود نیست</string>
     <string name="update_check_confirm">دانلود</string>

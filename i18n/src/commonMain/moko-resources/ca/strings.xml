@@ -251,8 +251,6 @@
     <string name="update_check_confirm">Baixa</string>
     <string name="update_check_no_new_updates">No hi ha cap nova actualització disponible</string>
     <string name="update_check_notification_download_in_progress">S’està baixant…</string>
-    <string name="update_check_notification_download_complete">Premeu per a instal·lar l’actualització</string>
-    <string name="update_check_notification_download_error">Error de baixada</string>
     <string name="update_check_notification_update_available">Nova versió disponible!</string>
     <string name="information_no_downloads">No hi ha baixades</string>
     <string name="information_no_recent">No hi ha actualitzacions recents</string>

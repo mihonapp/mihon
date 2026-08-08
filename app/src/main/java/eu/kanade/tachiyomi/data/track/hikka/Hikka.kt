@@ -112,6 +112,7 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
             track.finished_reading_date = (readContent.endDate ?: 0L) * 1000
             update(track)
         } else {
+            track.status = if (hasReadChapters) READING else PLAN_TO_READ
             track.score = 0.0
             update(track)
         }
@@ -124,14 +125,13 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
         track.copyPersonalFrom(remoteTrack)
         track.total_chapters = remoteTrack.total_chapters
 
-        val readContent = api.getRead(track)
-        if (readContent != null) {
-            track.score = readContent.score.toDouble()
-            track.last_chapter_read = readContent.chapters.toDouble()
-            track.status = toTrackStatus(readContent.status)
-            track.started_reading_date = (readContent.startDate ?: 0L) * 1000
-            track.finished_reading_date = (readContent.endDate ?: 0L) * 1000
-        }
+        val readContent = api.getRead(track) ?: throw Exception("Could not find manga")
+
+        track.score = readContent.score.toDouble()
+        track.last_chapter_read = readContent.chapters.toDouble()
+        track.status = toTrackStatus(readContent.status)
+        track.started_reading_date = (readContent.startDate ?: 0L) * 1000
+        track.finished_reading_date = (readContent.endDate ?: 0L) * 1000
 
         return track
     }
@@ -143,6 +143,7 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
             val oauth = api.accessToken(reference)
             interceptor.setAuth(oauth)
             val user = api.getCurrentUser()
+            saveDisplayUsername(user.username)
             saveCredentials(user.reference, oauth.accessToken)
         } catch (_: Throwable) {
             logout()

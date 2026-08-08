@@ -19,7 +19,7 @@ object Migrator {
         dryrun: Boolean = false,
         onMigrationComplete: () -> Unit,
     ) {
-        val migrationContext = MigrationContext(dryrun)
+        val migrationContext = MigrationContext(dryrun, old)
         val migrationJobFactory = MigrationJobFactory(migrationContext, scope)
         val migrationStrategyFactory = MigrationStrategyFactory(migrationJobFactory, onMigrationComplete)
         val strategy = migrationStrategyFactory.create(old, new)

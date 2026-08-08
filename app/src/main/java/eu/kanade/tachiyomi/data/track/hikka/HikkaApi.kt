@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.data.track.hikka.dto.HKUser
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.DELETE
 import eu.kanade.tachiyomi.network.GET
+import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.PUT
 import eu.kanade.tachiyomi.network.awaitSuccess
@@ -103,12 +104,16 @@ class HikkaApi(
             val slug = track.tracking_url.split("/")[4]
             val url = "$BASE_API_URL/read/manga/$slug".toUri().buildUpon().build()
             with(json) {
-                val response = authClient.newCall(GET(url.toString())).execute()
-                if (response.code == 404) {
-                    return@withIOContext null
-                }
-                response.use {
-                    it.parseAs<HKRead>()
+                try {
+                    authClient.newCall(GET(url.toString()))
+                        .awaitSuccess()
+                        .parseAs<HKRead>()
+                } catch (e: HttpException) {
+                    if (e.code == 404) {
+                        null
+                    } else {
+                        throw e
+                    }
                 }
             }
         }

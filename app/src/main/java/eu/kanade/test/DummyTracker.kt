@@ -81,6 +81,10 @@ data class DummyTracker(
 
     override fun getUsername(): String = "username"
 
+    override fun getDisplayUsername(): String = "UserName"
+
+    override fun saveDisplayUsername(displayName: String): Unit = Unit
+
     override fun getPassword(): String = "passw0rd"
 
     override fun saveCredentials(username: String, password: String) = Unit
