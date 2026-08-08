@@ -508,6 +508,10 @@
     <string name="pref_remove_after_read">After reading automatically delete</string>
     <string name="pref_remove_bookmarked_chapters">Allow deleting bookmarked chapters</string>
     <string name="pref_remove_exclude_categories">Excluded categories</string>
+    <string name="pref_delete_read_chapters">Delete read chapters</string>
+    <string name="pref_delete_read_chapters_summary">Remove downloaded chapters that are marked as read</string>
+    <string name="pref_delete_read_chapters_confirm">This will delete all downloaded chapters marked as read. Unread downloads will be kept. Bookmarked chapters and excluded categories still follow your settings above.</string>
+    <string name="delete_read_chapters_done">Deleted %1$d read chapter(s)</string>
     <string name="no_location_set">No storage location set</string>
     <string name="invalid_location">Invalid location: %s</string>
     <string name="storage_failed_to_create_download_directory">Failed to create download directory</string>
