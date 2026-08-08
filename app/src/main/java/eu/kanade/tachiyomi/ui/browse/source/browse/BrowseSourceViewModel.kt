@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi.ui.browse.source.browse
 
+import android.app.Application
 import android.content.res.Configuration
+import android.net.Uri
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
@@ -15,12 +17,14 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.filter
 import androidx.paging.map
+import com.hippo.unifile.UniFile
 import eu.kanade.core.preference.asState
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.source.interactor.GetIncognitoState
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.tachiyomi.data.cache.CoverCache
+import eu.kanade.tachiyomi.data.source.local.LocalSourceImportJob
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.coroutines.flow.SharingStarted
@@ -309,6 +313,18 @@ class BrowseSourceViewModel(
         setDialog(Dialog.Filter)
     }
 
+    fun onFilesSelected(uris: List<Uri>) {
+        if (uris.isEmpty()) return
+        val defaultName = uris.first().let { uri ->
+            UniFile.fromUri(Injekt.get<Application>(), uri)?.name?.substringBeforeLast('.') ?: ""
+        }
+        setDialog(Dialog.Import(uris, defaultName))
+    }
+
+    fun importFiles(uris: List<Uri>, folderName: String) {
+        LocalSourceImportJob.start(Injekt.get<Application>(), uris, folderName)
+    }
+
     fun setDialog(dialog: Dialog?) {
         mutableState.update { it.copy(dialog = dialog) }
     }
@@ -344,7 +360,9 @@ class BrowseSourceViewModel(
             val manga: Manga,
             val initialSelection: List<CheckboxState.State<Category>>,
         ) : Dialog
+
         data class Migrate(val target: Manga, val current: Manga) : Dialog
+        data class Import(val uris: List<Uri>, val defaultName: String) : Dialog
     }
 
     @Immutable

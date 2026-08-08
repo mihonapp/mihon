@@ -694,6 +694,13 @@
     <string name="no_more_results">No more results</string>
     <string name="no_results_found">No results found</string>
     <string name="local_source">Local source</string>
+    <string name="action_import_from_storage">Import from storage</string>
+    <string name="import_local_source_title">Import to local source</string>
+    <string name="import_local_source_folder_placeholder">Folder name</string>
+    <string name="importing_local_source">Importing…</string>
+    <string name="importing_local_source_progress">Importing: %1$d/%2$d</string>
+    <string name="import_local_source_success">Successfully imported to %1$s</string>
+    <string name="import_local_source_error">Failed to import files</string>
     <string name="other_source">Other</string>
     <string name="last_used_source">Last used</string>
     <string name="pinned_sources">Pinned</string>
