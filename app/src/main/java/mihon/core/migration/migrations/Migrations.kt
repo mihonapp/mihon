@@ -9,4 +9,5 @@ val migrations: List<Migration>
         TrustExtensionRepositoryMigration(),
         CategoryPreferencesCleanupMigration(),
         InstallationIdMigration(),
+        TranslationGemini36FlashMigration(),
     )

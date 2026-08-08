@@ -43,45 +43,34 @@ class TranslationRepository(
         return database.translationsQueries.observePagesByChapter(chapterId, targetLanguage).subscribeToList()
     }
 
-    suspend fun getPendingJobs(kind: TranslationWorkKind = TranslationWorkKind.Normal): List<Translation_jobs> {
-        return when (kind) {
-            TranslationWorkKind.Normal -> database.translationsQueries.getNormalPendingJobs().awaitAsList()
-            TranslationWorkKind.ManualRetry -> database.translationsQueries.getManualRetryPendingJobs().awaitAsList()
-        }
-    }
-
-    suspend fun countPendingManualRetryJobs(): Int {
-        return getPendingJobs(TranslationWorkKind.ManualRetry).size
+    suspend fun getPendingJobs(): List<Translation_jobs> {
+        return database.translationsQueries.getPendingJobs().awaitAsList()
     }
 
     suspend fun getFreshRunningJobs(
-        kind: TranslationWorkKind,
         now: Long = System.currentTimeMillis(),
         activeJobIds: Set<Long> = emptySet(),
     ): List<Translation_jobs> {
         return database.translationsQueries.getJobsByStatus(TranslationJobStatus.Running.value)
             .awaitAsList()
             .filter { job ->
-                TranslationRunningJobPolicy.matchesKind(job, kind) &&
-                    TranslationRunningJobPolicy.blocksNewClaims(job, now, activeJobIds)
+                TranslationRunningJobPolicy.blocksNewClaims(job, now, activeJobIds)
             }
     }
 
     suspend fun requeueStaleRunningJobs(
-        kind: TranslationWorkKind,
         now: Long = System.currentTimeMillis(),
         activeJobIds: Set<Long> = emptySet(),
     ): Int {
         val staleJobs = database.translationsQueries.getJobsByStatus(TranslationJobStatus.Running.value)
             .awaitAsList()
             .filter { job ->
-                TranslationRunningJobPolicy.matchesKind(job, kind) &&
-                    TranslationRunningJobPolicy.isRecoverableStale(job, now, activeJobIds)
+                TranslationRunningJobPolicy.isRecoverableStale(job, now, activeJobIds)
             }
         if (staleJobs.isEmpty()) return 0
-        val nextStatus = TranslationRunningJobPolicy.requeueStatus(kind)
         database.transaction {
             staleJobs.forEach { job ->
+                val nextStatus = TranslationRunningJobPolicy.requeueStatusForStoppedWorker(job)
                 updateJobStatus(
                     job = job,
                     status = nextStatus,
@@ -101,7 +90,7 @@ class TranslationRepository(
                         nextStatus = nextStatus.value,
                         reason = "Running job exceeded worker lease",
                         extra = mapOf(
-                            "worker_kind" to kind.value,
+                            "worker_kind" to TranslationRunningJobPolicy.kindForClaimToken(job).value,
                             "age_ms" to (now - job.updated_at),
                             "stale_after_ms" to TranslationRunningJobPolicy.STALE_RUNNING_MS,
                         ),
@@ -113,15 +102,11 @@ class TranslationRepository(
     }
 
     suspend fun requeueRunningJobsForStoppedWorker(
-        kind: TranslationWorkKind? = null,
         reason: String,
-        laneId: Int? = null,
         now: Long = System.currentTimeMillis(),
     ): Int {
         val runningJobs = database.translationsQueries.getJobsByStatus(TranslationJobStatus.Running.value)
             .awaitAsList()
-            .filter { job -> kind == null || TranslationRunningJobPolicy.matchesKind(job, kind) }
-            .filter { job -> laneId == null || TranslationClaimToken.laneId(job.error_message) == laneId }
         if (runningJobs.isEmpty()) return 0
         database.transaction {
             runningJobs.forEach { job ->
@@ -146,7 +131,6 @@ class TranslationRepository(
                         reason = reason,
                         extra = mapOf(
                             "worker_kind" to TranslationRunningJobPolicy.kindForClaimToken(job).value,
-                            "lane_id" to laneId,
                             "age_ms" to (now - job.updated_at),
                         ),
                     ),
@@ -176,6 +160,31 @@ class TranslationRepository(
                     boxes = database.translationsQueries.getBoxesForPage(page._id).awaitAsList(),
                 )
             }
+    }
+
+    suspend fun getPageRowsByChapter(chapterId: Long, targetLanguage: String): List<Translation_pages> {
+        return database.translationsQueries
+            .getPagesByChapter(chapterId, targetLanguage)
+            .awaitAsList()
+    }
+
+    suspend fun getActiveJobsByChapter(
+        mangaId: Long,
+        chapterId: Long,
+        pipeline: String,
+        mode: TranslationMode,
+        targetLanguage: String,
+    ): List<Translation_jobs> {
+        return database.translationsQueries
+            .getActiveJobsByChapter(
+                mangaId = mangaId,
+                chapterId = chapterId,
+                scope = TranslationScope.Image.value,
+                pipeline = pipeline,
+                mode = mode.value,
+                targetLanguage = targetLanguage,
+            )
+            .awaitAsList()
     }
 
     suspend fun getSavedPage(
@@ -290,6 +299,108 @@ class TranslationRepository(
             )
         }
         return requireNotNull(result)
+    }
+
+    suspend fun enqueueImageJobs(
+        mangaId: Long,
+        chapterId: Long,
+        pageIndexes: List<Int>,
+        pipeline: String,
+        mode: TranslationMode,
+        model: String,
+        targetLanguage: String,
+        sourceLanguage: String?,
+        overwrite: Boolean,
+    ): TranslationBulkEnqueueResult {
+        var queued = 0
+        var skipped = 0
+        var raceDuplicates = 0
+        val now = System.currentTimeMillis()
+        database.transaction {
+            pageIndexes.distinct().forEach { pageIndex ->
+                val duplicate = database.translationsQueries.getActiveMatchingJob(
+                    mangaId = mangaId,
+                    chapterId = chapterId,
+                    pageIndex = pageIndex.toLong(),
+                    scope = TranslationScope.Image.value,
+                    pipeline = pipeline,
+                    mode = mode.value,
+                    targetLanguage = targetLanguage,
+                ).awaitAsOneOrNull()
+                if (duplicate != null) {
+                    skipped++
+                    raceDuplicates++
+                    insertLog(
+                        jobId = duplicate._id,
+                        pageId = null,
+                        level = TranslationLogLevel.Info,
+                        tag = "queue",
+                        message = "Skipped duplicate translation job",
+                        details = TranslationLogDetailsFormatter.queueState(
+                            action = "duplicate_skip",
+                            jobId = duplicate._id,
+                            previousStatus = duplicate.status,
+                            nextStatus = duplicate.status,
+                            reason = "Active matching job already exists",
+                            extra = mapOf(
+                                "manga_id" to mangaId,
+                                "chapter_id" to chapterId,
+                                "page_index" to pageIndex,
+                                "scope" to TranslationScope.Image.value,
+                                "pipeline" to pipeline,
+                                "mode" to mode.value,
+                                "target_language" to targetLanguage.ifBlank { "app language" },
+                            ),
+                        ),
+                    )
+                    return@forEach
+                }
+
+                database.translationsQueries.insertJob(
+                    mangaId = mangaId,
+                    chapterId = chapterId,
+                    pageIndex = pageIndex.toLong(),
+                    scope = TranslationScope.Image.value,
+                    pipeline = pipeline,
+                    mode = mode.value,
+                    model = model,
+                    targetLanguage = targetLanguage,
+                    sourceLanguage = sourceLanguage,
+                    overwrite = overwrite,
+                    status = TranslationJobStatus.Queued.value,
+                    progressTotal = 1,
+                    createdAt = now,
+                )
+                val insertedJobId = database.translationsQueries.lastInsertedJobId().awaitAsOne()
+                queued++
+                insertLog(
+                    jobId = insertedJobId,
+                    pageId = null,
+                    level = TranslationLogLevel.Info,
+                    tag = "queue",
+                    message = "Queued translation job",
+                    details = TranslationLogDetailsFormatter.queueState(
+                        action = "enqueue",
+                        jobId = insertedJobId,
+                        previousStatus = null,
+                        nextStatus = TranslationJobStatus.Queued.value,
+                        extra = mapOf(
+                            "manga_id" to mangaId,
+                            "chapter_id" to chapterId,
+                            "page_index" to pageIndex,
+                            "scope" to TranslationScope.Image.value,
+                            "pipeline" to pipeline,
+                            "mode" to mode.value,
+                            "model" to model,
+                            "target_language" to targetLanguage.ifBlank { "app language" },
+                            "source_language" to sourceLanguage,
+                            "overwrite" to overwrite,
+                        ),
+                    ),
+                )
+            }
+        }
+        return TranslationBulkEnqueueResult(queued, skipped, raceDuplicates)
     }
 
     suspend fun updateJobStatus(
@@ -408,8 +519,8 @@ class TranslationRepository(
         return jobs.size.toLong()
     }
 
-    suspend fun pausePendingJobsForSetup(kind: TranslationWorkKind, message: String): Long {
-        val jobs = getPendingJobs(kind)
+    suspend fun pausePendingJobsForSetup(message: String): Long {
+        val jobs = getPendingJobs()
         database.transaction {
             jobs.forEach { job ->
                 updateJobStatus(
@@ -445,20 +556,12 @@ class TranslationRepository(
         database.transaction {
             jobs.forEach { job ->
                 val nextAttempt = job.attempts + 1
-                when (kind) {
-                    TranslationWorkKind.Normal -> database.translationsQueries.claimNormalJob(
-                        attempts = nextAttempt,
-                        claimToken = claimToken,
-                        updatedAt = System.currentTimeMillis(),
-                        id = job._id,
-                    )
-                    TranslationWorkKind.ManualRetry -> database.translationsQueries.claimManualRetryJob(
-                        attempts = nextAttempt,
-                        claimToken = claimToken,
-                        updatedAt = System.currentTimeMillis(),
-                        id = job._id,
-                    )
-                }
+                database.translationsQueries.claimJob(
+                    attempts = nextAttempt,
+                    claimToken = claimToken,
+                    updatedAt = System.currentTimeMillis(),
+                    id = job._id,
+                )
                 val refreshed = database.translationsQueries.getJob(job._id).awaitAsOneOrNull()
                 if (refreshed?.status == TranslationJobStatus.Running.value && refreshed.error_message == claimToken) {
                     claimed += refreshed.copy(error_message = null)
@@ -525,7 +628,9 @@ class TranslationRepository(
                         hasSavedPageRow = database.translationsQueries.getPage(
                             chapterId = chapterId,
                             pageIndex = pageIndex,
-                            targetLanguage = job.target_language.ifBlank { TranslationLanguages.defaultTargetLanguage() },
+                            targetLanguage = job.target_language.ifBlank {
+                                TranslationLanguages.defaultTargetLanguage()
+                            },
                         ).awaitAsOneOrNull() != null,
                         overwrite = job.overwrite,
                     )
@@ -593,51 +698,72 @@ class TranslationRepository(
         pipeline: String,
         imageWidth: Int?,
         imageHeight: Int?,
-        inpaintImageUri: String?,
         overlay: TranslationOverlayResult,
     ): Translation_pages {
+        return saveOverlays(
+            listOf(
+                TranslationOverlaySaveRequest(
+                    mangaId = mangaId,
+                    chapterId = chapterId,
+                    pageIndex = pageIndex,
+                    sourceImageKey = sourceImageKey,
+                    model = model,
+                    targetLanguage = targetLanguage,
+                    sourceLanguage = sourceLanguage,
+                    pipeline = pipeline,
+                    imageWidth = imageWidth,
+                    imageHeight = imageHeight,
+                    overlay = overlay,
+                ),
+            ),
+        ).single()
+    }
+
+    suspend fun saveOverlays(requests: List<TranslationOverlaySaveRequest>): List<Translation_pages> {
+        if (requests.isEmpty()) return emptyList()
         val now = System.currentTimeMillis()
+        val savedPages = mutableListOf<Translation_pages>()
         database.transaction {
-            database.translationsQueries.upsertPage(
-                mangaId = mangaId,
-                chapterId = chapterId,
-                pageIndex = pageIndex,
-                sourceImageKey = sourceImageKey,
-                model = model,
-                targetLanguage = targetLanguage,
-                sourceLanguage = sourceLanguage ?: overlay.sourceLanguage,
-                pipeline = pipeline,
-                imageWidth = imageWidth?.toLong(),
-                imageHeight = imageHeight?.toLong(),
-                inpaintImageUri = inpaintImageUri,
-                createdAt = now,
-            )
-            val page = database.translationsQueries
-                .getPage(chapterId, pageIndex, targetLanguage)
-                .awaitAsOne()
-            database.translationsQueries.deleteBoxesForPage(page._id)
-            overlay.boxes.mapNotNull { box ->
-                TranslationOverlayPersistenceGuard.normalizedGeometryOrNull(box)
-                    ?.let { geometry -> box to geometry }
-            }.forEachIndexed { index, (box, geometry) ->
-                database.translationsQueries.insertBox(
-                    pageId = page._id,
-                    x = geometry.x.toDouble(),
-                    y = geometry.y.toDouble(),
-                    width = geometry.width.toDouble(),
-                    height = geometry.height.toDouble(),
-                    originalText = box.originalText,
-                    translatedText = box.translatedText,
-                    textType = box.textType,
-                    confidence = box.confidence?.toDouble(),
-                    styleJson = null,
-                    sortOrder = index.toLong(),
+            requests.forEach { request ->
+                database.translationsQueries.upsertPage(
+                    mangaId = request.mangaId,
+                    chapterId = request.chapterId,
+                    pageIndex = request.pageIndex,
+                    sourceImageKey = request.sourceImageKey,
+                    model = request.model,
+                    targetLanguage = request.targetLanguage,
+                    sourceLanguage = request.sourceLanguage ?: request.overlay.sourceLanguage,
+                    pipeline = request.pipeline,
+                    imageWidth = request.imageWidth?.toLong(),
+                    imageHeight = request.imageHeight?.toLong(),
+                    createdAt = now,
                 )
+                val page = database.translationsQueries
+                    .getPage(request.chapterId, request.pageIndex, request.targetLanguage)
+                    .awaitAsOne()
+                savedPages += page
+                database.translationsQueries.deleteBoxesForPage(page._id)
+                request.overlay.boxes.mapNotNull { box ->
+                    TranslationOverlayPersistenceGuard.normalizedGeometryOrNull(box)
+                        ?.let { geometry -> box to geometry }
+                }.forEachIndexed { index, (box, geometry) ->
+                    database.translationsQueries.insertBox(
+                        pageId = page._id,
+                        x = geometry.x.toDouble(),
+                        y = geometry.y.toDouble(),
+                        width = geometry.width.toDouble(),
+                        height = geometry.height.toDouble(),
+                        originalText = box.originalText,
+                        translatedText = box.translatedText,
+                        textType = box.textType,
+                        confidence = box.confidence?.toDouble(),
+                        styleJson = null,
+                        sortOrder = index.toLong(),
+                    )
+                }
             }
         }
-        return database.translationsQueries
-            .getPage(chapterId, pageIndex, targetLanguage)
-            .awaitAsOne()
+        return savedPages
     }
 
     suspend fun ensurePage(
@@ -662,7 +788,6 @@ class TranslationRepository(
             pipeline = pipeline,
             imageWidth = null,
             imageHeight = null,
-            inpaintImageUri = null,
             createdAt = now,
         )
         return database.translationsQueries
@@ -748,6 +873,26 @@ class TranslationRepository(
 data class TranslationEnqueueResult(
     val jobId: Long,
     val inserted: Boolean,
+)
+
+data class TranslationBulkEnqueueResult(
+    val queued: Int,
+    val skipped: Int,
+    val raceDuplicates: Int,
+)
+
+data class TranslationOverlaySaveRequest(
+    val mangaId: Long,
+    val chapterId: Long,
+    val pageIndex: Long,
+    val sourceImageKey: String,
+    val model: String,
+    val targetLanguage: String,
+    val sourceLanguage: String?,
+    val pipeline: String,
+    val imageWidth: Int?,
+    val imageHeight: Int?,
+    val overlay: TranslationOverlayResult,
 )
 
 data class SavedTranslationPage(
@@ -838,8 +983,6 @@ enum class TranslationScope(val value: String) {
 
 enum class TranslationMode(val value: String) {
     Overlay("overlay"),
-    Inpaint("inpaint"),
-    OverlayAndInpaint("overlay_inpaint"),
 }
 
 enum class TranslationJobStatus(val value: String) {

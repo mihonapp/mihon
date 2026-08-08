@@ -14,7 +14,6 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import androidx.work.workDataOf
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.setForegroundSafely
 import kotlinx.coroutines.CancellationException
@@ -48,14 +47,12 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
     }
 
     override suspend fun doWork(): Result {
-        val workKind = TranslationWorkKind.from(inputData.getString(KEY_WORK_KIND))
-        val laneId = inputData.getInt(KEY_LANE_ID, 0)
-        if (repository.getPendingJobs(workKind).isEmpty()) {
+        if (repository.getPendingJobs().isEmpty()) {
             return Result.success()
         }
         val setup = setupValidator.readiness()
         if (!setup.ready) {
-            repository.pausePendingJobsForSetup(workKind, setup.message)
+            repository.pausePendingJobsForSetup(setup.message)
             return Result.success()
         }
 
@@ -73,28 +70,18 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
                     jobId = null,
                     previousStatus = null,
                     nextStatus = null,
-                    reason = "Translation queue uses regular WorkManager work to avoid Android dataSync foreground-service time limits",
+                    reason = "Translation queue uses regular WorkManager work " +
+                        "to avoid Android dataSync foreground-service time limits",
                     extra = mapOf(
-                        "worker_kind" to workKind.value,
-                        "lane_id" to laneId,
+                        "worker_kind" to "unified",
                     ),
                 ),
             )
         }
 
         return try {
-            when (processor.processPending(workKind, laneId)) {
+            when (processor.processPending()) {
                 TranslationProcessResult.RetryLater -> Result.retry()
-                TranslationProcessResult.ContinueLater -> {
-                    start(
-                        context = applicationContext,
-                        policy = TranslationWorkStartPolicy.AppendOrReplace,
-                        reason = "queued continuation after safe worker chunk",
-                        kind = workKind,
-                        laneId = laneId,
-                    )
-                    Result.success()
-                }
                 TranslationProcessResult.Idle,
                 TranslationProcessResult.Completed,
                 TranslationProcessResult.Paused,
@@ -103,9 +90,7 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
         } catch (e: CancellationException) {
             withContext(NonCancellable) {
                 repository.requeueRunningJobsForStoppedWorker(
-                    kind = workKind,
                     reason = e.message ?: "Worker cancelled",
-                    laneId = laneId,
                 )
             }
             throw e
@@ -115,26 +100,15 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
     companion object {
         private const val TAG = "TranslationQueue"
         private const val NORMAL_WORK_NAME = "TranslationQueue"
-        private const val RETRY_WORK_PREFIX = "TranslationQueueRetry"
-        private const val KEY_WORK_KIND = "translation_work_kind"
-        private const val KEY_LANE_ID = "translation_lane_id"
 
         fun start(
             context: Context,
             policy: TranslationWorkStartPolicy = TranslationWorkStartPolicy.Keep,
             reason: String = "start requested",
-            kind: TranslationWorkKind = TranslationWorkKind.Normal,
-            laneId: Int = 0,
         ) {
             val appContext = context.applicationContext
             val request = OneTimeWorkRequestBuilder<TranslationJob>()
                 .addTag(TAG)
-                .setInputData(
-                    workDataOf(
-                        KEY_WORK_KIND to kind.value,
-                        KEY_LANE_ID to laneId,
-                    ),
-                )
                 .setConstraints(
                     Constraints.Builder()
                         .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -149,7 +123,7 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
             }
             runCatching {
                 WorkManager.getInstance(appContext)
-                    .enqueueUniqueWork(workName(kind, laneId), existingWorkPolicy, request)
+                    .enqueueUniqueWork(NORMAL_WORK_NAME, existingWorkPolicy, request)
             }.onSuccess {
                 launchIO {
                     Injekt.get<TranslationRepository>().insertLog(
@@ -166,8 +140,7 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
                             reason = reason,
                             extra = mapOf(
                                 "policy" to policy.name,
-                                "worker_kind" to kind.value,
-                                "lane_id" to laneId,
+                                "worker_kind" to "unified",
                             ),
                         ),
                     )
@@ -188,28 +161,11 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
                             reason = error.message ?: error::class.simpleName.orEmpty(),
                             extra = mapOf(
                                 "policy" to policy.name,
-                                "worker_kind" to kind.value,
-                                "lane_id" to laneId,
+                                "worker_kind" to "unified",
                             ),
                         ),
                     )
                 }
-            }
-        }
-
-        fun startManualRetryWorkers(
-            context: Context,
-            workerCount: Int,
-            reason: String,
-        ) {
-            repeat(workerCount.coerceAtLeast(0)) { index ->
-                start(
-                    context = context,
-                    policy = TranslationWorkStartPolicy.Keep,
-                    reason = reason,
-                    kind = TranslationWorkKind.ManualRetry,
-                    laneId = index + 1,
-                )
             }
         }
 
@@ -263,13 +219,6 @@ class TranslationJob(context: Context, workerParams: WorkerParameters) : Corouti
                 .getWorkInfosByTagLiveData(TAG)
                 .asFlow()
                 .map { list -> list.any { it.state == WorkInfo.State.RUNNING } }
-        }
-
-        private fun workName(kind: TranslationWorkKind, laneId: Int): String {
-            return when (kind) {
-                TranslationWorkKind.Normal -> NORMAL_WORK_NAME
-                TranslationWorkKind.ManualRetry -> "$RETRY_WORK_PREFIX-${laneId.coerceAtLeast(1)}"
-            }
         }
     }
 }

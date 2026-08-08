@@ -7,9 +7,12 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.SerializationException
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import org.junit.jupiter.api.Test
@@ -19,6 +22,7 @@ import tachiyomi.data.Translation_jobs
 import tachiyomi.domain.translation.service.DEFAULT_TRANSLATION_SYSTEM_PROMPT
 import tachiyomi.domain.translation.service.TranslationPreferences
 import java.io.IOException
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.abs
 
 class TranslationCoreTest {
@@ -107,45 +111,32 @@ class TranslationCoreTest {
     }
 
     @Test
-    fun `generation config applies raw json override last`() {
-        val prefs = TranslationGenerationConfig(
-            temperature = 0.2f,
-            topP = 0.9f,
-            topK = 40,
-            maxOutputTokens = 4096,
-            thinkingLevel = TranslationThinkingLevel.Low.value,
-            rawJsonOverride = """{"temperature":0.7,"candidateCount":1}""",
-        )
+    fun `generation config emits only max output tokens and high thinking`() {
+        val config = TranslationGenerationConfig(maxOutputTokens = 4096)
 
-        val obj = prefs.toGeminiJson(Json).jsonObject
+        val obj = config.toGeminiJson(Json).jsonObject
 
-        obj["temperature"].toString() shouldBe "0.7"
-        obj["topP"].toString() shouldBe "0.9"
-        obj["topK"].toString() shouldBe "40"
+        obj.keys shouldContainExactly setOf("maxOutputTokens", "thinkingConfig")
         obj["maxOutputTokens"].toString() shouldBe "4096"
-        obj["candidateCount"].toString() shouldBe "1"
         obj["thinkingConfig"]!!.jsonObject shouldContain (
-            "thinkingLevel" to Json.parseToJsonElement("\"low\"")
+            "thinkingLevel" to Json.parseToJsonElement("\"high\"")
             )
-        obj["thinkingConfig"]!!.jsonObject shouldNotContainKey "thinkingBudget"
+        obj shouldNotContainKey "temperature"
+        obj shouldNotContainKey "topP"
+        obj shouldNotContainKey "topK"
+        obj shouldNotContainKey "candidateCount"
     }
 
     @Test
     fun `generation config defaults match Gemini 3 translation defaults`() {
         val preferences = TranslationPreferences(InMemoryPreferenceStore())
 
-        preferences.temperature.get() shouldBe 1f
-        preferences.topP.get() shouldBe 0.95f
-        preferences.topK.get() shouldBe 64
+        preferences.geminiModel.get() shouldBe "gemini-3.6-flash"
         preferences.maxOutputTokens.get() shouldBe 65_536
-        preferences.thinkingLevel.get() shouldBe TranslationThinkingLevel.High.value
-        preferences.maxImagesPerBatch.get() shouldBe DEFAULT_TRANSLATION_MAX_IMAGES_PER_BATCH
-        preferences.parallelRetryLanes.get() shouldBe "1"
         preferences.sourceLanguage.get() shouldBe TranslationLanguages.SOURCE_AUTO
         preferences.overlayTextSizeMode.get() shouldBe "dynamic"
         preferences.overlayFontFamily.get() shouldBe "system"
         preferences.overlayBoxPaddingDp.get() shouldBe 0
-        preferences.concurrency.get() shouldBe 1
         preferences.globalInstructions.get() shouldBe DEFAULT_TRANSLATION_SYSTEM_PROMPT
     }
 
@@ -153,13 +144,13 @@ class TranslationCoreTest {
     fun `setup ping config leaves room for Gemini 3 thinking tokens`() {
         val obj = TranslationSetupPingPolicy.generationConfig().jsonObject
 
-        obj["temperature"].toString() shouldBe "0"
         obj["maxOutputTokens"].toString() shouldBe "128"
         obj["thinkingConfig"]!!.jsonObject shouldContain (
-            "thinkingLevel" to Json.parseToJsonElement("\"low\"")
+            "thinkingLevel" to Json.parseToJsonElement("\"high\"")
             )
+        obj.keys shouldContainExactly setOf("maxOutputTokens", "thinkingConfig")
         TranslationSetupPingPolicy.REQUEST_SUMMARY shouldContain "maxOutputTokens=128"
-        TranslationSetupPingPolicy.REQUEST_SUMMARY shouldContain "thinkingLevel=low"
+        TranslationSetupPingPolicy.REQUEST_SUMMARY shouldContain "thinkingLevel=high"
     }
 
     @Test
@@ -760,42 +751,6 @@ class TranslationCoreTest {
     }
 
     @Test
-    fun `manual retry lanes default to one and zero means unlimited`() {
-        TranslationRetryLanePlanner.workerCount(pendingManualRetryJobs = 0, configuredLanes = 1) shouldBe 0
-        TranslationRetryLanePlanner.workerCount(pendingManualRetryJobs = 5, configuredLanes = 1) shouldBe 1
-        TranslationRetryLanePlanner.workerCount(pendingManualRetryJobs = 5, configuredLanes = 2) shouldBe 2
-        TranslationRetryLanePlanner.workerCount(pendingManualRetryJobs = 5, configuredLanes = 0) shouldBe 5
-
-        val preferences = TranslationPreferences(InMemoryPreferenceStore())
-        preferences.parallelRetryLanes.set("-1")
-        preferences.normalizedParallelRetryLanes(pendingManualRetryJobs = 5) shouldBe 1
-        preferences.parallelRetryLanes.set("invalid")
-        preferences.normalizedParallelRetryLanes(pendingManualRetryJobs = 5) shouldBe 1
-        preferences.parallelRetryLanes.set("0")
-        preferences.normalizedParallelRetryLanes(pendingManualRetryJobs = 5) shouldBe 5
-    }
-
-    @Test
-    fun `translation concurrency default one accepts eight and zero means unlimited`() {
-        TranslationConcurrencyPlanner.workerCount(
-            configuredConcurrency = 1,
-            pendingGroups = 8,
-        ) shouldBe 1
-        TranslationConcurrencyPlanner.workerCount(
-            configuredConcurrency = 8,
-            pendingGroups = 8,
-        ) shouldBe 8
-        TranslationConcurrencyPlanner.workerCount(
-            configuredConcurrency = 0,
-            pendingGroups = 8,
-        ) shouldBe 8
-        TranslationConcurrencyPlanner.workerCount(
-            configuredConcurrency = -1,
-            pendingGroups = 8,
-        ) shouldBe 1
-    }
-
-    @Test
     fun `active duplicate matching is exact`() {
         val queued = TranslationJobSignature(
             mangaId = 1,
@@ -837,14 +792,7 @@ class TranslationCoreTest {
         TranslationBatchPlanner.pagesToQueue(
             pages = pages,
             overwrite = false,
-            maxImagesPerBatch = 38,
         ).map { it.pageIndex } shouldContainExactly (0 until 50).toList()
-
-        TranslationBatchPlanner.pagesToQueue(
-            pages = pages,
-            overwrite = false,
-            maxImagesPerBatch = TRANSLATION_BATCH_ALL,
-        ) shouldContainExactly pages
     }
 
     @Test
@@ -859,7 +807,6 @@ class TranslationCoreTest {
         TranslationBatchPlanner.pagesToQueue(
             pages = pages,
             overwrite = false,
-            maxImagesPerBatch = 1,
         ).map { it.pageIndex } shouldContainExactly listOf(2, 3)
     }
 
@@ -873,7 +820,7 @@ class TranslationCoreTest {
             )
         }
 
-        val groups = TranslationPendingJobBatcher.groupPendingJobs(jobs, maxImagesPerBatch = 38)
+        val groups = TranslationPendingJobBatcher.groupPendingJobs(jobs)
 
         groups.map { it.jobs.size } shouldContainExactly listOf(38, 38, 24)
     }
@@ -888,7 +835,7 @@ class TranslationCoreTest {
             )
         }
 
-        val groups = TranslationPendingJobBatcher.groupPendingJobs(jobs, maxImagesPerBatch = TRANSLATION_BATCH_ALL)
+        val groups = TranslationPendingJobBatcher.groupPendingJobs(jobs)
 
         groups.map { it.jobs.size } shouldContainExactly listOf(38, 38, 24)
         groups.flatMap { it.jobs }.map { it.page_index?.toInt() } shouldContainExactly (0 until 100).toList()
@@ -932,6 +879,33 @@ class TranslationCoreTest {
     }
 
     @Test
+    fun `adaptive request gate enforces request and payload budgets`() = runTest {
+        TranslationAdaptiveRequestPolicy.payloadPermitCount(1) shouldBe 1
+        TranslationAdaptiveRequestPolicy.payloadPermitCount(20L * 1024L * 1024L) shouldBe 20
+        TranslationAdaptiveRequestPolicy.payloadPermitCount(21L * 1024L * 1024L) shouldBe 20
+
+        val gate = TranslationAdaptiveRequestGate(
+            maxConcurrentRequests = 4,
+            maxInFlightPayloadBytes = 4L * 1024L * 1024L,
+        )
+        val active = AtomicInteger(0)
+        val maximum = AtomicInteger(0)
+        coroutineScope {
+            (0 until 8).map {
+                async {
+                    gate.withPermit(2L * 1024L * 1024L) {
+                        val now = active.incrementAndGet()
+                        maximum.updateAndGet { current -> maxOf(current, now) }
+                        delay(10)
+                        active.decrementAndGet()
+                    }
+                }
+            }.forEach { it.await() }
+        }
+        maximum.get() shouldBe 2
+    }
+
+    @Test
     fun `batch fallback classifier only allows parser shaped failures`() {
         TranslationBatchFailureClassifier.shouldUseBatchFallback(
             IllegalArgumentException("Gemini response did not contain usable overlay JSON"),
@@ -968,22 +942,6 @@ class TranslationCoreTest {
         TranslationRunningJobPolicy.HEARTBEAT_MS shouldBe 30_000L
         TranslationRunningJobPolicy.STALE_RUNNING_MS shouldBe
             TranslationRunningJobPolicy.HEARTBEAT_MS * 3
-    }
-
-    @Test
-    fun `worker continuation policy yields after a processed group when pending work remains`() {
-        TranslationWorkerContinuationPolicy.shouldYieldAfterGroups(
-            processedGroupCount = 0,
-            hasPendingJobs = true,
-        ) shouldBe false
-        TranslationWorkerContinuationPolicy.shouldYieldAfterGroups(
-            processedGroupCount = 1,
-            hasPendingJobs = false,
-        ) shouldBe false
-        TranslationWorkerContinuationPolicy.shouldYieldAfterGroups(
-            processedGroupCount = 1,
-            hasPendingJobs = true,
-        ) shouldBe true
     }
 
     @Test
@@ -1057,7 +1015,8 @@ class TranslationCoreTest {
         TranslationRunningJobPolicy.matchesKind(manual, TranslationWorkKind.ManualRetry) shouldBe true
         TranslationRunningJobPolicy.matchesKind(manual, TranslationWorkKind.Normal) shouldBe false
         TranslationRunningJobPolicy.matchesKind(legacyNormal, TranslationWorkKind.Normal) shouldBe true
-        TranslationRunningJobPolicy.requeueStatus(TranslationWorkKind.ManualRetry) shouldBe TranslationJobStatus.ManualRetry
+        TranslationRunningJobPolicy.requeueStatus(TranslationWorkKind.ManualRetry) shouldBe
+            TranslationJobStatus.ManualRetry
     }
 
     @Test
@@ -1088,7 +1047,7 @@ class TranslationCoreTest {
     }
 
     @Test
-    fun `pending job batcher groups compatible image jobs up to cap`() {
+    fun `pending job batcher groups compatible image jobs up to fixed cap`() {
         val jobs = (0 until 5).map { index ->
             translationJob(
                 id = index + 1L,
@@ -1101,11 +1060,10 @@ class TranslationCoreTest {
             pageIndex = 0,
         )
 
-        val groups = TranslationPendingJobBatcher.groupPendingJobs(jobs, maxImagesPerBatch = 3)
+        val groups = TranslationPendingJobBatcher.groupPendingJobs(jobs)
 
         groups.map { it.jobs.map(Translation_jobs::_id) } shouldContainExactly listOf(
-            listOf(1L, 2L, 3L),
-            listOf(4L, 5L),
+            listOf(1L, 2L, 3L, 4L, 5L),
             listOf(20L),
         )
     }
@@ -1656,22 +1614,64 @@ class TranslationCoreTest {
         }
 
         TranslationSettingsMetadata.overlayTextSizeSp.subtitle(currentValue = "18 sp") shouldContain "Current = 18 sp"
-        TranslationSettingsMetadata.sourceLanguage.subtitle(currentValue = "Auto") shouldContain "Options = Auto, Japanese, Korean, Chinese"
+        TranslationSettingsMetadata.sourceLanguage.subtitle(currentValue = "Auto") shouldContain
+            "Options = Auto, Japanese, Korean, Chinese"
     }
 
     @Test
     fun `overlay sanitizer removes punctuation sfx and unrelated boxes`() {
         val overlay = TranslationOverlayResult(
             boxes = listOf(
-                TranslationOverlayBox(0f, 0f, 0.1f, 0.1f, originalText = "Hello", translatedText = "Hello", textType = "dialogue"),
-                TranslationOverlayBox(0f, 0f, 0.1f, 0.1f, originalText = "!!!", translatedText = "!!!", textType = "dialogue"),
-                TranslationOverlayBox(0f, 0f, 0.1f, 0.1f, originalText = "ドン", translatedText = "Boom", textType = "sfx"),
-                TranslationOverlayBox(0f, 0f, 0.1f, 0.1f, originalText = "scan", translatedText = "scan", textType = "watermark"),
-                TranslationOverlayBox(0f, 0f, 0.1f, 0.1f, originalText = "Exit", translatedText = "Exit", textType = "sign"),
+                TranslationOverlayBox(
+                    0f,
+                    0f,
+                    0.1f,
+                    0.1f,
+                    originalText = "Hello",
+                    translatedText = "Hello",
+                    textType = "dialogue",
+                ),
+                TranslationOverlayBox(
+                    0f,
+                    0f,
+                    0.1f,
+                    0.1f,
+                    originalText = "!!!",
+                    translatedText = "!!!",
+                    textType = "dialogue",
+                ),
+                TranslationOverlayBox(
+                    0f,
+                    0f,
+                    0.1f,
+                    0.1f,
+                    originalText = "ドン",
+                    translatedText = "Boom",
+                    textType = "sfx",
+                ),
+                TranslationOverlayBox(
+                    0f,
+                    0f,
+                    0.1f,
+                    0.1f,
+                    originalText = "scan",
+                    translatedText = "scan",
+                    textType = "watermark",
+                ),
+                TranslationOverlayBox(
+                    0f,
+                    0f,
+                    0.1f,
+                    0.1f,
+                    originalText = "Exit",
+                    translatedText = "Exit",
+                    textType = "sign",
+                ),
             ),
         )
 
-        TranslationOverlaySanitizer.sanitize(overlay).boxes.map { it.originalText } shouldContainExactly listOf("Hello", "Exit")
+        TranslationOverlaySanitizer.sanitize(overlay).boxes.map { it.originalText } shouldContainExactly
+            listOf("Hello", "Exit")
     }
 
     @Test
@@ -1758,12 +1758,12 @@ class TranslationCoreTest {
             listModels = {
                 listOf(
                     GeminiModel(
-                        name = "models/gemini-3-flash-preview",
+                        name = "models/gemini-3.6-flash",
                         supportedGenerationMethods = listOf("generateContent"),
                     ),
                 )
             },
-            testGenerateContent = { _, model -> model shouldBe "gemini-3-flash-preview" },
+            testGenerateContent = { _, model -> model shouldBe "gemini-3.6-flash" },
         )
 
         val result = validator.testSetup()
@@ -1778,16 +1778,15 @@ class TranslationCoreTest {
     }
 
     @Test
-    fun `setup validator requires inpaint model only when inpaint is enabled`() = runTest {
+    fun `setup validator does not require an inpaint model`() = runTest {
         val preferences = TranslationPreferences(InMemoryPreferenceStore())
         preferences.geminiApiKey.set("secret-key")
-        preferences.geminiInpaintModel.set("gemini-image")
         val validator = TranslationSetupValidator(
             preferences = preferences,
             listModels = {
                 listOf(
                     GeminiModel(
-                        name = "models/gemini-3-flash-preview",
+                        name = "models/gemini-3.6-flash",
                         supportedGenerationMethods = listOf("generateContent"),
                     ),
                 )
@@ -1796,11 +1795,7 @@ class TranslationCoreTest {
         )
 
         validator.testSetup().ready shouldBe true
-
-        preferences.enableInpaint.set(true)
-
-        validator.testSetup().ready shouldBe false
-        validator.readiness().ready shouldBe false
+        validator.readiness().ready shouldBe true
     }
 
     @Test

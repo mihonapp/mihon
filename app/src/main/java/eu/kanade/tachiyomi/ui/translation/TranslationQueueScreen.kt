@@ -5,14 +5,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.Pause
@@ -53,9 +53,9 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.util.Screen
+import eu.kanade.tachiyomi.data.translation.GroupedTranslationLog
 import eu.kanade.tachiyomi.data.translation.TranslationJob
 import eu.kanade.tachiyomi.data.translation.TranslationJobStatus
-import eu.kanade.tachiyomi.data.translation.GroupedTranslationLog
 import eu.kanade.tachiyomi.data.translation.TranslationLogDetailsFormatter
 import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
 import eu.kanade.tachiyomi.data.translation.TranslationLogUiItem
@@ -69,7 +69,6 @@ import eu.kanade.tachiyomi.data.translation.TranslationRepository
 import eu.kanade.tachiyomi.data.translation.TranslationRetryPlanner
 import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
 import eu.kanade.tachiyomi.data.translation.TranslationWorkStartPolicy
-import eu.kanade.tachiyomi.data.translation.normalizedParallelRetryLanes
 import eu.kanade.tachiyomi.data.translation.isRetryableFromQueue
 import eu.kanade.tachiyomi.data.translation.toJob
 import eu.kanade.tachiyomi.util.system.copyToClipboard
@@ -79,15 +78,14 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import me.saket.swipe.SwipeAction
 import me.saket.swipe.SwipeableActionsBox
-import tachiyomi.core.common.i18n.stringResource as contextStringResource
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.data.Translation_jobs
 import tachiyomi.data.Translation_logs
-import tachiyomi.i18n.MR
 import tachiyomi.domain.translation.service.TranslationLogSwipeAction
 import tachiyomi.domain.translation.service.TranslationPreferences
 import tachiyomi.domain.translation.service.TranslationQueueSwipeAction
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.Pill
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -97,6 +95,7 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.text.DateFormat
 import java.util.Date
+import tachiyomi.core.common.i18n.stringResource as contextStringResource
 
 object TranslationQueueScreen : Screen() {
 
@@ -337,7 +336,9 @@ object TranslationQueueScreen : Screen() {
                                         onRetry = {
                                             screenModel.retry(
                                                 context = context,
-                                                jobs = TranslationQueueUiModel.retryableItems(chapterGroup.items).map { it.toJob() },
+                                                jobs = TranslationQueueUiModel.retryableItems(chapterGroup.items).map {
+                                                    it.toJob()
+                                                },
                                             )
                                         },
                                     )
@@ -371,7 +372,9 @@ object TranslationQueueScreen : Screen() {
                                                 onClick = { selectedLog = log },
                                                 onCopy = {
                                                     context.copyToClipboard(
-                                                        context.contextStringResource(MR.strings.translation_log_details),
+                                                        context.contextStringResource(
+                                                            MR.strings.translation_log_details,
+                                                        ),
                                                         formatLogDetails(log),
                                                     )
                                                 },
@@ -409,7 +412,11 @@ object TranslationQueueScreen : Screen() {
                                         }
                                         Text(
                                             text = stringResource(
-                                                if (logsExpanded) MR.strings.manga_info_collapse else MR.strings.manga_info_expand,
+                                                if (logsExpanded) {
+                                                    MR.strings.manga_info_collapse
+                                                } else {
+                                                    MR.strings.manga_info_expand
+                                                },
                                             ),
                                             color = MaterialTheme.colorScheme.primary,
                                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 12.dp),
@@ -589,7 +596,9 @@ private fun TranslationQueueGroupHeader(
                     )
                 }
                 Text(
-                    text = stringResource(if (expanded) MR.strings.manga_info_collapse else MR.strings.manga_info_expand),
+                    text = stringResource(
+                        if (expanded) MR.strings.manga_info_collapse else MR.strings.manga_info_expand,
+                    ),
                     color = MaterialTheme.colorScheme.primary,
                 )
             }
@@ -943,11 +952,8 @@ private class TranslationQueueScreenModel(
                     ),
                 ),
             )
-            val pendingRetryJobs = repository.countPendingManualRetryJobs()
-            val workerCount = preferences.normalizedParallelRetryLanes(pendingRetryJobs)
-            TranslationJob.startManualRetryWorkers(
+            TranslationJob.start(
                 context = context,
-                workerCount = workerCount,
                 reason = "manual_retry",
             )
         }
@@ -976,7 +982,9 @@ private class TranslationQueueScreenModel(
             }
             if (result != null && result.requeued > 0) {
                 withUIContext {
-                    context.toast(context.contextStringResource(MR.strings.translation_resume_requeued, result.requeued))
+                    context.toast(
+                        context.contextStringResource(MR.strings.translation_resume_requeued, result.requeued),
+                    )
                 }
             } else if (!setup.ready) {
                 withUIContext {
@@ -1097,7 +1105,8 @@ private fun formatLogTimestamp(timestamp: Long): String {
 private fun statusColor(status: String) = when (status) {
     TranslationJobStatus.Failed.value -> MaterialTheme.colorScheme.error
     TranslationJobStatus.PausedAuth.value,
-    TranslationJobStatus.PausedQuota.value -> MaterialTheme.colorScheme.tertiary
+    TranslationJobStatus.PausedQuota.value,
+    -> MaterialTheme.colorScheme.tertiary
     TranslationJobStatus.Running.value -> MaterialTheme.colorScheme.primary
     TranslationJobStatus.Completed.value -> MaterialTheme.colorScheme.secondary
     else -> MaterialTheme.colorScheme.onSurface

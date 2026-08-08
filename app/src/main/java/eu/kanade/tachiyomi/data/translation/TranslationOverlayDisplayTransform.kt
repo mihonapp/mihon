@@ -28,7 +28,8 @@ data class TranslationOverlayDisplayTransform(
     companion object {
         val Identity = TranslationOverlayDisplayTransform()
         val Clockwise90 = TranslationOverlayDisplayTransform(rotation = TranslationOverlayRotation.Clockwise90)
-        val CounterClockwise90 = TranslationOverlayDisplayTransform(rotation = TranslationOverlayRotation.CounterClockwise90)
+        val CounterClockwise90 =
+            TranslationOverlayDisplayTransform(rotation = TranslationOverlayRotation.CounterClockwise90)
 
         fun reflowed(topSourceHalf: TranslationOverlaySourceHalf): TranslationOverlayDisplayTransform {
             return TranslationOverlayDisplayTransform(reflowTopSourceHalf = topSourceHalf)

@@ -13,50 +13,40 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import eu.kanade.presentation.more.settings.Preference
+import eu.kanade.tachiyomi.data.translation.DEFAULT_GEMINI_MAX_OUTPUT_TOKENS
+import eu.kanade.tachiyomi.data.translation.DEFAULT_GEMINI_TRANSLATION_MODEL
+import eu.kanade.tachiyomi.data.translation.GeminiModel
+import eu.kanade.tachiyomi.data.translation.GeminiTranslationClient
+import eu.kanade.tachiyomi.data.translation.TranslationJob
+import eu.kanade.tachiyomi.data.translation.TranslationLanguages
+import eu.kanade.tachiyomi.data.translation.TranslationModelLimits
+import eu.kanade.tachiyomi.data.translation.TranslationRepository
+import eu.kanade.tachiyomi.data.translation.TranslationSettingsMetadata
+import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
+import eu.kanade.tachiyomi.data.translation.TranslationWorkStartPolicy
+import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import tachiyomi.domain.translation.service.TranslationPreferences
+import kotlinx.serialization.json.Json
+import tachiyomi.domain.translation.service.DEFAULT_TRANSLATION_SYSTEM_PROMPT
 import tachiyomi.domain.translation.service.TranslationLogSwipeAction
+import tachiyomi.domain.translation.service.TranslationPreferences
 import tachiyomi.domain.translation.service.TranslationQueueSwipeAction
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import eu.kanade.presentation.more.settings.Preference
-import eu.kanade.tachiyomi.data.translation.DEFAULT_GEMINI_MAX_OUTPUT_TOKENS
-import eu.kanade.tachiyomi.data.translation.DEFAULT_GEMINI_TRANSLATION_MODEL
-import eu.kanade.tachiyomi.data.translation.DEFAULT_TRANSLATION_MAX_IMAGES_PER_BATCH
-import eu.kanade.tachiyomi.data.translation.GeminiModel
-import eu.kanade.tachiyomi.data.translation.GeminiTranslationClient
-import eu.kanade.tachiyomi.data.translation.TRANSLATION_BATCH_ALL
-import eu.kanade.tachiyomi.data.translation.TranslationLanguages
-import eu.kanade.tachiyomi.data.translation.TranslationModelLimits
-import eu.kanade.tachiyomi.data.translation.TranslationRepository
-import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
-import eu.kanade.tachiyomi.data.translation.TranslationJob
-import eu.kanade.tachiyomi.data.translation.TranslationWorkStartPolicy
-import eu.kanade.tachiyomi.data.translation.TranslationThinkingLevel
-import eu.kanade.tachiyomi.data.translation.TranslationSettingsMetadata
-import eu.kanade.tachiyomi.util.system.toast
 import java.io.File
 import java.text.DateFormat
 import java.util.Date
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.roundToInt
-import kotlinx.serialization.json.Json
-import tachiyomi.core.common.preference.Preference as PreferenceData
 import tachiyomi.core.common.i18n.stringResource as contextStringResource
-import tachiyomi.domain.translation.service.DEFAULT_TRANSLATION_SYSTEM_PROMPT
 
 object SettingsTranslationScreen : SearchableSettings {
 
@@ -77,22 +67,13 @@ object SettingsTranslationScreen : SearchableSettings {
 
         val apiKey by preferences.geminiApiKey.collectAsState()
         val selectedModel by preferences.geminiModel.collectAsState()
-        val selectedInpaintModel by preferences.geminiInpaintModel.collectAsState()
-        val enableInpaint by preferences.enableInpaint.collectAsState()
         val setupFingerprint by preferences.setupFingerprint.collectAsState()
         val setupTestedTranslationModel by preferences.setupTestedTranslationModel.collectAsState()
-        val setupTestedInpaintModel by preferences.setupTestedInpaintModel.collectAsState()
         val setupTestedAt by preferences.setupTestedAt.collectAsState()
         val setupStatus by preferences.setupStatus.collectAsState()
         val setupMessage by preferences.setupMessage.collectAsState()
         val cachedModelsJson by preferences.cachedModelsJson.collectAsState()
-        val temperature by preferences.temperature.collectAsState()
-        val topP by preferences.topP.collectAsState()
-        val topK by preferences.topK.collectAsState()
         val maxOutputTokens by preferences.maxOutputTokens.collectAsState()
-        val concurrency by preferences.concurrency.collectAsState()
-        val parallelRetryLanes by preferences.parallelRetryLanes.collectAsState()
-        val maxImagesPerBatch by preferences.maxImagesPerBatch.collectAsState()
         val overlayTextSizeMode by preferences.overlayTextSizeMode.collectAsState()
         val overlayTextSizeSp by preferences.overlayTextSizeSp.collectAsState()
         var showClearAllConfirmation by remember { mutableStateOf(false) }
@@ -113,8 +94,8 @@ object SettingsTranslationScreen : SearchableSettings {
             mutableStateOf(TranslationModelLimits.decodeModels(cachedModelsJson, json))
         }
         var modelStatus by remember { mutableStateOf<String?>(null) }
-        val models = remember(modelMetadata, selectedModel, selectedInpaintModel) {
-            (modelMetadata.map { it.id } + DEFAULT_GEMINI_TRANSLATION_MODEL + selectedModel + selectedInpaintModel)
+        val models = remember(modelMetadata, selectedModel) {
+            (modelMetadata.map { it.id } + DEFAULT_GEMINI_TRANSLATION_MODEL + selectedModel)
                 .filter { it.isNotBlank() }
                 .distinct()
                 .sorted()
@@ -122,11 +103,8 @@ object SettingsTranslationScreen : SearchableSettings {
         val readiness = remember(
             apiKey,
             selectedModel,
-            selectedInpaintModel,
-            enableInpaint,
             setupFingerprint,
             setupTestedTranslationModel,
-            setupTestedInpaintModel,
             setupTestedAt,
             setupStatus,
             setupMessage,
@@ -204,22 +182,6 @@ object SettingsTranslationScreen : SearchableSettings {
             selectedModel = selectedModel,
             cachedModels = modelMetadata,
         ).coerceIn(maxOutputTokenSliderMin, maxOutputTokenSliderMax)
-        val maxImagesValueString = if (maxImagesPerBatch == TRANSLATION_BATCH_ALL) {
-            stringResource(MR.strings.all)
-        } else {
-            maxImagesPerBatch.coerceAtLeast(1).toString()
-        }
-        val parallelRetryLanesValueString = when (val parsed = parallelRetryLanes.trim().toIntOrNull()) {
-            0 -> stringResource(MR.strings.all)
-            null -> "1"
-            else -> if (parsed >= 1) parsed.toString() else "1"
-        }
-        val concurrencyValueString = if (concurrency == 0) {
-            stringResource(MR.strings.all)
-        } else {
-            concurrency.coerceAtLeast(1).toString()
-        }
-
         if (showClearAllConfirmation) {
             AlertDialog(
                 onDismissRequest = { showClearAllConfirmation = false },
@@ -295,23 +257,6 @@ object SettingsTranslationScreen : SearchableSettings {
                             ),
                         ),
                     )
-                    if (readiness.inpaintRequired) {
-                        add(
-                            Preference.PreferenceItem.TextPreference(
-                                title = stringResource(MR.strings.pref_translation_inpaint_model),
-                                subtitle = metadata.setupInpaintModel.subtitle(
-                                    stringResource(
-                                        if (readiness.inpaintModelReady) {
-                                            MR.strings.translation_setup_model_ready
-                                        } else {
-                                            MR.strings.translation_setup_model_needs_test
-                                        },
-                                        readiness.inpaintModel,
-                                    ),
-                                ),
-                            ),
-                        )
-                    }
                     add(
                         Preference.PreferenceItem.TextPreference(
                             title = stringResource(MR.strings.translation_setup_test),
@@ -347,13 +292,6 @@ object SettingsTranslationScreen : SearchableSettings {
                         subtitle = metadata.translationModel.subtitle(currentValue = "%s"),
                         onValueChanged = { preferences.geminiModel.set(it) },
                     ),
-                    Preference.PreferenceItem.BasicListPreference(
-                        value = selectedInpaintModel,
-                        entries = modelEntries,
-                        title = stringResource(MR.strings.pref_translation_inpaint_model),
-                        subtitle = metadata.inpaintModel.subtitle(currentValue = "%s"),
-                        onValueChanged = { preferences.geminiInpaintModel.set(it) },
-                    ),
                     Preference.PreferenceItem.EditTextPreference(
                         preference = preferences.targetLanguage,
                         title = stringResource(MR.strings.pref_translation_target_language),
@@ -363,9 +301,12 @@ object SettingsTranslationScreen : SearchableSettings {
                         preference = preferences.sourceLanguage,
                         entries = mapOf(
                             TranslationLanguages.SOURCE_AUTO to stringResource(MR.strings.label_auto),
-                            TranslationLanguages.SOURCE_JAPANESE to stringResource(MR.strings.pref_translation_source_japanese),
-                            TranslationLanguages.SOURCE_KOREAN to stringResource(MR.strings.pref_translation_source_korean),
-                            TranslationLanguages.SOURCE_CHINESE to stringResource(MR.strings.pref_translation_source_chinese),
+                            TranslationLanguages.SOURCE_JAPANESE to
+                                stringResource(MR.strings.pref_translation_source_japanese),
+                            TranslationLanguages.SOURCE_KOREAN to
+                                stringResource(MR.strings.pref_translation_source_korean),
+                            TranslationLanguages.SOURCE_CHINESE to
+                                stringResource(MR.strings.pref_translation_source_chinese),
                         ).toImmutableMap(),
                         title = stringResource(MR.strings.pref_translation_source_language),
                         subtitle = metadata.sourceLanguage.subtitle(currentValue = "%s"),
@@ -479,39 +420,11 @@ object SettingsTranslationScreen : SearchableSettings {
                             stringResource(MR.strings.pref_translation_raw_debug_logs_summary),
                         ),
                     ),
-                    Preference.PreferenceItem.SwitchPreference(
-                        preference = preferences.enableInpaint,
-                        title = stringResource(MR.strings.pref_translation_enable_inpaint),
-                        subtitle = metadata.enableInpaint.subtitle(),
-                    ),
                 ),
             ),
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.pref_translation_generation),
                 preferenceItems = persistentListOf(
-                    Preference.PreferenceItem.SliderPreference(
-                        value = (temperature * 100).roundToInt(),
-                        valueRange = 0..200,
-                        title = stringResource(MR.strings.pref_translation_temperature),
-                        subtitle = metadata.temperature.subtitle(currentValue = "%.2f".format(temperature)),
-                        valueString = "%.2f".format(temperature),
-                        onValueChanged = { preferences.temperature.set(it / 100f) },
-                    ),
-                    Preference.PreferenceItem.SliderPreference(
-                        value = (topP * 100).roundToInt(),
-                        valueRange = 0..100,
-                        title = stringResource(MR.strings.pref_translation_top_p),
-                        subtitle = metadata.topP.subtitle(currentValue = "%.2f".format(topP)),
-                        valueString = "%.2f".format(topP),
-                        onValueChanged = { preferences.topP.set(it / 100f) },
-                    ),
-                    Preference.PreferenceItem.SliderPreference(
-                        value = topK,
-                        valueRange = 1..100,
-                        title = stringResource(MR.strings.pref_translation_top_k),
-                        subtitle = metadata.topK.subtitle(currentValue = topK.toString()),
-                        onValueChanged = { preferences.topK.set(it) },
-                    ),
                     Preference.PreferenceItem.SliderPreference(
                         value = maxOutputTokenSliderValue,
                         valueRange = maxOutputTokenSliderMin..maxOutputTokenSliderMax,
@@ -524,21 +437,6 @@ object SettingsTranslationScreen : SearchableSettings {
                         ),
                         onValueChanged = { preferences.maxOutputTokens.set(it) },
                     ),
-                    Preference.PreferenceItem.ListPreference(
-                        preference = preferences.thinkingLevel,
-                        entries = mapOf(
-                            TranslationThinkingLevel.High.value to stringResource(MR.strings.pref_translation_thinking_level_high),
-                            TranslationThinkingLevel.Medium.value to stringResource(MR.strings.pref_translation_thinking_level_medium),
-                            TranslationThinkingLevel.Low.value to stringResource(MR.strings.pref_translation_thinking_level_low),
-                        ).toImmutableMap(),
-                        title = stringResource(MR.strings.pref_translation_thinking_level),
-                        subtitle = metadata.thinkingLevel.subtitle(currentValue = "%s"),
-                    ),
-                    Preference.PreferenceItem.EditTextPreference(
-                        preference = preferences.rawJsonOverride,
-                        title = stringResource(MR.strings.pref_translation_raw_json_override),
-                        subtitle = metadata.rawJsonOverride.subtitle(),
-                    ),
                     Preference.PreferenceItem.EditTextPreference(
                         preference = preferences.globalInstructions,
                         title = stringResource(MR.strings.pref_translation_system_prompt),
@@ -549,64 +447,6 @@ object SettingsTranslationScreen : SearchableSettings {
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.pref_translation_queue),
                 preferenceItems = persistentListOf(
-                    Preference.PreferenceItem.EditTextPreference(
-                        preference = remember(preferences.concurrency) {
-                            IntAsStringPreference(preferences.concurrency)
-                        },
-                        title = stringResource(MR.strings.pref_translation_concurrency),
-                        subtitle = metadata.concurrency.subtitle(currentValue = concurrencyValueString),
-                        onValueChanged = { value ->
-                            val normalized = value.trim().toIntOrNull()
-                            if (normalized == null || normalized < 0) {
-                                context.toast(MR.strings.translation_invalid_number)
-                                false
-                            } else {
-                                true
-                            }
-                        },
-                    ),
-                    Preference.PreferenceItem.EditTextPreference(
-                        preference = preferences.parallelRetryLanes,
-                        title = stringResource(MR.strings.pref_translation_parallel_retry_lanes),
-                        subtitle = metadata.parallelRetryLanes.subtitle(currentValue = parallelRetryLanesValueString),
-                        onValueChanged = { value ->
-                            val normalized = value.trim().toIntOrNull()
-                            if (normalized == null || normalized < 0) {
-                                context.toast(MR.strings.translation_invalid_number)
-                                false
-                            } else {
-                                true
-                            }
-                        },
-                    ),
-                    Preference.PreferenceItem.SliderPreference(
-                        value = maxImagesPerBatch.coerceIn(0, 100),
-                        valueRange = 0..100,
-                        title = stringResource(MR.strings.pref_translation_max_images_per_batch),
-                        subtitle = metadata.maxImagesPerBatch.subtitle(currentValue = maxImagesValueString),
-                        valueString = maxImagesValueString,
-                        onValueChanged = {
-                            preferences.maxImagesPerBatch.set(
-                                if (it == TRANSLATION_BATCH_ALL) {
-                                    TRANSLATION_BATCH_ALL
-                                } else {
-                                    it.coerceAtLeast(1)
-                                },
-                            )
-                        },
-                    ),
-                    Preference.PreferenceItem.TextPreference(
-                        title = stringResource(MR.strings.pref_translation_reset_max_images_per_batch),
-                        subtitle = metadata.resetMaxImagesPerBatch.subtitle(
-                            stringResource(
-                                MR.strings.pref_translation_reset_max_images_per_batch_summary,
-                                DEFAULT_TRANSLATION_MAX_IMAGES_PER_BATCH,
-                            ),
-                        ),
-                        onClick = {
-                            preferences.maxImagesPerBatch.set(DEFAULT_TRANSLATION_MAX_IMAGES_PER_BATCH)
-                        },
-                    ),
                     Preference.PreferenceItem.ListPreference(
                         preference = preferences.queueSwipeStartAction,
                         entries = translationQueueSwipeEntries(),
@@ -679,30 +519,6 @@ private fun translationLogSwipeEntries() = mapOf(
     TranslationLogSwipeAction.OpenDetails to stringResource(MR.strings.pref_translation_swipe_open_details),
     TranslationLogSwipeAction.CopyDetails to stringResource(MR.strings.pref_translation_swipe_copy_details),
 ).toImmutableMap()
-
-private class IntAsStringPreference(
-    private val delegate: PreferenceData<Int>,
-) : PreferenceData<String> {
-    override fun key(): String = delegate.key()
-
-    override fun get(): String = delegate.get().coerceAtLeast(0).toString()
-
-    override fun set(value: String) {
-        delegate.set(value.trim().toIntOrNull()?.coerceAtLeast(0) ?: delegate.defaultValue())
-    }
-
-    override fun isSet(): Boolean = delegate.isSet()
-
-    override fun delete() = delegate.delete()
-
-    override fun defaultValue(): String = delegate.defaultValue().coerceAtLeast(0).toString()
-
-    override fun changes(): Flow<String> = delegate.changes().map { it.coerceAtLeast(0).toString() }
-
-    override fun stateIn(scope: CoroutineScope): StateFlow<String> {
-        return changes().stateIn(scope, SharingStarted.Eagerly, get())
-    }
-}
 
 private fun clearTranslationFiles(context: Context) {
     File(context.filesDir, "translations").deleteRecursively()

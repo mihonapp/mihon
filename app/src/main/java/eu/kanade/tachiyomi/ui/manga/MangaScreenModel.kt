@@ -776,11 +776,7 @@ class MangaScreenModel(
         }
 
         screenModelScope.launchIO {
-            val mode = if (translationPreferences.enableInpaint.get()) {
-                TranslationMode.OverlayAndInpaint
-            } else {
-                TranslationMode.Overlay
-            }
+            val mode = TranslationMode.Overlay
             var queued = 0
             var skipped = 0
             val result = translationBatchEnqueuer.enqueueChapters(

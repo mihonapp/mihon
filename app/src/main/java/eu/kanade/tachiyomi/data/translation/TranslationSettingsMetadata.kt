@@ -48,7 +48,8 @@ data class TranslationSettingMetadata(
 object TranslationSettingsMetadata {
     val setupStatus = metadata(
         key = "setup_status",
-        description = "Shows whether the saved Gemini setup can list models, ping the selected model, and pass queue preflight.",
+        description = "Shows whether the saved Gemini setup can list models, ping the selected model, " +
+            "and pass queue preflight.",
         defaultValue = "Needs attention until tested",
         options = "Ready, Needs attention",
     )
@@ -64,15 +65,10 @@ object TranslationSettingsMetadata {
         defaultValue = DEFAULT_GEMINI_TRANSLATION_MODEL,
         options = "Ready, Needs test",
     )
-    val setupInpaintModel = metadata(
-        key = "setup_inpaint_model",
-        description = "Shows whether the inpaint model has passed setup when inpaint is enabled.",
-        defaultValue = DEFAULT_GEMINI_TRANSLATION_MODEL,
-        options = "Ready, Needs test",
-    )
     val setupTest = metadata(
         key = "setup_test",
-        description = "Runs model list, setup ping, fingerprint cache, and queue preflight checks before translation work starts.",
+        description = "Runs model list, setup ping, fingerprint cache, and queue preflight checks " +
+            "before translation work starts.",
         defaultValue = "Manual test",
         options = "Tap to run",
     )
@@ -91,12 +87,6 @@ object TranslationSettingsMetadata {
     val translationModel = metadata(
         key = "translation_model",
         description = "Gemini model used for overlay translation requests.",
-        defaultValue = DEFAULT_GEMINI_TRANSLATION_MODEL,
-        options = "Any cached Gemini generateContent model",
-    )
-    val inpaintModel = metadata(
-        key = "inpaint_model",
-        description = "Gemini model used for inpaint requests when inpaint is enabled.",
         defaultValue = DEFAULT_GEMINI_TRANSLATION_MODEL,
         options = "Any cached Gemini generateContent model",
     )
@@ -126,7 +116,8 @@ object TranslationSettingsMetadata {
     )
     val skipExistingOverlays = metadata(
         key = "skip_existing_overlays",
-        description = "Skips pages that already have a saved overlay row during normal enqueue; manual retry still overwrites.",
+        description = "Skips pages that already have a saved overlay row during normal enqueue; " +
+            "manual retry still overwrites.",
         defaultValue = "On",
         options = "Off, On",
     )
@@ -138,7 +129,8 @@ object TranslationSettingsMetadata {
     )
     val overlayTextSizeMode = metadata(
         key = "overlay_text_size_mode",
-        description = "Controls the preferred maximum for overlay text fitting before the renderer shrinks text to fit.",
+        description = "Controls the preferred maximum for overlay text fitting before the renderer " +
+            "shrinks text to fit.",
         defaultValue = "Dynamic",
         options = "Dynamic, System, Custom",
     )
@@ -188,36 +180,10 @@ object TranslationSettingsMetadata {
     )
     val rawDebugLogging = metadata(
         key = "raw_debug_logging",
-        description = "Stores detailed redacted request, response, parser, save, and render diagnostics in Translation Queue logs.",
+        description = "Stores detailed redacted request, response, parser, save, and render diagnostics " +
+            "in Translation Queue logs.",
         defaultValue = "Off",
         options = "Off, On",
-    )
-    val enableInpaint = metadata(
-        key = "enable_inpaint",
-        description = "Enables optional inpaint work alongside translation overlays.",
-        defaultValue = "Off",
-        options = "Off, On",
-    )
-    val temperature = metadata(
-        key = "temperature",
-        description = "Gemini generation temperature controls randomness in model output.",
-        defaultValue = "0.20",
-        minValue = "0.00",
-        maxValue = "2.00",
-    )
-    val topP = metadata(
-        key = "top_p",
-        description = "Gemini nucleus sampling considers tokens until cumulative probability reaches this value.",
-        defaultValue = "0.95",
-        minValue = "0.00",
-        maxValue = "1.00",
-    )
-    val topK = metadata(
-        key = "top_k",
-        description = "Gemini top-k sampling limits generation to the most likely tokens before sampling.",
-        defaultValue = "40",
-        minValue = "1",
-        maxValue = "100",
     )
     val maxOutputTokens = metadata(
         key = "max_output_tokens",
@@ -226,50 +192,11 @@ object TranslationSettingsMetadata {
         minValue = "512",
         maxValue = "Selected model output token limit",
     )
-    val thinkingLevel = metadata(
-        key = "thinking_level",
-        description = "Controls how much model reasoning budget to request when the selected Gemini model supports thinking.",
-        defaultValue = "High",
-        options = "High, Medium, Low",
-    )
-    val rawJsonOverride = metadata(
-        key = "raw_json_override",
-        description = "Optional raw Gemini generation configuration override merged into requests for advanced debugging.",
-        defaultValue = "Empty",
-        format = "JSON object",
-    )
     val systemPrompt = metadata(
         key = "system_prompt",
         description = "Gemini system instruction that steers translation behavior before page content is sent.",
         defaultValue = DEFAULT_TRANSLATION_SYSTEM_PROMPT,
         format = "Plain text system instruction",
-    )
-    val concurrency = metadata(
-        key = "concurrency",
-        description = "Number of normal translation worker groups allowed to run at once.",
-        defaultValue = "1",
-        minValue = "0",
-        maxValue = "Unlimited",
-    )
-    val parallelRetryLanes = metadata(
-        key = "parallel_retry_lanes",
-        description = "Number of manual retry lanes allowed to run alongside normal translation work.",
-        defaultValue = "1",
-        minValue = "0",
-        maxValue = "Unlimited",
-    )
-    val maxImagesPerBatch = metadata(
-        key = "max_images_per_batch",
-        description = "Maximum page images included in one Gemini batch request; zero means All.",
-        defaultValue = DEFAULT_TRANSLATION_MAX_IMAGES_PER_BATCH.toString(),
-        minValue = "0",
-        maxValue = "100",
-    )
-    val resetMaxImagesPerBatch = metadata(
-        key = "reset_max_images_per_batch",
-        description = "Restores the batch image limit to the project default.",
-        defaultValue = DEFAULT_TRANSLATION_MAX_IMAGES_PER_BATCH.toString(),
-        options = "Tap to reset",
     )
     val queueSwipeStart = metadata(
         key = "queue_swipe_start",
@@ -318,12 +245,10 @@ object TranslationSettingsMetadata {
         setupStatus,
         setupApiKey,
         setupTranslationModel,
-        setupInpaintModel,
         setupTest,
         geminiApiKey,
         refreshModels,
         translationModel,
-        inpaintModel,
         targetLanguage,
         sourceLanguage,
         pipeline,
@@ -339,18 +264,8 @@ object TranslationSettingsMetadata {
         overlayBoxPadding,
         overlayTextAlignment,
         rawDebugLogging,
-        enableInpaint,
-        temperature,
-        topP,
-        topK,
         maxOutputTokens,
-        thinkingLevel,
-        rawJsonOverride,
         systemPrompt,
-        concurrency,
-        parallelRetryLanes,
-        maxImagesPerBatch,
-        resetMaxImagesPerBatch,
         queueSwipeStart,
         queueSwipeEnd,
         logSwipeStart,

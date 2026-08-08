@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.translation
 
-import android.app.Application
 import android.graphics.BitmapFactory
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.NonCancellable
@@ -15,19 +14,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.json.Json
-import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.data.Translation_jobs
 import tachiyomi.domain.translation.service.TranslationPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.io.ByteArrayInputStream
-import java.io.File
 import java.io.IOException
 import kotlin.math.max
 import kotlin.time.TimeSource
 
 class TranslationQueueProcessor(
-    private val context: Application = Injekt.get(),
     private val repository: TranslationRepository = Injekt.get(),
     private val preferences: TranslationPreferences = Injekt.get(),
     private val gemini: GeminiTranslationClient = Injekt.get(),
@@ -36,20 +31,17 @@ class TranslationQueueProcessor(
     private val notifier: TranslationNotifier = Injekt.get(),
     private val json: Json = Injekt.get(),
 ) {
-    suspend fun processPending(
-        workKind: TranslationWorkKind = TranslationWorkKind.Normal,
-        laneId: Int = 0,
-    ): TranslationProcessResult = coroutineScope {
+    private val requestGate = TranslationAdaptiveRequestGate()
+
+    suspend fun processPending(): TranslationProcessResult = coroutineScope {
         var retryLater = false
-        var continueLater = false
         var processedAny = false
-        var processedGroupCount = 0
-        val claimTokenPrefix = "${workKind.value}:$laneId:${System.currentTimeMillis()}"
+        val claimTokenPrefix = System.currentTimeMillis()
 
         while (true) {
-            val activeJobIds = TranslationActiveJobRegistry.activeJobIds(workKind)
-            val staleRecovered = repository.requeueStaleRunningJobs(workKind, activeJobIds = activeJobIds)
-            val freshRunning = repository.getFreshRunningJobs(workKind, activeJobIds = activeJobIds)
+            val activeJobIds = TranslationActiveJobRegistry.activeJobIds()
+            val staleRecovered = repository.requeueStaleRunningJobs(activeJobIds = activeJobIds)
+            val freshRunning = repository.getFreshRunningJobs(activeJobIds = activeJobIds)
             if (freshRunning.isNotEmpty()) {
                 val now = System.currentTimeMillis()
                 val oldestAge = freshRunning.maxOf { now - it.updated_at }
@@ -69,8 +61,7 @@ class TranslationQueueProcessor(
                         nextStatus = TranslationJobStatus.Running.value,
                         reason = "Another worker lease is still fresh; not claiming additional jobs",
                         extra = mapOf(
-                            "worker_kind" to workKind.value,
-                            "lane_id" to laneId,
+                            "worker_kind" to "unified",
                             "running_count" to freshRunning.size,
                             "active_running_count" to freshRunning.count { it._id in activeJobIds },
                             "recovered_stale_count" to staleRecovered,
@@ -85,85 +76,53 @@ class TranslationQueueProcessor(
                 continue
             }
 
-            val pendingJobs = repository.getPendingJobs(workKind)
+            val pendingJobs = repository.getPendingJobs()
             if (pendingJobs.isEmpty()) {
                 break
             }
 
             val groups = TranslationPendingJobBatcher.groupPendingJobs(
                 jobs = pendingJobs,
-                maxImagesPerBatch = preferences.normalizedMaxImagesPerBatch(),
             )
-            val groupsForInvocation = groups.take(TranslationWorkerContinuationPolicy.MAX_GROUPS_PER_WORKER_INVOCATION)
-            val concurrency = preferences.normalizedConcurrency(groupsForInvocation.size)
             var claimedAnyThisLoop = false
-            groupsForInvocation.chunked(concurrency).forEachIndexed { chunkIndex, batch ->
-                if (retryLater || continueLater) {
+            groups.chunked(TranslationAdaptiveRequestPolicy.MAX_CONCURRENT_REQUESTS).forEachIndexed {
+                    chunkIndex,
+                    batch,
+                ->
+                if (retryLater) {
                     return@forEachIndexed
                 }
                 val claimedGroups = batch.mapIndexedNotNull { groupIndex, group ->
+                    val workKind = group.first.pendingWorkKind()
                     val claimed = repository.claimJobs(
                         jobs = group.jobs,
                         kind = workKind,
-                        claimToken = "$claimTokenPrefix:$chunkIndex:$groupIndex",
+                        claimToken = "${workKind.value}:0:$claimTokenPrefix:$chunkIndex:$groupIndex",
                     )
-                    claimed.takeIf { it.isNotEmpty() }?.let(::TranslationBatchJobGroup)
+                    claimed.takeIf { it.isNotEmpty() }?.let { workKind to TranslationBatchJobGroup(it) }
                 }
                 if (claimedGroups.isEmpty()) {
                     return@forEachIndexed
                 }
                 claimedAnyThisLoop = true
                 processedAny = true
-                val results = claimedGroups.map { group ->
-                    async { processJobGroup(group, workKind, laneId) }
+                val results = claimedGroups.map { (workKind, group) ->
+                    async { processJobGroup(group, workKind, laneId = 0) }
                 }.awaitAll()
-                processedGroupCount += claimedGroups.size
                 when {
                     TranslationProcessResult.Paused in results -> return@coroutineScope TranslationProcessResult.Paused
                     TranslationProcessResult.RetryLater in results -> retryLater = true
-                }
-                if (!retryLater) {
-                    val remainingPendingCount = repository.getPendingJobs(workKind).size
-                    if (
-                        TranslationWorkerContinuationPolicy.shouldYieldAfterGroups(
-                            processedGroupCount = processedGroupCount,
-                            hasPendingJobs = remainingPendingCount > 0,
-                        )
-                    ) {
-                        repository.insertLog(
-                            jobId = null,
-                            pageId = null,
-                            level = TranslationLogLevel.Debug,
-                            tag = "queue",
-                            message = "Translation worker yielding for queued continuation",
-                            details = TranslationLogDetailsFormatter.queueState(
-                                action = "worker_yield_pending_continuation",
-                                jobId = null,
-                                previousStatus = null,
-                                nextStatus = null,
-                                reason = "Worker processed a safe chunk and will let WorkManager start a fresh continuation",
-                                extra = mapOf(
-                                    "worker_kind" to workKind.value,
-                                    "lane_id" to laneId,
-                                    "processed_group_count" to processedGroupCount,
-                                    "remaining_pending_count" to remainingPendingCount,
-                                ),
-                            ),
-                        )
-                        continueLater = true
-                    }
                 }
             }
             if (!claimedAnyThisLoop) {
                 break
             }
-            if (retryLater || continueLater) {
+            if (retryLater) {
                 break
             }
         }
         when {
             retryLater -> TranslationProcessResult.RetryLater
-            continueLater -> TranslationProcessResult.ContinueLater
             processedAny -> TranslationProcessResult.Completed
             else -> TranslationProcessResult.Idle
         }
@@ -200,10 +159,21 @@ class TranslationQueueProcessor(
                 }
                 TranslationScope.Chapter.value -> {
                     val chapterId = requireNotNull(runningJob.chapter_id) { "Chapter job missing chapter id" }
-                    val pageCount = imageResolver.getPageCount(runningJob.manga_id, chapterId)
+                    val resolvedChapter = imageResolver
+                        .resolveAllPages(runningJob.manga_id, chapterId)
+                        .getOrThrow()
+                    val pageCount = resolvedChapter.pageCount
                     repository.updateJobProgress(runningJob, current = 0, total = pageCount.toLong())
                     for (pageIndex in 0 until pageCount) {
-                        processPage(runningJob, chapterId, pageIndex, current = pageIndex.toLong(), total = pageCount.toLong())
+                        processPage(
+                            job = runningJob,
+                            chapterId = chapterId,
+                            pageIndex = pageIndex,
+                            current = pageIndex.toLong(),
+                            total = pageCount.toLong(),
+                            pageImage = resolvedChapter.pages[pageIndex]?.getOrThrow()
+                                ?: error("Page $pageIndex was not resolved for chapter $chapterId"),
+                        )
                         repository.updateJobProgress(runningJob, current = pageIndex + 1L, total = pageCount.toLong())
                         notifier.showJobProgress(
                             runningJob,
@@ -287,7 +257,8 @@ class TranslationQueueProcessor(
                     reason = "Preparing every claimed page image at once would exceed the app memory budget",
                     extra = mapOf(
                         "job_count" to runningJobs.size,
-                        "max_prepared_image_batch_pages" to TranslationVisionBatchPayloadPolicy.MAX_PREPARED_IMAGE_BATCH_PAGES,
+                        "max_prepared_image_batch_pages" to
+                            TranslationVisionBatchPayloadPolicy.MAX_PREPARED_IMAGE_BATCH_PAGES,
                         "sub_batch_count" to preparedRanges.size,
                         "sub_batch_sizes" to preparedRanges.joinToString { it.count().toString() },
                         "worker_kind" to workKind.value,
@@ -342,21 +313,28 @@ class TranslationQueueProcessor(
                     "job_ids" to runningJobs.joinToString { it._id.toString() },
                     "pages" to runningJobs.joinToString { "${it.chapter_id}:${it.page_index}" },
                     "batch_size" to runningJobs.size,
-                    "max_images_per_batch" to preferences.normalizedMaxImagesPerBatch(),
+                    "max_images_per_batch" to TranslationVisionBatchPayloadPolicy.MAX_PREPARED_IMAGE_BATCH_PAGES,
                 ),
             ),
         )
         val prepared = mutableListOf<PreparedTranslationPage>()
         val earlyResults = mutableListOf<TranslationProcessResult>()
 
+        val chapterId = requireNotNull(runningJobs.first().chapter_id) { "Image job missing chapter id" }
+        val resolvedImages = imageResolver.resolvePages(
+            mangaId = runningJobs.first().manga_id,
+            chapterId = chapterId,
+            pageIndexes = runningJobs.map { requireNotNull(it.page_index).toInt() },
+        )
+
         runningJobs.forEachIndexed { index, job ->
             try {
-                val chapterId = requireNotNull(job.chapter_id) { "Image job missing chapter id" }
+                val jobChapterId = requireNotNull(job.chapter_id) { "Image job missing chapter id" }
                 val pageIndex = requireNotNull(job.page_index) { "Image job missing page index" }.toInt()
                 val targetLanguage = job.target_language.ifBlank { TranslationLanguages.defaultTargetLanguage() }
                 if (
                     TranslationSavedOverlayPolicy.shouldSkipExistingOverlay(
-                        hasSavedPageRow = repository.getPage(chapterId, pageIndex.toLong(), targetLanguage) != null,
+                        hasSavedPageRow = repository.getPage(jobChapterId, pageIndex.toLong(), targetLanguage) != null,
                         overwrite = job.overwrite,
                     )
                 ) {
@@ -366,14 +344,15 @@ class TranslationQueueProcessor(
                         level = TranslationLogLevel.Info,
                         tag = "queue",
                         message = "Skipped existing overlay",
-                        details = "chapter=$chapterId, page=$pageIndex, batch=${index + 1}/${runningJobs.size}",
+                        details = "chapter=$jobChapterId, page=$pageIndex, batch=${index + 1}/${runningJobs.size}",
                     )
                     repository.updateJobProgress(job, current = 1, total = 1)
                     completeJob(job.copy(progress_current = 1, progress_total = 1))
                     return@forEachIndexed
                 }
 
-                val image = imageResolver.resolvePage(job.manga_id, chapterId, pageIndex)
+                val image = resolvedImages[pageIndex]?.getOrThrow()
+                    ?: error("Page $pageIndex was not resolved for chapter $jobChapterId")
                 val generationConfig = preferences.toGenerationConfig(job.model)
                 repository.insertLog(
                     jobId = job._id,
@@ -383,7 +362,7 @@ class TranslationQueueProcessor(
                     message = "Prepared batch page translation",
                     details = buildString {
                         appendLine("batch=${index + 1}/${runningJobs.size}")
-                        appendLine("chapter=$chapterId")
+                        appendLine("chapter=$jobChapterId")
                         appendLine("page=$pageIndex")
                         appendLine("mime=${image.mimeType}")
                         appendLine("size=${image.width}x${image.height}")
@@ -392,7 +371,7 @@ class TranslationQueueProcessor(
                 )
                 prepared += PreparedTranslationPage(
                     job = job,
-                    chapterId = chapterId,
+                    chapterId = jobChapterId,
                     pageIndex = pageIndex,
                     image = image,
                     generationConfig = generationConfig,
@@ -440,14 +419,16 @@ class TranslationQueueProcessor(
             return mergeResults(earlyResults + failed)
         }
         val batchResults = mutableListOf<TranslationProcessResult>()
+        val successfulPages = mutableListOf<Pair<PreparedTranslationPage, TranslationOverlayResult>>()
         prepared.forEach { page ->
             val overlay = translated[page.job._id]
             if (overlay == null) {
                 batchResults += fallbackSinglePage(page, "batch_missing_page", workKind)
                 return@forEach
             }
-            batchResults += savePreparedOverlay(page, overlay, workKind)
+            successfulPages += page to overlay
         }
+        batchResults += savePreparedOverlays(successfulPages, workKind)
 
         val merged = mergeResults(earlyResults + batchResults)
         repository.insertLog(
@@ -469,6 +450,99 @@ class TranslationQueueProcessor(
             ),
         )
         return merged
+    }
+
+    private suspend fun savePreparedOverlays(
+        pages: List<Pair<PreparedTranslationPage, TranslationOverlayResult>>,
+        workKind: TranslationWorkKind,
+    ): List<TranslationProcessResult> {
+        if (pages.isEmpty()) return emptyList()
+        val requests = pages.map { (page, overlay) ->
+            val normalized = TranslationOverlayCoordinateNormalizer.normalize(
+                overlay = overlay,
+                imageWidth = page.image.width,
+                imageHeight = page.image.height,
+            )
+            if (normalized.report.hasChanges) {
+                repository.insertLog(
+                    jobId = page.job._id,
+                    pageId = null,
+                    level = TranslationLogLevel.Debug,
+                    tag = "page",
+                    message = "Normalized translation overlay coordinates",
+                    details = coordinateNormalizationDetails(
+                        chapterId = page.chapterId,
+                        pageIndex = page.pageIndex,
+                        image = page.image,
+                        report = normalized.report,
+                    ),
+                )
+            }
+            TranslationOverlaySaveRequest(
+                mangaId = page.job.manga_id,
+                chapterId = page.chapterId,
+                pageIndex = page.pageIndex.toLong(),
+                sourceImageKey = page.image.sourceImageKey,
+                model = page.job.model,
+                targetLanguage = page.targetLanguage,
+                sourceLanguage = TranslationLanguages.sourcePromptLabel(page.job.source_language),
+                pipeline = page.job.pipeline,
+                imageWidth = page.image.width,
+                imageHeight = page.image.height,
+                overlay = TranslationOverlaySanitizer.sanitize(normalized.overlay),
+            )
+        }
+
+        val savedPages = try {
+            repository.saveOverlays(requests)
+        } catch (error: Throwable) {
+            return pages.map { (page, _) ->
+                handleFailure(page.job, error, page.job.attempts, workKind)
+            }
+        }
+
+        return pages.mapIndexed { index, (page, originalOverlay) ->
+            try {
+                val request = requests[index]
+                val savedPage = savedPages[index]
+                val verifiedPage = repository.getSavedPage(
+                    chapterId = request.chapterId,
+                    pageIndex = request.pageIndex,
+                    targetLanguage = request.targetLanguage,
+                ) ?: throw IOException(
+                    "Saved translation overlay could not be read back for chapter=${request.chapterId} page=${request.pageIndex}",
+                )
+                val verification = TranslationOverlaySaveVerificationPolicy.verifyReplace(
+                    expectedBoxCount = request.overlay.boxes.size,
+                    readBackPageExists = true,
+                    readBackBoxCount = verifiedPage.boxes.size,
+                )
+                repository.insertLog(
+                    jobId = page.job._id,
+                    pageId = savedPage._id,
+                    level = if (verification.success) TranslationLogLevel.Debug else TranslationLogLevel.Error,
+                    tag = "page",
+                    message = if (verification.success) {
+                        "Verified saved translation overlay"
+                    } else {
+                        "Failed to verify saved translation overlay"
+                    },
+                    details = "chapter=${request.chapterId}, page=${request.pageIndex}, " +
+                        "input_boxes=${originalOverlay.boxes.size}, saved_boxes=${verifiedPage.boxes.size}, " +
+                        "expected_state=${verification.expectedState}, read_back_state=${verification.readBackState}",
+                )
+                if (!verification.success) {
+                    repository.deletePage(savedPage._id)
+                    throw IOException("Saved translation overlay verification failed: ${verification.failureReason}")
+                }
+                repository.updateJobProgress(page.job, current = 1, total = 1)
+                notifier.showJobProgress(page.job, current = 1, total = 1, status = TranslationJobStatus.Running)
+                completeJob(page.job.copy(progress_current = 1, progress_total = 1))
+                TranslationProcessResult.Completed
+            } catch (error: Throwable) {
+                handleFailure(page.job, error, page.job.attempts, workKind)
+            }
+        }
     }
 
     private suspend fun translatePreparedBatch(
@@ -499,7 +573,8 @@ class TranslationQueueProcessor(
                         "pages" to pages.joinToString { it.pageIndex.toString() },
                         "batch_size" to pages.size,
                         "raw_image_bytes" to pages.sumOf { it.image.bytes.size.toLong() },
-                        "max_inline_image_batch_bytes" to TranslationVisionBatchPayloadPolicy.MAX_INLINE_IMAGE_BATCH_BYTES,
+                        "max_inline_image_batch_bytes" to
+                            TranslationVisionBatchPayloadPolicy.MAX_INLINE_IMAGE_BATCH_BYTES,
                         "sub_batch_count" to payloadRanges.size,
                         "sub_batch_sizes" to payloadRanges.joinToString { it.count().toString() },
                     ),
@@ -530,28 +605,33 @@ class TranslationQueueProcessor(
             }
             return combined
         }
+        val estimatedPayloadBytes = TranslationVisionBatchPayloadPolicy.estimatedRequestBytes(
+            pages.map { it.image.bytes.size.toLong() },
+        )
         val batchResult = try {
-            if (first.job.pipeline == "local_ocr_gemini") {
-                translatePreparedOcrBatch(pages)
-            } else {
-                gemini.translatePageImages(
-                    apiKey = preferences.geminiApiKey.get(),
-                    model = first.job.model,
-                    pages = pages.map { page ->
-                        TranslationBatchImageInput(
-                            pageIndex = page.pageIndex,
-                            imageBytes = page.image.bytes,
-                            mimeType = page.image.mimeType,
-                            width = page.image.width,
-                            height = page.image.height,
-                        )
-                    },
-                    targetLanguage = first.targetLanguage,
-                    sourceLanguage = TranslationLanguages.sourcePromptLabel(first.job.source_language),
-                    generationConfig = first.generationConfig,
-                    extraInstructions = preferences.globalInstructions.get(),
-                    jobId = first.job._id,
-                )
+            requestGate.withPermit(estimatedPayloadBytes) {
+                if (first.job.pipeline == "local_ocr_gemini") {
+                    translatePreparedOcrBatch(pages)
+                } else {
+                    gemini.translatePageImages(
+                        apiKey = preferences.geminiApiKey.get(),
+                        model = first.job.model,
+                        pages = pages.map { page ->
+                            TranslationBatchImageInput(
+                                pageIndex = page.pageIndex,
+                                imageBytes = page.image.bytes,
+                                mimeType = page.image.mimeType,
+                                width = page.image.width,
+                                height = page.image.height,
+                            )
+                        },
+                        targetLanguage = first.targetLanguage,
+                        sourceLanguage = TranslationLanguages.sourcePromptLabel(first.job.source_language),
+                        generationConfig = first.generationConfig,
+                        extraInstructions = preferences.globalInstructions.get(),
+                        jobId = first.job._id,
+                    )
+                }
             }
         } catch (e: Throwable) {
             if (e is GeminiApiException) {
@@ -734,7 +814,7 @@ class TranslationQueueProcessor(
             val overlay = if (page.job.pipeline == "local_ocr_gemini") {
                 translateWithLocalOcr(page.job, page.image, page.targetLanguage, page.generationConfig)
             } else {
-                gemini.translatePageImage(
+                translateVisionPageWithGate(
                     apiKey = preferences.geminiApiKey.get(),
                     model = page.job.model,
                     imageBytes = page.image.bytes,
@@ -790,6 +870,7 @@ class TranslationQueueProcessor(
         pageIndex: Int,
         current: Long,
         total: Long,
+        pageImage: TranslationPageImage? = null,
     ) {
         val targetLanguage = job.target_language.ifBlank { TranslationLanguages.defaultTargetLanguage() }
         if (
@@ -810,7 +891,7 @@ class TranslationQueueProcessor(
         }
 
         val mark = TimeSource.Monotonic.markNow()
-        val image = imageResolver.resolvePage(job.manga_id, chapterId, pageIndex)
+        val image = pageImage ?: imageResolver.resolvePage(job.manga_id, chapterId, pageIndex)
         val generationConfig = preferences.toGenerationConfig(job.model)
         repository.insertLog(
             jobId = job._id,
@@ -826,7 +907,7 @@ class TranslationQueueProcessor(
 
         val overlay = when (job.pipeline) {
             "local_ocr_gemini" -> translateWithLocalOcr(job, image, targetLanguage, generationConfig)
-            else -> gemini.translatePageImage(
+            else -> translateVisionPageWithGate(
                 apiKey = preferences.geminiApiKey.get(),
                 model = job.model,
                 imageBytes = image.bytes,
@@ -848,6 +929,35 @@ class TranslationQueueProcessor(
             targetLanguage = targetLanguage,
             elapsedMs = mark.elapsedNow().inWholeMilliseconds,
         )
+    }
+
+    private suspend fun translateVisionPageWithGate(
+        apiKey: String,
+        model: String,
+        imageBytes: ByteArray,
+        mimeType: String,
+        targetLanguage: String,
+        sourceLanguage: String?,
+        generationConfig: TranslationGenerationConfig,
+        extraInstructions: String,
+        jobId: Long,
+    ): TranslationOverlayResult {
+        val estimatedPayloadBytes = TranslationVisionBatchPayloadPolicy.estimatedRequestBytes(
+            listOf(imageBytes.size.toLong()),
+        )
+        return requestGate.withPermit(estimatedPayloadBytes) {
+            gemini.translatePageImage(
+                apiKey = apiKey,
+                model = model,
+                imageBytes = imageBytes,
+                mimeType = mimeType,
+                targetLanguage = targetLanguage,
+                sourceLanguage = sourceLanguage,
+                generationConfig = generationConfig,
+                extraInstructions = extraInstructions,
+                jobId = jobId,
+            )
+        }
     }
 
     private suspend fun saveOverlayForPage(
@@ -882,12 +992,6 @@ class TranslationQueueProcessor(
 
         val sanitizedOverlay = TranslationOverlaySanitizer.sanitize(normalized.overlay)
 
-        val inpaintUri = if (job.wantsInpaint()) {
-            generateInpaint(job, pageIndex, image, sanitizedOverlay, targetLanguage)
-        } else {
-            null
-        }
-
         val savedPage = repository.saveOverlay(
             mangaId = job.manga_id,
             chapterId = chapterId,
@@ -899,13 +1003,14 @@ class TranslationQueueProcessor(
             pipeline = job.pipeline,
             imageWidth = image.width,
             imageHeight = image.height,
-            inpaintImageUri = inpaintUri,
             overlay = sanitizedOverlay,
         )
         val verifiedPage = repository.getSavedPage(chapterId, pageIndex.toLong(), targetLanguage)
         if (verifiedPage == null) {
             repository.deletePage(savedPage._id)
-            throw IOException("Saved translation overlay could not be read back for chapter=$chapterId page=$pageIndex target=$targetLanguage")
+            throw IOException(
+                "Saved translation overlay could not be read back for chapter=$chapterId page=$pageIndex target=$targetLanguage",
+            )
         }
         val verification = TranslationOverlaySaveVerificationPolicy.verifyReplace(
             expectedBoxCount = sanitizedOverlay.boxes.size,
@@ -928,7 +1033,11 @@ class TranslationQueueProcessor(
                 appendLine("coordinate_clamped_boxes=${normalized.report.clampedBoxes}")
                 appendLine("sanitizer_dropped_boxes=${normalized.overlay.boxes.size - sanitizedOverlay.boxes.size}")
                 appendLine("elapsed_ms=${elapsedMs ?: "-"}")
-                appendLine("source_language=${sanitizedOverlay.sourceLanguage ?: TranslationLanguages.sourcePromptLabel(job.source_language) ?: "auto"}")
+                appendLine(
+                    "source_language=${sanitizedOverlay.sourceLanguage ?: TranslationLanguages.sourcePromptLabel(
+                        job.source_language,
+                    ) ?: "auto"}",
+                )
                 appendLine("target_language=${sanitizedOverlay.targetLanguage ?: targetLanguage}")
                 sanitizedOverlay.boxes.forEachIndexed { index, box ->
                     appendLine("${index + 1}. ${box.originalText} => ${box.translatedText}")
@@ -1058,16 +1167,21 @@ class TranslationQueueProcessor(
                 boxes = emptyList(),
             )
         }
-        return gemini.translateOcrBlocks(
-            apiKey = preferences.geminiApiKey.get(),
-            model = job.model,
-            blocks = blocks,
-            targetLanguage = targetLanguage,
-            sourceLanguage = TranslationLanguages.sourcePromptLabel(job.source_language),
-            generationConfig = generationConfig,
-            extraInstructions = preferences.globalInstructions.get(),
-            jobId = job._id,
+        val estimatedPayloadBytes = TranslationVisionBatchPayloadPolicy.estimatedRequestBytes(
+            listOf(image.bytes.size.toLong()),
         )
+        return requestGate.withPermit(estimatedPayloadBytes) {
+            gemini.translateOcrBlocks(
+                apiKey = preferences.geminiApiKey.get(),
+                model = job.model,
+                blocks = blocks,
+                targetLanguage = targetLanguage,
+                sourceLanguage = TranslationLanguages.sourcePromptLabel(job.source_language),
+                generationConfig = generationConfig,
+                extraInstructions = preferences.globalInstructions.get(),
+                jobId = job._id,
+            )
+        }
     }
 
     private suspend fun recognizeOcr(
@@ -1095,46 +1209,13 @@ class TranslationQueueProcessor(
             appendLine("page=${pageIndex ?: "-"}")
             appendLine("scripts:")
             report.scriptResults.forEach { result ->
-                appendLine("${result.script}: success=${result.success}, blocks=${result.blocks}, error=${result.error ?: "-"}")
+                appendLine(
+                    "${result.script}: success=${result.success}, blocks=${result.blocks}, error=${result.error ?: "-"}",
+                )
             }
             appendLine("raw_blocks=${report.blocks.size}")
             appendLine("filtered_blocks=${blocks.size}")
             blocks.forEach { block -> appendLine("${block.id}: ${block.text}") }
-        }
-    }
-
-    private suspend fun generateInpaint(
-        job: Translation_jobs,
-        pageIndex: Int,
-        image: TranslationPageImage,
-        overlay: TranslationOverlayResult,
-        targetLanguage: String,
-    ): String? {
-        return try {
-            val bytes = gemini.generateInpaintImage(
-                apiKey = preferences.geminiApiKey.get(),
-                model = preferences.geminiInpaintModel.get(),
-                imageBytes = image.bytes,
-                mimeType = image.mimeType,
-                overlay = overlay,
-                targetLanguage = targetLanguage,
-                jobId = job._id,
-            ) ?: return null
-            val mime = ImageUtil.findImageType { ByteArrayInputStream(bytes) } ?: ImageUtil.ImageType.JPEG
-            val dir = File(context.filesDir, "translations/inpaint").also { it.mkdirs() }
-            val file = File(dir, "${job.chapter_id}-$pageIndex-${targetLanguage.hashCode()}.${mime.extension}")
-            file.writeBytes(bytes)
-            file.absolutePath
-        } catch (e: Throwable) {
-            repository.insertLog(
-                jobId = job._id,
-                pageId = null,
-                level = TranslationLogLevel.Warning,
-                tag = "inpaint",
-                message = "Inpaint failed; overlay remains available",
-                details = e.message,
-            )
-            null
         }
     }
 
@@ -1166,7 +1247,9 @@ class TranslationQueueProcessor(
                     previousStatus = job.status,
                     nextStatus = status.value,
                     reason = message,
-                    extra = errorDetails(error) + mapOf("attempt" to attempt, "http_code" to (error as? GeminiApiException)?.code),
+                    extra =
+                    errorDetails(error) +
+                        mapOf("attempt" to attempt, "http_code" to (error as? GeminiApiException)?.code),
                 ),
             )
             return TranslationProcessResult.Paused
@@ -1220,21 +1303,12 @@ class TranslationQueueProcessor(
     private fun TranslationPreferences.toGenerationConfig(model: String): TranslationGenerationConfig {
         val cachedModels = TranslationModelLimits.decodeModels(cachedModelsJson.get(), json)
         return TranslationGenerationConfig(
-            temperature = temperature.get(),
-            topP = topP.get(),
-            topK = topK.get(),
             maxOutputTokens = TranslationModelLimits.maxOutputTokensFor(
                 requested = max(1, maxOutputTokens.get()),
                 selectedModel = model,
                 cachedModels = cachedModels,
             ),
-            thinkingLevel = thinkingLevel.get(),
-            rawJsonOverride = rawJsonOverride.get(),
         )
-    }
-
-    private fun Translation_jobs.wantsInpaint(): Boolean {
-        return mode == TranslationMode.Inpaint.value || mode == TranslationMode.OverlayAndInpaint.value
     }
 
     private fun errorDetails(error: Throwable): Map<String, Any?> {
@@ -1263,7 +1337,6 @@ private data class PreparedTranslationPage(
 enum class TranslationProcessResult {
     Idle,
     Completed,
-    ContinueLater,
     RetryLater,
     Paused,
 }

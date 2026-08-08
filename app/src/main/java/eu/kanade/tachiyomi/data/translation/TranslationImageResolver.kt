@@ -8,6 +8,7 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.loader.ChapterLoader
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
+import kotlinx.coroutines.CancellationException
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.domain.chapter.interactor.GetChapter
 import tachiyomi.domain.manga.interactor.GetManga
@@ -32,34 +33,106 @@ class TranslationImageResolver(
     }
 
     suspend fun resolvePage(mangaId: Long, chapterId: Long, pageIndex: Int): TranslationPageImage {
-        return withLoadedChapter(mangaId, chapterId) { chapter, source ->
-            val pages = chapter.pages.orEmpty()
-            val page = pages.getOrNull(pageIndex)
-                ?: error("Page $pageIndex is outside loaded chapter page range (${pages.size})")
-            val bytes = page.stream?.invoke()?.use { it.readBytes() }
-                ?: when (source) {
-                    is HttpSource -> {
-                        if (page.imageUrl.isNullOrBlank()) {
-                            page.imageUrl = source.getImageUrl(page)
-                        }
-                        source.getImage(page).use { response ->
-                            response.body.bytes()
-                        }
-                    }
-                    else -> error("Page $pageIndex did not expose an image stream")
+        return resolvePages(mangaId, chapterId, listOf(pageIndex))[pageIndex]
+            ?.getOrThrow()
+            ?: error("Page $pageIndex was not resolved")
+    }
+
+    /**
+     * Loads and unreferences a chapter exactly once for a group of page
+     * requests. Individual page failures stay isolated so one bad page does
+     * not discard successful work from the same chapter.
+     */
+    suspend fun resolvePages(
+        mangaId: Long,
+        chapterId: Long,
+        pageIndexes: List<Int>,
+    ): Map<Int, Result<TranslationPageImage>> {
+        val indexes = pageIndexes.distinct()
+        if (indexes.isEmpty()) return emptyMap()
+        return try {
+            withLoadedChapter(mangaId, chapterId) { chapter, source ->
+                indexes.associateWith { pageIndex ->
+                    resolvePageResult(chapter, source, chapterId, pageIndex)
                 }
-
-            val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-            BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options)
-
-            TranslationPageImage(
-                bytes = bytes,
-                mimeType = ImageUtil.findImageType { ByteArrayInputStream(bytes) }?.mime ?: "image/jpeg",
-                sourceImageKey = page.imageUrl ?: page.url.takeIf { it.isNotBlank() } ?: "$chapterId/$pageIndex",
-                width = options.outWidth.takeIf { it > 0 },
-                height = options.outHeight.takeIf { it > 0 },
-            )
+            }
+        } catch (error: CancellationException) {
+            throw error
+        } catch (error: Throwable) {
+            indexes.associateWith { Result.failure(error) }
         }
+    }
+
+    suspend fun resolveAllPages(
+        mangaId: Long,
+        chapterId: Long,
+    ): Result<TranslationChapterPageImages> {
+        return try {
+            Result.success(
+                withLoadedChapter(mangaId, chapterId) { chapter, source ->
+                    val indexes = chapter.pages.orEmpty().indices.toList()
+                    TranslationChapterPageImages(
+                        pageCount = indexes.size,
+                        pages = indexes.associateWith { pageIndex ->
+                            resolvePageResult(chapter, source, chapterId, pageIndex)
+                        },
+                    )
+                },
+            )
+        } catch (error: CancellationException) {
+            throw error
+        } catch (error: Throwable) {
+            Result.failure(error)
+        }
+    }
+
+    private suspend fun resolvePageResult(
+        chapter: ReaderChapter,
+        source: Source,
+        chapterId: Long,
+        pageIndex: Int,
+    ): Result<TranslationPageImage> {
+        return try {
+            Result.success(resolvePage(chapter, source, chapterId, pageIndex))
+        } catch (error: CancellationException) {
+            throw error
+        } catch (error: Throwable) {
+            Result.failure(error)
+        }
+    }
+
+    private suspend fun resolvePage(
+        chapter: ReaderChapter,
+        source: Source,
+        chapterId: Long,
+        pageIndex: Int,
+    ): TranslationPageImage {
+        val pages = chapter.pages.orEmpty()
+        val page = pages.getOrNull(pageIndex)
+            ?: error("Page $pageIndex is outside loaded chapter page range (${pages.size})")
+        val bytes = page.stream?.invoke()?.use { it.readBytes() }
+            ?: when (source) {
+                is HttpSource -> {
+                    if (page.imageUrl.isNullOrBlank()) {
+                        page.imageUrl = source.getImageUrl(page)
+                    }
+                    source.getImage(page).use { response ->
+                        response.body.bytes()
+                    }
+                }
+                else -> error("Page $pageIndex did not expose an image stream")
+            }
+
+        val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options)
+
+        return TranslationPageImage(
+            bytes = bytes,
+            mimeType = ImageUtil.findImageType { ByteArrayInputStream(bytes) }?.mime ?: "image/jpeg",
+            sourceImageKey = page.imageUrl ?: page.url.takeIf { it.isNotBlank() } ?: "$chapterId/$pageIndex",
+            width = options.outWidth.takeIf { it > 0 },
+            height = options.outHeight.takeIf { it > 0 },
+        )
     }
 
     private suspend fun <T> withLoadedChapter(
@@ -95,4 +168,9 @@ data class TranslationPageImage(
     val sourceImageKey: String,
     val width: Int?,
     val height: Int?,
+)
+
+data class TranslationChapterPageImages(
+    val pageCount: Int,
+    val pages: Map<Int, Result<TranslationPageImage>>,
 )

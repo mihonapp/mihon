@@ -39,7 +39,6 @@ CREATE TABLE translation_pages(
     pipeline TEXT NOT NULL,
     image_width INTEGER,
     image_height INTEGER,
-    inpaint_image_uri TEXT,
     created_at INTEGER NOT NULL,
     updated_at INTEGER NOT NULL,
     FOREIGN KEY(manga_id) REFERENCES mangas (_id) ON DELETE CASCADE,
@@ -160,16 +159,10 @@ JOIN mangas ON mangas._id = translation_jobs.manga_id
 LEFT JOIN chapters ON chapters._id = translation_jobs.chapter_id
 WHERE translation_jobs._id = :id;
 
-getNormalPendingJobs:
+getPendingJobs:
 SELECT *
 FROM translation_jobs
-WHERE status IN ('queued', 'retrying')
-ORDER BY manga_id ASC, chapter_id ASC, page_index ASC, created_at ASC;
-
-getManualRetryPendingJobs:
-SELECT *
-FROM translation_jobs
-WHERE status = 'manual_retry'
+WHERE status IN ('queued', 'retrying', 'manual_retry')
 ORDER BY updated_at DESC, manga_id ASC, chapter_id ASC, page_index ASC, created_at ASC;
 
 getJobsByStatus:
@@ -197,6 +190,18 @@ AND target_language = :targetLanguage
 AND status IN ('queued', 'running', 'retrying', 'manual_retry', 'paused_auth', 'paused_quota')
 ORDER BY created_at ASC
 LIMIT 1;
+
+getActiveJobsByChapter:
+SELECT *
+FROM translation_jobs
+WHERE manga_id = :mangaId
+AND chapter_id = :chapterId
+AND scope = :scope
+AND pipeline = :pipeline
+AND mode = :mode
+AND target_language = :targetLanguage
+AND status IN ('queued', 'running', 'retrying', 'manual_retry', 'paused_auth', 'paused_quota')
+ORDER BY page_index ASC, created_at ASC;
 
 updateJobStatus:
 UPDATE translation_jobs
@@ -232,23 +237,14 @@ SET status = 'queued',
     updated_at = :updatedAt
 WHERE _id = :id;
 
-claimNormalJob:
+claimJob:
 UPDATE translation_jobs
 SET status = 'running',
     attempts = :attempts,
     error_message = :claimToken,
     updated_at = :updatedAt
 WHERE _id = :id
-AND status IN ('queued', 'retrying');
-
-claimManualRetryJob:
-UPDATE translation_jobs
-SET status = 'running',
-    attempts = :attempts,
-    error_message = :claimToken,
-    updated_at = :updatedAt
-WHERE _id = :id
-AND status = 'manual_retry';
+AND status IN ('queued', 'retrying', 'manual_retry');
 
 clearClaimToken:
 UPDATE translation_jobs
@@ -287,7 +283,6 @@ INSERT INTO translation_pages(
     pipeline,
     image_width,
     image_height,
-    inpaint_image_uri,
     created_at,
     updated_at
 )
@@ -302,7 +297,6 @@ VALUES (
     :pipeline,
     :imageWidth,
     :imageHeight,
-    :inpaintImageUri,
     :createdAt,
     :createdAt
 )
@@ -314,7 +308,6 @@ DO UPDATE SET
     pipeline = excluded.pipeline,
     image_width = excluded.image_width,
     image_height = excluded.image_height,
-    inpaint_image_uri = excluded.inpaint_image_uri,
     updated_at = excluded.updated_at;
 
 getPage:

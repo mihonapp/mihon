@@ -128,7 +128,7 @@ class AppModule(val app: Application) : InjektModule {
         addSingletonFactory { TranslationImageResolver() }
         addSingletonFactory { TranslationBatchEnqueuer() }
         addSingletonFactory { TranslationNotifier(app) }
-        addSingletonFactory { TranslationQueueProcessor(app) }
+        addSingletonFactory { TranslationQueueProcessor() }
         addSingletonFactory { TranslationSetupValidator() }
 
         addSingletonFactory { TrackerManager() }

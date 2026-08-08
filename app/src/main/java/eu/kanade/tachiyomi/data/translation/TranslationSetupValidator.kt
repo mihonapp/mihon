@@ -17,23 +17,17 @@ class TranslationSetupValidator(
     fun readiness(): TranslationSetupReadiness {
         val apiKey = preferences.geminiApiKey.get().trim()
         val translationModel = preferences.geminiModel.get().ifBlank { DEFAULT_GEMINI_TRANSLATION_MODEL }
-        val inpaintEnabled = preferences.enableInpaint.get()
-        val inpaintModel = preferences.geminiInpaintModel.get().trim()
-        val currentFingerprint = setupFingerprint(apiKey, translationModel, inpaintModel.takeIf { inpaintEnabled })
+        val currentFingerprint = setupFingerprint(apiKey, translationModel)
         val apiKeyPresent = apiKey.isNotBlank()
         val statusReady = preferences.setupStatus.get() == SETUP_STATUS_READY
         val fingerprintReady = preferences.setupFingerprint.get() == currentFingerprint
         val translationModelReady = preferences.setupTestedTranslationModel.get() == translationModel
-        val inpaintModelReady = !inpaintEnabled || preferences.setupTestedInpaintModel.get() == inpaintModel
-        val ready = apiKeyPresent && statusReady && fingerprintReady && translationModelReady && inpaintModelReady
+        val ready = apiKeyPresent && statusReady && fingerprintReady && translationModelReady
         return TranslationSetupReadiness(
             ready = ready,
             apiKeyPresent = apiKeyPresent,
             translationModelReady = ready && translationModelReady,
-            inpaintModelReady = !inpaintEnabled || (ready && inpaintModelReady),
-            inpaintRequired = inpaintEnabled,
             translationModel = translationModel,
-            inpaintModel = inpaintModel,
             testedAt = preferences.setupTestedAt.get(),
             message = when {
                 ready -> preferences.setupMessage.get().ifBlank { "Translation setup ready" }
@@ -54,8 +48,6 @@ class TranslationSetupValidator(
         }
 
         val translationModel = preferences.geminiModel.get().ifBlank { DEFAULT_GEMINI_TRANSLATION_MODEL }
-        val inpaintEnabled = preferences.enableInpaint.get()
-        val inpaintModel = preferences.geminiInpaintModel.get().trim()
 
         return runCatching {
             val models = listModels(apiKey)
@@ -63,18 +55,11 @@ class TranslationSetupValidator(
             require(translationModel in ids) {
                 "Selected translation model is unavailable: $translationModel"
             }
-            if (inpaintEnabled) {
-                require(inpaintModel.isNotBlank()) { "Select an inpaint model, or turn off inpaint." }
-                require(inpaintModel in ids) {
-                    "Selected inpaint model is unavailable: $inpaintModel"
-                }
-            }
 
             testGenerateContent(apiKey, translationModel)
-            val fingerprint = setupFingerprint(apiKey, translationModel, inpaintModel.takeIf { inpaintEnabled })
+            val fingerprint = setupFingerprint(apiKey, translationModel)
             preferences.setupFingerprint.set(fingerprint)
             preferences.setupTestedTranslationModel.set(translationModel)
-            preferences.setupTestedInpaintModel.set(inpaintModel.takeIf { inpaintEnabled }.orEmpty())
             preferences.setupTestedAt.set(System.currentTimeMillis())
             preferences.setupStatus.set(SETUP_STATUS_READY)
             preferences.setupMessage.set("Translation setup ready")
@@ -107,9 +92,8 @@ class TranslationSetupValidator(
         fun setupFingerprint(
             apiKey: String,
             translationModel: String,
-            inpaintModel: String?,
         ): String {
-            val input = listOf(apiKey.trim(), translationModel, inpaintModel.orEmpty()).joinToString("\u001f")
+            val input = listOf(apiKey.trim(), translationModel).joinToString("\u001f")
             val bytes = MessageDigest.getInstance("SHA-256").digest(input.toByteArray())
             return bytes.joinToString(separator = "") { "%02x".format(it) }
         }
@@ -120,10 +104,7 @@ data class TranslationSetupReadiness(
     val ready: Boolean,
     val apiKeyPresent: Boolean,
     val translationModelReady: Boolean,
-    val inpaintModelReady: Boolean,
-    val inpaintRequired: Boolean,
     val translationModel: String,
-    val inpaintModel: String,
     val testedAt: Long,
     val message: String,
 )

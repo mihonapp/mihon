@@ -26,6 +26,7 @@ import eu.kanade.tachiyomi.data.translation.SavedTranslationPage
 import eu.kanade.tachiyomi.data.translation.TranslationBatchEnqueuer
 import eu.kanade.tachiyomi.data.translation.TranslationBoxEdit
 import eu.kanade.tachiyomi.data.translation.TranslationJob
+import eu.kanade.tachiyomi.data.translation.TranslationLanguages
 import eu.kanade.tachiyomi.data.translation.TranslationLogDetailsFormatter
 import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
 import eu.kanade.tachiyomi.data.translation.TranslationMode
@@ -34,9 +35,8 @@ import eu.kanade.tachiyomi.data.translation.TranslationOverlayEditPlanner
 import eu.kanade.tachiyomi.data.translation.TranslationOverlaySaveVerification
 import eu.kanade.tachiyomi.data.translation.TranslationOverlaySaveVerificationPolicy
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
-import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
 import eu.kanade.tachiyomi.data.translation.TranslationScope
-import eu.kanade.tachiyomi.data.translation.TranslationLanguages
+import eu.kanade.tachiyomi.data.translation.TranslationSetupValidator
 import eu.kanade.tachiyomi.data.translation.resolvedTargetLanguage
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -76,8 +76,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
-import tachiyomi.core.common.preference.toggle
 import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.core.common.preference.toggle
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.core.common.util.lang.withIOContext
@@ -100,9 +100,9 @@ import tachiyomi.i18n.MR
 import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.io.IOException
 import java.time.Instant
 import java.util.Date
-import java.io.IOException
 
 /**
  * Presenter used by the activity to perform background operations.
@@ -279,7 +279,9 @@ class ReaderViewModel @JvmOverloads constructor(
 
         combine(
             state.map { it.viewerChapters?.currChapter?.chapter?.id }.distinctUntilChanged(),
-            translationPreferences.targetLanguage.changes().onStart { emit(translationPreferences.targetLanguage.get()) },
+            translationPreferences.targetLanguage.changes().onStart {
+                emit(translationPreferences.targetLanguage.get())
+            },
         ) { currentChapterId, _ ->
             currentChapterId to translationTargetLanguage()
         }
@@ -633,7 +635,9 @@ class ReaderViewModel @JvmOverloads constructor(
                             ),
                         )
                         if (!verification.success) {
-                            throw IOException("Translation overlay delete verification failed: ${verification.failureReason}")
+                            throw IOException(
+                                "Translation overlay delete verification failed: ${verification.failureReason}",
+                            )
                         }
                     }
                     TranslationOverlayEditAction.ReplaceBoxes -> {
@@ -644,7 +648,9 @@ class ReaderViewModel @JvmOverloads constructor(
                             sourceImageKey = page.imageUrl ?: "${page.chapter.chapter.url}#${page.index}",
                             model = translationPreferences.geminiModel.get(),
                             targetLanguage = targetLanguage,
-                            sourceLanguage = TranslationLanguages.sourcePromptLabel(translationPreferences.sourceLanguage.get()),
+                            sourceLanguage = TranslationLanguages.sourcePromptLabel(
+                                translationPreferences.sourceLanguage.get(),
+                            ),
                             pipeline = translationPreferences.pipeline.get(),
                         )
                         translationRepository.replaceBoxes(savedPage._id, boxes)
@@ -679,7 +685,9 @@ class ReaderViewModel @JvmOverloads constructor(
                             ),
                         )
                         if (!verification.success) {
-                            throw IOException("Translation overlay save verification failed: ${verification.failureReason}")
+                            throw IOException(
+                                "Translation overlay save verification failed: ${verification.failureReason}",
+                            )
                         }
                     }
                 }
@@ -734,7 +742,9 @@ class ReaderViewModel @JvmOverloads constructor(
             appendLine("page_id=${pageId ?: "-"}")
             appendLine("box_count=${boxes.size}")
             boxes.forEachIndexed { index, box ->
-                appendLine("box_${index + 1}=x:${box.x},y:${box.y},w:${box.width},h:${box.height},textType:${box.textType}")
+                appendLine(
+                    "box_${index + 1}=x:${box.x},y:${box.y},w:${box.width},h:${box.height},textType:${box.textType}",
+                )
             }
             appendLine("exception_class=${error::class.qualifiedName ?: error::class.simpleName.orEmpty()}")
             appendLine("exception_message=${error.message ?: "-"}")
@@ -765,7 +775,9 @@ class ReaderViewModel @JvmOverloads constructor(
             appendLine("read_back_state=${verification.readBackState}")
             appendLine("failure_reason=${verification.failureReason ?: "-"}")
             boxes.forEachIndexed { index, box ->
-                appendLine("box_${index + 1}=x:${box.x},y:${box.y},w:${box.width},h:${box.height},textType:${box.textType}")
+                appendLine(
+                    "box_${index + 1}=x:${box.x},y:${box.y},w:${box.width},h:${box.height},textType:${box.textType}",
+                )
             }
         }.trimEnd()
     }
@@ -804,11 +816,7 @@ class ReaderViewModel @JvmOverloads constructor(
             return
         }
         viewModelScope.launchIO {
-            val mode = if (translationPreferences.enableInpaint.get()) {
-                TranslationMode.OverlayAndInpaint
-            } else {
-                TranslationMode.Overlay
-            }
+            val mode = TranslationMode.Overlay
             val queued = if (scope == TranslationScope.Chapter) {
                 translationBatchEnqueuer.enqueueChapters(
                     mangaId = manga.id,

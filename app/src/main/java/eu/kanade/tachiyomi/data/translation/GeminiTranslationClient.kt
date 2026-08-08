@@ -12,6 +12,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.put
@@ -102,7 +103,6 @@ class GeminiTranslationClient(
         val prompt = TranslationPromptPolicy.pagePrompt(targetLanguage, sourceLanguage)
         val systemPrompt = TranslationPromptPolicy.systemPrompt(extraInstructions)
         val config = generationConfig
-            .copy(rawJsonOverride = generationConfig.rawJsonOverride)
             .toGeminiJson(json)
             .withStructuredOverlaySchema()
         val request = GeminiGenerateContentRequest(
@@ -244,7 +244,9 @@ class GeminiTranslationClient(
                 appendLine(prompt)
                 appendLine("pages=${pages.size}")
                 pages.forEach { page ->
-                    appendLine("page=${page.pageIndex}, mime=${page.mimeType}, bytes=${page.imageBytes.size}, size=${page.width ?: "-"}x${page.height ?: "-"}")
+                    appendLine(
+                        "page=${page.pageIndex}, mime=${page.mimeType}, bytes=${page.imageBytes.size}, size=${page.width ?: "-"}x${page.height ?: "-"}",
+                    )
                 }
                 appendLine("generation_config=$config")
             },
@@ -307,63 +309,6 @@ class GeminiTranslationClient(
             jobId = jobId,
             pageId = pageId,
         )
-    }
-
-    suspend fun generateInpaintImage(
-        apiKey: String,
-        model: String,
-        imageBytes: ByteArray,
-        mimeType: String,
-        overlay: TranslationOverlayResult,
-        targetLanguage: String,
-        jobId: Long? = null,
-        pageId: Long? = null,
-    ): ByteArray? {
-        val prompt = buildString {
-            appendLine("Edit this manga page by replacing original text with the translated text.")
-            appendLine("Target language: $targetLanguage.")
-            appendLine("Preserve art, panel layout, tone, and reading order.")
-            overlay.boxes.forEachIndexed { index, box ->
-                appendLine("${index + 1}. ${box.translatedText}")
-            }
-        }
-        val request = GeminiGenerateContentRequest(
-            contents = listOf(
-                GeminiContent(
-                    parts = listOf(
-                        GeminiPart(text = prompt),
-                        GeminiPart(
-                            inlineData = GeminiInlineData(
-                                mimeType = mimeType,
-                                data = Base64.encodeToString(imageBytes, Base64.NO_WRAP),
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        )
-        val response = generateContent(
-            apiKey = apiKey,
-            model = model,
-            request = request,
-            operation = "generateInpaintImage",
-            requestSummary = buildString {
-                appendLine("prompt:")
-                appendLine(prompt)
-                appendLine("image_mime=$mimeType")
-                appendLine("image_bytes=${imageBytes.size}")
-                appendLine("overlay_boxes=${overlay.boxes.size}")
-            },
-            jobId = jobId,
-            pageId = pageId,
-        )
-        val imageData = response.candidates
-            .firstOrNull()
-            ?.content
-            ?.parts
-            ?.firstNotNullOfOrNull { it.inlineData?.data }
-            ?: return null
-        return Base64.decode(imageData, Base64.DEFAULT)
     }
 
     private suspend fun generateOverlay(
@@ -455,7 +400,9 @@ class GeminiTranslationClient(
                 overlays.forEach { page ->
                     appendLine("page=${page.pageIndex}, boxes=${page.overlay.boxes.size}")
                     page.overlay.boxes.forEachIndexed { index, box ->
-                        appendLine("page=${page.pageIndex}, box=${index + 1}, ${box.originalText} => ${box.translatedText}")
+                        appendLine(
+                            "page=${page.pageIndex}, box=${index + 1}, ${box.originalText} => ${box.translatedText}",
+                        )
                     }
                 }
             },
@@ -620,7 +567,6 @@ class GeminiTranslationClient(
             details = buildString {
                 appendLine("operation=$operation")
                 appendLine("model=$modelId")
-                appendLine("candidate_count=${parsed.candidates.size}")
                 parsed.candidates.forEachIndexed { candidateIndex, candidate ->
                     val texts = candidate.content?.parts.orEmpty().mapNotNull { it.text }
                     appendLine("candidate_${candidateIndex + 1}_text_parts=${texts.size}")
@@ -775,7 +721,7 @@ private fun JsonElement.withStructuredOverlaySchema(): JsonElement {
                                                     "originalText",
                                                     "translatedText",
                                                     "textType",
-                                                ).forEach { add(kotlinx.serialization.json.JsonPrimitive(it)) }
+                                                ).forEach { add(JsonPrimitive(it)) }
                                             },
                                         )
                                     },
@@ -784,7 +730,12 @@ private fun JsonElement.withStructuredOverlaySchema(): JsonElement {
                         )
                     },
                 )
-                put("required", kotlinx.serialization.json.buildJsonArray { add(kotlinx.serialization.json.JsonPrimitive("boxes")) })
+                put(
+                    "required",
+                    kotlinx.serialization.json.buildJsonArray {
+                        add(JsonPrimitive("boxes"))
+                    },
+                )
             },
         )
     }
@@ -829,11 +780,31 @@ private fun JsonElement.withStructuredBatchOverlaySchema(): JsonElement {
                                                                 put(
                                                                     "properties",
                                                                     buildJsonObject {
-                                                                        listOf("x", "y", "width", "height", "confidence").forEach {
-                                                                            put(it, buildJsonObject { put("type", "number") })
+                                                                        listOf(
+                                                                            "x",
+                                                                            "y",
+                                                                            "width",
+                                                                            "height",
+                                                                            "confidence",
+                                                                        ).forEach {
+                                                                            put(
+                                                                                it,
+                                                                                buildJsonObject {
+                                                                                    put("type", "number")
+                                                                                },
+                                                                            )
                                                                         }
-                                                                        listOf("originalText", "translatedText", "textType").forEach {
-                                                                            put(it, buildJsonObject { put("type", "string") })
+                                                                        listOf(
+                                                                            "originalText",
+                                                                            "translatedText",
+                                                                            "textType",
+                                                                        ).forEach {
+                                                                            put(
+                                                                                it,
+                                                                                buildJsonObject {
+                                                                                    put("type", "string")
+                                                                                },
+                                                                            )
                                                                         }
                                                                     },
                                                                 )
@@ -848,7 +819,13 @@ private fun JsonElement.withStructuredBatchOverlaySchema(): JsonElement {
                                                                             "originalText",
                                                                             "translatedText",
                                                                             "textType",
-                                                                        ).forEach { add(kotlinx.serialization.json.JsonPrimitive(it)) }
+                                                                        ).forEach {
+                                                                            add(
+                                                                                JsonPrimitive(
+                                                                                    it,
+                                                                                ),
+                                                                            )
+                                                                        }
                                                                     },
                                                                 )
                                                             },
@@ -860,8 +837,10 @@ private fun JsonElement.withStructuredBatchOverlaySchema(): JsonElement {
                                         put(
                                             "required",
                                             kotlinx.serialization.json.buildJsonArray {
-                                                add(kotlinx.serialization.json.JsonPrimitive("pageIndex"))
-                                                add(kotlinx.serialization.json.JsonPrimitive("boxes"))
+                                                add(JsonPrimitive("pageIndex"))
+                                                add(
+                                                    JsonPrimitive("boxes"),
+                                                )
                                             },
                                         )
                                     },
@@ -870,7 +849,12 @@ private fun JsonElement.withStructuredBatchOverlaySchema(): JsonElement {
                         )
                     },
                 )
-                put("required", kotlinx.serialization.json.buildJsonArray { add(kotlinx.serialization.json.JsonPrimitive("pages")) })
+                put(
+                    "required",
+                    kotlinx.serialization.json.buildJsonArray {
+                        add(JsonPrimitive("pages"))
+                    },
+                )
             },
         )
     }

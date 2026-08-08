@@ -1,12 +1,14 @@
 package eu.kanade.tachiyomi.data.translation
 
 import kotlinx.coroutines.CancellationException
-import kotlinx.serialization.decodeFromString
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
@@ -16,18 +18,17 @@ import kotlinx.serialization.json.floatOrNull
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.put
-import kotlin.math.min
-import java.io.IOException
-import java.util.LinkedHashMap
-import java.util.Locale
 import tachiyomi.data.Translation_jobs
 import tachiyomi.domain.translation.service.DEFAULT_TRANSLATION_SYSTEM_PROMPT
 import tachiyomi.domain.translation.service.TranslationPreferences
+import java.io.IOException
+import java.util.LinkedHashMap
+import java.util.Locale
+import kotlin.math.min
 
-const val DEFAULT_GEMINI_TRANSLATION_MODEL = "gemini-3-flash-preview"
+const val DEFAULT_GEMINI_TRANSLATION_MODEL = "gemini-3.6-flash"
 const val DEFAULT_GEMINI_MAX_OUTPUT_TOKENS = 65_536
 const val DEFAULT_TRANSLATION_MAX_IMAGES_PER_BATCH = 38
-const val TRANSLATION_BATCH_ALL = 0
 
 object TranslationLanguages {
     const val SOURCE_AUTO = "auto"
@@ -62,48 +63,6 @@ fun TranslationPreferences.resolvedSourceLanguageOrNull(): String? {
     return TranslationLanguages.sourcePromptLabel(sourceLanguage.get())
 }
 
-fun TranslationPreferences.normalizedMaxImagesPerBatch(): Int {
-    val value = maxImagesPerBatch.get()
-    return if (value == TRANSLATION_BATCH_ALL) TRANSLATION_BATCH_ALL else value.coerceAtLeast(1)
-}
-
-fun TranslationPreferences.normalizedParallelRetryLanes(pendingManualRetryJobs: Int): Int {
-    val parsed = parallelRetryLanes.get().trim().toIntOrNull()
-    val configured = if (parsed != null && parsed >= 0) parsed else 1
-    return TranslationRetryLanePlanner.workerCount(
-        pendingManualRetryJobs = pendingManualRetryJobs,
-        configuredLanes = configured,
-    )
-}
-
-fun TranslationPreferences.normalizedConcurrency(pendingGroups: Int): Int {
-    return TranslationConcurrencyPlanner.workerCount(
-        configuredConcurrency = concurrency.get(),
-        pendingGroups = pendingGroups,
-    )
-}
-
-object TranslationRetryLanePlanner {
-    fun workerCount(pendingManualRetryJobs: Int, configuredLanes: Int): Int {
-        val pending = pendingManualRetryJobs.coerceAtLeast(0)
-        if (pending == 0) return 0
-        val lanes = configuredLanes.coerceAtLeast(0)
-        return if (lanes == 0) pending else min(lanes, pending)
-    }
-}
-
-object TranslationConcurrencyPlanner {
-    fun workerCount(configuredConcurrency: Int, pendingGroups: Int): Int {
-        val pending = pendingGroups.coerceAtLeast(0)
-        if (pending == 0) return 1
-        return when {
-            configuredConcurrency == 0 -> pending
-            configuredConcurrency > 0 -> min(configuredConcurrency, pending)
-            else -> 1
-        }
-    }
-}
-
 @Serializable
 data class GeminiModel(
     val name: String,
@@ -115,10 +74,6 @@ data class GeminiModel(
     val supportedGenerationMethods: List<String> = emptyList(),
     val version: String? = null,
     val thinking: Boolean? = null,
-    val temperature: Float? = null,
-    val maxTemperature: Float? = null,
-    val topP: Float? = null,
-    val topK: Int? = null,
 ) {
     val id: String
         get() = name.removePrefix("models/")
@@ -167,12 +122,11 @@ object TranslationModelLimits {
 
 object TranslationSetupPingPolicy {
     const val MAX_OUTPUT_TOKENS = 128
-    const val THINKING_LEVEL = "low"
-    const val REQUEST_SUMMARY = "prompt=Reply with OK.\nconfig=temperature=0,maxOutputTokens=128,thinkingLevel=low"
+    const val THINKING_LEVEL = "high"
+    const val REQUEST_SUMMARY = "prompt=Reply with OK.\nconfig=maxOutputTokens=128,thinkingLevel=high"
 
     fun generationConfig(): JsonElement {
         return buildJsonObject {
-            put("temperature", 0)
             put("maxOutputTokens", MAX_OUTPUT_TOKENS)
             put(
                 "thinkingConfig",
@@ -337,40 +291,19 @@ object TranslationLogDetailsFormatter {
 }
 
 data class TranslationGenerationConfig(
-    val temperature: Float? = null,
-    val topP: Float? = null,
-    val topK: Int? = null,
     val maxOutputTokens: Int? = null,
-    val thinkingLevel: String? = null,
-    val rawJsonOverride: String = "",
 ) {
     fun toGeminiJson(json: Json): JsonElement {
-        val base = buildJsonObject {
-            temperature?.let { put("temperature", it) }
-            topP?.let { put("topP", it) }
-            topK?.let { put("topK", it) }
+        return buildJsonObject {
             maxOutputTokens?.let { put("maxOutputTokens", it) }
-            thinkingLevel?.takeIf { it.isNotBlank() }?.let {
-                put(
-                    "thinkingConfig",
-                    buildJsonObject {
-                        put("thinkingLevel", it)
-                    },
-                )
-            }
+            put(
+                "thinkingConfig",
+                buildJsonObject {
+                    put("thinkingLevel", TranslationSetupPingPolicy.THINKING_LEVEL)
+                },
+            )
         }
-        val override = rawJsonOverride.trim()
-            .takeIf { it.isNotEmpty() }
-            ?.let { json.parseToJsonElement(it).jsonObject }
-            ?: JsonObject(emptyMap())
-        return JsonObject(base + override)
     }
-}
-
-enum class TranslationThinkingLevel(val value: String) {
-    High("high"),
-    Medium("medium"),
-    Low("low"),
 }
 
 data class TranslationPageCandidate(
@@ -1091,11 +1024,7 @@ object TranslationEnqueuePlanner {
         pages: List<TranslationPageCandidate>,
         overwrite: Boolean,
     ): List<TranslationPageCandidate> {
-        return TranslationBatchPlanner.pagesToQueue(
-            pages = pages,
-            overwrite = overwrite,
-            maxImagesPerBatch = TRANSLATION_BATCH_ALL,
-        )
+        return TranslationBatchPlanner.pagesToQueue(pages = pages, overwrite = overwrite)
     }
 }
 
@@ -1103,7 +1032,6 @@ object TranslationBatchPlanner {
     fun pagesToQueue(
         pages: List<TranslationPageCandidate>,
         overwrite: Boolean,
-        maxImagesPerBatch: Int,
     ): List<TranslationPageCandidate> {
         return pages.filter { page ->
             (overwrite || !page.hasOverlay) && !page.hasActiveJob
@@ -1302,6 +1230,71 @@ object TranslationVisionBatchPayloadPolicy {
         ranges += start until imageByteSizes.size
         return ranges
     }
+
+    fun estimatedRequestBytes(imageByteSizes: List<Long>): Long {
+        return imageByteSizes.sumOf { rawSize ->
+            val raw = rawSize.coerceAtLeast(0L)
+            ((raw + 2L) / 3L) * 4L + ESTIMATED_IMAGE_OVERHEAD_BYTES
+        }
+    }
+}
+
+object TranslationAdaptiveRequestPolicy {
+    const val MAX_CONCURRENT_REQUESTS = 4
+    const val MAX_IN_FLIGHT_PAYLOAD_BYTES = 20L * 1024L * 1024L
+    const val PAYLOAD_PERMIT_UNIT_BYTES = 1L * 1024L * 1024L
+
+    fun payloadPermitCount(payloadBytes: Long): Int {
+        val safeBytes = payloadBytes.coerceAtLeast(1L)
+        val units = (safeBytes + PAYLOAD_PERMIT_UNIT_BYTES - 1L) / PAYLOAD_PERMIT_UNIT_BYTES
+        val maxUnits = MAX_IN_FLIGHT_PAYLOAD_BYTES / PAYLOAD_PERMIT_UNIT_BYTES
+        return units.coerceIn(1L, maxUnits).toInt()
+    }
+}
+
+class TranslationAdaptiveRequestGate(
+    maxConcurrentRequests: Int = TranslationAdaptiveRequestPolicy.MAX_CONCURRENT_REQUESTS,
+    maxInFlightPayloadBytes: Long = TranslationAdaptiveRequestPolicy.MAX_IN_FLIGHT_PAYLOAD_BYTES,
+) {
+    private val maxPayloadPermits =
+        (maxInFlightPayloadBytes / TranslationAdaptiveRequestPolicy.PAYLOAD_PERMIT_UNIT_BYTES)
+            .coerceIn(
+                1L,
+                TranslationAdaptiveRequestPolicy.MAX_IN_FLIGHT_PAYLOAD_BYTES /
+                    TranslationAdaptiveRequestPolicy.PAYLOAD_PERMIT_UNIT_BYTES,
+            )
+            .toInt()
+    private val requestPermits = Semaphore(
+        maxConcurrentRequests.coerceIn(1, TranslationAdaptiveRequestPolicy.MAX_CONCURRENT_REQUESTS),
+    )
+    private val payloadPermits = Semaphore(
+        maxPayloadPermits,
+    )
+
+    suspend fun <T> withPermit(
+        payloadBytes: Long,
+        block: suspend () -> T,
+    ): T {
+        return requestPermits.withPermit {
+            val safeBytes = payloadBytes.coerceAtLeast(1L)
+            val requested = (
+                (safeBytes + TranslationAdaptiveRequestPolicy.PAYLOAD_PERMIT_UNIT_BYTES - 1L) /
+                    TranslationAdaptiveRequestPolicy.PAYLOAD_PERMIT_UNIT_BYTES
+                )
+                .coerceIn(1L, maxPayloadPermits.toLong())
+                .toInt()
+            var acquired = 0
+            try {
+                repeat(requested) {
+                    payloadPermits.acquire()
+                    acquired++
+                }
+                block()
+            } finally {
+                repeat(acquired) { payloadPermits.release() }
+            }
+        }
+    }
 }
 
 object TranslationBatchFailureClassifier {
@@ -1311,8 +1304,9 @@ object TranslationBatchFailureClassifier {
         if (error.hasCause<GeminiApiException>()) return false
         return when (error) {
             is IllegalArgumentException -> true
-            is IllegalStateException -> error.message
-                ?.contains("Gemini batch response", ignoreCase = true) == true
+            is IllegalStateException ->
+                error.message
+                    ?.contains("Gemini batch response", ignoreCase = true) == true
             is SerializationException -> true
             else -> false
         }
@@ -1337,17 +1331,6 @@ object TranslationGeminiNetworkPolicy {
 object TranslationWorkerPolicy {
     const val USE_FOREGROUND_SERVICE = false
     const val BATCH_EXECUTION_TIMEOUT_MS = 30L * 60L * 1000L
-}
-
-object TranslationWorkerContinuationPolicy {
-    const val MAX_GROUPS_PER_WORKER_INVOCATION = 1
-
-    fun shouldYieldAfterGroups(
-        processedGroupCount: Int,
-        hasPendingJobs: Boolean,
-    ): Boolean {
-        return hasPendingJobs && processedGroupCount >= MAX_GROUPS_PER_WORKER_INVOCATION
-    }
 }
 
 object TranslationRunningJobPolicy {
@@ -1429,6 +1412,12 @@ object TranslationActiveJobRegistry {
         }
     }
 
+    fun activeJobIds(): Set<Long> {
+        return synchronized(lock) {
+            activeJobIdsByKind.values.flatMapTo(mutableSetOf()) { it }
+        }
+    }
+
     suspend fun <T> withActiveJobs(
         kind: TranslationWorkKind,
         jobs: List<Translation_jobs>,
@@ -1441,6 +1430,25 @@ object TranslationActiveJobRegistry {
             block()
         } finally {
             unregister(kind, jobIds)
+        }
+    }
+
+    suspend fun <T> withActiveJobs(
+        jobs: List<Translation_jobs>,
+        block: suspend () -> T,
+    ): T {
+        val jobIds = jobs.map { it._id }.distinct()
+        if (jobIds.isEmpty()) return block()
+        synchronized(lock) {
+            activeJobIdsByKind.getOrPut(TranslationWorkKind.Normal) { mutableSetOf() }.addAll(jobIds)
+        }
+        return try {
+            block()
+        } finally {
+            synchronized(lock) {
+                activeJobIdsByKind.values.forEach { it.removeAll(jobIds.toSet()) }
+                activeJobIdsByKind.entries.removeIf { it.value.isEmpty() }
+            }
         }
     }
 
@@ -1471,7 +1479,6 @@ data class TranslationBatchJobGroup(
 object TranslationPendingJobBatcher {
     fun groupPendingJobs(
         jobs: List<Translation_jobs>,
-        maxImagesPerBatch: Int,
     ): List<TranslationBatchJobGroup> {
         val remaining = jobs.toMutableList()
         val groups = mutableListOf<TranslationBatchJobGroup>()
@@ -1481,14 +1488,7 @@ object TranslationPendingJobBatcher {
                 groups += TranslationBatchJobGroup(listOf(first))
                 continue
             }
-            val requestedLimit = if (maxImagesPerBatch == TRANSLATION_BATCH_ALL) {
-                Int.MAX_VALUE
-            } else {
-                maxImagesPerBatch.coerceAtLeast(1)
-            }
-            val limit = requestedLimit
-                .coerceAtMost(TranslationVisionBatchPayloadPolicy.MAX_PREPARED_IMAGE_BATCH_PAGES)
-                .coerceAtLeast(1)
+            val limit = TranslationVisionBatchPayloadPolicy.MAX_PREPARED_IMAGE_BATCH_PAGES
             val batch = mutableListOf(first)
             val iterator = remaining.iterator()
             while (iterator.hasNext() && batch.size < limit) {
@@ -1513,7 +1513,16 @@ object TranslationPendingJobBatcher {
             model == other.model &&
             target_language == other.target_language &&
             source_language == other.source_language &&
-            overwrite == other.overwrite
+            overwrite == other.overwrite &&
+            status == other.status
+    }
+}
+
+fun Translation_jobs.pendingWorkKind(): TranslationWorkKind {
+    return if (status == TranslationJobStatus.ManualRetry.value) {
+        TranslationWorkKind.ManualRetry
+    } else {
+        TranslationWorkKind.Normal
     }
 }
 
@@ -1558,8 +1567,12 @@ object TranslationPromptPolicy {
         val trimmedUserPrompt = userPrompt.trim()
         return buildString {
             appendLine("You are a manga, manhwa, and manhua translation assistant.")
-            appendLine("Only translate relevant or critical information: speech bubbles, thought bubbles, signs, captions, narration, and author's notes.")
-            appendLine("Ignore sound effects, decorative text, unrelated background text, watermark text, and punctuation-only symbols.")
+            appendLine(
+                "Only translate relevant or critical information: speech bubbles, thought bubbles, signs, captions, narration, and author's notes.",
+            )
+            appendLine(
+                "Ignore sound effects, decorative text, unrelated background text, watermark text, and punctuation-only symbols.",
+            )
             appendLine("Return no box for ignored text.")
             trimmedUserPrompt
                 .takeIf { it.isNotBlank() && it != DEFAULT_TRANSLATION_SYSTEM_PROMPT }
@@ -1575,7 +1588,9 @@ object TranslationPromptPolicy {
             appendLine("Translate the relevant manga text into ${targetLanguage.ifBlank { "the app language" }}.")
             appendLine("Source language: ${TranslationLanguages.sourcePromptLabel(sourceLanguage) ?: "auto-detect"}.")
             appendLine("Return only JSON matching the schema. Coordinates must be normalized 0.0 to 1.0.")
-            appendLine("Do not return pixel coordinates like 811 or 38; return fractions of the original image width and height.")
+            appendLine(
+                "Do not return pixel coordinates like 811 or 38; return fractions of the original image width and height.",
+            )
             appendLine("Each box needs x, y, width, height, originalText, translatedText, textType, confidence.")
         }.trimEnd()
     }
@@ -1586,7 +1601,11 @@ object TranslationPromptPolicy {
         sourceLanguage: String?,
     ): String {
         return buildString {
-            appendLine("Translate these ${pageIndexes.size} manga pages into ${targetLanguage.ifBlank { "the app language" }}.")
+            appendLine(
+                "Translate these ${pageIndexes.size} manga pages into ${targetLanguage.ifBlank {
+                    "the app language"
+                }}.",
+            )
             appendLine("Source language: ${TranslationLanguages.sourcePromptLabel(sourceLanguage) ?: "auto-detect"}.")
             appendLine("Return only JSON matching the schema: an object with a pages array.")
             appendLine("Each page object must include pageIndex and boxes.")
@@ -1594,7 +1613,9 @@ object TranslationPromptPolicy {
             appendLine("Use only these exact pageIndex values; do not renumber pages.")
             appendLine("Do not return pageNumber, page, or local batch positions like 1, 2, 3.")
             appendLine("Coordinates must be normalized 0.0 to 1.0 for each original page.")
-            appendLine("Do not return pixel coordinates like 811 or 38; return fractions of each original page width and height.")
+            appendLine(
+                "Do not return pixel coordinates like 811 or 38; return fractions of each original page width and height.",
+            )
             appendLine("Each box needs x, y, width, height, originalText, translatedText, textType, confidence.")
         }.trimEnd()
     }

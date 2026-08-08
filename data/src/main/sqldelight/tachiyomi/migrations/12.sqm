@@ -1,0 +1,74 @@
+-- Remove inpaint-only data while retaining ordinary translation pages, boxes,
+-- and logs. Rebuilding the page table keeps this migration compatible with
+-- SQLite versions that do not support ALTER TABLE ... DROP COLUMN.
+
+PRAGMA foreign_keys = OFF;
+
+UPDATE translation_logs
+SET job_id = NULL
+WHERE job_id IN (
+    SELECT _id
+    FROM translation_jobs
+    WHERE mode IN ('inpaint', 'overlay_inpaint')
+);
+
+DELETE FROM translation_jobs
+WHERE mode IN ('inpaint', 'overlay_inpaint');
+
+CREATE TABLE translation_pages_new(
+    _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    manga_id INTEGER NOT NULL,
+    chapter_id INTEGER NOT NULL,
+    page_index INTEGER NOT NULL,
+    source_image_key TEXT NOT NULL,
+    model TEXT NOT NULL,
+    target_language TEXT NOT NULL,
+    source_language TEXT,
+    pipeline TEXT NOT NULL,
+    image_width INTEGER,
+    image_height INTEGER,
+    created_at INTEGER NOT NULL,
+    updated_at INTEGER NOT NULL,
+    FOREIGN KEY(manga_id) REFERENCES mangas (_id) ON DELETE CASCADE,
+    FOREIGN KEY(chapter_id) REFERENCES chapters (_id) ON DELETE CASCADE,
+    UNIQUE(chapter_id, page_index, target_language)
+);
+
+INSERT INTO translation_pages_new(
+    _id,
+    manga_id,
+    chapter_id,
+    page_index,
+    source_image_key,
+    model,
+    target_language,
+    source_language,
+    pipeline,
+    image_width,
+    image_height,
+    created_at,
+    updated_at
+)
+SELECT
+    _id,
+    manga_id,
+    chapter_id,
+    page_index,
+    source_image_key,
+    model,
+    target_language,
+    source_language,
+    pipeline,
+    image_width,
+    image_height,
+    created_at,
+    updated_at
+FROM translation_pages;
+
+DROP TABLE translation_pages;
+ALTER TABLE translation_pages_new RENAME TO translation_pages;
+
+CREATE INDEX translation_pages_manga_index ON translation_pages(manga_id);
+CREATE INDEX translation_pages_chapter_index ON translation_pages(chapter_id, page_index);
+
+PRAGMA foreign_keys = ON;

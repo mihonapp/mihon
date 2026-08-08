@@ -20,32 +20,33 @@ class TranslationBatchEnqueuer(
         val pipeline = preferences.pipeline.get()
         val model = preferences.geminiModel.get()
         val overwrite = !preferences.skipExistingOverlays.get()
-        val maxImages = preferences.normalizedMaxImagesPerBatch()
         val candidates = mutableListOf<TranslationPageCandidate>()
 
         chapterIds.distinct().forEach { chapterId ->
             val pageCount = imageResolver.getPageCount(mangaId, chapterId)
+            val savedPageIndexes = repository
+                .getPageRowsByChapter(chapterId, targetLanguage)
+                .map { it.page_index.toInt() }
+                .toSet()
+            val activePageIndexes = repository
+                .getActiveJobsByChapter(
+                    mangaId = mangaId,
+                    chapterId = chapterId,
+                    pipeline = pipeline,
+                    mode = mode,
+                    targetLanguage = targetLanguage,
+                )
+                .mapNotNull { it.page_index?.toInt() }
+                .toSet()
             for (pageIndex in 0 until pageCount) {
                 candidates += TranslationPageCandidate(
                     chapterId = chapterId,
                     pageIndex = pageIndex,
                     hasOverlay = TranslationSavedOverlayPolicy.shouldSkipExistingOverlay(
-                        hasSavedPageRow = repository.getPage(
-                            chapterId = chapterId,
-                            pageIndex = pageIndex.toLong(),
-                            targetLanguage = targetLanguage,
-                        ) != null,
+                        hasSavedPageRow = pageIndex in savedPageIndexes,
                         overwrite = overwrite,
                     ),
-                    hasActiveJob = repository.hasActiveMatchingJob(
-                        mangaId = mangaId,
-                        chapterId = chapterId,
-                        pageIndex = pageIndex.toLong(),
-                        scope = TranslationScope.Image,
-                        pipeline = pipeline,
-                        mode = mode,
-                        targetLanguage = targetLanguage,
-                    ),
+                    hasActiveJob = pageIndex in activePageIndexes,
                 )
             }
         }
@@ -54,7 +55,6 @@ class TranslationBatchEnqueuer(
             mangaId = mangaId,
             candidates = candidates,
             overwrite = overwrite,
-            maxImages = maxImages,
             pipeline = pipeline,
             mode = mode,
             model = model,
@@ -67,7 +67,6 @@ class TranslationBatchEnqueuer(
         mangaId: Long,
         candidates: List<TranslationPageCandidate>,
         overwrite: Boolean,
-        maxImages: Int,
         pipeline: String,
         mode: TranslationMode,
         model: String,
@@ -77,19 +76,17 @@ class TranslationBatchEnqueuer(
         val pages = TranslationBatchPlanner.pagesToQueue(
             pages = candidates,
             overwrite = overwrite,
-            maxImagesPerBatch = maxImages,
         )
         var queued = 0
         val skippedExisting = candidates.count { !overwrite && it.hasOverlay }
         val skippedActive = candidates.count { it.hasActiveJob }
         var skipped = candidates.size - pages.size
         var skippedRaceDuplicate = 0
-        pages.forEach { page ->
-            val result = repository.enqueueJob(
+        pages.groupBy { it.chapterId }.forEach { (chapterId, chapterPages) ->
+            val result = repository.enqueueImageJobs(
                 mangaId = mangaId,
-                chapterId = page.chapterId,
-                pageIndex = page.pageIndex.toLong(),
-                scope = TranslationScope.Image,
+                chapterId = chapterId,
+                pageIndexes = chapterPages.map { it.pageIndex },
                 pipeline = pipeline,
                 mode = mode,
                 model = model,
@@ -97,12 +94,9 @@ class TranslationBatchEnqueuer(
                 sourceLanguage = sourceLanguage,
                 overwrite = overwrite,
             )
-            if (result.inserted) {
-                queued++
-            } else {
-                skipped++
-                skippedRaceDuplicate++
-            }
+            queued += result.queued
+            skipped += result.skipped
+            skippedRaceDuplicate += result.raceDuplicates
         }
         repository.insertLog(
             jobId = null,
@@ -124,7 +118,7 @@ class TranslationBatchEnqueuer(
                     "skipped_existing" to skippedExisting,
                     "skipped_active_duplicate" to skippedActive,
                     "skipped_race_duplicate" to skippedRaceDuplicate,
-                    "worker_batch_size" to maxImages,
+                    "worker_batch_size" to TranslationVisionBatchPayloadPolicy.MAX_PREPARED_IMAGE_BATCH_PAGES,
                     "overwrite" to overwrite,
                 ),
             ),

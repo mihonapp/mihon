@@ -11,12 +11,12 @@ import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import eu.kanade.presentation.util.formattedMessage
-import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
-import eu.kanade.tachiyomi.data.translation.TranslationReaderOverlayLoadAction
-import eu.kanade.tachiyomi.data.translation.TranslationReaderOverlayLoader
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayDisplayTransform
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayDisplayTransformResolver
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayRotation
+import eu.kanade.tachiyomi.data.translation.TranslationReaderOverlayLoadAction
+import eu.kanade.tachiyomi.data.translation.TranslationReaderOverlayLoader
+import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView

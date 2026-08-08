@@ -7,13 +7,13 @@ import android.graphics.Paint
 import android.graphics.PointF
 import android.graphics.RectF
 import android.graphics.Typeface
+import android.graphics.drawable.Animatable
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.text.TextUtils
-import android.graphics.drawable.Animatable
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -44,19 +44,18 @@ import com.github.chrisbanes.photoview.PhotoView
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.data.coil.cropBorders
 import eu.kanade.tachiyomi.data.coil.customDecoder
+import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
+import eu.kanade.tachiyomi.data.translation.TranslationOverlayBoxStyle
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayDisplayBox
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayDisplayTransform
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayDisplayTransformer
-import eu.kanade.tachiyomi.data.translation.TranslationLogLevel
-import eu.kanade.tachiyomi.data.translation.TranslationOverlayBoxStyle
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayMappedRect
-import eu.kanade.tachiyomi.data.translation.TranslationOverlayRenderCacheKey
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayRectMapper
+import eu.kanade.tachiyomi.data.translation.TranslationOverlayRenderCacheKey
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayRenderSkipPolicy
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayTextFitPolicy
 import eu.kanade.tachiyomi.data.translation.TranslationOverlayTextOrientationPolicy
 import eu.kanade.tachiyomi.data.translation.TranslationRepository
-import tachiyomi.domain.translation.service.TranslationPreferences
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonSubsamplingImageView
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
@@ -65,9 +64,10 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import okio.BufferedSource
-import tachiyomi.data.Translation_boxes
-import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.lang.withIOContext
+import tachiyomi.core.common.util.system.ImageUtil
+import tachiyomi.data.Translation_boxes
+import tachiyomi.domain.translation.service.TranslationPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.LinkedHashMap
@@ -540,7 +540,9 @@ open class ReaderPageImageView @JvmOverloads constructor(
             0.75f,
             true,
         ) {
-            override fun removeEldestEntry(eldest: MutableMap.MutableEntry<TextLayoutCacheKey, FittedTextLayout>): Boolean {
+            override fun removeEldestEntry(
+                eldest: MutableMap.MutableEntry<TextLayoutCacheKey, FittedTextLayout>,
+            ): Boolean {
                 return size > TEXT_LAYOUT_CACHE_LIMIT
             }
         }
@@ -1075,7 +1077,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
             reason: String,
             mapping: TranslationOverlayMappedRect? = null,
         ) {
-            val key = "${sourceBoxId}:${fragmentOrdinal}:$reason"
+            val key = "$sourceBoxId:$fragmentOrdinal:$reason"
             if (!loggedRenderSkips.add(key)) return
             if (loggedRenderSkips.size > MAX_RENDER_SKIP_LOG_KEYS) {
                 val iterator = loggedRenderSkips.iterator()
@@ -1145,7 +1147,24 @@ open class ReaderPageImageView @JvmOverloads constructor(
             paddingPx: Float,
             rotated: Boolean,
         ) {
-            val key = "text_fit:$sourceBoxId:$fragmentOrdinal:${text.length}:$textSizePx:$textScaleX:$lineCount:$ellipsisCount:$rotated"
+            val key = buildString {
+                append("text_fit:")
+                append(sourceBoxId)
+                append(":")
+                append(fragmentOrdinal)
+                append(":")
+                append(text.length)
+                append(":")
+                append(textSizePx)
+                append(":")
+                append(textScaleX)
+                append(":")
+                append(lineCount)
+                append(":")
+                append(ellipsisCount)
+                append(":")
+                append(rotated)
+            }
             if (!loggedRenderSkips.add(key)) return
             if (loggedRenderSkips.size > MAX_RENDER_SKIP_LOG_KEYS) {
                 val iterator = loggedRenderSkips.iterator()
