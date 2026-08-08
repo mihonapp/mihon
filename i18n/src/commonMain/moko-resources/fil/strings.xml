@@ -918,4 +918,6 @@
     <string name="pref_vertical_navigator">Gamitin ang vertical na navigator sa</string>
     <string name="pref_vertical_navigator_height">Taas ng vertical na navigator</string>
     <string name="considering">Pinag-iisipan</string>
+    <string name="downloading_with_progress">Dina-download… (%d%%)</string>
+    <string name="pref_filter_update_categories_details">Hindi ipapakita ang mga update sa mga nakabukod na kategorya, kahit kabilang pa ang mga ito sa mga napiling kategorya.</string>
 </resources>

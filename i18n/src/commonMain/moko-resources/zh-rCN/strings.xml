@@ -920,4 +920,6 @@
     <string name="considering">考虑到</string>
     <string name="theme_tokyonight">东京夜色</string>
     <string name="downloading_with_progress">正在下载… (%d%%)</string>
+    <string name="pref_filter_update_categories_details">同时属于包含和排除分类的作品更新将不予显示。</string>
+    <string name="pref_filter_upcoming_categories_details">同时属于包含和排除分类的标题将不予显示。</string>
 </resources>
