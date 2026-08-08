@@ -17,6 +17,7 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -41,7 +42,7 @@ class UpcomingScreen : Screen() {
         val navigator = LocalNavigator.currentOrThrow
 
         val viewModel = viewModel<UpcomingViewModel>()
-        val state by viewModel.state.collectAsState()
+        val state by viewModel.state.collectAsStateWithLifecycle()
 
         when (state.dialog) {
             is UpcomingViewModel.Dialog.FilterSheet -> {
