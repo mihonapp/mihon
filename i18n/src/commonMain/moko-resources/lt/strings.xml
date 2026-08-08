@@ -206,7 +206,6 @@
     <string name="none">Nėra</string>
     <string name="all">Visi</string>
     <string name="pref_library_update_categories_details">Įrašai, kurie yra įtraukti į neįtraukiamas kategorijas, nebus atnaujinami, net jei yra įtraukti į įtrauktąsias kategorijas.</string>
-    <string name="update_check_notification_download_error">Atsiuntimo klaida</string>
     <string name="update_check_notification_update_available">Nauja versija pasiekiama!</string>
     <string name="scale_type_fit_height">Pagal aukštį talpinimas</string>
     <string name="white_background">Balta</string>
@@ -359,7 +358,6 @@
     <string name="transition_pages_error">Nepavyko įkelti puslapių: %1$s</string>
     <string name="transition_previous">Ankstesnis:</string>
     <string name="update_check_confirm">Parsisiųsti</string>
-    <string name="update_check_notification_download_complete">Bakstelėkite, kad įdiegtumėte atnaujinimą</string>
     <string name="update_check_eol">Ši \"Android\" versija nebepalaikoma</string>
     <string name="update_check_no_new_updates">Naujų atnaujinimų nėra</string>
     <string name="migration_dialog_what_to_include">Pasirinkite duomenis, kuriuos norite įtraukti</string>

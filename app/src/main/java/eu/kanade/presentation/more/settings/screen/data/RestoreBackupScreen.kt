@@ -1,5 +1,6 @@
 package eu.kanade.presentation.more.settings.screen.data
 
+import android.app.Application
 import android.content.Context
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
@@ -14,14 +15,15 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.core.net.toUri
-import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.rememberScreenModel
+import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
@@ -32,6 +34,7 @@ import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
 import eu.kanade.tachiyomi.data.backup.restore.RestoreOptions
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import kotlinx.coroutines.flow.update
+import mihon.core.viewmodel.StateViewModel
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.LazyColumnWithAction
@@ -39,6 +42,8 @@ import tachiyomi.presentation.core.components.SectionCard
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 class RestoreBackupScreen(
     private val uri: String,
@@ -46,10 +51,14 @@ class RestoreBackupScreen(
 
     @Composable
     override fun Content() {
-        val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
-        val model = rememberScreenModel { RestoreBackupScreenModel(context, uri) }
-        val state by model.state.collectAsState()
+        val viewModel = viewModel<RestoreBackupViewModel>(
+            factory = RestoreBackupViewModel.Factory,
+            extras = CreationExtras {
+                set(RestoreBackupViewModel.URI_KEY, uri)
+            },
+        )
+        val state by viewModel.state.collectAsState()
 
         Scaffold(
             topBar = {
@@ -65,7 +74,7 @@ class RestoreBackupScreen(
                 actionLabel = stringResource(MR.strings.action_restore),
                 actionEnabled = state.canRestore && state.options.canRestore(),
                 onClickAction = {
-                    model.startRestore()
+                    viewModel.startRestore()
                     navigator.pop()
                 },
             ) {
@@ -83,7 +92,7 @@ class RestoreBackupScreen(
                                     label = stringResource(option.label),
                                     checked = option.getter(state.options),
                                     onCheckedChange = {
-                                        model.toggle(option.setter, it)
+                                        viewModel.toggle(option.setter, it)
                                     },
                                 )
                             }
@@ -164,10 +173,23 @@ class RestoreBackupScreen(
     }
 }
 
-private class RestoreBackupScreenModel(
+class RestoreBackupViewModel(
     private val context: Context,
     private val uri: String,
-) : StateScreenModel<RestoreBackupScreenModel.State>(State()) {
+) : StateViewModel<RestoreBackupViewModel.State>(State()) {
+
+    companion object {
+        val URI_KEY = CreationExtras.Key<String>()
+
+        val Factory = viewModelFactory {
+            initializer {
+                RestoreBackupViewModel(
+                    context = Injekt.get<Application>(),
+                    uri = get(URI_KEY)!!,
+                )
+            }
+        }
+    }
 
     init {
         validate(uri.toUri())

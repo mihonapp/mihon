@@ -11,6 +11,7 @@ import tachiyomi.core.common.preference.AndroidPreference.IntPrimitive
 import tachiyomi.core.common.preference.AndroidPreference.LongPrimitive
 import tachiyomi.core.common.preference.AndroidPreference.ObjectAsInt
 import tachiyomi.core.common.preference.AndroidPreference.ObjectAsString
+import tachiyomi.core.common.preference.AndroidPreference.ObjectSetAsStringSet
 import tachiyomi.core.common.preference.AndroidPreference.StringPrimitive
 import tachiyomi.core.common.preference.AndroidPreference.StringSetPrimitive
 
@@ -68,6 +69,22 @@ class AndroidPreferenceStore(
         deserializer: (Int) -> T,
     ): Preference<T> {
         return ObjectAsInt(
+            preferences = sharedPreferences,
+            keyFlow = keyFlow,
+            key = key,
+            defaultValue = defaultValue,
+            serializer = serializer,
+            deserializer = deserializer,
+        )
+    }
+
+    override fun <T> getObjectSetFromStringSet(
+        key: String,
+        defaultValue: Set<T>,
+        serializer: (T) -> String,
+        deserializer: (String) -> T?,
+    ): Preference<Set<T>> {
+        return ObjectSetAsStringSet(
             preferences = sharedPreferences,
             keyFlow = keyFlow,
             key = key,

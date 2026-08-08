@@ -175,8 +175,6 @@
     <string name="update_6hour">Каждые 6 часов</string>
     <string name="update_check_confirm">Загрузить</string>
     <string name="update_check_no_new_updates">Нет обновлений</string>
-    <string name="update_check_notification_download_complete">Нажмите для установки обновления</string>
-    <string name="update_check_notification_download_error">Ошибка загрузки</string>
     <string name="update_check_notification_download_in_progress">Загрузка…</string>
     <string name="update_check_notification_update_available">Доступно обновление!</string>
     <string name="update_never">Выключено</string>
@@ -906,7 +904,6 @@
     <string name="donationCampaign.paragraph3">Независимо от поддержки, Mihon останется с открытым исходным кодом, и я с волонтёрами будем и дальше его поддерживать.</string>
     <string name="donationCampaign.dismiss">Отклонить</string>
     <string name="supportUsScreen.contactForDetailsMessage">Если у вас есть другие способы поддержки или вопросы по этому поводу, можете присоединиться к нашему Discord-серверу.</string>
-    <string name="pref_webtoon_vertical_navigator">Использовать вертикальную навигацию для читалки с длинными страницами</string>
     <string name="extensionStores">Хранилище расширений</string>
     <string name="action.addExtensionStore">Добавить хранилище расширений</string>
     <string name="extensionStoresScreen.emptyLabel">Вы ещё не добавляли хранилище расширений</string>
@@ -918,4 +915,11 @@
     <string name="extensionStoresScreen.deleteStore.title">Удалить хранилище расширений</string>
     <string name="extensionStoresScreen.deleteStore.body">Вы хотите удалить хранилище расширений \"%1$s\" (%2$s)?</string>
     <string name="pref_webtoon_vertical_navigator_on_left">Разместить вертикальную навигацию с левой стороны</string>
+    <string name="considering">Рассматривается</string>
+    <string name="pref_vertical_navigator">Использовать вертикальную навигацию главы в</string>
+    <string name="pref_vertical_navigator_height">Высота вертикальной навигации</string>
+    <string name="downloading_with_progress">Загружается... (%d%%)</string>
+    <string name="theme_tokyonight">Токийская Ночь</string>
+    <string name="pref_filter_update_categories_details">Обновления в исключённых категориях не будут показываться, даже если они находятся во включённых категориях.</string>
+    <string name="pref_filter_upcoming_categories_details">Серии в исключённых категориях не будут показываться, даже если находятся в любых включённых категориях.</string>
 </resources>

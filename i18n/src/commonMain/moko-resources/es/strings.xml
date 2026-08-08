@@ -146,8 +146,6 @@
     <string name="update_check_confirm">Descargar</string>
     <string name="update_check_no_new_updates">Ya estás usando la última versión disponible</string>
     <string name="update_check_notification_download_in_progress">Descargando…</string>
-    <string name="update_check_notification_download_complete">Toca aquí para instalar la actualización</string>
-    <string name="update_check_notification_download_error">Error de descarga</string>
     <string name="update_check_notification_update_available">¡Hay una nueva versión!</string>
     <string name="information_no_downloads">No hay descargas</string>
     <string name="information_no_recent">No hay actualizaciones recientes</string>
@@ -910,6 +908,5 @@
     <string name="extensionStoresScreen.addStoreDeeplink.bodyText">¿Seguro que quieres añadir este listado de extensiones?</string>
     <string name="extensionStoresScreen.deleteStore.title">Quitar listado de extensiones</string>
     <string name="extensionStoresScreen.deleteStore.body">¿Seguro que quieres quitar el listado de extensiones «%1$s» (%2$s)?</string>
-    <string name="pref_webtoon_vertical_navigator">Navegar de forma vertical al leer tiras largas</string>
     <string name="pref_webtoon_vertical_navigator_on_left">Ubicar la interfaz de navegación en el margen izquierdo</string>
 </resources>

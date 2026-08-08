@@ -18,6 +18,8 @@ dependencies {
     implementation(libs.androidx.glance.appWidget)
     implementation(libs.material)
 
+    implementation(libs.kotlinx.datetime)
+
     implementation(libs.coil.core)
 
     api(libs.injekt)

@@ -40,9 +40,15 @@ class ProgressResponseBody(
                 val bytesRead = super.read(sink, byteCount)
                 // read() returns the number of bytes read, or -1 if this source is exhausted.
                 totalBytesRead += if (bytesRead != -1L) bytesRead else 0
+
+                // contentLength() returns -1L if Content-Length is missing
+                val totalLength = responseBody.contentLength().let {
+                    if (it != -1L) it + existingSize else -1L
+                }
+
                 progressListener.update(
                     totalBytesRead,
-                    responseBody.contentLength(),
+                    totalLength,
                     bytesRead == -1L,
                 )
                 return bytesRead

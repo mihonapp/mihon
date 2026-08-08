@@ -172,8 +172,6 @@
     <string name="update_check_confirm">Télécharger</string>
     <string name="update_check_no_new_updates">Aucune mise à jour disponible</string>
     <string name="update_check_notification_download_in_progress">Téléchargement en cours…</string>
-    <string name="update_check_notification_download_complete">Appuyer pour installer</string>
-    <string name="update_check_notification_download_error">Erreur lors du téléchargement</string>
     <string name="update_check_notification_update_available">Mise à jour disponible !</string>
     <string name="information_no_downloads">Aucun téléchargement en cours</string>
     <string name="information_no_recent">Pas de mises à jour récentes</string>
@@ -903,7 +901,6 @@
     <string name="extensionStoresScreen.addStoreDeeplink.bodyText">Souhaitez-vous ajouter le magasin d\'extension ci-dessous ?</string>
     <string name="extensionStoresScreen.deleteStore.title">Retirer le magasin d\'extension</string>
     <string name="extensionStoresScreen.deleteStore.body">Souhaitez-vous retirer le magasin d\'extension \"%1$s\" (%2$s) ?</string>
-    <string name="pref_webtoon_vertical_navigator">Utiliser le menu de navigation vertical pour la lecture en bande continue</string>
     <string name="pref_webtoon_vertical_navigator_on_left">Placer le menu de navigation à gauche</string>
     <string name="download_bookmarked">Mis en favoris</string>
     <string name="supportUsScreen.perks">Les donnateurs ont accès à des canaux exclusifs, avec plus d\'avantages à venir.</string>

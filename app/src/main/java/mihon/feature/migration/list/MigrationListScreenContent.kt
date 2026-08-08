@@ -51,7 +51,6 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.manga.components.MangaCover
-import eu.kanade.presentation.util.animateItemFastScroll
 import eu.kanade.presentation.util.formatChapterNumber
 import eu.kanade.presentation.util.rememberResourceBitmapPainter
 import eu.kanade.tachiyomi.R
@@ -114,7 +113,7 @@ fun MigrationListScreenContent(
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .animateItemFastScroll()
+                        .animateItem()
                         .padding(
                             start = MaterialTheme.padding.medium,
                             end = MaterialTheme.padding.small,

@@ -125,14 +125,13 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
         track.copyPersonalFrom(remoteTrack)
         track.total_chapters = remoteTrack.total_chapters
 
-        val readContent = api.getRead(track)
-        if (readContent != null) {
-            track.score = readContent.score.toDouble()
-            track.last_chapter_read = readContent.chapters.toDouble()
-            track.status = toTrackStatus(readContent.status)
-            track.started_reading_date = (readContent.startDate ?: 0L) * 1000
-            track.finished_reading_date = (readContent.endDate ?: 0L) * 1000
-        }
+        val readContent = api.getRead(track) ?: throw Exception("Could not find manga")
+
+        track.score = readContent.score.toDouble()
+        track.last_chapter_read = readContent.chapters.toDouble()
+        track.status = toTrackStatus(readContent.status)
+        track.started_reading_date = (readContent.startDate ?: 0L) * 1000
+        track.finished_reading_date = (readContent.endDate ?: 0L) * 1000
 
         return track
     }

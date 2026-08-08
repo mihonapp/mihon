@@ -587,8 +587,6 @@
     <string name="remove_manga">\"%s\"ті кітапханадан жойғай тұрсыз</string>
     <string name="skipped_reason_not_always_update">Туындыға жаңарту керек жоқ болғандықтан өткізіп жіберіледі</string>
     <string name="update_check_notification_download_in_progress">Жүктелуде…</string>
-    <string name="update_check_notification_download_error">Жүктеу қателігі</string>
-    <string name="update_check_notification_download_complete">Жаңартуды орнату үшін басыңыз</string>
     <string name="channel_errors">Қателіктер</string>
     <string name="unfinished_list">Аяқталмағандар Тізімі</string>
     <string name="score">Бағалау</string>

@@ -580,9 +580,7 @@
     <string name="download_notifier_downloader_title">Xestor de descargas</string>
     <string name="download_notifier_title_error">Erro</string>
     <string name="download_notifier_download_paused">Descargas en pausa</string>
-    <string name="update_check_notification_download_complete">Preme para instalar a actualización</string>
     <string name="channel_progress">Progreso</string>
-    <string name="update_check_notification_download_error">Erro na descarga</string>
     <string name="manga_info_collapse">Menos</string>
     <string name="delete_downloads_for_manga">Eliminar os capítulos descargados?</string>
     <string name="on_hold">En espera</string>

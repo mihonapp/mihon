@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.webview
 
-import android.app.Activity
 import android.app.assist.AssistContent
 import android.content.Context
 import android.content.Intent
@@ -73,6 +72,7 @@ class WebViewActivity : BaseActivity() {
                 initialTitle = intent.extras?.getString(TITLE_KEY),
                 url = url,
                 headers = headers,
+                defaultUserAgentProvider = network::defaultUserAgentProvider,
                 onUrlChange = { assistUrl = it },
                 onShare = this::shareWebpage,
                 onOpenInBrowser = this::openInBrowser,

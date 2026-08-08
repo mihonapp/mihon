@@ -219,8 +219,6 @@
     <string name="pref_skip_filtered_chapters">Preskoči filtrirana poglavlja</string>
     <string name="pref_skip_read_chapters">Preskoči pročitana poglavlja</string>
     <string name="update_check_notification_update_available">Dostupna je nova verzija!</string>
-    <string name="update_check_notification_download_error">Greška pri preuzimanju</string>
-    <string name="update_check_notification_download_complete">Dodirni za instaliranje nove verzije</string>
     <string name="update_check_notification_download_in_progress">Preuzimanje …</string>
     <string name="update_check_no_new_updates">Nema novih verzija</string>
     <string name="update_check_confirm">Preuzmi</string>

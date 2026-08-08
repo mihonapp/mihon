@@ -213,8 +213,6 @@
     <string name="update_check_confirm">تنزيل</string>
     <string name="update_check_no_new_updates">لا تتوفر تحديثات جديدة</string>
     <string name="update_check_notification_download_in_progress">جار التنزيل…</string>
-    <string name="update_check_notification_download_complete">اضغط لتثبيت التحديث</string>
-    <string name="update_check_notification_download_error">حدث خطأ في التنزيل</string>
     <string name="update_check_notification_update_available">نسخة جديدة متوفرة!</string>
     <string name="information_no_downloads">لا توجد تنزيلات</string>
     <string name="information_no_recent">لا توجد تحديثات جديدة</string>

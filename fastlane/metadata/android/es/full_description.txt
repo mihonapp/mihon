@@ -1,0 +1,9 @@
+Características:
+* Lee a tu manera con modos de visualización personalizables, incluido el tradicional de derecha a izquierda, de izquierda a derecha y modo cascada para webtoons.
+* Organiza tu colección en categorías personalizadas, consulta las insignias de no leídos y recibe actualizaciones automáticas cuando salgan nuevos capítulos.
+* Sincroniza tu progreso de lectura automáticamente con servicios populares como MyAnimeList, AniList, Kitsu, MangaBaka y muchos más.
+* Descarga capítulos para leer sin conexión y haz copias de seguridad de toda tu biblioteca y ajustes fácilmente para migrar de dispositivo o mantenerlo todo a salvo.
+* Disfruta de una interfaz Material You con personalización completa del tema, incluido un modo True Dark estricto.
+* Y mucho más...
+
+El desarrollador de esta aplicación no tiene ninguna afiliación con los proveedores de contenido disponibles, y esta aplicación no aloja ningún contenido.
