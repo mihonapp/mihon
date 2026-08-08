@@ -107,6 +107,18 @@ object SettingsReaderScreen : SearchableSettings {
                     preference = readerPreferences.showPageNumber,
                     title = stringResource(MR.strings.pref_show_page_number),
                 ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.showClock,
+                    title = stringResource(MR.strings.pref_show_clock),
+                    subtitle = stringResource(MR.strings.pref_show_clock_summary),
+                    enabled = fullscreen,
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.showBattery,
+                    title = stringResource(MR.strings.pref_show_battery),
+                    subtitle = stringResource(MR.strings.pref_show_battery_summary),
+                    enabled = fullscreen,
+                ),
             ),
         )
     }
