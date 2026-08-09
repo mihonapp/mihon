@@ -162,6 +162,7 @@ open class WebGpuViewer(
 
     val pages: List<ReaderPage>? get() = (currentPage as? ViewerReaderPage)?.page?.chapter?.pages
 
+    @Volatile
     var currentPage: ViewerPage? = null
 
     val preloadCount = 2
@@ -178,10 +179,11 @@ open class WebGpuViewer(
     }
 
     /**
-     * Evicts the page farthest from current. Must be called while holding lock.
+     * Evicts the page farthest from reference. Must be called while holding lock.
+     * @param reference The page to use as reference (defaults to currentPage)
      */
-    private fun evictFarthestPage() {
-        val current = currentPage ?: return
+    private fun evictFarthestPage(reference: ViewerPage? = null) {
+        val current = reference ?: currentPage ?: return
         val candidates = pageCache.filter { it !== current }.toMutableSet()
         if (candidates.isEmpty()) return
 
@@ -242,26 +244,30 @@ open class WebGpuViewer(
 
     /**
      * Gets or creates a page. Thread-safe.
+     * @param referencePage The page to use as reference for eviction (defaults to currentPage)
      */
-    fun getPage(page: ReaderPage): ViewerPage {
+    fun getPage(page: ReaderPage, referencePage: ViewerPage? = null): ViewerPage {
         val key = "R:${page.chapter.chapter.id}:${page.index}"
         return synchronized(lock) {
             findInCache(key) ?: ViewerReaderPage(page).also { newPage ->
                 pageCache.add(newPage)
                 while (pageCache.size > cacheSize) {
-                    evictFarthestPage()
                 }
             }
         }
     }
 
-    fun getPage(prevChapter: ReaderChapter?, nextChapter: ReaderChapter?): ViewerPage {
+    fun getPage(
+        prevChapter: ReaderChapter?,
+        nextChapter: ReaderChapter?,
+        referencePage: ViewerPage? = null,
+    ): ViewerPage {
         val key = "T:${prevChapter?.chapter?.id}:${nextChapter?.chapter?.id}"
         return synchronized(lock) {
             findInCache(key) ?: TransitionPage(prevChapter, nextChapter).also { newPage ->
                 pageCache.add(newPage)
                 while (pageCache.size > cacheSize) {
-                    evictFarthestPage()
+                    evictFarthestPage(referencePage ?: newPage)
                 }
             }
         }
@@ -276,6 +282,7 @@ open class WebGpuViewer(
         @Volatile
         var state: PageState = PageState.IDLE
 
+        @Volatile
         open var imagePage: ImagePage = ImagePage.Dummy(400, 400).apply {
             minScale = 1f
             maxScale = 1f
@@ -362,7 +369,6 @@ open class WebGpuViewer(
             fetchPage = fetch@{ index ->
                 val i = if (isReversed) -index else index
                 val page = nextPage(i) ?: return@fetch null
-                if (index == 0) preloadPages(page)
                 page.imagePage
             }
 
@@ -430,6 +436,8 @@ open class WebGpuViewer(
                     ?: (currentPage as? TransitionPage)?.let {
                         getPage(it.prevChapter, it.nextChapter)
                     }
+
+                currentPage?.let { preloadPages(it) }
             }
 
             pager.state.invalidate()
@@ -802,9 +810,9 @@ open class WebGpuViewer(
             }
         }
 
-        val direction = when (previousPage) {
-            null -> return
+        if (previousPage == null) return
 
+        val direction = when (previousPage) {
             is ViewerReaderPage if newPage is ViewerReaderPage -> if (previousPage.page.chapter == newPage.page.chapter) {
                 (newPage.page.index - previousPage.page.index).coerceIn(-1, 1)
             } else if (previousPage.page.chapter == newPage.prevChapter) 1 else -1
@@ -816,7 +824,13 @@ open class WebGpuViewer(
             else -> 0
         }
 
-        pager.state.animatePageTurn(if (isReversed) direction else -direction)
+        if (direction != 0) {
+            // Set the transition "from" page to animate from actual previous page (for far navigation)
+            pager.state.transitionFromPage = previousPage.imagePage
+            pager.state.animatePageTurn(if (isReversed) direction else -direction)
+        } else {
+            pager.state.invalidate()
+        }
     }
 
     /**
