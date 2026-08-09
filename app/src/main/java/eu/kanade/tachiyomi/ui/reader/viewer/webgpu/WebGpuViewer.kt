@@ -35,6 +35,7 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences.TransitionAnimation
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
@@ -49,11 +50,6 @@ import uy.kohesive.injekt.injectLazy
 import java.io.InputStream
 import kotlin.math.abs
 import kotlin.math.min
-
-private fun id(page: ReaderPage): String = "${page.chapter.chapter.id ?: ""}:${page.index}"
-
-private fun id(prevChapter: ReaderChapter?, nextChapter: ReaderChapter?): String =
-    "${prevChapter?.chapter?.id ?: ""}:${nextChapter?.chapter?.id ?: ""}"
 
 open class WebGpuViewer(
     val activity: ReaderActivity,
@@ -80,15 +76,55 @@ open class WebGpuViewer(
     val preloadCount = 2
     open val cacheSize = 9
 
-    val pageCache = LinkedHashMap<String, ViewerPage>(cacheSize, 0.75f, true)
+    val pageCache = mutableListOf<ViewerPage>()
+
+    private fun chapterPosition(chapter: ReaderChapter?): Int = when (chapter) {
+        viewerChapters?.prevChapter -> -1
+        viewerChapters?.currChapter -> 0
+        viewerChapters?.nextChapter -> 1
+        else -> Int.MAX_VALUE
+    }
+
+    private fun pagePosition(page: ViewerPage): Pair<Int, Int> = when (page) {
+        is ViewerReaderPage -> Pair(chapterPosition(page.page.chapter), page.page.index)
+        is TransitionPage -> {
+            val pos = page.prevChapter?.let { chapterPosition(it) } ?: (chapterPosition(page.nextChapter) - 1)
+            Pair(pos, Int.MAX_VALUE)
+        }
+
+        else -> Pair(Int.MAX_VALUE, Int.MAX_VALUE)
+    }
+
+    private fun evictFarthestPage() {
+        val current = currentPage ?: return
+        val candidates = pageCache.filter { it !== current }
+        if (candidates.isEmpty()) return
+
+        val currentPos = pagePosition(current)
+        val withPos = candidates.map { it to pagePosition(it) }
+        val sorted = withPos.sortedWith(compareBy({ it.second.first }, { it.second.second })).map { it.first }
+
+        val currentIdx = sorted.indexOfFirst {
+            val p = pagePosition(it)
+            p.first > currentPos.first || (p.first == currentPos.first && p.second > currentPos.second)
+        }.let { if (it < 0) sorted.size else it }
+
+        val toRemove = if (currentIdx == 0) sorted.last()
+        else if (currentIdx >= sorted.size) sorted.first()
+        else if (currentIdx > sorted.size / 2) sorted.first()
+        else sorted.last()
+
+        pageCache.remove(toRemove)
+        toRemove.imagePage.cleanup()
+    }
 
     fun getPage(page: ReaderPage): ViewerPage {
         return synchronized(pageCache) {
-            val r = pageCache.getOrPut(id(page), { ViewerReaderPage(page) })
+            val existing = pageCache.find { it is ViewerReaderPage && it.page === page }
+            val r = existing ?: ViewerReaderPage(page).also { pageCache.add(it) }
 
-            // TODO this isn't ordered correctly anymore
             while (pageCache.size > cacheSize) {
-                pageCache.remove(pageCache.keys.first())?.imagePage?.cleanup()
+                evictFarthestPage()
             }
 
             r
@@ -97,10 +133,12 @@ open class WebGpuViewer(
 
     fun getPage(prevChapter: ReaderChapter?, nextChapter: ReaderChapter?): ViewerPage {
         return synchronized(pageCache) {
-            val r = pageCache.getOrPut(id(prevChapter, nextChapter), { TransitionPage(prevChapter, nextChapter) })
+            val existing =
+                pageCache.find { it is TransitionPage && it.prevChapter === prevChapter && it.nextChapter === nextChapter }
+            val r = existing ?: TransitionPage(prevChapter, nextChapter).also { pageCache.add(it) }
 
             while (pageCache.size > cacheSize) {
-                pageCache.remove(pageCache.keys.first())?.imagePage?.cleanup()
+                evictFarthestPage()
             }
 
             r
@@ -112,7 +150,6 @@ open class WebGpuViewer(
         abstract val nextChapter: ReaderChapter?
         abstract val prev: ViewerPage?
         abstract val next: ViewerPage?
-        abstract val id: String
 
         var isProcessing: Boolean = false
 
@@ -129,9 +166,6 @@ open class WebGpuViewer(
 
         override val next: ViewerPage?
             get() = nextChapter?.pages?.firstOrNull()?.let { getPage(it) }
-
-        override val id: String
-            get() = id(prevChapter, nextChapter)
     }
 
     inner class ViewerReaderPage(val page: ReaderPage) : ViewerPage() {
@@ -182,9 +216,6 @@ open class WebGpuViewer(
                     }
                 } ?: getPage(page.chapter, null)
             }
-
-        override val id: String
-            get() = "${page.chapter.chapter.id ?: ""}:${page.index}"
     }
 
     fun nextPage(count: Int): ViewerPage? {
@@ -203,24 +234,7 @@ open class WebGpuViewer(
         return currentPage
     }
 
-    open fun updateTransitionAnimation() {
-        pager.state.transition = when (config.transitionAnimation) {
-            TransitionAnimation.DEFAULT -> if (isVertical) TransitionBasic.Vertical else TransitionBasic
-            TransitionAnimation.FLIP_LEFT -> TransitionFlipLeft
-            TransitionAnimation.FLIP_RIGHT -> TransitionFlipRight
-            TransitionAnimation.STACK_LEFT -> TransitionStackLeft
-            TransitionAnimation.STACK_RIGHT -> TransitionStackRight
-            TransitionAnimation.STACK_UP -> TransitionStackUp
-            TransitionAnimation.STACK_DOWN -> TransitionStackDown
-            TransitionAnimation.SPHERE -> TransitionSphere
-            TransitionAnimation.CUBE_INSIDE -> TransitionCube
-            TransitionAnimation.CUBE_OUTSIDE -> TransitionCubeOuter
-        }
-    }
-
     init {
-        updateTransitionAnimation()
-
         pager.state.apply {
             fetchPage = fetch@{ index ->
                 val i = if (isReversed) -index else index
@@ -251,8 +265,39 @@ open class WebGpuViewer(
 //        }
 
         config.imagePropertyChangedListener = {
+            pager.state.apply {
+                transition = when (config.transitionAnimation) {
+                    TransitionAnimation.DEFAULT -> if (isVertical) TransitionBasic.Vertical else TransitionBasic
+                    TransitionAnimation.FLIP_LEFT -> TransitionFlipLeft
+                    TransitionAnimation.FLIP_RIGHT -> TransitionFlipRight
+                    TransitionAnimation.STACK_LEFT -> TransitionStackLeft
+                    TransitionAnimation.STACK_RIGHT -> TransitionStackRight
+                    TransitionAnimation.STACK_UP -> TransitionStackUp
+                    TransitionAnimation.STACK_DOWN -> TransitionStackDown
+                    TransitionAnimation.SPHERE -> TransitionSphere
+                    TransitionAnimation.CUBE_INSIDE -> TransitionCube
+                    TransitionAnimation.CUBE_OUTSIDE -> TransitionCubeOuter
+                }
+
+                when (config.cutoutMode) {
+                    ReaderPreferences.CutoutMode.IGNORE -> {
+                        avoidCutout = false
+                    }
+
+                    ReaderPreferences.CutoutMode.AVOID -> {
+                        avoidCutout = true
+                        alwaysAvoidCutout = false
+                    }
+
+                    ReaderPreferences.CutoutMode.SHIFT -> {
+                        avoidCutout = true
+                        alwaysAvoidCutout = true
+                    }
+                }
+            }
+
             synchronized(pageCache) {
-                pageCache.forEach { it.value.imagePage.cleanup() }
+                pageCache.forEach { it.imagePage.cleanup() }
                 pageCache.clear()
 
                 currentPage = (currentPage as? ViewerReaderPage)?.page?.let { getPage(it) }
@@ -262,8 +307,6 @@ open class WebGpuViewer(
             }
 
             pager.state.invalidate()
-
-            updateTransitionAnimation()
         }
 
         config.navigationModeChangedListener = {
@@ -274,7 +317,7 @@ open class WebGpuViewer(
 
     override fun destroy() {
         synchronized(pageCache) {
-            pageCache.forEach { it.value.imagePage.cleanup() }
+            pageCache.forEach { it.imagePage.cleanup() }
             pageCache.clear()
         }
         scope.cancel()

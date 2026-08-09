@@ -7,8 +7,6 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 class WebGpuViewerContinuous(activity: ReaderActivity) :
     WebGpuViewer(activity, isReversed = false, isVertical = true, pager = ImageViewContinuous(activity)) {
 
-    override fun updateTransitionAnimation() {}
-
     private fun scrollByHalfPage(direction: Int) {
         val state = (pager as ImageViewContinuous).state
         val totalDistance = direction * state.height / 2f

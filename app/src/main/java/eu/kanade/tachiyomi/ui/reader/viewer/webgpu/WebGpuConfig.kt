@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webgpu
 
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
-import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences.TransitionAnimation
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerConfig
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
@@ -49,7 +48,10 @@ class WebGpuConfig(
     var landscapeZoom = false
         private set
 
-    var transitionAnimation = TransitionAnimation.DEFAULT
+    var transitionAnimation = ReaderPreferences.TransitionAnimation.DEFAULT
+        private set
+
+    var cutoutMode = ReaderPreferences.CutoutMode.AVOID
         private set
 
     init {
@@ -114,6 +116,12 @@ class WebGpuConfig(
         readerPreferences.transitionAnimation
             .register(
                 { transitionAnimation = it },
+                { imagePropertyChangedListener?.invoke() },
+            )
+
+        readerPreferences.cutoutMode
+            .register(
+                { cutoutMode = it },
                 { imagePropertyChangedListener?.invoke() },
             )
     }

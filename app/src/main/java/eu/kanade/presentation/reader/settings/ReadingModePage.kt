@@ -252,4 +252,15 @@ private fun ColumnScope.WebGpuViewerSettings(screenModel: ReaderSettingsScreenMo
             )
         }
     }
+
+    val cutoutMode by screenModel.preferences.cutoutMode.collectAsState()
+    SettingsChipRow(MR.strings.pref_cutout_mode) {
+        ReaderPreferences.CutoutMode.entries.map {
+            FilterChip(
+                selected = it == cutoutMode,
+                onClick = { screenModel.preferences.cutoutMode.set(it) },
+                label = { Text(stringResource(it.titleRes)) },
+            )
+        }
+    }
 }

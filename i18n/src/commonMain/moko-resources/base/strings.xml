@@ -514,6 +514,10 @@
     <string name="transition_animation_sphere">Sphere</string>
     <string name="transition_animation_cube_inside">Cube (Inside)</string>
     <string name="transition_animation_cube_outside">Cube (Outside)</string>
+    <string name="pref_cutout_mode">Transition Animation</string>
+    <string name="cutout_mode_ignore">Ignore</string>
+    <string name="cutout_mode_avoid">Avoid</string>
+    <string name="cutout_mode_shift">Shift</string>
 
       <!-- Downloads section -->
     <string name="pref_category_delete_chapters">Delete chapters</string>

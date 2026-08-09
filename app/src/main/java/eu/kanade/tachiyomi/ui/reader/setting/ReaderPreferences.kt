@@ -194,6 +194,9 @@ class ReaderPreferences(
     val transitionAnimation: Preference<TransitionAnimation> =
         preferenceStore.getEnum("webgpu_transition_animation", TransitionAnimation.DEFAULT)
 
+    val cutoutMode: Preference<CutoutMode> =
+        preferenceStore.getEnum("webgpu_cutout_mode", CutoutMode.AVOID)
+
     // endregion
 
     enum class FlashColor {
@@ -231,6 +234,12 @@ class ReaderPreferences(
         SPHERE(MR.strings.transition_animation_sphere),
         CUBE_INSIDE(MR.strings.transition_animation_cube_inside),
         CUBE_OUTSIDE(MR.strings.transition_animation_cube_outside),
+    }
+
+    enum class CutoutMode(val titleRes: StringResource) {
+        IGNORE(MR.strings.cutout_mode_ignore),
+        AVOID(MR.strings.cutout_mode_avoid),
+        SHIFT(MR.strings.cutout_mode_shift),
     }
 
     companion object {
