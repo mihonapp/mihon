@@ -174,8 +174,6 @@
     <string name="update_check_confirm">Scarica</string>
     <string name="update_check_no_new_updates">Non ci sono nuovi aggiornamenti disponibili</string>
     <string name="update_check_notification_download_in_progress">Download in corso…</string>
-    <string name="update_check_notification_download_complete">Tocca per installare l\'aggiornamento</string>
-    <string name="update_check_notification_download_error">Errore di scaricamento</string>
     <string name="update_check_notification_update_available">Nuova versione disponibile!</string>
     <string name="information_no_downloads">Nessun download</string>
     <string name="information_no_recent">Nessuna novità recente</string>
@@ -590,8 +588,8 @@
     <string name="ext_info_language">Lingua</string>
     <string name="on_hold_list">In Pausa</string>
     <string name="reading_list">Lista di lettura</string>
-    <string name="wish_list">Da Leggere</string>
-    <string name="complete_list">Completati</string>
+    <string name="wish_list">Lista dei desideri</string>
+    <string name="complete_list">Lista completata</string>
     <string name="unfinished_list">Non Completati</string>
     <string name="network_not_metered">Solo su rete non a consumo</string>
     <string name="custom_cover">Copertina personalizzata</string>
@@ -893,4 +891,5 @@
     <string name="migrationListScreen.matchWithoutChapterToast">Nessun capitolo trovato, questa voce non può essere utilizzata per la migrazione</string>
     <string name="download_bookmarked">Segnato</string>
     <string name="action_filter_excluded_scanlators">Filtrare i scanlator esclusi</string>
+    <string name="considering">Considerando</string>
 </resources>

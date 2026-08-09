@@ -9,9 +9,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
+import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material3.Badge
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,9 +23,12 @@ import androidx.compose.ui.text.font.FontWeight
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
+import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.relativeDateText
 import eu.kanade.presentation.util.isTabletUi
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.YearMonth
 import mihon.feature.upcoming.components.UpcomingItem
 import mihon.feature.upcoming.components.calendar.Calendar
 import tachiyomi.core.common.Constants
@@ -36,14 +39,15 @@ import tachiyomi.presentation.core.components.TwoPanelBox
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
-import java.time.LocalDate
-import java.time.YearMonth
+import tachiyomi.presentation.core.theme.active
 
 @Composable
 fun UpcomingScreenContent(
     state: UpcomingViewModel.State,
     setSelectedYearMonth: (YearMonth) -> Unit,
     onClickUpcoming: (manga: Manga) -> Unit,
+    onClickFilter: () -> Unit,
+    hasActiveFilters: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -56,7 +60,12 @@ fun UpcomingScreenContent(
         }
     }
     Scaffold(
-        topBar = { UpcomingToolbar() },
+        topBar = {
+            UpcomingToolbar(
+                hasFilters = hasActiveFilters,
+                onClickFilter = onClickFilter,
+            )
+        },
         modifier = modifier,
     ) { paddingValues ->
         if (isTabletUi()) {
@@ -86,7 +95,10 @@ fun UpcomingScreenContent(
 }
 
 @Composable
-private fun UpcomingToolbar() {
+private fun UpcomingToolbar(
+    hasFilters: Boolean,
+    onClickFilter: () -> Unit,
+) {
     val navigator = LocalNavigator.currentOrThrow
     val uriHandler = LocalUriHandler.current
 
@@ -94,12 +106,21 @@ private fun UpcomingToolbar() {
         title = stringResource(MR.strings.label_upcoming),
         navigateUp = navigator::pop,
         actions = {
-            IconButton(onClick = { uriHandler.openUri(Constants.URL_HELP_UPCOMING) }) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.HelpOutline,
-                    contentDescription = stringResource(MR.strings.upcoming_guide),
-                )
-            }
+            AppBarActions(
+                listOf(
+                    AppBar.Action(
+                        title = stringResource(MR.strings.action_filter),
+                        icon = Icons.Outlined.FilterList,
+                        iconTint = if (hasFilters) MaterialTheme.colorScheme.active else LocalContentColor.current,
+                        onClick = onClickFilter,
+                    ),
+                    AppBar.Action(
+                        title = stringResource(MR.strings.upcoming_guide),
+                        icon = Icons.AutoMirrored.Outlined.HelpOutline,
+                        onClick = { uriHandler.openUri(Constants.URL_HELP_UPCOMING) },
+                    ),
+                ),
+            )
         },
     )
 }
@@ -171,6 +192,7 @@ private fun UpcomingScreenSmallImpl(
                         onClick = { onClickUpcoming(item.manga) },
                     )
                 }
+
                 is UpcomingUIModel.Header -> {
                     DateHeading(
                         date = item.date,
@@ -222,6 +244,7 @@ private fun UpcomingScreenLargeImpl(
                                 onClick = { onClickUpcoming(item.manga) },
                             )
                         }
+
                         is UpcomingUIModel.Header -> {
                             DateHeading(
                                 date = item.date,

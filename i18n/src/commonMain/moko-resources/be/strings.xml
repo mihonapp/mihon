@@ -813,8 +813,6 @@
     <string name="update_check_eol">Гэтая версія Android больш не падтрымліваецца</string>
     <string name="update_check_no_new_updates">Няма новых абнаўленняў</string>
     <string name="update_check_notification_download_in_progress">Спампоўванне…</string>
-    <string name="update_check_notification_download_complete">Націсніце, каб усталяваць абнаўленне</string>
-    <string name="update_check_notification_download_error">Памылка спампоўвання</string>
     <string name="update_check_notification_update_available">Даступная новая версія!</string>
     <string name="information_no_manga_category">Катэгорыя пустая</string>
     <string name="information_no_entries_found">У гэтай катэгорыі твораў не знойдзена</string>

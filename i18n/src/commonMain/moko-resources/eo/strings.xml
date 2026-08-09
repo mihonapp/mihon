@@ -207,8 +207,6 @@
     <string name="channel_progress">Progreso</string>
     <string name="download_notifier_title_error">Eraro</string>
     <string name="update_check_notification_update_available">Nova versio disponebla!</string>
-    <string name="update_check_notification_download_error">Elŝutada eraro</string>
-    <string name="update_check_notification_download_complete">Tuŝetu por instali ĝisdatigon</string>
     <string name="update_check_notification_download_in_progress">Elŝutado…</string>
     <string name="update_check_no_new_updates">Sen novaj ĝisdatigoj disponeblaj</string>
     <string name="update_check_confirm">Elŝuti</string>

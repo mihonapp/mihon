@@ -22,6 +22,9 @@ import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.util.PkceUtil
 import eu.kanade.tachiyomi.util.lang.toLocalDate
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -35,7 +38,6 @@ import java.math.RoundingMode
 import java.security.SecureRandom
 import java.util.Base64
 import java.util.Locale
-import kotlin.time.Instant
 import tachiyomi.domain.track.model.Track as DomainTrack
 
 class MangaBakaApi(
@@ -123,9 +125,8 @@ class MangaBakaApi(
                         title = additionalData.chooseBestTitle()
                         status = userData.getStatus()
                         score = userData.rating?.toDouble() ?: 0.0
-                        started_reading_date = userData.startDate?.let { Instant.parse(it).toEpochMilliseconds() } ?: 0
-                        finished_reading_date =
-                            userData.finishDate?.let { Instant.parse(it).toEpochMilliseconds() } ?: 0
+                        started_reading_date = parseIsoDateAsLocalStartOfDay(userData.startDate) ?: 0
+                        finished_reading_date = parseIsoDateAsLocalStartOfDay(userData.finishDate) ?: 0
                         last_chapter_read = userData.progressChapter ?: 0.0
                         private = userData.isPrivate
                     }
@@ -265,6 +266,16 @@ class MangaBakaApi(
     }
 
     fun verifyOAuthState(state: String): Boolean = state == oauthStateParam
+
+    private fun parseIsoDateAsLocalStartOfDay(isoDate: String?): Long? {
+        // The v1 API returns full ISO 8601 strings with a midnight-UTC-truncated time component, regardless of the
+        // actual time of the change made.
+        return isoDate
+            ?.substringBefore("T")
+            ?.let { LocalDate.parse(it) }
+            ?.atStartOfDayIn(TimeZone.currentSystemDefault())
+            ?.toEpochMilliseconds()
+    }
 
     companion object {
         private const val CLIENT_ID = "zEZYMHXLWsLsafgbvJHXqzGvqQNOdkpo"

@@ -19,7 +19,7 @@ class GetManga(
         }
     }
 
-    suspend fun subscribe(id: Long): Flow<Manga> {
+    fun subscribe(id: Long): Flow<Manga> {
         return mangaRepository.getMangaByIdAsFlow(id)
     }
 
