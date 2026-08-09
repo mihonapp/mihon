@@ -84,8 +84,8 @@ open class WebGpuViewer(
      * Must be called while holding lock.
      */
     private fun queueForDecode(page: ViewerPage, prioritize: Boolean = false) {
-        // Already decoded
-        if (page.imagePage !is ImagePage.Dummy) return
+        // Already has a decoded image
+        if (page.imagePage.isDecoded) return
 
         when (page.state) {
             PageState.IDLE -> {
@@ -123,9 +123,9 @@ open class WebGpuViewer(
                         decodeQueue.removeLast().also { it.state = PageState.DECODING }
                     }
 
-                    // Verify page is still valid
+                    // Verify page is still valid (not evicted and doesn't have a decoded image yet)
                     val shouldProcess = synchronized(lock) {
-                        page in pageCache && page.state == PageState.DECODING && page.imagePage is ImagePage.Dummy
+                        page in pageCache && page.state == PageState.DECODING && !page.imagePage.isDecoded
                     }
 
                     if (!shouldProcess) {
@@ -480,7 +480,7 @@ open class WebGpuViewer(
         // If page is already ready, just re-queue immediately
         if (page.page.status == Page.State.Ready) {
             synchronized(lock) {
-                if (page in pageCache && page.imagePage is ImagePage.Dummy) {
+                if (page in pageCache && !page.imagePage.isDecoded) {
                     page.state = PageState.IDLE
                     queueForDecode(page, prioritize = currentPage?.let { pageKey(it) == pageKey(page) } ?: false)
                 } else if (page in pageCache) {
@@ -560,7 +560,7 @@ open class WebGpuViewer(
                 synchronized(lock) {
                     if (page in pageCache && page.state == PageState.LOADING) {
                         page.state = PageState.IDLE
-                        if (page.page.status == Page.State.Ready && page.imagePage is ImagePage.Dummy) {
+                        if (page.page.status == Page.State.Ready && !page.imagePage.isDecoded) {
                             queueForDecode(
                                 page,
                                 prioritize = currentPage?.let { pageKey(it) == pageKey(page) } ?: false,
@@ -589,9 +589,9 @@ open class WebGpuViewer(
 
         try {
             stream.use { input ->
-                // Check if still valid before decoding
+                // Check if still valid before decoding (not evicted and doesn't have decoded image yet)
                 synchronized(lock) {
-                    if (page !in pageCache || page.imagePage !is ImagePage.Dummy) {
+                    if (page !in pageCache || page.imagePage.isDecoded) {
                         if (page in pageCache) page.state = PageState.IDLE
                         return
                     }
@@ -617,7 +617,7 @@ open class WebGpuViewer(
                 }
 
                 synchronized(lock) {
-                    if (page in pageCache && page.imagePage is ImagePage.Dummy && !page.imagePage.destroyed) {
+                    if (page in pageCache && !page.imagePage.isDecoded && !page.imagePage.destroyed) {
                         page.imagePage = imagePage
                         page.state = PageState.IDLE
                         pager.state.invalidate()
@@ -697,7 +697,7 @@ open class WebGpuViewer(
             }
 
             synchronized(lock) {
-                if (page in pageCache && page.imagePage is ImagePage.Dummy && !page.imagePage.destroyed) {
+                if (page in pageCache && !page.imagePage.isDecoded && !page.imagePage.destroyed) {
                     page.imagePage = imagePage
                     page.state = PageState.IDLE
                     pager.state.invalidate()
