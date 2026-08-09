@@ -43,11 +43,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import uy.kohesive.injekt.injectLazy
-import java.io.InputStream
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -61,6 +59,99 @@ open class WebGpuViewer(
     val downloadManager: DownloadManager by injectLazy()
 
     private val scope = MainScope()
+
+    // Single lock for all page cache and queue operations
+    private val lock = Object()
+
+    // Page cache - all pages we know about
+    private val pageCache = mutableListOf<ViewerPage>()
+
+    // Decode queue - pages waiting to be decoded, processed LIFO (last = highest priority)
+    private val decodeQueue = ArrayDeque<ViewerPage>()
+
+    // Helper to create a stable key for a page
+    private fun pageKey(page: ViewerPage): String = when (page) {
+        is ViewerReaderPage -> "R:${page.page.chapter.chapter.id}:${page.page.index}"
+        is TransitionPage -> "T:${page.prevChapter?.chapter?.id}:${page.nextChapter?.chapter?.id}"
+        else -> ""
+    }
+
+    private fun findInCache(key: String): ViewerPage? = pageCache.find { pageKey(it) == key }
+
+    /**
+     * Queue a page for decoding if not already queued/loading/decoded.
+     * If prioritize=true and page is already queued, moves it to front.
+     * Must be called while holding lock.
+     */
+    private fun queueForDecode(page: ViewerPage, prioritize: Boolean = false) {
+        // Already decoded
+        if (page.imagePage !is ImagePage.Dummy) return
+
+        when (page.state) {
+            PageState.IDLE -> {
+                page.state = PageState.QUEUED
+                if (prioritize) {
+                    decodeQueue.addLast(page)
+                } else {
+                    decodeQueue.addFirst(page)
+                }
+                (lock as Object).notify()
+            }
+
+            PageState.QUEUED -> {
+                // Already queued - move to front if prioritizing
+                if (prioritize && decodeQueue.remove(page)) {
+                    decodeQueue.addLast(page)
+                }
+            }
+
+            PageState.LOADING, PageState.DECODING -> {
+                // Already being processed
+            }
+        }
+    }
+
+    init {
+        // Decode worker thread - processes pages from the queue
+        scope.launch(Dispatchers.Default) {
+            try {
+                while (true) {
+                    val page = synchronized(lock) {
+                        while (decodeQueue.isEmpty()) {
+                            (lock as Object).wait()
+                        }
+                        decodeQueue.removeLast().also { it.state = PageState.DECODING }
+                    }
+
+                    // Verify page is still valid
+                    val shouldProcess = synchronized(lock) {
+                        page in pageCache && page.state == PageState.DECODING && page.imagePage is ImagePage.Dummy
+                    }
+
+                    if (!shouldProcess) {
+                        synchronized(lock) {
+                            if (page in pageCache) page.state = PageState.IDLE
+                        }
+                        continue
+                    }
+
+                    try {
+                        when (page) {
+                            is ViewerReaderPage -> decodeReaderPage(page)
+                            is TransitionPage -> createTransitionPage(page)
+                        }
+                    } catch (e: Exception) {
+                        Log.e("WebGpuViewer", "Decode error: ${pageKey(page)}", e)
+                        synchronized(lock) { if (page in pageCache) page.state = PageState.IDLE }
+                    }
+                }
+            } catch (e: InterruptedException) {
+                // Normal shutdown
+            } catch (e: Exception) {
+                Log.e("WebGpuViewer", "Decode worker died", e)
+            }
+        }
+    }
 
     /**
      * Configuration used by the pager, like allow taps, scale mode on images, page transitions...
@@ -76,71 +167,105 @@ open class WebGpuViewer(
     val preloadCount = 2
     open val cacheSize = 9
 
-    val pageCache = mutableListOf<ViewerPage>()
-
-    private fun chapterPosition(chapter: ReaderChapter?): Int = when (chapter) {
-        viewerChapters?.prevChapter -> -1
-        viewerChapters?.currChapter -> 0
-        viewerChapters?.nextChapter -> 1
-        else -> Int.MAX_VALUE
+    /**
+     * Page processing state
+     */
+    enum class PageState {
+        IDLE,      // Not being processed
+        QUEUED,    // In decode queue
+        LOADING,   // Waiting for download
+        DECODING   // Being decoded
     }
 
-    private fun pagePosition(page: ViewerPage): Pair<Int, Int> = when (page) {
-        is ViewerReaderPage -> Pair(chapterPosition(page.page.chapter), page.page.index)
-        is TransitionPage -> {
-            val pos = page.prevChapter?.let { chapterPosition(it) } ?: (chapterPosition(page.nextChapter) - 1)
-            Pair(pos, Int.MAX_VALUE)
-        }
-
-        else -> Pair(Int.MAX_VALUE, Int.MAX_VALUE)
-    }
-
+    /**
+     * Evicts the page farthest from current. Must be called while holding lock.
+     */
     private fun evictFarthestPage() {
         val current = currentPage ?: return
-        val candidates = pageCache.filter { it !== current }
+        val candidates = pageCache.filter { it !== current }.toMutableSet()
         if (candidates.isEmpty()) return
 
-        val currentPos = pagePosition(current)
-        val sorted =
-            candidates.map { it to pagePosition(it) }.sortedWith(compareBy({ it.second.first }, { it.second.second }))
+        fun findNext(page: ViewerPage): ViewerPage? = when (page) {
+            is ViewerReaderPage -> {
+                val chapterId = page.page.chapter.chapter.id
+                val nextIndex = page.page.index + 1
+                candidates.find { it is ViewerReaderPage && it.page.chapter.chapter.id == chapterId && it.page.index == nextIndex }
+                    ?: candidates.find { it is TransitionPage && it.prevChapter?.chapter?.id == chapterId }
+            }
 
-        val currentIdx = sorted.indexOfFirst { (_, pos) ->
-            pos.first > currentPos.first || (pos.first == currentPos.first && pos.second > currentPos.second)
-        }.let { if (it < 0) sorted.size else it }
+            is TransitionPage -> {
+                val nextChapterId = page.nextChapter?.chapter?.id
+                candidates.find { it is ViewerReaderPage && it.page.chapter.chapter.id == nextChapterId && it.page.index == 0 }
+            }
 
-        val toRemove = when {
-            currentIdx == 0 -> sorted.last()
-            currentIdx >= sorted.size -> sorted.first()
-            currentIdx > sorted.size / 2 -> sorted.first()
-            else -> sorted.last()
-        }.first
+            else -> null
+        }
+
+        fun findPrev(page: ViewerPage): ViewerPage? = when (page) {
+            is ViewerReaderPage -> {
+                val chapterId = page.page.chapter.chapter.id
+                val prevIndex = page.page.index - 1
+                candidates.find { it is ViewerReaderPage && it.page.chapter.chapter.id == chapterId && it.page.index == prevIndex }
+                    ?: candidates.find { it is TransitionPage && it.nextChapter?.chapter?.id == chapterId }
+            }
+
+            is TransitionPage -> {
+                val prevChapterId = page.prevChapter?.chapter?.id
+                page.prevChapter?.pages?.lastIndex?.let { lastIndex ->
+                    candidates.find { it is ViewerReaderPage && it.page.chapter.chapter.id == prevChapterId && it.page.index == lastIndex }
+                }
+            }
+
+            else -> null
+        }
+
+        var farthest: ViewerPage? = null
+        var forward: ViewerPage? = current
+        var backward: ViewerPage? = current
+
+        for (i in 0 until cacheSize) {
+            if (candidates.isEmpty()) break
+            forward = forward?.let { findNext(it) }
+            backward = backward?.let { findPrev(it) }
+            if (forward == null && backward == null) break
+            if (forward != null && candidates.remove(forward)) farthest = forward
+            if (backward != null && candidates.remove(backward)) farthest = backward
+        }
+
+        val toRemove = candidates.firstOrNull() ?: farthest ?: return
 
         pageCache.remove(toRemove)
+        decodeQueue.remove(toRemove)
+        toRemove.state = PageState.IDLE
         toRemove.imagePage.cleanup()
     }
 
-    private inline fun getOrCreatePage(
-        crossinline find: () -> ViewerPage?,
-        crossinline create: () -> ViewerPage,
-    ): ViewerPage {
-        return synchronized(pageCache) {
-            val r = find() ?: create().also { pageCache.add(it) }
-            while (pageCache.size > cacheSize) {
-                evictFarthestPage()
+    /**
+     * Gets or creates a page. Thread-safe.
+     */
+    fun getPage(page: ReaderPage): ViewerPage {
+        val key = "R:${page.chapter.chapter.id}:${page.index}"
+        return synchronized(lock) {
+            findInCache(key) ?: ViewerReaderPage(page).also { newPage ->
+                pageCache.add(newPage)
+                while (pageCache.size > cacheSize) {
+                    evictFarthestPage()
+                }
             }
-            r
         }
     }
 
-    fun getPage(page: ReaderPage): ViewerPage = getOrCreatePage(
-        find = { pageCache.find { it is ViewerReaderPage && it.page === page } },
-        create = { ViewerReaderPage(page) },
-    )
-
-    fun getPage(prevChapter: ReaderChapter?, nextChapter: ReaderChapter?): ViewerPage = getOrCreatePage(
-        find = { pageCache.find { it is TransitionPage && it.prevChapter === prevChapter && it.nextChapter === nextChapter } },
-        create = { TransitionPage(prevChapter, nextChapter) },
-    )
+    fun getPage(prevChapter: ReaderChapter?, nextChapter: ReaderChapter?): ViewerPage {
+        val key = "T:${prevChapter?.chapter?.id}:${nextChapter?.chapter?.id}"
+        return synchronized(lock) {
+            findInCache(key) ?: TransitionPage(prevChapter, nextChapter).also { newPage ->
+                pageCache.add(newPage)
+                while (pageCache.size > cacheSize) {
+                    evictFarthestPage()
+                }
+            }
+        }
+    }
 
     abstract class ViewerPage {
         abstract val prevChapter: ReaderChapter?
@@ -148,7 +273,8 @@ open class WebGpuViewer(
         abstract val prev: ViewerPage?
         abstract val next: ViewerPage?
 
-        var isProcessing: Boolean = false
+        @Volatile
+        var state: PageState = PageState.IDLE
 
         open var imagePage: ImagePage = ImagePage.Dummy(400, 400).apply {
             minScale = 1f
@@ -235,7 +361,9 @@ open class WebGpuViewer(
         pager.state.apply {
             fetchPage = fetch@{ index ->
                 val i = if (isReversed) -index else index
-                nextPage(i)?.also { preloadPages(it) }?.imagePage
+                val page = nextPage(i) ?: return@fetch null
+                if (index == 0) preloadPages(page)
+                page.imagePage
             }
 
             onTap = { offset ->
@@ -290,8 +418,12 @@ open class WebGpuViewer(
                 }
             }
 
-            synchronized(pageCache) {
-                pageCache.forEach { it.imagePage.cleanup() }
+            synchronized(lock) {
+                decodeQueue.clear()
+                pageCache.forEach {
+                    it.state = PageState.IDLE
+                    it.imagePage.cleanup()
+                }
                 pageCache.clear()
 
                 currentPage = (currentPage as? ViewerReaderPage)?.page?.let { getPage(it) }
@@ -310,8 +442,12 @@ open class WebGpuViewer(
     }
 
     override fun destroy() {
-        synchronized(pageCache) {
-            pageCache.forEach { it.imagePage.cleanup() }
+        synchronized(lock) {
+            decodeQueue.clear()
+            pageCache.forEach {
+                it.state = PageState.IDLE
+                it.imagePage.cleanup()
+            }
             pageCache.clear()
         }
         scope.cancel()
@@ -322,208 +458,289 @@ open class WebGpuViewer(
      */
     override fun getView(): View = pager
 
-    private suspend fun loadPage(page: ViewerReaderPage): InputStream? {
-        val loader = page.page.chapter.pageLoader ?: return null
-
-        // TODO: cancellable/queue
-        CoroutineScope(Dispatchers.IO).launch {
-            loader.loadPage(page.page)
+    /**
+     * Start loading a page and set up listener to re-queue when ready.
+     * Called when decode worker encounters a page that isn't downloaded yet.
+     */
+    private fun startPageLoad(page: ViewerReaderPage) {
+        val loader = page.page.chapter.pageLoader ?: run {
+            synchronized(lock) { if (page in pageCache) page.state = PageState.IDLE }
+            return
         }
 
-        val downloadProgressJob = CoroutineScope(Dispatchers.Default).launch {
-            page.page.progressFlow.collect { value ->
-                if (page.imagePage.image == null) {
-                    page.imagePage = ImagePage(400, 400).apply {
-                        parent = pager.state
-                        minScale = homeScale
-                        maxScale = homeScale
-                        scale = homeScale
+        // If page is already ready, just re-queue immediately
+        if (page.page.status == Page.State.Ready) {
+            synchronized(lock) {
+                if (page in pageCache && page.imagePage is ImagePage.Dummy) {
+                    page.state = PageState.IDLE
+                    queueForDecode(page, prioritize = currentPage?.let { pageKey(it) == pageKey(page) } ?: false)
+                } else if (page in pageCache) {
+                    page.state = PageState.IDLE
+                }
+            }
+            return
+        }
 
-                        WebGpuRenderer.withContext {
-                            (this@apply as ImagePage.Draw).texture?.let { texture ->
-                                Draw.submit { encoder ->
-                                    clear(encoder, texture, 0x00000000)
-                                    line(encoder, texture, 0.1f, 0.5f, 0.9f, 0.5f, 0xFF101010.toInt(), 30f)
+        // Transition to LOADING state
+        synchronized(lock) {
+            if (page !in pageCache) return
+            page.state = PageState.LOADING
+        }
+
+        // Start the download
+        if (page.page.status == Page.State.Queue) {
+            scope.launch(Dispatchers.IO) {
+                loader.loadPage(page.page)
+            }
+        }
+
+        // Set up progress indicator and re-queue when ready
+        scope.launch {
+            try {
+                val downloadProgressJob = launch {
+                    page.page.progressFlow.collect { value ->
+                        // Check if page was evicted or already decoded
+                        synchronized(lock) {
+                            if (page !in pageCache || page.imagePage !is ImagePage.Dummy) return@collect
+                        }
+
+                        if (page.imagePage.image == null) {
+                            page.imagePage = ImagePage(400, 400).apply {
+                                parent = pager.state
+                                minScale = homeScale
+                                maxScale = homeScale
+                                scale = homeScale
+
+                                WebGpuRenderer.withContext {
+                                    (this@apply as ImagePage.Draw).texture?.let { texture ->
+                                        Draw.submit { encoder ->
+                                            clear(encoder, texture, 0x00000000)
+                                            line(encoder, texture, 0.1f, 0.5f, 0.9f, 0.5f, 0xFF101010.toInt(), 30f)
+                                        }
+                                    }
                                 }
                             }
-                        }
-                    }
-                } else {
-                    WebGpuRenderer.withContext {
-                        (page.imagePage as ImagePage.Draw?)?.texture?.let { texture ->
-                            Draw.submit { encoder ->
-                                val x2 = 0.1f + (value / 100f) * 0.8f
-                                line(encoder, texture, 0.1f, 0.5f, x2, 0.5f, 0xFFFFFFFF.toInt(), 20f)
+                        } else {
+                            WebGpuRenderer.withContext {
+                                (page.imagePage as ImagePage.Draw?)?.texture?.let { texture ->
+                                    Draw.submit { encoder ->
+                                        val x2 = 0.1f + (value / 100f) * 0.8f
+                                        line(encoder, texture, 0.1f, 0.5f, x2, 0.5f, 0xFFFFFFFF.toInt(), 20f)
+                                    }
+                                }
+                                pager.state.invalidate()
                             }
                         }
-                        pager.state.invalidate()
                     }
                 }
+
+                page.page.statusFlow.takeWhile { state ->
+                    when (state) {
+                        Page.State.Queue, Page.State.LoadPage, Page.State.DownloadImage -> true
+                        is Page.State.Error -> {
+                            Log.e("WebGpuViewer", "Page load error: ${state.error}"); false
+                        }
+
+                        Page.State.Ready -> false
+                    }
+                }.collect {}
+
+                downloadProgressJob.cancel()
+
+                // Re-queue for decoding if ready
+                synchronized(lock) {
+                    if (page in pageCache && page.state == PageState.LOADING) {
+                        page.state = PageState.IDLE
+                        if (page.page.status == Page.State.Ready && page.imagePage is ImagePage.Dummy) {
+                            queueForDecode(
+                                page,
+                                prioritize = currentPage?.let { pageKey(it) == pageKey(page) } ?: false,
+                            )
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("WebGpuViewer", "startPageLoad error", e)
+                synchronized(lock) { if (page in pageCache) page.state = PageState.IDLE }
             }
         }
-
-        page.page.statusFlow.takeWhile { state ->
-            when (state) {
-                Page.State.Queue, Page.State.LoadPage, Page.State.DownloadImage -> true
-                is Page.State.Error -> {
-                    Log.e("WebGpuViewer", "Error ${state.error}"); false
-                }
-
-                Page.State.Ready -> false
-            }
-        }.collectLatest {}
-
-        downloadProgressJob.cancel()
-
-        return page.page.stream?.invoke()
     }
 
     private suspend fun decodeReaderPage(page: ViewerReaderPage) {
-        synchronized(page) {
-            if (page.imagePage !is ImagePage.Dummy) return
-            if (page.isProcessing) return
-            page.isProcessing = true
+        // If page isn't downloaded yet, start loading
+        if (page.page.status != Page.State.Ready) {
+            startPageLoad(page)
+            return
         }
 
-        loadPage(page)?.use {
-            Log.d("WebGpuViewer", "create page: ${page.page.chapter.chapter.id} ${page.page.index}")
-
-            val dec = ImageDecoder.new(it)
-            (0 until dec.pages).map { dec.decodeNext() }
-        }?.let { res ->
-            val pages = res.map { page -> Pair(Image(page.image, page.width, page.height), page.duration) }
-            ImagePage(pages[0].first).apply {
-                if (config.imageCropBorders) {
-                    trim = Trim.find(image!!, 1f, 1f, 1f, 0.15f)
-                }
-
-                parent = pager.state
-                x = homeX
-                y = homeY
-                scale = homeScale
-
-                if (pages.size > 1) {
-                    startAnimationLoop(pages, { pager.state.invalidate() })
-                }
-            }
-        }?.also {
-            synchronized(pageCache) {
-                if (page.imagePage.destroyed) {
-                    it.cleanup()
-                    return
-                }
-                page.imagePage = it
-                pager.state.invalidate()
-            }
+        val stream = page.page.stream?.invoke() ?: run {
+            synchronized(lock) { if (page in pageCache) page.state = PageState.IDLE }
+            return
         }
 
-        page.isProcessing = false
+        try {
+            stream.use { input ->
+                // Check if still valid before decoding
+                synchronized(lock) {
+                    if (page !in pageCache || page.imagePage !is ImagePage.Dummy) {
+                        if (page in pageCache) page.state = PageState.IDLE
+                        return
+                    }
+                }
+
+                val dec = ImageDecoder.new(input)
+                val decoded = (0 until dec.pages).map { dec.decodeNext() }
+                val frames = decoded.map { frame ->
+                    Pair(Image(frame.image, frame.width, frame.height), frame.duration)
+                }
+
+                val imagePage = ImagePage(frames[0].first).apply {
+                    if (config.imageCropBorders) {
+                        trim = Trim.find(image!!, 1f, 1f, 1f, 0.15f)
+                    }
+                    parent = pager.state
+                    x = homeX
+                    y = homeY
+                    scale = homeScale
+                    if (frames.size > 1) {
+                        startAnimationLoop(frames) { pager.state.invalidate() }
+                    }
+                }
+
+                synchronized(lock) {
+                    if (page in pageCache && page.imagePage is ImagePage.Dummy && !page.imagePage.destroyed) {
+                        page.imagePage = imagePage
+                        page.state = PageState.IDLE
+                        pager.state.invalidate()
+                    } else {
+                        if (page in pageCache) page.state = PageState.IDLE
+                        imagePage.cleanup()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("WebGpuViewer", "decodeReaderPage error", e)
+            synchronized(lock) { if (page in pageCache) page.state = PageState.IDLE }
+        }
     }
 
     private suspend fun createTransitionPage(page: TransitionPage) {
-        synchronized(page) {
-            if (page.imagePage !is ImagePage.Dummy) return
-            if (page.isProcessing) return
-            page.isProcessing = true
-        }
-
-        val bitmap = createBitmap(pager.state.width, pager.state.height)
-
-        val canvas = Canvas(bitmap)
-        canvas.drawColor(Color.BLACK)
-
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.WHITE
-            textSize = 48f
-            textAlign = Paint.Align.CENTER
-        }
-
-        val maxWidth = bitmap.width * 0.8f
-        val lineHeight = 48f
-
-        fun wrapText(text: String): List<String> {
-            val words = text.split(" ")
-            val lines = mutableListOf<String>()
-            var currentLine = StringBuilder()
-
-            for (word in words) {
-                val testLine = if (currentLine.isEmpty()) word else "$currentLine $word"
-                if (paint.measureText(testLine) <= maxWidth) {
-                    currentLine = StringBuilder(testLine)
-                } else {
-                    if (currentLine.isNotEmpty()) lines.add(currentLine.toString())
-                    currentLine = StringBuilder(word)
+        try {
+            // Check if still valid
+            synchronized(lock) {
+                if (page !in pageCache || page.imagePage !is ImagePage.Dummy) {
+                    if (page in pageCache) page.state = PageState.IDLE
+                    return
                 }
             }
-            if (currentLine.isNotEmpty()) lines.add(currentLine.toString())
-            return lines
-        }
 
-        val x = bitmap.width / 2f
-        var y = bitmap.height / 2f
+            val bitmap = createBitmap(pager.state.width, pager.state.height)
+            val canvas = Canvas(bitmap)
+            canvas.drawColor(Color.BLACK)
 
-        val lines = mutableListOf<Pair<String, Float>>()
-
-        page.prevChapter?.chapter?.let { chapter ->
-            lines.add(Pair("Previous:", lineHeight))
-            wrapText(chapter.name).forEach { lines.add(Pair(it, lineHeight)) }
-            page.nextChapter?.chapter?.let { lines.add(Pair("", lineHeight)) }
-        }
-
-        page.nextChapter?.chapter?.let { chapter ->
-            lines.add(Pair("Next:", lineHeight))
-            wrapText(chapter.name).forEach { lines.add(Pair(it, lineHeight)) }
-        }
-
-        y -= lines.map { it.second }.sum() / 2
-
-        lines.forEach {
-            canvas.drawText(it.first, x, y + it.second, paint)
-            y += it.second
-        }
-
-        val imagePage = ImagePage(bitmap, createMipMaps = false).apply {
-            minScale = 1f
-            maxScale = 1f
-        }
-
-        synchronized(pageCache) {
-            if (page.imagePage.destroyed) {
-                imagePage.cleanup()
-                return
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.WHITE
+                textSize = 48f
+                textAlign = Paint.Align.CENTER
             }
-            page.imagePage = imagePage
-            pager.state.invalidate()
-        }
 
-        page.isProcessing = false
+            val maxWidth = bitmap.width * 0.8f
+            val lineHeight = 48f
+
+            fun wrapText(text: String): List<String> {
+                val words = text.split(" ")
+                val lines = mutableListOf<String>()
+                var currentLine = StringBuilder()
+                for (word in words) {
+                    val testLine = if (currentLine.isEmpty()) word else "$currentLine $word"
+                    if (paint.measureText(testLine) <= maxWidth) {
+                        currentLine = StringBuilder(testLine)
+                    } else {
+                        if (currentLine.isNotEmpty()) lines.add(currentLine.toString())
+                        currentLine = StringBuilder(word)
+                    }
+                }
+                if (currentLine.isNotEmpty()) lines.add(currentLine.toString())
+                return lines
+            }
+
+            val lines = mutableListOf<Pair<String, Float>>()
+            page.prevChapter?.chapter?.let { chapter ->
+                lines.add(Pair("Previous:", lineHeight))
+                wrapText(chapter.name).forEach { lines.add(Pair(it, lineHeight)) }
+                page.nextChapter?.chapter?.let { lines.add(Pair("", lineHeight)) }
+            }
+            page.nextChapter?.chapter?.let { chapter ->
+                lines.add(Pair("Next:", lineHeight))
+                wrapText(chapter.name).forEach { lines.add(Pair(it, lineHeight)) }
+            }
+
+            val x = bitmap.width / 2f
+            var y = bitmap.height / 2f - lines.sumOf { it.second.toDouble() }.toFloat() / 2
+            lines.forEach {
+                canvas.drawText(it.first, x, y + it.second, paint)
+                y += it.second
+            }
+
+            val imagePage = ImagePage(bitmap, createMipMaps = false).apply {
+                minScale = 1f
+                maxScale = 1f
+            }
+
+            synchronized(lock) {
+                if (page in pageCache && page.imagePage is ImagePage.Dummy && !page.imagePage.destroyed) {
+                    page.imagePage = imagePage
+                    page.state = PageState.IDLE
+                    pager.state.invalidate()
+                } else {
+                    if (page in pageCache) page.state = PageState.IDLE
+                    imagePage.cleanup()
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("WebGpuViewer", "createTransitionPage error", e)
+            synchronized(lock) { if (page in pageCache) page.state = PageState.IDLE }
+        }
     }
 
-    protected fun preloadPage(page: ViewerPage) {
-        CoroutineScope(Dispatchers.Default).launch {
-            when (page) {
-                is ViewerReaderPage -> decodeReaderPage(page)
-                is TransitionPage -> createTransitionPage(page)
-            }
+    /**
+     * Queue a page for decoding. If prioritize=true, moves existing queued page to front.
+     */
+    protected fun preloadPage(page: ViewerPage, prioritize: Boolean = false) {
+        synchronized(lock) {
+            val cachedPage = findInCache(pageKey(page)) ?: return
+            queueForDecode(cachedPage, prioritize)
         }
     }
 
     protected fun preloadPages(page: ViewerPage) {
-        pager.state.post {
-            preloadPage(page)
+        // Get the canonical page from cache to ensure we're working with current data
+        val key = pageKey(page)
+        val cachedPage = synchronized(lock) { findInCache(key) } ?: return
 
-            var p = page
-            for (i in 0 until preloadCount) {
-                p = p.next ?: break
-                preloadPage(p)
-            }
+        // Priority order: current (highest), next1, next2, prev1, prev2 (lowest)
+        // Add in reverse for LIFO, current page gets prioritized
 
-            p = page
-            for (i in 0 until preloadCount) {
-                p = p.prev ?: break
-                preloadPage(p)
-            }
+        // Add prev pages (lowest priority)
+        val prevPages = mutableListOf<ViewerPage>()
+        var p: ViewerPage? = cachedPage
+        for (i in 0 until preloadCount) {
+            p = p?.prev ?: break
+            prevPages.add(p)
         }
+        prevPages.asReversed().forEach { preloadPage(it) }
+
+        // Add next pages (medium priority)
+        val nextPages = mutableListOf<ViewerPage>()
+        p = cachedPage
+        for (i in 0 until preloadCount) {
+            p = p?.next ?: break
+            nextPages.add(p)
+        }
+        nextPages.asReversed().forEach { preloadPage(it) }
+
+        // Add current page last with priority flag (highest priority in LIFO)
+        preloadPage(cachedPage, prioritize = true)
     }
 
     /**
@@ -537,10 +754,10 @@ open class WebGpuViewer(
 
         val requestedPage = pages[min(chapters.currChapter.requestedPage, pages.lastIndex)]
 
-        currentPage = (currentPage ?: getPage(requestedPage)).also { page ->
-            (page as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
-            preloadPages(page)
-        }
+        val page = currentPage ?: getPage(requestedPage)
+        currentPage = page
+        (page as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
+        preloadPages(page)
 
         pager.state.apply {
             onPageChange = onPageChange@{ delta ->
@@ -549,12 +766,12 @@ open class WebGpuViewer(
                 val delta = if (isReversed) -delta else delta
 
                 nextPage(delta)?.let { newPage ->
-                    currentPage = newPage.also { page ->
-                        (page as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
-                    }
+                    currentPage = newPage
+                    (newPage as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
+                    preloadPages(newPage)
 
-                    (currentPage as? TransitionPage)?.let { currentPage ->
-                        if (currentPage.prevChapter == null || currentPage.nextChapter == null) {
+                    (currentPage as? TransitionPage)?.let { transitionPage ->
+                        if (transitionPage.prevChapter == null || transitionPage.nextChapter == null) {
                             activity.showMenu()
                         }
                     }
@@ -575,12 +792,12 @@ open class WebGpuViewer(
     private fun moveToPage(newPage: ViewerPage) {
         val previousPage = currentPage
 
-        currentPage = newPage.also { page ->
-            (page as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
-        }
+        currentPage = newPage
+        (newPage as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
+        preloadPages(newPage)
 
-        (currentPage as? TransitionPage)?.let { currentPage ->
-            if (currentPage.prevChapter == null || currentPage.nextChapter == null) {
+        (newPage as? TransitionPage)?.let { transitionPage ->
+            if (transitionPage.prevChapter == null || transitionPage.nextChapter == null) {
                 activity.showMenu()
             }
         }
