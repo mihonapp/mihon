@@ -252,6 +252,7 @@ open class WebGpuViewer(
             findInCache(key) ?: ViewerReaderPage(page).also { newPage ->
                 pageCache.add(newPage)
                 while (pageCache.size > cacheSize) {
+                    evictFarthestPage(referencePage ?: newPage)
                 }
             }
         }
