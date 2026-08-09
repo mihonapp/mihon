@@ -438,20 +438,41 @@ open class WebGpuViewer(
             textAlign = Paint.Align.CENTER
         }
 
+        val maxWidth = bitmap.width * 0.8f
+        val lineHeight = 48f
+
+        fun wrapText(text: String): List<String> {
+            val words = text.split(" ")
+            val lines = mutableListOf<String>()
+            var currentLine = StringBuilder()
+
+            for (word in words) {
+                val testLine = if (currentLine.isEmpty()) word else "$currentLine $word"
+                if (paint.measureText(testLine) <= maxWidth) {
+                    currentLine = StringBuilder(testLine)
+                } else {
+                    if (currentLine.isNotEmpty()) lines.add(currentLine.toString())
+                    currentLine = StringBuilder(word)
+                }
+            }
+            if (currentLine.isNotEmpty()) lines.add(currentLine.toString())
+            return lines
+        }
+
         val x = bitmap.width / 2f
         var y = bitmap.height / 2f
 
         val lines = mutableListOf<Pair<String, Float>>()
 
         page.prevChapter?.chapter?.let { chapter ->
-            lines.add(Pair("Previous:", 48f))
-            lines.add(Pair(chapter.name, 48f))
-            page.nextChapter?.chapter?.let { lines.add(Pair("", 48f)) }
+            lines.add(Pair("Previous:", lineHeight))
+            wrapText(chapter.name).forEach { lines.add(Pair(it, lineHeight)) }
+            page.nextChapter?.chapter?.let { lines.add(Pair("", lineHeight)) }
         }
 
         page.nextChapter?.chapter?.let { chapter ->
-            lines.add(Pair("Next:", 48f))
-            lines.add(Pair(chapter.name, 48f))
+            lines.add(Pair("Next:", lineHeight))
+            wrapText(chapter.name).forEach { lines.add(Pair(it, lineHeight)) }
         }
 
         y -= lines.map { it.second }.sum() / 2
