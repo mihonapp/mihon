@@ -101,49 +101,46 @@ open class WebGpuViewer(
         if (candidates.isEmpty()) return
 
         val currentPos = pagePosition(current)
-        val withPos = candidates.map { it to pagePosition(it) }
-        val sorted = withPos.sortedWith(compareBy({ it.second.first }, { it.second.second })).map { it.first }
+        val sorted =
+            candidates.map { it to pagePosition(it) }.sortedWith(compareBy({ it.second.first }, { it.second.second }))
 
-        val currentIdx = sorted.indexOfFirst {
-            val p = pagePosition(it)
-            p.first > currentPos.first || (p.first == currentPos.first && p.second > currentPos.second)
+        val currentIdx = sorted.indexOfFirst { (_, pos) ->
+            pos.first > currentPos.first || (pos.first == currentPos.first && pos.second > currentPos.second)
         }.let { if (it < 0) sorted.size else it }
 
-        val toRemove = if (currentIdx == 0) sorted.last()
-        else if (currentIdx >= sorted.size) sorted.first()
-        else if (currentIdx > sorted.size / 2) sorted.first()
-        else sorted.last()
+        val toRemove = when {
+            currentIdx == 0 -> sorted.last()
+            currentIdx >= sorted.size -> sorted.first()
+            currentIdx > sorted.size / 2 -> sorted.first()
+            else -> sorted.last()
+        }.first
 
         pageCache.remove(toRemove)
         toRemove.imagePage.cleanup()
     }
 
-    fun getPage(page: ReaderPage): ViewerPage {
+    private inline fun getOrCreatePage(
+        crossinline find: () -> ViewerPage?,
+        crossinline create: () -> ViewerPage,
+    ): ViewerPage {
         return synchronized(pageCache) {
-            val existing = pageCache.find { it is ViewerReaderPage && it.page === page }
-            val r = existing ?: ViewerReaderPage(page).also { pageCache.add(it) }
-
+            val r = find() ?: create().also { pageCache.add(it) }
             while (pageCache.size > cacheSize) {
                 evictFarthestPage()
             }
-
             r
         }
     }
 
-    fun getPage(prevChapter: ReaderChapter?, nextChapter: ReaderChapter?): ViewerPage {
-        return synchronized(pageCache) {
-            val existing =
-                pageCache.find { it is TransitionPage && it.prevChapter === prevChapter && it.nextChapter === nextChapter }
-            val r = existing ?: TransitionPage(prevChapter, nextChapter).also { pageCache.add(it) }
+    fun getPage(page: ReaderPage): ViewerPage = getOrCreatePage(
+        find = { pageCache.find { it is ViewerReaderPage && it.page === page } },
+        create = { ViewerReaderPage(page) },
+    )
 
-            while (pageCache.size > cacheSize) {
-                evictFarthestPage()
-            }
-
-            r
-        }
-    }
+    fun getPage(prevChapter: ReaderChapter?, nextChapter: ReaderChapter?): ViewerPage = getOrCreatePage(
+        find = { pageCache.find { it is TransitionPage && it.prevChapter === prevChapter && it.nextChapter === nextChapter } },
+        create = { TransitionPage(prevChapter, nextChapter) },
+    )
 
     abstract class ViewerPage {
         abstract val prevChapter: ReaderChapter?
@@ -280,10 +277,7 @@ open class WebGpuViewer(
                 }
 
                 when (config.cutoutMode) {
-                    ReaderPreferences.CutoutMode.IGNORE -> {
-                        avoidCutout = false
-                    }
-
+                    ReaderPreferences.CutoutMode.IGNORE -> avoidCutout = false
                     ReaderPreferences.CutoutMode.AVOID -> {
                         avoidCutout = true
                         alwaysAvoidCutout = false
@@ -370,14 +364,12 @@ open class WebGpuViewer(
 
         page.page.statusFlow.takeWhile { state ->
             when (state) {
-                Page.State.Queue -> true
-                Page.State.LoadPage -> true
-                Page.State.DownloadImage -> true
-                Page.State.Ready -> false
+                Page.State.Queue, Page.State.LoadPage, Page.State.DownloadImage -> true
                 is Page.State.Error -> {
-                    Log.e("WebGpuViewer", "Error ${state.error}")
-                    false
+                    Log.e("WebGpuViewer", "Error ${state.error}"); false
                 }
+
+                Page.State.Ready -> false
             }
         }.collectLatest {}
 
@@ -501,18 +493,14 @@ open class WebGpuViewer(
 
             var p = page
             for (i in 0 until preloadCount) {
-                p.next?.let {
-                    preloadPage(it)
-                    p = it
-                } ?: break
+                p = p.next ?: break
+                preloadPage(p)
             }
 
             p = page
             for (i in 0 until preloadCount) {
-                p.prev?.let {
-                    preloadPage(it)
-                    p = it
-                } ?: break
+                p = p.prev ?: break
+                preloadPage(p)
             }
         }
     }
@@ -612,7 +600,7 @@ open class WebGpuViewer(
      */
     protected open fun moveRight() {
         pager.state.getPage(0)?.let { page ->
-            if (config.navigateToPan && (!page.atHome)) {
+            if (config.navigateToPan && !page.atHome) {
                 val maxX = pager.state.maxX(page.width, page.scale)
                 val c = if (isReversed) -1 else 1
                 val x = (page.x - c / page.scale).coerceIn(-maxX, maxX)
@@ -621,8 +609,7 @@ open class WebGpuViewer(
                     return
                 }
             }
-
-            nextPage(1)?.let { page -> moveToPage(page) }
+            nextPage(1)?.let { moveToPage(it) }
         }
     }
 
@@ -631,7 +618,7 @@ open class WebGpuViewer(
      */
     protected open fun moveLeft() {
         pager.state.getPage(0)?.let { page ->
-            if (config.navigateToPan && (!page.atHome)) {
+            if (config.navigateToPan && !page.atHome) {
                 val maxX = pager.state.maxX(page.width, page.scale)
                 val c = if (isReversed) -1 else 1
                 val x = (page.x + c / page.scale).coerceIn(-maxX, maxX)
@@ -640,8 +627,7 @@ open class WebGpuViewer(
                     return
                 }
             }
-
-            nextPage(-1)?.let { page -> moveToPage(page) }
+            nextPage(-1)?.let { moveToPage(it) }
         }
     }
 
