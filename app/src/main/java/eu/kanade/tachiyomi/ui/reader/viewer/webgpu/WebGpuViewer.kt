@@ -376,10 +376,10 @@ open class WebGpuViewer(
             onTap = { offset ->
                 when (config.navigator.getAction(PointF(offset.x, offset.y))) {
                     NavigationRegion.MENU -> activity.toggleMenu()
-                    NavigationRegion.NEXT -> moveToNext()
-                    NavigationRegion.PREV -> moveToPrevious()
-                    NavigationRegion.RIGHT -> moveRight()
-                    NavigationRegion.LEFT -> moveLeft()
+                    NavigationRegion.NEXT -> if (isReversed) moveToPrevious() else moveToNext()
+                    NavigationRegion.PREV -> if (isReversed) moveToNext() else moveToPrevious()
+                    NavigationRegion.RIGHT -> if (isReversed) moveLeft() else moveRight()
+                    NavigationRegion.LEFT -> if (isReversed) moveRight() else moveLeft()
                 }
             }
 
