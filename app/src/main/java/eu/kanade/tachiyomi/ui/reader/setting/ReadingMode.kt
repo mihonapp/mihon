@@ -23,7 +23,8 @@ enum class ReadingMode(
     val direction: Direction? = null,
     val type: ViewerType? = null,
 ) {
-    DEFAULT(MR.strings.label_default, R.drawable.ic_reader_default_24dp, 0x00000000), LEFT_TO_RIGHT(
+    DEFAULT(MR.strings.label_default, R.drawable.ic_reader_default_24dp, 0x00000000),
+    LEFT_TO_RIGHT(
         MR.strings.left_to_right_viewer,
         R.drawable.ic_reader_ltr_24dp,
         0x00000001,

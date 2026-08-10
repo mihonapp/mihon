@@ -173,10 +173,10 @@ open class WebGpuViewer(
      * Page processing state
      */
     enum class PageState {
-        IDLE,      // Not being processed
-        QUEUED,    // In decode queue
-        LOADING,   // Waiting for download
-        DECODING   // Being decoded
+        IDLE,
+        QUEUED,
+        LOADING,
+        DECODING,
     }
 
     /**
@@ -192,13 +192,16 @@ open class WebGpuViewer(
             is ViewerReaderPage -> {
                 val chapterId = page.page.chapter.chapter.id
                 val nextIndex = page.page.index + 1
-                candidates.find { it is ViewerReaderPage && it.page.chapter.chapter.id == chapterId && it.page.index == nextIndex }
-                    ?: candidates.find { it is TransitionPage && it.prevChapter?.chapter?.id == chapterId }
+                candidates.find {
+                    it is ViewerReaderPage && it.page.chapter.chapter.id == chapterId && it.page.index == nextIndex
+                } ?: candidates.find { it is TransitionPage && it.prevChapter?.chapter?.id == chapterId }
             }
 
             is TransitionPage -> {
                 val nextChapterId = page.nextChapter?.chapter?.id
-                candidates.find { it is ViewerReaderPage && it.page.chapter.chapter.id == nextChapterId && it.page.index == 0 }
+                candidates.find {
+                    it is ViewerReaderPage && it.page.chapter.chapter.id == nextChapterId && it.page.index == 0
+                }
             }
 
             else -> null
@@ -208,14 +211,20 @@ open class WebGpuViewer(
             is ViewerReaderPage -> {
                 val chapterId = page.page.chapter.chapter.id
                 val prevIndex = page.page.index - 1
-                candidates.find { it is ViewerReaderPage && it.page.chapter.chapter.id == chapterId && it.page.index == prevIndex }
+                candidates.find {
+                    it is ViewerReaderPage && it.page.chapter.chapter.id == chapterId &&
+                        it.page.index == prevIndex
+                }
                     ?: candidates.find { it is TransitionPage && it.nextChapter?.chapter?.id == chapterId }
             }
 
             is TransitionPage -> {
                 val prevChapterId = page.prevChapter?.chapter?.id
                 page.prevChapter?.pages?.lastIndex?.let { lastIndex ->
-                    candidates.find { it is ViewerReaderPage && it.page.chapter.chapter.id == prevChapterId && it.page.index == lastIndex }
+                    candidates.find {
+                        it is ViewerReaderPage && it.page.chapter.chapter.id == prevChapterId &&
+                            it.page.index == lastIndex
+                    }
                 }
             }
 
@@ -550,7 +559,8 @@ open class WebGpuViewer(
                     when (state) {
                         Page.State.Queue, Page.State.LoadPage, Page.State.DownloadImage -> true
                         is Page.State.Error -> {
-                            Log.e("WebGpuViewer", "Page load error: ${state.error}"); false
+                            Log.e("WebGpuViewer", "Page load error: ${state.error}")
+                            false
                         }
 
                         Page.State.Ready -> false
@@ -614,7 +624,9 @@ open class WebGpuViewer(
                 val trimColor = if (config.imageCropBorders) floatArrayOf(1f, 1f, 1f, 0.15f) else null
                 val firstFrame = decoded[0]
                 val (firstImage, trimRect) = Image.createWithTrim(
-                    firstFrame.image, firstFrame.width, firstFrame.height,
+                    firstFrame.image,
+                    firstFrame.width,
+                    firstFrame.height,
                     createMipMaps = true,
                     trimColor = trimColor,
                 )
@@ -849,13 +861,31 @@ open class WebGpuViewer(
         if (previousPage == null) return
 
         val direction = when (previousPage) {
-            is ViewerReaderPage if newPage is ViewerReaderPage -> if (previousPage.page.chapter == newPage.page.chapter) {
+            is ViewerReaderPage if newPage is ViewerReaderPage -> if (previousPage.page.chapter ==
+                newPage.page.chapter
+            ) {
                 (newPage.page.index - previousPage.page.index).coerceIn(-1, 1)
-            } else if (previousPage.page.chapter == newPage.prevChapter) 1 else -1
+            } else if (previousPage.page.chapter == newPage.prevChapter) {
+                1
+            } else {
+                -1
+            }
 
-            is TransitionPage if newPage is ViewerReaderPage -> if (previousPage.nextChapter == newPage.page.chapter) 1 else -1
+            is TransitionPage if newPage is ViewerReaderPage -> if (previousPage.nextChapter ==
+                newPage.page.chapter
+            ) {
+                1
+            } else {
+                -1
+            }
 
-            is ViewerReaderPage if newPage is TransitionPage -> if (previousPage.page.chapter == newPage.prevChapter) 1 else -1
+            is ViewerReaderPage if newPage is TransitionPage -> if (previousPage.page.chapter ==
+                newPage.prevChapter
+            ) {
+                1
+            } else {
+                -1
+            }
 
             else -> 0
         }
