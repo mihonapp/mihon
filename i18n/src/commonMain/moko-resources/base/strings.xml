@@ -503,7 +503,7 @@
     <string name="pref_lowest">Lowest</string>
     <string name="pref_webtoon_disable_zoom_out">Disable zoom out</string>
     <string name="webgpu_viewer">WebGPU</string>
-    <string name="pref_transition_animation">Transition Animation</string>
+    <string name="pref_transition_animation">Transition animation</string>
     <string name="transition_animation_default">Default</string>
     <string name="transition_animation_flip_left">Page flip (left)</string>
     <string name="transition_animation_flip_right">Page flip (right)</string>
@@ -516,7 +516,7 @@
     <string name="transition_animation_cube_outside">Cube (Outside)</string>
     <string name="transition_animation_fade">Fade</string>
     <string name="transition_animation_fade_white">Fade to white</string>
-    <string name="pref_cutout_mode">Transition Animation</string>
+    <string name="pref_cutout_mode">Display cutout mode</string>
     <string name="cutout_mode_ignore">Ignore</string>
     <string name="cutout_mode_avoid">Avoid</string>
     <string name="cutout_mode_shift">Shift</string>
