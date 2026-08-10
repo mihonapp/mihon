@@ -239,26 +239,26 @@ private fun ColumnScope.TapZonesItems(
 }
 
 @Composable
-private fun ColumnScope.WebGpuViewerSettings(screenModel: ReaderSettingsScreenModel) {
+private fun ColumnScope.WebGpuViewerSettings(viewModel: ReaderSettingsViewModel) {
     HeadingItem(MR.strings.webgpu_viewer)
 
-    val transitionAnimation by screenModel.preferences.transitionAnimation.collectAsState()
+    val transitionAnimation by viewModel.preferences.transitionAnimation.collectAsState()
     SettingsChipRow(MR.strings.pref_transition_animation) {
         ReaderPreferences.TransitionAnimation.entries.map {
             FilterChip(
                 selected = it == transitionAnimation,
-                onClick = { screenModel.preferences.transitionAnimation.set(it) },
+                onClick = { viewModel.preferences.transitionAnimation.set(it) },
                 label = { Text(stringResource(it.titleRes)) },
             )
         }
     }
 
-    val cutoutMode by screenModel.preferences.cutoutMode.collectAsState()
+    val cutoutMode by viewModel.preferences.cutoutMode.collectAsState()
     SettingsChipRow(MR.strings.pref_cutout_mode) {
         ReaderPreferences.CutoutMode.entries.map {
             FilterChip(
                 selected = it == cutoutMode,
-                onClick = { screenModel.preferences.cutoutMode.set(it) },
+                onClick = { viewModel.preferences.cutoutMode.set(it) },
                 label = { Text(stringResource(it.titleRes)) },
             )
         }
