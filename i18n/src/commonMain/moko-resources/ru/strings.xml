@@ -136,7 +136,7 @@
     <string name="pref_read_with_volume_keys">Клавиши громкости</string>
     <string name="pref_reader_navigation">Навигация</string>
     <string name="pref_reader_theme">Цвет фона</string>
-    <string name="pref_remove_after_marked_as_read">Удалять помеченое вручную как «Прочитано»</string>
+    <string name="pref_remove_after_marked_as_read">Удалять помеченное вручную как «Прочитано»</string>
     <string name="pref_remove_after_read">Удалять после прочтения</string>
     <string name="pref_rotation_type">Ориентация по умолчанию</string>
     <string name="pref_show_page_number">Номер страницы</string>
