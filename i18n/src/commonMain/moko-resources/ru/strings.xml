@@ -401,7 +401,7 @@
     <string name="channel_complete">Завершено</string>
     <string name="channel_progress">Прогресс</string>
     <string name="channel_errors">Ошибки</string>
-    <string name="backup_restore_missing_trackers">Сервисы отслеживания в которые не выполнен вход:</string>
+    <string name="backup_restore_missing_trackers">Сервисы отслеживания, в которые не выполнен вход:</string>
     <string name="pref_remove_bookmarked_chapters">Удалять главы с закладками</string>
     <string name="pref_category_delete_chapters">Удаление глав</string>
     <string name="ext_nsfw_warning">Источики из этого расширения могут содержать контент NSFW (18+)</string>
