@@ -633,7 +633,7 @@ open class WebGpuViewer(
 
                 // Create ImagePage early so its cleanup handles all frames
                 imagePage = ImagePage(firstImage).apply {
-                    trim = trimRect
+                    trim = trimRect?.takeIf { it.width() > 0 && it.height() > 0 }
                     parent = pager.state
                     x = homeX
                     y = homeY
