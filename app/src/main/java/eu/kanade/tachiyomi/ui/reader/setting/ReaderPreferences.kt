@@ -234,6 +234,8 @@ class ReaderPreferences(
         SPHERE(MR.strings.transition_animation_sphere),
         CUBE_INSIDE(MR.strings.transition_animation_cube_inside),
         CUBE_OUTSIDE(MR.strings.transition_animation_cube_outside),
+        FADE(MR.strings.transition_animation_fade),
+        FADE_WHITE(MR.strings.transition_animation_fade_white),
     }
 
     enum class CutoutMode(val titleRes: StringResource) {

@@ -12,7 +12,6 @@ import android.view.View
 import androidx.core.graphics.createBitmap
 import ca.mpreg.imagedecoder.ImageDecoder
 import ca.mpreg.webgpuviewer.ImageView
-import ca.mpreg.webgpuviewer.Trim
 import ca.mpreg.webgpuviewer.draw.Draw
 import ca.mpreg.webgpuviewer.draw.clear
 import ca.mpreg.webgpuviewer.draw.line
@@ -21,6 +20,8 @@ import ca.mpreg.webgpuviewer.renderer.WebGpuRenderer
 import ca.mpreg.webgpuviewer.transition.TransitionBasic
 import ca.mpreg.webgpuviewer.transition.TransitionCube
 import ca.mpreg.webgpuviewer.transition.TransitionCubeOuter
+import ca.mpreg.webgpuviewer.transition.TransitionFade
+import ca.mpreg.webgpuviewer.transition.TransitionFadeWhite
 import ca.mpreg.webgpuviewer.transition.TransitionFlipLeft
 import ca.mpreg.webgpuviewer.transition.TransitionFlipRight
 import ca.mpreg.webgpuviewer.transition.TransitionSphere
@@ -409,6 +410,8 @@ open class WebGpuViewer(
                     TransitionAnimation.SPHERE -> TransitionSphere
                     TransitionAnimation.CUBE_INSIDE -> TransitionCube
                     TransitionAnimation.CUBE_OUTSIDE -> TransitionCubeOuter
+                    TransitionAnimation.FADE -> TransitionFade
+                    TransitionAnimation.FADE_WHITE -> TransitionFadeWhite
                 }
 
                 when (config.cutoutMode) {
@@ -587,6 +590,7 @@ open class WebGpuViewer(
             return
         }
 
+        var imagePage: ImagePage? = null
         try {
             stream.use { input ->
                 // Check if still valid before decoding (not evicted and doesn't have decoded image yet)
@@ -599,37 +603,64 @@ open class WebGpuViewer(
 
                 val dec = ImageDecoder.new(input)
                 val decoded = (0 until dec.pages).map { dec.decodeNext() }
-                val frames = decoded.map { frame ->
-                    Pair(Image(frame.image, frame.width, frame.height), frame.duration)
+
+                if (decoded.isEmpty()) {
+                    Log.e("WebGpuViewer", "decodeReaderPage: no frames decoded")
+                    synchronized(lock) { if (page in pageCache) page.state = PageState.IDLE }
+                    return
                 }
 
-                val imagePage = ImagePage(frames[0].first).apply {
-                    if (config.imageCropBorders) {
-                        trim = Trim.find(image!!, 1f, 1f, 1f, 0.15f)
-                    }
+                // For first frame, create Image with trim in single GPU context switch
+                val trimColor = if (config.imageCropBorders) floatArrayOf(1f, 1f, 1f, 0.15f) else null
+                val firstFrame = decoded[0]
+                val (firstImage, trimRect) = Image.createWithTrim(
+                    firstFrame.image, firstFrame.width, firstFrame.height,
+                    createMipMaps = true,
+                    trimColor = trimColor,
+                )
+
+                // Create ImagePage early so its cleanup handles all frames
+                imagePage = ImagePage(firstImage).apply {
+                    trim = trimRect
                     parent = pager.state
                     x = homeX
                     y = homeY
                     scale = homeScale
-                    if (frames.size > 1) {
-                        startAnimationLoop(frames) { pager.state.invalidate() }
+                }
+
+                // Create remaining frames for animation
+                if (decoded.size > 1) {
+                    val frames = mutableListOf<Pair<Image, Int>>()
+                    frames.add(Pair(firstImage, firstFrame.duration))
+                    // Assign pages early so cleanup() will handle all frames if creation fails partway
+                    imagePage.pages = frames
+                    for (i in 1 until decoded.size) {
+                        val frame = decoded[i]
+                        frames.add(Pair(Image(frame.image, frame.width, frame.height), frame.duration))
                     }
+                    imagePage.startAnimationLoop(frames) { pager.state.invalidate() }
                 }
 
                 synchronized(lock) {
                     if (page in pageCache && !page.imagePage.isDecoded && !page.imagePage.destroyed) {
-                        page.imagePage = imagePage
+                        val oldImagePage = page.imagePage
+                        page.imagePage = imagePage!!
+                        imagePage = null
                         page.state = PageState.IDLE
+                        if (oldImagePage !is ImagePage.Dummy) {
+                            oldImagePage.cleanup()
+                        }
                         pager.state.invalidate()
                     } else {
                         if (page in pageCache) page.state = PageState.IDLE
-                        imagePage.cleanup()
                     }
                 }
             }
         } catch (e: Exception) {
             Log.e("WebGpuViewer", "decodeReaderPage error", e)
             synchronized(lock) { if (page in pageCache) page.state = PageState.IDLE }
+        } finally {
+            imagePage?.cleanup()
         }
     }
 
@@ -637,7 +668,7 @@ open class WebGpuViewer(
         try {
             // Check if still valid
             synchronized(lock) {
-                if (page !in pageCache || page.imagePage !is ImagePage.Dummy) {
+                if (page !in pageCache || page.imagePage.isDecoded) {
                     if (page in pageCache) page.state = PageState.IDLE
                     return
                 }
@@ -698,8 +729,12 @@ open class WebGpuViewer(
 
             synchronized(lock) {
                 if (page in pageCache && !page.imagePage.isDecoded && !page.imagePage.destroyed) {
+                    val oldImagePage = page.imagePage
                     page.imagePage = imagePage
                     page.state = PageState.IDLE
+                    if (oldImagePage !is ImagePage.Dummy) {
+                        oldImagePage.cleanup()
+                    }
                     pager.state.invalidate()
                 } else {
                     if (page in pageCache) page.state = PageState.IDLE
@@ -922,18 +957,8 @@ open class WebGpuViewer(
                 }
             }
 
-            KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                if (isUp) {
-                    if (ctrlPressed) moveToNext() else moveRight()
-                }
-            }
-
-            KeyEvent.KEYCODE_DPAD_LEFT -> {
-                if (isUp) {
-                    if (ctrlPressed) moveToPrevious() else moveLeft()
-                }
-            }
-
+            KeyEvent.KEYCODE_DPAD_RIGHT -> if (isUp) if (ctrlPressed) moveToNext() else moveRight()
+            KeyEvent.KEYCODE_DPAD_LEFT -> if (isUp) if (ctrlPressed) moveToPrevious() else moveLeft()
             KeyEvent.KEYCODE_DPAD_DOWN -> if (isUp) moveDown()
             KeyEvent.KEYCODE_DPAD_UP -> if (isUp) moveUp()
             KeyEvent.KEYCODE_PAGE_DOWN -> if (isUp) moveDown()
