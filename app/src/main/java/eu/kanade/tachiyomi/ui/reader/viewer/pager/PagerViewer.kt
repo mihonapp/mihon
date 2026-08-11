@@ -330,9 +330,16 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
      * Moves to the page at the right.
      */
     protected open fun moveRight() {
+        val isRTL = this is R2LPagerViewer
+        if (isRTL) {
+            if (navigateBackward()) return
+        } else {
+            if (navigateForward()) return
+        }
+
         if (pager.currentItem != adapter.count - 1) {
             val holder = (currentPage as? ReaderPage)?.let(::getPageHolder)
-            if (holder != null && config.navigateToPan && holder.canPanRight()) {
+            if (!config.guidedViewEnabled && holder != null && config.navigateToPan && holder.canPanRight()) {
                 holder.panRight()
             } else {
                 pager.setCurrentItem(pager.currentItem + 1, config.usePageTransitions)
@@ -344,9 +351,16 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
      * Moves to the page at the left.
      */
     protected open fun moveLeft() {
+        val isRTL = this is R2LPagerViewer
+        if (isRTL) {
+            if (navigateForward()) return
+        } else {
+            if (navigateBackward()) return
+        }
+
         if (pager.currentItem != 0) {
             val holder = (currentPage as? ReaderPage)?.let(::getPageHolder)
-            if (holder != null && config.navigateToPan && holder.canPanLeft()) {
+            if (!config.guidedViewEnabled && holder != null && config.navigateToPan && holder.canPanLeft()) {
                 holder.panLeft()
             } else {
                 pager.setCurrentItem(pager.currentItem - 1, config.usePageTransitions)
@@ -451,5 +465,57 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
 
     private fun cleanupPageSplit() {
         adapter.cleanupPageSplit()
+    }
+
+    private fun navigateForward(): Boolean {
+        if (!config.guidedViewEnabled) return false
+        val page = currentPage as? ReaderPage ?: return false
+        val panels = page.panels ?: return false
+        if (panels.isEmpty()) return false
+
+        val holder = getPageHolder(page) ?: return false
+
+        if (page.currentPanelIndex < panels.size - 1) {
+            page.currentPanelIndex++
+            holder.zoomToPanel(panels[page.currentPanelIndex].rect)
+            return true
+        }
+
+        page.currentPanelIndex = -1
+        holder.zoomToFit()
+        return false
+    }
+
+    private fun navigateBackward(): Boolean {
+        if (!config.guidedViewEnabled) return false
+        val page = currentPage as? ReaderPage ?: return false
+        val panels = page.panels ?: return false
+        if (panels.isEmpty()) return false
+
+        val holder = getPageHolder(page) ?: return false
+
+        if (page.currentPanelIndex > 0) {
+            page.currentPanelIndex--
+            holder.zoomToPanel(panels[page.currentPanelIndex].rect)
+            return true
+        } else if (page.currentPanelIndex == 0) {
+            page.currentPanelIndex = -1
+            holder.zoomToFit()
+            return true
+        }
+
+        val position = adapter.items.indexOf(page)
+        if (position > 0) {
+            val prevPage = adapter.items[position - 1] as? ReaderPage
+            if (prevPage != null) {
+                val prevPanels = prevPage.panels
+                if (prevPanels != null && prevPanels.isNotEmpty()) {
+                    prevPage.currentPanelIndex = prevPanels.size - 1
+                } else {
+                    prevPage.currentPanelIndex = -1
+                }
+            }
+        }
+        return false
     }
 }
