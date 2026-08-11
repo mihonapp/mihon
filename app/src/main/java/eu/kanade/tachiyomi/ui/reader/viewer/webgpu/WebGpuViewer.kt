@@ -621,14 +621,28 @@ open class WebGpuViewer(
                 }
 
                 // For first frame, create Image with trim in single GPU context switch
-                val trimColor = if (config.imageCropBorders) floatArrayOf(1f, 1f, 1f, 0.15f) else null
+                val trimColors = if (config.imageCropBorders) listOf(
+                    floatArrayOf(1f, 1f, 1f),
+                    floatArrayOf(0f, 0f, 0f)
+                ) else null
+
+                val backgroundColor = when {
+                    config.automaticBackground -> null
+                    config.theme == 0 -> 0xFFFFFFFF.toInt()
+                    config.theme == 1 -> 0xFF000000.toInt()
+                    config.theme == 2 -> 0xFF808080.toInt()
+                    else -> 0xFF000000.toInt()
+                }
+
                 val firstFrame = decoded[0]
                 val (firstImage, trimRect) = Image.createWithTrim(
                     firstFrame.image,
                     firstFrame.width,
                     firstFrame.height,
                     createMipMaps = true,
-                    trimColor = trimColor,
+                    trimColors = trimColors,
+                    trimThreshold = 0.15f,
+                    backgroundColor = backgroundColor
                 )
 
                 // Create ImagePage early so its cleanup handles all frames
