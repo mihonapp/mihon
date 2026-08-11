@@ -77,7 +77,7 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
-        val viewModel = viewModel<ViewModel>()
+        val viewModel = viewModel<Model>()
         val state by viewModel.state.collectAsState()
 
         var migrationSheetOpen by rememberSaveable { mutableStateOf(false) }
@@ -121,20 +121,20 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
                                 AppBar.Action(
                                     title = stringResource(MR.strings.migrationConfigScreen_selectAllLabel),
                                     icon = Icons.Outlined.SelectAll,
-                                    onClick = { viewModel.toggleSelection(ViewModel.SelectionConfig.All) },
+                                    onClick = { viewModel.toggleSelection(Model.SelectionConfig.All) },
                                 ),
                                 AppBar.Action(
                                     title = stringResource(MR.strings.migrationConfigScreen_selectNoneLabel),
                                     icon = Icons.Outlined.Deselect,
-                                    onClick = { viewModel.toggleSelection(ViewModel.SelectionConfig.None) },
+                                    onClick = { viewModel.toggleSelection(Model.SelectionConfig.None) },
                                 ),
                                 AppBar.OverflowAction(
                                     title = stringResource(MR.strings.migrationConfigScreen_selectEnabledLabel),
-                                    onClick = { viewModel.toggleSelection(ViewModel.SelectionConfig.Enabled) },
+                                    onClick = { viewModel.toggleSelection(Model.SelectionConfig.Enabled) },
                                 ),
                                 AppBar.OverflowAction(
                                     title = stringResource(MR.strings.migrationConfigScreen_selectPinnedLabel),
-                                    onClick = { viewModel.toggleSelection(ViewModel.SelectionConfig.Pinned) },
+                                    onClick = { viewModel.toggleSelection(Model.SelectionConfig.Pinned) },
                                 ),
                             ),
                         )
@@ -306,10 +306,10 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
         }
     }
 
-    private class ViewModel(
+    class Model(
         val sourcePreferences: SourcePreferences = Injekt.get(),
         private val sourceManager: SourceManager = Injekt.get(),
-    ) : StateViewModel<ViewModel.State>(State()) {
+    ) : StateViewModel<Model.State>(State()) {
 
         private val sourcesComparator = { includedSources: List<Long> ->
             compareBy<MigrationSource>(

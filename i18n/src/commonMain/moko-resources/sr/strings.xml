@@ -340,8 +340,6 @@
     <string name="information_webview_required">WebView је потребан како би апликација функционисала</string>
     <string name="information_cloudflare_bypass_failure">Неуспешно заобилажење Cloudflare-а</string>
     <string name="update_check_notification_update_available">Доступно је ново ажурирање!</string>
-    <string name="update_check_notification_download_error">Грешка током преузимања</string>
-    <string name="update_check_notification_download_complete">Додирните за инсталирање ажурирања</string>
     <string name="update_check_notification_download_in_progress">Преузимање…</string>
     <string name="update_check_no_new_updates">Нема нових ажурирања</string>
     <string name="update_check_confirm">Преузми</string>

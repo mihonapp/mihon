@@ -2,8 +2,6 @@ package eu.kanade.tachiyomi.data.download
 
 import android.content.Context
 import android.content.pm.ServiceInfo
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
 import android.os.Build
 import androidx.lifecycle.asFlow
 import androidx.work.Constraints
@@ -33,6 +31,8 @@ import kotlinx.coroutines.flow.onEach
 import tachiyomi.domain.download.service.DownloadPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.util.UUID
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -65,7 +65,8 @@ class DownloadJob(context: Context, workerParams: WorkerParameters) : CoroutineW
             return Result.failure()
         }
 
-        var waitingForNetwork = false
+        val workerId = id
+        val waitingForNetwork = AtomicBoolean()
 
         fun pauseForNetwork(status: DownloadNetworkStatus) {
             val reason = when (status) {
@@ -73,35 +74,43 @@ class DownloadJob(context: Context, workerParams: WorkerParameters) : CoroutineW
                 DownloadNetworkStatus.NoNetwork -> applicationContext.getString(R.string.download_notifier_no_network)
                 DownloadNetworkStatus.Available -> return
             }
+            waitingForNetwork.set(downloadManager.queueState.value.isNotEmpty())
             downloadManager.downloaderPauseForNetwork(reason)
-            waitingForNetwork = downloadManager.queueState.value.isNotEmpty()
         }
 
         fun handleNetworkStatus(status: DownloadNetworkStatus, allowStart: Boolean) {
-            when (status) {
-                DownloadNetworkStatus.Available -> {
-                    if (waitingForNetwork || allowStart) {
-                        waitingForNetwork = false
-                        downloadManager.downloaderStart()
+            synchronized(workerLock) {
+                if (activeWorkerId != workerId) return
+
+                when (status) {
+                    DownloadNetworkStatus.Available -> {
+                        if (waitingForNetwork.get() || allowStart) {
+                            downloadManager.downloaderStart()
+                            waitingForNetwork.set(false)
+                        }
                     }
+                    DownloadNetworkStatus.NoNetwork,
+                    DownloadNetworkStatus.NoWifi,
+                    -> pauseForNetwork(status)
                 }
-                DownloadNetworkStatus.NoNetwork,
-                DownloadNetworkStatus.NoWifi,
-                -> pauseForNetwork(status)
             }
         }
 
-        val initialNetworkStatus = applicationContext.activeNetworkState()
-            .toDownloadNetworkStatus(downloadPreferences.downloadOnlyOverWifi.get())
-        handleNetworkStatus(initialNetworkStatus, allowStart = true)
-
-        if (!downloadManager.isRunning && !waitingForNetwork) {
-            return Result.failure()
+        synchronized(workerLock) {
+            activeWorkerId = workerId
         }
 
-        setForegroundSafely()
-
         try {
+            val initialNetworkStatus = applicationContext.activeNetworkState()
+                .toDownloadNetworkStatus(downloadPreferences.downloadOnlyOverWifi.get())
+            handleNetworkStatus(initialNetworkStatus, allowStart = true)
+
+            if (!downloadManager.isRunning && !waitingForNetwork.get()) {
+                return Result.failure()
+            }
+
+            setForegroundSafely()
+
             coroutineScope {
                 val networkStatusJob = combine(
                     applicationContext.networkStateFlow(),
@@ -114,8 +123,9 @@ class DownloadJob(context: Context, workerParams: WorkerParameters) : CoroutineW
                 try {
                     while (
                         !isStopped &&
+                        activeWorkerId == workerId &&
                         downloadManager.queueState.value.isNotEmpty() &&
-                        (downloadManager.isRunning || waitingForNetwork)
+                        (downloadManager.isRunning || waitingForNetwork.get())
                     ) {
                         delay(1.seconds)
                     }
@@ -123,24 +133,37 @@ class DownloadJob(context: Context, workerParams: WorkerParameters) : CoroutineW
                     networkStatusJob.cancel()
                 }
             }
+
+            return Result.success()
         } finally {
-            if (downloadManager.isRunning && downloadManager.queueState.value.isNotEmpty()) {
-                val latestNetworkStatus = applicationContext.activeNetworkState()
-                    .toDownloadNetworkStatus(downloadPreferences.downloadOnlyOverWifi.get())
-                pauseForNetwork(latestNetworkStatus)
+            synchronized(workerLock) {
+                if (activeWorkerId == workerId) {
+                    if (downloadManager.isRunning && downloadManager.queueState.value.isNotEmpty()) {
+                        val latestNetworkStatus = applicationContext.activeNetworkState()
+                            .toDownloadNetworkStatus(downloadPreferences.downloadOnlyOverWifi.get())
+                        if (latestNetworkStatus == DownloadNetworkStatus.Available) {
+                            downloadManager.downloaderPause()
+                        } else {
+                            pauseForNetwork(latestNetworkStatus)
+                        }
+                    }
+                    activeWorkerId = null
+                }
             }
         }
-
-        return Result.success()
     }
 
     companion object {
         private const val TAG = "Downloader"
 
+        private val workerLock = Any()
+
+        @Volatile
+        private var activeWorkerId: UUID? = null
+
         fun start(context: Context) {
-            val downloadPreferences = Injekt.get<DownloadPreferences>()
             val request = OneTimeWorkRequestBuilder<DownloadJob>()
-                .setConstraints(getConstraints(downloadPreferences.downloadOnlyOverWifi.get()))
+                .setConstraints(Constraints(requiredNetworkType = NetworkType.CONNECTED))
                 .addTag(TAG)
                 .build()
             WorkManager.getInstance(context)
@@ -164,22 +187,6 @@ class DownloadJob(context: Context, workerParams: WorkerParameters) : CoroutineW
                 .getWorkInfosForUniqueWorkLiveData(TAG)
                 .asFlow()
                 .map { list -> list.count { it.state == WorkInfo.State.RUNNING } == 1 }
-        }
-
-        private fun getConstraints(requireWifi: Boolean): Constraints {
-            if (!requireWifi) {
-                return Constraints(requiredNetworkType = NetworkType.CONNECTED)
-            }
-
-            val networkRequest = NetworkRequest.Builder()
-                .removeCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN)
-                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                .build()
-
-            return Constraints.Builder()
-                // The network request only applies to Android 9+, otherwise the network type is used.
-                .setRequiredNetworkRequest(networkRequest, NetworkType.UNMETERED)
-                .build()
         }
     }
 }

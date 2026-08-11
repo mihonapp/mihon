@@ -123,7 +123,7 @@ internal fun Screen.MigrateMangaDialog(
     )
 }
 
-private class MigrateDialogViewModel(
+class MigrateDialogViewModel(
     private val sourcePreference: SourcePreferences = Injekt.get(),
     private val coverCache: CoverCache = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),

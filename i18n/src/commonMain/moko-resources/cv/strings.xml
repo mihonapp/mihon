@@ -125,8 +125,6 @@
     <string name="download_notifier_text_only_wifi">Wi-Fi ҫыхӑну ҫук</string>
     <string name="download_notifier_title_error">Йӑнӑш</string>
     <string name="update_check_notification_update_available">Ҫӗнӗ версси пур!</string>
-    <string name="update_check_notification_download_error">Тийев йӑнӑшӗ</string>
-    <string name="update_check_notification_download_complete">Тиенсе пӗтрӗ</string>
     <string name="notification_chapters_single">%1$s-мӗш сыпӑк</string>
     <string name="notification_new_chapters">Ҫӗнӗ сыпӑксем тупӑнман</string>
     <string name="information_no_recent_manga">Йулашки вӑхӑтра нимӗн те вуламан</string>

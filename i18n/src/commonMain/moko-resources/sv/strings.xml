@@ -254,8 +254,6 @@
     <string name="update_check_confirm">Ladda ner</string>
     <string name="update_check_no_new_updates">Inga nya uppdateringar tillgängliga</string>
     <string name="update_check_notification_download_in_progress">Laddar ner…</string>
-    <string name="update_check_notification_download_complete">Tryck för att installera uppdateringen</string>
-    <string name="update_check_notification_download_error">Nedladdningsfel</string>
     <string name="update_check_notification_update_available">Ny version tillgänglig!</string>
     <string name="information_no_downloads">Inga nedladdningar</string>
     <string name="information_no_recent">Inga nya uppdateringar</string>

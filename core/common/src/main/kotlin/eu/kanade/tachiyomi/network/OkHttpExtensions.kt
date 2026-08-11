@@ -136,8 +136,9 @@ fun OkHttpClient.newCachelessCallWithProgress(
                 .build()
 
             val originalResponse = chain.proceed(request)
+            val actualExistingSize = if (originalResponse.code == 206) existingSize else 0L
             originalResponse.newBuilder()
-                .body(ProgressResponseBody(originalResponse.body, listener, existingSize))
+                .body(ProgressResponseBody(originalResponse.body, listener, actualExistingSize))
                 .build()
         }
         .build()

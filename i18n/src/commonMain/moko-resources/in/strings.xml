@@ -206,8 +206,6 @@
     <string name="update_check_confirm">Unduh</string>
     <string name="update_check_no_new_updates">Pembaruan tidak tersedia</string>
     <string name="update_check_notification_download_in_progress">Mengunduh…</string>
-    <string name="update_check_notification_download_complete">Ketuk untuk menginstal pembaruan</string>
-    <string name="update_check_notification_download_error">Terjadi kesalahan saat mengunduh</string>
     <string name="update_check_notification_update_available">Versi baru tersedia!</string>
     <string name="information_no_downloads">Tidak ada unduhan</string>
     <string name="information_no_recent">Tidak ada pembaruan terkini</string>

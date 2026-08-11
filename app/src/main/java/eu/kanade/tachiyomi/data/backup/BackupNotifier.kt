@@ -18,7 +18,7 @@ import tachiyomi.core.common.storage.displayablePath
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
 import java.io.File
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.milliseconds
 
 class BackupNotifier(private val context: Context) {
 
@@ -149,10 +149,8 @@ class BackupNotifier(private val context: Context) {
 
         val timeString = context.stringResource(
             MR.strings.restore_duration,
-            TimeUnit.MILLISECONDS.toMinutes(time),
-            TimeUnit.MILLISECONDS.toSeconds(time) - TimeUnit.MINUTES.toSeconds(
-                TimeUnit.MILLISECONDS.toMinutes(time),
-            ),
+            time.milliseconds.inWholeMinutes,
+            time.milliseconds.inWholeSeconds - (time.milliseconds.inWholeMinutes * 60),
         )
 
         with(completeNotificationBuilder) {

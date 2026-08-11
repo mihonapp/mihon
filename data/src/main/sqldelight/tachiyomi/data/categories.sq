@@ -50,13 +50,21 @@ delete:
 DELETE FROM categories
 WHERE _id = :categoryId;
 
-update:
+updateName:
 UPDATE categories
-SET name = coalesce(:name, name),
-    sort = coalesce(:order, sort),
-    flags = coalesce(:flags, flags)
+SET name = :name
+WHERE _id = :categoryId;
+
+updateOrder:
+UPDATE categories
+SET sort = :order
+WHERE _id = :categoryId;
+
+updateFlags:
+UPDATE categories
+SET flags = :flags
 WHERE _id = :categoryId;
 
 updateAllFlags:
 UPDATE categories SET
-flags = coalesce(?, flags);
+flags = coalesce(:flags, flags);
