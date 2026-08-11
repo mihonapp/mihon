@@ -50,9 +50,14 @@ class SetReadStatus(
             chaptersToUpdate
                 .groupBy { it.mangaId }
                 .forEach { (mangaId, chapters) ->
+                    // Refresh chapters from database to get updated read status
+                    // This ensures the exclusion filter sees the correct state
+                    val freshChapters = chapters.mapNotNull { chapter ->
+                        chapterRepository.getChapterById(chapter.id)
+                    }
                     deleteDownload.awaitAll(
                         manga = mangaRepository.getMangaById(mangaId),
-                        chapters = chapters.toTypedArray(),
+                        chapters = freshChapters.toTypedArray(),
                     )
                 }
         }
