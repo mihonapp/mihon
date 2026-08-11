@@ -40,13 +40,14 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences.TransitionAnimation
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import uy.kohesive.injekt.injectLazy
+import java.util.concurrent.Executors
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -60,6 +61,12 @@ open class WebGpuViewer(
     val downloadManager: DownloadManager by injectLazy()
 
     private val scope = MainScope()
+
+    // Dedicated thread for decode worker to avoid blocking Dispatchers.Default pool
+    private val decodeExecutor = Executors.newSingleThreadExecutor { r ->
+        Thread(r, "WebGpuViewer-Decode").apply { isDaemon = true }
+    }
+    private val decodeDispatcher = decodeExecutor.asCoroutineDispatcher()
 
     // Single lock for all page cache and queue operations
     private val lock = Object()
@@ -96,7 +103,7 @@ open class WebGpuViewer(
                 } else {
                     decodeQueue.addFirst(page)
                 }
-                (lock as Object).notify()
+                lock.notify()
             }
 
             PageState.QUEUED -> {
@@ -114,12 +121,12 @@ open class WebGpuViewer(
 
     init {
         // Decode worker thread - processes pages from the queue
-        scope.launch(Dispatchers.Default) {
+        scope.launch(decodeDispatcher) {
             try {
                 while (true) {
                     val page = synchronized(lock) {
                         while (decodeQueue.isEmpty()) {
-                            (lock as Object).wait()
+                            lock.wait()
                         }
                         decodeQueue.removeLast().also { it.state = PageState.DECODING }
                     }
@@ -328,7 +335,7 @@ open class WebGpuViewer(
             get() = page.chapter.pages?.let { pages ->
                 pages.getOrNull(page.index - 1)?.let { getPage(it) } ?: prevChapter?.let { prevChapter ->
                     if (prevChapter.state !is ReaderChapter.State.Loaded) {
-                        CoroutineScope(Dispatchers.Default).launch {
+                        scope.launch(Dispatchers.Default) {
                             activity.viewModel.preload(prevChapter)
                             currentPage?.let { preloadPages(it) }
                         }
@@ -345,7 +352,7 @@ open class WebGpuViewer(
             get() = page.chapter.pages?.let { pages ->
                 pages.getOrNull(page.index + 1)?.let { getPage(it) } ?: nextChapter?.let { nextChapter ->
                     if (nextChapter.state !is ReaderChapter.State.Loaded) {
-                        CoroutineScope(Dispatchers.Default).launch {
+                        scope.launch(Dispatchers.Default) {
                             activity.viewModel.preload(nextChapter)
                             currentPage?.let { preloadPages(it) }
                         }
@@ -463,6 +470,14 @@ open class WebGpuViewer(
     }
 
     override fun destroy() {
+        // Cancel scope first to stop any new operations
+        scope.cancel()
+
+        // Shutdown decode executor with interrupt to wake up the worker from wait()
+        decodeExecutor.shutdownNow()
+        decodeDispatcher.close()
+
+        // Now clean up pages (cleanup() launches fire-and-forget coroutines on Dispatchers.Default)
         synchronized(lock) {
             decodeQueue.clear()
             pageCache.forEach {
@@ -470,8 +485,9 @@ open class WebGpuViewer(
                 it.imagePage.cleanup()
             }
             pageCache.clear()
+            // Notify in case worker is waiting (though it should be interrupted)
+            lock.notifyAll()
         }
-        scope.cancel()
     }
 
     /**

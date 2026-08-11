@@ -39,7 +39,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.updatePadding
-import ca.mpreg.webgpuviewer.renderer.Image
 import ca.mpreg.webgpuviewer.renderer.WebGpuRenderer
 import ca.mpreg.webgpuviewer.viewer.ImagePage
 import ca.mpreg.webgpuviewer.viewer.ImageViewer
@@ -178,6 +177,7 @@ fun MangaCoverDialog(
                         val page = runBlocking(WebGpuRenderer.dispatcher) {
                             ImagePage(res.image, res.width, res.height)
                         }.apply {
+                            image?.backgroundColor = 0
                             parent = state
                             x = homeX
                             y = homeY
