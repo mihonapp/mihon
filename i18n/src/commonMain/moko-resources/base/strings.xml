@@ -1062,4 +1062,20 @@
     <string name="donationCampaign.paragraph3">Regardless, Mihon will continue to be maintained by me and the volunteers, and it will stay open source.</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="donationCampaign.dismiss">Dismiss</string>
+
+    <!-- Image margins -->
+    <string name="pager_margins">Paged Reader Margins</string>
+
+    <string name="top_margin">Top margin</string>
+    <string name="bottom_margin">Bottom margin</string>
+    <string name="left_margin">Left margin</string>
+    <string name="right_margin">Right margin</string>
+    <string name="margin_color">Margin color</string>
+
+    <string name="margin_color_background">Background color</string>
+    <string name="margin_color_white">White</string>
+    <string name="margin_color_black">Black</string>
+    <string name="margin_color_transparent">Transparent</string>
+
+    <string name="pixels">px</string>
 </resources>
