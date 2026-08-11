@@ -621,10 +621,14 @@ open class WebGpuViewer(
                 }
 
                 // For first frame, create Image with trim in single GPU context switch
-                val trimColors = if (config.imageCropBorders) listOf(
-                    floatArrayOf(1f, 1f, 1f),
-                    floatArrayOf(0f, 0f, 0f)
-                ) else null
+                val trimColors = if (config.imageCropBorders) {
+                    listOf(
+                        floatArrayOf(1f, 1f, 1f),
+                        floatArrayOf(0f, 0f, 0f),
+                    )
+                } else {
+                    null
+                }
 
                 val backgroundColor = when {
                     config.automaticBackground -> null
@@ -642,7 +646,7 @@ open class WebGpuViewer(
                     createMipMaps = true,
                     trimColors = trimColors,
                     trimThreshold = 0.15f,
-                    backgroundColor = backgroundColor
+                    backgroundColor = backgroundColor,
                 )
 
                 // Create ImagePage early so its cleanup handles all frames
