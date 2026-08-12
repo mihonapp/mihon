@@ -30,7 +30,6 @@ import ca.mpreg.webgpuviewer.transition.TransitionStackLeft
 import ca.mpreg.webgpuviewer.transition.TransitionStackRight
 import ca.mpreg.webgpuviewer.transition.TransitionStackUp
 import ca.mpreg.webgpuviewer.viewer.ImagePage
-import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
@@ -46,7 +45,6 @@ import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
-import uy.kohesive.injekt.injectLazy
 import java.util.concurrent.Executors
 import kotlin.math.abs
 import kotlin.math.min
@@ -58,7 +56,7 @@ open class WebGpuViewer(
     val pager: ImageView = ImageView(activity, isVertical = isVertical),
 ) : Viewer {
 
-    val downloadManager: DownloadManager by injectLazy()
+    open val isContinuous: Boolean = false
 
     private val scope = MainScope()
 
@@ -153,7 +151,7 @@ open class WebGpuViewer(
                         synchronized(lock) { if (page in pageCache) page.state = PageState.IDLE }
                     }
                 }
-            } catch (e: InterruptedException) {
+            } catch (_: InterruptedException) {
                 // Normal shutdown
             } catch (e: Exception) {
                 Log.e("WebGpuViewer", "Decode worker died", e)
@@ -173,17 +171,14 @@ open class WebGpuViewer(
     @Volatile
     var currentPage: ViewerPage? = null
 
-    val preloadCount = 2
+    val preloadCount = 3
     open val cacheSize = 9
 
     /**
      * Page processing state
      */
     enum class PageState {
-        IDLE,
-        QUEUED,
-        LOADING,
-        DECODING,
+        IDLE, QUEUED, LOADING, DECODING,
     }
 
     /**
@@ -219,18 +214,15 @@ open class WebGpuViewer(
                 val chapterId = page.page.chapter.chapter.id
                 val prevIndex = page.page.index - 1
                 candidates.find {
-                    it is ViewerReaderPage && it.page.chapter.chapter.id == chapterId &&
-                        it.page.index == prevIndex
-                }
-                    ?: candidates.find { it is TransitionPage && it.nextChapter?.chapter?.id == chapterId }
+                    it is ViewerReaderPage && it.page.chapter.chapter.id == chapterId && it.page.index == prevIndex
+                } ?: candidates.find { it is TransitionPage && it.nextChapter?.chapter?.id == chapterId }
             }
 
             is TransitionPage -> {
                 val prevChapterId = page.prevChapter?.chapter?.id
                 page.prevChapter?.pages?.lastIndex?.let { lastIndex ->
                     candidates.find {
-                        it is ViewerReaderPage && it.page.chapter.chapter.id == prevChapterId &&
-                            it.page.index == lastIndex
+                        it is ViewerReaderPage && it.page.chapter.chapter.id == prevChapterId && it.page.index == lastIndex
                     }
                 }
             }
@@ -256,6 +248,7 @@ open class WebGpuViewer(
         pageCache.remove(toRemove)
         decodeQueue.remove(toRemove)
         toRemove.state = PageState.IDLE
+        (toRemove as? ViewerReaderPage)?.spreadPage?.cleanup()
         toRemove.imagePage.cleanup()
     }
 
@@ -301,10 +294,7 @@ open class WebGpuViewer(
         var state: PageState = PageState.IDLE
 
         @Volatile
-        open var imagePage: ImagePage = ImagePage.Dummy(400, 400).apply {
-            minScale = 1f
-            maxScale = 1f
-        }
+        open var imagePage: ImagePage = ImagePage.Dummy(400, 400)
     }
 
     inner class TransitionPage(override val prevChapter: ReaderChapter?, override val nextChapter: ReaderChapter?) :
@@ -317,6 +307,9 @@ open class WebGpuViewer(
     }
 
     inner class ViewerReaderPage(val page: ReaderPage) : ViewerPage() {
+        /** Cached spread ImagePage when this page is the anchor of a dual-page spread */
+        var spreadPage: ImagePage? = null
+
         override val prevChapter: ReaderChapter?
             get() = when (page.chapter) {
                 viewerChapters?.currChapter -> viewerChapters?.prevChapter
@@ -366,28 +359,128 @@ open class WebGpuViewer(
             }
     }
 
-    fun nextPage(count: Int): ViewerPage? {
-        if (count == 0) return currentPage
+    /**
+     * Check if dual page mode is currently active based on config and view dimensions.
+     * Dual page is never active for continuous (scrolling) viewers.
+     */
+    private fun isDualPageMode(): Boolean {
+        if (isContinuous) return false
+        return when (config.dualPageView) {
+            ReaderPreferences.DualPageView.NEVER -> false
+            ReaderPreferences.DualPageView.ALWAYS -> true
+            ReaderPreferences.DualPageView.WIDE -> {
+                val width = pager.state.width
+                val height = pager.state.height
+                width > 0 && height > 0 && width.toFloat() / height > 1f
+            }
+        }
+    }
 
-        var currentPage = currentPage ?: return null
+    /**
+     * Check if the given page can form a spread with the next page.
+     * Uses image.position to determine: anchor + partner = spread
+     * RTL: RIGHT is anchor, looks for LEFT on next
+     * LTR: LEFT is anchor, looks for RIGHT on next
+     */
+    private fun canFormSpread(page: ViewerReaderPage): Boolean {
+        if (!isDualPageMode()) return false
+        val anchorPosition = if (isReversed) Image.Position.RIGHT else Image.Position.LEFT
+        val partnerPosition = if (isReversed) Image.Position.LEFT else Image.Position.RIGHT
+        if (page.imagePage.image?.position != anchorPosition) return false
+        val next = page.next as? ViewerReaderPage ?: return false
+        if (next.page.chapter != page.page.chapter) return false
+        return next.imagePage.image?.position == partnerPosition
+    }
 
-        for (i in 0 until abs(count)) {
-            currentPage = if (count > 0) {
-                currentPage.next
-            } else {
-                currentPage.prev
-            } ?: return null
+    /**
+     * Get the anchor page for a spread.
+     * RTL: anchor is RIGHT, for LEFT page returns previous RIGHT
+     * LTR: anchor is LEFT, for RIGHT page returns previous LEFT
+     */
+    private fun getSpreadAnchor(page: ViewerPage): ViewerPage {
+        if (!isDualPageMode()) return page
+        if (page !is ViewerReaderPage) return page
+
+        val anchorPosition = if (isReversed) Image.Position.RIGHT else Image.Position.LEFT
+        val partnerPosition = if (isReversed) Image.Position.LEFT else Image.Position.RIGHT
+
+        // If this is a partner page, check if previous is anchor
+        if (page.imagePage.image?.position == partnerPosition) {
+            val prev = page.prev as? ViewerReaderPage ?: return page
+            if (prev.page.chapter == page.page.chapter && prev.imagePage.image?.position == anchorPosition) {
+                return prev
+            }
         }
 
-        return currentPage
+        // This page is the anchor or standalone
+        return page
+    }
+
+    /**
+     * Build an ImagePage for the given page, potentially combining with adjacent page for spread.
+     * RTL: RIGHT anchor + LEFT partner
+     * LTR: LEFT anchor + RIGHT partner
+     */
+    private fun buildSpreadPage(page: ViewerPage): ImagePage {
+        // For TransitionPage, return its imagePage directly
+        if (page !is ViewerReaderPage) {
+            return page.imagePage
+        }
+
+        val image = page.imagePage.image
+
+        // Only form spreads in dual page mode
+        if (!isDualPageMode()) {
+            return page.imagePage
+        }
+
+        val anchorPosition = if (isReversed) Image.Position.RIGHT else Image.Position.LEFT
+        val partnerPosition = if (isReversed) Image.Position.LEFT else Image.Position.RIGHT
+
+        // Anchor pages look for partner on next page
+        if (image?.position == anchorPosition) {
+            val nextReaderPage = (page.next as? ViewerReaderPage)?.takeIf { it.page.chapter == page.page.chapter }
+            val partnerImage = nextReaderPage?.imagePage?.image?.takeIf { it.position == partnerPosition }
+
+            if (partnerImage != null) {
+                // Reuse existing spread if images match - preserves transform state
+                val existing = page.spreadPage
+                if (existing != null && existing.images.getOrNull(0) === image && existing.images.getOrNull(1) === partnerImage) {
+                    return existing
+                }
+
+                // Create new spread: [anchor, partner]
+                val spread = ImagePage(image, partnerImage)
+                spread.ownsImages = false
+                page.spreadPage = spread
+                return spread
+            }
+        }
+
+        // Single page or no spread partner - clear any cached spread
+        page.spreadPage = null
+        return page.imagePage
     }
 
     init {
         pager.state.apply {
             fetchPage = fetch@{ index ->
                 val i = if (isReversed) -index else index
-                val page = nextPage(i) ?: return@fetch null
-                page.imagePage
+                val current = currentPage ?: return@fetch null
+
+                // For index 0, return the current spread
+                if (i == 0) {
+                    return@fetch buildSpreadPage(getSpreadAnchor(current))
+                }
+
+                // Navigate by spreads from current
+                var page = current
+                val step = if (i > 0) 1 else -1
+                repeat(abs(i)) {
+                    page = nextPage(page, step) ?: return@fetch null
+                }
+
+                return@fetch buildSpreadPage(page)
             }
 
             onTap = { offset ->
@@ -400,18 +493,12 @@ open class WebGpuViewer(
                 }
             }
 
-            onLongTap = { offset ->
+            onLongTap = { _ ->
                 if (activity.viewModel.state.value.menuVisible || config.longTapEnabled) {
                     (currentPage as? ViewerReaderPage)?.let { activity.onPageLongTap(it.page) }
                 }
             }
         }
-
-//        config.dualPageSplitChangedListener = { enabled ->
-//            if (!enabled) {
-//                cleanupPageSplit()
-//            }
-//        }
 
         config.imagePropertyChangedListener = {
             pager.state.apply {
@@ -448,6 +535,7 @@ open class WebGpuViewer(
                 decodeQueue.clear()
                 pageCache.forEach {
                     it.state = PageState.IDLE
+                    (it as? ViewerReaderPage)?.spreadPage?.cleanup()
                     it.imagePage.cleanup()
                 }
                 pageCache.clear()
@@ -482,6 +570,7 @@ open class WebGpuViewer(
             decodeQueue.clear()
             pageCache.forEach {
                 it.state = PageState.IDLE
+                (it as? ViewerReaderPage)?.spreadPage?.cleanup()
                 it.imagePage.cleanup()
             }
             pageCache.clear()
@@ -542,14 +631,9 @@ open class WebGpuViewer(
                         }
 
                         if (page.imagePage.image == null) {
-                            page.imagePage = ImagePage(400, 400).apply {
-                                parent = pager.state
-                                minScale = homeScale
-                                maxScale = homeScale
-                                scale = homeScale
-
+                            page.imagePage = ImagePage.drawable(400, 400).apply {
                                 WebGpuRenderer.withContext {
-                                    (this@apply as ImagePage.Draw).texture?.let { texture ->
+                                    this@apply.texture?.let { texture ->
                                         Draw.submit { encoder ->
                                             clear(encoder, texture, 0x00000000)
                                             line(encoder, texture, 0.1f, 0.5f, 0.9f, 0.5f, 0xFF101010.toInt(), 30f)
@@ -655,7 +739,7 @@ open class WebGpuViewer(
                 }
 
                 val firstFrame = decoded[0]
-                val (firstImage, trimRect) = Image.createWithTrim(
+                val firstImage = Image.createWithTrim(
                     firstFrame.image,
                     firstFrame.width,
                     firstFrame.height,
@@ -665,21 +749,27 @@ open class WebGpuViewer(
                     backgroundColor = backgroundColor,
                 )
 
-                // Create ImagePage early so its cleanup handles all frames
-                imagePage = ImagePage(firstImage).apply {
-                    trim = trimRect?.takeIf { it.width() > 0 && it.height() > 0 }
-                    parent = pager.state
-                    x = homeX
-                    y = homeY
-                    scale = homeScale
+                // Set position for dual page spreads:
+                // Set position for dual page spreads based on reading direction:
+                // RTL (isReversed): Cover on LEFT, even=LEFT, odd=RIGHT
+                // LTR (!isReversed): Cover on RIGHT, even=RIGHT, odd=LEFT
+                firstImage.position = if (!isDualPageMode()) {
+                    Image.Position.SINGLE
+                } else if (isReversed) {
+                    // RTL: even pages (including cover) on LEFT
+                    if (page.page.index % 2 == 0) Image.Position.LEFT else Image.Position.RIGHT
+                } else {
+                    // LTR: even pages (including cover) on RIGHT
+                    if (page.page.index % 2 == 0) Image.Position.RIGHT else Image.Position.LEFT
                 }
+
+                // Create ImagePage early so its cleanup handles all frames
+                imagePage = ImagePage(firstImage)
 
                 // Create remaining frames for animation
                 if (decoded.size > 1) {
                     val frames = mutableListOf<Pair<Image, Int>>()
                     frames.add(Pair(firstImage, firstFrame.duration))
-                    // Assign pages early so cleanup() will handle all frames if creation fails partway
-                    imagePage.pages = frames
                     for (i in 1 until decoded.size) {
                         val frame = decoded[i]
                         frames.add(Pair(Image(frame.image, frame.width, frame.height), frame.duration))
@@ -768,10 +858,8 @@ open class WebGpuViewer(
                 y += it.second
             }
 
-            val imagePage = ImagePage(bitmap, createMipMaps = false).apply {
-                minScale = 1f
-                maxScale = 1f
-            }
+            val imagePage = ImagePage(bitmap, createMipMaps = false)
+            imagePage.image?.position = Image.Position.SINGLE
 
             synchronized(lock) {
                 if (page in pageCache && !page.imagePage.isDecoded && !page.imagePage.destroyed) {
@@ -829,7 +917,9 @@ open class WebGpuViewer(
         }
         nextPages.asReversed().forEach { preloadPage(it) }
 
-        // Add current page last with priority flag (highest priority in LIFO)
+        // Add current spread last with priority flag (highest priority in LIFO)
+        // Also preload the paired page
+        cachedPage.next?.let { preloadPage(it, prioritize = true) }
         preloadPage(cachedPage, prioritize = true)
     }
 
@@ -842,28 +932,38 @@ open class WebGpuViewer(
 
         this.viewerChapters = chapters
 
-        val requestedPage = pages[min(chapters.currChapter.requestedPage, pages.lastIndex)]
+        val requestedIndex = min(chapters.currChapter.requestedPage, pages.lastIndex)
+        val requestedPage = pages[requestedIndex]
 
+        // Get the page and align to spread anchor if needed
         val page = currentPage ?: getPage(requestedPage)
-        currentPage = page
-        (page as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
-        preloadPages(page)
+        currentPage = getSpreadAnchor(page)
+        (currentPage as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
+        preloadPages(currentPage!!)
 
         pager.state.apply {
             onPageChange = onPageChange@{ delta ->
                 activity.hideMenu()
 
-                val delta = if (isReversed) -delta else delta
+                // The viewer already showed the page at fetchPage(delta).
+                // We need to update currentPage to match that.
+                val direction = if (isReversed) -delta else delta
+                val current = currentPage ?: return@onPageChange
 
-                nextPage(delta)?.let { newPage ->
-                    currentPage = newPage
-                    (newPage as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
-                    preloadPages(newPage)
+                // Navigate the same way fetchPage does
+                var page = current
+                val step = if (direction > 0) 1 else -1
+                repeat(abs(direction)) {
+                    page = nextPage(page, step) ?: return@onPageChange
+                }
 
-                    (currentPage as? TransitionPage)?.let { transitionPage ->
-                        if (transitionPage.prevChapter == null || transitionPage.nextChapter == null) {
-                            activity.showMenu()
-                        }
+                currentPage = page
+                (page as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
+                preloadPages(page)
+
+                (page as? TransitionPage)?.let { transitionPage ->
+                    if (transitionPage.prevChapter == null || transitionPage.nextChapter == null) {
+                        activity.showMenu()
                     }
                 }
             }
@@ -874,9 +974,11 @@ open class WebGpuViewer(
 
     /**
      * Tells this viewer to move to the given [page].
+     * In dual page mode, aligns to the start of the spread containing the page.
      */
     override fun moveToPage(page: ReaderPage) {
-        moveToPage(getPage(page))
+        // Get the page and align to spread anchor based on image position
+        moveToPage(getSpreadAnchor(getPage(page)))
     }
 
     private fun moveToPage(newPage: ViewerPage) {
@@ -895,9 +997,7 @@ open class WebGpuViewer(
         if (previousPage == null) return
 
         val direction = when (previousPage) {
-            is ViewerReaderPage if newPage is ViewerReaderPage -> if (previousPage.page.chapter ==
-                newPage.page.chapter
-            ) {
+            is ViewerReaderPage if newPage is ViewerReaderPage -> if (previousPage.page.chapter == newPage.page.chapter) {
                 (newPage.page.index - previousPage.page.index).coerceIn(-1, 1)
             } else if (previousPage.page.chapter == newPage.prevChapter) {
                 1
@@ -905,17 +1005,13 @@ open class WebGpuViewer(
                 -1
             }
 
-            is TransitionPage if newPage is ViewerReaderPage -> if (previousPage.nextChapter ==
-                newPage.page.chapter
-            ) {
+            is TransitionPage if newPage is ViewerReaderPage -> if (previousPage.nextChapter == newPage.page.chapter) {
                 1
             } else {
                 -1
             }
 
-            is ViewerReaderPage if newPage is TransitionPage -> if (previousPage.page.chapter ==
-                newPage.prevChapter
-            ) {
+            is ViewerReaderPage if newPage is TransitionPage -> if (previousPage.page.chapter == newPage.prevChapter) {
                 1
             } else {
                 -1
@@ -925,8 +1021,7 @@ open class WebGpuViewer(
         }
 
         if (direction != 0) {
-            // Set the transition "from" page to animate from actual previous page (for far navigation)
-            pager.state.transitionFromPage = previousPage.imagePage
+            pager.state.transitionFromPage = buildSpreadPage(previousPage)
             pager.state.animatePageTurn(if (isReversed) direction else -direction)
         } else {
             pager.state.invalidate()
@@ -961,7 +1056,8 @@ open class WebGpuViewer(
                     return
                 }
             }
-            nextPage(1)?.let { moveToPage(it) }
+
+            navigateSpread(1)
         }
     }
 
@@ -979,8 +1075,42 @@ open class WebGpuViewer(
                     return
                 }
             }
-            nextPage(-1)?.let { moveToPage(it) }
+
+            navigateSpread(-1)
         }
+    }
+
+    /**
+     * Get the target page when navigating by spreads from the given page.
+     * @param from Starting page
+     * @param direction Positive = forward in page numbers, negative = backward
+     * @return Target page or null if navigation not possible
+     */
+    private fun nextPage(from: ViewerPage, direction: Int): ViewerPage? {
+        var page = getSpreadAnchor(from)
+
+        page = if (direction > 0) {
+            // Going forward (next spread)
+            if (page is ViewerReaderPage && canFormSpread(page)) {
+                page.next?.next ?: return null
+            } else {
+                page.next ?: return null
+            }
+        } else {
+            // Going backward (prev spread)
+            page.prev ?: return null
+        }
+
+        return getSpreadAnchor(page)
+    }
+
+    /**
+     * Navigate by spreads from current page.
+     * @param direction Positive = forward in page numbers, negative = backward
+     */
+    private fun navigateSpread(direction: Int) {
+        val target = currentPage?.let { nextPage(it, direction) } ?: return
+        moveToPage(target)
     }
 
     /**

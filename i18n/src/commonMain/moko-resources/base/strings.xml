@@ -520,6 +520,10 @@
     <string name="cutout_mode_ignore">Ignore</string>
     <string name="cutout_mode_avoid">Avoid</string>
     <string name="cutout_mode_shift">Shift</string>
+    <string name="pref_dual_page_view">Dual page view</string>
+    <string name="dual_page_view_never">Never</string>
+    <string name="dual_page_view_always">Always</string>
+    <string name="dual_page_view_wide">When wide</string>
 
       <!-- Downloads section -->
     <string name="pref_category_delete_chapters">Delete chapters</string>

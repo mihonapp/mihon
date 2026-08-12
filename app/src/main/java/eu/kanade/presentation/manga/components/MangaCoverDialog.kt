@@ -178,10 +178,6 @@ fun MangaCoverDialog(
                             ImagePage(res.image, res.width, res.height)
                         }.apply {
                             image?.backgroundColor = 0
-                            parent = state
-                            x = homeX
-                            y = homeY
-                            scale = homeScale
                         }
                         state.apply {
                             fetchPage = { index ->

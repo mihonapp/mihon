@@ -54,6 +54,9 @@ class WebGpuConfig(
     var cutoutMode = ReaderPreferences.CutoutMode.AVOID
         private set
 
+    var dualPageView = ReaderPreferences.DualPageView.NEVER
+        private set
+
     init {
         readerPreferences.readerTheme
             .register(
@@ -122,6 +125,12 @@ class WebGpuConfig(
         readerPreferences.cutoutMode
             .register(
                 { cutoutMode = it },
+                { imagePropertyChangedListener?.invoke() },
+            )
+
+        readerPreferences.dualPageView
+            .register(
+                { dualPageView = it },
                 { imagePropertyChangedListener?.invoke() },
             )
     }
