@@ -953,7 +953,7 @@ open class WebGpuViewer(
     protected open fun moveRight() {
         pager.state.getPage(0)?.let { page ->
             if (config.navigateToPan && !page.atHome) {
-                val maxX = pager.state.maxX(page.width, page.scale)
+                val maxX = page.maxX(page.scale)
                 val c = if (isReversed) -1 else 1
                 val x = (page.x - c / page.scale).coerceIn(-maxX, maxX)
                 if (x != page.x) {
@@ -971,7 +971,7 @@ open class WebGpuViewer(
     protected open fun moveLeft() {
         pager.state.getPage(0)?.let { page ->
             if (config.navigateToPan && !page.atHome) {
-                val maxX = pager.state.maxX(page.width, page.scale)
+                val maxX = page.maxX(page.scale)
                 val c = if (isReversed) -1 else 1
                 val x = (page.x + c / page.scale).coerceIn(-maxX, maxX)
                 if (x != page.x) {
