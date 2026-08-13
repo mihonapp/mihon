@@ -44,10 +44,12 @@ internal fun ColumnScope.ReadingModePage(viewModel: ReaderSettingsViewModel) {
     }
 
     val default = Injekt.get<ReaderPreferences>().defaultReadingMode.get()
-    val resolved = ReadingMode.fromPreference(when {
-        readingMode == ReadingMode.DEFAULT -> default
-        else -> manga?.readingMode?.toInt() ?: default
-    })
+    val resolved = ReadingMode.fromPreference(
+        when {
+            readingMode == ReadingMode.DEFAULT -> default
+            else -> manga?.readingMode?.toInt() ?: default
+        },
+    )
     if (resolved == ReadingMode.LEFT_TO_RIGHT || resolved == ReadingMode.RIGHT_TO_LEFT) {
         val dualPageView by viewModel.preferences.dualPageView.collectAsState()
         SettingsChipRow(MR.strings.pref_dual_page_view) {

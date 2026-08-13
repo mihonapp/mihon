@@ -204,7 +204,9 @@ class ReaderPreferences(
     // endregion
 
     enum class FlashColor {
-        BLACK, WHITE, WHITE_BLACK,
+        BLACK,
+        WHITE,
+        WHITE_BLACK,
     }
 
     enum class TappingInvertMode(
@@ -212,7 +214,8 @@ class ReaderPreferences(
         val shouldInvertHorizontal: Boolean = false,
         val shouldInvertVertical: Boolean = false,
     ) {
-        NONE(MR.strings.tapping_inverted_none), HORIZONTAL(
+        NONE(MR.strings.tapping_inverted_none),
+        HORIZONTAL(
             MR.strings.tapping_inverted_horizontal,
             shouldInvertHorizontal = true,
         ),
@@ -224,30 +227,45 @@ class ReaderPreferences(
     }
 
     enum class ReaderHideThreshold(val threshold: Int) {
-        HIGHEST(5), HIGH(13), LOW(31), LOWEST(47),
+        HIGHEST(5),
+        HIGH(13),
+        LOW(31),
+        LOWEST(47),
     }
 
     enum class TransitionAnimation(val titleRes: StringResource) {
-        DEFAULT(MR.strings.transition_animation_default), FLIP_LEFT(MR.strings.transition_animation_flip_left), FLIP_RIGHT(
+        DEFAULT(MR.strings.transition_animation_default),
+        FLIP_LEFT(MR.strings.transition_animation_flip_left),
+        FLIP_RIGHT(
             MR.strings.transition_animation_flip_right,
         ),
-        STACK_LEFT(MR.strings.transition_animation_stack_left), STACK_RIGHT(MR.strings.transition_animation_stack_right), STACK_UP(
+        STACK_LEFT(MR.strings.transition_animation_stack_left),
+        STACK_RIGHT(MR.strings.transition_animation_stack_right),
+        STACK_UP(
             MR.strings.transition_animation_stack_up,
         ),
-        STACK_DOWN(MR.strings.transition_animation_stack_down), SPHERE(MR.strings.transition_animation_sphere), CUBE_INSIDE(
+        STACK_DOWN(MR.strings.transition_animation_stack_down),
+        SPHERE(MR.strings.transition_animation_sphere),
+        CUBE_INSIDE(
             MR.strings.transition_animation_cube_inside,
         ),
-        CUBE_OUTSIDE(MR.strings.transition_animation_cube_outside), FADE(MR.strings.transition_animation_fade), FADE_WHITE(
+        CUBE_OUTSIDE(MR.strings.transition_animation_cube_outside),
+        FADE(MR.strings.transition_animation_fade),
+        FADE_WHITE(
             MR.strings.transition_animation_fade_white,
         ),
     }
 
     enum class CutoutMode(val titleRes: StringResource) {
-        IGNORE(MR.strings.cutout_mode_ignore), AVOID(MR.strings.cutout_mode_avoid), SHIFT(MR.strings.cutout_mode_shift),
+        IGNORE(MR.strings.cutout_mode_ignore),
+        AVOID(MR.strings.cutout_mode_avoid),
+        SHIFT(MR.strings.cutout_mode_shift),
     }
 
     enum class DualPageView(val titleRes: StringResource) {
-        NEVER(MR.strings.dual_page_view_never), ALWAYS(MR.strings.dual_page_view_always), WIDE(MR.strings.dual_page_view_wide),
+        NEVER(MR.strings.dual_page_view_never),
+        ALWAYS(MR.strings.dual_page_view_always),
+        WIDE(MR.strings.dual_page_view_wide),
     }
 
     companion object {

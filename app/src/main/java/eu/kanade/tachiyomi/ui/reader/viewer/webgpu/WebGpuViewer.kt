@@ -186,7 +186,10 @@ open class WebGpuViewer(
      * Page processing state
      */
     enum class PageState {
-        IDLE, QUEUED, LOADING, DECODING,
+        IDLE,
+        QUEUED,
+        LOADING,
+        DECODING,
     }
 
     /**
@@ -230,7 +233,8 @@ open class WebGpuViewer(
                 val prevChapterId = page.prevChapter?.chapter?.id
                 page.prevChapter?.pages?.lastIndex?.let { lastIndex ->
                     candidates.find {
-                        it is ViewerReaderPage && it.page.chapter.chapter.id == prevChapterId && it.page.index == lastIndex
+                        it is ViewerReaderPage && it.page.chapter.chapter.id == prevChapterId &&
+                            it.page.index == lastIndex
                     }
                 }
             }
@@ -453,7 +457,9 @@ open class WebGpuViewer(
             if (partnerImage != null) {
                 // Reuse existing spread if images match - preserves transform state
                 val existing = page.spreadPage
-                if (existing != null && existing.images.getOrNull(0) === image && existing.images.getOrNull(1) === partnerImage) {
+                if (existing != null && existing.images.getOrNull(0) === image &&
+                    existing.images.getOrNull(1) === partnerImage
+                ) {
                     return existing
                 }
 
@@ -1006,7 +1012,9 @@ open class WebGpuViewer(
         if (previousPage == null) return
 
         val direction = when (previousPage) {
-            is ViewerReaderPage if newPage is ViewerReaderPage -> if (previousPage.page.chapter == newPage.page.chapter) {
+            is ViewerReaderPage if newPage is ViewerReaderPage -> if (previousPage.page.chapter ==
+                newPage.page.chapter
+            ) {
                 (newPage.page.index - previousPage.page.index).coerceIn(-1, 1)
             } else if (previousPage.page.chapter == newPage.prevChapter) {
                 1
