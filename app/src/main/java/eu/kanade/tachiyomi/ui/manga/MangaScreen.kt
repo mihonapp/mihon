@@ -38,9 +38,11 @@ import eu.kanade.presentation.manga.components.SetIntervalDialog
 import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.util.isTabletUi
+import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.isLocalOrStub
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.ui.browse.extension.details.SourcePreferencesScreen
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
@@ -164,6 +166,9 @@ class MangaScreen(
                 navigator.push(MigrationConfigScreen(successState.manga.id))
             }.takeIf { successState.manga.favorite },
             onEditNotesClicked = { navigator.push(MangaNotesScreen(manga = successState.manga)) },
+            onExtensionSettingsClicked = {
+                navigator.push(SourcePreferencesScreen(successState.source.id))
+            }.takeIf { successState.source is ConfigurableSource },
             onMultiBookmarkClicked = viewModel::bookmarkChapters,
             onMultiMarkAsReadClicked = viewModel::markChaptersRead,
             onMarkPreviousAsReadClicked = viewModel::markPreviousChapterRead,
