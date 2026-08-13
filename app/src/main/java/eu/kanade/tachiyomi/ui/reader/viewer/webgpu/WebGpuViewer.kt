@@ -30,6 +30,9 @@ import ca.mpreg.webgpuviewer.transition.TransitionStackLeft
 import ca.mpreg.webgpuviewer.transition.TransitionStackRight
 import ca.mpreg.webgpuviewer.transition.TransitionStackUp
 import ca.mpreg.webgpuviewer.viewer.ImagePage
+import de.stefan_oltmann.kim.Kim
+import de.stefan_oltmann.kim.android.readMetadata
+import de.stefan_oltmann.kim.format.tiff.constant.TiffTag
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
@@ -725,7 +728,29 @@ open class WebGpuViewer(
                     }
                 }
 
-                val dec = ImageDecoder.new(input)
+                // Buffer file to detect spread position tag, then decode.
+                // When not in dual page mode, skip Kim entirely.
+                val bytes = if (isDualPageMode()) input.readBytes() else null
+
+                val position = if (bytes != null) {
+                    val tag = Kim.readMetadata(bytes.inputStream(), bytes.size.toLong())
+                        ?.findStringValue(TiffTag.TIFF_TAG_PAGE_NAME)
+                    when (tag) {
+                        "Left" -> Image.Position.LEFT
+                        "Right" -> Image.Position.RIGHT
+                        null -> if (isReversed) { // TODO: heuristics, use image size
+                            if (page.page.index % 2 == 0) Image.Position.LEFT else Image.Position.RIGHT
+                        } else {
+                            if (page.page.index % 2 == 0) Image.Position.RIGHT else Image.Position.LEFT
+                        }
+
+                        else -> Image.Position.SINGLE
+                    }
+                } else {
+                    Image.Position.SINGLE
+                }
+
+                val dec = ImageDecoder.new(bytes?.inputStream() ?: input)
                 val pageCount = dec.pages
 
                 if (pageCount == 0) {
@@ -768,15 +793,7 @@ open class WebGpuViewer(
                 // Set position for dual page spreads based on reading direction:
                 // RTL (isReversed): Cover on LEFT, even=LEFT, odd=RIGHT
                 // LTR (!isReversed): Cover on RIGHT, even=RIGHT, odd=LEFT
-                firstImage.position = if (!isDualPageMode()) {
-                    Image.Position.SINGLE
-                } else if (isReversed) {
-                    // RTL: even pages (including cover) on LEFT
-                    if (page.page.index % 2 == 0) Image.Position.LEFT else Image.Position.RIGHT
-                } else {
-                    // LTR: even pages (including cover) on RIGHT
-                    if (page.page.index % 2 == 0) Image.Position.RIGHT else Image.Position.LEFT
-                }
+                firstImage.position = position
 
                 // Create ImagePage early so its cleanup handles all frames
                 imagePage = ImagePage(firstImage)

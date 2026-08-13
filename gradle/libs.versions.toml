@@ -44,6 +44,7 @@ imagedecoder2 = "6"
 injekt = "91edab2317"
 jsoup = "1.23.1"
 junit = "6.1.3"
+kim = "0.34.0"
 kotest-assertions = "6.2.4"
 kotlin-gradle = "2.4.10"
 kotlinx-coroutines = "1.11.0"
@@ -140,6 +141,7 @@ injekt = { module = "com.github.mihonapp:injekt", version.ref = "injekt" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+kim = { module = "de.stefan-oltmann:kim", version.ref = "kim" }
 kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest-assertions" }
 kotlin-compose-compiler-gradle = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin-gradle" }
 kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-gradle" }
