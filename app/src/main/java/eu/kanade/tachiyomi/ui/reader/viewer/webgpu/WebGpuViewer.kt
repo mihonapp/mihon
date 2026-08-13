@@ -69,20 +69,28 @@ open class WebGpuViewer(
     // Single lock for all page cache and queue operations
     private val lock = Object()
 
-    // Page cache - all pages we know about
-    private val pageCache = mutableListOf<ViewerPage>()
+    // Page cache - keyed by stable PageKey for O(1) lookup
+    private val pageCache = LinkedHashMap<PageKey, ViewerPage>()
 
     // Decode queue - pages waiting to be decoded, processed LIFO (last = highest priority)
     private val decodeQueue = ArrayDeque<ViewerPage>()
 
-    // Helper to create a stable key for a page
-    private fun pageKey(page: ViewerPage): String = when (page) {
-        is ViewerReaderPage -> "R:${page.page.chapter.chapter.id}:${page.page.index}"
-        is TransitionPage -> "T:${page.prevChapter?.chapter?.id}:${page.nextChapter?.chapter?.id}"
-        else -> ""
+    // Stable key types for page identity - data classes provide correct equals/hashCode
+    private sealed class PageKey {
+        data class Reader(val chapterId: Long?, val index: Int) : PageKey()
+        data class Transition(val prevId: Long?, val nextId: Long?) : PageKey()
     }
 
-    private fun findInCache(key: String): ViewerPage? = pageCache.find { pageKey(it) == key }
+    private fun pageKey(page: ViewerPage): PageKey = when (page) {
+        is ViewerReaderPage -> PageKey.Reader(page.page.chapter.chapter.id, page.page.index)
+        is TransitionPage -> PageKey.Transition(page.prevChapter?.chapter?.id, page.nextChapter?.chapter?.id)
+        else -> PageKey.Transition(null, null)
+    }
+
+    private fun findInCache(key: PageKey): ViewerPage? = pageCache[key]
+
+    /** Check if a page is in the cache by identity. O(1) via key lookup. */
+    private fun pageInCache(page: ViewerPage): Boolean = pageCache[pageKey(page)] === page
 
     /**
      * Queue a page for decoding if not already queued/loading/decoded.
@@ -131,12 +139,12 @@ open class WebGpuViewer(
 
                     // Verify page is still valid (not evicted and doesn't have a decoded image yet)
                     val shouldProcess = synchronized(lock) {
-                        page in pageCache && page.state == PageState.DECODING && !page.imagePage.isDecoded
+                        pageInCache(page) && page.state == PageState.DECODING && !page.imagePage.isDecoded
                     }
 
                     if (!shouldProcess) {
                         synchronized(lock) {
-                            if (page in pageCache) page.state = PageState.IDLE
+                            if (pageInCache(page)) page.state = PageState.IDLE
                         }
                         continue
                     }
@@ -148,7 +156,7 @@ open class WebGpuViewer(
                         }
                     } catch (e: Exception) {
                         Log.e("WebGpuViewer", "Decode error: ${pageKey(page)}", e)
-                        synchronized(lock) { if (page in pageCache) page.state = PageState.IDLE }
+                        synchronized(lock) { if (pageInCache(page)) page.state = PageState.IDLE }
                     }
                 }
             } catch (_: InterruptedException) {
@@ -187,7 +195,7 @@ open class WebGpuViewer(
      */
     private fun evictFarthestPage(reference: ViewerPage? = null) {
         val current = reference ?: currentPage ?: return
-        val candidates = pageCache.filter { it !== current }.toMutableSet()
+        val candidates = pageCache.values.filter { it !== current }.toMutableSet()
         if (candidates.isEmpty()) return
 
         fun findNext(page: ViewerPage): ViewerPage? = when (page) {
@@ -245,7 +253,7 @@ open class WebGpuViewer(
 
         val toRemove = candidates.firstOrNull() ?: farthest ?: return
 
-        pageCache.remove(toRemove)
+        pageCache.remove(pageKey(toRemove))
         decodeQueue.remove(toRemove)
         toRemove.state = PageState.IDLE
         (toRemove as? ViewerReaderPage)?.spreadPage?.cleanup()
@@ -257,10 +265,10 @@ open class WebGpuViewer(
      * @param referencePage The page to use as reference for eviction (defaults to currentPage)
      */
     fun getPage(page: ReaderPage, referencePage: ViewerPage? = null): ViewerPage {
-        val key = "R:${page.chapter.chapter.id}:${page.index}"
+        val key = PageKey.Reader(page.chapter.chapter.id, page.index)
         return synchronized(lock) {
             findInCache(key) ?: ViewerReaderPage(page).also { newPage ->
-                pageCache.add(newPage)
+                pageCache[key] = newPage
                 while (pageCache.size > cacheSize) {
                     evictFarthestPage(referencePage ?: newPage)
                 }
@@ -273,10 +281,10 @@ open class WebGpuViewer(
         nextChapter: ReaderChapter?,
         referencePage: ViewerPage? = null,
     ): ViewerPage {
-        val key = "T:${prevChapter?.chapter?.id}:${nextChapter?.chapter?.id}"
+        val key = PageKey.Transition(prevChapter?.chapter?.id, nextChapter?.chapter?.id)
         return synchronized(lock) {
             findInCache(key) ?: TransitionPage(prevChapter, nextChapter).also { newPage ->
-                pageCache.add(newPage)
+                pageCache[key] = newPage
                 while (pageCache.size > cacheSize) {
                     evictFarthestPage(referencePage ?: newPage)
                 }
@@ -533,7 +541,7 @@ open class WebGpuViewer(
 
             synchronized(lock) {
                 decodeQueue.clear()
-                pageCache.forEach {
+                pageCache.values.forEach {
                     it.state = PageState.IDLE
                     (it as? ViewerReaderPage)?.spreadPage?.cleanup()
                     it.imagePage.cleanup()
@@ -568,7 +576,7 @@ open class WebGpuViewer(
         // Now clean up pages (cleanup() launches fire-and-forget coroutines on Dispatchers.Default)
         synchronized(lock) {
             decodeQueue.clear()
-            pageCache.forEach {
+            pageCache.values.forEach {
                 it.state = PageState.IDLE
                 (it as? ViewerReaderPage)?.spreadPage?.cleanup()
                 it.imagePage.cleanup()
@@ -590,17 +598,17 @@ open class WebGpuViewer(
      */
     private fun startPageLoad(page: ViewerReaderPage) {
         val loader = page.page.chapter.pageLoader ?: run {
-            synchronized(lock) { if (page in pageCache) page.state = PageState.IDLE }
+            synchronized(lock) { if (pageInCache(page)) page.state = PageState.IDLE }
             return
         }
 
         // If page is already ready, just re-queue immediately
         if (page.page.status == Page.State.Ready) {
             synchronized(lock) {
-                if (page in pageCache && !page.imagePage.isDecoded) {
+                if (pageInCache(page) && !page.imagePage.isDecoded) {
                     page.state = PageState.IDLE
                     queueForDecode(page, prioritize = currentPage?.let { pageKey(it) == pageKey(page) } ?: false)
-                } else if (page in pageCache) {
+                } else if (pageInCache(page)) {
                     page.state = PageState.IDLE
                 }
             }
@@ -609,7 +617,7 @@ open class WebGpuViewer(
 
         // Transition to LOADING state
         synchronized(lock) {
-            if (page !in pageCache) return
+            if (!pageInCache(page)) return
             page.state = PageState.LOADING
         }
 
@@ -627,7 +635,7 @@ open class WebGpuViewer(
                     page.page.progressFlow.collect { value ->
                         // Check if page was evicted or already decoded
                         synchronized(lock) {
-                            if (page !in pageCache || page.imagePage !is ImagePage.Dummy) return@collect
+                            if (!pageInCache(page) || page.imagePage !is ImagePage.Dummy) return@collect
                         }
 
                         if (page.imagePage.image == null) {
@@ -671,7 +679,7 @@ open class WebGpuViewer(
 
                 // Re-queue for decoding if ready
                 synchronized(lock) {
-                    if (page in pageCache && page.state == PageState.LOADING) {
+                    if (pageInCache(page) && page.state == PageState.LOADING) {
                         page.state = PageState.IDLE
                         if (page.page.status == Page.State.Ready && !page.imagePage.isDecoded) {
                             queueForDecode(
@@ -683,7 +691,7 @@ open class WebGpuViewer(
                 }
             } catch (e: Exception) {
                 Log.e("WebGpuViewer", "startPageLoad error", e)
-                synchronized(lock) { if (page in pageCache) page.state = PageState.IDLE }
+                synchronized(lock) { if (pageInCache(page)) page.state = PageState.IDLE }
             }
         }
     }
@@ -696,7 +704,7 @@ open class WebGpuViewer(
         }
 
         val stream = page.page.stream?.invoke() ?: run {
-            synchronized(lock) { if (page in pageCache) page.state = PageState.IDLE }
+            synchronized(lock) { if (pageInCache(page)) page.state = PageState.IDLE }
             return
         }
 
@@ -705,20 +713,23 @@ open class WebGpuViewer(
             stream.use { input ->
                 // Check if still valid before decoding (not evicted and doesn't have decoded image yet)
                 synchronized(lock) {
-                    if (page !in pageCache || page.imagePage.isDecoded) {
-                        if (page in pageCache) page.state = PageState.IDLE
+                    if (!pageInCache(page) || page.imagePage.isDecoded) {
+                        if (pageInCache(page)) page.state = PageState.IDLE
                         return
                     }
                 }
 
                 val dec = ImageDecoder.new(input)
-                val decoded = (0 until dec.pages).map { dec.decodeNext() }
+                val pageCount = dec.pages
 
-                if (decoded.isEmpty()) {
+                if (pageCount == 0) {
                     Log.e("WebGpuViewer", "decodeReaderPage: no frames decoded")
-                    synchronized(lock) { if (page in pageCache) page.state = PageState.IDLE }
+                    synchronized(lock) { if (pageInCache(page)) page.state = PageState.IDLE }
                     return
                 }
+
+                // Decode first frame immediately; defer rest only if animated
+                val firstFrame = dec.decodeNext()
 
                 // For first frame, create Image with trim in single GPU context switch
                 val trimColors = if (config.imageCropBorders) {
@@ -738,7 +749,6 @@ open class WebGpuViewer(
                     else -> 0xFF000000.toInt()
                 }
 
-                val firstFrame = decoded[0]
                 val firstImage = Image.createWithTrim(
                     firstFrame.image,
                     firstFrame.width,
@@ -749,7 +759,6 @@ open class WebGpuViewer(
                     backgroundColor = backgroundColor,
                 )
 
-                // Set position for dual page spreads:
                 // Set position for dual page spreads based on reading direction:
                 // RTL (isReversed): Cover on LEFT, even=LEFT, odd=RIGHT
                 // LTR (!isReversed): Cover on RIGHT, even=RIGHT, odd=LEFT
@@ -766,19 +775,19 @@ open class WebGpuViewer(
                 // Create ImagePage early so its cleanup handles all frames
                 imagePage = ImagePage(firstImage)
 
-                // Create remaining frames for animation
-                if (decoded.size > 1) {
-                    val frames = mutableListOf<Pair<Image, Int>>()
+                // Create remaining frames for animation (only for animated images)
+                if (pageCount > 1) {
+                    val frames = ArrayList<Pair<Image, Int>>(pageCount)
                     frames.add(Pair(firstImage, firstFrame.duration))
-                    for (i in 1 until decoded.size) {
-                        val frame = decoded[i]
+                    for (i in 1 until pageCount) {
+                        val frame = dec.decodeNext()
                         frames.add(Pair(Image(frame.image, frame.width, frame.height), frame.duration))
                     }
                     imagePage.startAnimationLoop(frames) { pager.state.invalidate() }
                 }
 
                 synchronized(lock) {
-                    if (page in pageCache && !page.imagePage.isDecoded && !page.imagePage.destroyed) {
+                    if (pageInCache(page) && !page.imagePage.isDecoded && !page.imagePage.destroyed) {
                         val oldImagePage = page.imagePage
                         page.imagePage = imagePage!!
                         imagePage = null
@@ -788,13 +797,13 @@ open class WebGpuViewer(
                         }
                         pager.state.invalidate()
                     } else {
-                        if (page in pageCache) page.state = PageState.IDLE
+                        if (pageInCache(page)) page.state = PageState.IDLE
                     }
                 }
             }
         } catch (e: Exception) {
             Log.e("WebGpuViewer", "decodeReaderPage error", e)
-            synchronized(lock) { if (page in pageCache) page.state = PageState.IDLE }
+            synchronized(lock) { if (pageInCache(page)) page.state = PageState.IDLE }
         } finally {
             imagePage?.cleanup()
         }
@@ -804,8 +813,8 @@ open class WebGpuViewer(
         try {
             // Check if still valid
             synchronized(lock) {
-                if (page !in pageCache || page.imagePage.isDecoded) {
-                    if (page in pageCache) page.state = PageState.IDLE
+                if (!pageInCache(page) || page.imagePage.isDecoded) {
+                    if (pageInCache(page)) page.state = PageState.IDLE
                     return
                 }
             }
@@ -862,7 +871,7 @@ open class WebGpuViewer(
             imagePage.image?.position = Image.Position.SINGLE
 
             synchronized(lock) {
-                if (page in pageCache && !page.imagePage.isDecoded && !page.imagePage.destroyed) {
+                if (pageInCache(page) && !page.imagePage.isDecoded && !page.imagePage.destroyed) {
                     val oldImagePage = page.imagePage
                     page.imagePage = imagePage
                     page.state = PageState.IDLE
@@ -871,13 +880,13 @@ open class WebGpuViewer(
                     }
                     pager.state.invalidate()
                 } else {
-                    if (page in pageCache) page.state = PageState.IDLE
+                    if (pageInCache(page)) page.state = PageState.IDLE
                     imagePage.cleanup()
                 }
             }
         } catch (e: Exception) {
             Log.e("WebGpuViewer", "createTransitionPage error", e)
-            synchronized(lock) { if (page in pageCache) page.state = PageState.IDLE }
+            synchronized(lock) { if (pageInCache(page)) page.state = PageState.IDLE }
         }
     }
 
