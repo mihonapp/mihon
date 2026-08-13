@@ -136,20 +136,20 @@ class WebGpuConfig(
     }
 
     private fun zoomTypeFromPreference(value: Int) {
-//        imageZoomType = when (value) {
-//            // Auto
-//            1 -> when (viewer) {
-//                is L2RPagerViewer -> ReaderPageImageView.ZoomStartPosition.LEFT
-//                is R2LPagerViewer -> ReaderPageImageView.ZoomStartPosition.RIGHT
-//                else -> ReaderPageImageView.ZoomStartPosition.CENTER
-//            }
-//            // Left
-//            2 -> ReaderPageImageView.ZoomStartPosition.LEFT
-//            // Right
-//            3 -> ReaderPageImageView.ZoomStartPosition.RIGHT
-//            // Center
-//            else -> ReaderPageImageView.ZoomStartPosition.CENTER
-//        }
+        imageZoomType = when (value) {
+            // Auto
+            1 -> if (viewer.isReversed) {
+                ReaderPageImageView.ZoomStartPosition.RIGHT
+            } else {
+                ReaderPageImageView.ZoomStartPosition.LEFT
+            }
+            // Left
+            2 -> ReaderPageImageView.ZoomStartPosition.LEFT
+            // Right
+            3 -> ReaderPageImageView.ZoomStartPosition.RIGHT
+            // Center
+            else -> ReaderPageImageView.ZoomStartPosition.CENTER
+        }
     }
 
     override var navigator: ViewerNavigation = defaultNavigation()
@@ -158,11 +158,11 @@ class WebGpuConfig(
         }
 
     override fun defaultNavigation(): ViewerNavigation {
-//        return when (viewer) {
-//            is VerticalPagerViewer -> LNavigation()
-//            else -> RightAndLeftNavigation()
-//        }
-        return RightAndLeftNavigation()
+        return if (viewer.isVertical) {
+            LNavigation()
+        } else {
+            RightAndLeftNavigation()
+        }
     }
 
     override fun updateNavigation(navigationMode: Int) {

@@ -40,6 +40,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences.TransitionAnimation
+import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView.ZoomStartPosition
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import kotlinx.coroutines.Dispatchers
@@ -818,6 +819,7 @@ open class WebGpuViewer(
                         if (oldImagePage !is ImagePage.Dummy) {
                             oldImagePage.cleanup()
                         }
+                        applyWideZoomIfNeeded(page)
                         pager.state.invalidate()
                     } else {
                         if (pageInCache(page)) page.state = PageState.IDLE
@@ -910,6 +912,45 @@ open class WebGpuViewer(
         } catch (e: Exception) {
             Log.e("WebGpuViewer", "createTransitionPage error", e)
             synchronized(lock) { if (pageInCache(page)) page.state = PageState.IDLE }
+        }
+    }
+
+    private fun applyWideZoomIfNeeded(page: ViewerReaderPage) {
+        if (!config.landscapeZoom) return
+        val imagePage = page.imagePage
+        val image = imagePage.image ?: return
+        if (image.position != Image.Position.SINGLE) return
+
+        val screenW = pager.state.width
+        val screenH = pager.state.height
+        if (screenW <= 0 || screenH <= 0) return
+
+        // Wide page: half the image width is wider than the screen aspect ratio
+        if (image.width.toFloat() / image.height <= 2f * screenW.toFloat() / screenH) return
+
+        // Scale to fit half the image width to the full screen width
+        val wideScale = screenW.toFloat() / (image.width / 2f)
+
+        val halfOffset = (image.width / 4f) / screenW
+        val startX = when (config.imageZoomType) {
+            ZoomStartPosition.LEFT -> halfOffset
+            ZoomStartPosition.RIGHT -> -halfOffset
+            ZoomStartPosition.CENTER -> 0f
+        }
+
+        imagePage.homeScaleOverride = wideScale
+        imagePage.homeXOverride = startX
+        imagePage.scale = wideScale
+        imagePage.x = startX
+
+        imagePage.y = run {
+            val cutoutTopPx = pager.state.cutoutTopPx
+            if (cutoutTopPx <= 0f) return@run 0f
+            val trimTop = image.trim?.top ?: 0
+            val imageOnScreen = image.height * wideScale
+            val imageTopY = (screenH - imageOnScreen) / 2f
+            val trimTopY = imageTopY + trimTop * wideScale
+            if (trimTopY < cutoutTopPx) (cutoutTopPx - trimTopY) / (wideScale * screenH) else 0f
         }
     }
 
