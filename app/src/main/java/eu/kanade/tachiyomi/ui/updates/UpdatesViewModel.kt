@@ -47,6 +47,7 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.domain.updates.interactor.GetMangaUpdateErrors
 import tachiyomi.domain.updates.interactor.GetUpdates
 import tachiyomi.domain.updates.model.UpdatesWithRelations
 import tachiyomi.domain.updates.service.UpdatesPreferences
@@ -64,6 +65,7 @@ class UpdatesViewModel(
     private val getManga: GetManga = Injekt.get(),
     private val getChapter: GetChapter = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
+    private val getMangaUpdateErrors: GetMangaUpdateErrors = Injekt.get(),
     private val updatesPreferences: UpdatesPreferences = Injekt.get(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) : StateViewModel<UpdatesViewModel.State>(State()) {
@@ -124,6 +126,13 @@ class UpdatesViewModel(
                 .collect(this@UpdatesViewModel::updateDownloadState)
         }
 
+        viewModelScope.launchIO {
+            getMangaUpdateErrors.subscribeCount()
+                .catch { logcat(LogPriority.ERROR, it) }
+                .collectLatest { count ->
+                    mutableState.update { it.copy(failedUpdatesCount = count) }
+                }
+        }
         getUpdatesItemPreferenceFlow()
             .map { prefs ->
                 listOf(
@@ -462,6 +471,7 @@ class UpdatesViewModel(
         val hasActiveFilters: Boolean = false,
         val items: List<UpdatesItem> = listOf(),
         val dialog: Dialog? = null,
+        val failedUpdatesCount: Long = 0,
     ) {
         val selected = items.filter { it.selected }
         val selectionMode = selected.isNotEmpty()

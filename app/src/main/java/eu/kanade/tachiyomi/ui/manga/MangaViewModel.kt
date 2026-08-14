@@ -81,6 +81,8 @@ import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracks
+import tachiyomi.domain.updates.interactor.DeleteMangaUpdateError
+import tachiyomi.domain.updates.interactor.InsertMangaUpdateError
 import tachiyomi.i18n.MR
 import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
@@ -115,6 +117,8 @@ class MangaViewModel(
     private val mangaRepository: MangaRepository = Injekt.get(),
     private val filterChaptersForDownload: FilterChaptersForDownload = Injekt.get(),
     private val updateMangaFromRemote: UpdateMangaFromRemote = Injekt.get(),
+    private val insertMangaUpdateError: InsertMangaUpdateError = Injekt.get(),
+    private val deleteMangaUpdateError: DeleteMangaUpdateError = Injekt.get(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) : StateViewModel<MangaViewModel.State>(State.Loading) {
 
@@ -288,6 +292,14 @@ class MangaViewModel(
                 )
                     .getOrThrow()
 
+                try {
+                    deleteMangaUpdateError.await(state.manga.id)
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    logcat(LogPriority.ERROR, e) { "Failed to delete update error for manga ${state.manga.title}" }
+                }
+
                 if (manualFetch) {
                     downloadNewChapters(update.newChapters)
                 }
@@ -300,6 +312,19 @@ class MangaViewModel(
             } else {
                 logcat(LogPriority.ERROR, e)
                 with(context) { e.formattedMessage }
+            }
+
+            val currentManga = runCatching { mangaRepository.getMangaById(state.manga.id) }.getOrNull()
+            if (currentManga?.favorite == true) {
+                try {
+                    insertMangaUpdateError.await(currentManga.id, message, System.currentTimeMillis())
+                } catch (insertError: CancellationException) {
+                    throw insertError
+                } catch (insertError: Exception) {
+                    logcat(LogPriority.ERROR, insertError) {
+                        "Failed to insert update error for manga ${currentManga.title}"
+                    }
+                }
             }
 
             viewModelScope.launch {
