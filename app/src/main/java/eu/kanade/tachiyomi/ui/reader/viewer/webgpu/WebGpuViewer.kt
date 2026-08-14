@@ -807,7 +807,9 @@ open class WebGpuViewer(
                         val frame = dec.decodeNext()
                         frames.add(Pair(Image(frame.image, frame.width, frame.height), frame.duration))
                     }
-                    imagePage.startAnimationLoop(frames) { pager.state.invalidate() }
+                    imagePage.startAnimationLoop(frames) {
+                        if (currentPage === page) pager.state.invalidate()
+                    }
                 }
 
                 synchronized(lock) {
