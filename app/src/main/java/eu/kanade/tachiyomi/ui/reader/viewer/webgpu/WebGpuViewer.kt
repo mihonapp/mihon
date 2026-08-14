@@ -1122,13 +1122,18 @@ open class WebGpuViewer(
      */
     protected open fun moveRight() {
         pager.state.getPage(0)?.let { page ->
-            if (config.navigateToPan && !page.atHome) {
+            val isWidePage = page.homeScaleOverride != null
+            if (config.navigateToPan && (!page.atHome || isWidePage)) {
                 val maxX = page.maxX(page.scale)
                 val c = if (isReversed) -1 else 1
                 val x = (page.x - c / page.scale).coerceIn(-maxX, maxX)
                 if (x != page.x) {
-                    page.animateTo(targetX = x, targetY = page.y)
-                    return
+                    if (page.animationJob?.isActive == true && page.animationTargetX == x) {
+                        page.animationJob?.cancel()
+                    } else {
+                        page.animateTo(targetX = x, targetY = page.y)
+                        return
+                    }
                 }
             }
 
@@ -1141,13 +1146,18 @@ open class WebGpuViewer(
      */
     protected open fun moveLeft() {
         pager.state.getPage(0)?.let { page ->
-            if (config.navigateToPan && !page.atHome) {
+            val isWidePage = page.homeScaleOverride != null
+            if (config.navigateToPan && (!page.atHome || isWidePage)) {
                 val maxX = page.maxX(page.scale)
                 val c = if (isReversed) -1 else 1
                 val x = (page.x + c / page.scale).coerceIn(-maxX, maxX)
                 if (x != page.x) {
-                    page.animateTo(targetX = x, targetY = page.y)
-                    return
+                    if (page.animationJob?.isActive == true && page.animationTargetX == x) {
+                        page.animationJob?.cancel()
+                    } else {
+                        page.animateTo(targetX = x, targetY = page.y)
+                        return
+                    }
                 }
             }
 
