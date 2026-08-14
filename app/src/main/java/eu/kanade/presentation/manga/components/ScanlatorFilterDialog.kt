@@ -25,6 +25,8 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import tachiyomi.i18n.MR
@@ -40,7 +42,10 @@ fun ScanlatorFilterDialog(
     onConfirm: (Set<String>) -> Unit,
 ) {
     val sortedAvailableScanlators = remember(availableScanlators) {
-        availableScanlators.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it })
+        // Chapters without a scanlator are represented by an empty string, kept last
+        availableScanlators.sortedWith(
+            compareBy<String> { it.isEmpty() }.thenComparing(String.CASE_INSENSITIVE_ORDER),
+        )
     }
     val mutableExcludedScanlators = remember(excludedScanlators) { excludedScanlators.toMutableStateList() }
     AlertDialog(
@@ -85,9 +90,16 @@ fun ScanlatorFilterDialog(
                                     },
                                     contentDescription = null,
                                 )
+                                val isUnknown = scanlator.isEmpty()
                                 Text(
-                                    text = scanlator,
+                                    text = if (isUnknown) stringResource(MR.strings.unknown) else scanlator,
                                     style = MaterialTheme.typography.bodyMedium,
+                                    fontStyle = if (isUnknown) FontStyle.Italic else null,
+                                    color = if (isUnknown) {
+                                        MaterialTheme.colorScheme.onSurfaceVariant
+                                    } else {
+                                        Color.Unspecified
+                                    },
                                     modifier = Modifier.padding(start = 24.dp),
                                 )
                             }
