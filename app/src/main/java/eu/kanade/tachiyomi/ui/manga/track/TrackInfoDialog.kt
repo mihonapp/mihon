@@ -59,6 +59,8 @@ import eu.kanade.tachiyomi.util.lang.convertEpochMillisZone
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -68,7 +70,6 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import logcat.LogPriority
-import mihon.core.viewmodel.StateViewModel
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.core.common.util.lang.withIOContext
@@ -205,7 +206,10 @@ data class TrackInfoDialogHomeScreen(
         private val mangaId: Long,
         private val sourceId: Long,
         private val getTracks: GetTracks = Injekt.get(),
-    ) : StateViewModel<Model.State>(State()) {
+    ) : ViewModel() {
+
+        val state: StateFlow<Model.State>
+            field = MutableStateFlow<Model.State>(State())
 
         companion object {
             val MANGA_ID_KEY = CreationExtras.Key<Long>()
@@ -231,7 +235,7 @@ data class TrackInfoDialogHomeScreen(
                     .catch { logcat(LogPriority.ERROR, it) }
                     .distinctUntilChanged()
                     .map { it.mapToTrackItem() }
-                    .collectLatest { trackItems -> mutableState.update { it.copy(trackItems = trackItems) } }
+                    .collectLatest { trackItems -> state.update { it.copy(trackItems = trackItems) } }
             }
         }
 
@@ -324,7 +328,10 @@ private data class TrackStatusSelectorScreen(
     class Model(
         private val track: Track,
         private val tracker: Tracker,
-    ) : StateViewModel<Model.State>(State(track.status)) {
+    ) : ViewModel() {
+
+        val state: StateFlow<Model.State>
+            field = MutableStateFlow<Model.State>(State(track.status))
 
         companion object {
             val TRACK_KEY = CreationExtras.Key<Track>()
@@ -345,7 +352,7 @@ private data class TrackStatusSelectorScreen(
         }
 
         fun setSelection(selection: Long) {
-            mutableState.update { it.copy(selection = selection) }
+            state.update { it.copy(selection = selection) }
         }
 
         fun setStatus() {
@@ -393,7 +400,10 @@ private data class TrackChapterSelectorScreen(
     class Model(
         private val track: Track,
         private val tracker: Tracker,
-    ) : StateViewModel<Model.State>(State(track.lastChapterRead.toInt())) {
+    ) : ViewModel() {
+
+        val state: StateFlow<Model.State>
+            field = MutableStateFlow<Model.State>(State(track.lastChapterRead.toInt()))
 
         companion object {
             val TRACK_KEY = CreationExtras.Key<Track>()
@@ -419,7 +429,7 @@ private data class TrackChapterSelectorScreen(
         }
 
         fun setSelection(selection: Int) {
-            mutableState.update { it.copy(selection = selection) }
+            state.update { it.copy(selection = selection) }
         }
 
         fun setChapter() {
@@ -467,7 +477,10 @@ private data class TrackScoreSelectorScreen(
     class Model(
         private val track: Track,
         private val tracker: Tracker,
-    ) : StateViewModel<Model.State>(State(tracker.displayScore(track))) {
+    ) : ViewModel() {
+
+        val state: StateFlow<Model.State>
+            field = MutableStateFlow<Model.State>(State(tracker.displayScore(track)))
 
         companion object {
             val TRACK_KEY = CreationExtras.Key<Track>()
@@ -488,7 +501,7 @@ private data class TrackScoreSelectorScreen(
         }
 
         fun setSelection(selection: String) {
-            mutableState.update { it.copy(selection = selection) }
+            state.update { it.copy(selection = selection) }
         }
 
         fun setScore() {
@@ -788,7 +801,10 @@ data class TrackerSearchScreen(
         private val currentUrl: String?,
         initialQuery: String,
         private val tracker: Tracker,
-    ) : StateViewModel<Model.State>(State()) {
+    ) : ViewModel() {
+
+        val state: StateFlow<Model.State>
+            field = MutableStateFlow<Model.State>(State())
 
         companion object {
             val MANGA_ID_KEY = CreationExtras.Key<Long>()
@@ -820,7 +836,7 @@ data class TrackerSearchScreen(
         fun trackingSearch(query: String) {
             viewModelScope.launch {
                 // To show loading state
-                mutableState.update { it.copy(queryResult = null, selected = null) }
+                state.update { it.copy(queryResult = null, selected = null) }
 
                 val result = withIOContext {
                     try {
@@ -830,7 +846,7 @@ data class TrackerSearchScreen(
                         Result.failure(e)
                     }
                 }
-                mutableState.update { oldState ->
+                state.update { oldState ->
                     oldState.copy(
                         queryResult = result,
                         selected = result.getOrNull()?.find { it.tracking_url == currentUrl },
@@ -844,7 +860,7 @@ data class TrackerSearchScreen(
         }
 
         fun updateSelection(selected: TrackSearch) {
-            mutableState.update { it.copy(selected = selected) }
+            state.update { it.copy(selected = selected) }
         }
 
         @Immutable
