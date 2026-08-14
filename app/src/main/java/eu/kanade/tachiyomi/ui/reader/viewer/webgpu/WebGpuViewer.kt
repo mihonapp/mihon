@@ -30,6 +30,7 @@ import ca.mpreg.webgpuviewer.transition.TransitionStackLeft
 import ca.mpreg.webgpuviewer.transition.TransitionStackRight
 import ca.mpreg.webgpuviewer.transition.TransitionStackUp
 import ca.mpreg.webgpuviewer.viewer.ImagePage
+import com.google.android.material.color.MaterialColors
 import de.stefan_oltmann.kim.Kim
 import de.stefan_oltmann.kim.android.readMetadata
 import de.stefan_oltmann.kim.format.tiff.constant.TiffTag
@@ -43,6 +44,8 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences.TransitionAnimati
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView.ZoomStartPosition
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
+import eu.kanade.tachiyomi.util.system.createReaderThemeContext
+import eu.kanade.tachiyomi.util.system.readerBackgroundColor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -61,6 +64,14 @@ open class WebGpuViewer(
 ) : Viewer {
 
     open val isContinuous: Boolean = false
+
+    private fun readerBackgroundColor(): Int = activity.baseContext.readerBackgroundColor(config.theme)
+
+    private fun readerOnBackgroundColor(): Int = MaterialColors.getColor(
+        activity.createReaderThemeContext(),
+        com.google.android.material.R.attr.colorOnBackground,
+        Color.WHITE,
+    )
 
     private val scope = MainScope()
 
@@ -773,12 +784,10 @@ open class WebGpuViewer(
                     null
                 }
 
-                val backgroundColor = when {
-                    config.automaticBackground -> null
-                    config.theme == 0 -> 0xFFFFFFFF.toInt()
-                    config.theme == 1 -> 0xFF000000.toInt()
-                    config.theme == 2 -> 0xFF808080.toInt()
-                    else -> 0xFF000000.toInt()
+                val backgroundColor = if (config.automaticBackground) {
+                    null
+                } else {
+                    readerBackgroundColor()
                 }
 
                 val firstImage = Image.createWithTrim(
@@ -848,10 +857,10 @@ open class WebGpuViewer(
 
             val bitmap = createBitmap(pager.state.width, pager.state.height)
             val canvas = Canvas(bitmap)
-            canvas.drawColor(Color.BLACK)
+            canvas.drawColor(readerBackgroundColor())
 
             val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = Color.WHITE
+                color = readerOnBackgroundColor()
                 textSize = 48f
                 textAlign = Paint.Align.CENTER
             }
