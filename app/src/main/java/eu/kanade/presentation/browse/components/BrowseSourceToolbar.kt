@@ -2,6 +2,7 @@ package eu.kanade.presentation.browse.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ViewList
+import androidx.compose.material.icons.filled.FileOpen
 import androidx.compose.material.icons.filled.ViewModule
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -34,6 +35,7 @@ fun BrowseSourceToolbar(
     onWebViewClick: () -> Unit,
     onHelpClick: () -> Unit,
     onSettingsClick: () -> Unit,
+    onImportClick: () -> Unit,
     onSearch: (String) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
@@ -66,6 +68,13 @@ fun BrowseSourceToolbar(
                         ),
                     )
                     if (isLocalSource) {
+                        add(
+                            AppBar.Action(
+                                title = stringResource(MR.strings.action_import_from_storage),
+                                icon = Icons.Filled.FileOpen,
+                                onClick = onImportClick,
+                            ),
+                        )
                         add(
                             AppBar.OverflowAction(
                                 title = stringResource(MR.strings.label_help),

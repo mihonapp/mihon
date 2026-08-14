@@ -41,6 +41,13 @@ object Notifications {
     const val ID_DOWNLOAD_CHAPTER_ERROR = -202
 
     /**
+     * Notification channel and ids used by the local source import.
+     */
+    const val CHANNEL_LOCAL_SOURCE_IMPORT = "local_source_import_channel"
+    const val ID_LOCAL_SOURCE_IMPORT_PROGRESS = -601
+    const val ID_LOCAL_SOURCE_IMPORT_COMPLETE = -602
+
+    /**
      * Notification channel and ids used by the library updater.
      */
     const val CHANNEL_NEW_CHAPTERS = "new_chapters_channel"
@@ -140,6 +147,10 @@ object Notifications {
                 buildNotificationChannel(CHANNEL_DOWNLOADER_ERROR, IMPORTANCE_LOW) {
                     setName(context.stringResource(MR.strings.channel_errors))
                     setGroup(GROUP_DOWNLOADER)
+                    setShowBadge(false)
+                },
+                buildNotificationChannel(CHANNEL_LOCAL_SOURCE_IMPORT, IMPORTANCE_LOW) {
+                    setName(context.stringResource(MR.strings.channel_progress))
                     setShowBadge(false)
                 },
                 buildNotificationChannel(CHANNEL_BACKUP_RESTORE_PROGRESS, IMPORTANCE_LOW) {
