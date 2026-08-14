@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.di
 
 import android.app.Application
 import eu.kanade.domain.base.BasePreferences
+import eu.kanade.domain.recommendation.service.RecommendationPreferences
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.domain.ui.UiPreferences
@@ -50,6 +51,9 @@ class PreferenceModule(val app: Application) : InjektModule {
         }
         addSingletonFactory {
             UpcomingPreferences(get())
+        }
+        addSingletonFactory {
+            RecommendationPreferences(get())
         }
         addSingletonFactory {
             UpdatesPreferences(get())

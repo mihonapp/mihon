@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.DeletableTracker
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALOAuth
+import eu.kanade.tachiyomi.data.track.anilist.dto.ALRecommendation
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.serialization.json.Json
 import tachiyomi.i18n.MR
@@ -197,6 +198,10 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
 
     override suspend fun search(query: String): List<TrackSearch> {
         return api.search(query)
+    }
+
+    suspend fun getRecommendations(mediaId: Long): List<ALRecommendation> {
+        return api.getRecommendations(mediaId)
     }
 
     override suspend fun refresh(track: Track): Track {
