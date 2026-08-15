@@ -68,6 +68,8 @@ open class ReaderPageImageView @JvmOverloads constructor(
 
     private var config: Config? = null
 
+    private val imageRequestLifecycle = ImageRequestLifecycle()
+
     var onImageLoaded: (() -> Unit)? = null
     var onImageLoadError: ((Throwable?) -> Unit)? = null
     var onScaleChanged: ((newScale: Float) -> Unit)? = null
@@ -148,33 +150,38 @@ open class ReaderPageImageView @JvmOverloads constructor(
     }
 
     fun setImage(drawable: Drawable, config: Config) {
+        val requestGeneration = imageRequestLifecycle.start()
         this.config = config
         if (drawable is Animatable) {
             prepareAnimatedImageView()
-            setAnimatedImage(drawable, config)
+            setAnimatedImage(drawable, config, requestGeneration)
         } else {
             prepareNonAnimatedImageView()
-            setNonAnimatedImage(drawable, config)
+            setNonAnimatedImage(drawable, config, requestGeneration)
         }
     }
 
     fun setImage(source: BufferedSource, isAnimated: Boolean, config: Config) {
+        val requestGeneration = imageRequestLifecycle.start()
         this.config = config
         if (isAnimated) {
             prepareAnimatedImageView()
-            setAnimatedImage(source, config)
+            setAnimatedImage(source, config, requestGeneration)
         } else {
             prepareNonAnimatedImageView()
-            setNonAnimatedImage(source, config)
+            setNonAnimatedImage(source, config, requestGeneration)
         }
     }
 
-    fun recycle() = pageView?.let {
-        when (it) {
-            is SubsamplingScaleImageView -> it.recycle()
-            is AppCompatImageView -> it.dispose()
+    fun recycle() {
+        imageRequestLifecycle.dispose()
+        pageView?.let {
+            when (it) {
+                is SubsamplingScaleImageView -> it.recycle()
+                is AppCompatImageView -> it.dispose()
+            }
+            it.isVisible = false
         }
-        it.isVisible = false
     }
 
     /**
@@ -276,6 +283,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
     private fun setNonAnimatedImage(
         data: Any,
         config: Config,
+        requestGeneration: Long,
     ) = (pageView as? SubsamplingScaleImageView)?.apply {
         setDoubleTapZoomDuration(config.zoomDuration.getSystemScaledDuration())
         setMinimumScaleType(config.minimumScaleType)
@@ -284,12 +292,14 @@ open class ReaderPageImageView @JvmOverloads constructor(
         setOnImageEventListener(
             object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
                 override fun onReady() {
+                    if (!imageRequestLifecycle.isCurrent(requestGeneration)) return
                     setupZoom(config)
                     if (isVisibleOnScreen()) landscapeZoom(true)
                     this@ReaderPageImageView.onImageLoaded()
                 }
 
                 override fun onImageLoadError(e: Exception) {
+                    if (!imageRequestLifecycle.isCurrent(requestGeneration)) return
                     this@ReaderPageImageView.onImageLoadError(e)
                 }
             },
@@ -314,6 +324,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                     .diskCachePolicy(CachePolicy.DISABLED)
                     .target(
                         onSuccess = { result ->
+                            if (!imageRequestLifecycle.isCurrent(requestGeneration)) return@target
                             val image = result as BitmapImage
                             setImage(ImageSource.bitmap(image.bitmap))
                             isVisible = true
@@ -321,6 +332,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                     )
                     .listener(
                         onError = { _, result ->
+                            if (!imageRequestLifecycle.isCurrent(requestGeneration)) return@listener
                             onImageLoadError(result.throwable)
                         },
                     )
@@ -331,6 +343,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                     .crossfade(false)
                     .build()
                     .let(context.imageLoader::enqueue)
+                    .let { imageRequestLifecycle.track(requestGeneration, it) }
             }
             else -> {
                 throw IllegalArgumentException("Not implemented for class ${data::class.simpleName}")
@@ -380,6 +393,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
     private fun setAnimatedImage(
         data: Any,
         config: Config,
+        requestGeneration: Long,
     ) = (pageView as? AppCompatImageView)?.apply {
         if (this is PhotoView) {
             setZoomTransitionDuration(config.zoomDuration.getSystemScaledDuration())
@@ -391,6 +405,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
             .diskCachePolicy(CachePolicy.DISABLED)
             .target(
                 onSuccess = { result ->
+                    if (!imageRequestLifecycle.isCurrent(requestGeneration)) return@target
                     val drawable = result.asDrawable(context.resources)
                     setImageDrawable(drawable)
                     (drawable as? Animatable)?.start()
@@ -400,12 +415,13 @@ open class ReaderPageImageView @JvmOverloads constructor(
             )
             .listener(
                 onError = { _, result ->
+                    if (!imageRequestLifecycle.isCurrent(requestGeneration)) return@listener
                     onImageLoadError(result.throwable)
                 },
             )
             .crossfade(false)
             .build()
-        context.imageLoader.enqueue(request)
+        context.imageLoader.enqueue(request).let { imageRequestLifecycle.track(requestGeneration, it) }
     }
 
     private fun Int.getSystemScaledDuration(): Int {
