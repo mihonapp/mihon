@@ -35,8 +35,6 @@ class BasePreferences(
 
     val highQualityRenderer: Preference<Boolean> = preferenceStore.getBoolean("pref_high_quality_renderer_key", false)
 
-    val displayProfile: Preference<String> = preferenceStore.getString("pref_display_profile_key", "")
-
     val hardwareBitmapThreshold: Preference<Int> = preferenceStore.getInt(
         "pref_hardware_bitmap_threshold",
         GLUtil.SAFE_TEXTURE_LIMIT,

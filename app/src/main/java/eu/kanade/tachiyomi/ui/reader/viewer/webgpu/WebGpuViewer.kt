@@ -762,7 +762,56 @@ open class WebGpuViewer(
                     Image.Position.SINGLE
                 }
 
-                val dec = ImageDecoder.new(bytes?.inputStream() ?: input)
+                val dec = try {
+                    ImageDecoder.new(bytes?.inputStream() ?: input)
+                } catch (e: ImageDecoder.DecodeException) {
+                    Log.e("WebGpuViewer", "ImageDecoder.new failed: ${e.message}")
+                    val errorMessage = e.message ?: "Failed to decode image"
+                    val bitmap = createBitmap(pager.state.width.coerceAtLeast(1), pager.state.height.coerceAtLeast(1))
+                    val canvas = Canvas(bitmap)
+                    canvas.drawColor(readerBackgroundColor())
+                    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                        color = readerOnBackgroundColor()
+                        textSize = 36f
+                        textAlign = Paint.Align.CENTER
+                    }
+                    val maxWidth = bitmap.width * 0.8f
+                    val words = errorMessage.split(" ")
+                    val lines = mutableListOf<String>()
+                    var currentLine = StringBuilder()
+                    for (word in words) {
+                        val testLine = if (currentLine.isEmpty()) word else "$currentLine $word"
+                        if (paint.measureText(testLine) <= maxWidth) {
+                            currentLine = StringBuilder(testLine)
+                        } else {
+                            if (currentLine.isNotEmpty()) lines.add(currentLine.toString())
+                            currentLine = StringBuilder(word)
+                        }
+                    }
+                    if (currentLine.isNotEmpty()) lines.add(currentLine.toString())
+                    val lineHeight = 40f
+                    var y = bitmap.height / 2f - lines.size * lineHeight / 2
+                    for (line in lines) {
+                        canvas.drawText(line, bitmap.width / 2f, y, paint)
+                        y += lineHeight
+                    }
+                    val errorPage = ImagePage(bitmap, createMipMaps = false).also {
+                        it.image?.position = Image.Position.SINGLE
+                    }
+                    synchronized(lock) {
+                        if (pageInCache(page) && !page.imagePage.isDecoded && !page.imagePage.destroyed) {
+                            val oldImagePage = page.imagePage
+                            page.imagePage = errorPage
+                            page.state = PageState.IDLE
+                            if (oldImagePage !is ImagePage.Dummy) oldImagePage.cleanup()
+                            pager.state.invalidate()
+                        } else {
+                            if (pageInCache(page)) page.state = PageState.IDLE
+                            errorPage.cleanup()
+                        }
+                    }
+                    return
+                }
                 val pageCount = dec.pages
 
                 if (pageCount == 0) {
