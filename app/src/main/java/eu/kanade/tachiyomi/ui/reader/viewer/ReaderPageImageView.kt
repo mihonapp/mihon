@@ -301,8 +301,9 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 isVisible = true
             }
             is BufferedSource -> {
-                if (!isWebtoon || alwaysDecodeLongStripWithSSIV) {
-                    setHardwareConfig(ImageUtil.canUseHardwareBitmap(data))
+                val canUseHardwareBitmap = ImageUtil.canUseHardwareBitmap(data)
+                if (shouldUseSubsamplingDecoder(isWebtoon, alwaysDecodeLongStripWithSSIV, canUseHardwareBitmap)) {
+                    setHardwareConfig(canUseHardwareBitmap)
                     setImage(ImageSource.inputStream(data.inputStream()))
                     isVisible = true
                     return@apply
