@@ -7,6 +7,7 @@ import kotlinx.serialization.protobuf.ProtoNumber
 import mihon.data.extension.model.NetworkExtensionStore.ContentWarning
 import mihon.data.extension.model.NetworkExtensionStore.ExtensionList
 import mihon.domain.extension.model.ExtensionStore
+import eu.kanade.tachiyomi.extension.model.ContentWarning as TachiyomiContentWarning
 import eu.kanade.tachiyomi.extension.model.Extension as TachiyomiExtension
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -57,7 +58,6 @@ data class NetworkExtensionStore(
         @ProtoNumber(7) val message: String? = null,
     )
 
-    @Suppress("Unused")
     enum class ContentWarning {
         @ProtoNumber(0)
         @JsonNames("CONTENT_WARNING_UNSPECIFIED")
@@ -104,7 +104,7 @@ fun ExtensionList.toAvailableExtensions(store: ExtensionStore): List<TachiyomiEx
             versionCode = extension.versionCode,
             versionName = extension.versionName,
             lang = if (lang.size == 1) lang.first() else "all",
-            isNsfw = extension.contentWarning >= ContentWarning.MIXED,
+            contentWarning = extension.contentWarning.toDomain(),
             sources = extension.sources.map { source ->
                 TachiyomiExtension.Available.Source(
                     id = source.id,
@@ -116,4 +116,11 @@ fun ExtensionList.toAvailableExtensions(store: ExtensionStore): List<TachiyomiEx
             store = store,
         )
     }
+}
+
+private fun ContentWarning.toDomain(): TachiyomiContentWarning = when (this) {
+    ContentWarning.UNSPECIFIED -> TachiyomiContentWarning.UNSPECIFIED
+    ContentWarning.SAFE -> TachiyomiContentWarning.SAFE
+    ContentWarning.MIXED -> TachiyomiContentWarning.MIXED
+    ContentWarning.NSFW -> TachiyomiContentWarning.NSFW
 }

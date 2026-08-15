@@ -9,10 +9,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import eu.kanade.domain.source.model.ContentWarningLevel
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresScreen
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
+import eu.kanade.tachiyomi.util.system.toast
 import mihon.domain.extension.interactor.GetExtensionStoreCountAsFlow
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
@@ -57,14 +59,17 @@ object SettingsBrowseScreen : SearchableSettings {
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.pref_category_nsfw_content),
                 preferenceItems = listOf(
-                    Preference.PreferenceItem.SwitchPreference(
-                        preference = sourcePreferences.showNsfwSource,
+                    Preference.PreferenceItem.ListPreference(
+                        preference = sourcePreferences.contentWarningLevel,
+                        entries = ContentWarningLevel.entries
+                            .associateWith { stringResource(it.titleRes) },
                         title = stringResource(MR.strings.pref_show_nsfw_source),
-                        subtitle = stringResource(MR.strings.requires_app_restart),
                         onValueChanged = {
-                            (context as FragmentActivity).authenticate(
+                            val authenticated = (context as FragmentActivity).authenticate(
                                 title = context.stringResource(MR.strings.pref_category_nsfw_content),
                             )
+                            if (authenticated) context.toast(MR.strings.requires_app_restart)
+                            authenticated
                         },
                     ),
                     Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.parental_controls_info)),

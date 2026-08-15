@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.pm.PackageInfoCompat
 import eu.kanade.domain.extension.interactor.TrustExtension
+import eu.kanade.tachiyomi.extension.model.ContentWarning
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.LoadResult
 import eu.kanade.tachiyomi.source.Source
@@ -267,11 +268,23 @@ internal object ExtensionLoader {
             return LoadResult.Untrusted(extension)
         }
 
-        // NSFW extensions are always loaded here because this only runs for packages already
+        // Adult extensions are always loaded here because this only runs for packages already
         // installed on the device. The NSFW preference only gates discovery of new extensions
         // (see GetExtensionsByType), so installed ones stay usable and keep receiving updates.
-        val isNsfw = appInfo.metaData.getInt(METADATA_CONTENT_WARNING) > 0 ||
-            appInfo.metaData.getInt(METADATA_NSFW) == 1
+        //
+        // `tachiyomix.contentWarning` keeps the numbering it was introduced with; the
+        // `CONTENT_WARNING_UNSPECIFIED` value later added to the store index format did not shift
+        // it. Absent metadata reads as -1 so the legacy flag still decides in that case.
+        val contentWarning = if (appInfo.metaData.getInt(METADATA_NSFW) == 1) {
+            ContentWarning.NSFW
+        } else {
+            when (appInfo.metaData.getInt(METADATA_CONTENT_WARNING, -1)) {
+                0 -> ContentWarning.SAFE
+                1 -> ContentWarning.MIXED
+                2 -> ContentWarning.NSFW
+                else -> ContentWarning.UNSPECIFIED
+            }
+        }
 
         val classLoader = try {
             ChildFirstPathClassLoader(appInfo.sourceDir, null, context.classLoader)
@@ -317,7 +330,7 @@ internal object ExtensionLoader {
             versionCode = versionCode,
             libVersion = libVersion,
             lang = lang,
-            isNsfw = isNsfw,
+            contentWarning = contentWarning,
             sources = sources,
             pkgFactory = appInfo.metaData.getString(METADATA_SOURCE_FACTORY),
             icon = appInfo.loadIcon(pkgManager),

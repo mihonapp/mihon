@@ -1,6 +1,7 @@
 package mihon.data.extension.model
 
 import android.annotation.SuppressLint
+import eu.kanade.tachiyomi.extension.model.ContentWarning
 import eu.kanade.tachiyomi.extension.model.Extension
 import kotlinx.serialization.Serializable
 import mihon.domain.extension.model.ExtensionStore
@@ -35,7 +36,9 @@ data class NetworkLegacyExtension(
             versionCode = code,
             versionName = version,
             lang = lang,
-            isNsfw = nsfw == 1,
+            // The legacy index format has no notion of the three content tiers, so an unset flag
+            // only tells us the extension isn't dedicated to adult content, not that it's SAFE.
+            contentWarning = if (nsfw == 1) ContentWarning.NSFW else ContentWarning.UNSPECIFIED,
             sources = if (sources.isNullOrEmpty()) {
                 listOf(
                     Extension.Available.Source(
