@@ -53,6 +53,16 @@ class UpcomingViewModel(
 
     private val dialog = MutableStateFlow<Dialog?>(null)
 
+    private val hasActiveFilters = getUpcomingItemPreferenceFlow()
+        .map { prefs ->
+            listOf(
+                prefs.filterIncludedCategories,
+                prefs.filterExcludedCategories,
+            )
+                .any { it.isNotEmpty() }
+        }
+        .distinctUntilChanged()
+
     private val upcoming = getUpcomingItemPreferenceFlow()
         .distinctUntilChanged()
         .flatMapLatest {
@@ -70,12 +80,14 @@ class UpcomingViewModel(
         upcoming,
         selectedYearMonth,
         dialog,
-    ) { upcoming, selectedYearMonth, dialog ->
+        hasActiveFilters,
+    ) { upcoming, selectedYearMonth, dialog, hasActiveFilters ->
         State(
             selectedYearMonth = selectedYearMonth,
             items = upcoming,
             events = upcoming.toEvents(),
             headerIndexes = upcoming.getHeaderIndexes(),
+            hasActiveFilters = hasActiveFilters,
             dialog = dialog,
         )
     }
