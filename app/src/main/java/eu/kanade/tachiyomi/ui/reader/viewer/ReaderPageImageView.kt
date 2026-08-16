@@ -35,11 +35,13 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.SCALE_TYPE_
 import com.github.chrisbanes.photoview.PhotoView
 import eu.kanade.tachiyomi.data.coil.cropBorders
 import eu.kanade.tachiyomi.data.coil.customDecoder
+import eu.kanade.tachiyomi.ui.reader.viewer.panel.PanelRect
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonSubsamplingImageView
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
 import okio.BufferedSource
 import tachiyomi.core.common.util.system.ImageUtil
+import kotlin.math.min
 
 /**
  * A wrapper view for showing page image.
@@ -92,7 +94,16 @@ open class ReaderPageImageView @JvmOverloads constructor(
         onViewClicked?.invoke()
     }
 
+    /** Set by [PagerPageHolder] before load starts, when this page belongs to a panel-by-panel viewer. */
+    var panelModeActive: Boolean = false
+
+    private var panelStops: List<PanelRect> = emptyList()
+    private var panelStopIndex: Int = -1
+    private var panelStopsEnterForward: Boolean = true
+
     open fun onPageSelected(forward: Boolean) {
+        panelStopsEnterForward = forward
+        if (panelModeActive) return
         with(pageView as? SubsamplingScaleImageView) {
             if (this == null) return
             if (isReady) {
@@ -113,6 +124,82 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 )
             }
         }
+    }
+
+    /**
+     * Sets the ordered list of panel stops (normalized 0f..1f image-fraction coordinates) for
+     * panel-by-panel guided navigation, and jumps to the first (or last, if this page was
+     * entered backward) stop. Pass an empty list to clear (falls back to a single full-page stop).
+     */
+    fun setPanelStops(stops: List<PanelRect>) {
+        panelStops = stops.ifEmpty { listOf(PanelRect.FULL_PAGE) }
+        panelStopIndex = if (panelStopsEnterForward) 0 else panelStops.lastIndex
+        jumpToPanelStop(panelStopIndex)
+    }
+
+    fun hasPanelStops(): Boolean = panelStops.isNotEmpty()
+
+    fun canAdvancePanelStop(): Boolean = panelStops.isNotEmpty() && panelStopIndex < panelStops.lastIndex
+
+    fun canRetreatPanelStop(): Boolean = panelStops.isNotEmpty() && panelStopIndex > 0
+
+    fun advancePanelStop() {
+        if (!canAdvancePanelStop()) return
+        panelStopIndex++
+        animateToPanelStop(panelStopIndex)
+    }
+
+    fun retreatPanelStop() {
+        if (!canRetreatPanelStop()) return
+        panelStopIndex--
+        animateToPanelStop(panelStopIndex)
+    }
+
+    private fun jumpToPanelStop(index: Int) {
+        val view = pageView as? SubsamplingScaleImageView ?: return
+        val target = panelStops.getOrNull(index) ?: return
+        if (view.isReady) {
+            val (scale, center) = view.panelStopTarget(target)
+            view.setScaleAndCenter(scale, center)
+        } else {
+            view.setOnImageEventListener(
+                object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
+                    override fun onReady() {
+                        view.setupZoom(config)
+                        val (scale, center) = view.panelStopTarget(target)
+                        view.setScaleAndCenter(scale, center)
+                        this@ReaderPageImageView.onImageLoaded()
+                    }
+
+                    override fun onImageLoadError(e: Exception) {
+                        onImageLoadError(e)
+                    }
+                },
+            )
+        }
+    }
+
+    private fun animateToPanelStop(index: Int) {
+        val view = pageView as? SubsamplingScaleImageView ?: return
+        val target = panelStops.getOrNull(index) ?: return
+        val (scale, center) = view.panelStopTarget(target)
+        view.animateScaleAndCenter(scale, center)!!
+            .withEasing(EASE_OUT_QUAD)
+            .withDuration(250)
+            .withInterruptible(true)
+            .start()
+    }
+
+    private fun SubsamplingScaleImageView.panelStopTarget(rect: PanelRect): Pair<Float, PointF> {
+        val targetScale = min(
+            width / (rect.width * sWidth),
+            height / (rect.height * sHeight),
+        ).coerceIn(minScale, maxScale)
+        val center = PointF(
+            (rect.left + rect.width / 2f) * sWidth,
+            (rect.top + rect.height / 2f) * sHeight,
+        )
+        return targetScale to center
     }
 
     private fun SubsamplingScaleImageView.landscapeZoom(forward: Boolean) {

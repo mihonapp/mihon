@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.ui.reader.model.InsertPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
+import eu.kanade.tachiyomi.ui.reader.viewer.panel.flattenToStops
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.widget.ViewPagerAdapter
 import kotlinx.coroutines.Job
@@ -63,6 +64,9 @@ class PagerPageHolder(
     private var loadJob: Job? = null
 
     init {
+        if (viewer is PanelByPanelViewer) {
+            panelModeActive = true
+        }
         loadJob = scope.launch { loadPageAndProcessStatus() }
     }
 
@@ -150,7 +154,7 @@ class PagerPageHolder(
         val streamFn = page.stream ?: return
 
         try {
-            val (source, isAnimated, background) = withIOContext {
+            val (source, isAnimated, background, panelSourceBytes) = withIOContext {
                 val source = streamFn().use { process(item, Buffer().readFrom(it)) }
                 val isAnimated = ImageUtil.isAnimatedAndSupported(source)
                 val background = if (!isAnimated && viewer.config.automaticBackground) {
@@ -158,7 +162,12 @@ class PagerPageHolder(
                 } else {
                     null
                 }
-                Triple(source, isAnimated, background)
+                val panelSourceBytes = if (!isAnimated && viewer is PanelByPanelViewer) {
+                    Buffer().apply { writeAll(source.peek()) }
+                } else {
+                    null
+                }
+                PageLoadResult(source, isAnimated, background, panelSourceBytes)
             }
             withUIContext {
                 setImage(
@@ -177,11 +186,28 @@ class PagerPageHolder(
                 }
                 removeErrorLayout()
             }
+            if (panelSourceBytes != null && viewer is PanelByPanelViewer) {
+                loadPanels(viewer, panelSourceBytes)
+            }
         } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e)
             withUIContext {
                 setError(e)
             }
+        }
+    }
+
+    private data class PageLoadResult(
+        val source: BufferedSource,
+        val isAnimated: Boolean,
+        val background: android.graphics.drawable.Drawable?,
+        val panelSourceBytes: Buffer?,
+    )
+
+    private suspend fun loadPanels(viewer: PanelByPanelViewer, imageBytes: Buffer) {
+        val panels = viewer.panelDetector.detect(page, imageBytes, viewer.panelDirection)
+        withUIContext {
+            setPanelStops(panels.flattenToStops())
         }
     }
 
