@@ -4,6 +4,7 @@ import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.core.common.preference.getEnum
+import tachiyomi.domain.chapter.model.BookmarkColor
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibrarySort
 import tachiyomi.domain.manga.model.Manga
@@ -189,6 +190,11 @@ class LibraryPreferences(
     }
 
     val autoClearChapterCache: Preference<Boolean> = preferenceStore.getBoolean("auto_clear_chapter_cache", false)
+
+    val lastUsedBookmarkColor: Preference<BookmarkColor> = preferenceStore.getEnum(
+        "pref_last_used_bookmark_color",
+        BookmarkColor.DEFAULT,
+    )
 
     val hideMissingChapters: Preference<Boolean> = preferenceStore.getBoolean(
         "pref_hide_missing_chapter_indicators",

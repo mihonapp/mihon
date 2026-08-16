@@ -16,6 +16,7 @@ import tachiyomi.data.MemoColumnAdapter
 import tachiyomi.data.UpdateStrategyColumnAdapter
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
+import tachiyomi.domain.chapter.model.BookmarkColor
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.interactor.FetchInterval
 import tachiyomi.domain.manga.interactor.GetMangaByUrlAndSourceId
@@ -169,6 +170,11 @@ class MangaRestorer(
                     .copy(
                         id = dbChapter.id,
                         bookmark = chapter.bookmark || dbChapter.bookmark,
+                        bookmarkColor = when {
+                            chapter.bookmark -> chapter.bookmarkColor
+                            dbChapter.bookmark -> dbChapter.bookmarkColor
+                            else -> BookmarkColor.DEFAULT
+                        },
                     )
                 if (dbChapter.read && !updatedChapter.read) {
                     updatedChapter = updatedChapter.copy(
@@ -208,6 +214,7 @@ class MangaRestorer(
                     chapter.dateUpload,
                     chapter.version,
                     chapter.memo,
+                    chapter.bookmarkColor.value.toLong(),
                 )
             }
         }
@@ -232,6 +239,7 @@ class MangaRestorer(
                     version = chapter.version,
                     isSyncing = 0,
                     memo = chapter.memo.let(MemoColumnAdapter::encode),
+                    bookmarkColor = chapter.bookmarkColor.value.toLong(),
                 )
             }
         }

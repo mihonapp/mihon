@@ -1,5 +1,6 @@
 package eu.kanade.presentation.manga.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.data.download.model.Download
 import me.saket.swipe.SwipeableActionsBox
+import tachiyomi.domain.chapter.model.BookmarkColor
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.DISABLED_ALPHA
@@ -53,6 +55,7 @@ fun MangaChapterListItem(
     scanlator: String?,
     read: Boolean,
     bookmark: Boolean,
+    bookmarkColor: BookmarkColor,
     selected: Boolean,
     downloadIndicatorEnabled: Boolean,
     downloadStateProvider: () -> Download.State,
@@ -63,6 +66,7 @@ fun MangaChapterListItem(
     onClick: () -> Unit,
     onDownloadClick: ((ChapterDownloadAction) -> Unit)?,
     onChapterSwipe: (LibraryPreferences.ChapterSwipeAction) -> Unit,
+    onBookmarkClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     val start = getSwipeAction(
@@ -122,8 +126,15 @@ fun MangaChapterListItem(
                             imageVector = Icons.Filled.Bookmark,
                             contentDescription = stringResource(MR.strings.action_filter_bookmarked),
                             modifier = Modifier
-                                .sizeIn(maxHeight = with(LocalDensity.current) { textHeight.toDp() - 2.dp }),
-                            tint = MaterialTheme.colorScheme.primary,
+                                .sizeIn(maxHeight = with(LocalDensity.current) { textHeight.toDp() - 2.dp })
+                                .then(
+                                    if (onBookmarkClick != null) {
+                                        Modifier.clickable(onClick = onBookmarkClick)
+                                    } else {
+                                        Modifier
+                                    },
+                                ),
+                            tint = bookmarkColor.asComposeColor(),
                         )
                     }
                     Text(

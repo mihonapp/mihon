@@ -61,6 +61,7 @@ fun UpdateScreen(
     onOpenChapter: (UpdatesItem) -> Unit,
     onFilterClicked: () -> Unit,
     hasActiveFilters: Boolean,
+    onClickBookmark: (UpdatesItem) -> Unit,
 ) {
     BackHandler(enabled = state.selectionMode) {
         onSelectAll(false)
@@ -128,6 +129,7 @@ fun UpdateScreen(
                             onClickCover = onClickCover,
                             onClickUpdate = onOpenChapter,
                             onDownloadChapter = onDownloadChapter,
+                            onClickBookmark = onClickBookmark,
                         )
                     }
                 }

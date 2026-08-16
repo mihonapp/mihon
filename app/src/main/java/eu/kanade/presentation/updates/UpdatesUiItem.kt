@@ -1,5 +1,6 @@
 package eu.kanade.presentation.updates
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +38,7 @@ import eu.kanade.presentation.manga.components.ChapterDownloadAction
 import eu.kanade.presentation.manga.components.ChapterDownloadIndicator
 import eu.kanade.presentation.manga.components.DotSeparatorText
 import eu.kanade.presentation.manga.components.MangaCover
+import eu.kanade.presentation.manga.components.asComposeColor
 import eu.kanade.presentation.util.relativeTimeSpanString
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.updates.UpdatesItem
@@ -72,6 +74,7 @@ internal fun LazyListScope.updatesUiItems(
     onClickCover: (UpdatesItem) -> Unit,
     onClickUpdate: (UpdatesItem) -> Unit,
     onDownloadChapter: (List<UpdatesItem>, ChapterDownloadAction) -> Unit,
+    onClickBookmark: (UpdatesItem) -> Unit,
 ) {
     items(
         items = uiModels,
@@ -122,6 +125,9 @@ internal fun LazyListScope.updatesUiItems(
                     onDownloadChapter = { action: ChapterDownloadAction ->
                         onDownloadChapter(listOf(updatesItem), action)
                     }.takeIf { !selectionMode },
+                    onClickBookmark = { onClickBookmark(updatesItem) }.takeIf {
+                        !selectionMode && updatesItem.update.bookmark
+                    },
                     downloadStateProvider = updatesItem.downloadStateProvider,
                     downloadProgressProvider = updatesItem.downloadProgressProvider,
                 )
@@ -139,6 +145,7 @@ private fun UpdatesUiItem(
     onLongClick: () -> Unit,
     onClickCover: (() -> Unit)?,
     onDownloadChapter: ((ChapterDownloadAction) -> Unit)?,
+    onClickBookmark: (() -> Unit)?,
     // Download Indicator
     downloadStateProvider: () -> Download.State,
     downloadProgressProvider: () -> Int,
@@ -199,8 +206,15 @@ private fun UpdatesUiItem(
                         imageVector = Icons.Filled.Bookmark,
                         contentDescription = stringResource(MR.strings.action_filter_bookmarked),
                         modifier = Modifier
-                            .sizeIn(maxHeight = with(LocalDensity.current) { textHeight.toDp() - 2.dp }),
-                        tint = MaterialTheme.colorScheme.primary,
+                            .sizeIn(maxHeight = with(LocalDensity.current) { textHeight.toDp() - 2.dp })
+                            .then(
+                                if (onClickBookmark != null) {
+                                    Modifier.clickable(onClick = onClickBookmark)
+                                } else {
+                                    Modifier
+                                },
+                            ),
+                        tint = update.bookmarkColor.asComposeColor(),
                     )
                     Spacer(modifier = Modifier.width(2.dp))
                 }

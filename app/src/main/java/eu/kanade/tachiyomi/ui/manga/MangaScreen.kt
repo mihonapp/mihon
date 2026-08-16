@@ -31,6 +31,7 @@ import eu.kanade.presentation.manga.ChapterSettingsDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.presentation.manga.MangaScreen
+import eu.kanade.presentation.manga.components.BookmarkColorPickerDialog
 import eu.kanade.presentation.manga.components.DeleteChaptersDialog
 import eu.kanade.presentation.manga.components.MangaCoverDialog
 import eu.kanade.presentation.manga.components.ScanlatorFilterDialog
@@ -169,6 +170,7 @@ class MangaScreen(
             onMarkPreviousAsReadClicked = viewModel::markPreviousChapterRead,
             onMultiDeleteClicked = viewModel::showDeleteChapterDialog,
             onChapterSwipe = viewModel::chapterSwipe,
+            onBookmarkColorClicked = viewModel::showBookmarkColorDialog,
             onChapterSelected = viewModel::toggleSelection,
             onAllChapterSelected = viewModel::toggleAllSelection,
             onInvertSelection = viewModel::invertSelection,
@@ -280,6 +282,16 @@ class MangaScreen(
                     onDismissRequest = onDismissRequest,
                     onValueChanged = { interval: Int -> viewModel.setFetchInterval(dialog.manga, interval) }
                         .takeIf { viewModel.isUpdateIntervalEnabled },
+                )
+            }
+            is MangaViewModel.Dialog.BookmarkColorPicker -> {
+                BookmarkColorPickerDialog(
+                    selectedColor = dialog.chapter.bookmarkColor,
+                    bookmarked = dialog.chapter.bookmark,
+                    onColorSelected = { viewModel.setChapterBookmarkColor(dialog.chapter, it) },
+                    onRemoveBookmark = { viewModel.removeChapterBookmark(dialog.chapter) }
+                        .takeIf { dialog.chapter.bookmark },
+                    onDismissRequest = onDismissRequest,
                 )
             }
         }

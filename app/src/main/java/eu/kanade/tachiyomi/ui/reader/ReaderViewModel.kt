@@ -64,6 +64,7 @@ import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.UpdateChapter
+import tachiyomi.domain.chapter.model.BookmarkColor
 import tachiyomi.domain.chapter.model.ChapterUpdate
 import tachiyomi.domain.chapter.service.getChapterSort
 import tachiyomi.domain.download.service.DownloadPreferences
@@ -331,6 +332,7 @@ class ReaderViewModel @JvmOverloads constructor(
                 it.copy(
                     viewerChapters = newChapters,
                     bookmarked = newChapters.currChapter.chapter.bookmark,
+                    bookmarkColor = BookmarkColor.from(newChapters.currChapter.chapter.bookmarkColor),
                 )
             }
         }
@@ -645,13 +647,20 @@ class ReaderViewModel @JvmOverloads constructor(
     fun toggleChapterBookmark() {
         val chapter = getCurrentChapter()?.chapter ?: return
         val bookmarked = !chapter.bookmark
+        val color = if (bookmarked) {
+            libraryPreferences.lastUsedBookmarkColor.get()
+        } else {
+            BookmarkColor.DEFAULT
+        }
         chapter.bookmark = bookmarked
+        chapter.bookmarkColor = color.value
 
         viewModelScope.launchNonCancellable {
             updateChapter.await(
                 ChapterUpdate(
                     id = chapter.id!!,
                     bookmark = bookmarked,
+                    bookmarkColor = color,
                 ),
             )
         }
@@ -659,6 +668,60 @@ class ReaderViewModel @JvmOverloads constructor(
         mutableState.update {
             it.copy(
                 bookmarked = bookmarked,
+                bookmarkColor = color,
+            )
+        }
+    }
+
+    fun openBookmarkColorDialog() {
+        mutableState.update { it.copy(dialog = Dialog.BookmarkColor) }
+    }
+
+    fun setChapterBookmarkColor(color: BookmarkColor) {
+        val chapter = getCurrentChapter()?.chapter ?: return
+        libraryPreferences.lastUsedBookmarkColor.set(color)
+        chapter.bookmark = true
+        chapter.bookmarkColor = color.value
+
+        viewModelScope.launchNonCancellable {
+            updateChapter.await(
+                ChapterUpdate(
+                    id = chapter.id!!,
+                    bookmark = true,
+                    bookmarkColor = color,
+                ),
+            )
+        }
+
+        mutableState.update {
+            it.copy(
+                bookmarked = true,
+                bookmarkColor = color,
+                dialog = null,
+            )
+        }
+    }
+
+    fun removeChapterBookmark() {
+        val chapter = getCurrentChapter()?.chapter ?: return
+        chapter.bookmark = false
+        chapter.bookmarkColor = BookmarkColor.DEFAULT.value
+
+        viewModelScope.launchNonCancellable {
+            updateChapter.await(
+                ChapterUpdate(
+                    id = chapter.id!!,
+                    bookmark = false,
+                    bookmarkColor = BookmarkColor.DEFAULT,
+                ),
+            )
+        }
+
+        mutableState.update {
+            it.copy(
+                bookmarked = false,
+                bookmarkColor = BookmarkColor.DEFAULT,
+                dialog = null,
             )
         }
     }
@@ -951,6 +1014,7 @@ class ReaderViewModel @JvmOverloads constructor(
         val initError: Throwable? = null,
         val viewerChapters: ViewerChapters? = null,
         val bookmarked: Boolean = false,
+        val bookmarkColor: BookmarkColor = BookmarkColor.DEFAULT,
         val isLoadingAdjacentChapter: Boolean = false,
         val currentPage: Int = -1,
 
@@ -975,6 +1039,7 @@ class ReaderViewModel @JvmOverloads constructor(
         data object ReadingModeSelect : Dialog
         data object OrientationModeSelect : Dialog
         data class PageActions(val page: ReaderPage) : Dialog
+        data object BookmarkColor : Dialog
     }
 
     sealed interface Event {

@@ -15,6 +15,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import eu.kanade.presentation.manga.components.BookmarkColorPickerDialog
 import eu.kanade.presentation.updates.UpdateScreen
 import eu.kanade.presentation.updates.UpdatesDeleteConfirmationDialog
 import eu.kanade.presentation.updates.UpdatesFilterDialog
@@ -78,6 +79,7 @@ data object UpdatesTab : Tab {
             onCalendarClicked = { navigator.push(UpcomingScreen()) },
             onFilterClicked = viewModel::showFilterDialog,
             hasActiveFilters = state.hasActiveFilters,
+            onClickBookmark = viewModel::showBookmarkColorDialog,
         )
 
         val onDismissDialog = { viewModel.setDialog(null) }
@@ -92,6 +94,15 @@ data object UpdatesTab : Tab {
                 UpdatesFilterDialog(
                     onDismissRequest = onDismissDialog,
                     viewModel = settingsViewModel,
+                )
+            }
+            is UpdatesViewModel.Dialog.BookmarkColorPicker -> {
+                BookmarkColorPickerDialog(
+                    selectedColor = dialog.bookmarkColor,
+                    bookmarked = true,
+                    onColorSelected = { viewModel.setChapterBookmarkColor(dialog.chapterId, it) },
+                    onRemoveBookmark = { viewModel.removeChapterBookmark(dialog.chapterId) },
+                    onDismissRequest = onDismissDialog,
                 )
             }
             null -> {}

@@ -17,6 +17,7 @@ import tachiyomi.data.chapter.ChapterSanitizer
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.ShouldUpdateDbChapter
 import tachiyomi.domain.chapter.interactor.UpdateChapter
+import tachiyomi.domain.chapter.model.BookmarkColor
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.model.NoChaptersException
 import tachiyomi.domain.chapter.model.toChapterUpdate
@@ -162,6 +163,7 @@ class SyncChaptersWithSource(
         val deletedChapterNumbers = TreeSet<Double>()
         val deletedReadChapterNumbers = TreeSet<Double>()
         val deletedBookmarkedChapterNumbers = TreeSet<Double>()
+        val deletedBookmarkedChapterColors = mutableMapOf<Double, BookmarkColor>()
 
         val readChapterNumbers = dbChapters
             .asSequence()
@@ -171,7 +173,10 @@ class SyncChaptersWithSource(
 
         removedChapters.forEach { chapter ->
             if (chapter.read) deletedReadChapterNumbers.add(chapter.chapterNumber)
-            if (chapter.bookmark) deletedBookmarkedChapterNumbers.add(chapter.chapterNumber)
+            if (chapter.bookmark) {
+                deletedBookmarkedChapterNumbers.add(chapter.chapterNumber)
+                deletedBookmarkedChapterColors[chapter.chapterNumber] = chapter.bookmarkColor
+            }
             deletedChapterNumbers.add(chapter.chapterNumber)
         }
 
@@ -197,6 +202,8 @@ class SyncChaptersWithSource(
             chapter = chapter.copy(
                 read = chapter.chapterNumber in deletedReadChapterNumbers,
                 bookmark = chapter.chapterNumber in deletedBookmarkedChapterNumbers,
+                bookmarkColor = deletedBookmarkedChapterColors[chapter.chapterNumber]
+                    ?: BookmarkColor.DEFAULT,
             )
 
             // Try to to use the fetch date of the original entry to not pollute 'Updates' tab

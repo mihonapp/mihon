@@ -37,6 +37,7 @@ import eu.kanade.presentation.reader.components.ChapterNavigator
 import eu.kanade.presentation.reader.components.ChapterNavigatorType
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import tachiyomi.domain.chapter.model.BookmarkColor
 import tachiyomi.presentation.core.components.material.padding
 
 private val readerBarsSlideAnimationSpec = tween<IntOffset>(200)
@@ -51,7 +52,9 @@ fun ReaderAppBars(
     navigateUp: () -> Unit,
     onClickTopAppBar: () -> Unit,
     bookmarked: Boolean,
+    bookmarkColor: BookmarkColor,
     onToggleBookmarked: () -> Unit,
+    onOpenBookmarkColorPicker: () -> Unit,
     onOpenInWebView: (() -> Unit)?,
     onOpenInBrowser: (() -> Unit)?,
     onShare: (() -> Unit)?,
@@ -93,7 +96,9 @@ fun ReaderAppBars(
                 chapterTitle = chapterTitle,
                 navigateUp = navigateUp,
                 bookmarked = bookmarked,
+                bookmarkColor = bookmarkColor,
                 onToggleBookmarked = onToggleBookmarked,
+                onOpenBookmarkColorPicker = onOpenBookmarkColorPicker,
                 onOpenInWebView = onOpenInWebView,
                 onOpenInBrowser = onOpenInBrowser,
                 onShare = onShare,

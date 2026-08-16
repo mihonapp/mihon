@@ -8,6 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
+import eu.kanade.presentation.manga.components.asComposeColor
+import tachiyomi.domain.chapter.model.BookmarkColor
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
@@ -17,7 +19,9 @@ fun ReaderTopBar(
     chapterTitle: String?,
     navigateUp: () -> Unit,
     bookmarked: Boolean,
+    bookmarkColor: BookmarkColor,
     onToggleBookmarked: () -> Unit,
+    onOpenBookmarkColorPicker: () -> Unit,
     onOpenInWebView: (() -> Unit)?,
     onOpenInBrowser: (() -> Unit)?,
     onShare: (() -> Unit)?,
@@ -46,7 +50,9 @@ fun ReaderTopBar(
                             } else {
                                 Icons.Outlined.BookmarkBorder
                             },
+                            iconTint = if (bookmarked) bookmarkColor.asComposeColor() else null,
                             onClick = onToggleBookmarked,
+                            onLongClick = onOpenBookmarkColorPicker,
                         ),
                     )
                     onOpenInWebView?.let {

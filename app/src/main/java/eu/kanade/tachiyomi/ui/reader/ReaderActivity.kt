@@ -49,6 +49,7 @@ import com.google.android.material.transition.platform.MaterialContainerTransfor
 import com.hippo.unifile.UniFile
 import eu.kanade.core.util.ifSourcesLoaded
 import eu.kanade.domain.base.BasePreferences
+import eu.kanade.presentation.manga.components.BookmarkColorPickerDialog
 import eu.kanade.presentation.reader.DisplayRefreshHost
 import eu.kanade.presentation.reader.OrientationSelectDialog
 import eu.kanade.presentation.reader.ReaderContentOverlay
@@ -330,6 +331,15 @@ class ReaderActivity : BaseActivity() {
                     onSave = viewModel::saveImage,
                 )
             }
+            is ReaderViewModel.Dialog.BookmarkColor -> {
+                BookmarkColorPickerDialog(
+                    selectedColor = state.bookmarkColor,
+                    bookmarked = state.bookmarked,
+                    onColorSelected = viewModel::setChapterBookmarkColor,
+                    onRemoveBookmark = viewModel::removeChapterBookmark.takeIf { state.bookmarked },
+                    onDismissRequest = onDismissRequest,
+                )
+            }
             null -> {}
         }
     }
@@ -475,7 +485,9 @@ class ReaderActivity : BaseActivity() {
             navigateUp = onBackPressedDispatcher::onBackPressed,
             onClickTopAppBar = ::openMangaScreen,
             bookmarked = state.bookmarked,
+            bookmarkColor = state.bookmarkColor,
             onToggleBookmarked = viewModel::toggleChapterBookmark,
+            onOpenBookmarkColorPicker = viewModel::openBookmarkColorDialog,
             onOpenInWebView = ::openChapterInWebView.takeIf { isHttpSource },
             onOpenInBrowser = ::openChapterInBrowser.takeIf { isHttpSource },
             onShare = ::shareChapter.takeIf { isHttpSource },

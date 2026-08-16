@@ -5,6 +5,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.protobuf.ProtoNumber
 import mihon.core.common.extensions.JsonObjectEmptyBytes
 import tachiyomi.data.MemoColumnAdapter
+import tachiyomi.domain.chapter.model.BookmarkColor
 import tachiyomi.domain.chapter.model.Chapter
 
 @Serializable
@@ -26,6 +27,7 @@ class BackupChapter(
     @ProtoNumber(11) var lastModifiedAt: Long = 0,
     @ProtoNumber(12) var version: Long = 0,
     @ProtoNumber(13) var memo: ByteArray = JsonObjectEmptyBytes,
+    @ProtoNumber(14) var bookmarkColor: Int = 0,
 ) {
     fun toChapterImpl(): Chapter {
         return Chapter.create().copy(
@@ -35,6 +37,7 @@ class BackupChapter(
             scanlator = this@BackupChapter.scanlator,
             read = this@BackupChapter.read,
             bookmark = this@BackupChapter.bookmark,
+            bookmarkColor = BookmarkColor.from(this@BackupChapter.bookmarkColor),
             lastPageRead = this@BackupChapter.lastPageRead,
             dateFetch = this@BackupChapter.dateFetch,
             dateUpload = this@BackupChapter.dateUpload,
@@ -63,6 +66,7 @@ val backupChapterMapper = {
         version: Long,
         _: Long,
         memo: JsonObject,
+        bookmarkColor: Long,
     ->
     BackupChapter(
         url = url,
@@ -78,5 +82,6 @@ val backupChapterMapper = {
         lastModifiedAt = lastModifiedAt,
         version = version,
         memo = MemoColumnAdapter.encode(memo),
+        bookmarkColor = bookmarkColor.toInt(),
     )
 }

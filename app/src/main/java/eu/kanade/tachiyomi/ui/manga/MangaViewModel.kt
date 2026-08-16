@@ -68,6 +68,7 @@ import tachiyomi.domain.category.interactor.SetMangaCategories
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.chapter.interactor.SetMangaDefaultChapterFlags
 import tachiyomi.domain.chapter.interactor.UpdateChapter
+import tachiyomi.domain.chapter.model.BookmarkColor
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.model.ChapterUpdate
 import tachiyomi.domain.chapter.model.NoChaptersException
@@ -813,13 +814,55 @@ class MangaViewModel(
      * @param chapters the list of chapters to bookmark.
      */
     fun bookmarkChapters(chapters: List<Chapter>, bookmarked: Boolean) {
+        val color = if (bookmarked) {
+            libraryPreferences.lastUsedBookmarkColor.get()
+        } else {
+            BookmarkColor.DEFAULT
+        }
         viewModelScope.launchIO {
             chapters
                 .filterNot { it.bookmark == bookmarked }
-                .map { ChapterUpdate(id = it.id, bookmark = bookmarked) }
+                .map {
+                    ChapterUpdate(
+                        id = it.id,
+                        bookmark = bookmarked,
+                        bookmarkColor = color,
+                    )
+                }
                 .let { updateChapter.awaitAll(it) }
         }
         toggleAllSelection(false)
+    }
+
+    fun showBookmarkColorDialog(chapter: Chapter) {
+        updateSuccessState { it.copy(dialog = Dialog.BookmarkColorPicker(chapter)) }
+    }
+
+    fun setChapterBookmarkColor(chapter: Chapter, color: BookmarkColor) {
+        libraryPreferences.lastUsedBookmarkColor.set(color)
+        viewModelScope.launchIO {
+            updateChapter.await(
+                ChapterUpdate(
+                    id = chapter.id,
+                    bookmark = true,
+                    bookmarkColor = color,
+                ),
+            )
+        }
+        dismissDialog()
+    }
+
+    fun removeChapterBookmark(chapter: Chapter) {
+        viewModelScope.launchIO {
+            updateChapter.await(
+                ChapterUpdate(
+                    id = chapter.id,
+                    bookmark = false,
+                    bookmarkColor = BookmarkColor.DEFAULT,
+                ),
+            )
+        }
+        dismissDialog()
     }
 
     /**
@@ -1080,6 +1123,7 @@ class MangaViewModel(
         data object SettingsSheet : Dialog
         data object TrackSheet : Dialog
         data object FullCover : Dialog
+        data class BookmarkColorPicker(val chapter: Chapter) : Dialog
     }
 
     fun dismissDialog() {

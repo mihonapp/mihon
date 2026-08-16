@@ -46,6 +46,7 @@ import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.interactor.GetChapter
 import tachiyomi.domain.chapter.interactor.UpdateChapter
+import tachiyomi.domain.chapter.model.BookmarkColor
 import tachiyomi.domain.chapter.model.ChapterUpdate
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetManga
@@ -291,13 +292,60 @@ class UpdatesViewModel(
      * @param updates the list of chapters to bookmark.
      */
     fun bookmarkUpdates(updates: List<UpdatesItem>, bookmark: Boolean) {
+        val color = if (bookmark) {
+            libraryPreferences.lastUsedBookmarkColor.get()
+        } else {
+            BookmarkColor.DEFAULT
+        }
         viewModelScope.launchIO {
             updates
                 .filterNot { it.update.bookmark == bookmark }
-                .map { ChapterUpdate(id = it.update.chapterId, bookmark = bookmark) }
+                .map {
+                    ChapterUpdate(
+                        id = it.update.chapterId,
+                        bookmark = bookmark,
+                        bookmarkColor = color,
+                    )
+                }
                 .let { updateChapter.awaitAll(it) }
         }
         toggleAllSelection(false)
+    }
+
+    fun showBookmarkColorDialog(item: UpdatesItem) {
+        setDialog(
+            Dialog.BookmarkColorPicker(
+                chapterId = item.update.chapterId,
+                bookmarkColor = item.update.bookmarkColor,
+            ),
+        )
+    }
+
+    fun setChapterBookmarkColor(chapterId: Long, color: BookmarkColor) {
+        libraryPreferences.lastUsedBookmarkColor.set(color)
+        viewModelScope.launchIO {
+            updateChapter.await(
+                ChapterUpdate(
+                    id = chapterId,
+                    bookmark = true,
+                    bookmarkColor = color,
+                ),
+            )
+        }
+        setDialog(null)
+    }
+
+    fun removeChapterBookmark(chapterId: Long) {
+        viewModelScope.launchIO {
+            updateChapter.await(
+                ChapterUpdate(
+                    id = chapterId,
+                    bookmark = false,
+                    bookmarkColor = BookmarkColor.DEFAULT,
+                ),
+            )
+        }
+        setDialog(null)
     }
 
     /**
@@ -495,6 +543,10 @@ class UpdatesViewModel(
     sealed interface Dialog {
         data class DeleteConfirmation(val toDelete: List<UpdatesItem>) : Dialog
         data object FilterSheet : Dialog
+        data class BookmarkColorPicker(
+            val chapterId: Long,
+            val bookmarkColor: BookmarkColor,
+        ) : Dialog
     }
 
     sealed interface Event {

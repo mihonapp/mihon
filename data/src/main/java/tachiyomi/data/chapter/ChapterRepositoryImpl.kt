@@ -11,6 +11,7 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.data.Database
 import tachiyomi.data.MemoColumnAdapter
 import tachiyomi.data.subscribeToList
+import tachiyomi.domain.chapter.model.BookmarkColor
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.model.ChapterUpdate
 import tachiyomi.domain.chapter.repository.ChapterRepository
@@ -37,6 +38,7 @@ class ChapterRepositoryImpl(
                         chapter.dateUpload,
                         chapter.version,
                         chapter.memo,
+                        chapter.bookmarkColor.value.toLong(),
                     )
                         .awaitAsOne()
                     chapter.copy(id = chapterId)
@@ -75,6 +77,7 @@ class ChapterRepositoryImpl(
                     version = chapterUpdate.version,
                     isSyncing = 0,
                     memo = chapterUpdate.memo?.let(MemoColumnAdapter::encode),
+                    bookmarkColor = chapterUpdate.bookmarkColor?.value?.toLong(),
                 )
             }
         }
@@ -148,11 +151,13 @@ class ChapterRepositoryImpl(
         version: Long,
         isSyncing: Long,
         memo: JsonObject,
+        bookmarkColor: Long,
     ): Chapter = Chapter(
         id = id,
         mangaId = mangaId,
         read = read,
         bookmark = bookmark,
+        bookmarkColor = BookmarkColor.from(bookmarkColor.toInt()),
         lastPageRead = lastPageRead,
         dateFetch = dateFetch,
         sourceOrder = sourceOrder,

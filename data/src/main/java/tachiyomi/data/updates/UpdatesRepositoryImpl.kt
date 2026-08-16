@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import tachiyomi.core.common.util.lang.toLong
 import tachiyomi.data.Database
 import tachiyomi.data.subscribeToList
+import tachiyomi.domain.chapter.model.BookmarkColor
 import tachiyomi.domain.manga.model.MangaCover
 import tachiyomi.domain.updates.model.UpdatesWithRelations
 import tachiyomi.domain.updates.repository.UpdatesRepository
@@ -80,6 +81,7 @@ class UpdatesRepositoryImpl(
         chapterUrl: String,
         read: Boolean,
         bookmark: Boolean,
+        bookmarkColor: Long,
         lastPageRead: Long,
         sourceId: Long,
         favorite: Boolean,
@@ -97,6 +99,7 @@ class UpdatesRepositoryImpl(
         chapterUrl = chapterUrl,
         read = read,
         bookmark = bookmark,
+        bookmarkColor = BookmarkColor.from(bookmarkColor.toInt()),
         lastPageRead = lastPageRead,
         sourceId = sourceId,
         dateFetch = dateFetch,

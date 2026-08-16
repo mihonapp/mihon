@@ -84,6 +84,16 @@
     <string name="action_download">Download</string>
     <string name="action_bookmark">Bookmark chapter</string>
     <string name="action_remove_bookmark">Unbookmark chapter</string>
+    <string name="action_bookmark_color">Bookmark color</string>
+    <string name="action_set_bookmark_color">Set bookmark color</string>
+    <string name="bookmark_color_default">Default</string>
+    <string name="bookmark_color_red">Red</string>
+    <string name="bookmark_color_orange">Orange</string>
+    <string name="bookmark_color_yellow">Yellow</string>
+    <string name="bookmark_color_green">Green</string>
+    <string name="bookmark_color_blue">Blue</string>
+    <string name="bookmark_color_purple">Purple</string>
+    <string name="bookmark_color_pink">Pink</string>
     <string name="action_delete">Delete</string>
     <string name="action_update_library">Update library</string>
     <string name="action_enable_all">Enable all</string>

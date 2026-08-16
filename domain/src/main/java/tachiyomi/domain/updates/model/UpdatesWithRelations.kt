@@ -1,5 +1,6 @@
 package tachiyomi.domain.updates.model
 
+import tachiyomi.domain.chapter.model.BookmarkColor
 import tachiyomi.domain.manga.model.MangaCover
 
 data class UpdatesWithRelations(
@@ -11,6 +12,7 @@ data class UpdatesWithRelations(
     val chapterUrl: String,
     val read: Boolean,
     val bookmark: Boolean,
+    val bookmarkColor: BookmarkColor,
     val lastPageRead: Long,
     val sourceId: Long,
     val dateFetch: Long,

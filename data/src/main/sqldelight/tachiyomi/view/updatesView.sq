@@ -8,6 +8,7 @@ SELECT
     chapters.url AS chapterUrl,
     chapters.read,
     chapters.bookmark,
+    chapters.bookmark_color,
     chapters.last_page_read,
     mangas.source,
     mangas.favorite,
