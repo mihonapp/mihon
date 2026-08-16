@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS cookies(
+    host_key TEXT NOT NULL,
+    name TEXT NOT NULL,
+    value TEXT NOT NULL,
+    path TEXT NOT NULL
+);
+
+getCookiesForHost:
+SELECT
+    host_key,
+    name,
+    value,
+    path
+FROM cookies
+WHERE host_key = :host
+OR host_key = '.' || :host;
+
+getAllHosts:
+SELECT DISTINCT ltrim(host_key, '.')
+FROM cookies;
