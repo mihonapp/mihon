@@ -49,6 +49,7 @@ import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.presentation.manga.components.DotSeparatorNoSpaceText
 import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresScreen
 import eu.kanade.presentation.util.rememberRequestPackageInstallsPermissionState
+import eu.kanade.tachiyomi.extension.model.ContentWarning
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionUiModel
@@ -370,7 +371,8 @@ private fun ExtensionItemContent(
                 val warning = when {
                     extension is Extension.Untrusted -> MR.strings.ext_untrusted
                     extension is Extension.Installed && extension.isObsolete -> MR.strings.ext_obsolete
-                    extension.isNsfw -> MR.strings.ext_nsfw_short
+                    extension.contentWarning == ContentWarning.NSFW -> MR.strings.ext_nsfw_short
+                    extension.contentWarning == ContentWarning.MIXED -> MR.strings.ext_mixed_short
                     else -> null
                 }
                 if (warning != null) {

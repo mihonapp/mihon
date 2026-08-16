@@ -13,7 +13,7 @@ class GetExtensionsByType(
 ) {
 
     fun subscribe(): Flow<Extensions> {
-        val showNsfwSources = preferences.showNsfwSource.get()
+        val contentWarningLevel = preferences.contentWarningLevel.get()
 
         return combine(
             preferences.enabledLanguages.changes(),
@@ -21,8 +21,10 @@ class GetExtensionsByType(
             extensionManager.untrustedExtensionsFlow,
             extensionManager.availableExtensionsFlow,
         ) { enabledLanguages, _installed, _untrusted, _available ->
+            // Installed extensions stay listed regardless of the content warning level, except
+            // under the strictest (Safe only) level — see ContentWarningLevel.allowsInstalled.
             val (updates, installed) = _installed
-                .filter { (showNsfwSources || !it.isNsfw) }
+                .filter { contentWarningLevel.allowsInstalled(it.contentWarning) }
                 .sortedWith(
                     compareBy<Extension.Installed> { !it.isObsolete }
                         .thenBy(String.CASE_INSENSITIVE_ORDER) { it.name },
@@ -36,7 +38,7 @@ class GetExtensionsByType(
                 .filter { extension ->
                     _installed.none { it.pkgName == extension.pkgName } &&
                         _untrusted.none { it.pkgName == extension.pkgName } &&
-                        (showNsfwSources || !extension.isNsfw)
+                        contentWarningLevel.allowsDiscovery(extension.contentWarning)
                 }
                 .flatMap { ext ->
                     ext.sources.filter { it.lang in enabledLanguages }

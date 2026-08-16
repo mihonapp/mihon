@@ -21730,7 +21730,7 @@ HSPLeu/kanade/domain/source/service/SourcePreferences;->getLastUsedSource()Ltach
 HSPLeu/kanade/domain/source/service/SourcePreferences;->getMigrationSortingDirection()Ltachiyomi/core/common/preference/Preference;
 HSPLeu/kanade/domain/source/service/SourcePreferences;->getMigrationSortingMode()Ltachiyomi/core/common/preference/Preference;
 HSPLeu/kanade/domain/source/service/SourcePreferences;->getPinnedSources()Ltachiyomi/core/common/preference/Preference;
-HSPLeu/kanade/domain/source/service/SourcePreferences;->getShowNsfwSource()Ltachiyomi/core/common/preference/Preference;
+HSPLeu/kanade/domain/source/service/SourcePreferences;->getContentWarningLevel()Ltachiyomi/core/common/preference/Preference;
 Leu/kanade/domain/source/service/SourcePreferences$$ExternalSyntheticLambda0;
 HSPLeu/kanade/domain/source/service/SourcePreferences$$ExternalSyntheticLambda0;-><init>()V
 Leu/kanade/domain/source/service/SourcePreferences$$ExternalSyntheticLambda1;
