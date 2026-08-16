@@ -60,7 +60,9 @@ class DownloadManager(
 
     // For use by DownloadService only
     fun downloaderStart() = downloader.start()
+    fun downloaderPause() = downloader.pause()
     fun downloaderStop(reason: String? = null) = downloader.stop(reason)
+    fun downloaderPauseForNetwork(reason: String) = downloader.pauseForNetwork(reason)
 
     val isDownloaderRunning
         get() = DownloadJob.isRunningFlow(context)
@@ -70,12 +72,7 @@ class DownloadManager(
      */
     fun startDownloads() {
         if (downloader.isRunning) return
-
-        if (DownloadJob.isRunning(context)) {
-            downloader.start()
-        } else {
-            DownloadJob.start(context)
-        }
+        DownloadJob.start(context)
     }
 
     /**
