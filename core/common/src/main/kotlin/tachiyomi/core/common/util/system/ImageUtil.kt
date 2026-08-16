@@ -254,12 +254,10 @@ object ImageUtil {
         }
     }
 
-    private fun splitImageName(filenamePrefix: String, index: Int) = "${filenamePrefix}__${
-        "%03d".format(
-            Locale.ENGLISH,
-            index + 1,
-        )
-    }.jpg"
+    private fun splitImageName(filenamePrefix: String, index: Int) = "${filenamePrefix}__${"%03d".format(
+        Locale.ENGLISH,
+        index + 1,
+    )}.jpg"
 
     private val BitmapFactory.Options.splitData
         get(): List<SplitData> {
@@ -466,7 +464,6 @@ object ImageUtil {
                     overallWhitePixels = 0
                     break@outer
                 }
-
                 blackStreak -> {
                     darkBG = true
                     if (x == right || x == rightOffsetX) {
@@ -481,7 +478,6 @@ object ImageUtil {
                         break@outer
                     }
                 }
-
                 whiteStreak || whitePixels > 22 -> darkBG = false
             }
         }
@@ -516,15 +512,12 @@ object ImageUtil {
             darkBG && botCornersIsWhite -> {
                 intArrayOf(blackColor, blackColor, whiteColor, whiteColor)
             }
-
             darkBG && topCornersIsWhite -> {
                 intArrayOf(whiteColor, whiteColor, blackColor, blackColor)
             }
-
             darkBG -> {
                 return blackColor.toDrawable()
             }
-
             topIsBlackStreak ||
                 (
                     topCornersIsDark &&
@@ -533,7 +526,6 @@ object ImageUtil {
                     ) -> {
                 intArrayOf(blackColor, blackColor, whiteColor, whiteColor)
             }
-
             bottomIsBlackStreak ||
                 (
                     botCornersIsDark &&
@@ -542,7 +534,6 @@ object ImageUtil {
                     ) -> {
                 intArrayOf(whiteColor, whiteColor, blackColor, blackColor)
             }
-
             else -> {
                 return whiteColor.toDrawable()
             }
