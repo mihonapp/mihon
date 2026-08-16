@@ -61,7 +61,6 @@ data object UpdatesTab : Tab {
         UpdateScreen(
             state = state,
             snackbarHostState = viewModel.snackbarHostState,
-            lastUpdated = viewModel.lastUpdated,
             onClickCover = { item -> navigator.push(MangaScreen(item.update.mangaId)) },
             onSelectAll = viewModel::toggleAllSelection,
             onInvertSelection = viewModel::invertSelection,
@@ -77,7 +76,6 @@ data object UpdatesTab : Tab {
             },
             onCalendarClicked = { navigator.push(UpcomingScreen()) },
             onFilterClicked = viewModel::showFilterDialog,
-            hasActiveFilters = state.hasActiveFilters,
         )
 
         val onDismissDialog = { viewModel.setDialog(null) }

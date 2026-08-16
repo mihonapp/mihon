@@ -3,11 +3,9 @@ package eu.kanade.tachiyomi.ui.updates
 import android.app.Application
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.util.fastFilter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import eu.kanade.core.preference.asState
 import eu.kanade.core.util.addOrRemove
 import eu.kanade.core.util.insertSeparators
 import eu.kanade.domain.chapter.interactor.SetReadStatus
@@ -18,6 +16,7 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.util.lang.toLocalDate
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -75,8 +74,6 @@ class UpdatesViewModel(
 
     private val _events: Channel<Event> = Channel(Int.MAX_VALUE)
     val events: Flow<Event> = _events.receiveAsFlow()
-
-    val lastUpdated by libraryPreferences.lastUpdatedTimestamp.asState(viewModelScope)
 
     // First and last selected index in list
     private val selectedPositions: Array<Int> = arrayOf(-1, -1)
@@ -138,7 +135,14 @@ class UpdatesViewModel(
                     hideExcludedScanlators = it.filterExcludedScanlators,
                     includedCategories = it.filterIncludedCategories,
                     excludedCategories = it.filterExcludedCategories,
-                ).distinctUntilChanged()
+                )
+                    .distinctUntilChanged()
+                    .map { Result.success(it) }
+                    .catch { error ->
+                        logcat(LogPriority.ERROR, error)
+                        _events.send(Event.InternalError)
+                        emit(Result.failure(error))
+                    }
             },
         downloadCache.changes,
         downloadManager.queueState,
@@ -147,41 +151,78 @@ class UpdatesViewModel(
             old.filterDownloaded == new.filterDownloaded
         },
     ) { updates, _, _, itemPreferences ->
-        updates
-            .toUpdateItems()
-            .applyFilters(itemPreferences)
+        val loaded = updates.getOrElse {
+            return@combine UpdatesLoad.Error
+        }
+        try {
+            UpdatesLoad.Data(
+                loaded
+                    .toUpdateItems()
+                    .applyFilters(itemPreferences),
+            )
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            logcat(LogPriority.ERROR, e)
+            _events.send(Event.InternalError)
+            UpdatesLoad.Error
+        }
     }
+        .catch { error ->
+            logcat(LogPriority.ERROR, error)
+            _events.send(Event.InternalError)
+            emit(UpdatesLoad.Error)
+        }
         .flowOn(Dispatchers.IO)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), null)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), UpdatesLoad.Loading)
 
     val state: StateFlow<State> = combine(
         updateItems,
         selectedChapterIds,
         downloadStates,
         dialog,
-        hasActiveFilters,
-    ) { items, selectedIds, downloads, dialog, hasActiveFilters ->
-        State(
-            isLoading = items == null,
-            hasActiveFilters = hasActiveFilters,
-            items = items.orEmpty().map { item ->
-                val download = downloads[item.update.chapterId]
-                item.copy(
-                    selected = item.update.chapterId in selectedIds,
-                    downloadStateProvider = if (download != null) {
-                        { download.status }
-                    } else {
-                        item.downloadStateProvider
-                    },
-                    downloadProgressProvider = if (download != null) {
-                        { download.progress }
-                    } else {
-                        item.downloadProgressProvider
-                    },
-                )
-            },
-            dialog = dialog,
-        )
+        combine(
+            hasActiveFilters,
+            libraryPreferences.lastUpdatedTimestamp.changes(),
+            ::Pair,
+        ),
+    ) { items, selectedIds, downloads, dialog, (hasActiveFilters, lastUpdated) ->
+        when (items) {
+            UpdatesLoad.Loading -> State(
+                isLoading = true,
+                lastUpdated = lastUpdated,
+                hasActiveFilters = hasActiveFilters,
+                dialog = dialog,
+            )
+            UpdatesLoad.Error -> State(
+                isLoading = false,
+                lastUpdated = lastUpdated,
+                hasActiveFilters = hasActiveFilters,
+                hasError = true,
+                dialog = dialog,
+            )
+            is UpdatesLoad.Data -> State(
+                isLoading = false,
+                lastUpdated = lastUpdated,
+                hasActiveFilters = hasActiveFilters,
+                items = items.items.map { item ->
+                    val download = downloads[item.update.chapterId]
+                    item.copy(
+                        selected = item.update.chapterId in selectedIds,
+                        downloadStateProvider = if (download != null) {
+                            { download.status }
+                        } else {
+                            item.downloadStateProvider
+                        },
+                        downloadProgressProvider = if (download != null) {
+                            { download.progress }
+                        } else {
+                            item.downloadProgressProvider
+                        },
+                    )
+                },
+                dialog = dialog,
+            )
+        }
     }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), State())
 
@@ -467,10 +508,18 @@ class UpdatesViewModel(
 
     private data class DownloadProgress(val status: Download.State, val progress: Int)
 
+    private sealed interface UpdatesLoad {
+        data object Loading : UpdatesLoad
+        data class Data(val items: List<UpdatesItem>) : UpdatesLoad
+        data object Error : UpdatesLoad
+    }
+
     @Immutable
     data class State(
         val isLoading: Boolean = true,
+        val lastUpdated: Long = 0L,
         val hasActiveFilters: Boolean = false,
+        val hasError: Boolean = false,
         val items: List<UpdatesItem> = listOf(),
         val dialog: Dialog? = null,
     ) {
