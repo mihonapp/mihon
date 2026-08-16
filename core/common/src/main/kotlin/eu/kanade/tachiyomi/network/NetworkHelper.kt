@@ -1,10 +1,17 @@
 package eu.kanade.tachiyomi.network
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.ProcessLifecycleOwner
 import eu.kanade.tachiyomi.network.interceptor.CloudflareInterceptor
 import eu.kanade.tachiyomi.network.interceptor.UncaughtExceptionInterceptor
 import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
 import okhttp3.Cache
+import okhttp3.ConnectionPool
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.File
@@ -18,12 +25,15 @@ class NetworkHelper(
 
     val cookieJar = AndroidCookieJar()
 
+    private val connectionPool = ConnectionPool()
+
     private val clientBuilder: OkHttpClient.Builder = run {
         val builder = OkHttpClient.Builder()
             .cookieJar(cookieJar)
             .connectTimeout(30.seconds)
             .readTimeout(30.seconds)
             .callTimeout(2.minutes)
+            .connectionPool(connectionPool)
             .cache(
                 Cache(
                     directory = File(context.cacheDir, "network_cache"),
@@ -62,6 +72,47 @@ class NetworkHelper(
             CloudflareInterceptor(context, cookieJar, ::defaultUserAgentProvider),
         )
         .build()
+
+    init {
+        evictStaleConnections()
+    }
+
+    private fun evictStaleConnections() {
+        val connectivityManager = context.getSystemService(ConnectivityManager::class.java) ?: return
+        var wasOnline = false
+        connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                evictConnections()
+            }
+
+            override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
+                val isOnline = networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                if (isOnline != wasOnline) {
+                    wasOnline = isOnline
+                    evictConnections()
+                }
+            }
+
+            override fun onLost(network: Network) {
+                evictConnections()
+            }
+
+            override fun onUnavailable() {
+                evictConnections()
+            }
+        })
+        ProcessLifecycleOwner.get().lifecycle.addObserver(
+            LifecycleEventObserver { _, event ->
+                if (event == Lifecycle.Event.ON_START) {
+                    evictConnections()
+                }
+            },
+        )
+    }
+
+    private fun evictConnections() {
+        connectionPool.evictAll()
+    }
 
     /**
      * @deprecated Since extension-lib 1.5
