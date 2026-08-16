@@ -187,7 +187,11 @@ class PagerPageHolder(
                 removeErrorLayout()
             }
             if (panelSourceBytes != null && viewer is PanelByPanelViewer) {
-                loadPanels(viewer, panelSourceBytes)
+                try {
+                    loadPanels(viewer, panelSourceBytes)
+                } catch (e: Throwable) {
+                    logcat(LogPriority.ERROR, e) { "Panel detection failed for page ${page.index}" }
+                }
             }
         } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e)
