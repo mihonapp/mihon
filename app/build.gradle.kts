@@ -296,6 +296,9 @@ dependencies {
     }
     implementation(libs.image.decoder)
 
+    // Panel-by-panel text-block detection
+    implementation(libs.mlkit.text.recognition)
+
     implementation(libs.webgpuviewer)
     implementation(libs.kim)
 
