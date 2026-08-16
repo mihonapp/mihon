@@ -31,17 +31,15 @@ class Shikimori(id: Long) : BaseTracker(id, "Shikimori"), DeletableTracker {
 
     private val json: Json by injectLazy()
 
-    private val config by lazy {
-        ShikimoriConfig(
-            baseUrl = trackPreferences.shikimoriBaseUrl.get().ifBlank { ShikimoriApi.DEFAULT_BASE_URL },
-            clientId = trackPreferences.shikimoriClientId.get(),
-            clientSecret = trackPreferences.shikimoriClientSecret.get(),
-        )
-    }
+    fun getConfig(): ShikimoriConfig = ShikimoriConfig(
+        baseUrl = trackPreferences.shikimoriBaseUrl.get().ifBlank { ShikimoriApi.DEFAULT_BASE_URL },
+        clientId = trackPreferences.shikimoriClientId.get(),
+        clientSecret = trackPreferences.shikimoriClientSecret.get(),
+    )
 
-    private val interceptor by lazy { ShikimoriInterceptor(this, config) }
+    private val interceptor by lazy { ShikimoriInterceptor(this) }
 
-    private val api by lazy { ShikimoriApi(id, client, interceptor, config) }
+    private val api by lazy { ShikimoriApi(id, client, interceptor, this::getConfig) }
 
     fun authUrl(): Uri = api.authUrl()
 

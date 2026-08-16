@@ -36,19 +36,19 @@ class ShikimoriApi(
     private val trackId: Long,
     private val client: OkHttpClient,
     interceptor: ShikimoriInterceptor,
-    config: ShikimoriConfig,
+    private val config: () -> ShikimoriConfig,
 ) {
 
     private val json: Json by injectLazy()
 
     private val authClient = client.newBuilder().addInterceptor(interceptor).build()
 
-    private val apiUrl = "${config.baseUrl}/api"
-    private val graphqlApiUrl = "$apiUrl/graphql"
-    private val oauthUrl = "${config.baseUrl}/oauth/token"
-    private val loginUrl = "${config.baseUrl}/oauth/authorize"
-    private val clientId = config.clientId
-    private val clientSecret = config.clientSecret
+    private fun apiUrl() = "${config().baseUrl}/api"
+    private fun graphqlApiUrl() = "${config().baseUrl}/api/graphql"
+    private fun oauthUrl() = "${config().baseUrl}/oauth/token"
+    private fun loginUrl() = "${config().baseUrl}/oauth/authorize"
+    private fun clientId() = config().clientId
+    private fun clientSecret() = config().clientSecret
 
     suspend fun addLibManga(track: Track, userId: String): Track {
         return withIOContext {
@@ -65,7 +65,7 @@ class ShikimoriApi(
                 }
                 authClient.newCall(
                     POST(
-                        "$apiUrl/v2/user_rates",
+                        "${apiUrl()}/v2/user_rates",
                         body = payload.toString().toRequestBody(jsonMime),
                     ),
                 ).awaitSuccess()
@@ -84,7 +84,7 @@ class ShikimoriApi(
     suspend fun deleteLibManga(track: DomainTrack) {
         withIOContext {
             authClient
-                .newCall(DELETE("$apiUrl/v2/user_rates/${track.libraryId}"))
+                .newCall(DELETE("${apiUrl()}/v2/user_rates/${track.libraryId}"))
                 .awaitSuccess()
         }
     }
@@ -126,7 +126,7 @@ class ShikimoriApi(
             with(json) {
                 authClient.newCall(
                     POST(
-                        graphqlApiUrl,
+                        graphqlApiUrl(),
                         body = payload.toString().toRequestBody(jsonMime),
                     ),
                 )
@@ -176,7 +176,7 @@ class ShikimoriApi(
             with(json) {
                 authClient.newCall(
                     POST(
-                        graphqlApiUrl,
+                        graphqlApiUrl(),
                         body = payload.toString().toRequestBody(jsonMime),
                     ),
                 )
@@ -217,7 +217,7 @@ class ShikimoriApi(
             with(json) {
                 val listResult = authClient.newCall(
                     POST(
-                        graphqlApiUrl,
+                        graphqlApiUrl(),
                         body = payload.toString().toRequestBody(jsonMime),
                     ),
                 )
@@ -252,7 +252,7 @@ class ShikimoriApi(
             }
             authClient.newCall(
                 POST(
-                    graphqlApiUrl,
+                    graphqlApiUrl(),
                     body = payload.toString().toRequestBody(jsonMime),
                 ),
             )
@@ -273,18 +273,18 @@ class ShikimoriApi(
     }
 
     private fun accessTokenRequest(code: String) = POST(
-        oauthUrl,
+        oauthUrl(),
         body = FormBody.Builder()
             .add("grant_type", "authorization_code")
-            .add("client_id", clientId)
-            .add("client_secret", clientSecret)
+            .add("client_id", clientId())
+            .add("client_secret", clientSecret())
             .add("code", code)
             .add("redirect_uri", REDIRECT_URL)
             .build(),
     )
 
-    fun authUrl(): Uri = loginUrl.toUri().buildUpon()
-        .appendQueryParameter("client_id", clientId)
+    fun authUrl(): Uri = loginUrl().toUri().buildUpon()
+        .appendQueryParameter("client_id", clientId())
         .appendQueryParameter("redirect_uri", REDIRECT_URL)
         .appendQueryParameter("response_type", "code")
         .build()

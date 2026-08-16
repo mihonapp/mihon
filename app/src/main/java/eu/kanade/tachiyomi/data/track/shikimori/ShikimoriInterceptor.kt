@@ -8,10 +8,7 @@ import okhttp3.Interceptor
 import okhttp3.Response
 import uy.kohesive.injekt.injectLazy
 
-class ShikimoriInterceptor(
-    private val shikimori: Shikimori,
-    private val config: ShikimoriConfig,
-) : Interceptor {
+class ShikimoriInterceptor(private val shikimori: Shikimori) : Interceptor {
 
     private val json: Json by injectLazy()
 
@@ -29,7 +26,7 @@ class ShikimoriInterceptor(
 
         // Refresh access token if expired.
         if (currAuth.isExpired()) {
-            val response = chain.proceed(ShikimoriApi.refreshTokenRequest(config, refreshToken))
+            val response = chain.proceed(ShikimoriApi.refreshTokenRequest(shikimori.getConfig(), refreshToken))
             if (response.isSuccessful) {
                 newAuth(json.decodeFromString<SMOAuth>(response.body.string()))
             } else {
