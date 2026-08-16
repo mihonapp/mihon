@@ -41,7 +41,7 @@ class ImageDecoder(private val resources: ImageSource, private val options: Opti
             try {
                 ImageDecoder.new(it.inputStream())
             } catch (e: ImageDecoder.DecodeException) {
-                logcat(LogPriority.WARN, e) { "ImageDecoder.new failed: ${e.message}" }
+                logcat(LogPriority.ERROR, e) { "ImageDecoder.new failed: ${e.message}" }
                 null
             }
         }
