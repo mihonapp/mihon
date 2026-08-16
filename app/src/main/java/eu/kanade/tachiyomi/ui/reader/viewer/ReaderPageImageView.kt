@@ -144,15 +144,35 @@ open class ReaderPageImageView @JvmOverloads constructor(
     fun canRetreatPanelStop(): Boolean = panelStops.isNotEmpty() && panelStopIndex > 0
 
     fun advancePanelStop() {
+        syncPanelStopIndexToCurrentView()
         if (!canAdvancePanelStop()) return
         panelStopIndex++
         animateToPanelStop(panelStopIndex)
     }
 
     fun retreatPanelStop() {
+        syncPanelStopIndexToCurrentView()
         if (!canRetreatPanelStop()) return
         panelStopIndex--
         animateToPanelStop(panelStopIndex)
+    }
+
+    /**
+     * If the user pinch-zoomed away from the current panel stop, find the nearest stop to
+     * where they actually are before advancing/retreating, so guided navigation resumes
+     * from the right place instead of jumping relative to a stale index.
+     */
+    private fun syncPanelStopIndexToCurrentView() {
+        val view = pageView as? SubsamplingScaleImageView ?: return
+        val center = view.center ?: return
+        if (panelStops.isEmpty()) return
+        val nearestIndex = panelStops.indices.minByOrNull { index ->
+            val (_, target) = view.panelStopTarget(panelStops[index])
+            val dx = target.x - center.x
+            val dy = target.y - center.y
+            dx * dx + dy * dy
+        } ?: return
+        panelStopIndex = nearestIndex
     }
 
     private fun jumpToPanelStop(index: Int) {

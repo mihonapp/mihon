@@ -162,7 +162,9 @@ class PagerPageHolder(
                 } else {
                     null
                 }
-                val panelSourceBytes = if (!isAnimated && viewer is PanelByPanelViewer) {
+                val panelSourceBytes = if (
+                    !isAnimated && viewer is PanelByPanelViewer && !viewer.config.dualPageSplit
+                ) {
                     Buffer().apply { writeAll(source.peek()) }
                 } else {
                     null

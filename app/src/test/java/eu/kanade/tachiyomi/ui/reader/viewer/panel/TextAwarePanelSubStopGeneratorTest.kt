@@ -29,7 +29,12 @@ class TextAwarePanelSubStopGeneratorTest {
     // set after construction, and the same technique reflectively overwrites TextBlock's private
     // boundingBox field, bypassing the broken internal copy.
     private fun rect(left: Int, top: Int, right: Int, bottom: Int): Rect =
-        Rect().apply { this.left = left; this.top = top; this.right = right; this.bottom = bottom }
+        Rect().apply {
+            this.left = left
+            this.top = top
+            this.right = right
+            this.bottom = bottom
+        }
 
     private fun textBlock(box: Rect): Text.TextBlock {
         val block = Text.TextBlock("", rect(0, 0, 0, 0), emptyList<Point>(), "", null, emptyList<Text.Line>())

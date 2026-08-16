@@ -38,6 +38,11 @@ class TextAwarePanelSubStopGenerator(
         return ordered + panel
     }
 
+    /** Releases the native resources held by the OCR recognizer. */
+    fun close() {
+        recognizer.close()
+    }
+
     private suspend fun detectTextBlocks(bitmap: Bitmap, panel: PanelRect): List<PanelRect> {
         val text = withTimeoutOrNull(OCR_TIMEOUT_MS) { recognize(bitmap) } ?: return emptyList()
         return text.textBlocks.mapNotNull { block ->

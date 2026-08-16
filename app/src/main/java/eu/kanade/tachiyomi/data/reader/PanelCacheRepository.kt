@@ -15,20 +15,20 @@ class PanelCacheRepository(
     private val json: Json,
 ) {
 
-    suspend fun get(chapterId: Long, pageIndex: Int, imageHash: String): PanelPageData? {
-        val row = database.panel_cacheQueries
-            .getPanels(chapterId, pageIndex.toLong())
+    suspend fun get(chapterId: Long, pageIndex: Int, imageHash: String, detectorVersion: Int): PanelPageData? {
+        val panelsJson = database.panel_cacheQueries
+            .getPanels(chapterId, pageIndex.toLong(), imageHash, detectorVersion.toLong())
             .awaitAsOneOrNull()
             ?: return null
-        if (row.image_hash != imageHash) return null
-        return runCatching { json.decodeFromString<PanelPageData>(row.panels_json) }.getOrNull()
+        return runCatching { json.decodeFromString<PanelPageData>(panelsJson) }.getOrNull()
     }
 
-    suspend fun save(chapterId: Long, pageIndex: Int, imageHash: String, data: PanelPageData) {
+    suspend fun save(chapterId: Long, pageIndex: Int, imageHash: String, detectorVersion: Int, data: PanelPageData) {
         database.panel_cacheQueries.upsert(
             chapterId = chapterId,
             pageIndex = pageIndex.toLong(),
             imageHash = imageHash,
+            detectorVersion = detectorVersion.toLong(),
             panelsJson = json.encodeToString(PanelPageData.serializer(), data),
             detectedAt = System.currentTimeMillis(),
         )

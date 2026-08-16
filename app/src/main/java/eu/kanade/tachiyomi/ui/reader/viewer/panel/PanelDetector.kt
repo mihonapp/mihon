@@ -4,6 +4,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import eu.kanade.tachiyomi.data.reader.PanelCacheRepository
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import okio.Buffer
 import java.security.MessageDigest
@@ -18,13 +20,25 @@ class PanelDetector(
         val chapterId = page.chapter.chapter.id ?: return listOf(Panel(PanelRect.FULL_PAGE))
         val hash = imageBytes.contentHash()
 
-        panelCacheRepository.get(chapterId, page.index, hash)?.let { return it.panels }
+        withContext(Dispatchers.IO) {
+            panelCacheRepository.get(chapterId, page.index, hash, DETECTOR_VERSION)
+        }?.let { return it.panels }
 
-        val panels = withTimeoutOrNull(DETECTION_BUDGET_MS) {
-            runDetection(imageBytes, direction)
-        } ?: listOf(Panel(PanelRect.FULL_PAGE))
+        val timedOutOrPanels = withTimeoutOrNull(DETECTION_BUDGET_MS) {
+            withContext(Dispatchers.Default) { runDetection(imageBytes, direction) }
+        }
+        val panels = timedOutOrPanels ?: listOf(Panel(PanelRect.FULL_PAGE))
 
-        panelCacheRepository.save(chapterId, page.index, hash, PanelPageData(panels))
+        // Only persist a genuine detection outcome. A timeout is transient (system load,
+        // not a property of the image), so don't pin the page to "no panels" permanently —
+        // low-confidence/decode-failure fallbacks inside runDetection ARE deterministic
+        // given the same bytes+version and are fine to cache; they'll re-run automatically
+        // on a future DETECTOR_VERSION bump.
+        if (timedOutOrPanels != null) {
+            withContext(Dispatchers.IO) {
+                panelCacheRepository.save(chapterId, page.index, hash, DETECTOR_VERSION, PanelPageData(panels))
+            }
+        }
         return panels
     }
 
@@ -47,11 +61,17 @@ class PanelDetector(
 
         val ordered = PanelReadingOrder.sort(rawRects, direction)
         val fullBitmap = lazy { BitmapFactory.decodeStream(imageBytes.copy().inputStream()) }
-        return ordered.map { rect ->
-            val subStops = subStopGenerator.generate(rect, direction) {
-                fullBitmap.value?.let { cropNormalized(it, rect) }
+        try {
+            return ordered.map { rect ->
+                val subStops = subStopGenerator.generate(rect, direction) {
+                    fullBitmap.value?.let { cropNormalized(it, rect) }
+                }
+                Panel(rect, subStops)
             }
-            Panel(rect, subStops)
+        } finally {
+            if (fullBitmap.isInitialized()) {
+                fullBitmap.value?.recycle()
+            }
         }
     }
 
@@ -77,6 +97,7 @@ class PanelDetector(
 
     companion object {
         private const val DETECTION_BUDGET_MS = 2000L
-        private const val MAX_DETECTION_DIMENSION = 400
+        private const val MAX_DETECTION_DIMENSION = 900
+        private const val DETECTOR_VERSION = 1
     }
 }

@@ -84,4 +84,28 @@ class PanelBoundaryDetectorTest {
 
         assertEquals(2, panels.size)
     }
+
+    @Test
+    fun `a thin-framed panel with a white interior is still detected`() {
+        // A 40x40 page: a 3px-thick black rectangular frame outline (outer edge 5..34,
+        // inner edge 8..31) around a white interior, on a white background — the
+        // realistic manga morphology (panels are usually white/colored interiors bounded
+        // by a thin drawn frame, not solid filled blocks like the other fixtures above).
+        val page = buffer(40, 40) { x, y ->
+            val inOuter = x in 5..34 && y in 5..34
+            val inInner = x in 8..31 && y in 8..31
+            if (inOuter && !inInner) black else white
+        }
+
+        val panels = PanelBoundaryDetector.detect(page)
+
+        assertTrue(panels.isNotEmpty(), "expected the frame outline to survive erosion as at least one panel")
+        val panel = panels.first()
+        // Bounding box should roughly match the frame's extent (5..34 out of 40, i.e. ~0.12..0.85),
+        // allowing some slack since erosion shrinks the surviving pixels inward by ~1px.
+        assertTrue(panel.left in 0.0f..0.3f, "left was ${panel.left}")
+        assertTrue(panel.top in 0.0f..0.3f, "top was ${panel.top}")
+        assertTrue(panel.right in 0.7f..1.0f, "right was ${panel.right}")
+        assertTrue(panel.bottom in 0.7f..1.0f, "bottom was ${panel.bottom}")
+    }
 }

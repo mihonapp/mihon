@@ -2,6 +2,7 @@ CREATE TABLE panel_cache(
     chapter_id INTEGER NOT NULL,
     page_index INTEGER NOT NULL,
     image_hash TEXT NOT NULL,
+    detector_version INTEGER NOT NULL,
     panels_json TEXT NOT NULL,
     detected_at INTEGER NOT NULL,
     PRIMARY KEY (chapter_id, page_index),
@@ -10,16 +11,20 @@ CREATE TABLE panel_cache(
 );
 
 getPanels:
-SELECT image_hash, panels_json
+SELECT panels_json
 FROM panel_cache
-WHERE chapter_id = :chapterId AND page_index = :pageIndex;
+WHERE chapter_id = :chapterId
+AND page_index = :pageIndex
+AND image_hash = :imageHash
+AND detector_version = :detectorVersion;
 
 upsert:
-INSERT INTO panel_cache(chapter_id, page_index, image_hash, panels_json, detected_at)
-VALUES (:chapterId, :pageIndex, :imageHash, :panelsJson, :detectedAt)
+INSERT INTO panel_cache(chapter_id, page_index, image_hash, detector_version, panels_json, detected_at)
+VALUES (:chapterId, :pageIndex, :imageHash, :detectorVersion, :panelsJson, :detectedAt)
 ON CONFLICT(chapter_id, page_index)
 DO UPDATE
 SET
     image_hash = :imageHash,
+    detector_version = :detectorVersion,
     panels_json = :panelsJson,
     detected_at = :detectedAt;
