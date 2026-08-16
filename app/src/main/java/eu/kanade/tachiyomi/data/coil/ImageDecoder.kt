@@ -115,7 +115,7 @@ class ImageDecoder(private val resources: ImageSource, private val options: Opti
                 ImageUtil.ImageType.JXL,
                 ImageUtil.ImageType.HEIF,
                 ImageUtil.ImageType.JP2,
-                    -> true
+                -> true
 
                 else -> false
             }
