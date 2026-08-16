@@ -8,6 +8,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.browse.ExtensionFilterScreen
 import eu.kanade.presentation.util.Screen
 import kotlinx.coroutines.flow.collectLatest
@@ -21,7 +22,7 @@ class ExtensionFilterScreen : Screen() {
     override fun Content() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = viewModel<ExtensionFilterViewModel>()
+        val viewModel = metroViewModel<ExtensionFilterViewModel>()
         val state by viewModel.state.collectAsStateWithLifecycle()
 
         if (state is ExtensionFilterState.Loading) {

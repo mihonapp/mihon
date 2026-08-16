@@ -1,8 +1,10 @@
 package tachiyomi.domain.release.interactor
 
+import dev.zacsweers.metro.Inject
 import tachiyomi.domain.release.model.Release
 import tachiyomi.domain.release.service.ReleaseService
 
+@Inject
 class GetApplicationRelease(
     private val service: ReleaseService,
 ) {

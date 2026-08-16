@@ -12,9 +12,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.presentation.util.Screen
@@ -39,7 +44,7 @@ class CreateBackupScreen : Screen() {
     override fun Content() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = viewModel<CreateBackupViewModel>()
+        val viewModel = metroViewModel<CreateBackupViewModel>()
         val state by viewModel.state.collectAsState()
 
         val chooseBackupDir = rememberLauncherForActivityResult(
@@ -73,7 +78,7 @@ class CreateBackupScreen : Screen() {
                     if (!BackupCreateJob.isManualJobRunning(context)) {
                         try {
                             chooseBackupDir.launch(BackupCreator.getFilename())
-                        } catch (e: ActivityNotFoundException) {
+                        } catch (_: ActivityNotFoundException) {
                             context.toast(MR.strings.file_picker_error)
                         }
                     } else {
@@ -121,6 +126,9 @@ class CreateBackupScreen : Screen() {
     }
 }
 
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class CreateBackupViewModel : ViewModel() {
 
     val state: StateFlow<CreateBackupViewModel.State>

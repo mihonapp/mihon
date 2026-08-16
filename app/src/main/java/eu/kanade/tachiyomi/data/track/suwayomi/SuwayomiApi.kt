@@ -23,11 +23,12 @@ import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.injectLazy
 import java.security.MessageDigest
 
-class SuwayomiApi(private val trackId: Long) {
+class SuwayomiApi(
+    private val trackId: Long,
+    private val sourceManager: SourceManager,
+) {
 
     private val json: Json by injectLazy()
-
-    private val sourceManager: SourceManager by injectLazy()
     private val source: HttpSource by lazy { (sourceManager.get(sourceId) as HttpSource) }
     private val configurableSource: ConfigurableSource by lazy { (sourceManager.get(sourceId) as ConfigurableSource) }
     private val client: OkHttpClient by lazy { source.client }

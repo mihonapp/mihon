@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.browse.MigrateSourceScreen
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.TabContent
@@ -21,7 +22,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 fun Screen.migrateSourceTab(): TabContent {
     val uriHandler = LocalUriHandler.current
     val navigator = LocalNavigator.currentOrThrow
-    val viewModel = viewModel<MigrateSourceViewModel>()
+    val viewModel = metroViewModel<MigrateSourceViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     return TabContent(

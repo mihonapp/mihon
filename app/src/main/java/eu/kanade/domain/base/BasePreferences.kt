@@ -2,10 +2,15 @@ package eu.kanade.domain.base
 
 import android.content.Context
 import dev.icerock.moko.resources.StringResource
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.i18n.MR
 
+@Inject
+@SingleIn(AppScope::class)
 class BasePreferences(
     val context: Context,
     preferenceStore: PreferenceStore,
