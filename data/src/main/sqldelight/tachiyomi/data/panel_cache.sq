@@ -1,0 +1,25 @@
+CREATE TABLE panel_cache(
+    chapter_id INTEGER NOT NULL,
+    page_index INTEGER NOT NULL,
+    image_hash TEXT NOT NULL,
+    panels_json TEXT NOT NULL,
+    detected_at INTEGER NOT NULL,
+    PRIMARY KEY (chapter_id, page_index),
+    FOREIGN KEY(chapter_id) REFERENCES chapters (_id)
+    ON DELETE CASCADE
+);
+
+getPanels:
+SELECT image_hash, panels_json
+FROM panel_cache
+WHERE chapter_id = :chapterId AND page_index = :pageIndex;
+
+upsert:
+INSERT INTO panel_cache(chapter_id, page_index, image_hash, panels_json, detected_at)
+VALUES (:chapterId, :pageIndex, :imageHash, :panelsJson, :detectedAt)
+ON CONFLICT(chapter_id, page_index)
+DO UPDATE
+SET
+    image_hash = :imageHash,
+    panels_json = :panelsJson,
+    detected_at = :detectedAt;
