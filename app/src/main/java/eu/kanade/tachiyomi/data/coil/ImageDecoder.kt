@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.coil
 
-import android.util.Log
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.scale
 import ca.mpreg.imagedecoder.ImageDecoder
@@ -14,14 +13,16 @@ import coil3.decode.Decoder
 import coil3.decode.ImageSource
 import coil3.fetch.SourceFetchResult
 import coil3.request.Options
+import logcat.LogPriority
 import okio.BufferedSource
 import tachiyomi.core.common.util.system.ImageUtil
+import tachiyomi.core.common.util.system.logcat
 
 /**
  * A [Decoder] that uses [ImageDecoder] (libvips-based) to decode image formats not supported
  * by the Android system decoder (AVIF, JXL, HEIF, etc.).
  */
-class TachiyomiImageDecoder(private val resources: ImageSource, private val options: Options) : Decoder {
+class ImageDecoder(private val resources: ImageSource, private val options: Options) : Decoder {
 
     /**
      * Wraps a raw [ImageDecoder.DecodeResult] as a Coil [Image] for callers that want
@@ -40,7 +41,7 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
             try {
                 ImageDecoder.new(it.inputStream())
             } catch (e: ImageDecoder.DecodeException) {
-                Log.e("TachiyomiImageDecoder", "ImageDecoder.new failed: ${e.message}")
+                logcat(LogPriority.WARN, e) { "ImageDecoder.new failed: ${e.message}" }
                 null
             }
         }
@@ -99,7 +100,7 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
     class Factory : Decoder.Factory {
         override fun create(result: SourceFetchResult, options: Options, imageLoader: ImageLoader): Decoder? {
             return if (options.newDecoder || options.customDecoder || isApplicable(result.source.source())) {
-                TachiyomiImageDecoder(result.source, options)
+                ImageDecoder(result.source, options)
             } else {
                 null
             }
@@ -114,7 +115,7 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
                 ImageUtil.ImageType.JXL,
                 ImageUtil.ImageType.HEIF,
                 ImageUtil.ImageType.JP2,
-                -> true
+                    -> true
 
                 else -> false
             }
