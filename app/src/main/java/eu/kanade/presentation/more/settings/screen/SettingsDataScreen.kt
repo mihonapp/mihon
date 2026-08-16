@@ -44,6 +44,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.hippo.unifile.UniFile
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.data.CreateBackupScreen
+import eu.kanade.presentation.more.settings.screen.data.DuplicatesFinderScreen
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
 import eu.kanade.presentation.more.settings.screen.data.StorageInfo
 import eu.kanade.presentation.more.settings.widget.BasePreferenceWidget
@@ -107,6 +108,7 @@ object SettingsDataScreen : SearchableSettings {
 
             getBackupAndRestoreGroup(backupPreferences = backupPreferences),
             getDataGroup(),
+            getDuplicatesGroup(),
             getExportGroup(),
         )
     }
@@ -321,6 +323,21 @@ object SettingsDataScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = libraryPreferences.autoClearChapterCache,
                     title = stringResource(MR.strings.pref_auto_clear_chapter_cache),
+                ),
+            ),
+        )
+    }
+
+    @Composable
+    private fun getDuplicatesGroup(): Preference.PreferenceGroup {
+        val navigator = LocalNavigator.currentOrThrow
+        return Preference.PreferenceGroup(
+            title = stringResource(MR.strings.pref_duplicate_finder_title),
+            preferenceItems = listOf(
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.pref_duplicate_finder_title),
+                    subtitle = stringResource(MR.strings.pref_duplicate_finder_summary),
+                    onClick = { navigator.push(DuplicatesFinderScreen()) },
                 ),
             ),
         )
