@@ -4,7 +4,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
-import android.util.Log
 import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
@@ -52,6 +51,8 @@ import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
+import logcat.LogPriority
+import tachiyomi.core.common.util.system.logcat
 import java.util.concurrent.Executors
 import kotlin.math.abs
 import kotlin.math.min
@@ -170,14 +171,14 @@ open class WebGpuViewer(
                             is TransitionPage -> createTransitionPage(page)
                         }
                     } catch (e: Exception) {
-                        Log.e("WebGpuViewer", "Decode error: ${pageKey(page)}", e)
+                        logcat(LogPriority.ERROR, e) { "Decode error: ${pageKey(page)}" }
                         synchronized(lock) { if (pageInCache(page)) page.state = PageState.IDLE }
                     }
                 }
             } catch (_: InterruptedException) {
                 // Normal shutdown
             } catch (e: Exception) {
-                Log.e("WebGpuViewer", "Decode worker died", e)
+                logcat(LogPriority.ERROR, e) { "Decode worker died" }
             }
         }
     }
@@ -688,7 +689,7 @@ open class WebGpuViewer(
                     when (state) {
                         Page.State.Queue, Page.State.LoadPage, Page.State.DownloadImage -> true
                         is Page.State.Error -> {
-                            Log.e("WebGpuViewer", "Page load error: ${state.error}")
+                            logcat(LogPriority.ERROR) { "Page load error: ${state.error}" }
                             false
                         }
 
@@ -711,7 +712,7 @@ open class WebGpuViewer(
                     }
                 }
             } catch (e: Exception) {
-                Log.e("WebGpuViewer", "startPageLoad error", e)
+                logcat(LogPriority.ERROR, e) { "startPageLoad error" }
                 synchronized(lock) { if (pageInCache(page)) page.state = PageState.IDLE }
             }
         }
@@ -762,11 +763,60 @@ open class WebGpuViewer(
                     Image.Position.SINGLE
                 }
 
-                val dec = ImageDecoder.new(bytes?.inputStream() ?: input)
+                val dec = try {
+                    ImageDecoder.new(bytes?.inputStream() ?: input)
+                } catch (e: ImageDecoder.DecodeException) {
+                    logcat(LogPriority.ERROR, e) { "ImageDecoder.new failed: ${e.message}" }
+                    val errorMessage = e.message ?: "Failed to decode image"
+                    val bitmap = createBitmap(pager.state.width.coerceAtLeast(1), pager.state.height.coerceAtLeast(1))
+                    val canvas = Canvas(bitmap)
+                    canvas.drawColor(readerBackgroundColor())
+                    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                        color = readerOnBackgroundColor()
+                        textSize = 36f
+                        textAlign = Paint.Align.CENTER
+                    }
+                    val maxWidth = bitmap.width * 0.8f
+                    val words = errorMessage.split(" ")
+                    val lines = mutableListOf<String>()
+                    var currentLine = StringBuilder()
+                    for (word in words) {
+                        val testLine = if (currentLine.isEmpty()) word else "$currentLine $word"
+                        if (paint.measureText(testLine) <= maxWidth) {
+                            currentLine = StringBuilder(testLine)
+                        } else {
+                            if (currentLine.isNotEmpty()) lines.add(currentLine.toString())
+                            currentLine = StringBuilder(word)
+                        }
+                    }
+                    if (currentLine.isNotEmpty()) lines.add(currentLine.toString())
+                    val lineHeight = 40f
+                    var y = bitmap.height / 2f - lines.size * lineHeight / 2
+                    for (line in lines) {
+                        canvas.drawText(line, bitmap.width / 2f, y, paint)
+                        y += lineHeight
+                    }
+                    val errorPage = ImagePage(bitmap, createMipMaps = false).also {
+                        it.image?.position = Image.Position.SINGLE
+                    }
+                    synchronized(lock) {
+                        if (pageInCache(page) && !page.imagePage.isDecoded && !page.imagePage.destroyed) {
+                            val oldImagePage = page.imagePage
+                            page.imagePage = errorPage
+                            page.state = PageState.IDLE
+                            if (oldImagePage !is ImagePage.Dummy) oldImagePage.cleanup()
+                            pager.state.invalidate()
+                        } else {
+                            if (pageInCache(page)) page.state = PageState.IDLE
+                            errorPage.cleanup()
+                        }
+                    }
+                    return
+                }
                 val pageCount = dec.pages
 
                 if (pageCount == 0) {
-                    Log.e("WebGpuViewer", "decodeReaderPage: no frames decoded")
+                    logcat(LogPriority.ERROR) { "decodeReaderPage: no frames decoded" }
                     synchronized(lock) { if (pageInCache(page)) page.state = PageState.IDLE }
                     return
                 }
@@ -838,7 +888,7 @@ open class WebGpuViewer(
                 }
             }
         } catch (e: Exception) {
-            Log.e("WebGpuViewer", "decodeReaderPage error", e)
+            logcat(LogPriority.ERROR, e) { "decodeReaderPage error" }
             synchronized(lock) { if (pageInCache(page)) page.state = PageState.IDLE }
         } finally {
             imagePage?.cleanup()
@@ -921,7 +971,7 @@ open class WebGpuViewer(
                 }
             }
         } catch (e: Exception) {
-            Log.e("WebGpuViewer", "createTransitionPage error", e)
+            logcat(LogPriority.ERROR, e) { "createTransitionPage error" }
             synchronized(lock) { if (pageInCache(page)) page.state = PageState.IDLE }
         }
     }
