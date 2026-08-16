@@ -21,8 +21,9 @@ class GetExtensionsByType(
             extensionManager.untrustedExtensionsFlow,
             extensionManager.availableExtensionsFlow,
         ) { enabledLanguages, _installed, _untrusted, _available ->
+            // Installed extensions are always shown regardless of the NSFW preference; the
+            // toggle only controls discovery of new NSFW extensions (see `available` below).
             val (updates, installed) = _installed
-                .filter { (showNsfwSources || !it.isNsfw) }
                 .sortedWith(
                     compareBy<Extension.Installed> { !it.isObsolete }
                         .thenBy(String.CASE_INSENSITIVE_ORDER) { it.name },
