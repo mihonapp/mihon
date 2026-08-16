@@ -234,7 +234,6 @@
     <string name="information_webview_required">ತಚಿಯೋಮಿಗೆ ವೆಬ್‌ವೀಕ್ಷಣೆ ಅಗತ್ಯವಿದೆ</string>
     <string name="information_cloudflare_bypass_failure">ಕ್ಲೌಡ್‌ಫ್ಲೇರ್ ಅನ್ನು ಬೈಪಾಸ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ</string>
     <string name="update_check_notification_update_available">ಹೊಸ ಆವೃತ್ತಿ ಲಭ್ಯವಿದೆ!</string>
-    <string name="update_check_notification_download_in_progress">ಡೌನ್‌ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ…</string>
     <string name="update_check_no_new_updates">ಹೊಸ ನವೀಕರಣಗಳು ಲಭ್ಯವಿಲ್ಲ</string>
     <string name="update_check_confirm">ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
     <string name="file_select_backup">ಬ್ಯಾಕಪ್ ಫೈಲ್ ಆಯ್ಕೆಮಾಡಿ</string>

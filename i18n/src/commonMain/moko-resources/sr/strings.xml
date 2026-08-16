@@ -340,7 +340,6 @@
     <string name="information_webview_required">WebView је потребан како би апликација функционисала</string>
     <string name="information_cloudflare_bypass_failure">Неуспешно заобилажење Cloudflare-а</string>
     <string name="update_check_notification_update_available">Доступно је ново ажурирање!</string>
-    <string name="update_check_notification_download_in_progress">Преузимање…</string>
     <string name="update_check_no_new_updates">Нема нових ажурирања</string>
     <string name="update_check_confirm">Преузми</string>
     <string name="file_select_backup">Изаберите датотеку резервне копије</string>
@@ -546,7 +545,6 @@
     <string name="download_queue_size_warning">Упозорење: велики број преузимања може довести до успоравања извора и/или блокирања %s-а. Додирни да сазнаш више.</string>
     <string name="notification_size_warning">Велика ажурирања штете изворима и могу довести до споријег ажурирања и повећања потрошње батерије. Кликни да сазнаш више.</string>
     <string name="ext_update_all">Ажурирај све</string>
-    <string name="channel_app_updates">Ажурирања апликације</string>
     <string name="clear_database_source_item_count">Број наслова у бази података које нису у колекцији: %1$d</string>
     <string name="extension_api_error">Преузимање листе додатака није успело</string>
     <string name="pref_auto_clear_chapter_cache">Испразни кеш меморију поглавља током покретања апликације</string>

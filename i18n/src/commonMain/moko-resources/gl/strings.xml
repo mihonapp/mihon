@@ -604,7 +604,6 @@
     <string name="chapter_progress">Páxina: %1$d</string>
     <string name="error_saving_picture">Produciuse un erro ao gardar a imaxe</string>
     <string name="update_check_confirm">Descargar</string>
-    <string name="channel_app_updates">Actualizacións da aplicación</string>
     <string name="learn_more">Preme para saber máis</string>
     <string name="notification_cover_update_failed">Erro ao actualizar a portada</string>
     <string name="show_chapter_number">Número do capítulo</string>
@@ -638,7 +637,6 @@
     <string name="label_read_duration">Tempo de lectura</string>
     <string name="label_titles_in_global_update">Na actualización global</string>
     <string name="label_total_chapters">Totais</string>
-    <string name="update_check_notification_download_in_progress">Descargando…</string>
     <string name="information_empty_category_dialog">Aínda non tes categorías.</string>
     <string name="information_required_plain">*necesario</string>
     <string name="spen_previous_page">Páxina anterior</string>
@@ -792,10 +790,6 @@
     <string name="onboarding_permission_crashlytics_description">Envía rexistros de erros anónimos aos desenvolvedores.</string>
     <string name="onboarding_permission_crashlytics">Enviar rexistro de erros</string>
     <string name="non_library_settings">Todas as obras lidas</string>
-    <string name="pref_hardware_bitmap_threshold">Elixir un tamaño máximo co que decodificar imáxenes por hardware</string>
-    <string name="pref_hardware_bitmap_threshold_default">Por defecto (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Se o lector carga unha páxina en branco, recomendámoste reducilo pouco a pouco.\nLímite actual: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Afecta ao rendemento. Recomendámosche activalo só se a imaxe segue sen verse ao reducir o tamaño máximo</string>
     <string name="pref_download_new_unread_chapters_only">Omitir a descarga de capítulos duplicados xa lidos</string>
     <string name="ext_confirm_remove">Queres eliminar a extensión?</string>
     <string name="remove_private_extension_message">Seguro que queres eliminar a extensión \"%s\"?</string>
@@ -828,7 +822,6 @@
     <string name="action_edit_notes">Editar notas</string>
     <string name="pref_behavior">Comportamento</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">Ao obter capítulos novos</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Cargar imaxes de tira vertical co decodificador antigo</string>
     <string name="logging_in">Iniciando sesión…</string>
     <string name="export">Exportar</string>
     <string name="library_list">Lista da biblioteca</string>
