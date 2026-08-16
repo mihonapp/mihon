@@ -284,7 +284,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      */
     private fun scrollUp() {
         if (config.usePageTransitions) {
-            recycler.smoothScrollBy(0, -scrollDistance)
+            smoothScrollBy(-scrollDistance)
         } else {
             recycler.scrollBy(0, -scrollDistance)
         }
@@ -295,9 +295,22 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      */
     private fun scrollDown() {
         if (config.usePageTransitions) {
-            recycler.smoothScrollBy(0, scrollDistance)
+            smoothScrollBy(scrollDistance)
         } else {
             recycler.scrollBy(0, scrollDistance)
+        }
+    }
+
+    /**
+     * Smooth scrolls vertically by [distance], applying the selected page-transition animation. A
+     * null interpolator keeps RecyclerView's native smooth scroll (the Default animation).
+     */
+    private fun smoothScrollBy(distance: Int) {
+        val interpolator = config.transitionInterpolator
+        if (interpolator != null) {
+            recycler.smoothScrollBy(0, distance, interpolator, config.transitionDurationMs)
+        } else {
+            recycler.smoothScrollBy(0, distance)
         }
     }
 
