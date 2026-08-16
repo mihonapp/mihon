@@ -150,7 +150,6 @@
     <string name="file_select_backup">Selecionar ficheiro de cópia de segurança</string>
     <string name="update_check_confirm">Transferir</string>
     <string name="update_check_no_new_updates">Sem atualizações disponíveis</string>
-    <string name="update_check_notification_download_in_progress">A transferir…</string>
     <string name="update_check_notification_update_available">Nova versão disponível!</string>
     <string name="information_no_downloads">Sem transferências</string>
     <string name="information_no_recent">Sem atualizações recentes</string>
@@ -535,7 +534,6 @@
     <string name="pref_lowest">Mais baixa</string>
     <string name="pref_remove_exclude_categories">Categorias excluídas</string>
     <string name="label_background_activity">Atividade em segundo plano</string>
-    <string name="channel_app_updates">Atualizações da app</string>
     <string name="pref_inverted_colors">Invertido</string>
     <string name="backup_info">Deve manter cópias em outros locais também.</string>
     <string name="pref_tablet_ui_mode">Interface de tablet</string>
@@ -825,11 +823,6 @@
     <string name="pref_flash_duration">Duração do flash</string>
     <string name="pref_flash_page_interval">Flash a cada</string>
     <string name="pref_flash_with">Flash com</string>
-    <string name="pref_hardware_bitmap_threshold">Limite de bitmap de hardware personalizado</string>
-    <string name="pref_hardware_bitmap_threshold_default">Padrão (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Se o leitor carregar uma imagem em branco, reduza o limite incrementalmente.\nSelecionado: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Use o decodificador legado para leitor de tira longa</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Afeta o desempenho. Ative somente se a redução do limite de bitmap não corrigir problemas de imagem em branco</string>
     <string name="storage_failed_to_create_download_directory">Falha ao criar diretório de descargas</string>
     <string name="storage_failed_to_create_directory">Falha ao criar diretório: %s</string>
     <string name="pref_download_concurrent_sources">Descarga simultânea de fontes</string>

@@ -357,7 +357,6 @@
     <string name="label_data">डेटा</string>
     <string name="cache_delete_error">खाली गर्दा त्रुटि भयो</string>
     <string name="status">स्थिति</string>
-    <string name="update_check_notification_download_in_progress">डाउनलोड गर्दै…</string>
     <string name="download_notifier_unknown_error">अप्रत्याशित त्रुटिका कारण अध्याय डाउनलोड गर्न सकिएन</string>
     <string name="notification_chapters_single">अध्याय %1$s</string>
     <string name="scale_type_original_size">मूल आकार</string>
@@ -545,7 +544,6 @@
     <string name="spen_next_page">अर्को पृष्ठ</string>
     <string name="channel_progress">प्रगति</string>
     <string name="channel_complete">पूरा</string>
-    <string name="channel_app_updates">एप अपडेट्स</string>
     <string name="channel_errors">त्रुटिहरू</string>
     <string name="skipped_reason_not_started">कुनै अध्याय नपढेकाले छोडियो</string>
     <string name="notification_size_warning">ठूला अपडेटले स्रोतहरूलाई हानि पुर्‍याउँछ र यसले ढिलो अपडेट्स निम्त्याउन सक्छ र ब्याट्रीको प्रयोग पनि बढाउँछ। थप जान्न ट्याप गर्नुहोस्।</string>
@@ -806,13 +804,8 @@
     <string name="remove_private_extension_message">के तपाई साँच्चै \"%s\" एक्सटेन्शन हटाउन चाहनुहुन्छ?</string>
     <string name="pref_auto_update_manga_on_mark_read">पढिएको भनी चिन्ह लगाउँदा प्रगति अपडेट गर्नुहोस्</string>
     <string name="trackers_updated_summary">ट्र्याकरहरू अध्याय %d मा अपडेट गरियो</string>
-    <string name="pref_hardware_bitmap_threshold_default">पूर्वनिर्धारित (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">यदि पाठकले खाली छवि लोड गर्छ भने क्रमशः threshold घटाउनुहोस्।\nचयन गरिएको: %s</string>
-    <string name="pref_hardware_bitmap_threshold">Custom hardware bitmap threshold</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">कार्यसम्पादनमा असर गर्छ। Bitmap threshold घटाउँदा खाली छवि समस्याहरू समाधान गर्दैन भने मात्र सक्षम गर्नुहोस्</string>
     <string name="pref_incognito_mode_extension_summary">एक्सटेन्शनमा पढिएको इतिहास रोक्नुहोस्</string>
     <string name="label_auto">अटो</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">लामो स्ट्रिप रिडरको लागि लिगेसी डिकोडर प्रयोग गर्नुहोस्</string>
     <string name="pref_mark_duplicate_read_chapter_read">पढिएको अध्यायको डुप्लिकेटलाई पढिएको रूपमा चिन्ह लगाउनुहोस्</string>
     <string name="theme_monochrome">मोनोक्रोम</string>
     <string name="action_toggle_private_on">निजी रूपमा ट्र्याक गर्नुहोस्</string>

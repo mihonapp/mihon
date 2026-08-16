@@ -240,7 +240,6 @@
     <string name="file_select_backup">バックアップファイルを選択</string>
     <string name="update_check_confirm">ダウンロード</string>
     <string name="update_check_no_new_updates">新しいバージョンがありません</string>
-    <string name="update_check_notification_download_in_progress">ダウンロード中…</string>
     <string name="update_check_notification_update_available">新しいバージョンがリリースされました！</string>
     <string name="information_no_downloads">ダウンロードがありません</string>
     <string name="information_no_recent">最近の更新はありません</string>
@@ -539,7 +538,6 @@
     <string name="update_72hour">3 日ごと</string>
     <string name="connected_to_wifi">Wi-Fi 接続時のみ</string>
     <string name="ext_update_all">すべて更新</string>
-    <string name="channel_app_updates">アプリ更新</string>
     <string name="clear_database_source_item_count">データベース内に %1$d 件のライブラリにない項目があります</string>
     <string name="pref_auto_clear_chapter_cache">アプリ起動時に章のキャッシュを消去</string>
     <string name="database_clean">消去できるものはありませんでした</string>
@@ -801,10 +799,6 @@
     <string name="ext_confirm_remove">拡張機能を削除しますか?</string>
     <string name="remove_private_extension_message">拡張機能「%s」を削除してもよろしいですか？</string>
     <string name="confirm_tracker_update">トラッカーを章 %d に更新しますか？</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">パフォーマンスに影響します。ビットマップのしきい値を下げても空白画像の問題が解決しない場合にのみ有効にしてください</string>
-    <string name="pref_hardware_bitmap_threshold_default">デフォルト (%d)</string>
-    <string name="pref_hardware_bitmap_threshold">カスタムハードウェアビットマップのしきい値</string>
-    <string name="pref_hardware_bitmap_threshold_summary">リーダが空の画像を読み込んだ場合は、しきい値を徐々に下げてください。\n選択されました: %s</string>
     <string name="library_exported">ライブラリをエクスポートしました</string>
     <string name="action_notes">ノート</string>
     <string name="action_edit_notes">ノートを編集</string>
@@ -831,7 +825,6 @@
     <string name="theme_monochrome">モノクロ</string>
     <string name="pref_display_images_description">マンガの描写で画像をレンダリングする</string>
     <string name="pref_hide_missing_chapter_indicators">欠落している章のインジケーターを非表示にする</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">レガシーデコーダーを長尺ストリップリーダーに使用する</string>
     <string name="library_list">ライブラリリスト</string>
     <string name="pref_disallow_non_ascii_filenames">非 ASCII ファイル名を許可しない</string>
     <string name="pref_disallow_non_ascii_filenames_details">Unicode をサポートしていない特定のストレージメディアとの互換性を確保します。この機能を有効にすると、ソースフォルダーと漫画フォルダーの名前を手動で変更する必要があります。変更するには、非 ASCII 文字を小文字の UTF-8 16 進数表現に置き換えてください。章ファイルの名前を変更する必要はありません。</string>

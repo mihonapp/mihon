@@ -579,14 +579,12 @@
     <string name="download_notifier_unknown_error">Белгісіз қателіктің кесірінен тарау жүктеп алынбады</string>
     <string name="download_notifier_split_page_path_not_found">Бет файлының жолы %d табылмады</string>
     <string name="channel_new_chapters">Тарау жаңартулары</string>
-    <string name="channel_app_updates">Қолданба жаңартулары</string>
     <string name="channel_ext_updates">Кеңейту жаңартулары</string>
     <string name="spen_previous_page">Алдыңғы бет</string>
     <string name="spen_next_page">Келесі бет</string>
     <string name="appwidget_updates_description">Жақында кітапханада жаңартылған жазбаларды қарау</string>
     <string name="remove_manga">\"%s\"ті кітапханадан жойғай тұрсыз</string>
     <string name="skipped_reason_not_always_update">Туындыға жаңарту керек жоқ болғандықтан өткізіп жіберіледі</string>
-    <string name="update_check_notification_download_in_progress">Жүктелуде…</string>
     <string name="channel_errors">Қателіктер</string>
     <string name="unfinished_list">Аяқталмағандар Тізімі</string>
     <string name="score">Бағалау</string>
