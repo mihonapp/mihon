@@ -26,15 +26,29 @@ import tachiyomi.core.common.util.lang.withIOContext
 import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
 
+data class ShikimoriConfig(
+    val baseUrl: String,
+    val clientId: String,
+    val clientSecret: String,
+)
+
 class ShikimoriApi(
     private val trackId: Long,
     private val client: OkHttpClient,
     interceptor: ShikimoriInterceptor,
+    config: ShikimoriConfig,
 ) {
 
     private val json: Json by injectLazy()
 
     private val authClient = client.newBuilder().addInterceptor(interceptor).build()
+
+    private val apiUrl = "${config.baseUrl}/api"
+    private val graphqlApiUrl = "$apiUrl/graphql"
+    private val oauthUrl = "${config.baseUrl}/oauth/token"
+    private val loginUrl = "${config.baseUrl}/oauth/authorize"
+    private val clientId = config.clientId
+    private val clientSecret = config.clientSecret
 
     suspend fun addLibManga(track: Track, userId: String): Track {
         return withIOContext {
@@ -51,7 +65,7 @@ class ShikimoriApi(
                 }
                 authClient.newCall(
                     POST(
-                        "$API_URL/v2/user_rates",
+                        "$apiUrl/v2/user_rates",
                         body = payload.toString().toRequestBody(jsonMime),
                     ),
                 ).awaitSuccess()
@@ -70,7 +84,7 @@ class ShikimoriApi(
     suspend fun deleteLibManga(track: DomainTrack) {
         withIOContext {
             authClient
-                .newCall(DELETE("$API_URL/v2/user_rates/${track.libraryId}"))
+                .newCall(DELETE("$apiUrl/v2/user_rates/${track.libraryId}"))
                 .awaitSuccess()
         }
     }
@@ -112,7 +126,7 @@ class ShikimoriApi(
             with(json) {
                 authClient.newCall(
                     POST(
-                        GRAPHQL_API_URL,
+                        graphqlApiUrl,
                         body = payload.toString().toRequestBody(jsonMime),
                     ),
                 )
@@ -162,7 +176,7 @@ class ShikimoriApi(
             with(json) {
                 authClient.newCall(
                     POST(
-                        GRAPHQL_API_URL,
+                        graphqlApiUrl,
                         body = payload.toString().toRequestBody(jsonMime),
                     ),
                 )
@@ -203,7 +217,7 @@ class ShikimoriApi(
             with(json) {
                 val listResult = authClient.newCall(
                     POST(
-                        GRAPHQL_API_URL,
+                        graphqlApiUrl,
                         body = payload.toString().toRequestBody(jsonMime),
                     ),
                 )
@@ -238,7 +252,7 @@ class ShikimoriApi(
             }
             authClient.newCall(
                 POST(
-                    GRAPHQL_API_URL,
+                    graphqlApiUrl,
                     body = payload.toString().toRequestBody(jsonMime),
                 ),
             )
@@ -259,40 +273,33 @@ class ShikimoriApi(
     }
 
     private fun accessTokenRequest(code: String) = POST(
-        OAUTH_URL,
+        oauthUrl,
         body = FormBody.Builder()
             .add("grant_type", "authorization_code")
-            .add("client_id", CLIENT_ID)
-            .add("client_secret", CLIENT_SECRET)
+            .add("client_id", clientId)
+            .add("client_secret", clientSecret)
             .add("code", code)
             .add("redirect_uri", REDIRECT_URL)
             .build(),
     )
 
+    fun authUrl(): Uri = loginUrl.toUri().buildUpon()
+        .appendQueryParameter("client_id", clientId)
+        .appendQueryParameter("redirect_uri", REDIRECT_URL)
+        .appendQueryParameter("response_type", "code")
+        .build()
+
     companion object {
-        private const val BASE_URL = "https://shikimori.io"
-        private const val API_URL = "$BASE_URL/api"
-        private const val GRAPHQL_API_URL = "$BASE_URL/api/graphql"
-        private const val OAUTH_URL = "$BASE_URL/oauth/token"
-        private const val LOGIN_URL = "$BASE_URL/oauth/authorize"
+        const val DEFAULT_BASE_URL = "https://shikimori.io"
 
         private const val REDIRECT_URL = "mihon://shikimori-auth"
 
-        private const val CLIENT_ID = "PB9dq8DzI405s7wdtwTdirYqHiyVMh--djnP7lBUqSA"
-        private const val CLIENT_SECRET = "NajpZcOBKB9sJtgNcejf8OB9jBN1OYYoo-k4h2WWZus"
-
-        fun authUrl(): Uri = LOGIN_URL.toUri().buildUpon()
-            .appendQueryParameter("client_id", CLIENT_ID)
-            .appendQueryParameter("redirect_uri", REDIRECT_URL)
-            .appendQueryParameter("response_type", "code")
-            .build()
-
-        fun refreshTokenRequest(token: String) = POST(
-            OAUTH_URL,
+        fun refreshTokenRequest(config: ShikimoriConfig, token: String) = POST(
+            "${config.baseUrl}/oauth/token",
             body = FormBody.Builder()
                 .add("grant_type", "refresh_token")
-                .add("client_id", CLIENT_ID)
-                .add("client_secret", CLIENT_SECRET)
+                .add("client_id", config.clientId)
+                .add("client_secret", config.clientSecret)
                 .add("refresh_token", token)
                 .build(),
         )

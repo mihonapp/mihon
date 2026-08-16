@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.data.track.shikimori
 
+import android.net.Uri
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
@@ -30,9 +31,19 @@ class Shikimori(id: Long) : BaseTracker(id, "Shikimori"), DeletableTracker {
 
     private val json: Json by injectLazy()
 
-    private val interceptor by lazy { ShikimoriInterceptor(this) }
+    private val config by lazy {
+        ShikimoriConfig(
+            baseUrl = trackPreferences.shikimoriBaseUrl.get().ifBlank { ShikimoriApi.DEFAULT_BASE_URL },
+            clientId = trackPreferences.shikimoriClientId.get(),
+            clientSecret = trackPreferences.shikimoriClientSecret.get(),
+        )
+    }
 
-    private val api by lazy { ShikimoriApi(id, client, interceptor) }
+    private val interceptor by lazy { ShikimoriInterceptor(this, config) }
+
+    private val api by lazy { ShikimoriApi(id, client, interceptor, config) }
+
+    fun authUrl(): Uri = api.authUrl()
 
     override fun getScoreList(): List<String> = SCORE_LIST
 

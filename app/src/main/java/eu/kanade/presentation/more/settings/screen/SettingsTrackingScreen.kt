@@ -1,6 +1,7 @@
 package eu.kanade.presentation.more.settings.screen
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -52,7 +53,6 @@ import eu.kanade.tachiyomi.data.track.bangumi.BangumiApi
 import eu.kanade.tachiyomi.data.track.hikka.HikkaApi
 import eu.kanade.tachiyomi.data.track.mangabaka.MangaBakaApi
 import eu.kanade.tachiyomi.data.track.myanimelist.MyAnimeListApi
-import eu.kanade.tachiyomi.data.track.shikimori.ShikimoriApi
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import mihon.app.di.appGraph
@@ -61,6 +61,7 @@ import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
+import tachiyomi.presentation.core.util.collectAsState
 
 object SettingsTrackingScreen : SearchableSettings {
 
@@ -103,6 +104,15 @@ object SettingsTrackingScreen : SearchableSettings {
                     )
                 }
             }
+        }
+
+        val shikimoriBaseUrl by trackPreferences.shikimoriBaseUrl.collectAsState()
+        val shikimoriClientId by trackPreferences.shikimoriClientId.collectAsState()
+        val shikimoriClientSecret by trackPreferences.shikimoriClientSecret.collectAsState()
+        val shikimoriConfigChanged = remember(shikimoriBaseUrl, shikimoriClientId, shikimoriClientSecret) {
+            shikimoriBaseUrl != trackPreferences.shikimoriBaseUrl.defaultValue() ||
+                shikimoriClientId != trackPreferences.shikimoriClientId.defaultValue() ||
+                shikimoriClientSecret != trackPreferences.shikimoriClientSecret.defaultValue()
         }
 
         val enhancedTrackers = trackerManager.trackers
@@ -161,7 +171,12 @@ object SettingsTrackingScreen : SearchableSettings {
                     ),
                     Preference.PreferenceItem.TrackerPreference(
                         tracker = trackerManager.shikimori,
-                        login = { context.openInBrowser(ShikimoriApi.authUrl(), forceDefaultBrowser = true) },
+                        login = {
+                            context.openInBrowser(
+                                trackerManager.shikimori.authUrl(),
+                                forceDefaultBrowser = true,
+                            )
+                        },
                         logout = { dialog = LogoutDialog(trackerManager.shikimori) },
                     ),
                     Preference.PreferenceItem.TrackerPreference(
@@ -175,6 +190,72 @@ object SettingsTrackingScreen : SearchableSettings {
                         logout = { dialog = LogoutDialog(trackerManager.hikka) },
                     ),
                     Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.tracking_info)),
+                ),
+            ),
+            Preference.PreferenceGroup(
+                title = stringResource(MR.strings.pref_category_shikimori),
+                preferenceItems = listOf(
+                    Preference.PreferenceItem.EditTextPreference(
+                        preference = trackPreferences.shikimoriBaseUrl,
+                        title = stringResource(MR.strings.pref_shikimori_base_url),
+                        subtitle = stringResource(MR.strings.pref_shikimori_base_url_summary),
+                        onValueChanged = {
+                            val uri = runCatching { Uri.parse(it) }.getOrNull()
+                            val valid = !it.isBlank() &&
+                                uri != null &&
+                                (uri.scheme == "http" || uri.scheme == "https") &&
+                                !uri.host.isNullOrBlank()
+                            if (valid) {
+                                context.toast(MR.strings.pref_shikimori_config_changed)
+                                trackerManager.shikimori.logout()
+                                true
+                            } else {
+                                context.toast(MR.strings.error_shikimori_base_url_invalid)
+                                false
+                            }
+                        },
+                    ),
+                    Preference.PreferenceItem.EditTextPreference(
+                        preference = trackPreferences.shikimoriClientId,
+                        title = stringResource(MR.strings.pref_shikimori_client_id),
+                        subtitle = stringResource(MR.strings.pref_shikimori_client_id_summary),
+                        onValueChanged = {
+                            if (it.isBlank()) {
+                                context.toast(MR.strings.error_shikimori_config_blank)
+                                false
+                            } else {
+                                context.toast(MR.strings.pref_shikimori_config_changed)
+                                trackerManager.shikimori.logout()
+                                true
+                            }
+                        },
+                    ),
+                    Preference.PreferenceItem.EditTextPreference(
+                        preference = trackPreferences.shikimoriClientSecret,
+                        title = stringResource(MR.strings.pref_shikimori_client_secret),
+                        subtitle = stringResource(MR.strings.pref_shikimori_client_secret_summary),
+                        onValueChanged = {
+                            if (it.isBlank()) {
+                                context.toast(MR.strings.error_shikimori_config_blank)
+                                false
+                            } else {
+                                context.toast(MR.strings.pref_shikimori_config_changed)
+                                trackerManager.shikimori.logout()
+                                true
+                            }
+                        },
+                    ),
+                    Preference.PreferenceItem.TextPreference(
+                        title = stringResource(MR.strings.pref_reset_shikimori_config),
+                        enabled = shikimoriConfigChanged,
+                        onClick = {
+                            trackPreferences.shikimoriBaseUrl.delete()
+                            trackPreferences.shikimoriClientId.delete()
+                            trackPreferences.shikimoriClientSecret.delete()
+                            trackerManager.shikimori.logout()
+                            context.toast(MR.strings.pref_shikimori_config_reset)
+                        },
+                    ),
                 ),
             ),
             Preference.PreferenceGroup(
