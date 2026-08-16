@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.L2RPagerViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.PanelByPanelViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.VerticalPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuViewer
@@ -57,6 +58,13 @@ enum class ReadingMode(
         Direction.Vertical,
         ViewerType.Webtoon,
     ),
+    PANEL_BY_PANEL(
+        MR.strings.panel_by_panel_viewer,
+        R.drawable.ic_reader_panel_by_panel_24dp,
+        0x00000006,
+        Direction.Horizontal,
+        ViewerType.Pager,
+    ),
     ;
 
     companion object {
@@ -77,6 +85,9 @@ enum class ReadingMode(
                     VERTICAL -> WebGpuViewer(activity, isReversed = false, isVertical = true)
                     WEBTOON -> WebGpuViewerContinuous(activity)
                     CONTINUOUS_VERTICAL -> WebGpuViewerContinuous(activity)
+                    // Panel-by-panel always uses the SubsamplingScaleImageView-based pager,
+                    // regardless of the high-quality (WebGpu) renderer setting.
+                    PANEL_BY_PANEL -> PanelByPanelViewer(activity)
                     DEFAULT -> throw IllegalStateException("Preference value must be resolved: $preference")
                 }
             }
@@ -86,6 +97,7 @@ enum class ReadingMode(
                 VERTICAL -> VerticalPagerViewer(activity)
                 WEBTOON -> WebtoonViewer(activity)
                 CONTINUOUS_VERTICAL -> WebtoonViewer(activity, isContinuous = false)
+                PANEL_BY_PANEL -> PanelByPanelViewer(activity)
                 DEFAULT -> throw IllegalStateException("Preference value must be resolved: $preference")
             }
         }
