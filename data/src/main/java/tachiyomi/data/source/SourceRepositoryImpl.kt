@@ -1,5 +1,9 @@
 package tachiyomi.data.source
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -8,6 +12,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import tachiyomi.data.Database
 import tachiyomi.data.subscribeToList
+import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.source.model.SourceWithCount
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.domain.source.repository.SourcePagingSource
@@ -15,9 +20,13 @@ import tachiyomi.domain.source.repository.SourceRepository
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.source.model.Source as DomainSource
 
+@Inject
+@SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class)
 class SourceRepositoryImpl(
     private val sourceManager: SourceManager,
     private val database: Database,
+    private val networkToLocalManga: NetworkToLocalManga,
 ) : SourceRepository {
 
     override fun getSources(): Flow<List<DomainSource>> {
@@ -76,15 +85,15 @@ class SourceRepositoryImpl(
         query: String,
         filterList: FilterList,
     ): SourcePagingSource {
-        return SourceSearchPagingSource(sourceManager.getOrStub(sourceId), query, filterList)
+        return SourceSearchPagingSource(sourceManager.getOrStub(sourceId), query, filterList, networkToLocalManga)
     }
 
     override fun getPopular(sourceId: Long): SourcePagingSource {
-        return SourcePopularPagingSource(sourceManager.getOrStub(sourceId))
+        return SourcePopularPagingSource(sourceManager.getOrStub(sourceId), networkToLocalManga)
     }
 
     override fun getLatest(sourceId: Long): SourcePagingSource {
-        return SourceLatestPagingSource(sourceManager.getOrStub(sourceId))
+        return SourceLatestPagingSource(sourceManager.getOrStub(sourceId), networkToLocalManga)
     }
 
     private fun mapSourceToDomainSource(source: Source): DomainSource = DomainSource(

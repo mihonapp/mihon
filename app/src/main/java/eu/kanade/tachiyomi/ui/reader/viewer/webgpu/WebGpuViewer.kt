@@ -52,6 +52,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import logcat.LogPriority
+import mihon.app.di.appGraph
 import tachiyomi.core.common.util.system.logcat
 import java.util.concurrent.Executors
 import kotlin.math.abs
@@ -65,6 +66,8 @@ open class WebGpuViewer(
 ) : Viewer {
 
     open val isContinuous: Boolean = false
+
+    val readerPreferences by lazy { activity.appGraph.readerPreferences }
 
     private fun readerBackgroundColor(): Int = activity.baseContext.readerBackgroundColor(config.theme)
 
@@ -186,7 +189,7 @@ open class WebGpuViewer(
     /**
      * Configuration used by the pager, like allow taps, scale mode on images, page transitions...
      */
-    val config = WebGpuConfig(this, scope)
+    val config = WebGpuConfig(this, scope, readerPreferences)
 
     var viewerChapters: ViewerChapters? = null
 

@@ -1,13 +1,16 @@
 package eu.kanade.tachiyomi.ui.browse.extension.details
 
-import android.app.Application
 import android.content.Context
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import eu.kanade.domain.extension.interactor.ExtensionSourceItem
 import eu.kanade.domain.extension.interactor.GetExtensionSources
 import eu.kanade.domain.source.interactor.ToggleIncognito
@@ -32,32 +35,25 @@ import kotlinx.coroutines.flow.stateIn
 import logcat.LogPriority
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import tachiyomi.core.common.util.system.logcat
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import kotlin.time.Duration.Companion.seconds
 
+@AssistedInject
 class ExtensionDetailsViewModel(
-    pkgName: String,
+    @Assisted pkgName: String,
     private val context: Context,
-    private val network: NetworkHelper = Injekt.get(),
-    private val extensionManager: ExtensionManager = Injekt.get(),
-    private val getExtensionSources: GetExtensionSources = Injekt.get(),
-    private val toggleSource: ToggleSource = Injekt.get(),
-    private val toggleIncognito: ToggleIncognito = Injekt.get(),
-    private val preferences: SourcePreferences = Injekt.get(),
+    private val network: NetworkHelper,
+    private val extensionManager: ExtensionManager,
+    private val getExtensionSources: GetExtensionSources,
+    private val toggleSource: ToggleSource,
+    private val toggleIncognito: ToggleIncognito,
+    private val preferences: SourcePreferences,
 ) : ViewModel() {
 
-    companion object {
-        val PKG_NAME_KEY = CreationExtras.Key<String>()
-
-        val Factory = viewModelFactory {
-            initializer {
-                ExtensionDetailsViewModel(
-                    pkgName = get(PKG_NAME_KEY)!!,
-                    context = Injekt.get<Application>(),
-                )
-            }
-        }
+    @AssistedFactory
+    @ManualViewModelAssistedFactoryKey
+    @ContributesIntoMap(AppScope::class)
+    interface Factory : ManualViewModelAssistedFactory {
+        fun create(pkgName: String): ExtensionDetailsViewModel
     }
 
     val state: StateFlow<State> = extensionManager.installedExtensionsFlow
