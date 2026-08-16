@@ -21,11 +21,12 @@ class PanelBoundaryDetectorTest {
 
     @Test
     fun `two blocks separated by a wide gutter detect as two panels`() {
-        // 30x20 page: a 10x10 black block on the left, a 10x10 black block on the right,
-        // separated by a 10px-wide white gutter down the middle.
-        val page = buffer(30, 20) { x, y ->
-            val inLeftBlock = x in 0..9 && y in 0..19
-            val inRightBlock = x in 20..29 && y in 0..19
+        // 36x26 page with a 3px background margin: a 10x20 black block on the left, a
+        // 10x20 black block on the right, separated by a 10px-wide white gutter down the
+        // middle, none of the blocks touching the buffer edge.
+        val page = buffer(36, 26) { x, y ->
+            val inLeftBlock = x in 3..12 && y in 3..22
+            val inRightBlock = x in 23..32 && y in 3..22
             if (inLeftBlock || inRightBlock) black else white
         }
 
@@ -54,11 +55,12 @@ class PanelBoundaryDetectorTest {
 
     @Test
     fun `blocks joined by a thick bridge stay merged as one panel`() {
-        // Two 10x10 blocks joined by a bridge that is 4px tall, thick enough to survive erosion.
-        val page = buffer(30, 20) { x, y ->
-            val inLeftBlock = x in 0..9 && y in 0..19
-            val inRightBlock = x in 20..29 && y in 0..19
-            val inBridge = x in 10..19 && y in 8..11
+        // Same two blocks as above, joined by a bridge that is 4px tall, thick enough to
+        // survive erosion.
+        val page = buffer(36, 26) { x, y ->
+            val inLeftBlock = x in 3..12 && y in 3..22
+            val inRightBlock = x in 23..32 && y in 3..22
+            val inBridge = x in 13..22 && y in 11..14
             if (inLeftBlock || inRightBlock || inBridge) black else white
         }
 
@@ -69,12 +71,12 @@ class PanelBoundaryDetectorTest {
 
     @Test
     fun `blocks joined only by a 1px border line separate into two panels`() {
-        // Two 10x10 blocks joined by a single 1px-tall line (simulates a shared drawn border
-        // with no real gutter), surrounded by white above and below the line.
-        val page = buffer(30, 20) { x, y ->
-            val inLeftBlock = x in 0..9 && y in 0..19
-            val inRightBlock = x in 20..29 && y in 0..19
-            val inThinBridge = x in 10..19 && y == 9
+        // Same two blocks, joined by a single 1px-tall line (simulates a shared drawn
+        // border with no real gutter), surrounded by background above and below the line.
+        val page = buffer(36, 26) { x, y ->
+            val inLeftBlock = x in 3..12 && y in 3..22
+            val inRightBlock = x in 23..32 && y in 3..22
+            val inThinBridge = x in 13..22 && y == 12
             if (inLeftBlock || inRightBlock || inThinBridge) black else white
         }
 

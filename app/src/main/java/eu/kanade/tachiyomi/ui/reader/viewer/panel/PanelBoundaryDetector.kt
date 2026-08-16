@@ -46,7 +46,8 @@ object PanelBoundaryDetector {
             samples += buffer.luminanceAt(0, y)
             samples += buffer.luminanceAt(buffer.width - 1, y)
         }
-        return samples.maxOrNull() ?: 0
+        samples.sort()
+        return samples[samples.size / 2]
     }
 
     private fun erode(mask: BooleanArray, width: Int, height: Int): BooleanArray {
