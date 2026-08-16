@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.history
 
 import android.content.Context
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
@@ -125,6 +126,10 @@ data object HistoryTab : Tab {
                 )
             }
             null -> {}
+        }
+
+        BackHandler(enabled = state.searchQuery != null) {
+            screenModel.updateSearchQuery(null)
         }
 
         LaunchedEffect(state.list) {
