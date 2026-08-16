@@ -1,8 +1,8 @@
 package eu.kanade.tachiyomi.data.coil
 
-import android.graphics.Bitmap
 import android.util.Log
 import androidx.core.graphics.createBitmap
+import androidx.core.graphics.scale
 import ca.mpreg.imagedecoder.ImageDecoder
 import coil3.Canvas
 import coil3.Image
@@ -16,7 +16,6 @@ import coil3.fetch.SourceFetchResult
 import coil3.request.Options
 import okio.BufferedSource
 import tachiyomi.core.common.util.system.ImageUtil
-import androidx.core.graphics.scale
 
 /**
  * A [Decoder] that uses [ImageDecoder] (libvips-based) to decode image formats not supported
@@ -111,7 +110,12 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
                 ImageUtil.findImageType(it)
             }
             return when (type) {
-                ImageUtil.ImageType.AVIF, ImageUtil.ImageType.JXL, ImageUtil.ImageType.HEIF, ImageUtil.ImageType.JP2 -> true
+                ImageUtil.ImageType.AVIF,
+                ImageUtil.ImageType.JXL,
+                ImageUtil.ImageType.HEIF,
+                ImageUtil.ImageType.JP2,
+                -> true
+
                 else -> false
             }
         }
