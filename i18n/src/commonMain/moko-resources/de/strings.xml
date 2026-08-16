@@ -205,7 +205,6 @@
     <string name="file_select_backup">Wähle eine Sicherungsdatei</string>
     <string name="update_check_confirm">Herunterladen</string>
     <string name="update_check_no_new_updates">Kein neues Update verfügbar</string>
-    <string name="update_check_notification_download_in_progress">Herunterladen…</string>
     <string name="update_check_notification_update_available">Neue Version verfügbar!</string>
     <string name="information_no_downloads">Keine Downloads</string>
     <string name="information_no_recent">Keine neuen Kapitel</string>
@@ -541,7 +540,6 @@
     <string name="update_72hour">Alle 3 Tage</string>
     <string name="download_queue_size_warning">Achtung: Große Downloads könnten dazu führen, dass Quellen langsamer werden und/oder %s blockieren. Tippe um mehr zu erfahren.</string>
     <string name="ext_update_all">Alle aktualisieren</string>
-    <string name="channel_app_updates">App-Updates</string>
     <string name="pref_auto_clear_chapter_cache">Kapitel-Zwischenspeicher beim Öffnen der App löschen</string>
     <string name="clear_database_source_item_count">%1$d Nicht-Bibliothekseinträge in der Datenbank</string>
     <string name="database_clean">Nichts zu bereinigen</string>
@@ -808,10 +806,6 @@
     <string name="non_library_settings">Alle gelesenen Einträge</string>
     <string name="pref_auto_update_manga_on_mark_read">Fortschritt aktualisieren, wenn als gelesen markiert wird</string>
     <string name="trackers_updated_summary">Tracker auf Kapitel %d aktualisiert</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Reduziert stufenweise den Grenzwert, wenn der Leser nur ein leeres Bild lädt.\nAusgewählt: %s</string>
-    <string name="pref_hardware_bitmap_threshold">Benutzerdefinierter Hardware-Bitmap-Grenzwert</string>
-    <string name="pref_hardware_bitmap_threshold_default">Standard (%d)</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Beeinflusst die Leistung. Nur aktivieren, wenn das Reduzieren des Bitmap-Grenzwerts das Problem von leeren Bildern nicht behebt</string>
     <string name="pref_incognito_mode_extension_summary">Leseverlauf für eine Erweiterung pausieren</string>
     <string name="label_auto">Automatisch</string>
     <string name="theme_monochrome">Monochrom</string>
@@ -823,7 +817,6 @@
     <string name="author">Autor</string>
     <string name="export">Exportieren</string>
     <string name="artist">Illustrator</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Legacy-Decoder für Langer-Streifen-Leser verwenden</string>
     <string name="pref_mark_duplicate_read_chapter_read">Doppeltes gelesenes Kapitel als gelesen markieren</string>
     <string name="action_display_unread_badge">Ungelesene Kapitel</string>
     <string name="pref_behavior">Verhalten</string>

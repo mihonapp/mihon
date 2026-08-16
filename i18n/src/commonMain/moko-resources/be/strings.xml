@@ -443,11 +443,6 @@
     <string name="pref_flash_style_black">Чорным</string>
     <string name="pref_flash_style_white">Белым</string>
     <string name="pref_flash_style_white_black">Белым і чорным</string>
-    <string name="pref_hardware_bitmap_threshold">Уласная мяжа апаратнага растравання</string>
-    <string name="pref_hardware_bitmap_threshold_default">Па змаўчанні (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Калі чытанка загружае пустую выяву, паступова змяншаць парог.\nВыбрана: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Выкарыстоўваць састарэлы дэкодэр у чытанцы рулонаў</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Уплывае на прадукцыйнасць. Уключайце толькі калі памяншэнне парога растра не вырашае праблему з пустымі выявамі</string>
     <string name="pref_display_profile">Уласны профіль адлюстравання</string>
     <string name="pref_skip_dupe_chapters">Пропускаць дубляваныя раздзелы</string>
     <string name="disabled_nav">Адключана</string>
@@ -812,7 +807,6 @@
     <string name="update_check_open">Адкрыць на GitHub</string>
     <string name="update_check_eol">Гэтая версія Android больш не падтрымліваецца</string>
     <string name="update_check_no_new_updates">Няма новых абнаўленняў</string>
-    <string name="update_check_notification_download_in_progress">Спампоўванне…</string>
     <string name="update_check_notification_update_available">Даступная новая версія!</string>
     <string name="information_no_manga_category">Катэгорыя пустая</string>
     <string name="information_no_entries_found">У гэтай катэгорыі твораў не знойдзена</string>
@@ -837,7 +831,6 @@
     <string name="channel_complete">Завершэнні</string>
     <string name="channel_errors">Памылкі</string>
     <string name="channel_new_chapters">Абнаўленні раздзелаў</string>
-    <string name="channel_app_updates">Абнаўленні праграмы</string>
     <string name="channel_ext_updates">Абнаўленні пашырэнняў</string>
     <string name="spen_previous_page">Папярэдняя старонка</string>
     <string name="spen_next_page">Наступная старонка</string>
