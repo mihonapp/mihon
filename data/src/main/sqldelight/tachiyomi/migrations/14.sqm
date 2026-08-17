@@ -388,6 +388,69 @@ ON D._id = ES.manga_id;
 DROP TABLE excluded_scanlators;
 
 
+-- ---------------------------------------------------------------------------------------------------------
+-- table - manga_track
+-- ---------------------------------------------------------------------------------------------------------
+
+-- `manga_sync` is what tracking was called when it was still called syncing; `sync_id` is the tracker.
+-- ON CONFLICT REPLACE stays: InsertTrack relies on it to upsert a tracker's entry for a manga. That
+-- also means the copy below would silently drop a row when an entry that merged left two rows for the
+-- same tracker pointing at the survivor, so the one to keep is chosen first: the one furthest read,
+-- then the one already on the survivor, then the oldest. A track is taken whole rather than merged
+-- field by field, because two rows on the same tracker can point at different remote entries.
+CREATE TEMP TABLE duplicate_tracks AS
+SELECT
+    T._id,
+    first_value(T._id) OVER (
+        PARTITION BY D.keep_id, T.sync_id
+        ORDER BY T.last_chapter_read DESC, (T.manga_id = D.keep_id) DESC, T._id ASC
+    ) AS keep_track_id
+FROM manga_sync T
+JOIN duplicate_mangas D
+ON D._id = T.manga_id;
+
+DELETE FROM manga_sync
+WHERE _id IN (SELECT _id FROM duplicate_tracks WHERE _id != keep_track_id);
+
+DROP TABLE duplicate_tracks;
+
+CREATE TABLE manga_track(
+    id INTEGER NOT NULL PRIMARY KEY,
+    manga_id INTEGER NOT NULL,
+    tracker_id INTEGER NOT NULL,
+    remote_id INTEGER NOT NULL,
+    remote_url TEXT NOT NULL,
+    library_id INTEGER,
+    title TEXT NOT NULL,
+    last_chapter_read REAL NOT NULL,
+    total_chapters INTEGER NOT NULL,
+    status INTEGER NOT NULL,
+    score REAL NOT NULL,
+    start_date INTEGER NOT NULL,
+    finish_date INTEGER NOT NULL,
+    private INTEGER NOT NULL DEFAULT 0,
+    UNIQUE (manga_id, tracker_id) ON CONFLICT REPLACE,
+    FOREIGN KEY(manga_id) REFERENCES manga (id)
+    ON DELETE CASCADE
+);
+
+INSERT INTO manga_track(
+    id, manga_id, tracker_id, remote_id, remote_url, library_id, title, last_chapter_read,
+    total_chapters, status, score, start_date, finish_date, private
+)
+SELECT
+    T._id, coalesce(D.keep_id, T.manga_id), T.sync_id, T.remote_id, T.remote_url, T.library_id,
+    T.title, T.last_chapter_read, T.total_chapters, T.status, T.score, T.start_date,
+    T.finish_date, T.private
+FROM manga_sync T
+LEFT JOIN duplicate_mangas D
+ON D._id = T.manga_id;
+
+DROP TABLE duplicate_mangas;
+
+-- `idx_manga_sync_manga_id` is a prefix of the unique constraint
+DROP TABLE manga_sync;
+
 -- The views come back reading the new table
 CREATE VIEW historyView AS
 SELECT

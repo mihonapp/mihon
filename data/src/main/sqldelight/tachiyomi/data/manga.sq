@@ -99,9 +99,9 @@ getDuplicateLibraryManga:
 WITH
 track_dupes AS (
     SELECT DISTINCT S2.manga_id
-    FROM manga_sync S1
-    INNER JOIN manga_sync S2
-    ON S1.sync_id = S2.sync_id
+    FROM manga_track S1
+    INNER JOIN manga_track S2
+    ON S1.tracker_id = S2.tracker_id
     AND S1.remote_id = S2.remote_id
     AND S1.manga_id != S2.manga_id
     WHERE S1.manga_id = :id

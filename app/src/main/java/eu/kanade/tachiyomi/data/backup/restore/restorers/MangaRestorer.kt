@@ -391,7 +391,7 @@ class MangaRestorer(
         if (existingTracks.isEmpty()) return
         database.transaction {
             existingTracks.forEach { track ->
-                database.manga_syncQueries.update(
+                database.manga_trackQueries.update(
                     track.mangaId,
                     track.trackerId,
                     track.remoteId,
