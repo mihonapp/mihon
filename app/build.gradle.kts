@@ -16,6 +16,7 @@ plugins {
     alias(libs.plugins.aboutLibraries)
     alias(libs.plugins.androidx.baselineProfile)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.apollo)
 }
 
 if (Config.includeTelemetry) {
@@ -325,6 +326,9 @@ dependencies {
 
     // String similarity
     implementation(libs.stringSimilarity)
+
+    // GraphQL generation
+    implementation(libs.apollo)
 
     // Tests
     testImplementation(libs.bundles.test)

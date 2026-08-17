@@ -26,6 +26,7 @@ androidx-test-uiautomator = "2.4.0"
 androidx-viewPager = "1.1.0"
 androidx-webkit = "1.17.0"
 androidx-work = "2.11.2"
+apollo = "5.0.1"
 archive = "1.1.6"
 coil = "3.5.0"
 composeGrid = "1.2.2"
@@ -121,6 +122,7 @@ androidx-test-uiautomator = { module = "androidx.test.uiautomator:uiautomator", 
 androidx-viewPager = { module = "androidx.viewpager:viewpager", version.ref = "androidx-viewPager" }
 androidx-webkit = { module = "androidx.webkit:webkit", version.ref = "androidx-webkit" }
 androidx-work = { module = "androidx.work:work-runtime", version.ref = "androidx-work" }
+apollo = { module = "com.apollographql.apollo:apollo-runtime", version.ref = "apollo" }
 archive = { module = "me.zhanghai.android.libarchive:library", version.ref = "archive" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-core = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
@@ -206,6 +208,7 @@ android-kmp-library = { id = "com.android.kotlin.multiplatform.library", version
 android-library = { id = "com.android.library", version.ref = "android-gradle" }
 android-test = { id = "com.android.test", version.ref = "android-gradle" }
 androidx-baselineProfile = { id = "androidx.baselineprofile", version.ref = "androidx-baselineProfile" }
+apollo = { id = "com.apollographql.apollo", version.ref = "apollo" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-gradle" }
