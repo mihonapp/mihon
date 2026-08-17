@@ -21,6 +21,7 @@ data class MURecord(
     val ratingVotes: Int? = null,
     @SerialName("latest_chapter")
     val latestChapter: Int? = null,
+    val authors: List<MUAuthor> = emptyList(),
 )
 
 fun MURecord.toTrackSearch(id: Long): TrackSearch {
@@ -34,5 +35,8 @@ fun MURecord.toTrackSearch(id: Long): TrackSearch {
         publishing_status = ""
         publishing_type = this@toTrackSearch.type.toString()
         start_date = this@toTrackSearch.year.toString()
+        score = this@toTrackSearch.bayesianRating?.takeIf { it > 0 } ?: -1.0
+        authors = this@toTrackSearch.authors.filter { it.type == "Author" }.map { it.name }
+        artists = this@toTrackSearch.authors.filter { it.type == "Artist" }.map { it.name }
     }
 }
