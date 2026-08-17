@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.panel
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import eu.kanade.tachiyomi.data.reader.PanelCacheRepository
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
@@ -13,7 +12,6 @@ import kotlin.math.max
 
 class PanelDetector(
     private val panelCacheRepository: PanelCacheRepository,
-    private val subStopGenerator: PanelSubStopGenerator,
 ) {
 
     suspend fun detect(page: ReaderPage, imageBytes: Buffer, direction: PanelDirection): List<Panel> {
@@ -59,28 +57,13 @@ class PanelDetector(
 
         if (PanelConfidence.isLowConfidence(rawRects)) return listOf(Panel(PanelRect.FULL_PAGE))
 
+        // Sub-stops (multiple zoom stops within one wide panel) are disabled for now: when a
+        // panel is misdetected — a fragment of what should be one larger panel, or a thin
+        // spurious sliver — the wide-panel check often still matches it, and each wrong panel
+        // then costs 3-4 extra bad taps instead of one. Until panel-boundary detection itself
+        // is more reliable, every panel — right or wrong — is exactly one stop.
         val ordered = PanelReadingOrder.sort(rawRects, direction)
-        val fullBitmap = lazy { BitmapFactory.decodeStream(imageBytes.copy().inputStream()) }
-        try {
-            return ordered.map { rect ->
-                val subStops = subStopGenerator.generate(rect, direction) {
-                    fullBitmap.value?.let { cropNormalized(it, rect) }
-                }
-                Panel(rect, subStops)
-            }
-        } finally {
-            if (fullBitmap.isInitialized()) {
-                fullBitmap.value?.recycle()
-            }
-        }
-    }
-
-    private fun cropNormalized(bitmap: Bitmap, rect: PanelRect): Bitmap {
-        val left = (rect.left * bitmap.width).toInt().coerceIn(0, bitmap.width - 1)
-        val top = (rect.top * bitmap.height).toInt().coerceIn(0, bitmap.height - 1)
-        val right = (rect.right * bitmap.width).toInt().coerceIn(left + 1, bitmap.width)
-        val bottom = (rect.bottom * bitmap.height).toInt().coerceIn(top + 1, bitmap.height)
-        return Bitmap.createBitmap(bitmap, left, top, right - left, bottom - top)
+        return ordered.map { rect -> Panel(rect) }
     }
 
     private fun sampleSizeFor(width: Int, height: Int, maxDimension: Int): Int {
@@ -98,6 +81,6 @@ class PanelDetector(
     companion object {
         private const val DETECTION_BUDGET_MS = 2000L
         private const val MAX_DETECTION_DIMENSION = 900
-        private const val DETECTOR_VERSION = 1
+        private const val DETECTOR_VERSION = 4
     }
 }

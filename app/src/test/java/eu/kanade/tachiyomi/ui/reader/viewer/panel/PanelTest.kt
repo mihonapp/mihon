@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 class PanelTest {
 
     @Test
-    fun `flattenToStops uses subStops when present, otherwise the panel bounds`() {
+    fun `flattenToStops uses subStops when present, otherwise the panel bounds, then reveals the full page`() {
         val simple = Panel(bounds = PanelRect(0f, 0f, 0.5f, 1f))
         val wide = Panel(
             bounds = PanelRect(0.5f, 0f, 1f, 1f),
@@ -23,9 +23,22 @@ class PanelTest {
                 PanelRect(0f, 0f, 0.5f, 1f),
                 PanelRect(0.5f, 0f, 0.7f, 1f),
                 PanelRect(0.5f, 0f, 1f, 1f),
+                PanelRect.FULL_PAGE,
             ),
             stops,
         )
+    }
+
+    @Test
+    fun `flattenToStops does not duplicate the full-page reveal when the only panel already is the full page`() {
+        // The detector's fallback case (nothing confidently detected, decode failure, timeout)
+        // is exactly one Panel(PanelRect.FULL_PAGE) with no substops. Appending a second,
+        // identical full-page stop would make the reader tap once for a no-op.
+        val fallback = Panel(bounds = PanelRect.FULL_PAGE)
+
+        val stops = listOf(fallback).flattenToStops()
+
+        assertEquals(listOf(PanelRect.FULL_PAGE), stops)
     }
 
     @Test

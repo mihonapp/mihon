@@ -58,7 +58,6 @@ materialKolor = "5.0.0"
 metro = "1.4.2"
 metrox-viewmodel = "1.4.2"
 metrox-viewmodel-compose = "1.4.2"
-mlkit-text-recognition = "16.0.1"
 mockk = "1.14.11"
 moko-resources = "0.26.4"
 okhttp = "5.5.0"
@@ -167,7 +166,6 @@ materialKolor = { module = "com.materialkolor:material-kolor", version.ref = "ma
 metro-runtime = { module = "dev.zacsweers.metro:runtime", version.ref = "metro" }
 metrox-viewmodel = { module = "dev.zacsweers.metro:metrox-viewmodel", version.ref = "metrox-viewmodel" }
 metrox-viewmodel-compose = { module = "dev.zacsweers.metro:metrox-viewmodel-compose", version.ref = "metrox-viewmodel-compose" }
-mlkit-text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "mlkit-text-recognition" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
 natural-comparator = { module = "com.github.gpanther:java-nat-sort", version = "natural-comparator-1.1" }

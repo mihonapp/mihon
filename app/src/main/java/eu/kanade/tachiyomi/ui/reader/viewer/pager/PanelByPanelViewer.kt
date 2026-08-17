@@ -4,7 +4,6 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.panel.PanelDetector
 import eu.kanade.tachiyomi.ui.reader.viewer.panel.PanelDirection
-import eu.kanade.tachiyomi.ui.reader.viewer.panel.TextAwarePanelSubStopGenerator
 
 /**
  * Implementation of a PagerViewer that navigates panel-by-panel within each page before
@@ -13,12 +12,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.panel.TextAwarePanelSubStopGenerator
  */
 class PanelByPanelViewer(activity: ReaderActivity) : PagerViewer(activity) {
 
-    private val textAwareSubStopGenerator = TextAwarePanelSubStopGenerator()
-
-    val panelDetector = PanelDetector(
-        panelCacheRepository = graph.panelCacheRepository,
-        subStopGenerator = textAwareSubStopGenerator,
-    )
+    val panelDetector = PanelDetector(panelCacheRepository = graph.panelCacheRepository)
 
     val panelDirection: PanelDirection
         get() = if (
@@ -30,9 +24,4 @@ class PanelByPanelViewer(activity: ReaderActivity) : PagerViewer(activity) {
         }
 
     override fun createPager(): Pager = Pager(activity)
-
-    override fun destroy() {
-        super.destroy()
-        textAwareSubStopGenerator.close()
-    }
 }
