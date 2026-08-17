@@ -1,23 +1,26 @@
 import java.util.Date;
 
 CREATE TABLE history(
-    _id INTEGER NOT NULL PRIMARY KEY,
+    id INTEGER NOT NULL PRIMARY KEY,
+    manga_id INTEGER NOT NULL,
     chapter_id INTEGER NOT NULL UNIQUE,
-    last_read INTEGER AS Date,
-    time_read INTEGER NOT NULL,
+    read_at INTEGER AS Date,
+    read_duration INTEGER NOT NULL,
+    FOREIGN KEY(manga_id) REFERENCES manga (id)
+    ON DELETE CASCADE,
     FOREIGN KEY(chapter_id) REFERENCES chapter (id)
     ON DELETE CASCADE
 );
 
-CREATE INDEX history_history_chapter_id_index ON history(chapter_id);
-CREATE INDEX idx_history_last_read ON history(last_read);
+CREATE INDEX history_manga_id_index ON history(manga_id);
+CREATE INDEX history_read_at_index ON history(read_at);
 
 getHistoryByMangaId:
 SELECT
-H._id,
+H.id,
 H.chapter_id,
-H.last_read,
-H.time_read
+H.read_at,
+H.read_duration
 FROM history H
 JOIN chapter C
 ON H.chapter_id = C.id
@@ -25,10 +28,10 @@ WHERE C.manga_id = :mangaId AND C.id = H.chapter_id;
 
 getHistoryByChapterUrlAndMangaId:
 SELECT
-H._id,
+H.id,
 H.chapter_id,
-H.last_read,
-H.time_read
+H.read_at,
+H.read_duration
 FROM history H
 JOIN chapter C
 ON H.chapter_id = C.id
@@ -37,14 +40,14 @@ LIMIT 1;
 
 resetHistoryById:
 UPDATE history
-SET last_read = 0
-WHERE _id = :historyId;
+SET read_at = 0
+WHERE id = :historyId;
 
 resetHistoryByMangaId:
 UPDATE history
-SET last_read = 0
-WHERE _id IN (
-    SELECT H._id
+SET read_at = 0
+WHERE id IN (
+    SELECT H.id
     FROM manga M
     INNER JOIN chapter C
     ON M.id = C.manga_id
@@ -58,18 +61,20 @@ DELETE FROM history;
 
 removeResettedHistory:
 DELETE FROM history
-WHERE last_read = 0;
+WHERE read_at = 0;
 
 upsert:
-INSERT INTO history(chapter_id, last_read, time_read)
-VALUES (:chapterId, :readAt, :time_read)
+INSERT INTO history(manga_id, chapter_id, read_at, read_duration)
+SELECT C.manga_id, :chapterId, :readAt, :time_read
+FROM chapter C
+WHERE C.id = :chapterId
 ON CONFLICT(chapter_id)
 DO UPDATE
 SET
-    last_read = :readAt,
-    time_read = time_read + :time_read
+    read_at = :readAt,
+    read_duration = read_duration + :time_read
 WHERE chapter_id = :chapterId;
 
 getReadDuration:
-SELECT coalesce(sum(time_read), 0)
+SELECT coalesce(sum(read_duration), 0)
 FROM history;

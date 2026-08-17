@@ -326,10 +326,49 @@ DROP TABLE mangas_categories;
 
 CREATE INDEX manga_category_category_id_index ON manga_category(category_id);
 
--- The views come back reading the new table
+-- ---------------------------------------------------------------------------------------------------------
+-- table - history
+-- ---------------------------------------------------------------------------------------------------------
+
+-- `last_read` is when the chapter was last read and `time_read` is how long it has been read for, so
+-- both are renamed to say so. The chapter it belongs to is already unique, which leaves
+-- `history_history_chapter_id_index` a prefix of that constraint.
+-- The table keeps its name, so the original is renamed aside and the new one built under
+-- the real name; renaming a table into place makes SQLite rewrite its stored definition,
+-- leaving it spelled differently from the same table on a fresh install. The views were
+-- dropped at the top of this migration, so nothing refers to the name being moved.
+ALTER TABLE history RENAME TO history_temp;
+
+CREATE TABLE history(
+    id INTEGER NOT NULL PRIMARY KEY,
+    manga_id INTEGER NOT NULL,
+    chapter_id INTEGER NOT NULL UNIQUE,
+    read_at INTEGER,
+    read_duration INTEGER NOT NULL,
+    FOREIGN KEY(manga_id) REFERENCES manga (id)
+    ON DELETE CASCADE,
+    FOREIGN KEY(chapter_id) REFERENCES chapter (id)
+    ON DELETE CASCADE
+);
+
+-- Reaching the entry a row belongs to meant going through its chapter; it names the entry
+-- itself now, taken from that same chapter. A row whose chapter is already gone cannot name
+-- one and is dropped, which is what the foreign key would do to it once it is enforced again.
+INSERT INTO history(id, manga_id, chapter_id, read_at, read_duration)
+SELECT H._id, C.manga_id, H.chapter_id, H.last_read, H.time_read
+FROM history_temp H
+JOIN chapter C
+ON C.id = H.chapter_id;
+
+DROP TABLE history_temp;
+
+CREATE INDEX history_manga_id_index ON history(manga_id);
+CREATE INDEX history_read_at_index ON history(read_at);
+
+-- The views come back reading the renamed columns
 CREATE VIEW historyView AS
 SELECT
-    history._id AS id,
+    history.id AS id,
     manga.id AS mangaId,
     chapter.id AS chapterId,
     manga.remote_title AS title,
@@ -338,9 +377,9 @@ SELECT
     manga.user_favorite_at AS favoriteAt,
     manga.state_cover_last_modified,
     chapter.remote_chapter_number AS chapterNumber,
-    history.last_read AS readAt,
-    history.time_read AS readDuration,
-    max_last_read.last_read AS maxReadAt,
+    history.read_at AS readAt,
+    history.read_duration AS readDuration,
+    max_last_read.read_at AS maxReadAt,
     max_last_read.chapter_id AS maxReadAtChapterId
 FROM manga
 JOIN chapter
@@ -348,7 +387,7 @@ ON manga.id = chapter.manga_id
 JOIN history
 ON chapter.id = history.chapter_id
 JOIN (
-    SELECT chapter.manga_id,chapter.id AS chapter_id, MAX(history.last_read) AS last_read
+    SELECT chapter.manga_id,chapter.id AS chapter_id, MAX(history.read_at) AS read_at
     FROM chapter JOIN history
     ON chapter.id = history.chapter_id
     GROUP BY chapter.manga_id
@@ -372,7 +411,7 @@ LEFT JOIN (
         count(*) AS total,
         sum(user_read) AS readCount,
         coalesce(max(chapter.remote_date_upload), 0) AS latestUpload,
-        coalesce(max(history.last_read), 0) AS lastRead,
+        coalesce(max(history.read_at), 0) AS lastRead,
         coalesce(max(chapter.state_date_fetch), 0) AS fetchedAt,
         sum(chapter.user_bookmark) AS bookmarkCount
     FROM chapter

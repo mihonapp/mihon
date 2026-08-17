@@ -336,12 +336,12 @@ class MangaRestorer(
 
             // Update history entry
             item.copy(
-                id = dbHistory._id,
+                id = dbHistory.id,
                 chapterId = dbHistory.chapter_id,
-                readAt = max(item.readAt?.time ?: 0L, dbHistory.last_read?.time ?: 0L)
+                readAt = max(item.readAt?.time ?: 0L, dbHistory.read_at?.time ?: 0L)
                     .takeIf { it > 0L }
                     ?.let { Date(it) },
-                readDuration = max(item.readDuration, dbHistory.time_read) - dbHistory.time_read,
+                readDuration = max(item.readDuration, dbHistory.read_duration) - dbHistory.read_duration,
             )
         }
 
