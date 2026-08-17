@@ -563,15 +563,15 @@
     <string name="pref_category_shikimori">Shikimori</string>
     <string name="pref_shikimori_base_url">API base URL</string>
     <string name="pref_shikimori_base_url_summary">Server used for API and OAuth requests</string>
+    <string name="pref_shikimori_credentials">OAuth client ID &amp; secret</string>
+    <string name="pref_shikimori_credentials_summary">Client credentials used for Shikimori OAuth</string>
     <string name="pref_shikimori_client_id">OAuth client ID</string>
-    <string name="pref_shikimori_client_id_summary">Client ID used for Shikimori OAuth</string>
     <string name="pref_shikimori_client_secret">OAuth client secret</string>
-    <string name="pref_shikimori_client_secret_summary">Client secret used for Shikimori OAuth</string>
     <string name="pref_reset_shikimori_config">Reset Shikimori configuration</string>
     <string name="pref_shikimori_config_changed">Shikimori settings changed. You have been logged out. Please log in again.</string>
     <string name="pref_shikimori_config_reset">Shikimori configuration reset. You have been logged out. Please log in again.</string>
+    <string name="pref_shikimori_oauth_app_info">The default OAuth credentials work with any mirror of the main Shikimori instance. You only need to create your own OAuth application at %s if you are using a completely separate instance.</string>
     <string name="error_shikimori_base_url_invalid">Invalid base URL</string>
-    <string name="error_shikimori_config_blank">Value cannot be empty</string>
 
       <!-- Browse section -->
     <string name="pref_hide_in_library_items">Hide entries already in library</string>
