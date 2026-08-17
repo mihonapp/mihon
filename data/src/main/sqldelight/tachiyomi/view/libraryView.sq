@@ -15,7 +15,7 @@ LEFT JOIN (
         count(*) AS total,
         sum(user_read) AS readCount,
         coalesce(max(chapter.remote_date_upload), 0) AS latestUpload,
-        coalesce(max(history.last_read), 0) AS lastRead,
+        coalesce(max(history.read_at), 0) AS lastRead,
         coalesce(max(chapter.state_date_fetch), 0) AS fetchedAt,
         sum(chapter.user_bookmark) AS bookmarkCount
     FROM chapter

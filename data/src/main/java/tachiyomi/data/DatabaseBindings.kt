@@ -36,7 +36,7 @@ object DatabaseBindings {
         return Database(
             driver = driver,
             historyAdapter = History.Adapter(
-                last_readAdapter = DateColumnAdapter,
+                read_atAdapter = DateColumnAdapter,
             ),
             mangaAdapter = Manga.Adapter(
                 remote_genreAdapter = StringListColumnAdapter,

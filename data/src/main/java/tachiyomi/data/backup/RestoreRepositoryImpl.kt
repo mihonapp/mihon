@@ -235,8 +235,8 @@ class RestoreRepositoryImpl(
                 // Update history entry
                 Triple(
                     dbHistory.chapter_id,
-                    Date(max(readAt, dbHistory.last_read?.time ?: 0L)),
-                    max(readDuration, dbHistory.time_read) - dbHistory.time_read,
+                    Date(max(readAt, dbHistory.read_at?.time ?: 0L)),
+                    max(readDuration, dbHistory.read_duration) - dbHistory.read_duration,
                 )
             }
 
