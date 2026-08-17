@@ -477,14 +477,14 @@ SELECT
     chapter.id AS chapterId,
     manga.remote_title AS title,
     manga.remote_cover AS thumbnailUrl,
-    manga.source_id AS source,
+    manga.source_id AS sourceId,
     manga.user_favorite_at AS favoriteAt,
-    manga.state_cover_last_modified,
+    manga.state_cover_last_modified AS coverLastModified,
     chapter.remote_chapter_number AS chapterNumber,
     history.read_at AS readAt,
     history.read_duration AS readDuration,
-    max_last_read.read_at AS maxReadAt,
-    max_last_read.chapter_id AS maxReadAtChapterId
+    max_read.read_at AS maxReadAt,
+    max_read.chapter_id AS maxReadAtChapterId
 FROM manga
 JOIN chapter
 ON manga.id = chapter.manga_id
@@ -495,8 +495,8 @@ JOIN (
     FROM chapter JOIN history
     ON chapter.id = history.chapter_id
     GROUP BY chapter.manga_id
-) AS max_last_read
-ON chapter.manga_id = max_last_read.manga_id;
+) AS max_read
+ON chapter.manga_id = max_read.manga_id;
 
 CREATE VIEW libraryView AS
 SELECT
