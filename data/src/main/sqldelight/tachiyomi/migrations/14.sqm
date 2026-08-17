@@ -451,6 +451,24 @@ DROP TABLE duplicate_mangas;
 -- `idx_manga_sync_manga_id` is a prefix of the unique constraint
 DROP TABLE manga_sync;
 
+-- ---------------------------------------------------------------------------------------------------------
+-- table - source
+-- ---------------------------------------------------------------------------------------------------------
+
+-- The last of the plural table names, and `lang` spelled out. Nothing references this table, so it is a
+-- straight copy; name comes before language to read the way the row does.
+CREATE TABLE source(
+    id INTEGER NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    language TEXT NOT NULL
+);
+
+INSERT INTO source(id, name, language)
+SELECT _id, name, lang
+FROM sources;
+
+DROP TABLE sources;
+
 -- The views come back reading the new table
 CREATE VIEW historyView AS
 SELECT
