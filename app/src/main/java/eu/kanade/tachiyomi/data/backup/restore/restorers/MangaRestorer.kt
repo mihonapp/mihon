@@ -45,10 +45,10 @@ class MangaRestorer(
     private val currentFetchWindow = fetchInterval.getWindow(now.date, timeZone)
 
     suspend fun sortByNew(backupMangas: List<BackupManga>): List<BackupManga> {
-        val urlsBySource = database.mangasQueries
+        val urlsBySource = database.mangaQueries
             .getAllMangaSourceAndUrl()
             .awaitAsList()
-            .groupBy({ it.source }, { it.url })
+            .groupBy({ it.source_id }, { it.remote_url })
 
         return backupMangas
             .sortedWith(
@@ -109,7 +109,7 @@ class MangaRestorer(
     }
 
     private suspend fun updateManga(manga: Manga): Manga {
-        database.mangasQueries.update(
+        database.mangaQueries.update(
             source = manga.source,
             url = manga.url,
             artist = manga.artist,
@@ -119,7 +119,7 @@ class MangaRestorer(
             title = manga.title,
             status = manga.status,
             thumbnailUrl = manga.thumbnailUrl,
-            favorite = manga.favorite,
+            favoriteAt = manga.dateAdded.takeIf { manga.favorite },
             lastUpdate = manga.lastUpdate,
             nextUpdate = null,
             calculateInterval = null,
@@ -127,11 +127,8 @@ class MangaRestorer(
             viewer = manga.viewerFlags,
             chapterFlags = manga.chapterFlags,
             coverLastModified = manga.coverLastModified,
-            dateAdded = manga.dateAdded,
             mangaId = manga.id,
             updateStrategy = manga.updateStrategy.let(UpdateStrategyColumnAdapter::encode),
-            version = manga.version,
-            isSyncing = 1,
             notes = manga.notes,
             memo = manga.memo.let(MemoColumnAdapter::encode),
         )
@@ -243,7 +240,7 @@ class MangaRestorer(
      * @return id of [Manga], null if not found
      */
     private suspend fun insertManga(manga: Manga): Long {
-        return database.mangasQueries.insertReturningId(
+        return database.mangaQueries.insertReturningId(
             source = manga.source,
             url = manga.url,
             artist = manga.artist,
@@ -253,7 +250,7 @@ class MangaRestorer(
             title = manga.title,
             status = manga.status,
             thumbnailUrl = manga.thumbnailUrl,
-            favorite = manga.favorite,
+            favoriteAt = manga.dateAdded.takeIf { manga.favorite },
             lastUpdate = manga.lastUpdate,
             nextUpdate = 0L,
             calculateInterval = 0L,
@@ -261,9 +258,7 @@ class MangaRestorer(
             viewerFlags = manga.viewerFlags,
             chapterFlags = manga.chapterFlags,
             coverLastModified = manga.coverLastModified,
-            dateAdded = manga.dateAdded,
             updateStrategy = manga.updateStrategy,
-            version = manga.version,
             notes = manga.notes,
             memo = manga.memo,
         )

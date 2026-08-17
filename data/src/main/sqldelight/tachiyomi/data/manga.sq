@@ -1,0 +1,262 @@
+import eu.kanade.tachiyomi.source.model.UpdateStrategy;
+import kotlin.Boolean;
+import kotlin.String;
+import kotlin.collections.List;
+import kotlinx.serialization.json.JsonObject;
+
+CREATE TABLE manga(
+    id INTEGER NOT NULL PRIMARY KEY,
+    source_id INTEGER NOT NULL,
+    remote_url TEXT NOT NULL,
+    remote_title TEXT NOT NULL,
+    remote_author TEXT,
+    remote_artist TEXT,
+    remote_description TEXT,
+    remote_genre TEXT AS List<String>,
+    remote_status INTEGER NOT NULL,
+    remote_cover TEXT,
+    remote_update_strategy INTEGER AS UpdateStrategy NOT NULL,
+    remote_memo BLOB AS JsonObject NOT NULL,
+    user_favorite_at INTEGER,
+    user_notes TEXT NOT NULL,
+    user_reader_flags INTEGER NOT NULL,
+    user_chapter_flags INTEGER NOT NULL,
+    state_chapter_last_update INTEGER,
+    state_chapter_next_update INTEGER,
+    state_chapter_fetch_interval INTEGER NOT NULL,
+    state_cover_last_modified INTEGER NOT NULL,
+    state_initialized INTEGER AS Boolean NOT NULL,
+    state_modified_at INTEGER NOT NULL,
+    UNIQUE(source_id, remote_url)
+);
+
+CREATE INDEX manga_user_favorite_at_index ON manga(user_favorite_at) WHERE user_favorite_at IS NOT NULL;
+
+CREATE TRIGGER update_modified_at_manga
+AFTER UPDATE ON manga
+FOR EACH ROW
+BEGIN
+  UPDATE manga
+  SET state_modified_at = strftime('%s', 'now')
+  WHERE id = new.id;
+END;
+
+getMangaById:
+SELECT *
+FROM manga
+WHERE id = :id;
+
+-- TODO: this should ideally never really have more than 1 result
+getMangaByUrlAndSource:
+SELECT *
+FROM manga
+WHERE remote_url = :url
+AND source_id = :source
+LIMIT 1;
+
+getFavorites:
+SELECT *
+FROM manga
+WHERE user_favorite_at IS NOT NULL;
+
+getReadMangaNotInLibrary:
+SELECT *
+FROM manga
+WHERE user_favorite_at IS NULL AND id IN (
+    SELECT DISTINCT chapters.manga_id
+    FROM chapters
+    WHERE read = 1 OR last_page_read != 0
+);
+
+getAllManga:
+SELECT *
+FROM manga;
+
+getAllMangaSourceAndUrl:
+SELECT source_id, remote_url
+FROM manga;
+
+getMangasWithFavoriteTimestamp:
+SELECT *
+FROM manga
+WHERE user_favorite_at IS NOT NULL;
+
+getSourceIdWithFavoriteCount:
+SELECT
+source_id,
+count(*)
+FROM manga
+WHERE user_favorite_at IS NOT NULL
+GROUP BY source_id;
+
+getFavoriteBySourceId:
+SELECT *
+FROM manga
+WHERE user_favorite_at IS NOT NULL
+AND source_id = :sourceId;
+
+getDuplicateLibraryManga:
+WITH
+track_dupes AS (
+    SELECT DISTINCT S2.manga_id
+    FROM manga_sync S1
+    INNER JOIN manga_sync S2
+    ON S1.sync_id = S2.sync_id
+    AND S1.remote_id = S2.remote_id
+    AND S1.manga_id != S2.manga_id
+    WHERE S1.manga_id = :id
+),
+duplicates AS (
+    SELECT M.*
+    FROM manga M
+    LEFT JOIN track_dupes D
+    ON D.manga_id = id
+    WHERE user_favorite_at IS NOT NULL
+    AND id != :id
+    AND (lower(remote_title) LIKE '%' || lower(:title) || '%' OR D.manga_id IS NOT NULL)
+),
+chapter_counts AS (
+    SELECT
+        M.id AS manga_id,
+        count(*) AS chapter_count
+    FROM duplicates M
+    JOIN chapters C
+    ON M.id = C.manga_id
+    LEFT JOIN excluded_scanlators ES
+    ON C.manga_id = ES.manga_id
+    AND C.scanlator = ES.scanlator
+    WHERE ES.scanlator IS NULL
+    GROUP BY M.id
+)
+SELECT
+    M.*,
+    coalesce(CC.chapter_count, 0) AS chapter_count
+FROM duplicates M
+LEFT JOIN chapter_counts CC
+ON M.id = CC.manga_id;
+
+getUpcomingManga:
+SELECT *
+FROM manga
+WHERE state_chapter_next_update >= :startOfDay
+AND user_favorite_at IS NOT NULL
+AND remote_status IN :statuses
+AND (
+    -- includedEmpty being true expresses "don't care" state and bypasses the membership filter
+    :includedEmpty
+    OR EXISTS (
+        SELECT 1 FROM mangas_categories
+        WHERE mangas_categories.manga_id = manga.id
+        AND COALESCE(mangas_categories.category_id, 0) IN :includedCategories
+    )
+    OR (0 IN :includedCategories AND NOT EXISTS (
+        SELECT 1 FROM mangas_categories WHERE mangas_categories.manga_id = manga.id)
+    )
+)
+AND (
+    -- excludedEmpty being true expresses "don't care" state and bypasses the membership filter
+    :excludedEmpty
+    OR (
+        NOT EXISTS (
+            SELECT 1 FROM mangas_categories
+            WHERE mangas_categories.manga_id = manga.id
+            AND COALESCE(mangas_categories.category_id, 0) IN :excludedCategories
+        )
+        AND (
+            0 NOT IN :excludedCategories
+            OR EXISTS (SELECT 1 FROM mangas_categories WHERE mangas_categories.manga_id = manga.id)
+        )
+    )
+)
+ORDER BY state_chapter_next_update ASC;
+
+resetViewerFlags:
+UPDATE manga
+SET user_reader_flags = 0;
+
+getSourceIdsWithNonLibraryManga:
+SELECT source_id, COUNT(*) AS manga_count
+FROM manga
+WHERE user_favorite_at IS NULL
+GROUP BY source_id;
+
+deleteNonLibraryManga:
+DELETE FROM manga
+WHERE user_favorite_at IS NULL
+AND source_id IN :sourceIds
+AND (
+    :keepReadManga = 0
+    OR id NOT IN (
+        SELECT DISTINCT manga_id
+        FROM chapters
+        WHERE read = 1
+        OR last_page_read != 0
+    )
+);
+
+insertReturningId:
+INSERT INTO manga(source_id, remote_url, remote_artist, remote_author, remote_description, remote_genre, remote_title, remote_status, remote_cover, user_favorite_at, state_chapter_last_update, state_chapter_next_update, state_initialized, user_reader_flags, user_chapter_flags, state_cover_last_modified, remote_update_strategy, state_chapter_fetch_interval, state_modified_at, user_notes, remote_memo)
+VALUES (:source, :url, :artist, :author, :description, :genre, :title, :status, :thumbnailUrl, :favoriteAt, :lastUpdate, :nextUpdate, :initialized, :viewerFlags, :chapterFlags, :coverLastModified, :updateStrategy, :calculateInterval, 0, :notes, :memo)
+RETURNING id;
+
+update:
+UPDATE manga SET
+    source_id = coalesce(:source, source_id),
+    remote_url = coalesce(:url, remote_url),
+    remote_artist = coalesce(:artist, remote_artist),
+    remote_author = coalesce(:author, remote_author),
+    remote_description = coalesce(:description, remote_description),
+    remote_genre = coalesce(:genre, remote_genre),
+    remote_title = coalesce(:title, remote_title),
+    remote_status = coalesce(:status, remote_status),
+    remote_cover = coalesce(:thumbnailUrl, remote_cover),
+    user_favorite_at = coalesce(:favoriteAt, user_favorite_at),
+    state_chapter_last_update = coalesce(:lastUpdate, state_chapter_last_update),
+    state_chapter_next_update = coalesce(:nextUpdate, state_chapter_next_update),
+    state_initialized = coalesce(:initialized, state_initialized),
+    user_reader_flags = coalesce(:viewer, user_reader_flags),
+    user_chapter_flags = coalesce(:chapterFlags, user_chapter_flags),
+    state_cover_last_modified = coalesce(:coverLastModified, state_cover_last_modified),
+    remote_update_strategy = coalesce(:updateStrategy, remote_update_strategy),
+    state_chapter_fetch_interval = coalesce(:calculateInterval, state_chapter_fetch_interval),
+    user_notes = coalesce(:notes, user_notes),
+    remote_memo = coalesce(:memo, remote_memo)
+WHERE id = :mangaId;
+
+insertNetworkManga {
+    -- Insert the manga if it doesn't exist already
+    INSERT INTO manga(
+        source_id, remote_url, remote_artist, remote_author, remote_description, remote_genre, remote_title, remote_status, remote_cover, user_favorite_at,
+        state_chapter_last_update, state_chapter_next_update, state_initialized, user_reader_flags, user_chapter_flags, state_cover_last_modified,
+        remote_update_strategy, state_chapter_fetch_interval, state_modified_at, user_notes, remote_memo
+    )
+    SELECT
+        :source, :url, :artist, :author, :description, :genre, :title, :status, :thumbnailUrl, :favoriteAt,
+        :lastUpdate, :nextUpdate, :initialized, :viewerFlags, :chapterFlags, :coverLastModified,
+        :updateStrategy, :calculateInterval, 0, '', :memo
+    WHERE NOT EXISTS(SELECT 0 FROM manga WHERE source_id = :source AND remote_url = :url);
+
+    -- Update the relevant details if applicable and not favorite
+    UPDATE manga
+    SET
+        remote_title = CASE WHEN :updateTitle THEN :title ELSE remote_title END,
+        remote_cover = CASE WHEN :updateCover THEN :thumbnailUrl ELSE remote_cover END,
+        remote_author = CASE WHEN :updateDetails THEN :author ELSE remote_author END,
+        remote_artist = CASE WHEN :updateDetails THEN :artist ELSE remote_artist END,
+        remote_description = CASE WHEN :updateDetails THEN :description ELSE remote_description END,
+        remote_genre = CASE WHEN :updateDetails THEN :genre ELSE remote_genre END,
+        remote_status = CASE WHEN :updateDetails THEN :status ELSE remote_status END,
+        remote_update_strategy = CASE WHEN :updateDetails THEN :updateStrategy ELSE remote_update_strategy END,
+        state_initialized = :updateDetails,
+        remote_memo = :memo
+    WHERE source_id = :source
+    AND remote_url = :url
+    AND user_favorite_at IS NULL;
+
+    -- Finally return the manga
+    SELECT *
+    FROM manga
+    WHERE source_id = :source
+    AND remote_url = :url
+    LIMIT 1;
+}

@@ -89,7 +89,7 @@ class UpdatesRepositoryImpl(
         bookmark: Boolean,
         lastPageRead: Long,
         sourceId: Long,
-        favorite: Boolean,
+        favoriteAt: Long,
         thumbnailUrl: String?,
         coverLastModified: Long,
         dateUpload: Long,
@@ -110,7 +110,7 @@ class UpdatesRepositoryImpl(
         coverData = MangaCover(
             mangaId = mangaId,
             sourceId = sourceId,
-            isMangaFavorite = favorite,
+            isMangaFavorite = favoriteAt != 0L,
             url = thumbnailUrl,
             lastModified = coverLastModified,
         ),

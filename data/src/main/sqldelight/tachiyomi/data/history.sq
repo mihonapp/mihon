@@ -45,12 +45,12 @@ UPDATE history
 SET last_read = 0
 WHERE _id IN (
     SELECT H._id
-    FROM mangas M
+    FROM manga M
     INNER JOIN chapters C
-    ON M._id = C.manga_id
+    ON M.id = C.manga_id
     INNER JOIN history H
     ON C._id = H.chapter_id
-    WHERE M._id = :mangaId
+    WHERE M.id = :mangaId
 );
 
 removeAllHistory:

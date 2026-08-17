@@ -1,0 +1,234 @@
+import eu.kanade.tachiyomi.source.model.UpdateStrategy;
+import kotlin.Boolean;
+import kotlin.String;
+import kotlin.collections.List;
+import kotlinx.serialization.json.JsonObject;
+
+-- ---------------------------------------------------------------------------------------------------------
+-- table - manga
+-- ---------------------------------------------------------------------------------------------------------
+
+-- Every view reads `mangas`, so they are dropped here and recreated against the new table below
+DROP VIEW historyView;
+DROP VIEW libraryView;
+DROP VIEW updatesView;
+
+-- The sync scaffolding these maintain (version, is_syncing, favorite_modified_at) is gone
+DROP TRIGGER update_last_favorited_at_mangas;
+DROP TRIGGER update_last_modified_at_mangas;
+DROP TRIGGER update_manga_version;
+DROP TRIGGER update_chapter_and_manga_version;
+DROP TRIGGER insert_manga_category_update_version;
+
+-- Entries sharing a source and url are merged into one, since the new table won't hold both. The one that
+-- stays is a favorite if there is any, the oldest otherwise, and it takes over the details that it is
+-- missing along with everything attached to the entries it absorbs.
+CREATE TEMP TABLE duplicate_mangas AS
+SELECT
+    _id,
+    first_value(_id) OVER (PARTITION BY source, url ORDER BY favorite DESC, _id ASC) AS keep_id
+FROM mangas
+WHERE (source, url) IN (
+    SELECT source, url
+    FROM mangas
+    GROUP BY source, url
+    HAVING count(*) > 1
+);
+
+UPDATE mangas
+SET favorite = merged.favorite,
+    initialized = merged.initialized,
+    artist = coalesce(mangas.artist, merged.artist),
+    author = coalesce(mangas.author, merged.author),
+    description = coalesce(mangas.description, merged.description),
+    genre = coalesce(mangas.genre, merged.genre),
+    thumbnail_url = coalesce(mangas.thumbnail_url, merged.thumbnail_url),
+    status = coalesce(nullif(mangas.status, 0), merged.status, 0),
+    viewer = coalesce(nullif(mangas.viewer, 0), merged.viewer, 0),
+    chapter_flags = coalesce(nullif(mangas.chapter_flags, 0), merged.chapter_flags, 0),
+    notes = coalesce(nullif(mangas.notes, ''), merged.notes, ''),
+    memo = coalesce(nullif(mangas.memo, '{}'), merged.memo, '{}'),
+    last_update = merged.last_update,
+    date_added = coalesce(merged.date_added, mangas.date_added),
+    favorite_modified_at = merged.favorite_modified_at,
+    cover_last_modified = merged.cover_last_modified
+FROM (
+    SELECT
+        D.keep_id,
+        max(M.favorite) AS favorite,
+        max(M.initialized) AS initialized,
+        max(M.artist) AS artist,
+        max(M.author) AS author,
+        max(M.description) AS description,
+        max(M.genre) AS genre,
+        max(M.thumbnail_url) AS thumbnail_url,
+        max(nullif(M.status, 0)) AS status,
+        max(nullif(M.viewer, 0)) AS viewer,
+        max(nullif(M.chapter_flags, 0)) AS chapter_flags,
+        max(nullif(M.notes, '')) AS notes,
+        max(nullif(M.memo, '{}')) AS memo,
+        max(M.last_update) AS last_update,
+        min(nullif(M.date_added, 0)) AS date_added,
+        min(M.favorite_modified_at) AS favorite_modified_at,
+        max(M.cover_last_modified) AS cover_last_modified
+    FROM duplicate_mangas D
+    JOIN mangas M
+    ON M._id = D._id
+    GROUP BY D.keep_id
+) AS merged
+WHERE mangas._id = merged.keep_id;
+
+-- Every child table is rebuilt further down and resolves the surviving entry there, so nothing
+-- else has to be rewritten here first.
+DELETE FROM mangas
+WHERE _id IN (SELECT _id FROM duplicate_mangas WHERE _id != keep_id);
+
+CREATE TABLE manga(
+    id INTEGER NOT NULL PRIMARY KEY,
+    source_id INTEGER NOT NULL,
+    remote_url TEXT NOT NULL,
+    remote_title TEXT NOT NULL,
+    remote_author TEXT,
+    remote_artist TEXT,
+    remote_description TEXT,
+    remote_genre TEXT AS List<String>,
+    remote_status INTEGER NOT NULL,
+    remote_cover TEXT,
+    remote_update_strategy INTEGER AS UpdateStrategy NOT NULL,
+    remote_memo BLOB AS JsonObject NOT NULL,
+    user_favorite_at INTEGER,
+    user_notes TEXT NOT NULL,
+    user_reader_flags INTEGER NOT NULL,
+    user_chapter_flags INTEGER NOT NULL,
+    state_chapter_last_update INTEGER,
+    state_chapter_next_update INTEGER,
+    state_chapter_fetch_interval INTEGER NOT NULL,
+    state_cover_last_modified INTEGER NOT NULL,
+    state_initialized INTEGER AS Boolean NOT NULL,
+    state_modified_at INTEGER NOT NULL,
+    UNIQUE(source_id, remote_url)
+);
+
+-- `favorite`, `date_added` and `favorite_modified_at` all said the same thing: an entry is in the library
+-- exactly when it has a timestamp, and that timestamp is when it was added. `date_added` is the
+-- authoritative one, with the favorite timestamp covering entries added before it was written. That one
+-- was written by a trigger in seconds, unlike every other timestamp here, so it is scaled up.
+INSERT INTO manga(
+    id, source_id, remote_url, remote_title, remote_author, remote_artist, remote_description, remote_genre,
+    remote_status, remote_cover, remote_update_strategy, remote_memo, user_favorite_at, user_notes,
+    user_reader_flags, user_chapter_flags, state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
+    state_cover_last_modified, state_initialized, state_modified_at
+)
+SELECT
+    _id, source, url, title, author, artist, description, genre,
+    status, thumbnail_url, update_strategy, memo,
+    CASE WHEN favorite = 1 THEN coalesce(nullif(date_added, 0), favorite_modified_at * 1000, 0) END, notes,
+    viewer, chapter_flags, last_update, next_update, calculate_interval,
+    cover_last_modified, initialized, last_modified_at
+FROM mangas;
+
+DROP TABLE mangas;
+
+CREATE INDEX manga_user_favorite_at_index ON manga(user_favorite_at) WHERE user_favorite_at IS NOT NULL;
+
+CREATE TRIGGER update_modified_at_manga
+AFTER UPDATE ON manga
+FOR EACH ROW
+BEGIN
+  UPDATE manga
+  SET state_modified_at = strftime('%s', 'now')
+  WHERE id = new.id;
+END;
+-- The views read the columns that just changed, so they come back in their new shape
+CREATE VIEW historyView AS
+SELECT
+    history._id AS id,
+    manga.id AS mangaId,
+    chapters._id AS chapterId,
+    manga.remote_title AS title,
+    manga.remote_cover AS thumbnailUrl,
+    manga.source_id AS source,
+    manga.user_favorite_at AS favoriteAt,
+    manga.state_cover_last_modified,
+    chapters.chapter_number AS chapterNumber,
+    history.last_read AS readAt,
+    history.time_read AS readDuration,
+    max_last_read.last_read AS maxReadAt,
+    max_last_read.chapter_id AS maxReadAtChapterId
+FROM manga
+JOIN chapters
+ON manga.id = chapters.manga_id
+JOIN history
+ON chapters._id = history.chapter_id
+JOIN (
+    SELECT chapters.manga_id,chapters._id AS chapter_id, MAX(history.last_read) AS last_read
+    FROM chapters JOIN history
+    ON chapters._id = history.chapter_id
+    GROUP BY chapters.manga_id
+) AS max_last_read
+ON chapters.manga_id = max_last_read.manga_id;
+
+CREATE VIEW libraryView AS
+SELECT
+    M.*,
+    coalesce(C.total, 0) AS totalCount,
+    coalesce(C.readCount, 0) AS readCount,
+    coalesce(C.latestUpload, 0) AS latestUpload,
+    coalesce(C.fetchedAt, 0) AS chapterFetchedAt,
+    coalesce(C.lastRead, 0) AS lastRead,
+    coalesce(C.bookmarkCount, 0) AS bookmarkCount,
+    coalesce(MC.categories, '0') AS categories
+FROM manga M
+LEFT JOIN (
+    SELECT
+        chapters.manga_id,
+        count(*) AS total,
+        sum(read) AS readCount,
+        coalesce(max(chapters.date_upload), 0) AS latestUpload,
+        coalesce(max(history.last_read), 0) AS lastRead,
+        coalesce(max(chapters.date_fetch), 0) AS fetchedAt,
+        sum(chapters.bookmark) AS bookmarkCount
+    FROM chapters
+    LEFT JOIN excluded_scanlators
+    ON chapters.manga_id = excluded_scanlators.manga_id
+    AND chapters.scanlator = excluded_scanlators.scanlator
+    LEFT JOIN history
+    ON chapters._id = history.chapter_id
+    WHERE excluded_scanlators.scanlator IS NULL
+    GROUP BY chapters.manga_id
+) AS C
+ON M.id = C.manga_id
+LEFT JOIN (
+    SELECT manga_id, group_concat(category_id) AS categories
+    FROM mangas_categories
+    GROUP BY manga_id
+) AS MC
+ON MC.manga_id = M.id
+WHERE M.user_favorite_at IS NOT NULL;
+
+CREATE VIEW updatesView AS
+SELECT
+    manga.id AS mangaId,
+    manga.remote_title AS mangaTitle,
+    chapters._id AS chapterId,
+    chapters.name AS chapterName,
+    chapters.scanlator,
+    chapters.url AS chapterUrl,
+    chapters.read,
+    chapters.bookmark,
+    chapters.last_page_read,
+    manga.source_id AS source,
+    manga.user_favorite_at AS favoriteAt,
+    manga.remote_cover AS thumbnailUrl,
+    manga.state_cover_last_modified AS coverLastModified,
+    chapters.date_upload AS dateUpload,
+    chapters.date_fetch AS datefetch,
+    excluded_scanlators.scanlator AS excludedScanlator
+FROM manga JOIN chapters
+ON manga.id = chapters.manga_id
+LEFT JOIN excluded_scanlators
+ON manga.id = excluded_scanlators.manga_id
+AND chapters.scanlator = excluded_scanlators.scanlator
+WHERE user_favorite_at IS NOT NULL
+AND date_fetch > user_favorite_at
+ORDER BY date_fetch DESC;

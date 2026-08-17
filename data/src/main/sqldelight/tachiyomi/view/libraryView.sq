@@ -8,7 +8,7 @@ SELECT
     coalesce(C.lastRead, 0) AS lastRead,
     coalesce(C.bookmarkCount, 0) AS bookmarkCount,
     coalesce(MC.categories, '0') AS categories
-FROM mangas M
+FROM manga M
 LEFT JOIN (
     SELECT
         chapters.manga_id,
@@ -27,14 +27,14 @@ LEFT JOIN (
     WHERE excluded_scanlators.scanlator IS NULL
     GROUP BY chapters.manga_id
 ) AS C
-ON M._id = C.manga_id
+ON M.id = C.manga_id
 LEFT JOIN (
     SELECT manga_id, group_concat(category_id) AS categories
     FROM mangas_categories
     GROUP BY manga_id
 ) AS MC
-ON MC.manga_id = M._id
-WHERE M.favorite = 1;
+ON MC.manga_id = M.id
+WHERE M.user_favorite_at IS NOT NULL;
 
 library:
 SELECT *

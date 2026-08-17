@@ -1,21 +1,21 @@
 CREATE VIEW historyView AS
 SELECT
     history._id AS id,
-    mangas._id AS mangaId,
+    manga.id AS mangaId,
     chapters._id AS chapterId,
-    mangas.title,
-    mangas.thumbnail_url AS thumbnailUrl,
-    mangas.source,
-    mangas.favorite,
-    mangas.cover_last_modified,
+    manga.remote_title AS title,
+    manga.remote_cover AS thumbnailUrl,
+    manga.source_id AS source,
+    manga.user_favorite_at AS favoriteAt,
+    manga.state_cover_last_modified,
     chapters.chapter_number AS chapterNumber,
     history.last_read AS readAt,
     history.time_read AS readDuration,
     max_last_read.last_read AS maxReadAt,
     max_last_read.chapter_id AS maxReadAtChapterId
-FROM mangas
+FROM manga
 JOIN chapters
-ON mangas._id = chapters.manga_id
+ON manga.id = chapters.manga_id
 JOIN history
 ON chapters._id = history.chapter_id
 JOIN (
@@ -34,8 +34,8 @@ chapterId,
 title,
 thumbnailUrl,
 source,
-favorite,
-cover_last_modified,
+favoriteAt,
+state_cover_last_modified,
 chapterNumber,
 readAt,
 readDuration
@@ -53,8 +53,8 @@ chapterId,
 title,
 thumbnailUrl,
 source,
-favorite,
-cover_last_modified,
+favoriteAt,
+state_cover_last_modified,
 chapterNumber,
 readAt,
 readDuration
