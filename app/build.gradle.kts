@@ -353,6 +353,17 @@ apollo {
             schemaFile.set(file("$srcDir/anilist.graphqls"))
         }
     }
+
+    service("shikimori") {
+        packageName.set("mihon.graphql.shikimori")
+        val srcDir = "$schemaBasePath/shikimori"
+        srcDir(file(srcDir))
+
+        introspection {
+            endpointUrl.set("https://shikimori.io/api/graphql")
+            schemaFile.set(file("$srcDir/shikimori.graphqls"))
+        }
+    }
 }
 
 androidComponents {
