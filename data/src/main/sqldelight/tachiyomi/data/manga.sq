@@ -63,9 +63,9 @@ getReadMangaNotInLibrary:
 SELECT *
 FROM manga
 WHERE user_favorite_at IS NULL AND id IN (
-    SELECT DISTINCT chapters.manga_id
-    FROM chapters
-    WHERE read = 1 OR last_page_read != 0
+    SELECT DISTINCT chapter.manga_id
+    FROM chapter
+    WHERE user_read = 1 OR user_last_page_read != 0
 );
 
 getAllManga:
@@ -120,11 +120,11 @@ chapter_counts AS (
         M.id AS manga_id,
         count(*) AS chapter_count
     FROM duplicates M
-    JOIN chapters C
+    JOIN chapter C
     ON M.id = C.manga_id
     LEFT JOIN excluded_scanlators ES
     ON C.manga_id = ES.manga_id
-    AND C.scanlator = ES.scanlator
+    AND C.remote_scanlator = ES.scanlator
     WHERE ES.scanlator IS NULL
     GROUP BY M.id
 )
@@ -188,9 +188,9 @@ AND (
     :keepReadManga = 0
     OR id NOT IN (
         SELECT DISTINCT manga_id
-        FROM chapters
-        WHERE read = 1
-        OR last_page_read != 0
+        FROM chapter
+        WHERE user_read = 1
+        OR user_last_page_read != 0
     )
 );
 

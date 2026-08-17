@@ -191,7 +191,7 @@ class MangaRestorer(
     private suspend fun insertNewChapters(chapters: List<Chapter>) {
         database.transaction {
             chapters.forEach { chapter ->
-                database.chaptersQueries.insert(
+                database.chapterQueries.insert(
                     chapter.mangaId,
                     chapter.url,
                     chapter.name,
@@ -203,7 +203,6 @@ class MangaRestorer(
                     chapter.sourceOrder,
                     chapter.dateFetch,
                     chapter.dateUpload,
-                    chapter.version,
                     chapter.memo,
                 )
             }
@@ -213,7 +212,7 @@ class MangaRestorer(
     private suspend fun updateExistingChapters(chapters: List<Chapter>) {
         database.transaction {
             chapters.forEach { chapter ->
-                database.chaptersQueries.update(
+                database.chapterQueries.update(
                     mangaId = null,
                     url = null,
                     name = null,
@@ -226,8 +225,6 @@ class MangaRestorer(
                     dateFetch = null,
                     dateUpload = null,
                     chapterId = chapter.id,
-                    version = chapter.version,
-                    isSyncing = 0,
                     memo = chapter.memo.let(MemoColumnAdapter::encode),
                 )
             }
@@ -325,7 +322,7 @@ class MangaRestorer(
             val item = history.getHistoryImpl()
 
             if (dbHistory == null) {
-                val chapter = database.chaptersQueries
+                val chapter = database.chapterQueries
                     .getChapterByUrlAndMangaId(history.url, manga.id)
                     .awaitAsOneOrNull()
                 return@mapNotNull if (chapter == null) {
@@ -333,7 +330,7 @@ class MangaRestorer(
                     null
                 } else {
                     // New history entry
-                    item.copy(chapterId = chapter._id)
+                    item.copy(chapterId = chapter.id)
                 }
             }
 

@@ -139,34 +139,156 @@ BEGIN
   SET state_modified_at = strftime('%s', 'now')
   WHERE id = new.id;
 END;
+
+-- ---------------------------------------------------------------------------------------------------------
+-- table - chapter
+-- ---------------------------------------------------------------------------------------------------------
+
+-- The entries that merged in the previous group brought their chapters with them
+UPDATE chapters
+SET manga_id = (SELECT keep_id FROM duplicate_mangas WHERE _id = chapters.manga_id)
+WHERE manga_id IN (SELECT _id FROM duplicate_mangas WHERE _id != keep_id);
+
+-- Moving the chapters over brings rows for the same chapter together, and duplicates like those are
+-- what issue #647 is about in the first place. The one with reading history is kept, the oldest
+-- otherwise, and the read state and history of the others are merged into it.
+CREATE TEMP TABLE duplicate_chapters AS
+SELECT
+    _id,
+    first_value(_id) OVER (PARTITION BY manga_id, url ORDER BY has_history DESC, _id ASC) AS keep_id
+FROM (
+    SELECT
+        _id,
+        manga_id,
+        url,
+        EXISTS(SELECT 1 FROM history WHERE history.chapter_id = chapters._id) AS has_history
+    FROM chapters
+    WHERE (manga_id, url) IN (
+        SELECT manga_id, url
+        FROM chapters
+        GROUP BY manga_id, url
+        HAVING count(*) > 1
+    )
+);
+
+UPDATE chapters
+SET read = merged.read,
+    bookmark = merged.bookmark,
+    last_page_read = merged.last_page_read,
+    date_fetch = merged.date_fetch,
+    date_upload = merged.date_upload
+FROM (
+    SELECT
+        D.keep_id,
+        max(C.read) AS read,
+        max(C.bookmark) AS bookmark,
+        max(C.last_page_read) AS last_page_read,
+        -- 0 means the fetch date was never recorded rather than "the beginning of time", so it only
+        -- wins when no copy recorded one. Updates only lists chapters fetched after the entry joined
+        -- the library, so letting a 0 through would hide the merged chapter from it.
+        coalesce(min(nullif(C.date_fetch, 0)), 0) AS date_fetch,
+        max(C.date_upload) AS date_upload
+    FROM duplicate_chapters D
+    JOIN chapters C
+    ON C._id = D._id
+    GROUP BY D.keep_id
+) AS merged
+WHERE chapters._id = merged.keep_id;
+
+-- The kept chapter has a history entry whenever any of its duplicates has one
+UPDATE history
+SET last_read = merged.last_read,
+    time_read = merged.time_read
+FROM (
+    SELECT
+        D.keep_id,
+        max(H.last_read) AS last_read,
+        -- Each duplicate accumulated its own reading time, so the durations add up; only the
+        -- last-read timestamp is a point in time and takes the latest.
+        sum(H.time_read) AS time_read
+    FROM duplicate_chapters D
+    JOIN history H
+    ON H.chapter_id = D._id
+    GROUP BY D.keep_id
+) AS merged
+WHERE history.chapter_id = merged.keep_id;
+
+-- Foreign keys are off during migrations, so the history of a discarded chapter goes explicitly
+DELETE FROM history
+WHERE chapter_id IN (SELECT _id FROM duplicate_chapters WHERE _id != keep_id);
+
+DELETE FROM chapters
+WHERE _id IN (SELECT _id FROM duplicate_chapters WHERE _id != keep_id);
+
+DROP TABLE duplicate_chapters;
+
+CREATE TABLE chapter(
+    id INTEGER NOT NULL PRIMARY KEY,
+    manga_id INTEGER NOT NULL,
+    remote_url TEXT NOT NULL,
+    remote_name TEXT NOT NULL,
+    remote_scanlator TEXT,
+    remote_chapter_number REAL NOT NULL,
+    remote_date_upload INTEGER NOT NULL,
+    remote_order INTEGER NOT NULL,
+    remote_memo BLOB NOT NULL,
+    user_read INTEGER NOT NULL,
+    user_bookmark INTEGER NOT NULL,
+    user_last_page_read INTEGER NOT NULL,
+    state_date_fetch INTEGER NOT NULL,
+    state_modified_at INTEGER NOT NULL,
+    UNIQUE(manga_id, remote_url),
+    FOREIGN KEY(manga_id) REFERENCES manga (id)
+    ON DELETE CASCADE
+);
+
+INSERT INTO chapter(
+    id, manga_id, remote_url, remote_name, remote_scanlator, remote_chapter_number, remote_date_upload,
+    remote_order, remote_memo, user_read, user_bookmark, user_last_page_read, state_date_fetch, state_modified_at
+)
+SELECT
+    _id, manga_id, url, name, scanlator, chapter_number, date_upload,
+    source_order, memo, read, bookmark, last_page_read, date_fetch, last_modified_at
+FROM chapters;
+
+DROP TABLE chapters;
+
+CREATE TRIGGER update_modified_at_chapter
+AFTER UPDATE ON chapter
+FOR EACH ROW
+BEGIN
+  UPDATE chapter
+  SET state_modified_at = strftime('%s', 'now')
+  WHERE id = new.id;
+END;
 -- The views read the columns that just changed, so they come back in their new shape
 CREATE VIEW historyView AS
 SELECT
     history._id AS id,
     manga.id AS mangaId,
-    chapters._id AS chapterId,
+    chapter.id AS chapterId,
     manga.remote_title AS title,
     manga.remote_cover AS thumbnailUrl,
     manga.source_id AS source,
     manga.user_favorite_at AS favoriteAt,
     manga.state_cover_last_modified,
-    chapters.chapter_number AS chapterNumber,
+    chapter.remote_chapter_number AS chapterNumber,
     history.last_read AS readAt,
     history.time_read AS readDuration,
     max_last_read.last_read AS maxReadAt,
     max_last_read.chapter_id AS maxReadAtChapterId
 FROM manga
-JOIN chapters
-ON manga.id = chapters.manga_id
+JOIN chapter
+ON manga.id = chapter.manga_id
 JOIN history
-ON chapters._id = history.chapter_id
+ON chapter.id = history.chapter_id
 JOIN (
-    SELECT chapters.manga_id,chapters._id AS chapter_id, MAX(history.last_read) AS last_read
-    FROM chapters JOIN history
-    ON chapters._id = history.chapter_id
-    GROUP BY chapters.manga_id
+    SELECT chapter.manga_id,chapter.id AS chapter_id, MAX(history.last_read) AS last_read
+    FROM chapter JOIN history
+    ON chapter.id = history.chapter_id
+    GROUP BY chapter.manga_id
 ) AS max_last_read
-ON chapters.manga_id = max_last_read.manga_id;
+ON chapter.manga_id = max_last_read.manga_id;
 
 CREATE VIEW libraryView AS
 SELECT
@@ -181,21 +303,21 @@ SELECT
 FROM manga M
 LEFT JOIN (
     SELECT
-        chapters.manga_id,
+        chapter.manga_id,
         count(*) AS total,
-        sum(read) AS readCount,
-        coalesce(max(chapters.date_upload), 0) AS latestUpload,
+        sum(user_read) AS readCount,
+        coalesce(max(chapter.remote_date_upload), 0) AS latestUpload,
         coalesce(max(history.last_read), 0) AS lastRead,
-        coalesce(max(chapters.date_fetch), 0) AS fetchedAt,
-        sum(chapters.bookmark) AS bookmarkCount
-    FROM chapters
+        coalesce(max(chapter.state_date_fetch), 0) AS fetchedAt,
+        sum(chapter.user_bookmark) AS bookmarkCount
+    FROM chapter
     LEFT JOIN excluded_scanlators
-    ON chapters.manga_id = excluded_scanlators.manga_id
-    AND chapters.scanlator = excluded_scanlators.scanlator
+    ON chapter.manga_id = excluded_scanlators.manga_id
+    AND chapter.remote_scanlator = excluded_scanlators.scanlator
     LEFT JOIN history
-    ON chapters._id = history.chapter_id
+    ON chapter.id = history.chapter_id
     WHERE excluded_scanlators.scanlator IS NULL
-    GROUP BY chapters.manga_id
+    GROUP BY chapter.manga_id
 ) AS C
 ON M.id = C.manga_id
 LEFT JOIN (
@@ -210,25 +332,25 @@ CREATE VIEW updatesView AS
 SELECT
     manga.id AS mangaId,
     manga.remote_title AS mangaTitle,
-    chapters._id AS chapterId,
-    chapters.name AS chapterName,
-    chapters.scanlator,
-    chapters.url AS chapterUrl,
-    chapters.read,
-    chapters.bookmark,
-    chapters.last_page_read,
+    chapter.id AS chapterId,
+    chapter.remote_name AS chapterName,
+    chapter.remote_scanlator AS scanlator,
+    chapter.remote_url AS chapterUrl,
+    chapter.user_read AS read,
+    chapter.user_bookmark AS bookmark,
+    chapter.user_last_page_read AS last_page_read,
     manga.source_id AS source,
     manga.user_favorite_at AS favoriteAt,
     manga.remote_cover AS thumbnailUrl,
     manga.state_cover_last_modified AS coverLastModified,
-    chapters.date_upload AS dateUpload,
-    chapters.date_fetch AS datefetch,
+    chapter.remote_date_upload AS dateUpload,
+    chapter.state_date_fetch AS datefetch,
     excluded_scanlators.scanlator AS excludedScanlator
-FROM manga JOIN chapters
-ON manga.id = chapters.manga_id
+FROM manga JOIN chapter
+ON manga.id = chapter.manga_id
 LEFT JOIN excluded_scanlators
 ON manga.id = excluded_scanlators.manga_id
-AND chapters.scanlator = excluded_scanlators.scanlator
+AND chapter.remote_scanlator = excluded_scanlators.scanlator
 WHERE user_favorite_at IS NOT NULL
-AND date_fetch > user_favorite_at
-ORDER BY date_fetch DESC;
+AND state_date_fetch > user_favorite_at
+ORDER BY state_date_fetch DESC;

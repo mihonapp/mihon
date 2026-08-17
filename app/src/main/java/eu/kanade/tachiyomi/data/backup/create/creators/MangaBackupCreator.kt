@@ -39,7 +39,7 @@ class MangaBackupCreator(
 
         if (options.chapters) {
             // Backup all the chapters
-            database.chaptersQueries
+            database.chapterQueries
                 .getChaptersByMangaId(
                     mangaId = manga.id,
                     applyScanlatorFilter = 0, // false
@@ -71,10 +71,10 @@ class MangaBackupCreator(
             val historyByMangaId = getHistory.await(manga.id)
             if (historyByMangaId.isNotEmpty()) {
                 val history = historyByMangaId.map { history ->
-                    val chapter = database.chaptersQueries
+                    val chapter = database.chapterQueries
                         .getChapterById(history.chapterId)
                         .awaitAsOne()
-                    BackupHistory(chapter.url, history.readAt?.time ?: 0L, history.readDuration)
+                    BackupHistory(chapter.remote_url, history.readAt?.time ?: 0L, history.readDuration)
                 }
                 if (history.isNotEmpty()) {
                     mangaObject.history = history

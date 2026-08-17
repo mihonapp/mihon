@@ -16,7 +16,7 @@ import kotlinx.serialization.protobuf.ProtoBuf
 import nl.adaptivity.xmlutil.XmlDeclMode
 import nl.adaptivity.xmlutil.core.XmlVersion
 import nl.adaptivity.xmlutil.serialization.XML
-import tachiyomi.data.Chapters
+import tachiyomi.data.Chapter
 import tachiyomi.data.Database
 import tachiyomi.data.DateColumnAdapter
 import tachiyomi.data.History
@@ -54,8 +54,8 @@ object AppBindings {
                 remote_update_strategyAdapter = UpdateStrategyColumnAdapter,
                 remote_memoAdapter = MemoColumnAdapter,
             ),
-            chaptersAdapter = Chapters.Adapter(
-                memoAdapter = MemoColumnAdapter,
+            chapterAdapter = Chapter.Adapter(
+                remote_memoAdapter = MemoColumnAdapter,
             ),
         )
     }
