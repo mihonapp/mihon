@@ -365,7 +365,30 @@ DROP TABLE history_temp;
 CREATE INDEX history_manga_id_index ON history(manga_id);
 CREATE INDEX history_read_at_index ON history(read_at);
 
--- The views come back reading the renamed columns
+-- ---------------------------------------------------------------------------------------------------------
+-- table - excluded_scanlator
+-- ---------------------------------------------------------------------------------------------------------
+
+CREATE TABLE excluded_scanlator(
+    manga_id INTEGER NOT NULL,
+    scanlator TEXT NOT NULL,
+    UNIQUE(manga_id, scanlator),
+    FOREIGN KEY(manga_id) REFERENCES manga (id)
+    ON DELETE CASCADE
+);
+
+-- Excluding a scanlator twice excludes it once, and merged entries brought their exclusions along, so
+-- the copies collapse. `excluded_scanlators_manga_id_index` is a prefix of the new constraint.
+INSERT INTO excluded_scanlator(manga_id, scanlator)
+SELECT DISTINCT coalesce(D.keep_id, ES.manga_id), ES.scanlator
+FROM excluded_scanlators ES
+LEFT JOIN duplicate_mangas D
+ON D._id = ES.manga_id;
+
+DROP TABLE excluded_scanlators;
+
+
+-- The views come back reading the new table
 CREATE VIEW historyView AS
 SELECT
     history.id AS id,
@@ -415,12 +438,12 @@ LEFT JOIN (
         coalesce(max(chapter.state_date_fetch), 0) AS fetchedAt,
         sum(chapter.user_bookmark) AS bookmarkCount
     FROM chapter
-    LEFT JOIN excluded_scanlators
-    ON chapter.manga_id = excluded_scanlators.manga_id
-    AND chapter.remote_scanlator = excluded_scanlators.scanlator
+    LEFT JOIN excluded_scanlator
+    ON chapter.manga_id = excluded_scanlator.manga_id
+    AND chapter.remote_scanlator = excluded_scanlator.scanlator
     LEFT JOIN history
     ON chapter.id = history.chapter_id
-    WHERE excluded_scanlators.scanlator IS NULL
+    WHERE excluded_scanlator.scanlator IS NULL
     GROUP BY chapter.manga_id
 ) AS C
 ON M.id = C.manga_id
@@ -449,12 +472,12 @@ SELECT
     manga.state_cover_last_modified AS coverLastModified,
     chapter.remote_date_upload AS dateUpload,
     chapter.state_date_fetch AS datefetch,
-    excluded_scanlators.scanlator AS excludedScanlator
+    excluded_scanlator.scanlator AS excludedScanlator
 FROM manga JOIN chapter
 ON manga.id = chapter.manga_id
-LEFT JOIN excluded_scanlators
-ON manga.id = excluded_scanlators.manga_id
-AND chapter.remote_scanlator = excluded_scanlators.scanlator
+LEFT JOIN excluded_scanlator
+ON manga.id = excluded_scanlator.manga_id
+AND chapter.remote_scanlator = excluded_scanlator.scanlator
 WHERE user_favorite_at IS NOT NULL
 AND state_date_fetch > user_favorite_at
 ORDER BY state_date_fetch DESC;

@@ -122,7 +122,7 @@ chapter_counts AS (
     FROM duplicates M
     JOIN chapter C
     ON M.id = C.manga_id
-    LEFT JOIN excluded_scanlators ES
+    LEFT JOIN excluded_scanlator ES
     ON C.manga_id = ES.manga_id
     AND C.remote_scanlator = ES.scanlator
     WHERE ES.scanlator IS NULL
