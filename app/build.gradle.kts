@@ -341,6 +341,20 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
 }
 
+apollo {
+    val schemaBasePath = "src/main/graphql/mihon/graphql"
+    service("anilist") {
+        packageName.set("mihon.graphql.anilist")
+        val srcDir = "$schemaBasePath/anilist"
+        srcDir(file(srcDir))
+
+        introspection {
+            endpointUrl.set("https://graphql.anilist.co")
+            schemaFile.set(file("$srcDir/anilist.graphqls"))
+        }
+    }
+}
+
 androidComponents {
     onVariants { variant ->
         val resSource = variant.sources.res ?: return@onVariants

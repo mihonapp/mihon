@@ -35,7 +35,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
 
     private val interceptor by lazy { AnilistInterceptor(this, getPassword()) }
 
-    private val api by lazy { AnilistApi(client, interceptor) }
+    private val api by lazy { AnilistApi(id, client, interceptor) }
 
     override val supportsReadingDates: Boolean = true
 
@@ -47,7 +47,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
         // If the preference is an int from APIv1, logout user to force using APIv2
         try {
             scorePreference.get()
-        } catch (e: ClassCastException) {
+        } catch (_: ClassCastException) {
             logout()
             scorePreference.delete()
         }
@@ -170,10 +170,10 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
     override suspend fun delete(track: DomainTrack) {
         if (track.libraryId == null || track.libraryId == 0L) {
             val libManga = api.findLibManga(track.toDbTrack(), getUsername().toInt()) ?: return
-            return api.deleteLibManga(track.copy(id = libManga.library_id!!))
+            return api.deleteLibManga2(track.copy(id = libManga.library_id!!))
         }
 
-        api.deleteLibManga(track)
+        api.deleteLibManga2(track)
     }
 
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {
@@ -207,7 +207,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
     }
 
     override suspend fun refresh(track: Track): Track {
-        val remoteTrack = api.getLibManga(track, getUsername().toInt())
+        val remoteTrack = api.findLibManga(track, getUsername().toInt()) ?: throw Exception("Could not find manga")
         track.copyPersonalFrom(remoteTrack)
         track.title = remoteTrack.title
         track.total_chapters = remoteTrack.total_chapters
@@ -221,7 +221,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
             val oauth = api.createOAuth(token)
             interceptor.setAuth(oauth)
             val currentUser = api.getCurrentUser()
-            scorePreference.set(currentUser.mediaListOptions.scoreFormat)
+            scorePreference.set(currentUser.scoreFormat)
             saveDisplayUsername(currentUser.name)
             saveCredentials(currentUser.id.toString(), oauth.accessToken)
         } catch (e: Throwable) {

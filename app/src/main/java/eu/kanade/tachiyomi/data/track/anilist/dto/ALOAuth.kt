@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.track.anilist.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.time.Clock
 
 @Serializable
 data class ALOAuth(
@@ -12,6 +13,6 @@ data class ALOAuth(
     val expires: Long,
     @SerialName("expires_in")
     val expiresIn: Long,
-)
-
-fun ALOAuth.isExpired() = System.currentTimeMillis() > expires
+) {
+    fun isExpired() = Clock.System.now().toEpochMilliseconds() > expires
+}
