@@ -25,12 +25,14 @@ LEFT JOIN (
     LEFT JOIN history
     ON chapter.id = history.chapter_id
     WHERE excluded_scanlator.scanlator IS NULL
+    AND chapter.manga_id IN (SELECT id FROM manga WHERE user_favorite_at IS NOT NULL)
     GROUP BY chapter.manga_id
 ) AS C
 ON M.id = C.manga_id
 LEFT JOIN (
     SELECT manga_id, group_concat(category_id) AS categories
     FROM manga_category
+    WHERE manga_id IN (SELECT id FROM manga WHERE user_favorite_at IS NOT NULL)
     GROUP BY manga_id
 ) AS MC
 ON MC.manga_id = M.id
