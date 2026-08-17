@@ -546,13 +546,13 @@ SELECT
     chapter.remote_url AS chapterUrl,
     chapter.user_read AS read,
     chapter.user_bookmark AS bookmark,
-    chapter.user_last_page_read AS last_page_read,
-    manga.source_id AS source,
+    chapter.user_last_page_read AS lastPageRead,
+    manga.source_id AS sourceId,
     manga.user_favorite_at AS favoriteAt,
     manga.remote_cover AS thumbnailUrl,
     manga.state_cover_last_modified AS coverLastModified,
     chapter.remote_date_upload AS dateUpload,
-    chapter.state_date_fetch AS datefetch,
+    chapter.state_date_fetch AS dateFetch,
     excluded_scanlator.scanlator AS excludedScanlator
 FROM manga JOIN chapter
 ON manga.id = chapter.manga_id
