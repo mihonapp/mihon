@@ -113,7 +113,7 @@
     <string name="app_not_available">Hindi magagamit ang app</string>
     <string name="second_to_last">Pangalawa sa huling kabanata</string>
     <string name="last_read_chapter">Huling nabasang kabanata</string>
-    <string name="disabled">Sarado</string>
+    <string name="disabled">Di-pinagana</string>
     <string name="pref_remove_after_marked_as_read">Pagkatapos na manu-manong namarka bilang nabasa na</string>
     <string name="pref_remove_after_read">Pagkatapos basahin, awtomatikong burahin</string>
     <string name="pref_webtoon_side_padding">Kapal ng gilid</string>
@@ -361,7 +361,7 @@
     <string name="username">Username (pangalan)</string>
     <string name="login_title">Mag-login sa %1$s</string>
     <string name="downloaded_only_summary">Isasala ang lahat ng mga entry sa iyong akalatan</string>
-    <string name="label_downloaded_only">Mga na-download lang</string>
+    <string name="label_downloaded_only">Na-download lamang</string>
     <string name="pref_acra_summary">Nakatutulong sa pag-ayos sa mga bug. Walang sensitibong data ang ipapadala</string>
     <string name="pref_enable_acra">Ipadala ang mga ulat ng pag-crash</string>
     <string name="check_for_updates">Maghanap ng update</string>
@@ -370,8 +370,8 @@
     <string name="version">Bersyon</string>
     <string name="website">Website</string>
     <string name="battery_optimization_setting_activity_not_found">Di mabuksan ang pagsasaayos ng iyong device</string>
-    <string name="battery_optimization_disabled">Nakapatay na ang pag-o-optimisa sa baterya</string>
-    <string name="pref_disable_battery_optimization">Patayin ang pag-o-optimisa sa baterya</string>
+    <string name="battery_optimization_disabled">Di na pinagana ang pag-o-optimisa sa baterya</string>
+    <string name="pref_disable_battery_optimization">Di-paganahin ang pag-o-optimisa sa baterya</string>
     <string name="pref_disable_battery_optimization_summary">Nakatutulong sa pag-update ng aklatan sa background at pag-backup</string>
     <string name="pref_refresh_library_covers">I-refresh ang mga pabalat ng aklatan</string>
     <string name="clear_database_completed">Binura na</string>
@@ -494,7 +494,7 @@
     <string name="tracking_guide">Gabay sa pag-track</string>
     <string name="action_start_downloading_now">Simulan ang pag-download ngayon</string>
     <string name="about_dont_kill_my_app">May dagdag na mga restriksyon sa app ang ilang mga modelo ng phone na pumapatay sa mga serbisyo sa background. May impormasyon sa site na ito para maayos ang naturang problema.</string>
-    <string name="restore_miui_warning">Maaaring hindi gumana nang maayos ang pag-backup/pag-restore kung nakasara ang MIUI optimization.</string>
+    <string name="restore_miui_warning">Maaaring hindi gumana nang maayos ang pag-backup/pag-restore kung di-pinagana ang MIUI optimization.</string>
     <string name="enhanced_tracking_info">Nagbibigay ng mga pinahusay na mga feature para sa ilang mga source. Awtomatikong tina-track ang mga entry kapag naidagdag ito sa iyong aklatan.</string>
     <string name="enhanced_services">Pinahusay na mga tracker</string>
     <string name="theme_midnightdusk">Hatinggabi</string>
@@ -562,7 +562,7 @@
     <string name="learn_more">Matuto pa</string>
     <string name="rotation_reverse_portrait">Baligtad na patayo</string>
     <string name="action_move_to_top_all_for_series">Ilagay sa taas ang serye</string>
-    <string name="disabled_nav">Nakasara</string>
+    <string name="disabled_nav">Di-pinagana</string>
     <string name="empty_backup_error">Walang entry sa Aklatan na maiba-backup</string>
     <string name="update_check_open">Buksan sa Github</string>
     <string name="error_saving_picture">Error sa pag-save sa larawan</string>
@@ -603,7 +603,7 @@
     <string name="pref_user_agent_string">Default na string ng user agent</string>
     <string name="action_remove_everything">Burahin lahat</string>
     <string name="appwidget_updates_description">Tingnan ang mga kamakailang nai-update na entry sa iyong aklatan</string>
-    <string name="appwidget_unavailable_locked">Di available ang widget kapag nakabukas ang lock</string>
+    <string name="appwidget_unavailable_locked">Di available ang widget kapag pinagana ang app lock</string>
     <string name="update_already_running">May ina-update sa ngayon</string>
     <string name="error_user_agent_string_blank">Hindi dapat blangko ang user agent string</string>
     <string name="theme_tidalwave">Daluyong</string>
@@ -770,7 +770,7 @@
     <string name="manga_interval_expected_update_soon">Malapit na</string>
     <string name="ext_revoke_trust">Bawiin ang mga pinagkakatiwalaang hindi kilalang extension</string>
     <string name="action_open_repo">Open source na repo</string>
-    <string name="pref_webtoon_disable_zoom_out">Patayin ang pag-zoom out</string>
+    <string name="pref_webtoon_disable_zoom_out">Di-paganahin ang pag-zoom out</string>
     <string name="action_add_anyway">Idagdag pa rin</string>
     <string name="pref_display_profile">Custom na profile sa display</string>
     <string name="label_upcoming">Paparating</string>
@@ -915,4 +915,27 @@
     <string name="pref_filter_update_categories_details">Hindi ipapakita ang mga update sa mga nakabukod na kategorya, kahit kabilang pa ang mga ito sa mga napiling kategorya.</string>
     <string name="pref_filter_upcoming_categories_details">Hindi ipapakita ang mga update sa mga nakabukod na kategorya, kahit kabilang pa ang mga ito sa mga napiling kategorya.</string>
     <string name="theme_tokyonight">Tokyo sa Gabi</string>
+    <string name="pref_high_quality_renderer">Gamitin ang mataas na kalidad na renderer</string>
+    <string name="webgpu_viewer">WebGPU</string>
+    <string name="pref_transition_animation">Animasyon ng transisyon</string>
+    <string name="transition_animation_default">Default</string>
+    <string name="transition_animation_flip_left">Pabuklat ng pahina (kaliwa)</string>
+    <string name="transition_animation_flip_right">Pabuklat ng pahina (kanan)</string>
+    <string name="transition_animation_stack_left">Pa-stack (kaliwa)</string>
+    <string name="transition_animation_stack_right">Pa-stack (kanan)</string>
+    <string name="transition_animation_stack_up">Pa-stack (pataas)</string>
+    <string name="transition_animation_stack_down">Pa-stack (pababa)</string>
+    <string name="transition_animation_sphere">Ispera</string>
+    <string name="transition_animation_cube_inside">Kubo (Loob)</string>
+    <string name="transition_animation_cube_outside">Kubo (Labas)</string>
+    <string name="transition_animation_fade">Fade</string>
+    <string name="transition_animation_fade_white">I-fade patungong puti</string>
+    <string name="pref_cutout_mode">Mode ng display cotout</string>
+    <string name="cutout_mode_ignore">Di-pansinin</string>
+    <string name="cutout_mode_avoid">Iwasan</string>
+    <string name="cutout_mode_shift">Pag-usog</string>
+    <string name="pref_dual_page_view">View ng dalawang pahina</string>
+    <string name="dual_page_view_never">Hindi kailanman</string>
+    <string name="dual_page_view_always">Palagi</string>
+    <string name="dual_page_view_wide">Kapag malapad</string>
 </resources>
