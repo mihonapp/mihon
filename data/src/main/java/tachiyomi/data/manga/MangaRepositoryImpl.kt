@@ -139,14 +139,14 @@ class MangaRepositoryImpl(
     }
 
     override suspend fun getExcludedScanlators(mangaId: Long): Set<String> {
-        return database.excluded_scanlatorsQueries
+        return database.excluded_scanlatorQueries
             .getExcludedScanlatorsByMangaId(mangaId)
             .awaitAsList()
             .toSet()
     }
 
     override fun getExcludedScanlatorsAsFlow(mangaId: Long): Flow<Set<String>> {
-        return database.excluded_scanlatorsQueries
+        return database.excluded_scanlatorQueries
             .getExcludedScanlatorsByMangaId(mangaId)
             .subscribeToList()
             .map { it.toSet() }
@@ -154,14 +154,14 @@ class MangaRepositoryImpl(
 
     override suspend fun setExcludedScanlators(mangaId: Long, excludedScanlators: Set<String>) {
         database.transaction {
-            val current = database.excluded_scanlatorsQueries
+            val current = database.excluded_scanlatorQueries
                 .getExcludedScanlatorsByMangaId(mangaId)
                 .awaitAsList()
                 .toSet()
             excludedScanlators.minus(current).forEach { scanlator ->
-                database.excluded_scanlatorsQueries.insert(mangaId, scanlator)
+                database.excluded_scanlatorQueries.insert(mangaId, scanlator)
             }
-            database.excluded_scanlatorsQueries.remove(mangaId, current.minus(excludedScanlators))
+            database.excluded_scanlatorQueries.remove(mangaId, current.minus(excludedScanlators))
         }
     }
 
