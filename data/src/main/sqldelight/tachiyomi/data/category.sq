@@ -1,0 +1,70 @@
+CREATE TABLE category(
+    id INTEGER NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    `order` INTEGER NOT NULL UNIQUE,
+    flags INTEGER NOT NULL
+);
+
+-- Insert system category
+INSERT OR IGNORE INTO category(id, name, `order`, flags) VALUES (0, "", -1, 0);
+-- Disallow deletion of default category
+CREATE TRIGGER IF NOT EXISTS system_category_delete_trigger BEFORE DELETE
+ON category
+BEGIN SELECT CASE
+    WHEN old.id <= 0 THEN
+        RAISE(ABORT, "System category can't be deleted")
+    END;
+END;
+
+getCategory:
+SELECT *
+FROM category
+WHERE id = :id
+LIMIT 1;
+
+getCategories:
+SELECT
+id,
+name,
+`order`,
+flags
+FROM category
+ORDER BY `order`;
+
+getCategoriesByMangaId:
+SELECT
+C.id,
+C.name,
+C.`order`,
+C.flags
+FROM category C
+JOIN mangas_categories MC
+ON C.id = MC.category_id
+WHERE MC.manga_id = :mangaId;
+
+insert:
+INSERT INTO category(name, `order`, flags)
+VALUES (:name, :order, :flags);
+
+delete:
+DELETE FROM category
+WHERE id = :categoryId;
+
+updateName:
+UPDATE category
+SET name = :name
+WHERE id = :categoryId;
+
+updateOrder:
+UPDATE category
+SET `order` = :order
+WHERE id = :categoryId;
+
+updateFlags:
+UPDATE category
+SET flags = :flags
+WHERE id = :categoryId;
+
+updateAllFlags:
+UPDATE category SET
+flags = coalesce(:flags, flags);
