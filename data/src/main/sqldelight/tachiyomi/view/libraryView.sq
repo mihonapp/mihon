@@ -30,7 +30,7 @@ LEFT JOIN (
 ON M.id = C.manga_id
 LEFT JOIN (
     SELECT manga_id, group_concat(category_id) AS categories
-    FROM mangas_categories
+    FROM manga_category
     GROUP BY manga_id
 ) AS MC
 ON MC.manga_id = M.id

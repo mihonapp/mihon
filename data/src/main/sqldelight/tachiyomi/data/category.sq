@@ -38,7 +38,7 @@ C.name,
 C.`order`,
 C.flags
 FROM category C
-JOIN mangas_categories MC
+JOIN manga_category MC
 ON C.id = MC.category_id
 WHERE MC.manga_id = :mangaId;
 

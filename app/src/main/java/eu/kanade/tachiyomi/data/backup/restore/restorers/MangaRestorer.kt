@@ -306,9 +306,9 @@ class MangaRestorer(
 
         if (mangaCategoriesToUpdate.isNotEmpty()) {
             database.transaction {
-                database.mangas_categoriesQueries.deleteMangaCategoryByMangaId(manga.id)
+                database.manga_categoryQueries.deleteMangaCategoryByMangaId(manga.id)
                 mangaCategoriesToUpdate.forEach { (mangaId, categoryId) ->
-                    database.mangas_categoriesQueries.insert(mangaId, categoryId)
+                    database.manga_categoryQueries.insert(mangaId, categoryId)
                 }
             }
         }

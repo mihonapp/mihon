@@ -298,7 +298,35 @@ BEGIN SELECT CASE
         RAISE(ABORT, "System category can't be deleted")
     END;
 END;
--- The views come back unchanged; only the table under `mangas_categories` was replaced
+
+-- ---------------------------------------------------------------------------------------------------------
+-- table - manga_category
+-- ---------------------------------------------------------------------------------------------------------
+
+-- The surrogate key is gone: a manga belongs to a category once, and that pair is the identity of the row
+CREATE TABLE manga_category(
+    manga_id INTEGER NOT NULL,
+    category_id INTEGER NOT NULL,
+    UNIQUE(manga_id, category_id),
+    FOREIGN KEY(category_id) REFERENCES category (id)
+    ON DELETE CASCADE,
+    FOREIGN KEY(manga_id) REFERENCES manga (id)
+    ON DELETE CASCADE
+);
+
+-- Entries merged in the manga group brought their category rows with them, so the same pair can appear
+-- twice by now; membership carries nothing else, so the copies simply collapse.
+INSERT INTO manga_category(manga_id, category_id)
+SELECT DISTINCT coalesce(D.keep_id, MC.manga_id), MC.category_id
+FROM mangas_categories MC
+LEFT JOIN duplicate_mangas D
+ON D._id = MC.manga_id;
+
+DROP TABLE mangas_categories;
+
+CREATE INDEX manga_category_category_id_index ON manga_category(category_id);
+
+-- The views come back reading the new table
 CREATE VIEW historyView AS
 SELECT
     history._id AS id,
@@ -359,7 +387,7 @@ LEFT JOIN (
 ON M.id = C.manga_id
 LEFT JOIN (
     SELECT manga_id, group_concat(category_id) AS categories
-    FROM mangas_categories
+    FROM manga_category
     GROUP BY manga_id
 ) AS MC
 ON MC.manga_id = M.id

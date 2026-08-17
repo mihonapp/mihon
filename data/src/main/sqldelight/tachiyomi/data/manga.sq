@@ -145,12 +145,12 @@ AND (
     -- includedEmpty being true expresses "don't care" state and bypasses the membership filter
     :includedEmpty
     OR EXISTS (
-        SELECT 1 FROM mangas_categories
-        WHERE mangas_categories.manga_id = manga.id
-        AND COALESCE(mangas_categories.category_id, 0) IN :includedCategories
+        SELECT 1 FROM manga_category
+        WHERE manga_category.manga_id = manga.id
+        AND COALESCE(manga_category.category_id, 0) IN :includedCategories
     )
     OR (0 IN :includedCategories AND NOT EXISTS (
-        SELECT 1 FROM mangas_categories WHERE mangas_categories.manga_id = manga.id)
+        SELECT 1 FROM manga_category WHERE manga_category.manga_id = manga.id)
     )
 )
 AND (
@@ -158,13 +158,13 @@ AND (
     :excludedEmpty
     OR (
         NOT EXISTS (
-            SELECT 1 FROM mangas_categories
-            WHERE mangas_categories.manga_id = manga.id
-            AND COALESCE(mangas_categories.category_id, 0) IN :excludedCategories
+            SELECT 1 FROM manga_category
+            WHERE manga_category.manga_id = manga.id
+            AND COALESCE(manga_category.category_id, 0) IN :excludedCategories
         )
         AND (
             0 NOT IN :excludedCategories
-            OR EXISTS (SELECT 1 FROM mangas_categories WHERE mangas_categories.manga_id = manga.id)
+            OR EXISTS (SELECT 1 FROM manga_category WHERE manga_category.manga_id = manga.id)
         )
     )
 )
