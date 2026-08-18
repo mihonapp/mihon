@@ -461,6 +461,13 @@ class ReaderViewModel(
         }
     }
 
+    /** Records the panel-by-panel stop currently shown, so it survives the viewer being recreated. */
+    fun savePanelStop(pageIndex: Int, stopIndex: Int) {
+        mutableState.update {
+            it.copy(savedPanelStop = PanelStopPosition(pageIndex, stopIndex))
+        }
+    }
+
     /**
      * Called every time a page changes on the reader. Used to mark the flag of chapters being
      * read, update tracking services, enqueue downloaded chapter deletion, and updating the active chapter if this
@@ -813,12 +820,20 @@ class ReaderViewModel(
         mutableState.update { it.copy(dialog = Dialog.Settings) }
     }
 
+    fun openPageGridDialog() {
+        mutableState.update { it.copy(dialog = Dialog.PageGrid) }
+    }
+
     fun closeDialog() {
         mutableState.update { it.copy(dialog = null) }
     }
 
     fun setBrightnessOverlayValue(value: Int) {
         mutableState.update { it.copy(brightnessOverlayValue = value) }
+    }
+
+    fun previewPanelOpacity(value: Int?) {
+        mutableState.update { it.copy(panelOpacityPreview = value) }
     }
 
     /**
@@ -981,12 +996,27 @@ class ReaderViewModel(
         val currentPage: Int = -1,
 
         /**
+         * Which panel stop the panel-by-panel viewer was on, for the page it was on, so rotating
+         * the device (which recreates the viewer) resumes on the same panel instead of the start
+         * of the page. Session-only — not persisted, unlike [currentPage].
+         */
+        val savedPanelStop: PanelStopPosition? = null,
+
+        /**
          * Viewer used to display the pages (pager, webtoon, ...).
          */
         val viewer: Viewer? = null,
         val dialog: Dialog? = null,
         val menuVisible: Boolean = false,
         @IntRange(from = -100, to = 100) val brightnessOverlayValue: Int = 0,
+
+        /**
+         * The panel overlay opacity value while the settings slider is actively being dragged, so
+         * a small indicator can be shown directly over the reader content — the settings sheet
+         * itself is faded out during the drag (to preview the overlay unobstructed), which would
+         * otherwise hide the value along with everything else in it. Null when not dragging.
+         */
+        val panelOpacityPreview: Int? = null,
     ) {
         val currentChapter: ReaderChapter?
             get() = viewerChapters?.currChapter
@@ -995,11 +1025,15 @@ class ReaderViewModel(
             get() = currentChapter?.pages?.size ?: -1
     }
 
+    /** A panel-by-panel stop index for a specific page, identified by its index within the chapter. */
+    data class PanelStopPosition(val pageIndex: Int, val stopIndex: Int)
+
     sealed interface Dialog {
         data object Loading : Dialog
         data object Settings : Dialog
         data object ReadingModeSelect : Dialog
         data object OrientationModeSelect : Dialog
+        data object PageGrid : Dialog
         data class PageActions(val page: ReaderPage) : Dialog
     }
 

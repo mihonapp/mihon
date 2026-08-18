@@ -457,6 +457,11 @@
     <string name="webtoon_viewer">Long strip</string>
     <string name="vertical_plus_viewer">Long strip with gaps</string>
     <string name="panel_by_panel_viewer">Panel by panel</string>
+    <string name="pref_panel_by_panel_right_to_left">Right to left</string>
+    <string name="pref_panel_by_panel_show_full_page_intro">Show full page before panels</string>
+    <string name="pref_panel_by_panel_show_full_page_outro">Show full page after panels</string>
+    <string name="pref_panel_by_panel_overlay_opacity">Panel overlay opacity</string>
+    <string name="action_page_grid">Page grid</string>
     <string name="pager_viewer">Paged</string>
     <string name="pref_viewer_nav">Tap zones</string>
     <string name="pref_image_scale_type">Scale type</string>

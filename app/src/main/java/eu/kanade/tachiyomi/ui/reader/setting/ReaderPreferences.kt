@@ -62,6 +62,34 @@ class ReaderPreferences(
         ReadingMode.RIGHT_TO_LEFT.flagValue,
     )
 
+    /**
+     * Panel-by-panel navigation order. Unlike [ReadingMode.LEFT_TO_RIGHT]/[ReadingMode.RIGHT_TO_LEFT],
+     * [ReadingMode.PANEL_BY_PANEL] is a single mode with no direction of its own, so this is tracked
+     * separately. Defaults to right-to-left to match typical manga.
+     */
+    val panelByPanelRightToLeft: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_panel_by_panel_right_to_left",
+        true,
+    )
+
+    /** Whether a page starts with a full-page reveal before stepping into its first panel. */
+    val panelByPanelShowFullPageIntro: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_panel_by_panel_show_full_page_intro",
+        false,
+    )
+
+    /** Whether a page ends with a full-page reveal after its last panel, before turning the page. */
+    val panelByPanelShowFullPageOutro: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_panel_by_panel_show_full_page_outro",
+        true,
+    )
+
+    /** Opacity of the scrim dimming everything outside the current panel, 0 (transparent) to 100 (opaque black). */
+    val panelByPanelOverlayOpacity: Preference<Int> = preferenceStore.getInt(
+        "pref_panel_by_panel_overlay_opacity",
+        65,
+    )
+
     val defaultOrientationType: Preference<Int> = preferenceStore.getInt(
         "pref_default_orientation_type_key",
         ReaderOrientation.FREE.flagValue,

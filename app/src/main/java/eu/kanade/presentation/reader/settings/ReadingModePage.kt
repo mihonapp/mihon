@@ -15,6 +15,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.PanelByPanelViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import mihon.app.di.appGraph
@@ -28,7 +29,12 @@ import tachiyomi.presentation.core.util.collectAsState
 import java.text.NumberFormat
 
 @Composable
-internal fun ColumnScope.ReadingModePage(viewModel: ReaderSettingsViewModel) {
+internal fun ColumnScope.ReadingModePage(
+    viewModel: ReaderSettingsViewModel,
+    onHideMenus: () -> Unit = {},
+    onShowMenus: () -> Unit = {},
+    onOpacityPreview: (Int?) -> Unit = {},
+) {
     HeadingItem(MR.strings.pref_category_for_this_series)
     val manga by viewModel.mangaFlow.collectAsState()
 
@@ -77,12 +83,57 @@ internal fun ColumnScope.ReadingModePage(viewModel: ReaderSettingsViewModel) {
     val viewer by viewModel.viewerFlow.collectAsState()
     if (viewer is WebtoonViewer) {
         WebtoonViewerSettings(viewModel)
+    } else if (viewer is PanelByPanelViewer) {
+        PanelByPanelViewerSettings(viewModel, onHideMenus, onShowMenus, onOpacityPreview)
     } else {
         PagerViewerSettings(viewModel)
         if (viewer is WebGpuViewer) {
             WebGpuViewerSettings(viewModel)
         }
     }
+}
+
+@Composable
+private fun ColumnScope.PanelByPanelViewerSettings(
+    viewModel: ReaderSettingsViewModel,
+    onHideMenus: () -> Unit,
+    onShowMenus: () -> Unit,
+    onOpacityPreview: (Int?) -> Unit,
+) {
+    HeadingItem(MR.strings.panel_by_panel_viewer)
+
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_panel_by_panel_right_to_left),
+        pref = viewModel.preferences.panelByPanelRightToLeft,
+    )
+
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_panel_by_panel_show_full_page_intro),
+        pref = viewModel.preferences.panelByPanelShowFullPageIntro,
+    )
+
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_panel_by_panel_show_full_page_outro),
+        pref = viewModel.preferences.panelByPanelShowFullPageOutro,
+    )
+
+    val overlayOpacity by viewModel.preferences.panelByPanelOverlayOpacity.collectAsState()
+    SliderItem(
+        value = overlayOpacity,
+        valueRange = 0..100,
+        label = stringResource(MR.strings.pref_panel_by_panel_overlay_opacity),
+        valueString = "$overlayOpacity%",
+        onChange = {
+            onHideMenus()
+            onOpacityPreview(it)
+            viewModel.preferences.panelByPanelOverlayOpacity.set(it)
+        },
+        onValueChangeFinished = {
+            onOpacityPreview(null)
+            onShowMenus()
+        },
+        pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+    )
 }
 
 @Composable

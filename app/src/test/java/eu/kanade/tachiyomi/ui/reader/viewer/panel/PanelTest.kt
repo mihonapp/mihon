@@ -42,6 +42,45 @@ class PanelTest {
     }
 
     @Test
+    fun `flattenToStops adds a full-page intro before the first panel when enabled`() {
+        val panels = listOf(Panel(bounds = PanelRect(0f, 0f, 0.5f, 1f)))
+
+        val stops = panels.flattenToStops(showIntro = true, showOutro = false)
+
+        assertEquals(listOf(PanelRect.FULL_PAGE, PanelRect(0f, 0f, 0.5f, 1f)), stops)
+    }
+
+    @Test
+    fun `flattenToStops brackets both ends when intro and outro are both enabled`() {
+        val panels = listOf(Panel(bounds = PanelRect(0f, 0f, 0.5f, 1f)))
+
+        val stops = panels.flattenToStops(showIntro = true, showOutro = true)
+
+        assertEquals(
+            listOf(PanelRect.FULL_PAGE, PanelRect(0f, 0f, 0.5f, 1f), PanelRect.FULL_PAGE),
+            stops,
+        )
+    }
+
+    @Test
+    fun `flattenToStops has no full-page reveal at all when both are disabled`() {
+        val panels = listOf(Panel(bounds = PanelRect(0f, 0f, 0.5f, 1f)))
+
+        val stops = panels.flattenToStops(showIntro = false, showOutro = false)
+
+        assertEquals(listOf(PanelRect(0f, 0f, 0.5f, 1f)), stops)
+    }
+
+    @Test
+    fun `flattenToStops with intro still collapses to a single stop for the no-panels fallback`() {
+        val fallback = Panel(bounds = PanelRect.FULL_PAGE)
+
+        val stops = listOf(fallback).flattenToStops(showIntro = true, showOutro = true)
+
+        assertEquals(listOf(PanelRect.FULL_PAGE), stops)
+    }
+
+    @Test
     fun `PanelRect width and height are computed from bounds`() {
         val rect = PanelRect(left = 0.2f, top = 0.1f, right = 0.8f, bottom = 0.6f)
 

@@ -27,6 +27,8 @@ fun ReaderBottomBar(
     onClickCropBorder: () -> Unit,
     onClickSettings: () -> Unit,
     modifier: Modifier = Modifier,
+    isPanelByPanel: Boolean = false,
+    onClickPageGrid: () -> Unit = {},
 ) {
     Row(
         modifier = modifier
@@ -48,11 +50,20 @@ fun ReaderBottomBar(
             )
         }
 
-        IconButton(onClick = onClickCropBorder) {
-            Icon(
-                painter = painterResource(if (cropEnabled) R.drawable.ic_crop_24dp else R.drawable.ic_crop_off_24dp),
-                contentDescription = stringResource(MR.strings.pref_crop_borders),
-            )
+        if (isPanelByPanel) {
+            IconButton(onClick = onClickPageGrid) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_grid_view_24dp),
+                    contentDescription = stringResource(MR.strings.action_page_grid),
+                )
+            }
+        } else {
+            IconButton(onClick = onClickCropBorder) {
+                Icon(
+                    painter = painterResource(if (cropEnabled) R.drawable.ic_crop_24dp else R.drawable.ic_crop_off_24dp),
+                    contentDescription = stringResource(MR.strings.pref_crop_borders),
+                )
+            }
         }
 
         IconButton(onClick = onClickSettings) {

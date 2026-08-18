@@ -26,8 +26,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -52,6 +55,7 @@ import eu.kanade.core.util.ifSourcesLoaded
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.reader.DisplayRefreshHost
 import eu.kanade.presentation.reader.OrientationSelectDialog
+import eu.kanade.presentation.reader.PanelPageGridSheet
 import eu.kanade.presentation.reader.ReaderContentOverlay
 import eu.kanade.presentation.reader.ReaderPageActionsDialog
 import eu.kanade.presentation.reader.ReaderPageIndicator
@@ -77,6 +81,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.PanelByPanelViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuViewer
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
@@ -278,6 +283,24 @@ class ReaderActivity : BaseActivity() {
             ContentOverlay(state = state)
 
             AppBars(state = state)
+
+            state.panelOpacityPreview?.let { opacity ->
+                // Lives in the activity's own compose tree, not the settings dialog's — the dialog
+                // fades to transparent while this slider is dragged (so the overlay preview isn't
+                // obstructed), which would otherwise take any in-dialog value label down with it.
+                Surface(
+                    modifier = Modifier.align(Alignment.Center),
+                    shape = MaterialTheme.shapes.small,
+                    color = MaterialTheme.colorScheme.inverseSurface,
+                ) {
+                    Text(
+                        text = "$opacity%",
+                        color = MaterialTheme.colorScheme.inverseOnSurface,
+                        style = MaterialTheme.typography.labelLarge,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    )
+                }
+            }
         }
 
         val onDismissRequest = viewModel::closeDialog
@@ -303,6 +326,7 @@ class ReaderActivity : BaseActivity() {
                     onShowMenus = { setMenuVisibility(true) },
                     onHideMenus = { setMenuVisibility(false) },
                     viewModel = settingsviewModel,
+                    onOpacityPreview = viewModel::previewPanelOpacity,
                 )
             }
             is ReaderViewModel.Dialog.ReadingModeSelect -> {
@@ -334,6 +358,17 @@ class ReaderActivity : BaseActivity() {
                     onShare = viewModel::shareImage,
                     onSave = viewModel::saveImage,
                 )
+            }
+            is ReaderViewModel.Dialog.PageGrid -> {
+                val pages = state.currentChapter?.pages
+                if (pages != null) {
+                    PanelPageGridSheet(
+                        pages = pages,
+                        currentPageIndex = state.currentPage,
+                        onSelectPage = ::moveToPageIndex,
+                        onDismissRequest = onDismissRequest,
+                    )
+                }
             }
             null -> {}
         }
@@ -528,6 +563,8 @@ class ReaderActivity : BaseActivity() {
                 menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
             },
             onClickSettings = viewModel::openSettingsDialog,
+            isPanelByPanel = state.viewer is PanelByPanelViewer,
+            onClickPageGrid = viewModel::openPageGridDialog,
         )
     }
 

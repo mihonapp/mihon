@@ -1,8 +1,17 @@
 package tachiyomi.presentation.core.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsDraggedAsState
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.FlowRowScope
@@ -10,6 +19,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -30,6 +40,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
@@ -182,6 +193,8 @@ fun SliderItem(
     valueString: String = value.toString(),
     labelStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     pillColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
+    onValueChangeFinished: (() -> Unit)? = null,
+    showValueIndicatorWhileDragging: Boolean = false,
 ) {
     BaseSliderItem(
         value = value,
@@ -192,6 +205,8 @@ fun SliderItem(
         onChange = onChange,
         titleStyle = labelStyle,
         pillColor = pillColor,
+        onValueChangeFinished = onValueChangeFinished,
+        showValueIndicatorWhileDragging = showValueIndicatorWhileDragging,
         modifier = Modifier.padding(
             horizontal = SettingsItemsPaddings.Horizontal,
             vertical = SettingsItemsPaddings.Vertical,
@@ -212,8 +227,11 @@ fun BaseSliderItem(
     titleStyle: TextStyle = MaterialTheme.typography.titleLarge,
     subtitleStyle: TextStyle = MaterialTheme.typography.bodySmall,
     pillColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
+    onValueChangeFinished: (() -> Unit)? = null,
+    showValueIndicatorWhileDragging: Boolean = false,
 ) {
     val haptic = LocalHapticFeedback.current
+    val interactionSource = remember { MutableInteractionSource() }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -252,7 +270,49 @@ fun BaseSliderItem(
             },
             valueRange = valueRange,
             steps = steps,
+            onValueChangeFinished = onValueChangeFinished,
+            interactionSource = interactionSource,
+            thumb = if (showValueIndicatorWhileDragging) {
+                { SliderThumbWithValueLabel(interactionSource, valueString) }
+            } else {
+                { SliderDefaults.Thumb(interactionSource = interactionSource) }
+            },
         )
+    }
+}
+
+/**
+ * A standard slider thumb with a small value bubble that fades in above it while the user is
+ * actively pressing or dragging — so the current value stays visible even when something else
+ * (e.g. the reader's own UI, temporarily hidden to preview an overlay) would otherwise be the
+ * only place showing it.
+ */
+@Composable
+private fun SliderThumbWithValueLabel(interactionSource: MutableInteractionSource, valueString: String) {
+    val isDragged by interactionSource.collectIsDraggedAsState()
+    val isPressed by interactionSource.collectIsPressedAsState()
+    Box(contentAlignment = Alignment.TopCenter) {
+        AnimatedVisibility(
+            visible = isDragged || isPressed,
+            enter = fadeIn() + scaleIn(),
+            exit = fadeOut() + scaleOut(),
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .offset(y = (-36).dp),
+        ) {
+            Surface(
+                shape = MaterialTheme.shapes.small,
+                color = MaterialTheme.colorScheme.inverseSurface,
+            ) {
+                Text(
+                    text = valueString,
+                    color = MaterialTheme.colorScheme.inverseOnSurface,
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                )
+            }
+        }
+        SliderDefaults.Thumb(interactionSource = interactionSource)
     }
 }
 

@@ -135,6 +135,11 @@ android {
         }
     }
 
+    // Keep the panel-detection TFLite model uncompressed so it can be memory-mapped by the interpreter.
+    androidResources {
+        noCompress += "tflite"
+    }
+
     packaging {
         jniLibs {
             keepDebugSymbols += listOf(
@@ -295,6 +300,9 @@ dependencies {
         exclude(module = "image-decoder")
     }
     implementation(libs.image.decoder)
+
+    // Panel-by-panel ML panel detection
+    implementation(libs.tensorflow.lite)
 
     implementation(libs.webgpuviewer)
     implementation(libs.kim)
