@@ -364,6 +364,17 @@ apollo {
             schemaFile.set(file("$srcDir/shikimori.graphqls"))
         }
     }
+
+    service("suwayomi") {
+        packageName.set("mihon.graphql.suwayomi")
+        val srcDir = "$schemaBasePath/suwayomi"
+        srcDir(file(srcDir))
+
+        introspection {
+            endpointUrl.set("http://localhost:4567/api/graphql")
+            schemaFile.set(file("$srcDir/suwayomi.graphqls"))
+        }
+    }
 }
 
 androidComponents {
