@@ -262,7 +262,6 @@
     <string name="file_select_backup">เลือกแฟ้มข้อมูลสำรอง</string>
     <string name="update_check_confirm">ดาวน์โหลด</string>
     <string name="update_check_no_new_updates">ไม่มีการอัปเดตใหม่</string>
-    <string name="update_check_notification_download_in_progress">กำลังดาวน์โหลด…</string>
     <string name="update_check_notification_update_available">มีเวอร์ชั่นใหม่!</string>
     <string name="information_no_downloads">ไม่มีการดาวน์โหลด</string>
     <string name="information_no_recent">ไม่มีอัปเดตล่าสุด</string>
@@ -503,7 +502,6 @@
     <string name="cover_saved">บันทึกปกแล้ว</string>
     <string name="error_saving_cover">ผิดพลาดในการบันทึกปก</string>
     <string name="source_unsupported">ไม่รองรับแหล่งที่มานี้</string>
-    <string name="channel_app_updates">แอพอัปเดต</string>
     <string name="label_default">ค่าเริ่มต้น</string>
     <string name="error_sharing_cover">ผิดพลาดในการแบ่งปันปก</string>
     <string name="action_start_downloading_now">เริ่มดาวน์โหลดเลย</string>
@@ -819,11 +817,6 @@
     <string name="pref_mark_duplicate_read_chapter_read_existing">หลังจากอ่านตอน</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">หลังจากเรียกข้อมูลตอนใหม่</string>
     <string name="pref_hide_missing_chapter_indicators">ซ่อนตัวแสดงตอนที่หายไป</string>
-    <string name="pref_hardware_bitmap_threshold">เกณฑ์บิตแมปฮาร์ดแวร์กำหนดเอง</string>
-    <string name="pref_hardware_bitmap_threshold_default">ค่าเริ่มต้น (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">หากตัวอ่านโหลดภาพเปล่า ให้ลดเกณฑ์ลงทีละน้อย\nเลือกแล้ว: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">ใช้ตัวถอดรหัสแบบเก่าสำหรับตัวอ่านภาพยาว</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">มีผลต่อประสิทธิภาพ เปิดใช้งานเฉพาะเมื่อการลดเกณฑ์บิตแมปไม่สามารถแก้ไขปัญหาภาพเปล่าได้</string>
     <string name="storage_failed_to_create_download_directory">เกิดข้อผิดพลาดในการสร้างไดเรกเทอรี่ดาวน์โหลด</string>
     <string name="storage_failed_to_create_directory">เกิดข้อผิดพลาดในการสร้างไดเรกเทอรี่: %s</string>
     <string name="export">ส่งออก</string>
