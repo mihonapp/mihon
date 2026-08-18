@@ -25,7 +25,7 @@ object HistoryMapper {
         title: String,
         thumbnailUrl: String?,
         sourceId: Long,
-        isFavorite: Boolean,
+        favoriteAt: Long?,
         coverLastModified: Long,
         chapterNumber: Double,
         readAt: Date?,
@@ -41,7 +41,7 @@ object HistoryMapper {
         coverData = MangaCover(
             mangaId = mangaId,
             sourceId = sourceId,
-            isMangaFavorite = isFavorite,
+            isMangaFavorite = favoriteAt != null,
             url = thumbnailUrl,
             lastModified = coverLastModified,
         ),

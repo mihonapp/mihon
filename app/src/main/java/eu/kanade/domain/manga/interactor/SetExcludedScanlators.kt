@@ -11,16 +11,16 @@ class SetExcludedScanlators(
 
     suspend fun await(mangaId: Long, excludedScanlators: Set<String>) {
         database.transaction {
-            val currentExcluded = database.excluded_scanlatorsQueries
+            val currentExcluded = database.excluded_scanlatorQueries
                 .getExcludedScanlatorsByMangaId(mangaId)
                 .awaitAsList()
                 .toSet()
             val toAdd = excludedScanlators.minus(currentExcluded)
             for (scanlator in toAdd) {
-                database.excluded_scanlatorsQueries.insert(mangaId, scanlator)
+                database.excluded_scanlatorQueries.insert(mangaId, scanlator)
             }
             val toRemove = currentExcluded.minus(excludedScanlators)
-            database.excluded_scanlatorsQueries.remove(mangaId, toRemove)
+            database.excluded_scanlatorQueries.remove(mangaId, toRemove)
         }
     }
 }

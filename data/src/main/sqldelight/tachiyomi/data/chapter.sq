@@ -1,0 +1,100 @@
+import kotlin.Boolean;
+import kotlinx.serialization.json.JsonObject;
+
+CREATE TABLE chapter(
+    id INTEGER NOT NULL PRIMARY KEY,
+    manga_id INTEGER NOT NULL,
+    remote_url TEXT NOT NULL,
+    remote_name TEXT NOT NULL,
+    remote_scanlator TEXT,
+    remote_chapter_number REAL NOT NULL,
+    remote_date_upload INTEGER NOT NULL,
+    remote_order INTEGER NOT NULL,
+    remote_memo BLOB AS JsonObject NOT NULL,
+    user_read INTEGER AS Boolean NOT NULL,
+    user_bookmark INTEGER AS Boolean NOT NULL,
+    user_last_page_read INTEGER NOT NULL,
+    state_date_fetch INTEGER NOT NULL,
+    state_modified_at INTEGER NOT NULL,
+    UNIQUE(manga_id, remote_url),
+    FOREIGN KEY(manga_id) REFERENCES manga (id)
+    ON DELETE CASCADE
+);
+
+CREATE TRIGGER update_modified_at_chapter
+AFTER UPDATE ON chapter
+FOR EACH ROW
+BEGIN
+  UPDATE chapter
+  SET state_modified_at = strftime('%s', 'now')
+  WHERE id = new.id;
+END;
+
+getChapterById:
+SELECT *
+FROM chapter
+WHERE id = :id;
+
+getChaptersByMangaId:
+SELECT C.*
+FROM chapter C
+LEFT JOIN excluded_scanlator ES
+ON C.manga_id = ES.manga_id
+AND C.remote_scanlator = ES.scanlator
+WHERE C.manga_id = :mangaId
+AND (
+    :applyScanlatorFilter = 0
+    OR ES.scanlator IS NULL
+);
+
+getScanlatorsByMangaId:
+SELECT remote_scanlator
+FROM chapter
+WHERE manga_id = :mangaId;
+
+getBookmarkedChaptersByMangaId:
+SELECT *
+FROM chapter
+WHERE user_bookmark
+AND manga_id = :mangaId;
+
+getChapterByUrl:
+SELECT *
+FROM chapter
+WHERE remote_url = :chapterUrl;
+
+getChapterByUrlAndMangaId:
+SELECT *
+FROM chapter
+WHERE remote_url = :chapterUrl
+AND manga_id = :mangaId
+LIMIT 1;
+
+removeChaptersWithIds:
+DELETE FROM chapter
+WHERE id IN :chapterIds;
+
+insert:
+INSERT INTO chapter(manga_id, remote_url, remote_name, remote_scanlator, user_read, user_bookmark, user_last_page_read, remote_chapter_number, remote_order, state_date_fetch, remote_date_upload, state_modified_at, remote_memo)
+VALUES (:mangaId, :url, :name, :scanlator, :read, :bookmark, :lastPageRead, :chapterNumber, :sourceOrder, :dateFetch, :dateUpload, 0, :memo);
+
+insertReturningId:
+INSERT INTO chapter(manga_id, remote_url, remote_name, remote_scanlator, user_read, user_bookmark, user_last_page_read, remote_chapter_number, remote_order, state_date_fetch, remote_date_upload, state_modified_at, remote_memo)
+VALUES (:mangaId, :url, :name, :scanlator, :read, :bookmark, :lastPageRead, :chapterNumber, :sourceOrder, :dateFetch, :dateUpload, 0, :memo)
+RETURNING id;
+
+update:
+UPDATE chapter
+SET manga_id = coalesce(:mangaId, manga_id),
+    remote_url = coalesce(:url, remote_url),
+    remote_name = coalesce(:name, remote_name),
+    remote_scanlator = coalesce(:scanlator, remote_scanlator),
+    user_read = coalesce(:read, user_read),
+    user_bookmark = coalesce(:bookmark, user_bookmark),
+    user_last_page_read = coalesce(:lastPageRead, user_last_page_read),
+    remote_chapter_number = coalesce(:chapterNumber, remote_chapter_number),
+    remote_order = coalesce(:sourceOrder, remote_order),
+    state_date_fetch = coalesce(:dateFetch, state_date_fetch),
+    remote_date_upload = coalesce(:dateUpload, remote_date_upload),
+    remote_memo = coalesce(:memo, remote_memo)
+WHERE id = :chapterId;

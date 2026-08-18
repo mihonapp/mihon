@@ -1,54 +1,52 @@
 import kotlin.Boolean;
 
-CREATE TABLE manga_sync(
-    _id INTEGER NOT NULL PRIMARY KEY,
+CREATE TABLE manga_track(
+    id INTEGER NOT NULL PRIMARY KEY,
     manga_id INTEGER NOT NULL,
-    sync_id INTEGER NOT NULL,
+    tracker_id INTEGER NOT NULL,
     remote_id INTEGER NOT NULL,
+    remote_url TEXT NOT NULL,
     library_id INTEGER,
     title TEXT NOT NULL,
     last_chapter_read REAL NOT NULL,
     total_chapters INTEGER NOT NULL,
     status INTEGER NOT NULL,
     score REAL NOT NULL,
-    remote_url TEXT NOT NULL,
     start_date INTEGER NOT NULL,
     finish_date INTEGER NOT NULL,
-    private INTEGER AS Boolean DEFAULT 0 NOT NULL,
-    UNIQUE (manga_id, sync_id) ON CONFLICT REPLACE,
-    FOREIGN KEY(manga_id) REFERENCES mangas (_id)
+    private INTEGER AS Boolean NOT NULL DEFAULT 0,
+    UNIQUE (manga_id, tracker_id) ON CONFLICT REPLACE,
+    FOREIGN KEY(manga_id) REFERENCES manga (id)
     ON DELETE CASCADE
 );
 
-CREATE INDEX idx_manga_sync_manga_id ON manga_sync(manga_id);
-
 delete:
-DELETE FROM manga_sync
-WHERE manga_id = :mangaId AND sync_id = :syncId;
+DELETE FROM manga_track
+WHERE manga_id = :mangaId AND tracker_id = :syncId;
 
 getTracks:
 SELECT *
-FROM manga_sync;
+FROM manga_track;
 
 getTrackById:
 SELECT *
-FROM manga_sync
-WHERE _id = :id;
+FROM manga_track
+WHERE id = :id;
 
 getTracksByMangaId:
 SELECT *
-FROM manga_sync
+FROM manga_track
 WHERE manga_id = :mangaId;
 
 insert:
-INSERT INTO manga_sync(manga_id,sync_id,remote_id,library_id,title,last_chapter_read,total_chapters,status,score,remote_url,start_date,finish_date,private)
+INSERT INTO manga_track(manga_id,tracker_id,remote_id,library_id,title,last_chapter_read,total_chapters,status,score,remote_url,start_date,finish_date,private)
 VALUES (:mangaId,:syncId,:remoteId,:libraryId,:title,:lastChapterRead,:totalChapters,:status,:score,:remoteUrl,:startDate,:finishDate,:private);
 
 update:
-UPDATE manga_sync
+UPDATE manga_track
 SET
     manga_id = coalesce(:mangaId, manga_id),
-    sync_id = coalesce(:syncId, sync_id),
+    tracker_id = coalesce(:syncId, tracker_id),
     remote_id = coalesce(:mediaId, remote_id),
     library_id = coalesce(:libraryId, library_id),
     title = coalesce(:title, title),
@@ -60,4 +58,4 @@ SET
     start_date = coalesce(:startDate, start_date),
     finish_date = coalesce(:finishDate, finish_date),
     private = coalesce(:private, private)
-WHERE _id = :id;
+WHERE id = :id;

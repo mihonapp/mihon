@@ -16,11 +16,11 @@ import kotlinx.serialization.protobuf.ProtoBuf
 import nl.adaptivity.xmlutil.XmlDeclMode
 import nl.adaptivity.xmlutil.core.XmlVersion
 import nl.adaptivity.xmlutil.serialization.XML
-import tachiyomi.data.Chapters
+import tachiyomi.data.Chapter
 import tachiyomi.data.Database
 import tachiyomi.data.DateColumnAdapter
 import tachiyomi.data.History
-import tachiyomi.data.Mangas
+import tachiyomi.data.Manga
 import tachiyomi.data.MemoColumnAdapter
 import tachiyomi.data.StringListColumnAdapter
 import tachiyomi.data.UpdateStrategyColumnAdapter
@@ -47,15 +47,15 @@ object AppBindings {
         return Database(
             driver = driver,
             historyAdapter = History.Adapter(
-                last_readAdapter = DateColumnAdapter,
+                read_atAdapter = DateColumnAdapter,
             ),
-            mangasAdapter = Mangas.Adapter(
-                genreAdapter = StringListColumnAdapter,
-                update_strategyAdapter = UpdateStrategyColumnAdapter,
-                memoAdapter = MemoColumnAdapter,
+            mangaAdapter = Manga.Adapter(
+                remote_genreAdapter = StringListColumnAdapter,
+                remote_update_strategyAdapter = UpdateStrategyColumnAdapter,
+                remote_memoAdapter = MemoColumnAdapter,
             ),
-            chaptersAdapter = Chapters.Adapter(
-                memoAdapter = MemoColumnAdapter,
+            chapterAdapter = Chapter.Adapter(
+                remote_memoAdapter = MemoColumnAdapter,
             ),
         )
     }

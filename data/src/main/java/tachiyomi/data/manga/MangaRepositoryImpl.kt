@@ -35,37 +35,37 @@ class MangaRepositoryImpl(
 ) : MangaRepository {
 
     override suspend fun getMangaById(id: Long): Manga {
-        return database.mangasQueries
+        return database.mangaQueries
             .getMangaById(id, MangaMapper::mapManga)
             .awaitAsOne()
     }
 
     override fun getMangaByIdAsFlow(id: Long): Flow<Manga> {
-        return database.mangasQueries
+        return database.mangaQueries
             .getMangaById(id, MangaMapper::mapManga)
             .subscribeToOne()
     }
 
     override suspend fun getMangaByUrlAndSourceId(url: String, sourceId: Long): Manga? {
-        return database.mangasQueries
+        return database.mangaQueries
             .getMangaByUrlAndSource(url, sourceId, MangaMapper::mapManga)
             .awaitAsOneOrNull()
     }
 
     override fun getMangaByUrlAndSourceIdAsFlow(url: String, sourceId: Long): Flow<Manga?> {
-        return database.mangasQueries
+        return database.mangaQueries
             .getMangaByUrlAndSource(url, sourceId, MangaMapper::mapManga)
             .subscribeToOneOrNull()
     }
 
     override suspend fun getFavorites(): List<Manga> {
-        return database.mangasQueries
+        return database.mangaQueries
             .getFavorites(MangaMapper::mapManga)
             .awaitAsList()
     }
 
     override suspend fun getReadMangaNotInLibrary(): List<Manga> {
-        return database.mangasQueries
+        return database.mangaQueries
             .getReadMangaNotInLibrary(MangaMapper::mapManga)
             .awaitAsList()
     }
@@ -83,13 +83,13 @@ class MangaRepositoryImpl(
     }
 
     override fun getFavoritesBySourceId(sourceId: Long): Flow<List<Manga>> {
-        return database.mangasQueries
+        return database.mangaQueries
             .getFavoriteBySourceId(sourceId, MangaMapper::mapManga)
             .subscribeToList()
     }
 
     override suspend fun getDuplicateLibraryManga(id: Long, title: String): List<MangaWithChapterCount> {
-        return database.mangasQueries
+        return database.mangaQueries
             .getDuplicateLibraryManga(id, title, MangaMapper::mapMangaWithChapterCount)
             .awaitAsList()
     }
@@ -102,7 +102,7 @@ class MangaRepositoryImpl(
         val timeZone = TimeZone.currentSystemDefault()
         val epochMillis =
             Clock.System.now().toLocalDateTime(timeZone).date.atStartOfDayIn(timeZone).toEpochMilliseconds()
-        return database.mangasQueries
+        return database.mangaQueries
             .getUpcomingManga(
                 startOfDay = epochMillis,
                 statuses = statuses,
@@ -117,7 +117,7 @@ class MangaRepositoryImpl(
 
     override suspend fun resetViewerFlags(): Boolean {
         return try {
-            database.mangasQueries.resetViewerFlags()
+            database.mangaQueries.resetViewerFlags()
             true
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
@@ -127,9 +127,9 @@ class MangaRepositoryImpl(
 
     override suspend fun setMangaCategories(mangaId: Long, categoryIds: List<Long>) {
         database.transaction {
-            database.mangas_categoriesQueries.deleteMangaCategoryByMangaId(mangaId)
+            database.manga_categoryQueries.deleteMangaCategoryByMangaId(mangaId)
             categoryIds.forEach { categoryId ->
-                database.mangas_categoriesQueries.insert(mangaId, categoryId)
+                database.manga_categoryQueries.insert(mangaId, categoryId)
             }
         }
     }
@@ -157,7 +157,7 @@ class MangaRepositoryImpl(
     override suspend fun insertNetworkManga(manga: List<Manga>): List<Manga> {
         return database.transactionWithResult {
             manga.map {
-                database.mangasQueries.insertNetworkManga(
+                database.mangaQueries.insertNetworkManga(
                     source = it.source,
                     url = it.url,
                     artist = it.artist,
@@ -167,7 +167,7 @@ class MangaRepositoryImpl(
                     title = it.title,
                     status = it.status,
                     thumbnailUrl = it.thumbnailUrl,
-                    favorite = it.favorite,
+                    favoriteAt = it.dateAdded.takeIf { _ -> it.favorite },
                     lastUpdate = it.lastUpdate,
                     nextUpdate = it.nextUpdate,
                     calculateInterval = it.fetchInterval.toLong(),
@@ -175,9 +175,7 @@ class MangaRepositoryImpl(
                     viewerFlags = it.viewerFlags,
                     chapterFlags = it.chapterFlags,
                     coverLastModified = it.coverLastModified,
-                    dateAdded = it.dateAdded,
                     updateStrategy = it.updateStrategy,
-                    version = it.version,
                     memo = it.memo,
                     updateTitle = it.title.isNotBlank(),
                     updateCover = !it.thumbnailUrl.isNullOrBlank(),
@@ -192,7 +190,7 @@ class MangaRepositoryImpl(
     private suspend fun partialUpdate(vararg mangaUpdates: MangaUpdate) {
         database.transaction {
             mangaUpdates.forEach { value ->
-                database.mangasQueries.update(
+                database.mangaQueries.update(
                     source = value.source,
                     url = value.url,
                     artist = value.artist,
@@ -202,7 +200,7 @@ class MangaRepositoryImpl(
                     title = value.title,
                     status = value.status,
                     thumbnailUrl = value.thumbnailUrl,
-                    favorite = value.favorite,
+                    favoriteAt = value.dateAdded?.takeIf { it != 0L },
                     lastUpdate = value.lastUpdate,
                     nextUpdate = value.nextUpdate,
                     calculateInterval = value.fetchInterval?.toLong(),
@@ -210,11 +208,8 @@ class MangaRepositoryImpl(
                     viewer = value.viewerFlags,
                     chapterFlags = value.chapterFlags,
                     coverLastModified = value.coverLastModified,
-                    dateAdded = value.dateAdded,
                     mangaId = value.id,
                     updateStrategy = value.updateStrategy?.let(UpdateStrategyColumnAdapter::encode),
-                    version = value.version,
-                    isSyncing = 0,
                     notes = value.notes,
                     memo = value.memo?.let(MemoColumnAdapter::encode),
                 )

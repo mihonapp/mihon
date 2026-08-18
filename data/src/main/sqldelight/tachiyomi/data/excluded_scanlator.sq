@@ -1,0 +1,22 @@
+CREATE TABLE excluded_scanlator(
+    manga_id INTEGER NOT NULL,
+    scanlator TEXT NOT NULL,
+    UNIQUE(manga_id, scanlator),
+    FOREIGN KEY(manga_id) REFERENCES manga (id)
+    ON DELETE CASCADE
+);
+
+
+insert:
+INSERT INTO excluded_scanlator(manga_id, scanlator)
+VALUES (:mangaId, :scanlator);
+
+remove:
+DELETE FROM excluded_scanlator
+WHERE manga_id = :mangaId
+AND scanlator IN :scanlators;
+
+getExcludedScanlatorsByMangaId:
+SELECT scanlator
+FROM excluded_scanlator
+WHERE manga_id = :mangaId;

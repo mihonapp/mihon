@@ -52,17 +52,15 @@ val backupChapterMapper = {
         url: String,
         name: String,
         scanlator: String?,
+        chapterNumber: Double,
+        dateUpload: Long,
+        sourceOrder: Long,
+        memo: JsonObject,
         read: Boolean,
         bookmark: Boolean,
         lastPageRead: Long,
-        chapterNumber: Double,
-        sourceOrder: Long,
         dateFetch: Long,
-        dateUpload: Long,
-        lastModifiedAt: Long,
-        version: Long,
-        _: Long,
-        memo: JsonObject,
+        modifiedAt: Long,
     ->
     BackupChapter(
         url = url,
@@ -75,8 +73,8 @@ val backupChapterMapper = {
         dateFetch = dateFetch,
         dateUpload = dateUpload,
         sourceOrder = sourceOrder,
-        lastModifiedAt = lastModifiedAt,
-        version = version,
+        lastModifiedAt = modifiedAt,
+        version = 0,
         memo = MemoColumnAdapter.encode(memo),
     )
 }

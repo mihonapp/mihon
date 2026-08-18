@@ -253,7 +253,7 @@ class ClearDatabaseViewModel(
 
     suspend fun removeMangaBySourceId(keepReadManga: Boolean) = withNonCancellableContext {
         val state = state.value as? State.Ready ?: return@withNonCancellableContext
-        database.mangasQueries.deleteNonLibraryManga(state.selection, keepReadManga.toLong())
+        database.mangaQueries.deleteNonLibraryManga(state.selection, keepReadManga.toLong())
         database.historyQueries.removeResettedHistory()
     }
 

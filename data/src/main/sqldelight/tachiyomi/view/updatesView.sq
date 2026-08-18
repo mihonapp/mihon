@@ -1,29 +1,29 @@
 CREATE VIEW updatesView AS
 SELECT
-    mangas._id AS mangaId,
-    mangas.title AS mangaTitle,
-    chapters._id AS chapterId,
-    chapters.name AS chapterName,
-    chapters.scanlator,
-    chapters.url AS chapterUrl,
-    chapters.read,
-    chapters.bookmark,
-    chapters.last_page_read,
-    mangas.source,
-    mangas.favorite,
-    mangas.thumbnail_url AS thumbnailUrl,
-    mangas.cover_last_modified AS coverLastModified,
-    chapters.date_upload AS dateUpload,
-    chapters.date_fetch AS datefetch,
-    excluded_scanlators.scanlator AS excludedScanlator
-FROM mangas JOIN chapters
-ON mangas._id = chapters.manga_id
-LEFT JOIN excluded_scanlators
-ON mangas._id = excluded_scanlators.manga_id
-AND chapters.scanlator = excluded_scanlators.scanlator
-WHERE favorite = 1
-AND date_fetch > date_added
-ORDER BY date_fetch DESC;
+    manga.id AS mangaId,
+    manga.remote_title AS mangaTitle,
+    chapter.id AS chapterId,
+    chapter.remote_name AS chapterName,
+    chapter.remote_scanlator AS scanlator,
+    chapter.remote_url AS chapterUrl,
+    chapter.user_read AS read,
+    chapter.user_bookmark AS bookmark,
+    chapter.user_last_page_read AS lastPageRead,
+    manga.source_id AS sourceId,
+    manga.user_favorite_at AS favoriteAt,
+    manga.remote_cover AS thumbnailUrl,
+    manga.state_cover_last_modified AS coverLastModified,
+    chapter.remote_date_upload AS dateUpload,
+    chapter.state_date_fetch AS dateFetch,
+    excluded_scanlator.scanlator AS excludedScanlator
+FROM manga JOIN chapter
+ON manga.id = chapter.manga_id
+LEFT JOIN excluded_scanlator
+ON manga.id = excluded_scanlator.manga_id
+AND chapter.remote_scanlator = excluded_scanlator.scanlator
+WHERE user_favorite_at IS NOT NULL
+AND state_date_fetch > user_favorite_at
+ORDER BY state_date_fetch DESC;
 
 getRecentUpdates:
 SELECT *
@@ -39,8 +39,8 @@ AND (:read IS NULL OR read = :read)
 -- Started means some progress but not finished, Read means finished chapter, thus:
 AND (
     :started IS NULL
-    OR (:started = 1 AND last_page_read > 0 AND read = 0)
-    OR (:started = 0 AND last_page_read = 0 AND read = 0)
+    OR (:started = 1 AND lastPageRead > 0 AND read = 0)
+    OR (:started = 0 AND lastPageRead = 0 AND read = 0)
 )
 AND (:bookmarked IS NULL OR bookmark = :bookmarked)
 AND (
@@ -50,12 +50,12 @@ AND (
     -- includedEmpty being true expresses "don't care" state and bypasses the membership filter
     :includedEmpty
     OR EXISTS (
-        SELECT 1 FROM mangas_categories
-        WHERE mangas_categories.manga_id = mangaId
-        AND COALESCE(mangas_categories.category_id, 0) IN :includedCategories
+        SELECT 1 FROM manga_category
+        WHERE manga_category.manga_id = mangaId
+        AND COALESCE(manga_category.category_id, 0) IN :includedCategories
     )
     OR (0 IN :includedCategories AND NOT EXISTS (
-        SELECT 1 FROM mangas_categories mc WHERE mc.manga_id = mangaId)
+        SELECT 1 FROM manga_category mc WHERE mc.manga_id = mangaId)
     )
 )
 AND (
@@ -63,13 +63,13 @@ AND (
     :excludedEmpty
     OR (
         NOT EXISTS (
-            SELECT 1 FROM mangas_categories
-            WHERE mangas_categories.manga_id = mangaId
-            AND COALESCE(mangas_categories.category_id, 0) IN :excludedCategories
+            SELECT 1 FROM manga_category
+            WHERE manga_category.manga_id = mangaId
+            AND COALESCE(manga_category.category_id, 0) IN :excludedCategories
         )
         AND (
             0 NOT IN :excludedCategories
-            OR EXISTS (SELECT 1 FROM mangas_categories WHERE mangas_categories.manga_id = mangaId)
+            OR EXISTS (SELECT 1 FROM manga_category WHERE manga_category.manga_id = mangaId)
         )
     )
 )
