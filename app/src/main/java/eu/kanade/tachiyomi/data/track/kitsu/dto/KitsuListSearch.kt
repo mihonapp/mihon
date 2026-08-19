@@ -41,7 +41,7 @@ data class KitsuListSearchResult(
                 "planned" -> Kitsu.PLAN_TO_READ
                 else -> throw Exception("Unknown status")
             }
-            score = userDataAttrs.ratingTwenty?.let { it / 2.0 } ?: 0.0
+            score = userDataAttrs.ratingTwenty?.toDouble() ?: 0.0
             last_chapter_read = userDataAttrs.progress.toDouble()
             private = userDataAttrs.private
         }

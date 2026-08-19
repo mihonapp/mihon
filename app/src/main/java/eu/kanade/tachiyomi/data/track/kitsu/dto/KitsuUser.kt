@@ -16,4 +16,5 @@ data class KitsuUser(
 @Serializable
 data class KitsuUserAttributes(
     val name: String,
+    val ratingSystem: String,
 )
