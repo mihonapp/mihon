@@ -20,7 +20,7 @@ FROM mangas JOIN chapters
 ON mangas._id = chapters.manga_id
 LEFT JOIN excluded_scanlators
 ON mangas._id = excluded_scanlators.manga_id
-AND chapters.scanlator = excluded_scanlators.scanlator
+AND coalesce(chapters.scanlator, '') = excluded_scanlators.scanlator
 WHERE favorite = 1
 AND date_fetch > date_added
 ORDER BY date_fetch DESC;

@@ -147,7 +147,7 @@ chapter_counts AS (
     ON M._id = C.manga_id
     LEFT JOIN excluded_scanlators ES
     ON C.manga_id = ES.manga_id
-    AND C.scanlator = ES.scanlator
+    AND coalesce(C.scanlator, '') = ES.scanlator
     WHERE ES.scanlator IS NULL
     GROUP BY M._id
 )

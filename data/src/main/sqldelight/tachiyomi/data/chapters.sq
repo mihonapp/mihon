@@ -61,7 +61,7 @@ SELECT C.*
 FROM chapters C
 LEFT JOIN excluded_scanlators ES
 ON C.manga_id = ES.manga_id
-AND C.scanlator = ES.scanlator
+AND coalesce(C.scanlator, '') = ES.scanlator
 WHERE C.manga_id = :mangaId
 AND (
     :applyScanlatorFilter = 0
