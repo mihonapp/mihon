@@ -134,8 +134,6 @@
     <string name="file_select_backup">Vybrat záložní soubor</string>
     <string name="update_check_confirm">Stáhnout</string>
     <string name="update_check_no_new_updates">Žádné nové aktualizace</string>
-    <string name="update_check_notification_download_complete">Klepnutím nainstalujte aktualizaci</string>
-    <string name="update_check_notification_download_error">Chyba při stahování</string>
     <string name="update_check_notification_update_available">Dostupná aktualizace!</string>
     <string name="information_no_recent">Žádné nedávné aktualizace</string>
     <string name="information_no_recent_manga">Nic nedávno čtené</string>
@@ -263,7 +261,6 @@
     <string name="notification_cover_update_failed">Chyba při aktualizaci obalu</string>
     <string name="notification_first_add_to_library">Přidejte si prosím položku do knihovny před tím, než toto uděláte</string>
     <string name="file_select_cover">Vybrat obrázek obalu</string>
-    <string name="update_check_notification_download_in_progress">Probíhá stahování…</string>
     <string name="information_no_downloads">Žádné stahování</string>
     <string name="information_empty_library">Vaše knihovna je prázdná</string>
     <string name="information_empty_category">Nemáte žádné kategorie. Klikněte na tlačítko plus a vytvořte nějakou pro zorganizování vaší knihovny.</string>
@@ -542,7 +539,6 @@
     <string name="download_queue_size_warning">Varování: hromadné stahování může vést k tomu, že zdroje zpomalí a/nebo zablokují %s. Klepnutím se dozvíte více.</string>
     <string name="ext_update_all">Aktualizovat vše</string>
     <string name="pref_verbose_logging_summary">Vypisovat podrobné informace do systémového protokolu (sníží výkon aplikace)</string>
-    <string name="channel_app_updates">Aktualizace aplikace</string>
     <string name="notification_size_warning">Varování: velké aktualizace poškozují zdroje a můžou vést k pomalejším aktualizacím a zvýšenému využití baterie. Klepnutím se dozvíte více.</string>
     <string name="pref_auto_clear_chapter_cache">Vymazat mezipaměť kapitol při spuštění aplikace</string>
     <string name="extension_api_error">Chyba v získání seznamu rozšíření</string>
@@ -797,17 +793,13 @@
     <string name="pref_firebase">Analytika a záznamy o pádech</string>
     <string name="firebase_summary">Odesílání záznamů o pádech a analytických dat nám umožní identifikovat a opravit problémy, zlepšit výkon a přizpůsobit budoucí aktualizace vašim potřebám</string>
     <string name="onboarding_permission_analytics">Povolit analytiku</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Má dopad na výkon. Povolte pouze pokud snížení limitu bitmapy nespraví problémy s prázdnými obrázky</string>
     <string name="ext_remove">Odstranit</string>
     <string name="ext_confirm_remove">Odstranit rozšíření?</string>
     <string name="remove_private_extension_message">Opravdu chcete odstranit rozšíření \"%s\"?</string>
     <string name="pref_download_new_unread_chapters_only">Přeskočit stahování duplicitních přečtených kapitol</string>
     <string name="invalid_backup_file_json">Záloha do JSONu není podporována</string>
     <string name="invalid_backup_file_unknown">Soubor se zálohou je poškozen</string>
-    <string name="pref_hardware_bitmap_threshold">Vlastní limit hardwarových bitmap</string>
-    <string name="pref_hardware_bitmap_threshold_default">Výchozí (%d)</string>
     <string name="onboarding_permission_crashlytics">Posílat chybová hlášení</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Jestliže čtenář načte prázdnou stránku, postupně snižuj prahovou hodnotu.\nVybráno: %s</string>
     <string name="pref_incognito_mode_extension_summary">Pozastavit historii čtení pro rozšíření</string>
     <string name="trackers_updated_summary">Sledovače aktualizovány do kapitoly %d</string>
     <string name="non_library_settings">Všechny přečtené záznamy</string>
@@ -829,7 +821,6 @@
     <string name="pref_behavior">Chování</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">Po přečtení kapitoly</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">Po získání nové kapitoly</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Použít zastaralý dekodér pro dlouhý pruh</string>
     <string name="pref_update_library_manga_titles">Aktualizovat názvy mangy z knihovny, aby odpovídaly zdroji</string>
     <string name="logging_in">Přihlašování…</string>
     <string name="notes_placeholder">Užil jsem si tu část kde…</string>
@@ -892,7 +883,7 @@
     <string name="migrationConfigScreen.prioritizeByChaptersTitle">Shoda podle čísla kapitoly</string>
     <string name="migrationConfigScreen.prioritizeByChaptersSubtitle">Je-li povoleno, vybere shodu, která je nejdále. V opačném případě vybere první shodu podle priority zdroje.</string>
     <string name="pref_display_images_description">Zobrazovat obrázky v popisu mangy</string>
-    <string name="clear_database_history_warning">Přečtené kapitoly a postup u položek mimo knihovnu budou ztraceny</string>
+    <string name="clear_database_history_warning">Přečtené kapitoly a postup u položek mimo knihovnu bude ztracen</string>
     <string name="label_support_us">Podpořte nás</string>
     <string name="extensionStores">Obchody s doplňky</string>
     <string name="action.addExtensionStore">Přidat obchod s doplňky</string>
@@ -920,4 +911,8 @@
     <string name="considering">S ohledem na</string>
     <string name="pref_vertical_navigator">Použijte svislý navigační panel kapitol v</string>
     <string name="pref_vertical_navigator_height">Vertikální výška navigátoru</string>
+    <string name="theme_tokyonight">Tokijská noc</string>
+    <string name="downloading_with_progress">Stahování… (%d%%)</string>
+    <string name="pref_filter_update_categories_details">Aktualizace v kategoriích, které byly vyloučeny, se nezobrazí, i když se zároveň nacházejí v některé ze zahrnutých kategorií.</string>
+    <string name="pref_filter_upcoming_categories_details">Položky ve vyloučených kategoriích se nezobrazují, i když patří také do některé ze zahrnutých kategorií.</string>
 </resources>

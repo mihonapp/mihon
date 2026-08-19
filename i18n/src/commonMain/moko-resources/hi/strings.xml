@@ -213,9 +213,6 @@
     <string name="file_select_backup">बैकअप फ़ाइल का चयन करें</string>
     <string name="update_check_confirm">डाउनलोड</string>
     <string name="update_check_no_new_updates">कोई नया अद्यतन उपलब्ध नहीं है</string>
-    <string name="update_check_notification_download_in_progress">डाउनलोडिंग…</string>
-    <string name="update_check_notification_download_complete">अपडेट इंस्टॉल करने के लिए यहा टेप करें</string>
-    <string name="update_check_notification_download_error">डाउनलोड त्रुटि</string>
     <string name="update_check_notification_update_available">नया संस्करण उपलब्ध है!</string>
     <string name="information_no_downloads">कोई डाउनलोड नहीं है</string>
     <string name="information_no_recent">कोई हालिया अपडेट नहीं</string>
@@ -543,7 +540,6 @@
     <string name="backup_info">आपको अन्य स्थानों पर भी बैकअप की प्रतियाँ रखनी चाहिए।</string>
     <string name="download_queue_size_warning">चेतावनी: बड़े पैमाने पर डाउनलोड से स्रोत धीमे हो सकते हैं और/या %s को ब्लॉक कर सकते हैं। अधिक जानने के लिए टैप करें।</string>
     <string name="notification_size_warning">बड़े अपडेट स्रोतों को नुकसान पहुंचाते हैं और इससे धीमे अपडेट हो सकते हैं, और बैटरी का उपयोग भी बढ़ सकता है। अधिक जानने के लिए टैप करें ।</string>
-    <string name="channel_app_updates">ऐप अपडेट</string>
     <string name="update_72hour">हर 3 दिन</string>
     <string name="connected_to_wifi">केवल वाई-फ़ाई पर</string>
     <string name="clear_database_source_item_count">डेटाबेस में %1$d गैर-पुस्तकालय आइटम</string>
@@ -737,11 +733,6 @@
     <string name="pref_flash_style_black">काला</string>
     <string name="pref_flash_style_white">सफ़ेद</string>
     <string name="pref_flash_style_white_black">सफ़ेद और काला</string>
-    <string name="pref_hardware_bitmap_threshold">कस्टम हार्डवेयर बिटमैप सीमा</string>
-    <string name="pref_hardware_bitmap_threshold_default">डिफ़ॉल्ट (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">यदि रीडर खाली छवि लोड करता है तो सीमा धीरे-धीरे कम करें।\nचयनित: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">लॉन्ग स्ट्रिप रीडर के लिए पुराना डिकोडर उपयोग करें</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">प्रदर्शन को प्रभावित करता है। केवल तभी सक्षम करें जब बिटमैप सीमा कम करने से खाली छवि की समस्याएं ठीक न हों</string>
     <string name="pref_display_profile">कस्टम डिस्प्ले प्रोफ़ाइल</string>
     <string name="pref_webtoon_disable_zoom_out">ज़ूम आउट अक्षम करें</string>
     <string name="no_location_set">कोई स्टोरेज स्थान सेट नहीं किया गया है</string>

@@ -252,9 +252,6 @@
     <string name="file_select_backup">Ischerta sa còpia de seguresa</string>
     <string name="update_check_confirm">Iscàrriga</string>
     <string name="update_check_no_new_updates">Non bi sunt agiornamentos disponìbiles noos</string>
-    <string name="update_check_notification_download_in_progress">Iscarrighende…</string>
-    <string name="update_check_notification_download_complete">Toca pro installare s\'agiornamentu</string>
-    <string name="update_check_notification_download_error">Errore de iscarrigamentu</string>
     <string name="update_check_notification_update_available">Versione noa a disponimentu!</string>
     <string name="information_no_downloads">Perunu iscarrigamentu</string>
     <string name="information_no_recent">Perunu agiornamentu reghente</string>
@@ -541,7 +538,6 @@
     <string name="connected_to_wifi">Petzi cun su Wi-Fi</string>
     <string name="download_queue_size_warning">Dae cara: sos iscarrigamentos de massa mannos diant pòdere rallentare sas fontes e/o blocare %s. Toca pro nde ischire de prus.</string>
     <string name="ext_update_all">Agiorna totu</string>
-    <string name="channel_app_updates">Agiornamentos de s\'aplicatzione</string>
     <string name="clear_database_source_item_count">%1$d elementos chi non sunt in sa biblioteca in sa base de datos</string>
     <string name="extension_api_error">Recùperu de sa lista de sas estensiones fallidu</string>
     <string name="pref_auto_clear_chapter_cache">Isbòida sa memòria temporànea de sos capìtulos cando aberis s\'aplicatzione</string>
@@ -808,14 +804,9 @@
     <string name="confirm_tracker_update">Atualizare sos arrastadores a su capìtulu %d?</string>
     <string name="pref_auto_update_manga_on_mark_read">Agiorna su progressu cando est marcadu comente lèghidu</string>
     <string name="trackers_updated_summary">Arrastadores atualizados a su capìtulu %d</string>
-    <string name="pref_hardware_bitmap_threshold_default">Predefinidu (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Si su leghidore càrrigat un\'immàgine bianca, mìnima de pagu a pagu su lìmite.\nSeletzionadu: %s</string>
-    <string name="pref_hardware_bitmap_threshold">Mannària màssima pro sa decodìfica hardware (bitmap) de sas immàgines</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Influentzat su rendimentu. Abilita·lu petzi si sa minimada de sa mannària màssima pro sa decodìfica hardware (bitmap) de sas immàgines non risolvet sos problemas de sas immàgines bòidas</string>
     <string name="pref_incognito_mode_extension_summary">Pone in pàusa sa cronologia de letura pro s\'estensione</string>
     <string name="label_auto">Automàticu</string>
     <string name="library_list">Lista de sa biblioteca</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Imprea su codificadore betzu pro su leghidore de immàgines longas</string>
     <string name="export">Esporta</string>
     <string name="theme_monochrome">Monocromo</string>
     <string name="action_display_unread_badge">Capìtulos non lèghidos</string>

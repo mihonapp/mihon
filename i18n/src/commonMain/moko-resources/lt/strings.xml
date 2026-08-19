@@ -206,7 +206,6 @@
     <string name="none">Nėra</string>
     <string name="all">Visi</string>
     <string name="pref_library_update_categories_details">Įrašai, kurie yra įtraukti į neįtraukiamas kategorijas, nebus atnaujinami, net jei yra įtraukti į įtrauktąsias kategorijas.</string>
-    <string name="update_check_notification_download_error">Atsiuntimo klaida</string>
     <string name="update_check_notification_update_available">Nauja versija pasiekiama!</string>
     <string name="scale_type_fit_height">Pagal aukštį talpinimas</string>
     <string name="white_background">Balta</string>
@@ -359,14 +358,12 @@
     <string name="transition_pages_error">Nepavyko įkelti puslapių: %1$s</string>
     <string name="transition_previous">Ankstesnis:</string>
     <string name="update_check_confirm">Parsisiųsti</string>
-    <string name="update_check_notification_download_complete">Bakstelėkite, kad įdiegtumėte atnaujinimą</string>
     <string name="update_check_eol">Ši \"Android\" versija nebepalaikoma</string>
     <string name="update_check_no_new_updates">Naujų atnaujinimų nėra</string>
     <string name="migration_dialog_what_to_include">Pasirinkite duomenis, kuriuos norite įtraukti</string>
     <string name="copy">Kopijuoti</string>
     <string name="notification_new_chapters">Atrasti nauji skyriai</string>
     <string name="skipped_reason_not_caught_up">Praleista, nes yra neperskaitytų skyrių</string>
-    <string name="update_check_notification_download_in_progress">Atsiunčiama…</string>
     <string name="file_select_cover">Pasirinkti viršelio vaizdą</string>
     <string name="information_empty_category_dialog">Jūs dar neturite jokių kategorijų.</string>
     <string name="transition_no_previous">Ankstesnio skyriaus nėra</string>
@@ -441,7 +438,6 @@
     <string name="pref_clear_database">Išvalyti duomenų bazę</string>
     <string name="file_picker_error">Nerandama failų rinkiklio programos</string>
     <string name="update_check_open">Atidaryti „GitHub“ svetainėje</string>
-    <string name="channel_app_updates">Programėlių atnaujinimai</string>
     <string name="channel_ext_updates">Plėtinių atnaujinimai</string>
     <string name="spen_previous_page">Ankstesnis puslapis</string>
     <string name="restore_miui_warning">Atsarginės kopijos kūrimas / atkūrimas gali veikti netinkamai, jei \"MIUI Optimization\" yra išjungtas.</string>

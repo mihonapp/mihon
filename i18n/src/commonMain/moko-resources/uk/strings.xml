@@ -253,9 +253,6 @@
     <string name="file_select_backup">Виберіть файл резервної копії</string>
     <string name="update_check_confirm">Завантажити</string>
     <string name="update_check_no_new_updates">Оновлень не виявлено</string>
-    <string name="update_check_notification_download_in_progress">Завантаження в процесі…</string>
-    <string name="update_check_notification_download_complete">Тицьніть для встановлення оновлень</string>
-    <string name="update_check_notification_download_error">Помилка завантаження</string>
     <string name="update_check_notification_update_available">Доступна нова версія!</string>
     <string name="information_no_downloads">Завантажень немає</string>
     <string name="information_no_recent">Без оновлень</string>
@@ -536,7 +533,6 @@
     <string name="pref_verbose_logging">Докладне журналювання</string>
     <string name="pref_verbose_logging_summary">Записувати докладні журнали до системного журналу (знижує продуктивність застосунку)</string>
     <string name="notification_size_warning">Попередження: великі оновлення можуть призвести до сповільнення джерел або збільшити використання батареї. Тицьніть задля подробиць.</string>
-    <string name="channel_app_updates">Оновлення застосунку</string>
     <string name="download_queue_size_warning">Попередження: великий об\'єм завантажень може призвести до сповільнення роботи джерел та/або блокуванню %s.</string>
     <string name="ext_update_all">Оновити все</string>
     <string name="backup_info">Ви повинні зберігати декілька резервних копій в інших місцях. Резервні копії можуть містити конфіденційні дані, включно зі збереженими паролями; будьте обережні, якщо ділитеся ними.</string>
@@ -807,12 +803,7 @@
     <string name="pref_mark_duplicate_read_chapter_read">Позначати дублікат прочитаного розділу теж як прочитаний</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">Після прочитання розділу</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">Після отримання нового розділу</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Використовуйте застарілий декодер для читалки довгих сторінок</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Впливає на продуктивність. Увімкніть, якщо зменшення порогу растрового зображення не розв\'язує проблему з порожніми зображеннями</string>
-    <string name="pref_hardware_bitmap_threshold">Користувацький поріг апаратного растра</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Якщо читалка завантажує порожнє зображення, поступово зменшувати поріг.\nВибрано: %s</string>
     <string name="pref_flash_style_black">Чорний</string>
-    <string name="pref_hardware_bitmap_threshold_default">За замовчуванням (%d)</string>
     <string name="invalid_backup_file_json">Резервне копіювання JSON не підтримується</string>
     <string name="invalid_backup_file_unknown">Файл резервної копії пошкоджено</string>
     <string name="trackers_updated_summary">Трекери оновлено до розділу %d</string>

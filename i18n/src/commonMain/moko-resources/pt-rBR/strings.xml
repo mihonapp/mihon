@@ -207,9 +207,6 @@
     <string name="file_select_backup">Selecionar arquivo de backup</string>
     <string name="update_check_confirm">Fazer download</string>
     <string name="update_check_no_new_updates">Sem atualizações disponíveis</string>
-    <string name="update_check_notification_download_in_progress">Fazendo download…</string>
-    <string name="update_check_notification_download_complete">Toque para instalar a atualização</string>
-    <string name="update_check_notification_download_error">Erro ao fazer download</string>
     <string name="update_check_notification_update_available">Nova versão disponível!</string>
     <string name="information_no_downloads">Nenhum download</string>
     <string name="information_no_recent">Sem atualizações recentes</string>
@@ -543,7 +540,6 @@
     <string name="update_72hour">A cada 3 dias</string>
     <string name="download_queue_size_warning">Aviso: grandes downloads em massa podem levar as fontes a ficarem lentas e/ou começarem a bloquear o %s. Toque para saber mais.</string>
     <string name="ext_update_all">Atualizar tudo</string>
-    <string name="channel_app_updates">Atualizações do aplicativo</string>
     <string name="pref_auto_clear_chapter_cache">Limpar o cache de capítulos ao abrir o aplicativo</string>
     <string name="clear_database_source_item_count">%1$d itens que não estão na biblioteca no banco de dados</string>
     <string name="database_clean">Nada a ser limpo</string>
@@ -729,7 +725,7 @@
     <string name="action_apply">Aplicar</string>
     <string name="action_revert_to_default">Reverter para o padrão</string>
     <string name="no_scanlators_found">Nenhum scanlator encontrado</string>
-    <string name="scanlator">Scanner</string>
+    <string name="scanlator">Scanlator</string>
     <string name="exclude_scanlators">Excluir scanlators</string>
     <string name="action_create">Criar</string>
     <string name="selected">Selecionado</string>
@@ -804,11 +800,8 @@
     <string name="onboarding_permission_crashlytics">Enviar logs de falhas</string>
     <string name="pref_security">Segurança</string>
     <string name="onboarding_permission_analytics">Permitir análise</string>
-    <string name="pref_hardware_bitmap_threshold_default">Padrão (%d)</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Afeta o desempenho. Habilite somente se a redução do limite de bitmap não corrigir problemas de imagem em branco</string>
     <string name="ext_remove">Remover</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">Depois de ler um capítulo</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Use o decodificador legado para leitor de tira longa</string>
     <string name="ext_confirm_remove">Remover extensão?</string>
     <string name="firebase_summary">O envio de logs de falhas e análises nos permitirá identificar e corrigir problemas, melhorar o desempenho e tornar as atualizações futuras mais relevantes para suas necessidades</string>
     <string name="pref_behavior">Comportamento</string>
@@ -816,7 +809,6 @@
     <string name="pref_auto_update_manga_on_mark_read">Atualizar progresso quando marcado como lido</string>
     <string name="remove_private_extension_message">Você realmente deseja remover a extensão \"%s\"?</string>
     <string name="export">Exportar</string>
-    <string name="pref_hardware_bitmap_threshold">Limite de bitmap de hardware personalizado</string>
     <string name="pref_incognito_mode_extension_summary">Pausar histórico de leitura para extensão</string>
     <string name="trackers_updated_summary">Rastreadores atualizados para o capítulo %d</string>
     <string name="tracked_privately">Rastreado de forma privada</string>
@@ -825,7 +817,6 @@
     <string name="action_display_unread_badge">Capítulos não lidos</string>
     <string name="theme_monochrome">Monocromático</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">Depois de buscar um novo capítulo</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Se o leitor carregar uma imagem em branco, reduza o limite incrementalmente.\nSelecionado: %s</string>
     <string name="non_library_settings">Todas as entradas lidas</string>
     <string name="library_list">Lista da biblioteca</string>
     <string name="library_exported">Biblioteca Exportada</string>
@@ -916,5 +907,12 @@
     <string name="extensionStoresScreen.addStoreDeeplink.bodyText">Você deseja adicionar essa loja de extensões abaixo?</string>
     <string name="extensionStoresScreen.deleteStore.title">Remover loja de extensões</string>
     <string name="pref_webtoon_vertical_navigator_on_left">Coloque o navegador vertical no lado esquerdo</string>
-    <string name="extensionStoresScreen.deleteStore.body">Você deseja remover a loja de extensões \"%1$s\" (%2$s)?</string>
+    <string name="extensionStoresScreen.deleteStore.body">Deseja remover a loja de extensões \"%1$s\" (%2$s)?</string>
+    <string name="pref_vertical_navigator">Usar o navegador de capítulos vertical em</string>
+    <string name="pref_vertical_navigator_height">Altura do navegador vertical</string>
+    <string name="considering">Considerando</string>
+    <string name="theme_tokyonight">Noite em Tóquio</string>
+    <string name="downloading_with_progress">Fazendo download…(%d%%)</string>
+    <string name="pref_filter_update_categories_details">Atualizações nas categorias excluídas não serão exibidas mesmo que eles também estejam nas categorias incluídas.</string>
+    <string name="pref_filter_upcoming_categories_details">Títulos nas categorias excluídas não serão exibidas, mesmo que eles também estejam nas categorias incluídas.</string>
 </resources>

@@ -2,39 +2,36 @@ package eu.kanade.tachiyomi.ui.webview
 
 import android.content.Context
 import androidx.core.net.toUri
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import eu.kanade.presentation.more.stats.StatsScreenState
+import androidx.lifecycle.ViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import logcat.LogPriority
-import mihon.core.viewmodel.StateViewModel
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.service.SourceManager
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
+@AssistedInject
 class WebViewViewModel(
-    val sourceId: Long?,
-    private val sourceManager: SourceManager = Injekt.get(),
-    private val network: NetworkHelper = Injekt.get(),
-) : StateViewModel<StatsScreenState>(StatsScreenState.Loading) {
+    @Assisted val sourceId: Long?,
+    private val sourceManager: SourceManager,
+    private val network: NetworkHelper,
+) : ViewModel() {
 
-    companion object {
-        val SOURCE_ID_KEY = CreationExtras.Key<Long?>()
-
-        val Factory = viewModelFactory {
-            initializer {
-                WebViewViewModel(
-                    sourceId = get(SOURCE_ID_KEY),
-                )
-            }
-        }
+    @AssistedFactory
+    @ManualViewModelAssistedFactoryKey
+    @ContributesIntoMap(AppScope::class)
+    interface Factory : ManualViewModelAssistedFactory {
+        fun create(sourceId: Long?): WebViewViewModel
     }
 
     var headers = emptyMap<String, String>()
@@ -67,4 +64,6 @@ class WebViewViewModel(
             logcat { "Cleared $cleared cookies for: $url" }
         }
     }
+
+    fun defaultUserAgentProvider() = network.defaultUserAgentProvider()
 }

@@ -250,9 +250,6 @@
     <string name="file_select_backup">Seleccioneu el fitxer de còpia de seguretat</string>
     <string name="update_check_confirm">Baixa</string>
     <string name="update_check_no_new_updates">No hi ha cap nova actualització disponible</string>
-    <string name="update_check_notification_download_in_progress">S’està baixant…</string>
-    <string name="update_check_notification_download_complete">Premeu per a instal·lar l’actualització</string>
-    <string name="update_check_notification_download_error">Error de baixada</string>
     <string name="update_check_notification_update_available">Nova versió disponible!</string>
     <string name="information_no_downloads">No hi ha baixades</string>
     <string name="information_no_recent">No hi ha actualitzacions recents</string>
@@ -547,7 +544,6 @@
     <string name="pref_verbose_logging_summary">Imprimeix registres detallats al registre del sistema (redueix el rendiment de l’aplicació)</string>
     <string name="publishing_finished">Publicació finalitzada</string>
     <string name="on_hiatus">En pausa</string>
-    <string name="channel_app_updates">Actualitzacions de l’aplicació</string>
     <string name="action_track">Segueix</string>
     <string name="ext_app_info">Informació de l’aplicació</string>
     <string name="download_queue_size_warning">Advertència: Les baixades massa grosses poden fer que les fonts es tornin més lentes i/o bloquin el %s. Premeu per a obtenir-ne més informació.</string>
@@ -801,13 +797,9 @@
     <string name="pref_incognito_mode_extension_summary">Pausa l’historial de lectura per a aquesta extensió</string>
     <string name="trackers_updated_summary">Els serveis de seguiment s’han actualitzat al capítol %d</string>
     <string name="pref_auto_update_manga_on_mark_read">Actualitza el progrés en marcar com a llegit</string>
-    <string name="pref_hardware_bitmap_threshold_default">Per defecte (%d)</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Afecta el rendiment. Activeu-ho només si en reduir el llindar de mapes de bits no se solucionen els problemes d’imatges buides</string>
     <string name="ext_remove">Elimina</string>
     <string name="ext_confirm_remove">Voleu eliminar l’extensió?</string>
     <string name="remove_private_extension_message">Segur que voleu eliminar l’extensió «%s»?</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Si el lector carrega una imatge buida, reduïu-ne el llindar a poc a poc.\nActual: %s</string>
-    <string name="pref_hardware_bitmap_threshold">Llindar personalitzat dels mapes de bits per maquinari</string>
     <string name="tracked_privately">En seguiment de manera privada</string>
     <string name="export">Exporta</string>
     <string name="library_exported">S’ha exportat la biblioteca</string>
@@ -830,7 +822,6 @@
     <string name="pref_hide_missing_chapter_indicators">Amaga els indicadors de capítols que manquen</string>
     <string name="pref_disallow_non_ascii_filenames">No permetis noms de fitxer que no siguin ASCII</string>
     <string name="pref_disallow_non_ascii_filenames_details">Assegura la compatibiloitat amb alguns mitjans d’emmagatzematge que no admeten Unicode. Quan ho activeu, caldrà que canvieu de nom manualment les carpetes de les fonts i dels mangues substituint-ne els caràcters que no siguin ASCII per llurs representacions hexadecimals UTF-8 en minúscules. No cal que canvieu de nom els fitxers dels capítols.</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Utilitza el decodificador antic per al lector de tira llarga</string>
     <string name="storage_failed_to_create_download_directory">No s’ha pogut crear el directori de baixada</string>
     <string name="storage_failed_to_create_directory">No s’ha pogut crear el directori: %s</string>
     <string name="pref_download_concurrent_sources">Baixades concurrents de fonts</string>

@@ -207,9 +207,6 @@
     <string name="channel_progress">Progreso</string>
     <string name="download_notifier_title_error">Eraro</string>
     <string name="update_check_notification_update_available">Nova versio disponebla!</string>
-    <string name="update_check_notification_download_error">Elŝutada eraro</string>
-    <string name="update_check_notification_download_complete">Tuŝetu por instali ĝisdatigon</string>
-    <string name="update_check_notification_download_in_progress">Elŝutado…</string>
     <string name="update_check_no_new_updates">Sen novaj ĝisdatigoj disponeblaj</string>
     <string name="update_check_confirm">Elŝuti</string>
     <string name="file_select_backup">Elekti savkopian dosieron</string>
@@ -586,8 +583,6 @@
     <string name="pref_flash_page_summ">Reduktas fantomigon sur e-ink-ekranoj</string>
     <string name="pref_flash_duration">Fulma daŭro</string>
     <string name="pref_flash_style_black">Nigro</string>
-    <string name="pref_hardware_bitmap_threshold_default">Defaŭlta (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Se legilo ŝargas malplenan bildon alkremente redukti la sojlon.\nElektita: %s</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Instali kaj lanĉi Shizuku-n por uzi Shizuku-n kiel etendaĵa instalilo.</string>
     <string name="action_open_repo">Malfermitkoda deponejo</string>
     <string name="pref_page_rotate_invert">Inversigi orientiĝon de turnitaj larĝaj paĝoj</string>
@@ -601,9 +596,7 @@
     <string name="pref_flash_with">Fulmi per</string>
     <string name="pref_flash_style_white">Blanko</string>
     <string name="pref_flash_style_white_black">Blanko kaj nigro</string>
-    <string name="pref_hardware_bitmap_threshold">Propra rastruma sojlo de aparataro</string>
     <string name="filter_mode_darken">Malheligi</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Influas rendimenton. Ŝaltu nur se redukto de rastruma sojlo ne riparas problemojn pri malplenaj bildoj</string>
     <string name="pref_color_filter_mode">Miksada reĝimo de kolorfiltrilo</string>
     <string name="filter_mode_lighten">Heligi</string>
     <string name="pref_skip_dupe_chapters">Preterpasi duoblaĵojn de ĉapitroj</string>
@@ -708,7 +701,6 @@
     <string name="pref_mark_duplicate_read_chapter_read_new">Post akiro de nova ĉapitro</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">Post legado de ĉapitro</string>
     <string name="pref_mark_duplicate_read_chapter_read">Marki duoblaĵon de legita ĉapitro kiel legita</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Uzi malmodernan malkodilon por longa stria legilo</string>
     <string name="storage_failed_to_create_download_directory">Fiaskis krei elŝutadan dosierujon</string>
     <string name="storage_failed_to_create_directory">Fiaskis krei dosierujon: %s</string>
     <string name="possible_duplicates_title">Eblaj duoblaĵoj</string>
@@ -828,7 +820,6 @@
     <string name="download_notifier_no_network">Neniu retkonekto disponebla</string>
     <string name="download_notifier_split_page_not_found">Paĝo %d netrovita dum dividado</string>
     <string name="download_notifier_cache_renewal">Kontrolado de elŝutoj</string>
-    <string name="channel_app_updates">Apaj ĝisdatigoj</string>
     <string name="appwidget_updates_description">Vidi vian laste ĝisdatigitaj elementoj</string>
     <string name="appwidget_unavailable_locked">Fenestraĵo nedisponebla kiam apa ŝloso estas ŝaltita</string>
     <string name="remove_manga">Vi forigos \"%s\" el via biblioteko</string>
@@ -909,4 +900,11 @@
     <string name="donationCampaign.paragraph3">Sendepende de tio, Mihon daŭre estos prizorgata de mi kaj la volontuloj, kaj ĝi restos malfermitkoda.</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="donationCampaign.dismiss">Kaŝi</string>
+    <string name="theme_tokyonight">Tokia nokto</string>
+    <string name="downloading_with_progress">Elŝutado… (%d%%)</string>
+    <string name="pref_vertical_navigator">Uzi vertikalan ĉapitran navigilon en</string>
+    <string name="pref_vertical_navigator_height">Alto de vertikala navigilo</string>
+    <string name="considering">Konsiderataj</string>
+    <string name="pref_filter_update_categories_details">Ĝisdatigoj en ekskluzivitaj kategorioj ne estos montrotaj, eĉ se ili estas ankaŭ en inkluzivitaj kategorioj.</string>
+    <string name="pref_filter_upcoming_categories_details">Titoloj en ekskluzivitaj kategorioj ne estos montrotaj, eĉ se ili estas ankaŭ en inkluzivitaj kategorioj.</string>
 </resources>
