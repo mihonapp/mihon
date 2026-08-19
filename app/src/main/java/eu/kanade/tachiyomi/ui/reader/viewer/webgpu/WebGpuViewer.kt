@@ -1,4 +1,3 @@
-// Mihon -->
 package eu.kanade.tachiyomi.ui.reader.viewer.webgpu
 
 import android.graphics.Canvas
@@ -54,8 +53,7 @@ import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
+import mihon.app.di.appGraph
 import java.util.concurrent.Executors
 import kotlin.math.abs
 import kotlin.math.min
@@ -69,7 +67,7 @@ open class WebGpuViewer(
 
     open val isContinuous: Boolean = false
 
-    val readerPreferences by lazy { Injekt.get<ReaderPreferences>() }
+    val readerPreferences by lazy { activity.appGraph.readerPreferences }
 
     private fun readerBackgroundColor(): Int = activity.baseContext.readerBackgroundColor(config.theme)
 
@@ -1427,4 +1425,3 @@ open class WebGpuViewer(
         return false
     }
 }
-// Mihon <--
