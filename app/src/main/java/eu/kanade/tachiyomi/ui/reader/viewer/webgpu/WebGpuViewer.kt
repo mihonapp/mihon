@@ -1,3 +1,4 @@
+// Mihon -->
 package eu.kanade.tachiyomi.ui.reader.viewer.webgpu
 
 import android.graphics.Canvas
@@ -52,8 +53,9 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import logcat.LogPriority
-import mihon.app.di.appGraph
 import tachiyomi.core.common.util.system.logcat
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import java.util.concurrent.Executors
 import kotlin.math.abs
 import kotlin.math.min
@@ -67,7 +69,7 @@ open class WebGpuViewer(
 
     open val isContinuous: Boolean = false
 
-    val readerPreferences by lazy { activity.appGraph.readerPreferences }
+    val readerPreferences by lazy { Injekt.get<ReaderPreferences>() }
 
     private fun readerBackgroundColor(): Int = activity.baseContext.readerBackgroundColor(config.theme)
 
@@ -341,6 +343,10 @@ open class WebGpuViewer(
         /** Cached spread ImagePage when this page is the anchor of a dual-page spread */
         var spreadPage: ImagePage? = null
 
+        /** Whether this page encountered a decode error and should show retry on tap */
+        @Volatile
+        var hasDecodeError: Boolean = false
+
         override val prevChapter: ReaderChapter?
             get() = when (page.chapter) {
                 viewerChapters?.currChapter -> viewerChapters?.prevChapter
@@ -517,12 +523,29 @@ open class WebGpuViewer(
             }
 
             onTap = { offset ->
-                when (config.navigator.getAction(PointF(offset.x, offset.y))) {
-                    NavigationRegion.MENU -> activity.toggleMenu()
-                    NavigationRegion.NEXT -> if (isReversed) moveToPrevious() else moveToNext()
-                    NavigationRegion.PREV -> if (isReversed) moveToNext() else moveToPrevious()
-                    NavigationRegion.RIGHT -> if (isReversed) moveLeft() else moveRight()
-                    NavigationRegion.LEFT -> if (isReversed) moveRight() else moveLeft()
+                // Tap on error page retries the decode/load
+                val current = currentPage as? ViewerReaderPage
+                if (current != null && current.hasDecodeError) {
+                    synchronized(lock) {
+                        current.hasDecodeError = false
+                        current.state = PageState.IDLE
+                        current.imagePage.cleanup()
+                        current.imagePage = ImagePage.Dummy(
+                            pager.state.width.coerceAtLeast(1),
+                            pager.state.height.coerceAtLeast(1),
+                        )
+                    }
+                    // Re-queue for decode — decodeReaderPage will call startPageLoad if needed
+                    queueForDecode(current, prioritize = true)
+                    pager.state.invalidate()
+                } else {
+                    when (config.navigator.getAction(PointF(offset.x, offset.y))) {
+                        NavigationRegion.MENU -> activity.toggleMenu()
+                        NavigationRegion.NEXT -> if (isReversed) moveToPrevious() else moveToNext()
+                        NavigationRegion.PREV -> if (isReversed) moveToNext() else moveToPrevious()
+                        NavigationRegion.RIGHT -> if (isReversed) moveLeft() else moveRight()
+                        NavigationRegion.LEFT -> if (isReversed) moveRight() else moveLeft()
+                    }
                 }
             }
 
@@ -676,7 +699,7 @@ open class WebGpuViewer(
                             }
                         } else {
                             WebGpuRenderer.withContext {
-                                (page.imagePage as ImagePage.Draw?)?.texture?.let { texture ->
+                                (page.imagePage as? ImagePage.Draw?)?.texture?.let { texture ->
                                     Draw.submit { encoder ->
                                         val x2 = 0.1f + (value / 100f) * 0.8f
                                         line(encoder, texture, 0.1f, 0.5f, x2, 0.5f, 0xFFFFFFFF.toInt(), 20f)
@@ -702,7 +725,7 @@ open class WebGpuViewer(
 
                 downloadProgressJob.cancel()
 
-                // Re-queue for decoding if ready
+                // Re-queue for decoding if ready, or set error state for retry
                 synchronized(lock) {
                     if (pageInCache(page) && page.state == PageState.LOADING) {
                         page.state = PageState.IDLE
@@ -711,6 +734,10 @@ open class WebGpuViewer(
                                 page,
                                 prioritize = currentPage?.let { pageKey(it) == pageKey(page) } ?: false,
                             )
+                        } else if (page.page.status is Page.State.Error) {
+                            // Page failed to load — mark as error so user can tap to retry
+                            page.hasDecodeError = true
+                            pager.state.invalidate()
                         }
                     }
                 }
@@ -754,7 +781,7 @@ open class WebGpuViewer(
                     when (tag) {
                         "Left" -> Image.Position.LEFT
                         "Right" -> Image.Position.RIGHT
-                        null -> if (isReversed) { // TODO: heuristics, use image size
+                        null -> if (isReversed) {
                             if (page.page.index % 2 == 0) Image.Position.LEFT else Image.Position.RIGHT
                         } else {
                             if (page.page.index % 2 == 0) Image.Position.RIGHT else Image.Position.LEFT
@@ -807,6 +834,7 @@ open class WebGpuViewer(
                             val oldImagePage = page.imagePage
                             page.imagePage = errorPage
                             page.state = PageState.IDLE
+                            page.hasDecodeError = true
                             if (oldImagePage !is ImagePage.Dummy) oldImagePage.cleanup()
                             pager.state.invalidate()
                         } else {
@@ -880,6 +908,7 @@ open class WebGpuViewer(
                         page.imagePage = imagePage!!
                         imagePage = null
                         page.state = PageState.IDLE
+                        page.hasDecodeError = false
                         if (oldImagePage !is ImagePage.Dummy) {
                             oldImagePage.cleanup()
                         }
@@ -909,7 +938,9 @@ open class WebGpuViewer(
                 }
             }
 
-            val bitmap = createBitmap(pager.state.width, pager.state.height)
+            val width = pager.state.width.coerceAtLeast(1)
+            val height = pager.state.height.coerceAtLeast(1)
+            val bitmap = createBitmap(width, height)
             val canvas = Canvas(bitmap)
             canvas.drawColor(readerBackgroundColor())
 
@@ -1396,3 +1427,4 @@ open class WebGpuViewer(
         return false
     }
 }
+// Mihon <--
