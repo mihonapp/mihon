@@ -55,7 +55,7 @@ class Shikimori(id: Long) : BaseTracker(id, "Shikimori"), DeletableTracker {
             }
         }
 
-        return api.updateLibManga(track, getUsername())
+        return api.updateLibManga(track)
     }
 
     override suspend fun delete(track: DomainTrack) {
@@ -93,11 +93,10 @@ class Shikimori(id: Long) : BaseTracker(id, "Shikimori"), DeletableTracker {
     }
 
     override suspend fun refresh(track: Track): Track {
-        api.findLibManga(track, isRefresh = true)?.let { remoteTrack ->
-            track.library_id = remoteTrack.library_id
-            track.copyPersonalFrom(remoteTrack)
-            track.total_chapters = remoteTrack.total_chapters
-        } ?: throw Exception("Could not find manga")
+        val remoteTrack = api.findLibManga(track) ?: throw Exception("Could not find manga")
+        track.library_id = remoteTrack.library_id
+        track.copyPersonalFrom(remoteTrack)
+        track.total_chapters = remoteTrack.total_chapters
         return track
     }
 
