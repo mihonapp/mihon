@@ -25,7 +25,7 @@ import uy.kohesive.injekt.injectLazy
 import java.security.MessageDigest
 
 class SuwayomiApi(
-    private val trackId: Long,
+    private val trackerId: Long,
     private val sourceManager: SourceManager,
 ) {
 
@@ -71,7 +71,7 @@ class SuwayomiApi(
                 .entry
         }
 
-        TrackSearch.create(trackId).apply {
+        TrackSearch.create(trackerId).apply {
             remote_id = mangaId
             title = manga.title
             cover_url = "$baseUrl/${manga.thumbnailUrl}"

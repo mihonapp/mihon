@@ -18,7 +18,11 @@ import uy.kohesive.injekt.injectLazy
 import java.io.IOException
 import java.net.SocketTimeoutException
 
-class KavitaApi(private val client: OkHttpClient, interceptor: KavitaInterceptor) {
+class KavitaApi(
+    private val trackerId: Long,
+    private val client: OkHttpClient,
+    interceptor: KavitaInterceptor
+) {
 
     private val json: Json by injectLazy()
 
@@ -150,7 +154,7 @@ class KavitaApi(private val client: OkHttpClient, interceptor: KavitaInterceptor
                     .parseAs()
             }
 
-            val track = seriesDto.toTrack()
+            val track = seriesDto.toTrack(trackerId)
             track.apply {
                 cover_url = seriesDto.thumbnail_url.toString()
                 tracking_url = url

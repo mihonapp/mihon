@@ -27,7 +27,7 @@ class Kavita(id: Long) : BaseTracker(id, "Kavita"), EnhancedTracker {
     var authentications: OAuth? = null
 
     private val interceptor by lazy { KavitaInterceptor(this) }
-    val api by lazy { KavitaApi(client, interceptor) }
+    val api by lazy { KavitaApi(id, client, interceptor) }
 
     private val sourceManager: SourceManager by lazy { appGraph.sourceManager }
 

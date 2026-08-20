@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.core.net.toUri
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.database.models.Track
-import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaItem
 import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaItemResult
 import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaListResult
@@ -41,7 +40,7 @@ import java.util.Locale
 import tachiyomi.domain.track.model.Track as DomainTrack
 
 class MangaBakaApi(
-    private val trackId: Long,
+    private val trackerId: Long,
     baseClient: OkHttpClient,
     interceptor: MangaBakaInterceptor,
 ) {
@@ -120,7 +119,7 @@ class MangaBakaApi(
                         .parseAs<MangaBakaItemResult>()
                         .data
 
-                    Track.create(TrackerManager.MANGABAKA).apply {
+                    Track.create(trackerId).apply {
                         remote_id = track.remote_id
                         title = additionalData.chooseBestTitle()
                         status = userData.getStatus()
@@ -196,7 +195,7 @@ class MangaBakaApi(
     }
 
     private fun parseSearchItem(item: MangaBakaItem): TrackSearch {
-        return TrackSearch.create(trackId).apply {
+        return TrackSearch.create(trackerId).apply {
             remote_id = item.id
             title = item.chooseBestTitle()
             summary = item.description?.trim().orEmpty()
