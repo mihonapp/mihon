@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.webview
 
-import android.app.Activity
 import android.app.assist.AssistContent
 import android.content.Context
 import android.content.Intent
@@ -8,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.core.net.toUri
+import dev.zacsweers.metro.Inject
 import eu.kanade.presentation.webview.WebViewScreenContent
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.network.NetworkHelper
@@ -19,16 +19,17 @@ import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setComposeContent
 import logcat.LogPriority
+import mihon.app.di.appGraph
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.injectLazy
 
 class WebViewActivity : BaseActivity() {
 
-    private val sourceManager: SourceManager by injectLazy()
-    private val network: NetworkHelper by injectLazy()
+    @Inject private lateinit var sourceManager: SourceManager
+
+    @Inject private lateinit var network: NetworkHelper
 
     private var assistUrl: String? = null
 
@@ -39,7 +40,7 @@ class WebViewActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             overrideActivityTransition(
-                Activity.OVERRIDE_TRANSITION_OPEN,
+                OVERRIDE_TRANSITION_OPEN,
                 R.anim.shared_axis_x_push_enter,
                 R.anim.shared_axis_x_push_exit,
             )
@@ -48,6 +49,7 @@ class WebViewActivity : BaseActivity() {
             overridePendingTransition(R.anim.shared_axis_x_push_enter, R.anim.shared_axis_x_push_exit)
         }
         super.onCreate(savedInstanceState)
+        appGraph.inject(this)
 
         if (!WebViewUtil.supportsWebView(this)) {
             toast(MR.strings.information_webview_required, Toast.LENGTH_LONG)
@@ -73,6 +75,7 @@ class WebViewActivity : BaseActivity() {
                 initialTitle = intent.extras?.getString(TITLE_KEY),
                 url = url,
                 headers = headers,
+                defaultUserAgentProvider = network::defaultUserAgentProvider,
                 onUrlChange = { assistUrl = it },
                 onShare = this::shareWebpage,
                 onOpenInBrowser = this::openInBrowser,
@@ -90,7 +93,7 @@ class WebViewActivity : BaseActivity() {
         super.finish()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             overrideActivityTransition(
-                Activity.OVERRIDE_TRANSITION_CLOSE,
+                OVERRIDE_TRANSITION_CLOSE,
                 R.anim.shared_axis_x_pop_enter,
                 R.anim.shared_axis_x_pop_exit,
             )

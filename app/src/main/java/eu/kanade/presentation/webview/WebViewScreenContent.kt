@@ -51,7 +51,7 @@ import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.getHtml
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
-import kotlinx.collections.immutable.persistentListOf
+import eu.kanade.tachiyomi.util.system.setUserAgent
 import kotlinx.coroutines.launch
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -73,6 +73,7 @@ fun WebViewScreenContent(
     onNavigateUp: () -> Unit,
     initialTitle: String?,
     url: String,
+    defaultUserAgentProvider: () -> String,
     onShare: (String) -> Unit,
     onOpenInBrowser: (String) -> Unit,
     onClearCookies: (String) -> Unit,
@@ -234,7 +235,7 @@ fun WebViewScreenContent(
                         navigationIcon = Icons.Outlined.Close,
                         actions = {
                             AppBarActions(
-                                persistentListOf(
+                                listOf(
                                     AppBar.Action(
                                         title = stringResource(MR.strings.action_webview_back),
                                         icon = Icons.AutoMirrored.Outlined.ArrowBack,
@@ -271,7 +272,7 @@ fun WebViewScreenContent(
                                         title = stringResource(MR.strings.pref_clear_cookies),
                                         onClick = { onClearCookies(currentUrl) },
                                     ),
-                                ).builder().apply {
+                                ).toMutableList().apply {
                                     if (windowStack.size > 1) {
                                         add(
                                             0,
@@ -282,7 +283,7 @@ fun WebViewScreenContent(
                                             ),
                                         )
                                     }
-                                }.build(),
+                                },
                             )
                         },
                     )
@@ -341,9 +342,7 @@ fun WebViewScreenContent(
                         WebView.setWebContentsDebuggingEnabled(true)
                     }
 
-                    headers["user-agent"]?.let {
-                        webView.settings.userAgentString = it
-                    }
+                    webView.setUserAgent(headers["user-agent"] ?: defaultUserAgentProvider())
                 },
                 onDispose = { webView ->
                     val window = windowStack.items.find { it.webView == webView }

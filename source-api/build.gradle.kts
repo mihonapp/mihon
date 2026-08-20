@@ -1,44 +1,28 @@
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-
 plugins {
-    alias(mihonx.plugins.kotlin.multiplatform)
+    alias(mihonx.plugins.android.library)
     alias(mihonx.plugins.spotless)
 
     alias(libs.plugins.kotlin.serialization)
 }
 
-kotlin {
-    android {
-        namespace = "eu.kanade.tachiyomi.source"
+android {
+    namespace = "eu.kanade.tachiyomi.source"
 
-        defaultConfig {
-            consumerProguardFile("consumer-proguard.pro")
-        }
+    defaultConfig {
+        consumerProguardFiles("consumer-proguard.pro")
     }
+}
 
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    @Suppress("UnstableApiUsage")
-    dependencies {
-        api(libs.kotlinx.serialization.json)
-        api(libs.injekt)
-        api(libs.rxJava)
-        api(libs.jsoup)
+dependencies {
+    implementation(projects.core.common)
 
-        implementation(platform(libs.androidx.compose.bom))
-        implementation(libs.androidx.compose.runtime)
-    }
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.injekt)
+    implementation(libs.rxJava)
+    implementation(libs.jsoup)
 
-    sourceSets {
-        androidMain {
-            dependencies {
-                implementation(projects.core.common)
-                api(libs.androidx.preference)
-            }
-        }
-    }
+    implementation(libs.androidx.preference)
 
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    compilerOptions {
-        freeCompilerArgs.add("-Xexpect-actual-classes")
-    }
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.runtime)
 }

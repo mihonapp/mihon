@@ -3,6 +3,10 @@ package tachiyomi.core.common.preference
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import tachiyomi.core.common.preference.AndroidPreference.BooleanPrimitive
@@ -11,13 +15,15 @@ import tachiyomi.core.common.preference.AndroidPreference.IntPrimitive
 import tachiyomi.core.common.preference.AndroidPreference.LongPrimitive
 import tachiyomi.core.common.preference.AndroidPreference.ObjectAsInt
 import tachiyomi.core.common.preference.AndroidPreference.ObjectAsString
+import tachiyomi.core.common.preference.AndroidPreference.ObjectSetAsStringSet
 import tachiyomi.core.common.preference.AndroidPreference.StringPrimitive
 import tachiyomi.core.common.preference.AndroidPreference.StringSetPrimitive
 
-class AndroidPreferenceStore(
-    context: Context,
-    private val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context),
-) : PreferenceStore {
+@SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class)
+class AndroidPreferenceStore(private val sharedPreferences: SharedPreferences) : PreferenceStore {
+
+    @Inject constructor(context: Context) : this(PreferenceManager.getDefaultSharedPreferences(context))
 
     private val keyFlow = sharedPreferences.keyFlow
 
@@ -68,6 +74,22 @@ class AndroidPreferenceStore(
         deserializer: (Int) -> T,
     ): Preference<T> {
         return ObjectAsInt(
+            preferences = sharedPreferences,
+            keyFlow = keyFlow,
+            key = key,
+            defaultValue = defaultValue,
+            serializer = serializer,
+            deserializer = deserializer,
+        )
+    }
+
+    override fun <T> getObjectSetFromStringSet(
+        key: String,
+        defaultValue: Set<T>,
+        serializer: (T) -> String,
+        deserializer: (String) -> T?,
+    ): Preference<Set<T>> {
+        return ObjectSetAsStringSet(
             preferences = sharedPreferences,
             keyFlow = keyFlow,
             key = key,

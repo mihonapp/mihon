@@ -2,6 +2,7 @@ package eu.kanade.presentation.more.settings.widget
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,6 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.more.settings.LocalPreferenceHighlighted
 import eu.kanade.presentation.track.components.TrackLogoIcon
@@ -26,7 +29,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 fun TrackingPreferenceWidget(
     modifier: Modifier = Modifier,
     tracker: Tracker,
-    checked: Boolean,
+    isLoggedIn: Boolean,
     onClick: (() -> Unit)? = null,
 ) {
     val highlighted = LocalPreferenceHighlighted.current
@@ -39,16 +42,29 @@ fun TrackingPreferenceWidget(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             TrackLogoIcon(tracker)
-            Text(
-                text = tracker.name,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 16.dp),
-                maxLines = 1,
-                style = MaterialTheme.typography.titleLarge,
-                fontSize = TitleFontSize,
-            )
-            if (checked) {
+            Column(
+                modifier = Modifier.weight(1f),
+            ) {
+                Text(
+                    text = tracker.name,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    maxLines = 1,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontSize = TitleFontSize,
+                    fontWeight = FontWeight.Medium,
+                )
+                val displayName = tracker.getDisplayUsername()
+                if (isLoggedIn && displayName.isNotBlank()) {
+                    Text(
+                        text = displayName,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        maxLines = 1,
+                        style = MaterialTheme.typography.bodyMedium,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+            }
+            if (isLoggedIn) {
                 Icon(
                     imageVector = Icons.Outlined.Done,
                     modifier = Modifier

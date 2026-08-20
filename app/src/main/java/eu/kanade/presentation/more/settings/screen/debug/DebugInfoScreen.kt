@@ -16,7 +16,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.profileinstaller.ProfileVerifier
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.PreferenceScaffold
 import eu.kanade.presentation.more.settings.screen.about.AboutScreen
@@ -24,15 +23,12 @@ import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.copyToClipboard
-import kotlinx.collections.immutable.mutate
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.guava.await
 import kotlinx.coroutines.launch
+import mihon.app.di.appGraph
 import mihon.core.common.FeatureFlags
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.util.collectAsState
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 class DebugInfoScreen : Screen() {
 
@@ -64,12 +60,12 @@ class DebugInfoScreen : Screen() {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
 
-        val installationIdPref = remember { Injekt.get<BasePreferences>().installationId }
+        val installationIdPref = remember { context.appGraph.basePreferences.installationId }
         val installationId by installationIdPref.collectAsState()
 
         return Preference.PreferenceGroup(
             title = "App info",
-            preferenceItems = persistentListOf(
+            preferenceItems = listOf(
                 Preference.PreferenceItem.TextPreference(
                     title = "Version",
                     subtitle = AboutScreen.getVersionName(false),
@@ -141,8 +137,8 @@ class DebugInfoScreen : Screen() {
     }
 
     private fun getDeviceInfoGroup(): Preference.PreferenceGroup {
-        val items = persistentListOf<Preference.PreferenceItem<out Any, out Any>>().mutate {
-            it.add(
+        val items = buildList {
+            add(
                 Preference.PreferenceItem.TextPreference(
                     title = "Model",
                     subtitle = "${Build.MANUFACTURER} ${Build.MODEL} (${Build.DEVICE})",
@@ -150,14 +146,14 @@ class DebugInfoScreen : Screen() {
             )
 
             if (DeviceUtil.oneUiVersion != null) {
-                it.add(
+                add(
                     Preference.PreferenceItem.TextPreference(
                         title = "OneUI version",
                         subtitle = "${DeviceUtil.oneUiVersion}",
                     ),
                 )
             } else if (DeviceUtil.miuiMajorVersion != null) {
-                it.add(
+                add(
                     Preference.PreferenceItem.TextPreference(
                         title = "MIUI version",
                         subtitle = "${DeviceUtil.miuiMajorVersion}",
@@ -172,7 +168,7 @@ class DebugInfoScreen : Screen() {
             } else {
                 Build.VERSION.RELEASE
             }
-            it.add(
+            add(
                 Preference.PreferenceItem.TextPreference(
                     title = "Android version",
                     subtitle = "$androidVersion (${Build.DISPLAY})",

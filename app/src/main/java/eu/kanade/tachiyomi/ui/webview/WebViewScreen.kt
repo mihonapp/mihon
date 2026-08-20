@@ -2,9 +2,9 @@ package eu.kanade.tachiyomi.ui.webview
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.webview.WebViewScreenContent
@@ -23,17 +23,19 @@ class WebViewScreen(
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val context = LocalContext.current
-        val screenModel = rememberScreenModel { WebViewScreenModel(sourceId) }
+        val viewModel =
+            assistedMetroViewModel<WebViewViewModel, WebViewViewModel.Factory> { create(sourceId = sourceId) }
 
         WebViewScreenContent(
             onNavigateUp = { navigator.pop() },
             initialTitle = initialTitle,
             url = url,
-            headers = screenModel.headers,
+            headers = viewModel.headers,
+            defaultUserAgentProvider = viewModel::defaultUserAgentProvider,
             onUrlChange = { assistUrl = it },
-            onShare = { screenModel.shareWebpage(context, it) },
-            onOpenInBrowser = { screenModel.openInBrowser(context, it) },
-            onClearCookies = screenModel::clearCookies,
+            onShare = { viewModel.shareWebpage(context, it) },
+            onOpenInBrowser = { viewModel.openInBrowser(context, it) },
+            onClearCookies = viewModel::clearCookies,
         )
     }
 }

@@ -7,15 +7,16 @@ import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import cafe.adriel.voyager.core.model.rememberScreenModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.history.HistoryScreen
 import eu.kanade.presentation.history.components.HistoryDeleteAllDialog
@@ -62,59 +63,59 @@ data object HistoryTab : Tab {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val context = LocalContext.current
-        val screenModel = rememberScreenModel { HistoryScreenModel() }
-        val state by screenModel.state.collectAsState()
+        val viewModel = metroViewModel<HistoryViewModel>()
+        val state by viewModel.state.collectAsStateWithLifecycle()
 
         HistoryScreen(
             state = state,
             snackbarHostState = snackbarHostState,
-            onSearchQueryChange = screenModel::updateSearchQuery,
+            onSearchQueryChange = viewModel::updateSearchQuery,
             onClickCover = { navigator.push(MangaScreen(it)) },
-            onClickResume = screenModel::getNextChapterForManga,
-            onDialogChange = screenModel::setDialog,
-            onClickFavorite = screenModel::addFavorite,
+            onClickResume = viewModel::getNextChapterForManga,
+            onDialogChange = viewModel::setDialog,
+            onClickFavorite = viewModel::addFavorite,
         )
 
-        val onDismissRequest = { screenModel.setDialog(null) }
+        val onDismissRequest = { viewModel.setDialog(null) }
         when (val dialog = state.dialog) {
-            is HistoryScreenModel.Dialog.Delete -> {
+            is HistoryViewModel.Dialog.Delete -> {
                 HistoryDeleteDialog(
                     onDismissRequest = onDismissRequest,
                     onDelete = { all ->
                         if (all) {
-                            screenModel.removeAllFromHistory(dialog.history.mangaId)
+                            viewModel.removeAllFromHistory(dialog.history.mangaId)
                         } else {
-                            screenModel.removeFromHistory(dialog.history)
+                            viewModel.removeFromHistory(dialog.history)
                         }
                     },
                 )
             }
-            is HistoryScreenModel.Dialog.DeleteAll -> {
+            is HistoryViewModel.Dialog.DeleteAll -> {
                 HistoryDeleteAllDialog(
                     onDismissRequest = onDismissRequest,
-                    onDelete = screenModel::removeAllHistory,
+                    onDelete = viewModel::removeAllHistory,
                 )
             }
-            is HistoryScreenModel.Dialog.DuplicateManga -> {
+            is HistoryViewModel.Dialog.DuplicateManga -> {
                 DuplicateMangaDialog(
                     duplicates = dialog.duplicates,
                     onDismissRequest = onDismissRequest,
-                    onConfirm = { screenModel.addFavorite(dialog.manga) },
+                    onConfirm = { viewModel.addFavorite(dialog.manga) },
                     onOpenManga = { navigator.push(MangaScreen(it.id)) },
-                    onMigrate = { screenModel.showMigrateDialog(dialog.manga, it) },
+                    onMigrate = { viewModel.showMigrateDialog(dialog.manga, it) },
                 )
             }
-            is HistoryScreenModel.Dialog.ChangeCategory -> {
+            is HistoryViewModel.Dialog.ChangeCategory -> {
                 ChangeCategoryDialog(
                     initialSelection = dialog.initialSelection,
                     onDismissRequest = onDismissRequest,
                     onEditCategories = { navigator.push(CategoryScreen()) },
                     onConfirm = { include, _ ->
-                        screenModel.moveMangaToCategoriesAndAddToLibrary(dialog.manga, include)
+                        viewModel.moveMangaToCategoriesAndAddToLibrary(dialog.manga, include)
                     },
                 )
             }
-            is HistoryScreenModel.Dialog.Migrate -> {
+            is HistoryViewModel.Dialog.Migrate -> {
                 MigrateMangaDialog(
                     current = dialog.current,
                     target = dialog.target,
@@ -133,20 +134,20 @@ data object HistoryTab : Tab {
         }
 
         LaunchedEffect(Unit) {
-            screenModel.events.collectLatest { e ->
+            viewModel.events.collectLatest { e ->
                 when (e) {
-                    HistoryScreenModel.Event.InternalError ->
+                    HistoryViewModel.Event.InternalError ->
                         snackbarHostState.showSnackbar(context.stringResource(MR.strings.internal_error))
-                    HistoryScreenModel.Event.HistoryCleared ->
+                    HistoryViewModel.Event.HistoryCleared ->
                         snackbarHostState.showSnackbar(context.stringResource(MR.strings.clear_history_completed))
-                    is HistoryScreenModel.Event.OpenChapter -> openChapter(context, e.chapter)
+                    is HistoryViewModel.Event.OpenChapter -> openChapter(context, e.chapter)
                 }
             }
         }
 
         LaunchedEffect(Unit) {
             resumeLastChapterReadEvent.receiveAsFlow().collectLatest {
-                openChapter(context, screenModel.getNextChapter())
+                openChapter(context, viewModel.getNextChapter())
             }
         }
     }

@@ -7,15 +7,13 @@ import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.source.Source
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
 import tachiyomi.domain.manga.model.Manga as DomainManga
 import tachiyomi.domain.track.model.Track as DomainTrack
 
 class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
 
-    val api by lazy { SuwayomiApi(id) }
+    val api by lazy { SuwayomiApi(id, appGraph.sourceManager) }
 
     override fun getLogo() = R.drawable.brand_suwayomi
 
@@ -43,7 +41,7 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
 
     override fun getCompletionStatus(): Long = COMPLETED
 
-    override fun getScoreList(): ImmutableList<String> = persistentListOf()
+    override fun getScoreList(): List<String> = listOf()
 
     override fun displayScore(track: DomainTrack): String = ""
 

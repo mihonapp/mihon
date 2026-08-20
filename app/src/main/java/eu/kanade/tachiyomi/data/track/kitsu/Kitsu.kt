@@ -7,8 +7,6 @@ import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.DeletableTracker
 import eu.kanade.tachiyomi.data.track.kitsu.dto.KitsuOAuth
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.json.Json
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
@@ -23,6 +21,8 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
         const val ON_HOLD = 3L
         const val DROPPED = 4L
         const val PLAN_TO_READ = 5L
+
+        private const val SEARCH_ID_PREFIX = "id:"
     }
 
     override val supportsReadingDates: Boolean = true
@@ -56,9 +56,9 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
 
     override fun getCompletionStatus(): Long = COMPLETED
 
-    override fun getScoreList(): ImmutableList<String> {
+    override fun getScoreList(): List<String> {
         val df = DecimalFormat("0.#")
-        return (listOf("0") + IntRange(2, 20).map { df.format(it / 2f) }).toImmutableList()
+        return (listOf("0") + IntRange(2, 20).map { df.format(it / 2f) })
     }
 
     override fun indexToScore(index: Int): Double {
@@ -116,6 +116,12 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
     }
 
     override suspend fun search(query: String): List<TrackSearch> {
+        if (query.startsWith(SEARCH_ID_PREFIX)) {
+            query.substringAfter(SEARCH_ID_PREFIX).trim().toIntOrNull()?.let { id ->
+                return api.getMangaDetails(id)?.let { listOf(it) } ?: emptyList()
+            }
+        }
+
         return api.search(query)
     }
 
@@ -129,8 +135,9 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
     override suspend fun login(username: String, password: String) {
         val token = api.login(username, password)
         interceptor.newAuth(token)
-        val userId = api.getCurrentUser()
-        saveCredentials(username, userId)
+        val currentUser = api.getCurrentUser()
+        saveDisplayUsername(currentUser.attributes.name)
+        saveCredentials(username, currentUser.id)
     }
 
     override fun logout() {

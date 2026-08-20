@@ -7,9 +7,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateSearchScreen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
@@ -30,13 +30,16 @@ class MigrationListScreen(private val mangaIds: Collection<Long>, private val ex
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val screenModel = rememberScreenModel { MigrationListScreenModel(mangaIds, extraSearchQuery) }
-        val state by screenModel.state.collectAsState()
+        val viewModel =
+            assistedMetroViewModel<MigrationListViewModel, MigrationListViewModel.Factory> {
+                create(mangaIds = mangaIds, extraSearchQuery = extraSearchQuery)
+            }
+        val state by viewModel.state.collectAsState()
         val context = LocalContext.current
 
         LaunchedEffect(matchOverride) {
             val (current, target) = matchOverride ?: return@LaunchedEffect
-            screenModel.useMangaForMigration(
+            viewModel.useMangaForMigration(
                 current = current,
                 target = target,
                 onMissingChapters = {
@@ -46,8 +49,8 @@ class MigrationListScreen(private val mangaIds: Collection<Long>, private val ex
             matchOverride = null
         }
 
-        LaunchedEffect(screenModel) {
-            screenModel.navigateBackEvent.collect {
+        LaunchedEffect(viewModel) {
+            viewModel.navigateBackEvent.collect {
                 navigator.pop()
             }
         }
@@ -61,37 +64,37 @@ class MigrationListScreen(private val mangaIds: Collection<Long>, private val ex
             onSearchManually = { migrationItem ->
                 navigator push MigrateSearchScreen(migrationItem.manga.id)
             },
-            onSkip = { screenModel.removeManga(it) },
-            onMigrate = { screenModel.migrateNow(mangaId = it, replace = true) },
-            onCopy = { screenModel.migrateNow(mangaId = it, replace = false) },
-            openMigrationDialog = screenModel::showMigrateDialog,
+            onSkip = { viewModel.removeManga(it) },
+            onMigrate = { viewModel.migrateNow(mangaId = it, replace = true) },
+            onCopy = { viewModel.migrateNow(mangaId = it, replace = false) },
+            openMigrationDialog = viewModel::showMigrateDialog,
         )
 
         when (val dialog = state.dialog) {
-            is MigrationListScreenModel.Dialog.Migrate -> {
+            is MigrationListViewModel.Dialog.Migrate -> {
                 MigrationMangaDialog(
-                    onDismissRequest = screenModel::dismissDialog,
+                    onDismissRequest = viewModel::dismissDialog,
                     copy = dialog.copy,
                     totalCount = dialog.totalCount,
                     skippedCount = dialog.skippedCount,
                     onMigrate = {
                         if (dialog.copy) {
-                            screenModel.copyMangas()
+                            viewModel.copyMangas()
                         } else {
-                            screenModel.migrateMangas()
+                            viewModel.migrateMangas()
                         }
                     },
                 )
             }
-            is MigrationListScreenModel.Dialog.Progress -> {
+            is MigrationListViewModel.Dialog.Progress -> {
                 MigrationProgressDialog(
                     progress = dialog.progress,
-                    exitMigration = screenModel::cancelMigrate,
+                    exitMigration = viewModel::cancelMigrate,
                 )
             }
-            MigrationListScreenModel.Dialog.Exit -> {
+            MigrationListViewModel.Dialog.Exit -> {
                 MigrationExitDialog(
-                    onDismissRequest = screenModel::dismissDialog,
+                    onDismissRequest = viewModel::dismissDialog,
                     exitMigration = navigator::pop,
                 )
             }
@@ -99,7 +102,7 @@ class MigrationListScreen(private val mangaIds: Collection<Long>, private val ex
         }
 
         BackHandler(true) {
-            screenModel.showExitDialog()
+            viewModel.showExitDialog()
         }
     }
 }

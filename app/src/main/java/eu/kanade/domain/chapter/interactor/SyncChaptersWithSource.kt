@@ -1,5 +1,6 @@
 package eu.kanade.domain.chapter.interactor
 
+import dev.zacsweers.metro.Inject
 import eu.kanade.domain.chapter.model.copyFromSChapter
 import eu.kanade.domain.chapter.model.toSChapter
 import eu.kanade.domain.manga.interactor.GetExcludedScanlators
@@ -10,6 +11,9 @@ import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.online.HttpSource
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import tachiyomi.data.chapter.ChapterSanitizer
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.ShouldUpdateDbChapter
@@ -23,9 +27,10 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.source.local.isLocal
 import java.lang.Long.max
-import java.time.ZonedDateTime
 import java.util.TreeSet
+import kotlin.time.Clock
 
+@Inject
 class SyncChaptersWithSource(
     private val downloadManager: DownloadManager,
     private val downloadProvider: DownloadProvider,
@@ -57,8 +62,9 @@ class SyncChaptersWithSource(
             throw NoChaptersException()
         }
 
-        val now = ZonedDateTime.now()
-        val nowMillis = now.toInstant().toEpochMilli()
+        val timeZone = TimeZone.currentSystemDefault()
+        val now = Clock.System.now().toLocalDateTime(timeZone)
+        val nowMillis = now.toInstant(timeZone).toEpochMilliseconds()
 
         val sourceChapters = rawSourceChapters
             .distinctBy { it.url }
@@ -89,6 +95,7 @@ class SyncChaptersWithSource(
             // Update metadata from source if necessary.
             if (source is HttpSource) {
                 val sChapter = chapter.toSChapter()
+                @Suppress("DEPRECATION")
                 source.prepareNewChapter(sChapter, manga.toSManga())
                 chapter = chapter.copyFromSChapter(sChapter)
             }
@@ -128,6 +135,7 @@ class SyncChaptersWithSource(
                         chapterNumber = chapter.chapterNumber,
                         scanlator = chapter.scanlator,
                         sourceOrder = chapter.sourceOrder,
+                        memo = chapter.memo,
                     )
 
                     if (chapter.dateUpload != 0L) {
@@ -143,6 +151,7 @@ class SyncChaptersWithSource(
             if (manualFetch || manga.fetchInterval == 0 || manga.nextUpdate < fetchWindow.first) {
                 updateManga.awaitUpdateFetchInterval(
                     manga,
+                    timeZone,
                     now,
                     fetchWindow,
                 )
@@ -215,7 +224,7 @@ class SyncChaptersWithSource(
             val chapterUpdates = updatedChapters.map { it.toChapterUpdate() }
             updateChapter.awaitAll(chapterUpdates)
         }
-        updateManga.awaitUpdateFetchInterval(manga, now, fetchWindow)
+        updateManga.awaitUpdateFetchInterval(manga, timeZone, now, fetchWindow)
 
         // Set this manga as updated since chapters were changed
         // Note that last_update actually represents last time the chapter list changed at all

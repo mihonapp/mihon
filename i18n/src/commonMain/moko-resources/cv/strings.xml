@@ -125,8 +125,6 @@
     <string name="download_notifier_text_only_wifi">Wi-Fi ҫыхӑну ҫук</string>
     <string name="download_notifier_title_error">Йӑнӑш</string>
     <string name="update_check_notification_update_available">Ҫӗнӗ версси пур!</string>
-    <string name="update_check_notification_download_error">Тийев йӑнӑшӗ</string>
-    <string name="update_check_notification_download_complete">Тиенсе пӗтрӗ</string>
     <string name="notification_chapters_single">%1$s-мӗш сыпӑк</string>
     <string name="notification_new_chapters">Ҫӗнӗ сыпӑксем тупӑнман</string>
     <string name="information_no_recent_manga">Йулашки вӑхӑтра нимӗн те вуламан</string>
@@ -256,7 +254,6 @@
     <string name="download_notifier_unknown_error">Кӗтмен йӑнӑша пула сыпӑксене тийесе илеймест</string>
     <string name="download_notifier_downloader_title">Тийевҫӗ</string>
     <string name="information_webview_required">Mihon валли WebView кирлӗ</string>
-    <string name="update_check_notification_download_in_progress">Тийев…</string>
     <string name="update_check_no_new_updates">Ҫӗнетӳ тупӑнман</string>
     <string name="update_check_confirm">Тиесе ил</string>
     <string name="file_select_cover">Хуплашка суйла</string>
@@ -620,24 +617,12 @@
     <string name="remove_private_extension_message">«%s» хушмана катертесшӗн-и?</string>
     <string name="ext_permission_install_apps_warning">Хушмасене лартма ирӗксем кирлӗ. Ирӗксене пама кунта пус.</string>
     <string name="ext_revoke_trust">Шанчӑклӑ мар хушмасенчен шанчӑк туртса илмелле</string>
-    <string name="label_extension_repos">Хушмасен ҫӳпҫисем</string>
-    <string name="information_empty_repos">Пӗр хушмасен ҫӳпҫи те ҫук.</string>
-    <string name="action_add_repo">Хушмасен ҫӳпҫи хуш</string>
-    <string name="label_add_repo_input">Хушмасен ҫӳпҫин URL-ӗ</string>
-    <string name="action_add_repo_message">%s-а хушма хушмасен ҫӳпҫи хуш. «index.min.json» тенипе вӗҫленекен URL пулмалла.</string>
-    <string name="error_repo_exists">Ку хушмасен ҫӳпҫи унсӑрах пур!</string>
-    <string name="action_delete_repo">Хушмасен ҫӳпҫине катерт</string>
-    <string name="invalid_repo_name">Хушмасен ҫӳпҫин йӑнӑш URL-ӗ</string>
-    <string name="delete_repo_confirmation">«%s» хушма ҫӳпҫине катертесшӗн-и?</string>
-    <string name="add_repo_confirmation">«%s» хушмасен ҫӳпҫине хушасшӑн-и?</string>
     <string name="action_open_repo">Хушмасен ҫӳпҫин ҫӑл куҫне уҫ</string>
-    <string name="action_replace_repo">Ылмаштар</string>
     <string name="pref_double_tap_zoom">Пысӑклатма икӗ хут пусмалла</string>
     <string name="pref_flash_duration_summary">%1$s мҫ</string>
     <string name="pref_flash_style_black">Хура</string>
     <string name="pref_flash_style_white">Шурӑ</string>
     <string name="pref_flash_style_white_black">Шурӑпа хура</string>
-    <string name="pref_hardware_bitmap_threshold_default">Йаланхилле (%d)</string>
     <string name="pref_inverted_colors">Хирӗҫле тӗссем</string>
     <string name="pref_skip_dupe_chapters">Иккӗллӗ сыпӑксене сиктермелле</string>
     <string name="rotation_reverse_portrait">Хирӗҫле урлӑ</string>
@@ -646,7 +631,6 @@
     <string name="invalid_backup_file_error">Тулли йӑнӑш:</string>
     <string name="app_settings">Ап ӗнерӗвӗ</string>
     <string name="source_settings">Ҫӑл куҫ ӗнерӗвӗ</string>
-    <string name="extensionRepo_settings">Хушмасен ҫӳпҫисем</string>
     <string name="non_library_settings">Пур вуланӑ серилӗх</string>
     <string name="library_list">Вулавӑш йат-йышӗ</string>
 </resources>

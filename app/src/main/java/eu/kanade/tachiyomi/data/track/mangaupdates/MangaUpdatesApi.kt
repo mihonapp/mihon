@@ -4,6 +4,7 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.mangaupdates.MangaUpdates.Companion.READING_LIST
 import eu.kanade.tachiyomi.data.track.mangaupdates.MangaUpdates.Companion.WISH_LIST
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.MUContext
+import eu.kanade.tachiyomi.data.track.mangaupdates.dto.MUCurrentUser
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.MUListItem
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.MULoginResponse
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.MURating
@@ -13,6 +14,7 @@ import eu.kanade.tachiyomi.network.DELETE
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.PUT
+import eu.kanade.tachiyomi.network.await
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.json.Json
@@ -25,6 +27,7 @@ import kotlinx.serialization.json.putJsonObject
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
+import tachiyomi.core.common.util.lang.withIOContext
 import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
 
@@ -172,7 +175,24 @@ class MangaUpdatesApi(
         }
     }
 
-    suspend fun authenticate(username: String, password: String): MUContext? {
+    suspend fun getSeriesDetails(id: Long): MURecord? {
+        return withIOContext {
+            val url = "$BASE_URL/v1/series/$id"
+
+            with(json) {
+                val response = client.newCall(GET(url))
+                    .await()
+
+                if (response.code == 404) {
+                    null
+                } else {
+                    response.parseAs<MURecord>()
+                }
+            }
+        }
+    }
+
+    suspend fun authenticate(username: String, password: String): MUContext {
         val body = buildJsonObject {
             put("username", username)
             put("password", password)
@@ -187,6 +207,14 @@ class MangaUpdatesApi(
                 .awaitSuccess()
                 .parseAs<MULoginResponse>()
                 .context
+        }
+    }
+
+    suspend fun getCurrentUser(): MUCurrentUser {
+        return with(json) {
+            authClient.newCall(GET("$BASE_URL/v1/account/profile"))
+                .awaitSuccess()
+                .parseAs<MUCurrentUser>()
         }
     }
 

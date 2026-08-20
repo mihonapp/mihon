@@ -253,9 +253,6 @@
     <string name="file_select_backup">选择备份文件</string>
     <string name="update_check_confirm">下载</string>
     <string name="update_check_no_new_updates">没有新版本</string>
-    <string name="update_check_notification_download_in_progress">正在下载…</string>
-    <string name="update_check_notification_download_complete">点击安装更新</string>
-    <string name="update_check_notification_download_error">下载失败</string>
     <string name="update_check_notification_update_available">有新版本！</string>
     <string name="information_no_downloads">无下载任务</string>
     <string name="information_no_recent">最近没有更新</string>
@@ -285,8 +282,8 @@
     <string name="action_webview_forward">前进</string>
     <string name="action_webview_refresh">刷新</string>
     <string name="pref_category_library">书架</string>
-    <string name="ext_obsolete">废弃</string>
-    <string name="obsolete_extension_message">此插件已被废弃，可能无法正常运行或导致应用发生故障，建议卸载。</string>
+    <string name="ext_obsolete">无归属</string>
+    <string name="obsolete_extension_message">此插件不属于任何商店，将不会收到更新，可能无法正常运行或导致应用发生故障，建议卸载。</string>
     <string name="pref_date_format">日期格式</string>
     <string name="pref_category_library_update">全局更新</string>
     <string name="logout_title">要退出 %1$s 吗？</string>
@@ -543,7 +540,6 @@
     <string name="update_72hour">每 3 天</string>
     <string name="download_queue_size_warning">警告：批量下载可能导致图源变慢，甚至会使得它们屏蔽 %s 。点击了解详情。</string>
     <string name="ext_update_all">全部更新</string>
-    <string name="channel_app_updates">应用更新</string>
     <string name="pref_auto_clear_chapter_cache">启动时清除章节缓存</string>
     <string name="database_clean">无需清理</string>
     <string name="clear_database_source_item_count">数据库中有 %1$d 部作品未添加到书架</string>
@@ -748,12 +744,7 @@
     <string name="invalid_backup_file_error">完整错误信息：</string>
     <string name="onboarding_permission_ignore_battery_opts">后台运行权限</string>
     <string name="ext_permission_install_apps_warning">需要安装插件的权限，点击此处授权。</string>
-    <string name="action_add_repo">添加仓库</string>
     <string name="private_settings">包含敏感设置（例如进度记录平台的账号信息）</string>
-    <string name="delete_repo_confirmation">确定要删除仓库 \"%s\" 吗？</string>
-    <string name="error_repo_exists">此仓库已存在！</string>
-    <string name="action_delete_repo">删除仓库</string>
-    <string name="invalid_repo_name">仓库网址无效</string>
     <string name="pref_storage_location_info">用于自动备份、章节下载、本地图源。</string>
     <string name="manga_interval_expected_update">预计 %1$s后更新，每 %2$s检查一次。</string>
     <string name="manga_interval_custom_amount">自定义更新频率：</string>
@@ -764,10 +755,6 @@
     <string name="onboarding_guides_returning_user">如果你是重新安装了 %s，可以使用以下功能。</string>
     <string name="pref_library_update_smart_update">智能更新</string>
     <string name="onboarding_permission_notifications_description">用来发送书架更新等通知。</string>
-    <string name="label_extension_repos">插件仓库</string>
-    <string name="information_empty_repos">尚未设置仓库</string>
-    <string name="label_add_repo_input">仓库网址</string>
-    <string name="action_add_repo_message">在 %s 中添加仓库，输入的网址结尾应为 \"index.min.json\" 。</string>
     <string name="onboarding_storage_help_info">如果你是从旧版更新而来，可以查看存储指南了解详情。</string>
     <string name="onboarding_storage_help_action">存储指南</string>
     <string name="pref_storage_location">存储位置</string>
@@ -785,11 +772,7 @@
     <string name="action_open_repo">打开图源仓库</string>
     <string name="pref_webtoon_disable_zoom_out">禁用缩小</string>
     <string name="action_add_anyway">依然添加</string>
-    <string name="action_replace_repo">替换</string>
     <string name="pref_display_profile">自定义校色文件</string>
-    <string name="action_replace_repo_message">%1$s 仓库已经存在和 %2$s 仓库相同的签名密钥指纹。
-\n若继续，%2$s 将被替换，否则请联系你的仓库维护员。</string>
-    <string name="action_replace_repo_title">签名密钥指纹已存在</string>
     <string name="action_view_upcoming">显示即将推出的更新</string>
     <string name="upcoming_guide">即将推出的指南</string>
     <string name="label_upcoming">即将推出</string>
@@ -807,8 +790,6 @@
     <string name="invalid_backup_file_json">不支持 JSON 备份</string>
     <string name="invalid_backup_file_unknown">备份文件已损坏</string>
     <string name="action_copy_link">复制链接</string>
-    <string name="extensionRepo_settings">插件仓库</string>
-    <string name="add_repo_confirmation">您想添加仓库 \"%s\" 吗？</string>
     <string name="pref_download_new_unread_chapters_only">跳过下载重复阅读的章节</string>
     <string name="confirm_tracker_update">将进度更新到第 %d 章？</string>
     <string name="onboarding_permission_crashlytics">发送崩溃日志</string>
@@ -825,14 +806,9 @@
     <string name="non_library_settings">所有已读作品</string>
     <string name="pref_auto_update_manga_on_mark_read">标记为已读时更新章节进度</string>
     <string name="trackers_updated_summary">进度记录平台已更新到 %d 章</string>
-    <string name="pref_hardware_bitmap_threshold_default">默认 (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">如果阅读器加载空白图像，请逐步降低阈值。\n已选择： %s</string>
-    <string name="pref_hardware_bitmap_threshold">自定义硬件位图阈值</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">会影响性能。仅当降低位图阈值无法解决空白图像问题时才启用</string>
     <string name="pref_incognito_mode_extension_summary">暂停记录插件的阅读历史</string>
     <string name="label_auto">自动</string>
     <string name="theme_monochrome">单色</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">在长条阅读模式中使用旧版解码器</string>
     <string name="pref_mark_duplicate_read_chapter_read">将重复的已读章节都标记为已读</string>
     <string name="author">作者</string>
     <string name="action_toggle_private_off">公开记录</string>
@@ -921,4 +897,22 @@
     <string name="donationCampaign.paragraph3">无论如何，Mihon 仍将由我和志愿者们继续维护，并且会保持开源。</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="donationCampaign.dismiss">放弃</string>
+    <string name="extensionStores">插件商店</string>
+    <string name="action.addExtensionStore">添加插件商店</string>
+    <string name="extensionStoresScreen.emptyLabel">尚未添加插件商店</string>
+    <string name="extensionStoresScreen.addStore.title">添加插件商店</string>
+    <string name="extensionStoresScreen.addStore.alreadyExists">此插件商店已存在</string>
+    <string name="extensionStoresScreen.addStore.processing">处理中…</string>
+    <string name="extensionStoresScreen.addStoreInput.inputLabel">商店索引 URL</string>
+    <string name="extensionStoresScreen.addStoreDeeplink.bodyText">是否添加以下插件商店？</string>
+    <string name="extensionStoresScreen.deleteStore.title">移除插件商店</string>
+    <string name="extensionStoresScreen.deleteStore.body">是否移除插件商店 \"%1$s\" (%2$s)？</string>
+    <string name="pref_webtoon_vertical_navigator_on_left">将垂直导航栏放在左侧</string>
+    <string name="pref_vertical_navigator">使用垂直章节导航</string>
+    <string name="pref_vertical_navigator_height">垂直导航栏高度</string>
+    <string name="considering">考虑到</string>
+    <string name="theme_tokyonight">东京夜色</string>
+    <string name="downloading_with_progress">正在下载… (%d%%)</string>
+    <string name="pref_filter_update_categories_details">同时属于包含和排除分类的作品更新将不予显示。</string>
+    <string name="pref_filter_upcoming_categories_details">同时属于包含和排除分类的标题将不予显示。</string>
 </resources>

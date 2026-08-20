@@ -1,11 +1,13 @@
 package eu.kanade.domain.extension.interactor
 
+import dev.zacsweers.metro.Inject
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
+@Inject
 class GetExtensionLanguages(
     private val preferences: SourcePreferences,
     private val extensionManager: ExtensionManager,
@@ -17,11 +19,7 @@ class GetExtensionLanguages(
         ) { enabledLanguage, availableExtensions ->
             availableExtensions
                 .flatMap { ext ->
-                    if (ext.sources.isEmpty()) {
-                        listOf(ext.lang)
-                    } else {
-                        ext.sources.map { it.lang }
-                    }
+                    ext.sources.map { it.lang }
                 }
                 .distinct()
                 .sortedWith(

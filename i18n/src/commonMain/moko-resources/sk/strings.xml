@@ -271,9 +271,6 @@
     <string name="file_select_backup">Vyberte záložný súbor</string>
     <string name="update_check_confirm">Stiahnuť</string>
     <string name="update_check_no_new_updates">Žiadné nové aktualizácie</string>
-    <string name="update_check_notification_download_in_progress">Prebiehá stahovanie…</string>
-    <string name="update_check_notification_download_complete">Klepnutím nainštalujte</string>
-    <string name="update_check_notification_download_error">Chyba sťahovania</string>
     <string name="update_check_notification_update_available">Dostupná nová aktualizácia!</string>
     <string name="information_no_downloads">Žiadne sťahovanie</string>
     <string name="information_no_recent">Žiadne nedávne aktualizácie</string>
@@ -583,7 +580,6 @@
     <string name="about_dont_kill_my_app">Niektorí výrobcovia majú ďalšie obmedzenia aplikácií, ktoré vypínajú služby na pozadí. Na tejto webovej stránke nájdete viac informácií o tom, ako to opraviť.</string>
     <string name="viewer">Režim čítania</string>
     <string name="error_saving_picture">Chyba pri ukladaní obrázka</string>
-    <string name="channel_app_updates">Aktualizácie aplikácie</string>
     <string name="appwidget_unavailable_locked">Widget nie je k dispozícii, keď je povolený zámok aplikácie</string>
     <string name="local_filter_order_by">Zoradiť podľa</string>
     <string name="local_invalid_format">Neplatný formát kapitoly</string>
@@ -659,7 +655,6 @@
     <string name="action_sort_next_updated">Ďalšia očakávaná aktualizácia</string>
     <string name="onboarding_heading">Vitajte!</string>
     <string name="label_upcoming">Nadchádzajúce</string>
-    <string name="action_replace_repo">Nahradiť</string>
     <string name="action_bar_up_description">Navigovať hore</string>
     <string name="label_auto">Auto</string>
     <string name="action_filter_interval_custom">Vlastná frekvencia aktualizácie</string>
@@ -724,19 +719,7 @@
     <string name="ext_remove">Odstrániť</string>
     <string name="ext_permission_install_apps_warning">Na inštaláciu rozšírení sú potrebné povolenia. Ťuknite sem, aby ste ich udelili.</string>
     <string name="ext_revoke_trust">Odstrániť status \"dôveryhodné\" z neznámych rozšírení</string>
-    <string name="label_extension_repos">Repozitáre rozšírení</string>
-    <string name="information_empty_repos">Nemáte nastavené žiadne repozitáre.</string>
-    <string name="action_add_repo">Pridať repozitár</string>
-    <string name="label_add_repo_input">URL Repozitára</string>
-    <string name="action_add_repo_message">Pridať ďalšie repozitáre do %s. Hodnota by mala byť URL, ktorá končí \"index.min.json\".</string>
-    <string name="error_repo_exists">Tento repozitár už existuje!</string>
-    <string name="action_delete_repo">Odstrániť repozitár</string>
-    <string name="invalid_repo_name">Neplatná URL repozitára</string>
-    <string name="delete_repo_confirmation">Naozaj chcete odstrániť repozitár \"%s\"?</string>
-    <string name="add_repo_confirmation">Chcete pridať repozitár \"%s\"?</string>
     <string name="action_open_repo">Open-source repozitár</string>
-    <string name="action_replace_repo_title">Otlačok podpisového kľúča už existuje</string>
-    <string name="action_replace_repo_message">Repozitár %1$s má rovnaký otlačok podpisového kľúča ako %2$s.\nAk je toto očakávané, %2$s bude nahradený, inak kontaktuje manažéra repozitára.</string>
     <string name="pref_page_rotate">Otočiť široké strany, aby sa zmestili</string>
     <string name="pref_page_rotate_invert">Preklopiť orientáciu otočených širokých strán</string>
     <string name="pref_double_tap_zoom">Dvojťuk pre priblíženie</string>
@@ -748,8 +731,4 @@
     <string name="pref_flash_style_black">Čiernou</string>
     <string name="pref_flash_style_white">Bielou</string>
     <string name="pref_flash_style_white_black">Čiernou aj Bielou</string>
-    <string name="pref_hardware_bitmap_threshold">Vlastný prah pre hardvérové bitmapy</string>
-    <string name="pref_hardware_bitmap_threshold_default">Predvolený (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Ak čítacie rozhranie načítava prázdne obrázky, postupne znížte prah.\nVybrané: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Použiť starší dekodér pre čítacie rozhranie \"dlhé pásy\"</string>
 </resources>

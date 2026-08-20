@@ -8,12 +8,16 @@ import eu.kanade.tachiyomi.data.track.anilist.dto.ALCurrentUserResult
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALOAuth
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALSearchResult
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALUserListMangaQueryResult
+import eu.kanade.tachiyomi.data.track.anilist.dto.ALUserViewerData
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.interceptor.rateLimit
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
@@ -24,10 +28,8 @@ import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
 import tachiyomi.core.common.util.lang.withIOContext
 import uy.kohesive.injekt.injectLazy
-import java.time.Instant
-import java.time.ZoneId
-import java.time.ZonedDateTime
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Instant
 import tachiyomi.domain.track.model.Track as DomainTrack
 
 class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
@@ -285,12 +287,13 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
         return ALOAuth(token, "Bearer", System.currentTimeMillis() + 31536000000, 31536000000)
     }
 
-    suspend fun getCurrentUser(): Pair<Int, String> {
+    suspend fun getCurrentUser(): ALUserViewerData {
         return withIOContext {
             val query = """
             |query User {
                 |Viewer {
                     |id
+                    |name
                     |mediaListOptions {
                         |scoreFormat
                     |}
@@ -310,10 +313,74 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                 )
                     .awaitSuccess()
                     .parseAs<ALCurrentUserResult>()
-                    .let {
-                        val viewer = it.data.viewer
-                        Pair(viewer.id, viewer.mediaListOptions.scoreFormat)
-                    }
+                    .data.viewer
+            }
+        }
+    }
+
+    suspend fun getMangaDetails(id: Int): TrackSearch? {
+        return withIOContext {
+            val query = $$"""
+            |query Search($manga_id: Int) {
+                |Page (perPage: 1) {
+                    |media(id: $manga_id, type: MANGA, format_not_in: [NOVEL]) {
+                        |id
+                        |staff {
+                            |edges {
+                                |role
+                                |id
+                                |node {
+                                    |name {
+                                        |full
+                                        |userPreferred
+                                        |native
+                                    |}
+                                |}
+                            |}
+                        |}
+                        |title {
+                            |userPreferred
+                        |}
+                        |coverImage {
+                            |large
+                        |}
+                        |format
+                        |countryOfOrigin
+                        |status
+                        |chapters
+                        |description
+                        |startDate {
+                            |year
+                            |month
+                            |day
+                        |}
+                        |averageScore
+                    |}
+                |}
+            |}
+            |
+            """.trimMargin()
+
+            val payload = buildJsonObject {
+                put("query", query)
+                putJsonObject("variables") {
+                    put("manga_id", id)
+                }
+            }
+
+            with(json) {
+                authClient.newCall(
+                    POST(
+                        API_URL,
+                        body = payload.toString().toRequestBody(jsonMime),
+                    ),
+                )
+                    .awaitSuccess()
+                    .parseAs<ALSearchResult>()
+                    .data.page.media
+                    .firstOrNull()
+                    ?.toALManga()
+                    ?.toTrack()
             }
         }
     }
@@ -327,11 +394,11 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
             }
         }
 
-        val dateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(dateValue), ZoneId.systemDefault())
+        val dateTime = Instant.fromEpochMilliseconds(dateValue).toLocalDateTime(TimeZone.currentSystemDefault())
         return buildJsonObject {
             put("year", dateTime.year)
-            put("month", dateTime.monthValue)
-            put("day", dateTime.dayOfMonth)
+            put("month", dateTime.month.number)
+            put("day", dateTime.day)
         }
     }
 

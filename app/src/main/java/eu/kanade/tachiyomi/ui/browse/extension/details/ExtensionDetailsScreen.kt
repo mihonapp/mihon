@@ -2,15 +2,16 @@ package eu.kanade.tachiyomi.ui.browse.extension.details
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
-import cafe.adriel.voyager.core.model.rememberScreenModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.ExtensionDetailsScreen
 import eu.kanade.presentation.util.Screen
-import kotlinx.coroutines.flow.collectLatest
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 data class ExtensionDetailsScreen(
@@ -19,34 +20,32 @@ data class ExtensionDetailsScreen(
 
     @Composable
     override fun Content() {
-        val context = LocalContext.current
-        val screenModel = rememberScreenModel { ExtensionDetailsScreenModel(pkgName = pkgName, context = context) }
-        val state by screenModel.state.collectAsState()
-
-        if (state.isLoading) {
-            LoadingScreen()
-            return
-        }
+        val viewModel =
+            assistedMetroViewModel<ExtensionDetailsViewModel, ExtensionDetailsViewModel.Factory> {
+                create(pkgName = pkgName)
+            }
+        val state by viewModel.state.collectAsStateWithLifecycle()
 
         val navigator = LocalNavigator.currentOrThrow
 
-        ExtensionDetailsScreen(
-            navigateUp = navigator::pop,
-            state = state,
-            onClickSourcePreferences = { navigator.push(SourcePreferencesScreen(it)) },
-            onClickEnableAll = { screenModel.toggleSources(true) },
-            onClickDisableAll = { screenModel.toggleSources(false) },
-            onClickClearCookies = screenModel::clearCookies,
-            onClickUninstall = screenModel::uninstallExtension,
-            onClickSource = screenModel::toggleSource,
-            onClickIncognito = screenModel::toggleIncognito,
-        )
-
-        LaunchedEffect(Unit) {
-            screenModel.events.collectLatest { event ->
-                if (event is ExtensionDetailsEvent.Uninstalled) {
-                    navigator.pop()
-                }
+        when (val state = state) {
+            ExtensionDetailsViewModel.State.Loading -> LoadingScreen()
+            ExtensionDetailsViewModel.State.Uninstalled -> {
+                LaunchedEffect(Unit) { navigator.pop() }
+                EmptyScreen(MR.strings.empty_screen)
+            }
+            is ExtensionDetailsViewModel.State.Success -> {
+                ExtensionDetailsScreen(
+                    navigateUp = navigator::pop,
+                    state = state,
+                    onClickSourcePreferences = { navigator.push(SourcePreferencesScreen(it)) },
+                    onClickEnableAll = { viewModel.toggleSources(true) },
+                    onClickDisableAll = { viewModel.toggleSources(false) },
+                    onClickClearCookies = viewModel::clearCookies,
+                    onClickUninstall = viewModel::uninstallExtension,
+                    onClickSource = viewModel::toggleSource,
+                    onClickIncognito = viewModel::toggleIncognito,
+                )
             }
         }
     }

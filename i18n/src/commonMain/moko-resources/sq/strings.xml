@@ -87,7 +87,6 @@
     <string name="spen_next_page">Faqja tjetër</string>
     <string name="spen_previous_page">Faqja e meparshme</string>
     <string name="channel_ext_updates">Përditësimet shtesë</string>
-    <string name="channel_app_updates">Përditësimet e aplikacioneve</string>
     <string name="channel_new_chapters">Përditësimet e kapitullit</string>
     <string name="download_notifier_cache_renewal">Shkarkimet e indeksimit</string>
     <string name="download_notifier_split_page_not_found">Faqja %d nuk u gjet gjatë ndarjes</string>
@@ -424,7 +423,6 @@
     <string name="file_select_cover">Zgjidhni imazhin e kopertinës</string>
     <string name="update_check_open">Hapni në GitHub</string>
     <string name="update_check_confirm">Shkarko</string>
-    <string name="update_check_notification_download_complete">Prekni për të instaluar përditësimin</string>
     <string name="transition_no_previous">Nuk ka kapitull të mëparshëm</string>
     <string name="database_clean">Asgjë për të pastruar</string>
     <string name="notification_incognito_text">Çaktivizo modalitetin e fshehtë</string>
@@ -446,7 +444,6 @@
     <string name="manga_info_expand">Më shumë</string>
     <string name="chapter_settings">Cilësimet e kapitullit</string>
     <string name="crash_screen_title">Ups!</string>
-    <string name="update_check_notification_download_error">Gabim shkarkimi</string>
     <string name="pref_invalidate_download_cache">Anuloni indeksin e shkarkimeve</string>
     <string name="pref_auto_clear_chapter_cache">Pastro memorjen e kapitullit në mbylljen e aplikacionit</string>
     <string name="pref_clear_database">Pastro bazën e të dhënave</string>
@@ -619,7 +616,6 @@
     <string name="skipped_reason_not_always_update">U anashkalua sepse seritë nuk kërkojnë përditësime</string>
     <string name="file_select_backup">Zgjidhni skedarin rezervë</string>
     <string name="update_check_no_new_updates">Nuk disponohen përditësime të reja</string>
-    <string name="update_check_notification_download_in_progress">Po shkarkohet…</string>
     <string name="update_check_notification_update_available">Versioni i ri në dispozicion!</string>
     <string name="chapter_settings_updated">Cilësimet e kapitullit të parazgjedhur të përditësuara</string>
     <string name="theme_midnightdusk">Perëndim Mesnate</string>
