@@ -199,12 +199,6 @@ webgpuviewer = { module = "ca.mpreg:webgpuviewer", version.ref = "webgpuviewer" 
 xmlutil-core = { module = "io.github.pdvrieze.xmlutil:core-android", version.ref = "xmlutil" }
 xmlutil-serialization = { module = "io.github.pdvrieze.xmlutil:serialization", version.ref = "xmlutil" }
 
-androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.1" }
-androidx-viewpager = { module = "androidx.viewpager:viewpager", version = "1.1.0" }
-androidx-webgpu = { module = "androidx.webgpu:webgpu", version = "1.0.0-alpha05" }
-androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
-androidx-compose-animation-core = { group = "androidx.compose.animation", name = "animation-core", version = "1.11.4" }
-
 [plugins]
 aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "aboutLibraries" }
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
