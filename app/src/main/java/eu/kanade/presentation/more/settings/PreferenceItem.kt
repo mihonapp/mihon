@@ -28,8 +28,8 @@ import eu.kanade.presentation.more.settings.widget.SwitchPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.TitleFontSize
 import eu.kanade.presentation.more.settings.widget.TrackingPreferenceWidget
+import eu.kanade.tachiyomi.data.track.RefreshResult
 import eu.kanade.tachiyomi.util.system.toast
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
@@ -177,15 +177,17 @@ internal fun PreferenceItem(
             is Preference.PreferenceItem.TrackerPreference -> {
                 val context = LocalContext.current
                 LaunchedEffect(item.tracker) {
-                    item.tracker.isRefreshingFlow
-                        .drop(1) // screen load emits initial "false" once
-                        .collect {
-                            if (it) return@collect
-
-                            context.toast(
+                    item.tracker.refreshResultFlow.collect {
+                        when (it) {
+                            RefreshResult.Success -> context.toast(
                                 context.stringResource(MR.strings.refresh_tracker_success, item.tracker.name),
                             )
+
+                            is RefreshResult.Error -> context.toast(
+                                context.stringResource(MR.strings.refresh_tracker_error, item.tracker.name, it.msg)
+                            )
                         }
+                    }
                 }
                 val isLoggedIn by item.tracker.let { tracker ->
                     tracker.isLoggedInFlow.collectAsState(tracker.isLoggedIn)

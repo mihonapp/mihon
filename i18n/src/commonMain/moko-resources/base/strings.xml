@@ -562,6 +562,7 @@
     <string name="track_activity_name">Tracker login</string>
     <string name="refresh_tracker_profile">Refresh tracker profile</string>
     <string name="refresh_tracker_success">%s profile refreshed</string>
+    <string name="refresh_tracker_error">%1$s refresh error: %2$s</string>
 
       <!-- Browse section -->
     <string name="pref_hide_in_library_items">Hide entries already in library</string>
