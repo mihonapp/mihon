@@ -68,7 +68,7 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
 
     private val interceptor by lazy { KitsuInterceptor(this) }
 
-    private val api by lazy { KitsuApi(client, interceptor) }
+    private val api by lazy { KitsuApi(id, client, interceptor) }
 
     private val scorePreference by lazy { trackPreferences.kitsuScoreType }
 
@@ -119,7 +119,7 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
     }
 
     private suspend fun add(track: Track): Track {
-        return api.addLibManga(track, getUserId())
+        return api.addLibManga(track)
     }
 
     override suspend fun update(track: Track, didReadChapter: Boolean): Track {
@@ -145,7 +145,7 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
     }
 
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {
-        val remoteTrack = api.findLibManga(track, getUserId())
+        val remoteTrack = api.findLibManga(track)
         return if (remoteTrack != null) {
             track.copyPersonalFrom(remoteTrack, copyRemotePrivate = false)
             track.remote_id = remoteTrack.remote_id
@@ -165,7 +165,7 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
 
     override suspend fun search(query: String): List<TrackSearch> {
         if (query.startsWith(SEARCH_ID_PREFIX)) {
-            query.substringAfter(SEARCH_ID_PREFIX).trim().toIntOrNull()?.let { id ->
+            query.substringAfter(SEARCH_ID_PREFIX).trim().let { id ->
                 return api.getMangaDetails(id)?.let { listOf(it) } ?: emptyList()
             }
         }
@@ -174,7 +174,7 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
     }
 
     override suspend fun refresh(track: Track): Track {
-        val remoteTrack = api.getLibManga(track)
+        val remoteTrack = api.findLibManga(track) ?: throw Exception("Could not find manga")
         track.copyPersonalFrom(remoteTrack)
         track.total_chapters = remoteTrack.total_chapters
         return track
@@ -185,24 +185,20 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
         interceptor.newAuth(token)
         val currentUser = api.getCurrentUser()
 
-        val ratingSystem = currentUser.attributes.ratingSystem
-        if (ratingSystem in listOf(RATING_SIMPLE, RATING_REGULAR, RATING_ADVANCED)) {
+        val ratingSystem = currentUser.ratingSystem
+        if (ratingSystem.lowercase() in listOf(RATING_SIMPLE, RATING_REGULAR, RATING_ADVANCED)) {
             scorePreference.set(ratingSystem)
         } else {
             logcat(LogPriority.ERROR) { "Unsupported Kitsu score type: $ratingSystem" }
             scorePreference.set(RATING_ADVANCED)
         }
-        saveDisplayUsername(currentUser.attributes.name)
+        saveDisplayUsername(currentUser.profile.name)
         saveCredentials(username, currentUser.id)
     }
 
     override fun logout() {
         super.logout()
         interceptor.newAuth(null)
-    }
-
-    private fun getUserId(): String {
-        return getPassword()
     }
 
     fun saveToken(oauth: KitsuOAuth?) {
