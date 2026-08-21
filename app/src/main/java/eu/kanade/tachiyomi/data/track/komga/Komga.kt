@@ -79,6 +79,14 @@ class Komga(id: Long) : BaseTracker(id, "Komga"), EnhancedTracker {
         return track
     }
 
+    /**
+     * Page-level progress side channel (ADR-0001), independent of the chapter-level
+     * [update]/[refresh] flow above.
+     */
+    suspend fun pullBookReadProgress(bookUrl: String): KomgaBookProgress = api.getBookReadProgress(bookUrl)
+
+    suspend fun pushBookReadProgress(bookUrl: String, page: Int) = api.updateBookReadProgress(bookUrl, page)
+
     override suspend fun login(username: String, password: String) {
         saveCredentials("user", "pass")
     }

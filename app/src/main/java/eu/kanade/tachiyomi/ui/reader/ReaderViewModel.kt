@@ -4,6 +4,9 @@ import android.content.Context
 import android.net.Uri
 import androidx.annotation.IntRange
 import androidx.compose.runtime.Immutable
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.createSavedStateHandle
@@ -35,6 +38,11 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.saver.Image
 import eu.kanade.tachiyomi.data.saver.ImageSaver
 import eu.kanade.tachiyomi.data.saver.Location
+import eu.kanade.tachiyomi.data.track.TrackerManager
+import eu.kanade.tachiyomi.data.track.komga.KomgaBookProgress
+import eu.kanade.tachiyomi.data.track.komga.KomgaChapterSession
+import eu.kanade.tachiyomi.data.track.komga.KomgaPullResult
+import eu.kanade.tachiyomi.data.track.komga.ReconciliationAction
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.loader.ChapterLoader
@@ -55,9 +63,12 @@ import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.cacheImageDir
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -87,11 +98,18 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.source.local.image.LocalCoverManager
 import tachiyomi.source.local.isLocal
 import java.util.Date
 import kotlin.getValue
 import kotlin.time.Clock
+
+/** How long to wait for more page changes before pushing Komga page-level progress. */
+private const val KOMGA_PUSH_DEBOUNCE_MILLIS = 3000L
+
+/** A pending Komga page-level push, tagged with the chapter session it belongs to. */
+private data class KomgaPushRequest(val bookUrl: String, val page: Int, val session: KomgaChapterSession)
 
 /**
  * Presenter used by the activity to perform background operations.
@@ -109,6 +127,8 @@ class ReaderViewModel(
     private val downloadPreferences: DownloadPreferences,
     private val trackPreferences: TrackPreferences,
     private val trackChapter: TrackChapter,
+    private val trackerManager: TrackerManager,
+    private val getTracks: GetTracks,
     private val getManga: GetManga,
     private val getChaptersByMangaId: GetChaptersByMangaId,
     private val getNextChapters: GetNextChapters,
@@ -268,6 +288,19 @@ class ReaderViewModel(
     private val incognitoMode: Boolean by lazy { getIncognitoState.await(manga?.source) }
     private val downloadAheadAmount = downloadPreferences.autoDownloadWhileReading.get()
 
+    // Komga page-level progress side channel (ADR-0001).
+    private var komgaTrackingEnabled = false
+    private var komgaSession = KomgaChapterSession()
+    private val komgaPushRequests = MutableSharedFlow<KomgaPushRequest>(
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    )
+    private val komgaLifecycleObserver = object : DefaultLifecycleObserver {
+        override fun onStop(owner: LifecycleOwner) {
+            flushKomgaPush()
+        }
+    }
+
     init {
         // To save state
         state.map { it.viewerChapters?.currChapter }
@@ -284,6 +317,14 @@ class ReaderViewModel(
             }
             .launchIn(viewModelScope)
 
+        komgaPushRequests
+            .debounce(KOMGA_PUSH_DEBOUNCE_MILLIS)
+            .onEach { pushKomgaProgress(it.bookUrl, it.page, it.session) }
+            .launchIn(viewModelScope)
+
+        // Backgrounding the app should still flush the last page immediately.
+        ProcessLifecycleOwner.get().lifecycle.addObserver(komgaLifecycleObserver)
+
         if (hasValidArgs) {
             viewModelScope.launch { init() }
         }
@@ -297,13 +338,16 @@ class ReaderViewModel(
                 downloadManager.addDownloadsToStartOfQueue(listOf(it))
             }
         }
+        ProcessLifecycleOwner.get().lifecycle.removeObserver(komgaLifecycleObserver)
     }
 
     /**
      * Called when the user pressed the back button and is going to leave the reader. Used to
-     * trigger deletion of the downloaded chapters.
+     * trigger deletion of the downloaded chapters and to flush the last Komga page-level push
+     * (must happen here, not in [onCleared], since [viewModelScope] is cancelled before that runs).
      */
     fun onActivityFinish() {
+        flushKomgaPush()
         deletePendingChapters()
     }
 
@@ -319,6 +363,9 @@ class ReaderViewModel(
                 sourceManager.isInitialized.first { it }
                 mutableState.update { it.copy(manga = manga) }
                 if (chapterId == -1L) chapterId = initialChapterId
+
+                komgaTrackingEnabled = trackerManager.komga.isLoggedIn &&
+                    getTracks.await(manga.id).any { it.trackerId == trackerManager.komga.id }
 
                 val source = sourceManager.getOrStub(manga.source)
                 loader = ChapterLoader(context, downloadManager, downloadProvider, chapterCache, manga, source)
@@ -341,6 +388,12 @@ class ReaderViewModel(
         loader: ChapterLoader,
         chapter: ReaderChapter,
     ): ViewerChapters {
+        val previousChapter = state.value.viewerChapters?.currChapter
+        if (previousChapter != null && previousChapter.chapter.id != chapter.chapter.id) {
+            // Captured before startKomgaPull below replaces komgaSession for the incoming chapter.
+            flushKomgaPush(previousChapter, komgaSession)
+        }
+
         loader.loadChapter(chapter)
 
         val chapterPos = chapterList.indexOf(chapter)
@@ -363,6 +416,9 @@ class ReaderViewModel(
                 )
             }
         }
+
+        startKomgaPull(chapter)
+
         return newChapters
     }
 
@@ -572,6 +628,7 @@ class ReaderViewModel(
 
         if (!incognitoMode && page.status !is Page.State.Error) {
             readerChapter.chapter.last_page_read = pageIndex
+            requestKomgaPush(readerChapter.chapter.url, pageIndex)
 
             if (readerChapter.pages?.lastIndex == pageIndex) {
                 updateChapterProgressOnComplete(readerChapter)
@@ -585,6 +642,87 @@ class ReaderViewModel(
                 ),
             )
         }
+    }
+
+    /** Requests a debounced Komga page-level push, withheld until the current session's pull resolves. */
+    private fun requestKomgaPush(bookUrl: String, page: Int) {
+        if (!komgaTrackingEnabled) return
+        komgaPushRequests.tryEmit(KomgaPushRequest(bookUrl, page, komgaSession))
+    }
+
+    /**
+     * Immediate (non-debounced) push, bypassing [requestKomgaPush]'s throttling. [session] must be
+     * captured by the caller before a later chapter open reassigns [komgaSession]. Runs via
+     * [launchNonCancellable] since a flush on activity teardown races [viewModelScope] cancellation.
+     */
+    private fun flushKomgaPush(readerChapter: ReaderChapter, session: KomgaChapterSession) {
+        if (!komgaTrackingEnabled) return
+        val chapter = readerChapter.chapter
+        val bookUrl = chapter.url
+        val page = chapter.last_page_read
+        viewModelScope.launchNonCancellable {
+            pushKomgaProgress(bookUrl, page, session)
+        }
+    }
+
+    private fun flushKomgaPush() {
+        getCurrentChapter()?.let { flushKomgaPush(it, komgaSession) }
+    }
+
+    private suspend fun pushKomgaProgress(bookUrl: String, page: Int, session: KomgaChapterSession) {
+        // last_page_read doesn't advance in incognito, so skip pushing it too.
+        if (incognitoMode) return
+        if (session.isPushSuppressed) return
+        try {
+            trackerManager.komga.pushBookReadProgress(bookUrl, page)
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            logcat(LogPriority.WARN, e) { "Failed to push Komga page progress for $bookUrl" }
+        }
+    }
+
+    /** Pulls Komga's remote page for [readerChapter]'s book and starts a fresh push-suppressed session. */
+    private fun startKomgaPull(readerChapter: ReaderChapter) {
+        val session = KomgaChapterSession()
+        komgaSession = session
+        if (!komgaTrackingEnabled) return
+
+        val bookUrl = readerChapter.chapter.url
+        viewModelScope.launchIO {
+            val result = try {
+                when (val progress = trackerManager.komga.pullBookReadProgress(bookUrl)) {
+                    is KomgaBookProgress.Recorded -> KomgaPullResult.Recorded(progress.page)
+                    KomgaBookProgress.Absent -> KomgaPullResult.Absent
+                }
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                logcat(LogPriority.WARN, e) { "Failed to pull Komga page progress for $bookUrl" }
+                KomgaPullResult.Failure
+            }
+
+            when (val action = session.onPullResolved(result, readerChapter.chapter.last_page_read)) {
+                // Only a forward jump shows the "Synced from Komga" toast; a reset is silent.
+                is ReconciliationAction.JumpTo -> applyKomgaReconciliation(readerChapter, action.page, showToast = true)
+                ReconciliationAction.Reset -> applyKomgaReconciliation(readerChapter, 0, showToast = false)
+                ReconciliationAction.NoOp -> Unit
+            }
+        }
+    }
+
+    private suspend fun applyKomgaReconciliation(readerChapter: ReaderChapter, page: Int, showToast: Boolean) {
+        readerChapter.chapter.last_page_read = page
+        updateChapter.await(
+            ChapterUpdate(
+                id = readerChapter.chapter.id!!,
+                lastPageRead = page.toLong(),
+            ),
+        )
+
+        if (getCurrentChapter()?.chapter?.id != readerChapter.chapter.id) return
+        chapterPageIndex = page
+        readerChapter.requestedPage = page
+        mutableState.update { it.copy(currentPage = page + 1) }
+        eventChannel.send(Event.KomgaProgressSynced(page, showToast))
     }
 
     private suspend fun updateChapterProgressOnComplete(readerChapter: ReaderChapter) {
@@ -1012,5 +1150,8 @@ class ReaderViewModel(
         data class SavedImage(val result: SaveImageResult) : Event
         data class ShareImage(val uri: Uri, val page: ReaderPage) : Event
         data class CopyImage(val uri: Uri) : Event
+
+        /** A Komga pull reconciled to [page]; [showToast] is true only for a forward jump, not a reset. */
+        data class KomgaProgressSynced(val page: Int, val showToast: Boolean) : Event
     }
 }

@@ -795,6 +795,7 @@
     <string name="no_scanlators_found">No scanlators found</string>
     <string name="confirm_tracker_update">Update trackers to chapter %d?</string>
     <string name="trackers_updated_summary">Trackers updated to chapter %d</string>
+    <string name="komga_synced_progress">Synced from Komga</string>
 
     <!-- Tracking Screen -->
     <string name="manga_tracking_tab">Tracking</string>

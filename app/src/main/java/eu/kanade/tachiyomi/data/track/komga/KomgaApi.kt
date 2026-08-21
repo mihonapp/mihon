@@ -80,6 +80,45 @@ class KomgaApi(
             }
         }
 
+    /**
+     * Pulls the per-book page-level read progress for the book at [bookUrl] (distinct from the
+     * series-level [getTrackSearch]/[updateProgress] pair above). Preserves "no progress
+     * recorded" as [KomgaBookProgress.Absent], distinct from a genuinely-zero page.
+     *
+     * Converts Komga's 1-indexed page to Mihon's 0-indexed convention.
+     */
+    suspend fun getBookReadProgress(bookUrl: String): KomgaBookProgress =
+        withIOContext {
+            val readProgress = client.newCall(GET(bookUrl, headers))
+                .awaitSuccess()
+                .let { with(json) { it.parseAs<BookDto>() } }
+                .readProgress
+
+            if (readProgress == null) {
+                KomgaBookProgress.Absent
+            } else {
+                KomgaBookProgress.Recorded(readProgress.page - 1)
+            }
+        }
+
+    /**
+     * Pushes the current [page] for the book at [bookUrl] via Komga's per-book read-progress
+     * endpoint, converting from Mihon's 0-indexed page to Komga's 1-indexed format.
+     */
+    suspend fun updateBookReadProgress(bookUrl: String, page: Int) {
+        withIOContext {
+            val payload = json.encodeToString(BookReadProgressUpdateDto(page = page + 1, completed = false))
+            client.newCall(
+                Request.Builder()
+                    .url("$bookUrl/read-progress")
+                    .headers(headers)
+                    .patch(payload.toRequestBody("application/json".toMediaType()))
+                    .build(),
+            )
+                .awaitSuccess()
+        }
+    }
+
     suspend fun updateProgress(track: Track): Track {
         val payload = if (track.tracking_url.contains("/api/v1/series/")) {
             json.encodeToString(ReadProgressUpdateV2Dto(track.last_chapter_read))
