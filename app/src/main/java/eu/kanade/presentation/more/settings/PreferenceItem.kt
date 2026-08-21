@@ -184,7 +184,7 @@ internal fun PreferenceItem(
                             )
 
                             is RefreshResult.Error -> context.toast(
-                                context.stringResource(MR.strings.refresh_tracker_error, item.tracker.name, it.msg)
+                                context.stringResource(MR.strings.refresh_tracker_error, item.tracker.name, it.msg),
                             )
                         }
                     }
