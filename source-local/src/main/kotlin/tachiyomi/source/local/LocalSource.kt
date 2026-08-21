@@ -7,6 +7,7 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.UnmeteredSource
+import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.model.Page
@@ -38,7 +39,11 @@ import tachiyomi.core.metadata.tachiyomi.MangaDetails
 import tachiyomi.domain.chapter.service.ChapterRecognition
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
+import tachiyomi.source.local.filter.ArtistFilter
+import tachiyomi.source.local.filter.AuthorFilter
+import tachiyomi.source.local.filter.GenreFilter
 import tachiyomi.source.local.filter.OrderBy
+import tachiyomi.source.local.filter.StatusFilter
 import tachiyomi.source.local.image.LocalCoverManager
 import tachiyomi.source.local.io.Archive
 import tachiyomi.source.local.io.Format
@@ -89,19 +94,68 @@ class LocalSource(
             0L
         }
 
+        var authorFilter = ""
+        var artistFilter = ""
+        var genreFilter = ""
+        var statusFilter = StatusFilter.ANY
+
+        filters.forEach { filter ->
+            when (filter) {
+                is AuthorFilter -> authorFilter = filter.state.trim()
+                is ArtistFilter -> artistFilter = filter.state.trim()
+                is GenreFilter -> genreFilter = filter.state.trim()
+                is StatusFilter -> statusFilter = StatusFilter.statusFor(filter.state)
+                else -> { /* Do nothing */ }
+            }
+        }
+
+        val genreTerms = genreFilter.split(',')
+            .map { it.trim() }
+            .filterNot { it.isBlank() }
+
+        // Only pay the cost of reading each manga's metadata file when it's actually needed
+        // to answer the query, i.e. plain browsing keeps the previous, cheap behavior.
+        val needsMetadata = query.isNotBlank() ||
+            authorFilter.isNotBlank() ||
+            artistFilter.isNotBlank() ||
+            genreTerms.isNotEmpty() ||
+            statusFilter != StatusFilter.ANY
+
         var mangaDirs = fileSystem.getFilesInBaseDirectory()
             // Filter out files that are hidden and is not a folder
             .filter { it.isDirectory && !it.name.orEmpty().startsWith('.') }
             .distinctBy { it.name }
-            .filter {
-                if (lastModifiedLimit == 0L && query.isBlank()) {
-                    true
-                } else if (lastModifiedLimit == 0L) {
-                    it.name.orEmpty().contains(query, ignoreCase = true)
-                } else {
-                    it.lastModified() >= lastModifiedLimit
-                }
+            .filter { lastModifiedLimit == 0L || it.lastModified() >= lastModifiedLimit }
+
+        if (needsMetadata) {
+            val metadataByDir = mangaDirs
+                .map { mangaDir -> async { mangaDir to getMetadataForFiltering(mangaDir) } }
+                .awaitAll()
+                .toMap()
+
+            mangaDirs = mangaDirs.filter { mangaDir ->
+                val metadata = metadataByDir[mangaDir]
+
+                val matchesQuery = query.isBlank() ||
+                    mangaDir.name.orEmpty().contains(query, ignoreCase = true) ||
+                    metadata.matchesText(query)
+
+                val matchesAuthor = authorFilter.isBlank() ||
+                    metadata?.author.orEmpty().contains(authorFilter, ignoreCase = true)
+
+                val matchesArtist = artistFilter.isBlank() ||
+                    metadata?.artist.orEmpty().contains(artistFilter, ignoreCase = true)
+
+                val matchesGenre = genreTerms.isEmpty() ||
+                    genreTerms.all { term ->
+                        metadata?.genres.orEmpty().any { it.contains(term, ignoreCase = true) }
+                    }
+
+                val matchesStatus = statusFilter == StatusFilter.ANY || metadata?.status == statusFilter
+
+                matchesQuery && matchesAuthor && matchesArtist && matchesGenre && matchesStatus
             }
+        }
 
         filters.forEach { filter ->
             when (filter) {
@@ -269,6 +323,55 @@ class LocalSource(
         comicInfo.translator?.let { chapter.scanlator = it.value }
     }
 
+    /**
+     * Lightweight metadata used only for filtering/searching the browse list. Read from the
+     * top-level ComicInfo.xml if present, falling back to the legacy details.json. Returns
+     * null when neither file exists or it fails to parse.
+     */
+    private fun getMetadataForFiltering(mangaDir: UniFile): LocalMangaMetadata? {
+        return try {
+            val mangaDirFiles = mangaDir.listFiles().orEmpty()
+            val comicInfoFile = mangaDirFiles.firstOrNull { it.name == COMIC_INFO_FILE }
+            val legacyJsonDetailsFile = mangaDirFiles.firstOrNull { it.extension == "json" }
+
+            when {
+                comicInfoFile != null -> {
+                    val comicInfo = parseComicInfo(comicInfoFile.openInputStream())
+                    val temp = SManga.create().apply { copyFromComicInfo(comicInfo) }
+                    LocalMangaMetadata(
+                        author = temp.author,
+                        artist = temp.artist,
+                        description = temp.description,
+                        genres = temp.getGenres().orEmpty(),
+                        status = temp.status,
+                    )
+                }
+                legacyJsonDetailsFile != null -> {
+                    val details = json.decodeFromStream<MangaDetails>(legacyJsonDetailsFile.openInputStream())
+                    LocalMangaMetadata(
+                        author = details.author,
+                        artist = details.artist,
+                        description = details.description,
+                        genres = details.genre.orEmpty(),
+                        status = details.status ?: SManga.UNKNOWN,
+                    )
+                }
+                else -> null
+            }
+        } catch (e: Throwable) {
+            logcat(LogPriority.ERROR, e) { "Error reading local metadata for filtering: ${mangaDir.name}" }
+            null
+        }
+    }
+
+    private fun LocalMangaMetadata?.matchesText(text: String): Boolean {
+        if (this == null) return false
+        return author.orEmpty().contains(text, ignoreCase = true) ||
+            artist.orEmpty().contains(text, ignoreCase = true) ||
+            description.orEmpty().contains(text, ignoreCase = true) ||
+            genres.any { it.contains(text, ignoreCase = true) }
+    }
+
     // Chapters
     private suspend fun getChapterList(manga: SManga): List<SChapter> = withIOContext {
         val chapters = fileSystem.getFilesInMangaDirectory(manga.url)
@@ -315,7 +418,14 @@ class LocalSource(
     }
 
     // Filters
-    override fun getFilterList() = FilterList(OrderBy.Popular(context))
+    override fun getFilterList() = FilterList(
+        OrderBy.Popular(context),
+        Filter.Separator(),
+        AuthorFilter(context),
+        ArtistFilter(context),
+        GenreFilter(context),
+        StatusFilter(context),
+    )
 
     // Unused stuff
     override suspend fun getPageList(chapter: SChapter): List<Page> = throw UnsupportedOperationException("Unused")
@@ -383,6 +493,18 @@ class LocalSource(
         private val LATEST_THRESHOLD = 7.days.inWholeMilliseconds
     }
 }
+
+/**
+ * Metadata parsed from a local manga's ComicInfo.xml or legacy details.json, used purely to
+ * support filtering/searching in [LocalSource.getSearchManga].
+ */
+private data class LocalMangaMetadata(
+    val author: String?,
+    val artist: String?,
+    val description: String?,
+    val genres: List<String>,
+    val status: Int,
+)
 
 fun Manga.isLocal(): Boolean = source == LocalSource.ID
 
