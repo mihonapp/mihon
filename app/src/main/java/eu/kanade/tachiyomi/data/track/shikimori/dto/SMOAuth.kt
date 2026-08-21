@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.track.shikimori.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.time.Clock
 
 @Serializable
 data class SMOAuth(
@@ -15,7 +16,7 @@ data class SMOAuth(
     val expiresIn: Long,
     @SerialName("refresh_token")
     val refreshToken: String?,
-)
-
-// Access token lives 1 day
-fun SMOAuth.isExpired() = (System.currentTimeMillis() / 1000) > (createdAt + expiresIn - 3600)
+) {
+    // Access token lives 1 day
+    fun isExpired() = (Clock.System.now().toEpochMilliseconds() / 1000) > (createdAt + expiresIn - 3600)
+}

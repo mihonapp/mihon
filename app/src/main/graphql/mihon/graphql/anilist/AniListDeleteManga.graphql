@@ -1,0 +1,5 @@
+mutation AniListDeleteManga($library_id: Int!) {
+  DeleteMediaListEntry(id: $library_id) {
+    deleted
+  }
+}

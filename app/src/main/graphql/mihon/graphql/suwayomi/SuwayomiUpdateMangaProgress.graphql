@@ -1,0 +1,11 @@
+mutation SuwayomiUpdateMangaProgress(
+  $mangaId: Int!
+) {
+  trackProgress(
+    input: {
+      mangaId: $mangaId
+    }
+  ) {
+    __typename
+  }
+}

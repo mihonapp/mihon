@@ -1,0 +1,14 @@
+mutation SuwayomiMarkChaptersRead(
+  $chapters: [Int!]!
+) {
+  updateChapters(
+    input: {
+      ids: $chapters,
+      patch: {
+        isRead: true
+      }
+    }
+  ) {
+    __typename
+  }
+}

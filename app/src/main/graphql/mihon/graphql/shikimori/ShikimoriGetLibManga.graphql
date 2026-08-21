@@ -1,0 +1,14 @@
+query ShikimoriGetLibManga($remote_id: String!) {
+  mangas(ids: $remote_id, limit: 1) {
+    id
+    url
+    name
+    chapters
+    userRate {
+      id
+      chapters
+      status
+      score
+    }
+  }
+}
