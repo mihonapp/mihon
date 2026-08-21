@@ -56,7 +56,7 @@ class AnilistApi(
                 AniListAddMangaMutation(
                     manga_id = track.remote_id.toInt(),
                     progress = track.last_chapter_read.toInt(),
-                    status = track.toApiStatus2(),
+                    status = track.toApiStatus(),
                     private = track.private,
                 ),
             )
@@ -86,7 +86,7 @@ class AnilistApi(
                 AniListUpdateMangaMutation(
                     library_id = libraryId.toInt(),
                     progress = track.last_chapter_read.toInt(),
-                    status = track.toApiStatus2(),
+                    status = track.toApiStatus(),
                     private = track.private,
                     score = track.score.toInt(),
                     startedAt = createFuzzyDate(track.started_reading_date),
@@ -107,7 +107,7 @@ class AnilistApi(
             ?: throw Exception("Failed to update manga")
     }
 
-    suspend fun deleteLibManga2(track: DomainTrack) {
+    suspend fun deleteLibManga(track: DomainTrack) {
         val libraryId = track.libraryId
         requireNotNull(libraryId) { "AniList cannot update track with null library_id" }
 

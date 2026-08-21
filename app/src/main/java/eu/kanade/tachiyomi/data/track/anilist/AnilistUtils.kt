@@ -143,23 +143,13 @@ fun AniListGetMangaDetailsQuery.Medium.toTrackSearch(trackId: Long): TrackSearch
     }
 }
 
-fun Track.toApiStatus2(): MediaListStatus = when (status) {
+fun Track.toApiStatus(): MediaListStatus = when (status) {
     Anilist.READING -> MediaListStatus.CURRENT
     Anilist.COMPLETED -> MediaListStatus.COMPLETED
     Anilist.ON_HOLD -> MediaListStatus.PAUSED
     Anilist.DROPPED -> MediaListStatus.DROPPED
     Anilist.PLAN_TO_READ -> MediaListStatus.PLANNING
     Anilist.REREADING -> MediaListStatus.REPEATING
-    else -> throw NotImplementedError("Unknown status: $status")
-}
-
-fun Track.toApiStatus() = when (status) {
-    Anilist.READING -> "CURRENT"
-    Anilist.COMPLETED -> "COMPLETED"
-    Anilist.ON_HOLD -> "PAUSED"
-    Anilist.DROPPED -> "DROPPED"
-    Anilist.PLAN_TO_READ -> "PLANNING"
-    Anilist.REREADING -> "REPEATING"
     else -> throw NotImplementedError("Unknown status: $status")
 }
 

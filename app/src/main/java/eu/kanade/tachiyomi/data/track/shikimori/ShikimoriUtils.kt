@@ -93,32 +93,14 @@ private fun UserRateStatusEnum.toLocalStatus() = when (this) {
     else -> throw NotImplementedError("Unknown status: $this")
 }
 
-fun Track.toShikimoriStatus2(): UserRateStatusEnum = when (status) {
-    Shikimori.READING -> UserRateStatusEnum.watching
-    Shikimori.COMPLETED -> UserRateStatusEnum.completed
-    Shikimori.ON_HOLD -> UserRateStatusEnum.on_hold
-    Shikimori.DROPPED -> UserRateStatusEnum.dropped
-    Shikimori.PLAN_TO_READ -> UserRateStatusEnum.planned
-    Shikimori.REREADING -> UserRateStatusEnum.rewatching
-    else -> throw NotImplementedError("Unknown status: $status")
-}
-
 fun Track.toShikimoriStatus() = when (status) {
-    Shikimori.READING -> "watching"
-    Shikimori.COMPLETED -> "completed"
-    Shikimori.ON_HOLD -> "on_hold"
-    Shikimori.DROPPED -> "dropped"
-    Shikimori.PLAN_TO_READ -> "planned"
-    Shikimori.REREADING -> "rewatching"
-    else -> throw NotImplementedError("Unknown status: $status")
-}
-
-fun toTrackStatus(status: String) = when (status) {
-    "watching" -> Shikimori.READING
-    "completed" -> Shikimori.COMPLETED
-    "on_hold" -> Shikimori.ON_HOLD
-    "dropped" -> Shikimori.DROPPED
-    "planned" -> Shikimori.PLAN_TO_READ
-    "rewatching" -> Shikimori.REREADING
+    // rawValues because Shikimori doesn't have GraphQL mutations and this goes through the v2 API
+    // if/when Shikimori adds GraphQL mutations, this should return UserRateStatusEnum members
+    Shikimori.READING -> UserRateStatusEnum.watching.rawValue
+    Shikimori.COMPLETED -> UserRateStatusEnum.completed.rawValue
+    Shikimori.ON_HOLD -> UserRateStatusEnum.on_hold.rawValue
+    Shikimori.DROPPED -> UserRateStatusEnum.dropped.rawValue
+    Shikimori.PLAN_TO_READ -> UserRateStatusEnum.planned.rawValue
+    Shikimori.REREADING -> UserRateStatusEnum.rewatching.rawValue
     else -> throw NotImplementedError("Unknown status: $status")
 }
