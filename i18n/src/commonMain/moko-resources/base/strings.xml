@@ -560,6 +560,8 @@
     <string name="enhanced_services_not_installed">Available but source not installed: %s</string>
     <string name="enhanced_tracking_info">Provides enhanced features for specific sources. Entries are automatically tracked when added to your library.</string>
     <string name="track_activity_name">Tracker login</string>
+    <string name="refresh_tracker_profile">Refresh tracker profile</string>
+    <string name="refresh_tracker_success">%s profile refreshed</string>
 
       <!-- Browse section -->
     <string name="pref_hide_in_library_items">Hide entries already in library</string>

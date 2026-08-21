@@ -6,6 +6,7 @@ import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import okhttp3.OkHttpClient
 import tachiyomi.domain.track.model.Track as DomainTrack
 
@@ -57,9 +58,13 @@ interface Tracker {
     @CallSuper
     fun logout()
 
+    suspend fun refreshUser()
+
     val isLoggedIn: Boolean
 
     val isLoggedInFlow: Flow<Boolean>
+
+    val isRefreshingFlow: StateFlow<Boolean>
 
     fun getUsername(): String
 

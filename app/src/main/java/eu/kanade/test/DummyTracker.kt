@@ -5,6 +5,8 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import okhttp3.OkHttpClient
 import tachiyomi.domain.track.model.Track
@@ -17,6 +19,7 @@ data class DummyTracker(
     override val supportsPrivateTracking: Boolean = false,
     override val isLoggedIn: Boolean = false,
     override val isLoggedInFlow: Flow<Boolean> = flowOf(false),
+    override val isRefreshingFlow: StateFlow<Boolean> = MutableStateFlow(false),
     val valLogo: Int = R.drawable.brand_anilist,
     val valStatuses: List<Long> = (1L..6L).toList(),
     val valReadingStatus: Long = 1L,
@@ -74,6 +77,8 @@ data class DummyTracker(
     override suspend fun refresh(
         track: eu.kanade.tachiyomi.data.database.models.Track,
     ): eu.kanade.tachiyomi.data.database.models.Track = track
+
+    override suspend fun refreshUser() = Unit
 
     override suspend fun login(username: String, password: String) = Unit
 

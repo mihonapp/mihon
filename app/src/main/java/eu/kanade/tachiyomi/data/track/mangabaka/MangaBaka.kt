@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.json.Json
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
@@ -141,6 +142,24 @@ class MangaBaka(id: Long) : BaseTracker(id, "MangaBaka"), DeletableTracker {
         } catch (_: Exception) {
             logout()
         }
+    }
+
+    override suspend fun updateUserConfig() {
+        val currentUser = api.getCurrentUser()
+
+        logcat { "TANYA: MANGABAKA old score pref=${scorePreference.get()}" }
+        logcat { "TANYA: MANGABAKA currentUser=$currentUser" }
+
+        val scoreType = when (currentUser.ratingSteps) {
+            1 -> STEP_1
+            5 -> STEP_5
+            10 -> STEP_10
+            20 -> STEP_20
+            25 -> STEP_25
+            else -> throw Exception("Unknown score step size ${currentUser.ratingSteps}")
+        }
+        scorePreference.set(scoreType)
+        saveDisplayUsername(currentUser.nickname ?: currentUser.preferredUsername ?: currentUser.id)
     }
 
     fun saveToken(oauth: MangaBakaOAuth?) {

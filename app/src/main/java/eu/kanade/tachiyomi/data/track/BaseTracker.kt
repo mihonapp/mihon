@@ -9,6 +9,8 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import logcat.LogPriority
 import mihon.app.di.appGraph
@@ -69,6 +71,21 @@ abstract class BaseTracker(
             username.isNotEmpty() && password.isNotEmpty()
         }
     }
+
+    final override val isRefreshingFlow: StateFlow<Boolean>
+        field: MutableStateFlow<Boolean> = MutableStateFlow(false)
+
+    final override suspend fun refreshUser() {
+        isRefreshingFlow.value = true
+        try {
+            updateUserConfig()
+        } finally {
+            isRefreshingFlow.value = false
+        }
+    }
+
+    // does the actual remote calls shielded from outside access to guarantee proper refresh flow setting
+    protected abstract suspend fun updateUserConfig()
 
     override fun getUsername() = trackPreferences.trackUsername(this).get()
 
