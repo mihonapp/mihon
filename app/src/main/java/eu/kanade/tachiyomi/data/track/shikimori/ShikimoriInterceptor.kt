@@ -26,7 +26,7 @@ class ShikimoriInterceptor(private val shikimori: Shikimori) : Interceptor {
 
         // Refresh access token if expired.
         if (currAuth.isExpired()) {
-            val response = chain.proceed(ShikimoriApi.refreshTokenRequest(refreshToken))
+            val response = chain.proceed(ShikimoriApi.refreshTokenRequest(shikimori.getConfig(), refreshToken))
             if (response.isSuccessful) {
                 newAuth(json.decodeFromString<SMOAuth>(response.body.string()))
             } else {

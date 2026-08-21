@@ -52,6 +52,18 @@ class TrackPreferences(
 
     val mangabakaScoreType: Preference<String> = preferenceStore.getString("mangabaka_score_type", MangaBaka.STEP_1)
 
+    val shikimoriBaseUrl: Preference<String> = preferenceStore.getString("shikimori_base_url", "https://shikimori.io")
+
+    val shikimoriClientId: Preference<String> = preferenceStore.getString(
+        "shikimori_client_id",
+        "PB9dq8DzI405s7wdtwTdirYqHiyVMh--djnP7lBUqSA",
+    )
+
+    val shikimoriClientSecret: Preference<String> = preferenceStore.getString(
+        Preference.privateKey("shikimori_client_secret"),
+        "NajpZcOBKB9sJtgNcejf8OB9jBN1OYYoo-k4h2WWZus",
+    )
+
     val autoUpdateTrack: Preference<Boolean> = preferenceStore.getBoolean("pref_auto_update_manga_sync_key", true)
 
     val autoUpdateTrackOnMarkRead: Preference<AutoTrackState> = preferenceStore.getEnum(
