@@ -23,6 +23,7 @@ import ca.mpreg.webgpuviewer.transition.TransitionFade
 import ca.mpreg.webgpuviewer.transition.TransitionFadeWhite
 import ca.mpreg.webgpuviewer.transition.TransitionFlipLeft
 import ca.mpreg.webgpuviewer.transition.TransitionFlipRight
+import ca.mpreg.webgpuviewer.transition.TransitionNone
 import ca.mpreg.webgpuviewer.transition.TransitionSphere
 import ca.mpreg.webgpuviewer.transition.TransitionStackDown
 import ca.mpreg.webgpuviewer.transition.TransitionStackLeft
@@ -584,6 +585,7 @@ open class WebGpuViewer(
                     TransitionAnimation.CUBE_OUTSIDE -> TransitionCubeOuter
                     TransitionAnimation.FADE -> TransitionFade
                     TransitionAnimation.FADE_WHITE -> TransitionFadeWhite
+                    TransitionAnimation.NONE -> TransitionNone
                 }
 
                 when (config.cutoutMode) {
@@ -880,7 +882,7 @@ open class WebGpuViewer(
                     readerBackgroundColor()
                 }
 
-                val firstImage = Image.createWithTrim(
+                val firstImage = Image(
                     firstFrame.image,
                     firstFrame.width,
                     firstFrame.height,
@@ -902,9 +904,20 @@ open class WebGpuViewer(
                 if (pageCount > 1) {
                     val frames = ArrayList<Pair<Image, Int>>(pageCount)
                     frames.add(Pair(firstImage, firstFrame.duration))
-                    for (i in 1 until pageCount) {
+                    repeat(pageCount - 1) {
                         val frame = dec.decodeNext()
-                        frames.add(Pair(Image(frame.image, frame.width, frame.height), frame.duration))
+                        frames.add(
+                            Pair(
+                                Image(
+                                    frame.image,
+                                    frame.width,
+                                    frame.height,
+                                    false,
+                                    backgroundColor = backgroundColor,
+                                ),
+                                frame.duration,
+                            ),
+                        )
                     }
                     imagePage.startAnimationLoop(frames) {
                         if (currentPage === page) pager.state.invalidate()
