@@ -3,8 +3,10 @@ package eu.kanade.domain.chapter.interactor
 import dev.zacsweers.metro.Inject
 import eu.kanade.domain.chapter.model.copyFromSChapter
 import eu.kanade.domain.chapter.model.toSChapter
-import eu.kanade.domain.manga.interactor.GetExcludedScanlators
+import eu.kanade.domain.manga.interactor.GetScanlatorFilter
+import eu.kanade.domain.manga.interactor.SetScanlatorFilter
 import eu.kanade.domain.manga.interactor.UpdateManga
+import eu.kanade.domain.manga.model.ScanlatorFilter
 import eu.kanade.domain.manga.model.toSManga
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
@@ -39,7 +41,8 @@ class SyncChaptersWithSource(
     private val updateManga: UpdateManga,
     private val updateChapter: UpdateChapter,
     private val getChaptersByMangaId: GetChaptersByMangaId,
-    private val getExcludedScanlators: GetExcludedScanlators,
+    private val getScanlatorFilter: GetScanlatorFilter,
+    private val setScanlatorFilter: SetScanlatorFilter,
     private val libraryPreferences: LibraryPreferences,
 ) {
 
@@ -201,7 +204,7 @@ class SyncChaptersWithSource(
                 bookmark = chapter.chapterNumber in deletedBookmarkedChapterNumbers,
             )
 
-            // Try to to use the fetch date of the original entry to not pollute 'Updates' tab
+            // Try to use the fetch date of the original entry to not pollute 'Updates' tab
             deletedChapterNumberDateFetchMap[chapter.chapterNumber]?.let {
                 chapter = chapter.copy(dateFetch = it)
             }
@@ -230,8 +233,50 @@ class SyncChaptersWithSource(
         // Note that last_update actually represents last time the chapter list changed at all
         updateManga.awaitUpdateLastUpdate(manga.id)
 
-        val excludedScanlators = getExcludedScanlators.await(manga.id).toHashSet()
+        // --- Scanlator priority sync ---
+        // Sync scanlator filters: drop scanlators the source no longer publishes, then append any
+        // newly discovered ones, ranked by how much/how recently they publish.
+        //
+        // NOTE: the repository maps a NULL scanlator to "", while SetScanlatorFilter stores "" back
+        // as NULL, so both sides are normalised here or the diff never converges and appends a
+        // duplicate NULL row on every sync.
+        val currentScanlators = chapterRepository.getScanlatorsByMangaId(manga.id)
+            .map { it.takeUnless(String::isEmpty) }
+            .toSet()
+        val existingFilter = getScanlatorFilter.await(manga.id)
 
-        return updatedToAdd.filterNot { it.url in changedOrDuplicateReadUrls || it.scanlator in excludedScanlators }
+        // Prune rows whose scanlator has disappeared from the chapter list.
+        val validFilter = existingFilter.filter { it.scanlator in currentScanlators }
+
+        // Rank newly discovered scanlators by how much they publish, then by how recently.
+        val chapterCounts = (dbChapters + updatedToAdd)
+            .groupBy { it.scanlator?.takeUnless(String::isEmpty) }
+        val newScanlators = (currentScanlators - validFilter.map { it.scanlator }.toSet())
+            .sortedWith(
+                compareByDescending<String?> { chapterCounts[it]?.size ?: 0 }
+                    .thenByDescending { chapterCounts[it]?.maxOfOrNull { chapter -> chapter.dateUpload } ?: 0L },
+            )
+
+        if (validFilter.size != existingFilter.size || newScanlators.isNotEmpty()) {
+            val maxPriority = validFilter.maxOfOrNull { it.priority } ?: -1
+            val updatedFilter = validFilter + newScanlators.mapIndexed { index, scanlator ->
+                ScanlatorFilter(scanlator = scanlator, priority = maxPriority + index + 1, excluded = false)
+            }
+            setScanlatorFilter.await(manga.id, updatedFilter)
+        }
+
+        val scanlatorFilter = getScanlatorFilter.await(manga.id)
+        val excludedScanlators = scanlatorFilter.filter { it.excluded }.map { it.scanlator }.toSet()
+        val priorityByScanlator = scanlatorFilter.associate { it.scanlator to it.priority }
+
+        val deduplicatedChapters = updatedToAdd
+            .filterNot { it.scanlator in excludedScanlators }
+            .groupBy { it.chapterNumber }
+            .mapValues { (_, chapters) ->
+                chapters.minByOrNull { priorityByScanlator[it.scanlator] ?: Int.MAX_VALUE }!!
+            }
+            .values
+
+        return deduplicatedChapters.filterNot { it.url in changedOrDuplicateReadUrls }
     }
 }
