@@ -1,0 +1,1 @@
+ALTER TABLE chapters ADD COLUMN bookmark_page INTEGER NOT NULL DEFAULT 0;

@@ -334,9 +334,9 @@ class ReaderActivity : BaseActivity() {
             is ReaderViewModel.Dialog.BookmarkColor -> {
                 BookmarkColorPickerDialog(
                     selectedColor = state.bookmarkColor,
-                    bookmarked = state.bookmarked,
+                    bookmarked = state.isCurrentPageBookmarked,
                     onColorSelected = viewModel::setChapterBookmarkColor,
-                    onRemoveBookmark = viewModel::removeChapterBookmark.takeIf { state.bookmarked },
+                    onRemoveBookmark = viewModel::removeChapterBookmark.takeIf { state.isCurrentPageBookmarked },
                     onDismissRequest = onDismissRequest,
                 )
             }
@@ -484,7 +484,7 @@ class ReaderActivity : BaseActivity() {
             chapterTitle = state.currentChapter?.chapter?.name,
             navigateUp = onBackPressedDispatcher::onBackPressed,
             onClickTopAppBar = ::openMangaScreen,
-            bookmarked = state.bookmarked,
+            bookmarked = state.isCurrentPageBookmarked,
             bookmarkColor = state.bookmarkColor,
             onToggleBookmarked = viewModel::toggleChapterBookmark,
             onOpenBookmarkColorPicker = viewModel::openBookmarkColorDialog,

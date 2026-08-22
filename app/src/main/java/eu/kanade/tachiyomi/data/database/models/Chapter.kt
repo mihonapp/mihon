@@ -19,6 +19,8 @@ interface Chapter : SChapter, Serializable {
 
     var bookmarkColor: Int
 
+    var bookmarkPage: Int
+
     var last_page_read: Int
 
     var date_fetch: Long
@@ -39,9 +41,10 @@ fun Chapter.toDomainChapter(): DomainChapter? {
         id = id!!,
         mangaId = manga_id!!,
         read = read,
-        bookmark = bookmark,
-        bookmarkColor = BookmarkColor.from(bookmarkColor),
-        lastPageRead = last_page_read.toLong(),
+            bookmark = bookmark,
+            bookmarkColor = BookmarkColor.from(bookmarkColor),
+            bookmarkPage = bookmarkPage,
+            lastPageRead = last_page_read.toLong(),
         dateFetch = date_fetch,
         sourceOrder = source_order.toLong(),
         url = url,

@@ -109,7 +109,13 @@ fun BookmarkColorPickerDialog(
                             .semantics { contentDescription = description }
                             .clickable(
                                 role = Role.Button,
-                                onClick = { onColorSelected(color) },
+                                onClick = {
+                                    if (bookmarked && color == selectedColor) {
+                                        onRemoveBookmark?.invoke()
+                                    } else {
+                                        onColorSelected(color)
+                                    }
+                                },
                             ),
                     )
                 }

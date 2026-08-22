@@ -37,6 +37,7 @@ fun Chapter.toDbChapter(): DbChapter = ChapterImpl().also {
     it.read = read
     it.bookmark = bookmark
     it.bookmarkColor = bookmarkColor.value
+    it.bookmarkPage = bookmarkPage
     it.last_page_read = lastPageRead.toInt()
     it.date_fetch = dateFetch
     it.date_upload = dateUpload

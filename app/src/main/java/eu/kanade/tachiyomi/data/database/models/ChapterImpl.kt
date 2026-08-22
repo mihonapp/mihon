@@ -23,6 +23,8 @@ class ChapterImpl : Chapter {
 
     override var bookmarkColor: Int = 0
 
+    override var bookmarkPage: Int = 0
+
     override var last_page_read: Int = 0
 
     override var date_fetch: Long = 0

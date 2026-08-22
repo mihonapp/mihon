@@ -175,6 +175,11 @@ class MangaRestorer(
                             dbChapter.bookmark -> dbChapter.bookmarkColor
                             else -> BookmarkColor.DEFAULT
                         },
+                        bookmarkPage = when {
+                            chapter.bookmark -> chapter.bookmarkPage
+                            dbChapter.bookmark -> dbChapter.bookmarkPage
+                            else -> 0
+                        },
                     )
                 if (dbChapter.read && !updatedChapter.read) {
                     updatedChapter = updatedChapter.copy(
@@ -215,6 +220,7 @@ class MangaRestorer(
                     chapter.version,
                     chapter.memo,
                     chapter.bookmarkColor.value.toLong(),
+                    chapter.bookmarkPage.toLong(),
                 )
             }
         }
@@ -240,6 +246,7 @@ class MangaRestorer(
                     isSyncing = 0,
                     memo = chapter.memo.let(MemoColumnAdapter::encode),
                     bookmarkColor = chapter.bookmarkColor.value.toLong(),
+                    bookmarkPage = chapter.bookmarkPage.toLong(),
                 )
             }
         }

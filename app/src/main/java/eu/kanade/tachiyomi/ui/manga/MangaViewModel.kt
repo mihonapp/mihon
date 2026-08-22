@@ -827,6 +827,7 @@ class MangaViewModel(
                         id = it.id,
                         bookmark = bookmarked,
                         bookmarkColor = color,
+                        bookmarkPage = if (bookmarked) it.bookmarkPage else 0,
                     )
                 }
                 .let { updateChapter.awaitAll(it) }
@@ -859,6 +860,7 @@ class MangaViewModel(
                     id = chapter.id,
                     bookmark = false,
                     bookmarkColor = BookmarkColor.DEFAULT,
+                    bookmarkPage = 0,
                 ),
             )
         }

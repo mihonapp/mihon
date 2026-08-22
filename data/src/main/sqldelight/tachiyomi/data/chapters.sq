@@ -19,6 +19,7 @@ CREATE TABLE chapters(
     is_syncing INTEGER NOT NULL DEFAULT 0,
     memo BLOB AS JsonObject NOT NULL DEFAULT '{}',
     bookmark_color INTEGER NOT NULL DEFAULT 0,
+    bookmark_page INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY(manga_id) REFERENCES mangas (_id)
     ON DELETE CASCADE
 );
@@ -41,6 +42,7 @@ WHEN new.is_syncing = 0 AND (
     new.read != old.read OR
     new.bookmark != old.bookmark OR
     new.bookmark_color != old.bookmark_color OR
+    new.bookmark_page != old.bookmark_page OR
     new.last_page_read != old.last_page_read
 )
 BEGIN
@@ -103,12 +105,12 @@ SET is_syncing = 0
 WHERE is_syncing = 1;
 
 insert:
-INSERT INTO chapters(manga_id, url, name, scanlator, read, bookmark, last_page_read, chapter_number, source_order, date_fetch, date_upload, last_modified_at, version, is_syncing, memo, bookmark_color)
-VALUES (:mangaId, :url, :name, :scanlator, :read, :bookmark, :lastPageRead, :chapterNumber, :sourceOrder, :dateFetch, :dateUpload, 0, :version, 0, :memo, :bookmarkColor);
+INSERT INTO chapters(manga_id, url, name, scanlator, read, bookmark, last_page_read, chapter_number, source_order, date_fetch, date_upload, last_modified_at, version, is_syncing, memo, bookmark_color, bookmark_page)
+VALUES (:mangaId, :url, :name, :scanlator, :read, :bookmark, :lastPageRead, :chapterNumber, :sourceOrder, :dateFetch, :dateUpload, 0, :version, 0, :memo, :bookmarkColor, :bookmarkPage);
 
 insertReturningId:
-INSERT INTO chapters(manga_id, url, name, scanlator, read, bookmark, last_page_read, chapter_number, source_order, date_fetch, date_upload, last_modified_at, version, is_syncing, memo, bookmark_color)
-VALUES (:mangaId, :url, :name, :scanlator, :read, :bookmark, :lastPageRead, :chapterNumber, :sourceOrder, :dateFetch, :dateUpload, 0, :version, 0, :memo, :bookmarkColor)
+INSERT INTO chapters(manga_id, url, name, scanlator, read, bookmark, last_page_read, chapter_number, source_order, date_fetch, date_upload, last_modified_at, version, is_syncing, memo, bookmark_color, bookmark_page)
+VALUES (:mangaId, :url, :name, :scanlator, :read, :bookmark, :lastPageRead, :chapterNumber, :sourceOrder, :dateFetch, :dateUpload, 0, :version, 0, :memo, :bookmarkColor, :bookmarkPage)
 RETURNING _id;
 
 update:
@@ -127,5 +129,6 @@ SET manga_id = coalesce(:mangaId, manga_id),
     version = coalesce(:version, version),
     is_syncing = coalesce(:isSyncing, is_syncing),
     memo = coalesce(:memo, memo),
-    bookmark_color = coalesce(:bookmarkColor, bookmark_color)
+    bookmark_color = coalesce(:bookmarkColor, bookmark_color),
+    bookmark_page = coalesce(:bookmarkPage, bookmark_page)
 WHERE _id = :chapterId;

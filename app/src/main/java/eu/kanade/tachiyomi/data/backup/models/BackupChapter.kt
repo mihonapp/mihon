@@ -28,6 +28,7 @@ class BackupChapter(
     @ProtoNumber(12) var version: Long = 0,
     @ProtoNumber(13) var memo: ByteArray = JsonObjectEmptyBytes,
     @ProtoNumber(14) var bookmarkColor: Int = 0,
+    @ProtoNumber(15) var bookmarkPage: Int = 0,
 ) {
     fun toChapterImpl(): Chapter {
         return Chapter.create().copy(
@@ -38,6 +39,7 @@ class BackupChapter(
             read = this@BackupChapter.read,
             bookmark = this@BackupChapter.bookmark,
             bookmarkColor = BookmarkColor.from(this@BackupChapter.bookmarkColor),
+            bookmarkPage = this@BackupChapter.bookmarkPage,
             lastPageRead = this@BackupChapter.lastPageRead,
             dateFetch = this@BackupChapter.dateFetch,
             dateUpload = this@BackupChapter.dateUpload,
@@ -67,6 +69,7 @@ val backupChapterMapper = {
         _: Long,
         memo: JsonObject,
         bookmarkColor: Long,
+        bookmarkPage: Long,
     ->
     BackupChapter(
         url = url,
@@ -83,5 +86,6 @@ val backupChapterMapper = {
         version = version,
         memo = MemoColumnAdapter.encode(memo),
         bookmarkColor = bookmarkColor.toInt(),
+        bookmarkPage = bookmarkPage.toInt(),
     )
 }

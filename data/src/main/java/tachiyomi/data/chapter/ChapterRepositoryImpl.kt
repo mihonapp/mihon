@@ -39,6 +39,7 @@ class ChapterRepositoryImpl(
                         chapter.version,
                         chapter.memo,
                         chapter.bookmarkColor.value.toLong(),
+                        chapter.bookmarkPage.toLong(),
                     )
                         .awaitAsOne()
                     chapter.copy(id = chapterId)
@@ -78,6 +79,7 @@ class ChapterRepositoryImpl(
                     isSyncing = 0,
                     memo = chapterUpdate.memo?.let(MemoColumnAdapter::encode),
                     bookmarkColor = chapterUpdate.bookmarkColor?.value?.toLong(),
+                    bookmarkPage = chapterUpdate.bookmarkPage?.toLong(),
                 )
             }
         }
@@ -152,12 +154,14 @@ class ChapterRepositoryImpl(
         isSyncing: Long,
         memo: JsonObject,
         bookmarkColor: Long,
+        bookmarkPage: Long,
     ): Chapter = Chapter(
         id = id,
         mangaId = mangaId,
         read = read,
         bookmark = bookmark,
         bookmarkColor = BookmarkColor.from(bookmarkColor.toInt()),
+        bookmarkPage = bookmarkPage.toInt(),
         lastPageRead = lastPageRead,
         dateFetch = dateFetch,
         sourceOrder = sourceOrder,

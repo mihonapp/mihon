@@ -333,6 +333,7 @@ class ReaderViewModel @JvmOverloads constructor(
                     viewerChapters = newChapters,
                     bookmarked = newChapters.currChapter.chapter.bookmark,
                     bookmarkColor = BookmarkColor.from(newChapters.currChapter.chapter.bookmarkColor),
+                    bookmarkPage = newChapters.currChapter.chapter.bookmarkPage,
                 )
             }
         }
@@ -642,18 +643,23 @@ class ReaderViewModel @JvmOverloads constructor(
     }
 
     /**
-     * Bookmarks the currently active chapter.
+     * Bookmarks the currently visible page. Other pages stay unbookmarked until they are pressed.
      */
     fun toggleChapterBookmark() {
         val chapter = getCurrentChapter()?.chapter ?: return
-        val bookmarked = !chapter.bookmark
+        val currentPage = state.value.currentPage
+        if (currentPage < 1) return
+        val isThisPageBookmarked = chapter.bookmark && chapter.bookmarkPage == currentPage
+        val bookmarked = !isThisPageBookmarked
         val color = if (bookmarked) {
             libraryPreferences.lastUsedBookmarkColor.get()
         } else {
             BookmarkColor.DEFAULT
         }
+        val bookmarkPage = if (bookmarked) currentPage else 0
         chapter.bookmark = bookmarked
         chapter.bookmarkColor = color.value
+        chapter.bookmarkPage = bookmarkPage
 
         viewModelScope.launchNonCancellable {
             updateChapter.await(
@@ -661,6 +667,7 @@ class ReaderViewModel @JvmOverloads constructor(
                     id = chapter.id!!,
                     bookmark = bookmarked,
                     bookmarkColor = color,
+                    bookmarkPage = bookmarkPage,
                 ),
             )
         }
@@ -669,6 +676,7 @@ class ReaderViewModel @JvmOverloads constructor(
             it.copy(
                 bookmarked = bookmarked,
                 bookmarkColor = color,
+                bookmarkPage = bookmarkPage,
             )
         }
     }
@@ -679,9 +687,12 @@ class ReaderViewModel @JvmOverloads constructor(
 
     fun setChapterBookmarkColor(color: BookmarkColor) {
         val chapter = getCurrentChapter()?.chapter ?: return
+        val currentPage = state.value.currentPage
+        if (currentPage < 1) return
         libraryPreferences.lastUsedBookmarkColor.set(color)
         chapter.bookmark = true
         chapter.bookmarkColor = color.value
+        chapter.bookmarkPage = currentPage
 
         viewModelScope.launchNonCancellable {
             updateChapter.await(
@@ -689,6 +700,7 @@ class ReaderViewModel @JvmOverloads constructor(
                     id = chapter.id!!,
                     bookmark = true,
                     bookmarkColor = color,
+                    bookmarkPage = currentPage,
                 ),
             )
         }
@@ -697,6 +709,7 @@ class ReaderViewModel @JvmOverloads constructor(
             it.copy(
                 bookmarked = true,
                 bookmarkColor = color,
+                bookmarkPage = currentPage,
                 dialog = null,
             )
         }
@@ -706,6 +719,7 @@ class ReaderViewModel @JvmOverloads constructor(
         val chapter = getCurrentChapter()?.chapter ?: return
         chapter.bookmark = false
         chapter.bookmarkColor = BookmarkColor.DEFAULT.value
+        chapter.bookmarkPage = 0
 
         viewModelScope.launchNonCancellable {
             updateChapter.await(
@@ -713,6 +727,7 @@ class ReaderViewModel @JvmOverloads constructor(
                     id = chapter.id!!,
                     bookmark = false,
                     bookmarkColor = BookmarkColor.DEFAULT,
+                    bookmarkPage = 0,
                 ),
             )
         }
@@ -721,6 +736,7 @@ class ReaderViewModel @JvmOverloads constructor(
             it.copy(
                 bookmarked = false,
                 bookmarkColor = BookmarkColor.DEFAULT,
+                bookmarkPage = 0,
                 dialog = null,
             )
         }
@@ -1015,6 +1031,7 @@ class ReaderViewModel @JvmOverloads constructor(
         val viewerChapters: ViewerChapters? = null,
         val bookmarked: Boolean = false,
         val bookmarkColor: BookmarkColor = BookmarkColor.DEFAULT,
+        val bookmarkPage: Int = 0,
         val isLoadingAdjacentChapter: Boolean = false,
         val currentPage: Int = -1,
 
@@ -1028,6 +1045,9 @@ class ReaderViewModel @JvmOverloads constructor(
     ) {
         val currentChapter: ReaderChapter?
             get() = viewerChapters?.currChapter
+
+        val isCurrentPageBookmarked: Boolean
+            get() = bookmarked && bookmarkPage == currentPage
 
         val totalPages: Int
             get() = currentChapter?.pages?.size ?: -1

@@ -305,6 +305,7 @@ class UpdatesViewModel(
                         id = it.update.chapterId,
                         bookmark = bookmark,
                         bookmarkColor = color,
+                        bookmarkPage = if (bookmark) null else 0,
                     )
                 }
                 .let { updateChapter.awaitAll(it) }
@@ -342,6 +343,7 @@ class UpdatesViewModel(
                     id = chapterId,
                     bookmark = false,
                     bookmarkColor = BookmarkColor.DEFAULT,
+                    bookmarkPage = 0,
                 ),
             )
         }

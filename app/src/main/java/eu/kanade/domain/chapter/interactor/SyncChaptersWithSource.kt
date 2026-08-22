@@ -164,6 +164,7 @@ class SyncChaptersWithSource(
         val deletedReadChapterNumbers = TreeSet<Double>()
         val deletedBookmarkedChapterNumbers = TreeSet<Double>()
         val deletedBookmarkedChapterColors = mutableMapOf<Double, BookmarkColor>()
+        val deletedBookmarkedChapterPages = mutableMapOf<Double, Int>()
 
         val readChapterNumbers = dbChapters
             .asSequence()
@@ -176,6 +177,7 @@ class SyncChaptersWithSource(
             if (chapter.bookmark) {
                 deletedBookmarkedChapterNumbers.add(chapter.chapterNumber)
                 deletedBookmarkedChapterColors[chapter.chapterNumber] = chapter.bookmarkColor
+                deletedBookmarkedChapterPages[chapter.chapterNumber] = chapter.bookmarkPage
             }
             deletedChapterNumbers.add(chapter.chapterNumber)
         }
@@ -204,6 +206,7 @@ class SyncChaptersWithSource(
                 bookmark = chapter.chapterNumber in deletedBookmarkedChapterNumbers,
                 bookmarkColor = deletedBookmarkedChapterColors[chapter.chapterNumber]
                     ?: BookmarkColor.DEFAULT,
+                bookmarkPage = deletedBookmarkedChapterPages[chapter.chapterNumber] ?: 0,
             )
 
             // Try to to use the fetch date of the original entry to not pollute 'Updates' tab

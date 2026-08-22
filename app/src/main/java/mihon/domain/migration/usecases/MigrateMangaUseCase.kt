@@ -66,6 +66,8 @@ class MigrateMangaUseCase(
                             updatedChapter = updatedChapter.copy(
                                 dateFetch = prevChapter.dateFetch,
                                 bookmark = prevChapter.bookmark,
+                                bookmarkColor = prevChapter.bookmarkColor,
+                                bookmarkPage = prevChapter.bookmarkPage,
                             )
                         }
 
