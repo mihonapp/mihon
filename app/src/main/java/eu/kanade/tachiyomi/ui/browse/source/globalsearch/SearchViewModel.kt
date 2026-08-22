@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -134,12 +135,20 @@ abstract class SearchViewModel(
         val sameQuery = this.lastQuery == query
         if (sameQuery && this.lastSourceFilter == sourceFilter) return
 
-        this.lastQuery = query
-        this.lastSourceFilter = sourceFilter
-
         searchJob?.cancel()
 
         val sources = getSelectedSources()
+        if (sources.isEmpty() && !extensionFilter.isNullOrEmpty()) {
+            searchJob = viewModelScope.launch {
+                sourceManager.sources.first { getSelectedSources().isNotEmpty() }
+                searchJob = null
+                search()
+            }
+            return
+        }
+
+        this.lastQuery = query
+        this.lastSourceFilter = sourceFilter
 
         // Reuse previous results if possible
         if (sameQuery) {
