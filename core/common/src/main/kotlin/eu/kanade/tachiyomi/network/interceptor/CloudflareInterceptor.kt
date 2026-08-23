@@ -112,11 +112,11 @@ class CloudflareInterceptor(
                             // Listen for an interactiveBegin event
                             view.evaluateJavascript(
                                 """
-                                addEventListener("message", ({data}) => {
-                                    if (data?.source === "cloudflare-challenge" && data?.event === "interactiveBegin") {
-                                        mihon.interactiveDetected();
-                                    }
-                                })
+                                    addEventListener("message", ({data}) => {
+                                        if (data?.source === "cloudflare-challenge" && data?.event === "interactiveBegin") {
+                                            mihon.interactiveDetected();
+                                        }
+                                    })
                                 """.trimIndent(),
                                 null,
                             )
