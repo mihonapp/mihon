@@ -79,14 +79,17 @@ class CloudflareInterceptor(
         executor.execute {
             webview = createWebView(originalRequest)
 
-            webview.addJavascriptInterface(object {
-                @Suppress("unused")
-                @JavascriptInterface
-                fun interactiveDetected() {
-                    // The challenge cannot be solved non-interactively, abort.
-                    latch.countDown()
-                }
-            }, "mihon")
+            webview.addJavascriptInterface(
+                object {
+                    @Suppress("unused")
+                    @JavascriptInterface
+                    fun interactiveDetected() {
+                        // The challenge cannot be solved non-interactively, abort.
+                        latch.countDown()
+                    }
+                },
+                "mihon",
+            )
 
             webview.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, url: String) {
@@ -107,13 +110,16 @@ class CloudflareInterceptor(
                             latch.countDown()
                         } else {
                             // Listen for an interactiveBegin event
-                            view.evaluateJavascript("""
+                            view.evaluateJavascript(
+                                """
                                 addEventListener("message", ({data}) => {
                                     if (data?.source === "cloudflare-challenge" && data?.event === "interactiveBegin") {
                                         mihon.interactiveDetected();
                                     }
                                 })
-                            """.trimIndent(), null)
+                                """.trimIndent(),
+                                null,
+                            )
                         }
                     }
                 }
