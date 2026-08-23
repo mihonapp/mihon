@@ -86,7 +86,7 @@ class CloudflareInterceptor(
                     // The challenge cannot be solved non-interactively, abort.
                     latch.countDown()
                 }
-            }, "jsInterface")
+            }, "mihon")
 
             webview.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, url: String) {
@@ -110,7 +110,7 @@ class CloudflareInterceptor(
                             view.evaluateJavascript("""
                                 addEventListener("message", ({data}) => {
                                     if (data?.source === "cloudflare-challenge" && data?.event === "interactiveBegin") {
-                                        jsInterface.interactiveDetected();
+                                        mihon.interactiveDetected();
                                     }
                                 })
                             """.trimIndent(), null)
