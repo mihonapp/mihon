@@ -5,19 +5,18 @@ import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.network.okHttpClient
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
-import eu.kanade.tachiyomi.network.awaitSuccess
+import eu.kanade.tachiyomi.network.dataOrElse
 import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.sourcePreferences
-import logcat.LogPriority
+import kotlinx.coroutines.Dispatchers
 import mihon.graphql.suwayomi.SuwayomiGetMangaQuery
 import mihon.graphql.suwayomi.SuwayomiGetMangaUnreadChaptersQuery
 import mihon.graphql.suwayomi.SuwayomiMarkAndDeleteChaptersMutation
 import mihon.graphql.suwayomi.SuwayomiMarkChaptersReadMutation
 import mihon.graphql.suwayomi.SuwayomiUpdateMangaProgressMutation
 import okhttp3.OkHttpClient
-import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.service.SourceManager
 import java.security.MessageDigest
 
@@ -36,46 +35,45 @@ class SuwayomiApi(
         ApolloClient.Builder()
             .serverUrl(apiUrl)
             .okHttpClient(client)
+            .dispatcher(Dispatchers.IO)
+            // required to log the error body in dataOrElse, which also properly closes it
+            .httpExposeErrorBody(true)
             .build()
     }
 
     fun sourcePreferences(): SharedPreferences = configurableSource.sourcePreferences()
 
     suspend fun getTrackSearch(mangaId: Long): TrackSearch? {
-        val response = graphQlClient
+        return graphQlClient
             .query(
                 SuwayomiGetMangaQuery(mangaId = mangaId.toInt()),
             )
-            .awaitSuccess()
-
-        val data = response.data
-        return if (data != null) {
-            data.manga.mangaFragment.toTrackSearch(trackId, baseUrl)
-        } else {
-            if (response.hasErrors()) {
-                response.errors?.forEach { logcat(LogPriority.ERROR) { "Suwayomi Details error: ${it.message}" } }
+            .execute()
+            .dataOrElse(
+                errorLog = "Suwayomi: Failed to find manga in library",
+                default = { null },
+            ) {
+                it.manga.mangaFragment.toTrackSearch(trackId, baseUrl)
             }
-            null
-        }
     }
 
     suspend fun updateProgress(track: Track, deleteDownloadsOnServer: Boolean = false): Track? {
         val mangaId = track.remote_id
 
-        val chaptersResponse = graphQlClient
+        val chaptersToMark = graphQlClient
             .query(
                 SuwayomiGetMangaUnreadChaptersQuery(
                     mangaId = mangaId.toInt(),
                     chapterNumber = track.last_chapter_read,
                 ),
             )
-            .awaitSuccess()
-
-        val data = chaptersResponse.data
-        val chaptersToMark = data
-            ?.chapters
-            ?.nodes
-            ?.map { it.id }
+            .execute()
+            .dataOrElse(
+                errorLog = "Suwayomi: Failed to get chapters data",
+                default = { null },
+            ) {
+                it.chapters.nodes.map { chapter -> chapter.id }
+            }
             ?: throw Exception("Could not get chapters data")
 
         if (chaptersToMark.isEmpty()) {
@@ -88,25 +86,23 @@ class SuwayomiApi(
             SuwayomiMarkChaptersReadMutation(chapters = chaptersToMark)
         }
 
-        val markingResponse = graphQlClient
+        graphQlClient
             .mutation(markMutation)
-            .awaitSuccess()
+            .execute()
+            .dataOrElse(
+                errorLog = "Suwayomi: Failed to mark chapters",
+                default = {},
+            ) {}
 
-        if (markingResponse.hasErrors()) {
-            markingResponse.errors?.forEach { logcat(LogPriority.ERROR) { "Suwayomi Mark error: ${it.message}" } }
-        }
-
-        val updateResponse = graphQlClient
+        graphQlClient
             .mutation(
                 SuwayomiUpdateMangaProgressMutation(mangaId = mangaId.toInt()),
             )
-            .awaitSuccess()
-
-        if (updateResponse.hasErrors()) {
-            updateResponse.errors?.forEach {
-                logcat(LogPriority.ERROR) { "Suwayomi Track Progress error: ${it.message}" }
-            }
-        }
+            .execute()
+            .dataOrElse(
+                errorLog = "Suwayomi: Failed to update progress",
+                default = {},
+            ) {}
 
         return getTrackSearch(mangaId)
     }
