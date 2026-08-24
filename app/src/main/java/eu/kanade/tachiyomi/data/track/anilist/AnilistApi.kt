@@ -10,13 +10,12 @@ import eu.kanade.tachiyomi.data.track.anilist.dto.ALOAuth
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALUser
 import eu.kanade.tachiyomi.data.track.anilist.dto.toALUser
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
-import eu.kanade.tachiyomi.network.awaitSuccess
+import eu.kanade.tachiyomi.network.dataOrElse
 import eu.kanade.tachiyomi.network.interceptor.rateLimit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
-import logcat.LogPriority
 import mihon.graphql.anilist.AniListAddMangaMutation
 import mihon.graphql.anilist.AniListDeleteMangaMutation
 import mihon.graphql.anilist.AniListGetCurrentUserQuery
@@ -47,11 +46,13 @@ class AnilistApi(
             .serverUrl("https://graphql.anilist.co")
             .okHttpClient(authClient)
             .dispatcher(Dispatchers.IO)
+            // required to log the error body in dataOrElse, which also properly closes it
+            .httpExposeErrorBody(true)
             .build()
     }
 
     suspend fun addLibManga(track: Track): Track {
-        val response = graphQlClient
+        return graphQlClient
             .mutation(
                 AniListAddMangaMutation(
                     manga_id = track.remote_id.toInt(),
@@ -60,20 +61,16 @@ class AnilistApi(
                     private = track.private,
                 ),
             )
-            .awaitSuccess()
-
-        val data = response.data
-        return if (data != null) {
-            data.SaveMediaListEntry?.id?.let {
-                track.library_id = it.toLong()
-                track
+            .execute()
+            .dataOrElse(
+                errorLog = "AniList: Failed to add manga",
+                default = { null },
+            ) {
+                it.SaveMediaListEntry?.id?.let { libraryId ->
+                    track.library_id = libraryId.toLong()
+                    track
+                }
             }
-        } else {
-            if (response.hasErrors()) {
-                response.errors?.forEach { logcat(LogPriority.ERROR) { "AniList Add error: ${it.message}" } }
-            }
-            null
-        }
             ?: throw Exception("Failed to add manga")
     }
 
@@ -81,7 +78,7 @@ class AnilistApi(
         val libraryId = track.library_id
         requireNotNull(libraryId) { "AniList cannot update track with null library_id" }
 
-        val response = graphQlClient
+        return graphQlClient
             .mutation(
                 AniListUpdateMangaMutation(
                     library_id = libraryId.toInt(),
@@ -93,73 +90,74 @@ class AnilistApi(
                     completedAt = createFuzzyDate(track.finished_reading_date),
                 ),
             )
-            .awaitSuccess()
-
-        val data = response.data
-        return if (data != null) {
-            track
-        } else {
-            if (response.hasErrors()) {
-                response.errors?.forEach { logcat(LogPriority.ERROR) { "AniList Update error: ${it.message}" } }
+            .execute()
+            .dataOrElse(
+                errorLog = "AniList: Failed to update manga",
+                default = { null },
+            ) {
+                it.SaveMediaListEntry?.id?.let { remoteLibraryId ->
+                    track.library_id = remoteLibraryId.toLong()
+                    track
+                }
             }
-            null
-        }
             ?: throw Exception("Failed to update manga")
     }
 
     suspend fun deleteLibManga(track: DomainTrack) {
         val libraryId = track.libraryId
-        requireNotNull(libraryId) { "AniList cannot update track with null library_id" }
+        requireNotNull(libraryId) { "AniList cannot delete track with null library_id" }
 
-        val response = graphQlClient
+        graphQlClient
             .mutation(
                 AniListDeleteMangaMutation(library_id = libraryId.toInt()),
             )
-            .awaitSuccess()
-
-        if (response.hasErrors()) {
-            response.errors?.forEach { logcat(LogPriority.ERROR) { "AniList Delete error: ${it.message}" } }
-        }
+            .execute()
+            .dataOrElse(
+                errorLog = "AniList: Failed to delete manga",
+                default = { null },
+            ) {
+                it.DeleteMediaListEntry?.deleted?.let { deleted ->
+                    if (deleted) {
+                        logcat { "AniList: Deleted manga ${track.libraryId} successfully" }
+                    }
+                }
+            }
+            ?: throw Exception("Failed to delete manga")
     }
 
     suspend fun search(search: String): List<TrackSearch> {
-        val response = graphQlClient
+        return graphQlClient
             .query(
                 AniListSearchMangaQuery(search = search),
             )
-            .awaitSuccess()
-
-        // extracted for smart casting
-        val data = response.data
-        return if (data != null) {
-            data.Page?.media?.mapNotNull { it?.toTrackSearch(trackId) } ?: emptyList()
-        } else {
-            if (response.hasErrors()) {
-                response.errors?.forEach { logcat(LogPriority.ERROR) { "AniList Search error: ${it.message}" } }
+            .execute()
+            .dataOrElse(
+                errorLog = "AniList: Search failed",
+                default = { emptyList() },
+            ) {
+                it.Page?.media
+                    ?.mapNotNull { alManga -> alManga?.toTrackSearch(trackId) }
+                    ?: emptyList()
             }
-            emptyList()
-        }
     }
 
     suspend fun findLibManga(track: Track, userId: Int): Track? {
-        val response = graphQlClient
+        return graphQlClient
             .query(
                 AniListGetLibMangaQuery(
                     user_id = userId,
                     manga_id = track.remote_id.toInt(),
                 ),
             )
-            .awaitSuccess()
-
-        val data = response.data
-        return if (data != null) {
-            data.Page?.mediaList?.firstOrNull()?.toTrack(trackId)
-        } else {
-            if (response.hasErrors()) {
-                response.errors?.forEach { logcat(LogPriority.ERROR) { "AniList Find error: ${it.message}" } }
+            .execute()
+            .dataOrElse(
+                errorLog = "AniList: Failed to find manga in library",
+                default = { null },
+            ) {
+                it.Page?.mediaList
+                    ?.firstOrNull()
+                    ?.toTrack(trackId)
             }
-            null
-        }
     }
 
     fun createOAuth(token: String): ALOAuth {
@@ -167,38 +165,32 @@ class AnilistApi(
     }
 
     suspend fun getCurrentUser(): ALUser {
-        val response = graphQlClient
+        return graphQlClient
             .query(AniListGetCurrentUserQuery())
-            .awaitSuccess()
-
-        val data = response.data
-        return if (data != null) {
-            data.Viewer?.toALUser()
-        } else {
-            if (response.hasErrors()) {
-                response.errors?.forEach { logcat(LogPriority.ERROR) { "AniList Get User error: ${it.message}" } }
+            .execute()
+            .dataOrElse(
+                errorLog = "AniList: Failed to get current user",
+                default = { null },
+            ) {
+                it.Viewer?.toALUser()
             }
-            null
-        }
             ?: throw Exception("Failed to get AniList user data")
     }
 
     suspend fun getMangaDetails(id: Int): TrackSearch? {
-        val response = graphQlClient
+        return graphQlClient
             .query(
                 AniListGetMangaDetailsQuery(manga_id = id),
             )
-            .awaitSuccess()
-
-        val data = response.data
-        return if (data != null) {
-            data.Page?.media?.firstOrNull()?.toTrackSearch(trackId)
-        } else {
-            if (response.hasErrors()) {
-                response.errors?.forEach { logcat(LogPriority.ERROR) { "AniList Get Details error: ${it.message}" } }
+            .execute()
+            .dataOrElse(
+                errorLog = "AniList: Failed to get manga details",
+                default = { null },
+            ) {
+                it.Page?.media
+                    ?.firstOrNull()
+                    ?.toTrackSearch(trackId)
             }
-            null
-        }
     }
 
     private fun createFuzzyDate(dateValue: Long): FuzzyDateInput {
