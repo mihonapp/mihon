@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.network.DELETE
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.PUT
 import eu.kanade.tachiyomi.network.awaitSuccess
+import eu.kanade.tachiyomi.network.dataOrElse
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +21,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
-import logcat.LogPriority
 import mihon.graphql.shikimori.ShikimoriGetCurrentUserQuery
 import mihon.graphql.shikimori.ShikimoriGetLibMangaQuery
 import mihon.graphql.shikimori.ShikimoriGetMangaDetailsQuery
@@ -29,7 +29,6 @@ import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
 import tachiyomi.core.common.util.lang.withIOContext
-import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
 
@@ -48,6 +47,8 @@ class ShikimoriApi(
             .serverUrl("$API_URL/graphql")
             .okHttpClient(authClient)
             .dispatcher(Dispatchers.IO)
+            // required to log the error body in dataOrElse, which also properly closes it
+            .httpExposeErrorBody(true)
             .build()
     }
 
@@ -116,89 +117,77 @@ class ShikimoriApi(
     }
 
     suspend fun search(search: String): List<TrackSearch> {
-        val response = graphQlClient
+        return graphQlClient
             .query(
                 ShikimoriSearchMangaQuery(search = search),
             )
-            .awaitSuccess()
-
-        val data = response.data
-        return if (data != null) {
-            data.mangas.map { it.toTrackSearch(trackId) }
-        } else {
-            if (response.hasErrors()) {
-                response.errors?.forEach { logcat(LogPriority.ERROR) { "Shikimori Search error: ${it.message}" } }
+            .execute()
+            .dataOrElse(
+                errorLog = "Shikimori: Search failed",
+                default = { emptyList() },
+            ) {
+                it.mangas.map { manga ->
+                    manga.toTrackSearch(trackId)
+                }
             }
-            emptyList()
-        }
     }
 
     suspend fun getMangaDetails(id: Int): TrackSearch? {
-        val response = graphQlClient
+        return graphQlClient
             .query(
                 ShikimoriGetMangaDetailsQuery(query = "$id"),
             )
-            .awaitSuccess()
-
-        val data = response.data
-        return if (data != null) {
-            data.mangas
-                .firstOrNull()
-                ?.toTrackSearch(trackId)
-        } else {
-            if (response.hasErrors()) {
-                response.errors?.forEach { logcat(LogPriority.ERROR) { "Shikimori Get Details error: ${it.message}" } }
+            .execute()
+            .dataOrElse(
+                errorLog = "Shikimori: Failed to get manga details",
+                default = { null },
+            ) {
+                it.mangas
+                    .firstOrNull()
+                    ?.toTrackSearch(trackId)
             }
-            null
-        }
     }
 
     suspend fun findLibManga(track: Track): Track? {
-        val response = graphQlClient
+        return graphQlClient
             .query(
                 ShikimoriGetLibMangaQuery(
                     remote_id = track.remote_id.toString(),
                 ),
             )
-            .awaitSuccess()
+            .execute()
+            .dataOrElse(
+                errorLog = "Shikimori: Failed to find manga in library",
+                default = { null },
+            ) {
+                val mangaResult = it.mangas.firstOrNull()
 
-        val data = response.data
-        return if (data != null) {
-            val mangaResult = data.mangas.firstOrNull()
-
-            // Shikimori has no user list query that allows query by ID, so we go via the "mangas" query & include
-            // userRate data which will be null if the title is not in the user's list.
-            // If it was removed on Shikimori and is still linked in the app, notify user via returning null here
-            // which throws an exception at the Shikimori.refresh call
-            if (mangaResult?.userRate == null) {
-                null
-            } else {
-                mangaResult.toTrack(trackId)
+                // Shikimori has no user list query that allows query by ID, so we go via the "mangas" query & include
+                // userRate data which will be null if the title is not in the user's list.
+                // If it was removed on Shikimori and is still linked in the app, notify user via returning null here
+                // which throws an exception at the Shikimori.refresh call
+                if (mangaResult?.userRate == null) {
+                    null
+                } else {
+                    mangaResult.toTrack(trackId)
+                }
             }
-        } else {
-            if (response.hasErrors()) {
-                response.errors?.forEach { logcat(LogPriority.ERROR) { "Shikimori Find error: ${it.message}" } }
-            }
-            null
-        }
     }
 
     suspend fun getCurrentUser(): SMUser {
-        val response = graphQlClient
+        return graphQlClient
             .query(
                 ShikimoriGetCurrentUserQuery(),
             )
-            .awaitSuccess()
-
-        val data = response.data
-        return if (data?.currentUser != null) {
-            SMUser(id = data.currentUser.id, nickname = data.currentUser.nickname)
-        } else {
-            if (response.hasErrors()) {
-                response.errors?.forEach { logcat(LogPriority.ERROR) { "Shikimori Get User error: ${it.message}" } }
+            .execute()
+            .dataOrElse(
+                errorLog = "Shikimori: Failed to get current user",
+                default = { null },
+            ) {
+                it.currentUser?.let { currentUser ->
+                    SMUser(id = currentUser.id, nickname = currentUser.nickname)
+                }
             }
-            null
-        }
             ?: throw Exception("Failed to get Shikimori user data")
     }
 
