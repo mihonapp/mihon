@@ -8,7 +8,6 @@ import com.apollographql.apollo.network.okHttpClient
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALOAuth
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALUser
-import eu.kanade.tachiyomi.data.track.anilist.dto.toALUser
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.dataOrElse
 import eu.kanade.tachiyomi.network.interceptor.rateLimit

@@ -17,35 +17,7 @@ query AniListGetLibManga($user_id: Int!, $manga_id: Int!) {
         day
       }
       media {
-        id
-        title {
-          userPreferred
-        }
-        coverImage {
-          large
-        }
-        format
-        status
-        chapters
-        description
-        startDate {
-          year
-          month
-          day
-        }
-        staff {
-          edges {
-            role
-            id
-            node {
-              name {
-                full
-                userPreferred
-                native
-              }
-            }
-          }
-        }
+        ...MangaFragment
       }
     }
   }

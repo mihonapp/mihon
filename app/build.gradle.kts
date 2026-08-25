@@ -352,6 +352,9 @@ apollo {
             endpointUrl.set("https://graphql.anilist.co")
             schemaFile.set(file("$srcDir/anilist.graphqls"))
         }
+
+        // ISO 3166-1 alpha-2 country code
+        mapScalarToKotlinString("CountryCode")
     }
 
     service("kitsu") {
