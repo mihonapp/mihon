@@ -354,6 +354,34 @@ apollo {
         }
     }
 
+    service("kitsu") {
+        packageName.set("mihon.graphql.kitsu")
+        val srcDir = "$schemaBasePath/kitsu"
+        srcDir(file(srcDir))
+        android.defaultConfig.versionCode
+
+        introspection {
+            // Kitsu doesn't like requests without a UA
+            headers.put(
+                "User-Agent",
+                "Mihon v${android.defaultConfig.versionName} (${android.defaultConfig.applicationId})",
+            )
+            endpointUrl.set("https://kitsu.app/api/graphql")
+            schemaFile.set(file("$srcDir/kitsu.graphqls"))
+        }
+
+        // A date, expressed as an ISO8601 string
+        mapScalarToKotlinString("Date")
+        // An ISO 8601-encoded datetime
+        mapScalarToKotlinString("ISO8601DateTime")
+        // A loose key-value map in GraphQL
+        mapScalar(
+            "Map",
+            "kotlin.collections.Map<String, Any?>",
+            "mihon.graphql.kitsu.adapter.KitsuMapAdapter",
+        )
+    }
+
     service("shikimori") {
         packageName.set("mihon.graphql.shikimori")
         val srcDir = "$schemaBasePath/shikimori"

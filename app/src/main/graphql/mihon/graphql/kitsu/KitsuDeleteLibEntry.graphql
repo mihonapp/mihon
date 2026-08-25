@@ -1,0 +1,18 @@
+mutation KitsuDeleteLibEntry(
+  $library_id: ID!
+) {
+  libraryEntry {
+    delete(
+      input: {
+        id: $library_id
+      }
+    ) {
+      errors {
+        message
+      }
+      libraryEntry {
+        id
+      }
+    }
+  }
+}

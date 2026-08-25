@@ -1,0 +1,27 @@
+mutation KitsuAddLibManga(
+  $media_id: ID!
+  $status: LibraryEntryStatusEnum!
+  $progress: Int!
+  $private: Boolean!
+  $rating: Int
+) {
+  libraryEntry {
+    create(
+      input: {
+        mediaId: $media_id
+        mediaType: MANGA
+        status: $status
+        progress: $progress
+        private: $private
+        rating: $rating
+      }
+    ) {
+      errors {
+        message
+      }
+      libraryEntry {
+        id
+      }
+    }
+  }
+}

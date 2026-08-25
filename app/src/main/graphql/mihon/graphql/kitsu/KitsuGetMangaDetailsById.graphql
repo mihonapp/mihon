@@ -1,0 +1,9 @@
+query KitsuGetMangaDetailsById(
+  $id: ID!
+) {
+  findMangaById(
+    id: $id
+  ) {
+    ...MangaFragment
+  }
+}
