@@ -1,5 +1,10 @@
-query ShikimoriGetLibManga($remote_id: String!) {
-  mangas(ids: $remote_id, limit: 1) {
+query ShikimoriGetLibManga(
+  $remote_id: String!,
+) {
+  mangas(
+    ids: $remote_id,
+    limit: 1,
+  ) {
     id
     url
     name

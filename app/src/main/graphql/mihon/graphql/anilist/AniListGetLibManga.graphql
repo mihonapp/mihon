@@ -1,6 +1,13 @@
-query AniListGetLibManga($user_id: Int!, $manga_id: Int!) {
+query AniListGetLibManga(
+  $user_id: Int!,
+  $manga_id: Int!,
+) {
   Page {
-    mediaList(userId: $user_id, type: MANGA, mediaId: $manga_id) {
+    mediaList(
+      userId: $user_id,
+      type: MANGA,
+      mediaId: $manga_id,
+    ) {
       id
       status
       scoreRaw: score(format: POINT_100)

@@ -8,7 +8,7 @@ mutation AniListAddManga(
     mediaId: $manga_id,
     progress: $progress,
     status: $status,
-    private: $private
+    private: $private,
   ) {
     id
   }

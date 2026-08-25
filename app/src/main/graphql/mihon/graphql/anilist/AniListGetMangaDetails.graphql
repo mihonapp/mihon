@@ -1,6 +1,12 @@
-query AniListGetMangaDetails($manga_id: Int!) {
+query AniListGetMangaDetails(
+  $manga_id: Int!,
+) {
   Page (perPage: 1) {
-    media(id: $manga_id, type: MANGA, format_not_in: [NOVEL]) {
+    media(
+      id: $manga_id,
+      type: MANGA,
+      format_not_in: [NOVEL],
+    ) {
       ...MangaFragment
     }
   }

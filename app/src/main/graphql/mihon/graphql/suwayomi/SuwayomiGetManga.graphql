@@ -1,5 +1,9 @@
-query SuwayomiGetManga($mangaId: Int!) {
-  manga(id: $mangaId) {
+query SuwayomiGetManga(
+  $mangaId: Int!,
+) {
+  manga(
+    id: $mangaId,
+  ) {
     ...MangaFragment
   }
 }

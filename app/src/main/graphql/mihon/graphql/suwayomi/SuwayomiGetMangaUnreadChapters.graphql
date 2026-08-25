@@ -1,11 +1,11 @@
 query SuwayomiGetMangaUnreadChapters(
   $mangaId: Int!,
-  $chapterNumber: Float!
+  $chapterNumber: Float!,
 ) {
   chapters(
     condition: {
       mangaId: $mangaId,
-      isRead: false
+      isRead: false,
     },
     filter: {
       and: [
@@ -20,7 +20,7 @@ query SuwayomiGetMangaUnreadChapters(
           }
         },
       ]
-    }
+    },
   ){
     nodes {
       id

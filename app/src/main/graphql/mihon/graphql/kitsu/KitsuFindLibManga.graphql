@@ -1,5 +1,9 @@
-query KitsuFindLibManga($remote_id: ID!) {
-  findMangaById(id: $remote_id) {
+query KitsuFindLibManga(
+  $remote_id: ID!,
+) {
+  findMangaById(
+    id: $remote_id,
+  ) {
     ...MangaFragment
     myLibraryEntry {
       id

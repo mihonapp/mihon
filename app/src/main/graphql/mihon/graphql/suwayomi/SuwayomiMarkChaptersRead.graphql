@@ -1,13 +1,13 @@
 mutation SuwayomiMarkChaptersRead(
-  $chapters: [Int!]!
+  $chapters: [Int!]!,
 ) {
   updateChapters(
     input: {
       ids: $chapters,
       patch: {
-        isRead: true
-      }
-    }
+        isRead: true,
+      },
+    },
   ) {
     __typename
   }
