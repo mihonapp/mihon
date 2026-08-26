@@ -40,6 +40,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.updatePadding
+import ca.mpreg.webgpuviewer.renderer.Image
+import ca.mpreg.webgpuviewer.renderer.Image.Companion.invoke
 import ca.mpreg.webgpuviewer.renderer.WebGpuRenderer
 import ca.mpreg.webgpuviewer.viewer.ImagePage
 import ca.mpreg.webgpuviewer.viewer.ImageViewer
@@ -56,6 +58,7 @@ import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.tachiyomi.data.coil.ImageDecoder
 import eu.kanade.tachiyomi.data.coil.newDecoder
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import mihon.app.di.appGraph
 import tachiyomi.domain.manga.model.Manga
@@ -164,8 +167,6 @@ fun MangaCoverDialog(
             if (useNewRenderer) {
                 val state = ImageViewerState()
 
-                state.dpi = view.resources.displayMetrics.densityDpi / 100f
-
                 ImageRequest.Builder(view.context)
                     .data(manga)
                     .size(Size.ORIGINAL)
@@ -173,18 +174,20 @@ fun MangaCoverDialog(
                     .newDecoder(true)
                     .target { result ->
                         val res = (result as ImageDecoder.DecodeResultImage).res
-                        val page = runBlocking(WebGpuRenderer.dispatcher) {
-                            ImagePage(res.image, res.width, res.height)
-                        }.apply {
-                            image?.backgroundColor = 0
+                        val page = runBlocking(Dispatchers.Default) {
+                            ImagePage.ImageSingle(
+                                Image(
+                                    res.image,
+                                    res.width,
+                                    res.height,
+                                    createMipMaps = true,
+                                    backgroundColor = 0,
+                                ),
+                            )
                         }
                         state.apply {
                             fetchPage = { index ->
-                                if (index == 0) {
-                                    page
-                                } else {
-                                    null
-                                }
+                                if (index == 0) page else null
                             }
                             invalidate()
                         }
