@@ -12,6 +12,7 @@ import androidx.compose.ui.util.fastCoerceIn
 import androidx.webgpu.GPUTexture
 import ca.mpreg.imagedecoder.ImageDecoder
 import ca.mpreg.webgpuviewer.ImageView
+import ca.mpreg.webgpuviewer.closeTo
 import ca.mpreg.webgpuviewer.draw.TextAlign
 import ca.mpreg.webgpuviewer.renderer.Image
 import ca.mpreg.webgpuviewer.transition.TransitionBasic
@@ -1017,36 +1018,44 @@ open class WebGpuViewer(
 
     private fun applyWideZoomIfNeeded(page: ImagePage.ImageSingle): Boolean {
         if (!config.landscapeZoom) return false
-        val image = page.image ?: return false
 
         val screenW = pager.state.width
-        val screenH = pager.state.height
+        val screenH = pager.state.viewportHeight
         if (screenW <= 0 || screenH <= 0) return false
 
+        // don't zoom if it fits at original scale
+        if (page.trimWidth <= screenW) return false
+
+        val image = page.image ?: return false
+
+        // if the untrimmed page is wide and the trimmed page is wide
+        val aspectRatio = min(
+            page.trimWidth.toFloat() / page.trimHeight.toFloat(),
+            image.width.toFloat() / image.height.toFloat(),
+        )
+
         // Wide page: half the image width is wider than the screen aspect ratio
-        if (image.width.toFloat() / image.height <= 2f * screenW.toFloat() / screenH) return false
-
-        // Scale to fit half the image width to the full screen width
-        val wideScale = screenW.toFloat() / (image.width / 2f)
-
-        page.homeScale = wideScale
+        if (aspectRatio <= 2f * screenW.toFloat() / screenH) return false
 
         // need to set parent for positioning to work
         page.parent = pager.state
 
+        // Scale to fit half the image width to the full screen width
+        page.homeScale = screenW.toFloat() / (page.trimWidth / 2f)
+
+        page.scale = page.homeScale
+
         val minX = page.minX(page.homeScale)
         val maxX = page.maxX(page.homeScale)
 
-        val startX = when (config.imageZoomType) {
+        page.x = when (config.imageZoomType) {
             ZoomStartPosition.LEFT -> maxX
             ZoomStartPosition.RIGHT -> minX
             ZoomStartPosition.CENTER -> 0f
         }
 
-        page.homeX = startX
-        page.scale = page.homeScale
-        page.x = startX
         page.y = page.homeY
+
         return true
     }
 
@@ -1054,61 +1063,39 @@ open class WebGpuViewer(
         val scaleType = config.imageScaleType
         if (scaleType != 3 && scaleType != 4 && scaleType != 5) return
 
-        val image = page.image ?: return
-
         val screenW = pager.state.width
-        val screenH = pager.state.height
+        val screenH = pager.state.viewportHeight
         if (screenW <= 0 || screenH <= 0) return
 
         val w = page.trimWidth.toFloat()
         val h = page.trimHeight.toFloat()
         if (w <= 0f || h <= 0f) return
 
-        val cutoutTopPx = pager.state.cutoutTopPx
-        val contentW = screenW.toFloat()
-        val contentH = if (pager.state.avoidCutout && cutoutTopPx > 0f) screenH - cutoutTopPx else screenH.toFloat()
+        page.parent = pager.state
 
         page.homeScale = when (scaleType) {
-            3 -> contentW / w
-            4 -> contentH / h
+            3 -> screenW / w
+            4 -> screenH / h
             else -> 1f // original size
         }.coerceAtLeast(0.01f)
 
-        page.parent = pager.state
+        page.scale = page.homeScale
 
         if (scaleType == 5) { // original size
-            val minScaleComputed = minOf(contentW / page.width, contentH / page.height).coerceAtLeast(0.01f)
-            if (page.homeScale < minScaleComputed) {
+            if (page.homeScale < page.minScale) {
                 page.minScale = page.homeScale
             }
         }
 
-        // zoom start for fit height/original size
-        if (scaleType == 4 || scaleType == 5) {
-            val minX = page.minX(page.homeScale)
-            val maxX = page.maxX(page.homeScale)
-            page.homeX = when (config.imageZoomType) {
-                ZoomStartPosition.LEFT -> maxX
-                ZoomStartPosition.RIGHT -> minX
-                ZoomStartPosition.CENTER -> 0f
-            }
+        val minX = page.minX(page.homeScale)
+        val maxX = page.maxX(page.homeScale)
+
+        page.x = when (config.imageZoomType) {
+            ZoomStartPosition.LEFT -> maxX
+            ZoomStartPosition.RIGHT -> minX
+            ZoomStartPosition.CENTER -> 0f
         }
 
-        // push below cutout for fit width/original size
-        val trimTop = image.trim?.top ?: 0
-        val imageTopY = (screenH - page.height * page.homeScale) / 2f
-        val trimTopY = imageTopY + trimTop * page.homeScale
-        if ((scaleType == 3 || scaleType == 5) && h * page.homeScale > screenH) {
-            val target = if (pager.state.avoidCutout && cutoutTopPx > 0f) {
-                if (pager.state.alwaysAvoidCutout) cutoutTopPx / 2f else cutoutTopPx
-            } else {
-                0f
-            }
-            page.homeY = maxOf(0f, (target - trimTopY) / (page.homeScale * screenH))
-        }
-
-        page.scale = page.homeScale
-        page.x = page.homeX
         page.y = page.homeY
     }
 
@@ -1288,15 +1275,14 @@ open class WebGpuViewer(
             if (config.navigateToPan) {
                 val minX = page.minX(page.scale)
                 val maxX = page.maxX(page.scale)
+                val currentX = page.animationJob?.let { page.animationTargetX } ?: page.x
+
                 val c = if (isReversed) -1 else 1
-                val x = (page.x - c / page.scale).coerceIn(minX, maxX)
-                if (x != page.x) {
-                    if (page.animationJob?.isActive == true && page.animationTargetX == x) {
-                        page.animationJob?.cancel()
-                    } else {
-                        page.animateTo(targetX = x, targetY = page.y)
-                        return
-                    }
+                val x = (currentX - c / page.scale).coerceIn(minX, maxX)
+
+                if (!currentX.closeTo(x)) {
+                    page.animateTo(targetX = x, targetY = page.y)
+                    return
                 }
             }
 
@@ -1312,15 +1298,14 @@ open class WebGpuViewer(
             if (config.navigateToPan) {
                 val minX = page.minX(page.scale)
                 val maxX = page.maxX(page.scale)
+                val currentX = page.animationJob?.isActive?.let { page.animationTargetX } ?: page.x
+
                 val c = if (isReversed) -1 else 1
-                val x = (page.x + c / page.scale).coerceIn(minX, maxX)
-                if (x != page.x) {
-                    if (page.animationJob?.isActive == true && page.animationTargetX == x) {
-                        page.animationJob?.cancel()
-                    } else {
-                        page.animateTo(targetX = x, targetY = page.y)
-                        return
-                    }
+                val x = (currentX + c / page.scale).coerceIn(minX, maxX)
+
+                if (!currentX.closeTo(x)) {
+                    page.animateTo(targetX = x, targetY = page.y)
+                    return
                 }
             }
 
