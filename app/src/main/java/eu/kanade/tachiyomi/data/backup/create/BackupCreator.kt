@@ -20,8 +20,12 @@ import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupPreference
 import eu.kanade.tachiyomi.data.backup.models.BackupSource
 import eu.kanade.tachiyomi.data.backup.models.BackupSourcePreferences
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.chunked
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.serialization.protobuf.ProtoBuf
 import logcat.LogPriority
+import okio.BufferedSink
 import okio.buffer
 import okio.gzip
 import okio.sink
@@ -83,29 +87,28 @@ class BackupCreator(
             }
 
             val nonFavoriteManga = if (options.readEntries) mangaRepository.getReadMangaNotInLibrary() else emptyList()
-            val backupManga = backupMangas(getFavorites.await() + nonFavoriteManga, options)
-
-            val backup = Backup(
-                backupManga = backupManga,
-                backupCategories = backupCategories(options),
-                backupSources = backupSources(backupManga),
-                backupPreferences = backupAppPreferences(options),
-                backupExtensionStores = backupExtensionStores(options),
-                backupSourcePreferences = backupSourcePreferences(options),
-            )
-
-            val byteArray = parser.encodeToByteArray(Backup.serializer(), backup)
-            if (byteArray.isEmpty()) {
-                throw IllegalStateException(context.stringResource(MR.strings.empty_backup_error))
-            }
+            val mangas = getFavorites.await() + nonFavoriteManga
+            val backupMangaFlow = backupMangas(mangas, options)
 
             file.openOutputStream()
                 .also {
                     // Force overwrite old file
                     (it as? FileOutputStream)?.channel?.truncate(0)
                 }
-                .sink().gzip().buffer().use {
-                    it.write(byteArray)
+                .sink().gzip().buffer().use { sink ->
+                    val success = writeBackupToSink(
+                        mangaFlow = backupMangaFlow,
+                        categories = backupCategories(options),
+                        sources = backupSources(mangas),
+                        preferences = backupAppPreferences(options),
+                        extensionStores = backupExtensionStores(options),
+                        sourcePreferences = backupSourcePreferences(options),
+                        sink = sink,
+                    )
+
+                    if (!success) {
+                        throw IllegalStateException(context.stringResource(MR.strings.empty_backup_error))
+                    }
                 }
             val fileUri = file.uri
 
@@ -130,13 +133,13 @@ class BackupCreator(
         return categoriesBackupCreator()
     }
 
-    private suspend fun backupMangas(mangas: List<Manga>, options: BackupOptions): List<BackupManga> {
-        if (!options.libraryEntries) return emptyList()
+    private fun backupMangas(mangas: List<Manga>, options: BackupOptions): Flow<BackupManga> {
+        if (!options.libraryEntries) return flowOf()
 
         return mangaBackupCreator(mangas, options)
     }
 
-    private fun backupSources(mangas: List<BackupManga>): List<BackupSource> {
+    private fun backupSources(mangas: List<Manga>): List<BackupSource> {
         return sourcesBackupCreator(mangas)
     }
 
@@ -156,6 +159,57 @@ class BackupCreator(
         if (!options.sourceSettings) return emptyList()
 
         return preferenceBackupCreator.createSource(includePrivatePreferences = options.privateSettings)
+    }
+
+    private suspend fun writeBackupToSink(
+        mangaFlow: Flow<BackupManga>,
+        categories: List<BackupCategory>,
+        sources: List<BackupSource>,
+        preferences: List<BackupPreference>,
+        sourcePreferences: List<BackupSourcePreferences>,
+        extensionStores: List<BackupExtensionStore>,
+        sink: BufferedSink,
+    ): Boolean {
+        var emptyMangas = true
+
+        val tempBuffer = okio.Buffer()
+
+        mangaFlow.chunked(100).collect { chunk ->
+            emptyMangas = false
+            for (manga in chunk) {
+                val mangaBytes = parser.encodeToByteArray(BackupManga.serializer(), manga)
+                // Protobuf Tag for field 1, wire type 2 (Length-delimited): (1 << 3) | 2
+                tempBuffer.writeByte(0x0A)
+                tempBuffer.writeVarInt(mangaBytes.size)
+                tempBuffer.write(mangaBytes)
+            }
+
+            sink.write(tempBuffer, tempBuffer.size)
+        }
+
+        val remaining = parser.encodeToByteArray(
+            Backup.serializer(),
+            Backup(
+                backupManga = emptyList(),
+                backupCategories = categories,
+                backupSources = sources,
+                backupPreferences = preferences,
+                backupSourcePreferences = sourcePreferences,
+                backupExtensionStores = extensionStores,
+            ),
+        )
+        sink.write(remaining)
+
+        return !emptyMangas || remaining.isNotEmpty()
+    }
+
+    private fun BufferedSink.writeVarInt(value: Int) {
+        var v = value
+        while ((v and 0x7F.inv()) != 0) {
+            writeByte(((v and 0x7F) or 0x80))
+            v = v ushr 7
+        }
+        writeByte(v)
     }
 
     companion object {
