@@ -99,7 +99,7 @@ abstract class WebViewInterceptor(
     abstract fun getNonce(url: HttpUrl): String?
 
     open fun isBypassed(url: HttpUrl, oldNonce: String?): Boolean = getNonce(url).let {
-        it.isNullOrBlank() && it != oldNonce
+        !it.isNullOrBlank() && it != oldNonce
     }
 
     abstract fun intercept(chain: Interceptor.Chain, request: Request, response: Response, nonce: String?): Response?
