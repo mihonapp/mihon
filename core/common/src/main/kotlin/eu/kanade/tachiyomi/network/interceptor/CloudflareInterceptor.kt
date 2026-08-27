@@ -2,7 +2,10 @@ package eu.kanade.tachiyomi.network.interceptor
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.view.KeyEvent
+import android.view.ViewGroup
 import android.webkit.JavascriptInterface
+import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
@@ -10,18 +13,18 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import eu.kanade.tachiyomi.network.AndroidCookieJar
+import eu.kanade.tachiyomi.util.system.ForegroundActivity
 import eu.kanade.tachiyomi.util.system.isOutdated
 import eu.kanade.tachiyomi.util.system.toast
-import okhttp3.Cookie
-import okhttp3.HttpUrl.Companion.toHttpUrl
+import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
-import org.jsoup.Jsoup
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import java.io.IOException
 import java.util.concurrent.CountDownLatch
+import kotlin.concurrent.thread
 
 class CloudflareInterceptor(
     private val context: Context,
@@ -38,19 +41,21 @@ class CloudflareInterceptor(
         return response.header("cf-mitigated") == "challenge" && response.header("Server") in SERVER_CHECK
     }
 
+    override fun getNonce(url: HttpUrl): String? = cookieManager.get(url).firstOrNull {
+        it.name == "cf_clearance"
+    }?.value
+
     override fun intercept(
         chain: Interceptor.Chain,
         request: Request,
         response: Response,
-    ): Response {
+        nonce: String?,
+    ): Response? {
         try {
             response.close()
             cookieManager.remove(request.url, COOKIE_NAMES, 0)
-            val oldCookie = cookieManager.get(request.url)
-                .firstOrNull { it.name == "cf_clearance" }
-            resolveWithWebView(request, oldCookie)
-
-            return chain.proceed(request)
+            resolveWithWebView(request, nonce)
+            return null
         }
         // Because OkHttp's enqueue only handles IOExceptions, wrap the exception so that
         // we don't crash the entire app
@@ -62,7 +67,7 @@ class CloudflareInterceptor(
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private fun resolveWithWebView(originalRequest: Request, oldCookie: Cookie?) {
+    private fun resolveWithWebView(originalRequest: Request, originalNonce: String?) {
         // We need to lock this thread until the WebView finds the challenge solution url, because
         // OkHttp doesn't support asynchronous interceptors.
         val latch = CountDownLatch(1)
@@ -79,27 +84,100 @@ class CloudflareInterceptor(
         executor.execute {
             webview = createWebView(originalRequest)
 
+            with(webview) {
+                isFocusable = false
+                isFocusableInTouchMode = false
+                descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+            }
+
             webview.addJavascriptInterface(
                 object {
                     @Suppress("unused")
                     @JavascriptInterface
-                    fun interactiveDetected() {
-                        // The challenge cannot be solved non-interactively, abort.
-                        latch.countDown()
+                    fun handleEvent(event: String) {
+                        when (event) {
+                            "interactiveBegin" -> {
+                                // Get the current view group
+                                val container = ForegroundActivity.current?.window?.decorView as? ViewGroup
+                                if (container == null) {
+                                    latch.countDown()
+                                    return
+                                }
+
+                                executor.execute {
+                                    val width = container.width.takeIf { it > 0 } ?: 1920
+                                    val height = container.height.takeIf { it > 0 } ?: 1080
+
+                                    // Set translationX to negative width.
+                                    // The WebView should be offscreen even when the orientation changes.
+                                    webview.translationX = -width.toFloat()
+
+                                    // Attach the WebView to the view group so we can send key events.
+                                    container.addView(webview, ViewGroup.LayoutParams(width, height))
+
+                                    // Send Tab and Space to check the checkbox, and abort if dispatchKeyEvent fails.
+                                    // Use a separate thread to unblock the main thread.
+                                    thread {
+                                        if (!webview.dispatchKeyEvent(
+                                                KeyEvent(
+                                                    KeyEvent.ACTION_DOWN,
+                                                    KeyEvent.KEYCODE_TAB,
+                                                ),
+                                            )
+                                        ) {
+                                            latch.countDown()
+                                            return@thread
+                                        }
+                                        Thread.sleep(100)
+                                        if (!webview.dispatchKeyEvent(
+                                                KeyEvent(
+                                                    KeyEvent.ACTION_UP,
+                                                    KeyEvent.KEYCODE_TAB,
+                                                ),
+                                            )
+                                        ) {
+                                            latch.countDown()
+                                            return@thread
+                                        }
+                                        Thread.sleep(100)
+                                        if (!webview.dispatchKeyEvent(
+                                                KeyEvent(
+                                                    KeyEvent.ACTION_DOWN,
+                                                    KeyEvent.KEYCODE_SPACE,
+                                                ),
+                                            )
+                                        ) {
+                                            latch.countDown()
+                                            return@thread
+                                        }
+                                        Thread.sleep(100)
+                                        if (!webview.dispatchKeyEvent(
+                                                KeyEvent(
+                                                    KeyEvent.ACTION_UP,
+                                                    KeyEvent.KEYCODE_SPACE,
+                                                ),
+                                            )
+                                        ) {
+                                            latch.countDown()
+                                            return@thread
+                                        }
+                                    }
+                                }
+                            }
+                            "fail" -> {
+                                // Challenge failed, abort
+                                latch.countDown()
+                            }
+                        }
                     }
                 },
                 "mihon",
             )
 
+            @SuppressLint("MissingOnRenderProcessGone")
             webview.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, url: String) {
-                    fun isCloudFlareBypassed(): Boolean {
-                        return cookieManager.get(origRequestUrl.toHttpUrl())
-                            .firstOrNull { it.name == "cf_clearance" }
-                            .let { it != null && it != oldCookie }
-                    }
-
-                    if (isCloudFlareBypassed()) {
+                    if (isBypassed(originalRequest.url, originalNonce)) {
                         cloudflareBypassed = true
                         latch.countDown()
                     }
@@ -113,8 +191,8 @@ class CloudflareInterceptor(
                             view.evaluateJavascript(
                                 """
                                     addEventListener("message", ({data}) => {
-                                        if (data?.source === "cloudflare-challenge" && data?.event === "interactiveBegin") {
-                                            mihon.interactiveDetected();
+                                        if (data?.source === "cloudflare-challenge") {
+                                            mihon.handleEvent(data.event);
                                         }
                                     })
                                 """.trimIndent(),
@@ -139,6 +217,11 @@ class CloudflareInterceptor(
                         }
                     }
                 }
+
+                override fun onRenderProcessGone(view: WebView?, detail: RenderProcessGoneDetail?): Boolean {
+                    latch.countDown()
+                    return true
+                }
             }
 
             webview.loadUrl(origRequestUrl, headers)
@@ -150,6 +233,8 @@ class CloudflareInterceptor(
             if (!cloudflareBypassed) {
                 isWebViewOutdated = webview?.isOutdated() == true
             }
+
+            (webview?.parent as? ViewGroup)?.removeView(webview)
 
             webview?.run {
                 stopLoading()
