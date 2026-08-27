@@ -3,15 +3,8 @@
     console.log(`${location.origin}: ${JSON.stringify(e.data)}`);
   });
 
-  const patchStackLine = function __SOLVER__(str) {
-    return !str.includes("__SOLVER__");
-  };
-
-  const stackReduce = function __SOLVER__(sites, site) {
-    if (patchStackLine(site.toString())) {
-      sites.push(site);
-    }
-    return sites;
+  const stackFilter = function __SOLVER__(site) {
+    return !site.toString().includes("__SOLVER__");
   };
 
   const objectToProxy = new WeakMap();
@@ -62,7 +55,7 @@
         const result = Reflect.ownKeys(target).filter(function __SOLVER__(key) {
           return !(key in redirects);
         });
-        for (let prop in redirects) {
+        for (const prop in redirects) {
           if (prop in redirects[prop]) {
             result.push(prop);
           }
@@ -98,7 +91,7 @@
     Error.prepareStackTrace = function __SOLVER__(error, callSites) {
       return (
         prepareStackTraceObj.prepareStackTrace ?? prepareStackTrace
-      )(error, callSites.reduce(stackReduce, []));
+      )(error, callSites.filter(stackFilter));
     };
     window.Error = Error.prototype.constructor = createProxy(Error, getRedirectPropertyHandler({
       prepareStackTrace: prepareStackTraceObj
@@ -116,7 +109,7 @@
           if (stacks.has(thisArg)) {
             return stacks.get(thisArg);
           } else {
-            const value = target.call(thisArg).split('\n').reduce(stackReduce, []).join('\n');
+            const value = target.call(thisArg).split('\n').filter(stackFilter).join('\n');
             stacks.set(thisArg, value);
             return value;
           }
@@ -135,12 +128,12 @@
     const proxyErrorHandler = {
       apply: function __SOLVER__(target, thisArg, args) {
         const result = Reflect.apply(target, toObject(thisArg), args.map(toObject));
-        result.stack = result.stack.split('\n').reduce(stackReduce, []).join('\n');
+        result.stack = result.stack.split('\n').filter(stackFilter).join('\n');
         return result;
       },
       construct: function __SOLVER__(target, args) {
         const result = Reflect.construct(target, args.map(toObject));
-        result.stack = result.stack.split('\n').reduce(stackReduce, []).join('\n');
+        result.stack = result.stack.split('\n').filter(stackFilter).join('\n');
         return result;
       }
     };
