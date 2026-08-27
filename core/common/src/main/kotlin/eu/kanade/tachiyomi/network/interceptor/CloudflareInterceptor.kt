@@ -12,6 +12,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.webkit.ScriptHandler
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
 import eu.kanade.tachiyomi.network.AndroidCookieJar
@@ -35,6 +36,21 @@ class CloudflareInterceptor(
 ) : WebViewInterceptor(context, defaultUserAgentProvider) {
 
     private val executor = ContextCompat.getMainExecutor(context)
+
+    private val iframeScript by lazy {
+        javaClass
+            .getResource("/assets/CloudflareSolverIframeScript.js")!!
+            .readText()
+            .replace("__SOLVER__", "_${(0..Int.MAX_VALUE).random()}")
+    }
+
+    private val listenerScript = """
+        addEventListener("message", ({data}) => {
+            if (data?.source === "cloudflare-challenge") {
+                mihon?.postMessage(data.event);
+            }
+        })
+    """.trimIndent()
 
     override fun shouldIntercept(response: Response): Boolean {
         // Check if Cloudflare anti-bot is on
@@ -80,6 +96,9 @@ class CloudflareInterceptor(
         var cloudflareBypassed = false
         var isWebViewOutdated = false
 
+        var iframeScriptHandler: ScriptHandler? = null
+        var listenerScriptHandler: ScriptHandler? = null
+
         val origRequestUrl = originalRequest.url.toString()
         val headers = parseHeaders(originalRequest.headers)
 
@@ -92,82 +111,99 @@ class CloudflareInterceptor(
                 descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
             }
 
-            val jsBridge = object {
-                @JavascriptInterface
-                fun handleEvent(event: String) {
-                    when (event) {
-                        "interactiveBegin" -> {
-                            // Get the current view group
-                            val container = ForegroundActivity.current?.window?.decorView as? ViewGroup
-                            if (container == null) {
-                                latch.countDown()
-                                return
-                            }
+            // Fallback solver that injects JavaScript to solve challenge
+            fun injectIframeScript() {
+                if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
+                    iframeScriptHandler = WebViewCompat.addDocumentStartJavaScript(
+                        webview,
+                        iframeScript,
+                        mutableSetOf("https://challenges.cloudflare.com"),
+                    )
+                    webview.loadUrl(origRequestUrl, headers)
+                } else {
+                    // Feature not supported, abort
+                    latch.countDown()
+                }
+            }
 
-                            executor.execute {
-                                val width = container.width.takeIf { it > 0 } ?: 1920
-                                val height = container.height.takeIf { it > 0 } ?: 1080
+            fun handleEvent(event: String) {
+                when (event) {
+                    "interactiveBegin" -> {
+                        if (iframeScriptHandler != null) {
+                            // Solving is done in injected iframe script, skip
+                            return
+                        }
 
-                                // Set translationX to negative width.
-                                // The WebView should be offscreen even when the orientation changes.
-                                webview.translationX = -width.toFloat()
+                        // Get the current view group
+                        val container = ForegroundActivity.current?.window?.decorView as? ViewGroup
+                        if (container == null) {
+                            injectIframeScript()
+                            return
+                        }
 
-                                // Attach the WebView to the view group so we can send key events.
-                                container.addView(webview, ViewGroup.LayoutParams(width, height))
+                        executor.execute {
+                            val width = container.width.takeIf { it > 0 } ?: 1920
+                            val height = container.height.takeIf { it > 0 } ?: 1080
 
-                                // Send Tab and Space to check the checkbox, and abort if dispatchKeyEvent fails.
-                                // Use a separate thread to unblock the main thread.
-                                thread {
-                                    if (!webview.dispatchKeyEvent(
-                                            KeyEvent(
-                                                KeyEvent.ACTION_DOWN,
-                                                KeyEvent.KEYCODE_TAB,
-                                            ),
-                                        )
-                                    ) {
-                                        latch.countDown()
-                                        return@thread
-                                    }
-                                    Thread.sleep(100)
-                                    if (!webview.dispatchKeyEvent(
-                                            KeyEvent(
-                                                KeyEvent.ACTION_UP,
-                                                KeyEvent.KEYCODE_TAB,
-                                            ),
-                                        )
-                                    ) {
-                                        latch.countDown()
-                                        return@thread
-                                    }
-                                    Thread.sleep(100)
-                                    if (!webview.dispatchKeyEvent(
-                                            KeyEvent(
-                                                KeyEvent.ACTION_DOWN,
-                                                KeyEvent.KEYCODE_SPACE,
-                                            ),
-                                        )
-                                    ) {
-                                        latch.countDown()
-                                        return@thread
-                                    }
-                                    Thread.sleep(100)
-                                    if (!webview.dispatchKeyEvent(
-                                            KeyEvent(
-                                                KeyEvent.ACTION_UP,
-                                                KeyEvent.KEYCODE_SPACE,
-                                            ),
-                                        )
-                                    ) {
-                                        latch.countDown()
-                                        return@thread
-                                    }
+                            // Set translationX to negative width.
+                            // The WebView should be offscreen even when the orientation changes.
+                            webview.translationX = -width.toFloat()
+
+                            // Attach the WebView to the view group so we can send key events.
+                            container.addView(webview, ViewGroup.LayoutParams(width, height))
+
+                            // Send Tab and Space to check the checkbox, and abort if dispatchKeyEvent fails.
+                            // Use a separate thread to unblock the main thread.
+                            thread {
+                                if (!webview.dispatchKeyEvent(
+                                        KeyEvent(
+                                            KeyEvent.ACTION_DOWN,
+                                            KeyEvent.KEYCODE_TAB,
+                                        ),
+                                    )
+                                ) {
+                                    injectIframeScript()
+                                    return@thread
+                                }
+                                Thread.sleep(100)
+                                if (!webview.dispatchKeyEvent(
+                                        KeyEvent(
+                                            KeyEvent.ACTION_UP,
+                                            KeyEvent.KEYCODE_TAB,
+                                        ),
+                                    )
+                                ) {
+                                    injectIframeScript()
+                                    return@thread
+                                }
+                                Thread.sleep(100)
+                                if (!webview.dispatchKeyEvent(
+                                        KeyEvent(
+                                            KeyEvent.ACTION_DOWN,
+                                            KeyEvent.KEYCODE_SPACE,
+                                        ),
+                                    )
+                                ) {
+                                    injectIframeScript()
+                                    return@thread
+                                }
+                                Thread.sleep(100)
+                                if (!webview.dispatchKeyEvent(
+                                        KeyEvent(
+                                            KeyEvent.ACTION_UP,
+                                            KeyEvent.KEYCODE_SPACE,
+                                        ),
+                                    )
+                                ) {
+                                    injectIframeScript()
+                                    return@thread
                                 }
                             }
                         }
-                        "fail" -> {
-                            // Challenge failed, abort
-                            latch.countDown()
-                        }
+                    }
+                    "fail" -> {
+                        // Challenge failed, abort
+                        latch.countDown()
                     }
                 }
             }
@@ -185,26 +221,27 @@ class CloudflareInterceptor(
                         _,
                     ->
                     if (isMainFrame) {
-                        message.data?.let { jsBridge.handleEvent(it) }
+                        message.data?.let { handleEvent(it) }
                     }
                 }
 
                 // Listen for message events
-                WebViewCompat.addJavaScriptOnEvent(
+                listenerScriptHandler = WebViewCompat.addJavaScriptOnEvent(
                     webview,
-                    """
-                        addEventListener("message", ({data}) => {
-                            if (data?.source === "cloudflare-challenge") {
-                                mihon?.postMessage(data.event);
-                            }
-                        })
-                    """.trimIndent(),
+                    listenerScript,
                     WebViewCompat.INJECTION_EVENT_DOCUMENT_START,
                     allowedOriginRules,
                     world,
                 )
             } else {
-                webview.addJavascriptInterface(jsBridge, "mihon")
+                webview.addJavascriptInterface(
+                    object {
+                        @Suppress("unused")
+                        @JavascriptInterface
+                        fun postMessage(event: String) = handleEvent(event)
+                    },
+                    "mihon",
+                )
             }
 
             @SuppressLint("MissingOnRenderProcessGone")
@@ -222,13 +259,7 @@ class CloudflareInterceptor(
                         } else if (!WebViewFeature.isFeatureSupported(WebViewFeature.JS_INJECTION_IN_FRAME_AND_WORLD)) {
                             // Listen for message events
                             view.evaluateJavascript(
-                                """
-                                    addEventListener("message", ({data}) => {
-                                        if (data?.source === "cloudflare-challenge") {
-                                            mihon.handleEvent(data.event);
-                                        }
-                                    })
-                                """.trimIndent(),
+                                listenerScript,
                                 null,
                             )
                         }
@@ -267,11 +298,26 @@ class CloudflareInterceptor(
                 isWebViewOutdated = webview?.isOutdated() == true
             }
 
-            (webview?.parent as? ViewGroup)?.removeView(webview)
+            webview?.let { webview ->
+                if (WebViewFeature.isFeatureSupported(WebViewFeature.JS_INJECTION_IN_FRAME_AND_WORLD)) {
+                    WebViewCompat.removeWebMessageListener(
+                        webview,
+                        WebViewCompat.getExecutionWorld(webview, "mihon"),
+                        "mihon",
+                    )
+                } else {
+                    webview.removeJavascriptInterface("mihon")
+                }
 
-            webview?.run {
-                stopLoading()
-                destroy()
+                iframeScriptHandler?.remove()
+                listenerScriptHandler?.remove()
+
+                (webview.parent as? ViewGroup)?.removeView(webview)
+
+                webview.run {
+                    stopLoading()
+                    destroy()
+                }
             }
         }
 
