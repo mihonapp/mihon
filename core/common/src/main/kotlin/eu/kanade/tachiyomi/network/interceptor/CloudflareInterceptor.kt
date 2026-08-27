@@ -189,6 +189,7 @@ class CloudflareInterceptor(
                     }
                 }
 
+                // Listen for message events
                 WebViewCompat.addJavaScriptOnEvent(
                     webview,
                     """
@@ -219,7 +220,7 @@ class CloudflareInterceptor(
                             // The first request didn't return the challenge, abort.
                             latch.countDown()
                         } else if (!WebViewFeature.isFeatureSupported(WebViewFeature.JS_INJECTION_IN_FRAME_AND_WORLD)) {
-                            // Listen for an interactiveBegin event
+                            // Listen for message events
                             view.evaluateJavascript(
                                 """
                                     addEventListener("message", ({data}) => {
