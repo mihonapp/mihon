@@ -105,3 +105,29 @@ data class ReadProgressV2Dto(
     val lastReadContinuousNumberSort: Double,
     val maxNumberSort: Float,
 )
+
+@Serializable
+data class BookDto(
+    val readProgress: BookReadProgressDto? = null,
+)
+
+@Serializable
+data class BookReadProgressDto(
+    val page: Int,
+    val completed: Boolean,
+)
+
+@Serializable
+data class BookReadProgressUpdateDto(
+    val page: Int,
+    val completed: Boolean,
+)
+
+/**
+ * Result of a page-level read-progress pull for a single book. [Absent] means Komga has no
+ * progress recorded (e.g. after being marked unread), distinct from [Recorded] at page 0.
+ */
+sealed interface KomgaBookProgress {
+    data class Recorded(val page: Int) : KomgaBookProgress
+    data object Absent : KomgaBookProgress
+}
