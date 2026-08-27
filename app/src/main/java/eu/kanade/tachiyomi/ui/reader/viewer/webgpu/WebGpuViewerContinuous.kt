@@ -9,7 +9,7 @@ class WebGpuViewerContinuous(activity: ReaderActivity) :
 
     override val isContinuous: Boolean = true
 
-    override val preloadAhead = 2
+    override val preloadAhead = 3
     override val preloadBehind = 1
 
     private fun scrollByHalfPage(direction: Int) {
@@ -24,6 +24,6 @@ class WebGpuViewerContinuous(activity: ReaderActivity) :
 
     override fun moveToPage(page: ReaderPage) {
         super.moveToPage(page)
-        (pager as ImageViewContinuous).state.scrollY = 0f
+        (pager as ImageViewContinuous).state.resetScroll()
     }
 }
