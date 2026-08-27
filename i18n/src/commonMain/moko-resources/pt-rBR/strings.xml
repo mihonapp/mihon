@@ -915,4 +915,17 @@
     <string name="downloading_with_progress">Fazendo download…(%d%%)</string>
     <string name="pref_filter_update_categories_details">Atualizações nas categorias excluídas não serão exibidas mesmo que eles também estejam nas categorias incluídas.</string>
     <string name="pref_filter_upcoming_categories_details">Títulos nas categorias excluídas não serão exibidas, mesmo que eles também estejam nas categorias incluídas.</string>
+    <string name="pref_high_quality_renderer">Use o renderizador de alta qualidade</string>
+    <string name="webgpu_viewer">WebGPU</string>
+    <string name="pref_transition_animation">Animação de transição</string>
+    <string name="transition_animation_default">Padrão</string>
+    <string name="transition_animation_sphere">Esfera</string>
+    <string name="transition_animation_cube_inside">Cubo (Dentro)</string>
+    <string name="transition_animation_cube_outside">Cubo (Fora)</string>
+    <string name="transition_animation_fade">Desaparecer</string>
+    <string name="pref_cutout_mode">Modo de recorte de exibição</string>
+    <string name="cutout_mode_ignore">Ignorar</string>
+    <string name="cutout_mode_avoid">Evitar</string>
+    <string name="dual_page_view_never">Nunca</string>
+    <string name="dual_page_view_always">Sempre</string>
 </resources>
