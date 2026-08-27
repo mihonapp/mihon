@@ -37,6 +37,7 @@ class CloudflareInterceptor(
 
     private val executor = ContextCompat.getMainExecutor(context)
 
+    // Fallback JavaScript solver for when view group isn't available (i.e. app in background)
     private val iframeScript by lazy {
         javaClass
             .getResource("/assets/CloudflareSolverIframeScript.js")!!
@@ -51,6 +52,17 @@ class CloudflareInterceptor(
             }
         })
     """.trimIndent()
+
+    private fun injectIframeScript(webview: WebView): ScriptHandler? =
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
+            WebViewCompat.addDocumentStartJavaScript(
+                webview,
+                iframeScript,
+                mutableSetOf("https://challenges.cloudflare.com"),
+            )
+        } else {
+            null
+        }
 
     override fun shouldIntercept(response: Response): Boolean {
         // Check if Cloudflare anti-bot is on
@@ -111,14 +123,23 @@ class CloudflareInterceptor(
                 descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
             }
 
-            // Fallback solver that injects JavaScript to solve challenge
+            if (ForegroundActivity.viewGroup == null) {
+                // view group not available, using fallback JavaScript solver
+                synchronized(webview) {
+                    if (iframeScriptHandler == null) {
+                        iframeScriptHandler = injectIframeScript(webview)
+                    }
+                }
+            }
+
+            // Inject fallback JavaScript solver
             fun injectIframeScript() {
-                if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
-                    iframeScriptHandler = WebViewCompat.addDocumentStartJavaScript(
-                        webview,
-                        iframeScript,
-                        mutableSetOf("https://challenges.cloudflare.com"),
-                    )
+                synchronized(webview) {
+                    if (iframeScriptHandler == null) {
+                        iframeScriptHandler = injectIframeScript(webview)
+                    }
+                }
+                if (iframeScriptHandler != null) {
                     webview.loadUrl(origRequestUrl, headers)
                 } else {
                     // Feature not supported, abort
@@ -126,16 +147,25 @@ class CloudflareInterceptor(
                 }
             }
 
+            var complete = false
+
             fun handleEvent(event: String) {
                 when (event) {
                     "interactiveBegin" -> {
                         if (iframeScriptHandler != null) {
-                            // Solving is done in injected iframe script, skip
+                            // Fallback solver is injected
+                            thread {
+                                // Fallback solver should complete within a short amount of time
+                                Thread.sleep(5000)
+                                if (!complete) {
+                                    latch.countDown()
+                                }
+                            }
                             return
                         }
 
                         // Get the current view group
-                        val container = ForegroundActivity.current?.window?.decorView as? ViewGroup
+                        val container = ForegroundActivity.viewGroup
                         if (container == null) {
                             injectIframeScript()
                             return
@@ -152,7 +182,8 @@ class CloudflareInterceptor(
                             // Attach the WebView to the view group so we can send key events.
                             container.addView(webview, ViewGroup.LayoutParams(width, height))
 
-                            // Send Tab and Space to check the checkbox, and abort if dispatchKeyEvent fails.
+                            // Send Tab and Space to check the checkbox, and fall back to JavaScript solver
+                            // if dispatchKeyEvent fails.
                             // Use a separate thread to unblock the main thread.
                             thread {
                                 if (!webview.dispatchKeyEvent(
@@ -198,8 +229,17 @@ class CloudflareInterceptor(
                                     injectIframeScript()
                                     return@thread
                                 }
+
+                                // Challenge should complete in a short amount of time
+                                Thread.sleep(5000)
+                                if (!complete) {
+                                    latch.countDown()
+                                }
                             }
                         }
+                    }
+                    "complete" -> {
+                        complete = true
                     }
                     "fail" -> {
                         // Challenge failed, abort
