@@ -41,7 +41,7 @@ class CloudflareInterceptor(
         javaClass
             .getResource("/assets/CloudflareSolverIframeScript.js")!!
             .readText()
-            .replace("__SOLVER__", "_${(0..Int.MAX_VALUE).random()}")
+            .replace("__SOLVER__", "__SOLVER_${(ULong.MIN_VALUE..ULong.MAX_VALUE).random()}__")
     }
 
     private val listenerScript = """
