@@ -214,6 +214,22 @@ open class WebGpuViewer(
     @Volatile
     var currentPage: ViewerPage? = null
 
+    /**
+     * What a running page turn animates away from, kept out of [evictFarthestPage]'s reach - a
+     * jump preloads enough pages to evict it, and eviction frees its images. Replaced by the next
+     * turn's rather than cleared.
+     */
+    @Volatile
+    private var pinnedFromPage: ImagePage? = null
+
+    /** True while [pinnedFromPage] is drawing [page]'s image, as itself or as a spread side. */
+    private fun isPinned(page: ViewerPage): Boolean {
+        val pinned = pinnedFromPage ?: return false
+        val image = page.imagePage
+        if (pinned === image) return true
+        return pinned is ImagePage.ImageSpread && (pinned.left === image || pinned.right === image)
+    }
+
     open val preloadAhead = 3
     open val preloadBehind = 2
 
@@ -231,12 +247,18 @@ open class WebGpuViewer(
 
     /**
      * Evicts the page farthest from reference. Must be called while holding lock.
+     *
+     * Never evicts [reference], [currentPage] or what [pinnedFromPage] draws. Returns false when
+     * nothing was evictable, so a trim loop stops instead of spinning.
+     *
      * @param reference The page to use as reference (defaults to currentPage)
      */
-    private fun evictFarthestPage(reference: ViewerPage? = null) {
-        val current = reference ?: currentPage ?: return
-        val candidates = pageCache.values.filter { it !== current }.toMutableSet()
-        if (candidates.isEmpty()) return
+    private fun evictFarthestPage(reference: ViewerPage? = null): Boolean {
+        val current = reference ?: currentPage ?: return false
+        val candidates = pageCache.values
+            .filter { it !== current && it !== currentPage && !isPinned(it) }
+            .toMutableSet()
+        if (candidates.isEmpty()) return false
 
         fun findNext(page: ViewerPage): ViewerPage? = when (page) {
             is ViewerReaderPage -> {
@@ -305,13 +327,14 @@ open class WebGpuViewer(
             if (backward != null && candidates.remove(backward)) farthest = backward
         }
 
-        val toRemove = candidates.firstOrNull() ?: farthest ?: return
+        val toRemove = candidates.firstOrNull() ?: farthest ?: return false
 
         pageCache.remove(pageKey(toRemove))
         decodeQueue.remove(toRemove)
         toRemove.state = PageState.IDLE
         (toRemove as? ViewerReaderPage)?.spreadPage?.cleanup()
         toRemove.imagePage.cleanup()
+        return true
     }
 
     /**
@@ -324,7 +347,7 @@ open class WebGpuViewer(
             findInCache(key) ?: ViewerReaderPage(page).also { newPage ->
                 pageCache[key] = newPage
                 while (pageCache.size > cacheSize) {
-                    evictFarthestPage(referencePage ?: newPage)
+                    if (!evictFarthestPage(referencePage ?: newPage)) break
                 }
             }
         }
@@ -340,7 +363,7 @@ open class WebGpuViewer(
             findInCache(key) ?: ViewerTransitionPage(prevChapter, nextChapter).also { newPage ->
                 pageCache[key] = newPage
                 while (pageCache.size > cacheSize) {
-                    evictFarthestPage(referencePage ?: newPage)
+                    if (!evictFarthestPage(referencePage ?: newPage)) break
                 }
             }
         }
@@ -1196,12 +1219,17 @@ open class WebGpuViewer(
      * In dual page mode, aligns to the start of the spread containing the page.
      */
     override fun moveToPage(page: ReaderPage) {
+        // Pin first: resolving a target outside the cached window trims the cache.
+        pinnedFromPage = currentPage?.let { buildSpreadPage(it) }
         // Get the page and align to spread anchor based on image position
         moveToPage(getSpreadAnchor(getPage(page)))
     }
 
     private fun moveToPage(newPage: ViewerPage) {
         val previousPage = currentPage
+        // Before preloadPages below trims the cache - see [pinnedFromPage].
+        val fromSpread = previousPage?.let { buildSpreadPage(it) }
+        pinnedFromPage = fromSpread
 
         currentPage = newPage
         (newPage as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
@@ -1245,8 +1273,8 @@ open class WebGpuViewer(
             else -> 0
         }
 
-        if (direction != 0) {
-            pager.state.transitionFromPage = buildSpreadPage(previousPage)
+        if (direction != 0 && fromSpread != null) {
+            pager.state.transitionFromPage = fromSpread
             pager.state.animatePageTurn(if (isReversed) direction else -direction)
         } else {
             pager.state.invalidate()
