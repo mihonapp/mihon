@@ -725,8 +725,8 @@ open class WebGpuViewer(
                     NavigationRegion.MENU -> activity.toggleMenu()
                     NavigationRegion.NEXT -> if (isReversed) moveToPrevious() else moveToNext()
                     NavigationRegion.PREV -> if (isReversed) moveToNext() else moveToPrevious()
-                    NavigationRegion.RIGHT -> if (isReversed) moveLeft() else moveRight()
-                    NavigationRegion.LEFT -> if (isReversed) moveRight() else moveLeft()
+                    NavigationRegion.RIGHT -> moveRight()
+                    NavigationRegion.LEFT -> moveLeft()
                 }
             }
 
@@ -1305,8 +1305,7 @@ open class WebGpuViewer(
                 val maxX = page.maxX(page.scale)
                 val currentX = page.animationJob?.let { page.animationTargetX } ?: page.x
 
-                val c = if (isReversed) -1 else 1
-                val x = (currentX - c / page.scale).coerceIn(minX, maxX)
+                val x = (currentX - 1 / page.scale).coerceIn(minX, maxX)
 
                 if (!currentX.closeTo(x)) {
                     page.animateTo(targetX = x, targetY = page.y)
@@ -1314,7 +1313,7 @@ open class WebGpuViewer(
                 }
             }
 
-            navigateSpread(1)
+            navigateSpread(if (isReversed) -1 else 1)
         }
     }
 
@@ -1328,8 +1327,7 @@ open class WebGpuViewer(
                 val maxX = page.maxX(page.scale)
                 val currentX = page.animationJob?.isActive?.let { page.animationTargetX } ?: page.x
 
-                val c = if (isReversed) -1 else 1
-                val x = (currentX + c / page.scale).coerceIn(minX, maxX)
+                val x = (currentX + 1 / page.scale).coerceIn(minX, maxX)
 
                 if (!currentX.closeTo(x)) {
                     page.animateTo(targetX = x, targetY = page.y)
@@ -1337,7 +1335,7 @@ open class WebGpuViewer(
                 }
             }
 
-            navigateSpread(-1)
+            navigateSpread(if (isReversed) 1 else -1)
         }
     }
 
@@ -1400,7 +1398,7 @@ open class WebGpuViewer(
                 if (!config.volumeKeysEnabled || activity.viewModel.state.value.menuVisible) {
                     return false
                 } else if (isUp) {
-                    if (!config.volumeKeysInverted) moveDown() else moveUp()
+                    if (!config.volumeKeysInverted.xor(isReversed)) moveDown() else moveUp()
                 }
             }
 
@@ -1408,7 +1406,7 @@ open class WebGpuViewer(
                 if (!config.volumeKeysEnabled || activity.viewModel.state.value.menuVisible) {
                     return false
                 } else if (isUp) {
-                    if (!config.volumeKeysInverted) moveUp() else moveDown()
+                    if (!config.volumeKeysInverted.xor(isReversed)) moveUp() else moveDown()
                 }
             }
 
