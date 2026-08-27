@@ -12,6 +12,8 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.webkit.WebViewCompat
+import androidx.webkit.WebViewFeature
 import eu.kanade.tachiyomi.network.AndroidCookieJar
 import eu.kanade.tachiyomi.util.system.ForegroundActivity
 import eu.kanade.tachiyomi.util.system.isOutdated
@@ -90,89 +92,119 @@ class CloudflareInterceptor(
                 descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
             }
 
-            webview.addJavascriptInterface(
-                object {
-                    @Suppress("unused")
-                    @JavascriptInterface
-                    fun handleEvent(event: String) {
-                        when (event) {
-                            "interactiveBegin" -> {
-                                // Get the current view group
-                                val container = ForegroundActivity.current?.window?.decorView as? ViewGroup
-                                if (container == null) {
-                                    latch.countDown()
-                                    return
-                                }
+            val jsBridge = object {
+                @JavascriptInterface
+                fun handleEvent(event: String) {
+                    when (event) {
+                        "interactiveBegin" -> {
+                            // Get the current view group
+                            val container = ForegroundActivity.current?.window?.decorView as? ViewGroup
+                            if (container == null) {
+                                latch.countDown()
+                                return
+                            }
 
-                                executor.execute {
-                                    val width = container.width.takeIf { it > 0 } ?: 1920
-                                    val height = container.height.takeIf { it > 0 } ?: 1080
+                            executor.execute {
+                                val width = container.width.takeIf { it > 0 } ?: 1920
+                                val height = container.height.takeIf { it > 0 } ?: 1080
 
-                                    // Set translationX to negative width.
-                                    // The WebView should be offscreen even when the orientation changes.
-                                    webview.translationX = -width.toFloat()
+                                // Set translationX to negative width.
+                                // The WebView should be offscreen even when the orientation changes.
+                                webview.translationX = -width.toFloat()
 
-                                    // Attach the WebView to the view group so we can send key events.
-                                    container.addView(webview, ViewGroup.LayoutParams(width, height))
+                                // Attach the WebView to the view group so we can send key events.
+                                container.addView(webview, ViewGroup.LayoutParams(width, height))
 
-                                    // Send Tab and Space to check the checkbox, and abort if dispatchKeyEvent fails.
-                                    // Use a separate thread to unblock the main thread.
-                                    thread {
-                                        if (!webview.dispatchKeyEvent(
-                                                KeyEvent(
-                                                    KeyEvent.ACTION_DOWN,
-                                                    KeyEvent.KEYCODE_TAB,
-                                                ),
-                                            )
-                                        ) {
-                                            latch.countDown()
-                                            return@thread
-                                        }
-                                        Thread.sleep(100)
-                                        if (!webview.dispatchKeyEvent(
-                                                KeyEvent(
-                                                    KeyEvent.ACTION_UP,
-                                                    KeyEvent.KEYCODE_TAB,
-                                                ),
-                                            )
-                                        ) {
-                                            latch.countDown()
-                                            return@thread
-                                        }
-                                        Thread.sleep(100)
-                                        if (!webview.dispatchKeyEvent(
-                                                KeyEvent(
-                                                    KeyEvent.ACTION_DOWN,
-                                                    KeyEvent.KEYCODE_SPACE,
-                                                ),
-                                            )
-                                        ) {
-                                            latch.countDown()
-                                            return@thread
-                                        }
-                                        Thread.sleep(100)
-                                        if (!webview.dispatchKeyEvent(
-                                                KeyEvent(
-                                                    KeyEvent.ACTION_UP,
-                                                    KeyEvent.KEYCODE_SPACE,
-                                                ),
-                                            )
-                                        ) {
-                                            latch.countDown()
-                                            return@thread
-                                        }
+                                // Send Tab and Space to check the checkbox, and abort if dispatchKeyEvent fails.
+                                // Use a separate thread to unblock the main thread.
+                                thread {
+                                    if (!webview.dispatchKeyEvent(
+                                            KeyEvent(
+                                                KeyEvent.ACTION_DOWN,
+                                                KeyEvent.KEYCODE_TAB,
+                                            ),
+                                        )
+                                    ) {
+                                        latch.countDown()
+                                        return@thread
+                                    }
+                                    Thread.sleep(100)
+                                    if (!webview.dispatchKeyEvent(
+                                            KeyEvent(
+                                                KeyEvent.ACTION_UP,
+                                                KeyEvent.KEYCODE_TAB,
+                                            ),
+                                        )
+                                    ) {
+                                        latch.countDown()
+                                        return@thread
+                                    }
+                                    Thread.sleep(100)
+                                    if (!webview.dispatchKeyEvent(
+                                            KeyEvent(
+                                                KeyEvent.ACTION_DOWN,
+                                                KeyEvent.KEYCODE_SPACE,
+                                            ),
+                                        )
+                                    ) {
+                                        latch.countDown()
+                                        return@thread
+                                    }
+                                    Thread.sleep(100)
+                                    if (!webview.dispatchKeyEvent(
+                                            KeyEvent(
+                                                KeyEvent.ACTION_UP,
+                                                KeyEvent.KEYCODE_SPACE,
+                                            ),
+                                        )
+                                    ) {
+                                        latch.countDown()
+                                        return@thread
                                     }
                                 }
                             }
-                            "fail" -> {
-                                // Challenge failed, abort
-                                latch.countDown()
-                            }
+                        }
+                        "fail" -> {
+                            // Challenge failed, abort
+                            latch.countDown()
                         }
                     }
-                },
-                "mihon",
-            )
+                }
+            }
+
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.JS_INJECTION_IN_FRAME_AND_WORLD)) {
+                // Use an isolated world so the page cannot see our bridge
+                val world = WebViewCompat.getExecutionWorld(webview, "mihon")
+                val allowedOriginRules = mutableSetOf("${originalRequest.url.scheme}://${originalRequest.url.host}")
+
+                WebViewCompat.addWebMessageListener(webview, "mihon", allowedOriginRules, world) {
+                        _,
+                        message,
+                        _,
+                        isMainFrame,
+                        _,
+                    ->
+                    if (isMainFrame) {
+                        message.data?.let { jsBridge.handleEvent(it) }
+                    }
+                }
+
+                WebViewCompat.addJavaScriptOnEvent(
+                    webview,
+                    """
+                        addEventListener("message", ({data}) => {
+                            if (data?.source === "cloudflare-challenge") {
+                                mihon?.postMessage(data.event);
+                            }
+                        })
+                    """.trimIndent(),
+                    WebViewCompat.INJECTION_EVENT_DOCUMENT_START,
+                    allowedOriginRules,
+                    world,
+                )
+            } else {
+                webview.addJavascriptInterface(jsBridge, "mihon")
+            }
 
             @SuppressLint("MissingOnRenderProcessGone")
             webview.webViewClient = object : WebViewClient() {
@@ -186,7 +218,7 @@ class CloudflareInterceptor(
                         if (!challengeFound) {
                             // The first request didn't return the challenge, abort.
                             latch.countDown()
-                        } else {
+                        } else if (!WebViewFeature.isFeatureSupported(WebViewFeature.JS_INJECTION_IN_FRAME_AND_WORLD)) {
                             // Listen for an interactiveBegin event
                             view.evaluateJavascript(
                                 """
