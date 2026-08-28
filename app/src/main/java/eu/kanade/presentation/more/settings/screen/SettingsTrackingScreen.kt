@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -105,11 +106,12 @@ object SettingsTrackingScreen : SearchableSettings {
             }
         }
 
+        val installedSources by produceState(initialValue = emptyList()) { value = sourceManager.getAll() }
         val enhancedTrackers = trackerManager.trackers
             .filter { it is EnhancedTracker }
             .partition { service ->
                 val acceptedSources = (service as EnhancedTracker).getAcceptedSources()
-                sourceManager.getAll().any { it::class.qualifiedName in acceptedSources }
+                installedSources.any { it::class.qualifiedName in acceptedSources }
             }
         var enhancedTrackerInfo = stringResource(MR.strings.enhanced_tracking_info)
         if (enhancedTrackers.second.isNotEmpty()) {

@@ -11,5 +11,5 @@ import tachiyomi.source.local.isLocal
 fun List<Chapter>.filterDownloaded(manga: Manga, downloadCache: DownloadCache): List<Chapter> {
     if (manga.isLocal()) return this
 
-    return filter { downloadCache.isChapterDownloaded(it.name, it.scanlator, it.url, manga.title, manga.source, false) }
+    return filter { downloadCache.isChapterDownloaded(it.name, it.scanlator, it.url, manga.title, manga.source) }
 }

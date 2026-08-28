@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.sourcePreferences
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.addAll
 import kotlinx.serialization.json.buildJsonObject
@@ -29,8 +30,12 @@ class SuwayomiApi(
 ) {
 
     private val json: Json by injectLazy()
-    private val source: HttpSource by lazy { (sourceManager.get(sourceId) as HttpSource) }
-    private val configurableSource: ConfigurableSource by lazy { (sourceManager.get(sourceId) as ConfigurableSource) }
+
+    // Blocking is fine here: these are only touched from OkHttp and tracker threads.
+    private val source: HttpSource by lazy { runBlocking { sourceManager.get(sourceId) as HttpSource } }
+    private val configurableSource: ConfigurableSource by lazy {
+        runBlocking { sourceManager.get(sourceId) as ConfigurableSource }
+    }
     private val client: OkHttpClient by lazy { source.client }
     private val baseUrl: String by lazy { source.baseUrl.trimEnd('/') }
     private val apiUrl: String by lazy { "$baseUrl/api/graphql" }
