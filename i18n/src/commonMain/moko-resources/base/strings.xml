@@ -511,6 +511,7 @@
     <string name="transition_animation_cube_outside">Cube (Outside)</string>
     <string name="transition_animation_fade">Fade</string>
     <string name="transition_animation_fade_white">Fade to white</string>
+    <string name="transition_animation_none">None</string>
     <string name="pref_cutout_mode">Display cutout mode</string>
     <string name="cutout_mode_ignore">Ignore</string>
     <string name="cutout_mode_avoid">Avoid</string>

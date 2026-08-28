@@ -6,7 +6,6 @@ import com.hippo.unifile.UniFile
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -69,7 +68,6 @@ class DownloadCache(
     private val context: Context,
     private val provider: DownloadProvider,
     private val sourceManager: SourceManager,
-    private val extensionManager: ExtensionManager,
     private val storageManager: StorageManager,
 ) {
 
@@ -356,7 +354,6 @@ class DownloadCache(
             // Try to wait until extensions and sources have loaded
             var sources = emptyList<Source>()
             withTimeoutOrNull(30.seconds) {
-                extensionManager.isInitialized.first { it }
                 sourceManager.isInitialized.first { it }
 
                 sources = getSources()
