@@ -20,7 +20,7 @@ fun ShikimoriGetLibMangaQuery.Manga.toTrack(trackId: Long): Track {
         if (sManga.userRate != null) {
             // null if not in user's list, must not throw here because it'd break adding titles
             // throws in the findLibManga method of ShikimoriApi if null and shouldn't be
-            library_id = sManga.id.toLong()
+            library_id = sManga.userRate.id.toLong()
             last_chapter_read = sManga.userRate.chapters.toDouble()
             score = sManga.userRate.score.toDouble()
             status = sManga.userRate.status.toLocalStatus()
