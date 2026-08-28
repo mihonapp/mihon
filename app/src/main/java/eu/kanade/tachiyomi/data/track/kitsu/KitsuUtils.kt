@@ -57,8 +57,8 @@ fun KitsuFindLibMangaQuery.FindMangaById.toTrackSearch(trackId: Long): TrackSear
 
     return mangaFragment.toTrackSearch(trackId).apply {
         library_id = myLibraryEntry.id.toLong()
-        started_reading_date = myLibraryEntry.startedAt?.let { Instant.parse(it).toEpochMilliseconds() } ?: 0
-        finished_reading_date = myLibraryEntry.finishedAt?.let { Instant.parse(it).toEpochMilliseconds() } ?: 0
+        started_reading_date = myLibraryEntry.startedAt?.toEpochMilliseconds() ?: 0
+        finished_reading_date = myLibraryEntry.finishedAt?.toEpochMilliseconds() ?: 0
         status = myLibraryEntry.status.toLocalStatus()
         score = myLibraryEntry.rating?.toDouble() ?: 0.0
         last_chapter_read = myLibraryEntry.progress.toDouble()

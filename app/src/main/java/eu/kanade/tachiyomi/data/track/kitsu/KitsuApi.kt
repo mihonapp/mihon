@@ -88,14 +88,14 @@ class KitsuApi(
                     private = track.private,
                     rating = Optional.present(track.score.toInt().takeIf { it > 0 }),
                     startedAt = Optional.present(
-                        track.started_reading_date.takeIf { it > 0 }?.let {
-                            Instant.fromEpochMilliseconds(it).toString()
-                        },
+                        track.started_reading_date
+                            .takeIf { it > 0 }
+                            ?.let { Instant.fromEpochMilliseconds(it) },
                     ),
                     finishedAt = Optional.present(
-                        track.finished_reading_date.takeIf { it > 0 }?.let {
-                            Instant.fromEpochMilliseconds(it).toString()
-                        },
+                        track.finished_reading_date
+                            .takeIf { it > 0 }
+                            ?.let { Instant.fromEpochMilliseconds(it) },
                     ),
                 ),
             )

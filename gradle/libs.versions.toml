@@ -27,6 +27,7 @@ androidx-viewPager = "1.1.0"
 androidx-webkit = "1.17.0"
 androidx-work = "2.11.2"
 apollo = "5.0.1"
+apollo-adapters = "0.7.0"
 archive = "1.1.6"
 coil = "3.5.0"
 composeGrid = "1.2.2"
@@ -124,6 +125,7 @@ androidx-viewPager = { module = "androidx.viewpager:viewpager", version.ref = "a
 androidx-webkit = { module = "androidx.webkit:webkit", version.ref = "androidx-webkit" }
 androidx-work = { module = "androidx.work:work-runtime", version.ref = "androidx-work" }
 apollo = { module = "com.apollographql.apollo:apollo-runtime", version.ref = "apollo" }
+apollo-adapters = { module = "com.apollographql.adapters:apollo-adapters-core", version.ref = "apollo-adapters" }
 archive = { module = "me.zhanghai.android.libarchive:library", version.ref = "archive" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-core = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }

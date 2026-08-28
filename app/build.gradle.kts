@@ -196,6 +196,8 @@ kotlin {
             "-opt-in=kotlinx.coroutines.FlowPreview",
             "-opt-in=kotlinx.coroutines.InternalCoroutinesApi",
             "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
+            // https://github.com/apollographql/apollo-kotlin-adapters/issues/42
+            "-opt-in=kotlin.time.ExperimentalTime",
         )
     }
 }
@@ -329,6 +331,7 @@ dependencies {
 
     // GraphQL generation
     implementation(libs.apollo)
+    implementation(libs.apollo.adapters)
 
     // Tests
     testImplementation(libs.bundles.test)
@@ -376,7 +379,7 @@ apollo {
         // A date, expressed as an ISO8601 string
         mapScalarToKotlinString("Date")
         // An ISO 8601-encoded datetime
-        mapScalarToKotlinString("ISO8601DateTime")
+        mapScalar("ISO8601DateTime", "kotlin.time.Instant", "com.apollographql.adapter.core.KotlinInstantAdapter")
         // A loose key-value map in GraphQL
         mapScalar(
             "Map",
