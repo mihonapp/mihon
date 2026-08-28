@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.track.kavita
 
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -8,7 +9,8 @@ data class SeriesDto(
     val id: Int,
     val name: String,
     val originalName: String = "",
-    val thumbnail_url: String? = "",
+    @SerialName("thumbnailUrl")
+    val thumbnailUrl: String? = "",
     val localizedName: String? = "",
     val sortName: String? = "",
     val pages: Int,

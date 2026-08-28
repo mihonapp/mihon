@@ -156,7 +156,7 @@ class KavitaApi(
 
             val track = seriesDto.toTrack(trackerId)
             track.apply {
-                cover_url = seriesDto.thumbnail_url.toString()
+                cover_url = seriesDto.thumbnailUrl.toString()
                 tracking_url = url
                 total_chapters = getTotalChapters(url)
 
