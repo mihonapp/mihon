@@ -1,10 +1,6 @@
 (function __SOLVER__() {
   "use strict";
 
-  addEventListener("message", function __SOLVER__(e) {
-    console.log(`${location.origin}: ${JSON.stringify(e.data)}`);
-  });
-
   const stackFilter = function __SOLVER__(site) {
     return !site.toString().includes("__SOLVER__");
   };
