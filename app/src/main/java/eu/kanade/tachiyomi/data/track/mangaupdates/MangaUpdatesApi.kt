@@ -123,7 +123,7 @@ class MangaUpdatesApi(
                     .awaitSuccess()
                     .parseAs<MURating>()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }

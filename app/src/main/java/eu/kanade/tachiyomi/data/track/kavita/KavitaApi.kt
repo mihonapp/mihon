@@ -68,7 +68,7 @@ class KavitaApi(
                 }
             }
             // Not sure which one to catch
-        } catch (e: SocketTimeoutException) {
+        } catch (_: SocketTimeoutException) {
             logcat(LogPriority.WARN) {
                 "Could not fetch JWT token. Probably due to connectivity issue or URL '$apiUrl' not available, skipping"
             }

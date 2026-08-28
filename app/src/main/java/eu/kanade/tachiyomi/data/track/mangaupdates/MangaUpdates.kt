@@ -83,7 +83,7 @@ class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker
         return try {
             val (series, rating) = api.getSeriesListItem(track)
             track.copyFrom(series, rating)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             track.score = 0.0
             api.addSeriesToList(track, hasReadChapters)
             track
