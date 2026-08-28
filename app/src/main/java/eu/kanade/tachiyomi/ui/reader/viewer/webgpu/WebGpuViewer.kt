@@ -1202,8 +1202,6 @@ open class WebGpuViewer(
 
         pager.state.apply {
             onPageChange = onPageChange@{ delta ->
-                activity.hideMenu()
-
                 // The viewer already showed the page at fetchPage(delta).
                 // We need to update currentPage to match that.
                 val current = currentPage ?: return@onPageChange
@@ -1215,13 +1213,23 @@ open class WebGpuViewer(
                     page = nextPage(page, step) ?: return@onPageChange
                 }
 
+                // Synchronous, since the viewer walks getPage() from here - stale, and the next
+                // scroll step crosses the same boundary again.
                 currentPage = page
-                (page as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
-                preloadPages(page)
 
-                (page as? ViewerTransitionPage)?.let { ViewerTransitionPage ->
-                    if (ViewerTransitionPage.prevChapter == null || ViewerTransitionPage.nextChapter == null) {
-                        activity.showMenu()
+                // The rest ran here too, on the animation thread under the viewer's scroll lock.
+                // Posted in order, so nothing is skipped or reordered - and on this viewer's own
+                // MainScope, not the state's: that one dispatches inside the frame callback.
+                val settled = page
+                this@WebGpuViewer.scope.launch {
+                    activity.hideMenu()
+                    (settled as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
+                    preloadPages(settled)
+
+                    (settled as? ViewerTransitionPage)?.let { transitionPage ->
+                        if (transitionPage.prevChapter == null || transitionPage.nextChapter == null) {
+                            activity.showMenu()
+                        }
                     }
                 }
             }
