@@ -298,6 +298,13 @@ class ReaderPreferences(
             MR.strings.scale_type_smart_fit,
         )
 
+        val ImageScaleTypeWebGpuViewer = listOf(
+            MR.strings.scale_type_fit_screen,
+            MR.strings.scale_type_fit_width,
+            MR.strings.scale_type_fit_height,
+            MR.strings.scale_type_original_size,
+        )
+
         val ZoomStart = listOf(
             MR.strings.zoom_start_automatic,
             MR.strings.zoom_start_left,
