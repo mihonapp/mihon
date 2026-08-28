@@ -19,7 +19,7 @@ data class BGMOAuth(
     val refreshToken: String?,
     @SerialName("user_id")
     val userId: Long?,
-)
-
-// Access token refresh before expired
-fun BGMOAuth.isExpired() = (System.currentTimeMillis() / 1000) > (createdAt + expiresIn - 3600)
+) {
+    // Access token refresh before expired
+    fun isExpired() = (System.currentTimeMillis() / 1000) > (createdAt + expiresIn - 3600)
+}
