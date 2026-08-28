@@ -148,6 +148,7 @@ class CloudflareInterceptor(
             }
 
             var complete = false
+            var fail = false
 
             fun handleEvent(event: String) {
                 when (event) {
@@ -240,9 +241,11 @@ class CloudflareInterceptor(
                     }
                     "complete" -> {
                         complete = true
+                        fail = false
                     }
                     "fail" -> {
                         // Challenge failed, abort
+                        fail = true
                         latch.countDown()
                     }
                 }
@@ -287,7 +290,10 @@ class CloudflareInterceptor(
             @SuppressLint("MissingOnRenderProcessGone")
             webview.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, url: String) {
-                    if (isBypassed(originalRequest.url, originalNonce)) {
+                    if (fail) {
+                        cookieManager.remove(originalRequest.url, COOKIE_NAMES, 0)
+                        fail = false
+                    } else if (isBypassed(originalRequest.url, originalNonce)) {
                         cloudflareBypassed = true
                         latch.countDown()
                     }
