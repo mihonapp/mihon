@@ -132,10 +132,10 @@ class KitsuApi(
                     logcat { "Kitsu: Deleted library entry ${it.libraryEntry.delete?.libraryEntry?.id}" }
                 }
         } catch (e: HttpException) {
-            // TODO: STOPSHIP: technically not all 500s, possibly?
             // Deleting something not in the library (currently as of 2026-08-25) returns a 500 with a
             // "Couldn't find LibraryEntry" msg
             // dataOrElse would throw an HttpException but user gets their wish of "title not in library" so ignore it
+            // This may be overly broad but there is no access to the error message here
             if (e.code == 500) return
 
             throw e
