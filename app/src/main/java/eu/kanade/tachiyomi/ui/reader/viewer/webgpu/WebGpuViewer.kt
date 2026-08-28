@@ -214,6 +214,21 @@ open class WebGpuViewer(
     @Volatile
     var currentPage: ViewerPage? = null
 
+    /**
+     * What a running page turn animates away from, kept out of [evictFarthestPage]'s reach - a
+     * jump preloads enough pages to evict it. Replaced by the next turn's rather than cleared.
+     */
+    @Volatile
+    private var pinnedFromPage: ImagePage? = null
+
+    /** True while [pinnedFromPage] is drawing [page]'s image, as itself or as a spread side. */
+    private fun isPinned(page: ViewerPage): Boolean {
+        val pinned = pinnedFromPage ?: return false
+        val image = page.imagePage
+        if (pinned === image) return true
+        return pinned is ImagePage.ImageSpread && (pinned.left === image || pinned.right === image)
+    }
+
     open val preloadAhead = 3
     open val preloadBehind = 2
 
@@ -231,12 +246,18 @@ open class WebGpuViewer(
 
     /**
      * Evicts the page farthest from reference. Must be called while holding lock.
+     *
+     * Never evicts [reference], [currentPage] or what [pinnedFromPage] draws. Returns false when
+     * nothing was evictable, so a trim loop stops instead of spinning.
+     *
      * @param reference The page to use as reference (defaults to currentPage)
      */
-    private fun evictFarthestPage(reference: ViewerPage? = null) {
-        val current = reference ?: currentPage ?: return
-        val candidates = pageCache.values.filter { it !== current }.toMutableSet()
-        if (candidates.isEmpty()) return
+    private fun evictFarthestPage(reference: ViewerPage? = null): Boolean {
+        val current = reference ?: currentPage ?: return false
+        val candidates = pageCache.values
+            .filter { it !== current && it !== currentPage && !isPinned(it) }
+            .toMutableSet()
+        if (candidates.isEmpty()) return false
 
         fun findNext(page: ViewerPage): ViewerPage? = when (page) {
             is ViewerReaderPage -> {
@@ -305,13 +326,14 @@ open class WebGpuViewer(
             if (backward != null && candidates.remove(backward)) farthest = backward
         }
 
-        val toRemove = candidates.firstOrNull() ?: farthest ?: return
+        val toRemove = candidates.firstOrNull() ?: farthest ?: return false
 
         pageCache.remove(pageKey(toRemove))
         decodeQueue.remove(toRemove)
         toRemove.state = PageState.IDLE
         (toRemove as? ViewerReaderPage)?.spreadPage?.cleanup()
         toRemove.imagePage.cleanup()
+        return true
     }
 
     /**
@@ -324,7 +346,7 @@ open class WebGpuViewer(
             findInCache(key) ?: ViewerReaderPage(page).also { newPage ->
                 pageCache[key] = newPage
                 while (pageCache.size > cacheSize) {
-                    evictFarthestPage(referencePage ?: newPage)
+                    if (!evictFarthestPage(referencePage ?: newPage)) break
                 }
             }
         }
@@ -340,7 +362,7 @@ open class WebGpuViewer(
             findInCache(key) ?: ViewerTransitionPage(prevChapter, nextChapter).also { newPage ->
                 pageCache[key] = newPage
                 while (pageCache.size > cacheSize) {
-                    evictFarthestPage(referencePage ?: newPage)
+                    if (!evictFarthestPage(referencePage ?: newPage)) break
                 }
             }
         }
@@ -367,7 +389,7 @@ open class WebGpuViewer(
     }
 
     inner class ErrorPage internal constructor(
-        var message: String,
+        message: String,
         spreadPosition: SpreadPosition = SpreadPosition.SINGLE,
     ) : ImagePage.Render(
         if (spreadPosition == SpreadPosition.SINGLE) pager.state.width else pager.state.width / 2,
@@ -378,6 +400,12 @@ open class WebGpuViewer(
             maxScale = 1f
             homeScale = 1f
         }
+
+        var message: String = message
+            set(value) {
+                field = value
+                invalidate()
+            }
 
         override val backgroundColor: Int = readerBackgroundColor()
 
@@ -403,17 +431,27 @@ open class WebGpuViewer(
         }
     }
 
-    inner class ProgressPage(var foregroundColor: Int = readerOnBackgroundColor()) : ImagePage.Render(
+    inner class ProgressPage(foregroundColor: Int = readerOnBackgroundColor()) : ImagePage.Render(
         if (!isDualPageMode()) pager.state.width else pager.state.width / 2,
         pager.state.height,
     ) {
-        var progress: Float = 0f
-
         init {
             minScale = 1f
             maxScale = 1f
             homeScale = 1f
         }
+
+        var progress: Float = 0f
+            set(value) {
+                field = value
+                invalidate()
+            }
+
+        var foregroundColor: Int = foregroundColor
+            set(value) {
+                field = value
+                invalidate()
+            }
 
         override val backgroundColor: Int = readerBackgroundColor()
 
@@ -702,8 +740,8 @@ open class WebGpuViewer(
                     NavigationRegion.MENU -> activity.toggleMenu()
                     NavigationRegion.NEXT -> if (isReversed) moveToPrevious() else moveToNext()
                     NavigationRegion.PREV -> if (isReversed) moveToNext() else moveToPrevious()
-                    NavigationRegion.RIGHT -> if (isReversed) moveLeft() else moveRight()
-                    NavigationRegion.LEFT -> if (isReversed) moveRight() else moveLeft()
+                    NavigationRegion.RIGHT -> moveRight()
+                    NavigationRegion.LEFT -> moveLeft()
                 }
             }
 
@@ -847,7 +885,6 @@ open class WebGpuViewer(
 
                         (page.imagePage as? ProgressPage)?.apply {
                             progress = value / 100f
-                            invalidate()
                         }
                     }
                 }
@@ -979,7 +1016,6 @@ open class WebGpuViewer(
                 repeat(pageCount - 1) {
                     (page.imagePage as? ProgressPage)?.apply {
                         progress = (it + 1).toFloat() / pageCount
-                        invalidate()
                     }
                     val frame = dec.decodeNext()
                     val image = Image(
@@ -1001,6 +1037,9 @@ open class WebGpuViewer(
                     page.imagePage = imagePage
                     page.state = PageState.IDLE
                     oldImagePage.cleanup()
+                    // Fade up from the placeholder's colour, if that placeholder was on screen -
+                    // one that decoded out of view has nothing left to fade from.
+                    if (oldImagePage.isOnScreen) imagePage.fadeIn()
                     if (page.spreadPosition == SpreadPosition.SINGLE) {
                         (page.imagePage as? ImagePage.ImageSingle)?.let {
                             if (!applyWideZoomIfNeeded(it)) {
@@ -1163,8 +1202,6 @@ open class WebGpuViewer(
 
         pager.state.apply {
             onPageChange = onPageChange@{ delta ->
-                activity.hideMenu()
-
                 // The viewer already showed the page at fetchPage(delta).
                 // We need to update currentPage to match that.
                 val current = currentPage ?: return@onPageChange
@@ -1176,13 +1213,23 @@ open class WebGpuViewer(
                     page = nextPage(page, step) ?: return@onPageChange
                 }
 
+                // Synchronous, since the viewer walks getPage() from here - stale, and the next
+                // scroll step crosses the same boundary again.
                 currentPage = page
-                (page as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
-                preloadPages(page)
 
-                (page as? ViewerTransitionPage)?.let { ViewerTransitionPage ->
-                    if (ViewerTransitionPage.prevChapter == null || ViewerTransitionPage.nextChapter == null) {
-                        activity.showMenu()
+                // The rest ran here too, on the animation thread under the viewer's scroll lock.
+                // Posted in order, so nothing is skipped or reordered - and on this viewer's own
+                // MainScope, not the state's: that one dispatches inside the frame callback.
+                val settled = page
+                this@WebGpuViewer.scope.launch {
+                    activity.hideMenu()
+                    (settled as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
+                    preloadPages(settled)
+
+                    (settled as? ViewerTransitionPage)?.let { transitionPage ->
+                        if (transitionPage.prevChapter == null || transitionPage.nextChapter == null) {
+                            activity.showMenu()
+                        }
                     }
                 }
             }
@@ -1196,12 +1243,17 @@ open class WebGpuViewer(
      * In dual page mode, aligns to the start of the spread containing the page.
      */
     override fun moveToPage(page: ReaderPage) {
+        // Pin first: resolving a target outside the cached window trims the cache.
+        pinnedFromPage = currentPage?.let { buildSpreadPage(it) }
         // Get the page and align to spread anchor based on image position
         moveToPage(getSpreadAnchor(getPage(page)))
     }
 
     private fun moveToPage(newPage: ViewerPage) {
         val previousPage = currentPage
+        // Before preloadPages below trims the cache - see [pinnedFromPage].
+        val fromSpread = previousPage?.let { buildSpreadPage(it) }
+        pinnedFromPage = fromSpread
 
         currentPage = newPage
         (newPage as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
@@ -1245,12 +1297,17 @@ open class WebGpuViewer(
             else -> 0
         }
 
-        if (direction != 0) {
-            pager.state.transitionFromPage = buildSpreadPage(previousPage)
-            pager.state.animatePageTurn(if (isReversed) direction else -direction)
+        if (direction != 0 && fromSpread != null) {
+            animateTurn(direction, fromSpread)
         } else {
             pager.state.invalidate()
         }
+    }
+
+    /** How a [moveToPage] turn is shown. [direction] is 1 forward through the pages, -1 back. */
+    protected open fun animateTurn(direction: Int, fromSpread: ImagePage) {
+        pager.state.transitionFromPage = fromSpread
+        pager.state.animatePageTurn(if (isReversed) direction else -direction)
     }
 
     /**
@@ -1277,8 +1334,7 @@ open class WebGpuViewer(
                 val maxX = page.maxX(page.scale)
                 val currentX = page.animationJob?.let { page.animationTargetX } ?: page.x
 
-                val c = if (isReversed) -1 else 1
-                val x = (currentX - c / page.scale).coerceIn(minX, maxX)
+                val x = (currentX - 1 / page.scale).coerceIn(minX, maxX)
 
                 if (!currentX.closeTo(x)) {
                     page.animateTo(targetX = x, targetY = page.y)
@@ -1286,7 +1342,7 @@ open class WebGpuViewer(
                 }
             }
 
-            navigateSpread(1)
+            navigateSpread(if (isReversed) -1 else 1)
         }
     }
 
@@ -1300,8 +1356,7 @@ open class WebGpuViewer(
                 val maxX = page.maxX(page.scale)
                 val currentX = page.animationJob?.isActive?.let { page.animationTargetX } ?: page.x
 
-                val c = if (isReversed) -1 else 1
-                val x = (currentX + c / page.scale).coerceIn(minX, maxX)
+                val x = (currentX + 1 / page.scale).coerceIn(minX, maxX)
 
                 if (!currentX.closeTo(x)) {
                     page.animateTo(targetX = x, targetY = page.y)
@@ -1309,7 +1364,7 @@ open class WebGpuViewer(
                 }
             }
 
-            navigateSpread(-1)
+            navigateSpread(if (isReversed) 1 else -1)
         }
     }
 
@@ -1372,7 +1427,7 @@ open class WebGpuViewer(
                 if (!config.volumeKeysEnabled || activity.viewModel.state.value.menuVisible) {
                     return false
                 } else if (isUp) {
-                    if (!config.volumeKeysInverted) moveDown() else moveUp()
+                    if (!config.volumeKeysInverted.xor(isReversed)) moveDown() else moveUp()
                 }
             }
 
@@ -1380,7 +1435,7 @@ open class WebGpuViewer(
                 if (!config.volumeKeysEnabled || activity.viewModel.state.value.menuVisible) {
                     return false
                 } else if (isUp) {
-                    if (!config.volumeKeysInverted) moveUp() else moveDown()
+                    if (!config.volumeKeysInverted.xor(isReversed)) moveUp() else moveDown()
                 }
             }
 
