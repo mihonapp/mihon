@@ -216,8 +216,7 @@ open class WebGpuViewer(
 
     /**
      * What a running page turn animates away from, kept out of [evictFarthestPage]'s reach - a
-     * jump preloads enough pages to evict it, and eviction frees its images. Replaced by the next
-     * turn's rather than cleared.
+     * jump preloads enough pages to evict it. Replaced by the next turn's rather than cleared.
      */
     @Volatile
     private var pinnedFromPage: ImagePage? = null
@@ -390,7 +389,7 @@ open class WebGpuViewer(
     }
 
     inner class ErrorPage internal constructor(
-        var message: String,
+        message: String,
         spreadPosition: SpreadPosition = SpreadPosition.SINGLE,
     ) : ImagePage.Render(
         if (spreadPosition == SpreadPosition.SINGLE) pager.state.width else pager.state.width / 2,
@@ -401,6 +400,12 @@ open class WebGpuViewer(
             maxScale = 1f
             homeScale = 1f
         }
+
+        var message: String = message
+            set(value) {
+                field = value
+                invalidate()
+            }
 
         override val backgroundColor: Int = readerBackgroundColor()
 
@@ -426,17 +431,27 @@ open class WebGpuViewer(
         }
     }
 
-    inner class ProgressPage(var foregroundColor: Int = readerOnBackgroundColor()) : ImagePage.Render(
+    inner class ProgressPage(foregroundColor: Int = readerOnBackgroundColor()) : ImagePage.Render(
         if (!isDualPageMode()) pager.state.width else pager.state.width / 2,
         pager.state.height,
     ) {
-        var progress: Float = 0f
-
         init {
             minScale = 1f
             maxScale = 1f
             homeScale = 1f
         }
+
+        var progress: Float = 0f
+            set(value) {
+                field = value
+                invalidate()
+            }
+
+        var foregroundColor: Int = foregroundColor
+            set(value) {
+                field = value
+                invalidate()
+            }
 
         override val backgroundColor: Int = readerBackgroundColor()
 
@@ -870,7 +885,6 @@ open class WebGpuViewer(
 
                         (page.imagePage as? ProgressPage)?.apply {
                             progress = value / 100f
-                            invalidate()
                         }
                     }
                 }
@@ -1002,7 +1016,6 @@ open class WebGpuViewer(
                 repeat(pageCount - 1) {
                     (page.imagePage as? ProgressPage)?.apply {
                         progress = (it + 1).toFloat() / pageCount
-                        invalidate()
                     }
                     val frame = dec.decodeNext()
                     val image = Image(
@@ -1024,6 +1037,9 @@ open class WebGpuViewer(
                     page.imagePage = imagePage
                     page.state = PageState.IDLE
                     oldImagePage.cleanup()
+                    // Fade up from the placeholder's colour, if that placeholder was on screen -
+                    // one that decoded out of view has nothing left to fade from.
+                    if (oldImagePage.isOnScreen) imagePage.fadeIn()
                     if (page.spreadPosition == SpreadPosition.SINGLE) {
                         (page.imagePage as? ImagePage.ImageSingle)?.let {
                             if (!applyWideZoomIfNeeded(it)) {
@@ -1274,11 +1290,16 @@ open class WebGpuViewer(
         }
 
         if (direction != 0 && fromSpread != null) {
-            pager.state.transitionFromPage = fromSpread
-            pager.state.animatePageTurn(if (isReversed) direction else -direction)
+            animateTurn(direction, fromSpread)
         } else {
             pager.state.invalidate()
         }
+    }
+
+    /** How a [moveToPage] turn is shown. [direction] is 1 forward through the pages, -1 back. */
+    protected open fun animateTurn(direction: Int, fromSpread: ImagePage) {
+        pager.state.transitionFromPage = fromSpread
+        pager.state.animatePageTurn(if (isReversed) direction else -direction)
     }
 
     /**
