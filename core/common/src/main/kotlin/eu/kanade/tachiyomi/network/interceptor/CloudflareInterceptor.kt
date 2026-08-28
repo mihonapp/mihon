@@ -106,6 +106,7 @@ class CloudflareInterceptor(
 
         var challengeFound = false
         var cloudflareBypassed = false
+        var fail = false
         var isWebViewOutdated = false
 
         var iframeScriptHandler: ScriptHandler? = null
@@ -148,7 +149,6 @@ class CloudflareInterceptor(
             }
 
             var complete = false
-            var fail = false
 
             fun handleEvent(event: String) {
                 when (event) {
@@ -290,10 +290,7 @@ class CloudflareInterceptor(
             @SuppressLint("MissingOnRenderProcessGone")
             webview.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, url: String) {
-                    if (fail) {
-                        cookieManager.remove(originalRequest.url, COOKIE_NAMES, 0)
-                        fail = false
-                    } else if (isBypassed(originalRequest.url, originalNonce)) {
+                    if (!fail && isBypassed(originalRequest.url, originalNonce)) {
                         cloudflareBypassed = true
                         latch.countDown()
                     }
@@ -369,6 +366,8 @@ class CloudflareInterceptor(
 
         // Throw exception if we failed to bypass Cloudflare
         if (!cloudflareBypassed) {
+            // Clear cf_clearance cookie on fail
+            cookieManager.remove(originalRequest.url, COOKIE_NAMES, 0)
             // Prompt user to update WebView if it seems too outdated
             if (isWebViewOutdated) {
                 context.toast(MR.strings.information_webview_outdated, Toast.LENGTH_LONG)
