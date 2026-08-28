@@ -5,6 +5,7 @@ import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import mihon.graphql.shikimori.ShikimoriGetLibMangaQuery
 import mihon.graphql.shikimori.ShikimoriGetMangaDetailsQuery
 import mihon.graphql.shikimori.ShikimoriSearchMangaQuery
+import mihon.graphql.shikimori.fragment.MangaFragment
 import mihon.graphql.shikimori.type.MangaKindEnum
 import mihon.graphql.shikimori.type.MangaStatusEnum
 import mihon.graphql.shikimori.type.UserRateStatusEnum
@@ -29,24 +30,14 @@ fun ShikimoriGetLibMangaQuery.Manga.toTrack(trackId: Long): Track {
 }
 
 fun ShikimoriGetMangaDetailsQuery.Manga.toTrackSearch(trackId: Long): TrackSearch {
-    val sManga = this
-    return TrackSearch.create(trackId).apply {
-        remote_id = sManga.id.toLong()
-        title = sManga.name
-        total_chapters = sManga.chapters.toLong()
-        cover_url = sManga.poster?.mainUrl.orEmpty()
-        summary = sManga.description.orEmpty()
-        score = sManga.score?.takeIf { it > 0.0 } ?: -1.0
-        tracking_url = sManga.url
-        publishing_status = sManga.status.toLocalString()
-        publishing_type = sManga.kind.toLocalString()
-        start_date = sManga.airedOn?.date?.toString().orEmpty()
-        authors = sManga.personRoles?.filter { it.rolesEn.contains("Story") }?.map { it.person.name } ?: emptyList()
-        artists = sManga.personRoles?.filter { it.rolesEn.contains("Art") }?.map { it.person.name } ?: emptyList()
-    }
+    return mangaFragment.toTrackSearch(trackId)
 }
 
 fun ShikimoriSearchMangaQuery.Manga.toTrackSearch(trackId: Long): TrackSearch {
+    return mangaFragment.toTrackSearch(trackId)
+}
+
+private fun MangaFragment.toTrackSearch(trackId: Long): TrackSearch {
     val sManga = this
     return TrackSearch.create(trackId).apply {
         remote_id = sManga.id.toLong()
@@ -58,7 +49,7 @@ fun ShikimoriSearchMangaQuery.Manga.toTrackSearch(trackId: Long): TrackSearch {
         tracking_url = sManga.url
         publishing_status = sManga.status.toLocalString()
         publishing_type = sManga.kind.toLocalString()
-        start_date = sManga.airedOn?.date?.toString().orEmpty()
+        start_date = sManga.airedOn?.date.orEmpty()
         authors = sManga.personRoles?.filter { it.rolesEn.contains("Story") }?.map { it.person.name } ?: emptyList()
         artists = sManga.personRoles?.filter { it.rolesEn.contains("Art") }?.map { it.person.name } ?: emptyList()
     }

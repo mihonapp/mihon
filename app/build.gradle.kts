@@ -394,6 +394,9 @@ apollo {
             endpointUrl.set("https://shikimori.io/api/graphql")
             schemaFile.set(file("$srcDir/shikimori.graphqls"))
         }
+
+        // An ISO 8601-encoded date
+        mapScalarToKotlinString("ISO8601Date")
     }
 
     service("suwayomi") {
