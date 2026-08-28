@@ -152,15 +152,13 @@ class SuwayomiApi(
                 }
             }
         }
-        with(json) {
-            client.newCall(
-                POST(
-                    apiUrl,
-                    body = markPayload.toString().toRequestBody(jsonMime),
-                ),
-            )
-                .awaitSuccess()
-        }
+        client.newCall(
+            POST(
+                apiUrl,
+                body = markPayload.toString().toRequestBody(jsonMime),
+            ),
+        )
+            .awaitSuccess()
 
         val trackQuery = $$"""
         |mutation TrackManga($mangaId: Int!) {
@@ -175,15 +173,13 @@ class SuwayomiApi(
                 put("mangaId", mangaId)
             }
         }
-        with(json) {
-            client.newCall(
-                POST(
-                    apiUrl,
-                    body = trackPayload.toString().toRequestBody(jsonMime),
-                ),
-            )
-                .awaitSuccess()
-        }
+        client.newCall(
+            POST(
+                apiUrl,
+                body = trackPayload.toString().toRequestBody(jsonMime),
+            ),
+        )
+            .awaitSuccess()
 
         return getTrackSearch(track.remote_id)
     }
