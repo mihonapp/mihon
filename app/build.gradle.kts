@@ -196,8 +196,6 @@ kotlin {
             "-opt-in=kotlinx.coroutines.FlowPreview",
             "-opt-in=kotlinx.coroutines.InternalCoroutinesApi",
             "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
-            // https://github.com/apollographql/apollo-kotlin-adapters/issues/42
-            "-opt-in=kotlin.time.ExperimentalTime",
         )
     }
 }
