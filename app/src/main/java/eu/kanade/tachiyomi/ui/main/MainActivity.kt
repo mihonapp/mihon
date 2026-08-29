@@ -32,9 +32,6 @@ import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.OpenInNew
-import androidx.compose.material.icons.filled.VolunteerActivism
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -111,6 +108,9 @@ import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import mihon.core.migration.Migrator
 import mihon.feature.support.SupportUsScreen
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.automirroredrounded.OpenInNew
+import mihon.icons.materialsymbols.rounded.VolunteerActivism
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.system.logcat
@@ -418,7 +418,7 @@ class MainActivity : BaseActivity() {
                             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
                         ) {
                             Icon(
-                                imageVector = Icons.Default.VolunteerActivism,
+                                imageVector = MaterialSymbols.Rounded.VolunteerActivism,
                                 contentDescription = null,
                             )
                             Text(
@@ -447,7 +447,7 @@ class MainActivity : BaseActivity() {
                                     text = stringResource(MR.strings.donationCampaign_contactPlatform),
                                 )
                                 Icon(
-                                    imageVector = Icons.AutoMirrored.Default.OpenInNew,
+                                    imageVector = MaterialSymbols.AutoMirroredRounded.OpenInNew,
                                     contentDescription = null,
                                 )
                             }

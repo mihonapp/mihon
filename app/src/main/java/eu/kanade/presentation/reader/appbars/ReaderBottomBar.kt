@@ -2,8 +2,6 @@ package eu.kanade.presentation.reader.appbars
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -14,6 +12,8 @@ import androidx.compose.ui.res.painterResource
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Settings
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
@@ -57,7 +57,7 @@ fun ReaderBottomBar(
 
         IconButton(onClick = onClickSettings) {
             Icon(
-                imageVector = Icons.Outlined.Settings,
+                imageVector = MaterialSymbols.Rounded.Settings,
                 contentDescription = stringResource(MR.strings.action_settings),
             )
         }
