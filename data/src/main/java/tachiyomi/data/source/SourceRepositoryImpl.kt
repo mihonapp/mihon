@@ -85,15 +85,20 @@ class SourceRepositoryImpl(
         query: String,
         filterList: FilterList,
     ): SourcePagingSource {
-        return SourceSearchPagingSource(sourceManager.getOrStub(sourceId), query, filterList, networkToLocalManga)
+        return SourceSearchPagingSource(
+            { sourceManager.getOrStub(sourceId) },
+            query,
+            filterList,
+            networkToLocalManga,
+        )
     }
 
     override fun getPopular(sourceId: Long): SourcePagingSource {
-        return SourcePopularPagingSource(sourceManager.getOrStub(sourceId), networkToLocalManga)
+        return SourcePopularPagingSource({ sourceManager.getOrStub(sourceId) }, networkToLocalManga)
     }
 
     override fun getLatest(sourceId: Long): SourcePagingSource {
-        return SourceLatestPagingSource(sourceManager.getOrStub(sourceId), networkToLocalManga)
+        return SourceLatestPagingSource({ sourceManager.getOrStub(sourceId) }, networkToLocalManga)
     }
 
     private fun mapSourceToDomainSource(source: Source): DomainSource = DomainSource(

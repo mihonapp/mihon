@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.sourcePreferences
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import mihon.graphql.suwayomi.SuwayomiGetMangaQuery
 import mihon.graphql.suwayomi.SuwayomiGetMangaUnreadChaptersQuery
 import mihon.graphql.suwayomi.SuwayomiMarkAndDeleteChaptersMutation
@@ -24,7 +25,8 @@ class SuwayomiApi(
     private val trackId: Long,
     private val sourceManager: SourceManager,
 ) {
-    private val source: Source by lazy { sourceManager.get(sourceId)!! }
+    // Blocking is fine here: these are only touched from OkHttp and tracker threads.
+    private val source: Source by lazy { runBlocking { sourceManager.get(sourceId)!! } }
     private val httpSource: HttpSource by lazy { source as HttpSource }
     private val configurableSource: ConfigurableSource by lazy { source as ConfigurableSource }
     private val client: OkHttpClient by lazy { httpSource.client }
