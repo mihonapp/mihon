@@ -23,11 +23,11 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.more.settings.LocalPreferenceHighlighted
 import eu.kanade.presentation.track.components.TrackLogoIcon
 import eu.kanade.tachiyomi.data.track.Tracker
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Done
 import mihon.icons.materialsymbols.rounded.Refresh
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
