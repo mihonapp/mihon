@@ -15,12 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.ArrowUpward
-import androidx.compose.material.icons.rounded.CheckBox
-import androidx.compose.material.icons.rounded.CheckBoxOutlineBlank
-import androidx.compose.material.icons.rounded.DisabledByDefault
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
@@ -50,6 +44,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.StringResource
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.ArrowDownward
+import mihon.icons.materialsymbols.rounded.ArrowUpward
+import mihon.icons.materialsymbols.rounded.CheckBoxOutlineBlank
+import mihon.icons.materialsymbols.roundedfilled.CheckBox
+import mihon.icons.materialsymbols.roundedfilled.DisabledByDefault
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.core.common.preference.toggle
@@ -103,8 +103,8 @@ fun IconItem(label: String, icon: ImageVector, onClick: () -> Unit) {
 @Composable
 fun SortItem(label: String, sortDescending: Boolean?, onClick: () -> Unit) {
     val arrowIcon = when (sortDescending) {
-        true -> Icons.Default.ArrowDownward
-        false -> Icons.Default.ArrowUpward
+        true -> MaterialSymbols.Rounded.ArrowDownward
+        false -> MaterialSymbols.Rounded.ArrowUpward
         null -> null
     }
 
@@ -361,9 +361,9 @@ fun TriStateItem(
 
         Icon(
             imageVector = when (state) {
-                TriState.DISABLED -> Icons.Rounded.CheckBoxOutlineBlank
-                TriState.ENABLED_IS -> Icons.Rounded.CheckBox
-                TriState.ENABLED_NOT -> Icons.Rounded.DisabledByDefault
+                TriState.DISABLED -> MaterialSymbols.Rounded.CheckBoxOutlineBlank
+                TriState.ENABLED_IS -> MaterialSymbols.RoundedFilled.CheckBox
+                TriState.ENABLED_NOT -> MaterialSymbols.RoundedFilled.DisabledByDefault
             },
             contentDescription = null,
             tint = if (!enabled || state == TriState.DISABLED) {

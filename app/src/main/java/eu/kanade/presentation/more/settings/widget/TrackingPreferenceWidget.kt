@@ -7,9 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Done
-import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,6 +23,9 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.more.settings.LocalPreferenceHighlighted
 import eu.kanade.presentation.track.components.TrackLogoIcon
 import eu.kanade.tachiyomi.data.track.Tracker
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Done
+import mihon.icons.materialsymbols.rounded.Refresh
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import tachiyomi.i18n.MR
@@ -89,7 +89,7 @@ fun TrackingPreferenceWidget(
                 ) {
                     if (!isRefreshing) {
                         Icon(
-                            imageVector = Icons.Outlined.Refresh,
+                            imageVector = MaterialSymbols.Rounded.Refresh,
                             modifier = Modifier
                                 .padding(4.dp)
                                 .size(32.dp),
@@ -103,7 +103,7 @@ fun TrackingPreferenceWidget(
                     }
                 }
                 Icon(
-                    imageVector = Icons.Outlined.Done,
+                    imageVector = MaterialSymbols.Rounded.Done,
                     modifier = Modifier
                         .padding(4.dp)
                         .size(32.dp),
