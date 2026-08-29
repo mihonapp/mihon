@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webgpu
 
 import ca.mpreg.webgpuviewer.ImageViewContinuous
+import ca.mpreg.webgpuviewer.viewer.ImagePage
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 
@@ -9,13 +10,13 @@ class WebGpuViewerContinuous(activity: ReaderActivity) :
 
     override val isContinuous: Boolean = true
 
-    override val preloadAhead = 2
+    override val preloadAhead = 3
     override val preloadBehind = 1
 
+    private val state get() = (pager as ImageViewContinuous).state
+
     private fun scrollByHalfPage(direction: Int) {
-        val state = (pager as ImageViewContinuous).state
-        val totalDistance = direction * state.height / 2f
-        state.animateScroll(totalDistance)
+        state.animateScroll(direction * state.height / 2f)
     }
 
     override fun moveRight() = scrollByHalfPage(1)
@@ -24,6 +25,11 @@ class WebGpuViewerContinuous(activity: ReaderActivity) :
 
     override fun moveToPage(page: ReaderPage) {
         super.moveToPage(page)
-        (pager as ImageViewContinuous).state.scrollY = 0f
+        // Also for a jump to the page already showing, which turns nothing to slide in.
+        state.resetScroll()
+    }
+
+    override fun animateTurn(direction: Int, fromSpread: ImagePage) {
+        state.animateSlideIn(direction)
     }
 }

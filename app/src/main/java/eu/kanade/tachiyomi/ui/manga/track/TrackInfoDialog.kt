@@ -273,7 +273,7 @@ data class TrackInfoDialogHomeScreen(
             }
         }
 
-        private fun List<Track>.mapToTrackItem(): List<TrackItem> {
+        private suspend fun List<Track>.mapToTrackItem(): List<TrackItem> {
             val loggedInTrackers = trackerManager.loggedInTrackers()
             val source = sourceManager.getOrStub(sourceId)
             return loggedInTrackers
