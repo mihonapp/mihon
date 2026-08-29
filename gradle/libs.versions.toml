@@ -75,6 +75,7 @@ subsamplingScaleImageView = "94915e6f73"
 swipe = "1.3.0"
 tapmoc = "0.4.2"
 unifile = "08f224c8f9"
+valkyrie = "0.5.2"
 voyager = "2.2.21-1.10.3"
 webgpuviewer = "39"
 xmlutil = "1.0.2"
@@ -94,9 +95,9 @@ androidx-compose-bom = { module = "androidx.compose:compose-bom-alpha", version.
 androidx-compose-foundation = { module = "androidx.compose.foundation:foundation" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-compose-material3NavSuite = { module = "androidx.compose.material3:material3-adaptive-navigation-suite" }
-androidx-compose-materialIcons = { module = "androidx.compose.material:material-icons-extended" }
 androidx-compose-runtime = { module = "androidx.compose.runtime:runtime" }
 androidx-compose-runtimeAnnotation = { module = "androidx.compose.runtime:runtime-annotation" }
+androidx-compose-ui = { module = "androidx.compose.ui:ui" }
 androidx-compose-uiTooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-compose-uiUtil = { module = "androidx.compose.ui:ui-util" }
@@ -218,6 +219,7 @@ moko-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.re
 metro = { id = "dev.zacsweers.metro", version.ref = "metro" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
+valkyrie = { id = "io.github.composegears.valkyrie", version.ref = "valkyrie" }
 
 [bundles]
 androidx-lifecycle = ["androidx-lifecycle-common", "androidx-lifecycle-process", "androidx-lifecycle-runtime", "androidx-lifecycle-viewmodel", "androidx-lifecycle-viewmodelCompose"]
