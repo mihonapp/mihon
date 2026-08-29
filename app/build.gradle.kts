@@ -209,6 +209,7 @@ dependencies {
 
     implementation(projects.i18n)
     implementation(projects.icons.materialSymbols)
+    implementation(projects.icons.simpleIcons)
     implementation(projects.core.archive)
     implementation(projects.core.common)
     implementation(projects.core.metro)

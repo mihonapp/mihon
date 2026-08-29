@@ -21,11 +21,11 @@ import mihon.icons.materialsymbols.automirroredrounded.Label
 import mihon.icons.materialsymbols.rounded.ContentCopy
 import mihon.icons.materialsymbols.rounded.Delete
 import mihon.icons.materialsymbols.rounded.Public
+import mihon.icons.simpleicons.Discord
+import mihon.icons.simpleicons.SimpleIcons
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
-import tachiyomi.presentation.core.icons.CustomIcons
-import tachiyomi.presentation.core.icons.Discord
 
 @Composable
 fun ExtensionStoresContent(
@@ -103,7 +103,7 @@ private fun ExtensionStoresListItem(
             if (store.contact.discord != null) {
                 IconButton(onClick = onOpenDiscord) {
                     Icon(
-                        imageVector = CustomIcons.Discord,
+                        imageVector = SimpleIcons.Discord,
                         contentDescription = null,
                     )
                 }

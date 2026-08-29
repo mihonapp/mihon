@@ -28,14 +28,14 @@ import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.presentation.util.Screen
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.OpenInNew
+import mihon.icons.simpleicons.Discord
+import mihon.icons.simpleicons.OpenCollective
+import mihon.icons.simpleicons.Patreon
+import mihon.icons.simpleicons.SimpleIcons
 import tachiyomi.core.common.Constants
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
-import tachiyomi.presentation.core.icons.CustomIcons
-import tachiyomi.presentation.core.icons.Discord
-import tachiyomi.presentation.core.icons.OpenCollective
-import tachiyomi.presentation.core.icons.Patreon
 
 class SupportUsScreen : Screen() {
 
@@ -87,12 +87,12 @@ class SupportUsScreen : Screen() {
                 )
 
                 SupportItem(
-                    icon = CustomIcons.Patreon,
+                    icon = SimpleIcons.Patreon,
                     title = stringResource(MR.strings.supportUsScreen_donationPlatform_patreon),
                     onClick = { uriHandler.openUri(Constants.URL_DONATE_PATREON) },
                 )
                 SupportItem(
-                    icon = CustomIcons.OpenCollective,
+                    icon = SimpleIcons.OpenCollective,
                     title = stringResource(MR.strings.supportUsScreen_donationPlatform_opencollective),
                     onClick = { uriHandler.openUri(Constants.URL_DONATE_OPENCOLLECTIVE) },
                 )
@@ -110,7 +110,7 @@ class SupportUsScreen : Screen() {
                 )
 
                 SupportItem(
-                    icon = CustomIcons.Discord,
+                    icon = SimpleIcons.Discord,
                     title = stringResource(MR.strings.supportUsScreen_contactPlatform),
                     onClick = { uriHandler.openUri(Constants.URL_DISCORD) },
                 )
