@@ -14,9 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Launch
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
@@ -56,6 +53,9 @@ import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsViewModel
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.util.system.copyToClipboard
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.automirroredrounded.OpenInNew
+import mihon.icons.materialsymbols.rounded.Settings
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -97,7 +97,7 @@ fun ExtensionDetailsScreen(
                                 add(
                                     AppBar.Action(
                                         title = stringResource(MR.strings.action_open_repo),
-                                        icon = Icons.AutoMirrored.Outlined.Launch,
+                                        icon = MaterialSymbols.AutoMirroredRounded.OpenInNew,
                                         onClick = {
                                             uriHandler.openUri(url)
                                         },
@@ -425,7 +425,7 @@ private fun SourceSwitchPreference(
                 if (source.source is ConfigurableSource) {
                     IconButton(onClick = { onClickSourcePreferences(source.source.id) }) {
                         Icon(
-                            imageVector = Icons.Outlined.Settings,
+                            imageVector = MaterialSymbols.Rounded.Settings,
                             contentDescription = stringResource(MR.strings.label_settings),
                             tint = MaterialTheme.colorScheme.onSurface,
                         )
