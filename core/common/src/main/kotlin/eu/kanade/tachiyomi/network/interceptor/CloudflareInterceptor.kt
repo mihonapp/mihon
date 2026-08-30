@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.network.interceptor
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.view.KeyEvent
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.RenderProcessGoneDetail
@@ -16,7 +15,6 @@ import androidx.webkit.ScriptHandler
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
 import eu.kanade.tachiyomi.network.AndroidCookieJar
-import eu.kanade.tachiyomi.util.system.ForegroundActivity
 import eu.kanade.tachiyomi.util.system.isOutdated
 import eu.kanade.tachiyomi.util.system.toast
 import okhttp3.HttpUrl
@@ -27,7 +25,6 @@ import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import java.io.IOException
 import java.util.concurrent.CountDownLatch
-import kotlin.concurrent.thread
 
 class CloudflareInterceptor(
     private val context: Context,
@@ -37,14 +34,6 @@ class CloudflareInterceptor(
 
     private val executor = ContextCompat.getMainExecutor(context)
 
-    // Fallback JavaScript solver for when view group isn't available (i.e. app in background)
-    private val iframeScript by lazy {
-        javaClass
-            .getResource("/assets/CloudflareSolverIframeScript.js")!!
-            .readText()
-            .replace("__SOLVER__", "__SOLVER_${(ULong.MIN_VALUE..ULong.MAX_VALUE).random()}__")
-    }
-
     private val listenerScript = """
         addEventListener("message", ({data}) => {
             if (data?.source === "cloudflare-challenge") {
@@ -52,17 +41,6 @@ class CloudflareInterceptor(
             }
         })
     """.trimIndent()
-
-    private fun injectIframeScript(webview: WebView): ScriptHandler? =
-        if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
-            WebViewCompat.addDocumentStartJavaScript(
-                webview,
-                iframeScript,
-                mutableSetOf("https://challenges.cloudflare.com"),
-            )
-        } else {
-            null
-        }
 
     override fun shouldIntercept(response: Response): Boolean {
         // Check if Cloudflare anti-bot is on
@@ -109,7 +87,6 @@ class CloudflareInterceptor(
         var fail = false
         var isWebViewOutdated = false
 
-        var iframeScriptHandler: ScriptHandler? = null
         var listenerScriptHandler: ScriptHandler? = null
 
         val origRequestUrl = originalRequest.url.toString()
@@ -124,123 +101,13 @@ class CloudflareInterceptor(
                 descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
             }
 
-            if (ForegroundActivity.viewGroup == null) {
-                // view group not available, using fallback JavaScript solver
-                synchronized(webview) {
-                    if (iframeScriptHandler == null) {
-                        iframeScriptHandler = injectIframeScript(webview)
-                    }
-                }
-            }
-
-            // Inject fallback JavaScript solver
-            fun injectIframeScript() {
-                synchronized(webview) {
-                    if (iframeScriptHandler == null) {
-                        iframeScriptHandler = injectIframeScript(webview)
-                    }
-                }
-                if (iframeScriptHandler != null) {
-                    webview.loadUrl(origRequestUrl, headers)
-                } else {
-                    // Feature not supported, abort
-                    latch.countDown()
-                }
-            }
-
-            var complete = false
-
             fun handleEvent(event: String) {
                 when (event) {
                     "interactiveBegin" -> {
-                        if (iframeScriptHandler != null) {
-                            // Fallback solver is injected
-                            thread {
-                                // Fallback solver should complete within a short amount of time
-                                Thread.sleep(5000)
-                                if (!complete) {
-                                    latch.countDown()
-                                }
-                            }
-                            return
-                        }
-
-                        // Get the current view group
-                        val container = ForegroundActivity.viewGroup
-                        if (container == null) {
-                            injectIframeScript()
-                            return
-                        }
-
-                        executor.execute {
-                            val width = container.width.takeIf { it > 0 } ?: 1920
-                            val height = container.height.takeIf { it > 0 } ?: 1080
-
-                            // Set translationX to negative width.
-                            // The WebView should be offscreen even when the orientation changes.
-                            webview.translationX = -width.toFloat()
-
-                            // Attach the WebView to the view group so we can send key events.
-                            container.addView(webview, ViewGroup.LayoutParams(width, height))
-
-                            // Send Tab and Space to check the checkbox, and fall back to JavaScript solver
-                            // if dispatchKeyEvent fails.
-                            // Use a separate thread to unblock the main thread.
-                            thread {
-                                if (!webview.dispatchKeyEvent(
-                                        KeyEvent(
-                                            KeyEvent.ACTION_DOWN,
-                                            KeyEvent.KEYCODE_TAB,
-                                        ),
-                                    )
-                                ) {
-                                    injectIframeScript()
-                                    return@thread
-                                }
-                                Thread.sleep(100)
-                                if (!webview.dispatchKeyEvent(
-                                        KeyEvent(
-                                            KeyEvent.ACTION_UP,
-                                            KeyEvent.KEYCODE_TAB,
-                                        ),
-                                    )
-                                ) {
-                                    injectIframeScript()
-                                    return@thread
-                                }
-                                Thread.sleep(100)
-                                if (!webview.dispatchKeyEvent(
-                                        KeyEvent(
-                                            KeyEvent.ACTION_DOWN,
-                                            KeyEvent.KEYCODE_SPACE,
-                                        ),
-                                    )
-                                ) {
-                                    injectIframeScript()
-                                    return@thread
-                                }
-                                Thread.sleep(100)
-                                if (!webview.dispatchKeyEvent(
-                                        KeyEvent(
-                                            KeyEvent.ACTION_UP,
-                                            KeyEvent.KEYCODE_SPACE,
-                                        ),
-                                    )
-                                ) {
-                                    injectIframeScript()
-                                    return@thread
-                                }
-
-                                // Challenge should complete in a short amount of time
-                                Thread.sleep(5000)
-                                if (!complete) {
-                                    latch.countDown()
-                                }
-                            }
-                        }
+                        // The challenge cannot be solved non-interactively, abort.
+                        latch.countDown()
                     }
                     "complete" -> {
-                        complete = true
                         fail = false
                     }
                     "fail" -> {
@@ -352,7 +219,6 @@ class CloudflareInterceptor(
                     webview.removeJavascriptInterface("mihon")
                 }
 
-                iframeScriptHandler?.remove()
                 listenerScriptHandler?.remove()
 
                 (webview.parent as? ViewGroup)?.removeView(webview)
