@@ -28,7 +28,7 @@ androidx-webkit = "1.17.0"
 androidx-work = "2.11.2"
 archive = "1.1.6"
 coil = "3.6.0"
-composeGrid = "1.2.2"
+composeGrid = "2.8.0"
 composeMaterialMotion = "2.0.1"
 composeRichEditor = "1.0.0-rc13"
 composeWebview = "0.33.6"
@@ -128,7 +128,7 @@ coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" 
 coil-core = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
 coil-gif = { module = "io.coil-kt.coil3:coil-gif", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
-composeGrid = { module = "io.woong.compose.grid:grid", version.ref = "composeGrid" }
+composeGrid = { module = "com.cheonjaeung.compose.grid:grid", version.ref = "composeGrid" }
 composeMaterialMotion = { module = "io.github.fornewid:material-motion-compose-core", version.ref = "composeMaterialMotion" }
 composeRichEditor = { module = "com.mohamedrejeb.richeditor:richeditor-compose", version.ref = "composeRichEditor" }
 composeWebview = { module = "io.github.kevinnzou:compose-webview", version.ref = "composeWebview" }
