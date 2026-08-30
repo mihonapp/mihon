@@ -73,3 +73,30 @@ jobs:
         with:
           name: mapping-${{ github.sha }}
           path: app/build/outputs/mapping/release
+
+  desktop-windows:
+    name: Build & Test Windows Foundation
+    runs-on: windows-2025
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up JDK
+        uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
+        with:
+          java-version-file: .github/.java-version
+          distribution: temurin
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+
+      - name: Verify Windows desktop foundation
+        shell: pwsh
+        run: .\scripts\verify-desktop-foundation.ps1
+
+      - name: Upload Windows runtime image
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mihon-w-foundation-${{ github.sha }}
+          path: desktop-app/build/compose/binaries/main/app/MihonW
