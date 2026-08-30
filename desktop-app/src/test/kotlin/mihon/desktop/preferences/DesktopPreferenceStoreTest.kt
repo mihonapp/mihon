@@ -2,6 +2,7 @@ package mihon.desktop.preferences
 
 import io.kotest.matchers.shouldBe
 import mihon.desktop.navigation.DesktopDestination
+import mihon.desktop.window.WindowPlacement
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.nio.file.Files
@@ -21,7 +22,11 @@ class DesktopPreferenceStoreTest {
     fun `saved theme and destination survive reload`() {
         val file = tempDir.resolve("preferences.properties")
         val store = DesktopPreferenceStore(file)
-        val expected = DesktopPreferences(ThemeMode.Dark, DesktopDestination.Browse)
+        val expected = DesktopPreferences(
+            themeMode = ThemeMode.Dark,
+            lastDestination = DesktopDestination.Browse,
+            windowPlacement = WindowPlacement(120, 80, 1280, 800, maximized = true),
+        )
 
         store.save(expected)
 
