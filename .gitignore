@@ -8,6 +8,7 @@ build
 .idea/*
 !.idea/icon.svg
 /captures
+.worktrees/
 
 # Configuration files
 keystore.properties
