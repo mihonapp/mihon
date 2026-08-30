@@ -1,0 +1,47 @@
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.compose.compiler)
+    alias(libs.plugins.compose.multiplatform)
+    alias(mihonx.plugins.spotless)
+}
+
+kotlin {
+    jvmToolchain(mihonx.versions.java.get().toInt())
+}
+
+dependencies {
+    implementation(compose.desktop.currentOs)
+    implementation(compose.material3)
+
+    testImplementation(libs.bundles.test)
+    testRuntimeOnly(libs.junit.platform.launcher)
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+compose.desktop {
+    application {
+        mainClass = "mihon.desktop.MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Exe)
+            packageName = "MihonW"
+            packageVersion = "0.1.0"
+            description = "Mihon manga reader for Windows"
+            vendor = "Mihon W"
+            licenseFile.set(rootProject.file("LICENSE"))
+            modules("java.desktop", "java.logging", "java.prefs")
+
+            windows {
+                perUserInstall = true
+                dirChooser = true
+                menuGroup = "Mihon W"
+                upgradeUuid = "07E02BEA-9179-4E54-A1AF-CFC185C91398"
+            }
+        }
+    }
+}

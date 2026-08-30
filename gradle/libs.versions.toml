@@ -29,6 +29,7 @@ androidx-work = "2.11.2"
 archive = "1.1.6"
 coil = "3.6.0"
 composeGrid = "1.2.2"
+compose-multiplatform = "1.12.0"
 composeMaterialMotion = "2.0.1"
 composeRichEditor = "1.0.0-rc13"
 composeWebview = "0.33.6"
@@ -203,6 +204,7 @@ xmlutil-serialization = { module = "io.github.pdvrieze.xmlutil:serialization", v
 
 [plugins]
 aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "aboutLibraries" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
 android-kmp-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle" }
 android-library = { id = "com.android.library", version.ref = "android-gradle" }
