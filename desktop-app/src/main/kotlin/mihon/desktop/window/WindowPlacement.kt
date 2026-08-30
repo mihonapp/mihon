@@ -23,10 +23,14 @@ data class WindowPlacement(
             y < screen.y + screen.height &&
             x + safeWidth > screen.x &&
             y + safeHeight > screen.y
-        val safeX = if (intersectsScreen) x.coerceIn(screen.x, screen.x + screen.width - safeWidth) else {
+        val safeX = if (intersectsScreen) {
+            x.coerceIn(screen.x, screen.x + screen.width - safeWidth)
+        } else {
             screen.x + max(0, (screen.width - safeWidth) / 2)
         }
-        val safeY = if (intersectsScreen) y.coerceIn(screen.y, screen.y + screen.height - safeHeight) else {
+        val safeY = if (intersectsScreen) {
+            y.coerceIn(screen.y, screen.y + screen.height - safeHeight)
+        } else {
             screen.y + max(0, (screen.height - safeHeight) / 2)
         }
         return copy(x = safeX, y = safeY, width = safeWidth, height = safeHeight)
