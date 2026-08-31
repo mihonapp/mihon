@@ -84,3 +84,47 @@ JAVA_VERSION="17.0.18"
 The Gradle output retains pre-existing informational warnings about incubating
 Gradle features and a deprecated Compose `material3` dependency accessor. They
 are unrelated to this change and do not fail either required gate.
+
+## Smoke timeout follow-up
+
+The packaged smoke process no longer uses `Start-Process -Wait`. The verifier
+starts it with `-PassThru`, calls `Process.WaitForExit(30 * 1000)`, and on
+timeout calls `Kill()`, waits up to a further five seconds for that termination
+to take effect, then throws a clear timeout error. The existing exit-code and
+smoke data-root assertions run only after normal process completion.
+
+### RED/GREEN guard
+
+Before the change, a source-level regression guard failed with:
+
+```text
+Smoke verifier uses unbounded Start-Process -Wait
+```
+
+After the change, the same guard confirmed one `Start-Process` invocation with
+`-PassThru`, no `-Wait`, a bounded `WaitForExit`, and `Kill()` on timeout. It
+passed in both Windows PowerShell 5.1 and PowerShell 7.6.4. The verifier AST
+also parsed successfully in both versions:
+
+```text
+parser passed: 5.1.26100.9278
+parser passed: 7.6.4
+```
+
+### Final verifier run
+
+With the approved JDK 21 Gradle runtime, the daemon was stopped and the full
+verifier was run again:
+
+```powershell
+$env:JAVA_HOME = 'C:\Users\18734\.codex\toolchains\temurin-21\jdk-21.0.12.1+1'
+$env:Path = "$env:JAVA_HOME\bin;$env:Path"
+.\gradlew.bat --stop
+.\scripts\verify-desktop-foundation.ps1
+```
+
+Result: `BUILD SUCCESSFUL`; `spotlessCheck`, `:desktop-app:test`,
+`:desktop-app:createDistributable`, Java 17 runtime metadata validation, and
+the bounded packaged smoke test all passed. The output included
+`Packaged runtime JAVA_VERSION=17.0.18` and
+`Mihon W desktop foundation verification passed.`

@@ -30,7 +30,19 @@ try {
     Write-Host "Packaged runtime JAVA_VERSION=$javaVersion"
 
     $smokeRoot = Join-Path ([System.IO.Path]::GetTempPath()) ('mihon-w-smoke-' + [guid]::NewGuid().ToString('N'))
-    $process = Start-Process -FilePath $launcher -ArgumentList @('--smoke-test', "--data-dir=$smokeRoot") -Wait -PassThru
+    $smokeTimeoutMilliseconds = 30 * 1000
+    $process = Start-Process -FilePath $launcher -ArgumentList @('--smoke-test', "--data-dir=$smokeRoot") -PassThru
+    if (-not $process.WaitForExit($smokeTimeoutMilliseconds)) {
+        try {
+            $process.Kill()
+        } catch {
+            throw "Packaged launcher smoke test timed out after 30 seconds and could not be terminated: $($_.Exception.Message)"
+        }
+        if (-not $process.WaitForExit(5 * 1000)) {
+            throw "Packaged launcher smoke test timed out after 30 seconds and did not exit after termination was requested."
+        }
+        throw "Packaged launcher smoke test timed out after 30 seconds and was terminated."
+    }
     if ($process.ExitCode -ne 0) {
         throw "Packaged launcher smoke test failed with exit code $($process.ExitCode)"
     }
