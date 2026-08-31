@@ -39,7 +39,6 @@ import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonSubsamplingImageView
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
 import okio.BufferedSource
-import tachiyomi.core.common.util.system.ImageUtil
 
 /**
  * A wrapper view for showing page image.
