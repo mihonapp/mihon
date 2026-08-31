@@ -72,7 +72,7 @@ class SqlDelightLibraryRepository(
     override fun findManga(sourceId: Long, url: String): MangaRecord? =
         queries.selectMangaByIdentity(sourceId, url).executeAsOneOrNull()?.toRecord()
 
-    override fun insertManga(value: MangaRecord): Long {
+    override fun insertManga(value: MangaRecord): Long = database.transactionWithResult {
         queries.insertManga(
             source_id = value.sourceId,
             url = value.url,
@@ -96,7 +96,7 @@ class SqlDelightLibraryRepository(
             initialized = value.initialized,
             memo_json = value.memoJson,
         )
-        return lastInsertRowId()
+        lastInsertRowId()
     }
 
     override fun updateManga(value: MangaRecord) {
@@ -129,7 +129,7 @@ class SqlDelightLibraryRepository(
     override fun findChapter(mangaId: Long, url: String): ChapterRecord? =
         queries.selectChapterByIdentity(mangaId, url).executeAsOneOrNull()?.toRecord()
 
-    override fun insertChapter(value: ChapterRecord): Long {
+    override fun insertChapter(value: ChapterRecord): Long = database.transactionWithResult {
         queries.insertChapter(
             manga_id = value.mangaId,
             url = value.url,
@@ -146,7 +146,7 @@ class SqlDelightLibraryRepository(
             version = value.version,
             memo_json = value.memoJson,
         )
-        return lastInsertRowId()
+        lastInsertRowId()
     }
 
     override fun updateChapter(value: ChapterRecord) {
@@ -252,7 +252,7 @@ class SqlDelightLibraryRepository(
         )
     }
 
-    override fun insertReport(value: ImportReportRecord): Long {
+    override fun insertReport(value: ImportReportRecord): Long = database.transactionWithResult {
         queries.insertImportReport(
             import_type = value.importType.name,
             source_path = value.sourcePath,
@@ -267,7 +267,7 @@ class SqlDelightLibraryRepository(
             preferences_imported = value.counts.preferencesImported,
             preferences_skipped = value.counts.preferencesSkipped,
         )
-        return lastInsertRowId()
+        lastInsertRowId()
     }
 
     override fun insertReportItem(reportId: Long, value: ImportReportItemRecord) {

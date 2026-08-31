@@ -29,6 +29,7 @@ import java.nio.file.Path
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
 
 class SqlDelightLibraryRepositoryTest {
     @TempDir
@@ -303,6 +304,52 @@ class SqlDelightLibraryRepositoryTest {
             repository.findManga(2, "/committed")!!.title shouldBe "Committed"
         } finally {
             allowTransactionEnd.countDown()
+            executor.shutdownNow()
+            repository.close()
+        }
+    }
+
+    @Test
+    fun `concurrent manga inserts return the IDs of their own rows`() {
+        val firstInsertPaused = CountDownLatch(1)
+        val allowFirstInsertToReturn = CountDownLatch(1)
+        val secondInsertAttempted = CountDownLatch(1)
+        val secondInsertFinished = CountDownLatch(1)
+        val listenerInvocations = AtomicInteger()
+        val repository = DesktopLibraryDatabaseFactory.open(tempDir.resolve("insert-ids.db")) { sql ->
+            if (sql.startsWith("INSERT INTO manga(") && listenerInvocations.incrementAndGet() == 1) {
+                firstInsertPaused.countDown()
+                check(allowFirstInsertToReturn.await(5, TimeUnit.SECONDS))
+            }
+        }
+        val executor = Executors.newFixedThreadPool(2)
+
+        try {
+            val first = executor.submit<Long> {
+                repository.insertManga(MangaRecord(sourceId = 101, url = "/first", title = "First"))
+            }
+            check(firstInsertPaused.await(5, TimeUnit.SECONDS))
+
+            val second = executor.submit<Long> {
+                secondInsertAttempted.countDown()
+                try {
+                    repository.insertManga(MangaRecord(sourceId = 102, url = "/second", title = "Second"))
+                } finally {
+                    secondInsertFinished.countDown()
+                }
+            }
+            check(secondInsertAttempted.await(5, TimeUnit.SECONDS))
+            secondInsertFinished.await(1, TimeUnit.SECONDS) shouldBe false
+
+            allowFirstInsertToReturn.countDown()
+            val firstId = first.get(5, TimeUnit.SECONDS)
+            val secondId = second.get(5, TimeUnit.SECONDS)
+
+            firstId shouldBe repository.findManga(101, "/first")!!.id
+            secondId shouldBe repository.findManga(102, "/second")!!.id
+            (firstId == secondId) shouldBe false
+        } finally {
+            allowFirstInsertToReturn.countDown()
             executor.shutdownNow()
             repository.close()
         }

@@ -2,6 +2,7 @@ package mihon.desktop.library.db
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.db.QueryResult
+import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.driver.jdbc.JdbcDriver
 import java.nio.file.Files
 import java.nio.file.Path
@@ -11,10 +12,16 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 object DesktopLibraryDatabaseFactory {
-    fun open(path: Path): SqlDelightLibraryRepository {
+    fun open(path: Path): SqlDelightLibraryRepository = open(path, null)
+
+    /** Internal statement instrumentation used only by deterministic driver tests. */
+    internal fun open(
+        path: Path,
+        afterStatement: ((String) -> Unit)?,
+    ): SqlDelightLibraryRepository {
         val absolutePath = path.toAbsolutePath()
         Files.createDirectories(absolutePath.parent)
-        val driver = SingleConnectionSqliteDriver("jdbc:sqlite:$absolutePath")
+        val driver = SingleConnectionSqliteDriver("jdbc:sqlite:$absolutePath", afterStatement)
         try {
             driver.execute(null, "PRAGMA foreign_keys=ON", 0)
             val version = driver.executeQuery(
@@ -42,7 +49,10 @@ object DesktopLibraryDatabaseFactory {
     }
 }
 
-private class SingleConnectionSqliteDriver(url: String) : JdbcDriver() {
+private class SingleConnectionSqliteDriver(
+    url: String,
+    private val afterStatement: ((String) -> Unit)?,
+) : JdbcDriver() {
     private val connection = DriverManager.getConnection(url)
     private val listeners = mutableMapOf<String, MutableSet<Query.Listener>>()
     private val connectionLock = ReentrantLock(true)
@@ -55,6 +65,14 @@ private class SingleConnectionSqliteDriver(url: String) : JdbcDriver() {
     override fun closeConnection(connection: Connection) {
         connectionLock.unlock()
     }
+
+    override fun execute(
+        identifier: Int?,
+        sql: String,
+        parameters: Int,
+        binders: (SqlPreparedStatement.() -> Unit)?,
+    ): QueryResult<Long> =
+        super.execute(identifier, sql, parameters, binders).also { afterStatement?.invoke(sql) }
 
     override fun Connection.beginTransaction() {
         try {
