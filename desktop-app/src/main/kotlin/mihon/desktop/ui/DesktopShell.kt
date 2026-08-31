@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
@@ -27,7 +28,7 @@ fun DesktopShell(
     val secondary = DesktopDestination.entries.drop(5)
     Surface(modifier = Modifier.fillMaxSize()) {
         Row {
-            NavigationRail(modifier = Modifier.fillMaxHeight()) {
+            NavigationRail(modifier = Modifier.fillMaxHeight().width(80.dp)) {
                 Column(
                     modifier = Modifier.fillMaxHeight(),
                     verticalArrangement = Arrangement.SpaceBetween,

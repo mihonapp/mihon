@@ -128,3 +128,46 @@ Result: `BUILD SUCCESSFUL`; `spotlessCheck`, `:desktop-app:test`,
 the bounded packaged smoke test all passed. The output included
 `Packaged runtime JAVA_VERSION=17.0.18` and
 `Mihon W desktop foundation verification passed.`
+
+## Desktop navigation layout follow-up
+
+The `NavigationRail` inside `DesktopShell` was previously only constrained by
+height inside a `Row`, allowing it to consume the full row width and leave the
+following content `Box` without displayable width. It now explicitly uses
+`Modifier.fillMaxHeight().width(80.dp)`, preserving a fixed desktop rail and
+available space for the selected destination headline.
+
+### RED/GREEN guard
+
+Before the change, the layout guard failed with:
+
+```text
+Desktop navigation rail must reserve a fixed 80.dp width for content
+```
+
+After the change it passed, confirming the rail has the fixed-width modifier.
+
+### Build and package gates
+
+With `JAVA_HOME` set to the approved JDK 21 runtime, this command passed:
+
+```powershell
+.\gradlew.bat :desktop-app:test :desktop-app:compileKotlin :desktop-app:spotlessCheck --no-daemon
+```
+
+Result: `BUILD SUCCESSFUL`.
+
+After stopping the Gradle daemon, the full verifier was run again and passed:
+
+```powershell
+.\gradlew.bat --stop
+.\scripts\verify-desktop-foundation.ps1
+```
+
+Result: `BUILD SUCCESSFUL`; `spotlessCheck`, `:desktop-app:test`,
+`:desktop-app:createDistributable`, the packaged smoke test, and Java runtime
+metadata validation passed (`Packaged runtime JAVA_VERSION=17.0.18`).
+
+This change has not been claimed as visually verified here. A controller must
+relaunch the packaged desktop app and inspect a fresh screenshot/click flow to
+confirm the selected destination headline is visible.
