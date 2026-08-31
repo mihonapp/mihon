@@ -3,6 +3,7 @@ package mihon.desktop.library.backup
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.protobuf.ProtoBuf
@@ -65,6 +66,10 @@ class AndroidBackupImporterTest {
             PreferenceDecision.Import("BOOLEAN", "true")
         policy.classifySource("other-source", "quality", AndroidStringPreferenceValue("high")) shouldBe
             PreferenceDecision.Skip(PreferenceSkipReason.UNKNOWN)
+        listOf(Float.NaN, Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY).forEach { nonFinite ->
+            policy.classifySource("allowed-source", "quality", AndroidFloatPreferenceValue(nonFinite)) shouldBe
+                PreferenceDecision.Skip(PreferenceSkipReason.UNSUPPORTED_TYPE)
+        }
     }
 
     @Test
@@ -431,6 +436,74 @@ class AndroidBackupImporterTest {
     }
 
     @Test
+    fun `category set preferences skip atomically when any backup category id cannot be remapped`() {
+        val database = tempDir.resolve("strict-category-preferences.db")
+        val backupFile = tempDir.resolve("strict-category-preferences.tachibk")
+        val mixedInvalid = "SECRET_RAW_INVALID"
+        val allInvalid = "999"
+        encode(
+            AndroidBackup(
+                backupManga = listOf(
+                    AndroidBackupManga(
+                        source = 1,
+                        url = "/manga",
+                        title = "Manga",
+                        categories = listOf(1),
+                    ),
+                ),
+                backupCategories = listOf(AndroidBackupCategory(name = "Imported", order = 1, id = 10)),
+                backupPreferences = listOf(
+                    AndroidBackupPreference(
+                        "library_update_categories",
+                        AndroidStringSetPreferenceValue(setOf("10", mixedInvalid)),
+                    ),
+                    AndroidBackupPreference(
+                        "library_update_categories_exclude",
+                        AndroidStringSetPreferenceValue(setOf(allInvalid)),
+                    ),
+                ),
+            ),
+            backupFile,
+        )
+
+        DesktopLibraryDatabaseFactory.open(database).use { repository ->
+            val report = AndroidBackupImporter(AndroidBackupCodec(), AndroidBackupValidator(), repository)
+                .import(backupFile, 1)
+
+            queryRows(
+                database,
+                """
+                SELECT key, value_type, value_json
+                FROM preference_snapshot
+                WHERE key IN ('library_update_categories', 'library_update_categories_exclude')
+                ORDER BY key
+                """.trimIndent(),
+            ) shouldBe emptyList()
+            report.items.filter { it.itemType == "PREFERENCE" }.map { item ->
+                listOf(item.itemKey, item.outcome, item.reason, item.message)
+            } shouldBe listOf(
+                listOf(
+                    "app/library_update_categories",
+                    "SKIPPED",
+                    "UNKNOWN",
+                    "Skipped app preference 'library_update_categories': UNKNOWN",
+                ),
+                listOf(
+                    "app/library_update_categories_exclude",
+                    "SKIPPED",
+                    "UNKNOWN",
+                    "Skipped app preference 'library_update_categories_exclude': UNKNOWN",
+                ),
+            )
+            report.items.joinToString { it.message }.run {
+                shouldNotContain(mixedInvalid)
+                shouldNotContain(allInvalid)
+                shouldNotContain("10")
+            }
+        }
+    }
+
+    @Test
     fun `checkpoint failure rolls every imported table back byte for byte`() {
         val database = tempDir.resolve("rollback.db")
         val backupFile = tempDir.resolve("rollback.tachibk")
@@ -498,6 +571,29 @@ class AndroidBackupImporterTest {
             counting.transactions shouldBe 0
             repository.librarySnapshot() shouldBe emptyList()
             repository.latestImportReport() shouldBe null
+        }
+    }
+
+    @Test
+    fun `non-finite backup values never open a transaction or mutate any table`() {
+        nonFiniteBackupCases().forEachIndexed { index, case ->
+            val database = tempDir.resolve("non-finite-$index.db")
+            val backupFile = tempDir.resolve("non-finite-$index.tachibk")
+            encode(case.backup, backupFile)
+            DesktopLibraryDatabaseFactory.open(database).use { repository ->
+                val counting = CountingMutationPort(repository)
+                val before = dumpImportTables(database)
+
+                shouldThrow<BackupValidationException> {
+                    AndroidBackupImporter(AndroidBackupCodec(), AndroidBackupValidator(), counting)
+                        .import(backupFile, 1)
+                }.message.shouldContain(case.expectedPath)
+
+                counting.transactions shouldBe 0
+                dumpImportTables(database) shouldBe before
+                repository.librarySnapshot() shouldBe emptyList()
+                repository.latestImportReport() shouldBe null
+            }
         }
     }
 

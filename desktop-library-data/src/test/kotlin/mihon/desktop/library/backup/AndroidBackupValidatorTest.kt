@@ -187,6 +187,15 @@ class AndroidBackupValidatorTest {
     }
 
     @Test
+    fun `rejects every non-finite persisted float with a stable path`() {
+        nonFiniteBackupCases().forEach { case ->
+            shouldThrow<BackupValidationException> {
+                validator.validate(case.backup)
+            }.message.shouldContain(case.expectedPath)
+        }
+    }
+
+    @Test
     fun `accepts the boundary and exposes canonical memo JSON`() {
         val boundaryMemo = buildString {
             repeat(64) { append("{\"x\":") }
@@ -218,6 +227,85 @@ class AndroidBackupValidatorTest {
         val limits: BackupLimits = tinyLimits(),
         val expectedPath: String,
     )
+}
+
+internal data class NonFiniteBackupCase(
+    val name: String,
+    val backup: AndroidBackup,
+    val expectedPath: String,
+)
+
+internal fun nonFiniteBackupCases(): List<NonFiniteBackupCase> = buildList {
+    listOf(
+        "nan" to Float.NaN,
+        "positive-infinity" to Float.POSITIVE_INFINITY,
+        "negative-infinity" to Float.NEGATIVE_INFINITY,
+    ).forEach { (valueName, value) ->
+        add(
+            NonFiniteBackupCase(
+                "chapter-number-$valueName",
+                AndroidBackup(
+                    listOf(
+                        manga(
+                            chapters = listOf(
+                                AndroidBackupChapter(
+                                    url = "/chapter",
+                                    name = "Chapter",
+                                    chapterNumber = value,
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+                "backupManga[0].chapters[0].chapterNumber",
+            ),
+        )
+        add(
+            NonFiniteBackupCase(
+                "tracking-progress-$valueName",
+                AndroidBackup(
+                    listOf(
+                        manga(
+                            tracking = listOf(
+                                AndroidBackupTracking(syncId = 1, libraryId = 1, lastChapterRead = value),
+                            ),
+                        ),
+                    ),
+                ),
+                "backupManga[0].tracking[0].lastChapterRead",
+            ),
+        )
+        add(
+            NonFiniteBackupCase(
+                "tracking-score-$valueName",
+                AndroidBackup(
+                    listOf(
+                        manga(
+                            tracking = listOf(
+                                AndroidBackupTracking(syncId = 1, libraryId = 1, score = value),
+                            ),
+                        ),
+                    ),
+                ),
+                "backupManga[0].tracking[0].score",
+            ),
+        )
+        add(
+            NonFiniteBackupCase(
+                "preference-$valueName",
+                AndroidBackup(
+                    backupManga = listOf(manga()),
+                    backupPreferences = listOf(
+                        AndroidBackupPreference(
+                            "pref_display_mode_library",
+                            AndroidFloatPreferenceValue(value),
+                        ),
+                    ),
+                ),
+                "backupPreferences[0].value",
+            ),
+        )
+    }
 }
 
 private fun manga(

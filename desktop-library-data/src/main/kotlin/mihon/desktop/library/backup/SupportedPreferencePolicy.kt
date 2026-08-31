@@ -66,7 +66,8 @@ sealed interface PreferenceDecision {
 internal fun AndroidPreferenceValue.toImportDecision(): PreferenceDecision.Import? = when (this) {
     is AndroidIntPreferenceValue -> PreferenceDecision.Import("INT", value.toString())
     is AndroidLongPreferenceValue -> PreferenceDecision.Import("LONG", value.toString())
-    is AndroidFloatPreferenceValue -> PreferenceDecision.Import("FLOAT", JsonPrimitive(value).toString())
+    is AndroidFloatPreferenceValue -> value.takeIf(Float::isFinite)
+        ?.let { PreferenceDecision.Import("FLOAT", JsonPrimitive(it).toString()) }
     is AndroidStringPreferenceValue -> PreferenceDecision.Import("STRING", JsonPrimitive(value).toString())
     is AndroidBooleanPreferenceValue -> PreferenceDecision.Import("BOOLEAN", value.toString())
     is AndroidStringSetPreferenceValue -> PreferenceDecision.Import(

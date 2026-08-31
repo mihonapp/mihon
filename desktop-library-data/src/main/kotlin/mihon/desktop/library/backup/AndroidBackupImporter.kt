@@ -193,13 +193,15 @@ class AndroidBackupImporter(
                 PreferenceDecision.Import("INT", databaseId.toString())
             }
             "library_update_categories", "library_update_categories_exclude" -> {
-                val databaseIds = (preference.value as AndroidStringSetPreferenceValue).value.mapNotNull { backupId ->
-                    backupId.toLongOrNull()
+                val databaseIds = linkedSetOf<String>()
+                (preference.value as AndroidStringSetPreferenceValue).value.forEach { backupId ->
+                    val databaseId = backupId.toLongOrNull()
                         ?.let(backupCategoryNameById::get)
                         ?.lowercase(Locale.ROOT)
                         ?.let(databaseCategoryIdByName::get)
-                        ?.toString()
-                }.toSet()
+                        ?: return PreferenceDecision.Skip(PreferenceSkipReason.UNKNOWN)
+                    databaseIds += databaseId.toString()
+                }
                 AndroidStringSetPreferenceValue(databaseIds).toImportDecision()
                     ?: PreferenceDecision.Skip(PreferenceSkipReason.UNSUPPORTED_TYPE)
             }

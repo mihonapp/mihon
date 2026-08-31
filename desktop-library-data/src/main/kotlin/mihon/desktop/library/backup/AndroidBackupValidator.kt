@@ -69,6 +69,7 @@ class AndroidBackupValidator {
                 if (!chapterUrls.add(chapter.url)) reject("$chapterPath.url", "duplicate chapter URL")
                 checkString(chapter.name, "$chapterPath.name", limits)
                 checkNullableString(chapter.scanlator, "$chapterPath.scanlator", limits)
+                checkFinite(chapter.chapterNumber, "$chapterPath.chapterNumber")
                 perMangaChapterMemos += parseMemo(chapter.memo, "$chapterPath.memo", limits)
             }
             chapterMemos += perMangaChapterMemos
@@ -89,6 +90,8 @@ class AndroidBackupValidator {
                 if (!trackingIds.add(tracking.syncId)) reject("$trackingPath.syncId", "duplicate tracking syncId")
                 checkString(tracking.trackingUrl, "$trackingPath.trackingUrl", limits)
                 checkString(tracking.title, "$trackingPath.title", limits)
+                checkFinite(tracking.lastChapterRead, "$trackingPath.lastChapterRead")
+                checkFinite(tracking.score, "$trackingPath.score")
             }
         }
 
@@ -138,12 +141,16 @@ class AndroidBackupValidator {
             is AndroidStringSetPreferenceValue -> value.value.forEachIndexed { index, item ->
                 checkString(item, "$path.value[$index]", limits)
             }
+            is AndroidFloatPreferenceValue -> checkFinite(value.value, "$path.value")
             is AndroidIntPreferenceValue,
             is AndroidLongPreferenceValue,
-            is AndroidFloatPreferenceValue,
             is AndroidBooleanPreferenceValue,
             -> Unit
         }
+    }
+
+    private fun checkFinite(value: Float, path: String) {
+        if (!value.isFinite()) reject(path, "float must be finite")
     }
 
     private fun parseMemo(bytes: ByteArray, path: String, limits: BackupLimits): String {
