@@ -22,13 +22,18 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.protobuf.ProtoBuf
 import mihon.desktop.library.backup.AndroidBackup
 import mihon.desktop.library.backup.AndroidBackupCodec
+import mihon.desktop.library.backup.AndroidBackupImporter
+import mihon.desktop.library.backup.AndroidBackupValidator
 import mihon.desktop.library.backup.AndroidPreferenceValue
+import mihon.desktop.library.db.DesktopLibraryDatabaseFactory
+import mihon.desktop.library.db.SqlDelightLibraryRepository
 import okio.buffer
 import okio.gzip
 import okio.sink
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.nio.file.Path
+import java.sql.DriverManager
 
 @OptIn(ExperimentalSerializationApi::class)
 class DesktopBackupImportContractTest {
@@ -36,7 +41,7 @@ class DesktopBackupImportContractTest {
     lateinit var tempDir: Path
 
     @Test
-    fun `current Android encoder produces bytes understood by desktop`() {
+    fun `current Android encoder imports through the real desktop database`() {
         val android = Backup(
             backupManga = listOf(
                 BackupManga(source = 42, url = "/作品/一", title = "作品 一").apply {
@@ -79,9 +84,16 @@ class DesktopBackupImportContractTest {
             ),
         )
 
-        encodeWithAndroidSerializer(android, "android-encoder.tachibk")
-            .let(AndroidBackupCodec()::decode)
-            .toSemanticProjection() shouldBe android.toSemanticProjection()
+        val backupPath = encodeWithAndroidSerializer(android, "android-encoder.tachibk")
+        val databasePath = tempDir.resolve("desktop-library.db")
+        DesktopLibraryDatabaseFactory.open(databasePath).use { repository ->
+            AndroidBackupImporter(AndroidBackupCodec(), AndroidBackupValidator(), repository)
+                .import(backupPath, nowMillis = 1_000)
+        }
+
+        DesktopLibraryDatabaseFactory.open(databasePath).use { reopened ->
+            reopened.toImportedDatabaseProjection(databasePath) shouldBe android.toImportedDatabaseProjection()
+        }
     }
 
     @Test
@@ -125,6 +137,136 @@ class DesktopBackupImportContractTest {
             }
         }
 }
+
+private fun Backup.toImportedDatabaseProjection(): ImportedDatabaseProjection {
+    val categoriesByOrder = backupCategories.associateBy { it.order }
+    return ImportedDatabaseProjection(
+        manga = backupManga.map { manga ->
+            ImportedMangaProjection(
+                source = manga.source,
+                url = manga.url,
+                title = manga.title,
+                author = manga.author,
+                favorite = manga.favorite,
+                version = manga.version,
+                chapters = manga.chapters.map { chapter ->
+                    ImportedChapterProjection(
+                        url = chapter.url,
+                        name = chapter.name,
+                        read = chapter.read,
+                        bookmark = chapter.bookmark,
+                        lastPageRead = chapter.lastPageRead,
+                        version = chapter.version,
+                    )
+                }.sortedBy { it.url },
+                categories = manga.categories.map { order ->
+                    val category = checkNotNull(categoriesByOrder[order])
+                    ImportedCategoryLinkProjection(category.name, category.order, category.flags)
+                }.sortedBy { it.order },
+                history = manga.history.map { history ->
+                    ImportedHistoryProjection(history.url, history.lastRead, history.readDuration)
+                }.sortedBy { it.url },
+                tracking = manga.tracking.map { tracking ->
+                    ImportedTrackingProjection(
+                        syncId = tracking.syncId.toLong(),
+                        libraryId = tracking.libraryId,
+                        mediaId = tracking.effectiveMediaId(),
+                        title = tracking.title,
+                        lastChapterRead = tracking.lastChapterRead.toDouble(),
+                    )
+                }.sortedBy { it.syncId },
+            )
+        }.sortedWith(compareBy({ it.source }, { it.url })),
+        sources = backupSources.map { ImportedSourceProjection(it.sourceId, it.name) }.sortedBy { it.sourceId },
+        preferences = listOf(
+            ImportedPreferenceProjection("pref_display_mode_library", "STRING", "\"COMPACT_GRID\""),
+        ),
+        skippedPreferences = listOf(
+            ImportedSkipProjection("app/__PRIVATE_auth_token", "PRIVATE"),
+            ImportedSkipProjection("app/__APP_STATE_last_version_code", "APP_STATE"),
+            ImportedSkipProjection("app/unrecognized_plan2_key", "UNKNOWN"),
+        ),
+    )
+}
+
+private fun SqlDelightLibraryRepository.toImportedDatabaseProjection(databasePath: Path): ImportedDatabaseProjection {
+    val mangas = librarySnapshot().map { summary ->
+        val manga = checkNotNull(mangaSnapshot(summary.id))
+        val chapters = chapterSnapshot(summary.id)
+        ImportedMangaProjection(
+            source = manga.sourceId,
+            url = manga.url,
+            title = manga.title,
+            author = manga.author,
+            favorite = manga.favorite,
+            version = manga.version,
+            chapters = chapters.map { chapter ->
+                ImportedChapterProjection(
+                    url = chapter.url,
+                    name = chapter.name,
+                    read = chapter.read,
+                    bookmark = chapter.bookmark,
+                    lastPageRead = chapter.lastPageRead,
+                    version = chapter.version,
+                )
+            }.sortedBy { it.url },
+            categories = manga.categories.map { category ->
+                ImportedCategoryLinkProjection(category.name, category.sortOrder, category.flags)
+            }.sortedBy { it.order },
+            history = queryRows(
+                databasePath,
+                """
+                SELECT chapter.url, history.last_read, history.read_duration
+                FROM history JOIN chapter ON chapter.id = history.chapter_id
+                WHERE chapter.manga_id = ${manga.id}
+                ORDER BY chapter.url
+                """.trimIndent(),
+            ).map { row -> ImportedHistoryProjection(row[0], row[1].toLong(), row[2].toLong()) },
+            tracking = queryRows(
+                databasePath,
+                """
+                SELECT tracker_id, library_id, remote_id, title, last_chapter_read
+                FROM tracking WHERE manga_id = ${manga.id} ORDER BY tracker_id
+                """.trimIndent(),
+            ).map { row ->
+                ImportedTrackingProjection(
+                    syncId = row[0].toLong(),
+                    libraryId = row[1].toLong(),
+                    mediaId = row[2].toLong(),
+                    title = row[3],
+                    lastChapterRead = row[4].toDouble(),
+                )
+            },
+        )
+    }.sortedWith(compareBy({ it.source }, { it.url }))
+    val report = checkNotNull(latestImportReport())
+    return ImportedDatabaseProjection(
+        manga = mangas,
+        sources = queryRows(
+            databasePath,
+            "SELECT source_id, name FROM source_metadata ORDER BY source_id",
+        ).map { ImportedSourceProjection(it[0].toLong(), it[1]) },
+        preferences = queryRows(
+            databasePath,
+            "SELECT key, value_type, value_json FROM preference_snapshot ORDER BY key",
+        ).map { ImportedPreferenceProjection(it[0], it[1], it[2]) },
+        skippedPreferences = report.items
+            .filter { it.itemType == "PREFERENCE" }
+            .map { ImportedSkipProjection(it.itemKey, checkNotNull(it.reason)) },
+    )
+}
+
+private fun queryRows(path: Path, sql: String): List<List<String>> =
+    DriverManager.getConnection("jdbc:sqlite:${path.toAbsolutePath()}").use { connection ->
+        connection.createStatement().use { statement ->
+            statement.executeQuery(sql).use { result ->
+                val columns = result.metaData.columnCount
+                buildList {
+                    while (result.next()) add((1..columns).map(result::getString))
+                }
+            }
+        }
+    }
 
 private fun Backup.toSemanticProjection() = BackupProjection(
     manga = backupManga.map {
@@ -304,3 +446,62 @@ private data class SourcePreferencesProjection(
     val sourceKey: String,
     val preferences: List<PreferenceProjection>,
 )
+
+private data class ImportedDatabaseProjection(
+    val manga: List<ImportedMangaProjection>,
+    val sources: List<ImportedSourceProjection>,
+    val preferences: List<ImportedPreferenceProjection>,
+    val skippedPreferences: List<ImportedSkipProjection>,
+)
+
+private data class ImportedMangaProjection(
+    val source: Long,
+    val url: String,
+    val title: String,
+    val author: String?,
+    val favorite: Boolean,
+    val version: Long,
+    val chapters: List<ImportedChapterProjection>,
+    val categories: List<ImportedCategoryLinkProjection>,
+    val history: List<ImportedHistoryProjection>,
+    val tracking: List<ImportedTrackingProjection>,
+)
+
+private data class ImportedChapterProjection(
+    val url: String,
+    val name: String,
+    val read: Boolean,
+    val bookmark: Boolean,
+    val lastPageRead: Long,
+    val version: Long,
+)
+
+private data class ImportedCategoryLinkProjection(
+    val name: String,
+    val order: Long,
+    val flags: Long,
+)
+
+private data class ImportedHistoryProjection(
+    val url: String,
+    val lastRead: Long,
+    val readDuration: Long,
+)
+
+private data class ImportedTrackingProjection(
+    val syncId: Long,
+    val libraryId: Long,
+    val mediaId: Long,
+    val title: String,
+    val lastChapterRead: Double,
+)
+
+private data class ImportedSourceProjection(val sourceId: Long, val name: String)
+
+private data class ImportedPreferenceProjection(
+    val key: String,
+    val valueType: String,
+    val valueJson: String,
+)
+
+private data class ImportedSkipProjection(val itemKey: String, val reason: String)
