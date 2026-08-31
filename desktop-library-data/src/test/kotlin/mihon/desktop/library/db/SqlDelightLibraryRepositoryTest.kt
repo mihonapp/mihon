@@ -26,6 +26,9 @@ import mihon.desktop.library.model.TrackingRecord
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.nio.file.Path
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 class SqlDelightLibraryRepositoryTest {
     @TempDir
@@ -207,6 +210,7 @@ class SqlDelightLibraryRepositoryTest {
     @Test
     fun `metadata local records and latest report persist through the mutation port`() {
         val file = tempDir.resolve("metadata.db")
+        var reportId = 0L
         DesktopLibraryDatabaseFactory.open(file).use { repository ->
             val mangaId = repository.insertManga(MangaRecord(sourceId = 3, url = "/local", title = "Local"))
             val chapterId = repository.insertChapter(ChapterRecord(mangaId = mangaId, url = "/one", name = "One"))
@@ -217,7 +221,7 @@ class SqlDelightLibraryRepositoryTest {
             )
             repository.insertLocalManga(LocalMangaRecord(mangaId, "manga/path", "sha256", 103))
             repository.insertLocalChapter(LocalChapterRecord(chapterId, "chapter/path", "DIRECTORY", 104, 105))
-            val reportId = repository.insertReport(
+            reportId = repository.insertReport(
                 ImportReportRecord(
                     importType = ImportType.LOCAL_DIRECTORY,
                     sourcePath = "source/path",
@@ -231,13 +235,24 @@ class SqlDelightLibraryRepositoryTest {
                 reportId,
                 ImportReportItemRecord("PREFERENCE", "private", "SKIPPED", "PRIVATE", "Skipped private value"),
             )
+            repository.insertReportItem(
+                reportId,
+                ImportReportItemRecord("SOURCE", "42", "IMPORTED", null, "Imported source"),
+            )
+        }
 
+        DesktopLibraryDatabaseFactory.open(file).use { repository ->
             repository.latestImportReport()!!.run {
                 id shouldBe reportId
                 importType shouldBe ImportType.LOCAL_DIRECTORY
                 sourcePath shouldBe "source/path"
                 status shouldBe ImportStatus.SUCCEEDED
                 counts shouldBe ImportCounts(mangaInserted = 1, chaptersInserted = 1, preferencesImported = 2)
+                items.map { listOf(it.itemType, it.itemKey, it.outcome, it.reason, it.message) } shouldBe
+                    listOf(
+                        listOf("PREFERENCE", "private", "SKIPPED", "PRIVATE", "Skipped private value"),
+                        listOf("SOURCE", "42", "IMPORTED", null, "Imported source"),
+                    )
             }
         }
     }
@@ -248,5 +263,48 @@ class SqlDelightLibraryRepositoryTest {
         repository.close()
 
         shouldThrowAny { repository.librarySnapshot() }
+    }
+
+    @Test
+    fun `concurrent mutation waits for an uncommitted transaction and commits independently`() {
+        val repository = DesktopLibraryDatabaseFactory.open(tempDir.resolve("concurrent.db"))
+        val transactionStarted = CountDownLatch(1)
+        val concurrentStarted = CountDownLatch(1)
+        val concurrentFinished = CountDownLatch(1)
+        val allowTransactionEnd = CountDownLatch(1)
+        val executor = Executors.newFixedThreadPool(2)
+
+        try {
+            val transaction = executor.submit {
+                shouldThrow<IllegalStateException> {
+                    repository.transaction {
+                        insertManga(MangaRecord(sourceId = 1, url = "/rolled-back", title = "Rolled back"))
+                        transactionStarted.countDown()
+                        check(allowTransactionEnd.await(5, TimeUnit.SECONDS))
+                        error("forced rollback")
+                    }
+                }
+            }
+            check(transactionStarted.await(5, TimeUnit.SECONDS))
+
+            val concurrentMutation = executor.submit {
+                concurrentStarted.countDown()
+                repository.insertManga(MangaRecord(sourceId = 2, url = "/committed", title = "Committed"))
+                concurrentFinished.countDown()
+            }
+            check(concurrentStarted.await(5, TimeUnit.SECONDS))
+
+            concurrentFinished.await(1, TimeUnit.SECONDS) shouldBe false
+            allowTransactionEnd.countDown()
+            transaction.get(5, TimeUnit.SECONDS)
+            concurrentMutation.get(5, TimeUnit.SECONDS)
+
+            repository.findManga(1, "/rolled-back") shouldBe null
+            repository.findManga(2, "/committed")!!.title shouldBe "Committed"
+        } finally {
+            allowTransactionEnd.countDown()
+            executor.shutdownNow()
+            repository.close()
+        }
     }
 }

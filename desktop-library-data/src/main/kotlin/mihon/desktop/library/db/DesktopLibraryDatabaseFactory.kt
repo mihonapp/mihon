@@ -7,6 +7,8 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.sql.Connection
 import java.sql.DriverManager
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 object DesktopLibraryDatabaseFactory {
     fun open(path: Path): SqlDelightLibraryRepository {
@@ -43,10 +45,44 @@ object DesktopLibraryDatabaseFactory {
 private class SingleConnectionSqliteDriver(url: String) : JdbcDriver() {
     private val connection = DriverManager.getConnection(url)
     private val listeners = mutableMapOf<String, MutableSet<Query.Listener>>()
+    private val connectionLock = ReentrantLock(true)
 
-    override fun getConnection(): Connection = connection
+    override fun getConnection(): Connection {
+        connectionLock.lock()
+        return connection
+    }
 
-    override fun closeConnection(connection: Connection) = Unit
+    override fun closeConnection(connection: Connection) {
+        connectionLock.unlock()
+    }
+
+    override fun Connection.beginTransaction() {
+        try {
+            check(autoCommit) { "Expected autoCommit to be true before starting a transaction" }
+            autoCommit = false
+        } catch (error: Throwable) {
+            closeConnection(this)
+            throw error
+        }
+    }
+
+    override fun Connection.endTransaction() {
+        try {
+            commit()
+            autoCommit = true
+        } finally {
+            closeConnection(this)
+        }
+    }
+
+    override fun Connection.rollbackTransaction() {
+        try {
+            rollback()
+            autoCommit = true
+        } finally {
+            closeConnection(this)
+        }
+    }
 
     override fun addListener(vararg queryKeys: String, listener: Query.Listener) {
         synchronized(listeners) {
@@ -68,6 +104,6 @@ private class SingleConnectionSqliteDriver(url: String) : JdbcDriver() {
     }
 
     override fun close() {
-        connection.close()
+        connectionLock.withLock { connection.close() }
     }
 }

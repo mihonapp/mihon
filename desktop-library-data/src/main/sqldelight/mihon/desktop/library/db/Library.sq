@@ -182,6 +182,9 @@ ORDER BY category.sort_order, category.name COLLATE NOCASE;
 selectLatestImportReport:
 SELECT * FROM import_report ORDER BY id DESC LIMIT 1;
 
+selectImportReportItems:
+SELECT * FROM import_report_item WHERE report_id = ? ORDER BY id;
+
 insertManga:
 INSERT INTO manga(
   source_id, url, title, artist, author, description, genre_json, status, thumbnail_url,

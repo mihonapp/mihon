@@ -13,6 +13,7 @@ import mihon.desktop.library.model.ChapterRecord
 import mihon.desktop.library.model.HistoryRecord
 import mihon.desktop.library.model.ImportCounts
 import mihon.desktop.library.model.ImportReport
+import mihon.desktop.library.model.ImportReportItem
 import mihon.desktop.library.model.ImportReportItemRecord
 import mihon.desktop.library.model.ImportReportRecord
 import mihon.desktop.library.model.ImportStatus
@@ -59,8 +60,11 @@ class SqlDelightLibraryRepository(
     override fun chapterSnapshot(mangaId: Long): List<LibraryChapter> =
         queries.selectChaptersForManga(mangaId).executeAsList().map(Chapter::toModel)
 
-    override fun latestImportReport(): ImportReport? =
-        queries.selectLatestImportReport().executeAsOneOrNull()?.toModel()
+    override fun latestImportReport(): ImportReport? {
+        val report = queries.selectLatestImportReport().executeAsOneOrNull() ?: return null
+        val items = queries.selectImportReportItems(report.id).executeAsList().map(Import_report_item::toModel)
+        return report.toModel(items)
+    }
 
     override fun <T> transaction(block: LibraryMutationPort.() -> T): T =
         database.transactionWithResult { block(this@SqlDelightLibraryRepository) }
@@ -400,7 +404,7 @@ private fun Tracking.toRecord() = TrackingRecord(
     trackingUrl = tracking_url,
 )
 
-private fun Import_report.toModel() = ImportReport(
+private fun Import_report.toModel(items: List<ImportReportItem>) = ImportReport(
     id = id,
     importType = ImportType.valueOf(import_type),
     sourcePath = source_path,
@@ -416,4 +420,14 @@ private fun Import_report.toModel() = ImportReport(
         preferencesImported = preferences_imported,
         preferencesSkipped = preferences_skipped,
     ),
+    items = items,
+)
+
+private fun Import_report_item.toModel() = ImportReportItem(
+    itemType = item_type,
+    itemKey = item_key,
+    outcome = outcome,
+    reason = reason,
+    message = message,
+    id = id,
 )
