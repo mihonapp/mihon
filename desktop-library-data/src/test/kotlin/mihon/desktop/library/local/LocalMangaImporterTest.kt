@@ -437,6 +437,68 @@ class LocalMangaImporterTest {
     }
 
     @Test
+    fun `owned final is compensated when after-atomic-move callback throws without replacement`() {
+        val source = createManga("observable-promotion-source")
+        val mediaRoot = tempDir.resolve("observable-promotion-media")
+        val database = tempDir.resolve("observable-promotion.db")
+        val faults = object : LocalFileFaults {
+            override fun afterAtomicMove(source: Path, target: Path) {
+                throw IOException("forced failure after effective atomic move")
+            }
+        }
+        DesktopLibraryDatabaseFactory.open(database).use { repository ->
+            repository.insertManga(MangaRecord(sourceId = 99, url = "before", title = "before"))
+            val before = dumpImportTables(database)
+
+            shouldThrow<LocalImportRejected> {
+                LocalMangaImporter(
+                    mutations = repository,
+                    stager = LocalImportStager(
+                        fileFaults = faults,
+                        idFactory = { OBSERVABLE_PROMOTION_ID },
+                    ),
+                ).import(source, mediaRoot, 2)
+            }
+
+            dumpImportTables(database) shouldBe before
+            assertNoImportResidue(mediaRoot)
+        }
+    }
+
+    @Test
+    fun `promotion stays ambiguous when its namespace becomes permissive after the move`() {
+        val source = createManga("ambiguous-namespace-source")
+        val mediaRoot = tempDir.resolve("ambiguous-namespace-media")
+        val database = tempDir.resolve("ambiguous-namespace.db")
+        val finalPath = mediaRoot.resolve("manga").resolve(AMBIGUOUS_NAMESPACE_ID)
+        val faults = object : LocalFileFaults {
+            override fun afterAtomicMove(source: Path, target: Path) {
+                makePathPermissive(target.parent)
+                throw IOException("forced failure after namespace permission mutation")
+            }
+        }
+        DesktopLibraryDatabaseFactory.open(database).use { repository ->
+            val before = dumpImportTables(database)
+
+            shouldThrow<LocalImportRejected> {
+                LocalMangaImporter(
+                    mutations = repository,
+                    stager = LocalImportStager(
+                        fileFaults = faults,
+                        idFactory = { AMBIGUOUS_NAMESPACE_ID },
+                    ),
+                ).import(source, mediaRoot, 2)
+            }
+
+            dumpImportTables(database) shouldBe before
+            Files.readString(finalPath.resolve("第 1 话").resolve("页 01.jpg")) shouldBe "page"
+            Files.exists(mediaRoot.resolve(".claims").resolve("$AMBIGUOUS_NAMESPACE_ID.claim")) shouldBe false
+            LocalImportStager().cleanupOrphans(mediaRoot, emptySet())
+            Files.readString(finalPath.resolve("第 1 话").resolve("页 01.jpg")) shouldBe "page"
+        }
+    }
+
+    @Test
     fun `forged traversal absolute and duplicate manifests are rejected by staging`() {
         val source = createManga("forged")
         val original = LocalImportScanner().scan(source)
@@ -758,6 +820,46 @@ class LocalMangaImporterTest {
     }
 
     @Test
+    fun `marker temp replacement survives an ordinary callback exception with its claim`() {
+        val source = createManga("marker-temp-replacement-source")
+        val mediaRoot = tempDir.resolve("marker-temp-replacement-media")
+        val database = tempDir.resolve("marker-temp-replacement.db")
+        val displaced = tempDir.resolve("marker-temp-original")
+        lateinit var replacement: Path
+        val faults = object : LocalFileFaults {
+            override fun duringMarkerPublication(temporary: Path, marker: Path) {
+                replacement = temporary
+                Files.move(temporary, displaced)
+                Files.writeString(temporary, "unowned replacement", StandardOpenOption.CREATE_NEW)
+                throw IOException("forced marker callback failure after replacement")
+            }
+        }
+        DesktopLibraryDatabaseFactory.open(database).use { repository ->
+            repository.insertManga(MangaRecord(sourceId = 99, url = "before", title = "before"))
+            val before = dumpImportTables(database)
+
+            shouldThrow<LocalImportRejected> {
+                LocalMangaImporter(
+                    mutations = repository,
+                    stager = LocalImportStager(
+                        fileFaults = faults,
+                        idFactory = { MARKER_TEMP_REPLACEMENT_ID },
+                        clock = { 0L },
+                    ),
+                ).import(source, mediaRoot, 2)
+            }
+
+            dumpImportTables(database) shouldBe before
+            Files.readString(replacement) shouldBe "unowned replacement"
+            val claim = mediaRoot.resolve(".claims").resolve("$MARKER_TEMP_REPLACEMENT_ID.claim")
+            Files.isRegularFile(claim) shouldBe true
+            LocalImportStager(clock = { Long.MAX_VALUE }).cleanupOrphans(mediaRoot, emptySet())
+            Files.readString(replacement) shouldBe "unowned replacement"
+            Files.isRegularFile(claim) shouldBe true
+        }
+    }
+
+    @Test
     fun `claim callback mutation is rejected before staging directory creation`() {
         val source = createManga("claim-callback-source")
         val mediaRoot = tempDir.resolve("claim-callback-media")
@@ -1036,6 +1138,9 @@ private const val CLAIM_CALLBACK_ID = "00000000-0000-4000-8000-000000000027"
 private const val DIRECTORY_CALLBACK_ID = "00000000-0000-4000-8000-000000000028"
 private const val MARKER_CALLBACK_ID = "00000000-0000-4000-8000-000000000029"
 private const val MARKER_NAME_CHAPTER_ID = "00000000-0000-4000-8000-000000000033"
+private const val MARKER_TEMP_REPLACEMENT_ID = "00000000-0000-4000-8000-000000000034"
+private const val OBSERVABLE_PROMOTION_ID = "00000000-0000-4000-8000-000000000035"
+private const val AMBIGUOUS_NAMESPACE_ID = "00000000-0000-4000-8000-000000000036"
 private val COPY_CALLBACK_IDS = listOf(
     "00000000-0000-4000-8000-000000000030",
     "00000000-0000-4000-8000-000000000031",

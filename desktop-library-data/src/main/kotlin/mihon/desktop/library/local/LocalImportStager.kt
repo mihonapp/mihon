@@ -9,6 +9,7 @@ import java.nio.file.FileAlreadyExistsException
 import java.nio.file.FileVisitResult
 import java.nio.file.Files
 import java.nio.file.LinkOption
+import java.nio.file.NoSuchFileException
 import java.nio.file.Path
 import java.nio.file.SimpleFileVisitor
 import java.nio.file.StandardCopyOption
@@ -283,9 +284,11 @@ internal class LocalImportStager private constructor(
         try {
             Files.createDirectory(target)
             restrictPrivatePath(target, DIRECTORY_OWNER_PERMISSIONS, isDirectory = true)
-            Files.newDirectoryStream(source).use { children ->
-                children.forEach { child ->
-                    copyEntryNoFollow(child, target.resolve(child.fileName.toString()), context)
+            withDirectoryIterationRejection("failed to enumerate source directory: $source") {
+                Files.newDirectoryStream(source).use { children ->
+                    children.forEach { child ->
+                        copyEntryNoFollow(child, target.resolve(child.fileName.toString()), context)
+                    }
                 }
             }
             verifySourceUnchanged(source, before)
@@ -420,8 +423,8 @@ internal class StagedLocalManga internal constructor(
             }
             validatePromotionNamespaces()
             requireOwnedDirectoryMatches(stagingPath, createdIdentity, claimPath)
-            Files.move(stagingPath, finalPath, StandardCopyOption.ATOMIC_MOVE)
             promotionAmbiguous = true
+            Files.move(stagingPath, finalPath, StandardCopyOption.ATOMIC_MOVE)
             fileFaults.afterAtomicMove(stagingPath, finalPath)
             validatePromotionNamespaces()
             requireOwnedDirectoryMatches(finalPath, createdIdentity, claimPath)
@@ -440,6 +443,8 @@ internal class StagedLocalManga internal constructor(
             rejectStaging("promotion target already exists: $finalPath", error)
         } catch (error: IOException) {
             rejectStaging("atomic local manga promotion failed", error)
+        } finally {
+            if (promotionAmbiguous) reconcileObservablePromotionState()
         }
     }
 
@@ -487,9 +492,41 @@ internal class StagedLocalManga internal constructor(
         validatePrivateNamespace(mangaRoot, "manga namespace")
         validateNoReparseAncestors(claimPath, "local import claim")
     }
+
+    private fun reconcileObservablePromotionState() {
+        if (runCatching { validatePromotionNamespaces() }.isFailure) return
+        val stagingPresence = observePathPresence(stagingPath)
+        val finalPresence = observePathPresence(finalPath)
+        val stagingMatches = stagingPresence == PathPresence.PRESENT &&
+            runCatching { requireOwnedDirectoryMatches(stagingPath, createdIdentity, claimPath) }.isSuccess
+        val finalMatches = finalPresence == PathPresence.PRESENT &&
+            runCatching { requireOwnedDirectoryMatches(finalPath, createdIdentity, claimPath) }.isSuccess
+        when {
+            finalMatches && stagingPresence == PathPresence.ABSENT -> {
+                promoted = true
+                promotionAmbiguous = false
+            }
+            stagingMatches && finalPresence == PathPresence.ABSENT -> {
+                promoted = false
+                promotionAmbiguous = false
+            }
+            stagingPresence == PathPresence.ABSENT && finalPresence == PathPresence.ABSENT -> {
+                promoted = false
+                promotionAmbiguous = false
+            }
+        }
+    }
 }
 
 internal data class OwnedDirectoryIdentity(val id: String, val nonce: String, val fileKey: Any?)
+
+private data class OwnedMarkerIdentity(val id: String, val nonce: String, val fileKey: Any?)
+
+private enum class PathPresence {
+    ABSENT,
+    PRESENT,
+    UNKNOWN,
+}
 
 private data class StagingCopyContext(
     val stagingPath: Path,
@@ -802,6 +839,7 @@ private fun createOwnershipMarkerAtomically(
     val marker = ownershipMarkerPath(directory, nonce)
     val temporary = directory.resolve("${marker.fileName}.${UUID.randomUUID()}.tmp")
     var simulatedCrash = false
+    var temporaryIdentity: OwnedMarkerIdentity? = null
     try {
         Files.writeString(
             temporary,
@@ -812,6 +850,7 @@ private fun createOwnershipMarkerAtomically(
             StandardOpenOption.SYNC,
         )
         restrictPrivatePath(temporary, FILE_OWNER_PERMISSIONS, isDirectory = false)
+        temporaryIdentity = retainOwnedMarkerIdentity(temporary, id, nonce)
         try {
             fileFaults.duringMarkerPublication(temporary, marker)
         } catch (crash: LocalImportCrashSimulation) {
@@ -834,11 +873,36 @@ private fun createOwnershipMarkerAtomically(
     } catch (error: IOException) {
         rejectStaging("cannot create local import ownership marker", error)
     } finally {
-        if (!simulatedCrash) runCatching { Files.deleteIfExists(temporary) }
+        if (!simulatedCrash) {
+            temporaryIdentity?.let { identity ->
+                runCatching { deleteOwnedMarkerFile(temporary, identity) }
+            }
+        }
     }
     validatePrivatePath(marker, FILE_OWNER_PERMISSIONS, isDirectory = false)
     if (!hasValidOwnershipMarker(directory, id, nonce)) {
         rejectStaging("local import ownership marker validation failed")
+    }
+}
+
+private fun retainOwnedMarkerIdentity(marker: Path, id: String, nonce: String): OwnedMarkerIdentity {
+    if (!hasValidOwnershipMarkerFile(marker, id, nonce)) {
+        rejectStaging("temporary local import ownership marker validation failed")
+    }
+    val attributes = readAttributes(marker, "temporary ownership marker")
+    return OwnedMarkerIdentity(id, nonce, attributes.fileKey())
+}
+
+private fun deleteOwnedMarkerFile(marker: Path, identity: OwnedMarkerIdentity): Boolean {
+    if (Files.notExists(marker, LinkOption.NOFOLLOW_LINKS)) return true
+    if (!hasValidOwnershipMarkerFile(marker, identity.id, identity.nonce)) return false
+    val attributes = readAttributes(marker, "temporary ownership marker cleanup")
+    if (identity.fileKey != null && attributes.fileKey() != identity.fileKey) return false
+    return try {
+        Files.delete(marker)
+        true
+    } catch (_: IOException) {
+        false
     }
 }
 
@@ -988,8 +1052,10 @@ private fun hasValidOwnershipMarkerFile(marker: Path, id: String, nonce: String)
 }
 
 private fun readValidClaims(claimsRoot: Path): Map<String, ValidClaim> = try {
-    Files.newDirectoryStream(claimsRoot).use { children ->
-        children.mapNotNull(::readValidClaim).associateBy(ValidClaim::id)
+    withDirectoryIterationRejection("failed to read local import claims: $claimsRoot") {
+        Files.newDirectoryStream(claimsRoot).use { children ->
+            children.mapNotNull(::readValidClaim).associateBy(ValidClaim::id)
+        }
     }
 } catch (error: IOException) {
     rejectStaging("failed to read local import claims: $claimsRoot", error)
@@ -1056,18 +1122,22 @@ private fun isSafeImportDirectory(
 }
 
 private fun isEmptyClaimedDirectory(directory: Path): Boolean = try {
-    Files.newDirectoryStream(directory).use { entries -> !entries.iterator().hasNext() }
+    withDirectoryIterationRejection("failed to enumerate claimed import directory: $directory") {
+        Files.newDirectoryStream(directory).use { entries -> !entries.iterator().hasNext() }
+    }
 } catch (_: IOException) {
     false
 }
 
 private fun hasValidTemporaryOwnershipMarker(directory: Path, claim: ValidClaim): Boolean = try {
     val markerName = ownershipMarkerPath(directory, claim.nonce).fileName.toString()
-    Files.newDirectoryStream(directory, "$markerName.*.tmp").use { candidates ->
-        val matching = candidates.filter { marker ->
-            hasValidOwnershipMarkerFile(marker, claim.id, claim.nonce)
+    withDirectoryIterationRejection("failed to enumerate temporary ownership markers: $directory") {
+        Files.newDirectoryStream(directory, "$markerName.*.tmp").use { candidates ->
+            val matching = candidates.filter { marker ->
+                hasValidOwnershipMarkerFile(marker, claim.id, claim.nonce)
+            }
+            matching.size == 1
         }
-        matching.size == 1
     }
 } catch (_: IOException) {
     false
@@ -1130,6 +1200,17 @@ private fun samePathIdentity(before: BasicFileAttributes, after: BasicFileAttrib
         before.isSymbolicLink == after.isSymbolicLink &&
         before.isOther == after.isOther &&
         (before.fileKey() == null || before.fileKey() == after.fileKey())
+
+private fun observePathPresence(path: Path): PathPresence = try {
+    Files.readAttributes(path, BasicFileAttributes::class.java, LinkOption.NOFOLLOW_LINKS)
+    PathPresence.PRESENT
+} catch (_: NoSuchFileException) {
+    PathPresence.ABSENT
+} catch (_: IOException) {
+    PathPresence.UNKNOWN
+} catch (_: SecurityException) {
+    PathPresence.UNKNOWN
+}
 
 private fun requireImmediateChild(parent: Path, child: Path, label: String) {
     val normalizedParent = parent.toAbsolutePath().normalize()

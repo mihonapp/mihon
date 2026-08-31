@@ -3,6 +3,7 @@ package mihon.desktop.library.local
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
+import java.nio.file.DirectoryIteratorException
 import java.nio.file.FileVisitResult
 import java.nio.file.Files
 import java.nio.file.LinkOption
@@ -130,12 +131,14 @@ class LocalImportScanner private constructor(
         }
         val state = ScanState(root, limits, dosReparseReader)
         val chapters = try {
-            Files.newDirectoryStream(root).use { children ->
-                children.mapNotNull { child ->
-                    if (child.toAbsolutePath().normalize() in exclusions) {
-                        null
-                    } else {
-                        scanTopLevel(child, state)
+            withDirectoryIterationRejection("cannot enumerate source root: $root") {
+                Files.newDirectoryStream(root).use { children ->
+                    children.mapNotNull { child ->
+                        if (child.toAbsolutePath().normalize() in exclusions) {
+                            null
+                        } else {
+                            scanTopLevel(child, state)
+                        }
                     }
                 }
             }
@@ -314,6 +317,12 @@ internal fun readAttributes(path: Path, label: String): BasicFileAttributes = tr
     reject("cannot read attributes for $label: $path", error)
 } catch (error: SecurityException) {
     reject("cannot read attributes for $label: $path", error)
+}
+
+internal fun <T> withDirectoryIterationRejection(message: String, block: () -> T): T = try {
+    block()
+} catch (error: DirectoryIteratorException) {
+    throw LocalImportRejected(message, error.cause ?: error)
 }
 
 internal fun validateNoReparseAncestors(

@@ -7,6 +7,7 @@ import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.IOException
+import java.nio.file.DirectoryIteratorException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
@@ -220,6 +221,20 @@ class LocalImportScannerTest {
 
         shouldThrow<LocalImportRejected> { scanner.scan(manga) }
             .message.shouldContain("DOS reparse attribute")
+    }
+
+    @Test
+    fun `directory iterator exceptions are rejected with their IO cause`() {
+        val cause = IOException("forced iterator failure")
+
+        val rejection = shouldThrow<LocalImportRejected> {
+            withDirectoryIterationRejection("cannot enumerate test directory") {
+                throw DirectoryIteratorException(cause)
+            }
+        }
+
+        rejection.message.shouldContain("cannot enumerate test directory")
+        rejection.cause shouldBe cause
     }
 }
 
