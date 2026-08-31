@@ -98,7 +98,12 @@ class LocalImportScanner private constructor(
         limits: LocalImportLimits = LocalImportLimits(),
     ) : this(limits, entryFaults, dosReparseReader)
 
-    fun scan(sourceDirectory: Path): LocalImportManifest {
+    fun scan(sourceDirectory: Path): LocalImportManifest = scan(sourceDirectory, LocalScanMode.SOURCE, emptySet())
+
+    internal fun scanOwnedImportDirectory(directory: Path, verifiedMetadata: Set<Path>): LocalImportManifest =
+        scan(directory, LocalScanMode.OWNED_IMPORT, verifiedMetadata)
+
+    private fun scan(sourceDirectory: Path, mode: LocalScanMode, verifiedMetadata: Set<Path>): LocalImportManifest {
         val root = sourceDirectory.toAbsolutePath().normalize()
         if (Files.notExists(root, LinkOption.NOFOLLOW_LINKS)) {
             reject("source root is not a readable directory: $root")
@@ -114,10 +119,25 @@ class LocalImportScanner private constructor(
         }
         val title = root.fileName?.toString()?.takeIf(String::isNotEmpty)
             ?: reject("source root must have a directory name: $root")
+        val exclusions = verifiedMetadata.mapTo(mutableSetOf()) { metadata ->
+            val normalized = metadata.toAbsolutePath().normalize()
+            if (mode != LocalScanMode.OWNED_IMPORT || normalized.parent != root ||
+                !isInternalOwnershipMetadata(normalized)
+            ) {
+                reject("invalid internal ownership metadata exclusion: $metadata")
+            }
+            normalized
+        }
         val state = ScanState(root, limits, dosReparseReader)
         val chapters = try {
             Files.newDirectoryStream(root).use { children ->
-                children.mapNotNull { child -> scanTopLevel(child, state) }
+                children.mapNotNull { child ->
+                    if (child.toAbsolutePath().normalize() in exclusions) {
+                        null
+                    } else {
+                        scanTopLevel(child, state)
+                    }
+                }
             }
         } catch (error: LocalImportRejected) {
             throw error
@@ -157,7 +177,6 @@ class LocalImportScanner private constructor(
             reject("link or reparse point is not allowed: ${child.fileName}")
         }
         if (!Files.isReadable(child)) reject("entry is unreadable: ${child.fileName}")
-        if (isHidden(child, preliminaryAttributes)) return null
         val entry = state.inspect(child)
         val relative = entry.relativePath
         return when {
@@ -270,11 +289,24 @@ private val SUPPORTED_ARCHIVE_EXTENSIONS = setOf("cbz", "zip", "rar", "cbr", "7z
 private fun isSupportedArchive(name: String): Boolean =
     name.substringAfterLast('.', missingDelimiterValue = "").lowercase(Locale.ROOT) in SUPPORTED_ARCHIVE_EXTENSIONS
 
-private fun isHidden(path: Path, attributes: BasicFileAttributes): Boolean {
-    if (path.fileName.toString().startsWith('.')) return true
-    if (attributes is DosFileAttributes && attributes.isHidden) return true
-    return runCatching { Files.isHidden(path) }.getOrDefault(false)
+private enum class LocalScanMode {
+    SOURCE,
+    OWNED_IMPORT,
 }
+
+private fun isInternalOwnershipMetadata(path: Path): Boolean {
+    val name = path.fileName?.toString() ?: return false
+    if (!name.startsWith(LOCAL_IMPORT_OWNERSHIP_MARKER_PREFIX)) return false
+    val suffix = name.removePrefix(LOCAL_IMPORT_OWNERSHIP_MARKER_PREFIX)
+    if (suffix.matches(OWNERSHIP_NONCE_PATTERN)) return true
+    if (!suffix.endsWith(".tmp")) return false
+    val temporaryParts = suffix.removeSuffix(".tmp").split('.', limit = 2)
+    if (temporaryParts.size != 2 || !temporaryParts[0].matches(OWNERSHIP_NONCE_PATTERN)) return false
+    return runCatching { java.util.UUID.fromString(temporaryParts[1]).toString() == temporaryParts[1] }
+        .getOrDefault(false)
+}
+
+private val OWNERSHIP_NONCE_PATTERN = Regex("[0-9a-f]{32}")
 
 internal fun readAttributes(path: Path, label: String): BasicFileAttributes = try {
     Files.readAttributes(path, BasicFileAttributes::class.java, LinkOption.NOFOLLOW_LINKS)

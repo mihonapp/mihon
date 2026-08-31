@@ -64,16 +64,40 @@ class LocalImportScannerTest {
     }
 
     @Test
-    fun `hidden top level entries are skipped but visible unsupported files and empty manga are rejected`() {
-        val manga = Files.createDirectory(tempDir.resolve("manga"))
-        Files.writeString(manga.resolve(".ignored.txt"), "ignored")
-        Files.createDirectories(manga.resolve(".ignored-dir"))
+    fun `hidden supported entries are classified and hidden unsupported entries fail closed`() {
+        val manga = Files.createDirectory(tempDir.resolve("hidden-supported"))
+        Files.writeString(manga.resolve(".chapter.cbz"), "archive")
+        val hiddenDirectory = Files.createDirectory(manga.resolve(".chapter-directory"))
+        Files.writeString(hiddenDirectory.resolve("page.jpg"), "page")
+        val expectedNames = mutableSetOf(".chapter.cbz", ".chapter-directory")
+        if (System.getProperty("os.name").startsWith("Windows", ignoreCase = true)) {
+            val dosHiddenArchive = Files.writeString(manga.resolve("dos-hidden.zip"), "archive")
+            Files.setAttribute(dosHiddenArchive, "dos:hidden", true)
+            expectedNames += dosHiddenArchive.fileName.toString()
+        }
 
-        shouldThrow<LocalImportRejected> { LocalImportScanner().scan(manga) }
-            .message.shouldContain("no chapters")
+        val manifest = LocalImportScanner().scan(manga)
 
-        Files.writeString(manga.resolve("notes.txt"), "unsupported")
-        shouldThrow<LocalImportRejected> { LocalImportScanner().scan(manga) }
+        manifest.chapters.mapTo(mutableSetOf()) { it.name } shouldBe expectedNames
+        manifest.chapters.single { it.name == ".chapter.cbz" }.kind shouldBe LocalChapterKind.ARCHIVE
+        manifest.chapters.single { it.name == ".chapter-directory" }.kind shouldBe LocalChapterKind.DIRECTORY
+
+        val unsupported = Files.createDirectory(tempDir.resolve("hidden-unsupported"))
+        Files.writeString(unsupported.resolve(".notes.txt"), "unsupported")
+        shouldThrow<LocalImportRejected> { LocalImportScanner().scan(unsupported) }
+            .message.shouldContain("unsupported top-level file")
+
+        if (System.getProperty("os.name").startsWith("Windows", ignoreCase = true)) {
+            val dosUnsupported = Files.createDirectory(tempDir.resolve("dos-hidden-unsupported"))
+            val hiddenText = Files.writeString(dosUnsupported.resolve("notes.txt"), "unsupported")
+            Files.setAttribute(hiddenText, "dos:hidden", true)
+            shouldThrow<LocalImportRejected> { LocalImportScanner().scan(dosUnsupported) }
+                .message.shouldContain("unsupported top-level file")
+        }
+
+        val reservedLooking = Files.createDirectory(tempDir.resolve("source-reserved-looking"))
+        Files.writeString(reservedLooking.resolve(".mihon-local-import-owner"), "not internal here")
+        shouldThrow<LocalImportRejected> { LocalImportScanner().scan(reservedLooking) }
             .message.shouldContain("unsupported top-level file")
     }
 
@@ -86,7 +110,7 @@ class LocalImportScannerTest {
         Files.write(manga.resolve("chapter.cbz"), byteArrayOf(1))
         val outside = Files.createDirectory(tempDir.resolve("outside"))
         Files.writeString(outside.resolve("secret.txt"), "secret")
-        val link = manga.resolve("linked-chapter")
+        val link = manga.resolve(".linked-chapter")
         var linkCreated = runCatching {
             Files.createSymbolicLink(link, outside)
             true

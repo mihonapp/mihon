@@ -126,12 +126,15 @@ class LocalMangaImporter private constructor(
             throw LocalImportRejected("invalid existing local manga storage path", error)
         }
         if (path.parent != mangaRoot) rejectImport("existing local manga path is outside the local manga root")
-        validateCommittedLocalMangaSecurity(localLibraryRoot, path)
+        val ownershipMarker = validateCommittedLocalMangaSecurity(localLibraryRoot, path)
         val attributes = readAttributes(path, "existing local manga")
         if (!attributes.isDirectory || isLinkOrReparsePoint(path, attributes) || !Files.isReadable(path)) {
             rejectImport("existing local manga path is not a safe readable directory")
         }
-        val storedManifest = scanner.scan(path)
+        val storedManifest = scanner.scanOwnedImportDirectory(
+            path,
+            setOf(ownershipMarker),
+        )
         if (storedManifest.sha256 != manifest.sha256 || storedManifest.chapters != manifest.chapters) {
             rejectImport("existing local manga media does not match its manifest")
         }

@@ -636,7 +636,7 @@ class LocalMangaImporterTest {
             .stage(LocalImportScanner().scan(source), mediaRoot)
             .use { staged ->
                 val claim = Files.readAllLines(mediaRoot.resolve(".claims").resolve("$OWNERSHIP_NONCE_ID.claim"))
-                val marker = Files.readAllLines(staged.stagingPath.resolve(".mihon-local-import-owner"))
+                val marker = Files.readAllLines(findOwnershipMarker(staged.stagingPath))
                 val claimNonce = claim.single { it.startsWith("nonce=") }.removePrefix("nonce=")
                 val markerNonce = marker.single { it.startsWith("nonce=") }.removePrefix("nonce=")
 
@@ -654,6 +654,22 @@ class LocalMangaImporterTest {
         LocalImportStager(scanner = scanner, idFactory = { PRIVATE_IMPORT_ID })
             .stage(manifest, tempDir.resolve("exact-limits-media"))
             .use { staged -> staged.manifest shouldBe manifest }
+    }
+
+    @Test
+    fun `a supported chapter directory matching the marker prefix keeps its source path`() {
+        val source = Files.createDirectory(tempDir.resolve("marker-name-source"))
+        val chapter = Files.createDirectory(source.resolve(".mihon-local-import-owner"))
+        Files.writeString(chapter.resolve("page.jpg"), "page")
+        val manifest = LocalImportScanner().scan(source)
+
+        manifest.chapters.single().kind shouldBe LocalChapterKind.DIRECTORY
+        LocalImportStager(idFactory = { MARKER_NAME_CHAPTER_ID })
+            .stage(manifest, tempDir.resolve("marker-name-media"))
+            .use { staged ->
+                Files.readString(staged.stagingPath.resolve(".mihon-local-import-owner").resolve("page.jpg")) shouldBe
+                    "page"
+            }
     }
 
     @Test
@@ -715,6 +731,128 @@ class LocalMangaImporterTest {
     }
 
     @Test
+    fun `ordinary pre-marker failures leave no permanently unclaimed staging residue`() {
+        listOf("directory", "marker-temp").forEachIndexed { index, failurePoint ->
+            val caseRoot = Files.createDirectory(tempDir.resolve("ordinary-$failurePoint"))
+            val source = createMangaAt(caseRoot.resolve("source"))
+            val mediaRoot = caseRoot.resolve("media")
+            val id = ORDINARY_PRE_MARKER_IDS[index]
+            val faults = object : LocalFileFaults {
+                override fun afterStagingDirectoryCreated(directory: Path) {
+                    if (failurePoint == "directory") error("ordinary directory failure")
+                }
+
+                override fun duringMarkerPublication(temporary: Path, marker: Path) {
+                    if (failurePoint == "marker-temp") error("ordinary marker publication failure")
+                }
+            }
+
+            shouldThrow<IllegalStateException> {
+                LocalImportStager(fileFaults = faults, idFactory = { id }, clock = { 0L })
+                    .stage(LocalImportScanner().scan(source), mediaRoot)
+            }
+
+            LocalImportStager(clock = { Long.MAX_VALUE }).cleanupOrphans(mediaRoot, emptySet())
+            assertNoImportResidue(mediaRoot)
+        }
+    }
+
+    @Test
+    fun `claim callback mutation is rejected before staging directory creation`() {
+        val source = createManga("claim-callback-source")
+        val mediaRoot = tempDir.resolve("claim-callback-media")
+        val stagingPath = mediaRoot.resolve(".staging").resolve(CLAIM_CALLBACK_ID)
+        val faults = object : LocalFileFaults {
+            override fun afterClaimCreated(claim: Path) {
+                Files.writeString(claim, "mutated", StandardOpenOption.TRUNCATE_EXISTING)
+            }
+        }
+
+        shouldThrow<LocalImportRejected> {
+            LocalImportStager(fileFaults = faults, idFactory = { CLAIM_CALLBACK_ID })
+                .stage(LocalImportScanner().scan(source), mediaRoot)
+        }
+
+        Files.exists(stagingPath) shouldBe false
+    }
+
+    @Test
+    fun `staging directory callback replacement is rejected before marker publication`() {
+        val source = createManga("directory-callback-source")
+        val mediaRoot = tempDir.resolve("directory-callback-media")
+        val stagingPath = mediaRoot.resolve(".staging").resolve(DIRECTORY_CALLBACK_ID)
+        val displaced = tempDir.resolve("directory-callback-displaced")
+        val faults = object : LocalFileFaults {
+            override fun afterStagingDirectoryCreated(directory: Path) {
+                Files.move(directory, displaced)
+                Files.createDirectory(directory)
+                Files.writeString(directory.resolve("keep.txt"), "replacement")
+            }
+        }
+
+        shouldThrow<LocalImportRejected> {
+            LocalImportStager(fileFaults = faults, idFactory = { DIRECTORY_CALLBACK_ID })
+                .stage(LocalImportScanner().scan(source), mediaRoot)
+        }
+
+        ownershipMarkerFiles(stagingPath).shouldBeEmpty()
+        Files.readString(stagingPath.resolve("keep.txt")) shouldBe "replacement"
+    }
+
+    @Test
+    fun `marker publication callback mutation is rejected before atomic move`() {
+        val source = createManga("marker-callback-source")
+        val mediaRoot = tempDir.resolve("marker-callback-media")
+        val stagingPath = mediaRoot.resolve(".staging").resolve(MARKER_CALLBACK_ID)
+        val faults = object : LocalFileFaults {
+            override fun duringMarkerPublication(temporary: Path, marker: Path) {
+                Files.writeString(temporary, "mutated", StandardOpenOption.TRUNCATE_EXISTING)
+            }
+        }
+
+        shouldThrow<LocalImportRejected> {
+            LocalImportStager(fileFaults = faults, idFactory = { MARKER_CALLBACK_ID })
+                .stage(LocalImportScanner().scan(source), mediaRoot)
+        }
+
+        ownershipMarkerFiles(stagingPath).shouldBeEmpty()
+    }
+
+    @Test
+    fun `copy callback mutations are rejected before a subsequent chunk write`() {
+        listOf("source", "parent", "file").forEachIndexed { index, mutation ->
+            val caseRoot = Files.createDirectory(tempDir.resolve("copy-callback-$mutation"))
+            val source = createMangaAt(
+                caseRoot.resolve("source"),
+                pageContent = "x".repeat(LOCAL_COPY_TEST_BYTES),
+            )
+            val mediaRoot = caseRoot.resolve("media")
+            var pageCallbacks = 0
+            val faults = object : LocalFileFaults {
+                override fun afterCopyChunk(source: Path, target: Path, copiedBytes: Long) {
+                    if (target.fileName.toString() != "页 01.jpg") return
+                    pageCallbacks++
+                    if (pageCallbacks != 1) return
+                    when (mutation) {
+                        "source" -> Files.writeString(source, "changed", StandardOpenOption.APPEND)
+                        "parent" -> makePathPermissive(target.parent)
+                        "file" -> makePathPermissive(target)
+                    }
+                }
+            }
+
+            shouldThrow<LocalImportRejected> {
+                LocalImportStager(
+                    fileFaults = faults,
+                    idFactory = { COPY_CALLBACK_IDS[index] },
+                ).stage(LocalImportScanner().scan(source), mediaRoot)
+            }
+
+            pageCallbacks shouldBe 1
+        }
+    }
+
+    @Test
     fun `cleanup preserves invalid claims and directories without a matching ownership nonce`() {
         val source = createManga("claim-validation-source")
         val manifest = LocalImportScanner().scan(source)
@@ -744,7 +882,7 @@ class LocalMangaImporterTest {
             MISMATCHED_MARKER_ID to "mihon-desktop-local-import-v1\nid=$MISSING_MARKER_ID\n",
         ).map { (id, markerContent) ->
             LocalImportStager(idFactory = { id }, clock = { 0L }).stage(manifest, mediaRoot).also { staged ->
-                val marker = staged.stagingPath.resolve(".mihon-local-import-owner")
+                val marker = findOwnershipMarker(staged.stagingPath)
                 if (markerContent == null) {
                     Files.delete(marker)
                 } else {
@@ -890,6 +1028,19 @@ private val CRASH_IMPORT_IDS = listOf(
     "00000000-0000-4000-8000-000000000018",
     "00000000-0000-4000-8000-000000000019",
 )
+private val ORDINARY_PRE_MARKER_IDS = listOf(
+    "00000000-0000-4000-8000-000000000025",
+    "00000000-0000-4000-8000-000000000026",
+)
+private const val CLAIM_CALLBACK_ID = "00000000-0000-4000-8000-000000000027"
+private const val DIRECTORY_CALLBACK_ID = "00000000-0000-4000-8000-000000000028"
+private const val MARKER_CALLBACK_ID = "00000000-0000-4000-8000-000000000029"
+private const val MARKER_NAME_CHAPTER_ID = "00000000-0000-4000-8000-000000000033"
+private val COPY_CALLBACK_IDS = listOf(
+    "00000000-0000-4000-8000-000000000030",
+    "00000000-0000-4000-8000-000000000031",
+    "00000000-0000-4000-8000-000000000032",
+)
 
 private val LOCAL_IMPORT_TABLES = listOf(
     "manga",
@@ -953,6 +1104,19 @@ private fun assertOnlyManualMediaChildrenRemain(mediaRoot: Path, manualPaths: Se
 
 private fun isWindows(): Boolean = System.getProperty("os.name").startsWith("Windows", ignoreCase = true)
 
+private fun findOwnershipMarker(directory: Path): Path = ownershipMarkerFiles(directory).single()
+
+private fun ownershipMarkerFiles(directory: Path): List<Path> {
+    if (!Files.isDirectory(directory)) return emptyList()
+    return Files.list(directory).use { entries ->
+        entries.filter { entry ->
+            Files.isRegularFile(entry) &&
+                entry.fileName.toString().startsWith(LOCAL_IMPORT_OWNERSHIP_MARKER_PREFIX) &&
+                !entry.fileName.toString().endsWith(".tmp")
+        }.toList()
+    }
+}
+
 private fun makeWindowsDirectoryPermissive(directory: Path) {
     val view = Files.getFileAttributeView(directory, AclFileAttributeView::class.java)
         ?: error("Windows ACL view is unavailable")
@@ -964,6 +1128,37 @@ private fun makeWindowsDirectoryPermissive(directory: Path) {
         allowAcl(owner, permissions, inheritedFlags),
         allowAcl(everyone, permissions, inheritedFlags),
     )
+}
+
+private fun makePathPermissive(path: Path) {
+    val posix = Files.getFileAttributeView(path, PosixFileAttributeView::class.java)
+    if (posix != null) {
+        posix.setPermissions(
+            if (Files.isDirectory(path)) {
+                PosixFilePermission.entries.toSet()
+            } else {
+                setOf(
+                    PosixFilePermission.OWNER_READ,
+                    PosixFilePermission.OWNER_WRITE,
+                    PosixFilePermission.GROUP_READ,
+                    PosixFilePermission.GROUP_WRITE,
+                    PosixFilePermission.OTHERS_READ,
+                    PosixFilePermission.OTHERS_WRITE,
+                )
+            },
+        )
+        return
+    }
+    if (!isWindows()) return
+    val view = Files.getFileAttributeView(path, AclFileAttributeView::class.java)
+        ?: error("Windows ACL view is unavailable")
+    val everyone = lookupPrincipal(path, "S-1-1-0", "Everyone")
+    val flags = if (Files.isDirectory(path)) {
+        setOf(AclEntryFlag.FILE_INHERIT, AclEntryFlag.DIRECTORY_INHERIT)
+    } else {
+        emptySet()
+    }
+    view.acl = listOf(allowAcl(everyone, AclEntryPermission.entries.toSet(), flags))
 }
 
 private fun assertRestrictedWindowsAcl(path: Path) {
