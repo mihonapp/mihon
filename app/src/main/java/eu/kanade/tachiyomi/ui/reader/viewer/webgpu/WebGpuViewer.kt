@@ -29,6 +29,7 @@ import ca.mpreg.webgpuviewer.transition.TransitionStackLeft
 import ca.mpreg.webgpuviewer.transition.TransitionStackRight
 import ca.mpreg.webgpuviewer.transition.TransitionStackUp
 import ca.mpreg.webgpuviewer.viewer.ImagePage
+import ca.mpreg.webgpuviewer.viewer.ImageViewerContinuousState
 import com.google.android.material.color.MaterialColors
 import de.stefan_oltmann.kim.Kim
 import de.stefan_oltmann.kim.android.readMetadata
@@ -781,6 +782,11 @@ open class WebGpuViewer(
                         avoidCutout = true
                         alwaysAvoidCutout = true
                     }
+                }
+
+                (this as? ImageViewerContinuousState)?.let {
+                    minZoomWidthFraction = config.continuousMinWidth / 100f
+                    scale = minScale
                 }
             }
 

@@ -206,6 +206,8 @@ class ReaderPreferences(
 
     val cutoutMode: Preference<CutoutMode> = preferenceStore.getEnum("webgpu_cutout_mode", CutoutMode.AVOID)
 
+    val continuousMinWidth: Preference<Int> = preferenceStore.getInt("webgpu_continuous_minwidth", 100)
+
     // endregion
 
     enum class FlashColor {

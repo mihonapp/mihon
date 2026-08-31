@@ -64,6 +64,21 @@ internal fun ColumnScope.ReadingModePage(viewModel: ReaderSettingsViewModel) {
                 }
             }
         }
+
+        if (resolved == ReadingMode.WEBTOON) {
+            val numberFormat = remember { NumberFormat.getPercentInstance() }
+            val continuousMinWidth by viewModel.preferences.continuousMinWidth.collectAsState()
+            SliderItem(
+                value = continuousMinWidth,
+                valueRange = ReaderPreferences.let { 1..100 },
+                label = stringResource(MR.strings.pref_continuous_minwidth),
+                valueString = numberFormat.format(continuousMinWidth / 100f),
+                onChange = {
+                    viewModel.preferences.continuousMinWidth.set(it)
+                },
+                pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+            )
+        }
     }
 
     val orientation = remember(manga) { ReaderOrientation.fromPreference(manga?.readerOrientation?.toInt()) }

@@ -55,6 +55,9 @@ class WebGpuConfig(
     var dualPageView = ReaderPreferences.DualPageView.NEVER
         private set
 
+    var continuousMinWidth = 1
+        private set
+
     init {
         readerPreferences.readerTheme
             .register(
@@ -129,6 +132,12 @@ class WebGpuConfig(
         readerPreferences.dualPageView
             .register(
                 { dualPageView = it },
+                { imagePropertyChangedListener?.invoke() },
+            )
+
+        readerPreferences.continuousMinWidth
+            .register(
+                { continuousMinWidth = it },
                 { imagePropertyChangedListener?.invoke() },
             )
     }
