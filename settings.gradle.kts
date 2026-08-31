@@ -31,6 +31,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "Mihon"
 include(":app")
 include(":desktop-app")
+include(":desktop-library-data")
 include(":baseline-profile")
 include(":core-metadata")
 include(":core:archive")

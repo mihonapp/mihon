@@ -1,0 +1,302 @@
+import kotlin.Boolean;
+
+PRAGMA foreign_keys = 1;
+
+CREATE TABLE manga (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  source_id INTEGER NOT NULL,
+  url TEXT NOT NULL,
+  title TEXT NOT NULL,
+  artist TEXT,
+  author TEXT,
+  description TEXT,
+  genre_json TEXT NOT NULL DEFAULT '[]',
+  status INTEGER NOT NULL DEFAULT 0,
+  thumbnail_url TEXT,
+  favorite INTEGER AS Boolean NOT NULL DEFAULT 1,
+  date_added INTEGER NOT NULL DEFAULT 0,
+  viewer_flags INTEGER NOT NULL DEFAULT 0,
+  chapter_flags INTEGER NOT NULL DEFAULT 0,
+  update_strategy TEXT NOT NULL DEFAULT 'ALWAYS_UPDATE',
+  last_modified_at INTEGER NOT NULL DEFAULT 0,
+  favorite_modified_at INTEGER,
+  excluded_scanlators_json TEXT NOT NULL DEFAULT '[]',
+  version INTEGER NOT NULL DEFAULT 0,
+  notes TEXT NOT NULL DEFAULT '',
+  initialized INTEGER AS Boolean NOT NULL DEFAULT 0,
+  memo_json TEXT NOT NULL DEFAULT '{}',
+  UNIQUE(source_id, url)
+);
+
+CREATE TABLE chapter (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  manga_id INTEGER NOT NULL REFERENCES manga(id) ON DELETE CASCADE,
+  url TEXT NOT NULL,
+  name TEXT NOT NULL,
+  scanlator TEXT,
+  read INTEGER AS Boolean NOT NULL DEFAULT 0,
+  bookmark INTEGER AS Boolean NOT NULL DEFAULT 0,
+  last_page_read INTEGER NOT NULL DEFAULT 0,
+  date_fetch INTEGER NOT NULL DEFAULT 0,
+  date_upload INTEGER NOT NULL DEFAULT 0,
+  chapter_number REAL NOT NULL DEFAULT 0,
+  source_order INTEGER NOT NULL DEFAULT 0,
+  last_modified_at INTEGER NOT NULL DEFAULT 0,
+  version INTEGER NOT NULL DEFAULT 0,
+  memo_json TEXT NOT NULL DEFAULT '{}',
+  UNIQUE(manga_id, url)
+);
+
+CREATE TABLE category (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL COLLATE NOCASE UNIQUE,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  flags INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE manga_category (
+  manga_id INTEGER NOT NULL REFERENCES manga(id) ON DELETE CASCADE,
+  category_id INTEGER NOT NULL REFERENCES category(id) ON DELETE CASCADE,
+  PRIMARY KEY(manga_id, category_id)
+);
+
+CREATE TABLE history (
+  chapter_id INTEGER NOT NULL PRIMARY KEY REFERENCES chapter(id) ON DELETE CASCADE,
+  last_read INTEGER NOT NULL,
+  read_duration INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE tracking (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  manga_id INTEGER NOT NULL REFERENCES manga(id) ON DELETE CASCADE,
+  tracker_id INTEGER NOT NULL,
+  remote_id INTEGER NOT NULL,
+  library_id INTEGER NOT NULL DEFAULT 0,
+  title TEXT NOT NULL DEFAULT '',
+  last_chapter_read REAL NOT NULL DEFAULT 0,
+  total_chapters INTEGER NOT NULL DEFAULT 0,
+  score REAL NOT NULL DEFAULT 0,
+  status INTEGER NOT NULL DEFAULT 0,
+  started_reading_date INTEGER NOT NULL DEFAULT 0,
+  finished_reading_date INTEGER NOT NULL DEFAULT 0,
+  private INTEGER AS Boolean NOT NULL DEFAULT 0,
+  tracking_url TEXT NOT NULL DEFAULT '',
+  UNIQUE(manga_id, tracker_id)
+);
+
+CREATE TABLE source_metadata (
+  source_id INTEGER NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  imported_at INTEGER NOT NULL
+);
+
+CREATE TABLE preference_snapshot (
+  key TEXT NOT NULL PRIMARY KEY,
+  value_type TEXT NOT NULL,
+  value_json TEXT NOT NULL,
+  imported_at INTEGER NOT NULL
+);
+
+CREATE TABLE source_preference_snapshot (
+  source_key TEXT NOT NULL,
+  key TEXT NOT NULL,
+  value_type TEXT NOT NULL,
+  value_json TEXT NOT NULL,
+  imported_at INTEGER NOT NULL,
+  PRIMARY KEY(source_key, key)
+);
+
+CREATE TABLE local_manga_entry (
+  manga_id INTEGER NOT NULL PRIMARY KEY REFERENCES manga(id) ON DELETE CASCADE,
+  storage_path TEXT NOT NULL UNIQUE,
+  manifest_sha256 TEXT NOT NULL,
+  imported_at INTEGER NOT NULL
+);
+
+CREATE TABLE local_chapter_asset (
+  chapter_id INTEGER NOT NULL PRIMARY KEY REFERENCES chapter(id) ON DELETE CASCADE,
+  relative_path TEXT NOT NULL,
+  asset_kind TEXT NOT NULL,
+  size_bytes INTEGER NOT NULL,
+  modified_at INTEGER NOT NULL,
+  UNIQUE(relative_path)
+);
+
+CREATE TABLE import_report (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  import_type TEXT NOT NULL,
+  source_path TEXT NOT NULL,
+  status TEXT NOT NULL,
+  started_at INTEGER NOT NULL,
+  finished_at INTEGER NOT NULL,
+  manga_inserted INTEGER NOT NULL DEFAULT 0,
+  manga_merged INTEGER NOT NULL DEFAULT 0,
+  chapters_inserted INTEGER NOT NULL DEFAULT 0,
+  chapters_merged INTEGER NOT NULL DEFAULT 0,
+  categories_linked INTEGER NOT NULL DEFAULT 0,
+  preferences_imported INTEGER NOT NULL DEFAULT 0,
+  preferences_skipped INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE import_report_item (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  report_id INTEGER NOT NULL REFERENCES import_report(id) ON DELETE CASCADE,
+  item_type TEXT NOT NULL,
+  item_key TEXT NOT NULL,
+  outcome TEXT NOT NULL,
+  reason TEXT,
+  message TEXT NOT NULL
+);
+
+CREATE INDEX chapter_manga_order ON chapter(manga_id, source_order DESC, chapter_number DESC, id DESC);
+CREATE INDEX history_last_read ON history(last_read DESC);
+CREATE INDEX manga_title ON manga(title COLLATE NOCASE);
+
+selectLibrary:
+SELECT manga.*, COUNT(chapter.id) AS chapter_count,
+       COALESCE(SUM(CASE WHEN chapter.read = 0 THEN 1 ELSE 0 END), 0) AS unread_count
+FROM manga LEFT JOIN chapter ON chapter.manga_id = manga.id
+WHERE manga.favorite = 1
+GROUP BY manga.id
+ORDER BY manga.title COLLATE NOCASE, manga.id;
+
+selectMangaById:
+SELECT * FROM manga WHERE id = ?;
+
+selectMangaByIdentity:
+SELECT * FROM manga WHERE source_id = ? AND url = ?;
+
+selectChaptersForManga:
+SELECT * FROM chapter WHERE manga_id = ?
+ORDER BY source_order DESC, chapter_number DESC, name COLLATE NOCASE, id DESC;
+
+selectChapterByIdentity:
+SELECT * FROM chapter WHERE manga_id = ? AND url = ?;
+
+selectCategoriesForManga:
+SELECT category.* FROM category
+JOIN manga_category ON manga_category.category_id = category.id
+WHERE manga_category.manga_id = ?
+ORDER BY category.sort_order, category.name COLLATE NOCASE;
+
+selectLatestImportReport:
+SELECT * FROM import_report ORDER BY id DESC LIMIT 1;
+
+insertManga:
+INSERT INTO manga(
+  source_id, url, title, artist, author, description, genre_json, status, thumbnail_url,
+  favorite, date_added, viewer_flags, chapter_flags, update_strategy, last_modified_at,
+  favorite_modified_at, excluded_scanlators_json, version, notes, initialized, memo_json
+) VALUES (
+  :source_id, :url, :title, :artist, :author, :description, :genre_json, :status, :thumbnail_url,
+  :favorite, :date_added, :viewer_flags, :chapter_flags, :update_strategy, :last_modified_at,
+  :favorite_modified_at, :excluded_scanlators_json, :version, :notes, :initialized, :memo_json
+);
+
+updateManga:
+UPDATE manga SET source_id=:source_id, url=:url, title=:title, artist=:artist, author=:author,
+  description=:description, genre_json=:genre_json, status=:status, thumbnail_url=:thumbnail_url,
+  favorite=:favorite, date_added=:date_added, viewer_flags=:viewer_flags, chapter_flags=:chapter_flags,
+  update_strategy=:update_strategy, last_modified_at=:last_modified_at,
+  favorite_modified_at=:favorite_modified_at, excluded_scanlators_json=:excluded_scanlators_json,
+  version=:version, notes=:notes, initialized=:initialized, memo_json=:memo_json
+WHERE id=:id;
+
+insertChapter:
+INSERT INTO chapter(
+  manga_id, url, name, scanlator, read, bookmark, last_page_read, date_fetch, date_upload,
+  chapter_number, source_order, last_modified_at, version, memo_json
+) VALUES (
+  :manga_id, :url, :name, :scanlator, :read, :bookmark, :last_page_read, :date_fetch, :date_upload,
+  :chapter_number, :source_order, :last_modified_at, :version, :memo_json
+);
+
+updateChapter:
+UPDATE chapter SET manga_id=:manga_id, url=:url, name=:name, scanlator=:scanlator, read=:read,
+  bookmark=:bookmark, last_page_read=:last_page_read, date_fetch=:date_fetch, date_upload=:date_upload,
+  chapter_number=:chapter_number, source_order=:source_order, last_modified_at=:last_modified_at,
+  version=:version, memo_json=:memo_json
+WHERE id=:id;
+
+insertCategory:
+INSERT INTO category(name, sort_order, flags) VALUES (:name, :sort_order, :flags)
+ON CONFLICT(name) DO UPDATE SET
+  sort_order=MAX(category.sort_order, excluded.sort_order),
+  flags=(category.flags | excluded.flags);
+
+selectCategoryByName:
+SELECT * FROM category WHERE name = ? COLLATE NOCASE;
+
+linkMangaCategory:
+INSERT INTO manga_category(manga_id, category_id) VALUES (?, ?)
+ON CONFLICT(manga_id, category_id) DO NOTHING;
+
+upsertHistory:
+INSERT INTO history(chapter_id, last_read, read_duration) VALUES (:chapter_id, :last_read, :read_duration)
+ON CONFLICT(chapter_id) DO UPDATE SET
+  last_read=MAX(history.last_read, excluded.last_read),
+  read_duration=MAX(history.read_duration, excluded.read_duration);
+
+selectHistoryByChapter:
+SELECT * FROM history WHERE chapter_id = ?;
+
+insertTracking:
+INSERT INTO tracking(
+  manga_id, tracker_id, remote_id, library_id, title, last_chapter_read, total_chapters,
+  score, status, started_reading_date, finished_reading_date, private, tracking_url
+) VALUES (
+  :manga_id, :tracker_id, :remote_id, :library_id, :title, :last_chapter_read, :total_chapters,
+  :score, :status, :started_reading_date, :finished_reading_date, :private, :tracking_url
+);
+
+selectTrackingByIdentity:
+SELECT * FROM tracking WHERE manga_id=? AND tracker_id=? AND remote_id=?;
+
+updateTracking:
+UPDATE tracking SET library_id=:library_id, title=:title, last_chapter_read=:last_chapter_read,
+  total_chapters=:total_chapters, score=:score, status=:status,
+  started_reading_date=:started_reading_date, finished_reading_date=:finished_reading_date,
+  private=:private, tracking_url=:tracking_url
+WHERE id=:id;
+
+upsertSourceMetadata:
+INSERT INTO source_metadata(source_id, name, imported_at) VALUES (?, ?, ?)
+ON CONFLICT(source_id) DO UPDATE SET name=excluded.name, imported_at=excluded.imported_at;
+
+upsertPreferenceSnapshot:
+INSERT INTO preference_snapshot(key, value_type, value_json, imported_at) VALUES (?, ?, ?, ?)
+ON CONFLICT(key) DO UPDATE SET value_type=excluded.value_type,
+  value_json=excluded.value_json, imported_at=excluded.imported_at;
+
+upsertSourcePreferenceSnapshot:
+INSERT INTO source_preference_snapshot(source_key, key, value_type, value_json, imported_at)
+VALUES (?, ?, ?, ?, ?)
+ON CONFLICT(source_key, key) DO UPDATE SET value_type=excluded.value_type,
+  value_json=excluded.value_json, imported_at=excluded.imported_at;
+
+insertLocalMangaEntry:
+INSERT INTO local_manga_entry(manga_id, storage_path, manifest_sha256, imported_at) VALUES (?, ?, ?, ?)
+ON CONFLICT(manga_id) DO UPDATE SET storage_path=excluded.storage_path,
+  manifest_sha256=excluded.manifest_sha256, imported_at=excluded.imported_at;
+
+selectLocalMangaByManifest:
+SELECT * FROM local_manga_entry WHERE manifest_sha256 = ?;
+
+insertLocalChapterAsset:
+INSERT INTO local_chapter_asset(chapter_id, relative_path, asset_kind, size_bytes, modified_at)
+VALUES (?, ?, ?, ?, ?)
+ON CONFLICT(chapter_id) DO UPDATE SET relative_path=excluded.relative_path,
+  asset_kind=excluded.asset_kind, size_bytes=excluded.size_bytes, modified_at=excluded.modified_at;
+
+insertImportReport:
+INSERT INTO import_report(
+  import_type, source_path, status, started_at, finished_at, manga_inserted, manga_merged,
+  chapters_inserted, chapters_merged, categories_linked, preferences_imported, preferences_skipped
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+insertImportReportItem:
+INSERT INTO import_report_item(report_id, item_type, item_key, outcome, reason, message)
+VALUES (?, ?, ?, ?, ?, ?);
+
+lastInsertRowId:
+SELECT last_insert_rowid();

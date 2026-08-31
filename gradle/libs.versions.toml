@@ -189,6 +189,7 @@ sqldelight-androidxDriver = { module = "com.github.mihon.sqldelight-androidx-dri
 sqldelight-androidxPaging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqldelight" }
 sqldelight-async = { module = "app.cash.sqldelight:async-extensions", version.ref = "sqldelight" }
 sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
+sqldelight-jdbcDriver = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
 sqldelight-sqliteDialect338 = { module = "app.cash.sqldelight:sqlite-3-38-dialect", version.ref = "sqldelight" }
 stringSimilarity = { module = "com.aallam.similarity:string-similarity-kotlin", version.ref = "stringSimilarity" }
 subsamplingScaleImageView = { module = "com.github.mihonapp:subsampling-scale-image-view", version.ref = "subsamplingScaleImageView" }
