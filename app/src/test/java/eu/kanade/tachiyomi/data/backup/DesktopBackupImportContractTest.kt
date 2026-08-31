@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.data.backup.models.BackupHistory
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupPreference
 import eu.kanade.tachiyomi.data.backup.models.BackupSource
+import eu.kanade.tachiyomi.data.backup.models.BackupSourcePreferences
 import eu.kanade.tachiyomi.data.backup.models.BackupTracking
 import eu.kanade.tachiyomi.data.backup.models.BooleanPreferenceValue
 import eu.kanade.tachiyomi.data.backup.models.FloatPreferenceValue
@@ -66,6 +67,15 @@ class DesktopBackupImportContractTest {
                 BackupPreference("__PRIVATE_auth_token", StringPreferenceValue("must-not-appear-in-report")),
                 BackupPreference("__APP_STATE_last_version_code", IntPreferenceValue(1)),
                 BackupPreference("unrecognized_plan2_key", StringPreferenceValue("unknown")),
+            ),
+            backupSourcePreferences = listOf(
+                BackupSourcePreferences(
+                    sourceKey = "真实来源/42",
+                    prefs = listOf(
+                        BackupPreference("nested-string", StringPreferenceValue("嵌套值")),
+                        BackupPreference("nested-boolean", BooleanPreferenceValue(true)),
+                    ),
+                ),
             ),
         )
 
@@ -156,6 +166,14 @@ private fun Backup.toSemanticProjection() = BackupProjection(
     categories = backupCategories.map { CategoryProjection(it.id, it.name, it.order, it.flags) },
     sources = backupSources.map { SourceProjection(it.sourceId, it.name) },
     preferences = backupPreferences.map { PreferenceProjection(it.key, it.value.toPrimitive()) },
+    sourcePreferences = backupSourcePreferences.map { sourcePreferences ->
+        SourcePreferencesProjection(
+            sourceKey = sourcePreferences.sourceKey,
+            preferences = sourcePreferences.prefs.map { preference ->
+                PreferenceProjection(preference.key, preference.value.toPrimitive())
+            },
+        )
+    },
 )
 
 private fun AndroidBackup.toSemanticProjection() = BackupProjection(
@@ -198,6 +216,14 @@ private fun AndroidBackup.toSemanticProjection() = BackupProjection(
     categories = backupCategories.map { CategoryProjection(it.id, it.name, it.order, it.flags) },
     sources = backupSources.map { SourceProjection(it.sourceId, it.name) },
     preferences = backupPreferences.map { PreferenceProjection(it.key, it.value.toPrimitive()) },
+    sourcePreferences = backupSourcePreferences.map { sourcePreferences ->
+        SourcePreferencesProjection(
+            sourceKey = sourcePreferences.sourceKey,
+            preferences = sourcePreferences.prefs.map { preference ->
+                PreferenceProjection(preference.key, preference.value.toPrimitive())
+            },
+        )
+    },
 )
 
 @Suppress("DEPRECATION")
@@ -230,6 +256,7 @@ private data class BackupProjection(
     val categories: List<CategoryProjection>,
     val sources: List<SourceProjection>,
     val preferences: List<PreferenceProjection>,
+    val sourcePreferences: List<SourcePreferencesProjection>,
 )
 
 private data class MangaProjection(
@@ -272,3 +299,8 @@ private data class TrackingProjection(
 private data class SourceProjection(val sourceId: Long, val name: String)
 
 private data class PreferenceProjection(val key: String, val value: String)
+
+private data class SourcePreferencesProjection(
+    val sourceKey: String,
+    val preferences: List<PreferenceProjection>,
+)
