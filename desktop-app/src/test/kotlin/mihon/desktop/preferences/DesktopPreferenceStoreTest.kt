@@ -41,4 +41,20 @@ class DesktopPreferenceStoreTest {
 
         DesktopPreferenceStore(file).load() shouldBe DesktopPreferences()
     }
+
+    @Test
+    fun `malformed properties return defaults and quarantine the original file`() {
+        val file = tempDir.resolve("preferences.properties")
+        val malformedProperties = "theme=\\u12G4\ndestination=Browse\n"
+        Files.writeString(file, malformedProperties)
+
+        DesktopPreferenceStore(file).load() shouldBe DesktopPreferences()
+
+        Files.exists(file) shouldBe false
+        val quarantinedFiles = Files.list(tempDir).use { files ->
+            files.filter { it.fileName.toString().startsWith("preferences.properties.corrupt-") }.toList()
+        }
+        quarantinedFiles.size shouldBe 1
+        Files.readString(quarantinedFiles.single()) shouldBe malformedProperties
+    }
 }

@@ -14,6 +14,21 @@ try {
         throw "Packaged launcher was not created at $launcher"
     }
 
+    $runtimeRelease = Join-Path $repoRoot 'desktop-app\build\compose\binaries\main\app\MihonW\runtime\release'
+    if (-not (Test-Path -LiteralPath $runtimeRelease)) {
+        throw "Packaged Java runtime metadata was not created at $runtimeRelease"
+    }
+    $runtimeReleaseContents = Get-Content -Raw -LiteralPath $runtimeRelease
+    $javaVersionMatch = [regex]::Match($runtimeReleaseContents, '(?m)^JAVA_VERSION="(?<version>[^"]+)"\r?$')
+    if (-not $javaVersionMatch.Success) {
+        throw "Packaged Java runtime metadata did not contain JAVA_VERSION"
+    }
+    $javaVersion = $javaVersionMatch.Groups['version'].Value
+    if (-not [regex]::IsMatch($javaVersion, '^17(?:\.|$)')) {
+        throw "Packaged Java runtime must be Java 17, but JAVA_VERSION was $javaVersion"
+    }
+    Write-Host "Packaged runtime JAVA_VERSION=$javaVersion"
+
     $smokeRoot = Join-Path ([System.IO.Path]::GetTempPath()) ('mihon-w-smoke-' + [guid]::NewGuid().ToString('N'))
     $process = Start-Process -FilePath $launcher -ArgumentList @('--smoke-test', "--data-dir=$smokeRoot") -Wait -PassThru
     if ($process.ExitCode -ne 0) {

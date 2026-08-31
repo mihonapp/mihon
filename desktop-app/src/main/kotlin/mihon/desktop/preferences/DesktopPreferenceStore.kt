@@ -2,12 +2,14 @@ package mihon.desktop.preferences
 
 import mihon.desktop.navigation.DesktopDestination
 import mihon.desktop.window.WindowPlacement
+import java.io.IOException
 import java.nio.file.AtomicMoveNotSupportedException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption.ATOMIC_MOVE
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 import java.util.Properties
+import java.util.UUID
 
 enum class ThemeMode {
     System,
@@ -26,8 +28,16 @@ class DesktopPreferenceStore(private val file: Path) {
     fun load(): DesktopPreferences {
         if (!Files.exists(file)) return DesktopPreferences()
 
-        val properties = Properties().apply {
-            Files.newInputStream(file).use { input -> load(input) }
+        val properties = try {
+            Properties().apply {
+                Files.newInputStream(file).use { input -> load(input) }
+            }
+        } catch (_: IOException) {
+            quarantineInvalidFile()
+            return DesktopPreferences()
+        } catch (_: IllegalArgumentException) {
+            quarantineInvalidFile()
+            return DesktopPreferences()
         }
         return DesktopPreferences(
             themeMode = enumValueOrDefault(properties.getProperty("theme"), ThemeMode.System),
@@ -58,6 +68,17 @@ class DesktopPreferenceStore(private val file: Path) {
             Files.move(temporary, file, ATOMIC_MOVE, REPLACE_EXISTING)
         } catch (_: AtomicMoveNotSupportedException) {
             Files.move(temporary, file, REPLACE_EXISTING)
+        }
+    }
+
+    private fun quarantineInvalidFile() {
+        val corruptFile = file.resolveSibling("${file.fileName}.corrupt-${UUID.randomUUID()}")
+        try {
+            Files.move(file, corruptFile)
+        } catch (_: IOException) {
+            // The original file remains in place for diagnosis when it cannot be moved.
+        } catch (_: SecurityException) {
+            // The original file remains in place for diagnosis when permissions prevent moving it.
         }
     }
 

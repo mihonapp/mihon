@@ -23,7 +23,9 @@ object DesktopRuntimeFactory {
             ?.takeIf(String::isNotBlank)
             ?.let(Path::of)
         val mode = if ("--portable" in args) DistributionMode.Portable else DistributionMode.Installed
-        val appData = environment["APPDATA"]?.let(Path::of)
+        val appData = environment["APPDATA"]
+            ?.takeIf(String::isNotBlank)
+            ?.let(Path::of)
         val directories = AppDirectoryResolver(appData, executableDirectory)
             .resolve(mode, explicitRoot)
             .create()

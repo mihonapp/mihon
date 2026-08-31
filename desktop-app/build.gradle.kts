@@ -1,3 +1,5 @@
+import org.gradle.jvm.toolchain.JavaLanguageVersion
+import org.gradle.jvm.toolchain.JavaToolchainService
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -10,6 +12,16 @@ plugins {
 kotlin {
     jvmToolchain(mihonx.versions.java.get().toInt())
 }
+
+val desktopJavaHome = extensions
+    .getByType<JavaToolchainService>()
+    .launcherFor {
+        languageVersion.set(JavaLanguageVersion.of(mihonx.versions.java.get().toInt()))
+    }.get()
+    .metadata
+    .installationPath
+    .asFile
+    .absolutePath
 
 dependencies {
     implementation(compose.desktop.currentOs)
@@ -26,6 +38,7 @@ tasks.test {
 compose.desktop {
     application {
         mainClass = "mihon.desktop.MainKt"
+        javaHome = desktopJavaHome
 
         nativeDistributions {
             targetFormats(TargetFormat.Exe)
