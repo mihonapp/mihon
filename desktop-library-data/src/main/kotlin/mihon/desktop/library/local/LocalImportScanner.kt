@@ -55,6 +55,7 @@ class LocalImportScanner(
         if (Files.notExists(root, LinkOption.NOFOLLOW_LINKS)) {
             reject("source root is not a readable directory: $root")
         }
+        validateNoReparseAncestors(root, "source root")
         val rootAttributes = readAttributes(root, "source root")
         if (isLinkOrReparsePoint(root, rootAttributes) || !rootAttributes.isDirectory || !Files.isReadable(root)) {
             reject("source root is not a readable directory: $root")
@@ -73,6 +74,7 @@ class LocalImportScanner(
         }
         if (chapters.isEmpty()) reject("local manga contains no chapters: $root")
         val sorted = chapters.sortedWith(compareBy(LOCAL_CHAPTER_PATH_COMPARATOR) { portablePath(it.relativePath) })
+        validateNoReparseAncestors(root, "source root")
         return LocalImportManifest(title, root, sorted, manifestSha256(sorted))
     }
 
@@ -91,8 +93,13 @@ class LocalImportScanner(
     }
 
     private fun scanTopLevel(child: Path, state: ScanState): LocalChapterCandidate? {
+        val preliminaryAttributes = readAttributes(child, "top-level entry")
+        if (isLinkOrReparsePoint(child, preliminaryAttributes)) {
+            reject("link or reparse point is not allowed: ${child.fileName}")
+        }
+        if (!Files.isReadable(child)) reject("entry is unreadable: ${child.fileName}")
+        if (isHidden(child, preliminaryAttributes)) return null
         val entry = state.inspect(child)
-        if (isHidden(child, entry.attributes)) return null
         val relative = entry.relativePath
         return when {
             entry.attributes.isDirectory -> {
@@ -213,6 +220,23 @@ internal fun readAttributes(path: Path, label: String): BasicFileAttributes = tr
     reject("cannot read attributes for $label: $path", error)
 } catch (error: SecurityException) {
     reject("cannot read attributes for $label: $path", error)
+}
+
+internal fun validateNoReparseAncestors(path: Path, label: String) {
+    val absolute = path.toAbsolutePath().normalize()
+    var current = absolute.root ?: reject("$label has no filesystem root: $absolute")
+    validateSafePathComponent(current, label)
+    for (index in 0 until absolute.nameCount) {
+        current = current.resolve(absolute.getName(index))
+        validateSafePathComponent(current, label)
+    }
+}
+
+private fun validateSafePathComponent(path: Path, label: String) {
+    val attributes = readAttributes(path, "$label ancestor")
+    if (isLinkOrReparsePoint(path, attributes)) {
+        reject("$label ancestor is a link or reparse point: $path")
+    }
 }
 
 internal fun isLinkOrReparsePoint(path: Path, attributes: BasicFileAttributes): Boolean {

@@ -112,6 +112,22 @@ class LocalImportScannerTest {
     }
 
     @Test
+    fun `scanner rejects a normal manga directory reached through a junction parent`() {
+        val realParent = Files.createDirectory(tempDir.resolve("real-parent"))
+        val manga = Files.createDirectory(realParent.resolve("manga"))
+        Files.write(manga.resolve("chapter.cbz"), byteArrayOf(1))
+        val linkedParent = tempDir.resolve("linked-parent")
+        createDirectoryLink(linkedParent, realParent) shouldBe true
+
+        try {
+            shouldThrow<LocalImportRejected> { LocalImportScanner().scan(linkedParent.resolve("manga")) }
+                .message.shouldContain("ancestor")
+        } finally {
+            Files.deleteIfExists(linkedParent)
+        }
+    }
+
+    @Test
     fun `candidate validation rejects traversal absolute paths and case folded collisions`() {
         val root = Files.createDirectory(tempDir.resolve("candidate-root")).toAbsolutePath().normalize()
         val scanner = LocalImportScanner()
@@ -156,6 +172,16 @@ private fun createJunction(link: Path, target: Path): Boolean =
         .redirectErrorStream(true)
         .start()
         .waitFor() == 0
+
+private fun createDirectoryLink(link: Path, target: Path): Boolean =
+    if (System.getProperty("os.name").startsWith("Windows", ignoreCase = true)) {
+        createJunction(link, target)
+    } else {
+        runCatching {
+            Files.createSymbolicLink(link, target)
+            true
+        }.getOrDefault(false)
+    }
 
 private fun compareUnicodeCodePoints(left: String, right: String): Int {
     var leftIndex = 0

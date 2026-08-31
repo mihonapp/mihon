@@ -118,8 +118,7 @@ CREATE TABLE local_chapter_asset (
   relative_path TEXT NOT NULL,
   asset_kind TEXT NOT NULL,
   size_bytes INTEGER NOT NULL,
-  modified_at INTEGER NOT NULL,
-  UNIQUE(relative_path)
+  modified_at INTEGER NOT NULL
 );
 
 CREATE TABLE import_report (

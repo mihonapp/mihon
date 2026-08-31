@@ -3,6 +3,7 @@ package mihon.desktop.library.local
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
+import java.nio.charset.StandardCharsets
 import java.nio.file.AtomicMoveNotSupportedException
 import java.nio.file.FileAlreadyExistsException
 import java.nio.file.FileVisitResult
@@ -13,6 +14,9 @@ import java.nio.file.SimpleFileVisitor
 import java.nio.file.StandardCopyOption
 import java.nio.file.StandardOpenOption
 import java.nio.file.attribute.BasicFileAttributes
+import java.nio.file.attribute.PosixFileAttributeView
+import java.nio.file.attribute.PosixFilePermission
+import java.nio.file.attribute.PosixFilePermissions
 import java.util.UUID
 
 fun interface LocalStagingCheckpoint {
@@ -23,22 +27,47 @@ fun interface LocalStagingCheckpoint {
     }
 }
 
-class LocalImportStager(
+internal interface LocalFileFaults {
+    fun afterCopyChunk(source: Path, target: Path, copiedBytes: Long) = Unit
+    fun beforeAtomicMove(source: Path, target: Path) = Unit
+
+    companion object {
+        val NONE = object : LocalFileFaults {}
+    }
+}
+
+class LocalImportStager private constructor(
     private val scanner: LocalImportScanner = LocalImportScanner(),
     private val idFactory: () -> String = { UUID.randomUUID().toString() },
     private val checkpoint: LocalStagingCheckpoint = LocalStagingCheckpoint.NONE,
+    private val fileFaults: LocalFileFaults,
 ) {
+    constructor(
+        scanner: LocalImportScanner = LocalImportScanner(),
+        idFactory: () -> String = { UUID.randomUUID().toString() },
+        checkpoint: LocalStagingCheckpoint = LocalStagingCheckpoint.NONE,
+    ) : this(scanner, idFactory, checkpoint, LocalFileFaults.NONE)
+
+    internal constructor(
+        fileFaults: LocalFileFaults,
+        scanner: LocalImportScanner = LocalImportScanner(),
+        idFactory: () -> String = { UUID.randomUUID().toString() },
+        checkpoint: LocalStagingCheckpoint = LocalStagingCheckpoint.NONE,
+    ) : this(scanner, idFactory, checkpoint, fileFaults)
+
     fun stage(manifest: LocalImportManifest, localLibraryRoot: Path): StagedLocalManga {
         validateManifestShape(manifest)
+        validateNoReparseAncestors(manifest.sourceRoot, "source root")
         requireUnchangedManifest(manifest, scanner.scan(manifest.sourceRoot), "source changed after scan")
         val root = localLibraryRoot.toAbsolutePath().normalize()
         val stagingRoot = root.resolve(STAGING_DIRECTORY)
         val mangaRoot = root.resolve(MANGA_DIRECTORY)
         safeEnsureDirectory(root)
         safeEnsureDirectory(stagingRoot)
+        restrictOwnerOnlyWhenSupported(stagingRoot, DIRECTORY_OWNER_PERMISSIONS)
         safeEnsureDirectory(mangaRoot)
         val id = idFactory()
-        if (!SAFE_ID.matches(id)) rejectStaging("invalid staging identifier")
+        if (!isValidImportId(id)) rejectStaging("invalid staging identifier")
         val stagingPath = stagingRoot.resolve(id).normalize()
         val finalPath = mangaRoot.resolve(id).normalize()
         requireImmediateChild(stagingRoot, stagingPath, "staging path")
@@ -46,8 +75,9 @@ class LocalImportStager(
         var stagingCreated = false
         try {
             try {
-                Files.createDirectory(stagingPath)
+                createPrivateDirectory(stagingPath)
                 stagingCreated = true
+                createOwnershipMarkerAtomically(stagingPath, id)
             } catch (error: FileAlreadyExistsException) {
                 rejectStaging("staging target already exists: $stagingPath", error)
             }
@@ -62,7 +92,7 @@ class LocalImportStager(
                 rejectStaging("staged manifest verification failed")
             }
             checkpoint.afterStagingCopy(stagingPath)
-            return StagedLocalManga(stagingPath, finalPath, manifest, stagingRoot, mangaRoot)
+            return StagedLocalManga(stagingPath, finalPath, manifest, stagingRoot, mangaRoot, fileFaults)
         } catch (error: Throwable) {
             if (stagingCreated) {
                 runCatching { deleteValidated(stagingRoot, stagingPath) }.onFailure(error::addSuppressed)
@@ -83,8 +113,8 @@ class LocalImportStager(
             requireImmediateChild(mangaRoot, normalized, "database local manga path")
             normalized
         }
-        deleteChildren(stagingRoot, emptySet())
-        deleteChildren(mangaRoot, retained)
+        deleteOwnedChildren(stagingRoot, emptySet())
+        deleteOwnedChildren(mangaRoot, retained)
     }
 
     private fun validateManifestShape(manifest: LocalImportManifest) {
@@ -130,9 +160,11 @@ class LocalImportStager(
             FileChannel.open(source, StandardOpenOption.READ, LinkOption.NOFOLLOW_LINKS).use { input ->
                 FileChannel.open(target, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE).use { output ->
                     val buffer = ByteBuffer.allocateDirect(COPY_BUFFER_SIZE)
+                    var copiedBytes = 0L
                     while (input.read(buffer) != -1) {
                         buffer.flip()
-                        while (buffer.hasRemaining()) output.write(buffer)
+                        while (buffer.hasRemaining()) copiedBytes += output.write(buffer)
+                        fileFaults.afterCopyChunk(source, target, copiedBytes)
                         buffer.clear()
                     }
                 }
@@ -147,6 +179,7 @@ class LocalImportStager(
     }
 
     private fun safeSourceAttributes(source: Path): BasicFileAttributes {
+        validateNoReparseAncestors(source, "staged source")
         val attributes = readAttributes(source, "staged source entry")
         if (isLinkOrReparsePoint(source, attributes)) rejectStaging("link or reparse point is not allowed: $source")
         if (!Files.isReadable(source)) rejectStaging("source entry is unreadable: $source")
@@ -158,12 +191,14 @@ class LocalImportStager(
         if (!sameIdentityAndMetadata(before, after)) rejectStaging("source entry changed while copying: $source")
     }
 
-    private fun deleteChildren(directory: Path, retained: Set<Path>) {
+    private fun deleteOwnedChildren(directory: Path, retained: Set<Path>) {
         try {
             Files.newDirectoryStream(directory).use { children ->
                 children.forEach { child ->
                     val normalized = child.toAbsolutePath().normalize()
-                    if (normalized !in retained) deleteValidated(directory, normalized)
+                    if (normalized !in retained && isOwnedImportDirectory(normalized)) {
+                        deleteValidated(directory, normalized)
+                    }
                 }
             }
         } catch (error: LocalImportRejected) {
@@ -180,6 +215,7 @@ class StagedLocalManga internal constructor(
     val manifest: LocalImportManifest,
     private val stagingRoot: Path,
     private val mangaRoot: Path,
+    private val fileFaults: LocalFileFaults,
 ) : AutoCloseable {
     private var promoted = false
     private var committed = false
@@ -192,6 +228,7 @@ class StagedLocalManga internal constructor(
             rejectStaging("promotion target already exists: $finalPath")
         }
         try {
+            fileFaults.beforeAtomicMove(stagingPath, finalPath)
             Files.move(stagingPath, finalPath, StandardCopyOption.ATOMIC_MOVE)
             promoted = true
             return finalPath
@@ -236,7 +273,81 @@ private fun safeEnsureDirectory(directory: Path) {
     if (!attributes.isDirectory || isLinkOrReparsePoint(absolute, attributes)) {
         rejectStaging("local import directory is not a safe directory: $absolute")
     }
+    validateNoReparseAncestors(absolute, "local import directory")
 }
+
+private fun createPrivateDirectory(directory: Path) {
+    val parent = checkNotNull(directory.parent)
+    val posixView = Files.getFileAttributeView(parent, PosixFileAttributeView::class.java, LinkOption.NOFOLLOW_LINKS)
+    if (posixView == null) {
+        Files.createDirectory(directory)
+    } else {
+        Files.createDirectory(directory, PosixFilePermissions.asFileAttribute(DIRECTORY_OWNER_PERMISSIONS))
+    }
+    restrictOwnerOnlyWhenSupported(directory, DIRECTORY_OWNER_PERMISSIONS)
+    validateNoReparseAncestors(directory, "private staging directory")
+}
+
+private fun restrictOwnerOnlyWhenSupported(path: Path, permissions: Set<PosixFilePermission>) {
+    val view = Files.getFileAttributeView(path, PosixFileAttributeView::class.java, LinkOption.NOFOLLOW_LINKS) ?: return
+    try {
+        view.setPermissions(permissions)
+        if (view.readAttributes().permissions() != permissions) {
+            rejectStaging("private staging permissions could not be validated: $path")
+        }
+    } catch (error: IOException) {
+        rejectStaging("private staging permissions could not be applied: $path", error)
+    }
+}
+
+private fun createOwnershipMarkerAtomically(directory: Path, id: String) {
+    val marker = directory.resolve(OWNERSHIP_MARKER)
+    val temporary = directory.resolve("$OWNERSHIP_MARKER.${UUID.randomUUID()}.tmp")
+    val content = ownershipMarkerContent(id)
+    try {
+        Files.writeString(
+            temporary,
+            content,
+            StandardCharsets.UTF_8,
+            StandardOpenOption.CREATE_NEW,
+            StandardOpenOption.WRITE,
+            StandardOpenOption.SYNC,
+        )
+        restrictOwnerOnlyWhenSupported(temporary, FILE_OWNER_PERMISSIONS)
+        Files.move(temporary, marker, StandardCopyOption.ATOMIC_MOVE)
+    } catch (error: AtomicMoveNotSupportedException) {
+        rejectStaging("atomic ownership marker creation is not supported", error)
+    } catch (error: IOException) {
+        rejectStaging("cannot create local import ownership marker", error)
+    } finally {
+        runCatching { Files.deleteIfExists(temporary) }
+    }
+    if (!isOwnedImportDirectory(directory)) rejectStaging("local import ownership marker validation failed")
+}
+
+private fun isOwnedImportDirectory(directory: Path): Boolean {
+    val id = directory.fileName?.toString() ?: return false
+    if (!isValidImportId(id)) return false
+    val attributes = runCatching { readAttributes(directory, "owned import directory") }.getOrNull() ?: return false
+    if (!attributes.isDirectory || isLinkOrReparsePoint(directory, attributes)) return false
+    val marker = directory.resolve(OWNERSHIP_MARKER)
+    val markerAttributes = runCatching { readAttributes(marker, "ownership marker") }.getOrNull() ?: return false
+    if (
+        !markerAttributes.isRegularFile ||
+        isLinkOrReparsePoint(marker, markerAttributes) ||
+        markerAttributes.size() > MAX_OWNERSHIP_MARKER_BYTES
+    ) {
+        return false
+    }
+    return runCatching { Files.readString(marker, StandardCharsets.UTF_8) == ownershipMarkerContent(id) }
+        .getOrDefault(false)
+}
+
+private fun ownershipMarkerContent(id: String): String = "$OWNERSHIP_MARKER_FORMAT\nid=$id\n"
+
+private fun isValidImportId(id: String): Boolean = runCatching {
+    UUID.fromString(id).toString() == id
+}.getOrDefault(false)
 
 private fun resolveManifestEntry(root: Path, relative: Path): Path {
     if (relative.isAbsolute) rejectStaging("manifest path must not be absolute: $relative")
@@ -314,5 +425,16 @@ private fun rejectStaging(message: String, cause: Throwable? = null): Nothing = 
 
 private const val STAGING_DIRECTORY = ".staging"
 private const val MANGA_DIRECTORY = "manga"
+private const val OWNERSHIP_MARKER = ".mihon-local-import-owner"
+private const val OWNERSHIP_MARKER_FORMAT = "mihon-desktop-local-import-v1"
+private const val MAX_OWNERSHIP_MARKER_BYTES = 256L
 private const val COPY_BUFFER_SIZE = 64 * 1024
-private val SAFE_ID = Regex("[A-Za-z0-9][A-Za-z0-9-]{0,127}")
+private val DIRECTORY_OWNER_PERMISSIONS = setOf(
+    PosixFilePermission.OWNER_READ,
+    PosixFilePermission.OWNER_WRITE,
+    PosixFilePermission.OWNER_EXECUTE,
+)
+private val FILE_OWNER_PERMISSIONS = setOf(
+    PosixFilePermission.OWNER_READ,
+    PosixFilePermission.OWNER_WRITE,
+)
