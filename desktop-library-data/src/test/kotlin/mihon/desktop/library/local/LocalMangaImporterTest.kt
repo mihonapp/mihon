@@ -183,6 +183,32 @@ class LocalMangaImporterTest {
     }
 
     @Test
+    fun `after-scan callback mutation is reverified on the existing import path`() {
+        val source = createManga("existing-after-scan-source")
+        val mediaRoot = tempDir.resolve("existing-after-scan-media")
+        val database = tempDir.resolve("existing-after-scan.db")
+        DesktopLibraryDatabaseFactory.open(database).use { repository ->
+            LocalMangaImporter(repository).import(source, mediaRoot, 1)
+            val before = dumpImportTables(database)
+            val checkpoint = object : LocalImportCheckpoint {
+                override fun afterScan(manifest: LocalImportManifest) {
+                    Files.writeString(
+                        source.resolve("第 1 话").resolve("页 01.jpg"),
+                        "changed after scan",
+                        StandardOpenOption.TRUNCATE_EXISTING,
+                    )
+                }
+            }
+
+            shouldThrow<LocalImportRejected> {
+                LocalMangaImporter(repository, checkpoint = checkpoint).import(source, mediaRoot, 2)
+            }
+
+            dumpImportTables(database) shouldBe before
+        }
+    }
+
+    @Test
     fun `copy promotion and report checkpoints roll files and every database row back`() {
         listOf("copy", "promotion", "report").forEach { failurePoint ->
             val caseRoot = Files.createDirectory(tempDir.resolve(failurePoint))
@@ -198,7 +224,7 @@ class LocalMangaImporterTest {
                     LocalStagingCheckpoint.NONE
                 }
                 val importCheckpoint = object : LocalImportCheckpoint {
-                    override fun afterPromotion(staged: StagedLocalManga) {
+                    override fun afterPromotion(finalPath: Path) {
                         if (failurePoint == "promotion") error("after promotion")
                     }
 
@@ -217,6 +243,61 @@ class LocalMangaImporterTest {
                 dumpImportTables(database) shouldBe before
                 assertNoImportResidue(mediaRoot)
             }
+        }
+    }
+
+    @Test
+    fun `staging callback mutation is rejected by full post-callback verification`() {
+        val source = createManga("staging-callback-source")
+        val mediaRoot = tempDir.resolve("staging-callback-media")
+        val database = tempDir.resolve("staging-callback.db")
+        val checkpoint = LocalStagingCheckpoint { stagingPath ->
+            Files.writeString(
+                stagingPath.resolve("第 1 话").resolve("页 01.jpg"),
+                "tampered",
+                StandardOpenOption.TRUNCATE_EXISTING,
+            )
+        }
+        DesktopLibraryDatabaseFactory.open(database).use { repository ->
+            shouldThrow<LocalImportRejected> {
+                LocalMangaImporter(
+                    mutations = repository,
+                    stager = LocalImportStager(checkpoint = checkpoint),
+                ).import(source, mediaRoot, 2)
+            }
+
+            repository.librarySnapshot().shouldBeEmpty()
+            repository.latestImportReport() shouldBe null
+            assertNoImportResidue(mediaRoot)
+        }
+    }
+
+    @Test
+    fun `before-report callback replacement survives while database transaction rolls back`() {
+        val source = createManga("before-report-replacement-source")
+        val mediaRoot = tempDir.resolve("before-report-replacement-media")
+        val database = tempDir.resolve("before-report-replacement.db")
+        val finalPath = mediaRoot.resolve("manga").resolve(BEFORE_REPORT_REPLACEMENT_ID)
+        val displaced = tempDir.resolve("before-report-displaced")
+        val checkpoint = object : LocalImportCheckpoint {
+            override fun beforeReport() {
+                Files.move(finalPath, displaced)
+                Files.createDirectory(finalPath)
+                Files.writeString(finalPath.resolve("keep.txt"), "before-report replacement")
+            }
+        }
+        DesktopLibraryDatabaseFactory.open(database).use { repository ->
+            val before = dumpImportTables(database)
+            shouldThrow<LocalImportRejected> {
+                LocalMangaImporter(
+                    mutations = repository,
+                    stager = LocalImportStager(idFactory = { BEFORE_REPORT_REPLACEMENT_ID }),
+                    checkpoint = checkpoint,
+                ).import(source, mediaRoot, 2)
+            }
+
+            dumpImportTables(database) shouldBe before
+            Files.readString(finalPath.resolve("keep.txt")) shouldBe "before-report replacement"
         }
     }
 
@@ -279,8 +360,8 @@ class LocalMangaImporterTest {
             val before = dumpImportTables(database)
             var promoted = false
             val checkpoint = object : LocalImportCheckpoint {
-                override fun afterPromotion(staged: StagedLocalManga) {
-                    promoted = Files.isDirectory(staged.finalPath)
+                override fun afterPromotion(finalPath: Path) {
+                    promoted = Files.isDirectory(finalPath)
                 }
             }
 
@@ -291,6 +372,67 @@ class LocalMangaImporterTest {
             promoted shouldBe true
             dumpImportTables(database) shouldBe before
             assertOnlyManualMediaChildrenRemain(mediaRoot, manualPaths)
+        }
+    }
+
+    @Test
+    fun `replacement installed after promotion survives while database transaction rolls back`() {
+        val source = createManga("post-promotion-replacement-source")
+        val mediaRoot = tempDir.resolve("post-promotion-replacement-media")
+        val database = tempDir.resolve("post-promotion-replacement.db")
+        val replacement = mediaRoot.resolve("manga").resolve(POST_PROMOTION_REPLACEMENT_ID)
+        val displaced = tempDir.resolve("post-promotion-displaced")
+        val checkpoint = object : LocalImportCheckpoint {
+            override fun afterPromotion(finalPath: Path) {
+                Files.move(finalPath, displaced)
+                Files.createDirectory(finalPath)
+                Files.writeString(finalPath.resolve("keep.txt"), "replacement")
+            }
+        }
+        DesktopLibraryDatabaseFactory.open(database).use { repository ->
+            val before = dumpImportTables(database)
+            val importer = LocalMangaImporter(
+                mutations = repository,
+                stager = LocalImportStager(idFactory = { POST_PROMOTION_REPLACEMENT_ID }),
+                checkpoint = checkpoint,
+            )
+
+            shouldThrow<LocalImportRejected> { importer.import(source, mediaRoot, 2) }
+
+            dumpImportTables(database) shouldBe before
+            Files.readString(replacement.resolve("keep.txt")) shouldBe "replacement"
+        }
+    }
+
+    @Test
+    fun `ambiguous atomic move result preserves a replacement and rolls database back`() {
+        val source = createManga("ambiguous-promotion-source")
+        val mediaRoot = tempDir.resolve("ambiguous-promotion-media")
+        val database = tempDir.resolve("ambiguous-promotion.db")
+        val replacement = mediaRoot.resolve("manga").resolve(AMBIGUOUS_PROMOTION_ID)
+        val displaced = tempDir.resolve("ambiguous-promotion-displaced")
+        val faults = object : LocalFileFaults {
+            override fun afterAtomicMove(source: Path, target: Path) {
+                Files.move(target, displaced)
+                Files.createDirectory(target)
+                Files.writeString(target.resolve("keep.txt"), "ambiguous replacement")
+                throw IOException("forced ambiguous atomic move result")
+            }
+        }
+        DesktopLibraryDatabaseFactory.open(database).use { repository ->
+            val before = dumpImportTables(database)
+            val importer = LocalMangaImporter(
+                mutations = repository,
+                stager = LocalImportStager(
+                    fileFaults = faults,
+                    idFactory = { AMBIGUOUS_PROMOTION_ID },
+                ),
+            )
+
+            shouldThrow<LocalImportRejected> { importer.import(source, mediaRoot, 2) }
+
+            dumpImportTables(database) shouldBe before
+            Files.readString(replacement.resolve("keep.txt")) shouldBe "ambiguous replacement"
         }
     }
 
@@ -333,6 +475,30 @@ class LocalMangaImporterTest {
 
         Files.readString(existing.resolve("keep.txt")) shouldBe "keep"
         listChildren(mediaRoot.resolve(".staging")).shouldBeEmpty()
+    }
+
+    @Test
+    fun `persistent destination junction collision is rejected without deleting its content`() {
+        val source = createManga("junction-collision")
+        val mediaRoot = tempDir.resolve("junction-collision-media")
+        val outside = Files.createDirectory(tempDir.resolve("junction-collision-outside"))
+        Files.writeString(outside.resolve("keep.txt"), "outside")
+        val faults = object : LocalFileFaults {
+            override fun beforeAtomicMove(source: Path, target: Path) {
+                createImporterDirectoryLink(target, outside) shouldBe true
+            }
+        }
+        val staged = LocalImportStager(
+            fileFaults = faults,
+            idFactory = { DESTINATION_JUNCTION_ID },
+        ).stage(LocalImportScanner().scan(source), mediaRoot)
+
+        staged.use {
+            shouldThrow<LocalImportRejected> { it.promote() }.message.shouldContain("target already exists")
+        }
+
+        Files.readString(outside.resolve("keep.txt")) shouldBe "outside"
+        Files.exists(mediaRoot.resolve("manga").resolve(DESTINATION_JUNCTION_ID)) shouldBe true
     }
 
     @Test
@@ -393,7 +559,21 @@ class LocalMangaImporterTest {
             Files.createDirectories(mediaRoot)
             makeWindowsDirectoryPermissive(mediaRoot)
         }
-        val staged = LocalImportStager(idFactory = { PRIVATE_IMPORT_ID })
+        var markerTemporaryAclValidated = false
+        val staged = LocalImportStager(
+            fileFaults = object : LocalFileFaults {
+                override fun duringMarkerPublication(temporary: Path, marker: Path) {
+                    if (Files.getFileAttributeView(temporary, PosixFileAttributeView::class.java) != null) {
+                        assertRestrictedPosixPermissions(temporary)
+                        markerTemporaryAclValidated = true
+                    } else if (isWindows()) {
+                        assertRestrictedWindowsAcl(temporary)
+                        markerTemporaryAclValidated = true
+                    }
+                }
+            },
+            idFactory = { PRIVATE_IMPORT_ID },
+        )
             .stage(LocalImportScanner().scan(source), mediaRoot)
 
         staged.use {
@@ -411,25 +591,58 @@ class LocalMangaImporterTest {
             isLinkOrReparsePoint(it.stagingPath, attributes) shouldBe false
             val posix = Files.getFileAttributeView(it.stagingPath, PosixFileAttributeView::class.java)
             if (posix != null) {
-                posix.readAttributes().permissions() shouldBe setOf(
-                    PosixFilePermission.OWNER_READ,
-                    PosixFilePermission.OWNER_WRITE,
-                    PosixFilePermission.OWNER_EXECUTE,
-                )
-            } else if (isWindows()) {
+                markerTemporaryAclValidated shouldBe true
                 val claim = mediaRoot.resolve(".claims").resolve("$PRIVATE_IMPORT_ID.claim")
                 listOf(
                     mediaRoot.resolve(".staging"),
                     mediaRoot.resolve(".claims"),
+                    mediaRoot.resolve("manga"),
                     it.stagingPath,
                     hiddenFiles.single(),
                     claim,
+                    it.stagingPath.resolve("第 1 话"),
+                    it.stagingPath.resolve("第 1 话").resolve("页 01.jpg"),
+                    it.stagingPath.resolve("第 2 话.CBZ"),
+                ).forEach(::assertRestrictedPosixPermissions)
+            } else if (isWindows()) {
+                markerTemporaryAclValidated shouldBe true
+                val claim = mediaRoot.resolve(".claims").resolve("$PRIVATE_IMPORT_ID.claim")
+                listOf(
+                    mediaRoot.resolve(".staging"),
+                    mediaRoot.resolve(".claims"),
+                    mediaRoot.resolve("manga"),
+                    it.stagingPath,
+                    hiddenFiles.single(),
+                    claim,
+                    it.stagingPath.resolve("第 1 话"),
+                    it.stagingPath.resolve("第 1 话").resolve("页 01.jpg"),
+                    it.stagingPath.resolve("第 2 话.CBZ"),
                 ).forEach(::assertRestrictedWindowsAcl)
                 val promoted = it.promote()
                 assertRestrictedWindowsAcl(promoted)
                 assertRestrictedWindowsAcl(promoted.resolve(hiddenFiles.single().fileName))
+                assertRestrictedWindowsAcl(promoted.resolve("第 1 话"))
+                assertRestrictedWindowsAcl(promoted.resolve("第 1 话").resolve("页 01.jpg"))
+                assertRestrictedWindowsAcl(promoted.resolve("第 2 话.CBZ"))
             }
         }
+    }
+
+    @Test
+    fun `claim and marker retain the same opaque 128 bit ownership nonce`() {
+        val source = createManga("ownership-nonce-source")
+        val mediaRoot = tempDir.resolve("ownership-nonce-media")
+        LocalImportStager(idFactory = { OWNERSHIP_NONCE_ID })
+            .stage(LocalImportScanner().scan(source), mediaRoot)
+            .use { staged ->
+                val claim = Files.readAllLines(mediaRoot.resolve(".claims").resolve("$OWNERSHIP_NONCE_ID.claim"))
+                val marker = Files.readAllLines(staged.stagingPath.resolve(".mihon-local-import-owner"))
+                val claimNonce = claim.single { it.startsWith("nonce=") }.removePrefix("nonce=")
+                val markerNonce = marker.single { it.startsWith("nonce=") }.removePrefix("nonce=")
+
+                claimNonce shouldBe markerNonce
+                claimNonce.matches(Regex("[0-9a-f]{32,}")) shouldBe true
+            }
     }
 
     @Test
@@ -466,7 +679,7 @@ class LocalMangaImporterTest {
     }
 
     @Test
-    fun `crashes after claim directory and marker temp are reclaimed by startup cleanup`() {
+    fun `startup cleanup reclaims claim-only marker-temp and fully marked crash residue`() {
         listOf("claim", "directory", "marker-temp").forEachIndexed { index, crashPoint ->
             val caseRoot = Files.createDirectory(tempDir.resolve("crash-$crashPoint"))
             val source = createMangaAt(caseRoot.resolve("source"))
@@ -502,7 +715,7 @@ class LocalMangaImporterTest {
     }
 
     @Test
-    fun `cleanup preserves invalid claims but valid claims recover broken markers`() {
+    fun `cleanup preserves invalid claims and directories without a matching ownership nonce`() {
         val source = createManga("claim-validation-source")
         val manifest = LocalImportScanner().scan(source)
         val mediaRoot = tempDir.resolve("claim-validation-media")
@@ -548,8 +761,8 @@ class LocalMangaImporterTest {
             Files.exists(mediaRoot.resolve(".claims").resolve("${it.stagingPath.fileName}.claim")) shouldBe true
         }
         brokenMarkers.forEach {
-            Files.exists(it.stagingPath) shouldBe false
-            Files.exists(mediaRoot.resolve(".claims").resolve("${it.stagingPath.fileName}.claim")) shouldBe false
+            Files.isDirectory(it.stagingPath) shouldBe true
+            Files.isRegularFile(mediaRoot.resolve(".claims").resolve("${it.stagingPath.fileName}.claim")) shouldBe true
         }
         missingClaim.close()
         invalidClaims.forEach(StagedLocalManga::close)
@@ -667,6 +880,11 @@ private const val MISMATCHED_MARKER_ID = "00000000-0000-4000-8000-000000000013"
 private const val CLAIM_ONLY_ID = "00000000-0000-4000-8000-000000000014"
 private const val CONCURRENT_IMPORT_ID = "00000000-0000-4000-8000-000000000015"
 private const val TARGET_COLLISION_ID = "00000000-0000-4000-8000-000000000016"
+private const val POST_PROMOTION_REPLACEMENT_ID = "00000000-0000-4000-8000-000000000020"
+private const val DESTINATION_JUNCTION_ID = "00000000-0000-4000-8000-000000000021"
+private const val AMBIGUOUS_PROMOTION_ID = "00000000-0000-4000-8000-000000000022"
+private const val OWNERSHIP_NONCE_ID = "00000000-0000-4000-8000-000000000023"
+private const val BEFORE_REPORT_REPLACEMENT_ID = "00000000-0000-4000-8000-000000000024"
 private val CRASH_IMPORT_IDS = listOf(
     "00000000-0000-4000-8000-000000000017",
     "00000000-0000-4000-8000-000000000018",
@@ -753,12 +971,37 @@ private fun assertRestrictedWindowsAcl(path: Path) {
         ?: error("Windows ACL view is unavailable for $path")
     val owner = view.owner
     val system = lookupPrincipal(path, "S-1-5-18", "NT AUTHORITY\\SYSTEM", "SYSTEM")
-    val allowed = setOf(owner.name.lowercase(), system.name.lowercase())
+    val ownerName = owner.name.lowercase()
+    val systemName = system.name.lowercase()
     val entries = view.acl
     entries.size shouldBe 2
-    entries.all { it.type() == AclEntryType.ALLOW && it.principal().name.lowercase() in allowed } shouldBe true
-    entries.any { it.principal().name.equals(owner.name, ignoreCase = true) } shouldBe true
-    entries.any { it.principal().name.equals(system.name, ignoreCase = true) } shouldBe true
+    entries.count { it.principal().name.lowercase() == ownerName } shouldBe 1
+    entries.count { it.principal().name.lowercase() == systemName } shouldBe 1
+    val expectedFlags = if (Files.isDirectory(path)) {
+        setOf(AclEntryFlag.FILE_INHERIT, AclEntryFlag.DIRECTORY_INHERIT)
+    } else {
+        emptySet()
+    }
+    entries.forEach { entry ->
+        entry.type() shouldBe AclEntryType.ALLOW
+        entry.permissions() shouldBe AclEntryPermission.entries.toSet()
+        entry.flags() shouldBe expectedFlags
+    }
+}
+
+private fun assertRestrictedPosixPermissions(path: Path) {
+    val view = Files.getFileAttributeView(path, PosixFileAttributeView::class.java)
+        ?: error("POSIX attribute view is unavailable for $path")
+    val expected = if (Files.isDirectory(path)) {
+        setOf(
+            PosixFilePermission.OWNER_READ,
+            PosixFilePermission.OWNER_WRITE,
+            PosixFilePermission.OWNER_EXECUTE,
+        )
+    } else {
+        setOf(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE)
+    }
+    view.readAttributes().permissions() shouldBe expected
 }
 
 private fun allowAcl(

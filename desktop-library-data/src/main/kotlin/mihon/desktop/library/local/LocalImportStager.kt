@@ -23,9 +23,11 @@ import java.nio.file.attribute.PosixFileAttributeView
 import java.nio.file.attribute.PosixFilePermission
 import java.nio.file.attribute.PosixFilePermissions
 import java.nio.file.attribute.UserPrincipal
+import java.security.SecureRandom
+import java.util.Locale
 import java.util.UUID
 
-fun interface LocalStagingCheckpoint {
+internal fun interface LocalStagingCheckpoint {
     fun afterStagingCopy(stagingPath: Path)
 
     companion object {
@@ -36,6 +38,7 @@ fun interface LocalStagingCheckpoint {
 internal interface LocalFileFaults {
     fun afterCopyChunk(source: Path, target: Path, copiedBytes: Long) = Unit
     fun beforeAtomicMove(source: Path, target: Path) = Unit
+    fun afterAtomicMove(source: Path, target: Path) = Unit
     fun afterClaimCreated(claim: Path) = Unit
     fun afterStagingDirectoryCreated(directory: Path) = Unit
     fun duringMarkerPublication(temporary: Path, marker: Path) = Unit
@@ -48,14 +51,14 @@ internal interface LocalFileFaults {
 /** Test-only seam that models process death by intentionally bypassing synchronous compensation. */
 internal class LocalImportCrashSimulation : Error("simulated local import process crash")
 
-class LocalImportStager private constructor(
+internal class LocalImportStager private constructor(
     private val scanner: LocalImportScanner,
     private val idFactory: () -> String,
     private val checkpoint: LocalStagingCheckpoint,
     private val fileFaults: LocalFileFaults,
     private val clock: () -> Long,
 ) {
-    constructor(
+    internal constructor(
         scanner: LocalImportScanner = LocalImportScanner(),
         idFactory: () -> String = { UUID.randomUUID().toString() },
         checkpoint: LocalStagingCheckpoint = LocalStagingCheckpoint.NONE,
@@ -87,9 +90,10 @@ class LocalImportStager private constructor(
         safeEnsureDirectory(root)
         safeEnsurePrivateDirectory(stagingRoot)
         safeEnsurePrivateDirectory(claimsRoot)
-        safeEnsureDirectory(mangaRoot)
+        safeEnsurePrivateDirectory(mangaRoot)
         val id = idFactory()
         if (!isValidImportId(id)) rejectStaging("invalid staging identifier")
+        val ownershipNonce = newOwnershipNonce()
         val claimPath = claimsRoot.resolve("$id$CLAIM_SUFFIX").normalize()
         val stagingPath = stagingRoot.resolve(id).normalize()
         val finalPath = mangaRoot.resolve(id).normalize()
@@ -98,8 +102,9 @@ class LocalImportStager private constructor(
         requireImmediateChild(mangaRoot, finalPath, "promotion path")
         var claimCreated = false
         var stagingCreated = false
+        var createdIdentity: OwnedDirectoryIdentity? = null
         try {
-            createClaim(claimPath, id, clock())
+            createClaim(claimPath, id, ownershipNonce, clock())
             claimCreated = true
             fileFaults.afterClaimCreated(claimPath)
             try {
@@ -109,18 +114,17 @@ class LocalImportStager private constructor(
                 rejectStaging("staging target already exists: $stagingPath", error)
             }
             fileFaults.afterStagingDirectoryCreated(stagingPath)
-            createOwnershipMarkerAtomically(stagingPath, id, fileFaults)
+            createOwnershipMarkerAtomically(stagingPath, id, ownershipNonce, fileFaults)
+            val identity = retainOwnedDirectoryIdentity(stagingPath, id, ownershipNonce, claimPath)
+            createdIdentity = identity
             manifest.chapters.forEach { chapter ->
                 val source = resolveManifestEntry(manifest.sourceRoot, chapter.relativePath)
                 val target = resolveManifestEntry(stagingPath, chapter.relativePath)
                 copyEntryNoFollow(source, target)
             }
-            requireUnchangedManifest(manifest, scanner.scan(manifest.sourceRoot), "source changed during staging")
-            val stagedManifest = scanner.scan(stagingPath)
-            if (stagedManifest.chapters != manifest.chapters || stagedManifest.sha256 != manifest.sha256) {
-                rejectStaging("staged manifest verification failed")
-            }
+            verifyStagedState(manifest, stagingPath, identity, claimPath, stagingRoot, claimsRoot, mangaRoot)
             checkpoint.afterStagingCopy(stagingPath)
+            verifyStagedState(manifest, stagingPath, identity, claimPath, stagingRoot, claimsRoot, mangaRoot)
             return StagedLocalManga(
                 id = id,
                 stagingPath = stagingPath,
@@ -131,15 +135,22 @@ class LocalImportStager private constructor(
                 claimPath = claimPath,
                 claimsRoot = claimsRoot,
                 fileFaults = fileFaults,
+                scanner = scanner,
+                createdIdentity = identity,
             )
         } catch (crash: LocalImportCrashSimulation) {
             throw crash
         } catch (error: Throwable) {
             if (stagingCreated) {
-                runCatching { deleteValidated(stagingRoot, stagingPath) }.onFailure(error::addSuppressed)
+                runCatching {
+                    createdIdentity?.let { identity ->
+                        deleteOwnedDirectory(stagingRoot, stagingPath, identity, claimPath)
+                    }
+                }.onFailure(error::addSuppressed)
             }
             if (claimCreated) {
-                runCatching { deleteValidClaim(claimsRoot, claimPath, id) }.onFailure(error::addSuppressed)
+                runCatching { deleteValidClaim(claimsRoot, claimPath, id, ownershipNonce) }
+                    .onFailure(error::addSuppressed)
             }
             throw error
         }
@@ -153,7 +164,7 @@ class LocalImportStager private constructor(
         safeEnsureDirectory(root)
         safeEnsurePrivateDirectory(stagingRoot)
         safeEnsurePrivateDirectory(claimsRoot)
-        safeEnsureDirectory(mangaRoot)
+        safeEnsurePrivateDirectory(mangaRoot)
         val retained = retainedFinalPaths.mapTo(mutableSetOf()) { retainedPath ->
             val normalized = retainedPath.toAbsolutePath().normalize()
             requireImmediateChild(mangaRoot, normalized, "database local manga path")
@@ -163,18 +174,18 @@ class LocalImportStager private constructor(
             val stagingPath = stagingRoot.resolve(claim.id)
             val finalPath = mangaRoot.resolve(claim.id)
             var deletedDirectory = false
-            if (isSafeImportDirectory(stagingPath)) {
+            if (isSafeImportDirectory(stagingPath, claim, allowTemporaryMarker = true)) {
                 deleteValidated(stagingRoot, stagingPath)
                 deletedDirectory = true
             }
-            if (finalPath !in retained && isSafeImportDirectory(finalPath)) {
+            if (finalPath !in retained && isSafeImportDirectory(finalPath, claim, allowTemporaryMarker = false)) {
                 deleteValidated(mangaRoot, finalPath)
                 deletedDirectory = true
             }
             val pathRemains = Files.exists(stagingPath, LinkOption.NOFOLLOW_LINKS) ||
                 Files.exists(finalPath, LinkOption.NOFOLLOW_LINKS)
             if (!pathRemains && (deletedDirectory || isStaleClaim(claim.createdAt, clock()))) {
-                deleteValidClaim(claimsRoot, claim.path, claim.id)
+                deleteValidClaim(claimsRoot, claim.path, claim.id, claim.nonce)
             }
         }
     }
@@ -193,6 +204,27 @@ class LocalImportStager private constructor(
         }
     }
 
+    private fun verifyStagedState(
+        manifest: LocalImportManifest,
+        stagingPath: Path,
+        identity: OwnedDirectoryIdentity,
+        claimPath: Path,
+        stagingRoot: Path,
+        claimsRoot: Path,
+        mangaRoot: Path,
+    ) {
+        validatePrivateNamespace(stagingRoot, "staging namespace")
+        validatePrivateNamespace(claimsRoot, "claim namespace")
+        validatePrivateNamespace(mangaRoot, "manga namespace")
+        requireOwnedDirectoryMatches(stagingPath, identity, claimPath)
+        requireUnchangedManifest(manifest, scanner.scan(manifest.sourceRoot), "source changed during staging")
+        val stagedManifest = scanner.scan(stagingPath)
+        if (stagedManifest.chapters != manifest.chapters || stagedManifest.sha256 != manifest.sha256) {
+            rejectStaging("staged manifest verification failed")
+        }
+        validatePrivateTree(stagingPath)
+    }
+
     private fun copyEntryNoFollow(source: Path, target: Path) {
         val before = safeSourceAttributes(source)
         when {
@@ -205,11 +237,13 @@ class LocalImportStager private constructor(
     private fun copyDirectoryNoFollow(source: Path, target: Path, before: BasicFileAttributes) {
         try {
             Files.createDirectory(target)
+            restrictPrivatePath(target, DIRECTORY_OWNER_PERMISSIONS, isDirectory = true)
             Files.newDirectoryStream(source).use { children ->
                 children.forEach { child -> copyEntryNoFollow(child, target.resolve(child.fileName.toString())) }
             }
             verifySourceUnchanged(source, before)
             Files.setLastModifiedTime(target, before.lastModifiedTime())
+            validatePrivatePath(target, DIRECTORY_OWNER_PERMISSIONS, isDirectory = true)
         } catch (error: LocalImportRejected) {
             throw error
         } catch (error: IOException) {
@@ -233,6 +267,7 @@ class LocalImportStager private constructor(
             }
             verifySourceUnchanged(source, before)
             Files.setLastModifiedTime(target, before.lastModifiedTime())
+            restrictPrivatePath(target, FILE_OWNER_PERMISSIONS, isDirectory = false)
         } catch (error: LocalImportRejected) {
             throw error
         } catch (error: IOException) {
@@ -254,16 +289,18 @@ class LocalImportStager private constructor(
     }
 }
 
-class StagedLocalManga internal constructor(
+internal class StagedLocalManga internal constructor(
     private val id: String,
-    val stagingPath: Path,
-    val finalPath: Path,
-    val manifest: LocalImportManifest,
+    internal val stagingPath: Path,
+    internal val finalPath: Path,
+    internal val manifest: LocalImportManifest,
     private val stagingRoot: Path,
     private val mangaRoot: Path,
     private val claimPath: Path,
     private val claimsRoot: Path,
     private val fileFaults: LocalFileFaults,
+    private val scanner: LocalImportScanner,
+    private val createdIdentity: OwnedDirectoryIdentity,
 ) : AutoCloseable {
     private var promoted = false
     private var promotionAmbiguous = false
@@ -273,7 +310,8 @@ class StagedLocalManga internal constructor(
     fun promote(): Path {
         check(!closed) { "staged local manga is closed" }
         check(!promoted) { "staged local manga was already promoted" }
-        val before = requireOwnedImportDirectory(stagingPath, id, claimPath)
+        validatePromotionNamespaces()
+        requireOwnedDirectoryMatches(stagingPath, createdIdentity, claimPath)
         if (Files.exists(finalPath, LinkOption.NOFOLLOW_LINKS)) {
             rejectStaging("promotion target already exists: $finalPath")
         }
@@ -282,14 +320,19 @@ class StagedLocalManga internal constructor(
             if (Files.exists(finalPath, LinkOption.NOFOLLOW_LINKS)) {
                 rejectStaging("promotion target already exists: $finalPath")
             }
+            validatePromotionNamespaces()
+            requireOwnedDirectoryMatches(stagingPath, createdIdentity, claimPath)
             Files.move(stagingPath, finalPath, StandardCopyOption.ATOMIC_MOVE)
             promotionAmbiguous = true
-            val after = requireOwnedImportDirectory(finalPath, id, claimPath)
-            if (Files.exists(stagingPath, LinkOption.NOFOLLOW_LINKS) || !sameIdentityAndMetadata(before, after)) {
+            fileFaults.afterAtomicMove(stagingPath, finalPath)
+            validatePromotionNamespaces()
+            requireOwnedDirectoryMatches(finalPath, createdIdentity, claimPath)
+            if (Files.exists(stagingPath, LinkOption.NOFOLLOW_LINKS)) {
                 rejectStaging("atomic promotion identity validation failed: $finalPath")
             }
             promoted = true
             promotionAmbiguous = false
+            reverifyPromoted()
             return finalPath
         } catch (error: LocalImportRejected) {
             throw error
@@ -308,23 +351,63 @@ class StagedLocalManga internal constructor(
         committed = true
     }
 
+    internal fun reverifyPromoted() {
+        check(promoted) { "cannot verify local manga before promotion" }
+        validatePromotionNamespaces()
+        requireOwnedDirectoryMatches(finalPath, createdIdentity, claimPath)
+        val promotedManifest = scanner.scan(finalPath)
+        if (promotedManifest.chapters != manifest.chapters || promotedManifest.sha256 != manifest.sha256) {
+            rejectStaging("promoted manifest verification failed")
+        }
+        validatePrivateTree(finalPath)
+    }
+
     override fun close() {
         if (closed) return
         closed = true
         if (committed) return
         if (promotionAmbiguous) {
-            // Never authorize later cleanup of a target whose post-move identity could not be proved.
-            deleteValidClaim(claimsRoot, claimPath, id)
-            deleteValidated(stagingRoot, stagingPath)
+            // An indeterminate move result is preserved. Removing the claim prevents later orphan cleanup from
+            // treating a replacement at the same name as this import's residue.
+            deleteValidClaim(claimsRoot, claimPath, id, createdIdentity.nonce)
             return
         }
-        if (promoted) deleteValidated(mangaRoot, finalPath)
-        deleteValidated(stagingRoot, stagingPath)
-        deleteValidClaim(claimsRoot, claimPath, id)
+        if (promoted) {
+            deleteOwnedDirectory(mangaRoot, finalPath, createdIdentity, claimPath)
+        } else {
+            deleteOwnedDirectory(stagingRoot, stagingPath, createdIdentity, claimPath)
+        }
+        deleteValidClaim(claimsRoot, claimPath, id, createdIdentity.nonce)
+    }
+
+    private fun validatePromotionNamespaces() {
+        validatePrivateNamespace(stagingRoot, "staging namespace")
+        validatePrivateNamespace(claimsRoot, "claim namespace")
+        validatePrivateNamespace(mangaRoot, "manga namespace")
+        validateNoReparseAncestors(claimPath, "local import claim")
     }
 }
 
-private data class ValidClaim(val id: String, val createdAt: Long, val path: Path)
+internal data class OwnedDirectoryIdentity(val id: String, val nonce: String, val fileKey: Any?)
+
+private data class ValidClaim(val id: String, val nonce: String, val createdAt: Long, val path: Path)
+
+internal fun validateCommittedLocalMangaSecurity(localLibraryRoot: Path, finalPath: Path) {
+    val root = localLibraryRoot.toAbsolutePath().normalize()
+    val claimsRoot = root.resolve(CLAIMS_DIRECTORY)
+    val mangaRoot = root.resolve(MANGA_DIRECTORY)
+    val normalizedFinal = finalPath.toAbsolutePath().normalize()
+    requireImmediateChild(mangaRoot, normalizedFinal, "committed local manga path")
+    validatePrivateNamespace(claimsRoot, "claim namespace")
+    validatePrivateNamespace(mangaRoot, "manga namespace")
+    val id = normalizedFinal.fileName?.toString() ?: rejectStaging("committed local manga has no identifier")
+    if (!isValidImportId(id)) rejectStaging("committed local manga identifier is invalid")
+    val claimPath = claimsRoot.resolve("$id$CLAIM_SUFFIX")
+    validateNoReparseAncestors(claimPath, "local import claim")
+    val claim = readValidClaim(claimPath) ?: rejectStaging("committed local manga claim is invalid")
+    requireOwnedImportDirectory(normalizedFinal, id, claim.nonce, claimPath)
+    validatePrivateTree(normalizedFinal)
+}
 
 private fun safeEnsureDirectory(directory: Path) {
     val absolute = directory.toAbsolutePath().normalize()
@@ -351,6 +434,43 @@ private fun safeEnsurePrivateDirectory(directory: Path) {
     restrictPrivatePath(directory, DIRECTORY_OWNER_PERMISSIONS, isDirectory = true)
 }
 
+private fun validatePrivateNamespace(directory: Path, label: String) {
+    validateNoReparseAncestors(directory, label)
+    validatePrivatePath(directory, DIRECTORY_OWNER_PERMISSIONS, isDirectory = true)
+}
+
+private fun validatePrivateTree(root: Path) {
+    try {
+        Files.walkFileTree(
+            root,
+            setOf(),
+            Int.MAX_VALUE,
+            object : SimpleFileVisitor<Path>() {
+                override fun preVisitDirectory(
+                    directory: Path,
+                    attributes: BasicFileAttributes,
+                ): FileVisitResult {
+                    validatePrivatePath(directory, DIRECTORY_OWNER_PERMISSIONS, isDirectory = true)
+                    return FileVisitResult.CONTINUE
+                }
+
+                override fun visitFile(file: Path, attributes: BasicFileAttributes): FileVisitResult {
+                    validatePrivatePath(file, FILE_OWNER_PERMISSIONS, isDirectory = false)
+                    return FileVisitResult.CONTINUE
+                }
+
+                override fun visitFileFailed(file: Path, error: IOException): FileVisitResult {
+                    throw error
+                }
+            },
+        )
+    } catch (error: LocalImportRejected) {
+        throw error
+    } catch (error: IOException) {
+        rejectStaging("private local import tree could not be validated: $root", error)
+    }
+}
+
 private fun createPrivateDirectory(directory: Path) {
     val parent = checkNotNull(directory.parent)
     val posixView = Files.getFileAttributeView(parent, PosixFileAttributeView::class.java, LinkOption.NOFOLLOW_LINKS)
@@ -375,12 +495,10 @@ private fun restrictPrivatePath(path: Path, permissions: Set<PosixFilePermission
     if (posix != null) {
         try {
             posix.setPermissions(permissions)
-            if (posix.readAttributes().permissions() != permissions) {
-                rejectStaging("private local import permissions could not be validated: $path")
-            }
         } catch (error: IOException) {
             rejectStaging("private local import permissions could not be applied: $path", error)
         }
+        validatePrivatePath(path, permissions, isDirectory)
         return
     }
     if (!isWindowsHost()) return
@@ -399,7 +517,7 @@ private fun restrictPrivatePath(path: Path, permissions: Set<PosixFilePermission
             allowAcl(owner, allPermissions, flags),
             allowAcl(system, allPermissions, flags),
         )
-        validateRestrictedWindowsAcl(path, acl, owner, system)
+        validateRestrictedWindowsAcl(path, acl, owner, system, isDirectory)
     } catch (error: LocalImportRejected) {
         throw error
     } catch (error: IOException) {
@@ -409,21 +527,69 @@ private fun restrictPrivatePath(path: Path, permissions: Set<PosixFilePermission
     }
 }
 
+private fun validatePrivatePath(path: Path, permissions: Set<PosixFilePermission>, isDirectory: Boolean) {
+    val attributes = readAttributes(path, "private local import path")
+    if (
+        isLinkOrReparsePoint(path, attributes) ||
+        (isDirectory && !attributes.isDirectory) ||
+        (!isDirectory && !attributes.isRegularFile)
+    ) {
+        rejectStaging("private local import path is not a safe ${if (isDirectory) "directory" else "file"}: $path")
+    }
+    val posix = Files.getFileAttributeView(path, PosixFileAttributeView::class.java, LinkOption.NOFOLLOW_LINKS)
+    if (posix != null) {
+        try {
+            if (posix.readAttributes().permissions() != permissions) {
+                rejectStaging("private local import permissions could not be validated: $path")
+            }
+        } catch (error: IOException) {
+            rejectStaging("private local import permissions could not be validated: $path", error)
+        }
+        return
+    }
+    if (!isWindowsHost()) return
+    val acl = Files.getFileAttributeView(path, AclFileAttributeView::class.java, LinkOption.NOFOLLOW_LINKS)
+        ?: rejectStaging("Windows ACL view is unavailable for private local import path: $path")
+    try {
+        val owner = acl.owner
+        val system = lookupWindowsPrincipal(path, "S-1-5-18", "NT AUTHORITY\\SYSTEM", "SYSTEM")
+        validateRestrictedWindowsAcl(path, acl, owner, system, isDirectory)
+    } catch (error: LocalImportRejected) {
+        throw error
+    } catch (error: IOException) {
+        rejectStaging("private Windows ACL could not be validated: $path", error)
+    } catch (error: SecurityException) {
+        rejectStaging("private Windows ACL could not be validated: $path", error)
+    }
+}
+
 private fun validateRestrictedWindowsAcl(
     path: Path,
     view: AclFileAttributeView,
     owner: UserPrincipal,
     system: UserPrincipal,
+    isDirectory: Boolean,
 ) {
-    val allowed = setOf(owner.name.lowercase(), system.name.lowercase())
+    val ownerName = owner.name.lowercase(Locale.ROOT)
+    val systemName = system.name.lowercase(Locale.ROOT)
     val entries = view.acl
+    val expectedFlags = if (isDirectory) {
+        setOf(AclEntryFlag.FILE_INHERIT, AclEntryFlag.DIRECTORY_INHERIT)
+    } else {
+        emptySet()
+    }
+    val expectedPermissions = AclEntryPermission.entries.toSet()
     if (
         entries.size != 2 ||
-        entries.any { it.type() != AclEntryType.ALLOW || it.principal().name.lowercase() !in allowed } ||
-        entries.none { it.principal().name.equals(owner.name, ignoreCase = true) } ||
-        entries.none { it.principal().name.equals(system.name, ignoreCase = true) }
+        entries.count { it.principal().name.lowercase(Locale.ROOT) == ownerName } != 1 ||
+        entries.count { it.principal().name.lowercase(Locale.ROOT) == systemName } != 1 ||
+        entries.any {
+            it.type() != AclEntryType.ALLOW ||
+                it.permissions() != expectedPermissions ||
+                it.flags() != expectedFlags
+        }
     ) {
-        rejectStaging("private Windows ACL contains inherited or broad access: $path")
+        rejectStaging("private Windows ACL is not the exact owner and SYSTEM allow-list: $path")
     }
 }
 
@@ -445,13 +611,16 @@ private fun lookupWindowsPrincipal(path: Path, vararg names: String): UserPrinci
 
 private fun isWindowsHost(): Boolean = System.getProperty("os.name").startsWith("Windows", ignoreCase = true)
 
-private fun createClaim(path: Path, id: String, createdAt: Long) {
+private fun createClaim(path: Path, id: String, nonce: String, createdAt: Long) {
     if (createdAt < 0) rejectStaging("claim timestamp must not be negative")
+    if (!isValidOwnershipNonce(nonce)) rejectStaging("ownership nonce is invalid")
     var created = false
     try {
+        // CREATE_NEW + SYNC establishes claim ordering for process-crash recovery on a running filesystem. Pure Java
+        // has no portable parent-directory flush, so this is deliberately not a sudden-power-loss durability claim.
         Files.writeString(
             path,
-            claimContent(id, createdAt),
+            claimContent(id, nonce, createdAt),
             StandardCharsets.UTF_8,
             StandardOpenOption.CREATE_NEW,
             StandardOpenOption.WRITE,
@@ -463,26 +632,33 @@ private fun createClaim(path: Path, id: String, createdAt: Long) {
         rejectStaging("local import claim already exists: $path", error)
     } catch (error: Throwable) {
         if (created) {
-            runCatching { deleteValidClaim(checkNotNull(path.parent), path, id) }.onFailure(error::addSuppressed)
+            runCatching { deleteValidClaim(checkNotNull(path.parent), path, id, nonce) }
+                .onFailure(error::addSuppressed)
         }
         if (error is LocalImportRejected) throw error
         if (error is IOException) rejectStaging("cannot create local import claim: $path", error)
         throw error
     }
-    if (readValidClaim(path)?.id != id) {
-        runCatching { deleteValidClaim(checkNotNull(path.parent), path, id) }
+    val claim = readValidClaim(path)
+    if (claim?.id != id || claim.nonce != nonce) {
+        runCatching { deleteValidClaim(checkNotNull(path.parent), path, id, nonce) }
         rejectStaging("local import claim validation failed: $path")
     }
 }
 
-private fun createOwnershipMarkerAtomically(directory: Path, id: String, fileFaults: LocalFileFaults) {
+private fun createOwnershipMarkerAtomically(
+    directory: Path,
+    id: String,
+    nonce: String,
+    fileFaults: LocalFileFaults,
+) {
     val marker = directory.resolve(OWNERSHIP_MARKER)
     val temporary = directory.resolve("$OWNERSHIP_MARKER.${UUID.randomUUID()}.tmp")
     var simulatedCrash = false
     try {
         Files.writeString(
             temporary,
-            ownershipMarkerContent(id),
+            ownershipMarkerContent(id, nonce),
             StandardCharsets.UTF_8,
             StandardOpenOption.CREATE_NEW,
             StandardOpenOption.WRITE,
@@ -503,25 +679,80 @@ private fun createOwnershipMarkerAtomically(directory: Path, id: String, fileFau
     } finally {
         if (!simulatedCrash) runCatching { Files.deleteIfExists(temporary) }
     }
-    if (!hasValidOwnershipMarker(directory, id)) rejectStaging("local import ownership marker validation failed")
+    validatePrivatePath(marker, FILE_OWNER_PERMISSIONS, isDirectory = false)
+    if (!hasValidOwnershipMarker(directory, id, nonce)) {
+        rejectStaging("local import ownership marker validation failed")
+    }
 }
 
-private fun requireOwnedImportDirectory(directory: Path, id: String, claimPath: Path): BasicFileAttributes {
-    val attributes = readAttributes(directory, "owned import directory")
-    if (
-        !attributes.isDirectory ||
-        isLinkOrReparsePoint(directory, attributes) ||
-        !hasValidOwnershipMarker(directory, id) ||
-        readValidClaim(claimPath)?.id != id
-    ) {
-        rejectStaging("local import ownership validation failed: $directory")
+private fun retainOwnedDirectoryIdentity(
+    directory: Path,
+    id: String,
+    nonce: String,
+    claimPath: Path,
+): OwnedDirectoryIdentity {
+    val attributes = requireOwnedImportDirectory(directory, id, nonce, claimPath)
+    return OwnedDirectoryIdentity(id, nonce, attributes.fileKey())
+}
+
+private fun requireOwnedDirectoryMatches(
+    directory: Path,
+    identity: OwnedDirectoryIdentity,
+    claimPath: Path,
+): BasicFileAttributes {
+    val attributes = requireOwnedImportDirectory(directory, identity.id, identity.nonce, claimPath)
+    if (identity.fileKey != null && attributes.fileKey() != identity.fileKey) {
+        rejectStaging("local import directory identity changed: $directory")
     }
     return attributes
 }
 
-private fun hasValidOwnershipMarker(directory: Path, id: String): Boolean {
+private fun requireOwnedImportDirectory(
+    directory: Path,
+    id: String,
+    nonce: String,
+    claimPath: Path,
+): BasicFileAttributes {
+    validateNoReparseAncestors(directory, "owned import directory")
+    val attributes = readAttributes(directory, "owned import directory")
+    if (
+        !attributes.isDirectory ||
+        isLinkOrReparsePoint(directory, attributes) ||
+        !hasValidOwnershipMarker(directory, id, nonce) ||
+        readValidClaim(claimPath)?.let { it.id == id && it.nonce == nonce } != true
+    ) {
+        rejectStaging("local import ownership validation failed: $directory")
+    }
+    validatePrivatePath(directory, DIRECTORY_OWNER_PERMISSIONS, isDirectory = true)
+    return attributes
+}
+
+private fun deleteOwnedDirectory(
+    parent: Path,
+    target: Path,
+    identity: OwnedDirectoryIdentity,
+    claimPath: Path,
+): Boolean {
+    val normalizedTarget = target.toAbsolutePath().normalize()
+    requireImmediateChild(parent, normalizedTarget, "owned cleanup target")
+    if (Files.notExists(normalizedTarget, LinkOption.NOFOLLOW_LINKS)) return true
+    val matches = runCatching {
+        requireOwnedDirectoryMatches(normalizedTarget, identity, claimPath)
+        true
+    }.getOrDefault(false)
+    if (!matches) return false
+    deleteValidated(parent, normalizedTarget)
+    return true
+}
+
+private fun hasValidOwnershipMarker(directory: Path, id: String, nonce: String): Boolean {
     if (!isValidImportId(id) || directory.fileName?.toString() != id) return false
     val marker = directory.resolve(OWNERSHIP_MARKER)
+    return hasValidOwnershipMarkerFile(marker, id, nonce)
+}
+
+private fun hasValidOwnershipMarkerFile(marker: Path, id: String, nonce: String): Boolean {
+    if (!isValidImportId(id) || !isValidOwnershipNonce(nonce)) return false
     val markerAttributes = runCatching { readAttributes(marker, "ownership marker") }.getOrNull() ?: return false
     if (
         !markerAttributes.isRegularFile ||
@@ -530,7 +761,10 @@ private fun hasValidOwnershipMarker(directory: Path, id: String): Boolean {
     ) {
         return false
     }
-    return runCatching { Files.readString(marker, StandardCharsets.UTF_8) == ownershipMarkerContent(id) }
+    if (runCatching { validatePrivatePath(marker, FILE_OWNER_PERMISSIONS, isDirectory = false) }.isFailure) {
+        return false
+    }
+    return runCatching { Files.readString(marker, StandardCharsets.UTF_8) == ownershipMarkerContent(id, nonce) }
         .getOrDefault(false)
 }
 
@@ -555,22 +789,25 @@ private fun readValidClaim(path: Path): ValidClaim? {
     ) {
         return null
     }
+    if (runCatching { validatePrivatePath(path, FILE_OWNER_PERMISSIONS, isDirectory = false) }.isFailure) return null
     val content = runCatching { Files.readString(path, StandardCharsets.UTF_8) }.getOrNull() ?: return null
     val lines = content.split('\n')
-    if (lines.size != 4 || lines[0] != CLAIM_FORMAT || lines[3].isNotEmpty()) return null
+    if (lines.size != 5 || lines[0] != CLAIM_FORMAT || lines[4].isNotEmpty()) return null
     if (lines[1] != "id=$id") return null
-    val timestampText = lines[2].removePrefix("createdAt=")
-    if (lines[2] != "createdAt=$timestampText") return null
+    val nonce = lines[2].removePrefix("nonce=")
+    if (lines[2] != "nonce=$nonce" || !isValidOwnershipNonce(nonce)) return null
+    val timestampText = lines[3].removePrefix("createdAt=")
+    if (lines[3] != "createdAt=$timestampText") return null
     val createdAt = timestampText.toLongOrNull()?.takeIf { it >= 0 } ?: return null
-    return ValidClaim(id, createdAt, path.toAbsolutePath().normalize())
+    return ValidClaim(id, nonce, createdAt, path.toAbsolutePath().normalize())
 }
 
-private fun deleteValidClaim(claimsRoot: Path, claimPath: Path, id: String) {
+private fun deleteValidClaim(claimsRoot: Path, claimPath: Path, id: String, nonce: String) {
     val normalized = claimPath.toAbsolutePath().normalize()
     requireImmediateChild(claimsRoot, normalized, "claim cleanup target")
     if (Files.notExists(normalized, LinkOption.NOFOLLOW_LINKS)) return
     val valid = readValidClaim(normalized) ?: return
-    if (valid.id != id) return
+    if (valid.id != id || valid.nonce != nonce) return
     try {
         Files.delete(normalized)
     } catch (error: IOException) {
@@ -581,15 +818,55 @@ private fun deleteValidClaim(claimsRoot: Path, claimPath: Path, id: String) {
 private fun isStaleClaim(createdAt: Long, now: Long): Boolean =
     now >= createdAt && now - createdAt >= CLAIM_STALE_MILLIS
 
-private fun isSafeImportDirectory(directory: Path): Boolean {
-    if (!isValidImportId(directory.fileName?.toString() ?: return false)) return false
+private fun isSafeImportDirectory(
+    directory: Path,
+    claim: ValidClaim,
+    allowTemporaryMarker: Boolean,
+): Boolean {
+    if (directory.fileName?.toString() != claim.id) return false
     val attributes = runCatching { readAttributes(directory, "claimed import directory") }.getOrNull() ?: return false
-    return attributes.isDirectory && !isLinkOrReparsePoint(directory, attributes)
+    if (!attributes.isDirectory || isLinkOrReparsePoint(directory, attributes)) return false
+    if (runCatching { validateNoReparseAncestors(directory, "claimed import directory") }.isFailure) return false
+    if (runCatching { validatePrivatePath(directory, DIRECTORY_OWNER_PERMISSIONS, isDirectory = true) }.isFailure) {
+        return false
+    }
+    if (hasValidOwnershipMarker(directory, claim.id, claim.nonce)) return true
+    if (!allowTemporaryMarker) return false
+    if (hasValidTemporaryOwnershipMarker(directory, claim)) return true
+    return isEmptyClaimedDirectory(directory)
 }
 
-private fun ownershipMarkerContent(id: String): String = "$OWNERSHIP_MARKER_FORMAT\nid=$id\n"
+private fun isEmptyClaimedDirectory(directory: Path): Boolean = try {
+    Files.newDirectoryStream(directory).use { entries -> !entries.iterator().hasNext() }
+} catch (_: IOException) {
+    false
+}
 
-private fun claimContent(id: String, createdAt: Long): String = "$CLAIM_FORMAT\nid=$id\ncreatedAt=$createdAt\n"
+private fun hasValidTemporaryOwnershipMarker(directory: Path, claim: ValidClaim): Boolean = try {
+    Files.newDirectoryStream(directory, "$OWNERSHIP_MARKER.*.tmp").use { candidates ->
+        val matching = candidates.filter { marker ->
+            hasValidOwnershipMarkerFile(marker, claim.id, claim.nonce)
+        }
+        matching.size == 1
+    }
+} catch (_: IOException) {
+    false
+}
+
+private fun ownershipMarkerContent(id: String, nonce: String): String =
+    "$OWNERSHIP_MARKER_FORMAT\nid=$id\nnonce=$nonce\n"
+
+private fun claimContent(id: String, nonce: String, createdAt: Long): String =
+    "$CLAIM_FORMAT\nid=$id\nnonce=$nonce\ncreatedAt=$createdAt\n"
+
+private fun newOwnershipNonce(): String {
+    val bytes = ByteArray(OWNERSHIP_NONCE_BYTES)
+    OWNERSHIP_RANDOM.nextBytes(bytes)
+    return bytes.joinToString("") { byte -> "%02x".format(Locale.ROOT, byte.toInt() and 0xff) }
+}
+
+private fun isValidOwnershipNonce(nonce: String): Boolean =
+    nonce.length == OWNERSHIP_NONCE_BYTES * 2 && nonce.all { it in '0'..'9' || it in 'a'..'f' }
 
 private fun isValidImportId(id: String): Boolean = runCatching {
     UUID.fromString(id).toString() == id
@@ -676,8 +953,10 @@ private const val OWNERSHIP_MARKER = ".mihon-local-import-owner"
 private const val OWNERSHIP_MARKER_FORMAT = "mihon-desktop-local-import-v1"
 private const val MAX_OWNERSHIP_MARKER_BYTES = 256L
 private const val MAX_CLAIM_BYTES = 512L
+private const val OWNERSHIP_NONCE_BYTES = 16
 private const val CLAIM_STALE_MILLIS = 5 * 60 * 1000L
 private const val COPY_BUFFER_SIZE = 64 * 1024
+private val OWNERSHIP_RANDOM = SecureRandom()
 private val DIRECTORY_OWNER_PERMISSIONS = setOf(
     PosixFilePermission.OWNER_READ,
     PosixFilePermission.OWNER_WRITE,

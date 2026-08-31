@@ -17,9 +17,9 @@ import java.nio.file.Path
 
 const val LOCAL_SOURCE_ID = 0L
 
-interface LocalImportCheckpoint {
+internal interface LocalImportCheckpoint {
     fun afterScan(manifest: LocalImportManifest) = Unit
-    fun afterPromotion(staged: StagedLocalManga) = Unit
+    fun afterPromotion(finalPath: Path) = Unit
     fun beforeReport() = Unit
 
     companion object {
@@ -27,15 +27,34 @@ interface LocalImportCheckpoint {
     }
 }
 
-class LocalMangaImporter(
+class LocalMangaImporter private constructor(
     private val mutations: LibraryMutationPort,
-    private val scanner: LocalImportScanner = LocalImportScanner(),
-    private val stager: LocalImportStager = LocalImportStager(scanner),
-    private val checkpoint: LocalImportCheckpoint = LocalImportCheckpoint.NONE,
+    private val scanner: LocalImportScanner,
+    private val stager: LocalImportStager,
+    private val checkpoint: LocalImportCheckpoint,
+    @Suppress("UNUSED_PARAMETER") construction: LocalImporterConstruction,
 ) {
+    constructor(mutations: LibraryMutationPort) : this(
+        mutations,
+        LocalImportScanner(),
+        LocalImportStager(),
+        LocalImportCheckpoint.NONE,
+        LocalImporterConstruction.PRODUCTION,
+    )
+
+    internal constructor(
+        mutations: LibraryMutationPort,
+        scanner: LocalImportScanner = LocalImportScanner(),
+        stager: LocalImportStager = LocalImportStager(scanner),
+        checkpoint: LocalImportCheckpoint = LocalImportCheckpoint.NONE,
+    ) : this(mutations, scanner, stager, checkpoint, LocalImporterConstruction.TEST)
+
     fun import(sourceDirectory: Path, localLibraryRoot: Path, nowMillis: Long): ImportReport {
         val manifest = scanner.scan(sourceDirectory)
         checkpoint.afterScan(manifest)
+        if (scanner.scan(manifest.sourceRoot) != manifest) {
+            rejectImport("source changed after scan callback")
+        }
         val existing = mutations.findLocalMangaByManifest(manifest.sha256)
         if (existing != null) {
             val existingPath = validateExistingLocalManga(existing, manifest, localLibraryRoot)
@@ -45,7 +64,10 @@ class LocalMangaImporter(
                 if (current.mangaId != existing.mangaId || Path.of(current.storagePath) != existingPath) {
                     rejectImport("local manga registration changed during import")
                 }
-                register(manifest, existingPath, nowMillis, current)
+                register(manifest, existingPath, nowMillis, current) {
+                    checkpoint.beforeReport()
+                    validateExistingLocalManga(current, manifest, localLibraryRoot)
+                }
             }
         }
 
@@ -60,12 +82,21 @@ class LocalMangaImporter(
                     }
                     val promotedPath = staged.promote()
                     promotedByThisImport = true
-                    checkpoint.afterPromotion(staged)
+                    checkpoint.afterPromotion(promotedPath)
+                    staged.reverifyPromoted()
                     promotedPath
                 } else {
                     validateExistingLocalManga(concurrent, manifest, localLibraryRoot)
                 }
-                register(manifest, storagePath, nowMillis, concurrent)
+                register(manifest, storagePath, nowMillis, concurrent) {
+                    checkpoint.beforeReport()
+                    if (promotedByThisImport) {
+                        staged.reverifyPromoted()
+                    } else {
+                        checkNotNull(concurrent)
+                        validateExistingLocalManga(concurrent, manifest, localLibraryRoot)
+                    }
+                }
             }
             if (promotedByThisImport) staged.markCommitted()
             return report
@@ -95,6 +126,7 @@ class LocalMangaImporter(
             throw LocalImportRejected("invalid existing local manga storage path", error)
         }
         if (path.parent != mangaRoot) rejectImport("existing local manga path is outside the local manga root")
+        validateCommittedLocalMangaSecurity(localLibraryRoot, path)
         val attributes = readAttributes(path, "existing local manga")
         if (!attributes.isDirectory || isLinkOrReparsePoint(path, attributes) || !Files.isReadable(path)) {
             rejectImport("existing local manga path is not a safe readable directory")
@@ -111,6 +143,7 @@ class LocalMangaImporter(
         storagePath: Path,
         nowMillis: Long,
         existingLocal: LocalMangaRecord?,
+        beforeReport: () -> Unit,
     ): ImportReport {
         val url = mangaUrl(manifest)
         val existingManga = findManga(LOCAL_SOURCE_ID, url)
@@ -194,7 +227,7 @@ class LocalMangaImporter(
                 importedAt = existingLocal?.importedAt ?: nowMillis,
             ),
         )
-        checkpoint.beforeReport()
+        beforeReport()
         val report = ImportReport(
             importType = ImportType.LOCAL_DIRECTORY,
             sourcePath = manifest.sourceRoot.toString(),
@@ -213,6 +246,11 @@ class LocalMangaImporter(
         report.items.forEach { insertReportItem(reportId, it.toRecord()) }
         return report.copy(id = reportId)
     }
+}
+
+private enum class LocalImporterConstruction {
+    PRODUCTION,
+    TEST,
 }
 
 private fun mangaUrl(manifest: LocalImportManifest): String = "local:${manifest.sha256}"

@@ -9,6 +9,7 @@ import java.nio.file.LinkOption
 import java.nio.file.Path
 import java.nio.file.SimpleFileVisitor
 import java.nio.file.attribute.BasicFileAttributes
+import java.nio.file.attribute.DosFileAttributeView
 import java.nio.file.attribute.DosFileAttributes
 import java.security.MessageDigest
 import java.util.Locale
@@ -60,30 +61,60 @@ internal fun interface LocalScannerEntryFaults {
     }
 }
 
+internal fun interface LocalDosReparseReader {
+    fun read(path: Path): Boolean?
+
+    companion object {
+        val SYSTEM = LocalDosReparseReader { path ->
+            val view = Files.getFileAttributeView(
+                path,
+                DosFileAttributeView::class.java,
+                LinkOption.NOFOLLOW_LINKS,
+            ) ?: return@LocalDosReparseReader null
+            view.readAttributes().isOther
+        }
+    }
+}
+
 class LocalImportScanner private constructor(
     private val limits: LocalImportLimits,
     private val entryFaults: LocalScannerEntryFaults,
+    private val dosReparseReader: LocalDosReparseReader,
 ) {
-    constructor(limits: LocalImportLimits = LocalImportLimits()) : this(limits, LocalScannerEntryFaults.NONE)
+    constructor(limits: LocalImportLimits = LocalImportLimits()) : this(
+        limits,
+        LocalScannerEntryFaults.NONE,
+        LocalDosReparseReader.SYSTEM,
+    )
 
     internal constructor(
         entryFaults: LocalScannerEntryFaults,
         limits: LocalImportLimits = LocalImportLimits(),
-    ) : this(limits, entryFaults)
+    ) : this(limits, entryFaults, LocalDosReparseReader.SYSTEM)
+
+    internal constructor(
+        dosReparseReader: LocalDosReparseReader,
+        entryFaults: LocalScannerEntryFaults = LocalScannerEntryFaults.NONE,
+        limits: LocalImportLimits = LocalImportLimits(),
+    ) : this(limits, entryFaults, dosReparseReader)
 
     fun scan(sourceDirectory: Path): LocalImportManifest {
         val root = sourceDirectory.toAbsolutePath().normalize()
         if (Files.notExists(root, LinkOption.NOFOLLOW_LINKS)) {
             reject("source root is not a readable directory: $root")
         }
-        validateNoReparseAncestors(root, "source root")
+        validateNoReparseAncestors(root, "source root", dosReparseReader)
         val rootAttributes = readAttributes(root, "source root")
-        if (isLinkOrReparsePoint(root, rootAttributes) || !rootAttributes.isDirectory || !Files.isReadable(root)) {
+        if (
+            isLinkOrReparsePoint(root, rootAttributes, dosReparseReader) ||
+            !rootAttributes.isDirectory ||
+            !Files.isReadable(root)
+        ) {
             reject("source root is not a readable directory: $root")
         }
         val title = root.fileName?.toString()?.takeIf(String::isNotEmpty)
             ?: reject("source root must have a directory name: $root")
-        val state = ScanState(root, limits)
+        val state = ScanState(root, limits, dosReparseReader)
         val chapters = try {
             Files.newDirectoryStream(root).use { children ->
                 children.mapNotNull { child -> scanTopLevel(child, state) }
@@ -95,7 +126,7 @@ class LocalImportScanner private constructor(
         }
         if (chapters.isEmpty()) reject("local manga contains no chapters: $root")
         val sorted = chapters.sortedWith(compareBy(LOCAL_CHAPTER_PATH_COMPARATOR) { portablePath(it.relativePath) })
-        validateNoReparseAncestors(root, "source root")
+        validateNoReparseAncestors(root, "source root", dosReparseReader)
         return LocalImportManifest(title, root, sorted, manifestSha256(sorted))
     }
 
@@ -122,7 +153,7 @@ class LocalImportScanner private constructor(
             null -> Unit
         }
         val preliminaryAttributes = readAttributes(child, "top-level entry")
-        if (isLinkOrReparsePoint(child, preliminaryAttributes)) {
+        if (isLinkOrReparsePoint(child, preliminaryAttributes, dosReparseReader)) {
             reject("link or reparse point is not allowed: ${child.fileName}")
         }
         if (!Files.isReadable(child)) reject("entry is unreadable: ${child.fileName}")
@@ -199,6 +230,7 @@ private data class InspectedEntry(
 private class ScanState(
     private val root: Path,
     private val limits: LocalImportLimits,
+    private val dosReparseReader: LocalDosReparseReader,
 ) {
     private val caseFoldedPaths = mutableSetOf<String>()
     private var entries = 0L
@@ -215,7 +247,9 @@ private class ScanState(
         entries++
         if (entries > limits.maxEntries) reject("local import entry limit exceeded: ${limits.maxEntries}")
         val attributes = readAttributes(absolute, relative.toString())
-        if (isLinkOrReparsePoint(absolute, attributes)) reject("link or reparse point is not allowed: $relative")
+        if (isLinkOrReparsePoint(absolute, attributes, dosReparseReader)) {
+            reject("link or reparse point is not allowed: $relative")
+        }
         if (!Files.isReadable(absolute)) reject("entry is unreadable: $relative")
         if (relative.nameCount == 1) {
             chapters++
@@ -250,32 +284,50 @@ internal fun readAttributes(path: Path, label: String): BasicFileAttributes = tr
     reject("cannot read attributes for $label: $path", error)
 }
 
-internal fun validateNoReparseAncestors(path: Path, label: String) {
+internal fun validateNoReparseAncestors(
+    path: Path,
+    label: String,
+    dosReparseReader: LocalDosReparseReader = LocalDosReparseReader.SYSTEM,
+) {
     // Pure-Java NOFOLLOW checks reject persistent or observed component replacements. They are deliberately repeated
     // before copy operations, but are not a native handle-relative guarantee: a privileged actor that swaps and
     // restores a component entirely between observations is outside the Plan 2 local-library threat model.
     val absolute = path.toAbsolutePath().normalize()
     var current = absolute.root ?: reject("$label has no filesystem root: $absolute")
-    validateSafePathComponent(current, label)
+    validateSafePathComponent(current, label, dosReparseReader)
     for (index in 0 until absolute.nameCount) {
         current = current.resolve(absolute.getName(index))
-        validateSafePathComponent(current, label)
+        validateSafePathComponent(current, label, dosReparseReader)
     }
 }
 
-private fun validateSafePathComponent(path: Path, label: String) {
+private fun validateSafePathComponent(path: Path, label: String, dosReparseReader: LocalDosReparseReader) {
     val attributes = readAttributes(path, "$label ancestor")
-    if (isLinkOrReparsePoint(path, attributes)) {
+    if (isLinkOrReparsePoint(path, attributes, dosReparseReader)) {
         reject("$label ancestor is a link or reparse point: $path")
     }
 }
 
-internal fun isLinkOrReparsePoint(path: Path, attributes: BasicFileAttributes): Boolean {
+internal fun isLinkOrReparsePoint(
+    path: Path,
+    attributes: BasicFileAttributes,
+    dosReparseReader: LocalDosReparseReader = LocalDosReparseReader.SYSTEM,
+): Boolean {
     if (Files.isSymbolicLink(path) || attributes.isSymbolicLink || attributes.isOther) return true
     if (attributes is DosFileAttributes && attributes.isOther) return true
-    return runCatching {
-        Files.getAttribute(path, "dos:reparsePoint", LinkOption.NOFOLLOW_LINKS) as? Boolean == true
-    }.getOrDefault(false)
+    return try {
+        dosReparseReader.read(path) == true
+    } catch (error: LocalImportRejected) {
+        throw error
+    } catch (error: IOException) {
+        reject("cannot read DOS reparse attribute: $path", error)
+    } catch (error: SecurityException) {
+        reject("cannot read DOS reparse attribute: $path", error)
+    } catch (error: UnsupportedOperationException) {
+        reject("cannot read DOS reparse attribute: $path", error)
+    } catch (error: IllegalArgumentException) {
+        reject("cannot read DOS reparse attribute: $path", error)
+    }
 }
 
 internal fun portablePath(path: Path): String =

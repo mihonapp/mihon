@@ -6,6 +6,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
+import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
@@ -183,6 +184,18 @@ class LocalImportScannerTest {
             shouldThrow<LocalImportRejected> { scanner.scan(manga) }
                 .message.shouldContain(expectedMessage)
         }
+    }
+
+    @Test
+    fun `supported DOS reparse attribute read failure rejects the path`() {
+        val manga = Files.createDirectory(tempDir.resolve("dos-read-failure"))
+        Files.write(manga.resolve("chapter.cbz"), byteArrayOf(1))
+        val scanner = LocalImportScanner(
+            dosReparseReader = LocalDosReparseReader { throw IOException("forced DOS attribute read failure") },
+        )
+
+        shouldThrow<LocalImportRejected> { scanner.scan(manga) }
+            .message.shouldContain("DOS reparse attribute")
     }
 }
 
