@@ -137,15 +137,12 @@ following content `Box` without displayable width. It now explicitly uses
 `Modifier.fillMaxHeight().width(80.dp)`, preserving a fixed desktop rail and
 available space for the selected destination headline.
 
-### RED/GREEN guard
+### Correction
 
-Before the change, the layout guard failed with:
-
-```text
-Desktop navigation rail must reserve a fixed 80.dp width for content
-```
-
-After the change it passed, confirming the rail has the fixed-width modifier.
+The earlier source-text width guard was an exploratory, untracked check rather
+than a Compose UI regression test. It must not be treated as proof of the
+layout behavior. It is superseded by the committed Compose Desktop UI test
+documented below.
 
 ### Build and package gates
 
@@ -171,3 +168,61 @@ metadata validation passed (`Packaged runtime JAVA_VERSION=17.0.18`).
 This change has not been claimed as visually verified here. A controller must
 relaunch the packaged desktop app and inspect a fresh screenshot/click flow to
 confirm the selected destination headline is visible.
+
+## Compose Desktop layout regression test correction
+
+`desktop-app` now declares Compose 1.12's supported
+`compose.desktop.uiTestJUnit4` test dependency. The committed
+`DesktopShellTest` uses `androidx.compose.ui.test.v2.runComposeUiTest` to
+render `DesktopShell` inside a bounded `1280.dp x 800.dp` container. Stable
+semantics tags identify the navigation rail and selected headline. The test
+asserts that the headline has positive width and that its left bound is at or
+to the right of the rail's right bound.
+
+### Behavioral RED
+
+With the real UI test in place, the rail's `width(80.dp)` modifier was
+temporarily removed and the exact focused command was run:
+
+```powershell
+.\gradlew.bat :desktop-app:test --tests 'mihon.desktop.ui.DesktopShellTest' --no-daemon
+```
+
+Result: `BUILD FAILED`; `DesktopShellTest > selected headline has positive
+bounds beside the navigation rail()` failed, with `1 test completed, 1 failed`.
+This verifies the test observes the actual Compose layout regression rather
+than source text.
+
+### Behavioral GREEN
+
+After restoring `width(80.dp)`, the same real UI test was rerun without using
+the Gradle build cache:
+
+```powershell
+.\gradlew.bat :desktop-app:test --tests 'mihon.desktop.ui.DesktopShellTest' --rerun-tasks --no-daemon
+```
+
+Result: `BUILD SUCCESSFUL`; all 12 tasks executed and the single Compose UI
+test passed.
+
+### Full gates
+
+```powershell
+.\gradlew.bat :desktop-app:test :desktop-app:compileKotlin :desktop-app:spotlessCheck --no-daemon
+```
+
+Result: `BUILD SUCCESSFUL`. The JUnit XML results report 17 tests, 0 failures,
+0 errors, and 0 skipped, including `DesktopShellTest`.
+
+After stopping the daemon, the full verifier was rerun with the approved JDK
+21 runtime:
+
+```powershell
+.\gradlew.bat --stop
+.\scripts\verify-desktop-foundation.ps1
+```
+
+Result: `BUILD SUCCESSFUL`; formatting, tests, distributable creation, bounded
+smoke verification, and Java 17 metadata validation passed. The verifier
+reported `Packaged runtime JAVA_VERSION=17.0.18` and
+`Mihon W desktop foundation verification passed.`

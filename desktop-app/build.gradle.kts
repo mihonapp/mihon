@@ -28,6 +28,7 @@ dependencies {
     implementation(compose.material3)
 
     testImplementation(libs.bundles.test)
+    testImplementation(compose.desktop.uiTestJUnit4)
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 

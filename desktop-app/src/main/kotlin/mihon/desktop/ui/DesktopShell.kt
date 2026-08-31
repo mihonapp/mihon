@@ -16,8 +16,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import mihon.desktop.navigation.DesktopDestination
+
+internal const val DESKTOP_MAIN_HEADLINE_TEST_TAG = "desktop-main-headline"
+internal const val DESKTOP_NAVIGATION_RAIL_TEST_TAG = "desktop-navigation-rail"
 
 @Composable
 fun DesktopShell(
@@ -28,7 +32,11 @@ fun DesktopShell(
     val secondary = DesktopDestination.entries.drop(5)
     Surface(modifier = Modifier.fillMaxSize()) {
         Row {
-            NavigationRail(modifier = Modifier.fillMaxHeight().width(80.dp)) {
+            NavigationRail(
+                modifier = Modifier.fillMaxHeight()
+                    .width(80.dp)
+                    .testTag(DESKTOP_NAVIGATION_RAIL_TEST_TAG),
+            ) {
                 Column(
                     modifier = Modifier.fillMaxHeight(),
                     verticalArrangement = Arrangement.SpaceBetween,
@@ -50,7 +58,11 @@ fun DesktopShell(
                 modifier = Modifier.fillMaxSize().padding(32.dp),
                 contentAlignment = Alignment.TopStart,
             ) {
-                Text(text = selected.label, style = androidx.compose.material3.MaterialTheme.typography.headlineMedium)
+                Text(
+                    text = selected.label,
+                    modifier = Modifier.testTag(DESKTOP_MAIN_HEADLINE_TEST_TAG),
+                    style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
+                )
             }
         }
     }
