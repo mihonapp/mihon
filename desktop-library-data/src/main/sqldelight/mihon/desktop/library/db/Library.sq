@@ -250,10 +250,10 @@ INSERT INTO tracking(
 );
 
 selectTrackingByIdentity:
-SELECT * FROM tracking WHERE manga_id=? AND tracker_id=? AND remote_id=?;
+SELECT * FROM tracking WHERE manga_id=? AND tracker_id=?;
 
 updateTracking:
-UPDATE tracking SET library_id=:library_id, title=:title, last_chapter_read=:last_chapter_read,
+UPDATE tracking SET remote_id=:remote_id, library_id=:library_id, title=:title, last_chapter_read=:last_chapter_read,
   total_chapters=:total_chapters, score=:score, status=:status,
   started_reading_date=:started_reading_date, finished_reading_date=:finished_reading_date,
   private=:private, tracking_url=:tracking_url

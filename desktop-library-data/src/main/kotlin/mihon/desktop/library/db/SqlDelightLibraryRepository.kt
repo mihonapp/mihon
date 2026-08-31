@@ -1,0 +1,419 @@
+package mihon.desktop.library.db
+
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
+import app.cash.sqldelight.coroutines.mapToOneOrNull
+import app.cash.sqldelight.db.SqlDriver
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import mihon.desktop.library.model.CategoryRecord
+import mihon.desktop.library.model.ChapterRecord
+import mihon.desktop.library.model.HistoryRecord
+import mihon.desktop.library.model.ImportCounts
+import mihon.desktop.library.model.ImportReport
+import mihon.desktop.library.model.ImportReportItemRecord
+import mihon.desktop.library.model.ImportReportRecord
+import mihon.desktop.library.model.ImportStatus
+import mihon.desktop.library.model.ImportType
+import mihon.desktop.library.model.LibraryChapter
+import mihon.desktop.library.model.LibraryManga
+import mihon.desktop.library.model.LocalChapterRecord
+import mihon.desktop.library.model.LocalMangaRecord
+import mihon.desktop.library.model.MangaDetails
+import mihon.desktop.library.model.MangaRecord
+import mihon.desktop.library.model.PreferenceSnapshotRecord
+import mihon.desktop.library.model.SourcePreferenceSnapshotRecord
+import mihon.desktop.library.model.SourceRecord
+import mihon.desktop.library.model.TrackingRecord
+import mihon.desktop.library.repository.LibraryMutationPort
+import mihon.desktop.library.repository.LibraryRepository
+
+class SqlDelightLibraryRepository(
+    private val driver: SqlDriver,
+    private val database: DesktopLibraryDatabase,
+) : LibraryRepository, LibraryMutationPort, AutoCloseable {
+    private val queries = database.libraryQueries
+
+    override fun observeLibrary(): Flow<List<LibraryManga>> =
+        queries.selectLibrary().asFlow().mapToList(Dispatchers.IO).map { rows -> rows.map(SelectLibrary::toModel) }
+
+    override fun observeManga(id: Long): Flow<MangaDetails?> = combine(
+        queries.selectMangaById(id).asFlow().mapToOneOrNull(Dispatchers.IO),
+        queries.selectCategoriesForManga(id).asFlow().mapToList(Dispatchers.IO),
+    ) { manga, categories -> manga?.toDetails(categories.map(Category::toRecord)) }
+
+    override fun observeChapters(mangaId: Long): Flow<List<LibraryChapter>> =
+        queries.selectChaptersForManga(mangaId).asFlow().mapToList(Dispatchers.IO)
+            .map { rows -> rows.map(Chapter::toModel) }
+
+    override fun librarySnapshot(): List<LibraryManga> =
+        queries.selectLibrary().executeAsList().map(SelectLibrary::toModel)
+
+    override fun mangaSnapshot(id: Long): MangaDetails? {
+        val manga = queries.selectMangaById(id).executeAsOneOrNull() ?: return null
+        return manga.toDetails(queries.selectCategoriesForManga(id).executeAsList().map(Category::toRecord))
+    }
+
+    override fun chapterSnapshot(mangaId: Long): List<LibraryChapter> =
+        queries.selectChaptersForManga(mangaId).executeAsList().map(Chapter::toModel)
+
+    override fun latestImportReport(): ImportReport? =
+        queries.selectLatestImportReport().executeAsOneOrNull()?.toModel()
+
+    override fun <T> transaction(block: LibraryMutationPort.() -> T): T =
+        database.transactionWithResult { block(this@SqlDelightLibraryRepository) }
+
+    override fun findManga(sourceId: Long, url: String): MangaRecord? =
+        queries.selectMangaByIdentity(sourceId, url).executeAsOneOrNull()?.toRecord()
+
+    override fun insertManga(value: MangaRecord): Long {
+        queries.insertManga(
+            source_id = value.sourceId,
+            url = value.url,
+            title = value.title,
+            artist = value.artist,
+            author = value.author,
+            description = value.description,
+            genre_json = value.genreJson,
+            status = value.status,
+            thumbnail_url = value.thumbnailUrl,
+            favorite = value.favorite,
+            date_added = value.dateAdded,
+            viewer_flags = value.viewerFlags,
+            chapter_flags = value.chapterFlags,
+            update_strategy = value.updateStrategy,
+            last_modified_at = value.lastModifiedAt,
+            favorite_modified_at = value.favoriteModifiedAt,
+            excluded_scanlators_json = value.excludedScanlatorsJson,
+            version = value.version,
+            notes = value.notes,
+            initialized = value.initialized,
+            memo_json = value.memoJson,
+        )
+        return lastInsertRowId()
+    }
+
+    override fun updateManga(value: MangaRecord) {
+        queries.updateManga(
+            source_id = value.sourceId,
+            url = value.url,
+            title = value.title,
+            artist = value.artist,
+            author = value.author,
+            description = value.description,
+            genre_json = value.genreJson,
+            status = value.status,
+            thumbnail_url = value.thumbnailUrl,
+            favorite = value.favorite,
+            date_added = value.dateAdded,
+            viewer_flags = value.viewerFlags,
+            chapter_flags = value.chapterFlags,
+            update_strategy = value.updateStrategy,
+            last_modified_at = value.lastModifiedAt,
+            favorite_modified_at = value.favoriteModifiedAt,
+            excluded_scanlators_json = value.excludedScanlatorsJson,
+            version = value.version,
+            notes = value.notes,
+            initialized = value.initialized,
+            memo_json = value.memoJson,
+            id = value.id,
+        )
+    }
+
+    override fun findChapter(mangaId: Long, url: String): ChapterRecord? =
+        queries.selectChapterByIdentity(mangaId, url).executeAsOneOrNull()?.toRecord()
+
+    override fun insertChapter(value: ChapterRecord): Long {
+        queries.insertChapter(
+            manga_id = value.mangaId,
+            url = value.url,
+            name = value.name,
+            scanlator = value.scanlator,
+            read = value.read,
+            bookmark = value.bookmark,
+            last_page_read = value.lastPageRead,
+            date_fetch = value.dateFetch,
+            date_upload = value.dateUpload,
+            chapter_number = value.chapterNumber,
+            source_order = value.sourceOrder,
+            last_modified_at = value.lastModifiedAt,
+            version = value.version,
+            memo_json = value.memoJson,
+        )
+        return lastInsertRowId()
+    }
+
+    override fun updateChapter(value: ChapterRecord) {
+        queries.updateChapter(
+            manga_id = value.mangaId,
+            url = value.url,
+            name = value.name,
+            scanlator = value.scanlator,
+            read = value.read,
+            bookmark = value.bookmark,
+            last_page_read = value.lastPageRead,
+            date_fetch = value.dateFetch,
+            date_upload = value.dateUpload,
+            chapter_number = value.chapterNumber,
+            source_order = value.sourceOrder,
+            last_modified_at = value.lastModifiedAt,
+            version = value.version,
+            memo_json = value.memoJson,
+            id = value.id,
+        )
+    }
+
+    override fun upsertCategory(value: CategoryRecord): Long {
+        queries.insertCategory(value.name, value.sortOrder, value.flags)
+        return checkNotNull(queries.selectCategoryByName(value.name).executeAsOneOrNull()).id
+    }
+
+    override fun linkCategory(mangaId: Long, categoryId: Long) {
+        queries.linkMangaCategory(mangaId, categoryId)
+    }
+
+    override fun upsertHistory(value: HistoryRecord) {
+        queries.upsertHistory(value.chapterId, value.lastRead, value.readDuration)
+    }
+
+    override fun findTracking(mangaId: Long, trackerId: Long): TrackingRecord? =
+        queries.selectTrackingByIdentity(mangaId, trackerId).executeAsOneOrNull()?.toRecord()
+
+    override fun insertTracking(value: TrackingRecord) {
+        queries.insertTracking(
+            manga_id = value.mangaId,
+            tracker_id = value.trackerId,
+            remote_id = value.remoteId,
+            library_id = value.libraryId,
+            title = value.title,
+            last_chapter_read = value.lastChapterRead,
+            total_chapters = value.totalChapters,
+            score = value.score,
+            status = value.status,
+            started_reading_date = value.startedReadingDate,
+            finished_reading_date = value.finishedReadingDate,
+            private = value.private,
+            tracking_url = value.trackingUrl,
+        )
+    }
+
+    override fun updateTracking(value: TrackingRecord) {
+        queries.updateTracking(
+            remote_id = value.remoteId,
+            library_id = value.libraryId,
+            title = value.title,
+            last_chapter_read = value.lastChapterRead,
+            total_chapters = value.totalChapters,
+            score = value.score,
+            status = value.status,
+            started_reading_date = value.startedReadingDate,
+            finished_reading_date = value.finishedReadingDate,
+            private = value.private,
+            tracking_url = value.trackingUrl,
+            id = value.id,
+        )
+    }
+
+    override fun upsertSource(value: SourceRecord) {
+        queries.upsertSourceMetadata(value.sourceId, value.name, value.importedAt)
+    }
+
+    override fun upsertPreference(value: PreferenceSnapshotRecord) {
+        queries.upsertPreferenceSnapshot(value.key, value.valueType, value.valueJson, value.importedAt)
+    }
+
+    override fun upsertSourcePreference(value: SourcePreferenceSnapshotRecord) {
+        queries.upsertSourcePreferenceSnapshot(
+            value.sourceKey,
+            value.key,
+            value.valueType,
+            value.valueJson,
+            value.importedAt,
+        )
+    }
+
+    override fun insertLocalManga(value: LocalMangaRecord) {
+        queries.insertLocalMangaEntry(value.mangaId, value.storagePath, value.manifestSha256, value.importedAt)
+    }
+
+    override fun insertLocalChapter(value: LocalChapterRecord) {
+        queries.insertLocalChapterAsset(
+            value.chapterId,
+            value.relativePath,
+            value.assetKind,
+            value.sizeBytes,
+            value.modifiedAt,
+        )
+    }
+
+    override fun insertReport(value: ImportReportRecord): Long {
+        queries.insertImportReport(
+            import_type = value.importType.name,
+            source_path = value.sourcePath,
+            status = value.status.name,
+            started_at = value.startedAt,
+            finished_at = value.finishedAt,
+            manga_inserted = value.counts.mangaInserted,
+            manga_merged = value.counts.mangaMerged,
+            chapters_inserted = value.counts.chaptersInserted,
+            chapters_merged = value.counts.chaptersMerged,
+            categories_linked = value.counts.categoriesLinked,
+            preferences_imported = value.counts.preferencesImported,
+            preferences_skipped = value.counts.preferencesSkipped,
+        )
+        return lastInsertRowId()
+    }
+
+    override fun insertReportItem(reportId: Long, value: ImportReportItemRecord) {
+        queries.insertImportReportItem(
+            report_id = reportId,
+            item_type = value.itemType,
+            item_key = value.itemKey,
+            outcome = value.outcome,
+            reason = value.reason,
+            message = value.message,
+        )
+    }
+
+    override fun close() {
+        driver.close()
+    }
+
+    private fun lastInsertRowId(): Long = queries.lastInsertRowId().executeAsOne()
+}
+
+private fun SelectLibrary.toModel() = LibraryManga(
+    id = id,
+    sourceId = source_id,
+    url = url,
+    title = title,
+    thumbnailUrl = thumbnail_url,
+    chapterCount = chapter_count,
+    unreadCount = unread_count,
+)
+
+private fun Manga.toRecord() = MangaRecord(
+    id = id,
+    sourceId = source_id,
+    url = url,
+    title = title,
+    artist = artist,
+    author = author,
+    description = description,
+    genreJson = genre_json,
+    status = status,
+    thumbnailUrl = thumbnail_url,
+    favorite = favorite,
+    dateAdded = date_added,
+    viewerFlags = viewer_flags,
+    chapterFlags = chapter_flags,
+    updateStrategy = update_strategy,
+    lastModifiedAt = last_modified_at,
+    favoriteModifiedAt = favorite_modified_at,
+    excludedScanlatorsJson = excluded_scanlators_json,
+    version = version,
+    notes = notes,
+    initialized = initialized,
+    memoJson = memo_json,
+)
+
+private fun Manga.toDetails(categories: List<CategoryRecord>) = MangaDetails(
+    id = id,
+    sourceId = source_id,
+    url = url,
+    title = title,
+    artist = artist,
+    author = author,
+    description = description,
+    genreJson = genre_json,
+    status = status,
+    thumbnailUrl = thumbnail_url,
+    favorite = favorite,
+    dateAdded = date_added,
+    viewerFlags = viewer_flags,
+    chapterFlags = chapter_flags,
+    updateStrategy = update_strategy,
+    lastModifiedAt = last_modified_at,
+    favoriteModifiedAt = favorite_modified_at,
+    excludedScanlatorsJson = excluded_scanlators_json,
+    version = version,
+    notes = notes,
+    initialized = initialized,
+    memoJson = memo_json,
+    categories = categories,
+)
+
+private fun Chapter.toRecord() = ChapterRecord(
+    id = id,
+    mangaId = manga_id,
+    url = url,
+    name = name,
+    scanlator = scanlator,
+    read = read,
+    bookmark = bookmark,
+    lastPageRead = last_page_read,
+    dateFetch = date_fetch,
+    dateUpload = date_upload,
+    chapterNumber = chapter_number,
+    sourceOrder = source_order,
+    lastModifiedAt = last_modified_at,
+    version = version,
+    memoJson = memo_json,
+)
+
+private fun Chapter.toModel() = LibraryChapter(
+    id = id,
+    mangaId = manga_id,
+    url = url,
+    name = name,
+    scanlator = scanlator,
+    read = read,
+    bookmark = bookmark,
+    lastPageRead = last_page_read,
+    dateFetch = date_fetch,
+    dateUpload = date_upload,
+    chapterNumber = chapter_number,
+    sourceOrder = source_order,
+    lastModifiedAt = last_modified_at,
+    version = version,
+    memoJson = memo_json,
+)
+
+private fun Category.toRecord() = CategoryRecord(id, name, sort_order, flags)
+
+private fun Tracking.toRecord() = TrackingRecord(
+    id = id,
+    mangaId = manga_id,
+    trackerId = tracker_id,
+    remoteId = remote_id,
+    libraryId = library_id,
+    title = title,
+    lastChapterRead = last_chapter_read,
+    totalChapters = total_chapters,
+    score = score,
+    status = status,
+    startedReadingDate = started_reading_date,
+    finishedReadingDate = finished_reading_date,
+    private = private_,
+    trackingUrl = tracking_url,
+)
+
+private fun Import_report.toModel() = ImportReport(
+    id = id,
+    importType = ImportType.valueOf(import_type),
+    sourcePath = source_path,
+    status = ImportStatus.valueOf(status),
+    startedAt = started_at,
+    finishedAt = finished_at,
+    counts = ImportCounts(
+        mangaInserted = manga_inserted,
+        mangaMerged = manga_merged,
+        chaptersInserted = chapters_inserted,
+        chaptersMerged = chapters_merged,
+        categoriesLinked = categories_linked,
+        preferencesImported = preferences_imported,
+        preferencesSkipped = preferences_skipped,
+    ),
+)
