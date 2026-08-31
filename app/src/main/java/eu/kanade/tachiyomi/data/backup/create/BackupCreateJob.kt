@@ -30,7 +30,6 @@ import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.storage.service.StorageManager
-import uy.kohesive.injekt.api.get
 import java.util.concurrent.TimeUnit
 
 class BackupCreateJob(private val context: Context, workerParams: WorkerParameters) :
