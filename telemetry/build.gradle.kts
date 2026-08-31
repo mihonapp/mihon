@@ -2,6 +2,7 @@ import mihon.gradle.Config
 
 plugins {
     alias(mihonx.plugins.android.library)
+    alias(mihonx.plugins.detekt)
     alias(mihonx.plugins.spotless)
 }
 

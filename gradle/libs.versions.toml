@@ -33,6 +33,7 @@ composeMaterialMotion = "2.0.1"
 composeRichEditor = "1.2.0"
 composeWebview = "0.33.6"
 conscrypt = "2.7.0"
+detekt = "2.0.0-alpha.6"
 directionalViewPager = "1.0.0"
 diskLruCache = "2.0.2"
 firebase-bom = "34.19.0"
@@ -130,6 +131,7 @@ composeMaterialMotion = { module = "io.github.fornewid:material-motion-compose-c
 composeRichEditor = { module = "com.mohamedrejeb.richeditor:richeditor-compose", version.ref = "composeRichEditor" }
 composeWebview = { module = "io.github.kevinnzou:compose-webview", version.ref = "composeWebview" }
 conscrypt = { module = "org.conscrypt:conscrypt-android", version.ref = "conscrypt" }
+detekt-gradle = { module = "dev.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 directionalViewPager = { module = "com.github.tachiyomiorg:DirectionalViewPager", version.ref = "directionalViewPager" }
 diskLruCache = { module = "com.jakewharton:disklrucache", version.ref = "diskLruCache" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
@@ -204,6 +206,7 @@ android-kmp-library = { id = "com.android.kotlin.multiplatform.library", version
 android-library = { id = "com.android.library", version.ref = "android-gradle" }
 android-test = { id = "com.android.test", version.ref = "android-gradle" }
 androidx-baselineProfile = { id = "androidx.baselineprofile", version.ref = "androidx-baselineProfile" }
+detekt = { id = "dev.detekt", version.ref = "detekt" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-gradle" }

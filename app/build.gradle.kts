@@ -13,6 +13,7 @@ import java.util.Properties
 plugins {
     alias(mihonx.plugins.android.application)
     alias(mihonx.plugins.compose)
+    alias(mihonx.plugins.detekt)
     alias(mihonx.plugins.spotless)
 
     alias(libs.plugins.metro)

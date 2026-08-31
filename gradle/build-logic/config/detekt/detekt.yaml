@@ -1,0 +1,13 @@
+config:
+  validation: true
+  warningsAsErrors: false
+
+style:
+  UnusedImport:
+    active: true
+
+console-reports:
+  active: true
+  exclude:
+    - ComplexityReport
+    - ProjectStatisticsReport
