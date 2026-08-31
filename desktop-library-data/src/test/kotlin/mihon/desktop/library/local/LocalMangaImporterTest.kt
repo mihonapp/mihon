@@ -16,9 +16,19 @@ import java.io.IOException
 import java.nio.file.AtomicMoveNotSupportedException
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.StandardOpenOption
+import java.nio.file.attribute.AclEntry
+import java.nio.file.attribute.AclEntryFlag
+import java.nio.file.attribute.AclEntryPermission
+import java.nio.file.attribute.AclEntryType
+import java.nio.file.attribute.AclFileAttributeView
 import java.nio.file.attribute.PosixFileAttributeView
 import java.nio.file.attribute.PosixFilePermission
+import java.nio.file.attribute.UserPrincipal
 import java.sql.DriverManager
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
@@ -379,6 +389,10 @@ class LocalMangaImporterTest {
     fun `staging owns an atomic marker and uses private POSIX permissions when supported`() {
         val source = createManga("private-staging-source")
         val mediaRoot = tempDir.resolve("private-staging-media")
+        if (isWindows()) {
+            Files.createDirectories(mediaRoot)
+            makeWindowsDirectoryPermissive(mediaRoot)
+        }
         val staged = LocalImportStager(idFactory = { PRIVATE_IMPORT_ID })
             .stage(LocalImportScanner().scan(source), mediaRoot)
 
@@ -402,6 +416,18 @@ class LocalMangaImporterTest {
                     PosixFilePermission.OWNER_WRITE,
                     PosixFilePermission.OWNER_EXECUTE,
                 )
+            } else if (isWindows()) {
+                val claim = mediaRoot.resolve(".claims").resolve("$PRIVATE_IMPORT_ID.claim")
+                listOf(
+                    mediaRoot.resolve(".staging"),
+                    mediaRoot.resolve(".claims"),
+                    it.stagingPath,
+                    hiddenFiles.single(),
+                    claim,
+                ).forEach(::assertRestrictedWindowsAcl)
+                val promoted = it.promote()
+                assertRestrictedWindowsAcl(promoted)
+                assertRestrictedWindowsAcl(promoted.resolve(hiddenFiles.single().fileName))
             }
         }
     }
@@ -439,6 +465,170 @@ class LocalMangaImporterTest {
         }
     }
 
+    @Test
+    fun `crashes after claim directory and marker temp are reclaimed by startup cleanup`() {
+        listOf("claim", "directory", "marker-temp").forEachIndexed { index, crashPoint ->
+            val caseRoot = Files.createDirectory(tempDir.resolve("crash-$crashPoint"))
+            val source = createMangaAt(caseRoot.resolve("source"))
+            val mediaRoot = caseRoot.resolve("media")
+            val id = CRASH_IMPORT_IDS[index]
+            val faults = object : LocalFileFaults {
+                override fun afterClaimCreated(claim: Path) {
+                    if (crashPoint == "claim") throw LocalImportCrashSimulation()
+                }
+
+                override fun afterStagingDirectoryCreated(directory: Path) {
+                    if (crashPoint == "directory") throw LocalImportCrashSimulation()
+                }
+
+                override fun duringMarkerPublication(temporary: Path, marker: Path) {
+                    if (crashPoint == "marker-temp") throw LocalImportCrashSimulation()
+                }
+            }
+            val crashing = LocalImportStager(
+                fileFaults = faults,
+                idFactory = { id },
+                clock = { 0L },
+            )
+
+            shouldThrow<LocalImportCrashSimulation> {
+                crashing.stage(LocalImportScanner().scan(source), mediaRoot)
+            }
+
+            val manualPaths = createManualMediaChildren(mediaRoot)
+            LocalImportStager(clock = { Long.MAX_VALUE }).cleanupOrphans(mediaRoot, emptySet())
+            assertOnlyManualMediaChildrenRemain(mediaRoot, manualPaths)
+        }
+    }
+
+    @Test
+    fun `cleanup preserves invalid claims but valid claims recover broken markers`() {
+        val source = createManga("claim-validation-source")
+        val manifest = LocalImportScanner().scan(source)
+        val mediaRoot = tempDir.resolve("claim-validation-media")
+
+        val missingClaim = LocalImportStager(idFactory = { MISSING_CLAIM_ID }).stage(manifest, mediaRoot)
+        Files.delete(mediaRoot.resolve(".claims").resolve("$MISSING_CLAIM_ID.claim"))
+
+        val invalidClaims = listOf(
+            MALFORMED_CLAIM_ID to "malformed",
+            OVERSIZED_CLAIM_ID to "x".repeat(4_096),
+            MISMATCHED_CLAIM_ID to "mihon-desktop-local-import-claim-v1\nid=$MISSING_CLAIM_ID\ncreatedAt=0\n",
+        ).map { (id, invalidContent) ->
+            LocalImportStager(idFactory = { id }, clock = { 0L }).stage(manifest, mediaRoot).also {
+                Files.writeString(
+                    mediaRoot.resolve(".claims").resolve("$id.claim"),
+                    invalidContent,
+                    StandardOpenOption.TRUNCATE_EXISTING,
+                )
+            }
+        }
+
+        val brokenMarkers = listOf(
+            MISSING_MARKER_ID to null,
+            MALFORMED_MARKER_ID to "malformed",
+            OVERSIZED_MARKER_ID to "x".repeat(4_096),
+            MISMATCHED_MARKER_ID to "mihon-desktop-local-import-v1\nid=$MISSING_MARKER_ID\n",
+        ).map { (id, markerContent) ->
+            LocalImportStager(idFactory = { id }, clock = { 0L }).stage(manifest, mediaRoot).also { staged ->
+                val marker = staged.stagingPath.resolve(".mihon-local-import-owner")
+                if (markerContent == null) {
+                    Files.delete(marker)
+                } else {
+                    Files.writeString(marker, markerContent, StandardOpenOption.TRUNCATE_EXISTING)
+                }
+            }
+        }
+
+        LocalImportStager(clock = { Long.MAX_VALUE }).cleanupOrphans(mediaRoot, emptySet())
+
+        Files.isDirectory(missingClaim.stagingPath) shouldBe true
+        invalidClaims.forEach {
+            Files.isDirectory(it.stagingPath) shouldBe true
+            Files.exists(mediaRoot.resolve(".claims").resolve("${it.stagingPath.fileName}.claim")) shouldBe true
+        }
+        brokenMarkers.forEach {
+            Files.exists(it.stagingPath) shouldBe false
+            Files.exists(mediaRoot.resolve(".claims").resolve("${it.stagingPath.fileName}.claim")) shouldBe false
+        }
+        missingClaim.close()
+        invalidClaims.forEach(StagedLocalManga::close)
+        brokenMarkers.forEach(StagedLocalManga::close)
+    }
+
+    @Test
+    fun `claim without a directory is preserved until stale then safely removed`() {
+        val source = createManga("claim-age-source")
+        val mediaRoot = tempDir.resolve("claim-age-media")
+        val faults = object : LocalFileFaults {
+            override fun afterClaimCreated(claim: Path) = throw LocalImportCrashSimulation()
+        }
+        val stager = LocalImportStager(
+            fileFaults = faults,
+            idFactory = { CLAIM_ONLY_ID },
+            clock = { 100L },
+        )
+        shouldThrow<LocalImportCrashSimulation> {
+            stager.stage(LocalImportScanner().scan(source), mediaRoot)
+        }
+        val claim = mediaRoot.resolve(".claims").resolve("$CLAIM_ONLY_ID.claim")
+
+        LocalImportStager(clock = { 101L }).cleanupOrphans(mediaRoot, emptySet())
+        Files.isRegularFile(claim) shouldBe true
+
+        LocalImportStager(clock = { Long.MAX_VALUE }).cleanupOrphans(mediaRoot, emptySet())
+        Files.exists(claim) shouldBe false
+    }
+
+    @Test
+    fun `claim reservation serializes importers and target collision never overwrites manual data`() {
+        val source = createManga("claim-reservation-source")
+        val manifest = LocalImportScanner().scan(source)
+        val mediaRoot = tempDir.resolve("claim-reservation-media")
+        val claimCreated = CountDownLatch(1)
+        val allowFirst = CountDownLatch(1)
+        val executor = Executors.newSingleThreadExecutor()
+        val first = executor.submit<StagedLocalManga> {
+            LocalImportStager(
+                fileFaults = object : LocalFileFaults {
+                    override fun afterClaimCreated(claim: Path) {
+                        claimCreated.countDown()
+                        check(allowFirst.await(5, TimeUnit.SECONDS))
+                    }
+                },
+                idFactory = { CONCURRENT_IMPORT_ID },
+            ).stage(manifest, mediaRoot)
+        }
+        try {
+            check(claimCreated.await(5, TimeUnit.SECONDS))
+            shouldThrow<LocalImportRejected> {
+                LocalImportStager(idFactory = { CONCURRENT_IMPORT_ID }).stage(manifest, mediaRoot)
+            }.message.shouldContain("claim")
+            allowFirst.countDown()
+            first.get(5, TimeUnit.SECONDS).close()
+        } finally {
+            allowFirst.countDown()
+            executor.shutdownNow()
+        }
+
+        val manualTargetFault = object : LocalFileFaults {
+            override fun beforeAtomicMove(source: Path, target: Path) {
+                Files.createDirectories(target)
+                Files.writeString(target.resolve("keep.txt"), "manual")
+            }
+        }
+        val staged = LocalImportStager(
+            fileFaults = manualTargetFault,
+            idFactory = { TARGET_COLLISION_ID },
+        ).stage(manifest, mediaRoot)
+        staged.use {
+            shouldThrow<LocalImportRejected> { it.promote() }.message.shouldContain("target already exists")
+        }
+        val manualTarget = mediaRoot.resolve("manga").resolve(TARGET_COLLISION_ID)
+        Files.readString(manualTarget.resolve("keep.txt")) shouldBe "manual"
+        Files.exists(mediaRoot.resolve(".claims").resolve("$TARGET_COLLISION_ID.claim")) shouldBe false
+    }
+
     private fun createManga(name: String): Path = createMangaAt(tempDir.resolve(name))
 
     private fun createMangaAt(
@@ -455,6 +645,7 @@ class LocalMangaImporterTest {
 
     private fun assertNoImportResidue(mediaRoot: Path) {
         listChildren(mediaRoot.resolve(".staging")).shouldBeEmpty()
+        listChildren(mediaRoot.resolve(".claims")).shouldBeEmpty()
         listChildren(mediaRoot.resolve("manga")).shouldBeEmpty()
     }
 }
@@ -465,6 +656,22 @@ private const val STAGING_ORPHAN_ID = "00000000-0000-4000-8000-000000000002"
 private const val FINAL_ORPHAN_ID = "00000000-0000-4000-8000-000000000003"
 private const val RETAINED_IMPORT_ID = "00000000-0000-4000-8000-000000000004"
 private const val PRIVATE_IMPORT_ID = "00000000-0000-4000-8000-000000000005"
+private const val MISSING_CLAIM_ID = "00000000-0000-4000-8000-000000000006"
+private const val MALFORMED_CLAIM_ID = "00000000-0000-4000-8000-000000000007"
+private const val OVERSIZED_CLAIM_ID = "00000000-0000-4000-8000-000000000008"
+private const val MISMATCHED_CLAIM_ID = "00000000-0000-4000-8000-000000000009"
+private const val MISSING_MARKER_ID = "00000000-0000-4000-8000-000000000010"
+private const val MALFORMED_MARKER_ID = "00000000-0000-4000-8000-000000000011"
+private const val OVERSIZED_MARKER_ID = "00000000-0000-4000-8000-000000000012"
+private const val MISMATCHED_MARKER_ID = "00000000-0000-4000-8000-000000000013"
+private const val CLAIM_ONLY_ID = "00000000-0000-4000-8000-000000000014"
+private const val CONCURRENT_IMPORT_ID = "00000000-0000-4000-8000-000000000015"
+private const val TARGET_COLLISION_ID = "00000000-0000-4000-8000-000000000016"
+private val CRASH_IMPORT_IDS = listOf(
+    "00000000-0000-4000-8000-000000000017",
+    "00000000-0000-4000-8000-000000000018",
+    "00000000-0000-4000-8000-000000000019",
+)
 
 private val LOCAL_IMPORT_TABLES = listOf(
     "manga",
@@ -500,24 +707,75 @@ private fun listChildren(directory: Path): List<Path> =
 private fun createManualMediaChildren(mediaRoot: Path): Set<Path> {
     val stagingDirectory = mediaRoot.resolve(".staging").resolve("manual-directory")
     val stagingFile = mediaRoot.resolve(".staging").resolve("manual-file.txt")
+    val claimsDirectory = mediaRoot.resolve(".claims").resolve("manual-directory")
+    val claimsFile = mediaRoot.resolve(".claims").resolve("manual-file.txt")
     val mangaDirectory = mediaRoot.resolve("manga").resolve("manual-directory")
     val mangaFile = mediaRoot.resolve("manga").resolve("manual-file.txt")
     Files.createDirectories(stagingDirectory)
+    Files.createDirectories(claimsDirectory)
     Files.createDirectories(mangaDirectory)
     Files.writeString(stagingDirectory.resolve("keep.txt"), "keep")
+    Files.writeString(claimsDirectory.resolve("keep.txt"), "keep")
     Files.writeString(mangaDirectory.resolve("keep.txt"), "keep")
     Files.writeString(stagingFile, "keep")
+    Files.writeString(claimsFile, "keep")
     Files.writeString(mangaFile, "keep")
-    return setOf(stagingDirectory, stagingFile, mangaDirectory, mangaFile)
+    return setOf(stagingDirectory, stagingFile, claimsDirectory, claimsFile, mangaDirectory, mangaFile)
 }
 
 private fun assertOnlyManualMediaChildrenRemain(mediaRoot: Path, manualPaths: Set<Path>) {
     listChildren(mediaRoot.resolve(".staging")).toSet() shouldBe
         manualPaths.filterTo(mutableSetOf()) { it.parent == mediaRoot.resolve(".staging") }
+    listChildren(mediaRoot.resolve(".claims")).toSet() shouldBe
+        manualPaths.filterTo(mutableSetOf()) { it.parent == mediaRoot.resolve(".claims") }
     listChildren(mediaRoot.resolve("manga")).toSet() shouldBe
         manualPaths.filterTo(mutableSetOf()) { it.parent == mediaRoot.resolve("manga") }
     manualPaths.forEach { Files.exists(it) shouldBe true }
 }
+
+private fun isWindows(): Boolean = System.getProperty("os.name").startsWith("Windows", ignoreCase = true)
+
+private fun makeWindowsDirectoryPermissive(directory: Path) {
+    val view = Files.getFileAttributeView(directory, AclFileAttributeView::class.java)
+        ?: error("Windows ACL view is unavailable")
+    val owner = view.owner
+    val everyone = lookupPrincipal(directory, "S-1-1-0", "Everyone")
+    val inheritedFlags = setOf(AclEntryFlag.FILE_INHERIT, AclEntryFlag.DIRECTORY_INHERIT)
+    val permissions = AclEntryPermission.entries.toSet()
+    view.acl = listOf(
+        allowAcl(owner, permissions, inheritedFlags),
+        allowAcl(everyone, permissions, inheritedFlags),
+    )
+}
+
+private fun assertRestrictedWindowsAcl(path: Path) {
+    val view = Files.getFileAttributeView(path, AclFileAttributeView::class.java)
+        ?: error("Windows ACL view is unavailable for $path")
+    val owner = view.owner
+    val system = lookupPrincipal(path, "S-1-5-18", "NT AUTHORITY\\SYSTEM", "SYSTEM")
+    val allowed = setOf(owner.name.lowercase(), system.name.lowercase())
+    val entries = view.acl
+    entries.size shouldBe 2
+    entries.all { it.type() == AclEntryType.ALLOW && it.principal().name.lowercase() in allowed } shouldBe true
+    entries.any { it.principal().name.equals(owner.name, ignoreCase = true) } shouldBe true
+    entries.any { it.principal().name.equals(system.name, ignoreCase = true) } shouldBe true
+}
+
+private fun allowAcl(
+    principal: UserPrincipal,
+    permissions: Set<AclEntryPermission>,
+    flags: Set<AclEntryFlag>,
+): AclEntry = AclEntry.newBuilder()
+    .setType(AclEntryType.ALLOW)
+    .setPrincipal(principal)
+    .setPermissions(permissions)
+    .setFlags(flags)
+    .build()
+
+private fun lookupPrincipal(path: Path, vararg names: String): UserPrincipal =
+    names.firstNotNullOfOrNull { name ->
+        runCatching { path.fileSystem.userPrincipalLookupService.lookupPrincipalByName(name) }.getOrNull()
+    } ?: error("None of the Windows principals could be resolved: ${names.joinToString()}")
 
 private fun executeSql(database: Path, sql: String) {
     DriverManager.getConnection("jdbc:sqlite:${database.toAbsolutePath()}").use { connection ->

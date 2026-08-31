@@ -165,6 +165,25 @@ class LocalImportScannerTest {
                 .scan(directoryManga)
         }.message.shouldContain("entry limit")
     }
+
+    @Test
+    fun `deterministic entry faults reject unreadable and ordinary nonregular inputs`() {
+        listOf(
+            LocalEntryFault.UNREADABLE to "unreadable",
+            LocalEntryFault.NONREGULAR to "not a regular file or directory",
+        ).forEach { (fault, expectedMessage) ->
+            val manga = Files.createDirectory(tempDir.resolve("fault-${fault.name.lowercase()}"))
+            Files.write(manga.resolve("chapter.cbz"), byteArrayOf(1))
+            val scanner = LocalImportScanner(
+                entryFaults = LocalScannerEntryFaults { path ->
+                    if (path.fileName.toString() == "chapter.cbz") fault else null
+                },
+            )
+
+            shouldThrow<LocalImportRejected> { scanner.scan(manga) }
+                .message.shouldContain(expectedMessage)
+        }
+    }
 }
 
 private fun createJunction(link: Path, target: Path): Boolean =

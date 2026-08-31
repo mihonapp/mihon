@@ -47,9 +47,30 @@ data class LocalImportLimits(
 
 class LocalImportRejected(message: String, cause: Throwable? = null) : IllegalArgumentException(message, cause)
 
-class LocalImportScanner(
-    private val limits: LocalImportLimits = LocalImportLimits(),
+internal enum class LocalEntryFault {
+    UNREADABLE,
+    NONREGULAR,
+}
+
+internal fun interface LocalScannerEntryFaults {
+    fun fault(path: Path): LocalEntryFault?
+
+    companion object {
+        val NONE = LocalScannerEntryFaults { null }
+    }
+}
+
+class LocalImportScanner private constructor(
+    private val limits: LocalImportLimits,
+    private val entryFaults: LocalScannerEntryFaults,
 ) {
+    constructor(limits: LocalImportLimits = LocalImportLimits()) : this(limits, LocalScannerEntryFaults.NONE)
+
+    internal constructor(
+        entryFaults: LocalScannerEntryFaults,
+        limits: LocalImportLimits = LocalImportLimits(),
+    ) : this(limits, entryFaults)
+
     fun scan(sourceDirectory: Path): LocalImportManifest {
         val root = sourceDirectory.toAbsolutePath().normalize()
         if (Files.notExists(root, LinkOption.NOFOLLOW_LINKS)) {
@@ -93,6 +114,13 @@ class LocalImportScanner(
     }
 
     private fun scanTopLevel(child: Path, state: ScanState): LocalChapterCandidate? {
+        when (entryFaults.fault(child)) {
+            LocalEntryFault.UNREADABLE -> reject("entry is unreadable: ${child.fileName}")
+            LocalEntryFault.NONREGULAR -> reject(
+                "top-level entry is not a regular file or directory: ${child.fileName}",
+            )
+            null -> Unit
+        }
         val preliminaryAttributes = readAttributes(child, "top-level entry")
         if (isLinkOrReparsePoint(child, preliminaryAttributes)) {
             reject("link or reparse point is not allowed: ${child.fileName}")
@@ -223,6 +251,9 @@ internal fun readAttributes(path: Path, label: String): BasicFileAttributes = tr
 }
 
 internal fun validateNoReparseAncestors(path: Path, label: String) {
+    // Pure-Java NOFOLLOW checks reject persistent or observed component replacements. They are deliberately repeated
+    // before copy operations, but are not a native handle-relative guarantee: a privileged actor that swaps and
+    // restores a component entirely between observations is outside the Plan 2 local-library threat model.
     val absolute = path.toAbsolutePath().normalize()
     var current = absolute.root ?: reject("$label has no filesystem root: $absolute")
     validateSafePathComponent(current, label)
