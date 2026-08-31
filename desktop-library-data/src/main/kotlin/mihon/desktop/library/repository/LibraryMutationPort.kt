@@ -30,6 +30,8 @@ interface LibraryMutationPort {
     fun upsertSource(value: SourceRecord)
     fun upsertPreference(value: PreferenceSnapshotRecord)
     fun upsertSourcePreference(value: SourcePreferenceSnapshotRecord)
+    fun findLocalMangaByManifest(manifestSha256: String): LocalMangaRecord?
+    fun localMangaStoragePaths(): Set<String>
     fun insertLocalManga(value: LocalMangaRecord)
     fun insertLocalChapter(value: LocalChapterRecord)
     fun insertReport(value: ImportReportRecord): Long

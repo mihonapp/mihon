@@ -238,6 +238,19 @@ class SqlDelightLibraryRepository(
         )
     }
 
+    override fun findLocalMangaByManifest(manifestSha256: String): LocalMangaRecord? =
+        queries.selectLocalMangaByManifest(manifestSha256).executeAsOneOrNull()?.let { local ->
+            LocalMangaRecord(
+                mangaId = local.manga_id,
+                storagePath = local.storage_path,
+                manifestSha256 = local.manifest_sha256,
+                importedAt = local.imported_at,
+            )
+        }
+
+    override fun localMangaStoragePaths(): Set<String> =
+        queries.selectLocalMangaStoragePaths().executeAsList().toSet()
+
     override fun insertLocalManga(value: LocalMangaRecord) {
         queries.insertLocalMangaEntry(value.mangaId, value.storagePath, value.manifestSha256, value.importedAt)
     }
