@@ -92,7 +92,7 @@ This section preserves the factual RED summaries from the real local execution r
 
 - Expected failure: local scanner, stager, importer, and their contracts did not exist.
 - Observed failure recorded by Task 6: initial test compilation failed because the local scanner/stager/importer APIs were absent. Subsequent real review RED runs are also preserved in the Task 6 report, including absent fault seams, exact-limit marker accounting, absent claim/crash APIs, six callback/hidden-entry failures, two exceptional-cleanup failures, and mixed-state ownership regressions; this document does not claim console excerpts beyond those recorded summaries.
-- Resulting GREEN evidence: committed `LocalMangaScannerTest` and `LocalMangaImporterTest`; the final Task 6 focused rerun passed 45 tests (9 scanner + 36 importer), 0 failures/errors/skips. The current fresh data suite passes 77/77, including the later integration tests.
+- Resulting GREEN evidence: committed `LocalImportScannerTest` and `LocalMangaImporterTest`; the final Task 6 focused rerun passed 45 tests (9 scanner + 36 importer), 0 failures/errors/skips. The current fresh data suite passes 77/77, including the later integration tests.
 
 ### Task 7 — plan Steps 1–2, including line 1051
 
