@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,14 +37,72 @@ import mihon.desktop.library.model.LibraryManga
 @Composable
 fun LibraryScreen(
     state: LibraryUiState,
+    detailState: MangaDetailUiState = MangaDetailUiState(),
     onQueryChange: (String) -> Unit,
     onMangaSelected: (Long) -> Unit,
+    onBackFromDetail: () -> Unit = {},
+    onDetailRetry: () -> Unit = {},
     onImportBackup: () -> Unit,
     onImportLocal: () -> Unit,
     onRetry: () -> Unit = {},
 ) {
+    BoxWithConstraints(modifier = Modifier.fillMaxSize().testTag("library-screen")) {
+        val selected = state.selectedMangaId != null
+        val wide = maxWidth >= 1100.dp
+        if (wide && selected) {
+            Row(modifier = Modifier.fillMaxSize()) {
+                LibraryPane(
+                    state,
+                    onQueryChange,
+                    onMangaSelected,
+                    onImportBackup,
+                    onImportLocal,
+                    onRetry,
+                    Modifier.weight(0.55f).fillMaxHeight().testTag("library-grid-pane"),
+                )
+                VerticalDivider()
+                MangaDetailScreen(
+                    state = detailState,
+                    onBack = onBackFromDetail,
+                    onRetry = onDetailRetry,
+                    showBack = false,
+                    modifier = Modifier.weight(0.45f).fillMaxHeight(),
+                )
+            }
+        } else if (selected) {
+            MangaDetailScreen(
+                state = detailState,
+                onBack = onBackFromDetail,
+                onRetry = onDetailRetry,
+                showBack = true,
+                modifier = Modifier.fillMaxSize(),
+            )
+        } else {
+            LibraryPane(
+                state,
+                onQueryChange,
+                onMangaSelected,
+                onImportBackup,
+                onImportLocal,
+                onRetry,
+                Modifier.fillMaxSize().testTag("library-grid-pane"),
+            )
+        }
+    }
+}
+
+@Composable
+private fun LibraryPane(
+    state: LibraryUiState,
+    onQueryChange: (String) -> Unit,
+    onMangaSelected: (Long) -> Unit,
+    onImportBackup: () -> Unit,
+    onImportLocal: () -> Unit,
+    onRetry: () -> Unit,
+    modifier: Modifier,
+) {
     Column(
-        modifier = Modifier.fillMaxSize().testTag("library-screen"),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         Row(

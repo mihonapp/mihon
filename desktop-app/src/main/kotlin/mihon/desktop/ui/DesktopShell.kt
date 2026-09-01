@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import mihon.desktop.navigation.DesktopDestination
 import mihon.desktop.ui.library.LibraryScreen
 import mihon.desktop.ui.library.LibraryUiState
+import mihon.desktop.ui.library.MangaDetailUiState
 
 internal const val DESKTOP_MAIN_HEADLINE_TEST_TAG = "desktop-main-headline"
 internal const val DESKTOP_NAVIGATION_RAIL_TEST_TAG = "desktop-navigation-rail"
@@ -30,8 +31,11 @@ fun DesktopShell(
     selected: DesktopDestination,
     onDestinationSelected: (DesktopDestination) -> Unit,
     libraryState: LibraryUiState = LibraryUiState(),
+    mangaDetailState: MangaDetailUiState = MangaDetailUiState(),
     onLibraryQueryChange: (String) -> Unit = {},
     onMangaSelected: (Long) -> Unit = {},
+    onBackFromMangaDetail: () -> Unit = {},
+    onMangaDetailRetry: () -> Unit = {},
     onImportBackup: () -> Unit = {},
     onImportLocal: () -> Unit = {},
     onLibraryRetry: () -> Unit = {},
@@ -69,8 +73,11 @@ fun DesktopShell(
                 if (selected == DesktopDestination.Library) {
                     LibraryScreen(
                         state = libraryState,
+                        detailState = mangaDetailState,
                         onQueryChange = onLibraryQueryChange,
                         onMangaSelected = onMangaSelected,
+                        onBackFromDetail = onBackFromMangaDetail,
+                        onDetailRetry = onMangaDetailRetry,
                         onImportBackup = onImportBackup,
                         onImportLocal = onImportLocal,
                         onRetry = onLibraryRetry,

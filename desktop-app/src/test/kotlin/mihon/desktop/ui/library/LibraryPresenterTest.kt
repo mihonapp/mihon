@@ -139,8 +139,92 @@ class LibraryPresenterTest {
         parentJob.isActive shouldBe true
     }
 
+    @Test
+    fun `selection observes matching manga and chapters and preserves repository chapter order`() = runBlocking {
+        val rows = MutableStateFlow(listOf(manga(1, "One"), manga(2, "Two")))
+        val details = mapOf(
+            1L to MutableStateFlow(details(1, "One")),
+            2L to MutableStateFlow(details(2, "Two")),
+        )
+        val chapters = mapOf(
+            1L to MutableStateFlow(listOf(chapter(12, 1), chapter(11, 1))),
+            2L to MutableStateFlow(listOf(chapter(22, 2), chapter(21, 2))),
+        )
+        val presenter = LibraryPresenter(
+            FakeLibraryRepository(details = details, chapters = chapters, libraryFlow = { rows }),
+            scope,
+        )
+        presenter.awaitState { !it.loading && it.items.size == 2 }
+
+        presenter.selectManga(2)
+
+        val selected = presenter.awaitDetail { it.manga?.id == 2L && it.chapters.size == 2 }
+        selected.manga?.title shouldBe "Two"
+        selected.chapters.map(LibraryChapter::id).shouldContainExactly(22L, 21L)
+        presenter.close()
+    }
+
+    @Test
+    fun `switching selection detaches old detail flow and missing selected manga clears selection`() = runBlocking {
+        val rows = MutableStateFlow(listOf(manga(1, "One"), manga(2, "Two")))
+        val first = MutableStateFlow<MangaDetails?>(details(1, "One"))
+        val second = MutableStateFlow<MangaDetails?>(details(2, "Two"))
+        val presenter = LibraryPresenter(
+            FakeLibraryRepository(
+                details = mapOf(1L to first, 2L to second),
+                chapters = mapOf(1L to MutableStateFlow(emptyList()), 2L to MutableStateFlow(emptyList())),
+                libraryFlow = { rows },
+            ),
+            scope,
+        )
+        presenter.awaitState { !it.loading }
+        presenter.selectManga(1)
+        presenter.awaitDetail { it.manga?.id == 1L }
+
+        presenter.selectManga(2)
+        presenter.awaitDetail { it.manga?.id == 2L }
+        first.value = null
+        presenter.awaitDetail { it.manga?.id == 2L }.manga?.title shouldBe "Two"
+        second.value = null
+
+        presenter.awaitState { it.selectedMangaId == null }
+        presenter.awaitDetail { !it.loading && it.manga == null }.chapters shouldBe emptyList()
+        presenter.close()
+    }
+
+    @Test
+    fun `detail flow failure is visible and retry resubscribes for the selected id`() = runBlocking {
+        val rows = MutableStateFlow(listOf(manga(1, "One")))
+        val attempts = AtomicInteger()
+        val detailFlow = flow<MangaDetails?> {
+            if (attempts.incrementAndGet() == 1) error("detail database unavailable")
+            emit(details(1, "Recovered detail"))
+        }
+        val presenter = LibraryPresenter(
+            FakeLibraryRepository(
+                details = mapOf(1L to detailFlow),
+                chapters = mapOf(1L to MutableStateFlow(emptyList())),
+                libraryFlow = { rows },
+            ),
+            scope,
+        )
+        presenter.awaitState { !it.loading }
+        presenter.selectManga(1)
+
+        presenter.awaitDetail { it.errorMessage == "detail database unavailable" }
+        presenter.retryDetail()
+
+        presenter.awaitDetail { it.manga?.title == "Recovered detail" }
+        attempts.get() shouldBe 2
+        presenter.close()
+    }
+
     private suspend fun LibraryPresenter.awaitState(predicate: (LibraryUiState) -> Boolean): LibraryUiState =
         withTimeout(5_000) { state.first(predicate) }
+
+    private suspend fun LibraryPresenter.awaitDetail(
+        predicate: (MangaDetailUiState) -> Boolean,
+    ): MangaDetailUiState = withTimeout(5_000) { detailState.first(predicate) }
 
     private fun manga(
         id: Long,
@@ -156,14 +240,26 @@ class LibraryPresenterTest {
         unreadCount = 3,
         author = author,
     )
+
+    private fun details(id: Long, title: String) = MangaDetails(
+        id, 100 + id, "/$id", title, null, "Author", "Description", "[]", 0, null, true,
+        0, 0, 0, "ALWAYS_UPDATE", 0, null, "[]", 0, "Notes", true, "{}", emptyList(),
+    )
+
+    private fun chapter(id: Long, mangaId: Long) = LibraryChapter(
+        id, mangaId, "/$id", "Chapter $id", null, false, false, 0, 0, 0, id.toDouble(), id, 0, 0, "{}",
+    )
 }
 
 private class FakeLibraryRepository(
+    private val details: Map<Long, Flow<MangaDetails?>> = emptyMap(),
+    private val chapters: Map<Long, Flow<List<LibraryChapter>>> = emptyMap(),
     private val libraryFlow: () -> Flow<List<LibraryManga>>,
 ) : LibraryRepository {
     override fun observeLibrary(): Flow<List<LibraryManga>> = libraryFlow()
-    override fun observeManga(id: Long): Flow<MangaDetails?> = error("Not used")
-    override fun observeChapters(mangaId: Long): Flow<List<LibraryChapter>> = error("Not used")
+    override fun observeManga(id: Long): Flow<MangaDetails?> = details[id] ?: error("Missing manga flow for $id")
+    override fun observeChapters(mangaId: Long): Flow<List<LibraryChapter>> =
+        chapters[mangaId] ?: error("Missing chapter flow for $mangaId")
     override fun librarySnapshot(): List<LibraryManga> = error("Not used")
     override fun mangaSnapshot(id: Long): MangaDetails? = error("Not used")
     override fun chapterSnapshot(mangaId: Long): List<LibraryChapter> = error("Not used")

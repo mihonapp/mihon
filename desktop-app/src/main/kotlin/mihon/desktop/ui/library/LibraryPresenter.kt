@@ -21,7 +21,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import mihon.desktop.library.model.LibraryChapter
 import mihon.desktop.library.model.LibraryManga
+import mihon.desktop.library.model.MangaDetails
 import mihon.desktop.library.repository.LibraryRepository
 
 data class LibraryUiState(
@@ -29,6 +31,13 @@ data class LibraryUiState(
     val query: String = "",
     val items: List<LibraryManga> = emptyList(),
     val selectedMangaId: Long? = null,
+    val errorMessage: String? = null,
+)
+
+data class MangaDetailUiState(
+    val manga: MangaDetails? = null,
+    val chapters: List<LibraryChapter> = emptyList(),
+    val loading: Boolean = false,
     val errorMessage: String? = null,
 )
 
@@ -42,6 +51,7 @@ class LibraryPresenter(
     private val query = MutableStateFlow("")
     private val selectedMangaId = MutableStateFlow<Long?>(null)
     private val retryRequest = MutableStateFlow(0L)
+    private val detailRetryRequest = MutableStateFlow(0L)
 
     private val repositoryState: Flow<RepositoryState> = retryRequest
         .flatMapLatest {
@@ -93,6 +103,53 @@ class LibraryPresenter(
         initialValue = LibraryUiState(),
     )
 
+    private val selectedRepositoryState: Flow<SelectedRepositoryState> = combine(
+        selectedMangaId,
+        detailRetryRequest,
+    ) { selected, _ -> selected }
+        .flatMapLatest { selectedId ->
+            if (selectedId == null) {
+                flow<SelectedRepositoryState> { emit(SelectedRepositoryState.Loaded(null, null, emptyList())) }
+            } else {
+                flow<SelectedRepositoryState> {
+                    val manga = repository.observeManga(selectedId)
+                    val chapters = repository.observeChapters(selectedId)
+                    emitAll(
+                        combine(manga, chapters) { details, rows ->
+                            SelectedRepositoryState.Loaded(selectedId, details, rows)
+                        },
+                    )
+                }
+                    .onStart { emit(SelectedRepositoryState.Loading) }
+                    .catch { error ->
+                        emit(SelectedRepositoryState.Failed(error.message ?: "Unable to load manga details"))
+                    }
+            }
+        }
+        .flowOn(Dispatchers.IO)
+        .onEach { result ->
+            if (result is SelectedRepositoryState.Loaded && result.selectedId != null && result.manga == null) {
+                selectedMangaId.compareAndSet(result.selectedId, null)
+            }
+        }
+
+    val detailState: StateFlow<MangaDetailUiState> = selectedRepositoryState
+        .map { result ->
+            when (result) {
+                SelectedRepositoryState.Loading -> MangaDetailUiState(loading = true)
+                is SelectedRepositoryState.Failed -> MangaDetailUiState(errorMessage = result.message)
+                is SelectedRepositoryState.Loaded -> MangaDetailUiState(
+                    manga = result.manga,
+                    chapters = result.chapters,
+                )
+            }
+        }
+        .stateIn(
+            scope = presenterScope,
+            started = SharingStarted.Eagerly,
+            initialValue = MangaDetailUiState(),
+        )
+
     fun setQuery(value: String) {
         query.value = value
     }
@@ -105,6 +162,10 @@ class LibraryPresenter(
         retryRequest.update { it + 1 }
     }
 
+    fun retryDetail() {
+        detailRetryRequest.update { it + 1 }
+    }
+
     override fun close() {
         presenterScope.cancel()
     }
@@ -114,4 +175,14 @@ private sealed interface RepositoryState {
     data object Loading : RepositoryState
     data class Loaded(val items: List<LibraryManga>) : RepositoryState
     data class Failed(val message: String) : RepositoryState
+}
+
+private sealed interface SelectedRepositoryState {
+    data object Loading : SelectedRepositoryState
+    data class Loaded(
+        val selectedId: Long?,
+        val manga: MangaDetails?,
+        val chapters: List<LibraryChapter>,
+    ) : SelectedRepositoryState
+    data class Failed(val message: String) : SelectedRepositoryState
 }
