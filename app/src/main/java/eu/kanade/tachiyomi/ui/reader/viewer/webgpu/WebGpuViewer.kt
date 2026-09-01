@@ -235,7 +235,11 @@ open class WebGpuViewer(
     open val preloadAhead = 3
     open val preloadBehind = 2
 
-    open val cacheSize get() = 1 + preloadAhead + preloadBehind
+    /**
+     * Everything [preloadPages] reaches, plus slack. Sized exactly, a chapter transition page - or
+     * in dual mode a spread partner - evicts a page the next fetch asks for, and it decodes again.
+     */
+    open val cacheSize get() = 1 + preloadAhead + preloadBehind + if (isDualPageMode()) 3 else 1
 
     /**
      * Page processing state
@@ -392,11 +396,13 @@ open class WebGpuViewer(
 
     inner class ErrorPage internal constructor(
         message: String,
-        spreadPosition: SpreadPosition = SpreadPosition.SINGLE,
-    ) : ImagePage.Render(
-        if (spreadPosition == SpreadPosition.SINGLE) pager.state.width else pager.state.width / 2,
-        pager.state.height,
-    ) {
+        private val spreadPosition: SpreadPosition = SpreadPosition.SINGLE,
+    ) : ImagePage.Render(0, 0) {
+        override val width: Int
+            get() = viewportPageWidth(spreadPosition != SpreadPosition.SINGLE)
+        override val height: Int
+            get() = pager.state.height
+
         init {
             minScale = 1f
             maxScale = 1f
@@ -433,10 +439,13 @@ open class WebGpuViewer(
         }
     }
 
-    inner class ProgressPage(foregroundColor: Int = readerOnBackgroundColor()) : ImagePage.Render(
-        if (!isDualPageMode()) pager.state.width else pager.state.width / 2,
-        pager.state.height,
-    ) {
+    inner class ProgressPage(foregroundColor: Int = readerOnBackgroundColor()) :
+        ImagePage.Render(0, 0) {
+        override val width: Int
+            get() = viewportPageWidth(isDualPageMode())
+        override val height: Int
+            get() = pager.state.height
+
         init {
             minScale = 1f
             maxScale = 1f
@@ -458,6 +467,9 @@ open class WebGpuViewer(
         override val backgroundColor: Int = readerBackgroundColor()
 
         override fun render(dst: GPUTexture, x: Float, y: Float, scale: Float) {
+            // Its own footprint, so the page carries its background wherever a transition puts it.
+            fillPage(dst, x, y, scale, backgroundColor)
+
             val cx = dst.width * (0.5f + scale * x)
             val cy = dst.height * (0.5f + scale * y)
 
@@ -474,10 +486,14 @@ open class WebGpuViewer(
         }
     }
 
-    inner class TransitionPage(val prevChapter: ReaderChapter?, val nextChapter: ReaderChapter?) : ImagePage.Render(
-        min(pager.state.width, pager.state.height),
-        min(pager.state.width, pager.state.height),
-    ) {
+    inner class TransitionPage(val prevChapter: ReaderChapter?, val nextChapter: ReaderChapter?) :
+        ImagePage.Render(0, 0) {
+        /** Square, and never a spread side - [buildSpreadPage] hands it back whole. */
+        override val width: Int
+            get() = min(pager.state.width, pager.state.height)
+        override val height: Int
+            get() = width
+
         init {
             minScale = 1f
             maxScale = 1f
@@ -487,6 +503,9 @@ open class WebGpuViewer(
         override val backgroundColor: Int = readerBackgroundColor()
 
         override fun render(dst: GPUTexture, x: Float, y: Float, scale: Float) {
+            // Its own footprint, so the page carries its background wherever a transition puts it.
+            fillPage(dst, x, y, scale, backgroundColor)
+
             val lines: MutableList<String> = mutableListOf()
             prevChapter?.chapter?.let { chapter -> lines.add("Previous: " + chapter.name) }
             nextChapter?.chapter?.let { chapter -> lines.add("Next: " + chapter.name) }
@@ -546,18 +565,17 @@ open class WebGpuViewer(
         /** Cached spread ImagePage when this page is the anchor of a dual-page spread */
         var spreadPage: ImagePage.ImageSpread? = null
 
-        /** Set once decoding tags the file; null until then. */
-        private var taggedSpreadPosition: SpreadPosition? = null
+        /** The side the file names, or null for none. Never a value merely derived from the index. */
+        @Volatile
+        internal var taggedSpreadPosition: SpreadPosition? = null
 
         /**
-         * Which side of a dual-page spread this page is on - [spreadPositionForIndex] until decoding tags it.
-         * Without that a still-loading page stays SINGLE, never pairs, and its [ProgressPage] draws mid-screen.
+         * Which half of a spread this page is on - [spreadPositionForIndex] until the file tags it.
+         * Without that a still-loading page stays SINGLE, never pairs, and its ring draws
+         * mid-screen; deriving it live also re-decides it on a rotation in or out of dual mode.
          */
-        internal var spreadPosition: SpreadPosition
+        internal val spreadPosition: SpreadPosition
             get() = taggedSpreadPosition ?: spreadPositionForIndex(page.index)
-            set(value) {
-                taggedSpreadPosition = value
-            }
 
         override var imagePage: ImagePage = ProgressPage()
 
@@ -612,6 +630,10 @@ open class WebGpuViewer(
                 }
             }
     }
+
+    /** Read live: these pages are built before the surface has a size, and outlive a rotation. */
+    private fun viewportPageWidth(half: Boolean): Int =
+        if (half) pager.state.width / 2 else pager.state.width
 
     /**
      * Check if dual page mode is currently active based on config and view dimensions.
@@ -936,14 +958,12 @@ open class WebGpuViewer(
             try {
                 val downloadProgressJob = launch {
                     page.page.progressFlow.collect { value ->
-                        // Check if page was evicted or already decoded
-                        synchronized(lock) {
-                            if (!pageInCache(page) || page.imagePage !is ImagePage.Dummy) return@collect
+                        // Still the placeholder? Evicted or decoded, and there is nothing to fill.
+                        val progressPage = synchronized(lock) {
+                            if (!pageInCache(page)) return@collect
+                            page.imagePage as? ProgressPage ?: return@collect
                         }
-
-                        (page.imagePage as? ProgressPage)?.apply {
-                            progress = value / 100f
-                        }
+                        progressPage.progress = value / 100f
                     }
                 }
 
@@ -1001,23 +1021,25 @@ open class WebGpuViewer(
                 }
             }
 
-            // Buffer file to detect spread position tag, then decode.
-            // When not in dual page mode, skip Kim entirely.
-            val bytes = if (isDualPageMode()) input.readBytes() else null
+            // Buffered to read the spread tag, then decoded from the buffer. On the preference,
+            // not isDualPageMode(): WIDE is portrait-off, and a rotate never re-decodes.
+            val bytes = if (config.dualPageView != ReaderPreferences.DualPageView.NEVER) {
+                input.readBytes()
+            } else {
+                null
+            }
 
-            page.spreadPosition = if (bytes != null) {
+            // Left untouched for a file that names no side - [spreadPosition] then derives one.
+            // TODO: heuristics, use image size
+            if (bytes != null) {
                 val tag = Kim.readMetadata(bytes.inputStream(), bytes.size.toLong())
                     ?.findStringValue(TiffTag.TIFF_TAG_PAGE_NAME)
-                when (tag) {
+                page.taggedSpreadPosition = when (tag) {
                     "Left" -> SpreadPosition.LEFT
                     "Right" -> SpreadPosition.RIGHT
-                    // TODO: heuristics, use image size
-                    null -> spreadPositionForIndex(page.page.index)
-
+                    null -> null
                     else -> SpreadPosition.SINGLE
                 }
-            } else {
-                SpreadPosition.SINGLE
             }
 
             val dec = ImageDecoder.new(bytes?.inputStream() ?: input)
