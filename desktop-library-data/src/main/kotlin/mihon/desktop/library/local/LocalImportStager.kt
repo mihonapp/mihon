@@ -472,18 +472,7 @@ internal class StagedLocalManga internal constructor(
         if (closed) return
         closed = true
         if (committed) return
-        if (promotionAmbiguous) {
-            // An indeterminate move result is preserved. Removing the claim prevents later orphan cleanup from
-            // treating a replacement at the same name as this import's residue.
-            deleteValidClaim(claimsRoot, claimPath, id, createdIdentity.nonce)
-            return
-        }
-        if (promoted) {
-            deleteOwnedDirectory(mangaRoot, finalPath, createdIdentity, claimPath)
-        } else {
-            deleteOwnedDirectory(stagingRoot, stagingPath, createdIdentity, claimPath)
-        }
-        deleteValidClaim(claimsRoot, claimPath, id, createdIdentity.nonce)
+        compensateObservablePromotionState(reconcileObservablePromotionState())
     }
 
     private fun validatePromotionNamespaces() {
@@ -493,27 +482,81 @@ internal class StagedLocalManga internal constructor(
         validateNoReparseAncestors(claimPath, "local import claim")
     }
 
-    private fun reconcileObservablePromotionState() {
-        if (runCatching { validatePromotionNamespaces() }.isFailure) return
-        val stagingPresence = observePathPresence(stagingPath)
-        val finalPresence = observePathPresence(finalPath)
-        val stagingMatches = stagingPresence == PathPresence.PRESENT &&
-            runCatching { requireOwnedDirectoryMatches(stagingPath, createdIdentity, claimPath) }.isSuccess
-        val finalMatches = finalPresence == PathPresence.PRESENT &&
-            runCatching { requireOwnedDirectoryMatches(finalPath, createdIdentity, claimPath) }.isSuccess
+    private fun reconcileObservablePromotionState(): ObservablePromotionState {
+        if (runCatching { validatePromotionNamespaces() }.isFailure) {
+            return ObservablePromotionState.unknown()
+        }
+        val observable = ObservablePromotionState(
+            staging = observeOwnedPath(stagingPath),
+            final = observeOwnedPath(finalPath),
+        )
         when {
-            finalMatches && stagingPresence == PathPresence.ABSENT -> {
+            observable.final.state == OwnedPathState.OWNED &&
+                observable.staging.state == OwnedPathState.ABSENT -> {
                 promoted = true
                 promotionAmbiguous = false
             }
-            stagingMatches && finalPresence == PathPresence.ABSENT -> {
+            observable.staging.state == OwnedPathState.OWNED &&
+                observable.final.state == OwnedPathState.ABSENT -> {
                 promoted = false
                 promotionAmbiguous = false
             }
-            stagingPresence == PathPresence.ABSENT && finalPresence == PathPresence.ABSENT -> {
+            observable.staging.state == OwnedPathState.ABSENT &&
+                observable.final.state == OwnedPathState.ABSENT -> {
                 promoted = false
                 promotionAmbiguous = false
             }
+        }
+        return observable
+    }
+
+    private fun observeOwnedPath(path: Path): OwnedPathObservation = when (observePathPresence(path)) {
+        PathPresence.ABSENT -> OwnedPathObservation(OwnedPathState.ABSENT)
+        PathPresence.UNKNOWN -> OwnedPathObservation(OwnedPathState.OTHER_OR_UNKNOWN, needsProvenance = true)
+        PathPresence.PRESENT -> when (observePathPresence(ownershipMarkerPath(path, createdIdentity.nonce))) {
+            PathPresence.ABSENT -> OwnedPathObservation(OwnedPathState.OTHER_OR_UNKNOWN)
+            PathPresence.UNKNOWN -> OwnedPathObservation(OwnedPathState.OTHER_OR_UNKNOWN, needsProvenance = true)
+            PathPresence.PRESENT -> {
+                val matches = runCatching {
+                    requireOwnedDirectoryMatches(path, createdIdentity, claimPath)
+                }.isSuccess
+                OwnedPathObservation(
+                    state = if (matches) OwnedPathState.OWNED else OwnedPathState.OTHER_OR_UNKNOWN,
+                    needsProvenance = !matches,
+                )
+            }
+        }
+    }
+
+    private fun compensateObservablePromotionState(observable: ObservablePromotionState) {
+        var allOwnedPathsRemoved = true
+        if (observable.staging.state == OwnedPathState.OWNED) {
+            allOwnedPathsRemoved = deleteOwnedDirectory(
+                stagingRoot,
+                stagingPath,
+                createdIdentity,
+                claimPath,
+            ) && allOwnedPathsRemoved
+        }
+        if (observable.final.state == OwnedPathState.OWNED) {
+            allOwnedPathsRemoved = deleteOwnedDirectory(
+                mangaRoot,
+                finalPath,
+                createdIdentity,
+                claimPath,
+            ) && allOwnedPathsRemoved
+        }
+
+        val afterCleanup = reconcileObservablePromotionState()
+        val ownedPathRemains = afterCleanup.staging.state == OwnedPathState.OWNED ||
+            afterCleanup.final.state == OwnedPathState.OWNED
+        if (
+            allOwnedPathsRemoved &&
+            !ownedPathRemains &&
+            !observable.needsProvenance &&
+            !afterCleanup.needsProvenance
+        ) {
+            deleteValidClaim(claimsRoot, claimPath, id, createdIdentity.nonce)
         }
     }
 }
@@ -526,6 +569,31 @@ private enum class PathPresence {
     ABSENT,
     PRESENT,
     UNKNOWN,
+}
+
+private enum class OwnedPathState {
+    ABSENT,
+    OWNED,
+    OTHER_OR_UNKNOWN,
+}
+
+private data class OwnedPathObservation(
+    val state: OwnedPathState,
+    val needsProvenance: Boolean = false,
+)
+
+private data class ObservablePromotionState(
+    val staging: OwnedPathObservation,
+    val final: OwnedPathObservation,
+) {
+    val needsProvenance: Boolean = staging.needsProvenance || final.needsProvenance
+
+    companion object {
+        fun unknown(): ObservablePromotionState = ObservablePromotionState(
+            staging = OwnedPathObservation(OwnedPathState.OTHER_OR_UNKNOWN, needsProvenance = true),
+            final = OwnedPathObservation(OwnedPathState.OTHER_OR_UNKNOWN, needsProvenance = true),
+        )
+    }
 }
 
 private data class StagingCopyContext(

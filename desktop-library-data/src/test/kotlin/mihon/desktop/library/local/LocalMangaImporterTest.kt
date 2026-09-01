@@ -15,6 +15,7 @@ import org.junit.jupiter.api.io.TempDir
 import java.io.IOException
 import java.nio.file.AtomicMoveNotSupportedException
 import java.nio.file.Files
+import java.nio.file.LinkOption
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 import java.nio.file.attribute.AclEntry
@@ -466,7 +467,84 @@ class LocalMangaImporterTest {
     }
 
     @Test
-    fun `promotion stays ambiguous when its namespace becomes permissive after the move`() {
+    fun `mixed promotion cleans owned staging and preserves replacement final`() {
+        val source = createManga("mixed-owned-staging-source")
+        val mediaRoot = tempDir.resolve("mixed-owned-staging-media")
+        val database = tempDir.resolve("mixed-owned-staging.db")
+        val stagingPath = mediaRoot.resolve(".staging").resolve(MIXED_OWNED_STAGING_ID)
+        val replacementFinal = mediaRoot.resolve("manga").resolve(MIXED_OWNED_STAGING_ID)
+        val faults = object : LocalFileFaults {
+            override fun afterAtomicMove(source: Path, target: Path) {
+                Files.move(target, source)
+                Files.createDirectory(target)
+                Files.writeString(target.resolve("keep.txt"), "replacement final")
+                throw IOException("forced mixed promotion with owned staging")
+            }
+        }
+        DesktopLibraryDatabaseFactory.open(database).use { repository ->
+            repository.insertManga(MangaRecord(sourceId = 99, url = "before", title = "before"))
+            val before = dumpImportTables(database)
+
+            shouldThrow<LocalImportRejected> {
+                LocalMangaImporter(
+                    mutations = repository,
+                    stager = LocalImportStager(
+                        fileFaults = faults,
+                        idFactory = { MIXED_OWNED_STAGING_ID },
+                    ),
+                ).import(source, mediaRoot, 2)
+            }
+
+            dumpImportTables(database) shouldBe before
+            Files.exists(stagingPath, LinkOption.NOFOLLOW_LINKS) shouldBe false
+            Files.readString(replacementFinal.resolve("keep.txt")) shouldBe "replacement final"
+            Files.exists(
+                mediaRoot.resolve(".claims").resolve("$MIXED_OWNED_STAGING_ID.claim"),
+                LinkOption.NOFOLLOW_LINKS,
+            ) shouldBe false
+        }
+    }
+
+    @Test
+    fun `mixed promotion cleans owned final and preserves replacement staging`() {
+        val source = createManga("mixed-owned-final-source")
+        val mediaRoot = tempDir.resolve("mixed-owned-final-media")
+        val database = tempDir.resolve("mixed-owned-final.db")
+        val replacementStaging = mediaRoot.resolve(".staging").resolve(MIXED_OWNED_FINAL_ID)
+        val finalPath = mediaRoot.resolve("manga").resolve(MIXED_OWNED_FINAL_ID)
+        val faults = object : LocalFileFaults {
+            override fun afterAtomicMove(source: Path, target: Path) {
+                Files.createDirectory(source)
+                Files.writeString(source.resolve("keep.txt"), "replacement staging")
+                throw IOException("forced mixed promotion with owned final")
+            }
+        }
+        DesktopLibraryDatabaseFactory.open(database).use { repository ->
+            repository.insertManga(MangaRecord(sourceId = 99, url = "before", title = "before"))
+            val before = dumpImportTables(database)
+
+            shouldThrow<LocalImportRejected> {
+                LocalMangaImporter(
+                    mutations = repository,
+                    stager = LocalImportStager(
+                        fileFaults = faults,
+                        idFactory = { MIXED_OWNED_FINAL_ID },
+                    ),
+                ).import(source, mediaRoot, 2)
+            }
+
+            dumpImportTables(database) shouldBe before
+            Files.exists(finalPath, LinkOption.NOFOLLOW_LINKS) shouldBe false
+            Files.readString(replacementStaging.resolve("keep.txt")) shouldBe "replacement staging"
+            Files.exists(
+                mediaRoot.resolve(".claims").resolve("$MIXED_OWNED_FINAL_ID.claim"),
+                LinkOption.NOFOLLOW_LINKS,
+            ) shouldBe false
+        }
+    }
+
+    @Test
+    fun `promotion namespace ambiguity retains provenance for startup compensation`() {
         val source = createManga("ambiguous-namespace-source")
         val mediaRoot = tempDir.resolve("ambiguous-namespace-media")
         val database = tempDir.resolve("ambiguous-namespace.db")
@@ -492,9 +570,9 @@ class LocalMangaImporterTest {
 
             dumpImportTables(database) shouldBe before
             Files.readString(finalPath.resolve("第 1 话").resolve("页 01.jpg")) shouldBe "page"
-            Files.exists(mediaRoot.resolve(".claims").resolve("$AMBIGUOUS_NAMESPACE_ID.claim")) shouldBe false
+            Files.isRegularFile(mediaRoot.resolve(".claims").resolve("$AMBIGUOUS_NAMESPACE_ID.claim")) shouldBe true
             LocalImportStager().cleanupOrphans(mediaRoot, emptySet())
-            Files.readString(finalPath.resolve("第 1 话").resolve("页 01.jpg")) shouldBe "page"
+            assertNoImportResidue(mediaRoot)
         }
     }
 
@@ -1141,6 +1219,8 @@ private const val MARKER_NAME_CHAPTER_ID = "00000000-0000-4000-8000-000000000033
 private const val MARKER_TEMP_REPLACEMENT_ID = "00000000-0000-4000-8000-000000000034"
 private const val OBSERVABLE_PROMOTION_ID = "00000000-0000-4000-8000-000000000035"
 private const val AMBIGUOUS_NAMESPACE_ID = "00000000-0000-4000-8000-000000000036"
+private const val MIXED_OWNED_STAGING_ID = "00000000-0000-4000-8000-000000000037"
+private const val MIXED_OWNED_FINAL_ID = "00000000-0000-4000-8000-000000000038"
 private val COPY_CALLBACK_IDS = listOf(
     "00000000-0000-4000-8000-000000000030",
     "00000000-0000-4000-8000-000000000031",
