@@ -546,8 +546,18 @@ open class WebGpuViewer(
         /** Cached spread ImagePage when this page is the anchor of a dual-page spread */
         var spreadPage: ImagePage.ImageSpread? = null
 
-        /** Which side of a dual-page spread this page belongs on - set once decoding tags it. */
-        internal var spreadPosition: SpreadPosition = SpreadPosition.SINGLE
+        /** Set once decoding tags the file; null until then. */
+        private var taggedSpreadPosition: SpreadPosition? = null
+
+        /**
+         * Which side of a dual-page spread this page is on - [spreadPositionForIndex] until decoding tags it.
+         * Without that a still-loading page stays SINGLE, never pairs, and its [ProgressPage] draws mid-screen.
+         */
+        internal var spreadPosition: SpreadPosition
+            get() = taggedSpreadPosition ?: spreadPositionForIndex(page.index)
+            set(value) {
+                taggedSpreadPosition = value
+            }
 
         override var imagePage: ImagePage = ProgressPage()
 
@@ -618,6 +628,16 @@ open class WebGpuViewer(
                 width > 0 && height > 0 && width.toFloat() / height > 1f
             }
         }
+    }
+
+    /**
+     * Which half a page falls on when nothing tags the file: cover alone, then alternating - RTL cover left,
+     * LTR cover right. SINGLE outside dual page mode, so nothing pairs while one page fills the viewer.
+     */
+    private fun spreadPositionForIndex(index: Int): SpreadPosition = when {
+        !isDualPageMode() -> SpreadPosition.SINGLE
+        isReversed -> if (index % 2 == 0) SpreadPosition.LEFT else SpreadPosition.RIGHT
+        else -> if (index % 2 == 0) SpreadPosition.RIGHT else SpreadPosition.LEFT
     }
 
     /**
@@ -991,14 +1011,8 @@ open class WebGpuViewer(
                 when (tag) {
                     "Left" -> SpreadPosition.LEFT
                     "Right" -> SpreadPosition.RIGHT
-                    // Set position for dual page spreads based on reading direction:
-                    // RTL (isReversed): Cover on LEFT, even=LEFT, odd=RIGHT
-                    // LTR (!isReversed): Cover on RIGHT, even=RIGHT, odd=LEFT
-                    null -> if (isReversed) { // TODO: heuristics, use image size
-                        if (page.page.index % 2 == 0) SpreadPosition.LEFT else SpreadPosition.RIGHT
-                    } else {
-                        if (page.page.index % 2 == 0) SpreadPosition.RIGHT else SpreadPosition.LEFT
-                    }
+                    // TODO: heuristics, use image size
+                    null -> spreadPositionForIndex(page.page.index)
 
                     else -> SpreadPosition.SINGLE
                 }
@@ -1078,7 +1092,7 @@ open class WebGpuViewer(
                     // Fade up from the placeholder's colour, if that placeholder was on screen -
                     // one that decoded out of view has nothing left to fade from.
                     if (oldImagePage.isOnScreen) imagePage.fadeIn()
-                    if (page.spreadPosition == SpreadPosition.SINGLE) {
+                    if (!isDualPageMode()) {
                         (page.imagePage as? ImagePage.ImageSingle)?.let {
                             if (!applyWideZoomIfNeeded(it)) {
                                 applyFitModeAnchor(it)
