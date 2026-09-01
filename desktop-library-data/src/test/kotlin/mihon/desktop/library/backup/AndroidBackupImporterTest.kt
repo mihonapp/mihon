@@ -575,6 +575,47 @@ class AndroidBackupImporterTest {
     }
 
     @Test
+    fun `deeply nested memo is rejected without opening a transaction or mutating any table`() {
+        val database = tempDir.resolve("deep-memo.db")
+        val backupFile = tempDir.resolve("deep-memo.tachibk")
+        val deeplyNestedMemo = buildString {
+            append("{\"value\":")
+            repeat(10_000) { append('[') }
+            append('0')
+            repeat(10_000) { append(']') }
+            append('}')
+        }
+        encode(
+            AndroidBackup(
+                backupManga = listOf(
+                    AndroidBackupManga(
+                        source = 1,
+                        url = "/deep",
+                        title = "Deep",
+                        memo = deeplyNestedMemo.encodeToByteArray(),
+                    ),
+                ),
+            ),
+            backupFile,
+        )
+
+        DesktopLibraryDatabaseFactory.open(database).use { repository ->
+            val counting = CountingMutationPort(repository)
+            val before = dumpImportTables(database)
+
+            shouldThrow<BackupValidationException> {
+                AndroidBackupImporter(AndroidBackupCodec(), AndroidBackupValidator(), counting)
+                    .import(backupFile, 1)
+            }.message.shouldContain("backupManga[0].memo")
+
+            counting.transactions shouldBe 0
+            dumpImportTables(database) shouldBe before
+            repository.librarySnapshot() shouldBe emptyList()
+            repository.latestImportReport() shouldBe null
+        }
+    }
+
+    @Test
     fun `non-finite backup values never open a transaction or mutate any table`() {
         nonFiniteBackupCases().forEachIndexed { index, case ->
             val database = tempDir.resolve("non-finite-$index.db")

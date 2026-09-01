@@ -165,14 +165,40 @@ class AndroidBackupValidator {
             reject(path, "memo is not valid UTF-8")
         }
         checkString(text, path, limits)
+        val maximumDepth = minOf(limits.maxNestingDepth, MAX_SAFE_JSON_NESTING_DEPTH)
+        checkStructuralDepth(text, path, maximumDepth)
         val element = try {
             Json.parseToJsonElement(text)
         } catch (_: Exception) {
             reject(path, "memo is not valid JSON")
         }
         if (element !is JsonObject) reject(path, "memo JSON must be an object")
-        checkDepth(element, 1, path, limits.maxNestingDepth)
+        checkDepth(element, 1, path, maximumDepth)
         return element.toString()
+    }
+
+    private fun checkStructuralDepth(text: String, path: String, maximum: Int) {
+        var depth = 0
+        var inString = false
+        var escaped = false
+        text.forEach { character ->
+            if (inString) {
+                when {
+                    escaped -> escaped = false
+                    character == '\\' -> escaped = true
+                    character == '"' -> inString = false
+                }
+            } else {
+                when (character) {
+                    '"' -> inString = true
+                    '{', '[' -> {
+                        depth++
+                        if (depth > maximum) reject(path, "memo JSON nesting exceeds $maximum")
+                    }
+                    '}', ']' -> depth--
+                }
+            }
+        }
     }
 
     private fun checkDepth(element: JsonElement, depth: Int, path: String, maximum: Int) {
@@ -198,6 +224,10 @@ class AndroidBackupValidator {
     }
 
     private fun reject(path: String, reason: String): Nothing = throw BackupValidationException(path, reason)
+
+    private companion object {
+        const val MAX_SAFE_JSON_NESTING_DEPTH = 64
+    }
 }
 
 data class ValidatedAndroidBackup(

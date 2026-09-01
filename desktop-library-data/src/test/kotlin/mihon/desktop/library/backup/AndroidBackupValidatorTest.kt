@@ -221,6 +221,50 @@ class AndroidBackupValidatorTest {
         ).mangaMemoJson shouldBe listOf(boundaryMemo)
     }
 
+    @Test
+    fun `structural depth scan ignores brackets braces and escaped quotes inside strings`() {
+        val memo = """{"text":"[{{{\\\"still text\\\"}}}]","nested":{"ok":true}}"""
+
+        validator.validate(
+            AndroidBackup(listOf(manga(memo = memo.encodeToByteArray()))),
+            tinyLimits(maxStringChars = memo.length, maxNestingDepth = 2),
+        ).mangaMemoJson shouldBe listOf(memo)
+    }
+
+    @Test
+    fun `malformed and unbalanced memo JSON still uses the typed parser rejection`() {
+        listOf(
+            "{\"value\":[}",
+            "{\"value\":\"unterminated}",
+            "{\"value\":true",
+        ).forEach { memo ->
+            shouldThrow<BackupValidationException> {
+                validator.validate(AndroidBackup(listOf(manga(memo = memo.encodeToByteArray()))))
+            }.run {
+                path shouldBe "backupManga[0].memo"
+                reason shouldBe "memo is not valid JSON"
+            }
+        }
+    }
+
+    @Test
+    fun `configured memo depth cannot exceed the parser safety ceiling`() {
+        val memo = buildString {
+            append("{\"value\":")
+            repeat(10_000) { append('[') }
+            append('0')
+            repeat(10_000) { append(']') }
+            append('}')
+        }
+
+        shouldThrow<BackupValidationException> {
+            validator.validate(
+                AndroidBackup(listOf(manga(memo = memo.encodeToByteArray()))),
+                tinyLimits(maxStringChars = memo.length, maxNestingDepth = 20_000),
+            )
+        }.path shouldBe "backupManga[0].memo"
+    }
+
     private data class InvalidBackupCase(
         val name: String,
         val backup: AndroidBackup,

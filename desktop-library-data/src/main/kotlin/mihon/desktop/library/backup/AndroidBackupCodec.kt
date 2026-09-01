@@ -15,16 +15,32 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 
-class AndroidBackupCodec(private val protoBuf: ProtoBuf = ProtoBuf) {
+class AndroidBackupCodec private constructor(
+    private val protoBuf: ProtoBuf,
+    private val compressedSize: (Path) -> Long,
+    private val sourceFactory: (Path) -> Source,
+) {
+    constructor(protoBuf: ProtoBuf = ProtoBuf) : this(
+        protoBuf,
+        Files::size,
+        { path -> Files.newInputStream(path).source() },
+    )
+
+    internal constructor(
+        compressedSize: (Path) -> Long,
+        sourceFactory: (Path) -> Source,
+        protoBuf: ProtoBuf = ProtoBuf,
+    ) : this(protoBuf, compressedSize, sourceFactory)
+
     fun decode(path: Path, limits: BackupLimits = BackupLimits.DEFAULT): AndroidBackup {
-        val compressedBytes = Files.size(path)
+        val compressedBytes = compressedSize(path)
         if (compressedBytes > limits.maxCompressedBytes) {
             throw BackupDecodeException.compressed(compressedBytes)
         }
 
         var gzipPayload = false
         try {
-            Files.newInputStream(path).source().buffer().use { source ->
+            CompressedLimitSource(sourceFactory(path), limits.maxCompressedBytes).buffer().use { source ->
                 val magic = source.peek().run {
                     if (request(2)) {
                         intArrayOf(readByte().toInt() and 0xff, readByte().toInt() and 0xff)
@@ -69,6 +85,26 @@ class AndroidBackupCodec(private val protoBuf: ProtoBuf = ProtoBuf) {
         const val GZIP_MAGIC_SECOND = 0x8b
         val JSON_OBJECT_START = '{'.code.toByte()
         val LEGACY_JSON_SECOND_BYTES = byteArrayOf('}'.code.toByte(), '"'.code.toByte(), '\n'.code.toByte())
+    }
+}
+
+private class CompressedLimitSource(
+    delegate: Source,
+    private val maxCompressedBytes: Long,
+) : ForwardingSource(delegate) {
+    private var compressedBytes = 0L
+
+    override fun read(sink: Buffer, byteCount: Long): Long {
+        val remaining = maxCompressedBytes - compressedBytes
+        val boundedByteCount = if (remaining == Long.MAX_VALUE) byteCount else minOf(byteCount, remaining + 1)
+        val read = super.read(sink, boundedByteCount)
+        if (read > 0) {
+            compressedBytes += read
+            if (compressedBytes > maxCompressedBytes) {
+                throw BackupDecodeException.compressed(compressedBytes)
+            }
+        }
+        return read
     }
 }
 

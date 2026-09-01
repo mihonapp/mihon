@@ -4,6 +4,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.protobuf.ProtoBuf
+import okio.Buffer
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.ByteArrayOutputStream
@@ -22,7 +23,10 @@ class AndroidBackupCodecTest {
     fun `decodes a valid raw Android ProtoBuf backup`() {
         val path = write("raw.proto", encodedBackup())
 
-        val decoded = codec.decode(path)
+        val decoded = codec.decode(
+            path,
+            BackupLimits.DEFAULT.copy(maxCompressedBytes = Files.size(path)),
+        )
 
         decoded.backupManga.single().run {
             source shouldBe 42L
@@ -81,6 +85,20 @@ class AndroidBackupCodecTest {
         val path = write("too-large.bin", ByteArray(17))
 
         decodeFailure(path, limits) shouldBe BackupDecodeException.Kind.COMPRESSED_LIMIT
+    }
+
+    @Test
+    fun `rejects a source that grows beyond the compressed bound after its size check`() {
+        val encoded = encodedBackup()
+        val limits = BackupLimits.DEFAULT.copy(maxCompressedBytes = encoded.size.toLong())
+        val growingCodec = AndroidBackupCodec(
+            compressedSize = { encoded.size.toLong() },
+            sourceFactory = { Buffer().write(encoded).writeByte(0) },
+        )
+
+        shouldThrow<BackupDecodeException> {
+            growingCodec.decode(tempDir.resolve("growing.proto"), limits)
+        }.kind shouldBe BackupDecodeException.Kind.COMPRESSED_LIMIT
     }
 
     @Test
