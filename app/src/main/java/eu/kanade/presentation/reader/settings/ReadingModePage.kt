@@ -278,6 +278,10 @@ private fun ColumnScope.TapZonesItems(
 private fun ColumnScope.WebGpuViewerSettings(viewModel: ReaderSettingsViewModel) {
     HeadingItem(MR.strings.webgpu_viewer)
 
+    val viewer by viewModel.viewerFlow.collectAsState()
+
+    val isDual = (viewer as? WebGpuViewer)?.isDualPageMode() == true
+
     val navigationModePager by viewModel.preferences.navigationModePager.collectAsState()
     val pagerNavInverted by viewModel.preferences.pagerNavInverted.collectAsState()
     TapZonesItems(
@@ -286,6 +290,30 @@ private fun ColumnScope.WebGpuViewerSettings(viewModel: ReaderSettingsViewModel)
         invertMode = pagerNavInverted,
         onSelectInvertMode = viewModel.preferences.pagerNavInverted::set,
     )
+
+    if (isDual) {
+        val transitionAnimation by viewModel.preferences.transitionAnimationDual.collectAsState()
+        SettingsChipRow(MR.strings.pref_transition_animation_dual) {
+            ReaderPreferences.TransitionAnimationDual.entries.forEach {
+                FilterChip(
+                    selected = it == transitionAnimation,
+                    onClick = { viewModel.preferences.transitionAnimationDual.set(it) },
+                    label = { Text(stringResource(it.titleRes)) },
+                )
+            }
+        }
+        val cutoutMode by viewModel.preferences.cutoutModeDual.collectAsState()
+        SettingsChipRow(MR.strings.pref_cutout_mode_dual) {
+            ReaderPreferences.CutoutMode.entries.forEach {
+                FilterChip(
+                    selected = it == cutoutMode,
+                    onClick = { viewModel.preferences.cutoutModeDual.set(it) },
+                    label = { Text(stringResource(it.titleRes)) },
+                )
+            }
+        }
+        return
+    }
 
     val imageScaleType by viewModel.preferences.imageScaleType.collectAsState()
     SettingsChipRow(MR.strings.pref_image_scale_type) {

@@ -46,10 +46,16 @@ class WebGpuConfig(
     var landscapeZoom = false
         private set
 
-    var transitionAnimation = ReaderPreferences.TransitionAnimation.DEFAULT
+    var transitionAnimation = ReaderPreferences.TransitionAnimation.BASIC
+        private set
+
+    var transitionAnimationDual = ReaderPreferences.TransitionAnimationDual.BASIC
         private set
 
     var cutoutMode = ReaderPreferences.CutoutMode.AVOID
+        private set
+
+    var cutoutModeDual = ReaderPreferences.CutoutMode.AVOID
         private set
 
     var dualPageView = ReaderPreferences.DualPageView.NEVER
@@ -123,9 +129,21 @@ class WebGpuConfig(
                 { imagePropertyChangedListener?.invoke() },
             )
 
+        readerPreferences.transitionAnimationDual
+            .register(
+                { transitionAnimationDual = it },
+                { imagePropertyChangedListener?.invoke() },
+            )
+
         readerPreferences.cutoutMode
             .register(
                 { cutoutMode = it },
+                { imagePropertyChangedListener?.invoke() },
+            )
+
+        readerPreferences.cutoutModeDual
+            .register(
+                { cutoutModeDual = it },
                 { imagePropertyChangedListener?.invoke() },
             )
 

@@ -18,6 +18,7 @@ import ca.mpreg.webgpuviewer.renderer.Image
 import ca.mpreg.webgpuviewer.transition.TransitionBasic
 import ca.mpreg.webgpuviewer.transition.TransitionCube
 import ca.mpreg.webgpuviewer.transition.TransitionCubeOuter
+import ca.mpreg.webgpuviewer.transition.TransitionDualFlip
 import ca.mpreg.webgpuviewer.transition.TransitionFade
 import ca.mpreg.webgpuviewer.transition.TransitionFadeWhite
 import ca.mpreg.webgpuviewer.transition.TransitionFlipLeft
@@ -41,6 +42,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences.TransitionAnimation
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences.TransitionAnimationDual
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView.ZoomStartPosition
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
@@ -255,9 +257,8 @@ open class WebGpuViewer(
      */
     private fun evictFarthestPage(reference: ViewerPage? = null): Boolean {
         val current = reference ?: currentPage ?: return false
-        val candidates = pageCache.values
-            .filter { it !== current && it !== currentPage && !isPinned(it) }
-            .toMutableSet()
+        val candidates =
+            pageCache.values.filter { it !== current && it !== currentPage && !isPinned(it) }.toMutableSet()
         if (candidates.isEmpty()) return false
 
         fun findNext(page: ViewerPage): ViewerPage? = when (page) {
@@ -606,7 +607,7 @@ open class WebGpuViewer(
      * Check if dual page mode is currently active based on config and view dimensions.
      * Dual page is never active for continuous (scrolling) viewers.
      */
-    private fun isDualPageMode(): Boolean {
+    fun isDualPageMode(): Boolean {
         if (isContinuous) return false
         return when (config.dualPageView) {
             ReaderPreferences.DualPageView.NEVER -> false
@@ -754,33 +755,64 @@ open class WebGpuViewer(
         }
 
         config.imagePropertyChangedListener = {
+            val isDual = isDualPageMode()
             pager.state.apply {
-                transition = when (config.transitionAnimation) {
-                    TransitionAnimation.DEFAULT -> if (isVertical) TransitionBasic.Vertical else TransitionBasic
-                    TransitionAnimation.FLIP_LEFT -> TransitionFlipLeft
-                    TransitionAnimation.FLIP_RIGHT -> TransitionFlipRight
-                    TransitionAnimation.STACK_LEFT -> TransitionStackLeft
-                    TransitionAnimation.STACK_RIGHT -> TransitionStackRight
-                    TransitionAnimation.STACK_UP -> TransitionStackUp
-                    TransitionAnimation.STACK_DOWN -> TransitionStackDown
-                    TransitionAnimation.SPHERE -> TransitionSphere
-                    TransitionAnimation.CUBE_INSIDE -> TransitionCube
-                    TransitionAnimation.CUBE_OUTSIDE -> TransitionCubeOuter
-                    TransitionAnimation.FADE -> TransitionFade
-                    TransitionAnimation.FADE_WHITE -> TransitionFadeWhite
-                    TransitionAnimation.NONE -> TransitionNone
-                }
-
-                when (config.cutoutMode) {
-                    ReaderPreferences.CutoutMode.IGNORE -> avoidCutout = false
-                    ReaderPreferences.CutoutMode.AVOID -> {
-                        avoidCutout = true
-                        alwaysAvoidCutout = false
+                if (isDual) {
+                    transition = when (config.transitionAnimationDual) {
+                        TransitionAnimationDual.BASIC -> if (isVertical) TransitionBasic.Vertical else TransitionBasic
+                        TransitionAnimationDual.FLIP -> TransitionDualFlip
+                        TransitionAnimationDual.STACK_LEFT -> TransitionStackLeft
+                        TransitionAnimationDual.STACK_RIGHT -> TransitionStackRight
+                        TransitionAnimationDual.STACK_UP -> TransitionStackUp
+                        TransitionAnimationDual.STACK_DOWN -> TransitionStackDown
+                        TransitionAnimationDual.SPHERE -> TransitionSphere
+                        TransitionAnimationDual.CUBE_INSIDE -> TransitionCube
+                        TransitionAnimationDual.CUBE_OUTSIDE -> TransitionCubeOuter
+                        TransitionAnimationDual.FADE -> TransitionFade
+                        TransitionAnimationDual.FADE_WHITE -> TransitionFadeWhite
+                        TransitionAnimationDual.NONE -> TransitionNone
                     }
 
-                    ReaderPreferences.CutoutMode.SHIFT -> {
-                        avoidCutout = true
-                        alwaysAvoidCutout = true
+                    when (config.cutoutModeDual) {
+                        ReaderPreferences.CutoutMode.IGNORE -> avoidCutout = false
+                        ReaderPreferences.CutoutMode.AVOID -> {
+                            avoidCutout = true
+                            alwaysAvoidCutout = false
+                        }
+
+                        ReaderPreferences.CutoutMode.SHIFT -> {
+                            avoidCutout = true
+                            alwaysAvoidCutout = true
+                        }
+                    }
+                } else {
+                    transition = when (config.transitionAnimation) {
+                        TransitionAnimation.BASIC -> if (isVertical) TransitionBasic.Vertical else TransitionBasic
+                        TransitionAnimation.FLIP_LEFT -> TransitionFlipLeft
+                        TransitionAnimation.FLIP_RIGHT -> TransitionFlipRight
+                        TransitionAnimation.STACK_LEFT -> TransitionStackLeft
+                        TransitionAnimation.STACK_RIGHT -> TransitionStackRight
+                        TransitionAnimation.STACK_UP -> TransitionStackUp
+                        TransitionAnimation.STACK_DOWN -> TransitionStackDown
+                        TransitionAnimation.SPHERE -> TransitionSphere
+                        TransitionAnimation.CUBE_INSIDE -> TransitionCube
+                        TransitionAnimation.CUBE_OUTSIDE -> TransitionCubeOuter
+                        TransitionAnimation.FADE -> TransitionFade
+                        TransitionAnimation.FADE_WHITE -> TransitionFadeWhite
+                        TransitionAnimation.NONE -> TransitionNone
+                    }
+
+                    when (config.cutoutMode) {
+                        ReaderPreferences.CutoutMode.IGNORE -> avoidCutout = false
+                        ReaderPreferences.CutoutMode.AVOID -> {
+                            avoidCutout = true
+                            alwaysAvoidCutout = false
+                        }
+
+                        ReaderPreferences.CutoutMode.SHIFT -> {
+                            avoidCutout = true
+                            alwaysAvoidCutout = true
+                        }
                     }
                 }
 
