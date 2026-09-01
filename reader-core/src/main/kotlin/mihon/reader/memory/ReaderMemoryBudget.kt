@@ -16,7 +16,8 @@ data class ReaderMemoryMetrics(
         require(limitBytes >= 0) { "limitBytes must not be negative" }
         require(reservedBytes >= 0) { "reservedBytes must not be negative" }
         require(cacheBytes >= 0) { "cacheBytes must not be negative" }
-        require(reservedBytes + cacheBytes <= limitBytes) { "memory usage must not exceed limit" }
+        require(cacheBytes <= limitBytes) { "memory usage must not exceed limit" }
+        require(reservedBytes <= limitBytes - cacheBytes) { "memory usage must not exceed limit" }
     }
 }
 

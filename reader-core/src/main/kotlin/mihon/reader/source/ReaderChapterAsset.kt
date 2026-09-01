@@ -18,12 +18,6 @@ enum class ChapterDirection {
     RIGHT_TO_LEFT,
 }
 
-enum class ProgressWriteResult {
-    WRITTEN,
-    UNCHANGED,
-    REJECTED,
-}
-
 interface ReaderChapterCatalog {
     suspend fun chapters(): List<ReaderChapterAsset>
 }

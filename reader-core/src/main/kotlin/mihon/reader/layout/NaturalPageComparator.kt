@@ -25,7 +25,6 @@ object NaturalPageComparator : Comparator<String> {
 
             val foldedComparison = leftCharacter.lowercaseChar().compareTo(rightCharacter.lowercaseChar())
             if (foldedComparison != 0) return foldedComparison
-            if (leftCharacter != rightCharacter) return leftCharacter.compareTo(rightCharacter)
             leftIndex += 1
             rightIndex += 1
         }

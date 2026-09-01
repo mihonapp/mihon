@@ -4,7 +4,10 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import mihon.reader.model.PageDescriptor
 import mihon.reader.model.PageId
+import mihon.reader.model.ReaderLayout
+import mihon.reader.model.ReaderLayoutPolicy
 import mihon.reader.model.ReadingMode
+import mihon.reader.model.ScaleMode
 import org.junit.jupiter.api.Test
 
 class PageGroupingTest {
@@ -34,7 +37,7 @@ class PageGroupingTest {
     fun `right to left visual placement reverses each spread without changing page identity`() {
         val original = pageDescriptors(4)
 
-        PageGrouping.forMode(original, ReadingMode.DOUBLE_PAGE_RTL, reserveCover = false)
+        PageGrouping.forMode(original, ReadingMode.DUAL_RTL, reserveCover = false)
             .map { it.map(PageDescriptor::id) }
             .shouldContainExactly(
                 listOf(pageId(1), pageId(0)),
@@ -45,19 +48,80 @@ class PageGroupingTest {
     }
 
     @Test
-    fun `all reader modes have explicit grouping and direction contracts`() {
-        ReadingMode.entries.shouldContainExactly(
-            ReadingMode.LEFT_TO_RIGHT,
-            ReadingMode.RIGHT_TO_LEFT,
-            ReadingMode.VERTICAL,
-            ReadingMode.WEBTOON,
-            ReadingMode.DOUBLE_PAGE_LTR,
-            ReadingMode.DOUBLE_PAGE_RTL,
+    fun `spread snapshots stay immutable after a caller mutates its page list`() {
+        val pages = pageDescriptors(4).toMutableList()
+        val ltr = PageGrouping.dual(pages, reserveCover = false)
+        val rtl = PageGrouping.forMode(pages, ReadingMode.DUAL_RTL, reserveCover = false)
+
+        pages.clear()
+
+        ltr.map { it.map(PageDescriptor::id) }.shouldContainExactly(
+            listOf(pageId(0), pageId(1)),
+            listOf(pageId(2), pageId(3)),
         )
-        ReadingMode.RIGHT_TO_LEFT.isRightToLeft shouldBe true
-        ReadingMode.DOUBLE_PAGE_RTL.isRightToLeft shouldBe true
-        ReadingMode.DOUBLE_PAGE_LTR.isDualPage shouldBe true
-        ReadingMode.DOUBLE_PAGE_RTL.isDualPage shouldBe true
+        rtl.map { it.map(PageDescriptor::id) }.shouldContainExactly(
+            listOf(pageId(1), pageId(0)),
+            listOf(pageId(3), pageId(2)),
+        )
+    }
+
+    @Test
+    fun `all reader modes produce their concrete grouping and layout policies`() {
+        val pages = pageDescriptors(4)
+
+        PageGrouping.forMode(pages, ReadingMode.SINGLE_LTR, reserveCover = false)
+            .map { it.map(PageDescriptor::id) }
+            .shouldContainExactly(listOf(pageId(0)), listOf(pageId(1)), listOf(pageId(2)), listOf(pageId(3)))
+        ReaderLayout.policy(ReadingMode.SINGLE_LTR) shouldBe ReaderLayoutPolicy(
+            isRightToLeft = false,
+            isDualPage = false,
+            isContinuous = false,
+            continuousGapPixels = 0,
+            forcedScaleMode = null,
+        )
+
+        PageGrouping.forMode(pages, ReadingMode.SINGLE_RTL, reserveCover = false)
+            .map { it.map(PageDescriptor::id) }
+            .shouldContainExactly(listOf(pageId(0)), listOf(pageId(1)), listOf(pageId(2)), listOf(pageId(3)))
+        ReaderLayout.policy(ReadingMode.SINGLE_RTL).isRightToLeft shouldBe true
+
+        PageGrouping.forMode(pages, ReadingMode.DUAL_LTR, reserveCover = false)
+            .map { it.map(PageDescriptor::id) }
+            .shouldContainExactly(listOf(pageId(0), pageId(1)), listOf(pageId(2), pageId(3)))
+        ReaderLayout.policy(ReadingMode.DUAL_LTR).isDualPage shouldBe true
+
+        PageGrouping.forMode(pages, ReadingMode.DUAL_RTL, reserveCover = false)
+            .map { it.map(PageDescriptor::id) }
+            .shouldContainExactly(listOf(pageId(1), pageId(0)), listOf(pageId(3), pageId(2)))
+        ReaderLayout.policy(ReadingMode.DUAL_RTL) shouldBe ReaderLayoutPolicy(
+            isRightToLeft = true,
+            isDualPage = true,
+            isContinuous = false,
+            continuousGapPixels = 0,
+            forcedScaleMode = null,
+        )
+
+        PageGrouping.forMode(pages, ReadingMode.VERTICAL, reserveCover = false)
+            .map { it.map(PageDescriptor::id) }
+            .shouldContainExactly(listOf(pageId(0)), listOf(pageId(1)), listOf(pageId(2)), listOf(pageId(3)))
+        ReaderLayout.policy(ReadingMode.VERTICAL) shouldBe ReaderLayoutPolicy(
+            isRightToLeft = false,
+            isDualPage = false,
+            isContinuous = true,
+            continuousGapPixels = ReaderLayout.DEFAULT_CONTINUOUS_GAP_PIXELS,
+            forcedScaleMode = null,
+        )
+
+        PageGrouping.forMode(pages, ReadingMode.WEBTOON, reserveCover = false)
+            .map { it.map(PageDescriptor::id) }
+            .shouldContainExactly(listOf(pageId(0)), listOf(pageId(1)), listOf(pageId(2)), listOf(pageId(3)))
+        ReaderLayout.policy(ReadingMode.WEBTOON) shouldBe ReaderLayoutPolicy(
+            isRightToLeft = false,
+            isDualPage = false,
+            isContinuous = true,
+            continuousGapPixels = 0,
+            forcedScaleMode = ScaleMode.FIT_WIDTH,
+        )
     }
 }
 

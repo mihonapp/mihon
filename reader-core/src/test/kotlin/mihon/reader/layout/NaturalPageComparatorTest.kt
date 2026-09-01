@@ -1,6 +1,7 @@
 package mihon.reader.layout
 
 import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class NaturalPageComparatorTest {
@@ -31,4 +32,38 @@ class NaturalPageComparatorTest {
             .sortedWith(NaturalPageComparator)
             .shouldContainExactly("PAGE.jpg", "Page.jpg", "page.jpg")
     }
+
+    @Test
+    fun `natural order completes case insensitive numeric comparison before raw case tie breaking`() {
+        listOf("A10.jpg", "a2.jpg")
+            .sortedWith(NaturalPageComparator)
+            .shouldContainExactly("a2.jpg", "A10.jpg")
+    }
+
+    @Test
+    fun `natural order comparator is antisymmetric and transitive`() {
+        val names = listOf("A10.jpg", "a2.jpg", "a02.jpg", "chapter\\1.jpg", "chapter/1.jpg")
+
+        names.forEach { left ->
+            names.forEach { right ->
+                NaturalPageComparator.compare(left, right).sign shouldBe
+                    -NaturalPageComparator.compare(right, left).sign
+            }
+        }
+        names.forEach { first ->
+            names.forEach { second ->
+                names.forEach { third ->
+                    if (
+                        NaturalPageComparator.compare(first, second) <= 0 &&
+                        NaturalPageComparator.compare(second, third) <= 0
+                    ) {
+                        (NaturalPageComparator.compare(first, third) <= 0) shouldBe true
+                    }
+                }
+            }
+        }
+    }
 }
+
+private val Int.sign: Int
+    get() = compareTo(0)

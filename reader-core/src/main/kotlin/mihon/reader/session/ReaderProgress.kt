@@ -1,6 +1,10 @@
 package mihon.reader.session
 
-import mihon.reader.source.ProgressWriteResult
+enum class ProgressWriteResult {
+    WRITTEN,
+    UNCHANGED,
+    REJECTED,
+}
 
 data class ReaderProgressUpdate(
     val chapterId: String,
