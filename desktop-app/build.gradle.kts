@@ -5,6 +5,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.multiplatform)
     alias(mihonx.plugins.spotless)
 }
@@ -24,11 +25,14 @@ val desktopJavaHome = extensions
     .absolutePath
 
 dependencies {
+    implementation(project(":desktop-library-data"))
     implementation(compose.desktop.currentOs)
     implementation(compose.material3)
+    implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.bundles.test)
     testImplementation(compose.desktop.uiTestJUnit4)
+    testImplementation(libs.kotlinx.serialization.protobuf)
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 
@@ -48,9 +52,10 @@ compose.desktop {
             description = "Mihon manga reader for Windows"
             vendor = "Mihon W"
             licenseFile.set(rootProject.file("LICENSE"))
-            modules("java.desktop", "java.logging", "java.prefs")
+            modules("java.desktop", "java.logging", "java.prefs", "java.sql")
 
             windows {
+                console = true
                 perUserInstall = true
                 dirChooser = true
                 menuGroup = "Mihon W"
