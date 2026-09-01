@@ -75,7 +75,7 @@ jobs:
           path: app/build/outputs/mapping/release
 
   desktop-windows:
-    name: Build & Test Windows Foundation
+    name: Build & Test Windows Library
     runs-on: windows-2025
 
     steps:
@@ -93,10 +93,10 @@ jobs:
 
       - name: Verify Windows desktop foundation
         shell: pwsh
-        run: .\scripts\verify-desktop-foundation.ps1
+        run: .\scripts\verify-desktop-library.ps1
 
       - name: Upload Windows runtime image
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: mihon-w-foundation-${{ github.sha }}
+          name: mihon-w-library-${{ github.sha }}
           path: desktop-app/build/compose/binaries/main/app/MihonW

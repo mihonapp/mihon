@@ -102,7 +102,7 @@
 - Consumes: version catalog values `mihonx.versions.java=17`, `libs.versions.sqldelight=2.3.2`, and the root Spotless convention.
 - Produces: generated `mihon.desktop.library.db.DesktopLibraryDatabase`, `DesktopLibraryDatabase.Schema`, and generated `libraryQueries` methods used by Tasks 2, 5, and 6.
 
-- [ ] **Step 1: Write the failing module/schema test**
+- [x] **Step 1: Write the failing module/schema test**
 
 Create `LibrarySchemaTest.kt` with a temporary `JdbcSqliteDriver`, create the schema, query `sqlite_master`, and assert this exact table set:
 
@@ -139,13 +139,13 @@ class LibrarySchemaTest {
 }
 ```
 
-- [ ] **Step 2: Run the test to verify the module is absent**
+- [x] **Step 2: Run the test to verify the module is absent**
 
 Run: `./gradlew :desktop-library-data:test --tests mihon.desktop.library.db.LibrarySchemaTest`
 
 Expected: FAIL because project `:desktop-library-data` is not present.
 
-- [ ] **Step 3: Register dependencies and configure the module**
+- [x] **Step 3: Register dependencies and configure the module**
 
 Add `include(":desktop-library-data")` beside `include(":desktop-app")`. Add catalog alias `sqldelight-jdbcDriver = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }`. Create `desktop-library-data/build.gradle.kts` with these exact behaviors:
 
@@ -183,7 +183,7 @@ sqldelight {
 }
 ```
 
-- [ ] **Step 4: Add the complete initial schema and deterministic queries**
+- [x] **Step 4: Add the complete initial schema and deterministic queries**
 
 Create `Library.sq`. Use `INTEGER AS Boolean` for flags, `TEXT` for JSON/list snapshots, foreign keys with explicit delete actions, and the following tables/constraints:
 
@@ -494,13 +494,13 @@ lastInsertRowId:
 SELECT last_insert_rowid();
 ```
 
-- [ ] **Step 5: Run schema generation and the focused test**
+- [x] **Step 5: Run schema generation and the focused test**
 
 Run: `./gradlew :desktop-library-data:generateSqlDelightInterface :desktop-library-data:test --tests mihon.desktop.library.db.LibrarySchemaTest`
 
 Expected: PASS; generated schema contains all 13 Plan 2 tables.
 
-- [ ] **Step 6: Commit the module boundary**
+- [x] **Step 6: Commit the module boundary**
 
 ```bash
 git add settings.gradle.kts gradle/libs.versions.toml desktop-library-data
@@ -522,7 +522,7 @@ git commit -m "feat: add desktop library database schema"
 - Consumes: `DesktopLibraryDatabase`, `libraryQueries`, and Java `Path` from Task 1.
 - Produces: `LibraryRepository`, `LibraryMutationPort`, `SqlDelightLibraryRepository`, and `DesktopLibraryDatabaseFactory.open(Path): SqlDelightLibraryRepository` used by all later tasks.
 
-- [ ] **Step 1: Write persistence, foreign-key, ordering, and rollback tests**
+- [x] **Step 1: Write persistence, foreign-key, ordering, and rollback tests**
 
 Add tests that open a temporary file, insert a manga and two chapters through `LibraryMutationPort`, close and reopen, and assert the same title/unread counts and deterministic chapter order. Add a foreign-key test that inserting a chapter for manga ID `999` throws. Add `repository.transaction { insert manga; error("forced rollback") }`, reopen, and assert the manga is absent.
 
@@ -556,13 +556,13 @@ fun `committed library survives reopen and rollback never leaks rows`() {
 }
 ```
 
-- [ ] **Step 2: Run the focused test to verify the ports are missing**
+- [x] **Step 2: Run the focused test to verify the ports are missing**
 
 Run: `./gradlew :desktop-library-data:test --tests mihon.desktop.library.db.SqlDelightLibraryRepositoryTest`
 
 Expected: FAIL on unresolved `DesktopLibraryDatabaseFactory`, `MangaRecord`, and repository methods.
 
-- [ ] **Step 3: Define immutable public models and ports**
+- [x] **Step 3: Define immutable public models and ports**
 
 Define these exact public signatures; model fields that mirror backup fields remain lossless, while UI projection stays compact:
 
@@ -605,7 +605,7 @@ interface LibraryMutationPort {
 
 In `LibraryModels.kt`, define `LibraryManga(id, sourceId, url, title, thumbnailUrl, chapterCount, unreadCount)`, `MangaDetails` with every `manga` column plus `categories`, `LibraryChapter` with every `chapter` column, and the internal mutation records named above. In `ImportModels.kt`, define `ImportType { ANDROID_BACKUP, LOCAL_DIRECTORY }`, `ImportStatus { SUCCEEDED, REJECTED, FAILED }`, `PreferenceSkipReason { PRIVATE, APP_STATE, UNKNOWN, UNSUPPORTED_TYPE }`, `ImportCounts`, `ImportReportItem`, and `ImportReport`.
 
-- [ ] **Step 4: Implement the JDBC factory and SQLDelight repository**
+- [x] **Step 4: Implement the JDBC factory and SQLDelight repository**
 
 `DesktopLibraryDatabaseFactory.open(path)` must create the parent directory, open `jdbc:sqlite:${path.toAbsolutePath()}`, execute `PRAGMA foreign_keys=ON`, call `Schema.create` only when `PRAGMA user_version` is zero, then set `PRAGMA user_version=${DesktopLibraryDatabase.Schema.version}`, and return one `SqlDelightLibraryRepository` that owns/closes the driver. Implement query-to-model mappings in private functions, SQLDelight `asFlow().mapToList(Dispatchers.IO)`, `transactionWithResult`, and `lastInsertRowId` retrieval through the named SQLDelight query.
 
@@ -628,13 +628,13 @@ object DesktopLibraryDatabaseFactory {
 }
 ```
 
-- [ ] **Step 5: Run persistence tests and all module tests**
+- [x] **Step 5: Run persistence tests and all module tests**
 
 Run: `./gradlew :desktop-library-data:test`
 
 Expected: PASS, including reopen persistence, foreign-key rejection, deterministic order, and forced transaction rollback.
 
-- [ ] **Step 6: Commit the repository contract**
+- [x] **Step 6: Commit the repository contract**
 
 ```bash
 git add desktop-library-data/src/main
@@ -654,17 +654,17 @@ git commit -m "feat: persist desktop library data"
 - Consumes: kotlinx.serialization `ProtoBuf`, Okio gzip, and the Global Constraints limits.
 - Produces: `AndroidBackupCodec.decode(path: Path, limits: BackupLimits = BackupLimits.DEFAULT): AndroidBackup` and the import-only DTO graph consumed by Tasks 4 and 5.
 
-- [ ] **Step 1: Write corrupt, raw/gzip, JSON-signature, and expansion-limit tests**
+- [x] **Step 1: Write corrupt, raw/gzip, JSON-signature, and expansion-limit tests**
 
 Cover: valid raw ProtoBuf; the same bytes gzip-compressed; truncated gzip; random bytes; leading `{}`, `{"`, and `{\n`; compressed input one byte above `maxCompressedBytes`; and a gzip bomb that expands one byte above `maxExpandedBytes`. Assert stable exceptions `BackupDecodeException.Kind.COMPRESSED_LIMIT`, `EXPANDED_LIMIT`, `LEGACY_JSON`, `CORRUPT_GZIP`, or `INVALID_PROTOBUF`, never `OutOfMemoryError`.
 
-- [ ] **Step 2: Run the codec test to verify it fails**
+- [x] **Step 2: Run the codec test to verify it fails**
 
 Run: `./gradlew :desktop-library-data:test --tests mihon.desktop.library.backup.AndroidBackupCodecTest`
 
 Expected: FAIL because `AndroidBackupCodec` and the DTOs do not exist.
 
-- [ ] **Step 3: Define the exact wire DTOs**
+- [x] **Step 3: Define the exact wire DTOs**
 
 Use `@Serializable` and these exact field numbers/names/defaults; preserve deprecated fields because old/current Android backups can emit them:
 
@@ -731,7 +731,7 @@ data class AndroidBackupChapter(
 
 Add `AndroidBackupCategory(1 name, 2 order, 3 id, 100 flags)`, `AndroidBackupHistory(1 url, 2 lastRead, 3 readDuration)`, `AndroidBackupSource(1 name, 2 sourceId)`, and tracking fields exactly `1 syncId`, `2 libraryId`, `3 mediaIdInt`, `4 trackingUrl`, `5 title`, `6 lastChapterRead`, `7 totalChapters`, `8 score`, `9 status`, `10 startedReadingDate`, `11 finishedReadingDate`, `12 private`, `100 mediaId`. Add preference wrapper fields exactly `AndroidBackupPreference(1 key, 2 value)` and `AndroidBackupSourcePreferences(1 sourceKey, 2 prefs)`. Mirror the existing sealed `PreferenceValue` subclasses (`Int`, `Long`, `Float`, `String`, `Boolean`, `StringSet`) with the same serial class names by applying `@SerialName` equal to the Android fully qualified serializer names. Add extension-store fields `1 indexUrl`, `2 name`, `3 badgeLabel`, `4 contactWebsite`, `5 signingKey`, `6 contactDiscord`, `7 isLegacy`, `8 extensionListUrl`; decoding stores but Plan 2 reports these entries as unknown rather than installing extensions.
 
-- [ ] **Step 4: Implement streaming bounded gzip/ProtoBuf decoding**
+- [x] **Step 4: Implement streaming bounded gzip/ProtoBuf decoding**
 
 Define `BackupLimits` exactly as the Global Constraints default. `AndroidBackupCodec` must check `Files.size` before opening, read through an Okio `ForwardingSource` that increments expanded bytes and throws immediately above the bound, detect gzip from unsigned bytes `0x1f,0x8b`, reject the three JSON prefixes before ProtoBuf, and wrap serialization/EOF/gzip errors in typed `BackupDecodeException` without swallowing limit exceptions.
 
@@ -756,13 +756,13 @@ class AndroidBackupCodec(private val protoBuf: ProtoBuf = ProtoBuf) {
 }
 ```
 
-- [ ] **Step 5: Run codec tests and format checks**
+- [x] **Step 5: Run codec tests and format checks**
 
 Run: `./gradlew :desktop-library-data:test --tests mihon.desktop.library.backup.AndroidBackupCodecTest spotlessCheck`
 
 Expected: PASS for raw, gzip, corrupt, JSON, compressed-limit, and expanded-limit cases.
 
-- [ ] **Step 6: Commit the wire codec**
+- [x] **Step 6: Commit the wire codec**
 
 ```bash
 git add desktop-library-data/src/main/kotlin/mihon/desktop/library/backup desktop-library-data/src/test/kotlin/mihon/desktop/library/backup/AndroidBackupCodecTest.kt
@@ -779,7 +779,7 @@ git commit -m "feat: decode bounded Android backups on desktop"
 - Consumes: the existing Android classes `Backup`, `BackupManga`, `BackupChapter`, `BackupCategory`, `BackupHistory`, `BackupTracking`, `BackupPreference`, `BackupSourcePreferences`, and `ProtoBuf.encodeToByteArray`; consumes Task 3 `AndroidBackupCodec`.
 - Produces: a real cross-module wire compatibility gate whose input bytes are created only by the existing Android DTO serializer, never by the new desktop DTOs. Task 5 extends the same test through the real importer/database.
 
-- [ ] **Step 1: Add the failing Android-to-desktop semantic contract test**
+- [x] **Step 1: Add the failing Android-to-desktop semantic contract test**
 
 Add `testImplementation(project(":desktop-library-data"))` to `app/build.gradle.kts`. In the test, construct existing Android backup DTOs with Unicode and non-default fields, encode with the same `ProtoBuf` singleton used by `BackupCreator`, gzip with Okio, write `.tachibk`, decode using `AndroidBackupCodec`, and compare a stable semantic projection:
 
@@ -822,23 +822,23 @@ fun `current Android encoder produces bytes understood by desktop`() {
 
 Define both projections inside the test, using primitives only. Include source/url/title/author/favorite/version, chapter URL/name/read/bookmark/page/version, category ID/name/order/flags, the manga's category-order references, history URL/time/duration, and tracking IDs/progress/title. This comparison must not compare DTO class equality.
 
-- [ ] **Step 2: Run the cross-contract test to expose any field mismatch**
+- [x] **Step 2: Run the cross-contract test to expose any field mismatch**
 
 Run: `./gradlew :app:testDebugUnitTest --tests eu.kanade.tachiyomi.data.backup.DesktopBackupImportContractTest`
 
 Expected before correction: FAIL if serial names, enum encoding, defaults, or any ProtoNumber differs from the existing Android DTOs.
 
-- [ ] **Step 3: Correct only the desktop wire mirror until semantics match**
+- [x] **Step 3: Correct only the desktop wire mirror until semantics match**
 
 Compare every desktop annotation against `app/src/main/java/eu/kanade/tachiyomi/data/backup/models/*.kt`. Keep the existing Android DTOs and encoder untouched. Add a second contract case for `mediaIdInt` fallback, `viewer` fallback when `viewer_flags` is absent, all six preference value subclasses, and empty/default optional fields.
 
-- [ ] **Step 4: Run both contract and desktop codec suites**
+- [x] **Step 4: Run both contract and desktop codec suites**
 
 Run: `./gradlew :app:testDebugUnitTest --tests eu.kanade.tachiyomi.data.backup.DesktopBackupImportContractTest :desktop-library-data:test --tests mihon.desktop.library.backup.AndroidBackupCodecTest`
 
 Expected: PASS; test output demonstrates bytes originate from the existing Android serializer and desktop semantics match.
 
-- [ ] **Step 5: Commit the compatibility gate**
+- [x] **Step 5: Commit the compatibility gate**
 
 ```bash
 git add app/build.gradle.kts app/src/test/java/eu/kanade/tachiyomi/data/backup/DesktopBackupImportContractTest.kt desktop-library-data/src/main/kotlin/mihon/desktop/library/backup/AndroidBackupDtos.kt
@@ -860,11 +860,11 @@ git commit -m "test: lock Android desktop backup compatibility"
 - Consumes: Task 2 repository/mutation records and Task 3 codec/DTOs.
 - Produces: `AndroidBackupImporter.import(path: Path, nowMillis: Long): ImportReport`, exact preference classification, deterministic merge behavior used by CLI/UI, and an Android-encoder-to-real-desktop-database compatibility gate.
 
-- [ ] **Step 1: Write validator tests for limits, duplicates, references, and JSON memo bounds**
+- [x] **Step 1: Write validator tests for limits, duplicates, references, and JSON memo bounds**
 
 Create table-driven cases that reject: manga count over limit; total chapter/track/preference counts over limits; one string over `maxStringChars`; duplicate `(source,url)` manga; duplicate chapter URL within one manga; duplicate category IDs, names, or orders; manga category order absent from backup categories; history URL absent from that manga's chapters; duplicate `syncId` tracking rows within one manga; malformed `memo` bytes that are not a JSON object; and nesting deeper than 64. Assert `BackupValidationException` includes a stable path such as `backupManga[0].history[0].url` and does not mutate a repository.
 
-- [ ] **Step 2: Write importer tests for one transaction and non-regressive merge rules**
+- [x] **Step 2: Write importer tests for one transaction and non-regressive merge rules**
 
 Seed an existing manga/chapter/history/tracker with later progress but older metadata, import an overlapping backup, and assert:
 
@@ -881,13 +881,13 @@ mergedCategories.map { it.name }.toSet() shouldBe setOf("Existing", "Imported")
 
 Add the reverse case where incoming `lastModifiedAt` is older or equal and assert existing nonblank metadata wins. Inject an `ImportCheckpoint` that throws after tracking but before report insertion; assert manga, chapters, links, history, tracking, preferences, source metadata, and report tables all remain byte-for-byte unchanged.
 
-- [ ] **Step 3: Run validator/importer tests to verify they fail**
+- [x] **Step 3: Run validator/importer tests to verify they fail**
 
 Run: `./gradlew :desktop-library-data:test --tests 'mihon.desktop.library.backup.AndroidBackup*Test'`
 
 Expected: FAIL on missing validator, policy, merge policy, and importer.
 
-- [ ] **Step 4: Implement exact validation and preference policy**
+- [x] **Step 4: Implement exact validation and preference policy**
 
 Implement `AndroidBackupValidator.validate(backup, limits): ValidatedAndroidBackup` as a single pass with cumulative counters and canonical identity sets. Parse `memo` as JSON only after byte/string bounds; require a JSON object. Define:
 
@@ -916,11 +916,11 @@ sealed interface PreferenceDecision {
 
 Classification order is exact `__PRIVATE_` prefix, exact `__APP_STATE_` prefix, exact whitelist with the required value type, then unknown. Allow only the six known scalar/set subclasses; serialize string sets sorted lexicographically. An unknown preference subclass or a whitelisted key with the wrong value type is `UNSUPPORTED_TYPE`. Remap `default_category` and the two category-set preferences through backup category ID -> name -> target database ID inside the transaction. Never put skipped values into report messages; report only scope/key/reason to avoid leaking secrets.
 
-- [ ] **Step 5: Implement deterministic merge policy**
+- [x] **Step 5: Implement deterministic merge policy**
 
 Create pure functions `mergeManga(existing, incoming)`, `mergeChapter`, `mergeHistory`, and `mergeTracking`. Use incoming text/metadata only when incoming `lastModifiedAt > existing.lastModifiedAt`, selecting existing on ties; for every selected string use incoming only when nonblank. Always use `existing.favorite || incoming.favorite`, `read ||`, `bookmark ||`, maximum page/progress/version/date-fetch/date-upload/last-read/read-duration/total-chapters, earliest nonzero start date, latest finish date, set-union genres/excluded scanlators sorted by Unicode code point, and existing tracker score/status/title/URL unless incoming tracker progress is strictly greater.
 
-- [ ] **Step 6: Implement the all-or-nothing importer and report**
+- [x] **Step 6: Implement the all-or-nothing importer and report**
 
 Use this public signature and keep decode/validation outside the transaction:
 
@@ -949,7 +949,7 @@ class AndroidBackupImporter(
 
 Resolve category backup orders to database IDs before manga links; separately build backup category ID -> name -> database ID for the three category-valued preferences. Resolve history URLs only to chapters within the current manga. Identify tracking rows by `(mangaId, syncId)`; effective remote media ID is `mediaIdInt.toLong()` when nonzero, otherwise `mediaId`, and is merged as data rather than identity. Store extension-store entries only as `ImportReportItem(outcome="SKIPPED", reason="UNKNOWN", message="Extension store installation is outside Plan 2")`; do not persist trust/signing material. A decode or validation rejection returns/throws a typed failure without opening a write transaction or inserting a report. A successful report and all content commit together.
 
-- [ ] **Step 7: Extend the Android cross-contract through the real importer and run all gates**
+- [x] **Step 7: Extend the Android cross-contract through the real importer and run all gates**
 
 In `DesktopBackupImportContractTest`, keep the Android-generated gzip bytes from Task 4, open a temporary desktop database with `DesktopLibraryDatabaseFactory.open`, pass the path to `AndroidBackupImporter`, close/reopen the database, and compare a stable database projection against the original Android DTO projection. The database projection must include manga/source/url/title/author/favorite/version, chapter URL/name/read/bookmark/page/version, category name/order/flags/link, history time/duration, tracking IDs/progress/title, source metadata, the imported whitelisted preference, and skip report reasons for private/app-state/unknown preferences. No desktop DTO encoder may appear in this test.
 
@@ -957,7 +957,7 @@ Run: `./gradlew :desktop-library-data:test :app:testDebugUnitTest --tests eu.kan
 
 Expected: PASS for validation paths, rollback, non-regressive merges, preference skip reporting, reopen persistence, Android wire compatibility, and Android-generated bytes imported into the real desktop database.
 
-- [ ] **Step 8: Commit backup import**
+- [x] **Step 8: Commit backup import**
 
 ```bash
 git add desktop-library-data/src/main/kotlin/mihon/desktop/library/backup
@@ -978,21 +978,21 @@ git commit -m "feat: import Android backups transactionally"
 - Consumes: Task 2 mutation port and report models.
 - Produces: `LocalMangaImporter.import(sourceDirectory, localLibraryRoot, nowMillis): ImportReport`, chapter-directory/archive metadata, and a promoted immutable local media path.
 
-- [ ] **Step 1: Write scanner tests for supported formats, Unicode, and long paths**
+- [x] **Step 1: Write scanner tests for supported formats, Unicode, and long paths**
 
 Build a source directory named `漫画/作者/作品` with chapter directories and one file for each case-insensitive extension `.cbz`, `.zip`, `.rar`, `.cbr`, `.7z`, `.cb7`, `.tar`, `.cbt`, `.epub`. Create a nested directory path longer than 260 characters without exceeding per-segment Windows limits. Assert all names and relative paths survive unchanged, directory chapters classify as `DIRECTORY`, archives as `ARCHIVE`, and ordering is normalized relative-path Unicode ordinal order.
 
-- [ ] **Step 2: Write fail-closed and rollback tests**
+- [x] **Step 2: Write fail-closed and rollback tests**
 
 Cover symbolic link, junction/reparse point where supported, `..` escape in a synthetic scan candidate, absolute child path, duplicate paths after case-folding, unreadable/non-regular entry, unsupported top-level regular file, and a symlink introduced between scan and copy. Each must throw `LocalImportRejected` before final promotion/database mutation. Inject failures after staging copy, after promotion, and before report insertion; assert staging is empty, final directory is absent, and database snapshots/reports are unchanged. Add startup orphan cleanup for `.staging/*` and promoted directories without a `local_manga_entry` row.
 
-- [ ] **Step 3: Run local import tests to verify they fail**
+- [x] **Step 3: Run local import tests to verify they fail**
 
 Run: `./gradlew :desktop-library-data:test --tests 'mihon.desktop.library.local.*Test'`
 
 Expected: FAIL because scanner/stager/importer do not exist.
 
-- [ ] **Step 4: Implement no-follow scanner and manifest**
+- [x] **Step 4: Implement no-follow scanner and manifest**
 
 Define:
 
@@ -1008,21 +1008,21 @@ class LocalImportScanner {
 
 Resolve the root with `toAbsolutePath().normalize()` but do not call `toRealPath()` through a link. For root and every walked entry, reject `Files.isSymbolicLink`, reject `DosFileAttributes.isOther` or the `reparsePoint` bit when exposed, read attributes with `LinkOption.NOFOLLOW_LINKS`, require `candidate.normalize().startsWith(root)`, and never use `FOLLOW_LINKS`. Treat immediate child directories as chapter directories and immediate child supported archives as archive chapters. A chapter directory may contain regular files/directories that are copied as opaque page assets, but every descendant receives the same no-follow/root-escape checks. Reject an empty manga directory. Compute SHA-256 from sorted tuples `(relative UTF-8 path, kind, size, modifiedAt)`.
 
-- [ ] **Step 5: Implement staging, atomic promotion, and rollback**
+- [x] **Step 5: Implement staging, atomic promotion, and rollback**
 
 `LocalImportStager.stage(manifest, localLibraryRoot)` creates only beneath `<root>/.staging/<uuid>`, copies with `NOFOLLOW_LINKS`, re-reads source attributes before and after every copy, and verifies the staged manifest. `promote` moves to `<root>/manga/<uuid>` with `ATOMIC_MOVE`; if the filesystem reports atomic move unsupported, fail and delete staging instead of silently weakening guarantees. Return `StagedLocalManga(stagingPath, finalPath, manifest)` implementing `AutoCloseable`; closing before `markCommitted()` deletes staging/final paths. Use explicit validated paths for recursive cleanup and refuse cleanup if the target is not below `.staging` or `manga`.
 
-- [ ] **Step 6: Implement local database registration**
+- [x] **Step 6: Implement local database registration**
 
 Use a reserved local source ID constant `LOCAL_SOURCE_ID = 0L` and stable manga URL `local:<manifest.sha256>`. Inside `mutations.transaction`, promote, insert/merge the manga, insert one chapter per candidate with URL `local:<forward-slash-relative-path>`, insert `local_manga_entry` and `local_chapter_asset`, then insert report/items. On any exception the transaction rolls back and `StagedLocalManga.close()` removes promoted files. On success call `markCommitted()` after transaction return. Re-importing the same manifest must merge idempotently and must not duplicate chapters.
 
-- [ ] **Step 7: Run all scanner/importer tests**
+- [x] **Step 7: Run all scanner/importer tests**
 
 Run: `./gradlew :desktop-library-data:test --tests 'mihon.desktop.library.local.*Test'`
 
 Expected: PASS for all nine archive types, chapter directories, Unicode/long paths, link/reparse/traversal rejection, idempotence, and staging/database rollback.
 
-- [ ] **Step 8: Commit local import**
+- [x] **Step 8: Commit local import**
 
 ```bash
 git add desktop-library-data/src/main/kotlin/mihon/desktop/library/local desktop-library-data/src/test/kotlin/mihon/desktop/library/local
@@ -1044,17 +1044,17 @@ git commit -m "feat: import local manga directories safely"
 - Consumes: `DesktopLibraryDatabaseFactory`, `AndroidBackupImporter`, and `LocalMangaImporter` from Tasks 2, 5, and 6.
 - Produces: one `DesktopRuntime : AutoCloseable` with repository/importers and `DesktopCommandRunner.run(command): Int`; UI Tasks 8–9 consume the same runtime.
 
-- [ ] **Step 1: Write CLI parsing and lifecycle tests**
+- [x] **Step 1: Write CLI parsing and lifecycle tests**
 
 Test exact commands: no command, existing `--smoke-test`, `--import-backup=C:\\备份\\a.tachibk`, `--import-local=C:\\漫画\\作品`, and `--list-library-json`. Reject more than one headless command with exit-code-ready `CommandLineException`. Assert `--data-dir` and `--portable` continue working. Use a fake close callback to prove command success and exceptions both close the library exactly once.
 
-- [ ] **Step 2: Run focused desktop tests to verify missing commands**
+- [x] **Step 2: Run focused desktop tests to verify missing commands**
 
 Run: `./gradlew :desktop-app:test --tests 'mihon.desktop.*Runtime*Test' --tests 'mihon.desktop.cli.*Test'`
 
 Expected: FAIL because library runtime/commands are not wired.
 
-- [ ] **Step 3: Add the data module dependency and exact command model**
+- [x] **Step 3: Add the data module dependency and exact command model**
 
 Add `implementation(project(":desktop-library-data"))`. Define:
 
@@ -1074,19 +1074,19 @@ object DesktopCommandParser {
 
 `--data-dir` and `--portable` configure runtime and do not count as commands. Reject missing/blank paths. Do not accept separate next-argument path forms; the equals form avoids ambiguous Windows quoting.
 
-- [ ] **Step 4: Extend runtime ownership**
+- [x] **Step 4: Extend runtime ownership**
 
 Replace the `smokeTest: Boolean` field with `command: DesktopCommand`. Add `library: SqlDelightLibraryRepository`, `backupImporter`, and `localImporter`. Open `${directories.root}/library/library.db`; use `${directories.root}/media/local` for local imports. Make `DesktopRuntime.close()` idempotently close the repository. If construction after database open fails, close before rethrowing.
 
-- [ ] **Step 5: Implement stable JSON Lines command output**
+- [x] **Step 5: Implement stable JSON Lines command output**
 
 `DesktopCommandRunner` writes UTF-8 one-line JSON with `Json { encodeDefaults = true; explicitNulls = true }`. Success shapes are exactly `{"command":"import-backup","status":"SUCCEEDED","reportId":N,...}`, `{"command":"import-local",...}`, and `{"command":"list-library","items":[...]}`. Typed decode/validation/local rejection returns exit code `2` and a redacted JSON error containing category/path but no preference value; unexpected errors return `1`. Foundation smoke keeps the exact prefix `MIHON_DESKTOP_SMOKE_OK` so the current verifier remains valid.
 
-- [ ] **Step 6: Close resources in every main path**
+- [x] **Step 6: Close resources in every main path**
 
 Wrap runtime in `use`. Headless commands return without creating AWT/Compose. For UI launch, move closing into `application(exitProcessOnExit = false)` completion so the repository remains open while windows exist and closes after `exitApplication()`.
 
-- [ ] **Step 7: Run desktop lifecycle/CLI and packaged smoke tests**
+- [x] **Step 7: Run desktop lifecycle/CLI and packaged smoke tests**
 
 Run: `./gradlew :desktop-app:test :desktop-app:createDistributable`
 
@@ -1094,7 +1094,7 @@ Then run: `desktop-app\build\compose\binaries\main\app\MihonW\MihonW.exe --smoke
 
 Expected: tests PASS; executable exits 0 and prints `MIHON_DESKTOP_SMOKE_OK` while creating `library\library.db` under the explicit root.
 
-- [ ] **Step 8: Commit runtime and CLI ownership**
+- [x] **Step 8: Commit runtime and CLI ownership**
 
 ```bash
 git add desktop-app/build.gradle.kts desktop-app/src/main/kotlin/mihon/desktop desktop-app/src/test/kotlin/mihon/desktop
@@ -1116,21 +1116,21 @@ git commit -m "feat: wire desktop library runtime and commands"
 - Consumes: `LibraryRepository.observeLibrary()` and the `DesktopRuntime.library` instance from Task 7.
 - Produces: `LibraryPresenter.state: StateFlow<LibraryUiState>`, `LibraryScreen(state, onQueryChange, onMangaSelected, onImportBackup, onImportLocal)`, and selection handed to Task 9.
 
-- [ ] **Step 1: Write presenter tests against a controlled repository flow**
+- [x] **Step 1: Write presenter tests against a controlled repository flow**
 
 Assert loading starts true, emitted database rows become visible, query matching is case-insensitive across title/author, Unicode titles survive, selected manga ID is retained only while present, and repository exceptions become a retryable error without fixture fallback. Use `MutableStateFlow`; do not open SQLite in this unit test.
 
-- [ ] **Step 2: Write Compose UI tests for real state rendering**
+- [x] **Step 2: Write Compose UI tests for real state rendering**
 
 Render `LibraryScreen` with `LibraryUiState(items=listOf(LibraryManga(...)))`; assert tags `library-screen`, `library-search`, `library-item-<id>`, unread count, empty state, and import actions. Click a manga and assert the exact ID callback. In `DesktopShellTest`, select Library and assert `library-screen` exists instead of the old headline placeholder.
 
-- [ ] **Step 3: Run focused UI tests to verify they fail**
+- [x] **Step 3: Run focused UI tests to verify they fail**
 
 Run: `./gradlew :desktop-app:test --tests 'mihon.desktop.ui.library.*Test' --tests mihon.desktop.ui.DesktopShellTest`
 
 Expected: FAIL because the real Library route does not exist.
 
-- [ ] **Step 4: Implement the presenter and immutable UI state**
+- [x] **Step 4: Implement the presenter and immutable UI state**
 
 Define:
 
@@ -1154,21 +1154,21 @@ class LibraryPresenter(repository: LibraryRepository, scope: CoroutineScope) : A
 
 Collect only `repository.observeLibrary()` on `Dispatchers.IO`; combine with query/selection and publish on the supplied scope. Filtering is deterministic by the database-provided order. `close()` cancels only the presenter's child job, not the application scope or database.
 
-- [ ] **Step 5: Implement the Material 3 desktop library layout**
+- [x] **Step 5: Implement the Material 3 desktop library layout**
 
 Use a top `SearchBar`-equivalent `OutlinedTextField`, primary `FilledTonalButton` actions “Import Android backup” and “Import local manga”, and `LazyVerticalGrid` with minimum 180 dp cards. Each card shows title, source ID, chapter count, and unread badge; use stable keys. Loading uses `CircularProgressIndicator`, errors use text plus Retry, and empty states distinguish empty database from no search matches. Give every clickable item focus semantics and the test tags from Step 2.
 
-- [ ] **Step 6: Route production Library to the repository**
+- [x] **Step 6: Route production Library to the repository**
 
 Create one `LibraryPresenter` with `remember(runtime.library)` in `MihonDesktopApp`, dispose it with `DisposableEffect`, and pass state/callbacks to `DesktopShell`. Change only `DesktopDestination.Library` content to `LibraryScreen`; keep Updates, History, Browse, Downloads, Settings, and About foundation headlines unchanged. Do not seed rows in production.
 
-- [ ] **Step 7: Run presenter/UI tests and the full desktop suite**
+- [x] **Step 7: Run presenter/UI tests and the full desktop suite**
 
 Run: `./gradlew :desktop-app:test`
 
 Expected: PASS; Library destination displays supplied repository rows and no fixture is referenced from production source.
 
-- [ ] **Step 8: Commit the library screen**
+- [x] **Step 8: Commit the library screen**
 
 ```bash
 git add desktop-app/src/main/kotlin/mihon/desktop/ui desktop-app/src/test/kotlin/mihon/desktop/ui
@@ -1190,39 +1190,39 @@ git commit -m "feat: show persisted manga in desktop library"
 - Consumes: `observeManga`, `observeChapters`, `AndroidBackupImporter`, and `LocalMangaImporter`.
 - Produces: selected real `MangaDetails`/`LibraryChapter` state, responsive detail pane, chooser-driven imports, and visible structured result dialogs.
 
-- [ ] **Step 1: Write detail/chapter Compose tests**
+- [x] **Step 1: Write detail/chapter Compose tests**
 
 Assert selected real data renders title, author, description, categories, notes, and chapter rows with read/bookmark/page-progress semantics. Assert chapter order exactly follows repository order. On width at least 1,100 dp, detail uses adjacent pane; on narrower width, selecting pushes a detail surface with a Back action. A missing/deleted selected manga returns to Library without crashing. Do not assert reader navigation because reader work is Plan 3.
 
-- [ ] **Step 2: Write import action tests with fakes**
+- [x] **Step 2: Write import action tests with fakes**
 
 Inject chooser functions returning a backup path/local directory or null. Assert cancel performs no import; success shows counts/report ID; typed rejection shows its actionable category; exception messages do not reveal skipped preference values; imports run off the UI dispatcher; and successful completion is observed through repository flow rather than manually appending a UI fixture.
 
-- [ ] **Step 3: Run focused tests to verify missing detail/actions**
+- [x] **Step 3: Run focused tests to verify missing detail/actions**
 
 Run: `./gradlew :desktop-app:test --tests 'mihon.desktop.ui.library.MangaDetailScreenTest' --tests 'mihon.desktop.ui.library.LibraryImportActionsTest'`
 
 Expected: FAIL because detail and import action components do not exist.
 
-- [ ] **Step 4: Extend presenter with selected database flows**
+- [x] **Step 4: Extend presenter with selected database flows**
 
 When `selectedMangaId` changes, use `flatMapLatest` over `repository.observeManga(id)` and `observeChapters(id)`. Define `MangaDetailUiState(manga: MangaDetails?, chapters: List<LibraryChapter>, loading: Boolean, errorMessage: String?)`. Never cache detached DTOs after selection changes. If manga becomes null, clear selection.
 
-- [ ] **Step 5: Implement responsive Material 3 details and chapter list**
+- [x] **Step 5: Implement responsive Material 3 details and chapter list**
 
 Render metadata in a scrollable header and chapters in `LazyColumn` with stable chapter IDs. Show readable labels for read, bookmark, and `lastPageRead`; disable “Read” actions with explanatory tooltip/text “Reader arrives in Plan 3” rather than routing to a blank page. Wide layout uses `Row` with library `weight(0.55f)` and detail `weight(0.45f)` plus divider; narrow layout shows one surface at a time.
 
-- [ ] **Step 6: Implement native chooser imports and result dialog**
+- [x] **Step 6: Implement native chooser imports and result dialog**
 
 Use AWT `FileDialog` for `.tachibk` backup selection and `JFileChooser(DIRECTORIES_ONLY)` for local manga directories. Convert selected values to `Path`; execute import with `withContext(Dispatchers.IO)`. Expose `LibraryImportController.importBackup(path)` and `importLocal(path)` returning `ImportActionState`. The UI dialog lists inserted/merged/skipped counts and skip categories, not raw skipped values. On success, leave the repository flow to refresh the screen.
 
-- [ ] **Step 7: Run all desktop UI and data tests**
+- [x] **Step 7: Run all desktop UI and data tests**
 
 Run: `./gradlew :desktop-app:test :desktop-library-data:test`
 
 Expected: PASS for wide/narrow details, real chapter rendering, chooser cancel/success/error, and data importer suites.
 
-- [ ] **Step 8: Commit details and import actions**
+- [x] **Step 8: Commit details and import actions**
 
 ```bash
 git add desktop-app/src/main/kotlin/mihon/desktop/ui/library desktop-app/src/main/kotlin/mihon/desktop/ui/MihonDesktopApp.kt desktop-app/src/test/kotlin/mihon/desktop/ui/library
@@ -1241,17 +1241,17 @@ git commit -m "feat: add desktop library details and imports"
 - Consumes: packaged CLI commands from Task 7, real importers from Tasks 5–6, and existing `scripts/verify-desktop-foundation.ps1`.
 - Produces: repeatable packaged-process evidence that backup/local imports persist across process reopen and that the Java 17 runtime/foundation checks remain intact.
 
-- [ ] **Step 1: Write a file-backed integration test**
+- [x] **Step 1: Write a file-backed integration test**
 
 Create a temporary database plus two backups: first inserts two manga; second overlaps one with older metadata but newer read progress and includes one new manga. Import both, close/reopen, and assert three manga, non-regressed progress, union categories, source metadata, preference report reasons, and latest report counts. Add a forced importer checkpoint failure and assert reopen sees exactly the pre-failure state.
 
-- [ ] **Step 2: Run the integration test before verifier work**
+- [x] **Step 2: Run the integration test before verifier work**
 
 Run: `./gradlew :desktop-library-data:test --tests mihon.desktop.library.integration.LibraryImportIntegrationTest`
 
 Expected: PASS; failures here are data defects and must be fixed before scripting packaged verification.
 
-- [ ] **Step 3: Create a deterministic Android-wire fixture generator**
+- [x] **Step 3: Create a deterministic Android-wire fixture generator**
 
 Create `DesktopBackupFixtureWriterTest` in the Android `:app` test source set so the generated bytes necessarily use the existing Android `Backup` DTO graph and `ProtoBuf.encodeToByteArray(Backup.serializer(), value)`. Read output only from required system property `mihon.plan2.fixtureDir`, require the normalized directory to be beneath `app/build`, create `android-generated.tachibk` with Okio gzip, and create `android-generated.tachibk.sha256` from `MessageDigest.getInstance("SHA-256")`. The payload contains title `跨平台备份`, category `Android 收藏` whose `id` differs from its `order`, chapter `第 1 话`, source ID `42`, one history row, one tracker, whitelisted preference `pref_display_mode_library`, category-ID preferences `default_category` and `library_update_categories`, private preference `__PRIVATE_auth_token`, app-state preference `__APP_STATE_last_version_code`, and unknown preference `unrecognized_plan2_key`.
 
@@ -1275,7 +1275,7 @@ The fixture test must fail with a clear missing-property message when invoked di
 
 Expected: both fixture and lowercase 64-hex-character SHA-256 file exist under `app/build/plan2-fixtures`; no desktop DTO encoder appears in the writer test imports.
 
-- [ ] **Step 4: Implement the extended PowerShell verifier**
+- [x] **Step 4: Implement the extended PowerShell verifier**
 
 `verify-desktop-library.ps1` must:
 
@@ -1291,13 +1291,13 @@ Expected: both fixture and lowercase 64-hex-character SHA-256 file exist under `
 
 Use `Start-Process -WindowStyle Hidden -Wait -PassThru -RedirectStandardOutput/-RedirectStandardError` with a 30-second timeout per packaged command. Print `Mihon W desktop library verification passed.` only after every assertion succeeds.
 
-- [ ] **Step 5: Run the extended verifier locally**
+- [x] **Step 5: Run the extended verifier locally**
 
 Run: `pwsh -NoProfile -File .\scripts\verify-desktop-library.ps1`
 
 Expected: exit 0; final line `Mihon W desktop library verification passed.`; foundation smoke and Java 17 checks remain in the output.
 
-- [ ] **Step 6: Commit integration verification**
+- [x] **Step 6: Commit integration verification**
 
 ```bash
 git add desktop-library-data/src/test/kotlin/mihon/desktop/library/integration app/src/test/java/eu/kanade/tachiyomi/data/backup/DesktopBackupFixtureWriterTest.kt app/build.gradle.kts scripts/verify-desktop-library.ps1
@@ -1315,11 +1315,11 @@ git commit -m "test: verify packaged desktop library imports"
 - Consumes: all Tasks 1–10 and the existing Android/foundation CI jobs.
 - Produces: one Windows Plan 2 CI gate, retained Android regression gates, and auditable completion evidence.
 
-- [ ] **Step 1: Change only the Windows verifier invocation/artifact name**
+- [x] **Step 1: Change only the Windows verifier invocation/artifact name**
 
 Rename the Windows job display name to `Build & Test Windows Library`, run `./scripts/verify-desktop-library.ps1`, and upload the runtime as `mihon-w-library-${{ github.sha }}`. Keep checkout/setup action SHAs, Windows runner, JDK setup, Gradle setup, and the entire Android `build` job unchanged.
 
-- [ ] **Step 2: Run the complete local regression matrix**
+- [x] **Step 2: Run the complete local regression matrix**
 
 Run:
 
@@ -1336,19 +1336,19 @@ pwsh -NoProfile -File .\scripts\verify-desktop-library.ps1
 
 Expected: every Gradle task succeeds; Android debug APK is created; desktop runtime is created; cross-contract test passes; verifier prints both foundation and library success lines.
 
-- [ ] **Step 3: Perform the manual real-UI acceptance run**
+- [x] **Step 3: Perform the manual real-UI acceptance run**
 
 Launch packaged `MihonW.exe` with a clean explicit data root, import the Android-generated `.tachibk` from the Library action, import the Unicode local directory, close the application, relaunch with the same root, and verify: both manga remain; search finds each; selecting each opens real metadata; chapters are listed in deterministic order; read/bookmark/progress labels match imported data; the import report distinguishes imported, private, app-state, and unknown preferences without showing values; no reader action appears functional in this slice.
 
-- [ ] **Step 4: Record exact completion evidence**
+- [x] **Step 4: Record exact completion evidence**
 
 Create `windows-shared-data-library.md` with these filled fields from the actual run: branch/commit, command transcript summaries and counts, Android fixture generator class and SHA-256, database path, packaged executable path, Java runtime version, Android APK path, imported manga/chapter/category/history/tracking/preference counts, rollback test names, local Unicode/long-path fixture paths, manual UI observations, and remaining Plan 3/Plan 7 boundaries. Every entry must point to an actual output/file; omit any claim not observed.
 
-- [ ] **Step 5: Mark this plan's checkboxes only from evidence**
+- [x] **Step 5: Mark this plan's checkboxes only from evidence**
 
 Change a checkbox to `[x]` only when its command/expected outcome is present in the evidence document. Leave failed or unrun steps unchecked and state the exact failure in evidence. This prevents a green-looking plan from replacing verification.
 
-- [ ] **Step 6: Commit CI and evidence**
+- [x] **Step 6: Commit CI and evidence**
 
 ```bash
 git add .github/workflows/build.yml docs/superpowers/evidence/windows-shared-data-library.md docs/superpowers/plans/2026-09-01-windows-shared-data-library.md
