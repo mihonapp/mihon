@@ -32,6 +32,7 @@ rootProject.name = "Mihon"
 include(":app")
 include(":desktop-app")
 include(":desktop-library-data")
+include(":reader-core")
 include(":baseline-profile")
 include(":core-metadata")
 include(":core:archive")

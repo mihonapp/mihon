@@ -33,6 +33,7 @@ compose-multiplatform = "1.12.0"
 composeMaterialMotion = "2.0.1"
 composeRichEditor = "1.0.0-rc13"
 composeWebview = "0.33.6"
+commonsCompress = "1.28.0"
 conscrypt = "2.6.3"
 directionalViewPager = "1.0.0"
 diskLruCache = "2.0.2"
@@ -43,6 +44,7 @@ google-services = "4.5.0"
 image-decoder = "10"
 injekt = "91edab2317"
 jsoup = "1.23.2"
+junrar = "8.0.0"
 junit = "6.1.3"
 kim = "0.38.1"
 kotest-assertions = "6.2.4"
@@ -133,6 +135,7 @@ composeGrid = { module = "io.woong.compose.grid:grid", version.ref = "composeGri
 composeMaterialMotion = { module = "io.github.fornewid:material-motion-compose-core", version.ref = "composeMaterialMotion" }
 composeRichEditor = { module = "com.mohamedrejeb.richeditor:richeditor-compose", version.ref = "composeRichEditor" }
 composeWebview = { module = "io.github.kevinnzou:compose-webview", version.ref = "composeWebview" }
+commonsCompress = { module = "org.apache.commons:commons-compress", version.ref = "commonsCompress" }
 conscrypt = { module = "org.conscrypt:conscrypt-android", version.ref = "conscrypt" }
 directionalViewPager = { module = "com.github.tachiyomiorg:DirectionalViewPager", version.ref = "directionalViewPager" }
 diskLruCache = { module = "com.jakewharton:disklrucache", version.ref = "diskLruCache" }
@@ -143,6 +146,7 @@ flexibleAdapter = { module = "com.github.arkon.FlexibleAdapter:flexible-adapter"
 image-decoder = { module = "ca.mpreg:imagedecoder", version.ref = "image-decoder" }
 injekt = { module = "com.github.mihonapp:injekt", version.ref = "injekt" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
+junrar = { module = "com.github.junrar:junrar", version.ref = "junrar" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 kim = { module = "de.stefan-oltmann:kim", version.ref = "kim" }
