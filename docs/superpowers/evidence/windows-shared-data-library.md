@@ -10,6 +10,147 @@ Recorded on 2026-09-01 (Asia/Shanghai). Paths below are the paths observed on th
 - The Android `build` job, `ubuntu-24.04` runner, all action SHAs, JDK file/distribution, Gradle setup, Android commands, and Android artifact names are unchanged from `9dd7ac12b70968034f5a191c12f1f5fc997fe60e`.
 - Plan 2 implementation commits are auditable in Git from `aec9a0b61` through `9dd7ac12b`: schema/data (`aec9a0b61`), repository/lifecycle (`a0f0c1031`, `531e3e6b6`, `351f96df4`), codec (`915fe8411`), Android contract (`f796158fb`, `0eb5f5ebf`), backup import (`f571b9f42`, `1bebbcd2a`), local import and hardening (`7232da55e` through `6aed14dc4`), runtime/CLI (`29a3f52fa`), library UI (`fb3ce5695`), details/import UI (`d39d555a6`, `921b8ab6d`), and packaged verification (`9dd7ac12b`).
 
+## Historical TDD RED evidence for checked plan steps
+
+This section preserves the factual RED summaries from the real local execution records `.superpowers/sdd/task-1-report.md` through `task-10-report.md`. Those reports are ignored working-session records rather than clean-checkout artifacts, so this document does **not** claim that complete raw console logs are committed. Exact excerpts are reproduced only where a report recorded them; otherwise the entry is explicitly labelled as the focused command pattern and observed summary recorded by that report. Every resulting GREEN test named below is committed and is reproducible with the stated command.
+
+### Task 1 — plan Steps 1–2, including line 142
+
+- Failing test authored: `LibrarySchemaTest`, which referenced the not-yet-registered `:desktop-library-data` module and schema.
+- Exact RED command actually recorded:
+
+  ```powershell
+  ./gradlew :desktop-library-data:test --tests mihon.desktop.library.db.LibrarySchemaTest
+  ```
+
+- Expected failure: Gradle could not locate project `:desktop-library-data`.
+- Observed failure recorded by Task 1: `Cannot locate tasks that match ':desktop-library-data:test' as project 'desktop-library-data' not found in root project 'Mihon'.` The run ended `BUILD FAILED in 10s`.
+- Resulting GREEN evidence: committed `LibrarySchemaTest`; `:desktop-library-data:generateSqlDelightInterface :desktop-library-data:test --tests mihon.desktop.library.db.LibrarySchemaTest` recorded `BUILD SUCCESSFUL`, and the current fresh data suite contains that test among 77 passing tests.
+
+### Task 2 — plan Steps 1–2, including line 559
+
+- Failing tests authored: persistence/reopen, deterministic ordering, unread counts, foreign keys, forced rollback, observation, mutations, tracking identity, reports, and close lifecycle in `SqlDelightLibraryRepositoryTest`.
+- Exact RED command actually recorded (with the JDK required by root Gradle configuration):
+
+  ```powershell
+  $env:JAVA_HOME = 'C:\Program Files\Android\Android Studio\jbr'
+  .\gradlew.bat :desktop-library-data:test --tests mihon.desktop.library.db.SqlDelightLibraryRepositoryTest --console=plain
+  ```
+
+- Expected failure: repository models, ports, factory, and methods did not exist.
+- Observed failure recorded by Task 2: `compileTestKotlin FAILED` with unresolved `model`, `DesktopLibraryDatabaseFactory`, `transaction`, `insertManga`, and `MangaRecord`; `BUILD FAILED in 3s`.
+- Resulting GREEN evidence: committed `SqlDelightLibraryRepositoryTest`; the same focused command recorded `BUILD SUCCESSFUL in 5s`. Later review regressions also recorded one deliberate insert-ID RED (`expected false but was true`) followed by the same focused suite passing 8/8. The current fresh data suite passes all 77 tests.
+
+### Task 3 — plan Steps 1–2, including line 661
+
+- Failing tests authored: raw/gzip equivalence, truncated gzip, random ProtoBuf, three JSON signatures, compressed bound, and expanded bound in `AndroidBackupCodecTest`.
+- Exact RED command actually recorded:
+
+  ```powershell
+  $env:JAVA_HOME = 'C:\Program Files\Android\Android Studio\jbr'
+  .\gradlew.bat :desktop-library-data:test --tests mihon.desktop.library.backup.AndroidBackupCodecTest --console=plain
+  ```
+
+- Expected failure: codec, wire DTO graph, limits, and typed exception did not exist.
+- Observed failure recorded by Task 3: `compileTestKotlin FAILED` with unresolved `AndroidBackupCodec`, `AndroidBackup`, `BackupLimits`, and `BackupDecodeException`; `BUILD FAILED in 3s`.
+- Resulting GREEN evidence: committed `AndroidBackupCodecTest`; the same focused command recorded `BUILD SUCCESSFUL in 5s` with 8/8 tests passing. Those codec tests are included in the current fresh 77-test data suite.
+
+### Task 4 — plan Steps 1–2, including line 825
+
+- Failing contract authored: `DesktopBackupImportContractTest`, using existing Android DTOs/serializer and the desktop decoder.
+- Exact focused command actually recorded:
+
+  ```powershell
+  ./gradlew :app:testDebugUnitTest --tests eu.kanade.tachiyomi.data.backup.DesktopBackupImportContractTest
+  ```
+
+- Expected outcome in the plan: a semantic failure only if a desktop serial name, enum/default, or ProtoNumber differed from Android.
+- Observed history recorded by Task 4: the shell's Java 17 was rejected before tests; with JBR Java 21, the first compiling attempt failed on an incorrect **test-only** `UpdateStrategy` import. After that import was corrected, both cases passed without a production wire-mirror change, so no invented DTO mismatch is claimed. A later real deliberate RED temporarily omitted source preferences from the comparison and the same command failed 1/2 on `sourcePreferences` (expected `真实来源/42`, received an empty list).
+- Resulting GREEN evidence: committed `DesktopBackupImportContractTest`; restoring the source-preference projection made the focused contract pass 2/2. Both cases also passed in the current fresh Android suite and extended verifier.
+
+### Task 5 — plan Steps 1–3, including line 884
+
+- Failing tests authored: validator limits/duplicates/references/JSON bounds plus one-transaction importer, merge, category remapping, preference policy, secrecy, and checkpoint rollback tests.
+- Focused RED command pattern actually recorded:
+
+  ```powershell
+  ./gradlew :desktop-library-data:test --tests 'mihon.desktop.library.backup.AndroidBackup*Test'
+  ```
+
+- Expected failure: validator, supported-preference policy, merge policy, and importer APIs were absent.
+- Observed failure recorded by Task 5: Kotlin test compilation reached the new suite and failed on missing `AndroidBackupValidator`, `SupportedPreferencePolicy`, `BackupMergePolicy`, and `AndroidBackupImporter` APIs. A later review RED using the same focused pattern failed four targeted finite-float/atomic-category behaviors before their fix.
+- Resulting GREEN evidence: committed `AndroidBackupValidatorTest` and `AndroidBackupImporterTest`; the initial focused suite reached 18/18 after correcting a generated-ID-only assertion, the review-focused suite passed 21/21, and the current fresh data suite passes all 77 tests. The Android real-import contract passes 2/2.
+
+### Task 6 — plan Steps 1–3, including line 989
+
+- Failing tests authored: nine archive formats, Unicode/long paths, symlink/junction/reparse/traversal/collision/unreadable rejection, staging/promotion/report failures, database rollback, orphan cleanup, and later ownership/race hardening regressions.
+- Exact focused RED command pattern actually recorded:
+
+  ```powershell
+  ./gradlew :desktop-library-data:test --tests 'mihon.desktop.library.local.*Test'
+  ```
+
+- Expected failure: local scanner, stager, importer, and their contracts did not exist.
+- Observed failure recorded by Task 6: initial test compilation failed because the local scanner/stager/importer APIs were absent. Subsequent real review RED runs are also preserved in the Task 6 report, including absent fault seams, exact-limit marker accounting, absent claim/crash APIs, six callback/hidden-entry failures, two exceptional-cleanup failures, and mixed-state ownership regressions; this document does not claim console excerpts beyond those recorded summaries.
+- Resulting GREEN evidence: committed `LocalMangaScannerTest` and `LocalMangaImporterTest`; the final Task 6 focused rerun passed 45 tests (9 scanner + 36 importer), 0 failures/errors/skips. The current fresh data suite passes 77/77, including the later integration tests.
+
+### Task 7 — plan Steps 1–2, including line 1051
+
+- Failing tests authored: command parsing, mutual exclusion, runtime ownership, cleanup order, exact JSONL, redaction, lifecycle closure, and packaged smoke behavior.
+- Focused command pattern actually run and recorded by Task 7:
+
+  ```powershell
+  ./gradlew :desktop-app:test --tests 'mihon.desktop.*Runtime*Test' --tests 'mihon.desktop.cli.*Test'
+  ```
+
+- Expected failure: library commands and runtime ownership were not wired.
+- Observed failure recorded by Task 7: focused test compilation failed on the absent command model, data dependency, runtime fields, command runner, and execution boundary. Later real REDs found the missing `java.sql` jlink module (packaged smoke exited 1/no database), unobservable GUI-subsystem CLI output, an echoed secret sentinel, and the absent cleanup seam.
+- Resulting GREEN evidence: committed runtime/CLI tests; `:desktop-app:spotlessCheck :desktop-app:test :desktop-app:createDistributable --rerun-tasks` recorded 27 tests passing and all 26 actions executed. The current fresh desktop suite passes 47/47, and the extended packaged verifier passes.
+
+### Task 8 — plan Steps 1–3, including line 1127
+
+- Failing tests authored: controlled repository-flow presenter tests plus Compose Library screen/shell routing tests.
+- Focused command pattern actually run and recorded by Task 8:
+
+  ```powershell
+  ./gradlew :desktop-app:test --tests 'mihon.desktop.ui.library.*Test' --tests mihon.desktop.ui.DesktopShellTest
+  ```
+
+- Expected failure: presenter, immutable state, real Library screen, and production route did not exist.
+- Observed failure recorded by Task 8: after switching Gradle from Java 17 to the installed Java 23 runtime, compilation failed on missing `LibraryPresenter`, `LibraryUiState`, `LibraryScreen`, the Library shell parameter, and author projection. A later deliberate RED produced two actual failures for synchronous Flow-creation errors and restoring an absent selected ID.
+- Resulting GREEN evidence: committed `LibraryPresenterTest`, `LibraryScreenTest`, and `DesktopShellTest`; the focused presenter/UI/shell suite passed 13 tests after edge cases, followed by a 39-test desktop GREEN. The current fresh desktop suite passes 47/47.
+
+### Task 9 — plan Steps 1–3, including line 1201
+
+- Failing tests authored: real detail/chapter Compose tests and chooser/import action tests with controlled fakes.
+- Exact focused command pattern actually run and recorded by Task 9:
+
+  ```powershell
+  ./gradlew :desktop-app:test --tests 'mihon.desktop.ui.library.MangaDetailScreenTest' --tests 'mihon.desktop.ui.library.LibraryImportActionsTest'
+  ```
+
+- Expected failure: detail state/screen and native import action components did not exist.
+- Observed failure recorded by Task 9: compilation failed on missing `MangaDetailUiState`, `MangaDetailScreen`, `LibraryImportActions`, `LibraryImportController`, and `ImportActionState`. Later real REDs covered absent detail retry, swallowed cancellation, and raw sensitive report-reason text entering the dialog.
+- Resulting GREEN evidence: committed `MangaDetailScreenTest` and `LibraryImportActionsTest`; the focused suite passed after fixes, and `:desktop-app:test --rerun-tasks` recorded 47 tests passing. The current fresh desktop suite again passes 47/47, and the manual packaged run confirms the same real-data path.
+
+### Task 10 — checked test-first/verifier steps
+
+- Failing artifacts authored first: `LibraryImportIntegrationTest`, `DesktopBackupFixtureWriterTest`, and the extended verifier contract.
+- Exact initial RED commands recorded by Task 10:
+
+  ```powershell
+  ./gradlew :desktop-library-data:test --tests mihon.desktop.library.integration.LibraryImportIntegrationTest
+  ./gradlew :app:testDebugUnitTest --tests eu.kanade.tachiyomi.data.backup.DesktopBackupFixtureWriterTest -PmihonPlan2FixtureDir=app/build/plan2-fixtures
+  pwsh -NoProfile -File .\scripts\verify-desktop-library.ps1
+  ```
+
+- Expected/observed failures: both focused Gradle commands reported `No tests found` because the classes did not yet exist; PowerShell reported that the verifier script did not exist. The later checked plan Step 2 expected the newly added integration test to pass before scripting, and it did pass 2/2 before verifier completion.
+- Resulting GREEN evidence: committed `LibraryImportIntegrationTest`, `DesktopBackupFixtureWriterTest`, and `scripts/verify-desktop-library.ps1`; integration passed 2/2, the explicit writer passed 1/1 and produced the recorded hash, normal Android tests skipped only the opt-in writer, and the extended verifier printed its final success line.
+
+### Audit result for all checked RED-authoring steps
+
+The checked “write failing tests” steps are paired above with their actual initial RED execution and committed GREEN class: Task 1 schema; Task 2 repository; Task 3 codec; Task 4 Android contract; Task 5 validator/importer; Task 6 scanner/importer; Task 7 runtime/CLI; Task 8 presenter/Compose Library; Task 9 details/import actions; and Task 10 integration/writer/verifier. No additional checked plan step instructs a deliberate RED run. Task 10 Step 2 is explicitly a pre-verifier **PASS** gate and is recorded as such. Therefore all 75 checkboxes remain supported; none is being kept checked solely by an unrecorded failure claim.
+
 ## Commands and fresh results
 
 ### Complete matrix required by Task 11
