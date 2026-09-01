@@ -1,10 +1,13 @@
 package mihon.desktop.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.unit.dp
@@ -14,6 +17,7 @@ import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.rememberWindowState
 import mihon.desktop.DesktopRuntime
 import mihon.desktop.navigation.DesktopNavigator
+import mihon.desktop.ui.library.LibraryPresenter
 import mihon.desktop.window.ScreenBounds
 import mihon.desktop.window.WindowPlacement
 import java.awt.Frame
@@ -45,6 +49,12 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
         height = savedPlacement.height.dp,
     )
     var composeWindow: ComposeWindow? by remember { mutableStateOf(null) }
+    val presenterScope = rememberCoroutineScope()
+    val libraryPresenter = remember(runtime.library) { LibraryPresenter(runtime.library, presenterScope) }
+    val libraryState by libraryPresenter.state.collectAsState()
+    DisposableEffect(libraryPresenter) {
+        onDispose(libraryPresenter::close)
+    }
 
     Window(
         onCloseRequest = {
@@ -70,6 +80,10 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
             DesktopShell(
                 selected = navigator.current,
                 onDestinationSelected = navigator::navigate,
+                libraryState = libraryState,
+                onLibraryQueryChange = libraryPresenter::setQuery,
+                onMangaSelected = libraryPresenter::selectManga,
+                onLibraryRetry = libraryPresenter::retry,
             )
         }
     }

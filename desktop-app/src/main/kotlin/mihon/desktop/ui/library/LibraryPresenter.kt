@@ -1,0 +1,117 @@
+package mihon.desktop.ui.library
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import mihon.desktop.library.model.LibraryManga
+import mihon.desktop.library.repository.LibraryRepository
+
+data class LibraryUiState(
+    val loading: Boolean = true,
+    val query: String = "",
+    val items: List<LibraryManga> = emptyList(),
+    val selectedMangaId: Long? = null,
+    val errorMessage: String? = null,
+)
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class LibraryPresenter(
+    private val repository: LibraryRepository,
+    scope: CoroutineScope,
+) : AutoCloseable {
+    private val presenterJob = SupervisorJob(scope.coroutineContext[Job])
+    private val presenterScope = CoroutineScope(scope.coroutineContext + presenterJob)
+    private val query = MutableStateFlow("")
+    private val selectedMangaId = MutableStateFlow<Long?>(null)
+    private val retryRequest = MutableStateFlow(0L)
+
+    private val repositoryState: Flow<RepositoryState> = retryRequest
+        .flatMapLatest {
+            flow { emitAll(repository.observeLibrary()) }
+                .map<List<LibraryManga>, RepositoryState>(RepositoryState::Loaded)
+                .onStart { emit(RepositoryState.Loading) }
+                .catch { error ->
+                    emit(RepositoryState.Failed(error.message ?: "Unable to load library"))
+                }
+        }
+        .flowOn(Dispatchers.IO)
+        .onEach { result ->
+            if (result is RepositoryState.Loaded) {
+                selectedMangaId.update { selected ->
+                    selected?.takeIf { id -> result.items.any { it.id == id } }
+                }
+            }
+        }
+
+    val state: StateFlow<LibraryUiState> = combine(repositoryState, query, selectedMangaId) { result, query, selected ->
+        when (result) {
+            RepositoryState.Loading -> LibraryUiState(loading = true, query = query)
+            is RepositoryState.Failed -> LibraryUiState(
+                loading = false,
+                query = query,
+                errorMessage = result.message,
+            )
+            is RepositoryState.Loaded -> {
+                val normalizedQuery = query.trim()
+                val visibleItems = if (normalizedQuery.isEmpty()) {
+                    result.items
+                } else {
+                    result.items.filter { manga ->
+                        manga.title.contains(normalizedQuery, ignoreCase = true) ||
+                            manga.author?.contains(normalizedQuery, ignoreCase = true) == true
+                    }
+                }
+                LibraryUiState(
+                    loading = false,
+                    query = query,
+                    items = visibleItems,
+                    selectedMangaId = selected?.takeIf { id -> result.items.any { it.id == id } },
+                )
+            }
+        }
+    }.stateIn(
+        scope = presenterScope,
+        started = SharingStarted.Eagerly,
+        initialValue = LibraryUiState(),
+    )
+
+    fun setQuery(value: String) {
+        query.value = value
+    }
+
+    fun selectManga(id: Long?) {
+        selectedMangaId.value = id?.takeIf { selected -> state.value.items.any { it.id == selected } }
+    }
+
+    fun retry() {
+        retryRequest.update { it + 1 }
+    }
+
+    override fun close() {
+        presenterScope.cancel()
+    }
+}
+
+private sealed interface RepositoryState {
+    data object Loading : RepositoryState
+    data class Loaded(val items: List<LibraryManga>) : RepositoryState
+    data class Failed(val message: String) : RepositoryState
+}

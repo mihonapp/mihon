@@ -309,6 +309,7 @@ private fun SelectLibrary.toModel() = LibraryManga(
     thumbnailUrl = thumbnail_url,
     chapterCount = chapter_count,
     unreadCount = unread_count,
+    author = author,
 )
 
 private fun Manga.toRecord() = MangaRecord(

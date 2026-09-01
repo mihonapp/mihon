@@ -19,6 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import mihon.desktop.navigation.DesktopDestination
+import mihon.desktop.ui.library.LibraryScreen
+import mihon.desktop.ui.library.LibraryUiState
 
 internal const val DESKTOP_MAIN_HEADLINE_TEST_TAG = "desktop-main-headline"
 internal const val DESKTOP_NAVIGATION_RAIL_TEST_TAG = "desktop-navigation-rail"
@@ -27,6 +29,12 @@ internal const val DESKTOP_NAVIGATION_RAIL_TEST_TAG = "desktop-navigation-rail"
 fun DesktopShell(
     selected: DesktopDestination,
     onDestinationSelected: (DesktopDestination) -> Unit,
+    libraryState: LibraryUiState = LibraryUiState(),
+    onLibraryQueryChange: (String) -> Unit = {},
+    onMangaSelected: (Long) -> Unit = {},
+    onImportBackup: () -> Unit = {},
+    onImportLocal: () -> Unit = {},
+    onLibraryRetry: () -> Unit = {},
 ) {
     val primary = DesktopDestination.entries.take(5)
     val secondary = DesktopDestination.entries.drop(5)
@@ -58,11 +66,22 @@ fun DesktopShell(
                 modifier = Modifier.fillMaxSize().padding(32.dp),
                 contentAlignment = Alignment.TopStart,
             ) {
-                Text(
-                    text = selected.label,
-                    modifier = Modifier.testTag(DESKTOP_MAIN_HEADLINE_TEST_TAG),
-                    style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
-                )
+                if (selected == DesktopDestination.Library) {
+                    LibraryScreen(
+                        state = libraryState,
+                        onQueryChange = onLibraryQueryChange,
+                        onMangaSelected = onMangaSelected,
+                        onImportBackup = onImportBackup,
+                        onImportLocal = onImportLocal,
+                        onRetry = onLibraryRetry,
+                    )
+                } else {
+                    Text(
+                        text = selected.label,
+                        modifier = Modifier.testTag(DESKTOP_MAIN_HEADLINE_TEST_TAG),
+                        style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
+                    )
+                }
             }
         }
     }

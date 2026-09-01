@@ -10,10 +10,27 @@ import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.width
 import mihon.desktop.navigation.DesktopDestination
+import mihon.desktop.ui.library.LibraryUiState
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class DesktopShellTest {
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun `Library destination renders the real library screen`() = runComposeUiTest {
+        setContent {
+            Box(modifier = Modifier.requiredSize(1280.dp, 800.dp)) {
+                DesktopShell(
+                    selected = DesktopDestination.Library,
+                    onDestinationSelected = {},
+                    libraryState = LibraryUiState(loading = false),
+                )
+            }
+        }
+
+        onNodeWithTag("library-screen").assertExists()
+    }
 
     @OptIn(ExperimentalTestApi::class)
     @Test

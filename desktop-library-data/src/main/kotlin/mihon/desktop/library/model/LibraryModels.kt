@@ -8,6 +8,7 @@ data class LibraryManga(
     val thumbnailUrl: String?,
     val chapterCount: Long,
     val unreadCount: Long,
+    val author: String? = null,
 )
 
 data class MangaDetails(
