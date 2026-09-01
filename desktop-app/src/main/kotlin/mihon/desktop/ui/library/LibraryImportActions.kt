@@ -11,6 +11,7 @@ import mihon.desktop.library.local.LocalImportRejected
 import mihon.desktop.library.local.LocalMangaImporter
 import mihon.desktop.library.model.ImportCounts
 import mihon.desktop.library.model.ImportReport
+import mihon.desktop.library.model.PreferenceSkipReason
 import java.awt.FileDialog
 import java.awt.Frame
 import java.nio.file.Path
@@ -94,11 +95,16 @@ private fun ImportReport.sanitized() = SanitizedImportResult(
     counts = counts,
     skipCategories = items.asSequence()
         .filter { it.outcome.equals("SKIPPED", ignoreCase = true) || it.reason != null }
-        .mapNotNull { it.reason }
+        .map { item ->
+            item.reason?.takeIf(SAFE_SKIP_REASON_NAMES::contains) ?: UNKNOWN_SKIP_REASON
+        }
         .distinct()
         .sorted()
         .toList(),
 )
+
+private val SAFE_SKIP_REASON_NAMES = PreferenceSkipReason.entries.mapTo(mutableSetOf()) { it.name }
+private const val UNKNOWN_SKIP_REASON = "UNKNOWN_SKIP_REASON"
 
 private fun chooseAndroidBackup(): Path? {
     val dialog = FileDialog(null as Frame?, "Import Android backup", FileDialog.LOAD).apply {

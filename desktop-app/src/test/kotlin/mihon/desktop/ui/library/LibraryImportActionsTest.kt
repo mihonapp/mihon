@@ -1,6 +1,6 @@
 package mihon.desktop.ui.library
 
-import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -12,6 +12,7 @@ import mihon.desktop.library.model.ImportReport
 import mihon.desktop.library.model.ImportReportItem
 import mihon.desktop.library.model.ImportStatus
 import mihon.desktop.library.model.ImportType
+import mihon.desktop.library.model.PreferenceSkipReason
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.nio.file.Path
@@ -68,10 +69,16 @@ class LibraryImportActionsTest {
     fun `successful import exposes structured counts report id and safe skip categories`() = runBlocking {
         val report = report(
             id = 91,
-            counts = ImportCounts(mangaInserted = 2, mangaMerged = 1, chaptersInserted = 8, preferencesSkipped = 1),
-            items = listOf(
-                ImportReportItem("PREFERENCE", "secret.preference", "SKIPPED", "PRIVATE", "secret raw value"),
-            ),
+            counts = ImportCounts(mangaInserted = 2, mangaMerged = 1, chaptersInserted = 8, preferencesSkipped = 4),
+            items = PreferenceSkipReason.entries.map { reason ->
+                ImportReportItem(
+                    "PREFERENCE",
+                    "secret.preference",
+                    "SKIPPED",
+                    reason.name,
+                    "secret raw value",
+                )
+            },
         )
         val controller = LibraryImportController(
             importBackup = { _, _ -> report },
@@ -84,9 +91,38 @@ class LibraryImportActionsTest {
 
         state.result.reportId shouldBe 91
         state.result.counts.mangaInserted shouldBe 2
-        state.result.skipCategories.shouldContain("PRIVATE")
+        state.result.skipCategories.shouldContainExactly(PreferenceSkipReason.entries.map { it.name }.sorted())
         state.result.toString().contains("secret.preference") shouldBe false
         state.result.toString().contains("secret raw value") shouldBe false
+    }
+
+    @Test
+    fun `unknown report reasons collapse to one safe category without retaining sensitive text`() = runBlocking {
+        val sensitiveReasons = listOf(
+            "secret.preference=raw-value",
+            "C:\\Users\\person\\private-library",
+            "SQLException: token 123 leaked",
+        )
+        val report = report(
+            items = listOf(
+                ImportReportItem("PREFERENCE", "safe", "SKIPPED", "PRIVATE", "safe category"),
+            ) + sensitiveReasons.mapIndexed { index, reason ->
+                ImportReportItem("PREFERENCE", "sensitive-$index", "SKIPPED", reason, "must not surface")
+            },
+        )
+        val controller = LibraryImportController(
+            importBackup = { _, _ -> report },
+            importLocal = { _, _, _ -> report },
+            localLibraryRoot = Path.of("library"),
+            ioDispatcher = Dispatchers.Default,
+        )
+
+        val result = (controller.importBackup(Path.of("backup.tachibk")) as ImportActionState.Completed).result
+
+        result.skipCategories.shouldContainExactly("PRIVATE", "UNKNOWN_SKIP_REASON")
+        sensitiveReasons.forEach { sensitive ->
+            result.toString().contains(sensitive) shouldBe false
+        }
     }
 
     @Test
