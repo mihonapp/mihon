@@ -25,7 +25,7 @@ This section preserves the factual RED summaries from the real local execution r
 
 - Expected failure: Gradle could not locate project `:desktop-library-data`.
 - Observed failure recorded by Task 1: `Cannot locate tasks that match ':desktop-library-data:test' as project 'desktop-library-data' not found in root project 'Mihon'.` The run ended `BUILD FAILED in 10s`.
-- Resulting GREEN evidence: committed `LibrarySchemaTest`; `:desktop-library-data:generateSqlDelightInterface :desktop-library-data:test --tests mihon.desktop.library.db.LibrarySchemaTest` recorded `BUILD SUCCESSFUL`, and the current fresh data suite contains that test among 77 passing tests.
+- Resulting GREEN evidence: committed `LibrarySchemaTest`; `:desktop-library-data:generateSqlDelightInterface :desktop-library-data:test --tests mihon.desktop.library.db.LibrarySchemaTest` recorded `BUILD SUCCESSFUL`, and the current fresh data suite contains that test among 82 passing tests.
 
 ### Task 2 — plan Steps 1–2, including line 559
 
@@ -39,7 +39,7 @@ This section preserves the factual RED summaries from the real local execution r
 
 - Expected failure: repository models, ports, factory, and methods did not exist.
 - Observed failure recorded by Task 2: `compileTestKotlin FAILED` with unresolved `model`, `DesktopLibraryDatabaseFactory`, `transaction`, `insertManga`, and `MangaRecord`; `BUILD FAILED in 3s`.
-- Resulting GREEN evidence: committed `SqlDelightLibraryRepositoryTest`; the same focused command recorded `BUILD SUCCESSFUL in 5s`. Later review regressions also recorded one deliberate insert-ID RED (`expected false but was true`) followed by the same focused suite passing 8/8. The current fresh data suite passes all 77 tests.
+- Resulting GREEN evidence: committed `SqlDelightLibraryRepositoryTest`; the same focused command recorded `BUILD SUCCESSFUL in 5s`. Later review regressions also recorded one deliberate insert-ID RED (`expected false but was true`) followed by the same focused suite passing 8/8. The current fresh data suite passes all 82 tests.
 
 ### Task 3 — plan Steps 1–2, including line 661
 
@@ -53,7 +53,7 @@ This section preserves the factual RED summaries from the real local execution r
 
 - Expected failure: codec, wire DTO graph, limits, and typed exception did not exist.
 - Observed failure recorded by Task 3: `compileTestKotlin FAILED` with unresolved `AndroidBackupCodec`, `AndroidBackup`, `BackupLimits`, and `BackupDecodeException`; `BUILD FAILED in 3s`.
-- Resulting GREEN evidence: committed `AndroidBackupCodecTest`; the same focused command recorded `BUILD SUCCESSFUL in 5s` with 8/8 tests passing. Those codec tests are included in the current fresh 77-test data suite.
+- Resulting GREEN evidence: committed `AndroidBackupCodecTest`; the same focused command recorded `BUILD SUCCESSFUL in 5s` with 8/8 tests passing. Those codec tests are included in the current fresh 82-test data suite.
 
 ### Task 4 — plan Steps 1–2, including line 825
 
@@ -79,7 +79,7 @@ This section preserves the factual RED summaries from the real local execution r
 
 - Expected failure: validator, supported-preference policy, merge policy, and importer APIs were absent.
 - Observed failure recorded by Task 5: Kotlin test compilation reached the new suite and failed on missing `AndroidBackupValidator`, `SupportedPreferencePolicy`, `BackupMergePolicy`, and `AndroidBackupImporter` APIs. A later review RED using the same focused pattern failed four targeted finite-float/atomic-category behaviors before their fix.
-- Resulting GREEN evidence: committed `AndroidBackupValidatorTest` and `AndroidBackupImporterTest`; the initial focused suite reached 18/18 after correcting a generated-ID-only assertion, the review-focused suite passed 21/21, and the current fresh data suite passes all 77 tests. The Android real-import contract passes 2/2.
+- Resulting GREEN evidence: committed `AndroidBackupValidatorTest` and `AndroidBackupImporterTest`; the initial focused suite reached 18/18 after correcting a generated-ID-only assertion, the review-focused suite passed 21/21, and the current fresh data suite passes all 82 tests. The Android real-import contract passes 2/2.
 
 ### Task 6 — plan Steps 1–3, including line 989
 
@@ -92,7 +92,7 @@ This section preserves the factual RED summaries from the real local execution r
 
 - Expected failure: local scanner, stager, importer, and their contracts did not exist.
 - Observed failure recorded by Task 6: initial test compilation failed because the local scanner/stager/importer APIs were absent. Subsequent real review RED runs are also preserved in the Task 6 report, including absent fault seams, exact-limit marker accounting, absent claim/crash APIs, six callback/hidden-entry failures, two exceptional-cleanup failures, and mixed-state ownership regressions; this document does not claim console excerpts beyond those recorded summaries.
-- Resulting GREEN evidence: committed `LocalImportScannerTest` and `LocalMangaImporterTest`; the final Task 6 focused rerun passed 45 tests (9 scanner + 36 importer), 0 failures/errors/skips. The current fresh data suite passes 77/77, including the later integration tests.
+- Resulting GREEN evidence: committed `LocalImportScannerTest` and `LocalMangaImporterTest`; the final Task 6 focused rerun passed 45 tests (9 scanner + 36 importer), 0 failures/errors/skips. The current fresh data suite passes 82/82, including the later integration and final boundary tests.
 
 ### Task 7 — plan Steps 1–2, including line 1051
 
@@ -177,9 +177,19 @@ To remove cache/up-to-date ambiguity from the three test gates, this additional 
 
 Observed result: `BUILD SUCCESSFUL in 1m 7s`; all 264 actionable tasks executed. JUnit XML totals after that run:
 
-- `desktop-library-data/build/test-results/test`: 8 suites, 77 tests, 0 failures, 0 errors, 0 skipped.
+- `desktop-library-data/build/test-results/test`: 8 suites, 82 tests, 0 failures, 0 errors, 0 skipped.
 - `desktop-app/build/test-results/test`: 11 suites, 47 tests, 0 failures, 0 errors, 0 skipped.
 - `app/build/test-results/testDebugUnitTest`: 3 suites, 9 tests, 0 failures, 0 errors, 1 expected skip. The skipped test is the opt-in fixture writer when its output property is absent; both `DesktopBackupImportContractTest` cases passed.
+
+### Final whole-branch boundary regressions
+
+The merge review added five data regressions after the 77-test snapshot above. The final fresh command was:
+
+```powershell
+.\gradlew.bat :desktop-library-data:test :desktop-app:test :desktop-library-data:verifySqlDelightMigration spotlessCheck --rerun-tasks
+```
+
+Observed result: `BUILD SUCCESSFUL in 48s`; all 134 actionable tasks executed. The final totals were 82 desktop data tests and 47 desktop app tests, with 0 failures, errors, or skips; SQLDelight migration and Spotless passed. The new tests first reproduced a `StackOverflowError` from a 10,000-level memo and the absence of an actual-read compressed-source limit, then proved that deeply nested JSON is rejected before a transaction with zero mutation and that a source growing one byte beyond `maxCompressedBytes` returns typed `COMPRESSED_LIMIT`. Exact-bound raw/gzip behavior, string/escape scanning, malformed JSON classification, and a caller-configured depth of 20,000 are also covered.
 
 ### Extended packaged verifier
 
@@ -260,7 +270,7 @@ The chapter query ordered by manga and `source_order DESC` confirmed the backup 
 
 ## Rollback and failure evidence
 
-The fresh 77-test data suite includes these named, passing rollback/transaction gates (names are read from JUnit XML):
+The fresh 82-test data suite includes these named, passing rollback/transaction gates (names are read from JUnit XML):
 
 - `SqlDelightLibraryRepositoryTest :: committed library survives reopen and rollback never leaks rows()`
 - `SqlDelightLibraryRepositoryTest :: concurrent mutation waits for an uncommitted transaction and commits independently()`
@@ -272,7 +282,7 @@ The fresh 77-test data suite includes these named, passing rollback/transaction 
 - `LocalMangaImporterTest :: before-report callback replacement survives while database transaction rolls back()`
 - `LocalMangaImporterTest :: replacement installed after promotion survives while database transaction rolls back()`
 
-The same suite also covers corrupt/raw/gzip/JSON/expanded-size codec cases, duplicate/reference/limit validation, exact preference classification, non-regressive merge rules, foreign keys, Unicode/long paths, supported local archive extensions, no-follow link/reparse/traversal rejection, ownership races, orphan cleanup, and staged-media compensation. These assertions are in the committed test sources and all 77 tests passed fresh.
+The same suite also covers corrupt/raw/gzip/JSON/compressed-growth/expanded-size codec cases, pre-parser JSON depth limits, duplicate/reference/limit validation, exact preference classification, non-regressive merge rules, foreign keys, Unicode/long paths, supported local archive extensions, no-follow link/reparse/traversal rejection, ownership races, orphan cleanup, and staged-media compensation. These assertions are in the committed test sources and all 82 tests passed fresh.
 
 ## Explicit remaining boundaries
 
